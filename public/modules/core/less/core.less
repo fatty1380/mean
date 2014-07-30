@@ -1,0 +1,56 @@
+/* Less Variables */
+@percent: 1;
+@height: `Math.round( screen.height * @{percent})`;
+@width: `Math.round( screen.width * @{percent})`;
+
+@firstFoldTop : `(@{height}) + 10`
+@secondFoldTop : `(@{height} * 2) + 10px`
+
+.content {
+	margin-top: 50px;
+}
+.undecorated-link:hover {
+	text-decoration: none;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
+body {
+	background: url('/modules/core/img/brand/phx_bg.jpg') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-size: cover;
+}
+
+.jumbotron {
+	margin-top: 20px;
+}
+
+.jumbotron, .well {
+	background-color: rgba(238, 238, 238, 0.75);
+}
+
+.well {
+	background-image: linear-gradient(rgba(232, 232, 232, 0.75) 0%, rgba(245, 245, 245, 0.75) 100%)
+}
+
+/*.jumbotron:nth-of-type(2) {
+	top: @firstFoldTop;
+}
+
+.jumbotron:nth-of-type(3) {
+	top: @secondFoldTop;
+}*/
+
+section.container {
+	background-color: rgba(238, 238, 238, 0.75);
+}
+
+section.jumbotron {
+	margin:auto;
+    top:100%;
+    width:100%;
+}

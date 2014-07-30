@@ -1,0 +1,35 @@
+.content {
+	margin-top: 50px;
+}
+.undecorated-link:hover {
+	text-decoration: none;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
+body {
+	background: url('/modules/core/img/brand/phx_bg.jpg') no-repeat center center fixed; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-size: cover;
+}
+
+.jumbotron {
+	margin-top: 20px;
+}
+
+.jumbotron, .well {
+	background-color: rgba(238, 238, 238, 0.75);
+}
+
+.well {
+	background-image: linear-gradient(rgba(232, 232, 232, 0.75) 0%, rgba(245, 245, 245, 0.75) 100%)
+}
+
+section.container {
+	background-color: rgba(238, 238, 238, 0.75);
+}
