@@ -21,6 +21,7 @@ var LicenseSchema = new Schema({
 	type: {
 		type: String,
 		enum: ['Standard', 'Commercial'],
+		default: 'Standard',
 	},
 	number: {
 		type: String,

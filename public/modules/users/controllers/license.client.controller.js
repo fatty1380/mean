@@ -5,7 +5,7 @@ function LicenseController($scope) {
 		alert('[LicenseController] Hello!');
 	};
 
-	$scope.license = { type : 'test', number : '12345', state : 'CA', issued : new Date('2014-07-01'), expired : new Date('2014-07-01'), endorsements : 'none'};
+	$scope.license = { type : '', number : '', state : '', issued : null, expired : null, endorsements : []};
 }
 
 LicenseController.$inject = ['$scope'];

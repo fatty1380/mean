@@ -78,15 +78,13 @@ function SettingsController($scope, $http, $location, Users, Authentication) {
 	// Specific User Type Stuff
 	$scope.addLicense = function() {
 
-		var data = { type : 'Standard', number : '12345', state : 'CA', issued : new Date('2014-07-01'), expired : new Date('2014-07-01'), endorsements : 'none'};
+		$scope.success = $scope.error = null;
+		event.preventDefault();
 
-		$http.post('/users/newlicense', data).success(function(response) {
-			alert('got response: ' + response);
-		}).error(function(response) {
-			$scope.error = response.message;
-		});
+		var data = { type : '', number : '', state : '', issued : new Date('2014-07-01'), expired : new Date('2014-07-01'), endorsements : []};
 
-		alert('adding a license');
+		$scope.user.licenses.push([data]);
+		
 	};
 }
 

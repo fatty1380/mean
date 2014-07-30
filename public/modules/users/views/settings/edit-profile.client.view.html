@@ -56,7 +56,7 @@
 
 				<div>
 					<label class="pull-left" for="licenses">Driver's License</label>
-					<button class="btn pull-left btn-small btn-success editing-element" ng-click="addLicense()" ng-show="{{ user.licenses.length < 1 }}"> 
+					<button class="btn pull-left btn-small btn-success" ng-click="addLicense()" ng-show="{{ addingLicense == true || user.licenses.length < 1 }}"> 
 						<i class="icon icon-plus"></i> Add Details
 					</button>
 					<div id="licenses" name="licenses" data-ng-repeat="license in user.licenses">

@@ -14,4 +14,4 @@ function Authentication() {
 
 angular
 	.module('users')
-	.factory('Authentication', Authentication); 
+	.factory('Authentication', Authentication);
