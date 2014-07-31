@@ -175,7 +175,7 @@ exports.update = function(req, res) {
 		console.log('user has ' + user.licenses.length + ' license(s).');
 
 		if (licenses.length > 0) {
-			var license = req.user.licenses.length === 0 ? new License(licenses[0]) : req.user.licenses[0];
+			var license = new License(licenses[0]);
 
 			// TODO: Add dirty check: https://github.com/LearnBoost/mongoose/issues/1814
 			license.updated = Date.now();
@@ -189,9 +189,9 @@ exports.update = function(req, res) {
 
 					console.log('User License Count: ' + user.licenses.length);
 
-					user.licenses.push(doc._id);
-					
-					console.log('User License Count: ' + user.licenses.length);
+					//user.licenses.push(doc._id);
+
+					//console.log('User License Count: ' + user.licenses.length);
 				}
 
 				user.save(function(err) {

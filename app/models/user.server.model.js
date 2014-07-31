@@ -138,11 +138,7 @@ var UserSchema = new Schema({
 	// TODO: Move to Sub-Class of User
 
 	// Complex Modeling taken from http://stackoverflow.com/questions/8737082/mongoose-schema-within-schema
-	licenses: [{
-		type: Schema.ObjectId, 
-		ref: 'License',
-		default : [],
-	}],
+	licenses: ['License'],
 
 	experience: [{
 		text : { type : String },
