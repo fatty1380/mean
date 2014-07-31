@@ -32,7 +32,8 @@ module.exports = function() {
 				}
 
 				return done(null, user);
-			});
+			})
+			.populate('licenses');
 		}
 	));
 };
