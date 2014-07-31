@@ -150,7 +150,7 @@ exports.signin = function( req, res, next ) {
  * Update user details
  */
 exports.update = function( req, res ) {
-    debugger;
+    //debugger;
     // Init Variables
     var user = req.user;
     var message = null;
