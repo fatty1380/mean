@@ -14,6 +14,16 @@ var validateLocalStrategyProperty = function(property) {
 };
 
 /**
+ * A method to retrieve any enum values
+ */
+ var getEnumValues = function() {
+ 	//Temp.schema.path('salutation').enumValues;
+
+ 	debugger;
+ 	var enums;
+ };
+
+/**
  * License Schema
  */
 var LicenseSchema = new Schema({
@@ -27,7 +37,6 @@ var LicenseSchema = new Schema({
 		type: String,
 		trim: true,
 		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your first name']
 	},
 	state: {
 		type: String,
@@ -36,24 +45,25 @@ var LicenseSchema = new Schema({
 		validate: [validateLocalStrategyProperty, 'Please select your state'],
 	},
 	endorsements: {
-		type: [{
-			type: String,
-			enum: ['none', 'Class A', 'Class C', 'Motorcycle']
-		}],
-		default: ['none']
+		type: [String],
+		enum: ['none', 'Class A', 'Class C', 'Motorcycle'],
+		default: [],
 	},
 	issued: {
-		type: Date
+		type: Date,
+		default: null,
 	},
 	expires: {
-		type: Date
+		type: Date,
+		default: null,
 	},
 	updated: {
-		type: Date
+		type: Date,
+		default: Date.now,
 	},
 	created: {
 		type: Date,
-		default: Date.now
+		default: Date.now,
 	}
 });
 

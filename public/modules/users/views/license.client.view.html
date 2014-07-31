@@ -1,5 +1,8 @@
-<section data-ng-controller="LicenseController">
+<section>
+	<h4>Driver's License</h4>
 	<label for="licenseType">Type</label>
+
+  	<select ng-model="license.type" ng-options="type for type in license.enums.type"></select><br>
 	<input type="text" id="licenseType" name="licenseType" class="form-control" data-ng-model="license.type">
 
 	<label for="licenseNumber">Number</label>

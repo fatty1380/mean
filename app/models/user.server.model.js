@@ -141,7 +141,7 @@ var UserSchema = new Schema({
 	licenses: [{
 		type: Schema.ObjectId, 
 		ref: 'License',
-		default : [new License({ type : '', number : '', state : '', issued : new Date('2014-07-01'), expired : new Date('2014-07-01')})],
+		default : [],
 	}],
 
 	experience: [{

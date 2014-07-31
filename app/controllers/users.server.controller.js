@@ -44,7 +44,31 @@ exports.newLicense = function(req, res) {
 	delete req.body.roles;
 
 	if (user) {
-		var license = new License(req.body);
+
+		var license;
+
+		if (user.licenses.length === 0) {
+			license = new License(req.body);
+		}
+		else {
+			res.jsonp(user.licenses[0]);
+		}
+
+		var attributeEnums;
+		var enumOpts = {};
+
+		for (var attribute in License.schema.paths) {
+ 			attributeEnums = License.schema.path(attribute).options.enum; //License.schema.path(attribute).enumValues || 
+
+	 		if (attributeEnums !== undefined && attributeEnums.length > 0) {
+	 			console.log(attribute + ': ' + attributeEnums);
+
+	 			//enumOpts.push({attribute : attributeEnums});
+	 			enumOpts[attribute] = attributeEnums;
+	 		}
+		}
+
+		license._doc.enums = enumOpts;
 
 		res.jsonp(license);
 	} else {
@@ -120,6 +144,7 @@ exports.signin = function(req, res, next) {
  * Update user details
  */
 exports.update = function(req, res) {
+	debugger;
 	// Init Variables
 	var user = req.user;
 	var message = null;
@@ -128,26 +153,56 @@ exports.update = function(req, res) {
 	delete req.body.roles;
 
 	if (user) {
+		if (req.user.licenses.length === 0) {
+			console.log('No licenses in current user model');
+		}
+
 		// Merge existing user
 		user = _.extend(user, req.body);
 		user.updated = Date.now();
 		user.displayName = user.firstName + ' ' + user.lastName;
 
-		user.save(function(err) {
-			if (err) {
-				return res.send(400, {
-					message: getErrorMessage(err)
-				});
-			} else {
-				req.login(user, function(err) {
-					if (err) {
-						res.send(400, err);
-					} else {
-						res.jsonp(user);
-					}
-				});
-			}
-		});
+		var licenses = req.body.licenses;
+
+		for (var i = 0; i < licenses.length; i++) {
+			var license = new License(licenses[i]);
+
+			// TODO: Add dirty check: https://github.com/LearnBoost/mongoose/issues/1814
+			licenses[i].updated = Date.now();
+
+			license.save(function(err, license) {
+				if (err) {
+					console.log('error saving license #' + i);
+					console.log(err);
+				} else {
+					console.log('license #' + i + ' saved successfully');
+
+					user.licenses.push(license);
+
+					user.save(function(err) {
+						if (err) {
+							return res.send(400, {
+								message: getErrorMessage(err)
+							});
+						} else {
+							req.login(user, function(err) {
+								if (err) {
+									res.send(400, err);
+								} else {
+									console.log('successfully saved user');
+									res.jsonp(user);
+								}
+							});
+						}
+					});
+				}
+			});
+
+
+			
+		}
+
+		
 	} else {
 		res.send(400, {
 			message: 'User is not signed in'

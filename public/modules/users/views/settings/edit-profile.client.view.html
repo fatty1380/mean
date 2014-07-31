@@ -55,16 +55,15 @@
 				</div>
 
 				<div>
-					<label class="pull-left" for="licenses">Driver's License</label>
-					<button class="btn pull-left btn-small btn-success" ng-click="addLicense()" ng-show="{{ addingLicense == true || user.licenses.length < 1 }}"> 
-						<i class="icon icon-plus"></i> Add Details
+					<button class="btn pull-left btn-small btn-success" ng-click="addLicense()" ng-show="switchHelper() == 0"> 
+						<i class="icon icon-plus"></i> Add License
 					</button>
-					<div id="licenses" name="licenses" data-ng-repeat="license in user.licenses">
-						<div ng-include="'modules/users/views/license.client.view.html'" ng-model="license"></div>
+					<div data-ng-repeat="license in user.licenses">
+						<div ng-include="'modules/users/views/license.client.view.html'" ></div> 
 					</div>
 				</div>
 
-				
+				<hr />
 
 				<div class="text-center form-group">
 					<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
