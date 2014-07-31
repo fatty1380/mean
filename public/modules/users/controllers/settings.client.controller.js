@@ -43,7 +43,10 @@ function SettingsController($scope, $http, $location, Users, Authentication) {
 
 		// Remove License "enum" info
 		// Todo: move enum info into separate request
-		delete $scope.user.licenses[0].enums;
+		if ($scope.user.licenses.length > 0) {
+			delete $scope.user.licenses[0].enums;
+		}
+		
 
 		var user = new Users($scope.user);
 

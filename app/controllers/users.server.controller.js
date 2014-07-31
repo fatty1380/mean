@@ -129,6 +129,12 @@ exports.signin = function(req, res, next) {
 			user.password = undefined;
 			user.salt = undefined;
 
+			console.log(' [PrePop] User has ' + user.licenses.length + ' licenses');
+			// Populate Licenses Documents
+			user.populate('licenses');
+
+			console.log('[PostPop] User has ' + user.licenses.length + ' licenses');
+
 			req.login(user, function(err) {
 				if (err) {
 					res.send(400, err);
@@ -164,43 +170,71 @@ exports.update = function(req, res) {
 
 		var licenses = req.body.licenses;
 
-		for (var i = 0; i < licenses.length; i++) {
-			var license = new License(licenses[i]);
+		console.log('request has ' + licenses.length + ' license(s).');
+		console.log('req user has ' + req.user.licenses.length + ' license(s).');
+		console.log('user has ' + user.licenses.length + ' license(s).');
+
+		if (licenses.length > 0) {
+			var license = req.user.licenses.length === 0 ? new License(licenses[0]) : req.user.licenses[0];
 
 			// TODO: Add dirty check: https://github.com/LearnBoost/mongoose/issues/1814
-			licenses[i].updated = Date.now();
+			license.updated = Date.now();
 
-			license.save(function(err, license) {
+			license.save(function(err, doc) {
 				if (err) {
-					console.log('error saving license #' + i);
+					console.log('error saving license');
 					console.log(err);
 				} else {
-					console.log('license #' + i + ' saved successfully');
+					console.log('license saved successfully');
 
-					user.licenses.push(license);
+					console.log('User License Count: ' + user.licenses.length);
 
-					user.save(function(err) {
-						if (err) {
-							return res.send(400, {
-								message: getErrorMessage(err)
-							});
-						} else {
-							req.login(user, function(err) {
-								if (err) {
-									res.send(400, err);
-								} else {
-									console.log('successfully saved user');
-									res.jsonp(user);
-								}
-							});
-						}
-					});
+					user.licenses.push(doc._id);
+					
+					console.log('User License Count: ' + user.licenses.length);
 				}
+
+				user.save(function(err) {
+					if (err) {
+						console.log('[err] error saving user\n\t' + err);
+						return res.send(400, {
+							message: getErrorMessage(err)
+						});
+					} else {
+						req.login(user, function(err) {
+							if (err) {
+								console.log('[log] error saving user\n\t' + err);
+								res.send(400, err);
+							} else {
+								console.log('successfully saved user');
+								res.jsonp(user);
+							}
+						});
+					}
+				});
 			});
-
-
-			
 		}
+
+		else {
+			user.save(function(err) {
+					if (err) {
+						return res.send(400, {
+							message: getErrorMessage(err)
+						});
+					} else {
+						req.login(user, function(err) {
+							if (err) {
+								res.send(400, err);
+							} else {
+								console.log('successfully saved user');
+								res.jsonp(user);
+							}
+						});
+					}
+				});
+		}
+
+		
 
 		
 	} else {
