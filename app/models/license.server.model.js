@@ -35,6 +35,11 @@ var LicenseSchema = new Schema( {
         trim: true,
         default: '',
     },
+    dateOfBirth: {
+        type: Date,
+        default: '',
+        trim: true,
+    },
     state: {
         type: String,
         trim: true,
