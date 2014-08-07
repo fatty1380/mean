@@ -27,7 +27,7 @@ else
 fi
 
 # Check for and install Node.js (if necessary)
-if npm -g ls node -parseable > /dev/null; then
+if command -v node > /dev/null; then
 	echo "Node.js is installed globally";
 else
 	echo "Installing 'Node.js' from latest";
@@ -90,7 +90,7 @@ else
 fi
 
 # Check for and install Bower (if necessary)
-if npm -g ls bower -parseable > /dev/null; then 
+if command -v bower > /dev/null; then 
 	echo "Bower is installed globally";
 else
 	echo "Installing 'Bower' from latest";
@@ -106,7 +106,7 @@ else
 fi
 
 # Check for and install Grunt-cli package (if necessary)
-if npm -g ls grunt-cli -parseable > /dev/null; then
+if command -v grunt > /dev/null; then
 	echo "Grunt is installed globally";
 else
 	echo "Installing 'grunt-cli' from latest";
@@ -122,7 +122,7 @@ else
 fi
 
 # Check for and install Yeoman (if necessary)
-if npm -g ls yo -parseable > /dev/null; then
+if command -v yo > /dev/null; then
 	echo "Yeoman is installed globally";
 else
 	echo "Installing 'Bower' from latest";
@@ -138,7 +138,7 @@ else
 fi
 
 # Check for and install MeanJS Yeoman Generator (if necessary)
-if npm -g ls generator-meanjs -parseable > /dev/null; then
+if npm -g list generator-meanjs -parseable > /dev/null; then
 	echo "MeanJS Yeoman Generator is installed globally";
 else
 	echo "Installing 'MeanJS Yeoman Generator' from latest";
