@@ -153,7 +153,15 @@ else
 	fi
 fi
 
+# Check if there is a data directory:
+if [ ! -d "./data/db" ]; then
+	echo "Creating empty Mongo Data Directory at ./data/db";
+	mkdir -p ./data/db;
+fi
+
 # Running Outset _________________________________________________________
+
+npm install;
 
 # Check if MongoDB is running - launch if it is not active
 if ps cax | grep "mongod --dbpath ./data/db" > /dev/null; then
