@@ -7,6 +7,7 @@ var mongoose = require( 'mongoose' ),
     Schema = mongoose.Schema,
     crypto = require( 'crypto' ),
     License = mongoose.model( 'License' ),
+    Address = mongoose.model( 'Address' ),
     config = require( '../../config/env/all' );
 
 /**
@@ -93,39 +94,7 @@ var UserSchema = new Schema( {
         // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
 
-    // Mailing Address -- START
-    streetAddress: {
-        type: String,
-        default: '',
-        trim: true,
-    },
-
-    streetAddress2: {
-        type: String,
-        default: '',
-        trim: true,
-    },
-
-    city: {
-        type: String,
-        default: '',
-        trim: true,
-    },
-
-    state: {
-        type: String,
-        default: '',
-        //enum : config.assets.USAStates,
-    },
-
-    zipCode: {
-        type: String,
-        default: '',
-        match: [ /\d{5,5}/ ],
-        trim: true,
-    },
-
-    // Mailing Address -- END
+    addresses: [ 'Address' ],
 
     // "Driver" Specific Information
     // TODO: Move to Sub-Class of User

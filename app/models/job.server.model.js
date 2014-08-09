@@ -3,27 +3,72 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+var mongoose = require( 'mongoose' ),
+    Address = mongoose.model( 'Address' ),
+    Schema = mongoose.Schema;
 
 /**
  * Job Schema
  */
-var JobSchema = new Schema({
-	name: {
-		type: String,
-		default: '',
-		required: 'Please fill Job name',
-		trim: true
-	},
-	created: {
-		type: Date,
-		default: Date.now
-	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'User'
-	}
-});
+var JobSchema = new Schema( {
+    name: {
+        type: String,
+        default: '',
+        required: 'Please fill in a title for this Job',
+        trim: true
+    },
+    description: {
+        type: String,
+        default: '',
+        required: 'Please fill in a Job description',
+        trim: true,
+    },
 
-mongoose.model('Job', JobSchema);
+    location: {
+        type: Schema.ObjectId,
+        ref: 'Address',
+    },
+
+    payRate: {
+        min: {
+            type: Number,
+            default: 0,
+        },
+        max: {
+            type: Number,
+            default: 0,
+        },
+    },
+
+    driverStatus: {
+        type: String,
+        default: 'unreviewed',
+        enum: [ 'unreviewed', 'connected', 'hired' ],
+    },
+
+    postStatus: {
+        type: String,
+        default: '',
+        enum: [ 'draft', 'posted', 'withdrawn', 'deleted' ]
+    },
+
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    posted: {
+        // TODO: figure out null dates
+        type: Date,
+        default: Date.now,
+    },
+    created: {
+        type: Date,
+        default: Date.now,
+    },
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+    }
+} );
+
+mongoose.model( 'Job', JobSchema );
