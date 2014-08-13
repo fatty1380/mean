@@ -17,32 +17,36 @@
 .profile-row {
     padding: 5px 10px;
 }
+.profile-row > div {
+    padding: 0;
+}
 .profile-row p {
     margin: 0;
 }
+.availability_matrix > .well {
+    padding: 5px;
+}
 .availability-header {
     border-bottom: 1px solid #CCC;
-    margin-bottom: 5px;
-    height: 18px;
 }
-.availability-row {
-    height: 12px;
+.availability-header > div {
+    padding: 0;
 }
-.span6 .profile-row .profile-label {
+.col-md-6 .profile-row .profile-label {
     margin: 0px;
 }
 .profile-row .pull-right {
     margin: 0px 10px 10px 0px;
     width: 108px;
 }
-.profile-row .row-fluid .span5 p {
+.profile-row .row-fluid .col-md-5 p {
     text-align: right;
 }
-.profile-row .span8 .row-fluid select {
+.profile-row .col-md-8 .row-fluid select {
     margin: 0px;
     width: 108px;
 }
-.profile-row .row-fluid .span6 p span {
+.profile-row .row-fluid .col-md-6 p span {
     background-color: rgba(255, 255, 255, 0);
 }
 .profile-row .row-fluid .btn-group.btn-group-1 {
@@ -54,14 +58,23 @@
 .profile-row .profile-label {
     margin: 6px;
 }
-.span6 .profile-row .span12 .well {
+.col-md-6 .profile-row .col-md-12 .well {
     background: rgba(245, 245, 245, 0.0509804);
     padding: 5px 20px 0px 10px;
 }
-.span6 .profile-row .availability-row .control-label {
+.col-md-6 .profile-row .availability-row .control-label {
     line-height: 14px;
 }
 .availability-row .checkbox {
     text-align: center;
     line-height: 12px;
+}
+/* License Details */
+
+.license_details .license_label {
+    width: 80px;
+    text-align: right;
+}
+.license_details select {
+    -webkit-appearance: none;
 }

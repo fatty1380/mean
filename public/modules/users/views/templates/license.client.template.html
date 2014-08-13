@@ -1,21 +1,83 @@
 <section>
-    <h4>Driver's License</h4>
-    <label for="licenseType">Type</label>
+    <span class="license_details">
+        <div class="form-group">
+            <div class="col-md-12 input-group margin-bottom-sm" id="licenseState">
+                <span class="license_label input-group-addon">State</span>
+                <select class="form-control">
+                    <option value="AZ">AZ</option>
+                    <option value="CA">CA</option>
+                    <option value="NV">NV</option>
+                    <option value="------">------</option>
+                    <option value="-more-">-more-</option>
+                </select>
+                <span class="input-group-addon">
+                    <i class="fa fa-chevron-down fa-fw"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group margin-bottom-sm" id="licenseNumber">
+                <span class="license_label input-group-addon">Number</span>
+                <input class="form-control" type="text" placeholder="License Number" name="">
+                <span class="input-group-addon"><i class="fa fa-fw">#</i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+    <div class="input-group margin-bottom-sm" id="issueDate">
+        <span class="license_label input-group-addon">Issued</span>
+        <input class="form-control" type="date" name="" data-ng-value="user.license.issued" placeholder="DD/MM/YYYY">
+        <span class="input-group-addon">
+            <i class="fa fa-calendar fa-fw"></i>
+        </span>
+    </div>
+</div>
 
-    <select ng-model="license.type" ng-options="type for type in license.enums.type"></select>
-
-    <label for="licenseNumber">Number</label>
-    <input type="text" id="licenseNumber" name="licenseNumber" class="form-control" data-ng-model="license.number">
-
-    <label for="licenseState">State</label>
-    <input type="text" id="licenseState" name="licenseState" class="form-control" data-ng-model="license.state">
-
-    <label for="licenseIssued">Issued</label>
-    <input type="text" id="licenseIssued" name="licenseIssued" class="form-control" data-ng-model="license.issued">
-
-    <label for="licenseExpires">Expires</label>
-    <input type="text" id="licenseExpires" name="licenseExpires" class="form-control" data-ng-model="license.expires">
-
-    <label for="licenseEndorsements">Endorsements</label>
-    <input type="text" id="licenseEndorsements" name="licenseEndorsements" class="form-control" data-ng-model="license.endorsements">
+        <div class="form-group">
+            <div class="input-group margin-bottom-sm" id="issueDate">
+                <span class="license_label input-group-addon">Expires</span>
+                <input class="form-control" type="date" name="" data-ng-value="user.license.expires" placeholder="DD/MM/YYYY">
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar fa-fw"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group margin-bottom-sm" id="birthDate">
+                <span class="license_label input-group-addon">DOB</span>
+                <input class="form-control" type="date" name="" data-ng-value="user.license.dateOfBirth" placeholder="DD/MM/YYYY">
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar fa-fw"></i>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="classRating">Class Rating</label>
+            <div class="input-group" id="classRating">
+                <p>{{user.license.type}}</p>
+                <div class="btn-group btn-group-1">
+                    <button class="btn btn-success btn-small">A</button>
+                    <button class="btn btn-small">B</button>
+                    <button class="btn btn-small">C</button>
+                    <button class="btn btn-small">D</button>
+                    <button class="btn btn-small">G</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <span class="col-md-6">
+                <p>Endorsements</p>
+            </span>
+            <span class="col-md-7">
+                <p>{{user.license.endorsements}}</p>
+                <div class="btn-group btn-group-vertical">
+                    <button class="btn btn-small">Hazardous</button>
+                    <button class="btn btn-small">Trailer</button>
+                    <button class="btn btn-small">Tank</button>
+                    <button class="btn btn-small btn-success center-block">Passenger</button>
+                    <button class="btn btn-small">School Bus</button>
+                </div>
+            </span>
+        </div>
+    </span>
 </section>
