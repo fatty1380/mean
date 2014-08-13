@@ -1,7 +1,5 @@
 'use strict';
 
-debugger;
-
 /**
  * Module dependencies.
  */

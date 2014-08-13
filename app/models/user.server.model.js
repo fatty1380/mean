@@ -8,19 +8,20 @@ var mongoose = require( 'mongoose' ),
     crypto = require( 'crypto' ),
     License = mongoose.model( 'License' ),
     Address = mongoose.model( 'Address' ),
+    Schedule = mongoose.model( 'Schedule' ),
     config = require( '../../config/env/all' );
 
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function( property ) {
+var validateLocalStrategyProperty = function ( property ) {
     return ( ( this.provider !== 'local' && !this.updated ) || property.length );
 };
 
 /**
  * A Validation function for local strategy password
  */
-var validateLocalStrategyPassword = function( password ) {
+var validateLocalStrategyPassword = function ( password ) {
     return ( this.provider !== 'local' || ( password && password.length > 6 ) );
 };
 
@@ -43,13 +44,6 @@ var UserSchema = new Schema( {
     displayName: {
         type: String,
         trim: true
-    },
-    email: {
-        type: String,
-        trim: true,
-        default: '',
-        validate: [ validateLocalStrategyProperty, 'Please fill in your email' ],
-        match: [ /.+\@.+\..+/, 'Please fill a valid email address' ]
     },
     username: {
         type: String,
@@ -87,6 +81,13 @@ var UserSchema = new Schema( {
     },
 
     // Additional Fields
+    email: {
+        type: String,
+        trim: true,
+        default: '',
+        validate: [ validateLocalStrategyProperty, 'Please fill in your email' ],
+        match: [ /.+\@.+\..+/, 'Please fill a valid email address' ]
+    },
     phone: {
         type: String,
         trim: true,
@@ -101,6 +102,15 @@ var UserSchema = new Schema( {
 
     // Complex Modeling taken from http://stackoverflow.com/questions/8737082/mongoose-schema-within-schema
     licenses: [ 'License' ],
+
+    schedule: {
+        type: [ 'Schedule' ],
+        default: [ new Schedule( {
+            time: 'morning'
+        } ), new Schedule( {
+            time: 'afternoon'
+        } ) ],
+    },
 
     experience: [ {
         text: {
@@ -118,7 +128,7 @@ var UserSchema = new Schema( {
 /**
  * Hook a pre save method to hash the password
  */
-UserSchema.pre( 'save', function( next ) {
+UserSchema.pre( 'save', function ( next ) {
     if ( this.password && this.password.length > 6 ) {
         this.salt = new Buffer( crypto.randomBytes( 16 )
             .toString( 'base64' ), 'base64' );
@@ -126,12 +136,21 @@ UserSchema.pre( 'save', function( next ) {
     }
 
     next();
+
+    if ( this.schedule === undefined ) {
+        this.schedule = [];
+    }
+    if ( this.schedule.length === 0 ) {
+        this.schedule.push( new Schedule( {
+            time: 'morning'
+        } ) );
+    }
 } );
 
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = function( password ) {
+UserSchema.methods.hashPassword = function ( password ) {
     if ( this.salt && password ) {
         return crypto.pbkdf2Sync( password, this.salt, 10000, 64 )
             .toString( 'base64' );
@@ -143,20 +162,20 @@ UserSchema.methods.hashPassword = function( password ) {
 /**
  * Create instance method for authenticating user
  */
-UserSchema.methods.authenticate = function( password ) {
+UserSchema.methods.authenticate = function ( password ) {
     return this.password === this.hashPassword( password );
 };
 
 /**
  * Find possible not used username
  */
-UserSchema.statics.findUniqueUsername = function( username, suffix, callback ) {
+UserSchema.statics.findUniqueUsername = function ( username, suffix, callback ) {
     var _this = this;
     var possibleUsername = username + ( suffix || '' );
 
     _this.findOne( {
         username: possibleUsername
-    }, function( err, user ) {
+    }, function ( err, user ) {
         if ( !err ) {
             if ( !user ) {
                 callback( possibleUsername );

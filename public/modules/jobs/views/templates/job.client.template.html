@@ -1,0 +1,57 @@
+<section>
+    <div class="well well-1 container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-11">
+                <h2 class="heading">{{ job.name }}</h2>
+                <small>
+                    <em class="text-muted">
+                        Posted on
+                        <span data-ng-bind="job.created | date:'mediumDate'"></span>
+                        by
+                        <span data-ng-bind="job.user.displayName"></span>
+                    </em>
+                </small>
+                <p class="p-1">Job ID {{ job._id }}</p>
+            </div>
+            <div class="col-md-1">
+                <h4><i class="fa fa-star center-block"></i>Favorite</h4>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-2 p-3">{{ job.location.zipCode }}</h4>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-usd fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-2">
+                    ${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</h4>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-credit-card fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-4">{{ job.endorsements || "Operator - Class D" }}</h4>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-clock-o fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-2">{{ job.positionType || "Part-Time Employment" }}</h4>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-8">
+                <p>{{ job.description }}</p>
+            </div>
+        </div>
+    </div>
+</section>

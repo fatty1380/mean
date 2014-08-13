@@ -41,7 +41,6 @@ exports.create = function( req, res ) {
 
     address.save( function( err ) {
         if ( err ) {
-            debugger;
             return res.send( 400, {
                 message: getErrorMessage( err )
             } );
@@ -50,11 +49,9 @@ exports.create = function( req, res ) {
             req.body.location = address._id;
             var job = new Job( req.body );
             job.user = req.user;
-            //job.location = address._id;
 
             job.save( function( err ) {
                 if ( err ) {
-                    debugger;
                     return res.send( 400, {
                         message: getErrorMessage( err )
                     } );
@@ -80,18 +77,30 @@ exports.read = function( req, res ) {
  */
 exports.update = function( req, res ) {
     var job = req.job;
+    var address = job.location;
 
     job = _.extend( job, req.body );
+    address = _.extend( address, req.body.location );
 
-    job.save( function( err ) {
+    address.save( function( err ) {
         if ( err ) {
             return res.send( 400, {
                 message: getErrorMessage( err )
             } );
         } else {
-            res.jsonp( job );
+            job.save( function( err ) {
+                if ( err ) {
+                    return res.send( 400, {
+                        message: getErrorMessage( err )
+                    } );
+                } else {
+                    res.jsonp( job );
+                }
+            } );
         }
     } );
+
+
 };
 
 /**
@@ -118,6 +127,7 @@ exports.list = function( req, res ) {
     Job.find()
         .sort( '-created' )
         .populate( 'user', 'displayName' )
+        .populate( 'location' )
         .exec( function( err, jobs ) {
             if ( err ) {
                 return res.send( 400, {
@@ -135,6 +145,7 @@ exports.list = function( req, res ) {
 exports.jobByID = function( req, res, next, id ) {
     Job.findById( id )
         .populate( 'user', 'displayName' )
+        .populate( 'location' )
         .exec( function( err, job ) {
             if ( err ) return next( err );
             if ( !job ) return next( new Error( 'Failed to load Job ' + id ) );
