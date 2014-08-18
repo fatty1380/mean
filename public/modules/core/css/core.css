@@ -20,10 +20,10 @@ section > .container {
     padding-top: 67px;
     padding-bottom: 20px;
 }
-div.clear-bg {
+.clear-bg {
     background-color: rgba(238, 238, 238, 0.0);
 }
-div.opaque-bg {
+.opaque-bg {
     background-color: rgba(238, 238, 238, 0.5);
 }
 /* NAVBAR - TOP */
@@ -139,6 +139,9 @@ p.details {
 }
 .detail-pane div {
     background-color: rgba(238, 238, 238, 0.5);
+}
+.detail-pane:hover img {
+	opacity: 1.0;
 }
 .detail-pane img {
     opacity: 0.6;

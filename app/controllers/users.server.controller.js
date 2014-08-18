@@ -58,7 +58,7 @@ exports.newLicense = function( req, res ) {
 
         for ( var attribute in License.schema.paths ) {
             attributeEnums = License.schema.path( attribute )
-                .options.enum; //License.schema.path(attribute).enumValues || 
+                .options.enum; //License.schema.path(attribute).enumValues ||
 
             if ( attributeEnums !== undefined && attributeEnums.length > 0 ) {
                 console.log( attribute + ': ' + attributeEnums );
@@ -95,7 +95,7 @@ exports.signup = function( req, res ) {
     user.provider = 'local';
     user.displayName = user.firstName + ' ' + user.lastName;
 
-    // Then save the user 
+    // Then save the user
     user.save( function( err ) {
         if ( err ) {
             return res.send( 400, {

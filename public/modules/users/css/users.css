@@ -12,6 +12,12 @@
     right: 10px;
     position: absolute;
 }
+
+/* Signup classes */
+.social-link img {
+    /*height: 60px;*/
+}
+
 /* driver-profile client template */
 
 .profile-row {
