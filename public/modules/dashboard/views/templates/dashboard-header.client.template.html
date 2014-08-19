@@ -1,0 +1,45 @@
+<section class="container-fluid">
+    <div class="row-fluid">
+        <span class="col-md-4" ng-class="{'bg-primary' : activeModule == 'users' }">
+            <a class="row" data-ng-href="#!/settings/profile">
+                <div class="col-md-offset-1 col-md-3">
+                    <span class="fa-stack fa-3x">
+                        <i class="fa fa-square-o fa-stack-2x"></i>
+                        <i class="fa fa-user fa-stack-1x"></i>
+                    </span>
+                </div>
+                <div class="col-md-7">
+                    <h3 class="heading">Profile</h3>
+                    <span class="badge badge-warning">50% Complete</span>
+                </div>
+            </a>
+        </span>
+        <span class="col-md-4" ng-class="{'bg-primary' : activeModule == 'jobs' }">
+            <a class="row" data-ng-href="#!/jobs">
+                <div class="col-md-offset-1 col-md-3">
+                    <span class="fa-stack fa-3x">
+                        <i class="fa fa-square-o fa-stack-2x"></i>
+                        <i class="fa fa-list fa-stack-1x"></i>
+                    </span>
+                </div>
+                <div class="col-md-7">
+                    <h3 class="heading">Job Postings</h3>
+                </div>
+            </a>
+        </span>
+        <span class="col-md-4" ng-class="{'bg-primary' : activeModule == 'applications' }">
+            <a class="row" data-ng-href="#!/jobs/myapps">
+                <div class="col-md-offset-1 col-md-3">
+                    <span class="fa-stack fa-3x">
+                        <i class="fa fa-square-o fa-stack-2x"></i>
+                        <i class="fa fa-envelope-o fa-stack-1x"></i>
+                    </span>
+                </div>
+                <div class="col-md-7">
+                    <h3 class="heading">Applications</h3>
+                    <span class="badge">3 New Messages</span>
+                </div>
+            </a>
+        </span>
+    </div>
+</section>
