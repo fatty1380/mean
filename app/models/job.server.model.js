@@ -3,14 +3,14 @@
 /**
  * Module dependencies.
  */
-var mongoose = require( 'mongoose' ),
-    Address = mongoose.model( 'Address' ),
+var mongoose = require('mongoose'),
+    Address = mongoose.model('Address'),
     Schema = mongoose.Schema;
 
 /**
  * Job Schema
  */
-var JobSchema = new Schema( {
+var JobSchema = new Schema({
     name: {
         type: String,
         default: '',
@@ -40,16 +40,21 @@ var JobSchema = new Schema( {
         },
     },
 
+    applications: [{
+        type: Schema.ObjectId,
+        ref: 'Application',
+    }],
+
     driverStatus: {
         type: String,
         default: 'unreviewed',
-        enum: [ 'unreviewed', 'connected', 'hired' ],
+        enum: ['unreviewed', 'connected', 'hired', 'ignored'],
     },
 
     postStatus: {
         type: String,
         default: '',
-        enum: [ 'draft', 'posted', 'withdrawn', 'deleted' ]
+        enum: ['draft', 'posted', 'withdrawn', 'deleted']
     },
 
     isDeleted: {
@@ -69,6 +74,6 @@ var JobSchema = new Schema( {
         type: Schema.ObjectId,
         ref: 'User',
     }
-} );
+});
 
-mongoose.model( 'Job', JobSchema );
+mongoose.model('Job', JobSchema);
