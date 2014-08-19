@@ -175,9 +175,7 @@ exports.listByUserID = function(req, res, id) {
  */
 exports.jobByID = function(req, res, next, id) {
     Job.findById(id)
-        .populate('user', 'displayName', {
-            _id: id
-        })
+        .populate('user', 'displayName')
         .populate('location')
         .exec(function(err, job) {
             if (err) return next(err);
