@@ -141,10 +141,17 @@ p.details {
     background-color: rgba(238, 238, 238, 0.5);
 }
 .detail-pane:hover img {
-	opacity: 1.0;
+    opacity: 1.0;
+}
+.detail-pane:hover img path {
+    fill: blue;
 }
 .detail-pane img {
     opacity: 0.6;
+}
+#pin-image {
+    padding-top: 10px;
+    padding-bottom: 15px;
 }
 .container .row-fluid.features {
     padding-top: 30px;
