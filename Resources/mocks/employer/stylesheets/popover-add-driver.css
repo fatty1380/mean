@@ -1,0 +1,65 @@
+ body {
+   padding-left: 0;
+   padding-right: 0;
+ }
+ /* This makes absolutely positioned elements like p, h1,
+     and some bootstrap elements placed properly. */
+ #absolute-wrapper p, #absolute-wrapper h1, #absolute-wrapper h2, #absolute-wrapper h3, #absolute-wrapper h4, #absolute-wrapper h5, #absolute-wrapper h6 {
+   margin-top: 0 !important;
+ }
+ #absolute-wrapper {
+   position: relative;
+   width: 700px;
+   margin: 0 auto;
+   height: 1px;
+ }
+ #absolute-wrapper .row-fluid {
+   width: 940px;
+   height: 30px;
+   position: absolute;
+   top: -219px;
+   left: -719px;
+ }
+ #absolute-wrapper .icon.icon-question-sign {
+   position: absolute;
+   top: 893px;
+   left: -423px;
+ }
+ .container-fluid .row-fluid .span12 .heading {
+   font-family:"museo-sans";
+   text-align: center;
+ }
+ .container-fluid .row-fluid .span12 .heading.heading-1 {
+   color: #0e2d4c;
+ }
+ .container-fluid .row-fluid .span12 .heading.heading-2 {
+   font-weight: normal;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1 {
+   background: rgba(245, 245, 245, 0.773438);
+   padding: 5px;
+   margin: 5px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1 .well {
+   -moz-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   -webkit-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   -o-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   padding: 10px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1 .well .row-fluid .span12 p {
+   margin: 0px;
+   font-family:"museo-sans";
+   font-weight: bold;
+   color: rgba(14, 45, 76, 0.476562);
+   text-align: center;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1 form .form-actions {
+   background: rgba(245, 245, 245, 0);
+ }
+ .container-fluid .row-fluid .span12 .well.well-1 form .form-actions .btn {
+   font-family:"museo-sans";
+ }
+ .container-fluid .row-fluid .span12 .well.well-1 form .form-actions .btn-primary {
+   margin: 0px 20px 0px 0px;
+ }

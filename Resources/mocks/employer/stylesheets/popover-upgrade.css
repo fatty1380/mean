@@ -1,0 +1,102 @@
+ body {
+   padding-left: 0;
+   padding-right: 0;
+ }
+ /* This makes absolutely positioned elements like p, h1,
+     and some bootstrap elements placed properly. */
+ #absolute-wrapper p, #absolute-wrapper h1, #absolute-wrapper h2, #absolute-wrapper h3, #absolute-wrapper h4, #absolute-wrapper h5, #absolute-wrapper h6 {
+   margin-top: 0 !important;
+ }
+ #absolute-wrapper {
+   position: relative;
+   width: 768px;
+   margin: 0 auto;
+   height: 1px;
+ }
+ #absolute-wrapper .row-fluid {
+   width: 940px;
+   height: 30px;
+   position: absolute;
+   top: -219px;
+   left: -719px;
+ }
+ #absolute-wrapper .icon.icon-question-sign {
+   position: absolute;
+   top: 893px;
+   left: -423px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1 {
+   background: rgba(245, 245, 245, 0.773438);
+ }
+ .container-fluid .row-fluid .span12 .well {
+   padding: 5px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-2 {
+   -moz-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   -webkit-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   -o-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+ }
+ .container-fluid .row-fluid .span12 .well.well-3 {
+   background: rgba(245, 245, 245, 0.769531);
+ }
+ .container-fluid .row-fluid .span12 .well.well-4 {
+   border: 1px solid #333333;
+ }
+ .container-fluid .row-fluid .span12 .well.well-5 {
+   margin: 10px 0px 0px 0px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading {
+   font-family:"museo-sans";
+   text-align: center;
+   color: #0e2d4c;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading.heading-1 {
+   margin: 20px 0px 0px 0px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading.heading-2 {
+   font-size: 14px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading.heading-3 {
+   font-weight: normal;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .row-fluid .span2 .well.well-2.well-3 {
+   border: 5px solid #0e2d4c;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .row-fluid .span2 .icon.icon-arrow-up {
+   color: #0e2d4c;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .row-fluid .span2 .heading-2.heading-4 {
+   margin-top: 0px;
+   margin-bottom: 0px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .row-fluid .span2 .well.well-4.well-6 {
+   background: rgba(245, 245, 245, 0.777344);
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .row-fluid .span2 .well.well-4.well-7 {
+   background: rgba(245, 245, 245, 0.789062);
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading-3.heading-5 {
+   margin: 30px 0px 10px 0px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading-2.heading-3 {
+   margin: 0px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .pull-center.pull-center-1 {
+   font-family:"museo-sans";
+   width: 200px;
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 form .form-actions {
+   background: rgba(245, 245, 245, 0);
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 form .form-actions .btn {
+   font-family:"museo-sans";
+ }
+ .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 form .form-actions .btn-primary {
+   background: #0088cc;
+   background-image: -moz-linear-gradient(270deg, #0088cc 0%, #0044cc 100%);
+   background-image: -webkit-linear-gradient(270deg, #0088cc 0%, #0044cc 100%);
+   background-image: -o-linear-gradient(270deg, #0088cc 0%, #0044cc 100%);
+   background-image: linear-gradient(180deg, #0088cc 0%, #0044cc 100%);
+   margin: 0px 5px 0px 0px;
+ }
