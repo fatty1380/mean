@@ -24,7 +24,8 @@ section > .container {
     background-color: rgba(238, 238, 238, 0.0);
 }
 .opaque-bg {
-    background-color: rgba(238, 238, 238, 0.5);
+    background-color:rgba(238, 238, 238, 0.5);
+
 }
 /* NAVBAR - TOP */
 

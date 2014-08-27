@@ -24,6 +24,10 @@ angular.module('jobs').config(['$stateProvider',
         state('editJob', {
             url: '/jobs/:jobId/edit',
             templateUrl: 'modules/jobs/views/edit-job.client.view.html'
+        }).
+        state('applyToJob', {
+            url: 'jobs/:jobId/apply',
+            templateUrl: 'modules/jobs/views.list-my-jobs.client.view.html',
         });
     }
 ]);

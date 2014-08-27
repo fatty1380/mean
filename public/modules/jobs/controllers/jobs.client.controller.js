@@ -41,9 +41,23 @@ angular.module('jobs')
                 ///this.name = '';
             };
 
+            $scope.toggleApplication = function(state) {
+                if (state) {
+                    $scope.formMode = 'apply';
+                } else {
+                    $scope.formMode = 'view';
+                }
+            };
+
+            $scope.apply = function(job) {
+
+            };
+
+
             // Remove existing Job
             $scope.remove = function(job) {
                 if (job) {
+                    debugger;
                     job.$remove();
 
                     for (var i in $scope.jobs) {

@@ -14,6 +14,10 @@ module.exports = function(app) {
         .put(users.requiresLogin, jobs.hasAuthorization, jobs.update)
         .delete(users.requiresLogin, jobs.hasAuthorization, jobs.delete);
 
+    app.route('/jobs/:jobId/apply')
+        .get(jobs.read)
+        .put(users.requiresLogin, jobs.hasAuthorization, jobs.apply);
+
     // Finish by binding the Job middleware
     app.param('jobId', jobs.jobByID);
 };
