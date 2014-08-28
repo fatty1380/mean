@@ -1,3 +1,5 @@
+![Outset Logo](https://bitbucket.org/patrick_fowler/outset/src/242315713ade0f418ad6b0668a1dfd8e023962d1/Resources/images/Outset-Logo_01.png?at=develop)
+
 # Outset!
 Outset is built on the "MEAN" stack, using the MEAN.JS project as a base.
 
