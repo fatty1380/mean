@@ -1,21 +1,24 @@
 <section data-ng-controller="DriversController" data-ng-init="findOne()">
-	<div class="page-header">
-		<h1 data-ng-bind="driver.name"></h1>
-	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == driver.user._id">
-		<a class="btn btn-primary" href="/#!/drivers/{{driver._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
-	</div>
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="driver.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="driver.user.displayName"></span>
-		</em>
-	</small>
+    <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
+    <section class="container opaque-bg">
+        <div class="page-header">
+            <h1 data-ng-bind="driver.name"></h1>
+        </div>
+        <div class="pull-right" data-ng-show="authentication.user._id == driver.user._id">
+            <a class="btn btn-primary" href="/#!/drivers/{{driver._id}}/edit">
+                <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a class="btn btn-primary" data-ng-click="remove();">
+                <i class="glyphicon glyphicon-trash"></i>
+            </a>
+        </div>
+        <small>
+            <em class="text-muted">
+                Created on
+                <span data-ng-bind="driver.created | date:'mediumDate'"></span>
+                by
+                <span data-ng-bind="driver.user.displayName"></span>
+            </em>
+        </small>
+    </section>
 </section>

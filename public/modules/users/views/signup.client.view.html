@@ -25,11 +25,14 @@
                         <input type="password" id="password" name="password" class="form-control" data-ng-model="credentials.password" placeholder="Password">
                     </div>
                     <div class="text-center form-group">
-                    <strong>Sign up as a &nbsp;<strong>
-                        <button type="submit" class="btn btn-large btn-primary" ng-click="signupType = 'Driver'">Driver</button>
-                        <button type="submit" class="btn btn-large btn-primary" ng-click="signupType = 'Owner'">Owner</button>
-                        <br/>&nbsp; or&nbsp;
-                        <a href="/#!/signin" class="show-signup"><strong>Sign in</strong></a>
+                        <strong>Sign up as a &nbsp;
+                            <strong>
+                                <button type="submit" class="btn btn-large btn-primary" ng-click="signupType = 'driver'">Driver</button>
+                                <button type="submit" class="btn btn-large btn-primary" ng-click="signupType = 'owner'">Owner</button>
+                                <br/>&nbsp; or&nbsp;
+                                <a href="/#!/signin" class="show-signup">
+                                    <strong>Sign in</strong>
+                                </a>
                     </div>
                     <div data-ng-show="error" class="text-center text-danger">
                         <strong data-ng-bind="error"></strong>

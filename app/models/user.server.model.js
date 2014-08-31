@@ -65,14 +65,6 @@ var UserSchema = new Schema({
     },
     providerData: {},
     additionalProvidersData: {},
-
-    roles: {
-        type: [{
-            type: String,
-            enum: ['user', 'admin']
-        }],
-        default: ['user']
-    },
     updated: {
         type: Date
     },
@@ -81,7 +73,17 @@ var UserSchema = new Schema({
         default: Date.now
     },
 
-    // Additional Fields
+    roles: {
+        type: [{
+            type: String,
+            enum: ['user', 'admin']
+        }],
+        default: ['user']
+    },
+    types: [{
+        type: String,
+        enum: ['driver', 'owner', ''],
+    }],
     email: {
         type: String,
         trim: true,
@@ -107,7 +109,13 @@ UserSchema.pre('save', function(next) {
         this.password = this.hashPassword(this.password);
     }
 
-    next();
+    if (this.types === undefined) {
+        this.types = [];
+
+        if (this.type !== undefined) {
+            this.types.push(this.type);
+        }
+    }
 
     if (this.schedule === undefined) {
         this.schedule = [];
@@ -117,6 +125,8 @@ UserSchema.pre('save', function(next) {
             time: 'morning'
         }));
     }
+
+    next();
 });
 
 /**

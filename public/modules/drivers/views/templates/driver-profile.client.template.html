@@ -1,0 +1,71 @@
+<section data-ng-controller="DriversController" data-ng-init="findByUser()">
+    <span class="col-md-12 opaque-bg">
+        <!-- Driver's License Information -->
+        <div class="row-fluid profile-row">
+            <label for="licenses">Driver's License</label>
+            <button class="btn pull-right btn-small btn-link" ng-click="addLicense()" ng-show="switchHelper({{driver.licenses}})">
+                Add License
+            </button>
+            <div data-ng-repeat="license in driver.licenses" name="licenses">
+                <div ng-include="'modules/drivers/views/templates/license.client.template.html'"></div>
+            </div>
+
+        </div>
+
+        <!-- Driver's Experience Breakdown -->
+        <div class="row-fluid profile-row">
+            <label for="experience">Experience</label>
+            <button class="btn pull-right btn-small btn-link" ng-click="addExperience()" ng-show="switchHelper({{driver.experience}})">
+                Add Experience
+            </button>
+            <div data-ng-repeat="exp in driver.experience" name="experience">
+                <div class="input-group" name="experience">
+                    <span class="col-md-6 col-offset-md-1">
+                        <p>{{exp.type}}</p>
+                    </span>
+                    <span class="col-md-4">
+                        <p>{{exp.duration}}</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver's Availability -->
+        <div class="row-fluid profile-row">
+            <label for="schedule">Availability</label>
+            <div class="col-md-12 availability_matrix" name="schedule">
+                <div class="container-fluid well">
+                    <div class="col-md-12">
+                        <div class="row availability-header">
+                            <div class="col-md-5">
+                                <h6 class="heading profile-label profile-label-1">Time</h6>
+                            </div>
+                            <div class="col-md-1">
+                                <h6 class="heading profile-label profile-label-1">M</h6>
+                            </div>
+                            <div class="col-md-1">
+                                <h6 class="heading profile-label profile-label-1">Tu</h6>
+                            </div>
+                            <div class="col-md-1">
+                                <h6 class="heading profile-label profile-label-1">W</h6>
+                            </div>
+                            <div class="col-md-1">
+                                <h6 class="heading profile-label profile-label-1">Th</h6>
+                            </div>
+                            <div class="col-md-1">
+                                <h6 class="heading profile-label profile-label-1">F</h6>
+                            </div>
+                            <div class="col-md-1">
+                                <h6 class="heading profile-label profile-label-1">Sa</h6>
+                            </div>
+                            <div class="col-md-1">
+                                <h6 class="heading profile-label profile-label-1">Su</h6>
+                            </div>
+                        </div>
+                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in user.schedule'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </span>
+</section>

@@ -185,6 +185,7 @@ fi
 while [ "$1" != "" ]; do
     case $1 in
         -d | --debug )          shift
+								sleep 10;
                                 echo 'Attaching Node-Inspector for Debugging'
                                 node-inspector&
                                 ;;

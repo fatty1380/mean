@@ -176,8 +176,8 @@ exports.listByUserID = function(req, res, id) {
 exports.apply = function(req, res, id) {
     var job = req.job;
 
-    console.log("TODO: Implement Server-Side Job Application logic")
-}
+    console.log('TODO: Implement Server-Side Job Application logic');
+};
 
 
 

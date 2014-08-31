@@ -12,7 +12,7 @@ var mongoose = require('mongoose'),
  * user			User
  * address		[Address]
  * licenses		[License]
- * endorsements	[{ Mixed }]
+ * endorsements	[{ ? }]
  * connections	[Connection]
  * experience	"text
  * time
@@ -21,19 +21,9 @@ var mongoose = require('mongoose'),
  * isActive
  * isDeleted
  * created
- * moditifed
+ * modified
  */
 var DriverSchema = new Schema({
-    name: {
-        type: String,
-        default: '',
-        required: 'Please fill Driver name',
-        trim: true
-    },
-    created: {
-        type: Date,
-        default: Date.now
-    },
 
     user: {
         type: Schema.ObjectId,
@@ -41,11 +31,17 @@ var DriverSchema = new Schema({
     },
 
 
-    addresses: ['Address'],
+    addresses: [{
+        type: Schema.ObjectId,
+        ref: 'Address'
+    }],
 
     licenses: ['License'],
 
-    endorsements: Schema.Types.Mixed,
+    endorsements: [{
+        description: String,
+        expires: Date,
+    }],
 
     schedule: {
         type: ['Schedule'],
@@ -62,6 +58,25 @@ var DriverSchema = new Schema({
             type: String
         },
     }],
+
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+
+    created: {
+        type: Date,
+        default: Date.now,
+    },
+
+    modified: {
+        type: Date,
+        default: Date.now,
+    },
 });
 
 mongoose.model('Driver', DriverSchema);
