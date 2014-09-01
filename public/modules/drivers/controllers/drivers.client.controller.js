@@ -64,7 +64,7 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
     };
 
     $scope.findByUser = function() {
-        debugger;
+        //debugger;
         $scope.driver = Drivers.get({
             userId: $scope.user._id
         });
