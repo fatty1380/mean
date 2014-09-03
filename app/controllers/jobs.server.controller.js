@@ -171,6 +171,17 @@ exports.listByUserID = function(req, res, id) {
 };
 
 /**
+ * Apply for a job
+ */
+exports.apply = function(req, res, id) {
+    var job = req.job;
+
+    console.log('TODO: Implement Server-Side Job Application logic');
+};
+
+
+
+/**
  * Job middleware
  */
 exports.jobByID = function(req, res, next, id) {

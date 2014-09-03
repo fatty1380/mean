@@ -45,6 +45,7 @@ var JobSchema = new Schema({
         ref: 'Application',
     }],
 
+    // TODO - Determine if this is the appropriate place for driver/applicant status
     driverStatus: {
         type: String,
         default: 'unreviewed',

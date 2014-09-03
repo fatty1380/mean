@@ -29,8 +29,8 @@ describe('Address Model Unit Tests:', function() {
 
 		user.save(function() { 
 			address = new Address({
-				// Add model fields
-				// ...
+				name: 'Address Name',
+				user: user
 			});
 
 			done();
@@ -41,6 +41,15 @@ describe('Address Model Unit Tests:', function() {
 		it('should be able to save without problems', function(done) {
 			return address.save(function(err) {
 				should.not.exist(err);
+				done();
+			});
+		});
+
+		it('should be able to show an error when try to save without name', function(done) { 
+			address.name = '';
+
+			return address.save(function(err) {
+				should.exist(err);
 				done();
 			});
 		});

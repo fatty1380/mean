@@ -1,0 +1,6 @@
+.container section.job-item .heading {
+    text-align: left;
+    text-transform: none;
+    color: #000;
+    text-shadow: 1px 1px 1px #CCC;
+}

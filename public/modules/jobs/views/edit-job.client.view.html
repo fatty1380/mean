@@ -1,58 +1,59 @@
 <section data-ng-controller="JobsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>Edit Job</h1>
-        <div class="badge pull-right" data-ng-model="job.postStatus">{{postStatus || 'UNKNOWN' }}</div>
-    </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="update()" novalidate>
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">Headline</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="job.name" id="name" class="form-control" placeholder="Job Headline" required>
+    <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
+    <section class="container opaque-bg">
+        <h3>Job Details</h3>
+        <div class="col-md-12">
+            <form class="form-horizontal" data-ng-submit="update()" novalidate>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="control-label" for="name">Headline</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="job.name" id="name" class="form-control" placeholder="Job Headline" required>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="control-label" for="description">Description</label>
-                    <div class="controls">
-                        <textarea data-ng-model="job.description" id="description" class="form-control" placeholder="Please fill in a detailed description about this job." required></textarea>
+                    <div class="form-group">
+                        <label class="control-label" for="description">Description</label>
+                        <div class="controls">
+                            <textarea data-ng-model="job.description" id="description" class="form-control" placeholder="Please fill in a detailed description about this job." required></textarea>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="control-label" for="name">Location</label>
-                    <button class="btn btn-link btn-small" ng-hide="showAddressDetails" ng-click="showAddressDetails = true;">add address details...</button>
-                    <div class="controls">
-                        <input type="text" data-ng-model="job.location.type" ng-show="showAddressDetails" id="locType" class="form-control" placeholder="Address Type">
-                        <input type="text" data-ng-model="job.location.streetAddress" ng-show="showAddressDetails" id="locStreet" class="form-control" placeholder="Street Address">
-                        <input type="text" data-ng-model="job.location.streetAddress2" ng-show="showAddressDetails" id="locStreet2" class="form-control" placeholder="Street Address (cont)">
-                        <input type="text" data-ng-model="job.location.city" ng-show="showAddressDetails" id="locCity" class="form-control" placeholder="City" required>
-                        <input type="text" data-ng-model="job.location.state" ng-show="showAddressDetails" id="locState" class="form-control" placeholder="State" required>
-                        <input type="text" data-ng-model="job.location.zipCode" id="locZip" class="form-control" placeholder="Zip" required>
+                    <div class="form-group">
+                        <label class="control-label" for="name">Location</label>
+                        <button class="btn btn-link btn-small" ng-hide="showAddressDetails" ng-click="showAddressDetails = true;">add address details...</button>
+                        <div class="controls">
+                            <input type="text" data-ng-model="job.location.type" ng-show="showAddressDetails" id="locType" class="form-control" placeholder="Address Type">
+                            <input type="text" data-ng-model="job.location.streetAddress" ng-show="showAddressDetails" id="locStreet" class="form-control" placeholder="Street Address">
+                            <input type="text" data-ng-model="job.location.streetAddress2" ng-show="showAddressDetails" id="locStreet2" class="form-control" placeholder="Street Address (cont)">
+                            <input type="text" data-ng-model="job.location.city" ng-show="showAddressDetails" id="locCity" class="form-control" placeholder="City" required>
+                            <input type="text" data-ng-model="job.location.state" ng-show="showAddressDetails" id="locState" class="form-control" placeholder="State" required>
+                            <input type="text" data-ng-model="job.location.zipCode" id="locZip" class="form-control" placeholder="Zip" required>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="control-label" for="payMin">Pay</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="job.payRate.min" id="payMin" class="form-control" placeholder="$min" required>&nbsp;-&nbsp;
-                        <input type="text" data-ng-model="job.payRate.max" id="payMax" class="form-control" placeholder="$max" required>
+                    <div class="form-group">
+                        <label class="control-label" for="payMin">Pay</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="job.payRate.min" id="payMin" class="form-control" placeholder="$min" required>&nbsp;-&nbsp;
+                            <input type="text" data-ng-model="job.payRate.max" id="payMax" class="form-control" placeholder="$max" required>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="control-label" for="name">Post Status</label>
-                    <div class="controls">
+                    <div class="form-group">
+                        <label class="control-label" for="name">Post Status</label>
+                        <div class="controls">
+                            <div class="badge" data-ng-model="job.postStatus">{{postStatus || 'UNKNOWN' }}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-default">
-                </div>
-                <div data-ng-show="error" class="text-danger">
-                    <strong data-ng-bind="error"></strong>
-                </div>
-            </fieldset>
-        </form>
-    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-default">
+                    </div>
+                    <div data-ng-show="error" class="text-danger">
+                        <strong data-ng-bind="error"></strong>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </section>
 </section>
