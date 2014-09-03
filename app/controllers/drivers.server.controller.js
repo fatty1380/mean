@@ -76,6 +76,38 @@ exports.update = function(req, res) {
     });
 };
 
+exports.licenseStuff = function(req, res) {
+
+    if (req.licenses.length === 0) {
+        console.log('No licenses in current user model');
+    }
+
+    var licenses = req.body.licenses;
+
+    console.log('request has ' + licenses.length + ' license(s).');
+    console.log('req user has ' + req.user.licenses.length + ' license(s).');
+
+    if (licenses.length > 0) {
+        var license = new License(licenses[0]);
+
+        // TODO: Add dirty check: https://github.com/LearnBoost/mongoose/issues/1814
+        license.updated = Date.now();
+
+        license.save(function(err, doc) {
+            if (err) {
+                console.log('error saving license');
+                console.log(err);
+            } else {
+                console.log('license saved successfully');
+
+                //user.licenses.push(doc._id);
+
+                //console.log('User License Count: ' + user.licenses.length);
+            }
+        });
+    }
+};
+
 /**
  * Delete an Driver
  */
@@ -97,6 +129,7 @@ exports.delete = function(req, res) {
  * List of Drivers
  */
 exports.list = function(req, res) {
+    //debugger;
     Driver.find().sort('-created').populate('user', 'displayName').exec(function(err, drivers) {
         if (err) {
             return res.send(400, {
@@ -158,6 +191,7 @@ exports.newLicense = function(req, res) {
  * Driver middleware
  */
 exports.driverByID = function(req, res, next, id) {
+    debugger;
     Driver.findById(id)
         .populate('user', 'licenses')
         .exec(function(err, driver) {
@@ -169,9 +203,10 @@ exports.driverByID = function(req, res, next, id) {
 };
 
 exports.driverByUserID = function(req, res, next, id) {
+    console.log('Looking for Driver with user: ', mongoose.Types.ObjectId(req.user.id));
     debugger;
-    Driver.find({
-        user: req.user.id
+    Driver.findOne({
+        user: mongoose.Types.ObjectId(req.user.id)
     })
         .populate('user', 'licenses')
         .exec(function(err, driver) {

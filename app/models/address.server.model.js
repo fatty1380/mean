@@ -3,29 +3,23 @@
 /**
  * Module dependencies.
  */
-var mongoose = require( 'mongoose' ),
+var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
  * Address Schema
  */
-var AddressSchema = new Schema( {
+var AddressSchema = new Schema({
     type: {
         type: String,
-        default: 'default',
-        enum: [ 'home', 'business', 'base', 'default' ],
+        default: 'main',
+        enum: ['main', 'home', 'business', 'billing', 'other'],
     },
-    streetAddress: {
+    streetAddresses: [{
         type: String,
-        default: '',
+        default: [''],
         trim: true,
-    },
-
-    streetAddress2: {
-        type: String,
-        default: '',
-        trim: true,
-    },
+    }],
 
     city: {
         type: String,
@@ -42,9 +36,9 @@ var AddressSchema = new Schema( {
     zipCode: {
         type: String,
         default: '',
-        match: [ /\d{5,5}/ ],
+        match: [/\d{5,5}/],
         trim: true,
     },
-} );
+});
 
-mongoose.model( 'Address', AddressSchema );
+mongoose.model('Address', AddressSchema);

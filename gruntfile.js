@@ -1,20 +1,20 @@
 'use strict';
 
-module.exports = function ( grunt ) {
+module.exports = function(grunt) {
     // Unified Watch Object
     var watchFiles = {
-        serverViews: [ 'app/views/**/*.*' ],
-        serverJS: [ 'gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js' ],
-        clientViews: [ 'public/modules/**/views/*.html' ],
-        clientJS: [ 'public/js/*.js', 'public/modules/**/*.js' ],
-        clientCSS: [ 'public/modules/**/*.css' ],
-        clientLESS: [ 'public/modules/**/*.less' ],
-        mochaTests: [ 'app/tests/**/*.js' ]
+        serverViews: ['app/views/**/*.*'],
+        serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js'],
+        clientViews: ['public/modules/**/views/*.html'],
+        clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
+        clientCSS: ['public/modules/**/*.css'],
+        clientLESS: ['public/modules/**/*.less'],
+        mochaTests: ['app/tests/**/*.js']
     };
 
     // Project Configuration
-    grunt.initConfig( {
-        pkg: grunt.file.readJSON( 'package.json' ),
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         watch: {
             serverViews: {
                 files: watchFiles.serverViews,
@@ -24,7 +24,7 @@ module.exports = function ( grunt ) {
             },
             serverJS: {
                 files: watchFiles.serverJS,
-                tasks: [ 'jshint' ],
+                tasks: ['jshint'],
                 options: {
                     livereload: true
                 }
@@ -37,21 +37,21 @@ module.exports = function ( grunt ) {
             },
             clientJS: {
                 files: watchFiles.clientJS,
-                tasks: [ 'jshint' ],
+                tasks: ['jshint'],
                 options: {
                     livereload: true
                 }
             },
             clientCSS: {
                 files: watchFiles.clientCSS,
-                tasks: [ 'csslint' ],
+                tasks: ['csslint'],
                 options: {
                     livereload: true
                 }
             },
             clientLESS: {
                 files: watchFiles.clientLESS,
-                tasks: [ 'less', 'csslint' ],
+                tasks: ['less', 'csslint'],
                 options: {
                     livereload: true,
                 }
@@ -59,7 +59,7 @@ module.exports = function ( grunt ) {
         },
         jshint: {
             all: {
-                src: watchFiles.clientJS.concat( watchFiles.serverJS ),
+                src: watchFiles.clientJS.concat(watchFiles.serverJS),
                 options: {
                     jshintrc: true
                 }
@@ -95,9 +95,9 @@ module.exports = function ( grunt ) {
             dev: {
                 script: 'server.js',
                 options: {
-                    nodeArgs: [ '--debug' ],
+                    nodeArgs: ['--debug'],
                     ext: 'js,html',
-                    watch: watchFiles.serverViews.concat( watchFiles.serverJS )
+                    watch: watchFiles.serverViews.concat(watchFiles.serverJS)
                 }
             }
         },
@@ -122,8 +122,8 @@ module.exports = function ( grunt ) {
             }
         },
         concurrent: {
-            default: [ 'nodemon', 'watch' ],
-            debug: [ 'nodemon', 'watch', 'node-inspector' ],
+            default: ['nodemon', 'watch'],
+            debug: ['nodemon', 'watch', 'node-inspector'],
             options: {
                 logConcurrentOutput: true
             }
@@ -148,48 +148,60 @@ module.exports = function ( grunt ) {
         less: {
             development: {
                 options: {
-                    paths: [ 'public/less' ],
+                    paths: ['public/less'],
                 },
                 files: {
                     'public/less/modules.css': '<%= applicationLESSFiles %>', // 'public/modules/**/css/*.less'
                 }
             }
         },
-    } );
+        // Launch mongod if necessary:
+        shell: {
+            mongo: {
+                command: 'sh mongod-check-and-start.sh',
+                options: {
+                    async: true
+                }
+            },
+        },
+    });
 
     // Load NPM tasks
-    require( 'load-grunt-tasks' )( grunt );
+    require('load-grunt-tasks')(grunt);
 
-    grunt.loadNpmTasks( 'grunt-contrib-less' );
-    grunt.loadNpmTasks( 'grunt-contrib-watch' );
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+
+    // Load grunt-shell-spawn in support of launching mongod (if necessary)
+    grunt.loadNpmTasks('grunt-shell-spawn');
 
     // Making grunt default to force in order not to break the project.
-    grunt.option( 'force', true );
+    grunt.option('force', true);
 
     // A Task for loading the configuration object
-    grunt.task.registerTask( 'loadConfig', 'Task that loads the config into a grunt option.', function () {
-        var init = require( './config/init' )();
-        var config = require( './config/config' );
+    grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function() {
+        var init = require('./config/init')();
+        var config = require('./config/config');
 
-        grunt.config.set( 'applicationJavaScriptFiles', config.assets.js );
-        grunt.config.set( 'applicationCSSFiles', config.assets.css );
-        grunt.config.set( 'applicationLESSFiles', config.assets.less );
-        grunt.config.set( 'applicationFontFiles', config.assets.fonts );
-    } );
+        grunt.config.set('applicationJavaScriptFiles', config.assets.js);
+        grunt.config.set('applicationCSSFiles', config.assets.css);
+        grunt.config.set('applicationLESSFiles', config.assets.less);
+        grunt.config.set('applicationFontFiles', config.assets.fonts);
+    });
 
 
     // Default task(s).
-    grunt.registerTask( 'default', [ 'lint', 'concurrent:default', 'csslint', 'less' ] );
+    grunt.registerTask('default', ['lint', 'concurrent:default', 'csslint', 'less']);
 
     // Debug task.
-    grunt.registerTask( 'debug', [ 'lint', 'concurrent:debug' ] );
+    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
 
     // Lint task(s).
-    grunt.registerTask( 'lint', [ 'jshint', 'csslint' ] );
+    grunt.registerTask('lint', ['jshint', 'csslint']);
 
     // Build task(s).
-    grunt.registerTask( 'build', [ 'lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin', 'csslint', 'less' ] );
+    grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin', 'csslint', 'less']);
 
     // Test task.
-    grunt.registerTask( 'test', [ 'env:test', 'mochaTest', 'karma:unit' ] );
+    grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
 };

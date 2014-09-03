@@ -7,7 +7,14 @@ function config($stateProvider) {
     $stateProvider.
     state('profile', {
         url: '/settings/profile',
-        templateUrl: 'modules/users/views/settings/profile.client.view.html'
+        templateUrl: 'modules/users/views/settings/profile.client.view.html',
+        controller: 'SettingsController',
+    })
+        .
+    state('view-profile', {
+        url: '/profiles/:userId',
+        templateUrl: 'modules/users/views/settings/profile.client.view.html',
+        controller: 'ProfileController'
     })
         .
     state('profile-edit', {

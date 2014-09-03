@@ -2,17 +2,19 @@
 
 // Users service used for communicating with the users REST endpoint
 
-function UsersService($resource) {
+function ProfileService($resource) {
     debugger;
-    return $resource('users', {}, {
+    return $resource('users/:userId', {
+        userId: '@_id'
+    }, {
         update: {
             method: 'PUT'
         }
     });
 }
 
-UsersService.$inject = ['$resource'];
+ProfileService.$inject = ['$resource'];
 
 angular
     .module('users')
-    .factory('Users', UsersService);
+    .factory('Profile', ProfileService);

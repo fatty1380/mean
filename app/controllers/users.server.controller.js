@@ -108,82 +108,30 @@ exports.update = function(req, res) {
     delete req.body.roles;
 
     if (user) {
-        if (req.user.licenses.length === 0) {
-            console.log('No licenses in current user model');
-        }
-
         // Merge existing user
         user = _.extend(user, req.body);
         user.updated = Date.now();
         user.displayName = user.firstName + ' ' + user.lastName;
 
-        var licenses = req.body.licenses;
 
-        console.log('request has ' + licenses.length + ' license(s).');
-        console.log('req user has ' + req.user.licenses.length + ' license(s).');
-        console.log('user has ' + user.licenses.length + ' license(s).');
-
-        if (licenses.length > 0) {
-            var license = new License(licenses[0]);
-
-            // TODO: Add dirty check: https://github.com/LearnBoost/mongoose/issues/1814
-            license.updated = Date.now();
-
-            license.save(function(err, doc) {
-                if (err) {
-                    console.log('error saving license');
-                    console.log(err);
-                } else {
-                    console.log('license saved successfully');
-
-                    console.log('User License Count: ' + user.licenses.length);
-
-                    //user.licenses.push(doc._id);
-
-                    //console.log('User License Count: ' + user.licenses.length);
-                }
-
-                user.save(function(err) {
+        user.save(function(err) {
+            if (err) {
+                console.log('[err] error saving user\n\t' + err);
+                return res.send(400, {
+                    message: getErrorMessage(err)
+                });
+            } else {
+                req.login(user, function(err) {
                     if (err) {
-                        console.log('[err] error saving user\n\t' + err);
-                        return res.send(400, {
-                            message: getErrorMessage(err)
-                        });
+                        console.log('[log] error saving user\n\t' + err);
+                        res.send(400, err);
                     } else {
-                        req.login(user, function(err) {
-                            if (err) {
-                                console.log('[log] error saving user\n\t' + err);
-                                res.send(400, err);
-                            } else {
-                                console.log('successfully saved user');
-                                res.jsonp(user);
-                            }
-                        });
+                        console.log('successfully saved user');
+                        res.jsonp(user);
                     }
                 });
-            });
-        } else {
-            user.save(function(err) {
-                if (err) {
-                    return res.send(400, {
-                        message: getErrorMessage(err)
-                    });
-                } else {
-                    req.login(user, function(err) {
-                        if (err) {
-                            res.send(400, err);
-                        } else {
-                            console.log('successfully saved user');
-                            res.jsonp(user);
-                        }
-                    });
-                }
-            });
-        }
-
-
-
-
+            }
+        });
     } else {
         res.send(400, {
             message: 'User is not signed in'
@@ -284,7 +232,38 @@ exports.oauthCallback = function(strategy) {
 /**
  * User middleware
  */
+
+
+/**
+ * Show the current User
+ */
+exports.read = function(req, res) {
+    debugger;
+    res.jsonp(req.user);
+};
+
+
+/**
+ * List of Users
+ */
+exports.list = function(req, res) {
+    debugger;
+    User.find()
+        .sort('-created')
+        .populate('addresses')
+        .exec(function(err, drivers) {
+            if (err) {
+                return res.send(400, {
+                    message: getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(drivers);
+            }
+        });
+};
+
 exports.userByID = function(req, res, next, id) {
+    debugger;
     User.findOne({
         _id: id
     })

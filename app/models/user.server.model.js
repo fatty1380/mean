@@ -8,7 +8,6 @@ var mongoose = require('mongoose'),
     crypto = require('crypto'),
     License = mongoose.model('License'),
     Address = mongoose.model('Address'),
-    Schedule = mongoose.model('Schedule'),
     config = require('../../config/env/all');
 
 /**
@@ -94,9 +93,15 @@ var UserSchema = new Schema({
     phone: {
         type: String,
         trim: true,
+        default: '',
         match: [/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/], // TODO: Fix this Regex
         // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
+
+    addresses: [{
+        type: Schema.ObjectId,
+        ref: 'Address'
+    }],
 });
 
 /**
@@ -115,15 +120,6 @@ UserSchema.pre('save', function(next) {
         if (this.type !== undefined) {
             this.types.push(this.type);
         }
-    }
-
-    if (this.schedule === undefined) {
-        this.schedule = [];
-    }
-    if (this.schedule.length === 0) {
-        this.schedule.push(new Schedule({
-            time: 'morning'
-        }));
     }
 
     next();

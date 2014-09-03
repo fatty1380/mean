@@ -63,8 +63,22 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         });
     };
 
-    $scope.findByUser = function() {
-        //debugger;
+    $scope.findByUser = function(ct) {
+        ct = ct || 1;
+
+        if (ct > 30) {
+            return;
+        }
+
+        if (!$scope.user || $scope.user._id === undefined) {
+            console.log('No user yet ... waiting 500');
+            setTimeout(function() {
+                $scope.findByUser(ct++);
+            }, 500);
+            return;
+        }
+
+        debugger;
         $scope.driver = Drivers.get({
             userId: $scope.user._id
         });
@@ -96,9 +110,6 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
                     info: data
                 });
             });
-
-
-
     };
 
     $scope.switchHelper = function(value) {

@@ -17,15 +17,6 @@
 .social-link img {
     /*height: 60px;*/
 }
-/* Readonly - Non-Edit Profile mode */
-
-.form-control[readonly] {
-    background-color: transparent;
-    border: 0;
-}
-.input-group > .input-group-addon {
-    display: none;
-}
 /* driver-profile client template */
 
 .profile-row {

@@ -2,6 +2,7 @@
 
 //Drivers service used to communicate Drivers REST endpoints
 function DriverFactory($resource) {
+    debugger;
     return $resource('drivers/:driverId', {
         driverId: '@_id'
     }, {
@@ -11,5 +12,8 @@ function DriverFactory($resource) {
     });
 }
 
-angular.module('drivers')
-    .factory('Drivers', ['$resource', DriverFactory]);
+DriverFactory.$inject = ['$resource'];
+
+angular
+    .module('drivers')
+    .factory('Drivers', DriverFactory);

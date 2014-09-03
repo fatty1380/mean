@@ -1,14 +1,37 @@
 'use strict';
 
-function SettingsController($scope, $http, $location, Users, Authentication) {
+function SettingsController($scope, $http, $location, Users, Authentication, Address) {
+    debugger;
     $scope.activeModule = 'users';
     $scope.user = Authentication.user;
-    $scope.driver = Authentication.driver;
+    //$scope.driver = Authentication.driver;
+    $scope.editMode = false;
 
-    $scope.pageMode = 'readonly';
+    $scope.addresses = $scope.user.addresses;
 
-    $scope.isReadOnly = function() {
-        return 'readonly' === $scope.pageMode;
+    $scope.toggleMode = function(arg) {
+        if (arg === undefined) {
+            $scope.editMode = !$scope.editMode;
+            return;
+        }
+
+        $scope.editMode = !!arg;
+    };
+
+    $scope.cancel = function() {
+        $scope.user = angular.copy(Authentication.user);
+        $scope.editMode = false;
+    };
+
+    $scope.addAddress = function() {
+        // Prevent this from bubbling up;
+        event.preventDefault();
+
+        var addr = new Address({
+            type: 'select type',
+            streetAddresses: [''],
+        });
+        $scope.addresses.push(addr);
     };
 
     // If user is not signed in then redirect back home
@@ -51,18 +74,13 @@ function SettingsController($scope, $http, $location, Users, Authentication) {
     $scope.updateUserProfile = function() {
         $scope.success = $scope.error = null;
 
-        // Remove License "enum" info
-        // Todo: move enum info into separate request
-        if ($scope.user.licenses.length > 0) {
-            delete $scope.user.licenses[0].enums;
-        }
-
-
+        $scope.user.addresses = $scope.addresses;
         var user = new Users($scope.user);
 
         user.$update(function(response) {
             $scope.success = true;
             Authentication.user = response;
+            $scope.editMode = false;
         }, function(response) {
             $scope.error = response.data.message;
         });
@@ -101,7 +119,7 @@ function SettingsController($scope, $http, $location, Users, Authentication) {
 
 }
 
-SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication'];
+SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses'];
 
 angular
     .module('users')
