@@ -1,11 +1,13 @@
 <section data-ng-controller="AddressesController" ng-form data-ng-submit="update()">
-    <div class="profile-row form-group" ng-repeat="address in addresses">
-        <select ng-model="address.type" ng-options="type as type for type in types">
+    <div class="profile-row form-group" ng-repeat="(a,address) in addresses track by a">
+
+        <label data-ng-hide="editMode" for="address-type">{{address.type}}</label>
+        <select data-ng-show="editMode" ng-model="address.type" ng-options="type as type for type in types">
             <option value="">-- choose type --</option>
         </select>
-        <div ng-repeat="street in address.streetAddresses">
+        <div ng-repeat="(s,street) in address.streetAddresses track by s">
             <p data-ng-hide="editMode">{{street}}</p>
-            <input data-ng-show="editMode" type="text" id="street-address" name="street-address" class="form-control" data-ng-model="address.streetAddresses[$index]" placeholder="Street Address {{$index+1}}">
+            <input data-ng-show="editMode" type="text" id="street-address" name="street-address" class="form-control" data-ng-model="addresses[a].streetAddresses[s]" placeholder="Street Address {{$index+1}}">
         </div>
         <div class="row" style="margin-left: 0; margin-right: 18px;">
             <div class="form-group col-md-6">

@@ -23,7 +23,11 @@
                         </div>
                     </div>
 
-                    <div ng-include="'modules/drivers/views/templates/driver-profile.client.template.html'" ng-model="driver"></div>
+                    <div ng-include="'modules/drivers/views/templates/driver-profile.client.template.html'" ng-model="driver" ng-hide="driver === undefined"></div>
+
+                    <div class="col-md-12 text-center" ng-show="driver === undefined">
+                        <button type="submit" class="btn btn-large btn-success">Add Driver Details</button>
+                    </div>
 
                 </fieldset>
             </form>

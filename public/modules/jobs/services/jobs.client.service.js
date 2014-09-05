@@ -13,4 +13,6 @@ function JobsService($resource) {
 
 JobsService.$inject = ['$resource'];
 
-angular.module('jobs').factory('Jobs', JobsService);
+angular
+    .module('jobs')
+    .factory('Jobs', JobsService);

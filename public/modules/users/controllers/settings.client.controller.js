@@ -1,7 +1,6 @@
 'use strict';
 
 function SettingsController($scope, $http, $location, Users, Authentication, Address) {
-    debugger;
     $scope.activeModule = 'users';
     $scope.user = Authentication.user;
     //$scope.driver = Authentication.driver;
@@ -74,7 +73,6 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     $scope.updateUserProfile = function() {
         $scope.success = $scope.error = null;
 
-        $scope.user.addresses = $scope.addresses;
         var user = new Users($scope.user);
 
         user.$update(function(response) {
