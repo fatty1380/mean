@@ -129,16 +129,19 @@ exports.delete = function(req, res) {
  * List of Drivers
  */
 exports.list = function(req, res) {
-    //debugger;
-    Driver.find().sort('-created').populate('user', 'displayName').exec(function(err, drivers) {
-        if (err) {
-            return res.send(400, {
-                message: getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(drivers);
-        }
-    });
+    debugger;
+    Driver.find()
+        .sort('-created')
+        .populate('user', 'displayName')
+        .exec(function(err, drivers) {
+            if (err) {
+                return res.send(400, {
+                    message: getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(drivers);
+            }
+        });
 };
 
 /**
@@ -203,15 +206,19 @@ exports.driverByID = function(req, res, next, id) {
 };
 
 exports.driverByUserID = function(req, res, next, id) {
-    console.log('Looking for Driver with user: ', mongoose.Types.ObjectId(req.user.id));
     debugger;
+    var userId = req.params.userId || req.query.userId || req.user.id;
+
+    console.log('Looking for Driver for user: ', userId);
+
+
     Driver.findOne({
-        user: mongoose.Types.ObjectId(req.user.id)
+        user: mongoose.Types.ObjectId(userId)
     })
         .populate('user', 'licenses')
         .exec(function(err, driver) {
             if (err) return next(err);
-            if (!driver) return next(new Error('Failed to load Driver from User ' + id));
+            if (!driver) return next(new Error('No driver available for UserId: ' + userId));
             req.driver = driver;
             next();
         });

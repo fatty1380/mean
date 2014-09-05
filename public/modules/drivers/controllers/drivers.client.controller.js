@@ -1,9 +1,10 @@
 'use strict';
 
 // Drivers controller
-function DriversController($scope, $stateParams, $location, $http, Authentication, Drivers) {
+function DriversController($scope, $stateParams, $location, $http, Authentication, Drivers, DriverUser) {
     $scope.authentication = Authentication;
     $scope.driver = Drivers;
+    $scope.driverUser = DriverUser;
 
     // Create new Driver
     $scope.create = function() {
@@ -79,7 +80,7 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         }
 
         debugger;
-        $scope.driver = Drivers.get({
+        $scope.driver = DriverUser.get({
             userId: $scope.user._id
         });
     };
@@ -121,6 +122,6 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
     };
 }
 
-DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Drivers'];
+DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Drivers', 'DriverUser'];
 
 angular.module('drivers').controller('DriversController', DriversController);
