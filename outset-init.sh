@@ -169,7 +169,9 @@ if ps ax | grep mongod | grep -v grep > /dev/null; then
 else
 	echo "Launching MongoDB Daemon";
 
-	mongod --dbpath ./data/db&
+	./mongod-check-and-start.sh ./data/db &
+
+	sleep 5;
 fi
 
 # Check if gruntis running - launch if not
