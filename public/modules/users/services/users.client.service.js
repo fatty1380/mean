@@ -3,7 +3,6 @@
 // Users service used for communicating with the users REST endpoint
 
 function UsersService($resource) {
-    debugger;
     return $resource('users', {}, {
         update: {
             method: 'PUT'

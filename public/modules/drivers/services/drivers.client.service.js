@@ -11,18 +11,10 @@ function DriverFactory($resource) {
     });
 }
 
-//function DriverUserFactory($resource) {
-//    return $resource('driver/:userId', {
-//        userId: '@_id'
-//    }, {
-//        update: {
-//            method: 'PUT'
-//        }
-//    });
-//}
-
 function DriverUserFactory($resource) {
-    return $resource('driver/', {}, {
+    return $resource('driver/user/:userId', {
+        userId: '@_id'
+    }, {
         update: {
             method: 'PUT'
         }

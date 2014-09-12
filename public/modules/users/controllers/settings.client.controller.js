@@ -1,6 +1,6 @@
 'use strict';
 
-function SettingsController($scope, $http, $location, Users, Authentication, Address) {
+function SettingsController($scope, $http, $location, Users, Authentication, Address, Driver) {
     $scope.activeModule = 'users';
     $scope.user = Authentication.user;
     //$scope.driver = Authentication.driver;
@@ -31,6 +31,15 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
             streetAddresses: [''],
         });
         $scope.addresses.push(addr);
+    };
+
+    $scope.addDriver = function() {
+        event.preventDefault();
+
+        var driver = new Driver({
+            userId: $scope.user._id
+        });
+        $scope.user.driver = driver;
     };
 
     // If user is not signed in then redirect back home
@@ -73,6 +82,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     $scope.updateUserProfile = function() {
         $scope.success = $scope.error = null;
 
+        debugger;
         var user = new Users($scope.user);
 
         user.$update(function(response) {
@@ -117,7 +127,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
 
 }
 
-SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses'];
+SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses', 'Drivers'];
 
 angular
     .module('users')

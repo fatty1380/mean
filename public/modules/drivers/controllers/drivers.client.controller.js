@@ -15,6 +15,7 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
 
         // Redirect after save
         driver.$save(function(response) {
+            console.log('Successfully created new Driver');
             $location.path('drivers/' + response._id);
         }, function(errorResponse) {
             $scope.error = errorResponse.data.message;
@@ -46,7 +47,7 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         var driver = $scope.driver;
 
         driver.$update(function() {
-            $location.path('drivers/' + driver._id);
+            $location.path('driver/user/' + driver._id);
         }, function(errorResponse) {
             $scope.error = errorResponse.data.message;
         });
