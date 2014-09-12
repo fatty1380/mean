@@ -54,7 +54,7 @@ var JobSchema = new Schema({
 
     postStatus: {
         type: String,
-        default: '',
+        default: 'draft',
         enum: ['draft', 'posted', 'withdrawn', 'deleted']
     },
 

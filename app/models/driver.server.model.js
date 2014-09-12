@@ -1,23 +1,29 @@
 'use strict';
 
+// Load Schedule early //
+var preload = require('./schedule');
+
 /**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Address = mongoose.model('Address');
+    Schedule = mongoose.model('Schedule'),
+    Address = mongoose.model('Address'),
+    constants = require('../../config/env/constants'),
+    _ = require('lodash');
 
 /**
  * Driver Schema
- * user			User
- * address		[Address]
- * licenses		[License]
- * endorsements	[{ ? }]
- * connections	[Connection]
- * experience	"text
+ * user         User
+ * address      [Address]
+ * licenses     [License]
+ * endorsements [{ ? }]
+ * connections  [Connection]
+ * experience   "text
  * time
  * location"
- * schedule		[Schedule]
+ * schedule     [Schedule]
  * isActive
  * isDeleted
  * created
@@ -27,14 +33,9 @@ var DriverSchema = new Schema({
 
     user: {
         type: Schema.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true,
     },
-
-
-    addresses: [{
-        type: Schema.ObjectId,
-        ref: 'Address'
-    }],
 
     licenses: ['License'],
 
@@ -77,6 +78,26 @@ var DriverSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+});
+
+
+/**
+ * Hook a pre save method to create a base schedule (if necessary)
+ */
+DriverSchema.pre('save', function(next) {
+    if (_.isUndefined(this.schedule)) {
+        this.schedule = [];
+    }
+
+    var _self = this;
+
+    if (this.schedule.length === 0) {
+        _.forEach(constants.base_schedule, function(val, key) {
+            _self.schedule.push(new Schedule(val));
+        });
+    }
+
+    next();
 });
 
 mongoose.model('Driver', DriverSchema);

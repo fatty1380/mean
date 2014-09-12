@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
     passport = require('passport'),
     User = mongoose.model('User'),
-    License = mongoose.model('License'),
+    Driver = mongoose.model('Driver'),
     _ = require('lodash');
 
 /**
@@ -102,6 +102,7 @@ exports.update = function(req, res) {
     //debugger;
     // Init Variables
     var user = req.user;
+    var driver = req.user.driver;
     var message = null;
 
     // For security measurement we remove the roles from the req.body object
@@ -113,25 +114,71 @@ exports.update = function(req, res) {
         user.updated = Date.now();
         user.displayName = user.firstName + ' ' + user.lastName;
 
+        if (req.body.driver) {
+            debugger;
+            driver = _.extend(driver, req.body.driver);
+            driver.updated = Date.now;
 
-        user.save(function(err) {
-            if (err) {
-                console.log('[err] error saving user\n\t' + err);
-                return res.send(400, {
-                    message: getErrorMessage(err)
-                });
-            } else {
-                req.login(user, function(err) {
-                    if (err) {
-                        console.log('[log] error saving user\n\t' + err);
-                        res.send(400, err);
-                    } else {
-                        console.log('successfully saved user');
-                        res.jsonp(user);
-                    }
-                });
-            }
-        });
+            driver.save(function(err) {
+                if (err) {
+                    debugger;
+                    console.log('[err] error saving driver\n\t' + err);
+                    return res.send(400, {
+                        message: getErrorMessage(err)
+                    });
+                } else {
+                    //req.login(user, function(err) {
+                    //    if (err) {
+                    //        console.log('[log] error saving user\n\t' + err);
+                    //        res.send(400, err);
+                    //    } else {
+                    //        console.log('successfully saved user');
+                    //        res.jsonp(user);
+                    //    }
+                    //});
+                    debugger;
+                    user.driver = driver._id;
+
+                    user.save(function(err) {
+                        if (err) {
+                            console.log('[err] error saving user\n\t' + err);
+                            return res.send(400, {
+                                message: getErrorMessage(err)
+                            });
+                        } else {
+                            req.login(user, function(err) {
+                                if (err) {
+                                    console.log('[log] error saving user\n\t' + err);
+                                    res.send(400, err);
+                                } else {
+                                    console.log('successfully saved user');
+                                    res.jsonp(user);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            user.save(function(err) {
+                if (err) {
+                    console.log('[err] error saving user\n\t' + err);
+                    return res.send(400, {
+                        message: getErrorMessage(err)
+                    });
+                } else {
+                    req.login(user, function(err) {
+                        if (err) {
+                            console.log('[log] error saving user\n\t' + err);
+                            res.send(400, err);
+                        } else {
+                            console.log('successfully saved user');
+                            res.jsonp(user);
+                        }
+                    });
+                }
+            });
+        }
     } else {
         res.send(400, {
             message: 'User is not signed in'
@@ -251,7 +298,9 @@ exports.list = function(req, res) {
     User.find()
         .sort('-created')
         .populate('addresses')
+        .populate('driver')
         .exec(function(err, drivers) {
+            debugger;
             if (err) {
                 return res.send(400, {
                     message: getErrorMessage(err)

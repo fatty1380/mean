@@ -9,7 +9,7 @@ module.exports = function(grunt) {
         clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
         clientCSS: ['public/modules/**/*.css'],
         clientLESS: ['public/modules/**/*.less'],
-        mochaTests: ['app/tests/**/*.js']
+        serverMochaTests: ['app/tests/**/*.js']
     };
 
     // Project Configuration
@@ -134,7 +134,7 @@ module.exports = function(grunt) {
             }
         },
         mochaTest: {
-            src: watchFiles.mochaTests,
+            src: watchFiles.serverMochaTests,
             options: {
                 reporter: 'spec',
                 require: 'server.js'

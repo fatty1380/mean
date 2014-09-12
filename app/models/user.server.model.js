@@ -7,8 +7,8 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     crypto = require('crypto'),
     License = mongoose.model('License'),
-    Address = mongoose.model('Address'),
-    config = require('../../config/env/all');
+    Driver = mongoose.model('Driver'),
+    Address = mongoose.model('Address');
 
 /**
  * A Validation function for local strategy properties
@@ -97,6 +97,16 @@ var UserSchema = new Schema({
         match: [/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/],
         // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
+
+    driver: {
+        type: Schema.ObjectId,
+        ref: 'Driver'
+    },
+
+    //company: {
+    //    type: Schema.ObjectId,
+    //    ref: 'User'
+    //},
 
     addresses: [Address.schema],
 });

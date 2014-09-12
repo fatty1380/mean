@@ -194,10 +194,10 @@ exports.newLicense = function(req, res) {
  * Driver middleware
  */
 exports.driverByID = function(req, res, next, id) {
-    debugger;
     Driver.findById(id)
         .populate('user', 'licenses')
         .exec(function(err, driver) {
+            debugger;
             if (err) return next(err);
             if (!driver) return next(new Error('Failed to load Driver ' + id));
             req.driver = driver;
@@ -206,7 +206,6 @@ exports.driverByID = function(req, res, next, id) {
 };
 
 exports.driverByUserID = function(req, res, next, id) {
-    debugger;
     var userId = req.params.userId || req.query.userId || req.user.id;
 
     console.log('Looking for Driver for user: ', userId);
@@ -217,6 +216,7 @@ exports.driverByUserID = function(req, res, next, id) {
     })
         .populate('user', 'licenses')
         .exec(function(err, driver) {
+            debugger;
             if (err) return next(err);
             if (!driver) return next(new Error('No driver available for UserId: ' + userId));
             req.driver = driver;
