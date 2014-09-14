@@ -39,6 +39,11 @@
             // Set a new global scope
             scope = $rootScope.$new();
 
+            scope.streetAddresses = [];
+            scope.city = '';
+            scope.state = '';
+            scope.zipCode = '';
+
             // Point global variables to injected services
             $stateParams = _$stateParams_;
             $httpBackend = _$httpBackend_;
@@ -93,17 +98,27 @@
         it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Addresses) {
             // Create a sample Address object
             var sampleAddressPostData = new Addresses({
-                streetAddresses: ['New Address']
+                streetAddresses: ['New Address'],
+                city: 'some city',
+                state: 'CA',
+                zipCode: '94123'
             });
 
             // Create a sample Address response
             var sampleAddressResponse = new Addresses({
                 _id: '525cf20451979dea2c000001',
-                streetAddresses: ['New Address']
+                streetAddresses: ['New Address'],
+                city: 'some city',
+                state: 'CA',
+                zipCode: '94123'
             });
 
             // Fixture mock form input values
-            scope.name = 'New Address';
+            scope.name = '';
+            scope.streetAddresses = ['New Address'];
+            scope.city = 'some city';
+            scope.state = 'CA';
+            scope.zipCode = '94123';
 
             // Set POST response
             $httpBackend.expectPOST('addresses', sampleAddressPostData).respond(sampleAddressResponse);
@@ -113,7 +128,10 @@
             $httpBackend.flush();
 
             // Test form inputs are reset
-            expect(scope.name).toEqual('');
+            expect(scope.streetAddresses).toEqual('');
+            expect(scope.city).toEqual('');
+            expect(scope.state).toEqual('');
+            expect(scope.zipCode).toEqual('');
 
             // Test URL redirection after the Address was created
             expect($location.path()).toBe('/addresses/' + sampleAddressResponse._id);
@@ -123,7 +141,10 @@
             // Define a sample Address put data
             var sampleAddressPutData = new Addresses({
                 _id: '525cf20451979dea2c000001',
-                streetAddresses: ['New Address']
+                streetAddresses: ['New Address'],
+                city: 'some city',
+                state: 'CA',
+                zipCode: '94123'
             });
 
             // Mock Address in scope
@@ -143,7 +164,10 @@
         it('$scope.remove() should send a DELETE request with a valid addressId and remove the Address from the scope', inject(function(Addresses) {
             // Create new Address object
             var sampleAddress = new Addresses({
-                _id: '525a8422f6d0f87f0e407a33'
+                _id: '525a8422f6d0f87f0e407a33',
+                city: 'some city',
+                state: 'CA',
+                zipCode: '94123'
             });
 
             // Create new Addresses array and include the Address

@@ -40,10 +40,6 @@ var UserSchema = new Schema({
         default: '',
         validate: [validateLocalStrategyProperty, 'Please fill in your last name']
     },
-    displayName: {
-        type: String,
-        trim: true
-    },
     username: {
         type: String,
         unique: true,
@@ -98,6 +94,19 @@ var UserSchema = new Schema({
         // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
 
+    /**
+     * Addresses holds one or more Address Objects, nested
+     * locally within the User model
+     */
+    addresses: [Address.schema],
+
+    /** Section Begin : Virtual Members **/
+
+    displayName: {
+        type: String,
+        trim: true
+    },
+
     driver: {
         type: Schema.ObjectId,
         ref: 'Driver'
@@ -107,8 +116,6 @@ var UserSchema = new Schema({
     //    type: Schema.ObjectId,
     //    ref: 'User'
     //},
-
-    addresses: [Address.schema],
 });
 
 /**
