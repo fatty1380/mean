@@ -11,6 +11,7 @@ function config($stateProvider, $urlRouterProvider) {
             templateUrl: 'modules/core/views/home.client.view.html'
         })
         .state('driver', {
+            // TODO: Determine if this is the correct way to route differently
             url: '/',
             templateUrl: 'modules/users/views/settings/profile.client.view.html'
         });

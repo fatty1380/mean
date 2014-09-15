@@ -1,7 +1,6 @@
 'use strict';
 
 // Config HTTP Error Handling
-
 function config($httpProvider) {
     // Set the httpProvider "not authorized" interceptor
     $httpProvider.interceptors.push(['$q', '$location', 'Authentication',

@@ -8,6 +8,14 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
+.ng-invalid.ng-dirty {
+    border-color: #FA787E;
+}
+.ng-valid.ng-dirty {
+    border-color: #78FA89;
+}
+/* Outset Specific Changes */
+
 body {
     background: url('/modules/core/img/home-country-road.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -163,5 +171,3 @@ p.details {
     padding-top: 30px;
 }
 /* END : Home - Main Content */
-
-;
