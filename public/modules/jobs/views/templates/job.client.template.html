@@ -1,0 +1,85 @@
+<section class='job-item'>
+    <div class="well well-1 container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-10">
+                <h2 class="heading">{{ job.name }}</h2>
+                <small>
+                    <em class="text-muted">
+                        Posted on
+                        <span data-ng-bind="job.created | date:'mediumDate'"></span>
+                        by
+                        <span data-ng-bind="job.user.displayName"></span>
+                    </em>
+                </small>
+                <p class="p-1">Job ID {{ job._id }}</p>
+            </div>
+            <div class="col-md-2">
+                <h4><i class="fa fa-star center-block"></i>Favorite</h4>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-2 p-3">{{ job.location.zipCode }}</h4>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-usd fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-2">
+                    ${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</h4>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-credit-card fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-4">{{ job.endorsements || "Operator - Class D" }}</h4>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-lg pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-clock-o fa-stack-1x fa-inverse"></i>
+                </span>
+                <h4 class="p-2">{{ job.positionType || "Part-Time Employment" }}</h4>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <span class="col-md-8">
+                <p>{{ job.description }}</p>
+            </span>
+            <span class="col-md-4">
+                <div class="pull-right" data-ng-show="authentication.user._id == job.user._id">
+                    <a class="btn btn-primary" href="/#!/jobs/{{job._id}}/edit">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-primary" data-ng-click="remove();">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </div>
+                <div class="pull-right" data-ng-show="authentication.user._id != job.user._id && formMode !== 'apply'">
+                    <a class="btn btn-primary btn-large pull-right" data-ng-click="toggleApplication(true)">Full Details &amp; Apply</a>
+                </div>
+            </span>
+        </div>
+        <div class="row-fluid " data-ng-show="formMode === 'apply' ">
+            <span class="col-md-12 ">
+                <form action=" ">
+                    <textarea class="col-md-12 " name=" " placeholder="Write a short cover letter (2-3 sentences) stating why you 're a good fit for the position."></textarea>
+                    <label class="checkbox col-md-12">
+                        <input type="checkbox" value="" name="">
+                        <span>By checking this box, you are giving the job poster permission to review your profile information, including your background check, drug test results, and motor vehicle records.</span>
+                    </label>
+                    <div class="form-actions">
+                        <a class="btn pull-right" data-ng-click="toggleApplication(false)">Cancel</a>
+                        <a class="btn btn-primary pull-right" href="driver-dashboard-jobs.html">Apply!</a>
+                    </div>
+                </form>
+            </span>
+        </div>
+    </div>
+</section>

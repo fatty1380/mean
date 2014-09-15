@@ -2,16 +2,16 @@
 
 // Users service used for communicating with the users REST endpoint
 
-function Users($resource) {
-	return $resource('users', {}, {
-		update: {
-			method: 'PUT'
-		}
-	});
+function UsersService($resource) {
+    return $resource('users', {}, {
+        update: {
+            method: 'PUT'
+        }
+    });
 }
 
-Users.$inject = ['$resource'];
+UsersService.$inject = ['$resource'];
 
 angular
-	.module('users')
-	.factory('Users', Users);
+    .module('users')
+    .factory('Users', UsersService);

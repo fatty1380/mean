@@ -1,97 +1,206 @@
 'use strict';
 
-function SettingsController($scope, $http, $location, Users, Authentication) {
-	$scope.user = Authentication.user;
+<<<<<<< HEAD
+function SettingsController($scope, $http, $location, Users, Authentication, Address, Driver) {
+    $scope.activeModule = 'users';
+    $scope.user = Authentication.user;
+    //$scope.driver = Authentication.driver;
+    $scope.editMode = false;
 
-	// If user is not signed in then redirect back home
-	if (!$scope.user) $location.path('/');
+    $scope.addresses = $scope.user.addresses;
 
-	// Check if there are additional accounts 
-	$scope.hasConnectedAdditionalSocialAccounts = function(provider) {
-		for (var i in $scope.user.additionalProvidersData) {
-			return true;
-		}
+    $scope.toggleMode = function(arg) {
+        if (arg === undefined) {
+            $scope.editMode = !$scope.editMode;
+            return;
+        }
 
-		return false;
-	};
+        $scope.editMode = !!arg;
+    };
 
-	// Check if provider is already in use with current user
-	$scope.isConnectedSocialAccount = function(provider) {
-		return $scope.user.provider === provider || ($scope.user.additionalProvidersData && $scope.user.additionalProvidersData[provider]);
-	};
+    $scope.cancel = function() {
+        $scope.user = angular.copy(Authentication.user);
+        $scope.editMode = false;
+    };
 
-	// Remove a user social account
-	$scope.removeUserSocialAccount = function(provider) {
-		$scope.success = $scope.error = null;
+    $scope.addAddress = function() {
+        // Prevent this from bubbling up;
+        event.preventDefault();
 
-		$http.delete('/users/accounts', {
-			params: {
-				provider: provider
-			}
-		}).success(function(response) {
-			// If successful show success message and clear form
-			$scope.success = true;
-			$scope.user = Authentication.user = response;
-		}).error(function(response) {
-			$scope.error = response.message;
-		});
-	};
+        var addr = new Address({
+            type: 'select type',
+            streetAddresses: [''],
+        });
+        $scope.addresses.push(addr);
+    };
 
-	// Update a user profile
-	$scope.updateUserProfile = function() {
-		$scope.success = $scope.error = null;
-		var user = new Users($scope.user);
+    $scope.addDriver = function() {
+        event.preventDefault();
 
-		user.$update(function(response) {
-			$scope.success = true;
-			Authentication.user = response;
-		}, function(response) {
-			$scope.error = response.data.message;
-		});
-	};
+        var driver = new Driver({
+            userId: $scope.user._id
+        });
+        $scope.user.driver = driver;
+    };
 
-	// Change user password
-	$scope.changeUserPassword = function() {
-		$scope.success = $scope.error = null;
+    // If user is not signed in then redirect back home
+    if (!$scope.user) $location.path('/');
 
-		$http.post('/users/password', $scope.passwordDetails).success(function(response) {
-			// If successful show success message and clear form
-			$scope.success = true;
-			$scope.passwordDetails = null;
-		}).error(function(response) {
-			$scope.error = response.message;
-		});
-	};
+    // Check if there are additional accounts
+    $scope.hasConnectedAdditionalSocialAccounts = function(provider) {
+        for (var i in $scope.user.additionalProvidersData) {
+            return true;
+        }
 
-	$scope.signup = function() {
-		$http.post('/auth/signup', $scope.credentials).success(function(response) {
-			//If successful we assign the response to the global user model
-			$scope.authentication.user = response;
+        return false;
+    };
 
-			//And redirect to the index page
-			$location.path('/');
-		}).error(function(response) {
-			$scope.error = response.message;
-		});
-	};
+    // Check if provider is already in use with current user
+    $scope.isConnectedSocialAccount = function(provider) {
+        return $scope.user.provider === provider || ($scope.user.additionalProvidersData && $scope.user.additionalProvidersData[provider]);
+    };
 
-	// Specific User Type Stuff
-	$scope.addLicense = function() {
+    // Remove a user social account
+    $scope.removeUserSocialAccount = function(provider) {
+        $scope.success = $scope.error = null;
 
-		var data = { type : 'Standard', number : '12345', state : 'CA', issued : new Date('2014-07-01'), expired : new Date('2014-07-01'), endorsements : 'none'};
+        $http.delete('/users/accounts', {
+            params: {
+                provider: provider
+            }
+        })
+            .success(function(response) {
+                // If successful show success message and clear form
+                $scope.success = true;
+                $scope.user = Authentication.user = response;
+            })
+            .error(function(response) {
+                $scope.error = response.message;
+            });
+    };
 
-		$http.post('/users/newlicense', data).success(function(response) {
-			alert('got response: ' + response);
-		}).error(function(response) {
-			$scope.error = response.message;
-		});
+    // Update a user profile
+    $scope.updateUserProfile = function() {
+        $scope.success = $scope.error = null;
 
-		alert('adding a license');
-	};
+        debugger;
+        var user = new Users($scope.user);
+
+        user.$update(function(response) {
+            $scope.success = true;
+            Authentication.user = response;
+            $scope.editMode = false;
+        }, function(response) {
+            $scope.error = response.data.message;
+        });
+    };
+
+    // Change user password
+    $scope.changeUserPassword = function() {
+        $scope.success = $scope.error = null;
+
+        $http.post('/users/password', $scope.passwordDetails)
+            .success(function(response) {
+                // If successful show success message and clear form
+                $scope.success = true;
+                $scope.passwordDetails = null;
+            })
+            .error(function(response) {
+                $scope.error = response.message;
+            });
+    };
+
+    $scope.signup = function() {
+        // TODO: Pass in $scope.signupType
+        $http.post('/auth/signup', $scope.credentials)
+            .success(function(response) {
+                //If successful we assign the response to the global user model
+                $scope.authentication.user = response;
+
+                //And redirect to the index page
+                $location.path('/');
+            })
+            .error(function(response) {
+                $scope.error = response.message;
+            });
+    };
+
+
 }
 
-SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication'];
+SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses', 'Drivers'];
 
 angular
-	.module('users')
-	.controller('SettingsController', SettingsController);
+    .module('users')
+    .controller('SettingsController', SettingsController);
+=======
+angular.module('users').controller('SettingsController', ['$scope', '$http', '$location', 'Users', 'Authentication',
+	function($scope, $http, $location, Users, Authentication) {
+		$scope.user = Authentication.user;
+
+		// If user is not signed in then redirect back home
+		if (!$scope.user) $location.path('/');
+
+		// Check if there are additional accounts 
+		$scope.hasConnectedAdditionalSocialAccounts = function(provider) {
+			for (var i in $scope.user.additionalProvidersData) {
+				return true;
+			}
+
+			return false;
+		};
+
+		// Check if provider is already in use with current user
+		$scope.isConnectedSocialAccount = function(provider) {
+			return $scope.user.provider === provider || ($scope.user.additionalProvidersData && $scope.user.additionalProvidersData[provider]);
+		};
+
+		// Remove a user social account
+		$scope.removeUserSocialAccount = function(provider) {
+			$scope.success = $scope.error = null;
+
+			$http.delete('/users/accounts', {
+				params: {
+					provider: provider
+				}
+			}).success(function(response) {
+				// If successful show success message and clear form
+				$scope.success = true;
+				$scope.user = Authentication.user = response;
+			}).error(function(response) {
+				$scope.error = response.message;
+			});
+		};
+
+		// Update a user profile
+		$scope.updateUserProfile = function(isValid) {
+			if (isValid){
+				$scope.success = $scope.error = null;
+				var user = new Users($scope.user);
+	
+				user.$update(function(response) {
+					$scope.success = true;
+					Authentication.user = response;
+				}, function(response) {
+					$scope.error = response.data.message;
+				});
+			} else {
+				$scope.submitted = true;
+			}
+		};
+
+		// Change user password
+		$scope.changeUserPassword = function() {
+			$scope.success = $scope.error = null;
+
+			$http.post('/users/password', $scope.passwordDetails).success(function(response) {
+				// If successful show success message and clear form
+				$scope.success = true;
+				$scope.passwordDetails = null;
+			}).error(function(response) {
+				$scope.error = response.message;
+			});
+		};
+	}
+]);
+>>>>>>> meanjs

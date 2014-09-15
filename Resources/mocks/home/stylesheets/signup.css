@@ -1,0 +1,113 @@
+ body {
+   padding-left: 0;
+   padding-right: 0;
+ }
+ /* This makes absolutely positioned elements like p, h1,
+     and some bootstrap elements placed properly. */
+ #absolute-wrapper p, #absolute-wrapper h1, #absolute-wrapper h2, #absolute-wrapper h3, #absolute-wrapper h4, #absolute-wrapper h5, #absolute-wrapper h6 {
+   margin-top: 0 !important;
+ }
+ /* Set floating dom-heading margins to 0 */
+ [class*="dom-heading"] {
+   margin: 0;
+ }
+ #absolute-wrapper {
+   position: relative;
+   width: 980px;
+   margin: 0 auto;
+   height: 1px;
+ }
+ #absolute-wrapper .brand {
+   background: rgba(0, 0, 0, 0);
+   width: 147px;
+   height: 49px;
+   position: absolute;
+   top: -124px;
+   left: -10px;
+ }
+ #absolute-wrapper .dom-heading {
+   background-image: url(../images/source.png);
+   background-attachment: initial;
+   background-origin: initial;
+   background-clip: initial;
+   background-color: rgba(0, 0, 0, 0);
+   background-size: cover;
+   font-family: Arial;
+   width: 162px;
+   height: 64px;
+   font-size: 28px;
+   background-position: 0px 0px;
+   background-repeat: repeat repeat;
+   position: absolute;
+   top: 6px;
+   left: 19px;
+ }
+ .navbar {
+   height: 78px;
+ }
+ .navbar .navbar-inner {
+   background: rgba(255, 255, 255, 0.957031);
+   border: none;
+   height: 78px;
+   padding-left: 20px;
+   padding-right: 20px;
+ }
+ .navbar .navbar-inner .nav li a {
+   line-height: 40px;
+   text-shadow: none;
+   padding: 20px 15px 10px 15px;
+ }
+ .container-fluid.container-fluid-1 {
+   background: transparent;
+   padding: 20px;
+ }
+ .container-fluid-1 .row-fluid {
+   padding: 10px 0px 0px 0px;
+ }
+ .container-fluid-1 .row-fluid .span8 .well {
+   margin: 0px;
+   padding: 0px 10px 0px 10px;
+   border: 1px solid #11588b;
+ }
+ .container-fluid-1 .row-fluid .span8 .well .heading {
+   padding: 10px 0px 0px 0px;
+   font-family:"museo-sans";
+   font-weight: 900;
+   text-align: center;
+ }
+ .container-fluid-1 .row-fluid .span8 .well .form-horizontal {
+   margin: 0px;
+ }
+ .container-fluid-1 .row-fluid .span8 .well .form-horizontal .control-group .control-label {
+   font-family:"museo-sans";
+ }
+ .container-fluid-1 .row-fluid .span8 .well .form-horizontal .control-group .controls input.textinput {
+   font-family:"museo-sans";
+ }
+ .container-fluid-1 .row-fluid .span8 .well .form-horizontal .form-actions {
+   margin: 0px;
+   border: none;
+ }
+ .container-fluid-1 .row-fluid .span8 .well .form-horizontal .form-actions .btn-primary {
+   background: #436f8e;
+   background-image: -moz-linear-gradient(270deg, #436f8e 0%, #11588b 100%);
+   background-image: -webkit-linear-gradient(270deg, #436f8e 0%, #11588b 100%);
+   background-image: -o-linear-gradient(270deg, #436f8e 0%, #11588b 100%);
+   background-image: linear-gradient(180deg, #436f8e 0%, #11588b 100%);
+ }
+ .container-fluid.container-fluid-2 {
+   background: #333333;
+   padding: 30px 20px 30px 20px;
+ }
+ .container-fluid-2 .container .row-fluid .span12 .pull-left p {
+   font-weight: 300;
+   color: #ffffff;
+   line-height: 36px;
+ }
+ .container-fluid-2 .container .row-fluid .span12 .nav {
+   margin: 0px;
+ }
+ .container-fluid-2 .container .row-fluid .span12 .nav li a {
+   text-align: center;
+   color: #cccccc;
+ }

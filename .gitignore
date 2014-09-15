@@ -7,3 +7,11 @@ public/lib
 app/tests/coverage/
 .bower-*/
 .idea/
+
+/* Outset Additions */
+*.pem
+data
+readonly_rsa
+*.pub
+coverage
+*.orig

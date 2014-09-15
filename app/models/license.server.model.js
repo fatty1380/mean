@@ -3,57 +3,70 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+var mongoose = require( 'mongoose' ),
+    Schema = mongoose.Schema;
 
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function(property) {
-	return ((this.provider !== 'local' && !this.updated) || property.length);
+var validateLocalStrategyProperty = function( property ) {
+    return ( ( this.provider !== 'local' && !this.updated ) || property.length );
+};
+
+/**
+ * A method to retrieve any enum values
+ */
+var getEnumValues = function() {
+    var enums;
 };
 
 /**
  * License Schema
  */
-var LicenseSchema = new Schema({
-	// License model fields   
-	type: {
-		type: String,
-		enum: ['Standard', 'Commercial'],
-	},
-	number: {
-		type: String,
-		trim: true,
-		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your first name']
-	},
-	state: {
-		type: String,
-		trim: true,
-		default: 'AZ',
-		validate: [validateLocalStrategyProperty, 'Please select your state'],
-	},
-	endorsements: {
-		type: [{
-			type: String,
-			enum: ['none', 'Class A', 'Class C', 'Motorcycle']
-		}],
-		default: ['none']
-	},
-	issued: {
-		type: Date
-	},
-	expires: {
-		type: Date
-	},
-	updated: {
-		type: Date
-	},
-	created: {
-		type: Date,
-		default: Date.now
-	}
-});
+var LicenseSchema = new Schema( {
+    // License model fields   
+    type: {
+        type: String,
+        enum: [ 'Standard', 'Commercial' ],
+        default: 'Standard',
+    },
+    number: {
+        type: String,
+        trim: true,
+        default: '',
+    },
+    dateOfBirth: {
+        type: Date,
+        default: '',
+        trim: true,
+    },
+    state: {
+        type: String,
+        trim: true,
+        default: 'AZ',
+        validate: [ validateLocalStrategyProperty, 'Please select your state' ],
+    },
+    endorsements: {
+        type: [ String ],
+        enum: [ 'none', 'Class A', 'Class C', 'Motorcycle' ],
+        default: [],
+    },
+    issued: {
+        type: Date,
+        default: null,
+    },
+    expires: {
+        type: Date,
+        default: null,
+    },
+    updated: {
+        type: Date,
+        default: Date.now,
+    },
+    created: {
+        type: Date,
+        default: Date.now,
+    }
+} );
 
-mongoose.model('License', LicenseSchema);
+mongoose.model( 'License', LicenseSchema );

@@ -1,0 +1,16 @@
+section.container-fluid, .dash-item {
+    padding: 0 0 0 0;
+}
+.dash-item:not(.dash-active) {
+    text-shadow: 1px 1px 1px #2A6496;
+}
+.dash-active i {
+    color: #2A6496;
+}
+:not(.opaque-bg).dash-item:hover {
+    background-color: rgba(238, 238, 238, 0.25);
+}
+.dash-item:hover i {
+    color: #2A6496;
+    text-shadow: 1px 1px 1px #fff;
+}

@@ -38,13 +38,13 @@ else
 		echo "Completed Global installation of 'Node.js'";
 	else
 		echo "Node failed to be installed. Exiting";
-		exit 1; 
+		exit 1;
 	fi
 
 fi
 
 # Check for and install MongoDB (if necessary)
-if command -v mongod > /dev/null; then 
+if command -v mongod > /dev/null; then
 	echo "MongoDB is installed";
 else
 	echo "Installing 'MongoDB' from latest";
@@ -84,24 +84,28 @@ else
 
 	echo 'export PATH=/usr/local/bin:$MONGO_HOME' >> ~/.bash_profile
 
-	if command -v mongod > /dev/null; then 
+	if command -v mongod > /dev/null; then
 		echo "MongoDB was successfully installed at ${MONGO_HOME}";
 	fi
 fi
 
 # Check for and install Bower (if necessary)
+<<<<<<< HEAD
 if command -v bower > /dev/null; then 
+=======
+if command -v bower > /dev/null; then
+>>>>>>> develop
 	echo "Bower is installed globally";
 else
 	echo "Installing 'Bower' from latest";
 
 	npm install -g bower;
 
-	if command -v bower > /dev/null; then 
+	if command -v bower > /dev/null; then
 		echo "Completed global installation of Bower";
 	else
 		echo "Bower failed to be installed. Exiting";
-		exit 1; 
+		exit 1;
 	fi
 fi
 
@@ -117,7 +121,7 @@ else
 		echo "Completed global installation of Grunt";
 	else
 		echo "Grunt failed to be installed. Exiting";
-		exit 1; 
+		exit 1;
 	fi
 fi
 
@@ -133,7 +137,7 @@ else
 		echo "Completed global installation of Yeoman";
 	else
 		echo "Yeoman failed to be installed. Exiting";
-		exit 1; 
+		exit 1;
 	fi
 fi
 
@@ -149,19 +153,29 @@ else
 		echo "Completed global installation of MeanJS Yeoman Generator";
 	else
 		echo "MeanJS Yeoman Generator failed to be installed. Exiting";
-		exit 1; 
+		exit 1;
 	fi
+fi
+
+# Check if there is a data directory:
+if [ ! -d "./data/db" ]; then
+	echo "Creating empty Mongo Data Directory at ./data/db";
+	mkdir -p ./data/db;
 fi
 
 # Running Outset _________________________________________________________
 
+npm install;
+
 # Check if MongoDB is running - launch if it is not active
-if ps cax | grep "mongod --dbpath ./data/db" > /dev/null; then
+if ps ax | grep mongod | grep -v grep > /dev/null; then
 	echo "MongoDB Daemon is already running";
 else
 	echo "Launching MongoDB Daemon";
 
-	mongod --dbpath ./data/db&
+	./mongod-check-and-start.sh ./data/db &
+
+	sleep 5;
 fi
 
 # Check if gruntis running - launch if not
@@ -170,5 +184,21 @@ if ps cax | grep grunt > /dev/null; then
 else
 	echo "Launching Grunt Task Runner";
 
-	grunt;
+	grunt&
 fi
+
+# If Debugging, launch node-inspector
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --debug )          shift
+								sleep 10;
+                                echo 'Attaching Node-Inspector for Debugging'
+                                node-inspector&
+                                ;;
+        * )                     echo 'Unknown Argument "'$1'"'
+                                ;;
+    esac
+    shift
+done
+
+echo "Finished Launching Outset!"

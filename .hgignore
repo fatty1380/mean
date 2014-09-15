@@ -9,3 +9,4 @@ app/tests/coverage/
 data/db
 .bower-*/
 .idea/
+*.pem
