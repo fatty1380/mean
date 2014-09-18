@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-xs-offset-0 col-xs-4 col-md-offset-1 col-md-5">
-            <form data-ng-submit="updateUserProfile()" class="signin form-horizontal" autocomplete="off">
+            <form data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
                 <fieldset>
                     <!-- Begin include of primary User Information Display -->
                     <div ng-include="'modules/users/views/templates/user-profile.client.template.html'"></div>

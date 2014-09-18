@@ -81,7 +81,8 @@
             "load-grunt-tasks": "~0.6.0"
         },
         "//": {
-            "nodewebkit": "^0.10.4"
+            "nodewebkit": "~0.10.4"
         }
+
     }
 }

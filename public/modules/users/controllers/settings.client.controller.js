@@ -79,7 +79,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     };
 
     // Update a user profile
-    $scope.updateUserProfile = function() {
+    $scope.updateUserProfile = function(isValid) {
         if (isValid) {
             $scope.success = $scope.error = null;
             var user = new Users($scope.user);

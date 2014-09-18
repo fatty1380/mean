@@ -169,7 +169,7 @@ module.exports = function(grunt) {
     // Load NPM tasks
     require('load-grunt-tasks')(grunt);
 
-    grunt.loadNpmTasks('grunt-contrib-less');
+    //grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Load grunt-shell-spawn in support of launching mongod (if necessary)
@@ -191,16 +191,16 @@ module.exports = function(grunt) {
 
 
     // Default task(s).
-    grunt.registerTask('default', ['lint', 'concurrent:default', 'csslint', 'less']);
+    grunt.registerTask('default', ['lint', 'concurrent:default', 'csslint']);
 
     // Debug task.
-    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
+    grunt.registerTask('debug', ['lint', 'concurrent:debug']); // 'less'
 
     // Lint task(s).
     grunt.registerTask('lint', ['jshint', 'csslint']);
 
     // Build task(s).
-    grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin', 'csslint', 'less']);
+    grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin', 'csslint']); // 'less'
 
     // Test task.
     grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);

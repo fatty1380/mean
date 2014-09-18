@@ -78,7 +78,7 @@ exports.update_TO_BE_MERGED_TO_ABOVE = function(req, res) {
                     debugger;
                     console.log('[err] error saving driver\n\t' + err);
                     return res.send(400, {
-                        message: getErrorMessage(err)
+                        message: errorHandler.getErrorMessage(err)
                     });
                 } else {
                     //req.login(user, function(err) {
@@ -97,7 +97,7 @@ exports.update_TO_BE_MERGED_TO_ABOVE = function(req, res) {
                         if (err) {
                             console.log('[err] error saving user\n\t' + err);
                             return res.send(400, {
-                                message: getErrorMessage(err)
+                                message: errorHandler.getErrorMessage(err)
                             });
                         } else {
                             req.login(user, function(err) {
@@ -118,7 +118,7 @@ exports.update_TO_BE_MERGED_TO_ABOVE = function(req, res) {
                 if (err) {
                     console.log('[err] error saving user\n\t' + err);
                     return res.send(400, {
-                        message: getErrorMessage(err)
+                        message: errorHandler.getErrorMessage(err)
                     });
                 } else {
                     req.login(user, function(err) {
