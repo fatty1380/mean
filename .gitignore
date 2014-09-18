@@ -8,7 +8,7 @@ app/tests/coverage/
 .bower-*/
 .idea/
 
-/* Outset Additions */
+## Outset Additions ##
 *.pem
 data
 readonly_rsa
