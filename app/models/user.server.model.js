@@ -67,14 +67,14 @@ var UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    
-    	/* For reset password */
-	resetPasswordToken: {
-		type: String
-	},
-  	resetPasswordExpires: {
-  		type: Date
-  	},
+
+    /* For reset password */
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
+    },
 
     roles: {
         type: [{
@@ -85,7 +85,8 @@ var UserSchema = new Schema({
     },
     types: [{
         type: String,
-        enum: ['driver', 'owner', ''],
+        enum: ['driver', 'owner'],
+        default: []
     }],
     email: {
         type: String,

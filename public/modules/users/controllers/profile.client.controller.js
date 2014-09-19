@@ -5,7 +5,7 @@ function ProfileController($scope, $stateParams, Users, Drivers, Authentication)
     $scope.profileOnly = true;
     $scope.editMode = false;
 
-    // Find existing Job
+    // Find existing User Profile
     $scope.init = function() {
         debugger;
         $scope.user =

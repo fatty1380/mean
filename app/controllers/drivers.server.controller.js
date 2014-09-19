@@ -195,7 +195,7 @@ exports.newLicense = function(req, res) {
  */
 exports.driverByID = function(req, res, next, id) {
     Driver.findById(id)
-        .populate('user', 'licenses')
+        .populate('user')
         .exec(function(err, driver) {
             debugger;
             if (err) return next(err);
@@ -210,11 +210,10 @@ exports.driverByUserID = function(req, res, next, id) {
 
     console.log('Looking for Driver for user: ', userId);
 
-
     Driver.findOne({
         user: mongoose.Types.ObjectId(userId)
     })
-        .populate('user', 'licenses')
+        .populate('user')
         .exec(function(err, driver) {
             debugger;
             if (err) return next(err);
