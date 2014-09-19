@@ -21,7 +21,7 @@ module.exports = function(app) {
 
 
     app.route('/driver/user')
-        .get(drivers.driverByUserID);
+        .get(drivers.list);
 
     app.route('/driver/user/:userId')
         .get(drivers.read);

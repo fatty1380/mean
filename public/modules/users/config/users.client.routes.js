@@ -10,11 +10,6 @@ function config($stateProvider) {
         templateUrl: 'modules/users/views/settings/profile.client.view.html',
         controller: 'SettingsController',
     }).
-    state('view-profile', {
-        url: '/profiles/:userId',
-        templateUrl: 'modules/users/views/settings/profile.client.view.html',
-        controller: 'ProfileController'
-    }).
     state('profile-edit', {
         url: '/settings/profile/edit',
         templateUrl: 'modules/users/views/settings/edit-profile.client.view.html'
@@ -50,6 +45,12 @@ function config($stateProvider) {
     state('reset', {
         url: '/password/reset/:token',
         templateUrl: 'modules/users/views/password/reset-password.client.view.html'
+    }).
+
+    state('view-profile', {
+        url: '/profiles/:userId',
+        templateUrl: 'modules/users/views/settings/profile.client.view.html',
+        controller: 'ProfileController'
     });
 }
 

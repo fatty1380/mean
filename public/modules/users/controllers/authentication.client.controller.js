@@ -18,43 +18,30 @@ function AuthenticationController($scope, $http, $location, Authentication) {
     }
 
     $scope.signup = function() {
-        debugger;
 
         $scope.credentials.types = [$scope.signupType];
+        console.log('[Auth.Ctrl.signup] signing up with credentials: ', $scope.credentials);
 
-        console.log('signing up with credentials: ', $scope.credentials);
 
         $http.post('/auth/signup', $scope.credentials)
             .success(function(response) {
                 //If successful we assign the response to the global user model
                 $scope.authentication.user = response;
 
+                console.log('Successfully created ' + $scope.signupType + ' USER Profile');
                 debugger;
                 if ($scope.signupType === 'driver') {
-                    console.info('Creating a new DRIVER profile');
+                    console.info('Created a new DRIVER profile, checking user object');
 
-                    $http.post('/driver/create', $scope.authentication.user)
-                        .success(function(response) {
-                            debugger;
+                    console.log('User has Driver info: ' + $scope.authentication.user.driver);
 
-                            console.log('got response: ', response);
-
-                            $scope.authentication.driver = response;
-
-                            $location.path('/settings/profile');
-                        })
-                        .error(function(response) {
-                            console.error(response.message);
-                            $scope.error = response.message;
-
-                            $location.path('/settings/profile');
-                        });
+                    $location.path('/settings/profile');
 
                 } else if ($scope.signupType === 'owner') {
                     console.info('Creating a new OWNER profile');
                     $scope.error = 'Don\'t know how to create an owner ... redirecting';
 
-                    $location.path('/settings/profile');
+                    $location.path('/company');
                 } else {
                     console.warn('Unknown profile type: ' + $scope.signupType);
 
@@ -77,30 +64,16 @@ function AuthenticationController($scope, $http, $location, Authentication) {
                 $scope.authentication.user = response;
                 debugger;
 
-                if ($scope.signupType === 'driver') {
-                    console.info('Creating a new DRIVER profile');
+                if (response.types.indexOf('driver') !== -1) {
+                    console.info('Loading a DRIVER profile');
 
                     debugger;
 
-                    $http.post('/driver/user/' + $scope.authentication.user)
-                        .success(function(response) {
-                            debugger;
+                    console.log('User has Driver info: ' + $scope.authentication.user.driver);
 
-                            console.log('[Get Driver] got response: ', response);
+                    $scope.authentication.driver = response.driver;
 
-                            $scope.authentication.driver = response;
-
-                            $location.path('/settings/profile');
-                        })
-                        .error(function(response) {
-                            debugger;
-                            console.error(response.message);
-                            $scope.error = response.message;
-
-                            $location.path('/settings/profile');
-                        });
-
-                } else if ($scope.signupType === 'owner') {
+                } else if (response.types.indexOf('owner') !== -1) {
                     console.info('Creating a new OWNER profile');
                     $scope.error = 'Don\'t know how to load an owner ... redirecting';
 

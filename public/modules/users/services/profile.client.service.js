@@ -3,7 +3,7 @@
 // Users service used for communicating with the users REST endpoint
 
 function ProfileService($resource) {
-    return $resource('users/:userId', {
+    return $resource('profiles/:userId', {
         userId: '@_id'
     }, {
         update: {

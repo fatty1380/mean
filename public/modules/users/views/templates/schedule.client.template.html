@@ -1,7 +1,7 @@
 <section>
     <div class="row availability-row">
         <div class="col-md-5">
-            <label class="control-label">{{ schedule.time }}</label>
+            <label class="control-label" title="{{schedule.time.start}} to {{schedule.time.end}}">{{ schedule.description }}</label>
         </div>
         <div class="col-md-1">
             <input ng-readonly="isReadOnly()" type="checkbox" ng-bind="schedule.day[0]" name="">

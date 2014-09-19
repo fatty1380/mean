@@ -117,8 +117,7 @@ var UserSchema = new Schema({
     },
 
     driver: {
-        type: Schema.ObjectId,
-        ref: 'Driver'
+        type: Schema.Types.Mixed
     },
 
     //company: {

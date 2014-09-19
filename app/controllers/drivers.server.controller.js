@@ -54,6 +54,7 @@ exports.create = function(req, res) {
  * Show the current Driver
  */
 exports.read = function(req, res) {
+    console.log('[Driver.Controller] read()');
     res.jsonp(req.driver);
 };
 
@@ -61,6 +62,7 @@ exports.read = function(req, res) {
  * Update a Driver
  */
 exports.update = function(req, res) {
+    console.log('[Driver.Controller] update()');
     var driver = req.driver;
 
     driver = _.extend(driver, req.body);
@@ -129,7 +131,7 @@ exports.delete = function(req, res) {
  * List of Drivers
  */
 exports.list = function(req, res) {
-    debugger;
+    console.log('[Driver.Controller] list()');
     Driver.find()
         .sort('-created')
         .populate('user', 'displayName')
@@ -194,6 +196,7 @@ exports.newLicense = function(req, res) {
  * Driver middleware
  */
 exports.driverByID = function(req, res, next, id) {
+    console.log('[Driver.Controller] driverByID()');
     Driver.findById(id)
         .populate('user')
         .exec(function(err, driver) {
@@ -206,6 +209,7 @@ exports.driverByID = function(req, res, next, id) {
 };
 
 exports.driverByUserID = function(req, res, next, id) {
+    console.log('[Driver.Controller] driverByUserID()');
     var userId = req.params.userId || req.query.userId || req.user.id;
 
     console.log('Looking for Driver for user: ', userId);

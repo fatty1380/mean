@@ -1,12 +1,24 @@
-<section data-ng-controller="DriversController" data-ng-init="findByUser()">
+<section ng-init="view = driver">
     <span class="col-md-12 opaque-bg">
+
+        <div class="row">
+            <div class="col-md-10">
+                <h4>Driver Information</h4>
+            </div>
+            <div class="col-md-2">
+                <a class="btn btn-default btn-sm" ng-click="editMode = !editMode" data-ng-hide="editMode">
+                    <i class="fa fa-pencil">
+            </i>edit</a>
+            </div>
+        </div>
+
         <!-- Driver's License Information -->
         <div class="row-fluid profile-row">
             <label for="licenses">Driver's License</label>
-            <button class="btn pull-right btn-small btn-link" ng-click="addLicense()" ng-show="switchHelper({{driver.licenses}})">
+            <button class="btn pull-right btn-small btn-link" ng-click="addLicense()" ng-show="{{user.driver.licenses.length === 0}}">
                 Add License
             </button>
-            <div data-ng-repeat="license in driver.licenses" name="licenses">
+            <div data-ng-repeat="license in user.driver.licenses" name="licenses">
                 <div ng-include="'modules/drivers/views/templates/license.client.template.html'"></div>
             </div>
 
@@ -15,10 +27,10 @@
         <!-- Driver's Experience Breakdown -->
         <div class="row-fluid profile-row">
             <label for="experience">Experience</label>
-            <button class="btn pull-right btn-small btn-link" ng-click="addExperience()" ng-show="switchHelper({{driver.experience}})">
+            <button class="btn pull-right btn-small btn-link" ng-click="addExperience()" ng-show="{{user.driver.experience.length === 0}}">
                 Add Experience
             </button>
-            <div data-ng-repeat="exp in driver.experience" name="experience">
+            <div data-ng-repeat="exp in user.driver.experience" name="experience">
                 <div class="input-group" name="experience">
                     <span class="col-md-6 col-offset-md-1">
                         <p>{{exp.type}}</p>
@@ -62,17 +74,19 @@
                                 <h6 class="heading profile-label profile-label-1">Su</h6>
                             </div>
                         </div>
-                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in user.schedule'></div>
+                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in user.driver.schedule'></div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="profile-row" data-ng-show="editMode">
 
-        <hr/>
-        <div class="text-right form-group">
-            <button type="cancel" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
-            <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+            <hr/>
+            <div class="text-right form-group">
+                <button type="cancel" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
+                <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+            </div>
         </div>
     </span>
 </section>

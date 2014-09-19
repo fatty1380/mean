@@ -7,23 +7,39 @@ function ProfileController($scope, $stateParams, Users, Drivers, Authentication)
 
     // Find existing User Profile
     $scope.init = function() {
-        debugger;
-        $scope.user =
-            Users.get({
-                userId: $stateParams.userId
-            });
-        //.then($scope.getDriver);
-    };
+        console.log('[ProfileController] init()');
 
-    $scope.getDriver = function() {
-        $scope.driver = Drivers.get({
-            userId: $scope.user._id
-        });
+        Users
+            .get({
+                userId: $stateParams.userId
+            })
+            .$promise
+            .then(function(user) {
+                console.log('[ProfileController] init() user = %o', user);
+                $scope.user = user;
+
+                Drivers.get({
+                    userId: user._id
+                }).$promise.then(function(driver) {
+                    if (driver) {
+                        console.log('[ProfileController] init() driver = %o', driver);
+                        $scope.user.driver = driver;
+                    }
+                });
+            });
     };
 }
 
-ProfileController.$inject = ['$scope', '$stateParams', 'Users', 'Drivers', 'Authentication'];
+ProfileController.$inject = ['$scope', '$stateParams', 'Profile', 'DriverUser', 'Authentication'];
 
 angular
     .module('users')
     .controller('ProfileController', ProfileController);
+
+
+//var Regions = $resource('mocks/regions.json');//
+
+//$scope.regions = Regions.query();
+//$scope.regions.$promise.then(function(result) {
+//    $scope.regions = result;
+//});

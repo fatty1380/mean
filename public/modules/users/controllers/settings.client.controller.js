@@ -1,15 +1,31 @@
 'use strict';
 
-function SettingsController($scope, $http, $location, Users, Authentication, Address, Driver) {
+function SettingsController($scope, $http, $location, Users, Authentication, Address, Drivers, DriverUser) {
     $scope.activeModule = 'users';
     $scope.user = Authentication.user;
-    //$scope.driver = Authentication.driver;
+    $scope.user.driver = Authentication.driver;
     $scope.editMode = false;
 
     $scope.addresses = $scope.user.addresses;
 
     // If user is not signed in then redirect back home
     if (!$scope.user) $location.path('/');
+
+    $scope.init = function() {
+        if (!$scope.user.driver) {
+            if ($scope.user.types.indexOf('driver') !== -1) {
+                DriverUser.get({
+                    userId: $scope.user._id
+                }).$promise.then(function(driver) {
+                    if (driver) {
+                        $scope.user.driver = Authentication.driver = driver;
+                    }
+                });
+            }
+        }
+
+        console.log('[SettingsController] init(%o,%o)', $scope.user, $scope.user.driver);
+    };
 
     $scope.toggleMode = function(arg) {
         if (arg === undefined) {
@@ -21,8 +37,15 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     };
 
     $scope.cancel = function() {
-        $scope.user = angular.copy(Authentication.user);
-        $scope.editMode = false;
+        if (this.view === 'user') {
+            var driverTmp = angular.copy(Authentication.user.driver);
+            $scope.user = angular.copy(Authentication.user);
+            $scope.user.driver = driverTmp;
+        } else if (this.view === 'driver') {
+            $scope.user.driver = angular.copy(Authentication.user.driver);
+        }
+
+        this.editMode = false;
     };
 
     $scope.addAddress = function() {
@@ -39,7 +62,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     $scope.addDriver = function() {
         event.preventDefault();
 
-        var driver = new Driver({
+        var driver = new Drivers({
             userId: $scope.user._id
         });
         $scope.user.driver = driver;
@@ -112,7 +135,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     };
 
     $scope.signup = function() {
-        // TODO: Pass in $scope.signupType
+        debugger;
         $http.post('/auth/signup', $scope.credentials)
             .success(function(response) {
                 //If successful we assign the response to the global user model
@@ -129,7 +152,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
 
 }
 
-SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses', 'Drivers'];
+SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses', 'Drivers', 'DriverUser'];
 
 angular
     .module('users')

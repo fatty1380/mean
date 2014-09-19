@@ -17,6 +17,8 @@ exports.update = function(req, res) {
     var user = req.user;
     var message = null;
 
+    console.log('[Profile.Ctrl] update()');
+
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
@@ -144,6 +146,7 @@ exports.update_TO_BE_MERGED_TO_ABOVE = function(req, res) {
  * Return User by ID
  */
 exports.read = function(req, res) {
+    console.log('[Profile.Ctrl] read()');
     debugger;
     res.jsonp(req.user);
 };
@@ -152,5 +155,6 @@ exports.read = function(req, res) {
  * Send User
  */
 exports.me = function(req, res) {
+    console.log('[Profile.Ctrl] me()');
     res.jsonp(req.user || null);
 };
