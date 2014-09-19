@@ -171,3 +171,11 @@ p.details {
     padding-top: 30px;
 }
 /* END : Home - Main Content */
+
+/* BEGIN : Schedule & Driver Content */
+
+/* TODO: move to appropriate place */
+
+.schedule input[type="checkbox"][disabled] {
+    cursor: default!important;
+}
