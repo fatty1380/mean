@@ -18,13 +18,29 @@ module.exports = function(app) {
     app.route('/bgcheck/login')
         .get(bgchecks.login);
 
+    app.route('/bgcheck/logout')
+        .get(bgchecks.logout);
+
     app.route('/bgcheck/applicants')
         .get(bgchecks.getAllApplicants);
 
     app.route('/bgcheck/applicants/:applicantId')
-        .get(bgchecks.read);
+        .get(bgchecks.getApplicant);
 
-    app.param('applicantId', bgchecks.getApplicant);
+    app.route('/bgcheck/applicants/:applicantId/report/:reportType')
+        .get(bgchecks.runReport);
+
+    app.route('/bgcheck/report/:reportId')
+        .get(bgchecks.getReport);
+
+    app.route('/bgcheck/report/:reportId/pdf')
+        .get(bgchecks.getPdfReport);
+
+    app.param('reportId', bgchecks.checkReportStatus);
+
+
+    //app.param('reportType', bgchecks.);
+    //app.param('applicantId', bgchecks.);
 
     // Finish by binding the Bgcheck middleware
     app.param('bgcheckId', bgchecks.bgcheckByID);
