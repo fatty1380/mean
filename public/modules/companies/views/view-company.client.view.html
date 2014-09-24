@@ -1,21 +1,41 @@
-<section data-ng-controller="CompaniesController" data-ng-init="findOne()">
-	<div class="page-header">
-		<h1 data-ng-bind="company.name"></h1>
-	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == company.user._id">
-		<a class="btn btn-primary" href="/#!/companies/{{company._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"></i>
-		</a>
-	</div>
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="company.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="company.user.displayName"></span>
-		</em>
-	</small>
+<section data-ng-controller="CompaniesController" data-ng-init="findOne()" class="container opaque-bg">
+
+    <div class="col-md-10 col-md-offset-1">
+        <div class="row page-header">
+            <div class="col-md-8">
+                <h1 class="list-group-item-heading">{{company.name}}
+                </h1>
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right" data-ng-show="authentication.user._id == company.user._id">
+                    <a class="btn btn-primary" href="/#!/companies/{{company._id}}/edit">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-primary" data-ng-click="remove();">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 opaque-bg">
+                {{company.about}}
+            </div>
+            <div class="col-md-4">
+                <div style="margin: auto; width: 300px; height: 300px; background-color: #CCC; border: solid 1px #666">
+                    <h1 class="text-center" style="margin-top: 100px;">
+                        <small>Location</small>
+                        <br/>{{company.zip}}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="border-top: 1px solid #EEE; margin-top: 10px;">
+            <div class="col-md-8 col-md-offset-1">
+                <h4>Contact this business via&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-primary" ng-disabled="!company.phone" ng-click="makeCall()">Phone</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="!company.email" ng-click="sendEmail()">Email</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="!company.chat" ng-click="openChat()">Chat</button>
+                </h4>
+
+            </div>
 </section>

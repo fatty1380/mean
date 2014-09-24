@@ -86,6 +86,27 @@ header .nav > li > a:hover, header .nav > li > a:focus, footer .nav > li > a:hov
 }
 /* Home - Main Content */
 
+/* General */
+
+/* END General */
+
+/* Company Specific - possibly general in future */
+
+.company label.control-label {
+    margin-bottom: 20px;
+}
+.company label small {
+    color: #666;
+    font-weight: normal;
+    position: absolute;
+    right: 0;
+    padding-right: inherit;
+}
+.company .form-group > * {
+    margin-bottom: 20px;
+}
+/* END Company Specific Work */
+
 .separator div {
     background: #ffffff;
     height: 5px;

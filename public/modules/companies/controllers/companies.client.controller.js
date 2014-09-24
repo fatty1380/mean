@@ -2,64 +2,85 @@
 
 // Companies controller
 angular.module('companies').controller('CompaniesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Companies',
-	function($scope, $stateParams, $location, Authentication, Companies ) {
-		$scope.authentication = Authentication;
+    function($scope, $stateParams, $location, Authentication, Companies) {
+        $scope.authentication = Authentication;
 
-		// Create new Company
-		$scope.create = function() {
-			// Create new Company object
-			var company = new Companies ({
-				name: this.name
-			});
+        // REGION : Page Action methods
 
-			// Redirect after save
-			company.$save(function(response) {
-				$location.path('companies/' + response._id);
+        $scope.makeCall = function() {
+            window.location.href = 'tel://' + $scope.company.phone;
+        };
 
-				// Clear form fields
-				$scope.name = '';
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
+        $scope.sendEmail = function() {
+            window.location.href = 'mailto:' + $scope.company.email + '?subject=Your Outset Company Profile' + '&body=Hello ' + $scope.company.name + ',%0D%0AI saw your company profile on Outset and wanted to hear more.%0D%0A%0D%0AThank you,%0D%0A' + Authentication.user.firstName + '%0D%0A%0D%0A-------------%0D%0AView this Outset Profile here: ' + $location.$$absUrl;
+        };
 
-		// Remove existing Company
-		$scope.remove = function( company ) {
-			if ( company ) { company.$remove();
+        $scope.openChat = function() {
+            alert('Sorry, but chat functionailty is not available at this time');
+        };
 
-				for (var i in $scope.companies ) {
-					if ($scope.companies [i] === company ) {
-						$scope.companies.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.company.$remove(function() {
-					$location.path('companies');
-				});
-			}
-		};
+        // REGION : CRUD Methods
 
-		// Update existing Company
-		$scope.update = function() {
-			var company = $scope.company ;
+        // Create new Company
+        $scope.create = function() {
+            // Create new Company object
+            var company = new Companies({
+                name: this.name,
+                about: this.about,
+                phone: this.phone,
+                email: this.email,
+                zip: this.zip
+            });
 
-			company.$update(function() {
-				$location.path('companies/' + company._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
+            // Redirect after save
+            company.$save(function(response) {
+                $location.path('companies/' + response._id);
 
-		// Find a list of Companies
-		$scope.find = function() {
-			$scope.companies = Companies.query();
-		};
+                // Clear form fields
+                $scope.name = '';
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
 
-		// Find existing Company
-		$scope.findOne = function() {
-			$scope.company = Companies.get({ 
-				companyId: $stateParams.companyId
-			});
-		};
-	}
+        // Remove existing Company
+        $scope.remove = function(company) {
+            if (company) {
+                company.$remove();
+
+                for (var i in $scope.companies) {
+                    if ($scope.companies[i] === company) {
+                        $scope.companies.splice(i, 1);
+                    }
+                }
+            } else {
+                $scope.company.$remove(function() {
+                    $location.path('companies');
+                });
+            }
+        };
+
+        // Update existing Company
+        $scope.update = function() {
+            var company = $scope.company;
+
+            company.$update(function() {
+                $location.path('companies/' + company._id);
+            }, function(errorResponse) {
+                $scope.error = errorResponse.data.message;
+            });
+        };
+
+        // Find a list of Companies
+        $scope.find = function() {
+            $scope.companies = Companies.query();
+        };
+
+        // Find existing Company
+        $scope.findOne = function() {
+            $scope.company = Companies.get({
+                companyId: $stateParams.companyId
+            });
+        };
+    }
 ]);

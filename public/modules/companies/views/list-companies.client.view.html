@@ -1,19 +1,37 @@
-<section data-ng-controller="CompaniesController" data-ng-init="find()">
+<section data-ng-controller="CompaniesController" data-ng-init="find()" class="container opaque-bg">
     <div class="page-header">
         <h1>Companies</h1>
     </div>
     <div class="list-group">
         <a data-ng-repeat="company in companies" data-ng-href="#!/companies/{{company._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Posted on
-				<span data-ng-bind="company.created | date:'medium'"></span>
-				by
-				<span data-ng-bind="company.user.displayName"></span>
-			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="company.name"></h4>
+            <div class="row">
+                <div class="col-md-8">
+                    <h4 class="list-group-item-heading">{{company.name}}
+                    </h4>
+                </div>
+                <div class="col-md-4">
+                    <small class="list-group-item-text">
+                        <p class="text-right">Added on
+                            <span data-ng-bind="company.created | date:'shortDate'"></span>
+                        </p>
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 opaque-bg">
+                    {{company.about}}
+                </div>
+                <div class="col-md-4">
+                    <div style="margin: auto; width: 300px; height: 300px; background-color: #CCC; border: solid 1px #666">
+                        <h1 class="text-center" style="margin-top: 100px;">
+                            <small>Location</small>
+                            <br/>{{company.zip}}</h1>
+                    </div>
+                </div>
+            </div>
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!companies.$resolved || companies.length">
-    	No Companies yet, why don't you <a href="/#!/companies/create">create one</a>?
+        No Companies yet, why don't you <a href="/#!/companies/create">create one</a>?
     </div>
 </section>
