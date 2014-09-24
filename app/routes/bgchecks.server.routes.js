@@ -25,7 +25,7 @@ module.exports = function(app) {
         .get(bgchecks.getAllApplicants);
 
     app.route('/bgcheck/applicants/:applicantId')
-        .get(bgchecks.getApplicant);
+        .get(bgchecks.readApplicant);
 
     app.route('/bgcheck/applicants/:applicantId/report/:reportType')
         .get(bgchecks.runReport);
@@ -37,6 +37,7 @@ module.exports = function(app) {
         .get(bgchecks.getPdfReport);
 
     app.param('reportId', bgchecks.checkReportStatus);
+    app.param('applicantId', bgchecks.getApplicant);
 
 
     //app.param('reportType', bgchecks.);

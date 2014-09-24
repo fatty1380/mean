@@ -25,13 +25,16 @@ var login_unirest = function(req, res) {
         });
     }
 
+    // Initaalize new Cookie Jar
     CookieJar = unirest.jar(true);
 
+    // Init username/password post data
     var post_data = {
         'username': username,
         'password': password
     };
 
+    // post login request to get new session;
     unirest.post(api_base_url + '/rest/session')
         .type('json')
         .send(post_data)
@@ -39,12 +42,14 @@ var login_unirest = function(req, res) {
         .end(function(response) {
             console.log(response.body);
 
+            debugger;
+
             if (response.error) {
                 CookieJar = null;
 
                 return res.status(400).send({
                     message: response.error.message,
-                    reason: JSON.parse(response.body)
+                    reason: response.body ? JSON.parse(response.body).reason : response.error.code
                 });
             }
 
@@ -67,7 +72,8 @@ var getApplicants_unirest = function(req, res) {
 
             if (response.error) {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage(response.error)
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
                 });
             }
 
@@ -92,10 +98,13 @@ var getApplicant_unirest = function(req, res, next, id) {
 
             if (response.error) {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage(response.error)
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
                 });
             }
-            res.jsonp(response.body);
+
+            req.applicant = response.body;
+            next();
         });
 };
 
@@ -118,7 +127,8 @@ var logout_unirest = function(req, res) {
 
             if (response.error) {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage(response.error)
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
                 });
             }
 
@@ -161,7 +171,8 @@ exports.getAvailableReports = function(req, res) {
 
             if (response.error) {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage(response.error)
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
                 });
             }
 
@@ -180,8 +191,8 @@ exports.runReport = function(req, res, next) {
 
     console.log('[bgchecks.runReport]');
     var type = req.params.reportType || 'OFAC';
-    var id = req.params.applicantId || req.query.applicantId || 54;
-    //reportSku={reportSkuValue}&applicantId={applicantIdValue}
+    var id = req.applicant ? req.applicant.applicantId : null || req.params.applicantId || req.query.applicantId || 54;
+
     unirest.post(api_base_url + '/rest/report')
         .jar(CookieJar)
         .query({
@@ -191,10 +202,12 @@ exports.runReport = function(req, res, next) {
         .end(function(response) {
             debugger;
             console.log(response.body);
+            console.log(response.error);
 
             if (response.error) {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage(response.error)
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
                 });
             }
 
@@ -223,7 +236,8 @@ exports.getReport = function(req, res) {
 
             if (response.error) {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage(response.error)
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
                 });
             }
 
@@ -252,7 +266,8 @@ exports.getPdfReport = function(req, res) {
 
             if (response.error) {
                 return res.status(400).send({
-                    message: errorHandler.getErrorMessage(response.error)
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
                 });
             }
 
@@ -276,6 +291,13 @@ exports.checkReportStatus = function(req, res, next, id) {
         .end(function(response) {
             debugger;
             console.log(response.body);
+
+            if (response.error) {
+                return res.status(400).send({
+                    message: response.error.message,
+                    reason: JSON.parse(response.body).reason
+                });
+            }
 
             var reportCheck = response.body.reportCheckStatus;
 
@@ -316,6 +338,10 @@ exports.create = function(req, res) {
 exports.read = function(req, res) {
     debugger;
     res.jsonp(req.bgcheck);
+};
+
+exports.readApplicant = function(req, res) {
+    res.jsonp(req.applicant);
 };
 
 /**
