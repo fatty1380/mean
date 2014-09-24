@@ -1,4 +1,4 @@
-<section ng-init="findByUser(user.id)" data-ng-controller="CompaniesController">
+<section ng-init="findByUser(user._id)" data-ng-controller="CompaniesController">
     <span class="col-md-12 opaque-bg">
 
         <div class="list-group">
@@ -31,7 +31,7 @@
             </a>
         </div>
         <div class="alert alert-warning text-center" data-ng-hide="!companies.$resolved || companies.length">
-            No Companies yet, why don't you <a href="/#!/companies/create">create one</a>?
+            Do you own a company? <a href="/#!/companies/create">create a profile</a>?
         </div>
     </span>
 </section>

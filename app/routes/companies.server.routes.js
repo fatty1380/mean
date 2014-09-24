@@ -14,7 +14,7 @@ module.exports = function(app) {
         .put(users.requiresLogin, companies.hasAuthorization, companies.update)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
-    app.route('/profiles/:userId/company')
+    app.route('/profiles/:userId/companies')
         .get(companies.read)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
