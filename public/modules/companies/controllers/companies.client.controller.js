@@ -82,5 +82,11 @@ angular.module('companies').controller('CompaniesController', ['$scope', '$state
                 companyId: $stateParams.companyId
             });
         };
+
+        $scope.findByUser = function(userId) {
+            $scope.companies = Companies.query({
+                user: userId
+            });
+        };
     }
 ]);

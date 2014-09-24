@@ -200,7 +200,6 @@ exports.driverByID = function(req, res, next, id) {
     Driver.findById(id)
         .populate('user')
         .exec(function(err, driver) {
-            debugger;
             if (err) return next(err);
             if (!driver) return next(new Error('Failed to load Driver ' + id));
             req.driver = driver;
@@ -219,7 +218,6 @@ exports.driverByUserID = function(req, res, next, id) {
     })
         .populate('user')
         .exec(function(err, driver) {
-            debugger;
             if (err) return next(err);
             if (!driver) return next(new Error('No driver available for UserId: ' + userId));
             req.driver = driver;

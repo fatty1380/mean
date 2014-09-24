@@ -3,18 +3,8 @@
 /**
  * Module dependencies.
  */
-var validator = require('validator'),
-    mongoose = require('mongoose'),
+var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-
-
-var validateZipCode = function(value) {
-    console.log('Validator length check: ', validator.len(value, 5, 10));
-    console.log('Validator regex check: ', validator.matches(value, /^[0-9]+[ -]{0,1}[0-9]+$/));
-    console.log('alt validator regex check: ', validator.matches(value, /^\d{5}(?:[-\s]\d{4})?$/));
-
-    return (validator.len(value, 5, 10) && validator.matches(value, /^[0-9]+[ -]{0,1}[0-9]+$/));
-};
 
 /**
  * Company Schema
