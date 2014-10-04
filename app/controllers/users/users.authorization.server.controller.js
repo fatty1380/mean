@@ -19,7 +19,6 @@ exports.userByID = function(req, res, next, id) {
         .exec(function(err, user) {
             if (err) return next(err);
             if (!user) return next(new Error('Failed to load User ' + id));
-            debugger;
             req.profile = user;
             next();
         });

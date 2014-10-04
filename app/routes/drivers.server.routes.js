@@ -19,12 +19,10 @@ module.exports = function(app) {
     // Finish by binding the Driver middleware
     app.param('driverId', drivers.driverByID);
 
-
-    app.route('/driver/user')
-        .get(drivers.list);
-
-    app.route('/driver/user/:userId')
-        .get(drivers.read);
+    // Setup routes for getting a User's driver profile
+    app.route('/profiles/:userId/driver')
+        .get(drivers.read)
+        .delete(users.requiresLogin, drivers.hasAuthorization, drivers.delete);
 
     app.param('userId', drivers.driverByUserID);
 

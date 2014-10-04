@@ -15,6 +15,19 @@ module.exports = function(app) {
         .delete(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.delete);
 
     // DEBUGGING Routes
+    /* Order of operations
+     * ---------------------------------------------------
+     * /bgcheck/login
+     * /bgcheck/applicants
+     * /bgcheck/applicants/:applicantId
+     * /bgcheck/applicants/:applicantId/report/:reportType
+     * /bgcheck/report/:reportId
+     * /bgcheck/logout
+     *
+     * use 54 for applicantId
+     *     "OFAC" for reportType
+     *     120 for reportId
+     */
     app.route('/bgcheck/login')
         .get(bgchecks.login);
 
@@ -45,4 +58,6 @@ module.exports = function(app) {
 
     // Finish by binding the Bgcheck middleware
     app.param('bgcheckId', bgchecks.bgcheckByID);
+    app.param('reportId', bgchecks.checkReportStatus);
+    app.param('applicantId', bgchecks.getApplicant);
 };

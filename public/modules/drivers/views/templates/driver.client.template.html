@@ -1,0 +1,33 @@
+<section ng-init="findOneByUser(user._id)" data-ng-controller="DriversController">
+    <span class="col-md-12 opaque-bg">
+        <div data-ng-show="!!driver.$resolved || !!driver">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4 class="list-group-item-heading">{{driver.user.displayName}}
+                    </h4>
+                </div>
+                <div class="col-md-4">
+                    <small class="list-group-item-text">
+                        <p class="text-right">Added on
+                            <span data-ng-bind="driver.created | date:'shortDate'"></span>
+                        </p>
+                    </small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 opaque-bg">
+                    {{driver.experience}}
+                </div>
+                <div class="col-md-4">
+                    <label>IsActive:
+                        <strong>{{driver.isActive}}</strong>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning text-center" data-ng-hide="!!driver">
+            Are you a driver? <a href="/#!/drivers/create">create a profile!</a>?
+        </div>
+    </span>
+</section>

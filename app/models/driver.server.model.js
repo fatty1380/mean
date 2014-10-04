@@ -39,11 +39,6 @@ var DriverSchema = new Schema({
 
     licenses: ['License'],
 
-    endorsements: [{
-        description: String,
-        expires: Date,
-    }],
-
     schedule: {
         type: ['Schedule'],
     },
@@ -53,7 +48,8 @@ var DriverSchema = new Schema({
             type: String
         },
         time: {
-            type: String
+            start: Date,
+            end: Date
         },
         location: {
             type: String

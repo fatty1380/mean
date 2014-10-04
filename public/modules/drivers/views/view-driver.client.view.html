@@ -21,9 +21,9 @@
             </em>
         </small>
 
-        <h4 class="list-group-item-heading" data-ng-bind="driver.name"></h4>
+        <h4 class="list-group-item-heading" data-ng-bind="driver.user.name"></h4>
         <label>Addresses</label>
-        <div ng-repeat="address in driver.addresses">
+        <div ng-repeat="address in driver.user.addresses">
             <div ng-repeat="street in address.streetAddresses">
                 <p data-ng-bind="street"></p>
             </div>
@@ -31,32 +31,35 @@
             <p data-ng-bind="address.state"></p>
             <p data-ng-bind="address.zip"></p>
         </div>
-        <p ng-show="driver.addresses.length == 0">None</p>
+        <p ng-show="!driver.user.addresses || driver.user.addresses.length == 0">None</p>
         <br/>
         <label>Licenses</label>
         <div ng-repeat="license in driver.licenses">
-            <p data-ng-bind="license.type"></p>
-            <p data-ng-bind="license.number"></p>
-            <p data-ng-bind="license.dateOfBirth"></p>
-            <p data-ng-bind="license.state"></p>
-            <p data-ng-bind="license.endorsements"></p>
-            <p data-ng-bind="license.issued"></p>
-            <p data-ng-bind="license.expires"></p>
+            <p>Type: {{license.type}}</p>
+            <p>Number: {{license.number}}</p>
+            <p>DOB: {{license.dateOfBirth}}</p>
+            <p>State: {{license.state}}</p>
+            <p>Rating/Class: {{license.rating}}</p>
+            <p>Issued: {{license.issued}}</p>
+            <p>Expires: {{license.expires}}</p>
+
+            <label>Endorsements</label>
+            <div ng-repeat="endorsement in license.endorsements">
+                <p>{{endorsement.key}}
+                    <span class="label" data-ng-bind="endorsement.value ? 'YES' : 'NO'" ng-class="endorsement.value ? 'label-success' : 'label-danger'"></span>
+                </p>
+
+            </div>
         </div>
         <p ng-show="driver.licenses.length == 0">None</p>
         <br/>
-        <label>Endorsements</label>
-        <div ng-repeat="endorsement in driver.endorsements">
-            <p data-ng-bind="endorsement.description"></p>
-            <p data-ng-bind="endorsement.expires"></p>
-        </div>
+
         <p ng-show="driver.endorsements.length == 0">None</p>
         <br/>
         <label>Experience</label>
         <div ng-repeat="exp in driver.experience">
+            <p>{{exp.location}}: from {{exp.time.start | date : 'MMMM, yyyy'}} to {{exp.time.end | date : 'MMMM, yyyy'}}</p>
             <p data-ng-bind="exp.text"></p>
-            <p data-ng-bind="exp.time"></p>
-            <p data-ng-bind="exp.location"></p>
         </div>
         <p ng-show="driver.experience.length == 0">None</p>
         <br/>

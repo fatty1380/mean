@@ -3,14 +3,14 @@
 /**
  * Module dependencies.
  */
-var mongoose = require( 'mongoose' ),
+var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function( property ) {
-    return ( ( this.provider !== 'local' && !this.updated ) || property.length );
+var validateLocalStrategyProperty = function(property) {
+    return ((this.provider !== 'local' && !this.updated) || property.length);
 };
 
 /**
@@ -23,12 +23,12 @@ var getEnumValues = function() {
 /**
  * License Schema
  */
-var LicenseSchema = new Schema( {
-    // License model fields   
+var LicenseSchema = new Schema({
+    // License model fields
     type: {
         type: String,
-        enum: [ 'Standard', 'Commercial' ],
-        default: 'Standard',
+        enum: ['standard', 'commercial'],
+        default: 'standard',
     },
     number: {
         type: String,
@@ -44,11 +44,17 @@ var LicenseSchema = new Schema( {
         type: String,
         trim: true,
         default: 'AZ',
-        validate: [ validateLocalStrategyProperty, 'Please select your state' ],
+        validate: [validateLocalStrategyProperty, 'Please select your state'],
+    },
+    ratings: {
+        type: String,
+        default: 'D'
     },
     endorsements: {
-        type: [ String ],
-        enum: [ 'none', 'Class A', 'Class C', 'Motorcycle' ],
+        type: [{
+            key: String,
+            value: Boolean
+        }],
         default: [],
     },
     issued: {
@@ -67,6 +73,6 @@ var LicenseSchema = new Schema( {
         type: Date,
         default: Date.now,
     }
-} );
+});
 
-mongoose.model( 'License', LicenseSchema );
+mongoose.model('License', LicenseSchema);

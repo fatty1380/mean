@@ -12,19 +12,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     if (!$scope.user) $location.path('/');
 
     $scope.init = function() {
-        if (!$scope.user.driver) {
-            if ($scope.user.types.indexOf('driver') !== -1) {
-                DriverUser.get({
-                    userId: $scope.user._id
-                }).$promise.then(function(driver) {
-                    if (driver) {
-                        $scope.user.driver = Authentication.driver = driver;
-                    }
-                });
-            }
-        }
-
-        console.log('[SettingsController] init(%o,%o)', $scope.user, $scope.user.driver);
+        console.log('[SettingsController] init(%o,%o)', $scope.user);
     };
 
     $scope.toggleMode = function(arg) {
@@ -57,15 +45,6 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
             streetAddresses: [''],
         });
         $scope.addresses.push(addr);
-    };
-
-    $scope.addDriver = function() {
-        event.preventDefault();
-
-        var driver = new Drivers({
-            userId: $scope.user._id
-        });
-        $scope.user.driver = driver;
     };
 
     // Check if there are additional accounts

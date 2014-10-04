@@ -8,10 +8,10 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
 }
-.ng-invalid.ng-dirty {
+:not(label.btn).ng-invalid.ng-dirty {
     border-color: #FA787E;
 }
-.ng-valid.ng-dirty {
+:not(label.btn).ng-valid.ng-dirty {
     border-color: #78FA89;
 }
 /* Outset Specific Changes */
@@ -92,18 +92,20 @@ header .nav > li > a:hover, header .nav > li > a:focus, footer .nav > li > a:hov
 
 /* Company Specific - possibly general in future */
 
-.company label.control-label {
+.create label.control-label {
     margin-bottom: 20px;
 }
-.company label small {
+.create label small {
     color: #666;
     font-weight: normal;
     position: absolute;
     right: 0;
     padding-right: inherit;
 }
-.company .form-group > * {
-    margin-bottom: 20px;
+.create .form-group .controls {
+    margin-bottom: 10px;
+    padding-top: 7px;
+    min-height: 34px;
 }
 /* END Company Specific Work */
 

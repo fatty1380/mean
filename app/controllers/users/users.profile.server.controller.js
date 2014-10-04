@@ -58,7 +58,6 @@ exports.update_TO_BE_MERGED_TO_ABOVE = function(req, res) {
     //debugger;
     // Init Variables
     var user = req.user;
-    var driver = req.user.driver;
     var message = null;
 
     // For security measurement we remove the roles from the req.body object
@@ -71,6 +70,8 @@ exports.update_TO_BE_MERGED_TO_ABOVE = function(req, res) {
         user.displayName = user.firstName + ' ' + user.lastName;
 
         if (req.body.driver) {
+
+            var driver = req.user.driver;
             debugger;
             driver = _.extend(driver, req.body.driver);
             driver.updated = Date.now;

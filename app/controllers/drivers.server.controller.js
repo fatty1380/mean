@@ -54,7 +54,7 @@ exports.create = function(req, res) {
  * Show the current Driver
  */
 exports.read = function(req, res) {
-    console.log('[Driver.Controller] read()');
+    console.log('[Driver.read] start with driver: ', req.driver);
     res.jsonp(req.driver);
 };
 
@@ -196,30 +196,45 @@ exports.newLicense = function(req, res) {
  * Driver middleware
  */
 exports.driverByID = function(req, res, next, id) {
-    console.log('[Driver.Controller] driverByID()');
+    console.log('[Driver.driverById] start');
     Driver.findById(id)
         .populate('user')
         .exec(function(err, driver) {
-            if (err) return next(err);
-            if (!driver) return next(new Error('Failed to load Driver ' + id));
+            if (err) {
+                console.log('[Driver.driverById] Driver search errored: ', err.message);
+                return next(err);
+            }
+            if (!driver) {
+                console.log('[Driver.driverById] No Driver Found');
+                return next(new Error('Failed to load Driver ' + id));
+            }
+            console.log('[Driver.driverById] found driver: ', driver);
             req.driver = driver;
             next();
         });
 };
 
 exports.driverByUserID = function(req, res, next, id) {
-    console.log('[Driver.Controller] driverByUserID()');
+    console.log('[Driver.driverByUserId] start');
     var userId = req.params.userId || req.query.userId || req.user.id;
 
-    console.log('Looking for Driver for user: ', userId);
+    console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
     Driver.findOne({
         user: mongoose.Types.ObjectId(userId)
     })
         .populate('user')
         .exec(function(err, driver) {
-            if (err) return next(err);
-            if (!driver) return next(new Error('No driver available for UserId: ' + userId));
+            if (err) {
+                console.log('[Driver.driverByUserId] Driver search errored: ', err.message);
+                return next(err);
+            }
+            if (!driver) {
+                console.log('[Driver.driverByUserId] No Driver Found');
+                return next(new Error('No driver available for UserId: ' + userId));
+            }
+
+            console.log('[Driver.driverByUserId] found driver: ', driver);
             req.driver = driver;
             next();
         });

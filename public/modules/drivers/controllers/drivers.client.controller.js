@@ -3,14 +3,113 @@
 // Drivers controller
 function DriversController($scope, $stateParams, $location, $http, Authentication, Drivers, DriverUser) {
     $scope.authentication = Authentication;
-    $scope.driver = Drivers;
-    $scope.driverUser = DriverUser;
+    //$scope.driver = Drivers;
+    //$scope.driverUser = DriverUser;
+
+    // Local Variables
+    $scope.licenses = [];
+    $scope.experience = [];
+    $scope.ratings = ['A', 'B', 'C', 'D', 'M', 'G'];
+    $scope.rating = {
+        model: undefined
+    };
+
+    $scope.endorsements = [{
+        key: 'HME (Hazardous Materials)',
+        value: false
+    }, {
+        key: 'P (Passenger)',
+        value: false
+    }, {
+        key: 'S (School Bus)',
+        value: false
+    }, {
+        key: 'Double-Triple Trailer',
+        value: false
+    }, {
+        key: 'Tank Vehicle',
+        value: false
+    }, {
+        key: 'Motorcycle',
+        value: false
+    }];
+
+    $scope.months = [{
+        'key': '1',
+        'value': 'January'
+    }, {
+        'key': '2',
+        'value': 'February'
+    }, {
+        'key': '3',
+        'value': 'March'
+    }, {
+        'key': '4',
+        'value': 'April'
+    }, {
+        'key': '5',
+        'value': 'May'
+    }, {
+        'key': '6',
+        'value': 'June'
+    }, {
+        'key': '7',
+        'value': 'July'
+    }, {
+        'key': '8',
+        'value': 'August'
+    }, {
+        'key': '9',
+        'value': 'September'
+    }, {
+        'key': '10',
+        'value': 'October'
+    }, {
+        'key': '11',
+        'value': 'November'
+    }, {
+        'key': '12',
+        'value': 'December'
+    }];
+
 
     // Create new Driver
     $scope.create = function() {
+
+        if (!$scope.driverForm.$valid) {
+            $scope.error = 'Please fill in required fields';
+            return;
+        }
+
+        if (!$scope.license) {
+            $scope.error = 'Please fill in information about your driver\'s license';
+            return;
+        }
+
+        $scope.license.rating = $scope.rating.model;
+        $scope.license.endorsements = $scope.endorsements;
+
+        angular.forEach($scope.experience, function(exp, i) {
+            var start = new Date(exp.time.start.year, exp.time.start.month - 1);
+            var end = new Date(exp.time.end.year, exp.time.end.month - 1);
+
+            exp.time.start = start;
+            exp.time.end = end;
+
+            debugger;
+
+            console.log('Start %o vs %o', start, exp.time.start, $scope.experience[i].time.start);
+        });
+
+        console.log('After iter: %o', $scope.experience[0].time.start);
+
+
         // Create new Driver object
         var driver = new Drivers({
-            name: this.name
+            licenses: [
+                $scope.license
+            ],
+            experience: $scope.experience,
         });
 
         // Redirect after save
@@ -65,24 +164,10 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         });
     };
 
-    $scope.findByUser = function(ct) {
-        ct = ct || 1;
-
-        if (ct > 30) {
-            return;
-        }
-
-        if (!$scope.user || $scope.user._id === undefined) {
-            console.log('No user yet ... waiting 500');
-            setTimeout(function() {
-                $scope.findByUser(ct++);
-            }, 500);
-            return;
-        }
-
-        debugger;
+    $scope.findOneByUser = function(id) {
+        console.log('[DriverClientController] findOneByUser(%o)', id);
         $scope.driver = DriverUser.get({
-            userId: $scope.user._id
+            userId: id
         });
     };
 
@@ -112,6 +197,43 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
                     info: data
                 });
             });
+    };
+
+    $scope.addExperience = function() {
+        event.preventDefault();
+
+        $scope.experience.push({
+            text: '',
+            time: {
+                start: {
+                    month: null,
+                    year: null
+                },
+                end: {
+                    month: null,
+                    year: null
+                }
+            },
+            location: ''
+        });
+    };
+
+    $scope.date = new Date();
+
+    $scope.moreExperienceDisplayHelper = function() {
+        var experience = $scope.experience;
+
+        if (experience && experience.length > 0) {
+            var val = experience[experience.length - 1];
+
+            if (val.text.length && val.location.length) {
+                if (val.time.start.month && val.time.start.year) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     };
 
     $scope.switchHelper = function(value) {

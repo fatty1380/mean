@@ -7,7 +7,6 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     crypto = require('crypto'),
     License = mongoose.model('License'),
-    Driver = mongoose.model('Driver'),
     Address = mongoose.model('Address');
 
 /**
@@ -116,9 +115,9 @@ var UserSchema = new Schema({
         trim: true
     },
 
-    driver: {
-        type: Schema.Types.Mixed
-    },
+    //    driver: {
+    //        type: Schema.Types.Mixed
+    //    },
 
     //company: {
     //    type: Schema.ObjectId,
