@@ -27,4 +27,4 @@ DriverUserFactory.$inject = ['$resource'];
 angular
     .module('drivers')
     .factory('Drivers', DriverFactory)
-    .factory('DriverUser', DriverUserFactory);
+    .factory('Profile.Drivers', DriverUserFactory);

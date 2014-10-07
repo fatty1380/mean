@@ -12,10 +12,10 @@ var _ = require('lodash'),
  */
 exports.userByID = function(req, res, next, id) {
     console.log('[Athr.Ctrl] userById()');
-    User.findOne({
-        _id: id
-    })
-        .populate('driver')
+    User
+        .findOne({
+            _id: id
+        })
         .exec(function(err, user) {
             if (err) return next(err);
             if (!user) return next(new Error('Failed to load User ' + id));

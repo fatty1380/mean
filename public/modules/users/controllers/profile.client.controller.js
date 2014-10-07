@@ -1,45 +1,41 @@
 'use strict';
 
-function ProfileController($scope, $stateParams, Users, Drivers, Authentication) {
+function ProfileController($scope, $stateParams, Users, Authentication) {
     $scope.activeModule = 'users';
     $scope.profileOnly = true;
     $scope.editMode = false;
 
+    //    $scope.Profile = {
+    //        'Companies': Companies,
+    //        'Drivers': DriverUser
+    //    };
+
     // Find existing User Profile
     $scope.init = function() {
-        console.log('[ProfileController] init()');
-
-        Users
-            .get({
+        $scope.user =
+            Users.get({
                 userId: $stateParams.userId
-            })
-            .$promise
-            .then(function(user) {
-                console.log('[ProfileController] init() user = %o', user);
-                $scope.user = user;
-
-                Drivers.get({
-                    userId: user._id
-                }).$promise.then(function(driver) {
-                    if (driver) {
-                        console.log('[ProfileController] init() driver = %o', driver);
-                        $scope.user.driver = driver;
-                    }
-                });
             });
+
+        //        $scope.driver = $scope.Profile.Drivers.get({
+        //            userId: $stateParams.userId
+        //        });
+        //
+        //        $scope.companies = $scope.Profile.Companies.get({
+        //            userId: $stateParams.userId
+        //        });
+
     };
+
+    //    $scope.getDriver = function() {
+    //        $scope.driver = $scope.Profile.Drivers.get({
+    //            userId: $scope.user._id
+    //        });
+    //    };
 }
 
-ProfileController.$inject = ['$scope', '$stateParams', 'Profile', 'DriverUser', 'Authentication'];
+ProfileController.$inject = ['$scope', '$stateParams', 'Users', 'Authentication'];
 
 angular
     .module('users')
     .controller('ProfileController', ProfileController);
-
-
-//var Regions = $resource('mocks/regions.json');//
-
-//$scope.regions = Regions.query();
-//$scope.regions.$promise.then(function(result) {
-//    $scope.regions = result;
-//});

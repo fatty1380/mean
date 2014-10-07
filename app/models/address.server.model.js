@@ -29,7 +29,7 @@ var AddressSchema = new Schema({
         type: [String],
         default: [''],
         trim: true,
-        validate: [validateStreetAddressValue, 'Please provide a valid street address'],
+        //validate: [validateStreetAddressValue, 'Please provide a valid street address'],
     },
 
     city: {

@@ -1,28 +1,31 @@
 'use strict';
 
 //Companies service used to communicate Companies REST endpoints
-angular.module('companies').factory('Companies', ['$resource',
-    function($resource) {
-        return $resource('companies/:companyId', {
-            companyId: '@_id'
-        }, {
-            update: {
-                method: 'PUT'
-            }
-        });
-    }
-]);
+function Companies($resource) {
+    return $resource('companies/:companyId', {
+        companyId: '@_id'
+    }, {
+        update: {
+            method: 'PUT'
+        }
+    });
+}
 
 
-angular.module('companies').factory('ProfileCompanies', ['$resource',
-    function($resource) {
-        return $resource('profiles/:userId/companies', {
-            userId: '@_id'
-        }, {
-            // TODO : See if this can be eliminated?
-            update: {
-                method: 'PUT'
-            }
-        });
-    }
-]);
+function ProfileCompanies($resource) {
+    return $resource('profiles/:userId/companies', {
+        userId: '@_id'
+    }, {
+        update: {
+            method: 'PUT'
+        }
+    });
+}
+
+Companies.$inject = ['$resource'];
+ProfileCompanies.$inject = ['$resource'];
+
+angular
+    .module('companies')
+    .factory('Companies', Companies)
+    .factory('Profile.Companies', ProfileCompanies);

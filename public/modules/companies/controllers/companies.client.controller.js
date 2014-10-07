@@ -1,7 +1,7 @@
 'use strict';
 
 // Companies controller
-angular.module('companies').controller('CompaniesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Companies', 'ProfileCompanies',
+angular.module('companies').controller('CompaniesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Companies', 'Profile.Companies',
 
     function($scope, $stateParams, $location, Authentication, Companies, ProfileCompanies) {
         $scope.authentication = Authentication;

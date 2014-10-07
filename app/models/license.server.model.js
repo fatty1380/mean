@@ -46,7 +46,7 @@ var LicenseSchema = new Schema({
         default: 'AZ',
         validate: [validateLocalStrategyProperty, 'Please select your state'],
     },
-    ratings: {
+    rating: {
         type: String,
         default: 'D'
     },

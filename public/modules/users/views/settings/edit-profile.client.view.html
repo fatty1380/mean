@@ -1,12 +1,12 @@
-<section class="row" data-ng-controller="SettingsController">
+<section class="row" data-ng-controller="SettingsController" data-ng-init="init()">
     <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
     <section class="container opaque-bg">
         <div class="page-header col-md-12">
             <h2 class="col-md-9">Edit your
-                <span class="text-capitalize">{{ user.roles[0] }}</span>&nbsp;profile
+                <span class="text-capitalize">{{ user.type }}</span>&nbsp;profile
                 <small>{{ user.email }}</small>
             </h2>
-            <div class="col-md-3" style="margin-top: 20px">
+            <div class="pull-right" style="margin-top: 20px">
                 <div class="col-md-12 text-right">Member Since {{ user.created | date:'longDate' }}</div>
                 <div class="col-md-12 text-right">Logged in via {{ user.provider }} auth</div>
             </div>

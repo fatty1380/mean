@@ -1,4 +1,4 @@
-<section data-ng-controller="JobsController">
+<section data-ng-controller="JobsController" class="container opaque-bg">
     <div class="page-header">
         <h1>{{ name || 'New Job' }}</h1>
 
@@ -23,8 +23,12 @@
 
                 <div class="form-group">
                     <label class="control-label" for="name">Location</label>
-                    <button class="btn btn-link btn-small" ng-hide="showAddressDetails" ng-click="showAddressDetails = true;">add address details...</button>
+                    <button class="btn btn-link btn-small" ng-hide="showAddressDetails" ng-click="showAddressDetails()">add address details...</button>
+
                     <div class="controls">
+                        <select data-ng-show="editMode" ng-model="location.type" ng-options="type as type for type in types">
+                            <option value="">-- choose type --</option>
+                        </select>
                         <input type="text" data-ng-model="location.type" ng-show="showAddressDetails" id="locType" class="form-control" placeholder="Address Type">
                         <input type="text" data-ng-model="location.streetAddress" ng-show="showAddressDetails" id="locStreet" class="form-control" placeholder="Street Address">
                         <input type="text" data-ng-model="location.streetAddress2" ng-show="showAddressDetails" id="locStreet2" class="form-control" placeholder="Street Address (cont)">

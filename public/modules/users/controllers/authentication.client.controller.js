@@ -19,9 +19,10 @@ function AuthenticationController($scope, $http, $location, Authentication) {
 
     $scope.signup = function() {
 
-        $scope.credentials.types = [$scope.signupType];
+        $scope.credentials.type = $scope.signupType;
         console.log('[Auth.Ctrl.signup] signing up with credentials: ', $scope.credentials);
 
+        debugger;
 
         $http.post('/auth/signup', $scope.credentials)
             .success(function(response) {

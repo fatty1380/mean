@@ -1,6 +1,6 @@
 'use strict';
 
-// Configuring the Articles module
+// Configuring the Jobs module
 angular.module('jobs').run(['Menus',
     function(Menus) {
         // Set top bar menu items

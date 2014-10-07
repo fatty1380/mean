@@ -2,18 +2,18 @@
     <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
     <section class="container opaque-bg">
         <div class="page-header col-md-12">
-            <h2 class="col-md-9" data-ng-show="profileOnly">{{user.displayName}}</h2>
-            <h2 class="col-md-9" data-ng-hide="profileOnly">Your
-                <span class="text-capitalize">{{ user.roles[0] }}</span>&nbsp;profile
+            <span class="h2 pull-left" data-ng-show="profileOnly">{{user.displayName}}</span>
+            <span class="h2 pull-left" data-ng-hide="profileOnly">Your
+                <span class="text-capitalize">{{ user.type }}</span>&nbsp;profile
                 <small>{{ user.email }}</small>
-            </h2>
-            <div class="col-md-3" style="margin-top: 20px">
+            </span>
+            <div class="pull-right" style="margin-top: 20px">
                 <div class="col-md-12 text-right">Member Since {{ user.created | date:'longDate' }}</div>
-                <div class="col-md-12 text-right">Logged in via {{ user.provider }} auth</div>
+                <small class="col-md-12 text-right">Logged in via {{ user.provider }} auth</small>
             </div>
         </div>
 
-        <div class="col-xs-offset-0 col-xs-4 col-md-offset-1 col-md-5">
+        <div class="col-xs-offset-0 col-xs-4 col-md-8">
             <form data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
                 <fieldset>
                     <!-- Begin include of primary User Information Display -->
@@ -40,7 +40,7 @@
             </form>
         </div>
 
-        <div class="well well-sm col-md-offset-1 col-md-4">
+        <div class="well well-sm col-md-4">
 
 
             <div class="col-md-12">

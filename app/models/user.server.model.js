@@ -82,11 +82,11 @@ var UserSchema = new Schema({
         }],
         default: ['user']
     },
-    types: [{
+    type: {
         type: String,
         enum: ['driver', 'owner'],
         default: []
-    }],
+    },
     email: {
         type: String,
         trim: true,

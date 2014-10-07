@@ -2,17 +2,257 @@
     <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
     <section class="container opaque-bg">
         <div class="page-header">
-            <h1>Edit Driver</h1>
+            <h1>Edit {{driver.user.displayName}}'s Driver Profile</h1>
         </div>
         <div class="col-md-12">
             <form class="form-horizontal" data-ng-submit="update()" novalidate>
                 <fieldset>
-                    <div class="form-group">
-                        <label class="control-label" for="name">Name</label>
-                        <div class="controls">
-                            <input type="text" data-ng-model="driver.name" id="name" class="form-control" placeholder="Name" required>
+
+                    <!-- Driver's License Information -->
+                    <div class="row-fluid profile-row">
+                        <h3 class="col-sm-10 col-sm-offset-1">Driver's License
+                            <hr>
+                        </h3>
+                    </div>
+
+                    <div class="row-fluid profile-row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">State
+                                    <br/>
+                                    <small>The state which issued the license</small>
+                                </label>
+                                <div class="controls col-sm-6" syle>
+                                    <select class="form-control" data-ng-model="driver.license.state">
+                                        <option value="AZ">AZ</option>
+                                        <option value="CA">CA</option>
+                                        <option value="NV">NV</option>
+                                        <option value="------">------</option>
+                                        <option value="-more-">-more-</option>
+                                    </select>
+                                </div>
+
+                                <label class="col-sm-6 control-label">DL Number
+                                    <br/>
+                                    <small>The license ID Number</small>
+                                </label>
+                                <span class="controls col-sm-6">
+                                    <input type="text" data-ng-model="driver.license.number" class="form-control" placeholder="eg: A1298702" required />
+                                </span>
+
+                                <label class="col-sm-6 control-label">Issued
+                                    <br/>
+                                    <small>The date your license was issued</small>
+                                </label>
+                                <span class="controls col-sm-6">
+                                    <div class="input-group margin-bottom-sm" id="issueDate">
+                                        <input class="form-control" type="date" name="" data-ng-value="driver.license.issued" placeholder="DD/MM/YYYY">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar fa-fw"></i>
+                                        </span>
+                                    </div>
+                                </span>
+
+                                <label class="col-sm-6 control-label">Expiration
+                                    <br/>
+                                    <small>The date your license expires</small>
+                                </label>
+                                <span class="controls col-sm-6">
+                                    <div class="input-group margin-bottom-sm" id="issueDate">
+                                        <input class="form-control" type="date" name="" data-ng-value="driver.license.expires" placeholder="DD/MM/YYYY">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar fa-fw"></i>
+                                        </span>
+                                    </div>
+                                </span>
+                                <label class="col-sm-6 control-label">Date of Birth
+                                    <br/>
+                                    <small>Your birthdate</small>
+                                </label>
+                                <span class="controls col-sm-6">
+                                    <div class="input-group margin-bottom-sm" id="birthDate">
+                                        <input class="form-control" type="date" name="" data-ng-value="driver.license.dateOfBirth" placeholder="DD/MM/YYYY">
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar fa-fw"></i>
+                                        </span>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-repeat="license in driver.licenses">
+                                <label class="col-sm-6 control-label">License Type
+                                    <br/>
+                                    <small>is this a commercial or standard license</small>
+                                </label>
+                                <div class="controls col-sm-6">
+                                    <select class="form-control" data-ng-model="license.type">
+                                        <option>Standard</option>
+                                        <option>Commercial</option>
+                                    </select>
+                                </div>
+                                <label class="col-sm-6 control-label">Class Rating
+                                    <br/>
+                                    <small>the license class rating</small>
+                                </label>
+                                <span class="controls col-sm-6">
+                                    <div class="btn-group">
+                                        <label ng-repeat="val in ratings" class="btn btn-primary btn-sm" ng-model="license.rating" btn-radio="val">{{val}}</label>
+                                    </div>
+                                </span>
+                                <label class="col-sm-6 control-label">Endorsements
+                                    <br/>
+                                    <small>any endorsements on the license</small>
+                                </label>
+                                <span class="controls col-sm-6">
+                                    <div class="btn-group btn-group-vertical">
+                                        <label ng-repeat="endorsement in license.endorsements" class="btn btn-primary btn-md pull-left" ng-model="endorsement.value" btn-checkbox>{{endorsement.key}}
+                                            <span data-ng-show="endorsement.value" class="fa fa-check-circle pull-left"></span>
+                                            <span data-ng-hide="endorsement.value" class="fa fa-circle-o pull-left"></span>
+                                        </label>
+                                    </div>
+                                </span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Driver's Experience Breakdown -->
+                    <div class="row-fluid profile-row">
+                        <h3 class="col-sm-10 col-sm-offset-1">Experience
+                            <hr>
+                        </h3>
+                    </div>
+
+                    <div class="row-fluid profile-row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="form-group">
+                                <div data-ng-repeat="exp in driver.experience" name="experience">
+                                    <label class="col-sm-2 control-label">Title
+                                        <br/>
+                                        <small>Your title at this position</small>
+                                    </label>
+                                    <span class="controls col-sm-10 controls">
+                                        <input type="text" data-ng-model="exp.title" class="form-control" placeholder="Short Title" required>
+                                        </textarea>
+                                    </span>
+                                    <label class="col-sm-2 control-label">About
+                                        <br/>
+                                        <small>Describe your experience</small>
+                                    </label>
+                                    <span class="controls col-sm-10 controls">
+                                        <textarea rows="5" data-ng-model="exp.description" class="form-control" placeholder="About" required></textarea>
+                                    </span>
+
+                                    <label class="col-sm-2 control-label">Start Date
+                                        <br/>
+                                        <small>when you started</small>
+                                    </label>
+                                    <span class="col-sm-4 controls">
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <div class="btn-group" dropdown is-open="status.start.isopen">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="disabled">
+                                                        {{months[exp.time.start.month-1].value || "Month"}}
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li ng-repeat="currMonth in months" ng-click="exp.time.start.month = currMonth.key">
+                                                            <a>{{currMonth.value}}</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <input type="text" data-ng-model="exp.time.start.year" class="form-control" placeholder="year (eg: 2013)" required />
+                                        </div>
+                                    </span>
+                                    <label class="col-sm-2 control-label">End Date
+                                        <br/>
+                                        <small>when you finished</small>
+                                    </label>
+                                    <span class="col-sm-4 controls">
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <div class="btn-group" dropdown is-open="status.end.isopen">
+                                                    <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="disabled">
+                                                        {{months[exp.time.end.month-1].value || "Month"}}
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li ng-repeat="currMonth in months" ng-click="exp.time.end.month = currMonth.key">
+                                                            <a>{{currMonth.value}}</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <input type="text" data-ng-model="exp.time.end.year" class="form-control" placeholder="year (eg: 2013)" />
+                                        </div>
+                                    </span>
+
+                                    <label class="col-sm-2 control-label">Location
+                                        <br/>
+                                        <small>Where was this job?</small>
+                                    </label>
+                                    <span class="col-md-10 controls">
+                                        <input type="text" data-ng-model="exp.location" class="form-control" placeholder="Where" required />
+                                    </span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row-fluid profile-row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <alert type="info pull-center" ng-click="addExperience()" ng-hide="!experience || experience.length > 0">
+                                <i class="fa fa-plus-circle text-success fa-2x" style="padding-right: 10px;"></i>
+                                <span>Add information about past Experience to help employers know more about you and your background</span>
+                            </alert>
+                            <alert type="info pull-center" ng-click="addExperience()" ng-show="moreExperienceDisplayHelper()">
+                                <i class="fa fa-plus-circle text-success fa-2x" style="padding-right: 10px;"></i>
+                                <span>Add information about other Experience to fill in your background!</span>
+                            </alert>
+                        </div>
+                    </div>
+
+                    <!-- Driver's Availability -->
+                    <div class="row-fluid profile-row">
+                        <label for="schedule">Availability</label>
+                        <div class="col-md-12 availability_matrix" name="schedule">
+                            <div class="container-fluid well">
+                                <div class="col-md-12">
+                                    <div class="row availability-header">
+                                        <div class="col-md-5">
+                                            <h6 class="heading profile-label profile-label-1">Time</h6>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <h6 class="heading profile-label profile-label-1">M</h6>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <h6 class="heading profile-label profile-label-1">Tu</h6>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <h6 class="heading profile-label profile-label-1">W</h6>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <h6 class="heading profile-label profile-label-1">Th</h6>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <h6 class="heading profile-label profile-label-1">F</h6>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <h6 class="heading profile-label profile-label-1">Sa</h6>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <h6 class="heading profile-label profile-label-1">Su</h6>
+                                        </div>
+                                    </div>
+                                    <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in user.driver.schedule'></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <input type="submit" value="Update" class="btn btn-default">
                     </div>

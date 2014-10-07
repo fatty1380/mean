@@ -126,12 +126,20 @@
                     <div class="col-sm-8 col-sm-offset-2">
                         <div class="form-group">
                             <div data-ng-repeat="exp in experience" name="experience">
-                                <label class="col-sm-2 control-label">Description
+                                <label class="col-sm-2 control-label">Title
+                                    <br/>
+                                    <small>Your title at this position</small>
+                                </label>
+                                <span class="controls col-sm-10 controls">
+                                    <input type="text" data-ng-model="exp.title" class="form-control" placeholder="Short Title" required>
+                                    </textarea>
+                                </span>
+                                <label class="col-sm-2 control-label">About
                                     <br/>
                                     <small>Describe your experience</small>
                                 </label>
                                 <span class="controls col-sm-10 controls">
-                                    <textarea rows="5" data-ng-model="exp.text" class="form-control" placeholder="About" required></textarea>
+                                    <textarea rows="5" data-ng-model="exp.description" class="form-control" placeholder="About" required></textarea>
                                 </span>
 
                                 <label class="col-sm-2 control-label">Start Date

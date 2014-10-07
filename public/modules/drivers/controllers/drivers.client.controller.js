@@ -236,6 +236,18 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         return false;
     };
 
+    $scope.endorsementFilter = function(item) {
+        return item.value === true;
+    };
+
+    $scope.endorsementDisplay = function(item) {
+        var i = item.key.indexOf('(');
+        if (i > 0) {
+            return item.key.substring(0, i).trim();
+        }
+        return item.key;
+    };
+
     $scope.switchHelper = function(value) {
 
         if (!value || value.length === 0)
@@ -245,6 +257,6 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
     };
 }
 
-DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Drivers', 'DriverUser'];
+DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Drivers', 'Profile.Drivers'];
 
 angular.module('drivers').controller('DriversController', DriversController);

@@ -1,9 +1,8 @@
 'use strict';
 
-function SettingsController($scope, $http, $location, Users, Authentication, Address, Drivers, DriverUser) {
+function SettingsController($scope, $http, $location, Users, Authentication, Address) {
     $scope.activeModule = 'users';
     $scope.user = Authentication.user;
-    $scope.user.driver = Authentication.driver;
     $scope.editMode = false;
 
     $scope.addresses = $scope.user.addresses;
@@ -12,7 +11,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     if (!$scope.user) $location.path('/');
 
     $scope.init = function() {
-        console.log('[SettingsController] init(%o,%o)', $scope.user);
+        console.log('[SettingsController] init(%o)', $scope.user);
     };
 
     $scope.toggleMode = function(arg) {
@@ -25,14 +24,6 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     };
 
     $scope.cancel = function() {
-        if (this.view === 'user') {
-            var driverTmp = angular.copy(Authentication.user.driver);
-            $scope.user = angular.copy(Authentication.user);
-            $scope.user.driver = driverTmp;
-        } else if (this.view === 'driver') {
-            $scope.user.driver = angular.copy(Authentication.user.driver);
-        }
-
         this.editMode = false;
     };
 
@@ -131,7 +122,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
 
 }
 
-SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses', 'Drivers', 'DriverUser'];
+SettingsController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication', 'Addresses'];
 
 angular
     .module('users')

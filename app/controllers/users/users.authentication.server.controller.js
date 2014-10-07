@@ -36,7 +36,7 @@ exports.signup = function(req, res) {
     // Init Variables
     var user = new User(req.body);
     var message = null;
-    var userType = req.body.userType;
+    var userType = req.body.type;
 
     // Add missing user fields
     user.provider = 'local';

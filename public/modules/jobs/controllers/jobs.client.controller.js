@@ -11,6 +11,15 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
     $scope.location = {};
     $scope.payRate = {};
 
+
+    $scope.types = ['main', 'home', 'business', 'billing', 'other'];
+
+    $scope.showAddressDetails = function() {
+        event.preventDefault();
+
+        $scope.showAddressDetails = true;
+    };
+
     // Create new Job
     $scope.create = function() {
 
