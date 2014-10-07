@@ -23,7 +23,7 @@ function config($stateProvider) {
         templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
     }).
     state('signup', {
-        url: '/signup',
+        url: '/signup/:signupType',
         templateUrl: 'modules/users/views/authentication/signup.client.view.html'
     }).
     state('signin', {

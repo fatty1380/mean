@@ -1,6 +1,6 @@
 'use strict';
 
-function AuthenticationController($scope, $http, $location, Authentication) {
+function AuthenticationController($scope, $http, $location, $routeParams, Authentication) {
     $scope.authentication = Authentication;
 
     //If user is signed in then redirect back home
@@ -16,6 +16,17 @@ function AuthenticationController($scope, $http, $location, Authentication) {
         }
         $location.path('');
     }
+
+    $scope.init = function() {
+        if ($location.$$path.indexOf('driver') != -1) {
+            $scope.signupType = 'driver';
+        } else if ($location.$$path.indexOf('owner') != -1) {
+            $scope.signupType = 'owner'
+        } else {
+            $scope.typeNeeded = true;
+        }
+
+    };
 
     $scope.signup = function() {
 
@@ -96,7 +107,7 @@ function AuthenticationController($scope, $http, $location, Authentication) {
     };
 }
 
-AuthenticationController.$inject = ['$scope', '$http', '$location', 'Authentication'];
+AuthenticationController.$inject = ['$scope', '$http', '$location', '$routeParams', 'Authentication'];
 
 angular
     .module('users')

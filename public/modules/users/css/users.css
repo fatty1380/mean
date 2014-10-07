@@ -13,6 +13,7 @@
     position: absolute;
 }
 /* TODO: Move these to SIGNUP Specific CSS File */
+
 /* Signup classes */
 
 .social-link img {
@@ -84,3 +85,21 @@
 .license_details select {
     -webkit-appearance: none;
 }
+/* Signup Typing */
+
+.signup-type {
+    color: #ffffff;
+}
+.signup-type img {
+    padding: 40px;
+}
+.signup-type .heading {
+    border: none;
+}
+.signup-type div > * {
+    border: none;
+    background: #0e2d4c;
+    padding: 20px;
+    text-align: center;
+}
+/*.container-fluid .signup-type img {}*/

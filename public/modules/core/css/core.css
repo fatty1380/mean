@@ -24,6 +24,9 @@ body {
     background-size: cover;
     background-size: cover;
 }
+.home {
+    height: 1000px;
+}
 section > .container:first-child {
     padding-top: 67px;
     padding-bottom: 20px;
@@ -201,4 +204,19 @@ p.details {
 
 .schedule input[type="checkbox"][disabled] {
     cursor: default!important;
+}
+.container.opaque-bg, .container-fluid.opaque-bg {
+    padding-top: 15px;
+    padding-bottom: 30px;
+    margin-top: 20px;
+}
+/* animation test */
+
+.ng-enter {
+    transition: height 1s;
+    height: 0px;
+    overflow: hidden;
+}
+div.container-fluid.ng-enter-active {
+    height: 100px;
 }
