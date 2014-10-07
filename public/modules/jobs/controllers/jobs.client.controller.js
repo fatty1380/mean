@@ -10,6 +10,7 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
     $scope.postStatus = 'draft';
     $scope.location = {};
     $scope.payRate = {};
+    $scope.formMode = [];
 
 
     $scope.types = ['main', 'home', 'business', 'billing', 'other'];
@@ -48,11 +49,11 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
         ///this.name = '';
     };
 
-    $scope.toggleApplication = function(state) {
+    $scope.toggleApplication = function(state, $index) {
         if (state) {
-            $scope.formMode = 'apply';
+            $scope.formMode[$index] = 'apply';
         } else {
-            $scope.formMode = 'view';
+            $scope.formMode[$index] = 'view';
         }
     };
 
