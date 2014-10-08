@@ -8,7 +8,8 @@ var _ = require('lodash'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     User = mongoose.model('User'),
-    Driver = mongoose.model('Driver');
+    Driver = mongoose.model('Driver'),
+    Company = mongoose.model('Company');
 
 
 // DRY Simple Login Function
@@ -54,7 +55,7 @@ exports.signup = function(req, res) {
             user.salt = undefined;
 
             // Create necessary Supporting Profile:
-            if (user.types.indexOf('driver') !== -1) {
+            if (userType.indexOf('driver') !== -1) {
                 var driver = new Driver({
                     'user': user
                 });
@@ -64,8 +65,20 @@ exports.signup = function(req, res) {
                         console.error('Unable to create Driver profile');
                     } else {
                         console.log('Successfuly saved Driver profile');
+                    }
 
-                        user.driver = driver;
+                    login(req, res, user);
+                });
+            } else if (userType.indexOf('owner') !== -1) {
+                var company = new Company({
+                    'user': user
+                });
+
+                company.save(function(err) {
+                    if (err) {
+                        console.error('Unable to create Company profile');
+                    } else {
+                        console.log('Successfuly saved Company profile');
                     }
 
                     login(req, res, user);
@@ -99,29 +112,15 @@ exports.signin = function(req, res, next) {
                     res.status(400).send(err);
                 } else {
 
-                    if (user.types.indexOf('driver') !== -1) {
+                    if (user.type.indexOf('driver') !== -1) {
                         console.log('User is a driver ...');
-
-                        Driver.findOne({
-                            user: mongoose.Types.ObjectId(user._id)
-                        }, function(err, driver) {
-                            if (err || !driver) {
-                                console.warn('No Driver found for user ', user.username);
-                            } else {
-                                console.log('Found Driver: ', driver);
-                                user.driver = driver;
-                            }
-
-                            res.jsonp(user);
-                        });
-
-                    } else if (user.types.indexOf('owner') !== -1) {
+                    } else if (user.type.indexOf('owner') !== -1) {
                         console.log('We\'ve got an owner!');
-                        console.log('I don\'t know what to do with owners yet');
-                        res.jsonp(user);
                     } else {
-                        res.jsonp(user);
+                        console.log('I\'m not sure what we\'ve got: ', user.type);
                     }
+
+                    res.jsonp(user);
                 }
             });
         }

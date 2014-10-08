@@ -18,10 +18,10 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
     }
 
     $scope.init = function() {
-        if ($location.$$path.indexOf('driver') != -1) {
+        if ($location.$$path.indexOf('driver') !== -1) {
             $scope.signupType = 'driver';
-        } else if ($location.$$path.indexOf('owner') != -1) {
-            $scope.signupType = 'owner'
+        } else if ($location.$$path.indexOf('owner') !== -1) {
+            $scope.signupType = 'owner';
         } else {
             $scope.typeNeeded = true;
         }
@@ -33,15 +33,12 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
         $scope.credentials.type = $scope.signupType;
         console.log('[Auth.Ctrl.signup] signing up with credentials: ', $scope.credentials);
 
-        debugger;
-
         $http.post('/auth/signup', $scope.credentials)
             .success(function(response) {
                 //If successful we assign the response to the global user model
                 $scope.authentication.user = response;
 
                 console.log('Successfully created ' + $scope.signupType + ' USER Profile');
-                debugger;
                 if ($scope.signupType === 'driver') {
                     console.info('Created a new DRIVER profile, checking user object');
 
