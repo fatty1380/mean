@@ -4,6 +4,7 @@
 function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
     $scope.activeModule = 'jobs';
     $scope.authentication = Authentication;
+    $scope.user = Authentication.user;
 
     // Init addressDetails for creation.
     $scope.showAddressDetails = false;
@@ -11,6 +12,8 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
     $scope.location = {};
     $scope.payRate = {};
     $scope.formMode = [];
+
+    $scope.listTitle = ($scope.user.type === 'driver') ? 'Outset Job Listings' : 'My Job Postings';
 
 
     $scope.types = ['main', 'home', 'business', 'billing', 'other'];
@@ -93,7 +96,15 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
 
     // Find a list of Jobs
     $scope.find = function() {
-        $scope.jobs = Jobs.query();
+        var user = $scope.authentication.user;
+
+        if(user && user.type === 'owner') {
+            $scope.jobs = Jobs.query({
+                userId: Authentication.user._id,
+            });
+        } else {
+            $scope.jobs = Jobs.query();
+        }
     };
 
     // Find a list of 'My' Jobs.
