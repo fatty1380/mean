@@ -71,12 +71,8 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
             .success(function(response) {
                 //If successful we assign the response to the global user model
                 $scope.authentication.user = response;
-                debugger;
-
                 if (response.types.indexOf('driver') !== -1) {
                     console.info('Loading a DRIVER profile');
-
-                    debugger;
 
                     console.log('User has Driver info: ' + $scope.authentication.user.driver);
 
