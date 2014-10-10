@@ -1,5 +1,5 @@
 .content {
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 40px;
 }
 .undecorated-link:hover {
@@ -21,7 +21,6 @@ body {
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
     background-size: cover;
 }
 .home {
@@ -45,13 +44,10 @@ section > .container:first-child {
 }
 .navbar .navbar-inner {
     border: none;
-    border-radius: 0px;
+    border-radius: 0;
     height: 67px;
     padding-left: 20px;
     padding-right: 20px;
-}
-.navbar-brand img {
-    /*height: 65px;*/
 }
 header nav > ul {
     padding-top: 17px;
@@ -125,13 +121,13 @@ header .nav > li > a:hover, header .nav > li > a:focus, footer .nav > li > a:hov
     text-align: center;
 }
 .container .heading.leader {
-    padding: 20px 0px 0px 0px;
+    padding: 20px 0 0 0;
     font-size: 100px;
 }
 .container .heading.sub {
     font-size: 50px;
     color: #ffffff;
-    margin: 15px 0px 10px 0px;
+    margin: 15px 0 10px 0;
 }
 .instruction {
     font-family: 'museo-sans', 'museo_sans500', sans-serif;
@@ -143,10 +139,10 @@ header .nav > li > a:hover, header .nav > li > a:focus, footer .nav > li > a:hov
 .container .tagline {
     text-shadow: 1px 1px 2px #000000;
     font-size: 50px;
-    margin: 15px 0px 10px 0px;
+    margin: 15px 0 10px 0;
 }
 .signup {
-    padding: 10px 0px 0px 0px;
+    padding: 10px 0 0 0;
 }
 .signup .btn-success {
     background: #5475b6;
@@ -214,7 +210,7 @@ p.details {
 
 .ng-enter {
     transition: height 1s;
-    height: 0px;
+    height: 0;
     overflow: hidden;
 }
 div.container-fluid.ng-enter-active {

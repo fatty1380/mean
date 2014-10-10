@@ -45,25 +45,25 @@ body {
   font-size: 12px;
 }
 .container-fluid p.p-4 {
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid p.p-5 {
   text-align: right;
-  margin: 10px 0px 0px 0px;
+  margin: 10px 0 0 0;
 }
 .container-fluid .heading {
   font-family:"museo-sans";
   color: #0e2d4c;
 }
 .container-fluid .heading.heading-1 {
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid .heading.heading-2 {
   font-size: 30px;
   text-align: center;
 }
 .container-fluid .heading-2 .icon.icon-comments {
-  margin: 0px;
+  margin: 0;
   font-size: 43px;
   height: 43px;
   width: 64px;
@@ -75,17 +75,17 @@ body {
   padding: 5px;
 }
 .container-fluid .well.well-2 {
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid .well.well-3 {
-  -moz-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-  -webkit-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-  -o-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-  box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+  -moz-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+  -webkit-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+  -o-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+  box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
 }
 .container-fluid .well.well-4 {
   border-top: 1px dashed #0e2d4c;
-  padding: 0px;
+  padding: 0;
   border-right: none;
   border-bottom: none;
   border-left: none;
@@ -93,18 +93,18 @@ body {
 }
 .container-fluid .well.well-5 {
   border: 2px solid #e3e3e3;
-  -moz-box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
-  -webkit-box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
-  -o-box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
-  box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
+  -moz-box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
+  -webkit-box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
+  -o-box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
+  box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
   height: 524px;
 }
 .container-fluid .well.well-1.well-2.well-5 .well.well-1.well-3 .row-fluid .span1 .easel-inserted-link .image.image-1 {
-  -moz-box-shadow: 0px 1px 2px 0px #000000;
-  -webkit-box-shadow: 0px 1px 2px 0px #000000;
-  -o-box-shadow: 0px 1px 2px 0px #000000;
-  box-shadow: 0px 1px 2px 0px #000000;
-  margin: 0px 0px 5px 0px;
+  -moz-box-shadow: 0 1px 2px 0 #000000;
+  -webkit-box-shadow: 0 1px 2px 0 #000000;
+  -o-box-shadow: 0 1px 2px 0 #000000;
+  box-shadow: 0 1px 2px 0 #000000;
+  margin: 0 0 5px 0;
 }
 .container-fluid .well.well-1.well-2.well-5 .well.well-1.well-3 .row-fluid .span1 .easel-inserted-link .badge-important {
   font-family:"museo-sans";
@@ -114,7 +114,7 @@ body {
 }
 .container-fluid .well.well-1.well-2.well-5 .well.well-1.well-3 .row-fluid .span1 .easel-inserted-link .icon.icon-comments {
   font-size: 27px;
-  margin: 0px;
+  margin: 0;
   color: #0e2c4d;
   height: 27px;
   width: 47px;
@@ -122,14 +122,14 @@ body {
 .container-fluid .well.well-1.well-2.well-5 .well.well-1.well-3 .row-fluid .span11 .row-fluid .span3 .icon.icon-map-marker {
   font-size: 22px;
   color: #f4821c;
-  margin: 0px;
+  margin: 0;
   height: 22px;
   width: 23px;
 }
 .container-fluid .well.well-1.well-2.well-5 .well.well-1.well-3 .row-fluid .span11 .row-fluid .span3 .icon.icon-credit-card {
   font-size: 19px;
   color: #0e2d4c;
-  margin: 0px;
+  margin: 0;
   height: 25px;
   width: 19px;
 }
@@ -142,10 +142,10 @@ body {
   font-family:"museo-sans";
 }
 .container-fluid .well.well-1.well-2.well-5 .well.well-1.well-3 .row-fluid .span11 .well.well-2.well-4 .row-fluid {
-  margin: 5px 0px 0px 0px;
+  margin: 5px 0 0 0;
 }
 .container-fluid .row-fluid .span12 .row-fluid .span12 {
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px 0;
 }
 .container-fluid .row-fluid .span12 .row-fluid .span12 .well.well-1 {
   background: rgba(245, 245, 245, 0);

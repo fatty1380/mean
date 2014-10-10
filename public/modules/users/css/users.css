@@ -40,17 +40,17 @@
     padding: 0;
 }
 .col-md-6 .profile-row .profile-label {
-    margin: 0px;
+    margin: 0;
 }
 .profile-row .pull-right {
-    margin: 0px 10px 10px 0px;
+    margin: 0 10px 10px 0;
     width: 108px;
 }
 .profile-row .row-fluid .col-md-5 p {
     text-align: right;
 }
 .profile-row .col-md-8 .row-fluid select {
-    margin: 0px;
+    margin: 0;
     width: 108px;
 }
 .profile-row .row-fluid .col-md-6 p span {
@@ -67,7 +67,7 @@
 }
 .col-md-6 .profile-row .col-md-12 .well {
     background: rgba(245, 245, 245, 0.0509804);
-    padding: 5px 20px 0px 10px;
+    padding: 5px 20px 0 10px;
 }
 .col-md-6 .profile-row .availability-row .control-label {
     line-height: 14px;

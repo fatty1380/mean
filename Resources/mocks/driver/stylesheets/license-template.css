@@ -36,14 +36,14 @@ body {
   background: rgba(255, 255, 255, 0);
 }
 .container .row-fluid .span6.span6-1 {
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px 0;
 }
 .container .row-fluid .span6-1 div .image {
-  margin: 0px 0px 0px 5px;
+  margin: 0 0 0 5px;
 }
 .container .row-fluid .span6-1 div .badge {
   background: rgba(255, 0, 0, 0.777344);
-  margin: 0px 0px 0px 60px;
+  margin: 0 0 0 60px;
 }
 .container .row-fluid .span6-1 div .table tbody tr td.td-1 {
   text-align: center;
@@ -58,20 +58,20 @@ body {
   text-align: center;
 }
 .container .row-fluid .span6 .profile-row .span4 .profile-label {
-  margin: 0px;
+  margin: 0;
 }
 .container .row-fluid .span6 .profile-row .span8 p.p-1 {
-  margin: 0px;
+  margin: 0;
 }
 .container .row-fluid .span6 .profile-row .span8 p.p-2 {
   text-align: right;
 }
 .container .row-fluid .span6 .profile-row .span8 .pull-right {
-  margin: 0px 10px 10px 0px;
+  margin: 0 10px 10px 0;
   width: 108px;
 }
 .container .row-fluid .span6 .profile-row .span8 .row-fluid .span7 select {
-  margin: 0px;
+  margin: 0;
   width: 108px;
 }
 .container .row-fluid .span6 .profile-row .span8 .row-fluid .span6 p span {
@@ -84,14 +84,14 @@ body {
   width: 120px;
 }
 .container .row-fluid .span6 .profile-row .span12 .profile-label {
-  margin: 0px;
+  margin: 0;
 }
 .container .row-fluid .span6 .profile-row .span12 .profile-label.profile-label-1 {
   line-height: 12px;
 }
 .container .row-fluid .span6 .profile-row .span12 .well {
   background: rgba(245, 245, 245, 0.0507812);
-  padding: 5px 20px 0px 10px;
+  padding: 5px 20px 0 10px;
 }
 .container .row-fluid .span6 .profile-row .span12 .well .profile-row .span12 .availability-row .span5 .control-label {
   line-height: 14px;

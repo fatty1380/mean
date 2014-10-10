@@ -36,7 +36,7 @@
    width: 162px;
    height: 64px;
    font-size: 28px;
-   background-position: 0px 0px;
+   background-position: 0 0;
    background-repeat: repeat repeat;
    position: absolute;
    top: 6px;
@@ -62,21 +62,21 @@
    padding: 20px;
  }
  .container-fluid-1 .row-fluid {
-   padding: 10px 0px 0px 0px;
+   padding: 10px 0 0 0;
  }
  .container-fluid-1 .row-fluid .span8 .well {
-   margin: 0px;
-   padding: 0px 10px 0px 10px;
+   margin: 0;
+   padding: 0 10px 0 10px;
    border: 1px solid #11588b;
  }
  .container-fluid-1 .row-fluid .span8 .well .heading {
-   padding: 10px 0px 0px 0px;
+   padding: 10px 0 0 0;
    font-family:"museo-sans";
    font-weight: 900;
    text-align: center;
  }
  .container-fluid-1 .row-fluid .span8 .well .form-horizontal {
-   margin: 0px;
+   margin: 0;
  }
  .container-fluid-1 .row-fluid .span8 .well .form-horizontal .control-group .control-label {
    font-family:"museo-sans";
@@ -85,7 +85,7 @@
    font-family:"museo-sans";
  }
  .container-fluid-1 .row-fluid .span8 .well .form-horizontal .form-actions {
-   margin: 0px;
+   margin: 0;
    border: none;
  }
  .container-fluid-1 .row-fluid .span8 .well .form-horizontal .form-actions .btn-primary {
@@ -105,7 +105,7 @@
    line-height: 36px;
  }
  .container-fluid-2 .container .row-fluid .span12 .nav {
-   margin: 0px;
+   margin: 0;
  }
  .container-fluid-2 .container .row-fluid .span12 .nav li a {
    text-align: center;

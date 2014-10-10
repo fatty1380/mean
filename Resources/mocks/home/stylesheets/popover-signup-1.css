@@ -31,7 +31,7 @@ body {
 .container-fluid .well {
   border: none;
   padding: 10px;
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid .well .heading {
   font-family:"museo-sans";
@@ -39,7 +39,7 @@ body {
   text-align: center;
 }
 .container-fluid .well .form-horizontal .control-group {
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid .well .form-horizontal .control-group .control-label {
   font-family:"museo-sans";
@@ -51,12 +51,12 @@ body {
 }
 .container-fluid .well .form-horizontal .checkbox.checkbox-1 {
   font-family:"museo-sans";
-  padding: 10px 0px 0px 180px;
+  padding: 10px 0 0 180px;
 }
 .container-fluid .well .form-horizontal .form-actions {
-  margin: 0px;
+  margin: 0;
   border: none;
-  padding: 0px 20px 0px 0px;
+  padding: 0 20px 0 0;
 }
 .container-fluid .well .form-horizontal .form-actions .btn-primary {
   background: #436f8e;
