@@ -38,27 +38,9 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
                 //If successful we assign the response to the global user model
                 $scope.authentication.user = response;
 
-                console.log('Successfully created ' + $scope.signupType + ' USER Profile');
-                if ($scope.signupType === 'driver') {
-                    console.info('Created a new DRIVER profile, checking user object');
+                console.log('Successfully created %o USER Profile', response.type);
 
-                    console.log('User has Driver info: ' + $scope.authentication.user.driver);
-
-                    $location.path('/settings/profile');
-
-                } else if ($scope.signupType === 'owner') {
-                    console.info('Creating a new OWNER profile');
-                    $scope.error = 'Don\'t know how to create an owner ... redirecting';
-
-                    $location.path('/company');
-                } else {
-                    console.warn('Unknown profile type: ' + $scope.signupType);
-
-                    //And redirect to the index page
-                    $scope.error = 'Don\'t know how to create a "' + $scope.signupType + '" ... redirecting';
-
-                    $location.path('/settings/profile');
-                }
+                redirect(response.type, $location);
 
             }).error(function(response) {
                 console.error(response.message);
@@ -71,32 +53,26 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
             .success(function(response) {
                 //If successful we assign the response to the global user model
                 $scope.authentication.user = response;
-                if (response.types.indexOf('driver') !== -1) {
-                    console.info('Loading a DRIVER profile');
 
-                    console.log('User has Driver info: ' + $scope.authentication.user.driver);
+                console.info('Loading a %o profile', response.type);
 
-                    $scope.authentication.driver = response.driver;
-
-                } else if (response.types.indexOf('owner') !== -1) {
-                    console.info('Creating a new OWNER profile');
-                    $scope.error = 'Don\'t know how to load an owner ... redirecting';
-
-                    $location.path('/settings/profile');
-                } else {
-                    console.warn('Unknown profile type: ' + $scope.signupType);
-
-                    //And redirect to the index page
-                    $scope.error = 'Don\'t know how to load a "' + $scope.signupType + '" ... redirecting';
-
-                    $location.path('/settings/profile');
-                }
-
-                //And redirect to the index page
-                $location.path('/settings/profile');
+                redirect(response.type, $location);
             }).error(function(response) {
                 $scope.error = response.message;
             });
+    };
+
+    var redirect = function(userType, $location) {
+        if (userType === 'driver') {
+            console.info('directing to a DRIVER profile');
+            $location.path('/settings/profile');
+        } else if (userType === 'owner') {
+            console.info('redirecting to owner page');
+            $location.path('/company');
+        } else {
+            console.warn('Unknown profile type: ' + userType);
+            $location.path('/settings/profile');
+        }
     };
 }
 

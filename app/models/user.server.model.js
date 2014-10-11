@@ -85,7 +85,7 @@ var UserSchema = new Schema({
     type: {
         type: String,
         enum: ['driver', 'owner'],
-        default: []
+        default: ''
     },
     email: {
         type: String,
@@ -135,16 +135,27 @@ UserSchema.pre('save', function(next) {
         this.password = this.hashPassword(this.password);
     }
 
-    if (this.types === undefined) {
-        this.types = [];
+    next();
+});
 
-        if (this.type !== undefined) {
-            this.types.push(this.type);
+
+UserSchema.methods.migrate = function() {
+    if (!this.type) {
+        debugger;
+
+        var types = this.getValue('types');
+
+        if (!!types && types.length) {
+            // Move the "Types" data into "type"
+            console.log('Migrating user.types --> user.type: ', types);
+            this.type = types[0];
+            this.setValue('types', undefined);
+            return true;
         }
     }
 
-    next();
-});
+    return false;
+};
 
 /**
  * Create instance method for hashing a password

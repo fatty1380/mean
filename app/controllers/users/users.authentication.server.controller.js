@@ -99,11 +99,15 @@ exports.signin = function(req, res, next) {
 
     passport.authenticate('local', function(err, user, info) {
         if (err || !user) {
+            console.error(info, err);
             res.status(400).send(info);
         } else {
             // Remove sensitive data before login
             user.password = undefined;
             user.salt = undefined;
+
+            // Migrate if necessary:
+            user.migrate();
 
             console.log('[Auth.Ctrl] signin() user=)', user);
 
@@ -112,9 +116,9 @@ exports.signin = function(req, res, next) {
                     res.status(400).send(err);
                 } else {
 
-                    if (user.type.indexOf('driver') !== -1) {
+                    if (user.type === 'driver') {
                         console.log('User is a driver ...');
-                    } else if (user.type.indexOf('owner') !== -1) {
+                    } else if (user.type === 'owner') {
                         console.log('We\'ve got an owner!');
                     } else {
                         console.log('I\'m not sure what we\'ve got: ', user.type);
