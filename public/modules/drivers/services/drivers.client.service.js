@@ -12,7 +12,7 @@ function DriverFactory($resource) {
 }
 
 function DriverUserFactory($resource) {
-    return $resource('profiles/:userId/driver', {
+    return $resource('profiles/:userId/drivers', {
         userId: '@_id'
     }, {
         update: {

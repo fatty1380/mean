@@ -29,7 +29,9 @@ exports.update = function(req, res) {
         user.displayName = user.firstName + ' ' + user.lastName;
 
         // Migrate if necessary:
-        req.user.migrate();
+        console.log('[Profile.Ctrl.update] types: ', user.types);
+        user.migrate();
+        console.log('[Profile.Ctrl.update] types: ', user.types);
 
 
         user.save(function(err) {
@@ -38,13 +40,7 @@ exports.update = function(req, res) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                req.login(user, function(err) {
-                    if (err) {
-                        res.status(400).send(err);
-                    } else {
-                        res.jsonp(user);
-                    }
-                });
+                res.jsonp(user);
             }
         });
     } else {
@@ -59,6 +55,7 @@ exports.update = function(req, res) {
  */
 exports.read = function(req, res) {
     console.log('[Profile.Ctrl] read()');
+    debugger;
     req.user.migrate();
     res.jsonp(req.user);
 };
@@ -68,6 +65,7 @@ exports.read = function(req, res) {
  */
 exports.me = function(req, res) {
     console.log('[Profile.Ctrl] me()');
+    debugger;
     req.user.migrate();
     res.jsonp(req.user || null);
 };

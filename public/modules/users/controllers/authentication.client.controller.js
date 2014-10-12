@@ -18,6 +18,7 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
     }
 
     $scope.init = function() {
+        debugger;
         if ($location.$$path.indexOf('driver') !== -1) {
             $scope.signupType = 'driver';
         } else if ($location.$$path.indexOf('owner') !== -1) {
@@ -36,6 +37,7 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
         $http.post('/auth/signup', $scope.credentials)
             .success(function(response) {
                 //If successful we assign the response to the global user model
+                debugger;
                 $scope.authentication.user = response;
 
                 console.log('Successfully created %o USER Profile', response.type);
@@ -52,6 +54,7 @@ function AuthenticationController($scope, $http, $location, $routeParams, Authen
         $http.post('/auth/signin', $scope.credentials)
             .success(function(response) {
                 //If successful we assign the response to the global user model
+                debugger;
                 $scope.authentication.user = response;
 
                 console.info('Loading a %o profile', response.type);

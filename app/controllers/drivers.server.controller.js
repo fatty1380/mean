@@ -128,25 +128,6 @@ exports.delete = function(req, res) {
 };
 
 /**
- * List of Drivers
- */
-exports.list = function(req, res) {
-    console.log('[Driver.Controller] list()');
-    Driver.find()
-        .sort('-created')
-        .populate('user', 'displayName')
-        .exec(function(err, drivers) {
-            if (err) {
-                return res.send(400, {
-                    message: getErrorMessage(err)
-                });
-            } else {
-                res.jsonp(drivers);
-            }
-        });
-};
-
-/**
  * Add License
  * TODO: Move to License Controller?
  */
@@ -192,6 +173,26 @@ exports.newLicense = function(req, res) {
         });
     }
 };
+
+/**
+ * List of Drivers
+ */
+exports.list = function(req, res) {
+    console.log('[Driver.Controller] list()');
+    Driver.find()
+        .sort('-created')
+        .populate('user', 'displayName')
+        .exec(function(err, drivers) {
+            if (err) {
+                return res.send(400, {
+                    message: getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(drivers);
+            }
+        });
+};
+
 /**
  * Driver middleware
  */
@@ -220,7 +221,7 @@ exports.driverByUserID = function(req, res, next, id) {
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
-    Driver.findOne({
+    Driver.find({
         user: mongoose.Types.ObjectId(userId)
     })
         .populate('user')

@@ -1,35 +1,15 @@
 <section ng-init="view = user" data-ng-controller="SettingsController">
     <span class="col-md-12 opaque-bg">
-        <span ng-hide="editMode" <div class="row">
-            <legend class="pull-left">Personal Information
-                <div class="pull-right">
-                    <a class="btn btn-link" ng-click="edit()">
-                        <i class="fa fa-pencil"></i>&nbsp;edit
-                    </a>
+        <form name="userForm" data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Personal Information</h4>
+                    </div>
                 </div>
-            </legend>
-
-            <dl class="dl-horizontal">
-                <dt>Name</dt>
-                <dd>{{user.displayName}}</dd>
-                <dt>Email</dt>
-                <dd>{{user.email}}</dd>
-                <dt>Phone</dt>
-                <dd>{{user.phone}}</dd>
-                <dt>Addresses</dt>
-                <dd><div ng-include="'modules/addresses/views/address.client.template.html'"></div></dd>
-                <dt>Phone</dt>
-                <dd>{{user.phone}}</dd>
-            </dl>
-        </span>
-
-
-        <form name="userForm" data-ng-submit="updateUserProfile(userForm.$valid)" class="form-horizontal" autocomplete="off" ng-show="editMode">
-            <fieldset class="create">
-                <legend>Edit Personal Profile</legend>
 
                 <div class="form-group profile-row">
-                    <label class="control-label" for="name">Name</label>
+                    <label for="name">Name</label>
                     <div class="form-inline margin-bottom-sm" name="name">
                         <input class="form-control" type="text" data-ng-model="user.firstName" placeholder="First">
                         <input class="form-control" type="text" data-ng-model="user.lastName" placeholder="Last">
@@ -69,7 +49,7 @@
                     <small class="pull-left">edit-profile.client.view</small>
 
                     <div class="text-right form-group">
-                        <button type="button" value="cancel" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
+                        <button type="cancel" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
                         <button type="submit" value="update" class="btn btn-large btn-primary">Save Profile</button>
                     </div>
                     <div data-ng-show="success" class="text-center text-success">
@@ -81,5 +61,6 @@
                 </div>
             </fieldset>
         </form>
+
     </span>
 </section>

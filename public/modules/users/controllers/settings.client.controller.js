@@ -3,28 +3,13 @@
 function SettingsController($scope, $http, $location, Users, Authentication, Address) {
     $scope.activeModule = 'users';
     $scope.user = Authentication.user;
-    $scope.editMode = false;
-
-    $scope.addresses = $scope.user.addresses;
 
     // If user is not signed in then redirect back home
     if (!$scope.user) $location.path('/');
 
     $scope.init = function() {
         console.log('[SettingsController] init(%o)', $scope.user);
-    };
-
-    $scope.toggleMode = function(arg) {
-        if (arg === undefined) {
-            $scope.editMode = !$scope.editMode;
-            return;
-        }
-
-        $scope.editMode = !!arg;
-    };
-
-    $scope.cancel = function() {
-        this.editMode = false;
+        $scope.user = Authentication.user;
     };
 
     $scope.addAddress = function() {
@@ -35,7 +20,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
             type: 'select type',
             streetAddresses: [''],
         });
-        $scope.addresses.push(addr);
+        $scope.user.addresses.push(addr);
     };
 
     // Check if there are additional accounts
@@ -57,13 +42,14 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
         $scope.success = $scope.error = null;
 
         $http.delete('/users/accounts', {
-            params: {
-                provider: provider
-            }
-        })
+                params: {
+                    provider: provider
+                }
+            })
             .success(function(response) {
                 // If successful show success message and clear form
                 $scope.success = true;
+                debugger;
                 $scope.user = Authentication.user = response;
             })
             .error(function(response) {
@@ -72,15 +58,16 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
     };
 
     // Update a user profile
-    $scope.updateUserProfile = function(isValid) {
-        if (isValid) {
+    $scope.updateUserProfile = function() {
+        if ($scope.userForm.$valid) {
             $scope.success = $scope.error = null;
             var user = new Users($scope.user);
 
             user.$update(function(response) {
                 $scope.success = true;
-                Authentication.user = response;
-                $scope.editMode = false;
+                debugger;
+                $scope.user = Authentication.user = response;
+                $scope.cancel();
             }, function(response) {
                 $scope.error = response.data.message;
             });
@@ -109,6 +96,7 @@ function SettingsController($scope, $http, $location, Users, Authentication, Add
         $http.post('/auth/signup', $scope.credentials)
             .success(function(response) {
                 //If successful we assign the response to the global user model
+                debugger;
                 $scope.authentication.user = response;
 
                 //And redirect to the index page

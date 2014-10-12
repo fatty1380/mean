@@ -20,6 +20,7 @@ var login = function(req, res, user) {
             res.status(400).send(err);
         } else {
             console.log('Login Successful!');
+            debugger;
             res.jsonp(user);
         }
     });
@@ -54,38 +55,7 @@ exports.signup = function(req, res) {
             user.password = undefined;
             user.salt = undefined;
 
-            // Create necessary Supporting Profile:
-            if (userType.indexOf('driver') !== -1) {
-                var driver = new Driver({
-                    'user': user
-                });
-
-                driver.save(function(err) {
-                    if (err) {
-                        console.error('Unable to create Driver profile');
-                    } else {
-                        console.log('Successfuly saved Driver profile');
-                    }
-
-                    login(req, res, user);
-                });
-            } else if (userType.indexOf('owner') !== -1) {
-                var company = new Company({
-                    'user': user
-                });
-
-                company.save(function(err) {
-                    if (err) {
-                        console.error('Unable to create Company profile');
-                    } else {
-                        console.log('Successfuly saved Company profile');
-                    }
-
-                    login(req, res, user);
-                });
-            } else {
-                login(req, res, user);
-            }
+            login(req, res, user);
 
         }
     });
@@ -106,6 +76,7 @@ exports.signin = function(req, res, next) {
             user.password = undefined;
             user.salt = undefined;
 
+            debugger;
             // Migrate if necessary:
             user.migrate();
 

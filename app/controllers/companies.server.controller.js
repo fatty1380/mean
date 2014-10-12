@@ -73,15 +73,18 @@ exports.delete = function(req, res) {
  * List of Companies
  */
 exports.list = function(req, res) {
-    Company.find().sort('-created').populate('user', 'displayName').exec(function(err, companies) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(companies);
-        }
-    });
+    Company.find()
+        .sort('-created')
+        .populate('user', 'displayName')
+        .exec(function(err, companies) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(companies);
+            }
+        });
 };
 
 /**
@@ -98,12 +101,12 @@ exports.companyByID = function(req, res, next, id) {
 
 exports.companyByUser = function(req, res, next, id) {
     Company.find({
-        user: id
-    })
-        .exec(function(err, company) {
+            user: id
+        })
+        .exec(function(err, companies) {
             if (err) return next(err);
-            if (!company) return next(new Error('Failed to load Company ' + id));
-            req.company = company;
+            if (!companies) return next(new Error('No available companies for user: ' + id));
+            req.companies = companies;
             next();
         });
 };

@@ -14,24 +14,22 @@
         </div>
 
         <div class="col-xs-offset-0 col-xs-4 col-md-8">
-            <form data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
-                <fieldset>
-                    <!-- Begin include of primary User Information Display -->
-                    <div ng-include="'modules/users/views/templates/user-profile.client.template.html'"></div>
+            <fieldset>
+                <!-- Begin include of primary User Information Display -->
+                <div ng-include="'modules/users/views/templates/user-profile.client.template.html'"></div>
 
-                    <div class="row-fluid">
-                        <div class="col-md-12" style="margin: 10px 0;">
-                        </div>
+                <div class="row-fluid">
+                    <div class="col-md-12" style="margin: 10px 0;">
                     </div>
+                </div>
 
-                    <!-- Begin include of Driver Information Display -->
-                    <div ng-show="user.type === 'driver'" ng-include="'modules/drivers/views/templates/driver.client.template.html'"></div>
+                <!-- Begin include of Driver Information Display -->
+                <div ng-show="user.type === 'driver'" ng-include="'modules/drivers/views/templates/drivers-list.client.template.html'"></div>
 
-                    <!-- Begin include of Company Information Display -->
-                    <div ng-hide="user.type === 'driver'" ng-include="'modules/companies/views/templates/company-list.client.template.html'"></div>
+                <!-- Begin include of Company Information Display -->
+                <div ng-show="user.type === 'owner'" ng-include="'modules/companies/views/templates/company-list.client.template.html'"></div>
 
-                </fieldset>
-            </form>
+            </fieldset>
         </div>
 
         <div class="well well-sm col-md-4">

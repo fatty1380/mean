@@ -20,7 +20,7 @@ module.exports = function(app) {
     app.param('driverId', drivers.driverByID);
 
     // Setup routes for getting a User's driver profile
-    app.route('/profiles/:userId/driver')
+    app.route('/profiles/:userId/drivers')
         .get(drivers.read)
         .delete(users.requiresLogin, drivers.hasAuthorization, drivers.delete);
 

@@ -140,6 +140,9 @@ UserSchema.pre('save', function(next) {
 
 
 UserSchema.methods.migrate = function() {
+
+    var changed = false;
+
     if (!this.type) {
         debugger;
 
@@ -150,11 +153,34 @@ UserSchema.methods.migrate = function() {
             console.log('Migrating user.types --> user.type: ', types);
             this.type = types[0];
             this.setValue('types', undefined);
-            return true;
+            changed = true;
         }
     }
 
-    return false;
+    if (this.types && this.type) {
+        console.log('Removing value for user.types');
+        this.types = undefined;
+        changed = true;
+    }
+
+    if (this.getValue('types')) {
+        console.log('Removing value for user[types]');
+        this.setValue('types', undefined);
+        changed = true;
+    }
+
+    if (changed) {
+        this.save(function(err) {
+            if (err) {
+                console.err('Unable to save migrated user: %o', err);
+            }
+            else {
+                console.log('Saved migrated user: %o', this);
+            }
+        });
+    }
+
+    return changed;
 };
 
 /**

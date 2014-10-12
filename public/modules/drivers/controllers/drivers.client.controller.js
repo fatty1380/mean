@@ -1,7 +1,7 @@
 'use strict';
 
 // Drivers controller
-function DriversController($scope, $stateParams, $location, $http, Authentication, Drivers, DriverUser) {
+function DriversController($scope, $stateParams, $location, $http, $window, Authentication, Drivers, DriverUser) {
     $scope.authentication = Authentication;
     //$scope.driver = Drivers;
     //$scope.driverUser = DriverUser;
@@ -171,6 +171,13 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         });
     };
 
+    $scope.findByUser = function(id) {
+        console.log('[DriverClientController] findByUser(%o)', id);
+        $scope.drivers = DriverUser.query({
+            userId: id
+        });
+    };
+
     // Specific Driver Functions
     $scope.addLicense = function() {
 
@@ -236,6 +243,10 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         return false;
     };
 
+    $scope.inspect = function() {
+        debugger;
+    };
+
     $scope.endorsementFilter = function(item) {
         return item.value === true;
     };
@@ -255,8 +266,13 @@ function DriversController($scope, $stateParams, $location, $http, Authenticatio
         else
             return false;
     };
+
+    $scope.cancel = function() {
+        console.log('Canceling! Form is dirty: %o, valid: %o', $scope.driverForm.$dirty, $scope.driverForm.$valid);
+       $window.history.back();
+    };
 }
 
-DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', 'Authentication', 'Drivers', 'Profile.Drivers'];
+DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', '$window', 'Authentication', 'Drivers', 'Profile.Drivers'];
 
 angular.module('drivers').controller('DriversController', DriversController);

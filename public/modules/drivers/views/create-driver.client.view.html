@@ -7,11 +7,7 @@
             <fieldset>
 
                 <!-- Driver's License Information -->
-                <div class="row-fluid profile-row">
-                    <h3 class="col-sm-10 col-sm-offset-1">Driver's License
-                        <hr>
-                    </h3>
-                </div>
+                <legend>Driver's License</legend>
 
                 <div class="row-fluid profile-row">
                     <div class="col-sm-5">
@@ -116,11 +112,7 @@
                 </div>
 
                 <!-- Driver's Experience Breakdown -->
-                <div class="row-fluid profile-row">
-                    <h3 class="col-sm-10 col-sm-offset-1">Experience
-                        <hr>
-                    </h3>
-                </div>
+                <legend>Experience</legend>
 
                 <div class="row-fluid profile-row">
                     <div class="col-sm-8 col-sm-offset-2">
@@ -214,11 +206,7 @@
                 </div>
 
                 <!-- Driver's Availability -->
-                <div class="row-fluid profile-row">
-                    <h3 class="col-sm-10 col-sm-offset-1" for="experience">Schedule
-                        <hr>
-                    </h3>
-                </div>
+                <legend>Schedule</legend>
 
                 <div class="row-fluid profile-row">
                     <div class="col-sm-8 col-sm-offset-2">
@@ -231,7 +219,7 @@
                 <div class="row-fluid profile-row">
                     <div class="col-sm-8 col-sm-offset-3">
                         <div class="text-right form-group">
-                            <button type="cancel" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
+                            <button type="button" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
                             <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
                             <div data-ng-show="error" class="text-center text-danger">
                                 <strong data-ng-bind="error"></strong>

@@ -2,36 +2,28 @@
 
 function ProfileController($scope, $stateParams, Users, Authentication) {
     $scope.activeModule = 'users';
-    $scope.profileOnly = true;
     $scope.editMode = false;
-
-    //    $scope.Profile = {
-    //        'Companies': Companies,
-    //        'Drivers': DriverUser
-    //    };
 
     // Find existing User Profile
     $scope.init = function() {
-        $scope.user =
-            Users.get({
-                userId: $stateParams.userId
-            });
-
-        //        $scope.driver = $scope.Profile.Drivers.get({
-        //            userId: $stateParams.userId
-        //        });
-        //
-        //        $scope.companies = $scope.Profile.Companies.get({
-        //            userId: $stateParams.userId
-        //        });
-
+        if (!$stateParams.userId) {
+            $scope.profileOnly = false;
+            $scope.user = Authentication.user;
+        } else {
+            $scope.profileOnly = true;
+            $scope.user =
+                Users.get({
+                    userId: $stateParams.userId
+                });
+        }
     };
 
-    //    $scope.getDriver = function() {
-    //        $scope.driver = $scope.Profile.Drivers.get({
-    //            userId: $scope.user._id
-    //        });
-    //    };
+    $scope.edit = function() {
+        $scope.editMode = true;
+    };
+    $scope.cancel = function() {
+        $scope.editMode = false;
+    };
 }
 
 ProfileController.$inject = ['$scope', '$stateParams', 'Users', 'Authentication'];

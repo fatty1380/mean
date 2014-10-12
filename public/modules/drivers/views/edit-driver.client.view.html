@@ -4,16 +4,12 @@
         <div class="page-header">
             <h1>Edit {{driver.user.displayName}}'s Driver Profile</h1>
         </div>
-        <div class="col-md-12">
-            <form class="form-horizontal" data-ng-submit="update()" novalidate>
+        <div class="driver create">
+            <form name="driverForm" class="form-horizontal" data-ng-submit="update()" novalidate>
                 <fieldset>
 
                     <!-- Driver's License Information -->
-                    <div class="row-fluid profile-row">
-                        <h3 class="col-sm-10 col-sm-offset-1">Driver's License
-                            <hr>
-                        </h3>
-                    </div>
+                    <legend>Driver's License<button type="button" value="inspect" ng-click="inspect()"></button></legend>
 
                     <div class="row-fluid profile-row">
                         <div class="col-sm-5">
@@ -46,7 +42,7 @@
                                 </label>
                                 <span class="controls col-sm-6">
                                     <div class="input-group margin-bottom-sm" id="issueDate">
-                                        <input class="form-control" type="date" name="" data-ng-value="driver.license.issued" placeholder="DD/MM/YYYY">
+                                        <input class="form-control" type="date" name="" data-ng-model="driver.license.issued" placeholder="DD/MM/YYYY">
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>
@@ -59,7 +55,7 @@
                                 </label>
                                 <span class="controls col-sm-6">
                                     <div class="input-group margin-bottom-sm" id="issueDate">
-                                        <input class="form-control" type="date" name="" data-ng-value="driver.license.expires" placeholder="DD/MM/YYYY">
+                                        <input class="form-control" type="date" name="" data-ng-model="driver.license.expires" placeholder="DD/MM/YYYY">
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>
@@ -71,7 +67,7 @@
                                 </label>
                                 <span class="controls col-sm-6">
                                     <div class="input-group margin-bottom-sm" id="birthDate">
-                                        <input class="form-control" type="date" name="" data-ng-value="driver.license.dateOfBirth" placeholder="DD/MM/YYYY">
+                                        <input class="form-control" type="date" name="" data-ng-model="driver.license.dateOfBirth" placeholder="DD/MM/YYYY">
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>
@@ -81,13 +77,13 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <div class="form-group" ng-repeat="license in driver.licenses">
+                            <div class="form-group">
                                 <label class="col-sm-6 control-label">License Type
                                     <br/>
                                     <small>is this a commercial or standard license</small>
                                 </label>
                                 <div class="controls col-sm-6">
-                                    <select class="form-control" data-ng-model="license.type">
+                                    <select class="form-control" data-ng-model="driver.license.type">
                                         <option>Standard</option>
                                         <option>Commercial</option>
                                     </select>
@@ -98,7 +94,7 @@
                                 </label>
                                 <span class="controls col-sm-6">
                                     <div class="btn-group">
-                                        <label ng-repeat="val in ratings" class="btn btn-primary btn-sm" ng-model="license.rating" btn-radio="val">{{val}}</label>
+                                        <label ng-repeat="val in ratings" class="btn btn-primary btn-sm" ng-model="driver.license.rating" btn-radio="val">{{val}}</label>
                                     </div>
                                 </span>
                                 <label class="col-sm-6 control-label">Endorsements
@@ -107,7 +103,7 @@
                                 </label>
                                 <span class="controls col-sm-6">
                                     <div class="btn-group btn-group-vertical">
-                                        <label ng-repeat="endorsement in license.endorsements" class="btn btn-primary btn-md pull-left" ng-model="endorsement.value" btn-checkbox>{{endorsement.key}}
+                                        <label ng-repeat="endorsement in driver.license.endorsements" class="btn btn-primary btn-md pull-left" ng-model="endorsement.value" btn-checkbox>{{endorsement.key}}
                                             <span data-ng-show="endorsement.value" class="fa fa-check-circle pull-left"></span>
                                             <span data-ng-hide="endorsement.value" class="fa fa-circle-o pull-left"></span>
                                         </label>
@@ -118,11 +114,7 @@
                     </div>
 
                     <!-- Driver's Experience Breakdown -->
-                    <div class="row-fluid profile-row">
-                        <h3 class="col-sm-10 col-sm-offset-1">Experience
-                            <hr>
-                        </h3>
-                    </div>
+                    <legend>Experience</legend>
 
                     <div class="row-fluid profile-row">
                         <div class="col-sm-8 col-sm-offset-2">
@@ -215,9 +207,10 @@
                         </div>
                     </div>
 
+
+                    <legend>Availability</legend>
                     <!-- Driver's Availability -->
                     <div class="row-fluid profile-row">
-                        <label for="schedule">Availability</label>
                         <div class="col-md-12 availability_matrix" name="schedule">
                             <div class="container-fluid well">
                                 <div class="col-md-12">
