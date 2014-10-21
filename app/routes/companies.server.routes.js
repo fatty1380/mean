@@ -14,12 +14,10 @@ module.exports = function(app) {
         .put(users.requiresLogin, companies.hasAuthorization, companies.update)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
-    app.route('/profiles/:userId/companies')
-        .get(companies.read)
+    app.route('/users/:userId/companies')
+        .get(companies.companyByUser)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
     // Finish by binding the Company middleware
     app.param('companyId', companies.companyByID);
-
-    app.param('userId', companies.companyByUser);
 };

@@ -100,14 +100,18 @@ exports.companyByID = function(req, res, next, id) {
 };
 
 exports.companyByUser = function(req, res, next, id) {
+    debugger; // TODO: Check if middleware mapping is still working
     Company.find({
             user: id
         })
         .exec(function(err, companies) {
-            if (err) return next(err);
-            if (!companies) return next(new Error('No available companies for user: ' + id));
-            req.companies = companies;
-            next();
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(companies || []);
+            }
         });
 };
 

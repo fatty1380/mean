@@ -1,9 +1,9 @@
 'use strict';
 
 // Companies controller
-angular.module('companies').controller('CompaniesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Companies', 'Profile.Companies',
+angular.module('companies').controller('CompaniesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Companies',
 
-    function($scope, $stateParams, $location, Authentication, Companies, ProfileCompanies) {
+    function($scope, $stateParams, $location, Authentication, Companies) {
         $scope.authentication = Authentication;
 
         // REGION : Page Action methods
@@ -74,18 +74,18 @@ angular.module('companies').controller('CompaniesController', ['$scope', '$state
 
         // Find a list of Companies
         $scope.find = function() {
-            $scope.companies = Companies.query();
+            $scope.companies = Companies.ById.query();
         };
 
         // Find existing Company
         $scope.findOne = function() {
-            $scope.company = Companies.get({
+            $scope.company = Companies.ById.get({
                 companyId: $stateParams.companyId
             });
         };
 
         $scope.findByUser = function(id) {
-            $scope.companies = ProfileCompanies.query({
+            $scope.companies = Companies.ByUser.query({
                 userId: id
             });
         };

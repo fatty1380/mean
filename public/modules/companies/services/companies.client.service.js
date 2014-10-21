@@ -2,30 +2,22 @@
 
 //Companies service used to communicate Companies REST endpoints
 function Companies($resource) {
-    return $resource('companies/:companyId', {
-        companyId: '@_id'
-    }, {
-        update: {
-            method: 'PUT'
-        }
-    });
-}
-
-
-function ProfileCompanies($resource) {
-    return $resource('profiles/:userId/companies', {
-        userId: '@_id'
-    }, {
-        update: {
-            method: 'PUT'
-        }
-    });
+    return {
+        ById: $resource('companies/:companyId', {
+            companyId: '@_id'
+        }, {
+            update: {
+                method: 'PUT'
+            }
+        }),
+        ByUser: $resource('users/:userId/companies', {
+            userId: '@_id'
+        })
+    };
 }
 
 Companies.$inject = ['$resource'];
-ProfileCompanies.$inject = ['$resource'];
 
 angular
     .module('companies')
-    .factory('Companies', Companies)
-    .factory('Profile.Companies', ProfileCompanies);
+    .factory('Companies', Companies);
