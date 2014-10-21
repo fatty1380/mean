@@ -7,5 +7,6 @@ angular.module('applications').run(['Menus',
 		Menus.addMenuItem('topbar', 'Applications', 'applications', 'dropdown', '/applications(/create)?');
 		Menus.addSubMenuItem('topbar', 'applications', 'List Applications', 'applications');
 		Menus.addSubMenuItem('topbar', 'applications', 'New Application', 'applications/create');
+        Menus.addSubMenuItem('topbar', 'applications', 'My Applications', 'applications/me');
 	}
 ]);

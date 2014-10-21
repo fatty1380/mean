@@ -40,11 +40,6 @@ var JobSchema = new Schema({
         },
     },
 
-    applications: [{
-        type: Schema.ObjectId,
-        ref: 'Application',
-    }],
-
     // TODO - Determine if this is the appropriate place for driver/applicant status
     driverStatus: {
         type: String,

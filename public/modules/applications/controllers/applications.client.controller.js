@@ -4,20 +4,23 @@
 angular.module('applications').controller('ApplicationsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Applications',
 	function($scope, $stateParams, $location, Authentication, Applications ) {
 		$scope.authentication = Authentication;
+		$scope.placeholders = {'intro': 'Write a short message explaining why you\'re a good fit for the position.'};
 
 		// Create new Application
 		$scope.create = function() {
+			debugger;
+			console.log('[AppController.create]', 'Creating new Application');
 			// Create new Application object
-			var application = new Applications ({
-				name: this.name
+			var application = new Applications.ById ({
+				messages: [{text: this.message, status: 'sent'}]
 			});
 
 			// Redirect after save
 			application.$save(function(response) {
-				$location.path('applications/' + response._id);
+				//$location.path('applications/' + response._id);
 
 				// Clear form fields
-				$scope.name = '';
+				$scope.message = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -52,13 +55,23 @@ angular.module('applications').controller('ApplicationsController', ['$scope', '
 
 		// Find a list of Applications
 		$scope.find = function() {
-			$scope.applications = Applications.query();
+			console.log('[AppController.find] Searching for applications');
+			if ($scope.job) {
+				debugger;
+				console.log('[AppController.find] Looking for applications on jobID %o', $scope.job._id);
+
+				$scope.applications = Applications.ByJob({id : $scope.job._id});
+			} else {
+				debugger;
+				$scope.applications = Applications.ById.query();
+			}
+
 		};
 
 		// Find existing Application
 		$scope.findOne = function() {
-			$scope.application = Applications.get({ 
-				applicationId: $stateParams.applicationId
+			$scope.application = Applications.ById.get({
+				id: $stateParams.applicationId
 			});
 		};
 	}
