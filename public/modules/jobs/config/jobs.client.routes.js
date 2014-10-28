@@ -11,7 +11,7 @@ angular.module('jobs').config(['$stateProvider',
         }).
         state('myJobs', {
             url: '/myjobs',
-            templateUrl: 'modules/jobs/views/list-my-jobs.client.view.html',
+            templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
         }).
         state('createJob', {
             url: '/jobs/create',

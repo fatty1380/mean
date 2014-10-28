@@ -1,9 +1,7 @@
 'use strict';
 
 // Companies controller
-angular.module('companies').controller('CompaniesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Companies',
-
-    function($scope, $stateParams, $location, Authentication, Companies) {
+function CompaniesController($scope, $stateParams, $location, Authentication, Companies) {
         $scope.authentication = Authentication;
 
         // REGION : Page Action methods
@@ -90,4 +88,7 @@ angular.module('companies').controller('CompaniesController', ['$scope', '$state
             });
         };
     }
-]);
+
+    CompaniesController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Companies'];
+
+    angular.module('companies').controller('CompaniesController', CompaniesController);

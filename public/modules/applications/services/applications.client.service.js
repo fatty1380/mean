@@ -13,21 +13,42 @@
 */
 
 var ApplicationsService = function($resource) {
-    return {
+
+    var _this = this;
+
+    _this._data = {
         ByUser: $resource('users/:userId/applications', {
-            userId: '@_id'
+            userId: '@userId'
+        }, {
+            get: {
+                method: 'GET',
+                isArray: true
+            }
         }),
         ByJob: $resource('jobs/:jobId/applications', {
-            jobId: '@_id'
+            jobId: '@jobId'
+        }, {
+            get: {
+                method: 'GET',
+                isArray: true
+            },
+            save: {
+                method: 'POST',
+            }
         }),
         ById: $resource('applications/:id', {
             id: '@_id'
         }, {
             update: {
                 method: 'PUT'
+            },
+            save: {
+                method: 'POST'
             }
         })
     };
+
+    return _this._data;
 };
 
 ApplicationsService.$inject = ['$resource'];

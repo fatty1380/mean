@@ -62,14 +62,22 @@
                     </a>
                 </div>
                 <div class="pull-right" data-ng-show="authentication.user._id != job.user._id && formMode[$index] !== 'apply'">
-                    <a class="btn btn-primary btn-large pull-right" data-ng-click="toggleApplication
-(true, $index)">Full Details &amp; Apply</a>
+                    <a class="btn btn-primary btn-large" data-ng-click="toggleApplication(true, $index)">Full Details</a>
+
+                    <a class="btn btn-primary btn-large" data-ng-click="apply('lg', job)">Apply</a>
                 </div>
             </span>
         </div>
         <div class="row-fluid" data-ng-show="formMode[$index] === 'apply' ">
             <span class="col-md-12 ">
-                <!--<div ng-include="'/modules/applications/views/templates/create-application.client.template.html'"></div>-->
+                <div ng-include="'/modules/applications/views/templates/create-application.client.template.html'"></div>
+            </span>
+        </div>
+
+        <div class="row-fluid">
+            <span class="col-md-12">
+                <h4>Existing Applications</h4>
+                <div ng-include="'/modules/applications/views/templates/list-applications.client.template.html'"></div>
             </span>
         </div>
     </div>

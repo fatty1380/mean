@@ -14,6 +14,9 @@ var mongoose = require('mongoose'),
 exports.create = function(req, res) {
     var application = new Application(req.body);
     application.user = req.user;
+    application.job = req.job;
+
+    debugger;
 
     application.save(function(err) {
         if (err) {
@@ -31,6 +34,10 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
     res.jsonp(req.application);
+};
+
+exports.readList = function(req, res) {
+    res.jsonp(req.applications);
 };
 
 /**
@@ -70,7 +77,7 @@ exports.delete = function(req, res) {
 };
 
 /**
- * List of Applications
+ * List of *ALL* Applications
  */
 exports.list = function(req, res) {
     debugger;
@@ -79,6 +86,7 @@ exports.list = function(req, res) {
         .find()
         .sort('-created')
         .populate('user', 'displayName')
+        .populate('job')
         .exec(function(err, applications) {
             if (err) {
                 return res.status(400).send({
@@ -92,6 +100,7 @@ exports.list = function(req, res) {
 
 exports.queryByJobID = function(req, res, next, jobId) {
 
+    console.log('[ApplicationsCtrl.queryByJobId] Start]');
     debugger; // TODO: See if Query Parameter is properly passed
 
     if (!jobId) {
@@ -99,18 +108,18 @@ exports.queryByJobID = function(req, res, next, jobId) {
         return next(new Error('Must include jobID in request to find Applications by job'));
     }
 
-    Application.findById(jobId)
+    Application.find({
+            'job': jobId
+        })
+        .populate('user', 'displayName')
         .exec(function(err, applications) {
-            if (err) {
-                return res.status(400).send({
-                    message: 'Failed to load applications for JobId ' + jobId,
-                    error: err
-                });
-            }
+            if (err) return next(err);
 
-            console.log('[ApplicationsCtrl.queryByJobId] ' + 'Found %d applications for jobId', (applications || []).length, jobId);
+            req.applications = applications || [];
 
-            res.jsonp(applications || []);
+            console.log('[ApplicationsCtrl.queryByJobId] ' + 'Found %d applications for jobId', req.applications.length, jobId);
+
+            next();
         });
 };
 
@@ -120,6 +129,8 @@ exports.loadMine = function(req, res) {
 
 exports.queryByUserID = function(req, res, next, id) {
 
+    console.log('[ApplicationsCtrl.queryByUserId] Start]');
+
     debugger; // TODO: See if Query Parameter is properly passed
     var userId = id || (req.user ? req.user._id : null);
 
@@ -127,16 +138,12 @@ exports.queryByUserID = function(req, res, next, id) {
             'user': userId
         })
         .exec(function(err, applications) {
-            if (err) {
-                return res.status(400).send({
-                    message: 'Failed to load applications for userId ' + userId,
-                    error: err
-                });
-            }
+            if (err) return next(err);
 
-            console.log('[ApplicationsCtrl.queryByUserId] ' + 'Found %d applications for userId', (applications || []).length, userId);
+            req.applications = applications || [];
 
-            res.jsonp(applications || []);
+            console.log('[ApplicationsCtrl.queryByUserId] ' + 'Found %d applications for userId', req.applications.length, userId);
+            next();
         });
 };
 
@@ -146,6 +153,8 @@ exports.queryByUserID = function(req, res, next, id) {
 exports.applicationByID = function(req, res, next, id) {
     Application.findById(id)
         .populate('user', 'displayName')
+        .populate('job')
+        .populate('messages.sender')
         .exec(function(err, application) {
             if (err) return next(err);
             if (!application) return next(new Error('Failed to load Application ' + id));

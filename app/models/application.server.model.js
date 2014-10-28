@@ -24,6 +24,10 @@ var ApplicationSchema = new Schema({
         default: 'draft'
     },
     messages: [{
+        sender: {
+            type: Schema.ObjectId,
+            ref: 'User'
+        },
         text: {
             type: String,
             default: ''

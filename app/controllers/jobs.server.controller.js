@@ -74,6 +74,10 @@ exports.read = function(req, res) {
     res.jsonp(req.job);
 };
 
+exports.readList = function(req, res) {
+    res.jsonp(req.jobs);
+};
+
 /**
  * Update a Job
  */
@@ -101,8 +105,6 @@ exports.update = function(req, res) {
             });
         }
     });
-
-
 };
 
 /**
@@ -126,6 +128,7 @@ exports.delete = function(req, res) {
  * List of Jobs
  */
 exports.list = function(req, res) {
+    debugger;
     var query = null;
 
     if (req.query.userId !== undefined) {
@@ -152,8 +155,27 @@ exports.list = function(req, res) {
 /**
  * List of a user's posted jobs
  */
-exports.listByUserID = function(req, res, id) {
+exports.queryByUserID = function(req, res, next, id) {
+    debugger;
     Job.find()
+        .sort('-created')
+        .populate('user', 'displayName', {
+            _id: id
+        })
+        .populate('location')
+        .exec(function(err, jobs) {
+            if (err) return next(err);
+            req.jobs = jobs || [];
+            next();
+        });
+};
+
+/**
+ * List of a company's posted jobs
+ */
+exports.queryByCompanyID = function(req, res, next, id) {
+    debugger;
+    Job.find({company: id})
         .sort('-created')
         .populate('user', 'displayName', {
             _id: id
@@ -167,6 +189,10 @@ exports.listByUserID = function(req, res, id) {
             } else {
                 res.jsonp(jobs);
             }
+
+            if (err) return next(err);
+            req.jobs = jobs || [];
+            next();
         });
 };
 
@@ -185,6 +211,7 @@ exports.apply = function(req, res, id) {
  * Job middleware
  */
 exports.jobByID = function(req, res, next, id) {
+    debugger;
     Job.findById(id)
         .populate('user', 'displayName')
         .populate('location')
@@ -200,6 +227,7 @@ exports.jobByID = function(req, res, next, id) {
  * Job authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
+    debugger;
     if (req.job.user.id !== req.user.id) {
         return res.send(403, 'User is not authorized');
     }

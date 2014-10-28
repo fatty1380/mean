@@ -175,7 +175,7 @@ exports.newLicense = function(req, res) {
 };
 
 /**
- * List of Drivers
+ * List of *ALL* Drivers
  */
 exports.list = function(req, res) {
     console.log('[Driver.Controller] list()');

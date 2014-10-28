@@ -1,7 +1,7 @@
 'use strict';
 
 // Drivers controller
-function DriversController($scope, $stateParams, $location, $http, $window, Authentication, Drivers, DriverUser) {
+function DriversController($scope, $stateParams, $location, $http, $window, Authentication, Drivers) {
     $scope.authentication = Authentication;
     //$scope.driver = Drivers;
     //$scope.driverUser = DriverUser;
@@ -154,26 +154,26 @@ function DriversController($scope, $stateParams, $location, $http, $window, Auth
 
     // Find a list of Drivers
     $scope.find = function() {
-        $scope.drivers = Drivers.query();
+        $scope.drivers = Drivers.ById.query();
     };
 
     // Find existing Driver
     $scope.findOne = function() {
-        $scope.driver = Drivers.get({
+        $scope.driver = Drivers.ById.get({
             driverId: $stateParams.driverId
         });
     };
 
     $scope.findOneByUser = function(id) {
         console.log('[DriverClientController] findOneByUser(%o)', id);
-        $scope.driver = DriverUser.get({
+        $scope.driver = Drivers.ByUser.get({
             userId: id
         });
     };
 
     $scope.findByUser = function(id) {
         console.log('[DriverClientController] findByUser(%o)', id);
-        $scope.drivers = DriverUser.query({
+        $scope.drivers = Drivers.ByUser.query({
             userId: id
         });
     };
@@ -273,6 +273,6 @@ function DriversController($scope, $stateParams, $location, $http, $window, Auth
     };
 }
 
-DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', '$window', 'Authentication', 'Drivers', 'Profile.Drivers'];
+DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', '$window', 'Authentication', 'Drivers'];
 
 angular.module('drivers').controller('DriversController', DriversController);

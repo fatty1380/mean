@@ -33,6 +33,10 @@ exports.read = function(req, res) {
     res.jsonp(req.company);
 };
 
+exports.readList = function(req, res) {
+    res.jsonp(req.companies);
+};
+
 /**
  * Update a Company
  */
@@ -87,6 +91,14 @@ exports.list = function(req, res) {
         });
 };
 
+exports.listDrivers = function(req, res) {
+    debugger;
+
+    console.log('NOT IMPLEMENTED');
+
+    res.jsonp([{error:'NOT IMPLEMENTED', about:'THIS METHOD IS NOT IMPLEMENTED'}]);
+};
+
 /**
  * Company middleware
  */
@@ -99,19 +111,20 @@ exports.companyByID = function(req, res, next, id) {
     });
 };
 
-exports.companyByUser = function(req, res, next, id) {
+exports.companyByUserID = function(req, res, next, id) {
     debugger; // TODO: Check if middleware mapping is still working
     Company.find({
             user: id
         })
         .exec(function(err, companies) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                res.jsonp(companies || []);
-            }
+
+            if (err) return next(err);
+            if (!companies) return next(new Error('Failed to load companies for userId ' + id));
+
+            console.log('[ApplicationsCtrl.queryByUserId] ' + 'Found %d companies for userId', (companies || []).length, id);
+
+            req.companies = companies || [];
+            next();
         });
 };
 

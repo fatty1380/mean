@@ -2,29 +2,22 @@
 
 //Drivers service used to communicate Drivers REST endpoints
 function DriverFactory($resource) {
-    return $resource('drivers/:driverId', {
-        driverId: '@_id'
-    }, {
-        update: {
-            method: 'PUT'
-        }
-    });
-}
-
-function DriverUserFactory($resource) {
-    return $resource('profiles/:userId/drivers', {
-        userId: '@_id'
-    }, {
-        update: {
-            method: 'PUT'
-        }
-    });
+    return {
+        ById: $resource('drivers/:driverId', {
+            driverId: '@_id'
+        }, {
+            update: {
+                method: 'PUT'
+            }
+        }),
+        ByUser: $resource('users/:userId/driver', {
+            userId: '@_id'
+        })
+    };
 }
 
 DriverFactory.$inject = ['$resource'];
-DriverUserFactory.$inject = ['$resource'];
 
 angular
     .module('drivers')
-    .factory('Drivers', DriverFactory)
-    .factory('Profile.Drivers', DriverUserFactory);
+    .factory('Drivers', DriverFactory);

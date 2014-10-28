@@ -4,16 +4,10 @@ module.exports = function(app) {
     var users = require('../../app/controllers/users');
     var applications = require('../../app/controllers/applications');
 
-    app.route('/profile/applications')
-        .get(applications.loadMine);
-
     // Applications Routes
     app.route('/applications')
         .get(applications.list)
         .post(users.requiresLogin, applications.create);
-
-    app.route('/users/me/applications')
-        .get(users.requiresLogin, applications.loadMine);
 
     app.route('/applications/:applicationId')
         .get(applications.read)
@@ -21,11 +15,14 @@ module.exports = function(app) {
         .delete(users.requiresLogin, applications.hasAuthorization, applications.delete);
 
     app.route('/jobs/:jobId/applications')
-        .get(applications.queryByJobID);
+        .get(applications.readList)
+        .post(users.requiresLogin, applications.create);
 
     app.route('/users/:userId/applications')
-        .get(applications.queryByUserID);
+        .get(applications.readList);
 
     // Finish by binding the Application middleware
     app.param('applicationId', applications.applicationByID);
+    app.param('userId', applications.queryByUserID);
+    app.param('jobId', applications.queryByJobID);
 };
