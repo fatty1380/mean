@@ -10,9 +10,11 @@ module.exports = function(app) {
 	var users = require('../../app/controllers/users');
 
 	// Setting up the users profile api
-	app.route('/users/me').get(users.me);
 	app.route('/users').put(users.update);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
+    app.route('/users/:userId')
+        .get(users.read)
+        .put(users.requiresLogin, users.hasAuthorization, users.update);
 
 	// Setting up the users password api
 	app.route('/users/password').post(users.changePassword);
@@ -24,11 +26,6 @@ module.exports = function(app) {
 	app.route('/auth/signup').post(users.signup);
 	app.route('/auth/signin').post(users.signin);
 	app.route('/auth/signout').get(users.signout);
-
-	// Setting up the Profile Access API
-    app.route('/profiles/:userId')
-        .get(users.read)
-        .put(users.requiresLogin, users.hasAuthorization, users.update);
 
 	// Setting the facebook oauth routes
 	app.route('/auth/facebook').get(passport.authenticate('facebook', {

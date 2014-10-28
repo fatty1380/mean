@@ -5,6 +5,19 @@
 #
 # Feedback and changes welcome!
 
+# Check Arguments
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --debug )          modeDebug=true
+                                ;;
+        -v | --verbose )		modeVerbose=true
+								;;
+        * )                     echo 'Unknown Argument "'$1'"'
+                                ;;
+    esac
+    shift
+done
+
 # Bootstrapping
 command -v gcc >/dev/null 2>&1 || { echo >&2 "I require gcc but it's not installed.  Aborting."; exit 1; }
 
@@ -180,21 +193,18 @@ if ps cax | grep grunt > /dev/null; then
 else
 	echo "Launching Grunt Task Runner";
 
-	grunt&
+	if [ "$modeVerbose" = true ] ; then
+		DEBUG=express:* grunt&
+	else
+		grunt&
+	fi
 fi
 
 # If Debugging, launch node-inspector
-while [ "$1" != "" ]; do
-    case $1 in
-        -d | --debug )          shift
-								sleep 10;
-                                echo 'Attaching Node-Inspector for Debugging'
-                                node-inspector&
-                                ;;
-        * )                     echo 'Unknown Argument "'$1'"'
-                                ;;
-    esac
-    shift
-done
+if [ "$modeDebug" = true ] ; then
+	sleep 10;
+    echo 'Attaching Node-Inspector for Debugging'
+    node-inspector&
+fi
 
 echo "Finished Launching Outset!"

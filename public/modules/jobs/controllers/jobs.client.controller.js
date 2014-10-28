@@ -1,7 +1,7 @@
 'use strict';
 
 // Jobs controller
-function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
+function JobsController($scope, $stateParams, $location, $state, $modal, Authentication, Jobs) {
     $scope.activeModule = 'jobs';
     $scope.authentication = Authentication;
     $scope.user = Authentication.user;
@@ -13,7 +13,7 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
     $scope.payRate = {};
     $scope.formMode = [];
 
-    $scope.listTitle = ($scope.user.type === 'driver') ? 'Outset Job Listings' : 'My Job Postings';
+
 
 
     $scope.types = ['main', 'home', 'business', 'billing', 'other'];
@@ -28,7 +28,7 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
     $scope.create = function() {
 
         // Create new Job object
-        var job = new Jobs({
+        var job = new Jobs.ById({
             name: this.name,
             description: this.description,
             location: this.location,
@@ -60,8 +60,24 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
         }
     };
 
-    $scope.apply = function(job) {
+    $scope.apply = function(size, job) {
+        var modalInstance = $modal.open({
+            templateUrl: 'applyModal.html',
+            controller: 'ModalInstanceController',
+            scope: $scope,
+            size: size,
+            resolve: {
+                passed_job: function() {
+                    return $scope.job;
+                }
+            }
+        });
 
+        modalInstance.result.then(function(selectedItem) {
+            $scope.selected = selectedItem;
+        }, function() {
+            console.info('Modal dismissed at: ' + new Date());
+        });
     };
 
 
@@ -94,34 +110,64 @@ function JobsController($scope, $stateParams, $location, Authentication, Jobs) {
         });
     };
 
+    $scope.initList = function() {
+
+        if ($state.is('listJobs')) {
+            $scope.listTitle = 'Outset Job Listings';
+            $scope.find();
+        } else if ($state.is('myJobs')) {
+            $scope.listTitle = ($scope.user.type === 'driver') ? 'My Jobs' : 'My Job Postings';
+
+            $scope.findMine();
+        }
+    };
+
     // Find a list of Jobs
     $scope.find = function() {
         var user = $scope.authentication.user;
 
-        if(user && user.type === 'owner') {
-            $scope.jobs = Jobs.query({
+        if (user && user.type === 'owner') {
+            $scope.jobs = Jobs.ByUser.query({
                 userId: Authentication.user._id,
             });
         } else {
-            $scope.jobs = Jobs.query();
+            $scope.jobs = Jobs.ById.query();
         }
     };
 
     // Find a list of 'My' Jobs.
     $scope.findMine = function() {
-        $scope.jobs = Jobs.query({
+        $scope.jobs = Jobs.ByUser.query({
             userId: Authentication.user._id,
         });
     };
     // Find existing Job
     $scope.findOne = function() {
-        $scope.job = Jobs.get({
+        $scope.job = Jobs.ById.get({
             jobId: $stateParams.jobId
         });
     };
 }
 
-JobsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Jobs'];
+function ModalInstanceController($scope, $modalInstance, pJob) {
+    $scope.selected = {
+        id: null
+    };
+    $scope.passed_job = pJob;
+    $scope.job = $scope.job || pJob;
+
+    $scope.ok = function() {
+        $modalInstance.close($scope.selected.id);
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+}
+
+JobsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', 'Authentication', 'Jobs'];
+ModalInstanceController.$inject = ['$scope', '$modalInstance', 'passed_job'];
 
 angular.module('jobs')
-    .controller('JobsController', JobsController);
+    .controller('JobsController', JobsController)
+    .controller('ModalInstanceController', ModalInstanceController);

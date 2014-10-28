@@ -20,6 +20,8 @@ var express = require('express'),
 	consolidate = require('consolidate'),
 	path = require('path');
 
+	var expressDebug = require('express-debug');
+
 module.exports = function(db) {
 	// Initialize express app
 	var app = express();
@@ -139,6 +141,9 @@ module.exports = function(db) {
 			error: 'Not Found'
 		});
 	});
+
+	debugger;
+	expressDebug(app, {});
 
 	return app;
 };
