@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
+    errorHandler = require('./errors.server.controller'),
     Application = mongoose.model('Application'),
     _ = require('lodash');
 
@@ -102,6 +102,7 @@ exports.queryByJobID = function(req, res, next, jobId) {
 
     console.log('[ApplicationsCtrl.queryByJobId] Start]');
     debugger; // TODO: See if Query Parameter is properly passed
+
 
     if (!jobId) {
         console.log('[ApplicationsCtrl.queryByJobId]', 'Cannot search without a jobId');

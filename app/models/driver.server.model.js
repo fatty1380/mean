@@ -1,7 +1,7 @@
 'use strict';
 
 // Load Schedule early //
-var preload = require('./schedule');
+var preload = require('./schedule.server.model.js');
 
 /**
  * Module dependencies.

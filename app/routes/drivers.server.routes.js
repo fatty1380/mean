@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = function(app) {
-    var users = require('../../app/controllers/users');
-    var drivers = require('../../app/controllers/drivers');
+    var users = require('../../app/controllers/users.server.controller');
+    var drivers = require('../../app/controllers/drivers.server.controller');
 
     // Drivers Routes
     app.route('/drivers/create').post(users.requiresLogin, drivers.create);

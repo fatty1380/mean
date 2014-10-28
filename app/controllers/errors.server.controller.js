@@ -4,17 +4,8 @@
  * Get unique error field name
  */
 var getUniqueErrorMessage = function(err) {
-    var output;
+	var output;
 
-<<<<<<< HEAD
-    try {
-        var fieldName = err.err.substring(err.err.lastIndexOf('.$') + 2, err.err.lastIndexOf('_1'));
-        output = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ' already exist';
-
-    } catch (ex) {
-        output = 'Unique field already exist';
-    }
-=======
 	try {
 		var fieldName = err.err.substring(err.err.lastIndexOf('.$') + 2, err.err.lastIndexOf('_1'));
 		output = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ' already exists';
@@ -22,34 +13,32 @@ var getUniqueErrorMessage = function(err) {
 	} catch(ex) {
 		output = 'Unique field already exists';
 	}
->>>>>>> a7243763ea765d2ce4a837bb8fe138355f9e8640
 
-    return output;
+	return output;
 };
 
 /**
  * Get the error message from error object
  */
 exports.getErrorMessage = function(err) {
-<<<<<<< HEAD
-    var message = '';
+	var message = '';
+	
+	if (err.code) {
+		switch (err.code) {
+			case 11000:
+			case 11001:
+				message = getUniqueErrorMessage(err);
+				break;
+			default:
+				message = 'Something went wrong';
+		}
+	} else {
+		for (var errName in err.errors) {
+			if (err.errors[errName].message) message = err.errors[errName].message;
+		}
+	}
 
-    if (err.code) {
-        switch (err.code) {
-            case 11000:
-            case 11001:
-                message = getUniqueErrorMessage(err);
-                break;
-            default:
-                message = 'Something went wrong';
-        }
-    } else {
-        for (var errName in err.errors) {
-            if (err.errors[errName].message) message = err.errors[errName].message;
-        }
-    }
-
-    return message;
+	return message;
 };
 
 /**
@@ -86,24 +75,4 @@ exports.censor = function(censor) {
         return value;
     };
 
-=======
-	var message = '';
-	
-	if (err.code) {
-		switch (err.code) {
-			case 11000:
-			case 11001:
-				message = getUniqueErrorMessage(err);
-				break;
-			default:
-				message = 'Something went wrong';
-		}
-	} else {
-		for (var errName in err.errors) {
-			if (err.errors[errName].message) message = err.errors[errName].message;
-		}
-	}
-
-	return message;
->>>>>>> a7243763ea765d2ce4a837bb8fe138355f9e8640
 };

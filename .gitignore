@@ -7,7 +7,7 @@ public/lib
 app/tests/coverage/
 .bower-*/
 .idea/
-<<<<<<< HEAD
+config/sslcert/*.pem
 
 ## Outset Additions ##
 *.pem
@@ -16,6 +16,3 @@ readonly_rsa
 *.pub
 coverage
 *.orig
-=======
-config/sslcert/*.pem
->>>>>>> a7243763ea765d2ce4a837bb8fe138355f9e8640
