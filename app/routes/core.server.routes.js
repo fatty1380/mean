@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = function(app) {
+<<<<<<< HEAD
     // Root routing
     var core = require('../../app/controllers/core');
 
@@ -14,3 +15,9 @@ module.exports = function(app) {
 
     app.param('configName', core.getConfig);
 };
+=======
+	// Root routing
+	var core = require('../../app/controllers/core.server.controller');
+	app.route('/').get(core.index);
+};
+>>>>>>> a7243763ea765d2ce4a837bb8fe138355f9e8640

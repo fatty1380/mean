@@ -3,7 +3,9 @@
 /**
  * Module dependencies.
  */
-var express = require('express'),
+var fs = require('fs'),
+	http = require('http'),
+  express = require('express'),
 	morgan = require('morgan'),
 	bodyParser = require('body-parser'),
 	session = require('express-session'),
@@ -38,6 +40,7 @@ module.exports = function(db) {
 	app.locals.facebookAppId = config.facebook.clientID;
 	app.locals.jsFiles = config.getJavaScriptAssets();
 	app.locals.cssFiles = config.getCSSAssets();
+	app.locals.secure = config.secure;
 
 	// Passing the request url to environment locals
 	app.use(function(req, res, next) {
@@ -80,9 +83,6 @@ module.exports = function(db) {
 	}));
 	app.use(bodyParser.json());
 	app.use(methodOverride());
-
-	// Enable jsonp
-	app.enable('jsonp callback');
 
 	// CookieParser should be above session
 	app.use(cookieParser());
@@ -142,8 +142,24 @@ module.exports = function(db) {
 		});
 	});
 
+<<<<<<< HEAD
 	debugger;
 	expressDebug(app, {});
 
 	return app;
+=======
+	if (app.locals.secure) {
+		console.log('Securely using https protocol');
+		var https = require('https'),
+		privateKey  = fs.readFileSync('./config/sslcert/key.pem', 'utf8'),
+		certificate = fs.readFileSync('./config/sslcert/cert.pem', 'utf8'),
+		credentials = {key: privateKey, cert: certificate},
+		httpsServer = https.createServer(credentials, app);
+		return httpsServer;
+	} else {
+		console.log('Insecurely using http protocol');
+		var httpServer = http.createServer(app);
+		return httpServer;
+	}
+>>>>>>> a7243763ea765d2ce4a837bb8fe138355f9e8640
 };
