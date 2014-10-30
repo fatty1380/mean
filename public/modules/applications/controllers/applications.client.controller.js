@@ -1,7 +1,7 @@
 'use strict';
 
 // Applications controller
-function ApplicationsController($scope, $stateParams, $location, Authentication, Applications) {
+function ApplicationsController($scope, $stateParams, $location, $state, Authentication, Applications) {
     $scope.authentication = Authentication;
     $scope.activeModule = $scope.activeModule || 'applications';
     $scope.placeholders = {
@@ -107,28 +107,60 @@ function ApplicationsController($scope, $stateParams, $location, Authentication,
 
     var processError = function(errorResponse) {
         switch (errorResponse.status) {
-                case 403:
-                    $scope.error = 'Sorry, you cannot make changes to this application';
-                    $location.path('/settings/profile/');
-                    break;
-                default:
-                    $scope.error = errorResponse.data.message;
-            }
+            case 403:
+                $scope.error = 'Sorry, you cannot make changes to this application';
+                $location.path('/settings/profile/');
+                break;
+            default:
+                $scope.error = errorResponse.data.message;
+        }
+    };
+
+    $scope.initJobList = function() {
+        $scope.listTitle = 'Applications';
+        $scope.findAll();
+    };
+
+    $scope.initList = function() {
+        debugger;
+
+        var isAdmin = $scope.authentication.user.roles.indexOf('admin') !== -1;
+
+        if ($state.is('listApplications') && isAdmin) {
+            $scope.listTitle = 'Outset Job Application Listings';
+            $scope.findAll();
+        } else if ($state.is('myApplications') && $scope.authentication.user.type === 'driver') {
+            $scope.listTitle = 'My Job Applications';
+
+            $scope.findMine();
+        } else {
+            $location.path('/applications/me');
+        }
     };
 
     // Find a list of Applications
-    $scope.find = function() {
+    $scope.findAll = function() {
         console.log('[AppController.find] Searching for applications');
-        if ($scope.job) {
-            console.log('[AppController.find] Looking for applications on jobID %o', $scope.job._id);
 
-            $scope.applications = Applications.ByJob.get({
-                jobId: $scope.job._id
+        var jobId = ($scope.job.$resolved && $scope.job._id) || $stateParams.jobId;
+
+        if (jobId) {
+            console.log('[AppController.find] Looking for applications on jobID %o', jobId._id);
+
+            $scope.applications = Applications.ByJob.query({
+                jobId: jobId
             });
         } else {
             $scope.applications = Applications.ById.query();
         }
 
+    };
+
+    // Find a list of 'My' Jobs.
+    $scope.findMine = function() {
+        $scope.applications = Applications.ByUser.query({
+            userId: Authentication.user._id,
+        });
     };
 
     // Find existing Application
@@ -139,6 +171,6 @@ function ApplicationsController($scope, $stateParams, $location, Authentication,
     };
 }
 
-ApplicationsController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Applications'];
+ApplicationsController.$inject = ['$scope', '$stateParams', '$location', '$state', 'Authentication', 'Applications'];
 
 angular.module('applications').controller('ApplicationsController', ApplicationsController);

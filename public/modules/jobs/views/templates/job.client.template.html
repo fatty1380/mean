@@ -69,15 +69,16 @@
             </span>
         </div>
         <div class="row-fluid" data-ng-show="formMode[$index] === 'apply' ">
-            <span class="col-md-12 ">
+            <span class="col-md-12 " data-ng-controller="ApplicationsController">
                 <div ng-include="'/modules/applications/views/templates/create-application.client.template.html'"></div>
             </span>
         </div>
 
         <div class="row-fluid">
-            <span class="col-md-12">
-                <h4>Existing Applications</h4>
-                <div ng-include="'/modules/applications/views/templates/list-applications.client.template.html'"></div>
+            <span class="col-md-12" data-ng-controller="ApplicationsController" data-ng-init="initJobList()">
+                <h4>{{listTitle}}</h4>
+                <div ng-include="'/modules/applications/views/templates/list-applications.client.template.html'">
+                </div>
             </span>
         </div>
     </div>

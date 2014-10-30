@@ -128,16 +128,7 @@ exports.delete = function(req, res) {
  * List of Jobs
  */
 exports.list = function(req, res) {
-    debugger;
-    var query = null;
-
-    if (req.query.userId !== undefined) {
-        query = {
-            user: req.query.userId
-        };
-    }
-
-    Job.find(query)
+    Job.find()
         .sort('-created')
         .populate('user', 'displayName')
         .populate('location')
@@ -157,13 +148,14 @@ exports.list = function(req, res) {
  */
 exports.queryByUserID = function(req, res, next, id) {
     debugger;
-    Job.find()
-        .sort('-created')
-        .populate('user', 'displayName', {
-            _id: id
+    Job.find({
+            user: id
         })
+        .sort('-created')
+        .populate('user', 'displayName')
         .populate('location')
         .exec(function(err, jobs) {
+            debugger; // TODO: Check to confirm that Query works
             if (err) return next(err);
             req.jobs = jobs || [];
             next();
@@ -175,7 +167,9 @@ exports.queryByUserID = function(req, res, next, id) {
  */
 exports.queryByCompanyID = function(req, res, next, id) {
     debugger;
-    Job.find({company: id})
+    Job.find({
+            company: id
+        })
         .sort('-created')
         .populate('user', 'displayName', {
             _id: id
