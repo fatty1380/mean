@@ -142,12 +142,10 @@ module.exports = function(db) {
 		});
 	});
 
-<<<<<<< HEAD
-	debugger;
-	expressDebug(app, {});
+	if (process.env.NODE_ENV === 'development') {
+		expressDebug(app, {});
+	}
 
-	return app;
-=======
 	if (app.locals.secure) {
 		console.log('Securely using https protocol');
 		var https = require('https'),
@@ -161,5 +159,4 @@ module.exports = function(db) {
 		var httpServer = http.createServer(app);
 		return httpServer;
 	}
->>>>>>> a7243763ea765d2ce4a837bb8fe138355f9e8640
 };

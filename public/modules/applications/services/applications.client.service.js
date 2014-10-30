@@ -20,7 +20,7 @@ var ApplicationsService = function($resource) {
         ByUser: $resource('users/:userId/applications', {
             userId: '@userId'
         }, {
-            get: {
+            query: {
                 method: 'GET',
                 isArray: true
             }
@@ -28,7 +28,7 @@ var ApplicationsService = function($resource) {
         ByJob: $resource('jobs/:jobId/applications', {
             jobId: '@jobId'
         }, {
-            get: {
+            query: {
                 method: 'GET',
                 isArray: true
             },

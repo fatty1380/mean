@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    errorHandler = require('./errors'),
+    errorHandler = require('./errors.server.controller'),
     Bgcheck = mongoose.model('Bgcheck'),
     unirest = require('unirest'),
     _ = require('lodash');
