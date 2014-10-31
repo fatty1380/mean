@@ -6,26 +6,33 @@
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Application = mongoose.model('Application'),
+    User = mongoose.model('User'),
+    Job = mongoose.model('Job'),
     _ = require('lodash');
 
 /**
  * "Instance" Methods
  */
 
-var executeQuery = function(req, res, next) {
+var executeQuery = function(req, res) {
 
-    var query = req.query;
+    var query = req.query || {};
+    var sort = req.sort || '';
 
     Application.find(query)
+        .sort(sort)
         .populate('user', 'displayName')
-        .populate('job', 'user')
+        .populate('job', 'name')
         .exec(function(err, applications) {
-            if (err) return next(err);
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+
             req.applications = applications || [];
-
             console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %s', req.applications.length, query);
-
-            next();
+            res.json(req.applications);
         });
 };
 
@@ -43,7 +50,7 @@ exports.create = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(application);
+            res.json(application);
         }
     });
 };
@@ -52,11 +59,7 @@ exports.create = function(req, res) {
  * Show the current Application
  */
 exports.read = function(req, res) {
-    res.jsonp(req.application);
-};
-
-exports.readList = function(req, res) {
-    res.jsonp(req.applications);
+    res.json(req.application);
 };
 
 /**
@@ -73,7 +76,7 @@ exports.update = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(application);
+            res.json(application);
         }
     });
 };
@@ -90,7 +93,7 @@ exports.delete = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(application);
+            res.json(application);
         }
     });
 };
@@ -99,17 +102,19 @@ exports.delete = function(req, res) {
  * List of *ALL* Applications
  */
 exports.list = function(req, res) {
+    req.sort = '-created';
 
-    req.query = {};
-
-    executeQuery(req, res, null);
+    executeQuery(req, res);
 };
 
-exports.queryByJobID = function(req, res, next, jobId) {
+exports.queryByJobID = function(req, res) {
+    var jobId = req.params.jobId;
 
     if (!jobId) {
         console.log('[ApplicationsCtrl.queryByJobId]', 'Cannot search without a jobId');
-        return next(new Error('Must include jobID in request to find Applications by job'));
+        return res.status(400).send({
+            message: 'Must include jobID in request to find Applications by job'
+        });
     }
 
     var query = {
@@ -124,7 +129,7 @@ exports.queryByJobID = function(req, res, next, jobId) {
 
     req.query = query;
 
-    executeQuery(req, res, next);
+    executeQuery(req, res);
 
 };
 
@@ -132,27 +137,46 @@ exports.loadMine = function(req, res) {
     return this.queryByUserID(req, res, null, req.user._id);
 };
 
-exports.queryByUserID = function(req, res, next, id) {
+exports.queryByUserID = function(req, res) {
     req.query = {
-        user: id
+        user: req.params.userId
     };
 
-    executeQuery(req, res, next);
+    executeQuery(req, res);
 };
 
 /**
  * Application middleware
  */
 exports.applicationByID = function(req, res, next, id) {
+
+    if (!req.originalUrl.endsWith(id)) {
+        next();
+        return;
+    }
+
     Application.findById(id)
         .populate('user', 'displayName')
-        .populate('job')
+        .populate('job', 'user')
         .populate('messages.sender')
         .exec(function(err, application) {
             if (err) return next(err);
             if (!application) return next(new Error('Failed to load Application ' + id));
-            req.application = application;
-            next();
+
+            // TODO: Determine if this is the appropriate change
+            // to populate the job's user :(
+
+            Job.populate(application.job, {
+                path: 'user',
+                model: User
+            }, function(err, user) {
+                console.log('populated user: %o', user);
+
+                req.application = application;
+                next();
+            });
+
+
         });
 };
 
@@ -160,7 +184,7 @@ exports.applicationByID = function(req, res, next, id) {
  * Application authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-    if (req.application.user.id !== req.user.id) {
+    if (req.application.user.id !== req.user.id && req.application.job.user.id !== req.user.id) {
         return res.status(403).send('User is not authorized');
     }
     next();
