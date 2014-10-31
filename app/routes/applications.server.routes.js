@@ -15,14 +15,12 @@ module.exports = function(app) {
         .delete(users.requiresLogin, applications.hasAuthorization, applications.delete);
 
     app.route('/jobs/:jobId/applications')
-        .get(applications.readList)
+        .get(applications.queryByJobID) // ,
         .post(users.requiresLogin, applications.create);
 
     app.route('/users/:userId/applications')
-        .get(applications.readList);
+        .get(applications.queryByUserID);
 
     // Finish by binding the Application middleware
     app.param('applicationId', applications.applicationByID);
-    app.param('userId', applications.queryByUserID);
-    app.param('jobId', applications.queryByJobID);
 };

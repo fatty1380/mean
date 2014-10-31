@@ -15,13 +15,11 @@ module.exports = function(app) {
         .delete(users.requiresLogin, jobs.hasAuthorization, jobs.delete);
 
     app.route('/users/:userId/jobs')
-        .get(jobs.readList);
+        .get(jobs.queryByUserID);
 
     app.route('/companies/:companyId/jobs')
-        .get(jobs.readList);
+        .get(jobs.queryByCompanyID);
 
     // Finish by binding the Job middleware
     app.param('jobId', jobs.jobByID);
-    app.param('userId', jobs.queryByUserID);
-    app.param('companyId', jobs.queryByCompanyID);
 };

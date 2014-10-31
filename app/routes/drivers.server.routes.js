@@ -18,11 +18,10 @@ module.exports = function(app) {
 
     // Setup routes for getting a User's driver profile
     app.route('/users/:userId/driver')
-        .get(drivers.read);
+        .get(drivers.driverByUserID);
 
     // Finish by binding the Driver middleware
     app.param('driverId', drivers.driverByID);
-    app.param('userId', drivers.driverByUserID);
 
     // TODO: Move to Licenses
     app.route('/driver/newlicense').get(drivers.newLicense);

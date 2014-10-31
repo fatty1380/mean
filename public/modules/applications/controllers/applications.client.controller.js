@@ -13,7 +13,7 @@ function ApplicationsController($scope, $stateParams, $location, $state, Authent
     };
 
     // Create new Application
-    $scope.create = function() {
+    $scope.createApplication = function() {
 
         if (!$scope.job || !$scope.job._id) {
             $scope.error = $scope.placeholders.errors.noJob;
@@ -27,7 +27,7 @@ function ApplicationsController($scope, $stateParams, $location, $state, Authent
             status: 'submitted'
         });
 
-        createApplication(application);
+        saveApplication(application);
     };
 
     $scope.saveDraft = function() {
@@ -37,10 +37,10 @@ function ApplicationsController($scope, $stateParams, $location, $state, Authent
             status: 'draft'
         });
 
-        createApplication(application);
+        saveApplication(application);
     };
 
-    var createApplication = function(application) {
+    var saveApplication = function(application) {
         if (!$scope.message || $scope.message.length < 1) {
             $scope.error = $scope.placeholders.errors.noMessage;
             return;
@@ -122,7 +122,6 @@ function ApplicationsController($scope, $stateParams, $location, $state, Authent
     };
 
     $scope.initList = function() {
-        debugger;
 
         var isAdmin = $scope.authentication.user.roles.indexOf('admin') !== -1;
 
@@ -142,7 +141,7 @@ function ApplicationsController($scope, $stateParams, $location, $state, Authent
     $scope.findAll = function() {
         console.log('[AppController.find] Searching for applications');
 
-        var jobId = ($scope.job.$resolved && $scope.job._id) || $stateParams.jobId;
+        var jobId = ($scope.job && $scope.job._id) || $stateParams.jobId;
 
         if (jobId) {
             console.log('[AppController.find] Looking for applications on jobID %o', jobId._id);

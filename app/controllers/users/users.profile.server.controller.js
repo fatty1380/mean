@@ -61,17 +61,6 @@ exports.update = function(req, res) {
  */
 exports.read = function(req, res) {
     console.log('[Profile.Ctrl] read()');
-    debugger; // TODO: Determine if this is still the correct method placement
     req.user.migrate();
     res.jsonp(req.user);
-};
-
-/**
- * Send User
- */
-exports.me = function(req, res) {
-    console.log('[Profile.Ctrl] me()');
-    debugger;
-    req.user.migrate();
-    res.json(req.user || null);
 };

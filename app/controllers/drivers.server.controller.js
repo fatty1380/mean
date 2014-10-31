@@ -6,7 +6,33 @@
 var mongoose = require('mongoose'),
     Driver = mongoose.model('Driver'),
     License = mongoose.model('License'),
+    errorHandler = require('./errors.server.controller'),
     _ = require('lodash');
+
+/**
+ * "Instance" Methods
+ */
+
+var executeQuery = function(req, res, next) {
+
+    var query = req.query || {};
+    var sort = req.sort || '';
+
+    Driver.find(query)
+        .sort(sort)
+        .populate('user', 'displayName')
+        .exec(function(err, drivers) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+
+            req.drivers = drivers || [];
+            console.log('[DriversCtrl.executeQuery] Found %d drivers for query %s', req.drivers.length, query);
+            res.json(req.drivers);
+        });
+};
 
 /**
  * Get the error message from error object
@@ -45,7 +71,7 @@ exports.create = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(driver);
+            res.json(driver);
         }
     });
 };
@@ -55,7 +81,7 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
     console.log('[Driver.read] start with driver: ', req.driver);
-    res.jsonp(req.driver);
+    res.json(req.driver);
 };
 
 /**
@@ -73,7 +99,7 @@ exports.update = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(driver);
+            res.json(driver);
         }
     });
 };
@@ -122,7 +148,7 @@ exports.delete = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(driver);
+            res.json(driver);
         }
     });
 };
@@ -146,7 +172,7 @@ exports.newLicense = function(req, res) {
         if (user.licenses.length === 0) {
             license = new License(req.body);
         } else {
-            res.jsonp(user.licenses[0]);
+            res.json(user.licenses[0]);
         }
 
         var attributeEnums;
@@ -166,7 +192,7 @@ exports.newLicense = function(req, res) {
 
         license._doc.enums = enumOpts;
 
-        res.jsonp(license);
+        res.json(license);
     } else {
         res.send(400, {
             message: 'User is not signed in'
@@ -179,6 +205,11 @@ exports.newLicense = function(req, res) {
  */
 exports.list = function(req, res) {
     console.log('[Driver.Controller] list()');
+
+    req.sort = '-created';
+
+    executeQuery(req, res);
+
     Driver.find()
         .sort('-created')
         .populate('user', 'displayName')
@@ -188,7 +219,7 @@ exports.list = function(req, res) {
                     message: getErrorMessage(err)
                 });
             } else {
-                res.jsonp(drivers);
+                res.json(drivers);
             }
         });
 };
@@ -215,30 +246,13 @@ exports.driverByID = function(req, res, next, id) {
         });
 };
 
-exports.driverByUserID = function(req, res, next, id) {
+exports.driverByUserID = function(req, res) {
     console.log('[Driver.driverByUserId] start');
     var userId = req.params.userId || req.query.userId || req.user.id;
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
-    Driver.find({
-        user: mongoose.Types.ObjectId(userId)
-    })
-        .populate('user')
-        .exec(function(err, driver) {
-            if (err) {
-                console.log('[Driver.driverByUserId] Driver search errored: ', err.message);
-                return next(err);
-            }
-            if (!driver) {
-                console.log('[Driver.driverByUserId] No Driver Found');
-                return next(new Error('No driver available for UserId: ' + userId));
-            }
-
-            console.log('[Driver.driverByUserId] found driver: ', driver);
-            req.driver = driver;
-            next();
-        });
+    executeQuery(req, res);
 };
 
 /**

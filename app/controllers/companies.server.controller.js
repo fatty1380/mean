@@ -3,10 +3,35 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    errorHandler = require('./errors.server.controller'),
+var mongoose = require('mongoose'),errorHandler = require('./errors.server.controller'),
+
     Company = mongoose.model('Company'),
     _ = require('lodash');
+
+/**
+ * "Instance" Methods
+ */
+
+var executeQuery = function(req, res) {
+
+    var query = req.query || {};
+    var sort = req.sort || '';
+
+    Company.find(query)
+        .sort(sort)
+        .populate('user', 'displayName')
+        .exec(function(err, companies) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+
+            req.companies = companies || [];
+            console.log('[CompaniesCtrl.executeQuery] Found %d companies for query %s', req.companies.length, query);
+            res.json(req.companies);
+        });
+};
 
 /**
  * Create a Company
@@ -21,7 +46,7 @@ exports.create = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(company);
+            res.json(company);
         }
     });
 };
@@ -30,11 +55,7 @@ exports.create = function(req, res) {
  * Show the current Company
  */
 exports.read = function(req, res) {
-    res.jsonp(req.company);
-};
-
-exports.readList = function(req, res) {
-    res.jsonp(req.companies);
+    res.json(req.company);
 };
 
 /**
@@ -51,7 +72,7 @@ exports.update = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(company);
+            res.json(company);
         }
     });
 };
@@ -68,7 +89,7 @@ exports.delete = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.jsonp(company);
+            res.json(company);
         }
     });
 };
@@ -77,18 +98,9 @@ exports.delete = function(req, res) {
  * List of Companies
  */
 exports.list = function(req, res) {
-    Company.find()
-        .sort('-created')
-        .populate('user', 'displayName')
-        .exec(function(err, companies) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                res.jsonp(companies);
-            }
-        });
+    req.sort = '-created';
+
+    executeQuery(req,res);
 };
 
 exports.listDrivers = function(req, res) {
@@ -96,34 +108,34 @@ exports.listDrivers = function(req, res) {
 
     console.log('NOT IMPLEMENTED');
 
-    res.jsonp([{error:'NOT IMPLEMENTED', about:'THIS METHOD IS NOT IMPLEMENTED'}]);
+    res.json([{
+        error: 'NOT IMPLEMENTED',
+        about: 'THIS METHOD IS NOT IMPLEMENTED'
+    }]);
+};
+
+exports.companyByUserID = function(req, res) {
+
+    req.query = {user: req.params.userId};
+
+    executeQuery(req,res);
 };
 
 /**
  * Company middleware
  */
 exports.companyByID = function(req, res, next, id) {
-    Company.findById(id).populate('user', 'displayName').exec(function(err, company) {
-        if (err) return next(err);
-        if (!company) return next(new Error('Failed to load Company ' + id));
-        req.company = company;
+    if (!req.originalUrl.endsWith(id)) {
         next();
-    });
-};
-
-exports.companyByUserID = function(req, res, next, id) {
-    debugger; // TODO: Check if middleware mapping is still working
-    Company.find({
-            user: id
-        })
-        .exec(function(err, companies) {
-
+        return;
+    }
+    Company
+        .findById(id)
+        .populate('user', 'displayName')
+        .exec(function(err, company) {
             if (err) return next(err);
-            if (!companies) return next(new Error('Failed to load companies for userId ' + id));
-
-            console.log('[ApplicationsCtrl.queryByUserId] ' + 'Found %d companies for userId', (companies || []).length, id);
-
-            req.companies = companies || [];
+            if (!company) return next(new Error('Failed to load Company ' + id));
+            req.company = company;
             next();
         });
 };

@@ -18,9 +18,8 @@ module.exports = function(app) {
         .get(companies.listDrivers);
 
     app.route('/users/:userId/companies')
-        .get(companies.readList);
+        .get(companies.companyByUserID);
 
     // Finish by binding the Company middleware
     app.param('companyId', companies.companyByID);
-    app.param('userId', companies.companyByUserID);
 };

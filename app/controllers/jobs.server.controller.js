@@ -6,7 +6,34 @@
 var mongoose = require('mongoose'),
     Job = mongoose.model('Job'),
     Address = mongoose.model('Address'),
+    errorHandler = require('./errors.server.controller'),
     _ = require('lodash');
+
+/**
+ * "Instance" Methods
+ */
+
+var executeQuery = function(req, res) {
+
+    var query = req.query || {};
+    var sort = req.sort || '';
+
+    Job.find(query)
+        .sort(sort)
+        .populate('user', 'displayName')
+        .populate('location')
+        .exec(function(err, jobs) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+
+            req.jobs = jobs || [];
+            console.log('[JobsCtrl.executeQuery] Found %d jobs for query %s', req.jobs.length, query);
+            res.json(req.jobs);
+        });
+};
 
 /**
  * Get the error message from error object
@@ -58,7 +85,7 @@ exports.create = function(req, res) {
                         message: getErrorMessage(err)
                     });
                 } else {
-                    res.jsonp(job);
+                    res.json(job);
                 }
             });
         }
@@ -71,11 +98,7 @@ exports.create = function(req, res) {
  * Show the current Job
  */
 exports.read = function(req, res) {
-    res.jsonp(req.job);
-};
-
-exports.readList = function(req, res) {
-    res.jsonp(req.jobs);
+    res.json(req.job);
 };
 
 /**
@@ -100,7 +123,7 @@ exports.update = function(req, res) {
                         message: getErrorMessage(err)
                     });
                 } else {
-                    res.jsonp(job);
+                    res.json(job);
                 }
             });
         }
@@ -119,7 +142,7 @@ exports.delete = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(job);
+            res.json(job);
         }
     });
 };
@@ -128,84 +151,44 @@ exports.delete = function(req, res) {
  * List of Jobs
  */
 exports.list = function(req, res) {
-    Job.find()
-        .sort('-created')
-        .populate('user', 'displayName')
-        .populate('location')
-        .exec(function(err, jobs) {
-            if (err) {
-                return res.send(400, {
-                    message: getErrorMessage(err)
-                });
-            } else {
-                res.jsonp(jobs);
-            }
-        });
+    req.sort = '-created';
+
+    executeQuery(req, res);
 };
 
 /**
  * List of a user's posted jobs
  */
-exports.queryByUserID = function(req, res, next, id) {
-    debugger;
-    Job.find({
-            user: id
-        })
-        .sort('-created')
-        .populate('user', 'displayName')
-        .populate('location')
-        .exec(function(err, jobs) {
-            debugger; // TODO: Check to confirm that Query works
-            if (err) return next(err);
-            req.jobs = jobs || [];
-            next();
-        });
+exports.queryByUserID = function(req, res) {
+    req.query = {
+        user: req.params.userId
+    };
+
+    executeQuery(req, res);
 };
 
 /**
  * List of a company's posted jobs
  */
-exports.queryByCompanyID = function(req, res, next, id) {
-    debugger;
-    Job.find({
-            company: id
-        })
-        .sort('-created')
-        .populate('user', 'displayName', {
-            _id: id
-        })
-        .populate('location')
-        .exec(function(err, jobs) {
-            if (err) {
-                return res.send(400, {
-                    message: getErrorMessage(err)
-                });
-            } else {
-                res.jsonp(jobs);
-            }
+exports.queryByCompanyID = function(req, res) {
 
-            if (err) return next(err);
-            req.jobs = jobs || [];
-            next();
-        });
+    req.query = {
+        company: req.params.companyId
+    };
+
+    executeQuery(req, res);
 };
-
-/**
- * Apply for a job
- */
-exports.apply = function(req, res, id) {
-    var job = req.job;
-
-    console.log('TODO: Implement Server-Side Job Application logic');
-};
-
-
 
 /**
  * Job middleware
  */
 exports.jobByID = function(req, res, next, id) {
-    debugger;
+
+    if (!req.originalUrl.endsWith(id)) {
+        next();
+        return;
+    }
+
     Job.findById(id)
         .populate('user', 'displayName')
         .populate('location')
@@ -221,7 +204,6 @@ exports.jobByID = function(req, res, next, id) {
  * Job authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-    debugger;
     if (req.job.user.id !== req.user.id) {
         return res.send(403, 'User is not authorized');
     }

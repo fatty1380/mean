@@ -399,12 +399,14 @@ exports.list = function(req, res) {
  * Bgcheck middleware
  */
 exports.bgcheckByID = function(req, res, next, id) {
-    Bgcheck.findById(id).populate('user', 'displayName').exec(function(err, bgcheck) {
-        if (err) return next(err);
-        if (!bgcheck) return next(new Error('Failed to load Bgcheck ' + id));
-        req.bgcheck = bgcheck;
-        next();
-    });
+    Bgcheck.findById(id)
+        .populate('user', 'displayName')
+        .exec(function(err, bgcheck) {
+            if (err) return next(err);
+            if (!bgcheck) return next(new Error('Failed to load Bgcheck ' + id));
+            req.bgcheck = bgcheck;
+            next();
+        });
 };
 
 /**
