@@ -76,7 +76,17 @@ exports.update = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            res.json(application);
+            debugger;
+
+            Application.populate(application.messages, {
+                path: 'user',
+                model: User
+            }, function(err, messages) {
+                debugger;
+
+
+                res.json(application);
+            });
         }
     });
 };
@@ -157,24 +167,16 @@ exports.applicationByID = function(req, res, next, id) {
 
     Application.findById(id)
         .populate('user', 'displayName')
-        .populate('job', 'user')
+        .populate('job', 'name user')
         .populate('messages.sender')
         .exec(function(err, application) {
             if (err) return next(err);
             if (!application) return next(new Error('Failed to load Application ' + id));
 
-            // TODO: Determine if this is the appropriate change
-            // to populate the job's user :(
+            console.log('Job has user: ', application.job.user);
 
-            Job.populate(application.job, {
-                path: 'user',
-                model: User
-            }, function(err, user) {
-                console.log('populated user: %o', user);
-
-                req.application = application;
-                next();
-            });
+            req.application = application;
+            next();
 
 
         });
@@ -184,7 +186,7 @@ exports.applicationByID = function(req, res, next, id) {
  * Application authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-    if (req.application.user.id !== req.user.id && req.application.job.user.id !== req.user.id) {
+    if (req.application.user.id !== req.user.id && !req.application.job.user.equals(req.user.id)) {
         return res.status(403).send('User is not authorized');
     }
     next();

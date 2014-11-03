@@ -39,9 +39,7 @@ var DriverSchema = new Schema({
 
     licenses: ['License'],
 
-    schedule: {
-        type: ['Schedule'],
-    },
+    schedule: ['Schedule'],
 
     about: {
         type: String,

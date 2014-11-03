@@ -5,9 +5,7 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    crypto = require('crypto'),
-    License = mongoose.model('License'),
-    Address = mongoose.model('Address');
+    crypto = require('crypto');
 
 /**
  * A Validation function for local strategy properties
@@ -106,7 +104,7 @@ var UserSchema = new Schema({
      * Addresses holds one or more Address Objects, nested
      * locally within the User model
      */
-    addresses: [Address.schema],
+    addresses: ['Address'],
 
     /** Section Begin : Virtual Members **/
 

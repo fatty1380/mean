@@ -10,6 +10,24 @@ var mongoose = require('mongoose'),
  * Company Schema
  */
 var CompanySchema = new Schema({
+
+    owner: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    },
+
+    users: [{
+        user: {
+            type: Schema.ObjectId,
+            ref: 'User'
+        },
+        role: {
+            type: String,
+            default: '',
+            enum: ['owner', 'agent', 'driver']
+        }
+    }],
+
     name: {
         type: String,
         default: '',
@@ -17,11 +35,10 @@ var CompanySchema = new Schema({
         trim: true
     },
 
-    zip: {
+    zipCode: {
         type: String,
         default: '',
         match: [/^\d{5}$/, 'Please provide a valid ZIP code for the location of your business']
-
     },
 
     about: {
@@ -47,10 +64,6 @@ var CompanySchema = new Schema({
     created: {
         type: Date,
         default: Date.now
-    },
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User'
     }
 });
 
