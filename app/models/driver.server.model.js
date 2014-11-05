@@ -82,6 +82,10 @@ var DriverSchema = new Schema({
     },
 });
 
+DriverSchema.pre('save', function(next){
+  this.modified = Date.now;
+  next();
+});
 
 /**
  * Hook a pre save method to create a base schedule (if necessary)

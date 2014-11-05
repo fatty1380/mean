@@ -4,11 +4,8 @@
 
 function ProfileService($resource) {
     return $resource('profiles/:userId', {
-        userId: '@_id'
+        userId: '@userId'
     }, {
-        update: {
-            method: 'PUT'
-        }
     });
 }
 

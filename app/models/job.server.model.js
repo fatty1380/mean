@@ -5,12 +5,24 @@
  */
 var mongoose = require('mongoose'),
     Address = mongoose.model('Address'),
+    Company = mongoose.model('Company'),
     Schema = mongoose.Schema;
 
 /**
  * Job Schema
  */
 var JobSchema = new Schema({
+
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+    },
+
+    company: {
+        type: Schema.ObjectId,
+        ref: 'Company'
+    },
+
     name: {
         type: String,
         default: '',
@@ -58,18 +70,21 @@ var JobSchema = new Schema({
         default: false,
     },
     posted: {
-        // TODO: figure out null dates
-        type: Date,
-        default: Date.now,
+        type: Date
     },
     created: {
         type: Date,
         default: Date.now,
     },
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User',
+    modified: {
+        type: Date,
+        default: Date.now
     }
+});
+
+JobSchema.pre('save', function(next){
+  this.modified = Date.now;
+  next();
 });
 
 mongoose.model('Job', JobSchema);

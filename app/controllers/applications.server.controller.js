@@ -169,6 +169,7 @@ exports.applicationByID = function(req, res, next, id) {
         .populate('user', 'displayName')
         .populate('job', 'name user')
         .populate('messages.sender')
+        .populate('company', 'users')
         .exec(function(err, application) {
             if (err) return next(err);
             if (!application) return next(new Error('Failed to load Application ' + id));

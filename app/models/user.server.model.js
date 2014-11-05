@@ -57,7 +57,7 @@ var UserSchema = new Schema({
     },
     providerData: {},
     additionalProvidersData: {},
-    updated: {
+    modified: {
         type: Date
     },
     created: {
@@ -112,15 +112,12 @@ var UserSchema = new Schema({
         type: String,
         trim: true
     },
+});
 
-    //    driver: {
-    //        type: Schema.Types.Mixed
-    //    },
-
-    //company: {
-    //    type: Schema.ObjectId,
-    //    ref: 'User'
-    //},
+UserSchema.post('init', function(next) {
+    if(!this.displayName) {
+        this.displayName = this.firstName + ' ' + this.lastName;
+    }
 });
 
 /**
@@ -134,6 +131,11 @@ UserSchema.pre('save', function(next) {
     }
 
     next();
+});
+
+UserSchema.pre('save', function(next){
+  this.modified = Date.now;
+  next();
 });
 
 

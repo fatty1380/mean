@@ -1,5 +1,6 @@
-<section ng-init="view = user" data-ng-controller="SettingsController">
+<section ng-init="view = profile || user" data-ng-controller="SettingsController">
     <span class="col-md-12 opaque-bg">
+        user-profile.client.template
         <span ng-hide="editMode" <div class="row">
             <legend class="pull-left">Personal Information
                 <div class="pull-right">
@@ -11,15 +12,13 @@
 
             <dl class="dl-horizontal">
                 <dt>Name</dt>
-                <dd>{{user.displayName}}</dd>
+                <dd>{{view.displayName}}</dd>
                 <dt>Email</dt>
-                <dd>{{user.email}}</dd>
+                <dd>{{view.email}}</dd>
                 <dt>Phone</dt>
-                <dd>{{user.phone}}</dd>
+                <dd>{{view.phone}}</dd>
                 <dt>Addresses</dt>
                 <dd><div ng-include="'modules/addresses/views/address.client.template.html'"></div></dd>
-                <dt>Phone</dt>
-                <dd>{{user.phone}}</dd>
             </dl>
         </span>
 
@@ -31,8 +30,8 @@
                 <div class="form-group profile-row">
                     <label class="control-label" for="name">Name</label>
                     <div class="form-inline margin-bottom-sm" name="name">
-                        <input class="form-control" type="text" data-ng-model="user.firstName" placeholder="First">
-                        <input class="form-control" type="text" data-ng-model="user.lastName" placeholder="Last">
+                        <input class="form-control" type="text" data-ng-model="view.firstName" placeholder="First">
+                        <input class="form-control" type="text" data-ng-model="view.lastName" placeholder="Last">
                     </div>
                 </div>
 
@@ -41,11 +40,11 @@
                     <div class="input-group margin-bottom-sm" name="email">
                         <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i>
                         </span>
-                        <input class="form-control" type="text" placeholder="Email address" data-ng-model="user.email">
+                        <input class="form-control" type="text" placeholder="Email address" data-ng-model="view.email">
                     </div>
                 </div>
 
-                <div class="form-group profile-row" ng-init="addresses = user.addresses">
+                <div class="form-group profile-row" ng-init="addresses = view.addresses">
                     <label for="addressses">Addresses</label>
                     <button class="btn pull-right btn-small btn-link" ng-click="addAddress()">
                         Add Address
@@ -58,7 +57,7 @@
                 <div class="form-group profile-row">
                     <label for="phone">Phone</label>
                     <div class="input-group margin-bottom-sm">
-                        <input class="form-control" type="tel" name="phone" data-ng-model="user.phone" placeholder="(xxx) xxx-xxxx">
+                        <input class="form-control" type="tel" name="phone" data-ng-model="view.phone" placeholder="(xxx) xxx-xxxx">
                         <span class="input-group-addon">
                             <i class="fa fa-phone fa-fw"></i>
                         </span>

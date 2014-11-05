@@ -16,14 +16,23 @@ var BgcheckSchema = new Schema({
         required: 'Please fill Bgcheck name',
         trim: true
     },
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    },
     created: {
         type: Date,
         default: Date.now
     },
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User'
+    modified: {
+        type: Date,
+        default: Date.now
     }
+});
+
+BgcheckSchema.pre('save', function(next){
+  this.modified = Date.now;
+  next();
 });
 
 mongoose.model('Bgcheck', BgcheckSchema);

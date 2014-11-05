@@ -38,7 +38,8 @@ var executeQuery = function(req, res) {
  */
 exports.create = function(req, res) {
     var company = new Company(req.body);
-    company.user = req.user;
+    company.owner = req.user;
+    company.agents = [];
 
     company.save(function(err) {
         if (err) {

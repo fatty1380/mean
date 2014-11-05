@@ -1,6 +1,6 @@
 'use strict';
 
-function ProfileController($scope, $stateParams, Users, Authentication) {
+function ProfileController($scope, $stateParams, $location, Profile, Authentication) {
     $scope.activeModule = 'users';
     $scope.editMode = false;
 
@@ -11,10 +11,18 @@ function ProfileController($scope, $stateParams, Users, Authentication) {
             $scope.user = Authentication.user;
         } else {
             $scope.profileOnly = true;
-            $scope.user =
-                Users.get({
+            $scope.profile =
+                Profile.get({
                     userId: $stateParams.userId
                 });
+        }
+    };
+
+    $scope.initList = function() {
+        if (Authentication.user.roles.indexOf('admin') !== -1) {
+            $scope.users = Profile.query();
+        } else {
+            $location.path('/settings/profile');
         }
     };
 
@@ -26,7 +34,7 @@ function ProfileController($scope, $stateParams, Users, Authentication) {
     };
 }
 
-ProfileController.$inject = ['$scope', '$stateParams', 'Users', 'Authentication'];
+ProfileController.$inject = ['$scope', '$stateParams', '$location', 'Profile', 'Authentication'];
 
 angular
     .module('users')

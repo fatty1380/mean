@@ -65,14 +65,19 @@ var LicenseSchema = new Schema({
         type: Date,
         default: null,
     },
-    updated: {
-        type: Date,
-        default: Date.now,
-    },
     created: {
         type: Date,
         default: Date.now,
+    },
+    modified: {
+        type: Date,
+        default: Date.now,
     }
+});
+
+LicenseSchema.pre('save', function(next){
+  this.modified = Date.now;
+  next();
 });
 
 mongoose.model('License', LicenseSchema);

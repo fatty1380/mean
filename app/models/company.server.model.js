@@ -16,16 +16,9 @@ var CompanySchema = new Schema({
         ref: 'User'
     },
 
-    users: [{
-        user: {
-            type: Schema.ObjectId,
-            ref: 'User'
-        },
-        role: {
-            type: String,
-            default: '',
-            enum: ['owner', 'agent', 'driver']
-        }
+    agents: [{
+        type: Schema.ObjectId,
+        ref: 'User'
     }],
 
     name: {
@@ -64,7 +57,17 @@ var CompanySchema = new Schema({
     created: {
         type: Date,
         default: Date.now
+    },
+
+    modified: {
+        type: Date,
+        default: Date.now
     }
+});
+
+CompanySchema.pre('save', function(next){
+  this.modified = Date.now;
+  next();
 });
 
 mongoose.model('Company', CompanySchema);

@@ -23,7 +23,7 @@ function CompaniesController($scope, $stateParams, $location, Authentication, Co
         // Create new Company
         $scope.create = function() {
             // Create new Company object
-            var company = new Companies({
+            var company = new Companies.ById({
                 name: this.name,
                 about: this.about,
                 phone: this.phone,

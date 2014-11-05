@@ -4,29 +4,7 @@
     </div>
     <div class="list-group">
         <a data-ng-repeat="company in companies" data-ng-href="#!/companies/{{company._id}}" class="list-group-item">
-            <div class="row">
-                <div class="col-md-8">
-                    <h4 class="list-group-item-heading">{{company.name}}
-                    </h4>
-                </div>
-                <div class="col-md-4">
-                    <small class="list-group-item-text">
-                        <p class="text-right">Added on
-                            <span data-ng-bind="company.created | date:'shortDate'"></span>
-                        </p>
-                    </small>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8 opaque-bg">
-                    {{company.about}}
-                </div>
-                <div class="col-md-4">
-                    <label>Location:
-                        <strong>{{company.zip}}</strong>
-                    </label>
-                </div>
-            </div>
+            <os-company company="company" inline="true"/>
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!companies.$resolved || companies.length">

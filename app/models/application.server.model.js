@@ -32,6 +32,16 @@ var ApplicationSchema = new Schema({
     },
 
     /**
+     * Company
+     * -------
+     * The company that posted the job, primarily here for convenience
+     */
+    company: {
+        type: Schema.ObjectId,
+        ref: 'Company'
+    },
+
+    /**
      * Status
      * ----
      * The current state of the application
@@ -41,17 +51,22 @@ var ApplicationSchema = new Schema({
      * submitted    The applicaiton has been sent to the employer
      * read         The application has been seen/read by the employer
      * connected    The employer has chosen to make a connection to talk further
+     * delisted     The job post will no longer appear in search, and new applications will not be accepted.
      * hired        The employer has chosen to hire the applicant for this job
      * deleted      The applicant has decided to delete their application
      * rejected     The employer has chosen not to persue the applicant for employment
      */
     status: {
         type: String,
-        enum: ['draft', 'submitted', 'read', 'connected', 'hired', 'deleted', 'rejected'],
+        enum: ['draft', 'submitted', 'read', 'connected', 'delisted', 'hired', 'deleted', 'rejected'],
         default: 'draft'
     },
 
-
+    /**
+     * Mesages
+     * -------
+     * This represents the communications between the applicant and company
+     */
     messages: ['Message'],
 
 
@@ -65,7 +80,6 @@ var ApplicationSchema = new Schema({
     },
 
     /* Virtual Members - BEGIN */
-
     isDraft: {
         type: Boolean
     },
@@ -83,6 +97,11 @@ var ApplicationSchema = new Schema({
     },
 
     /* Virtual Members - END */
+});
+
+ApplicationSchema.pre('save', function(next){
+  this.modified = Date.now;
+  next();
 });
 
 mongoose.model('Application', ApplicationSchema);
