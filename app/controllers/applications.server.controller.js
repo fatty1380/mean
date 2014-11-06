@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
     errorHandler = require('./errors.server.controller'),
     Application = mongoose.model('Application'),
+    Message = mongoose.model('Message'),
     User = mongoose.model('User'),
     Job = mongoose.model('Job'),
     _ = require('lodash');
@@ -41,8 +42,10 @@ var executeQuery = function(req, res) {
  */
 exports.create = function(req, res) {
     var application = new Application(req.body);
+    var messages = req.body.messages;
+
     application.user = req.user;
-    application.job = req.job;
+    application.job = req.job || req.body.jobId; // TODO: Figure out why this is not populated!
 
     application.save(function(err) {
         if (err) {
@@ -78,15 +81,19 @@ exports.update = function(req, res) {
         } else {
             debugger;
 
-            Application.populate(application.messages, {
-                path: 'user',
-                model: User
-            }, function(err, messages) {
-                debugger;
+            var opts = [{
+                path: 'sender',
+                select: 'displayName',
+                model: 'User'
+            }];
+
+            Application.populate(application.messages, opts,
+                function(err, messages) {
+                    debugger;
 
 
-                res.json(application);
-            });
+                    res.json(application);
+                });
         }
     });
 };
@@ -161,20 +168,20 @@ exports.queryByUserID = function(req, res) {
 exports.applicationByID = function(req, res, next, id) {
 
     if (!req.originalUrl.endsWith(id)) {
-        next();
-        return;
+        debugger;
+        return next();
     }
 
     Application.findById(id)
         .populate('user', 'displayName')
-        .populate('job', 'name user')
-        .populate('messages.sender')
-        .populate('company', 'users')
+        .populate('job', 'name company')
+        .populate({path:'messages.sender', model:'User', select: 'displayName id'})
         .exec(function(err, application) {
             if (err) return next(err);
             if (!application) return next(new Error('Failed to load Application ' + id));
 
-            console.log('Job has user: ', application.job.user);
+            debugger;
+            //console.log('Job has user: ', application.job.user);
 
             req.application = application;
             next();

@@ -1,75 +1,35 @@
 <section class="row" data-ng-init="init()">
     <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
     <section class="container opaque-bg">
+        profile.client.view.html {{title}}
         <div class="page-header col-md-12">
-            <span class="h2 pull-left" data-ng-show="profileOnly">{{user.displayName}}</span>
+            <span class="h2 pull-left" data-ng-show="profileOnly">{{profile.displayName}}</span>
             <span class="h2 pull-left" data-ng-hide="profileOnly">Your
-                <span class="text-capitalize">{{ user.type }}</span>&nbsp;profile
-                <small>{{ user.email }}</small>
+                <span class="text-capitalize">{{ profile.type }}</span>&nbsp;profile
+                <small>{{ profile.email }}</small>
             </span>
             <div class="pull-right" style="margin-top: 20px">
-                <div class="col-md-12 text-right">Member Since {{ user.created | date:'longDate' }}</div>
-                <small class="col-md-12 text-right">Logged in via {{ user.provider }} auth</small>
+                <div class="col-md-12 text-right">Member Since {{ profile.created | date:'longDate' }}</div>
+                <small class="col-md-12 text-right">Logged in via {{ profile.provider }} auth</small>
             </div>
         </div>
 
         <div class="col-xs-offset-0 col-xs-4 col-md-8">
             <fieldset>
                 <!-- Begin include of primary User Information Display -->
-                <div ng-include="'modules/users/views/templates/user-profile.client.template.html'"></div>
-
-                <div class="row-fluid">
-                    <div class="col-md-12" style="margin: 10px 0;">
-                    </div>
-                </div>
+                <os-profile profile="profile"></os-profile>
 
                 <!-- Begin include of Driver Information Display -->
-                <div ng-show="user.type === 'driver'" ng-include="'modules/drivers/views/templates/drivers-list.client.template.html'"></div>
+                <div ng-show="profile.type === 'driver'" ng-include="'modules/drivers/views/templates/drivers-list.client.template.html'"></div>
 
                 <!-- Begin include of Company Information Display -->
-                <div ng-show="user.type === 'owner'" ng-include="'modules/companies/views/templates/company-list.client.template.html'"></div>
+                <div ng-show="profile.type === 'owner'" ng-include="'modules/companies/views/templates/company-list.client.template.html'"></div>
 
             </fieldset>
         </div>
 
         <div class="well well-sm col-md-4">
-
-
-            <div class="col-md-12">
-                <h3>Make yourself stand out!
-                    <br>
-                    <small class="">add these premium features</small>
-                </h3>
-            </div>
-
-            <div class="col-md-12">
-                <div class="col-md-1">
-                    <span class="glyphicon btn-lg glyphicon-certificate"></span>
-                </div>
-                <div class="col-md-9 col-md-offset-1">
-                    <h4>Background Check</h4>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="col-md-1">
-                    <span class="glyphicon btn-lg glyphicon-certificate"></span>
-                </div>
-                <div class="col-md-9 col-md-offset-1">
-                    <h4>Drug Test Results</h4>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="col-md-1">
-                    <span class="glyphicon btn-lg glyphicon-certificate"></span>
-                </div>
-                <div class="col-md-9 col-md-offset-1">
-                    <h4>DMV Records</h4>
-                </div>
-            </div>
-            <div class="col-md-12" style="height:10px;"></div>
-            <div class="col-md-12 text-center ">
-                <button type="submit" class="btn btn-large btn-success">Go Premium!</button>
-            </div>
+            <div ng-include="'modules/users/views/templates/addons.client.template.html'"></div>
         </div>
     </section>
 </section>

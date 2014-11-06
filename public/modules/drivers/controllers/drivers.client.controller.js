@@ -171,11 +171,13 @@ function DriversController($scope, $stateParams, $location, $http, $window, Auth
         });
     };
 
-    $scope.findByUser = function(id) {
-        console.log('[DriverClientController] findByUser(%o)', id);
-        $scope.drivers = Drivers.ByUser.query({
-            userId: id
-        });
+    $scope.findByUser = function(user) {
+        if (user.type === 'driver') {
+            console.log('[DriverClientController] findByUser(%o)', user._id);
+            $scope.drivers = Drivers.ByUser.query({
+                userId: user._id
+            });
+        }
     };
 
     // Specific Driver Functions
@@ -269,7 +271,7 @@ function DriversController($scope, $stateParams, $location, $http, $window, Auth
 
     $scope.cancel = function() {
         console.log('Canceling! Form is dirty: %o, valid: %o', $scope.driverForm.$dirty, $scope.driverForm.$valid);
-       $window.history.back();
+        $window.history.back();
     };
 }
 

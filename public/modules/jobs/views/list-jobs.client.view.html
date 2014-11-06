@@ -5,7 +5,7 @@
         <div class="list-group">
             <a data-ng-repeat="job in jobs" data-ng-href="#!/jobs/{{job._id}}" class="list-group-item">
                 <small>
-                    <div ng-include="'modules/jobs/views/templates/job.client.template.html'"></div>
+                    <os-job job="job" inline="true"></os-job>
                 </small>
             </a>
         </div>

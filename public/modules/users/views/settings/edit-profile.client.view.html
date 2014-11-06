@@ -1,5 +1,6 @@
 <section class="row" data-ng-controller="SettingsController" data-ng-init="init()">
     <section class="container opaque-bg">
+        edit-profile.client.view.html
         <div class="page-header col-md-12">
             <h2 class="col-md-9">Edit your
                 <span class="text-capitalize">{{ user.type }}</span>&nbsp;profile
@@ -11,10 +12,12 @@
             </div>
         </div>
 
-        <div class="col-xs-offset-0 col-xs-4 col-md-offset-1 col-md-5">
-            <div ng-show="editMode" ng-include="'modules/users/views/templates/edit-profile.client.template.html'"></div>
+        <div class="col-xs-offset-0 col-xs-4 col-md-8">
+            <os-profile profile="profile" edit-mode="true"></os-profile>
         </div>
 
-        <div ng-include="'modules/users/views/templates/addons.client.template.html'"></div>
+        <div class="well well-sm col-md-4">
+            <div ng-include="'modules/users/views/templates/addons.client.template.html'"></div>
+        </div>
     </section>
 </section>

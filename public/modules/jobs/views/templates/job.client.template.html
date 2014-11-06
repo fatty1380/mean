@@ -1,5 +1,57 @@
 <section class='job-item'>
-    <div class="well well-1 container-fluid">
+    <div ng-if="inline" class="row">
+        <div class="col-md-8">
+            <h4 class="list-group-item-heading">{{job.name}}
+            </h4>
+        </div>
+        <div class="col-md-4">
+            <small class="list-group-item-text">
+                <p class="text-right">Added on
+                    <span data-ng-bind="job.created | date:'shortDate'"></span>
+                </p>
+            </small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 opaque-bg">
+            <span ng-if="inline" class="nowrap" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ job.description | limitTo : 100 }}</span>
+            <span ng-if="!inline">{{ job.description }}
+        </div>
+        <div class="col-md-4">
+            <div ng-if="!inline" style="margin: auto; width: 300px; height: 300px; background-color: #CCC; border: solid 1px #666">
+                <h1 class="text-center" style="margin-top: 100px;">
+                    <small>Location</small>
+                    <br/>{{job.location.zipCode}}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="inline">
+        <div class="col-md-3">
+            <span class="fa-stack fa-md pull-left">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-usd fa-stack-1x fa-inverse"></i>
+            </span>
+            <span>
+                ${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</span>
+        </div>
+        <div class="col-md-3">
+            <span class="fa-stack fa-md pull-left">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-credit-card fa-stack-1x fa-inverse"></i>
+            </span>
+            <span>{{ job.endorsements || "Operator - Class D" }}</span>
+        </div>
+        <div class="col-md-3">
+                <span class="fa-stack fa-md pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
+                </span>
+                <span>{{ job.location.zipCode }}</span>
+            </div>
+    </div>
+
+    <div class="well well-1 container-fluid" ng-if="!inline">
         <div class="row-fluid">
             <div class="col-md-10">
                 <h2 class="heading">{{ job.name }}</h2>
@@ -17,7 +69,7 @@
                 <h4><i class="fa fa-star center-block"></i>Favorite</h4>
             </div>
         </div>
-        <div class="row-fluid">
+        <div class="row-fluid" ng-if="!inline">
             <div class="col-md-3">
                 <span class="fa-stack fa-lg pull-left">
                     <i class="fa fa-circle fa-stack-2x"></i>
@@ -48,10 +100,7 @@
                 <h4 class="p-2">{{ job.positionType || "Part-Time Employment" }}</h4>
             </div>
         </div>
-        <div class="row-fluid">
-            <span class="col-md-8">
-                <p>{{ job.description }}</p>
-            </span>
+        <div ng-if="!inline" class="row-fluid">
             <span class="col-md-4">
                 <div class="pull-right" data-ng-show="authentication.user._id == job.user._id">
                     <a class="btn btn-primary" href="/#!/jobs/{{job._id}}/edit">
@@ -74,7 +123,7 @@
             </span>
         </div>
 
-        <div class="row-fluid">
+        <div ng-if="!inline" class="row-fluid">
             <span class="col-md-12" data-ng-controller="ApplicationsController" data-ng-init="initJobList()">
                 <h4>{{listTitle}}</h4>
                 <div ng-include="'/modules/applications/views/templates/list-applications.client.template.html'">

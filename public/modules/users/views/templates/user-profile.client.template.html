@@ -1,25 +1,29 @@
-<section ng-init="view = profile || user" data-ng-controller="SettingsController">
+<section class="container-fluid">
     <span class="col-md-12 opaque-bg">
-        user-profile.client.template
-        <span ng-hide="editMode" <div class="row">
-            <legend class="pull-left">Personal Information
-                <div class="pull-right">
-                    <a class="btn btn-link" ng-click="edit()">
-                        <i class="fa fa-pencil"></i>&nbsp;edit
-                    </a>
-                </div>
-            </legend>
+        user-profile.client.template {{title}}
+        <span ng-hide="editMode">
+            <div class="row-fluid">
+                <legend class="pull-left">Personal Information
+                    <div class="pull-right">
+                        <a class="btn btn-link" ng-click="edit()">
+                            <i class="fa fa-pencil"></i>&nbsp;edit
+                        </a>
+                    </div>
+                </legend>
 
-            <dl class="dl-horizontal">
-                <dt>Name</dt>
-                <dd>{{view.displayName}}</dd>
-                <dt>Email</dt>
-                <dd>{{view.email}}</dd>
-                <dt>Phone</dt>
-                <dd>{{view.phone}}</dd>
-                <dt>Addresses</dt>
-                <dd><div ng-include="'modules/addresses/views/address.client.template.html'"></div></dd>
-            </dl>
+                <dl class="dl-horizontal">
+                    <dt>Name</dt>
+                    <dd>{{profile.displayName}}</dd>
+                    <dt>Email</dt>
+                    <dd>{{profile.email}}</dd>
+                    <dt>Phone</dt>
+                    <dd>{{profile.phone}}</dd>
+                    <dt>Addresses</dt>
+                    <dd>
+                        <div ng-include="'modules/addresses/views/address.client.template.html'"></div>
+                    </dd>
+                </dl>
+            </div>
         </span>
 
 
@@ -30,8 +34,8 @@
                 <div class="form-group profile-row">
                     <label class="control-label" for="name">Name</label>
                     <div class="form-inline margin-bottom-sm" name="name">
-                        <input class="form-control" type="text" data-ng-model="view.firstName" placeholder="First">
-                        <input class="form-control" type="text" data-ng-model="view.lastName" placeholder="Last">
+                        <input class="form-control" type="text" data-ng-model="profile.firstName" placeholder="First">
+                        <input class="form-control" type="text" data-ng-model="profile.lastName" placeholder="Last">
                     </div>
                 </div>
 
@@ -40,11 +44,11 @@
                     <div class="input-group margin-bottom-sm" name="email">
                         <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i>
                         </span>
-                        <input class="form-control" type="text" placeholder="Email address" data-ng-model="view.email">
+                        <input class="form-control" type="text" placeholder="Email address" data-ng-model="profile.email">
                     </div>
                 </div>
 
-                <div class="form-group profile-row" ng-init="addresses = view.addresses">
+                <div class="form-group profile-row" ng-init="addresses = profile.addresses">
                     <label for="addressses">Addresses</label>
                     <button class="btn pull-right btn-small btn-link" ng-click="addAddress()">
                         Add Address
@@ -57,7 +61,7 @@
                 <div class="form-group profile-row">
                     <label for="phone">Phone</label>
                     <div class="input-group margin-bottom-sm">
-                        <input class="form-control" type="tel" name="phone" data-ng-model="view.phone" placeholder="(xxx) xxx-xxxx">
+                        <input class="form-control" type="tel" name="phone" data-ng-model="profile.phone" placeholder="(xxx) xxx-xxxx">
                         <span class="input-group-addon">
                             <i class="fa fa-phone fa-fw"></i>
                         </span>

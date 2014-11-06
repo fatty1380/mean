@@ -8,7 +8,7 @@ function ProfileController($scope, $stateParams, $location, Profile, Authenticat
     $scope.init = function() {
         if (!$stateParams.userId) {
             $scope.profileOnly = false;
-            $scope.user = Authentication.user;
+            $scope.profile = Authentication.user;
         } else {
             $scope.profileOnly = true;
             $scope.profile =

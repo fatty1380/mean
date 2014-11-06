@@ -184,10 +184,10 @@ exports.queryByCompanyID = function(req, res) {
  */
 exports.jobByID = function(req, res, next, id) {
 
-    if (!req.originalUrl.endsWith(id)) {
-        next();
-        return;
-    }
+//    if (!req.originalUrl.endsWith(id)) {
+//        next();
+//        return;
+//    }
 
     Job.findById(id)
         .populate('user', 'displayName')
