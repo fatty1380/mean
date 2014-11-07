@@ -13,15 +13,15 @@ angular.module('users')
                 replace: true,
                 controller: 'OsProfileController',
                 controllerAs: 'ctrl',
-                //bindToController: true
+                bindToController: true
             };
         }
     ])
     .controller('OsProfileController',
-        function($scope) {
-            debugger;
+        function() {
             console.log('[OPC] Profile: %o', this.profile);
             console.log('[OPC] editMode: %o', this.editMode);
+
             this.edit = function() {
                 console.log('[OsProfileController] edit()');
                 this.editMode.enabled = true;

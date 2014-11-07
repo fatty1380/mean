@@ -7,21 +7,28 @@ function ProfileController($scope, $stateParams, $location, Profile, Authenticat
     $scope.showEditLink = false;
     $scope.header = 'Your Profile';
 
+    $scope.editMode = {
+        enabled: false,
+        visible: true
+    };
+
     // Find existing User Profile
     this.init = function() {
         if (!$stateParams.userId) {
-            $scope.profile = Authentication.user;
-            $scope.header = 'Your ' + $scope.profile.type + ' profile';
-            $scope.showEditLink = true;
+            this.profile = $scope.profile = Authentication.user;
+            this.header = $scope.header = 'Your ' + $scope.profile.type + ' profile';
+            this.showEditLink = $scope.showEditLink = true;
         } else {
-                var that = this;
-                Profile.get({
+                this.profile = Profile.get({
                     userId: $stateParams.userId
-                })
-                .$promise
-                .then(function(profile) {
-                    $scope.profile = profile;
+                });
 
+                var promise = this.profile.$promise;
+
+                promise
+                .then(function(profile) {
+                    debugger;
+                    $scope.profile = profile;
                     $scope.header = profile.displayName;
                     $scope.showEditLink = profile._id === Authentication.user._id;
                 }, function(err) {
