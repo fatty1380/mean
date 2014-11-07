@@ -1,35 +1,51 @@
 'use strict';
 
 function ProfileController($scope, $stateParams, $location, Profile, Authentication) {
-    $scope.activeModule = 'users';
-    $scope.editMode = false;
+
+    $scope.editMode = $scope.editMode || false;
+
+    $scope.showEditLink = false;
+    $scope.header = 'Your Profile';
 
     // Find existing User Profile
-    $scope.init = function() {
+    this.init = function() {
         if (!$stateParams.userId) {
-            $scope.profileOnly = false;
             $scope.profile = Authentication.user;
+            $scope.header = 'Your ' + $scope.profile.type + ' profile';
+            $scope.showEditLink = true;
         } else {
-            $scope.profileOnly = true;
-            $scope.profile =
+                var that = this;
                 Profile.get({
                     userId: $stateParams.userId
+                })
+                .$promise
+                .then(function(profile) {
+                    $scope.profile = profile;
+
+                    $scope.header = profile.displayName;
+                    $scope.showEditLink = profile._id === Authentication.user._id;
+                }, function(err) {
+                    debugger;
                 });
         }
     };
 
-    $scope.initList = function() {
+    this.initList = function() {
+        debugger;
         if (Authentication.user.roles.indexOf('admin') !== -1) {
-            $scope.users = Profile.query();
+            this.users = Profile.query();
         } else {
             $location.path('/settings/profile');
         }
     };
 
-    $scope.edit = function() {
+    this.edit = function() {
+        console.log('[ProfileController] edit()');
         $scope.editMode = true;
     };
-    $scope.cancel = function() {
+
+    this.cancel = function() {
+        console.log('[ProfileController] cancel()');
         $scope.editMode = false;
     };
 }

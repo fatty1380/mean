@@ -1,23 +1,21 @@
-<section class="row" data-ng-init="init()">
+<section class="row" data-ng-init="viewCtrl.init()" data-ng-controller="ProfileController as viewCtrl">
     <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
     <section class="container opaque-bg">
-        profile.client.view.html {{title}}
+        <div class="alert alert-info" role="alert">profile.client.view.html {{title}}</div>
         <div class="page-header col-md-12">
-            <span class="h2 pull-left" data-ng-show="profileOnly">{{profile.displayName}}</span>
-            <span class="h2 pull-left" data-ng-hide="profileOnly">Your
-                <span class="text-capitalize">{{ profile.type }}</span>&nbsp;profile
-                <small>{{ profile.email }}</small>
-            </span>
+            <span class="h2 pull-left">{{header}}</span>
             <div class="pull-right" style="margin-top: 20px">
-                <div class="col-md-12 text-right">Member Since {{ profile.created | date:'longDate' }}</div>
-                <small class="col-md-12 text-right">Logged in via {{ profile.provider }} auth</small>
+                <div class="col-md-12 text-right">Member Since {{ viewCtrl.profile.created | date:'longDate' }}</div>
+                <small class="col-md-12 text-right">Logged in via {{ viewCtrl.profile.provider }} auth</small>
             </div>
         </div>
 
         <div class="col-xs-offset-0 col-xs-4 col-md-8">
             <fieldset>
+            <div class="alert alert-info" role="alert">profile: {{profile}}<br>editMode: {{editMode}}</div>
+
                 <!-- Begin include of primary User Information Display -->
-                <os-profile profile="profile"></os-profile>
+                <os-profile profile="profile" enable-edit="{{showEditLink}}" edit-mode="editMode"></os-profile>
 
                 <!-- Begin include of Driver Information Display -->
                 <div ng-show="profile.type === 'driver'" ng-include="'modules/drivers/views/templates/drivers-list.client.template.html'"></div>

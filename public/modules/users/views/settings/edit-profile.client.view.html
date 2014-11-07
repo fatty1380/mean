@@ -1,23 +1,5 @@
 <section class="row" data-ng-controller="SettingsController" data-ng-init="init()">
     <section class="container opaque-bg">
-        edit-profile.client.view.html
-        <div class="page-header col-md-12">
-            <h2 class="col-md-9">Edit your
-                <span class="text-capitalize">{{ user.type }}</span>&nbsp;profile
-                <small>{{ user.email }}</small>
-            </h2>
-            <div class="pull-right" style="margin-top: 20px">
-                <div class="col-md-12 text-right">Member Since {{ user.created | date:'longDate' }}</div>
-                <div class="col-md-12 text-right">Logged in via {{ user.provider }} auth</div>
-            </div>
-        </div>
-
-        <div class="col-xs-offset-0 col-xs-4 col-md-8">
-            <os-profile profile="profile" edit-mode="true"></os-profile>
-        </div>
-
-        <div class="well well-sm col-md-4">
-            <div ng-include="'modules/users/views/templates/addons.client.template.html'"></div>
-        </div>
+        <div class="alert alert-danger" role="alert">This page, edit-profile.client.view.html, is deprecated. profile.client.view.html needs to be changed to support this functionality</div>
     </section>
 </section>

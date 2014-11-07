@@ -1,0 +1,57 @@
+<form name="userForm" data-ng-submit="updateUserProfile(userForm.$valid)" class="form-horizontal" autocomplete="off">
+    <fieldset class="create" ng-show="editMode">
+        <legend>Edit Personal Profile</legend>
+
+        <div class="form-group profile-row">
+            <label class="control-label" for="name">Name</label>
+            <div class="form-inline margin-bottom-sm" name="name">
+                <input class="form-control" type="text" data-ng-model="profile.firstName" placeholder="First">
+                <input class="form-control" type="text" data-ng-model="profile.lastName" placeholder="Last">
+            </div>
+        </div>
+
+        <div class="form-group profile-row">
+            <label for="email">Email</label>
+            <div class="input-group margin-bottom-sm" name="email">
+                <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i>
+                </span>
+                <input class="form-control" type="text" placeholder="Email address" data-ng-model="profile.email">
+            </div>
+        </div>
+
+        <div class="form-group profile-row" ng-init="addresses = profile.addresses">
+            <label for="addressses">Addresses</label>
+            <button class="btn pull-right btn-small btn-link" ng-click="addAddress()">
+                Add Address
+            </button>
+
+            <div ng-include="'modules/addresses/views/address.client.template.html'"></div>
+        </div>
+
+        <!-- Driver's Telephone -->
+        <div class="form-group profile-row">
+            <label for="phone">Phone</label>
+            <div class="input-group margin-bottom-sm">
+                <input class="form-control" type="tel" name="phone" data-ng-model="profile.phone" placeholder="(xxx) xxx-xxxx">
+                <span class="input-group-addon">
+                    <i class="fa fa-phone fa-fw"></i>
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-row" data-ng-show="editMode">
+            <small class="pull-left">edit-profile.client.view</small>
+
+            <div class="text-right form-group">
+                <button type="button" value="cancel" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
+                <button type="submit" value="update" class="btn btn-large btn-primary">Save Profile</button>
+            </div>
+            <div data-ng-show="error" class="text-center text-danger">
+                <strong data-ng-bind="error"></strong>
+            </div>
+        </div>
+        <div data-ng-show="success" class="text-center text-success">
+            <strong>Profile Saved Successfully</strong>
+        </div>
+    </fieldset>
+</form>

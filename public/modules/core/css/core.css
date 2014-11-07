@@ -1,5 +1,5 @@
 .content {
-    margin-top: 0;
+    margin-top: 67px;
     margin-bottom: 40px;
 }
 .undecorated-link:hover {
@@ -51,6 +51,9 @@ section > .container:first-child {
 }
 header nav > ul {
     padding-top: 17px;
+}
+header .brand > img {
+    margin-top: 14px;
 }
 /* END : NAVBAR - TOP */
 
