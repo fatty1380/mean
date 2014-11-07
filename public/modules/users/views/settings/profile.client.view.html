@@ -12,10 +12,23 @@
 
         <div class="col-xs-offset-0 col-xs-4 col-md-8">
             <fieldset>
-            <div class="alert alert-info" role="alert">profile: {{profile}}<br>editMode: {{editMode}}</div>
+                <div class="alert alert-info" role="alert">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="h4">Scope?</p>
+                            <p>profile: {{profile.displayName}}</p>
+                            <p>editMode: {{editMode}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="h4">viewCtrl</p>
+                            <p>profile: {{viewCtrl.profile.displayName}}</p>
+                            <p>editMode: {{viewCtrl.editMode}}</p>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Begin include of primary User Information Display -->
-                <os-profile profile="profile" enable-edit="{{showEditLink}}" edit-mode="editMode"></os-profile>
+                <os-profile profile="profile" edit-mode="editMode"></os-profile>
 
                 <!-- Begin include of Driver Information Display -->
                 <div ng-show="profile.type === 'driver'" ng-include="'modules/drivers/views/templates/drivers-list.client.template.html'"></div>
