@@ -1,0 +1,24 @@
+<section>
+    <div data-ng-show="editCtrl.enableEdit">
+    <select ng-model="editCtrl.address.type" ng-options="type as type for type in editCtrl.types">
+        <option value="">-- choose type --</option>
+    </select>
+    <div ng-repeat="(s,street) in editCtrl.address.streetAddresses track by s">
+        <input type="text" id="street-address" name="street-address" class="form-control" data-ng-model="editCtrl.address.streetAddresses[s]" placeholder="Street Address {{$index+1}}">
+    </div>
+    <div class="row" style="margin-left: 0; margin-right: 18px;">
+        <div class="form-group col-md-6">
+            <label class="sr-only" for="address-city">City</label>
+            <input type="text" id="city" name="city" class="form-control" data-ng-model="editCtrl.address.city" placeholder="City">
+        </div>
+        <div class="form-group col-md-2">
+            <label class="sr-only" for="address-state">State</label>
+            <input type="text" id="state" name="state" class="form-control" data-ng-model="editCtrl.address.state" placeholder="State" style="padding-left: 2px; padding-right: 2px;">
+        </div>
+        <div class="form-group col-md-4">
+            <label class="sr-only" for="address-zip">Zip Code</label>
+            <input type="text" id="address-zip" name="zip" class="form-control" data-ng-model="editCtrl.address.zipCode" placeholder="ZIP">
+        </div>
+    </div>
+    </div>
+</section>

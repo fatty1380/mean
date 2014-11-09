@@ -19,15 +19,13 @@
             </div>
         </div>
 
-        <div class="form-group profile-row" ng-init="addresses = ctrl.profile.addresses">
+        <div class="form-group profile-row">
             <label for="addressses">Addresses</label>
             <button class="btn pull-right btn-small btn-link" ng-click="ctrl.addAddress()">
                 Add Address
             </button>
 
-            <p><b>Address Count:</b> {{addresses.length}}
-
-            <div ng-include="'modules/addresses/views/address.client.template.html'"></div>
+            <os-address-list addresses="ctrl.profile.addresses" enable-edit="ctrl.editMode.enabled"></os-address-list>
         </div>
 
         <!-- Driver's Telephone -->

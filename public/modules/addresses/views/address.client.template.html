@@ -1,35 +1,8 @@
-<section data-ng-controller="AddressesController" ng-form data-ng-submit="update()"  class="profile-row form-group" >
-    <div ng-repeat="(a,address) in addresses track by a">
-        <address ng-hide="editMode" class="col-sm-4">
-            <strong>{{address.type}}</strong>
-            <div ng-repeat="(s,street) in address.streetAddresses track by s">
-                {{street}}
-            </div>
-            {{address.city}}, {{address.state}} {{address.zipCode}}
-            <br/>
-        </address>
-
-        <span data-ng-show="editMode">
-            <select ng-model="address.type" ng-options="type as type for type in types">
-                <option value="">-- choose type --</option>
-            </select>
-            <div ng-repeat="(s,street) in address.streetAddresses track by s">
-                <input type="text" id="street-address" name="street-address" class="form-control" data-ng-model="addresses[a].streetAddresses[s]" placeholder="Street Address {{$index+1}}">
-            </div>
-            <div class="row" style="margin-left: 0; margin-right: 18px;">
-                <div class="form-group col-md-6">
-                    <label class="sr-only" for="address-city">City</label>
-                    <input type="text" id="city" name="city" class="form-control" data-ng-model="address.city" placeholder="City">
-                </div>
-                <div class="form-group col-md-2">
-                    <label class="sr-only" for="address-state">State</label>
-                    <input type="text" id="state" name="state" class="form-control" data-ng-model="address.state" placeholder="State" style="padding-left: 2px; padding-right: 2px;">
-                </div>
-                <div class="form-group col-md-4">
-                    <label class="sr-only" for="address-zip">Zip Code</label>
-                    <input type="text" id="address-zip" name="zip" class="form-control" data-ng-model="address.zipCode" placeholder="ZIP">
-                </div>
-            </div>
-        </span>
+<address ng-hide="enableEdit" class="col-sm-4">
+    <strong>{{address.type}}</strong>
+    <div ng-repeat="street in address.streetAddresses">
+        {{street}}
     </div>
-</section>
+    {{address.city}}, {{address.state}} {{address.zipCode}}
+    <br/>
+</address>

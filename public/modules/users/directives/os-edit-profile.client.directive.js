@@ -63,7 +63,7 @@ angular.module('users')
 
                 var addr = new Address({
                     type: 'select type',
-                    streetAddresses: [''],
+                    streetAddresses: ['',''],
                 });
 
                 this.profile.addresses.push(addr);

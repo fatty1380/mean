@@ -27,7 +27,6 @@ function ProfileController($scope, $stateParams, $location, Profile, Authenticat
 
                 promise
                 .then(function(profile) {
-                    debugger;
                     $scope.profile = profile;
                     $scope.header = profile.displayName;
                     $scope.showEditLink = profile._id === Authentication.user._id;
