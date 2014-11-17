@@ -79,8 +79,6 @@ exports.update = function(req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            debugger;
-
             var opts = [{
                 path: 'sender',
                 select: 'displayName',
@@ -174,19 +172,18 @@ exports.applicationByID = function(req, res, next, id) {
 
     Application.findById(id)
         .populate('user', 'displayName')
-        .populate('job', 'name company')
-        .populate({path:'messages.sender', model:'User', select: 'displayName id'})
+        .populate('job', 'name user company')
+        .populate({
+            path: 'messages.sender',
+            model: 'User',
+            select: 'displayName id'
+        })
         .exec(function(err, application) {
             if (err) return next(err);
             if (!application) return next(new Error('Failed to load Application ' + id));
 
-            debugger;
-            //console.log('Job has user: ', application.job.user);
-
             req.application = application;
             next();
-
-
         });
 };
 

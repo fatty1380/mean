@@ -42,8 +42,6 @@ var login_unirest = function(req, res) {
         .end(function(response) {
             console.log(response.body);
 
-            debugger;
-
             if (response.error) {
                 CookieJar = null;
 
@@ -93,7 +91,6 @@ var getApplicant_unirest = function(req, res, next, id) {
     unirest.get(api_base_url + '/rest/applicant/' + id)
         .jar(CookieJar)
         .end(function(response) {
-            debugger;
             console.log(response.body);
 
             if (response.error) {
@@ -120,7 +117,6 @@ var logout_unirest = function(req, res) {
     unirest.delete(api_base_url + '/rest/session')
         .jar(CookieJar)
         .end(function(response) {
-            debugger;
             console.log(response.body);
 
             CookieJar = null;
@@ -166,7 +162,6 @@ exports.getAvailableReports = function(req, res) {
     unirest.get(api_base_url + '/rest/report')
         .jar(CookieJar)
         .end(function(response) {
-            debugger;
             console.log(response.body);
 
             if (response.error) {
@@ -200,7 +195,6 @@ exports.runReport = function(req, res, next) {
             applicantId: id
         })
         .end(function(response) {
-            debugger;
             console.log(response.body);
             console.log(response.error);
 
@@ -231,7 +225,6 @@ exports.getReport = function(req, res) {
     unirest.get(api_base_url + '/rest/reportCheck/' + id + '/report')
         .jar(CookieJar)
         .end(function(response) {
-            debugger;
             console.log(response.body);
 
             if (response.error) {
@@ -261,7 +254,6 @@ exports.getPdfReport = function(req, res) {
     unirest.get(api_base_url + '/rest/reportCheck/' + id + '/report/pdf')
         .jar(CookieJar)
         .end(function(response) {
-            debugger;
             console.log(response.body);
 
             if (response.error) {
@@ -289,7 +281,6 @@ exports.checkReportStatus = function(req, res, next, id) {
     unirest.get(api_base_url + '/rest/reportCheck/' + id)
         .jar(CookieJar)
         .end(function(response) {
-            debugger;
             console.log(response.body);
 
             if (response.error) {
@@ -336,7 +327,6 @@ exports.create = function(req, res) {
  * Show the current Bgcheck
  */
 exports.read = function(req, res) {
-    debugger;
     res.jsonp(req.bgcheck);
 };
 

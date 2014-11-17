@@ -1,0 +1,18 @@
+<div class="container-fluid alert alert-info" style="position: fixed; bottom: 50px; right: 0; z-index: 1500;" role="alert">
+    <div class="row">
+        <div ng-repeat="info in debugInfo">
+            <span>
+                <b>{{info.key}}:</b>
+            </span>
+            <span>{{info.value || "UNDEFINED"}}</span>
+        </div>
+        <div>
+            <span><b>View Size:</b>
+            </span>
+            <span class="visible-xs">XS</span>
+            <span class="visible-sm">SM</span>
+            <span class="visible-md">MD</span>
+            <span class="visible-lg">LG</span>
+        </div>
+    </div>
+</div>

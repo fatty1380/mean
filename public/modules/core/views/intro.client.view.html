@@ -8,7 +8,11 @@
         <h2 class="heading sub">The best way to find and fill transportation jobs</h2>
         <div class="row signup" ng-show="showMain">
             <div class="col-md-4 col-md-offset-4">
-                <button ng-click="gotoSignup()" class="btn btn-success btn-large center-block">Sign Up Today</button>
+
+                <signup-modal>
+                    <button class="btn btn-success btn-large center-block">Sign Up Today</button>
+                </signup-modal>
+
             </div>
         </div>
         <div class="row" ng-show="showMain">

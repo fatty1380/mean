@@ -115,7 +115,7 @@ var UserSchema = new Schema({
 });
 
 UserSchema.post('init', function(next) {
-    if(!this.displayName) {
+    if (!this.displayName) {
         this.displayName = this.firstName + ' ' + this.lastName;
     }
 });
@@ -133,9 +133,9 @@ UserSchema.pre('save', function(next) {
     next();
 });
 
-UserSchema.pre('save', function(next){
-  this.modified = Date.now;
-  next();
+UserSchema.pre('save', function(next) {
+    this.modified = Date.now;
+    next();
 });
 
 
@@ -144,8 +144,6 @@ UserSchema.methods.migrate = function() {
     var changed = false;
 
     if (!this.type) {
-        debugger;
-
         var types = this.getValue('types');
 
         if (!!types && types.length) {
@@ -173,8 +171,7 @@ UserSchema.methods.migrate = function() {
         this.save(function(err) {
             if (err) {
                 console.err('Unable to save migrated user: %o', err);
-            }
-            else {
+            } else {
                 console.log('Saved migrated user: %o', this);
             }
         });

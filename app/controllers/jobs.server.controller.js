@@ -30,7 +30,7 @@ var executeQuery = function(req, res) {
             }
 
             req.jobs = jobs || [];
-            console.log('[JobsCtrl.executeQuery] Found %d jobs for query %s', req.jobs.length, query);
+            console.log('[JobsCtrl.executeQuery] Found %d jobs for query %o', req.jobs.length, query);
             res.json(req.jobs);
         });
 };
@@ -184,10 +184,10 @@ exports.queryByCompanyID = function(req, res) {
  */
 exports.jobByID = function(req, res, next, id) {
 
-//    if (!req.originalUrl.endsWith(id)) {
-//        next();
-//        return;
-//    }
+    //    if (!req.originalUrl.endsWith(id)) {
+    //        next();
+    //        return;
+    //    }
 
     Job.findById(id)
         .populate('user', 'displayName')

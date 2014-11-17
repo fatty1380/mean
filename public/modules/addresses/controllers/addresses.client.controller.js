@@ -1,64 +1,66 @@
-'use strict';
+(function() {
+    'use strict';
 
-// Addresses controller
-angular.module('addresses').controller('AddressesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Addresses',
-    function($scope, $stateParams, $location, Authentication, Addresses) {
-        $scope.authentication = Authentication;
+    // Addresses controller
+    angular.module('addresses').controller('AddressesController', ['$scope', '$stateParams', '$location', '$log', 'Authentication', 'Addresses',
+        function($scope, $stateParams, $location, $log, Authentication, Addresses) {
+            $scope.authentication = Authentication;
 
-        $scope.types = ['main', 'home', 'business', 'billing', 'other'];
+            $scope.types = ['main', 'home', 'business', 'billing', 'other'];
 
-        // Create new Address
-        $scope.create = function() {
-            // Create new Address object
-            var address = new Addresses({});
+            // Create new Address
+            $scope.create = function() {
+                // Create new Address object
+                var address = new Addresses({});
 
-            // Redirect after save
-            address.$save(function(response) {
-                console.log('Created new Address Object');
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-                console.error('Address Creation Failed: ', $scope.error);
-            });
-        };
-
-        // Remove existing Address
-        $scope.remove = function(address) {
-            if (address) {
-                address.$remove();
-
-                for (var i in $scope.addresses) {
-                    if ($scope.addresses[i] === address) {
-                        $scope.addresses.splice(i, 1);
-                    }
-                }
-            } else {
-                $scope.address.$remove(function() {
-                    $location.path('addresses');
+                // Redirect after save
+                address.$save(function(response) {
+                    $log.debug('Created new Address Object');
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                    console.error('Address Creation Failed: ', $scope.error);
                 });
-            }
-        };
+            };
 
-        // Update existing Address
-        $scope.update = function() {
-            var address = $scope.address;
+            // Remove existing Address
+            $scope.remove = function(address) {
+                if (address) {
+                    address.$remove();
 
-            address.$update(function() {
-                console.log('Updated Address object');
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-        };
+                    for (var i in $scope.addresses) {
+                        if ($scope.addresses[i] === address) {
+                            $scope.addresses.splice(i, 1);
+                        }
+                    }
+                } else {
+                    $scope.address.$remove(function() {
+                        $location.path('addresses');
+                    });
+                }
+            };
 
-        // Find a list of Addresses
-        $scope.find = function() {
-            $scope.addresses = Addresses.query();
-        };
+            // Update existing Address
+            $scope.update = function() {
+                var address = $scope.address;
 
-        // Find existing Address
-        $scope.findOne = function() {
-            $scope.address = Addresses.get({
-                addressId: $stateParams.addressId
-            });
-        };
-    }
-]);
+                address.$update(function() {
+                    $log.debug('Updated Address object');
+                }, function(errorResponse) {
+                    $scope.error = errorResponse.data.message;
+                });
+            };
+
+            // Find a list of Addresses
+            $scope.find = function() {
+                $scope.addresses = Addresses.query();
+            };
+
+            // Find existing Address
+            $scope.findOne = function() {
+                $scope.address = Addresses.get({
+                    addressId: $stateParams.addressId
+                });
+            };
+        }
+    ]);
+})();

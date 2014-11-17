@@ -1,23 +1,25 @@
-<section data-ng-controller="CompaniesController" data-ng-init="findOne()" class="container opaque-bg">
-
-    <div class="col-md-10 col-md-offset-1">
-        <div class="row page-header">
-            <div class="col-md-8">
-                <h1 class="list-group-item-heading">{{company.name}}
-                </h1>
-            </div>
-            <div class="col-md-4">
-                <div class="pull-right" data-ng-show="authentication.user._id == company.user._id">
-                    <a class="btn btn-primary" href="/#!/companies/{{company._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                    <a class="btn btn-primary" data-ng-click="remove();">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
+<section data-ng-controller="CompaniesController" data-ng-init="init()">
+    <div class="container">
+        <section class="container">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1>{{company.name}}
+                        </h1>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="pull-right" data-ng-show="authentication.user._id == company.owner._id">
+                            <a class="btn btn-primary" href="/#!/companies/{{company._id}}/edit">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                            <a class="btn btn-primary" data-ng-click="remove();">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
+                <os-company company="company || companies[0]"></os-company>
             </div>
-        </div>
-        <os-company company="company"></os-company>
-
+        </section>
     </div>
 </section>

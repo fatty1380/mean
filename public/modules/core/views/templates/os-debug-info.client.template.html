@@ -1,0 +1,16 @@
+<div class="row alert alert-info" style="position: fixed; bottom: 50px; right: 0; z-index: 1500;" role="alert">
+    <div ng-repeat="info in debugInfo">
+        <span class="col-xs-3 col-md-2 text-right">
+            <b>{{info.key}}:</b>
+        </span>
+        <span class="col-xs-9">{{info.value || "UNDEFINED"}}</span>
+    </div>
+    <div>
+        <span class="col-xs-3 col-md-2 text-right"><b>View Size:</b>
+        </span>
+        <span class="col-xs-9 visible-xs">XS</span>
+        <span class="col-xs-9 visible-sm">SM</span>
+        <span class="col-xs-9 visible-md">MD</span>
+        <span class="col-xs-9 visible-lg">LG</span>
+    </div>
+</div>

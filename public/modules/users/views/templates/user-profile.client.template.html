@@ -1,33 +1,24 @@
-<section class="container-fluid">
-    <span class="col-md-12 opaque-bg">
-        <div class="alert alert-info" role="alert">user-profile.client.template</div>
-
-        <span ng-hide="ctrl.editMode.enabled">
-            <div class="row-fluid">
-                <legend class="pull-left">Personal Information
-                    <div class="pull-right">
-                        <a class="btn btn-link" ng-click="ctrl.edit()" ng-if="ctrl.editMode.visible">
-                            <i class="fa fa-pencil"></i>&nbsp;edit
-                        </a>
-                    </div>
-                </legend>
-
-                <dl class="dl-horizontal">
-                    <dt>Name</dt>
-                    <dd>{{ctrl.profile.displayName}}</dd>
-                    <dt>Email</dt>
-                    <dd>{{ctrl.profile.email}}</dd>
-                    <dt>Phone</dt>
-                    <dd>{{ctrl.profile.phone}}</dd>
-                    <dt>({{ctrl.profile.addresses.length}}) Addresses</dt>
-                    <dd>
-                        <os-address-list addresses="ctrl.profile.addresses" enable-edit="ctrl.editMode.enabled"></os-address-list>
-                    </dd>
-                </dl>
+<section>
+    <div ng-hide="ctrl.editMode.enabled" class="row-fluid">
+        <legend class="pull-left">{{ctrl.title || 'Personal Information'}}
+            <div class="pull-right">
+                <a class="btn btn-link" ng-click="ctrl.edit()" ng-if="ctrl.editMode.visible">
+                    <i class="fa fa-pencil"></i>&nbsp;edit
+                </a>
             </div>
-        </span>
+        </legend>
 
-        <os-edit-profile profile="ctrl.profile" edit-mode="ctrl.editMode" cancel='ctrl.cancel()'></os-edit-profile>
-
-    </span>
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>{{ctrl.profile.displayName}}</dd>
+            <dt>Email</dt>
+            <dd>{{ctrl.profile.email}}</dd>
+            <dt>Phone</dt>
+            <dd>{{ctrl.profile.phone}}</dd>
+            <dt>({{ctrl.profile.addresses.length}}) Addresses</dt>
+            <dd>
+                <os-address-list addresses="ctrl.profile.addresses" enable-edit="ctrl.editMode.enabled"></os-address-list>
+            </dd>
+        </dl>
+    </div>
 </section>

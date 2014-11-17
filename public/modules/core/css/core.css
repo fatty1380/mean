@@ -56,7 +56,6 @@ header .brand > img {
     margin-top: 14px;
 }
 /* END : NAVBAR - TOP */
-
 /* Footer */
 
 footer.navbar {
@@ -64,6 +63,7 @@ footer.navbar {
 }
 footer .navbar .navbar-inner {
     /*background: #0e2d4c;*/
+    
     height: 42px;
     padding-left: 20px;
     padding-right: 20px;
@@ -81,17 +81,14 @@ footer .navbar .navbar-inner {
     color: #ffffff;
     line-height: 40px;
 }
-header .nav > li > a:hover, header .nav > li > a:focus, footer .nav > li > a:hover, footer .nav > li > a:focus {
+header .nav > li > a:hover, header .nav > li > div > a:hover, header .nav > li > a:focus, header .nav > li > div > a:focus, footer .nav > li > a:hover, footer .nav > li > a:focus {
     background-color: rgba(238, 238, 238, .2);
     border-radius: 0;
     text-shadow: 1px 1px 1px #333;
 }
 /* Home - Main Content */
-
 /* General */
-
 /* END General */
-
 /* Company Specific - possibly general in future */
 
 .create label.control-label {
@@ -196,9 +193,7 @@ p.details {
     padding-top: 30px;
 }
 /* END : Home - Main Content */
-
 /* BEGIN : Schedule & Driver Content */
-
 /* TODO: move to appropriate place */
 
 .schedule input[type="checkbox"][disabled] {

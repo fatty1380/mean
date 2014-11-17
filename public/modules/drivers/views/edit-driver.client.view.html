@@ -1,7 +1,6 @@
 <section data-ng-controller="DriversController" data-ng-init="findOne()">
-    <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
-    <section class="container opaque-bg">
-        <div class="page-header">
+    <section class="container">
+        <div>
             <h1>Edit {{driver.user.displayName}}'s Driver Profile</h1>
         </div>
         <div class="driver create">
@@ -9,7 +8,9 @@
                 <fieldset>
 
                     <!-- Driver's License Information -->
-                    <legend>Driver's License<button type="button" value="inspect" ng-click="inspect()"></button></legend>
+                    <legend>Driver's License
+                        <button type="button" value="inspect" ng-click="inspect()"></button>
+                    </legend>
 
                     <div class="row-fluid profile-row">
                         <div class="col-sm-5">

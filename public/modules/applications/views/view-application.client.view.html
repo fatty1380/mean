@@ -1,6 +1,5 @@
 <section data-ng-controller="ApplicationsController" data-ng-init="findOne()">
-    <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
-    <section class="container opaque-bg">
+    <section class="container">
         <span class="h3" data-ng-bind="application.job.name"></span class="h3">
         <div class="pull-right" data-ng-show="authentication.user._id == application.user._id">
             <a class="btn btn-primary" href="/#!/applications/{{application._id}}/edit">
@@ -19,32 +18,41 @@
             </em>
         </small>
         <div class="container-fluid">
-            <h4>Messages</h4>
-            <dl class="dl-horizontal">
-                <div ng-repeat="message in application.messages">
-                    <dt>{{message.sender.displayName || 'UNKNOWN'}}<br/>
-                        <small>
-                            <em class="text-muted">
-                                <span data-ng-bind="message.created | date:'short'"></span>
-                            </em>
-                        </small></dt>
-                    <dd>{{message.text}}
-                        <span class="label label-info">{{message.status}}</span>
-                    </dd>
+            <div class="row-fluid">
+                <div ng-class="{col-md-8: application.user.type === 'owner', col-md-12: application.user.type === 'driver'}">
+                    <h4>Messages</h4>
+                    <dl class="dl-horizontal">
+                        <div ng-repeat="message in application.messages">
+                            <dt>{{message.sender.displayName || 'UNKNOWN'}}
+                                <br/>
+                                <small>
+                                    <em class="text-muted">
+                                        <span data-ng-bind="message.created | date:'short'"></span>
+                                    </em>
+                                </small>
+                            </dt>
+                            <dd>{{message.text}}
+                                <span class="label label-info">{{message.status}}</span>
+                            </dd>
+                        </div>
+                    </dl>
+                    <div class="row">
+                        <form data-ng-submit="postMessage()" novalidate>
+                            <div class="col-md-8 col-md-offset-1">
+                                <textarea type="text" data-ng-model="message" class="form-control" placeholder="new message..." required></textarea>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary" value="send">Send</button>
+                            </div>
+                            <div data-ng-show="error" class="text-danger">
+                                <strong data-ng-bind="error"></strong>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </dl>
-            <div class="row">
-                <form data-ng-submit="postMessage()" novalidate>
-                    <div class="col-md-8 col-md-offset-1">
-                        <textarea type="text" data-ng-model="message" class="form-control" placeholder="new message..." required></textarea>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary" value="send">Send</button>
-                    </div>
-                    <div data-ng-show="error" class="text-danger">
-                        <strong data-ng-bind="error"></strong>
-                    </div>
-                </form>
+                <div ng-if="application.user.type === 'owner'" class="col-md-4">
+                    <os-profile-badge profile="application.user"></os-profile>
+                </div>
             </div>
         </div>
     </section>

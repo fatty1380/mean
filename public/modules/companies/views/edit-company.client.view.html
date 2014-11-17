@@ -1,60 +1,71 @@
-<section data-ng-controller="CompaniesController" data-ng-init="findOne()" class="container opaque-bg">
-    <div class="page-header">
-        <h1>{{company.name}}
-            <small data-ng-click="editName=true" data-ng-hide="!!editName">edit</small>
-        </h1>
-    </div>
-    <div class="company">
-        <form class="form-horizontal" data-ng-submit="update()" novalidate>
-            <fieldset>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label" data-ng-show="!!editName" for="name">Business Name
-                        <br/>
-                        <small>the name of your business</small>
-                    </label>
-                    <div class="controls col-sm-8" data-ng-show="!!editName">
-                        <input type="text" data-ng-model="company.name" id="name" class="form-control" placeholder="Name" required />
-                    </div>
-
-                    <label class="col-sm-3 control-label" for="zip">Location (ZIP Code)
-                        <br/>
-                        <small>where your business is located</small>
-                    </label>
-                    <div class="controls col-sm-8">
-                        <input type="text" data-ng-model="company.zipCode" id="zip" class="form-control" placeholder="XXXXX" required />
-                    </div>
-
-                    <label class="col-sm-3 control-label" for="about">About
-                        <br/>
-                        <small>a short introduction to your business</small>
-                    </label>
-                    <div class="controls col-sm-8">
-                        <textarea rows="5" data-ng-model="company.about" id="about" class="form-control" placeholder="About" required></textarea>
-                    </div>
-
-                    <label class="col-sm-3 control-label" for="phone">Business Phone
-                        <br/>
-                        <small>primary business number</small>
-                    </label>
-                    <div class="controls col-sm-8">
-                        <input type="text" data-ng-model="company.phone" id="phone" class="form-control" placeholder="(xxx) xxx-xxxx" required />
-                    </div>
-
-                    <label class="col-sm-3 control-label" for="email">Business Email
-                        <br/>
-                        <small>for notifications</small>
-                    </label>
-                    <div class="controls col-sm-8">
-                        <input type="text" data-ng-model="company.email" id="email" class="form-control" placeholder="jobs@your_company.com" />
-                    </div>
+<section data-ng-controller="CompaniesController" data-ng-init="findOne()">
+    <div class="container opaque-bg">
+        <section class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>{{company.name}}</h1>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Update" class="btn btn-default">
-                </div>
-                <div data-ng-show="error" class="text-danger">
-                    <strong data-ng-bind="error"></strong>
-                </div>
-            </fieldset>
-        </form>
+            </div>
+            <div class="company">
+                <form class="form-horizontal" data-ng-submit="update()" novalidate>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" data-ng-show="!!editName" for="name">Business Name
+                                <br/>
+                                <small>the name of your business</small>
+                            </label>
+                            <div class="controls col-sm-8" data-ng-show="!!editName">
+                                <input type="text" data-ng-model="company.name" id="name" class="form-control" placeholder="Name" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="zip">Location (ZIP Code)
+                                <br/>
+                                <small>where your business is located</small>
+                            </label>
+                            <div class="controls col-sm-8">
+                                <input type="text" data-ng-model="company.zipCode" id="zip" class="form-control" placeholder="XXXXX" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-sm-3 control-label" for="about">About
+                                <br/>
+                                <small>a short introduction to your business</small>
+                            </label>
+                            <div class="controls col-sm-8">
+                                <textarea rows="5" data-ng-model="company.about" id="about" class="form-control" placeholder="About" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-sm-3 control-label" for="phone">Business Phone
+                                <br/>
+                                <small>primary business number</small>
+                            </label>
+                            <div class="controls col-sm-8">
+                                <input type="text" data-ng-model="company.phone" id="phone" class="form-control" placeholder="(xxx) xxx-xxxx" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-sm-3 control-label" for="email">Business Email
+                                <br/>
+                                <small>for notifications</small>
+                            </label>
+                            <div class="controls col-sm-8">
+                                <input type="text" data-ng-model="company.email" id="email" class="form-control" placeholder="jobs@your_company.com" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Update" class="btn btn-default">
+                        </div>
+                        <div data-ng-show="error" class="text-danger">
+                            <strong data-ng-bind="error"></strong>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
     </div>
 </section>

@@ -1,24 +1,23 @@
-'use strict';
+(function() {
+    'use strict';
 
-function ProfileController($scope, $stateParams, $location, Profile, Authentication) {
+    function ProfileController($scope, $stateParams, $location, $log, Profile, Authentication) {
 
-    $scope.editMode = $scope.editMode || false;
+        this.editMode = $scope.editMode || {
+            enabled: false,
+            visible: true
+        };
 
-    $scope.showEditLink = false;
-    $scope.header = 'Your Profile';
+        this.showEditLink = false;
+        this.header = 'Your Profile';
 
-    $scope.editMode = {
-        enabled: false,
-        visible: true
-    };
-
-    // Find existing User Profile
-    this.init = function() {
-        if (!$stateParams.userId) {
-            this.profile = $scope.profile = Authentication.user;
-            this.header = $scope.header = 'Your ' + $scope.profile.type + ' profile';
-            this.showEditLink = $scope.showEditLink = true;
-        } else {
+        // Find existing User Profile
+        this.init = function() {
+            if (!$stateParams.userId) {
+                this.profile = Authentication.user;
+                this.header = this.header = 'Your ' + this.profile.type + ' profile';
+                this.showEditLink = this.showEditLink = true;
+            } else {
                 this.profile = Profile.get({
                     userId: $stateParams.userId
                 });
@@ -26,38 +25,41 @@ function ProfileController($scope, $stateParams, $location, Profile, Authenticat
                 var promise = this.profile.$promise;
 
                 promise
-                .then(function(profile) {
-                    $scope.profile = profile;
-                    $scope.header = profile.displayName;
-                    $scope.showEditLink = profile._id === Authentication.user._id;
-                }, function(err) {
-                    debugger;
-                });
-        }
-    };
+                    .then(this.setProfile, function(err) {
+                        $log.debug('Error retrieving profile', err);
+                        debugger;
+                    });
+            }
+        };
 
-    this.initList = function() {
-        debugger;
-        if (Authentication.user.roles.indexOf('admin') !== -1) {
-            this.users = Profile.query();
-        } else {
-            $location.path('/settings/profile');
-        }
-    };
+        this.setProfile = function(profile) {
+            this.profile = profile;
+            this.header = profile.displayName;
+            this.showEditLink = profile._id === Authentication.user._id;
+        };
 
-    this.edit = function() {
-        console.log('[ProfileController] edit()');
-        $scope.editMode = true;
-    };
+        this.initList = function() {
+            if (Authentication.user.roles.indexOf('admin') !== -1) {
+                this.users = Profile.query();
+            } else {
+                $location.path('/settings/profile');
+            }
+        };
 
-    this.cancel = function() {
-        console.log('[ProfileController] cancel()');
-        $scope.editMode = false;
-    };
-}
+        this.edit = function() {
+            $log.debug('[ProfileController] edit()');
+            this.editMode.enabled = true;
+        };
 
-ProfileController.$inject = ['$scope', '$stateParams', '$location', 'Profile', 'Authentication'];
+        this.cancel = function() {
+            $log.debug('[ProfileController] cancel()');
+            this.editMode.enabled = false;
+        };
+    }
 
-angular
-    .module('users')
-    .controller('ProfileController', ProfileController);
+    ProfileController.$inject = ['$scope', '$stateParams', '$location', '$log', 'Profile', 'Authentication'];
+
+    angular
+        .module('users')
+        .controller('ProfileController', ProfileController);
+})();

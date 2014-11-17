@@ -13,7 +13,8 @@
     "angular-ui-router": "~0.2.10",
     "components-font-awesome": "~4.2.0",
     "font-awesome": "~4.2.0",
-    "angular-route": "~1.2.26"
+    "angular-route": "~1.2.26",
+    "ngImgCrop": "~0.2.0"
   },
   "resolutions": {
     "angular": "1.3"

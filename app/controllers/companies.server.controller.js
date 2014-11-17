@@ -3,7 +3,8 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),errorHandler = require('./errors.server.controller'),
+var mongoose = require('mongoose'),
+    errorHandler = require('./errors.server.controller'),
 
     Company = mongoose.model('Company'),
     _ = require('lodash');
@@ -19,7 +20,7 @@ var executeQuery = function(req, res) {
 
     Company.find(query)
         .sort(sort)
-        .populate('user', 'displayName')
+        .populate('owner', 'displayName')
         .exec(function(err, companies) {
             if (err) {
                 return res.status(400).send({
@@ -28,7 +29,7 @@ var executeQuery = function(req, res) {
             }
 
             req.companies = companies || [];
-            console.log('[CompaniesCtrl.executeQuery] Found %d companies for query %s', req.companies.length, query);
+            console.log('[CompaniesCtrl.executeQuery] Found %d companies for query %o', req.companies.length, query);
             res.json(req.companies);
         });
 };
@@ -101,7 +102,7 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
     req.sort = '-created';
 
-    executeQuery(req,res);
+    executeQuery(req, res);
 };
 
 exports.listDrivers = function(req, res) {
@@ -117,9 +118,11 @@ exports.listDrivers = function(req, res) {
 
 exports.companyByUserID = function(req, res) {
 
-    req.query = {user: req.params.userId};
+    req.query = {
+        owner: req.params.userId
+    };
 
-    executeQuery(req,res);
+    executeQuery(req, res);
 };
 
 /**
@@ -132,7 +135,7 @@ exports.companyByID = function(req, res, next, id) {
     }
     Company
         .findById(id)
-        .populate('user', 'displayName')
+        .populate('owner', 'displayName')
         .exec(function(err, company) {
             if (err) return next(err);
             if (!company) return next(new Error('Failed to load Company ' + id));
@@ -145,7 +148,7 @@ exports.companyByID = function(req, res, next, id) {
  * Company authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-    if (req.company.user.id !== req.user.id) {
+    if (req.company.owner.id !== req.user.id) {
         return res.status(403).send('User is not authorized');
     }
     next();
