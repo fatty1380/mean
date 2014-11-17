@@ -42,15 +42,28 @@ var executeFind = function(req, res, next, driverFind) {
         .exec(function(err, driver) {
             if (err) {
                 console.log('[Driver.executeFind] Driver search errored: ', err.message);
-                return next(err);
+                if (!!next) {
+                    return next(err);
+                }
+
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
             }
             if (!driver) {
                 console.log('[Driver.executeFind] No Driver Found');
-                return next(new Error('No Driver Found'));
+                if (!!next) {
+                    return next(new Error('No Driver Found'));
+                }
+            } else {
+                console.log('[Driver.executeFind] found driver: ', driver);
             }
-            console.log('[Driver.executeFind] found driver: ', driver);
-            req.driver = driver;
-            next();
+
+            if (!!next) {
+                req.driver = driver;
+            } else {
+                res.json(driver);
+            }
         });
 };
 
@@ -237,9 +250,7 @@ exports.list = function(req, res) {
 exports.driverByID = function(req, res, next, id) {
     console.log('[Driver.driverById] start');
 
-
-    executeFind(Driver.findById(id));
-
+    executeFind(req, res, next, Driver.findById(id));
 };
 
 exports.driverByUserID = function(req, res) {
@@ -248,7 +259,7 @@ exports.driverByUserID = function(req, res) {
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
-    executeFind(Driver.find({
+    executeFind(req, res, null, Driver.find({
         user: userId
     }));
 };
