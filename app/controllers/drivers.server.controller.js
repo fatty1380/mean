@@ -34,6 +34,26 @@ var executeQuery = function(req, res, next) {
         });
 };
 
+
+var executeFind = function(req, res, next, driverFind) {
+
+    driverFind
+        .populate('user')
+        .exec(function(err, driver) {
+            if (err) {
+                console.log('[Driver.executeFind] Driver search errored: ', err.message);
+                return next(err);
+            }
+            if (!driver) {
+                console.log('[Driver.executeFind] No Driver Found');
+                return next(new Error('No Driver Found'));
+            }
+            console.log('[Driver.executeFind] found driver: ', driver);
+            req.driver = driver;
+            next();
+        });
+};
+
 /**
  * Get the error message from error object
  */
@@ -209,19 +229,6 @@ exports.list = function(req, res) {
     req.sort = '-created';
 
     executeQuery(req, res);
-
-    Driver.find()
-        .sort('-created')
-        .populate('user', 'displayName')
-        .exec(function(err, drivers) {
-            if (err) {
-                return res.send(400, {
-                    message: getErrorMessage(err)
-                });
-            } else {
-                res.json(drivers);
-            }
-        });
 };
 
 /**
@@ -229,21 +236,10 @@ exports.list = function(req, res) {
  */
 exports.driverByID = function(req, res, next, id) {
     console.log('[Driver.driverById] start');
-    Driver.findById(id)
-        .populate('user')
-        .exec(function(err, driver) {
-            if (err) {
-                console.log('[Driver.driverById] Driver search errored: ', err.message);
-                return next(err);
-            }
-            if (!driver) {
-                console.log('[Driver.driverById] No Driver Found');
-                return next(new Error('Failed to load Driver ' + id));
-            }
-            console.log('[Driver.driverById] found driver: ', driver);
-            req.driver = driver;
-            next();
-        });
+
+
+    executeFind(Driver.findById(id));
+
 };
 
 exports.driverByUserID = function(req, res) {
@@ -252,7 +248,9 @@ exports.driverByUserID = function(req, res) {
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
-    executeQuery(req, res);
+    executeFind(Driver.find({
+        user: userId
+    }));
 };
 
 /**

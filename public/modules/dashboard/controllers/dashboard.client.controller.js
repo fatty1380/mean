@@ -31,6 +31,7 @@ function DashboardController($scope, $rootScope, $location, $state, $route, $log
 
         switch (parent) {
             case 'user':
+            case 'drivers':
             case 'profile':
                 $scope.activeModule = 'users';
                 break;

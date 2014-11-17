@@ -14,7 +14,8 @@ angular.module('drivers').config(['$stateProvider',
 
         state('drivers.list', {
             url: '',
-            templateUrl: 'modules/drivers/views/list-drivers.client.view.html'
+            templateUrl: 'modules/drivers/views/list-drivers.client.view.html',
+            parent: 'drivers'
         }).
 
         state('drivers.create', {
@@ -24,12 +25,14 @@ angular.module('drivers').config(['$stateProvider',
 
         state('drivers.view', {
             url: '/:driverId',
-            templateUrl: 'modules/drivers/views/view-driver.client.view.html'
+            templateUrl: 'modules/drivers/views/view-driver.client.view.html',
+            parent: 'drivers'
         }).
 
         state('drivers.edit', {
             url: '/:driverId/edit',
-            templateUrl: 'modules/drivers/views/edit-driver.client.view.html'
+            templateUrl: 'modules/drivers/views/edit-driver.client.view.html',
+            parent: 'drivers'
         });
     }
 ]);
