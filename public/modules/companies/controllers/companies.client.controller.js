@@ -77,7 +77,6 @@
         };
 
         $scope.init = function() {
-            debugger;
             if ($stateParams.companyId === 'me') {
                 $scope.findByUser($scope.authentication.user);
             } else {
