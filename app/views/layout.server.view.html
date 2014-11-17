@@ -50,7 +50,9 @@
 
 <body scroll class="ng-cloak">
     <header data-ng-include="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top"></header>
-    <div ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
+
+    <div class="navigation
+" ng-include="'modules/dashboard/views/templates/dashboard-header.client.template.html'"></div>
 
 
 
@@ -60,6 +62,7 @@
             {% block content %}{% endblock %}
         </section>
     </section>
+
     <footer data-ng-include="'/modules/core/views/footer.client.view.html'" class="navbar navbar-fixed-bottom"></footer>
 
     <!--Embedding The User Object-->

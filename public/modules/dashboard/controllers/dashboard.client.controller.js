@@ -18,11 +18,12 @@ function DashboardController($scope, $rootScope, $location, $state, $route, $log
     }
 
     $scope.setModule = function(event, toState, toParams, fromState, fromParams) {
-        $log.info('Routing dashboard from %s%s to %s%s',
+        $log.info('Routing dashboard from %s%s to %s%s based on event %o',
             fromState.parent ? fromState.parent + '.' : '',
             fromState.name,
             toState.parent ? toState.parent + '.' : '',
-            toState.name);
+            toState.name,
+            event);
 
 
         var stateName = toState.name;
@@ -47,7 +48,7 @@ function DashboardController($scope, $rootScope, $location, $state, $route, $log
                 break;
         }
 
-        $log.debug('Active module is %s based on state %s', parent, stateName);
+        $log.debug('[Dashboard] Activated module \'%s\' for state [%s]', parent, stateName);
     };
 
     //$scope.setModule();

@@ -1,4 +1,4 @@
-<section class="container" ng-controller="DashboardController as ctrl">
+<section class="container" ng-controller="DashboardController as ctrl" ng-show="!!activeModule">
     <div class="row-fluid">
         <span ng-if="ctrl.showProfile" class="col-md-4 dash-item" ng-class="{'dash-active opaque-bg' : activeModule == 'users' }">
             <a class="row" data-ng-href="#!/settings/profile">

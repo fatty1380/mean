@@ -23,7 +23,7 @@ var executeQuery = function(req, res) {
     Application.find(query)
         .sort(sort)
         .populate('user', 'displayName')
-        .populate('job', 'name')
+        .populate('job', 'name driverStatus postStatus')
         .exec(function(err, applications) {
             if (err) {
                 return res.status(400).send({

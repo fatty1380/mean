@@ -16,10 +16,10 @@
                 <os-edit-profile profile="viewCtrl.profile" edit-mode="viewCtrl.editMode" cancel-fn='viewCtrl.cancel()'></os-edit-profile>
 
                 <!-- Begin include of Driver Information Display -->
-                <div ng-if="profile.type === 'driver'" ng-include="'modules/drivers/views/templates/drivers-list.client.template.html'"></div>
+                <div ng-if="viewCtrl.profile.type === 'driver'" ng-init="profile = viewCtrl.profile" ng-include="'modules/drivers/views/templates/drivers-list.client.template.html'"></div>
 
                 <!-- Begin include of Company Information Display -->
-                <div ng-if="profile.type === 'owner'" ng-include="'modules/companies/views/templates/company-list.client.template.html'"></div>
+                <div ng-if="viewCtrl.profile.type === 'owner'" ng-include="'modules/companies/views/templates/company-list.client.template.html'"></div>
 
             </fieldset>
         </div>

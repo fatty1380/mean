@@ -1,5 +1,7 @@
-.content {
+.navigation {
     margin-top: 67px;
+}
+.content {
     margin-bottom: 40px;
 }
 .undecorated-link:hover {
@@ -26,10 +28,11 @@ body {
 .home {
     height: 1000px;
 }
-section > .container:first-child {
+/*section > .container:first-child {
     padding-top: 67px;
     padding-bottom: 20px;
-}
+}*/
+
 .clear-bg {
     background-color: rgba(238, 238, 238, 0.0);
 }
@@ -198,11 +201,6 @@ p.details {
 
 .schedule input[type="checkbox"][disabled] {
     cursor: default!important;
-}
-.container.opaque-bg, .container-fluid.opaque-bg {
-    padding-top: 15px;
-    padding-bottom: 30px;
-    margin-top: 20px;
 }
 /* animation test */
 

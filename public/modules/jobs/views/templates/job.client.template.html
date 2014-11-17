@@ -43,12 +43,12 @@
             <span>{{ job.endorsements || "Operator - Class D" }}</span>
         </div>
         <div class="col-md-3">
-                <span class="fa-stack fa-md pull-left">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
-                </span>
-                <span>{{ job.location.zipCode }}</span>
-            </div>
+            <span class="fa-stack fa-md pull-left">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
+            </span>
+            <span>{{ job.location.zipCode }}</span>
+        </div>
     </div>
 
     <div class="well well-1 container-fluid" ng-if="!inline">
@@ -124,7 +124,7 @@
         </div>
 
         <div ng-if="!inline" class="row-fluid">
-            <span class="col-md-12" data-ng-controller="ApplicationsController" data-ng-init="initJobList()">
+            <span class="col-md-12" data-ng-controller="ApplicationsController" data-ng-init="initJobList(job)">
                 <h4>{{listTitle}}</h4>
                 <div ng-include="'/modules/applications/views/templates/list-applications.client.template.html'">
                 </div>

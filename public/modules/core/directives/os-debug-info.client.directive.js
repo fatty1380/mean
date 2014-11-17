@@ -23,7 +23,7 @@
 
                 var updateInfo = function(event, toState, toParams, fromState, fromParams) {
 
-                    $log.info('State changing to state: %o. %o', toState.name, toState);
+                    $log.debug('[DebugInfo] Entering state: %o. %o', toState.name, toState);
 
                     $scope.debugInfo.length = 0;
 

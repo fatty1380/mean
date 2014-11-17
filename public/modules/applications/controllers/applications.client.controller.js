@@ -115,32 +115,39 @@
             }
         };
 
-        $scope.initJobList = function() {
+        /**
+         * initJobList
+         * -----------
+         * Used to find all applications for the given job
+         */
+        $scope.initJobList = function(job) {
             $scope.listTitle = 'Applications';
-            $scope.findAll();
+            $scope.findAll(job);
         };
 
         $scope.initList = function() {
 
             var isAdmin = $scope.authentication.user.roles.indexOf('admin') !== -1;
 
-            if ($state.is('listApplications') && isAdmin) {
+            if ($state.is('applications.list') && isAdmin) {
+                $log.info('[AC.initList] Finding all applications in the system for Admin user');
                 $scope.listTitle = 'Outset Job Application Listings';
                 $scope.findAll();
-            } else if ($state.is('myApplications') && $scope.authentication.user.type === 'driver') {
+            } else if ($state.is('applications.mine') && $scope.authentication.user.type === 'driver') {
+                $log.info('[AC.initList] Finding all job applications for logged in driver');
                 $scope.listTitle = 'My Job Applications';
 
                 $scope.findMine();
             } else {
-                $location.path('/applications/me');
+                debugger;
             }
         };
 
         // Find a list of Applications
-        $scope.findAll = function() {
+        $scope.findAll = function(job) {
             $log.debug('[AppController.find] Searching for applications');
 
-            var jobId = ($scope.job && $scope.job._id) || $stateParams.jobId;
+            var jobId = job || ($scope.job && $scope.job._id) || $stateParams.jobId;
 
             if (jobId) {
                 $log.debug('[AppController.find] Looking for applications on jobID %o', jobId._id);

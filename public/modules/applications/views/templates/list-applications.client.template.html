@@ -6,7 +6,9 @@
                     <div class="col-md-4">
                         <dl class="dl-horizontal">
                             <dt>Job:</dt>
-                            <dd>{{application.job.name || 'UNKNOWN'}}</dd>
+                            <dd>{{application.job.name || 'UNKNOWN'}}
+                                <span class="label label-info">{{application.job.postStatus}}</span>
+                            </dd>
                             <dt>Applicant:</dt>
                             <dd>{{application.user.displayName}}</dd>
                             <dt>Applied On:</dt>
