@@ -156,8 +156,7 @@ exports.list = function(req, res) {
     executeQuery(req, res);
 };
 
-/**
- * List of a user's posted jobs
+/** * List of a user's posted jobs
  */
 exports.queryByUserID = function(req, res) {
     req.query = {
@@ -183,11 +182,6 @@ exports.queryByCompanyID = function(req, res) {
  * Job middleware
  */
 exports.jobByID = function(req, res, next, id) {
-
-    //    if (!req.originalUrl.endsWith(id)) {
-    //        next();
-    //        return;
-    //    }
 
     Job.findById(id)
         .populate('user', 'displayName')

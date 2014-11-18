@@ -9,7 +9,8 @@ angular.module('companies').config(['$stateProvider',
         state('companies', {
             abstract: true,
             url: '/companies',
-            templateUrl: 'modules/core/views/fixed-width.client.view.html'
+            templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+            parent: 'full-opaque'
         }).
 
         state('companies.list', {

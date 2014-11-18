@@ -4,6 +4,7 @@
 
 function config($stateProvider) {
     // Users state routing
+
     $stateProvider.
 
     // === Users Parent State ======================================================
@@ -11,7 +12,8 @@ function config($stateProvider) {
     state('users', {
         abstract: true,
         url: '/users',
-        templateUrl: 'modules/core/views/fixed-width.client.view.html'
+        templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+        parent: 'full-opaque'
     }).
 
     /**
@@ -40,7 +42,8 @@ function config($stateProvider) {
     state('profile', {
             abstract: true,
             url: '/profile',
-            templateUrl: 'modules/core/views/fixed-width.client.view.html'
+            templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+            parent: 'full-opaque'
         }).
         /**
          * Show *my* profile
@@ -77,8 +80,7 @@ function config($stateProvider) {
     state('password', {
         abstract: true,
         url: '/password',
-        templateUrl: 'modules/core/views/fixed-width.client.view.html',
-        parent: 'password'
+        parent: 'fixed-opaque'
     }).
 
     /**
@@ -122,12 +124,13 @@ function config($stateProvider) {
     }).
 
     // === Auth Parent State ======================================================
-
+    // TODO: Determine if these states are still required ...
     state('auth', {
         abstract: true,
         url: '/sign',
-        templateUrl: 'modules/core/views/fixed-width.client.view.html',
-        controller: 'AuthenticationController'
+        templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+        controller: 'AuthenticationController',
+        parent: 'full-opaque'
     }).
 
     /**

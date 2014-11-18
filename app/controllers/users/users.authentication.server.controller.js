@@ -75,6 +75,8 @@ exports.signin = function(req, res, next) {
             user.password = undefined;
             user.salt = undefined;
 
+            user.isAdmin = user.roles.indexOf('admin') !== -1;
+
             // Migrate if necessary:
             user.migrate();
 

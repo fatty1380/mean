@@ -147,7 +147,7 @@
         $scope.findAll = function(job) {
             $log.debug('[AppController.find] Searching for applications');
 
-            var jobId = job || ($scope.job && $scope.job._id) || $stateParams.jobId;
+            var jobId = (job && job._id) || ($scope.job && $scope.job._id) || $stateParams.jobId;
 
             if (jobId) {
                 $log.debug('[AppController.find] Looking for applications on jobID %o', jobId._id);
@@ -156,6 +156,7 @@
                     jobId: jobId
                 });
             } else {
+                debugger;
                 $scope.applications = Applications.ById.query();
             }
 

@@ -3,6 +3,11 @@
 }
 .content {
     margin-bottom: 40px;
+    min-height: 400px;
+}
+.content > .container-fluid {
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 .undecorated-link:hover {
     text-decoration: none;
@@ -36,8 +41,11 @@ body {
 .clear-bg {
     background-color: rgba(238, 238, 238, 0.0);
 }
+.semi-bg {
+    background-color: rgba(238, 238, 238, 0.4);
+}
 .opaque-bg {
-    background-color: rgba(238, 238, 238, 0.5);
+    background-color: rgba(238, 238, 238, 0.9);
 }
 /* NAVBAR - TOP */
 

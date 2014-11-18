@@ -58,9 +58,7 @@
 
     <section class="content">
         <os-debug-info></os-debug-info>
-        <section class="container-fluid opaque-bg">
-            {% block content %}{% endblock %}
-        </section>
+        {% block content %}{% endblock %}
     </section>
 
     <footer data-ng-include="'/modules/core/views/footer.client.view.html'" class="navbar navbar-fixed-bottom"></footer>

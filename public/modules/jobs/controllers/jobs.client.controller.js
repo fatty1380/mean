@@ -3,16 +3,25 @@
 
     // Jobs controller
     function JobsController($scope, $stateParams, $location, $state, $modal, $log, Authentication, Jobs) {
-        $scope.activeModule = 'jobs';
+
         $scope.authentication = Authentication;
         $scope.user = Authentication.user;
 
         // Init addressDetails for creation.
         $scope.showAddressDetails = false;
-        $scope.postStatus = 'draft';
-        $scope.location = {};
-        $scope.payRate = {};
         $scope.formMode = [];
+
+        $scope.mode = $state.current.data.mode;
+
+        if ($scope.mode === 'create') {
+            $scope.job = {
+                payRate: {
+                    min: null,
+                    max: null
+                },
+                postStatus: 'draft'
+            };
+        }
 
 
 
@@ -23,6 +32,17 @@
             event.preventDefault();
 
             $scope.showAddressDetails = true;
+        };
+
+        $scope.upsert = function() {
+            if ($scope.mode === 'create') {
+                return $scope.create();
+            }
+            if ($scope.mode === 'edit') {
+                return $scope.update();
+            }
+
+            $log.warn('Unknown Form Mode: "%s"', $scope.mode);
         };
 
         // Create new Job
@@ -123,10 +143,10 @@
 
         $scope.initList = function() {
 
-            if ($state.is('listJobs')) {
+            if ($state.is('jobs.list')) {
                 $scope.listTitle = 'Outset Job Listings';
                 $scope.find();
-            } else if ($state.is('myJobs')) {
+            } else if ($state.is('jobs.mine')) {
                 $scope.listTitle = ($scope.user.type === 'driver') ? 'My Jobs' : 'My Job Postings';
 
                 $scope.findMine();
@@ -154,6 +174,13 @@
         };
         // Find existing Job
         $scope.findOne = function() {
+            if (!$stateParams.jobId) {
+                $scope.pageTitle = 'Post New Job';
+                return;
+            }
+
+            $scope.pageTitle = 'Edit Job';
+
             $scope.job = Jobs.ById.get({
                 jobId: $stateParams.jobId
             });

@@ -1,0 +1,36 @@
+<section ng-init="findByUser(profile)" data-ng-controller="DriversController">
+    <span class="col-md-12 opaque-bg">
+        <legend>Driver Profile</legend>
+        <div class="list-group" data-ng-show="driver">
+            <a data-ng-href="#!/drivers/{{driver._id}}" class="list-group-item">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="list-group-item-heading">{{driver.name}}
+                        </h4>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="list-group-item-text">
+                            <p class="text-right">Added on
+                                <span data-ng-bind="driver.created | date:'shortDate'"></span>
+                            </p>
+                        </small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8 opaque-bg">
+                        {{driver.about}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>Location:
+                            <strong>{{driver.zip}}</strong>
+                        </label>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="alert alert-warning text-center" data-ng-hide="driver">
+            Want to drive? <a href="/#!/drivers/create">create a profile</a>?
+        </div>
+    </span>
+</section>

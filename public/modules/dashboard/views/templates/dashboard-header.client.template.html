@@ -1,6 +1,6 @@
 <section class="container" ng-controller="DashboardController as ctrl" ng-show="!!activeModule">
     <div class="row-fluid">
-        <span ng-if="ctrl.showProfile" class="col-md-4 dash-item" ng-class="{'dash-active opaque-bg' : activeModule == 'users' }">
+        <span ng-if="ctrl.showProfile" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'users' }">
             <a class="row" data-ng-href="#!/settings/profile">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
@@ -13,7 +13,7 @@
                 </div>
             </a>
         </span>
-        <span ng-if="ctrl.showCompany" class="col-md-4 dash-item" ng-class="{'dash-active opaque-bg' : activeModule == 'company' }">
+        <span ng-if="ctrl.showCompany" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'company' }">
             <a class="row" data-ng-href="#!/companies/me">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
@@ -26,7 +26,7 @@
                 </div>
             </a>
         </span>
-        <span ng-if="ctrl.showJobs" class="col-md-4 dash-item" ng-class="{'dash-active opaque-bg' : activeModule == 'jobs' } ">
+        <span ng-if="ctrl.showJobs" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'jobs' } ">
             <a class="row" data-ng-href="#!/jobs">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
@@ -39,7 +39,7 @@
                 </div>
             </a>
         </span>
-        <span ng-if="ctrl.showApplications" class="col-md-4 dash-item" ng-class="{'dash-active opaque-bg' : activeModule == 'applications' }">
+        <span ng-if="ctrl.showApplications" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'applications' }">
             <a class="row" data-ng-href="#!/applications/me">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
