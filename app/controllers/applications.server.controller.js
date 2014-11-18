@@ -137,8 +137,9 @@ exports.queryByJobID = function(req, res) {
     };
 
     var user = req.user;
+    var isAdmin = (typeof user.isAdmin !== 'undefined') ? user.isAdmin : user.roles.indexOf('admin') !== -1;
 
-    if (!!user && user.type.toLowerCase() === 'driver') {
+    if (!isAdmin && !!user && user.type.toLowerCase() === 'driver') {
         query.user = user.id;
     }
 
