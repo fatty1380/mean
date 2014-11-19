@@ -32,8 +32,7 @@
 
         state('intro', {
             url: '/',
-            templateUrl: 'modules/core/views/intro.client.view.html',
-            parent: 'fixed-clear'
+            templateUrl: 'modules/core/views/intro.client.view.html'
         });
     }
 

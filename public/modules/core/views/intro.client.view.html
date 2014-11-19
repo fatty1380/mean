@@ -1,30 +1,30 @@
 <section data-ng-controller="HomeController" class="home">
-    <div scroll class="container clear-bg">
-        <h1 class="heading leader">Driving Connections</h1>
-        <div class="row-fluid separator">
-            <div class="col-md-6 col-md-offset-3">
-            </div>
-        </div>
-        <h2 class="heading sub">The best way to find and fill transportation jobs</h2>
-        <div class="row signup" ng-show="showMain">
-            <div class="col-md-4 col-md-offset-4">
+    <div class="intro-leader container">
+        <div scroll class="container">
+            <div class="row">
+                <h1 class="heading leader">Driving Connections</h1>
+                <h2 class="heading sub">The best way to find and fill transportation jobs</h2>
+                <div class="row signup" ng-show="showMain">
+                    <div class="col-md-4 col-md-offset-4">
 
-                <signup-modal>
-                    <button class="btn btn-success btn-large center-block">Sign Up Today</button>
-                </signup-modal>
+                        <signup-modal>
+                            <button class="btn btn-success btn-large center-block">Sign Up Today</button>
+                        </signup-modal>
 
-            </div>
-        </div>
-        <div class="row" ng-show="showMain">
-            <div class="col-md-12">
-                <h4 class="instruction center-block">Membership is free, and only takes a minute</h4>
+                    </div>
+                </div>
+                <div class="row" ng-show="showMain">
+                    <div class="col-md-12">
+                        <h4 class="instruction center-block">Membership is free, and only takes a minute</h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="container-fluid opaque-bg" style="background-color: rgba(238, 238, 238, 0.9);" ng-hide="!showInfo">
-        <div class="container">
-            <div class="row-fluid">
+    <div class="intro-section container">
+        <div class="container vcenter">
+            <div class="semi-bg row">
                 <div class="col-md-4 detail-pane">
                     <div>
                         <h2 class="heading sub">One Stop</h2>
@@ -51,8 +51,11 @@
 
     </div>
 
-    <div id="signup_type" class="container-fluid full-width opaque-bg" ng-hide="!showSignup">
-        <div ng-include="'modules/users/views/templates/signup-type.client.template.html'"></div>
+    <div class="intro-section container-fluid blue-bg">
+        <div class="container vcenter">
+            <h3>Contact Us</h3>
+        </div>
+    </div>
 
     </div>
 

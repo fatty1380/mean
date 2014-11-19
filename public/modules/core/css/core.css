@@ -33,6 +33,16 @@ body {
 .home {
     height: 1000px;
 }
+.intro-leader {
+    height: 100%;
+}
+.intro-section {
+    height: 50%;
+}
+.intro-section > *, .intro-leader > * {
+    vertical-align: middle;
+    text-align: center;
+}
 /*section > .container:first-child {
     padding-top: 67px;
     padding-bottom: 20px;
@@ -46,6 +56,10 @@ body {
 }
 .opaque-bg {
     background-color: rgba(238, 238, 238, 0.9);
+}
+.blue-bg {
+    background-color: #0e2d4c;
+    background-color: transparent(0.9);
 }
 /* NAVBAR - TOP */
 
@@ -137,7 +151,7 @@ header .nav > li > a:hover, header .nav > li > div > a:hover, header .nav > li >
 }
 .container .heading.sub {
     font-size: 50px;
-    color: #ffffff;
+    color: #aaa;
     margin: 15px 0 10px 0;
 }
 .instruction {
@@ -182,10 +196,11 @@ p.details {
     line-height: 25px;
 }
 .detail-pane {
+    margin-bottom: 15px;
     font-family: 'museo-sans', 'museo_sans500', sans-serif;
 }
 .detail-pane div {
-    background-color: rgba(238, 238, 238, 0.5);
+    background-color: rgba(238, 238, 238, 0.9);
 }
 .detail-pane:hover img {
     opacity: 1.0;
