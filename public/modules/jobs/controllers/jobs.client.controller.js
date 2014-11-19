@@ -23,9 +23,6 @@
             };
         }
 
-
-
-
         $scope.types = ['main', 'home', 'business', 'billing', 'other'];
 
         $scope.showAddressDetails = function() {
@@ -49,17 +46,7 @@
         $scope.create = function() {
 
             // Create new Job object
-            var job = new Jobs.ById({
-                name: this.name,
-                description: this.description,
-                location: this.location,
-                payRate: {
-                    min: this.payRate.min,
-                    max: this.payRate.max,
-                },
-                driverStatus: 'unreviewed',
-                postStatus: this.postStatus,
-            });
+            var job = new Jobs.ById($scope.job);
 
             // Redirect after save
             job.$save(function(response) {
@@ -142,7 +129,6 @@
         };
 
         $scope.initList = function() {
-
             if ($state.is('jobs.list')) {
                 $scope.listTitle = 'Outset Job Listings';
                 $scope.find();

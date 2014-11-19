@@ -64,30 +64,20 @@ var getErrorMessage = function(err) {
  */
 exports.create = function(req, res) {
 
-    var address = new Address(req.body.location);
+    var job = new Job(req.body);
 
-    address.save(function(err) {
+    // Set properties
+    job.user = req.user;
+    job.postStatus = 'posted';
+    job.posted = Date.now;
+
+    job.save(function(err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
             });
-
         } else {
-            req.body.location = address._id;
-            req.body.user = req.user._id;
-            var job = new Job(req.body);
-            //job.location = address; //._id;
-            //job.user = req.user; //._id;
-
-            job.save(function(err) {
-                if (err) {
-                    return res.send(400, {
-                        message: getErrorMessage(err)
-                    });
-                } else {
-                    res.json(job);
-                }
-            });
+            res.json(job);
         }
     });
 
@@ -106,26 +96,16 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
     var job = req.job;
-    var address = job.location;
 
     job = _.extend(job, req.body);
-    address = _.extend(address, req.body.location);
 
-    address.save(function(err) {
+    job.save(function(err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
             });
         } else {
-            job.save(function(err) {
-                if (err) {
-                    return res.send(400, {
-                        message: getErrorMessage(err)
-                    });
-                } else {
-                    res.json(job);
-                }
-            });
+            res.json(job);
         }
     });
 };

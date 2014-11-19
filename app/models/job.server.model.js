@@ -26,20 +26,17 @@ var JobSchema = new Schema({
     name: {
         type: String,
         default: '',
-        required: 'Please fill in a title for this Job',
+        required: 'Please fill in a Job Headline',
         trim: true
     },
     description: {
         type: String,
         default: '',
-        required: 'Please fill in a Job description',
+        required: 'Please fill in a Job Description',
         trim: true,
     },
 
-    location: {
-        type: Schema.ObjectId,
-        ref: 'Address',
-    },
+    location: ['Address'],
 
     payRate: {
         min: {
@@ -52,12 +49,16 @@ var JobSchema = new Schema({
         },
     },
 
-    // TODO - Determine if this is the appropriate place for driver/applicant status
-    driverStatus: {
-        type: String,
-        default: 'unreviewed',
-        enum: ['unreviewed', 'connected', 'hired', 'ignored'],
-    },
+    views: [{
+        user: {
+            type: Schema.ObjectId,
+            ref: 'User'
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }],
 
     postStatus: {
         type: String,
@@ -82,9 +83,9 @@ var JobSchema = new Schema({
     }
 });
 
-JobSchema.pre('save', function(next){
-  this.modified = Date.now;
-  next();
+JobSchema.pre('save', function(next) {
+    this.modified = Date.now;
+    next();
 });
 
 mongoose.model('Job', JobSchema);
