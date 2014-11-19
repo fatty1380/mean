@@ -101,11 +101,12 @@
                 $log.debug('Start %o vs %o', start, exp.time.start, $scope.experience[i].time.start);
             });
 
-            $log.debug('After iter: %o', $scope.experience[0].time.start);
-
+            if ($scope.experience && $scope.experience.length > 0) {
+                $log.debug('After iter: %o', $scope.experience[0].time.start);
+            }
 
             // Create new Driver object
-            var driver = new Drivers({
+            var driver = new Drivers.ById({
                 licenses: [
                     $scope.license
                 ],

@@ -259,6 +259,8 @@ exports.driverByUserID = function(req, res) {
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
+    debugger;
+
     executeFind(req, res, null, Driver.find({
         user: userId
     }));
