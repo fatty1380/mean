@@ -174,7 +174,7 @@
         };
 
         $scope.findByUser = function(user) {
-            if (user._id == Authentication.user._id) {
+            if (user._id === Authentication.user._id) {
                 $scope.createEnabled = true;
             }
             if (user.type === 'driver') {
