@@ -23,7 +23,7 @@
                 </div>
             </h4>
         </div>
-        <a data-ng-repeat="user in ctrl.users" data-ng-href="#!/profiles/{{user._id}}" class="row list-group-item">
+        <a data-ng-repeat="user in ctrl.users" data-ng-href="#!/users/{{user._id}}" class="row list-group-item">
             <div class="col-sm-9 col-xs-8">
                 {{user.displayName}}
                 <span class="label label-danger" ng-show="{{user.roles.indexOf('admin') !== -1}}">Administrator</span>

@@ -31,7 +31,7 @@ function config($stateProvider) {
      * @description Allows a user to view another user's profile page.
      */
     state('users.view', {
-        url: '/sourcet/:userId',
+        url: '/:userId',
         templateUrl: 'modules/users/views/settings/profile.client.view.html',
         controller: 'ProfileController',
         parent: 'users'

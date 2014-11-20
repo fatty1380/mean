@@ -26,8 +26,9 @@
                 </div>
             </div>
         </div>
-        <div class="alert alert-warning text-center" data-ng-hide="!!driver">
+        <div class="alert alert-warning text-center" data-ng-hide="!!driver || !createEnabled">
             Are you a driver? <a href="/#!/drivers/create">create a profile!</a>?
         </div>
+        <div>Create Enabled: {{createEnabled}}</div>
     </span>
 </section>

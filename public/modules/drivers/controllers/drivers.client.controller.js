@@ -6,6 +6,7 @@
         $scope.authentication = Authentication;
         //$scope.driver = Drivers;
         //$scope.driverUser = DriverUser;
+        $scope.createEnabled = false;
 
         // Local Variables
         $scope.licenses = [];
@@ -173,6 +174,9 @@
         };
 
         $scope.findByUser = function(user) {
+            if (user._id == Authentication.user._id) {
+                $scope.createEnabled = true;
+            }
             if (user.type === 'driver') {
                 $log.debug('[DriverClientController] findByUser(%o)', user._id);
                 $scope.drivers = Drivers.ByUser.query({

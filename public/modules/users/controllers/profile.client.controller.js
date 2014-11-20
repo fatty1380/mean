@@ -33,9 +33,10 @@
         };
 
         this.setProfile = function(profile) {
-            this.profile = profile;
-            this.header = profile.displayName;
-            this.showEditLink = profile._id === Authentication.user._id;
+            // TODO: Fix this logic - it's fully borked!
+            $scope.profile = profile;
+            $scope.header = profile.displayName;
+            $scope.showEditLink = profile._id === Authentication.user._id;
         };
 
         this.initList = function() {
