@@ -69,7 +69,7 @@ exports.create = function(req, res) {
     // Set properties
     job.user = req.user;
     job.postStatus = 'posted';
-    job.posted = Date.now;
+    job.posted = Date.now();
 
     job.save(function(err) {
         if (err) {

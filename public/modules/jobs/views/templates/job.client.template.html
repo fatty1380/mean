@@ -77,88 +77,101 @@
 
         <div class="row">
             <div class="col-md-8">
-                <tabset>
-                    <tab heading="description">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                {{ job.description }}</div>
-                        </div>
-                    </tab>
-                    <tab heading="location">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
 
-                                <h2>{{ job.location }}</h2>
-                            </div>
+                <div class="panel panel-default job-info">
+                    <div class="panel-heading">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button type="button" ng-class="{active : showSection('description', true)}" ng-click=" setDisplay( 'description') " class="btn btn-link ">Description</button>
+                            <button type="button" ng-class="{active : showSection('requirements', true)}" ng-click="setDisplay( 'requirements') " class="btn btn-link ">Requirements</button>
+                            <button type="button" ng-class="{active : showSection('location', true)}" ng-click="setDisplay( 'location') " class="btn btn-link ">Location</button>
+                            <button type="button" ng-class="{active : showSection('about', true)}" ng-click="setDisplay( 'about') " class="btn btn-link ">About</button>
+                            <button type="button" ng-click="setDisplay() " class="btn btn-link ">x</button>
                         </div>
-                    </tab>
-                    <tab heading="about">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                {{job.company}}
-                            </div>
-                        </div>
-                    </tab>
-                </tabset>
+                    </div>
+                    <div class="panel-body ">
+                        <span ng-show="showSection( 'description') ">
+                            <h4 ng-show="showSection( 'all') ">Description</h4>
+                            <div ng-bind-html="job.description "></div>
+                            <hr/>
+                        </span>
+
+                        <span ng-show="showSection( 'requirements') ">
+                            <h4 ng-show="showSection( 'all') ">Requirements</h4>
+                            {{ job.requirements || 'none listed'}}
+                            <hr/>
+                        </span>
+
+                        <span ng-show="showSection( 'location') ">
+                            <h4 ng-show="showSection( 'all') ">Location</h4>
+                            {{ job.location || 'not available' }}
+                            <hr/>
+                        </span>
+
+                        <span ng-show="showSection( 'about') ">
+                            <h4 ng-show="showSection( 'all') ">About the Company</h4>
+                            {{job.company || 'not available'}}
+                        </span>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 ">
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">Info</div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <span class="fa-stack fa-lg pull-left">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-clock-o fa-stack-1x fa-inverse"></i>
+                <div class="panel panel-default ">
+                    <div class="panel-heading ">Info</div>
+                    <div class="panel-body ">
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-clock-o fa-stack-1x fa-inverse "></i>
                             </span>
-                            <span>{{ job.positionType || "Part-Time Employment" }}</span>
+                            <span>{{ job.positionType || "Part-Time Employment " }}</span>
                             <br>
                         </div>
 
-                        <div class="row">
-                            <span class="fa-stack fa-lg pull-left">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse "></i>
                             </span>
                             <span>{{ job.location.zipCode }}</span>
                             <br>
                         </div>
 
-                        <div class="row">
-                            <span class="fa-stack fa-lg pull-left">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-usd fa-stack-1x fa-inverse"></i>
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-usd fa-stack-1x fa-inverse "></i>
                             </span>
                             <span>
                                 ${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</span>
                             <br>
                         </div>
 
-                        <div class="row">
-                            <span class="fa-stack fa-lg pull-left">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-credit-card fa-stack-1x fa-inverse"></i>
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-credit-card fa-stack-1x fa-inverse "></i>
                             </span>
-                            <span>{{ job.endorsements || "Operator - Class D" }}</span>
+                            <span>{{ job.endorsements || "Operator - Class D " }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">Applicants</div>
-                    <div class="panel-body">
-                        <div ng-if="!inline && authentication.user._id == job.user._id" class="row">
-                            <span class="col-md-12" data-ng-controller="ApplicationsController" data-ng-init="initJobList(job)">
+                <div class="panel panel-default ">
+                    <div class="panel-heading ">Applicants</div>
+                    <div class="panel-body ">
+                        <div ng-if="!inline && authentication.user._id==j ob.user._id " class="row ">
+                            <span class="col-md-12 " data-ng-controller="ApplicationsController " data-ng-init="initJobList(job) ">
                                 <h4>{{listTitle}}</h4>
-                                <div ng-include="'/modules/applications/views/templates/list-applications.client.template.html'">
+                                <div ng-include=" '/modules/applications/views/templates/list-applications.client.template.html' ">
                                 </div>
                             </span>
                         </div>
 
-                        <div class="row" data-ng-show="formMode[$index] === 'apply' ">
+                        <div class="row " data-ng-show="formMode[$index]==='apply' ">
                             <span class="col-md-12 ">
-                                <div ng-include="'/modules/applications/views/templates/create-application.client.template.html'"></div>
+                                <div ng-include=" '/modules/applications/views/templates/create-application.client.template.html' "></div>
                             </span>
                         </div>
                     </div>

@@ -17,6 +17,7 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.css',
                 'public/lib/components-font-awesome/css/font-awesome.css',
+                'public/lib/textAngular/src/textAngular.css',
             ],
             js: [
                 'public/lib/angular/angular.js',
@@ -26,7 +27,12 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.js',
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'public/lib/angular-route/angular-route.js',
-                'public/lib/autofill-event/src/autofill-event.js'
+                'public/lib/autofill-event/src/autofill-event.js',
+                'public/lib/textAngular/dist/textAngular-rangy.min.js',
+                'public/lib/textAngular/src/textAngular-sanitize.js',
+                'public/lib/textAngular/src/textAngularSetup.js',
+                'public/lib/textAngular/src/textAngular.js'
+
             ]
         },
         less: [

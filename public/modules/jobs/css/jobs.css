@@ -4,3 +4,25 @@
     color: #000;
     text-shadow: 1px 1px 1px #CCC;
 }
+.job-item .panel.job-info > .panel-heading {
+    padding: 0px;
+}
+.job-item .panel.job-info > .panel-heading button {
+    color: #333;
+}
+.job-item .panel.job-info > .panel-heading button.active {
+    color: black;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+    text-decoration: none;
+}
+.job-item .panel.job-info > .panel-heading button:hover {
+    color: black;
+    text-decoration: none;
+}
+.job-item .panel.job-info > .panel-body {
+    max-height: 800px!important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    text-wrap: normal;
+}

@@ -171,6 +171,20 @@
                 jobId: $stateParams.jobId
             });
         };
+
+        $scope.displayMode = 'all';
+
+        $scope.showSection = function(section, only) {
+            if (!only && $scope.displayMode === 'all') {
+                return true;
+            }
+
+            return $scope.displayMode === section;
+        };
+
+        $scope.setDisplay = function(section) {
+            $scope.displayMode = section || 'all';
+        };
     }
 
     function ModalInstanceController($scope, $modalInstance, pJob) {
