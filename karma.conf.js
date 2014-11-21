@@ -3,50 +3,52 @@
 /**
  * Module dependencies.
  */
-var applicationConfiguration = require('./config/config');
+var _ = require('lodash'),
+	defaultAssets = require('./config/assets/default'),
+	testAssets = require('./config/assets/test');
 
 // Karma configuration
-module.exports = function(config) {
-    config.set({
-        // Frameworks to use
-        frameworks: ['jasmine'],
+module.exports = function(karmaConfig) {
+	karmaConfig.set({
+		// Frameworks to use
+		frameworks: ['jasmine'],
 
-        // List of files / patterns to load in the browser
-        files: applicationConfiguration.assets.lib.js.concat(applicationConfiguration.assets.js, applicationConfiguration.assets.tests),
+		// List of files / patterns to load in the browser
+		files: _.union(defaultAssets.client.lib.js, defaultAssets.client.lib.tests, defaultAssets.client.js, testAssets.tests.client),
 
-        // Test results reporter to use
-        // Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-        //reporters: ['progress'],
-        reporters: ['progress', 'coverage', 'osx'],
+		// Test results reporter to use
+		// Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
+		//reporters: ['progress'],
+        reporters: ['progress'], //, 'coverage', 'osx'],
 
-        // Web server port
-        port: 9876,
+		// Web server port
+		port: 9876,
 
-        // Enable / disable colors in the output (reporters and logs)
-        colors: true,
+		// Enable / disable colors in the output (reporters and logs)
+		colors: true,
 
-        // Level of logging
-        // Possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_INFO,
+		// Level of logging
+		// Possible values: karmaConfig.LOG_DISABLE || karmaConfig.LOG_ERROR || karmaConfig.LOG_WARN || karmaConfig.LOG_INFO || karmaConfig.LOG_DEBUG
+		logLevel: karmaConfig.LOG_INFO,
 
-        // Enable / disable watching file and executing tests whenever any file changes
-        autoWatch: true,
+		// Enable / disable watching file and executing tests whenever any file changes
+		autoWatch: true,
 
-        // Start these browsers, currently available:
-        // - Chrome
-        // - ChromeCanary
-        // - Firefox
-        // - Opera
-        // - Safari (only Mac)
-        // - PhantomJS
-        // - IE (only Windows)
-        browsers: ['PhantomJS'],
+		// Start these browsers, currently available:
+		// - Chrome
+		// - ChromeCanary
+		// - Firefox
+		// - Opera
+		// - Safari (only Mac)
+		// - PhantomJS
+		// - IE (only Windows)
+		browsers: ['PhantomJS'],
 
-        // If browser does not capture in given timeout [ms], kill it
-        captureTimeout: 60000,
+		// If browser does not capture in given timeout [ms], kill it
+		captureTimeout: 60000,
 
-        // Continuous Integration mode
-        // If true, it capture browsers, run tests and exit
+		// Continuous Integration mode
+		// If true, it capture browsers, run tests and exit
         singleRun: true,
 
         // Coverage Setup per https://blog.sergiocruz.me/angularjs-how-to-generate-code-coverage-for-yeoman-scaffolded-apps/
@@ -66,5 +68,5 @@ module.exports = function(config) {
             'karma-osx-reporter'
         ],
         // End Coverage Setup
-    });
+	});
 };
