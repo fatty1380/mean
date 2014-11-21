@@ -75,53 +75,17 @@ function config($stateProvider) {
         parent: 'profile'
     }).
 
-    // === Password Parent State ======================================================
 
-    state('password', {
-        abstract: true,
-        url: '/password',
-        parent: 'fixed-opaque'
-    }).
 
-    /**
-     * Change Password
-     * @description Allows the user to change their password
-     */
+
+    // password.edit --> settings.password
     state('password.edit', {
         url: '/edit', // '/settings/password',
         templateUrl: 'modules/users/views/settings/change-password.client.view.html',
         parent: 'password'
     }).
 
-    /**
-     * Forgot Password
-     * @description Allows the user to reset their password
-     */
-    state('password.forgot', {
-        url: '/forgot',
-        templateUrl: 'modules/users/views/password/forgot-password.client.view.html',
-        parent: 'password'
-    }).
 
-    /**
-     * Password Reset - Invalid
-     * @description Route if password reset was unsuccessful
-     */
-    state('password.reset-invalid', {
-        url: '/reset/invalid',
-        templateUrl: 'modules/users/views/password/reset-password-invalid.client.view.html',
-        parent: 'password'
-    }).
-
-    /**
-     * Password Reset - Success
-     * @description Route if the password reset was successful
-     */
-    state('password.reset-success', {
-        url: '/reset/success',
-        templateUrl: 'modules/users/views/password/reset-password-success.client.view.html',
-        parent: 'password'
-    }).
 
     // === Auth Parent State ======================================================
     // TODO: Determine if these states are still required ...

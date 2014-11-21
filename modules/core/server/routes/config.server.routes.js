@@ -2,14 +2,13 @@
 
 module.exports = function(app) {
 	// Root routing
-	var core = require('../../app/controllers/core.server.controller');
-	app.route('/').get(core.index);
+    var config = require('../../../../modules/core/server/controllers/config.server.controller');
 
     app.route('/config')
-        .get(core.getAllConfigs);
+        .get(config.getAllConfigs);
 
     app.route('/config/:name')
-        .get(core.read);
+        .get(config.read);
 
-    app.param('configName', core.getConfig);
+    app.param('configName', config.getConfig);
 };

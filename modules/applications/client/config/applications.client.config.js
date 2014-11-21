@@ -4,10 +4,23 @@
 function menus(Menus, Auth) {
     // Set top bar menu items
     if (!!Auth.user && Auth.user.roles.indexOf('admin') !== -1) {
-        Menus.addMenuItem('topbar', 'Applications', 'applications', 'dropdown', '/applications(/create)?');
-        Menus.addSubMenuItem('topbar', 'applications', 'List Applications', 'applications');
-        Menus.addSubMenuItem('topbar', 'applications', 'New Application', 'applications/create');
-        Menus.addSubMenuItem('topbar', 'applications', 'My Applications', 'applications/me');
+        Menus.addMenuItem('topbar', {
+            title: 'Applications',
+            state: 'applications',
+            type: 'dropdown'
+        });
+        Menus.addSubMenuItem('topbar', 'applications', {
+            title: 'List Applications',
+            state: 'applications.list'
+        });
+        Menus.addSubMenuItem('topbar', 'applications', {
+            title: 'New Application',
+            state: 'applications.create'
+        });
+        Menus.addSubMenuItem('topbar', 'applications', {
+            title: 'My Applications',
+            state: 'applications.mine'
+        });
     }
 }
 

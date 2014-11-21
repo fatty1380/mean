@@ -1,5 +1,9 @@
 'use strict';
 
+var xdescribe = function(description) {
+    console.log('Skipping tests: \'%s\'', description);
+};
+
 (function() {
     // Addresses Controller Spec
     xdescribe('Addresses Controller Tests', function() {

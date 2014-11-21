@@ -1,6 +1,6 @@
 'use strict';
 
-var constants = require('../../config/env/constants');
+var constants = require('../models/outset.constants');
 
 exports.getConfig = function(req, res, next, varName) {
 
@@ -25,4 +25,8 @@ exports.getAllConfigs = function(req, res) {
     };
 
     res.jsonp(response);
+};
+
+exports.read = function(req, res) {
+    return res.json(req.configVal);
 };

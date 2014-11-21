@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = function(app) {
-    var users = require('../../app/controllers/users.server.controller');
-    var jobs = require('../../app/controllers/jobs.server.controller');
+    var users = require('../../../../modules/users/server/controllers/users.server.controller');
+    var jobs = require('../controllers/jobs.server.controller');
 
     // Jobs Routes
     app.route('/jobs')

@@ -1,16 +1,11 @@
 'use strict';
 
-// Load Schedule early //
-var preload = require('./schedule.server.model.js');
-
 /**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Schedule = mongoose.model('Schedule'),
-    Address = mongoose.model('Address'),
-    constants = require('../../config/env/constants'),
+    constants = require('constants'),
     _ = require('lodash');
 
 /**
@@ -90,7 +85,7 @@ DriverSchema.pre('save', function(next){
 /**
  * Hook a pre save method to create a base schedule (if necessary)
  */
-DriverSchema.pre('save', function(next) {
+DriverSchema.pre('save', ['Schedule', function(Schedule, next) {
     if (_.isUndefined(this.schedule)) {
         this.schedule = [];
     }
@@ -104,6 +99,6 @@ DriverSchema.pre('save', function(next) {
     }
 
     next();
-});
+}]);
 
 mongoose.model('Driver', DriverSchema);

@@ -3,6 +3,8 @@
 
     function ProfileController($scope, $stateParams, $location, $log, Profile, Authentication) {
 
+        console.log('WARNING: TBD IF PROFILE CONTROLLER IS DUPE FUNCTIONALITY WITH OTHER USERS CONTROLLERS');
+
         this.editMode = $scope.editMode || {
             enabled: false,
             visible: true
@@ -27,7 +29,6 @@
                 promise
                     .then(this.setProfile, function(err) {
                         $log.debug('Error retrieving profile', err);
-                        debugger;
                     });
             }
         };

@@ -92,7 +92,6 @@
             job = job || $scope.job;
 
             if (!job) {
-                debugger;
                 $log.debug('Cannot delist without a job');
             }
 
@@ -102,7 +101,6 @@
         // Remove existing Job
         $scope.remove = function(job) {
             if (job) {
-                debugger;
                 job.$remove();
 
                 for (var i in $scope.jobs) {

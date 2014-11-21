@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    errorHandler = require('./errors.server.controller'),
+    errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
 
     Company = mongoose.model('Company'),
     _ = require('lodash');
@@ -106,8 +106,6 @@ exports.list = function(req, res) {
 };
 
 exports.listDrivers = function(req, res) {
-    debugger;
-
     console.log('NOT IMPLEMENTED');
 
     res.json([{

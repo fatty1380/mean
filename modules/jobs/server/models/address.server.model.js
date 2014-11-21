@@ -4,9 +4,10 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    constants = require('../../../../modules/core/server/models/outset.constants');
 
-var constants = require('../../config/env/constants');
+//var constants = require('core/server/models/outset.constants');
 
 /**
  * A Validation function for street addresss
@@ -42,7 +43,7 @@ var AddressSchema = new Schema({
         type: String,
         default: '',
         required: 'Please specify a State',
-        enum: constants.state_abbreviations(),
+        //enum: constants.state_abbreviations(),
     },
 
     zipCode: {

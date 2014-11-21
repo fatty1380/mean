@@ -156,7 +156,6 @@
                     jobId: jobId
                 });
             } else {
-                debugger;
                 $scope.applications = Applications.ById.query();
             }
 

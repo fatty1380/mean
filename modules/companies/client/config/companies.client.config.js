@@ -4,9 +4,9 @@
 function menus(Menus, Auth) {
     // Set top bar menu items
     if (!!Auth.user && Auth.user.roles.indexOf('admin') !== -1) {
-        Menus.addMenuItem('topbar', 'Companies', 'companies', 'dropdown', '/companies(/create)?');
-        Menus.addSubMenuItem('topbar', 'companies', 'List Companies', 'companies');
-        Menus.addSubMenuItem('topbar', 'companies', 'New Company', 'companies/create');
+        Menus.addMenuItem('topbar', {title: 'Companies', state:'companies', type: 'dropdown'});
+        Menus.addSubMenuItem('topbar', 'companies', {title: 'List Companies', state: 'companies.list'});
+        Menus.addSubMenuItem('topbar', 'companies', {title: 'New Company', state:'companies.create'});
     }
 }
 

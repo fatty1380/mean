@@ -32,7 +32,6 @@
         }
 
         $scope.init = function() {
-            debugger;
             if ($location.$$path.indexOf('driver') !== -1) {
                 $scope.signupType = 'driver';
             } else if ($location.$$path.indexOf('owner') !== -1) {

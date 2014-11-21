@@ -4,8 +4,6 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    MessageVar = require('./message.server.model'),
-    Message = mongoose.model('Message'),
     Schema = mongoose.Schema;
 
 /**
@@ -69,7 +67,7 @@ var ApplicationSchema = new Schema({
      * -------
      * This represents the communications between the applicant and company
      */
-    messages: [Message.schema],
+    messages: ['Message'],
 
 
     created: {

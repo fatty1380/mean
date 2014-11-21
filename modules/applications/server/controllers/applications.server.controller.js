@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    errorHandler = require('./errors.server.controller'),
+    errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
     Application = mongoose.model('Application'),
     Message = mongoose.model('Message'),
     User = mongoose.model('User'),
@@ -87,9 +87,6 @@ exports.update = function(req, res) {
 
             Application.populate(application.messages, opts,
                 function(err, messages) {
-                    debugger;
-
-
                     res.json(application);
                 });
         }
@@ -165,11 +162,6 @@ exports.queryByUserID = function(req, res) {
  * Application middleware
  */
 exports.applicationByID = function(req, res, next, id) {
-
-    if (!req.originalUrl.endsWith(id)) {
-        debugger;
-        return next();
-    }
 
     Application.findById(id)
         .populate('user', 'displayName')

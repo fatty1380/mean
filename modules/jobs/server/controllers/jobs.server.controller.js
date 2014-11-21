@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
     Job = mongoose.model('Job'),
     Address = mongoose.model('Address'),
-    errorHandler = require('./errors.server.controller'),
+    errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
     _ = require('lodash');
 
 /**

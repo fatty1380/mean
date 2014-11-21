@@ -6,7 +6,7 @@
 var mongoose = require('mongoose'),
     Driver = mongoose.model('Driver'),
     License = mongoose.model('License'),
-    errorHandler = require('./errors.server.controller'),
+    errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
     _ = require('lodash');
 
 /**
@@ -258,8 +258,6 @@ exports.driverByUserID = function(req, res) {
     var userId = req.params.userId || req.query.userId || req.user.id;
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
-
-    debugger;
 
     executeFind(req, res, null, Driver.find({
         user: userId

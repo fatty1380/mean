@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = function(app) {
-    var users = require('../../app/controllers/users.server.controller');
-    var bgchecks = require('../../app/controllers/bgchecks.server.controller');
+    var users = require('../../../../modules/users/server/controllers/users.server.controller');
+    var bgchecks = require('../controllers/bgchecks.server.controller');
 
     // Bgchecks Routes
     app.route('/bgchecks')
