@@ -14,7 +14,10 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
-				'public/lib/angular-file-upload/angular-file-upload.min.js'
+				'public/lib/angular-file-upload/angular-file-upload.min.js',
+                'public/lib/angular-route/angular-route.min.js',
+                'public/lib/textAngular/src/textAngular-sanitize.min.js',
+                'public/lib/textAngular/src/textAngular.min.js'
 			]
 		},
 		css: 'public/dist/application.min.css',

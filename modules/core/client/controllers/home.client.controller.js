@@ -1,7 +1,6 @@
 (function() {
     'use strict';
 
-<<<<<<< HEAD:public/modules/core/controllers/home.client.controller.js
     function HomeController($scope, $location, $state, $anchorScroll, $modal, $log, Authentication) {
         // This provides Authentication context.
         $scope.authentication = Authentication;
@@ -49,11 +48,3 @@
         .module('core')
         .controller('HomeController', HomeController);
 })();
-=======
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-	function($scope, Authentication) {
-		// This provides Authentication context.
-		$scope.authentication = Authentication;
-	}
-]);
->>>>>>> c94c870a306c87d46b003d5ae93a497dcc63b3bc:modules/core/client/controllers/home.client.controller.js
