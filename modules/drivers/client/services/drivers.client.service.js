@@ -3,15 +3,15 @@
 //Drivers service used to communicate Drivers REST endpoints
 function DriverFactory($resource) {
     return {
-        ById: $resource('drivers/:driverId', {
-            driverId: '@_id'
+        ById: $resource('api/drivers/:driverId', {
+            driverId: '@driverId'
         }, {
             update: {
                 method: 'PUT'
             }
         }),
-        ByUser: $resource('users/:userId/driver', {
-            userId: '@_id'
+        ByUser: $resource('api/users/:userId/driver', {
+            userId: '@userId'
         })
     };
 }

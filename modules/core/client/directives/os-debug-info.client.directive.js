@@ -37,7 +37,7 @@
                     if (!!toState && !!toState.name) {
                         $scope.debugInfo.push({
                             key: 'Parent',
-                            value: toState.parent || 'n/a'
+                            value: (toState.parent && toState.parent.name) || 'n/a'
                         });
                     }
 
@@ -52,9 +52,7 @@
                     });
                 };
 
-                updateInfo(null, $state.$current, null, null, null);
-
-                $rootScope.$on('$stateChangeStart', updateInfo);
+                $rootScope.$on('$stateChangeSuccess', updateInfo);
             }
         ])
         .filter('sanitize', [

@@ -2,7 +2,7 @@
     <section class="container">
         <span class="h3" data-ng-bind="application.job.name"></span class="h3">
         <div class="pull-right" data-ng-show="authentication.user._id == application.user._id">
-            <a class="btn btn-primary" href="/#!/applications/{{application._id}}/edit">
+            <a class="btn btn-primary" href="/applications/{{application._id}}/edit">
                 <i class="glyphicon glyphicon-edit"></i>
             </a>
             <a class="btn btn-primary" data-ng-click="remove();">

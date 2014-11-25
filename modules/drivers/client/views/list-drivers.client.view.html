@@ -5,7 +5,7 @@
         </div>
         <div class="list-group">
             <div data-ng-repeat="driver in drivers">
-                <a data-ng-href="#!/drivers/{{driver._id}}" class="list-group-item container-fluid">
+                <a data-ng-href="drivers/{{driver._id}}" class="list-group-item container-fluid">
                     <div class="col-md-2 text-center">
                         <img ng-src="modules/core/img/avatars/person.png" style="max-width: 100px; margin-top: 10px; border: 1px solid #333; padding: 10px;" />
                     </div>
@@ -69,7 +69,7 @@
             </div>
         </div>
         <div class="alert alert-warning text-center" data-ng-hide="!drivers.$resolved || drivers.length">
-            No Drivers yet, why don't you <a href="/#!/drivers/create">create one</a>?
+            No Drivers yet, why don't you <a href="/drivers/create">create one</a>?
         </div>
     </section>
 </section>

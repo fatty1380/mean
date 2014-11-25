@@ -5,11 +5,11 @@ module.exports = function(app) {
     var bgchecks = require('../controllers/bgchecks.server.controller');
 
     // Bgchecks Routes
-    app.route('/bgchecks')
+    app.route('/api/bgchecks')
         .get(bgchecks.list)
         .post(users.requiresLogin, bgchecks.create);
 
-    app.route('/bgchecks/:bgcheckId')
+    app.route('/api/bgchecks/:bgcheckId')
         .get(bgchecks.read)
         .put(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.update)
         .delete(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.delete);
@@ -28,25 +28,25 @@ module.exports = function(app) {
      *     "OFAC" for reportType
      *     120 for reportId
      */
-    app.route('/bgcheck/login')
+    app.route('/api/bgcheck/login')
         .get(bgchecks.login);
 
-    app.route('/bgcheck/logout')
+    app.route('/api/bgcheck/logout')
         .get(bgchecks.logout);
 
-    app.route('/bgcheck/applicants')
+    app.route('/api/bgcheck/applicants')
         .get(bgchecks.getAllApplicants);
 
-    app.route('/bgcheck/applicants/:applicantId')
+    app.route('/api/bgcheck/applicants/:applicantId')
         .get(bgchecks.readApplicant);
 
-    app.route('/bgcheck/applicants/:applicantId/report/:reportType')
+    app.route('/api/bgcheck/applicants/:applicantId/report/:reportType')
         .get(bgchecks.runReport);
 
-    app.route('/bgcheck/report/:reportId')
+    app.route('/api/bgcheck/report/:reportId')
         .get(bgchecks.getReport);
 
-    app.route('/bgcheck/report/:reportId/pdf')
+    app.route('/api/bgcheck/report/:reportId/pdf')
         .get(bgchecks.getPdfReport);
 
     app.param('reportId', bgchecks.checkReportStatus);

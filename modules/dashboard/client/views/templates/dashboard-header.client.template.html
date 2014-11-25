@@ -1,7 +1,7 @@
 <section class="container" ng-controller="DashboardController as ctrl" ng-show="!!activeModule">
     <div class="row-fluid">
         <span ng-if="ctrl.showProfile" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'users' }">
-            <a class="row" data-ng-href="#!/settings/profile">
+            <a class="row" data-ui-sref="drivers.me">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
                         <i class="fa fa-square-o fa-stack-2x"></i>
@@ -14,7 +14,7 @@
             </a>
         </span>
         <span ng-if="ctrl.showCompany" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'company' }">
-            <a class="row" data-ng-href="#!/companies/me">
+            <a class="row" data-ui-sref="companies.me">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
                         <i class="fa fa-square-o fa-stack-2x"></i>
@@ -27,7 +27,7 @@
             </a>
         </span>
         <span ng-if="ctrl.showJobs" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'jobs' } ">
-            <a class="row" data-ng-href="#!/jobs">
+            <a class="row" data-ui-sref="{{ctrl.jobLinkState}}">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
                         <i class="fa fa-square-o fa-stack-2x"></i>
@@ -40,7 +40,7 @@
             </a>
         </span>
         <span ng-if="ctrl.showApplications" class="col-md-4 dash-item semi-bg" ng-class="{'dash-active opaque-bg' : activeModule == 'applications' }">
-            <a class="row" data-ng-href="#!/applications/me">
+            <a class="row" data-ui-sref="applications.list">
                 <div class="col-md-offset-1 col-md-3">
                     <span class="fa-stack fa-3x">
                         <i class="fa fa-square-o fa-stack-2x"></i>

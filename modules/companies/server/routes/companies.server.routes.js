@@ -5,19 +5,19 @@ module.exports = function(app) {
     var companies = require('../controllers/companies.server.controller');
 
     // Companies Routes
-    app.route('/companies')
+    app.route('/api/companies')
         .get(companies.list)
         .post(users.requiresLogin, companies.create);
 
-    app.route('/companies/:companyId')
+    app.route('/api/companies/:companyId')
         .get(companies.read)
         .put(users.requiresLogin, companies.hasAuthorization, companies.update)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
-    app.route('/companies/:companyId/drivers')
+    app.route('/api/companies/:companyId/drivers')
         .get(companies.listDrivers);
 
-    app.route('/users/:userId/companies')
+    app.route('/api/users/:userId/companies')
         .get(companies.companyByUserID);
 
     // Finish by binding the Company middleware

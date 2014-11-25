@@ -30,7 +30,7 @@ var executeQuery = function(req, res) {
             }
 
             req.jobs = jobs || [];
-            console.log('[JobsCtrl.executeQuery] Found %d jobs for query %o', req.jobs.length, query);
+            console.log('[JobsCtrl.executeQuery] Found %d jobs for query %j', req.jobs.length, query);
             res.json(req.jobs);
         });
 };

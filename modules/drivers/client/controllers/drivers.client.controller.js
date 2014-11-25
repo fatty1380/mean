@@ -2,7 +2,7 @@
     'use strict';
 
     // Drivers controller
-    function DriversController($scope, $stateParams, $location, $http, $window, $log, Authentication, Drivers) {
+    function DriversController($scope, $state, $stateParams, $location, $http, $window, $log, Authentication, Drivers) {
         $scope.authentication = Authentication;
         //$scope.driver = Drivers;
         //$scope.driverUser = DriverUser;
@@ -160,27 +160,18 @@
         };
 
         // Find existing Driver
-        $scope.findOne = function() {
-            $scope.driver = Drivers.ById.get({
-                driverId: $stateParams.driverId
-            });
-        };
+        $scope.findOne = function(userId) {
+            var id = userId || $stateParams.driverId;
 
-        $scope.findOneByUser = function(id) {
-            $log.debug('[DriverClientController] findOneByUser(%o)', id);
-            $scope.driver = Drivers.ByUser.get({
-                userId: id
-            });
-        };
+            if (id && id !== 'me') {
+                $scope.createEnabled = (id === $scope.authentication.user._id);
 
-        $scope.findByUser = function(user) {
-            if (user._id === Authentication.user._id) {
-                $scope.createEnabled = true;
-            }
-            if (user.type === 'driver') {
-                $log.debug('[DriverClientController] findByUser(%o)', user._id);
-                $scope.drivers = Drivers.ByUser.query({
-                    userId: user._id
+                $scope.driver = Drivers.ById.get({
+                    driverId: id
+                });
+            } else {
+                $scope.driver = Drivers.ByUser.get({
+                    userId: $scope.authentication.user._id
                 });
             }
         };
@@ -280,7 +271,7 @@
         };
     }
 
-    DriversController.$inject = ['$scope', '$stateParams', '$location', '$http', '$window', '$log', 'Authentication', 'Drivers'];
+    DriversController.$inject = ['$scope', '$state', '$stateParams', '$location', '$http', '$window', '$log', 'Authentication', 'Drivers'];
 
     angular.module('drivers').controller('DriversController', DriversController);
 })();

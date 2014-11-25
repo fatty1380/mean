@@ -10,8 +10,7 @@ angular.module('drivers').config(['$stateProvider',
             abstract: true,
             url: '/drivers',
             templateUrl: 'modules/core/views/fixed-clear.client.view.html',
-parent: 'full-opaque'
-
+            parent: 'full-opaque'
         }).
 
         state('drivers.list', {
@@ -27,6 +26,12 @@ parent: 'full-opaque'
 
         state('drivers.view', {
             url: '/:driverId',
+            templateUrl: 'modules/drivers/views/view-driver.client.view.html',
+            parent: 'drivers'
+        }).
+
+        state('drivers.me', {
+            url: '/me',
             templateUrl: 'modules/drivers/views/view-driver.client.view.html',
             parent: 'drivers'
         }).

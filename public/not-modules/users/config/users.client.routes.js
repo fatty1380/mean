@@ -124,8 +124,8 @@ function config($stateProvider) {
      */
 }
 
-config.$inject = ['$stateProvider'];
+//config.$inject = ['$stateProvider'];
 
-angular
-    .module('users')
-    .config(config);
+//angular
+//    .module('users')
+//    .config(config);

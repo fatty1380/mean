@@ -4,7 +4,7 @@
 
 /**
 * service.factory('ProductsRest', ['$resource', function ($resource) {
-    return $resource('service/products/:dest', {}, {
+    return $resource('api/service/products/:dest', {}, {
         query: {method: 'GET', params: {dest:"allProducts"}, isArray: true },
         save: {method: 'POST', params: {dest:"modifyProduct"}},
         update: { method: 'POST', params: {dest:"modifyProduct"}},
@@ -17,7 +17,7 @@ var ApplicationsService = function($resource) {
     var _this = this;
 
     _this._data = {
-        ByUser: $resource('users/:userId/applications', {
+        ByUser: $resource('api/users/:userId/applications', {
             userId: '@userId'
         }, {
             query: {
@@ -25,7 +25,7 @@ var ApplicationsService = function($resource) {
                 isArray: true
             }
         }),
-        ByJob: $resource('jobs/:jobId/applications', {
+        ByJob: $resource('api/jobs/:jobId/applications', {
             jobId: '@jobId'
         }, {
             query: {
@@ -36,7 +36,7 @@ var ApplicationsService = function($resource) {
                 method: 'POST',
             }
         }),
-        ById: $resource('applications/:id', {
+        ById: $resource('api/applications/:id', {
             id: '@_id'
         }, {
             update: {

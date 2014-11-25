@@ -14,7 +14,6 @@ var mongoose = require('mongoose'),
  */
 
 var executeQuery = function(req, res, next) {
-
     var query = req.query || {};
     var sort = req.sort || '';
 
@@ -29,14 +28,14 @@ var executeQuery = function(req, res, next) {
             }
 
             req.drivers = drivers || [];
-            console.log('[DriversCtrl.executeQuery] Found %d drivers for query %s', req.drivers.length, query);
+            console.log('[DriversCtrl.executeQuery] Found %d drivers for query %j', req.drivers.length, query);
             res.json(req.drivers);
         });
 };
 
+// Searches for a single instance of a driver, based on the passed in 'driverFind' function;
 
 var executeFind = function(req, res, next, driverFind) {
-
     driverFind
         .populate('user')
         .exec(function(err, driver) {
@@ -61,6 +60,7 @@ var executeFind = function(req, res, next, driverFind) {
 
             if (!!next) {
                 req.driver = driver;
+                next();
             } else {
                 res.json(driver);
             }
@@ -244,24 +244,30 @@ exports.list = function(req, res) {
     executeQuery(req, res);
 };
 
-/**
- * Driver middleware
- */
-exports.driverByID = function(req, res, next, id) {
-    console.log('[Driver.driverById] start');
 
-    executeFind(req, res, next, Driver.findById(id));
-};
-
-exports.driverByUserID = function(req, res) {
+exports.driverByUserID = function(req, res, next) {
     console.log('[Driver.driverByUserId] start');
     var userId = req.params.userId || req.query.userId || req.user.id;
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
-    executeFind(req, res, null, Driver.find({
+    executeFind(req, res, next, Driver.findOne({
         user: userId
     }));
+};
+
+/**
+ * Driver middleware
+ */
+exports.driverByID = function(req, res, next, id) {
+    console.log('[Driver.driverById] start ');
+
+    if ((/^[a-f\d]{24}$/i).test(id)) {
+        return executeFind(req, res, next, Driver.findById(id));
+    }
+
+    next();
+
 };
 
 /**

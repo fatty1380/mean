@@ -5,19 +5,19 @@ module.exports = function(app) {
     var jobs = require('../controllers/jobs.server.controller');
 
     // Jobs Routes
-    app.route('/jobs')
+    app.route('/api/jobs')
         .get(jobs.list)
         .post(users.requiresLogin, jobs.create);
 
-    app.route('/jobs/:jobId')
+    app.route('/api/jobs/:jobId')
         .get(jobs.read)
         .put(users.requiresLogin, jobs.hasAuthorization, jobs.update)
         .delete(users.requiresLogin, jobs.hasAuthorization, jobs.delete);
 
-    app.route('/users/:userId/jobs')
+    app.route('/api/users/:userId/jobs')
         .get(jobs.queryByUserID);
 
-    app.route('/companies/:companyId/jobs')
+    app.route('/api/companies/:companyId/jobs')
         .get(jobs.queryByCompanyID);
 
     // Finish by binding the Job middleware

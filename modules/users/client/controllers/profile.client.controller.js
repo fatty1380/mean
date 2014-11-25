@@ -16,15 +16,15 @@
         // Find existing User Profile
         this.init = function() {
             if (!$stateParams.userId) {
-                this.profile = Authentication.user;
-                this.header = this.header = 'Your ' + this.profile.type + ' profile';
+                this.user = Authentication.user;
+                this.header = this.header = 'Your ' + this.user.type + ' profile';
                 this.showEditLink = this.showEditLink = true;
             } else {
-                this.profile = Profile.get({
+                this.user = Profile.get({
                     userId: $stateParams.userId
                 });
 
-                var promise = this.profile.$promise;
+                var promise = this.user.$promise;
 
                 promise
                     .then(this.setProfile, function(err) {
@@ -59,9 +59,9 @@
         };
     }
 
-    ProfileController.$inject = ['$scope', '$stateParams', '$location', '$log', 'Profile', 'Authentication'];
+    ProfileController.$inject = ['$scope', '$stateParams', '$location', '$log', 'User', 'Authentication'];
 
     angular
         .module('users')
-        .controller('ProfileController', ProfileController);
+        .controller('UserController', ProfileController);
 })();

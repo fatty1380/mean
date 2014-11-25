@@ -1,4 +1,4 @@
-<section ng-init="findOneByUser(user._id)" data-ng-controller="DriversController">
+<section ng-init="findOne(user._id)" data-ng-controller="DriversController">
     <span class="col-md-12 opaque-bg">
         <div data-ng-show="!!driver.$resolved || !!driver">
             <div class="row">
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="alert alert-warning text-center" data-ng-hide="!!driver || !createEnabled">
-            Are you a driver? <a href="/#!/drivers/create">create a profile!</a>?
+            Are you a driver? <a href="/drivers/create">create a profile!</a>?
         </div>
         <div>Create Enabled: {{createEnabled}}</div>
     </span>

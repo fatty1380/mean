@@ -10,7 +10,7 @@
             switch ($scope.authentication.user.type) {
                 case 'driver':
                     $log.debug('[HomeController] Re-Routing to driver\'s profile page');
-                    $state.go('profile.me');
+                    $state.go('drivers.me');
                     break;
                 case 'owner':
                     $log.debug('[HomeController] Re-Routing to the user\'s companies');

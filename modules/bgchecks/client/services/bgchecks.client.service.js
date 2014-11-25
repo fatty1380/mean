@@ -2,7 +2,7 @@
 
 //Bgchecks service used to communicate Bgchecks REST endpoints
 var bgCheckFactory = function($resource) {
-    return $resource('bgchecks/:bgcheckId', {
+    return $resource('api/bgchecks/:bgcheckId', {
         bgcheckId: '@_id'
     }, {
         update: {

@@ -1,8 +1,8 @@
-<section ng-init="findByUser(profile)" data-ng-controller="DriversController">
+<section ng-init="findOne(profile._id)" data-ng-controller="DriversController">
     <span class="col-md-12 opaque-bg">
         <legend>Driver Profile</legend>
         <div class="list-group" data-ng-show="driver">
-            <a data-ng-href="#!/drivers/{{driver._id}}" class="list-group-item">
+            <a data-ng-href="drivers/{{driver._id}}" class="list-group-item">
                 <div class="row">
                     <div class="col-md-8">
                         <h4 class="list-group-item-heading">{{driver.name}}
@@ -30,7 +30,7 @@
             </a>
         </div>
         <div class="alert alert-warning text-center" data-ng-hide="driver || !createEnabled">
-            Want to drive? <a href="/#!/drivers/create">create a profile</a>?
+            Want to drive? <a href="/drivers/create">create a profile</a>?
         </div>
     </span>
 </section>

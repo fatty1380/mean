@@ -29,7 +29,7 @@ var executeQuery = function(req, res) {
             }
 
             req.companies = companies || [];
-            console.log('[CompaniesCtrl.executeQuery] Found %d companies for query %o', req.companies.length, query);
+            console.log('[CompaniesCtrl.executeQuery] Found %d companies for query %j', req.companies.length, query);
             res.json(req.companies);
         });
 };

@@ -1,5 +1,9 @@
 <section data-ng-controller="DriversController" data-ng-init="findOne()">
-    <section class="container">
+User Name: {{authentication.user.displayName}}
+    <section class="container" data-ng-if="!driver.user">
+    {{authentication.user.displayName}} has not yet created a driver profile
+    </section>
+    <section class="container" data-ng-if="!!driver.user">
         <div class="col-md-2 text-center">
             <img ng-src="modules/core/img/avatars/person.png" style="max-width: 100px; margin-top: 10px; border: 1px solid #333; padding: 10px;" />
         </div>
@@ -15,7 +19,7 @@
             </small>
             <span class="pull-right">
                 <div data-ng-show="authentication.user._id == driver.user._id">
-                    <a class="btn btn-primary" href="/#!/drivers/{{driver._id}}/edit">
+                    <a class="btn btn-primary" href="/drivers/{{driver._id}}/edit">
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
                     <a class="btn btn-primary" data-ng-click="remove();">

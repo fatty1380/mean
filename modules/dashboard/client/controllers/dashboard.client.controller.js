@@ -1,6 +1,6 @@
 'use strict';
 
-function DashboardController($scope, $rootScope, $location, $state, $route, $log, Auth) {
+function DashboardController($scope, $rootScope, $location, $state, $log, Auth) {
 
     if (Auth.user) {
         this.user = Auth.user;
@@ -8,9 +8,11 @@ function DashboardController($scope, $rootScope, $location, $state, $route, $log
         if (this.user.type === 'driver') {
             this.showProfile = true;
             this.showCompany = false;
+            this.jobLinkState = 'jobs.list';
         } else if (this.user.type === 'owner') {
             this.showProfile = false;
             this.showCompany = true;
+            this.jobLinkState = 'jobs.mine';
         }
 
         this.showJobs = true;
@@ -57,7 +59,7 @@ function DashboardController($scope, $rootScope, $location, $state, $route, $log
     $rootScope.$on('$stateChangeSuccess', $scope.setModule);
 }
 
-DashboardController.$inject = ['$scope', '$rootScope', '$location', '$state', '$route', '$log', 'Authentication'];
+DashboardController.$inject = ['$scope', '$rootScope', '$location', '$state', '$log', 'Authentication'];
 
 angular.module('dashboard')
     .controller('DashboardController', DashboardController);

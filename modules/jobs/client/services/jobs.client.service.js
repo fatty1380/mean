@@ -3,18 +3,18 @@
 //Jobs service used to communicate Jobs REST endpoints
 function JobsService($resource) {
     return {
-        ById: $resource('jobs/:jobId', {
-            jobId: '@_id'
+        ById: $resource('api/jobs/:jobId', {
+            jobId: '@jobId'
         }, {
             update: {
                 method: 'PUT'
             }
         }),
-        ByUser: $resource('users/:userId/jobs', {
-            userId: '@_id'
+        ByUser: $resource('api/users/:userId/jobs', {
+            userId: '@userId'
         }),
-        ByCompany: $resource('companies/:companyId/jobs', {
-            companyId: '@_company'
+        ByCompany: $resource('api/companies/:companyId/jobs', {
+            companyId: '@companyId'
         })
     };
 }

@@ -28,22 +28,21 @@ function config($httpProvider) {
 }
 
 function menus(Menus, Auth) {
-    // Add menu for Users iff the user is an admin
-    if (!!Auth.user && Auth.user.roles.indexOf('admin') !== -1) {
         Menus.addMenuItem('topbar', {
             title: 'Users',
             state: 'users',
             type: 'dropdown'
         });
+
         Menus.addSubMenuItem('topbar', 'users', {
             title: 'List Users',
             state: 'users'
         });
+
         Menus.addSubMenuItem('topbar', 'users', {
             title: 'New User',
             state: 'users/create'
         });
-    }
 }
 
 config.$inject = ['$httpProvider'];

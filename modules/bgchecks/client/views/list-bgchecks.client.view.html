@@ -3,7 +3,7 @@
         <h1>Bgchecks</h1>
     </div>
     <div class="list-group">
-        <a data-ng-repeat="bgcheck in bgchecks" data-ng-href="#!/bgchecks/{{bgcheck._id}}" class="list-group-item">
+        <a data-ng-repeat="bgcheck in bgchecks" data-ng-href="bgchecks/{{bgcheck._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="bgcheck.created | date:'medium'"></span>
@@ -14,6 +14,6 @@
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!bgchecks.$resolved || bgchecks.length">
-    	No Bgchecks yet, why don't you <a href="/#!/bgchecks/create">create one</a>?
+    	No Bgchecks yet, why don't you <a href="/bgchecks/create">create one</a>?
     </div>
 </section>

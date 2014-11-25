@@ -5,20 +5,20 @@ module.exports = function(app) {
     var applications = require('../controllers/applications.server.controller');
 
     // Applications Routes
-    app.route('/applications')
+    app.route('/api/applications')
         .get(applications.list)
         .post(users.requiresLogin, applications.create);
 
-    app.route('/applications/:applicationId')
+    app.route('/api/applications/:applicationId')
         .get(applications.read)
         .put(users.requiresLogin, applications.hasAuthorization, applications.update)
         .delete(users.requiresLogin, applications.hasAuthorization, applications.delete);
 
-    app.route('/jobs/:jobId/applications')
+    app.route('/api/jobs/:jobId/applications')
         .get(applications.queryByJobID) // ,
         .post(users.requiresLogin, applications.create);
 
-    app.route('/users/:userId/applications')
+    app.route('/api/users/:userId/applications')
         .get(applications.queryByUserID);
 
     // Finish by binding the Application middleware

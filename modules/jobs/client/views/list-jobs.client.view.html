@@ -2,14 +2,14 @@
     <section class="container">
         <h3>{{listTitle}}</h3>
         <div class="list-group">
-            <a data-ng-repeat="job in jobs" data-ng-href="#!/jobs/{{job._id}}" class="list-group-item">
+            <a data-ng-repeat="job in jobs" data-ng-href="jobs/{{job._id}}" class="list-group-item">
                 <small>
                     <os-job job="job" inline="true"></os-job>
                 </small>
             </a>
         </div>
         <div class="alert alert-warning text-center" data-ng-hide="!jobs.$resolved || jobs.length">
-            No Jobs yet, why don't you <a href="/#!/jobs/create">create one</a>?
+            No Jobs yet, why don't you <a href="/jobs/create">create one</a>?
         </div>
     </section>
 </section>

@@ -1,4 +1,4 @@
-.navigation {
+/*.navigation {
     margin-top: 67px;
 }
 .content {
@@ -23,7 +23,7 @@
 }
 /* Outset Specific Changes */
 
-body {
+/*body {
     background: url('/modules/core/img/home-country-road.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -48,22 +48,9 @@ body {
     padding-bottom: 20px;
 }*/
 
-.clear-bg {
-    background-color: rgba(238, 238, 238, 0.0);
-}
-.semi-bg {
-    background-color: rgba(238, 238, 238, 0.4);
-}
-.opaque-bg {
-    background-color: rgba(238, 238, 238, 0.9);
-}
-.blue-bg {
-    background-color: #0e2d4c;
-    background-color: transparent(0.9);
-}
 /* NAVBAR - TOP */
 
-.navbar {
+/*.navbar {
     height: 67px;
     background: rgba(161, 161, 161, 0.4);
 }
@@ -88,7 +75,7 @@ footer.navbar {
 }
 footer .navbar .navbar-inner {
     /*background: #0e2d4c;*/
-    
+
     height: 42px;
     padding-left: 20px;
     padding-right: 20px;
@@ -98,7 +85,7 @@ footer .navbar .navbar-inner {
 }
 /* Common Nav */
 
-.navbar a {
+/*.navbar a {
     padding: 20px 15px 10px 15px;
     text-shadow: none;
     font-family: 'museo-sans', 'museo_sans500', sans-serif;
@@ -116,7 +103,7 @@ header .nav > li > a:hover, header .nav > li > div > a:hover, header .nav > li >
 /* END General */
 /* Company Specific - possibly general in future */
 
-.create label.control-label {
+/*.create label.control-label {
     margin-bottom: 20px;
 }
 .create label small {
@@ -133,7 +120,7 @@ header .nav > li > a:hover, header .nav > li > div > a:hover, header .nav > li >
 }
 /* END Company Specific Work */
 
-.separator div {
+/*.separator div {
     background: #ffffff;
     height: 5px;
 }
@@ -222,16 +209,6 @@ p.details {
 /* BEGIN : Schedule & Driver Content */
 /* TODO: move to appropriate place */
 
-.schedule input[type="checkbox"][disabled] {
+/*.schedule input[type="checkbox"][disabled] {
     cursor: default!important;
-}
-/* animation test */
-
-.ng-enter {
-    transition: height 1s;
-    height: 0;
-    overflow: hidden;
-}
-div.container-fluid.ng-enter-active {
-    height: 100px;
 }
