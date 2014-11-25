@@ -32,6 +32,12 @@ body {
 .navbar {
     background: rgba(161, 161, 161, 0.4);
 }
+.navbar-brand > img {
+    display: block;
+    height: 30px;
+    position: relative;
+    top: -5px;
+}
 .clear-bg {
     background-color: rgba(238, 238, 238, 0.0);
 }
