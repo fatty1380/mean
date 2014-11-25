@@ -1,8 +1,8 @@
 (function() {
-'use strict';
+    'use strict';
 
-    function AuthenticationController($scope, $http, $state, $location, $routeParams, $modalInstance, $log, Authentication) {
-		$scope.authentication = Authentication;
+    function AuthenticationController($scope, $http, $state, $location, $modalInstance, $log, Authentication) {
+        $scope.authentication = Authentication;
 
         var redirect = function(userType) {
             $modalInstance.close(userType);
@@ -10,7 +10,7 @@
             switch (userType) {
                 case 'driver':
                     $log.debug('[HomeController] Re-Routing to driver\'s profile page');
-                    $state.go('profile.me');
+                    $state.go('drivers.me');
                     break;
                 case 'owner':
                     $log.debug('[HomeController] Re-Routing to the user\'s companies');
@@ -24,7 +24,7 @@
             }
         };
 
-		// If user is signed in then redirect back home
+        // If user is signed in then redirect back home
         if ($scope.authentication.user) {
             redirect($scope.authentication.user.type);
         } else {
@@ -42,41 +42,46 @@
 
         };
 
-		$scope.signup = function() {
+        $scope.signup = function() {
 
-            $scope.credentials.type = $scope.signupType;
+            var credentials = $scope.credentials || this.credentials;
+
+            credentials.type = $scope.signupType || this.signupType;
             $log.debug('[Auth.Ctrl.signup] signing up with credentials: ', $scope.credentials);
 
-            $http.post('/api/auth/signup', $scope.credentials)
+            $http.post('/api/auth/signup', credentials)
                 .success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+                    // If successful we assign the response to the global user model
+                    $scope.authentication.user = response;
 
                     $log.debug('Successfully created %o USER Profile', response.type);
 
                     redirect(response.type);
 
-			}).error(function(response) {
+                }).error(function(response) {
                     console.error(response.message);
-				$scope.error = response.message;
-			});
-		};
+                    $scope.error = response.message;
+                });
+        };
 
-		$scope.signin = function() {
-            $http.post('/api/auth/signin', $scope.credentials)
+        $scope.signin = function() {
+
+            var credentials = $scope.credentials || this.credentials;
+
+            $http.post('/api/auth/signin', credentials)
                 .success(function(response) {
-				// If successful we assign the response to the global user model
-				$scope.authentication.user = response;
+                    // If successful we assign the response to the global user model
+                    $scope.authentication.user = response;
 
                     redirect(response.type);
-			}).error(function(response) {
-				$scope.error = response.message;
-			});
-		};
+                }).error(function(response) {
+                    $scope.error = response.message;
+                });
+        };
 
-	}
+    }
 
-    AuthenticationController.$inject = ['$scope', '$http', '$state', '$location', '$routeParams', '$modalInstance', '$log', 'Authentication'];
+    AuthenticationController.$inject = ['$scope', '$http', '$state', '$location', '$modalInstance', '$log', 'Authentication'];
 
     angular
         .module('users')

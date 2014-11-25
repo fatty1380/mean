@@ -7,7 +7,8 @@ function Menus(Menus) {
     Menus.addMenuItem('topbar', {
         title: 'Articles',
         state: 'articles',
-        type: 'dropdown'
+        type: 'dropdown',
+        position: 1
     });
 
     // Add the dropdown list item
@@ -25,4 +26,4 @@ function Menus(Menus) {
 
 Menus.$inject = ['Menus'];
 
-//angular.module('articles').run(Menus);
+angular.module('articles').run(Menus);

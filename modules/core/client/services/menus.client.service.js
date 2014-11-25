@@ -95,7 +95,7 @@ angular.module('core').service('Menus', [
                 class: options.class,
                 isPublic: ((options.isPublic === null || typeof options.isPublic === 'undefined') ? this.menus[menuId].isPublic : options.isPublic),
                 roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].roles : options.roles),
-                position: options.position || 0,
+                position: options.position || 100,
                 items: [],
                 shouldRender: shouldRender
             });

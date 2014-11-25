@@ -51,3 +51,18 @@ body {
     background-color: #0e2d4c;
     background-color: transparent(0.9);
 }
+
+/* Forms Specific Styling */
+div.controls > input, div.controls > .input-group
+{
+    top: 10px;
+    position: relative;
+}
+
+div.controls > label.control-label {
+    float: right;
+}
+
+label > small {
+    font-weight: normal;
+}
