@@ -1,0 +1,33 @@
+<section>
+    <div class="list-group">
+        <a data-ng-repeat="application in applications" data-ng-href="applications/{{application._id}}" class="list-group-item">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <dl class="dl-horizontal">
+                            <dt>Job:</dt>
+                            <dd>{{application.job.name || 'UNKNOWN'}}
+                                <span class="label label-info">{{application.job.postStatus}}</span>
+                            </dd>
+                            <dt>Applicant:</dt>
+                            <dd>{{application.user.displayName}}</dd>
+                            <dt>Applied On:</dt>
+                            <dd>{{application.created | date:'short'}}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-8">
+                        <dl class="dl-horizontal" ng-repeat="message in application.messages | orderBy:'-created' | limitTo: 1">
+                            <dt>Last Message:</dt>
+                            <dd>{{message.text | limitTo : 100}}</dd>
+                            <dt>Sent:</dt>
+                            <dd>{{message.created | date: 'short'}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!applications.$resolved || applications.length">
+        <h4>Sorry, no one has applied yet</h4>
+    </div>
+</section>

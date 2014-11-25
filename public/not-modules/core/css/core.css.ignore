@@ -1,0 +1,214 @@
+/*.navigation {
+    margin-top: 67px;
+}
+.content {
+    margin-bottom: 40px;
+    min-height: 400px;
+}
+.content > .container-fluid {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.undecorated-link:hover {
+    text-decoration: none;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+:not(label.btn).ng-invalid.ng-dirty {
+    border-color: #FA787E;
+}
+:not(label.btn).ng-valid.ng-dirty {
+    border-color: #78FA89;
+}
+/* Outset Specific Changes */
+
+/*body {
+    background: url('/modules/core/img/home-country-road.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.home {
+    height: 1000px;
+}
+.intro-leader {
+    height: 100%;
+}
+.intro-section {
+    height: 50%;
+}
+.intro-section > *, .intro-leader > * {
+    vertical-align: middle;
+    text-align: center;
+}
+/*section > .container:first-child {
+    padding-top: 67px;
+    padding-bottom: 20px;
+}*/
+
+/* NAVBAR - TOP */
+
+/*.navbar {
+    height: 67px;
+    background: rgba(161, 161, 161, 0.4);
+}
+.navbar .navbar-inner {
+    border: none;
+    border-radius: 0;
+    height: 67px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+header nav > ul {
+    padding-top: 17px;
+}
+header .brand > img {
+    margin-top: 14px;
+}
+/* END : NAVBAR - TOP */
+/* Footer */
+
+footer.navbar {
+    height: 42px;
+}
+footer .navbar .navbar-inner {
+    /*background: #0e2d4c;*/
+
+    height: 42px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.footer .navbar-inner .responsive-container .nav-collapse.collapse .nav li a {
+    text-shadow: none;
+}
+/* Common Nav */
+
+/*.navbar a {
+    padding: 20px 15px 10px 15px;
+    text-shadow: none;
+    font-family: 'museo-sans', 'museo_sans500', sans-serif;
+    font-size: 17px;
+    color: #ffffff;
+    line-height: 40px;
+}
+header .nav > li > a:hover, header .nav > li > div > a:hover, header .nav > li > a:focus, header .nav > li > div > a:focus, footer .nav > li > a:hover, footer .nav > li > a:focus {
+    background-color: rgba(238, 238, 238, .2);
+    border-radius: 0;
+    text-shadow: 1px 1px 1px #333;
+}
+/* Home - Main Content */
+/* General */
+/* END General */
+/* Company Specific - possibly general in future */
+
+/*.create label.control-label {
+    margin-bottom: 20px;
+}
+.create label small {
+    color: #666;
+    font-weight: normal;
+    position: absolute;
+    right: 0;
+    padding-right: inherit;
+}
+.create .form-group .controls {
+    margin-bottom: 10px;
+    padding-top: 7px;
+    min-height: 34px;
+}
+/* END Company Specific Work */
+
+/*.separator div {
+    background: #ffffff;
+    height: 5px;
+}
+.container .heading {
+    font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #000000;
+    font-weight: normal;
+    text-align: center;
+}
+.container .heading.leader {
+    padding: 20px 0 0 0;
+    font-size: 100px;
+}
+.container .heading.sub {
+    font-size: 50px;
+    color: #aaa;
+    margin: 15px 0 10px 0;
+}
+.instruction {
+    font-family: 'museo-sans', 'museo_sans500', sans-serif;
+    text-align: center;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #000000;
+    font-size: 29px;
+}
+.container .tagline {
+    text-shadow: 1px 1px 2px #000000;
+    font-size: 50px;
+    margin: 15px 0 10px 0;
+}
+.signup {
+    padding: 10px 0 0 0;
+}
+.signup .btn-success {
+    background: #5475b6;
+    background-image: -moz-linear-gradient(270deg, #5475b6 0%, #0f34a2 100%);
+    background-image: -webkit-linear-gradient(270deg, #5475b6 0%, #0f34a2 100%);
+    background-image: -o-linear-gradient(270deg, #5475b6 0%, #0f34a2 100%);
+    background-image: linear-gradient(180deg, #5475b6 0%, #0f34a2 100%);
+    font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
+    font-size: 40px;
+    padding: 25px 60px 25px 60px;
+    margin-top: 80px;
+}
+.features.full-width {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    padding: 20px 0 80px 0;
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+p.details {
+    font-family: 'museo-sans', 'museo_sans500', sans-serif;
+    text-align: center;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 25px;
+}
+.detail-pane {
+    margin-bottom: 15px;
+    font-family: 'museo-sans', 'museo_sans500', sans-serif;
+}
+.detail-pane div {
+    background-color: rgba(238, 238, 238, 0.9);
+}
+.detail-pane:hover img {
+    opacity: 1.0;
+}
+.detail-pane:hover img path {
+    fill: blue;
+}
+.detail-pane img {
+    opacity: 0.6;
+}
+#pin-image {
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+.container .row-fluid.features {
+    padding-top: 30px;
+}
+/* END : Home - Main Content */
+/* BEGIN : Schedule & Driver Content */
+/* TODO: move to appropriate place */
+
+/*.schedule input[type="checkbox"][disabled] {
+    cursor: default!important;
+}

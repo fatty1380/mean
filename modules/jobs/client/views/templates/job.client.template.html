@@ -1,0 +1,185 @@
+<section class='job-item'>
+    <!-- job.client.template.html -->
+
+    <section ng-if="inline">
+        <div class="row">
+            <div class="col-md-8">
+                <h4 class="list-group-item-heading">{{job.name}}
+                </h4>
+            </div>
+            <div class="col-md-4">
+                <small class="list-group-item-text">
+                    <p class="text-right">Added on
+                        <span data-ng-bind="job.created | date:'shortDate'"></span>
+                    </p>
+                </small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 opaque-bg">
+                <span class="nowrap" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ job.description | limitTo : 100 }}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <span class="fa-stack fa-md pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-usd fa-stack-1x fa-inverse"></i>
+                </span>
+                <span>
+                    ${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</span>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-md pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-credit-card fa-stack-1x fa-inverse"></i>
+                </span>
+                <span>{{ job.endorsements || "Operator - Class D" }}</span>
+            </div>
+            <div class="col-md-3">
+                <span class="fa-stack fa-md pull-left">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
+                </span>
+                <span>{{ job.location.zipCode }}</span>
+            </div>
+        </div>
+    </section>
+
+    <section ng-if="!inline">
+        <h2>{{ job.name }}
+            <small>
+                <em class="text-muted">
+                    Posted on
+                    <span data-ng-bind="job.created | date:'mediumDate'"></span>
+                    by
+                    <span data-ng-bind="job.user.displayName"></span>
+                </em>
+            </small>
+            <div class="pull-right">
+                <div data-ng-show="authentication.user._id == job.user._id">
+                    <a class="btn btn-primary" href="/jobs/{{job._id}}/edit">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a class="btn btn-primary" data-ng-click="remove();">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </div>
+                <div data-ng-show="authentication.user._id != job.user._id && formMode[$index] !== 'apply'">
+                    <a class="btn btn-primary btn-large" data-ng-click="toggleApplication(true, $index)">Full Details</a>
+
+                    <a class="btn btn-primary btn-large" data-ng-click="apply('lg', job)">Apply</a>
+                </div>
+            </div>
+        </h2>
+
+        <div class="row">
+            <div class="col-md-8">
+
+                <div class="panel panel-default job-info">
+                    <div class="panel-heading">
+                        <div class="btn-group" role="group" aria-label="...">
+                            <button type="button" ng-class="{active : showSection('description', true)}" ng-click=" setDisplay( 'description') " class="btn btn-link ">Description</button>
+                            <button type="button" ng-class="{active : showSection('requirements', true)}" ng-click="setDisplay( 'requirements') " class="btn btn-link ">Requirements</button>
+                            <button type="button" ng-class="{active : showSection('location', true)}" ng-click="setDisplay( 'location') " class="btn btn-link ">Location</button>
+                            <button type="button" ng-class="{active : showSection('about', true)}" ng-click="setDisplay( 'about') " class="btn btn-link ">About</button>
+                            <button type="button" ng-click="setDisplay() " class="btn btn-link ">x</button>
+                        </div>
+                    </div>
+                    <div class="panel-body ">
+                        <span ng-show="showSection( 'description') ">
+                            <h4 ng-show="showSection( 'all') ">Description</h4>
+                            <div ng-bind-html="job.description "></div>
+                            <hr/>
+                        </span>
+
+                        <span ng-show="showSection( 'requirements') ">
+                            <h4 ng-show="showSection( 'all') ">Requirements</h4>
+                            {{ job.requirements || 'none listed'}}
+                            <hr/>
+                        </span>
+
+                        <span ng-show="showSection( 'location') ">
+                            <h4 ng-show="showSection( 'all') ">Location</h4>
+                            {{ job.location || 'not available' }}
+                            <hr/>
+                        </span>
+
+                        <span ng-show="showSection( 'about') ">
+                            <h4 ng-show="showSection( 'all') ">About the Company</h4>
+                            {{job.company || 'not available'}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 ">
+
+                <div class="panel panel-default ">
+                    <div class="panel-heading ">Info</div>
+                    <div class="panel-body ">
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-clock-o fa-stack-1x fa-inverse "></i>
+                            </span>
+                            <span>{{ job.positionType || "Part-Time Employment " }}</span>
+                            <br>
+                        </div>
+
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse "></i>
+                            </span>
+                            <span>{{ job.location.zipCode }}</span>
+                            <br>
+                        </div>
+
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-usd fa-stack-1x fa-inverse "></i>
+                            </span>
+                            <span>
+                                ${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</span>
+                            <br>
+                        </div>
+
+                        <div class="row ">
+                            <span class="fa-stack fa-lg pull-left ">
+                                <i class="fa fa-circle fa-stack-2x "></i>
+                                <i class="fa fa-credit-card fa-stack-1x fa-inverse "></i>
+                            </span>
+                            <span>{{ job.endorsements || "Operator - Class D " }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default ">
+                    <div class="panel-heading ">Applicants</div>
+                    <div class="panel-body ">
+                        <div ng-if="!inline && authentication.user._id==j ob.user._id " class="row ">
+                            <span class="col-md-12 " data-ng-controller="ApplicationsController " data-ng-init="initJobList(job) ">
+                                <h4>{{listTitle}}</h4>
+                                <div ng-include=" '/modules/applications/views/templates/list-applications.client.template.html' ">
+                                </div>
+                            </span>
+                        </div>
+
+                        <div class="row " data-ng-show="formMode[$index]==='apply' ">
+                            <span class="col-md-12 ">
+                                <div ng-include=" '/modules/applications/views/templates/create-application.client.template.html' "></div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+    </section>
+</section>

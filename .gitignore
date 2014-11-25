@@ -7,10 +7,11 @@ public/lib
 app/tests/coverage/
 .bower-*/
 .idea/
+uploads
+modules/users/client/img/profie/uploads
 config/sslcert/*.pem
 
 ## Outset Additions ##
-*.pem
 data
 readonly_rsa
 *.pub
