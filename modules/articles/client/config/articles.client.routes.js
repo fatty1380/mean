@@ -8,7 +8,7 @@ angular.module('articles').config(['$stateProvider',
 		state('articles', {
 			abstract: true,
 			url: '/articles',
-			template: '<ui-view/>'
+			templateUrl: 'modules/core/views/fixed-opaque.client.view.html'
 		}).
 		state('articles.list', {
 			url: '',
