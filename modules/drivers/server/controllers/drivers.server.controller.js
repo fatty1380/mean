@@ -49,11 +49,15 @@ var executeFind = function(req, res, next, driverFind) {
                     message: errorHandler.getErrorMessage(err)
                 });
             }
+
             if (!driver) {
                 console.log('[Driver.executeFind] No Driver Found');
+
                 if (!!next) {
-                    return next(new Error('No Driver Found'));
+                    return next();
                 }
+
+
             } else {
                 console.log('[Driver.executeFind] found driver: ', driver);
             }
@@ -113,7 +117,14 @@ exports.create = function(req, res) {
  * Show the current Driver
  */
 exports.read = function(req, res) {
-    console.log('[Driver.read] start with driver: ', req.driver);
+    console.log('[Driver.read] Result: ', req.driver);
+
+    if (!req.driver) {
+        return res.status(404).send({
+            message: 'No driver found'
+        });
+    }
+
     res.json(req.driver);
 };
 
@@ -247,14 +258,23 @@ exports.list = function(req, res) {
 
 exports.driverByUserID = function(req, res, next) {
     console.log('[Driver.driverByUserId] start');
-    var userId = req.params.userId || req.query.userId || req.user.id;
+    var userId = req.params.userId || req.query.userId;
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
-    executeFind(req, res, next, Driver.findOne({
-        user: userId
-    }));
+    if (!!userId) {
+        return executeFind(req, res, next, Driver.findOne({
+            user: userId
+        }));
+    }
+    next();
 };
+
+exports.me = function(req, res, next) {
+    executeFind(req, res, next, Driver.findOne({
+        user: req.user.id
+    }));
+}
 
 /**
  * Driver middleware
