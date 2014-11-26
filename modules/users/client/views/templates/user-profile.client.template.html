@@ -2,7 +2,7 @@
     <div ng-hide="ctrl.editMode.enabled" class="row-fluid">
         <legend class="pull-left">{{ctrl.title || 'Personal Information'}}
             <div class="pull-right">
-                <a class="btn btn-link" ng-click="ctrl.edit()" ng-if="ctrl.editMode.visible">
+                <a class="btn btn-link" ng-click="ctrl.edit()" ng-if="ctrl.editable">
                     <i class="fa fa-pencil"></i>&nbsp;edit
                 </a>
             </div>
@@ -17,7 +17,7 @@
             <dd>{{ctrl.profile.phone}}</dd>
             <dt>({{ctrl.profile.addresses.length}}) Addresses</dt>
             <dd>
-                <os-address-list addresses="ctrl.profile.addresses" enable-edit="ctrl.editMode.enabled"></os-address-list>
+                <os-address-list addresses="ctrl.profile.addresses" enable-edit="false"></os-address-list>
             </dd>
         </dl>
     </div>

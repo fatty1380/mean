@@ -24,7 +24,7 @@ exports.update = function (req, res) {
 	if (user) {
 		// Merge existing user
 		user = _.extend(user, req.body);
-		user.updated = Date.now();
+		user.modified = Date.now();
 		user.displayName = user.firstName + ' ' + user.lastName;
 
 		user.save(function (err) {
@@ -87,6 +87,27 @@ exports.changeProfilePicture = function (req, res) {
 			message: 'User is not signed in'
 		});
 	}
+};
+
+exports.list = function(req, res, next) {
+    User
+        .find()
+        .sort('-created')
+        .exec(function(err, users) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.jsonp(users);
+            }
+        });
+};
+
+exports.readProfile = function(req, res) {
+	debugger;
+    console.log('[Profile.Ctrl] read()');
+    res.jsonp(req.profile);
 };
 
 /**

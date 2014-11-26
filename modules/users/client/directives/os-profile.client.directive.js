@@ -1,16 +1,30 @@
 (function() {
     'use strict';
 
+    /**
+    * @ngdoc directive
+    * @name core.directive:osProfile
+    * @element os-profile
+    * @restrict E
+    * --------------------
+    * @description
+    * Used to display a User Profile, including Company or Driver profile information
+*
+* @property {User} profile  the user profile to be displayed @required
+* @property {String} title  An optional cusom title to display at the top
+* @property {Bool} editable  Whether or not the profile can be edited by the current user
+* @property {Funtion} editFn  A function to be called when the user cliks the edit link.
+    */
+
     angular.module('users')
         .directive('osProfile', [
             function() {
                 return {
                     scope: {
-                        title: '@?',
                         profile: '=',
-                        editMode: '=?',
-                        editFn: '&?',
-                        cancelFn: '&?'
+                        title: '@?',
+                        editable: '=?',
+                        editFn: '&?'
                     },
                     templateUrl: 'modules/users/views/templates/user-profile.client.template.html',
                     restrict: 'E',
@@ -23,20 +37,7 @@
         ])
         .controller('OsProfileController', ['$log',
             function($log) {
-                this.editMode = this.editMode || {
-                    enabled: false,
-                    visible: false
-                };
-
-                this.edit = this.editFn || function() {
-                    $log.debug('[OsProfileController] edit()');
-                    this.editMode.enabled = true;
-                };
-
-                this.cancel = this.cancelFn || function() {
-                    $log.debug('[OsProfileController] cancel()');
-                    this.editMode.enabled = false;
-                };
+                this.edit = this.editFn;
             }
         ])
 

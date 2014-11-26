@@ -44,7 +44,7 @@ exports.signup = function(req, res) {
 	user.provider = 'local';
 	user.displayName = user.firstName + ' ' + user.lastName;
 
-	// Then save the user 
+	// Then save the user
 	user.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -77,9 +77,6 @@ exports.signin = function(req, res, next) {
 			user.salt = undefined;
 
             user.isAdmin = user.roles.indexOf('admin') !== -1;
-
-            // Migrate if necessary:
-            user.migrate();
 
             console.log('[Auth.Ctrl] signin() user=)', user);
 

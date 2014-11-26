@@ -1,26 +1,18 @@
 (function() {
     'use strict';
 
-    function ProfileController($scope, $stateParams, $location, $log, Profile, Authentication) {
+    function ProfileController($scope, $state, $stateParams, $location, $log, Profiles, Authentication) {
 
-        console.log('WARNING: TBD IF PROFILE CONTROLLER IS DUPE FUNCTIONALITY WITH OTHER USERS CONTROLLERS');
-
-        this.editMode = $scope.editMode || {
-            enabled: false,
-            visible: true
-        };
-
-        this.showEditLink = false;
-        this.header = 'Your Profile';
+        this.header = 'User Profile';
 
         // Find existing User Profile
         this.init = function() {
-            if (!$stateParams.userId) {
+            if (!$stateParams.userId) { // Viewing your own profile
                 this.user = Authentication.user;
-                this.header = this.header = 'Your ' + this.user.type + ' profile';
-                this.showEditLink = this.showEditLink = true;
-            } else {
-                this.user = Profile.get({
+                this.header = this.user.displayName + " <small>(you)</small>";
+                this.showEditLink = true;
+            } else { // Viewing someone else's profile
+                this.user = Profiles.get({
                     userId: $stateParams.userId
                 });
 
@@ -42,26 +34,16 @@
 
         this.initList = function() {
             if (Authentication.user.roles.indexOf('admin') !== -1) {
-                this.users = Profile.query();
+                this.users = Profiles.query();
             } else {
-                $location.path('/settings/profile');
+                $location.path('/');
             }
-        };
-
-        this.edit = function() {
-            $log.debug('[ProfileController] edit()');
-            this.editMode.enabled = true;
-        };
-
-        this.cancel = function() {
-            $log.debug('[ProfileController] cancel()');
-            this.editMode.enabled = false;
         };
     }
 
-    ProfileController.$inject = ['$scope', '$stateParams', '$location', '$log', 'User', 'Authentication'];
+    ProfileController.$inject = ['$scope','$state', '$stateParams', '$location', '$log', 'Profiles', 'Authentication'];
 
     angular
         .module('users')
-        .controller('UserController', ProfileController);
+        .controller('ProfileController', ProfileController);
 })();

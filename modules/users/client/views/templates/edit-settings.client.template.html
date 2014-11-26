@@ -1,35 +1,43 @@
-<form name="ctrl.userForm" data-ng-submit="ctrl.updateUserProfile(ctrl.userForm.$valid)" class="form-horizontal" autocomplete="off">
-    <fieldset class="create" ng-show="ctrl.editMode.enabled">
-        <legend>Edit Personal Profile</legend>
-
-        <div class="form-group profile-row">
+<form name="ctrl.userForm" data-ng-submit="ctrl.updateUserProfile(ctrl.userForm.$valid)" class="form" autocomplete="off">
+    <fieldset class="create">
+        <div class="form-group">
             <label class="control-label" for="name">Name</label>
             <div class="form-inline margin-bottom-sm" name="name">
-                <input class="form-control" type="text" data-ng-model="ctrl.profile.firstName" placeholder="First">
-                <input class="form-control" type="text" data-ng-model="ctrl.profile.lastName" placeholder="Last">
+                <div class="input-group margin-bottom-sm" name="First">
+                    <span class="input-group-addon">First</span>
+                    <input class="form-control" type="text" data-ng-model="ctrl.profile.firstName" placeholder="First">
+                </div>
+
+                <div class="input-group margin-bottom-sm" name="Last">
+                    <span class="input-group-addon">Last</span>
+                    <input class="form-control" type="text" data-ng-model="ctrl.profile.lastName" placeholder="Last">
+                </div>
             </div>
         </div>
 
-        <div class="form-group profile-row">
+        <div class="form-group">
             <label for="email">Email</label>
             <div class="input-group margin-bottom-sm" name="email">
-                <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i>
+                <span class="input-group-addon">
+                    <i class="fa fa-envelope-o fa-fw"></i>
                 </span>
                 <input class="form-control" type="text" placeholder="Email address" data-ng-model="ctrl.profile.email">
             </div>
         </div>
 
-        <div class="form-group profile-row">
+        <div class="form-group">
             <label for="addressses">Addresses</label>
             <button class="btn pull-right btn-small btn-link" ng-click="ctrl.addAddress()">
                 Add Address
             </button>
 
-            <os-address-list addresses="ctrl.profile.addresses" enable-edit="ctrl.editMode.enabled"></os-address-list>
+            <div class="container-fluid">
+                <os-address-list addresses="ctrl.profile.addresses" enable-edit="ctrl.editMode.enabled"></os-address-list>
+            </div>
         </div>
 
         <!-- Driver's Telephone -->
-        <div class="form-group profile-row">
+        <div class="form-group">
             <label for="phone">Phone</label>
             <div class="input-group margin-bottom-sm">
                 <input class="form-control" type="tel" name="phone" data-ng-model="ctrl.profile.phone" placeholder="(xxx) xxx-xxxx">
@@ -39,7 +47,7 @@
             </div>
         </div>
 
-        <div class="profile-row" data-ng-show="ctrl.editMode.enabled">
+        <div class="form-group" data-ng-show="ctrl.show">
             <div class="text-right form-group">
                 <button type="button" value="cancel" class="btn btn-large btn-link" ng-click="ctrl.cancel()">cancel</button>
                 <button type="submit" value="update" class="btn btn-large btn-primary">Save Profile</button>
@@ -48,6 +56,9 @@
                 <strong data-ng-bind="ctrl.error"></strong>
             </div>
         </div>
+
+
+
     </fieldset>
     <div data-ng-show="ctrl.success" class="text-center text-success">
         <strong>Profile Saved Successfully!</strong>

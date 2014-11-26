@@ -10,8 +10,20 @@ function UsersService($resource) {
 		});
 	}
 
+
+function ProfilesService($resource) {
+    return $resource('api/profiles/:userId', {
+        userId: '@userId'
+    }, {
+
+        });
+    }
+
+
 UsersService.$inject = ['$resource'];
+ProfilesService.$inject = ['$resource'];
 
 angular
     .module('users')
-    .factory('Users', UsersService);
+    .factory('Users', UsersService)
+    .factory('Profiles', ProfilesService);

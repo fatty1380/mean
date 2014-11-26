@@ -2,7 +2,7 @@
 
 // Configuring the Articles module
 
-function Menus(Menus) {
+function menus(Menus) {
     // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
         title: 'Articles',
@@ -24,6 +24,6 @@ function Menus(Menus) {
     });
 }
 
-Menus.$inject = ['Menus'];
+menus.$inject = ['Menus'];
 
-angular.module('articles').run(Menus);
+angular.module('articles').run(menus);

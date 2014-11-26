@@ -36,12 +36,12 @@ function menus(Menus, Auth) {
 
         Menus.addSubMenuItem('topbar', 'users', {
             title: 'List Users',
-            state: 'users'
+            state: 'users.list'
         });
 
         Menus.addSubMenuItem('topbar', 'users', {
-            title: 'New User',
-            state: 'users/create'
+            title: 'My User',
+            state: 'users.view'
         });
 }
 
