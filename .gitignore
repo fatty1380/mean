@@ -17,3 +17,4 @@ readonly_rsa
 *.pub
 coverage
 *.orig
+Outset-Logo_*.png

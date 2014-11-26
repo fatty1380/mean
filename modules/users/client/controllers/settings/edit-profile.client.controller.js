@@ -12,7 +12,7 @@
 
         this.profile = this.profile || Authentication.user;
 
-        $log.info('[EditProfileController] Profile %o', this.profile)
+        $log.info('[EditProfileController] Profile %o', this.profile);
 
         // Update a user profile
         this.updateUserProfile = function(isValid) {
