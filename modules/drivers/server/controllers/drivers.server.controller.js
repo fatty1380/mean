@@ -274,7 +274,7 @@ exports.me = function(req, res, next) {
     executeFind(req, res, next, Driver.findOne({
         user: req.user.id
     }));
-}
+};
 
 /**
  * Driver middleware

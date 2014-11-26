@@ -106,7 +106,13 @@ exports.list = function(req, res, next) {
 
 exports.readProfile = function(req, res) {
 	debugger;
-    console.log('[Profile.Ctrl] read()');
+
+    if (!req.profile) {
+        return res.status(404).send({
+            message: 'No profile found'
+        });
+    }
+
     res.jsonp(req.profile);
 };
 
@@ -114,5 +120,12 @@ exports.readProfile = function(req, res) {
  * Send User
  */
 exports.me = function (req, res) {
-	res.json(req.user || null);
+
+    if (!req.user) {
+        return res.status(404).send({
+            message: 'No user found'
+        });
+    }
+
+	res.json(req.user);
 };

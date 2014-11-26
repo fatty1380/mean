@@ -88,6 +88,12 @@ exports.create = function(req, res) {
  * Show the current Job
  */
 exports.read = function(req, res) {
+    if (!req.job) {
+        return res.status(404).send({
+            message: 'No job found'
+        });
+    }
+
     res.json(req.job);
 };
 
@@ -168,7 +174,6 @@ exports.jobByID = function(req, res, next, id) {
         .populate('location')
         .exec(function(err, job) {
             if (err) return next(err);
-            if (!job) return next(new Error('Failed to load Job ' + id));
             req.job = job;
             next();
         });

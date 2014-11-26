@@ -12,9 +12,7 @@ exports.getConfig = function(req, res, next, varName) {
             req.configVal = constants.base_schedule;
             return next();
         default:
-            res.status(400).send({
-                message: 'Method not implemented or config not found'
-            });
+            next();
     }
 };
 
@@ -28,5 +26,11 @@ exports.getAllConfigs = function(req, res) {
 };
 
 exports.read = function(req, res) {
+    if (!req.configVal) {
+        return res.status(404).send({
+            message: 'No config found'
+        });
+    }
+
     return res.json(req.configVal);
 };

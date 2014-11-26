@@ -62,6 +62,12 @@ exports.create = function(req, res) {
  * Show the current Application
  */
 exports.read = function(req, res) {
+    if (!req.application) {
+        return res.status(404).send({
+            message: 'No application found'
+        });
+    }
+
     res.json(req.application);
 };
 
@@ -173,7 +179,6 @@ exports.applicationByID = function(req, res, next, id) {
         })
         .exec(function(err, application) {
             if (err) return next(err);
-            if (!application) return next(new Error('Failed to load Application ' + id));
 
             req.application = application;
             next();

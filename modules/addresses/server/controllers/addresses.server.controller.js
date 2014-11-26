@@ -53,6 +53,12 @@ exports.create = function(req, res) {
  * Show the current Address
  */
 exports.read = function(req, res) {
+    if (!req.address) {
+        return res.status(404).send({
+            message: 'No address found'
+        });
+    }
+
     res.jsonp(req.address);
 };
 
@@ -115,7 +121,6 @@ exports.list = function(req, res) {
 exports.addressByID = function(req, res, next, id) {
     Address.findById(id).populate('user', 'displayName').exec(function(err, address) {
         if (err) return next(err);
-        if (!address) return next(new Error('Failed to load Address ' + id));
         req.address = address;
         next();
     });

@@ -57,6 +57,12 @@ exports.create = function(req, res) {
  * Show the current Company
  */
 exports.read = function(req, res) {
+    if (!req.company) {
+        return res.status(404).send({
+            message: 'No company found'
+        });
+    }
+
     res.json(req.company);
 };
 
@@ -114,7 +120,7 @@ exports.listDrivers = function(req, res) {
     }]);
 };
 
-exports.companyByUserID = function(req, res) {
+exports.companiesByUserID = function(req, res) {
 
     req.query = {
         owner: req.params.userId
@@ -136,7 +142,7 @@ exports.companyByID = function(req, res, next, id) {
         .populate('owner', 'displayName')
         .exec(function(err, company) {
             if (err) return next(err);
-            if (!company) return next(new Error('Failed to load Company ' + id));
+
             req.company = company;
             next();
         });

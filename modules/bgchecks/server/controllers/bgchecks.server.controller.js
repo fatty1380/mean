@@ -327,10 +327,23 @@ exports.create = function(req, res) {
  * Show the current Bgcheck
  */
 exports.read = function(req, res) {
+    if (!req.bgcheck) {
+        return res.status(404).send({
+            message: 'No BG Check found'
+        });
+    }
+
     res.jsonp(req.bgcheck);
 };
 
 exports.readApplicant = function(req, res) {
+
+    if (!req.applicant) {
+        return res.status(404).send({
+            message: 'No applicant found'
+        });
+    }
+
     res.jsonp(req.applicant);
 };
 
@@ -393,7 +406,6 @@ exports.bgcheckByID = function(req, res, next, id) {
         .populate('user', 'displayName')
         .exec(function(err, bgcheck) {
             if (err) return next(err);
-            if (!bgcheck) return next(new Error('Failed to load Bgcheck ' + id));
             req.bgcheck = bgcheck;
             next();
         });
