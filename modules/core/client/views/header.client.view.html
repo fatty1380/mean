@@ -27,18 +27,18 @@
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-            <li data-ui-sref-active="active">
+            <li data-ui-sref-active="active" class="hidden">
                 <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>
             </li>
             <li>
-                <a signup-modal>(modal)</a>
+                <a signup-modal>Sign Up</a>
             </li>
             <li class="divider-vertical"></li>
-            <li data-ui-sref-active="active">
+            <li data-ui-sref-active="active" class="hidden">
                 <a data-ui-sref="authentication.signin" target="_self">Sign In</a>
             </li>
             <li>
-                <a login-modal>(modal)</a>
+                <a login-modal>Sign In</a>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">

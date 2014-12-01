@@ -3,10 +3,10 @@
 
 <script type="text/ng-template" id="loginModal.html">
 
-    <div class="modal-header" ng-init="isOpen = true;">
+    <div class="modal-header bg-primary" ng-init="isOpen = true;">
         <span class="modal-title h3 text-center">Login to your account</span>
         <div class="pull-right">
-            <button class="btn btn-text" ng-click="$dismiss('cancel')">X</button>
+            <button type="button" class="close modal-title" ng-click="$dismiss('cancel')"><span aria-hidden="true">&times;<span class="sr-only">Close</span></button>
         </div>
     </div>
 
@@ -33,8 +33,7 @@
 
         <div class="modal-footer">
             <div class="text-center form-group">
-                <button type="submit" class="btn btn-primary">Sign in</button>&nbsp; or&nbsp;
-                <a href="/signup">Sign up</a>
+                <button type="submit" class="btn btn-primary">Sign in</button>
             </div>
             <div class="forgot-password text-center" ng-show="error">
                 <a href="/password/forgot">Forgot your password?</a>

@@ -1,12 +1,12 @@
 (function() {
     'use strict';
 
-    angular.module('core')
+    angular.module('users')
         .directive('signupModal', [
             function() {
                 return {
                     transclude: true,
-                    templateUrl: 'modules/core/views/templates/signup-modal.client.template.html',
+                    templateUrl: 'modules/users/views/templates/signup-modal.client.template.html',
                     restrict: 'EA',
                     scope: {
                         signin: '&',

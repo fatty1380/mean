@@ -4,23 +4,26 @@
 <script type="text/ng-template" id="signupModal.html">
 
 
-<div class="modal-header">
+<div class="modal-header bg-primary">
 
     <div ng-hide="signupType" class="container-fluid">
         <section class="signup-type">
-            <div class="row">
+            <div class="row text-center">
+                <div class="col-xs-12 h2">I want to ...</div>
+            <div>
+            <div class="row text-center">
                 <div class="col-xs-6" ng-click="signupType = 'driver'">
                     <div>
                         <img src="modules/users/img/steering-wheel.png" class="image" />
                         <br/>
-                        <div class="heading h3">I am a Driver</div>
+                        <div class="heading h3">Drive</div>
                     </div>
                 </div>
                 <div class="col-xs-6" ng-click="signupType = 'owner'">
                     <div>
                         <img src="modules/users/img/owner-group.png" class="image" />
                         <br/>
-                        <div class="heading h3">I am an Employer</div>
+                        <div class="heading h3">Hire</div>
                     </div>
                 </div>
             </div>
@@ -30,7 +33,7 @@
     <div ng-show="signupType">
     <span class="modal-title h3 text-center">Sign up as {{signupType == 'owner' ? 'an' : 'a'}} {{signupType}}</span>
         <div class="pull-right">
-            <button class="btn btn-text" ng-click="$dismiss('cancel')">X</button>
+            <button type="button" class="close modal-title" ng-click="$dismiss('cancel')"><span aria-hidden="true">&times;<span class="sr-only">Close</span></button>
         </div>
     </div>
 </div>
@@ -78,8 +81,7 @@
 
     <div class="modal-footer" ng-show="signupType">
         <div class="text-center form-group">
-            <button type="submit" class="btn btn-primary">Sign Up!</button>&nbsp; or&nbsp;
-            <a href="/signup">Sign in...</a>
+            <button type="submit" class="btn btn-primary">Sign Up!</button>
         </div>
         <div data-ng-show="error" class="text-center text-danger">
             <strong data-ng-bind="error"></strong>
