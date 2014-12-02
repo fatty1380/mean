@@ -37,8 +37,6 @@
             });
 
         };
-
-
     }
 
     function ModalFocusDirective($timeout, $parse) {
@@ -55,14 +53,6 @@
                         });
                     }
                 });
-
-                console.log('focus on ' + attrs.focusMe);
-
-                //                    if (attrs.focusMe) {
-                //                        $timeout(functino() {
-                //                            element[0].focus();
-                //                        });
-                //                    }
             }
         };
     }

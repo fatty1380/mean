@@ -19,7 +19,7 @@
         </small>
         <div class="container-fluid">
             <div class="row-fluid">
-                <div ng-class="{col-md-8: application.user.type === 'owner', col-md-12: application.user.type === 'driver'}">
+                <div ng-class="{'col-md-8': application.user.type === 'owner', 'col-md-12': application.user.type === 'driver'}">
                     <h4>Messages</h4>
                     <dl class="dl-horizontal">
                         <div ng-repeat="message in application.messages">
