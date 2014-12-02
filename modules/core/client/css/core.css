@@ -1,7 +1,18 @@
+html, body, .content, .content > .ng-scope {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
 body {
     background-color: #0e2d4c;
-    padding-top: 55px;
-    padding-bottom: 55px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    width: 100%;
+    height: 100%;
 }
 .undecorated-link:hover {
     text-decoration: none;
@@ -51,18 +62,108 @@ body {
     background-color: #0e2d4c;
     background-color: transparent(0.9);
 }
-
 /* Forms Specific Styling */
-div.controls > input, div.controls > .input-group
-{
+
+div.controls > input, div.controls > .input-group {
     top: 10px;
     position: relative;
 }
-
 div.controls > label.control-label {
     float: right;
 }
-
 label > small {
     font-weight: normal;
+}
+/* Home/Intro Styling */
+
+.intro {
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    background: url('../img/home-country-road.jpg') no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100%;
+    font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
+}
+.intro-break {
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    background: url('../img/phx_skyline.png') no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 250px;
+    font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
+}
+.leader {
+    text-align: center;
+    position: absolute;
+    top: 25%;
+    padding-bottom: 20px;
+    color: #fff;
+}
+.leader h1 {
+    font-size: 64px;
+}
+.signup {
+    padding: 10px 0 0 0;
+}
+.signup .btn-primary {
+    font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
+    font-size: 32px;
+    padding: 25px 60px 25px 60px;
+    margin-top: 80px;
+}
+div.fade-blue {
+    background: url('../img/fade-blue.png') repeat-x;
+}
+div.fade-black {
+    background: url('../img/fade-black.png') repeat-x;
+}
+div.fade-white {
+    background: url('../img/fade-white.png') repeat-x;
+}
+div.section-fade {
+    height: 49px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+/* Intro Sections - EG: Examples; */
+
+.intro-spacer {
+    float: left;
+    width: 200px;
+    border-top: 3px solid #e7e7e7;
+}
+.intro-section {
+    background-color: #FFF;
+    padding: 50px 0;
+    color: #333;
+    min-height: 25%;
+}
+.intro-section.darken {
+    background-color: #DDD;
+}
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+.section-heading {
+    margin-bottom: 30px;
+}
+.lead {
+    font-size: 18px;
+    font-weight: 400;
+}
+img {
+    vertical-align: middle;
 }
