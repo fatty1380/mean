@@ -15,7 +15,7 @@ function menus(Menus, Auth) {
         title: 'Drivers',
         state: 'drivers',
         type: 'dropdown',
-        roles: ['Admin']
+        roles: ['admin']
 
     });
     Menus.addSubMenuItem('adminbar', 'drivers', {
