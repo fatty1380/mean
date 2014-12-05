@@ -5,25 +5,6 @@
         // This provides Authentication context.
         $scope.authentication = Authentication;
 
-        // TODO: Move this to $stateChangeStart event (???)
-        if ($scope.authentication.user) {
-            switch ($scope.authentication.user.type) {
-                case 'driver':
-                    $log.debug('[HomeController] Re-Routing to driver\'s profile page');
-                    $state.go('drivers.me');
-                    break;
-                case 'owner':
-                    $log.debug('[HomeController] Re-Routing to the user\'s companies');
-                    $state.go('companies.me');
-                    break;
-                default:
-                    if ($scope.authentication.user.roles.indexOf('admin') !== -1) {
-                        $state.go('users.list');
-                    }
-                    $log.warn('Unknown User Type');
-            }
-        }
-
         $scope.showMain = true;
         $scope.showInfo = false;
         $scope.showSignup = false;

@@ -93,7 +93,7 @@
 
         $scope.findByUser = function(user) {
             if (user.type === 'owner') {
-                $scope.companies = Companies.ByUser.query({
+                $scope.company = Companies.ByUser.get({
                     userId: user._id
                 });
             }

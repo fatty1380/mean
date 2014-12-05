@@ -68,25 +68,7 @@
             }
         };
 
-        $scope.apply = function(size, job) {
-            var modalInstance = $modal.open({
-                templateUrl: 'applyModal.html',
-                controller: 'ModalInstanceController',
-                scope: $scope,
-                size: size,
-                resolve: {
-                    passed_job: function() {
-                        return $scope.job;
-                    }
-                }
-            });
 
-            modalInstance.result.then(function(selectedItem) {
-                $scope.selected = selectedItem;
-            }, function() {
-                console.info('Modal dismissed at: ' + new Date());
-            });
-        };
 
         $scope.delist = function(job) {
             job = job || $scope.job;
@@ -185,27 +167,11 @@
         };
     }
 
-    function ModalInstanceController($scope, $modalInstance, pJob) {
-        $scope.selected = {
-            id: null
-        };
-        $scope.passed_job = pJob;
-        $scope.job = $scope.job || pJob;
 
-        $scope.ok = function() {
-            $modalInstance.close($scope.selected.id);
-        };
-
-        $scope.cancel = function() {
-            $modalInstance.dismiss('cancel');
-        };
-    }
 
     JobsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', '$log', 'Authentication', 'Jobs'];
-    ModalInstanceController.$inject = ['$scope', '$modalInstance', 'passed_job'];
 
     angular.module('jobs')
-        .controller('JobsController', JobsController)
-        .controller('ModalInstanceController', ModalInstanceController);
+        .controller('JobsController', JobsController);
 
 })();

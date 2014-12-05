@@ -5,7 +5,7 @@
     text-shadow: 1px 1px 1px #CCC;
 }
 .job-item .panel.job-info > .panel-heading {
-    padding: 0px;
+    padding: 0;
 }
 .job-item .panel.job-info > .panel-heading button {
     color: #333;

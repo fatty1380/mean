@@ -9,7 +9,7 @@
         this.init = function() {
             if (!$stateParams.userId) { // Viewing your own profile
                 this.user = Authentication.user;
-                this.header = this.user.displayName + " <small>(you)</small>";
+                this.header = this.user.displayName + ' <small>(you)</small>';
                 this.showEditLink = true;
             } else { // Viewing someone else's profile
                 this.user = Profiles.get({
@@ -41,7 +41,7 @@
         };
     }
 
-    ProfileController.$inject = ['$scope','$state', '$stateParams', '$location', '$log', 'Profiles', 'Authentication'];
+    ProfileController.$inject = ['$scope', '$state', '$stateParams', '$location', '$log', 'Profiles', 'Authentication'];
 
     angular
         .module('users')

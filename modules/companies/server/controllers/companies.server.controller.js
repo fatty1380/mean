@@ -129,6 +129,26 @@ exports.companiesByUserID = function(req, res) {
     executeQuery(req, res);
 };
 
+exports.companyByUserID = function(req, res) {
+
+    req.query = {
+        owner: req.params.userId
+    };
+
+    Company.findOne(req.query)
+        .populate('owner', 'displayName')
+        .exec(function(err, company) {
+            debugger;
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                res.json(company);
+            }
+        });
+};
+
 /**
  * Company middleware
  */

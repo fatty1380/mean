@@ -1,8 +1,8 @@
 html, body, .content, .content > .ng-scope {
     width: 100%;
     height: 100%;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -102,10 +102,15 @@ label > small {
     height: 250px;
     font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
 }
+.brand-lead {
+    text-align: center;
+    position: absolute;
+    top: 10%;
+}
 .leader {
     text-align: center;
     position: absolute;
-    top: 25%;
+    bottom: 60px;
     padding-bottom: 20px;
     color: #fff;
 }
