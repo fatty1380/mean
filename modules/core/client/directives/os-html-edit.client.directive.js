@@ -5,8 +5,8 @@
         .directive('osHtmlEdit', [function() {
             return {
                 priority: 0,
-                template: '<div><h3>DIRECTIVE</h3><text-angular ng-model="model" ta-toolbar="{{toolbar}}"></text-angular></div>',
-                replace: true,
+                template: '<text-angular ng-model="model" ta-toolbar="{{toolbar}}"></text-angular>',
+                replace: false,
                 restrict: 'E',
                 scope: {
                     model: '='

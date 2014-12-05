@@ -153,10 +153,6 @@ exports.companyByUserID = function(req, res) {
  * Company middleware
  */
 exports.companyByID = function(req, res, next, id) {
-    if (!req.originalUrl.endsWith(id)) {
-        next();
-        return;
-    }
     Company
         .findById(id)
         .populate('owner', 'displayName')

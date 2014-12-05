@@ -21,6 +21,7 @@
             <div ng-if="viewCtrl.user.type === 'driver'" ng-init="profile = viewCtrl.user" ng-include="'modules/drivers/views/templates/driver-badge.client.template.html'"></div>
 
             <!-- Begin include of Company Information Display -->
+            <!-- TODO: Remove this reference and use the directive instead -->
             <div ng-if="viewCtrl.user.type === 'owner'" ng-include="'modules/companies/views/templates/company-list.client.template.html'"></div>
 
         </fieldset>

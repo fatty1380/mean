@@ -11,7 +11,7 @@ function Companies($resource) {
             }
         }),
         ByUser: $resource('api/users/:userId/companies', {
-            userId: '@_id'
+            userId: '@_userId'
         })
     };
 }

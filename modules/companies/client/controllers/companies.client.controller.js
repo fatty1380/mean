@@ -2,7 +2,7 @@
     'use strict';
 
     // Companies controller
-    function CompaniesController($scope, $stateParams, $location, Authentication, Companies) {
+    function CompaniesController($scope, $state, $stateParams, $location, Authentication, Companies) {
         $scope.authentication = Authentication;
 
         // REGION : Page Action methods
@@ -77,7 +77,7 @@
         };
 
         $scope.init = function() {
-            if ($stateParams.companyId === 'me') {
+            if ($state.is('companies.me') || $stateParams.companyId === 'me') {
                 $scope.findByUser($scope.authentication.user);
             } else {
                 $scope.findOne();
@@ -100,7 +100,7 @@
         };
     }
 
-    CompaniesController.$inject = ['$scope', '$stateParams', '$location', 'Authentication', 'Companies'];
+    CompaniesController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Companies'];
 
     angular.module('companies').controller('CompaniesController', CompaniesController);
 })();
