@@ -4,7 +4,7 @@
 function JobsService($resource) {
     return {
         ById: $resource('api/jobs/:jobId', {
-            jobId: '@jobId'
+            jobId: '@_id'
         }, {
             update: {
                 method: 'PUT'
