@@ -163,17 +163,34 @@
         $scope.findOne = function(userId) {
             var id = userId || $stateParams.driverId;
 
-            if (id && id !== 'me') {
+            if (id && id === 'me') {
+                $scope.createEnabled = true;
+
+                $scope.driver = Drivers.ByUser.get({
+                    userId: $scope.authentication.user._id
+                }, function() {
+                    $log.info('Successfully loaded LoggedInUser Driver Profile');
+                }, handleFindError);
+            } else if (id) {
                 $scope.createEnabled = (id === $scope.authentication.user._id);
 
                 $scope.driver = Drivers.ById.get({
                     driverId: id
-                });
-            } else {
-                $scope.driver = Drivers.ByUser.get({
-                    userId: $scope.authentication.user._id
-                });
+                }, function(id) {
+                    $log.info('Successfully loaded Driver Profile for id: %s', id);
+                }, handleFindError);
             }
+        };
+
+        var handleFindError = function(response) {
+            debugger;
+            $log.error('Error loading driver: [%s] %s', response.status, response.data.message);
+            if (response.status === 404) {
+                $log.info('No Driver found for this user');
+            } else {
+                $log.error('Error loading driver: [%s] %s', response.status, response.data.message);
+            }
+
         };
 
         // Specific Driver Functions
