@@ -43,11 +43,22 @@ body {
 .navbar {
     background: rgba(161, 161, 161, 0.4);
 }
-.navbar-brand > img {
+.navbar-brand > div.brand-img {
     display: block;
-    height: 30px;
+    height: 40px;
+    width: 144px;
     position: relative;
-    top: -5px;
+    top: -10px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.navbar-inverse .navbar-brand > div {
+    background: url('../img/brand/logo-white.png') no-repeat;
+}
+.navbar-default .navbar-brand > div {
+    background: url('../img/brand/logo-blue.png') no-repeat;
 }
 .clear-bg {
     background-color: rgba(238, 238, 238, 0.0);
