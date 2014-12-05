@@ -4,21 +4,22 @@
 
 function menus(Menus) {
     // Add the articles dropdown item
-    Menus.addMenuItem('topbar', {
+    Menus.addMenuItem('adminbar', {
         title: 'Articles',
         state: 'articles',
         type: 'dropdown',
-        position: 1
+        position: 1,
+        roles: ['admin']
     });
 
     // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'articles', {
+    Menus.addSubMenuItem('adminbar', 'articles', {
         title: 'List Articles',
         state: 'articles.list'
     });
 
     // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'articles', {
+    Menus.addSubMenuItem('adminbar', 'articles', {
         title: 'Create Articles',
         state: 'articles.create'
     });

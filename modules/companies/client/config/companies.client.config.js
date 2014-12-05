@@ -1,26 +1,36 @@
-'use strict';
+(function() {
+    'use strict';
 
-// Configuring the Companies module
-function menus(Menus, Auth) {
-    // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-        title: 'Companies',
-        state: 'companies',
-        type: 'dropdown'
-    });
-    Menus.addSubMenuItem('topbar', 'companies', {
-        title: 'List Companies',
-        state: 'companies.list'
-    });
-    Menus.addSubMenuItem('topbar', 'companies', {
-        title: 'New Company',
-        state: 'companies.create'
-    });
-}
+    // Configuring the Companies module
+    function menus(Menus, Auth) {
+        // Set top bar menu items
+        Menus.addMenuItem('topbar', {
+            title: 'Dashboard',
+            state: 'companies.me',
+            userTypes: ['owner'],
+            position: 1
+        });
+
+        Menus.addMenuItem('adminbar', {
+            title: 'Companies',
+            state: 'companies',
+            type: 'dropdown',
+            roles: ['admin']
+        });
+        Menus.addSubMenuItem('adminbar', 'companies', {
+            title: 'List Companies',
+            state: 'companies.list'
+        });
+        Menus.addSubMenuItem('adminbar', 'companies', {
+            title: 'New Company',
+            state: 'companies.create'
+        });
+    }
 
 
-menus.$inject = ['Menus', 'Authentication'];
+    menus.$inject = ['Menus', 'Authentication'];
 
-angular
-    .module('companies')
-    .run(menus);
+    angular
+        .module('companies')
+        .run(menus);
+})();

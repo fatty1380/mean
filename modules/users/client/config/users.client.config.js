@@ -28,21 +28,24 @@ function config($httpProvider) {
 }
 
 function menus(Menus, Auth) {
-        Menus.addMenuItem('topbar', {
-            title: 'Users',
-            state: 'users',
-            type: 'dropdown'
-        });
 
-        Menus.addSubMenuItem('topbar', 'users', {
-            title: 'List Users',
-            state: 'users.list'
-        });
+    // Setup Admin-Only menu Items
+    Menus.addMenuItem('adminbar', {
+        title: 'Users',
+        state: 'users',
+        type: 'dropdown',
+        roles: ['admin']
+    });
 
-        Menus.addSubMenuItem('topbar', 'users', {
-            title: 'My User',
-            state: 'users.view'
-        });
+    Menus.addSubMenuItem('adminbar', 'users', {
+        title: 'List Users',
+        state: 'users.list'
+    });
+
+    Menus.addSubMenuItem('adminbar', 'users', {
+        title: 'My User',
+        state: 'users.view'
+    });
 }
 
 config.$inject = ['$httpProvider'];

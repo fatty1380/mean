@@ -2,21 +2,37 @@
 
 // Configuring the Jobs module
 function menus(Menus, Auth) {
-    // Set top bar menu items
     Menus.addMenuItem('topbar', {
+        title: 'Job Postings',
+        state: 'jobs.mine',
+        userTypes: ['owner'],
+        position: 10
+    });
+
+    Menus.addMenuItem('topbar', {
+        title: 'Job Postings',
+        state: 'jobs.list',
+        userTypes: ['driver'],
+        position: 10
+    });
+
+
+    // Set admin menu items
+    Menus.addMenuItem('adminbar', {
         title: 'Jobs',
         state: 'jobs',
-        type: 'dropdown'
+        type: 'dropdown',
+        roles: ['Admin']
     });
-    Menus.addSubMenuItem('topbar', 'jobs', {
+    Menus.addSubMenuItem('adminbar', 'jobs', {
         title: 'My Jobs',
         state: 'jobs.mine'
     });
-    Menus.addSubMenuItem('topbar', 'jobs', {
+    Menus.addSubMenuItem('adminbar', 'jobs', {
         title: 'All Jobs',
         state: 'jobs.list'
     });
-    Menus.addSubMenuItem('topbar', 'jobs', {
+    Menus.addSubMenuItem('adminbar', 'jobs', {
         title: 'New Job',
         state: 'jobs.create'
     });

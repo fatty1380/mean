@@ -6,6 +6,7 @@ angular.module('core').service('Menus', [
     function() {
         // Define a set of default roles
         this.defaultRoles = ['*'];
+        this.defaultUserTypes = ['*'];
 
         // Define the menus object
         this.menus = {};
@@ -13,16 +14,42 @@ angular.module('core').service('Menus', [
         // A private function for rendering decision
         var shouldRender = function(user) {
             if (user) {
-                if (!!~this.roles.indexOf('*')) {
+                var roleValid = !!~this.roles.indexOf('*');
+                var typeValid = !!~this.userTypes.indexOf('*');
+
+                if (roleValid && typeValid) {
                     return true;
                 } else {
-                    for (var userRoleIndex in user.roles) {
-                        for (var roleIndex in this.roles) {
-                            if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
-                                return true;
+                    if (!roleValid) {
+
+                        for (var userRoleIndex in user.roles) {
+                            for (var roleIndex in this.roles) {
+                                if (this.roles[roleIndex] === user.roles[userRoleIndex]) {
+                                    roleValid = true;
+                                    break;
+                                }
                             }
                         }
+
+                        if (!roleValid) {
+                            return false;
+                        }
                     }
+
+                    if (!typeValid) {
+                        for (var typeIndex in this.userTypes) {
+                            if (this.userTypes[typeIndex] === user.type) {
+                                typeValid = true;
+                                break;
+                            }
+                        }
+
+                        if (!typeValid) {
+                            return false;
+                        }
+                    }
+
+                    return (roleValid && typeValid);
                 }
             } else {
                 return this.isPublic;
@@ -63,6 +90,7 @@ angular.module('core').service('Menus', [
             this.menus[menuId] = {
                 isPublic: ((options.isPublic === null || typeof options.isPublic === 'undefined') ? true : options.isPublic),
                 roles: options.roles || this.defaultRoles,
+                userTypes: options.userTypes || this.defaultUserTypes,
                 items: options.items || [],
                 shouldRender: shouldRender
             };
@@ -95,6 +123,7 @@ angular.module('core').service('Menus', [
                 class: options.class,
                 isPublic: ((options.isPublic === null || typeof options.isPublic === 'undefined') ? this.menus[menuId].isPublic : options.isPublic),
                 roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].roles : options.roles),
+                userTypes: ((options.userTypes === null || typeof options.userTypes === 'undefined') ? this.menus[menuId].userTypes : options.userTypes),
                 position: options.position || 100,
                 items: [],
                 shouldRender: shouldRender
@@ -103,7 +132,7 @@ angular.module('core').service('Menus', [
             // Add submenu items
             if (options.items) {
                 for (var i in options.items) {
-                	this.addSubMenuItem(menuId, options.link, options.items[i]);
+                    this.addSubMenuItem(menuId, options.link, options.items[i]);
                 }
             }
 
@@ -124,9 +153,10 @@ angular.module('core').service('Menus', [
                     // Push new submenu item
                     this.menus[menuId].items[itemIndex].items.push({
                         title: options.title || '',
-                        state: options.state|| '',
+                        state: options.state || '',
                         isPublic: ((options.isPublic === null || typeof options.isPublic === 'undefined') ? this.menus[menuId].items[itemIndex].isPublic : options.isPublic),
                         roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
+                        userTypes: ((options.userTypes === null || typeof options.userTypes === 'undefined') ? this.menus[menuId].items[itemIndex].userTypes : options.userTypes),
                         position: options.position || 0,
                         shouldRender: shouldRender
                     });
@@ -174,6 +204,11 @@ angular.module('core').service('Menus', [
         //Adding the topbar menu
         this.addMenu('topbar', {
             isPublic: false
+        });
+
+        this.addMenu('adminbar', {
+            isPublic: false,
+            roles: ['admin']
         });
     }
 ]);

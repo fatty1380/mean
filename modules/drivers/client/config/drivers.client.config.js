@@ -2,17 +2,27 @@
 
 // Configuring the Drivers module
 function menus(Menus, Auth) {
-    // Add menu for Drivers iff the user is an admin
+
     Menus.addMenuItem('topbar', {
+        title: 'Dashboard',
+        state: 'drivers.me',
+        position: 1,
+        userTypes: ['driver']
+    });
+
+    // Add menu for Drivers iff the user is an admin
+    Menus.addMenuItem('adminbar', {
         title: 'Drivers',
         state: 'drivers',
-        type: 'dropdown'
+        type: 'dropdown',
+        roles: ['Admin']
+
     });
-    Menus.addSubMenuItem('topbar', 'drivers', {
+    Menus.addSubMenuItem('adminbar', 'drivers', {
         title: 'List Drivers',
         state: 'drivers.list'
     });
-    Menus.addSubMenuItem('topbar', 'drivers', {
+    Menus.addSubMenuItem('adminbar', 'drivers', {
         title: 'New Driver',
         state: 'drivers.create'
     });
