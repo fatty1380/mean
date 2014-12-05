@@ -12,7 +12,16 @@
                     model: '='
                 },
                 controller: function($scope, $element, $attrs, $transclude) {
-                    $scope.toolbar = '[[\'h1\',\'h2\',\'h3\'],[\'ul\',\'ol\'],[\'indent\',\'outdent\'],[\'justifyLeft\',\'justifyCenter\']]';
+
+                    var toolbar = [
+                        ['h1', 'h2', 'h3', 'p'],
+                        ['bold', 'italics', 'underline'],
+                        ['ul', 'ol'],
+                        ['indent', 'outdent'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight']
+                    ];
+
+                    $scope.toolbar = JSON.stringify(toolbar);
                 }
             };
         }]);
