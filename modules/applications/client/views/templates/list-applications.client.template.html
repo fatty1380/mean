@@ -27,7 +27,7 @@
             </div>
         </a>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!applications.$resolved || applications.length">
-        <h4>Sorry, no one has applied yet</h4>
+    <div class="text-center" data-ng-hide="!applications.$resolved || applications.length">
+        <p>{{::noItemsText}}</p>
     </div>
 </section>

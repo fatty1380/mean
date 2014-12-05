@@ -2,21 +2,36 @@
 
 // Configuring the Job Applications module
 function menus(Menus, Auth) {
-    // Set top bar menu items
+
     Menus.addMenuItem('topbar', {
+        title: 'Active Applications',
+        state: 'applications.mine',
+        userTypes: ['owner'],
+        position: 20
+    });
+    Menus.addMenuItem('topbar', {
+        title: 'My Applications',
+        state: 'applications.mine',
+        userTypes: ['driver'],
+        position: 20
+    });
+
+    // Set top bar menu items
+    Menus.addMenuItem('adminbar', {
         title: 'Applications',
         state: 'applications',
-        type: 'dropdown'
+        type: 'dropdown',
+        roles: ['admin']
     });
-    Menus.addSubMenuItem('topbar', 'applications', {
-        title: 'List Applications',
+    Menus.addSubMenuItem('adminbar', 'applications', {
+        title: 'All Applications',
         state: 'applications.list'
     });
-    Menus.addSubMenuItem('topbar', 'applications', {
+    Menus.addSubMenuItem('adminbar', 'applications', {
         title: 'New Application',
         state: 'applications.create'
     });
-    Menus.addSubMenuItem('topbar', 'applications', {
+    Menus.addSubMenuItem('adminbar', 'applications', {
         title: 'My Applications',
         state: 'applications.mine'
     });

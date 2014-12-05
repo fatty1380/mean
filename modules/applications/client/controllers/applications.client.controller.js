@@ -128,18 +128,24 @@
         $scope.initList = function() {
 
             var isAdmin = $scope.authentication.user.roles.indexOf('admin') !== -1;
+            var userType = $scope.authentication.user.type;
 
             if ($state.is('applications.list') && isAdmin) {
                 $log.info('[AC.initList] Finding all applications in the system for Admin user');
                 $scope.listTitle = 'Outset Job Application Listings';
                 $scope.findAll();
-            } else if ($state.is('applications.mine') && $scope.authentication.user.type === 'driver') {
-                $log.info('[AC.initList] Finding all job applications for logged in driver');
-                $scope.listTitle = 'My Job Applications';
-
-                $scope.findMine();
             } else {
-                debugger;
+                $log.info('[AC.initList] Routing to "My Applications" for state %s', $state.$current.name);
+
+                if (userType === 'driver') {
+                    $scope.listTitle = 'My Job Applications';
+                    $scope.noItemsText = 'You have not applied to any jobs yet.';
+                } else if (userType === 'owner') {
+                    $scope.listTitle = 'Active Job Applications';
+                    $scope.noItemsText = 'No job applications yet';
+                }
+
+                $scope.findMine(userType);
             }
         };
 
@@ -162,9 +168,10 @@
         };
 
         // Find a list of 'My' Jobs.
-        $scope.findMine = function() {
+        $scope.findMine = function(type) {
             $scope.applications = Applications.ByUser.query({
                 userId: Authentication.user._id,
+                userType: type
             });
         };
 
