@@ -4,7 +4,7 @@
 function DriverFactory($resource) {
     return {
         ById: $resource('api/drivers/:driverId', {
-            driverId: '@driverId'
+            driverId: '@_id'
         }, {
             update: {
                 method: 'PUT'
