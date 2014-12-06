@@ -46,7 +46,7 @@ angular.module('users').config(['$stateProvider',
         state('users', {
             abstract: true,
             url: '/users',
-            templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+            template: '<div ui-view></div>',
             parent: 'full-opaque'
         }).
 

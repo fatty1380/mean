@@ -9,7 +9,7 @@ angular.module('jobs').config(['$stateProvider',
         state('jobs', {
             abstract: true,
             url: '/jobs',
-            templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+            template: '<div ui-view></div>',
             parent: 'fixed-opaque'
         }).
 

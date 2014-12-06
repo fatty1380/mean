@@ -9,7 +9,7 @@ angular.module('drivers').config(['$stateProvider',
         state('drivers', {
             abstract: true,
             url: '/drivers',
-            templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+            template: '<div ui-view></div>',
             parent: 'fixed-opaque'
         }).
 
@@ -21,17 +21,17 @@ angular.module('drivers').config(['$stateProvider',
 
         state('drivers.create', {
             url: '/create',
-            templateUrl: 'modules/drivers/views/create-driver.client.view.html'
-        }).
-
-        state('drivers.view', {
-            url: '/:driverId',
-            templateUrl: 'modules/drivers/views/view-driver.client.view.html',
-            parent: 'drivers'
+            templateUrl: 'modules/drivers/views/edit-driver.client.view.html'
         }).
 
         state('drivers.me', {
             url: '/me',
+            templateUrl: 'modules/drivers/views/view-driver.client.view.html',
+            parent: 'drivers'
+        }).
+
+        state('drivers.view', {
+            url: '/:driverId',
             templateUrl: 'modules/drivers/views/view-driver.client.view.html',
             parent: 'drivers'
         }).

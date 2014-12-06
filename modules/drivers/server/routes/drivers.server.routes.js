@@ -24,7 +24,4 @@ module.exports = function(app) {
 
     // Finish by binding the Driver middleware
     app.param('driverId', drivers.driverByID);
-
-    // TODO: Move to Licenses
-    app.route('/api/driver/newlicense').post(drivers.newLicense);
 };
