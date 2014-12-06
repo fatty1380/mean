@@ -55,7 +55,7 @@
             <div class="row-fluid">
                 <div class="col-md-4">
                     <label>Location:</label>
-                    <span class="text-danger">TODO: Need to use Address Directive/Template</span>
+                    <span class="text-danger">TODO: Directivize</span>
                     <address ng-show="driver.user.addresses.length > 0" ng-repeat="address in driver.user.addresses">
                         <strong>{{address.type}} [{{$index+1}} of {{driver.user.addresses.length}}]</strong>
                         <br/> {{address.city}}, {{address.state}} {{address.zipCode}}
@@ -66,7 +66,7 @@
 
                 <div class="col-md-4">
                     <label>Licenses ({{driver.licenses.length}})</label>
-                    <span class="text-danger">TODO: Need to use License Directive/Template</span>
+                    <span class="text-danger">TODO: Directivize</span>
                     <div ng-show="driver.licenses.length > 0" ng-repeat="license in driver.licenses">
 
                         <p><i class="fa fa-credit-card fa-2x"></i>&nbsp;{{license.state}} Driver License</p>
