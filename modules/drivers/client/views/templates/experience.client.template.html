@@ -1,0 +1,107 @@
+<section class="experience">
+    <section class="edit" ng-show="expctrl.editMode">
+        <div class="row">
+            <label class="col-sm-2 control-label">Title
+                <br/>
+                <small>Your title at this position</small>
+            </label>
+            <div class="controls col-sm-9 controls">
+                <input type="text" data-ng-model="expctrl.model.title" class="form-control" placeholder="Short Title" required></input>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-2 control-label">About
+                <br/>
+                <small>Describe your experience</small>
+            </label>
+            <div class="controls col-sm-9 controls">
+                <os-html-edit model="expctrl.model.description"></os-html-edit>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <label class="col-sm-2 control-label">Time
+                <br/>
+                <small>when were you at this job</small>
+            </label>
+
+            <label class="col-sm-1 control-label">Start</label>
+            <div class="col-sm-3 controls">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <div class="btn-group" dropdown is-open="status.start.isopen">
+                            <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="disabled">
+                                {{months[expctrl .model.time.start.month-1].value || "Month"}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="currMonth in months" ng-click="expctrl.model.time.start.month = currMonth.key">
+                                    <a>{{currMonth.value}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <input type="text" data-ng-model="expctrl.model.time.start.year" class="form-control" placeholder="year (eg: 2013)" required></input>
+                </div>
+            </div>
+
+            <label class="col-sm-1 control-label">End</label>
+            <div class="col-sm-3 controls">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <div class="btn-group" dropdown is-open="status.end.isopen">
+                            <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="disabled">
+                                {{months[expctrl.model.time.end.month-1].value || "Month"}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="currMonth in months" ng-click="expctrl.model.time.end.month = currMonth.key">
+                                    <a>{{currMonth.value}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <input type="text" data-ng-model="expctrl.model.time.end.year" class="form-control" placeholder="year (eg: 2013)" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-sm-2 control-label">Location
+                <br/>
+                <small>Where was this job?</small>
+            </label>
+            <div class="col-md-9 controls">
+                <input type="text" data-ng-model="expctrl.model.location" class="form-control" placeholder="Where" required />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="pull-right">
+                    <button class="btn btn-link" ng-click="expctrl.cancel()">
+                        cancel
+                    </button>
+
+                    <button class="btn btn-primary" ng-click="expctrl.save({add: false})">
+                        <i class="fa fa-check-circle" style="padding-right: 10px;"></i> Save
+                    </button>
+
+                    <button class="btn btn-primary" ng-if="!!expctrl.addFn" ng-click="expctrl.save({add: true})">
+                        <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Save &amp; Add
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="experience view" ng-hide="expctrl.editMode">
+        <div class="row">
+            <h4>{{expctrl.model.title}} <small ng-if="expctrl.editEnable"><button class="btn btn-link" ng-click="expctrl.edit()"><i class="fa fa-pencil"></i> edit</button></small></h4>
+            <p data-ng-bind-html="expctrl.model.description"></p>
+            <p>{{expctrl.model.time.start.month}}/{{expctrl.model.time.start.year}} to {{expctrl.model.time.end.month}}/{{expctrl.model.time.end.year}}, {{expctrl.model.location}}</p>
+    </section>
+</section>

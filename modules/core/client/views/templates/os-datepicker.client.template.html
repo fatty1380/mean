@@ -1,0 +1,6 @@
+<div class="input-group {{dpClasses}}" id="issueDate">
+    <input type="text" class="form-control" datepicker-mode="{{initialMode}}" datepicker-options="ctrl.dateOptions" datepicker-popup="{{ctrl.format}}" ng-model="ctrl.model" is-open="ctrl.opened" ng-required="ctrl.required" close-text="Close" />
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="ctrl.toggle($event)"><i class="fa fa-calendar fa-fw"></i></button>
+    </span>
+</div>

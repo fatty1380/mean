@@ -1,9 +1,9 @@
-<section data-ng-controller="DriversController" data-ng-init="findOne()">
+<section data-ng-controller="DriversController" data-ng-init="init()">
     User Name: {{authentication.user.displayName}}
     <section class="container" data-ng-if="!driver.user">
         {{authentication.user.displayName}} has not yet created a driver profile
 
-        <button type="button" class="btn btn-primary" ui-sref="drivers.create" data-ng-show="createEnabled">Create Your Driver Profile</button>
+        <button type="button" class="btn btn-primary" ui-sref="drivers.create" data-ng-show="canEdit">Create Your Driver Profile</button>
 
     </section>
     <section class="container" data-ng-if="!!driver.user">
@@ -57,23 +57,26 @@
                     <label>Location:</label>
                     <span class="text-danger">TODO: Need to use Address Directive/Template</span>
                     <address ng-show="driver.user.addresses.length > 0" ng-repeat="address in driver.user.addresses">
-                        {{address.city}}, {{address.state}}} {{address.zip}} [{{0}} of {{driver.addresses.length}}]
-                        <br/>
+                        <strong>{{address.type}} [{{$index+1}} of {{driver.user.addresses.length}}]</strong>
+                        <br/> {{address.city}}, {{address.state}} {{address.zipCode}}
                     </address>
 
                     <p ng-show="!driver.user.addresses || driver.user.addresses.length <= 0">No Address on File</p>
                 </div>
 
                 <div class="col-md-4">
-                    <label>Licenses</label>
+                    <label>Licenses ({{driver.licenses.length}})</label>
                     <span class="text-danger">TODO: Need to use License Directive/Template</span>
                     <div ng-show="driver.licenses.length > 0" ng-repeat="license in driver.licenses">
+
+                        <p><i class="fa fa-credit-card fa-2x"></i>&nbsp;{{license.state}} Driver License</p>
+
                         <p><i class="fa fa-credit-card fa-2x"></i>&nbsp;{{license.type}} - Class {{license.ratings}}</p>
                         <p>
                             <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter" class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
                         </p>
                     </div>
-                    <p ng-show="driver.licenses.length == 0">No License on File</p>
+                    <p ng-show="driver.licenses.length === 0">No License on File</p>
                 </div>
             </div>
 

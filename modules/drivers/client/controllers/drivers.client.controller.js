@@ -6,15 +6,17 @@
         $scope.authentication = Authentication;
         //$scope.driver = Drivers;
         //$scope.driverUser = DriverUser;
-        $scope.createEnabled = false;
+        $scope.canEdit = $state.is('drivers.me') || ($stateParams.driverId === Authentication.user.id);
 
         // Local Variables
-        $scope.licenses = [];
         $scope.experience = [];
         $scope.ratings = ['A', 'B', 'C', 'D', 'M', 'G'];
         $scope.rating = {
             model: undefined
         };
+
+        // Date Picker Ctrl
+
 
         $scope.endorsements = [{
             key: 'HME (Hazardous Materials)',
@@ -74,6 +76,24 @@
             'value': 'December'
         }];
 
+        $scope.init = function() {
+            if ($state.is('drivers.view') || $state.is('drivers.me')) {
+                $scope.action = 'Edit';
+                return $scope.findOne();
+            } else if ($state.is('drivers.create')) {
+                $scope.driver = {
+                    experience: [],
+                    licenses: [{}]
+                };
+                $scope.submit = $scope.create;
+                $scope.action = 'New';
+            } else {
+                $scope.action = 'Edit';
+                $scope.submit = $scope.update;
+                return $scope.findOne();
+            }
+        };
+
 
         // Create new Driver
         $scope.create = function() {
@@ -83,16 +103,13 @@
                 return;
             }
 
-            if (!$scope.license) {
+            if (!$scope.driver.licenses || !$scope.driver.licenses[0]) {
                 $scope.error = 'Please fill in information about your driver\'s license';
                 return;
             }
 
-            $scope.license.rating = $scope.rating.model;
-            $scope.license.endorsements = $scope.endorsements;
-
             // TODO: determine if this is necessary on the client side or if it is better handled on the server
-            angular.forEach($scope.experience, function(exp, i) {
+            angular.forEach($scope.driver.experience, function(exp, i) {
                 var start = new Date(exp.time.start.year, exp.time.start.month - 1);
                 var end = new Date(exp.time.end.year, exp.time.end.month - 1);
 
@@ -102,28 +119,22 @@
                 $log.debug('Start %o vs %o', start, exp.time.start, $scope.experience[i].time.start);
             });
 
-            if ($scope.experience && $scope.experience.length > 0) {
+            if ($scope.driver.experience && $scope.driver.experience.length > 0) {
                 $log.debug('After iter: %o', $scope.experience[0].time.start);
             }
 
             // Create new Driver object
-            var driver = new Drivers.ById({
-                licenses: [
-                    $scope.license
-                ],
-                experience: $scope.experience,
-            });
+            var driver = new Drivers.ById($scope.driver);
 
             // Redirect after save
             driver.$save(function(response) {
                 $log.debug('Successfully created new Driver');
-                $location.path('drivers/' + response._id);
+                $state.go('drivers.view', {
+                    driverId: response._id
+                });
             }, function(errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
-
-            // Clear form fields
-            this.name = '';
         };
 
         // Remove existing Driver
@@ -147,8 +158,11 @@
         $scope.update = function() {
             var driver = $scope.driver;
 
-            driver.$update(function() {
-                $location.path('driver/user/' + driver._id);
+            driver.$update(function(response) {
+                debugger;
+                $state.go('drivers.view', {
+                    driverId: response._id
+                });
             }, function(errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
@@ -164,7 +178,7 @@
             var id = userId || $stateParams.driverId;
 
             if (id && id === 'me') {
-                $scope.createEnabled = true;
+                $scope.canEdit = true;
 
                 $scope.driver = Drivers.ByUser.get({
                     userId: $scope.authentication.user._id
@@ -172,7 +186,7 @@
                     $log.info('Successfully loaded LoggedInUser Driver Profile');
                 }, handleFindError);
             } else if (id) {
-                $scope.createEnabled = (id === $scope.authentication.user._id);
+                $scope.canEdit = (id === $scope.authentication.user._id);
 
                 $scope.driver = Drivers.ById.get({
                     driverId: id
@@ -183,7 +197,6 @@
         };
 
         var handleFindError = function(response) {
-            debugger;
             $log.error('Error loading driver: [%s] %s', response.status, response.data.message);
             if (response.status === 404) {
                 $log.info('No Driver found for this user');
@@ -193,38 +206,23 @@
 
         };
 
-        // Specific Driver Functions
-        $scope.addLicense = function() {
+        $scope.dropExperience = function(exp) {
+            exp = exp || this.exp;
 
-            $scope.success = $scope.error = null;
-            event.preventDefault();
+            if (exp) {
 
-            $http.get('/drivers/newLicense', $scope.licenses)
-                .success(function(response) {
-                    $scope.user.licenses.push(response);
-                })
-                .error(function(response) {
-                    alert('Failed with response: ' + response.message);
-
-                    var data = {
-                        type: 'pscope',
-                        number: 'pscope',
-                        state: 'pscope',
-                        issued: new Date('2014-07-01'),
-                        expired: new Date('2014-07-01'),
-                        endorsements: []
-                    };
-
-                    $scope.user.licenses.push({
-                        info: data
-                    });
-                });
+                for (var i in $scope.driver.experience) {
+                    if ($scope.driver.experience[i] === exp) {
+                        $scope.driver.experience.splice(i, 1);
+                    }
+                }
+            }
         };
 
         $scope.addExperience = function() {
             event.preventDefault();
 
-            $scope.experience.push({
+            $scope.driver.experience.push({
                 text: '',
                 time: {
                     start: {
@@ -236,30 +234,9 @@
                         year: null
                     }
                 },
-                location: ''
+                location: '',
+                isFresh: true
             });
-        };
-
-        $scope.date = new Date();
-
-        $scope.moreExperienceDisplayHelper = function() {
-            var experience = $scope.experience;
-
-            if (experience && experience.length > 0) {
-                var val = experience[experience.length - 1];
-
-                if (val.text.length && val.location.length) {
-                    if (val.time.start.month && val.time.start.year) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        };
-
-        $scope.inspect = function() {
-            debugger;
         };
 
         $scope.endorsementFilter = function(item) {

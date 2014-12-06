@@ -5,7 +5,6 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    constants = require('constants'),
     _ = require('lodash');
 
 /**
@@ -77,28 +76,11 @@ var DriverSchema = new Schema({
     },
 });
 
-DriverSchema.pre('save', function(next){
-  this.modified = Date.now;
-  next();
-});
-
-/**
- * Hook a pre save method to create a base schedule (if necessary)
- */
-DriverSchema.pre('save', ['Schedule', function(Schedule, next) {
-    if (_.isUndefined(this.schedule)) {
-        this.schedule = [];
-    }
-
-    var _self = this;
-
-    if (this.schedule.length === 0) {
-        _.forEach(constants.base_schedule, function(val, key) {
-            _self.schedule.push(new Schedule(val));
-        });
-    }
+DriverSchema.pre('save', function(next) {
+    debugger;
+    this.modified = Date.now();
 
     next();
-}]);
+});
 
 mongoose.model('Driver', DriverSchema);

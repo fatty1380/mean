@@ -20,6 +20,7 @@
             function($scope, $rootScope, $location, $state, $log, Auth) {
 
                 $scope.debugInfo = [];
+                $scope.collapsed = true;
 
                 var updateInfo = function(event, toState, toParams, fromState, fromParams) {
 
@@ -50,6 +51,10 @@
                         key: 'UserId',
                         value: Auth.user._id
                     });
+                };
+
+                $scope.toggle = function() {
+                    $scope.collapsed = !$scope.collapsed;
                 };
 
                 $rootScope.$on('$stateChangeSuccess', updateInfo);
