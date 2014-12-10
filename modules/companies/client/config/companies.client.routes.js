@@ -2,7 +2,6 @@
     'use strict';
 
     function company_resolve(rsrc, params) {
-
         if (!!params.companyId) {
             var val = params.companyId;
             console.log('Searching for company ID: %s', val);
@@ -11,7 +10,7 @@
                 companyId: val
             }).$promise;
         }
-        return null;
+        return {};
     }
 
     function user_resolve(rsrc, params, auth) {
@@ -111,9 +110,9 @@
         });
     }
 
+    // Dependency Injection
     company_resolve.$inject = ['Companies', '$stateParams'];
     user_resolve.$inject = ['Companies', '$stateParams', 'Authentication'];
-
     config.$inject = ['$stateProvider'];
 
     //Setting up route
