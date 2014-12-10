@@ -22,7 +22,9 @@ module.exports = {
                 'public/lib/textAngular/dist/textAngular-rangy.min.js',
                 'public/lib/textAngular/src/textAngular-sanitize.js',
                 'public/lib/textAngular/src/textAngularSetup.js',
-                'public/lib/textAngular/src/textAngular.js'
+                'public/lib/textAngular/src/textAngular.js',
+                'public/lib/angular-google-maps/dist/angular-google-maps.js',
+                'public/lib/lodash/dist/lodash.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },

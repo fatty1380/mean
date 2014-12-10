@@ -19,7 +19,9 @@ module.exports = {
                 'public/lib/angular-file-upload/angular-file-upload.min.js',
                 'public/lib/angular-route/angular-route.min.js',
                 'public/lib/textAngular/src/textAngular-sanitize.min.js',
-                'public/lib/textAngular/src/textAngular.min.js'
+                'public/lib/textAngular/src/textAngular.min.js',
+                'public/lib/angular-google-maps/dist/angular-google-maps.min.js',
+                'public/lib/lodash/dist/lodash.min.js'
             ]
         },
         css: 'public/dist/application.min.css',
