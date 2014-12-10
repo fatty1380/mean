@@ -138,7 +138,6 @@ exports.companyByUserID = function(req, res) {
     Company.findOne(req.query)
         .populate('owner', 'displayName')
         .exec(function(err, company) {
-            debugger;
             if (err) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
@@ -153,6 +152,8 @@ exports.companyByUserID = function(req, res) {
  * Company middleware
  */
 exports.companyByID = function(req, res, next, id) {
+    console.log('Querying for company with id %s', id);
+
     Company
         .findById(id)
         .populate('owner', 'displayName')

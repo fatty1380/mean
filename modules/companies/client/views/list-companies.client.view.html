@@ -1,10 +1,10 @@
-<section data-ng-controller="CompaniesController" data-ng-init="find()" class="container-fluid opaque-bg">
+<section class="container-fluid opaque-bg">
     <div class="container">
         <div class="page-header">
             <h1>Companies</h1>
         </div>
         <div class="list-group">
-            <a data-ng-repeat="company in companies" data-ng-href="companies/{{company._id}}" class="list-group-item">
+            <a data-ng-repeat="company in vm.companies" data-ng-href="companies/{{company._id}}" class="list-group-item">
                 <os-company company="company" inline="true"></os-company>
             </a>
         </div>

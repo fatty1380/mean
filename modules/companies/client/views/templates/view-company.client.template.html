@@ -1,26 +1,36 @@
 <section>
     <div ng-if="inline" class="row">
         <div class="col-md-8">
-            <h4 class="list-group-item-heading">{{company.name}}</h4>
+            <h4 class="list-group-item-heading">{{vm.company.name}}</h4>
         </div>
         <div class="col-md-4">
-            <small class="list-group-item-text"><p class="text-right">Added on<span data-ng-bind="company.created | date:'shortDate'"></span></p></small>
+            <small class="list-group-item-text"><p class="text-right">Added on<span data-ng-bind="vm.company.created | date:'shortDate'"></span></p></small>
         </div>
     </div>
-    <div class="row">
+
+    <div class="row" ng-if="inline">
         <div class="col-md-8 opaque-bg">
-            <span ng-if="inline" class="nowrap" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ company.about | limitTo : 100 }}</span>
-            <div ng-if="!inline" data-ng-bind-html="company.about"></div>
+            <span class="nowrap" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ vm.company.about | limitTo : 100 }}</span>
+            <div ng-if="!inline" data-ng-bind-html="vm.company.about"></div>
         </div>
         <div class="col-md-4">
-            <div ng-if="!inline" style="margin: auto; width: 300px; height: 300px; background-color: #CCC; border: solid 1px #666">
-                <h1 class="text-center" style="margin-top: 100px;"><small>Location</small><br/>{{company.zipCode}}</h1>
-            </div>
-            <label ng-if="inline">Location:
-                <strong>{{company.zipCode}}</strong>
+            <label>Location:
+                <strong>{{vm.company.zipCode}}</strong>
             </label>
         </div>
     </div>
+
+    <div class="row" ng-if="!inline">
+        <div class="col-md-8 opaque-bg" ng-if="!inline">
+            <div data-ng-bind-html="vm.company.about"></div>
+        </div>
+        <div class="col-md-4">
+            <div ng-if="!inline" style="margin: auto; width: 300px; height: 300px; background-color: #CCC; border: solid 1px #666">
+                <h1 class="text-center" style="margin-top: 100px;"><small>Location</small><br/>{{vm.company.zipCode}}</h1>
+            </div>
+        </div>
+    </div>
+
     <div ng-if="!inline" class="row" style="border-top: 1px solid #EEE; margin-top: 10px;">
         <div class="col-md-8 col-md-offset-1">
             <h4>Contact this business via&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-primary" ng-disabled="!company.phone" ng-click="makeCall()">Phone</button><button type="button" class="btn btn-primary" ng-disabled="!company.email" ng-click="sendEmail()">Email</button><button type="button" class="btn btn-primary" ng-disabled="!company.chat" ng-click="openChat()">Chat</button></h4>

@@ -2,7 +2,7 @@
     'use strict';
 
     // Jobs controller
-    function JobsController($scope, $stateParams, $location, $state, $modal, $log, Authentication, Jobs) {
+    function JobsController($scope, $stateParams, $location, $state, $modal, $log, Authentication, Jobs, Companies) {
 
         $scope.authentication = Authentication;
         $scope.user = Authentication.user;
@@ -11,7 +11,7 @@
         $scope.showAddressDetails = false;
         $scope.formMode = [];
 
-        $scope.mode = $state.current.data.mode;
+        $scope.mode = $state.current.data && $state.current.data.mode;
 
         if ($scope.mode === 'create') {
             $scope.job = {
@@ -19,9 +19,22 @@
                     min: null,
                     max: null
                 },
-                postStatus: 'draft'
+                postStatus: 'draft',
+                companyId: $stateParams.companyId
             };
         }
+
+        function activate() {
+            $scope.company = ($stateParams.companyId) ? Companies.ById.get({
+                companyId: $stateParams.companyId
+            }) : Companies.ByUser.get({
+                userId: $scope.user._id
+            });
+        }
+
+
+        $log.debug('State Params: %o', $stateParams);
+
 
         $scope.types = ['main', 'home', 'business', 'billing', 'other'];
 
@@ -44,6 +57,14 @@
 
         // Create new Job
         $scope.create = function() {
+
+            $scope.job.companyId = $scope.job.companyId || $scope.company._id;
+
+            if (!$scope.job.companyId) {
+                $log.error('Cannot create a job without a company ID!');
+                $scope.error = 'Company is not defined, please try again later';
+                return;
+            }
 
             // Create new Job object
             var job = new Jobs.ById($scope.job);
@@ -169,7 +190,7 @@
 
 
 
-    JobsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', '$log', 'Authentication', 'Jobs'];
+    JobsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', '$log', 'Authentication', 'Jobs', 'Companies'];
 
     angular.module('jobs')
         .controller('JobsController', JobsController);

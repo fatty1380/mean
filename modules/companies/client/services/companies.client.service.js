@@ -3,8 +3,9 @@
 //Companies service used to communicate Companies REST endpoints
 function Companies($resource) {
     return {
-        ById: $resource('api/companies/:companyId', {
-            companyId: '@_id'
+        ById: $resource('api/companies/:company:companyId', {
+            company: '@_id',
+            companyId: '@_companyId'
         }, {
             update: {
                 method: 'PUT'

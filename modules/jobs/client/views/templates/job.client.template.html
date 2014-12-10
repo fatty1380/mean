@@ -16,9 +16,9 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-8 opaque-bg">
-                <span class="nowrap" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ job.description | limitTo : 100 }}</span>
+        <div class="row hidden">
+            <div class="col-md-12 opaque-bg">
+                <span class="" ng-bind-html='job.description | streamline | limitTo : 100' style="white-space: wrap; overflow:hidden; text-overflow: ellipsis; display: block;"></span>
             </div>
         </div>
 

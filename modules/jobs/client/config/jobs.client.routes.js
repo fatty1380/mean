@@ -32,7 +32,7 @@ angular.module('jobs').config(['$stateProvider',
         }).
 
         state('jobs.create', {
-            url: '/create',
+            url: '/create/:companyId',
             templateUrl: 'modules/jobs/views/edit-job.client.view.html',
             data: {
                 mode: 'create'

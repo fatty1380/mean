@@ -6,7 +6,7 @@
         // Set top bar menu items
         Menus.addMenuItem('topbar', {
             title: 'Dashboard',
-            state: 'companies.me',
+            state: 'companies.home',
             userTypes: ['owner'],
             position: 1
         });

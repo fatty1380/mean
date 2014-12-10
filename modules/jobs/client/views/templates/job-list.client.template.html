@@ -1,0 +1,8 @@
+<section name="job-list.client.template">
+    <h3 ng-if="!!header">{{header}}<button class="btn btn-primary pull-right" ui-sref="jobs.create">Post Job</button></h3>
+    <div class="list-group">
+        <a data-ng-repeat="job in ctrl.jobs" data-ng-href="jobs/{{job._id}}" class="list-group-item">
+            <small><os-job job="job" inline="true"></os-job></small>
+        </a>
+    </div>
+</section>

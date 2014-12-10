@@ -54,6 +54,11 @@ var CompanySchema = new Schema({
         match: [/.+\@.+\..+/, 'Please fill a valid email address']
     },
 
+    profileImageURL: {
+        type: String,
+        default: ''
+    },
+
     created: {
         type: Date,
         default: Date.now

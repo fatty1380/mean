@@ -68,6 +68,7 @@ exports.create = function(req, res) {
 
     // Set properties
     job.user = req.user;
+    job.company = mongoose.Types.ObjectId(req.body.companyId);
     job.postStatus = 'posted';
     job.posted = Date.now();
 

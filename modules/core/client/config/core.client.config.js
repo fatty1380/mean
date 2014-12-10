@@ -7,6 +7,7 @@
             $log.debug('[CoreConfig] Entering state: %o. %o', toState.name, toState);
 
             if (Auth.user && toState.url === '/') {
+                debugger;
                 switch (Auth.user.type) {
                     case 'driver':
                         $log.debug('[HomeController] Re-Routing to driver\'s profile page');
@@ -14,9 +15,9 @@
                         $state.go('drivers.me');
                         break;
                     case 'owner':
-                        $log.debug('[HomeController] Re-Routing to the user\'s companies');
+                        $log.debug('[HomeController] Re-Routing to the user\'s company home');
                         event.preventDefault();
-                        $state.go('companies.me');
+                        $state.go('companies.home');
                         break;
                     default:
                         if (Auth.user.roles.indexOf('admin') !== -1) {
