@@ -14,8 +14,6 @@
         function activate() {
             if (!!vm.company && !!vm.company._id) {
                 console.log('hooray! %s', vm.company._id);
-            } else if ($state.is('companies.me') || $stateParams.companyId === 'me') {
-                vm.findOneByUser(vm.authentication.user);
             } else if ($state.is('companies.home') || $stateParams.companyId === 'home') {
                 vm.findOneByUser(vm.authentication.user);
             } else {
@@ -93,7 +91,7 @@
         };
 
         vm.init = function() {
-            if ($state.is('companies.me') || $stateParams.companyId === 'me') {
+            if ($state.is('companies.home') || $stateParams.companyId === 'home') {
                 vm.findByUser(vm.authentication.user);
             } else {
                 vm.findOne();

@@ -53,7 +53,7 @@
 
         state('companies.home', {
             url: '/home',
-            templateUrl: 'modules/companies/views/templates/company-dashboard.client.template.html',
+            templateUrl: 'modules/companies/views/view-company.client.view.html',
             parent: 'companies',
             controller: 'CompaniesController',
             controllerAs: 'vm',

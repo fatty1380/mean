@@ -14,7 +14,7 @@
                     break;
                 case 'owner':
                     $log.debug('[HomeController] Re-Routing to the user\'s companies');
-                    $state.go('companies.me');
+                    $state.go('companies.home');
                     break;
                 default:
                     if ($scope.authentication.user.roles.indexOf('admin') !== -1) {
