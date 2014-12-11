@@ -1,15 +1,8 @@
-<section data-ng-controller="JobsController" data-ng-init="initList()">
-    <section class="container">
-        <h3>{{listTitle}}</h3>
-        <div class="list-group">
-            <a data-ng-repeat="job in jobs" data-ng-href="jobs/{{job._id}}" class="list-group-item">
-                <small>
-                    <os-job job="job" inline="true"></os-job>
-                </small>
-            </a>
-        </div>
-        <div class="alert alert-warning text-center" data-ng-hide="!jobs.$resolved || jobs.length">
-            No Jobs yet, why don't you <a href="/jobs/create">create one</a>?
-        </div>
+<section data-ng-init="initList()">
+    <section class="container-fluid">
+        <os-page-header title="{{listTitle}}" btn-show="true" btn-text="Post Job" btn-sref="jobs.create({companyId: '{{company._id}}' })">
+            <button ng-if="authentication.user._id === company.owner._id" class="btn btn-primary pull-right" ui-sref="jobs.create({companyId: company._id})">Post Job</button>
+        </os-page-header>
+        <os-job-list src-jobs="jobs" company="company" company-id="{{company._id}}"></os-job-list>
     </section>
 </section>

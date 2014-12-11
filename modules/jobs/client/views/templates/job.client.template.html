@@ -1,16 +1,14 @@
-<section class='job-item'>
-    <!-- job.client.template.html -->
-
-    <section ng-if="inline">
+<section class='job-item' name="os-dm.job.directive">
+    <section ng-if="dm.inline">
         <div class="row">
             <div class="col-md-8">
-                <h4 class="list-group-item-heading">{{job.name}}
+                <h4 class="list-group-item-heading">{{dm.job.name}}
                 </h4>
             </div>
             <div class="col-md-4">
                 <small class="list-group-item-text">
                     <p class="text-right">Added on
-                        <span data-ng-bind="job.created | date:'shortDate'"></span>
+                        <span data-ng-bind="dm.job.created | date:'shortDate'"></span>
                     </p>
                 </small>
             </div>
@@ -18,7 +16,7 @@
 
         <div class="row hidden">
             <div class="col-md-12 opaque-bg">
-                <span class="" ng-bind-html='job.description | streamline | limitTo : 100' style="white-space: wrap; overflow:hidden; text-overflow: ellipsis; display: block;"></span>
+                <span class="" ng-bind-html='dm.job.description | streamline | limitTo : 100' style="white-space: wrap; overflow:hidden; text-overflow: ellipsis; display: block;"></span>
             </div>
         </div>
 
@@ -28,49 +26,32 @@
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-usd fa-stack-1x fa-inverse"></i>
                 </span>
-                <span>${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</span>
+                <span>${{ dm.job.payRate.min }} to ${{ dm.job.payRate.max }} per Hour</span>
             </div>
             <div class="col-md-3">
                 <span class="fa-stack fa-md pull-left">
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-credit-card fa-stack-1x fa-inverse"></i>
                 </span>
-                <span>{{ job.endorsements || "Operator - Class D" }}</span>
+                <span>{{ dm.job.endorsements || "Operator - Class D" }}</span>
             </div>
             <div class="col-md-3">
                 <span class="fa-stack fa-md pull-left">
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse"></i>
                 </span>
-                <span>{{ job.location.zipCode }}</span>
+                <span>{{ dm.job.location.zipCode }}</span>
             </div>
         </div>
     </section>
 
-    <section ng-if="!inline" class="row col-sm-12">
-        <div class="page-header">
-            <h1>{{ job.name }}
-            <div class="pull-right">
-                <div data-ng-show="authentication.user._id == job.user._id">
-                    <a class="btn btn-primary" href="/jobs/{{job._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                    <a class="btn btn-primary" data-ng-click="remove();">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                </div>
-            </div>
-            </h1>
-            <small>
-                <em class="text-muted">
-                    Posted on
-                    <span data-ng-bind="job.created | date:'mediumDate'"></span>
-                    by
-                    <span data-ng-bind="job.user.displayName"></span>
-                </em>
-            </small>
-        </div>
+    <section ng-if="!dm.inline">
 
+        <os-page-header title="{{dm.job.name}}" edit-sref="jobs.edit({jobId: '{{dm.job._id}}'})" show-edit="dm.auth.user._id == dm.job.user._id">
+            Posted on
+            <span data-ng-bind="dm.job.created | date:'mediumDate'"></span> by
+            <span data-ng-bind="dm.job.user.displayName"></span>
+        </os-page-header>
 
         <div class="row">
             <div class="col-md-8">
@@ -78,41 +59,41 @@
                 <div class="panel panel-default job-info">
                     <div class="panel-heading">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" ng-class="{active : showSection('description', true)}" ng-click=" setDisplay( 'description') " class="btn btn-link "><span class="h4">Description</span>
+                            <button type="button" ng-class="{active : dm.showSection('description', true)}" ng-click=" dm.setDisplay( 'description') " class="btn btn-link "><span class="h4">Description</span>
                             </button>
-                            <button type="button" ng-class="{active : showSection('requirements', true)}" ng-click="setDisplay( 'requirements') " class="btn btn-link "><span class="h4">Requirements</span>
+                            <button type="button" ng-class="{active : dm.showSection('requirements', true)}" ng-click="dm.setDisplay( 'requirements') " class="btn btn-link "><span class="h4">Requirements</span>
                             </button>
-                            <button type="button" ng-class="{active : showSection('location', true)}" ng-click="setDisplay( 'location') " class="btn btn-link "><span class="h4">Location</span>
+                            <button type="button" ng-class="{active : dm.showSection('location', true)}" ng-click="dm.setDisplay( 'location') " class="btn btn-link "><span class="h4">Location</span>
                             </button>
-                            <button type="button" ng-class="{active : showSection('about', true)}" ng-click="setDisplay( 'about') " class="btn btn-link "><span class="h4">About</span>
+                            <button type="button" ng-class="{active : dm.showSection('about', true)}" ng-click="dm.setDisplay( 'about') " class="btn btn-link "><span class="h4">About</span>
                             </button>
                         </div>
 
-                        <button type="button" ng-click="setDisplay() " class="btn btn-link pull-right"><span class="h4">&times;</span>
+                        <button type="button" ng-click="dm.setDisplay() " class="btn btn-link pull-right"><span class="h4">&times;</span>
                         </button>
                     </div>
                     <div class="panel-body ">
-                        <span ng-show="showSection( 'description') ">
-                            <h4 ng-show="showSection( 'all') ">Description</h4>
-                            <div ng-bind-html="job.description"></div>
+                        <span ng-show="dm.showSection( 'description') ">
+                            <h4 ng-show="dm.showSection( 'all') ">Description</h4>
+                            <div ng-bind-html="dm.job.description"></div>
                             <hr/>
                         </span>
 
-                        <span ng-show="showSection( 'requirements') ">
-                            <h4 ng-show="showSection( 'all') ">Requirements</h4>
-                            {{ job.requirements || 'none listed'}}
+                        <span ng-show="dm.showSection( 'requirements') ">
+                            <h4 ng-show="dm.showSection( 'all') ">Requirements</h4>
+                            {{ dm.job.requirements || 'none listed'}}
                             <hr/>
                         </span>
 
-                        <span ng-show="showSection( 'location') ">
-                            <h4 ng-show="showSection( 'all') ">Location</h4>
-                            {{ job.location || 'not available' }}
+                        <span ng-show="dm.showSection( 'location') ">
+                            <h4 ng-show="dm.showSection( 'all') ">Location</h4>
+                            {{ dm.job.location || 'not available' }}
                             <hr/>
                         </span>
 
-                        <span ng-show="showSection( 'about') ">
-                            <h4 ng-show="showSection( 'all') ">About the Company</h4>
-                            {{job.company || 'not available'}}
+                        <span ng-show="dm.showSection( 'about') ">
+                            <h4 ng-show="dm.showSection( 'all') ">About the Company</h4>
+                            {{dm.job.company || 'not available'}}
                         </span>
                     </div>
                 </div>
@@ -125,57 +106,57 @@
                         <span class="h4">Info</span>
                     </div>
                     <div class="panel-body ">
-                        <div class="row" ng-if="job.positionType">
+                        <div class="row" ng-if="dm.job.positionType">
                             <span class="fa-stack fa-lg pull-left ">
                                 <i class="fa fa-circle fa-stack-2x "></i>
                                 <i class="fa fa-clock-o fa-stack-1x fa-inverse "></i>
                             </span>
-                            <span>{{ job.positionType || "Part-Time Employment " }}</span>
+                            <span>{{ dm.job.positionType || "Part-Time Employment " }}</span>
                             <br>
                         </div>
 
-                        <div class="row" ng-if="job.location && job.location.zipCode">
+                        <div class="row" ng-if="dm.job.location && dm.job.location.zipCode">
                             <span class="fa-stack fa-lg pull-left ">
                                 <i class="fa fa-circle fa-stack-2x "></i>
                                 <i class="fa fa-map-marker pull-left fa-stack-1x fa-inverse "></i>
                             </span>
-                            <span>{{ job.location.zipCode }}</span>
+                            <span>{{ dm.job.location.zipCode }}</span>
                             <br>
                         </div>
 
-                        <div class="row" ng-if="job.payRate && (job.payRate.min || job.payRate.max)">
+                        <div class="row" ng-if="dm.job.payRate && (dm.job.payRate.min || dm.job.payRate.max)">
                             <span class="fa-stack fa-lg pull-left ">
                                 <i class="fa fa-circle fa-stack-2x "></i>
                                 <i class="fa fa-usd fa-stack-1x fa-inverse "></i>
                             </span>
                             <span>
-                                ${{ job.payRate.min }} to ${{ job.payRate.max }} per Hour</span>
+                                ${{ dm.job.payRate.min }} to ${{ dm.job.payRate.max }} per Hour</span>
                             <br>
                         </div>
 
-                        <div class="row" ng-if="job.endorsements">
+                        <div class="row" ng-if="dm.job.endorsements">
                             <span class="fa-stack fa-lg pull-left ">
                                 <i class="fa fa-circle fa-stack-2x "></i>
                                 <i class="fa fa-credit-card fa-stack-1x fa-inverse "></i>
                             </span>
-                            <span>{{ job.endorsements }}</span>
+                            <span>{{ dm.job.endorsements }}</span>
                         </div>
                     </div>
                 </div>
 
 
-                <div data-ng-if="authentication.user._id !== job.user._id && formMode[$index] !== 'apply'">
+                <div data-ng-if="authentication.user._id !== dm.job.user._id && formMode[$index] !== 'apply'">
                     <button class="btn btn-primary btn-lg btn-block" data-ng-click="apply('lg', job)">Apply to this job</button>
                     <br>
                     <button class="btn btn-primary btn-lg btn-block" os-new-application-modal job='job'>Apply to this job(m)</button>
                 </div>
 
-                <div data-ng-if="authentication.user._id === job.user._id" class="panel panel-default " data-ng-controller="ApplicationsController " data-ng-init="initJobList(job) ">
+                <div data-ng-if="authentication.user._id === dm.job.user._id" class="panel panel-default " data-ng-controller="ApplicationsController " data-ng-init="initJobList(job) ">
                     <div class="panel-heading ">
                         <span class="h4">{{listTitle}}</span>
                     </div>
                     <div class="panel-body ">
-                        <div ng-if="!inline && authentication.user._id == job.user._id " class="row ">
+                        <div ng-if="!inline && authentication.user._id == dm.job.user._id " class="row ">
                             <span class="col-md-12 ">
                                 <div ng-include=" '/modules/applications/views/templates/list-applications.client.template.html' ">
                                 </div>

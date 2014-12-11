@@ -2,41 +2,44 @@
     'use strict';
 
     // Jobs controller
-    function JobsController($scope, $stateParams, $location, $state, $modal, $log, Authentication, Jobs, Companies) {
+    function JobsController($scope, $stateParams, $location, $state, $modal, $log, Authentication, Jobs, Companies, job, jobs, company) {
 
         $scope.authentication = Authentication;
         $scope.user = Authentication.user;
+
+        $scope.job = job;
+        $scope.jobs = jobs;
+        $scope.company = company || job && typeof job.company === 'object' && job.company || undefined;
 
         // Init addressDetails for creation.
         $scope.showAddressDetails = false;
         $scope.formMode = [];
 
-        $scope.mode = $state.current.data && $state.current.data.mode;
-
-        if ($scope.mode === 'create') {
+        if ($state.is('jobs.create')) {
             $scope.job = {
                 payRate: {
                     min: null,
                     max: null
                 },
                 postStatus: 'draft',
-                companyId: $stateParams.companyId
+                companyId: !!$scope.company && $scope.company._id || $stateParams.companyId
             };
         }
 
         function activate() {
-            $scope.company = ($stateParams.companyId) ? Companies.ById.get({
-                companyId: $stateParams.companyId
-            }) : Companies.ByUser.get({
-                userId: $scope.user._id
-            });
+            if (!$scope.company) {
+                $scope.company = ($stateParams.companyId) ? Companies.ById.get({
+                    companyId: $stateParams.companyId
+                }) : Companies.ByUser.get({
+                    userId: $scope.user._id
+                });
+            }
         }
-
 
         $log.debug('State Params: %o', $stateParams);
 
-
         $scope.types = ['main', 'home', 'business', 'billing', 'other'];
+        activate();
 
         $scope.showAddressDetails = function() {
             event.preventDefault();
@@ -45,7 +48,7 @@
         };
 
         $scope.upsert = function() {
-            if ($scope.mode === 'create') {
+            if ($state.is('jobs.create')) {
                 return $scope.create();
             }
             if ($scope.mode === 'edit') {
@@ -58,6 +61,7 @@
         // Create new Job
         $scope.create = function() {
 
+            debugger; // todo - check companyId status
             $scope.job.companyId = $scope.job.companyId || $scope.company._id;
 
             if (!$scope.job.companyId) {
@@ -80,16 +84,6 @@
             // TODO: Clear all form fields
             ///this.name = '';
         };
-
-        $scope.toggleApplication = function(state, $index) {
-            if (state) {
-                $scope.formMode[$index] = 'apply';
-            } else {
-                $scope.formMode[$index] = 'view';
-            }
-        };
-
-
 
         $scope.delist = function(job) {
             job = job || $scope.job;
@@ -135,13 +129,17 @@
                 $scope.find();
             } else if ($state.is('jobs.mine')) {
                 $scope.listTitle = ($scope.user.type === 'driver') ? 'My Jobs' : 'My Job Postings';
-
                 $scope.findMine();
             }
         };
 
         // Find a list of Jobs
         $scope.find = function() {
+
+            if (!!$scope.jobs) {
+                return;
+            }
+
             var user = $scope.authentication.user;
 
             if (user && user.type === 'owner') {
@@ -155,42 +153,32 @@
 
         // Find a list of 'My' Jobs.
         $scope.findMine = function() {
+            if (!!$scope.jobs) {
+                return;
+            }
+
             $scope.jobs = Jobs.ByUser.query({
                 userId: Authentication.user._id,
             });
         };
         // Find existing Job
         $scope.findOne = function() {
-            if (!$stateParams.jobId) {
+            if ($state.is('jobs.create')) {
                 $scope.pageTitle = 'Post New Job';
                 return;
             }
 
             $scope.pageTitle = 'Edit Job';
 
-            $scope.job = Jobs.ById.get({
+            $scope.job = $scope.job || Jobs.ById.get({
                 jobId: $stateParams.jobId
             });
-        };
-
-        $scope.displayMode = 'all';
-
-        $scope.showSection = function(section, only) {
-            if (!only && $scope.displayMode === 'all') {
-                return true;
-            }
-
-            return $scope.displayMode === section;
-        };
-
-        $scope.setDisplay = function(section) {
-            $scope.displayMode = section || 'all';
         };
     }
 
 
 
-    JobsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', '$log', 'Authentication', 'Jobs', 'Companies'];
+    JobsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', '$log', 'Authentication', 'Jobs', 'Companies', 'job', 'jobs', 'company'];
 
     angular.module('jobs')
         .controller('JobsController', JobsController);

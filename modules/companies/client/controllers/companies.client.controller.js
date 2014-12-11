@@ -12,8 +12,6 @@
         vm.company = company;
 
         function activate() {
-                debugger;
-
             if (!!vm.company && !!vm.company._id) {
                 console.log('hooray! %s', vm.company._id);
             } else if ($state.is('companies.me') || $stateParams.companyId === 'me') {

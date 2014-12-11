@@ -1,9 +1,9 @@
-<section data-ng-controller="JobsController" data-ng-init="findOne()">
+<section data-ng-init="findOne()">
     <!-- edit-job.client.view.html -->
-    <section class="container">
-        <div class="page-header">
-            <h1>{{ pageTitle || 'Edit Job' }}</h1>
-        </div>
+    <section class="container-fluid">
+        <os-page-header title="{{ pageTitle || 'Edit Job'}}">
+            <span ng-show="!!company">For {{company.name}}</span>
+        </os-page-header>
         <div class="col-md-12">
             <form class="form-horizontal" data-ng-submit="upsert()" novalidate>
                 <fieldset>
@@ -24,10 +24,7 @@
                             <div class="panel-heading">Preview</div>
                             <div class="panel-body" ng-bind-html="job.description"></div>
                         </div>
-
                     </div>
-
-
 
                     <div class="form-group">
                         <label class="control-label" for="name">Location</label>

@@ -1,26 +1,29 @@
-<section>
-    <div class="container">
-        <section class="container">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h1>{{vm.company.name}}
-                        </h1>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="pull-right" data-ng-show="authentication.user._id == company.owner._id">
-                            <a class="btn btn-primary" href="/companies/{{vm.company._id}}/edit">
-                                <i class="glyphicon glyphicon-edit"></i>
-                            </a>
-                            <a class="btn btn-primary" data-ng-click="remove();">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <h4>Company: {{vm.company.name}}, Companies: {{vm.companies[0].name}}</h4>
-                <os-company company="vm.company"></os-company>
+<section class="container-fluid">
+    <os-page-header title="{{vm.company.name}}" edit-sref="companies.edit({companyId: '{{vm.company._id}}'})" show-edit="vm.authentication.user._id === vm.company.owner._id">
+        Joined on
+        <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>.
+        Owner:
+        <span data-ng-bind="vm.company.owner.displayName"></span>
+    </os-page-header>
+
+    <div class="row">
+        <div class="col-md-8" style="border-right: 1px solid #CCC">
+            <os-company company="vm.company"></os-company>
+
+            <os-job-list header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}" show-post="vm.authentication.user._id === vm.company.owner._id" ></os-job-list>
+        </div>
+
+        <div class="gutter right col-md-4">
+            <span id="evilNonSemanticSpacer"></span>
+
+            <div class="profile-floater">
+                <img data-ng-src="{{vm.imageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
+                <a class="btn btn-link" href="/companies/{{vm.company._id}}/edit/picture">edit
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
             </div>
-        </section>
+
+            <os-map-location zipCode='{{vm.company.zipCode}}'></os-map-location>
+        </div>
     </div>
 </section>

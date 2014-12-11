@@ -15,7 +15,6 @@
 
     function user_resolve(rsrc, params, auth) {
         var val;
-
         if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
             val = params.userId;

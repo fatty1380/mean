@@ -173,6 +173,7 @@ exports.jobByID = function(req, res, next, id) {
     Job.findById(id)
         .populate('user', 'displayName')
         .populate('location')
+        .populate('company')
         .exec(function(err, job) {
             if (err) return next(err);
             req.job = job;

@@ -1,40 +1,21 @@
-<section class="container-fluid" style="height: 200%;">
-    <!-- Masthead -->
-    <div class="page-header" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
-        <h1>{{ vm.company.name }}
-            <span data-ng-show="hover && vm.authentication.user._id == vm.company.owner._id">
-                <a class="btn btn-link" ui-sref="companies.edit({companyId: vm.company._id})">edit
-                    <i class="fa" ng-class="{'fa-pencil-square-o': hover}" ></i>
-                </a>
-            </span>
-        </h1>
-        <!-- Sub-heading -->
-        <small>
-            <em class="text-muted">
-                Joined on
-                <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>
-                by
-                <span data-ng-bind="vm.company.owner.displayName"></span>
-            </em>
-        </small>
-    </div>
-
+<section class="container-fluid">
+    <os-page-header title="{{vm.company.name}}" edit-sref="companies.edit({companyId: '{{vm.company._id}}'})" show-edit="vm.authentication.user._id === vm.company.owner._id">
+        Joined on
+        <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>.
+        Owner:
+        <span data-ng-bind="vm.company.owner.displayName"></span>
+    </os-page-header>
 
     <div class="row">
-        <div class="col-md-8" style="border: 1px solid #666;">
-            <div class="row">
-                <div data-ng-bind-html="vm.company.about" class="well"></div>
-            </div>
+        <div class="col-md-8">
+            <os-company company="vm.company"></os-company>
 
-            <div class="row">
-                <h3>My Jobs <small>for co: {{vm.company._id}}</small><button class="btn btn-primary pull-right" ui-sref="jobs.create({companyId: vm.company._id})">Post Job</button></h3>
-                <os-job-list company="company" company-id="vm.company._id"></os-list-jobs>
-            </div>
+            <os-job-list header="My Jobs" company="vm.company" company-id="{{vm.company._id}}" show-post="vm.authentication.user._id === vm.company.owner._id" ></os-job-list>
         </div>
 
-        <div class="gutter right well col-md-4" style="position: relative; border: 1px solid #666;">
-
+        <div class="gutter right col-md-4">
             <span id="evilNonSemanticSpacer"></span>
+
             <div class="profile-floater">
                 <img data-ng-src="{{vm.imageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
                 <a class="btn btn-link" href="/companies/{{vm.company._id}}/edit/picture">edit
@@ -43,11 +24,6 @@
             </div>
 
             <os-map-location zipCode='{{vm.company.zipCode}}'></os-map-location>
-
-            <div style="margin: auto; width: 300px; height: 300px; background-color: #CCC; border: solid 1px #666">
-                <h1 class="text-center" style="margin-top: 100px;"><small>Location</small><br/>{{vm.company.zipCode}}</h1>
-            </div>
-
         </div>
     </div>
 

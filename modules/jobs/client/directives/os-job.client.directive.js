@@ -1,40 +1,70 @@
 'use strict';
 
+function JobItemController(Auth) {
+    var dm = this;
+
+    dm.auth = Auth;
+    dm.displayMode = 'all';
+
+    dm.showSection = function(section, only) {
+        if (!only && dm.displayMode === 'all') {
+            return true;
+        }
+
+        return dm.displayMode === section;
+    };
+
+    dm.setDisplay = function(section) {
+        dm.displayMode = section || 'all';
+    };
+}
+
 function JobDirective() {
     return {
         scope: {
             job: '=',
-            inline: '='
+            inline: '=?',
+            editSref: '@?',
+            showEdit: '=?'
         },
         templateUrl: 'modules/jobs/views/templates/job.client.template.html',
         restrict: 'E',
         replace: true,
-        controller: 'JobsController',
-        controllerAs: 'ctrl'
+        controller: JobItemController,
+        controllerAs: 'dm',
+        bindToController: true
     };
 }
 
 function JobListController(Jobs, $log, $state) {
-    this.companyId = this.companyId || this.company._id;
-    this.driverId = this.driverId || (this.driver && this.driver.user._id);
+    var dm = this;
 
-    if (!this.companyId && !this.driverId) {
+    dm.limitTo = dm.limitTo || 10;
+    dm.companyId = dm.companyId || dm.company._id;
+    dm.driverId = dm.driverId || (dm.driver && dm.driver.user._id);
+
+    if (!dm.companyId && !dm.driverId) {
         $log.error('[%s] Must Specify either a company or driver', 'JobListController');
         $state.go('home');
     }
 
-    if (!!this.companyId && !!this.driverId) {
+    if (!!dm.companyId && !!dm.driverId) {
         $log.warn('[%s] Both company and driver specified, defaulting to company', 'JobListController');
     }
 
-    if (!!this.companyId) {
-        this.jobs = Jobs.ByCompany.query({
-            companyId: this.companyId
+    if (!!dm.srcJobs && dm.srcJobs.length >= 0) {
+        dm.jobs = dm.srcJobs;
+    }
+    else if (!!dm.companyId) {
+        dm.jobs = Jobs.ByCompany.query({
+            companyId: dm.companyId
         });
-    } else if (!!this.driverId) {
-        this.jobs = Jobs.ByUser.query({
-            userId: this.driverId
+    } else if (!!dm.driverId) {
+        dm.jobs = Jobs.ByUser.query({
+            userId: dm.driverId
         });
+    } else {
+        dm.jobs = [];
     }
 }
 
@@ -46,18 +76,22 @@ function JobListDirective() {
         replace: false,
         scope: {
             header: '@?',
-            companyId: '=?',
+            companyId: '@?',
             company: '=?',
-            driverId: '=?',
-            driver: '=?'
+            driverId: '@?',
+            driver: '=?',
+            srcJobs: '=?',
+            showPost: '=?',
+            limitTo: '@?'
         },
         controller: JobListController,
-        controllerAs: 'ctrl',
+        controllerAs: 'dm',
         bindToController: true
     };
 }
 
 JobListController.$inject = ['Jobs', '$log', '$state'];
+JobItemController.$inject = ['Authentication'];
 
 angular.module('jobs')
     .directive('osJob', JobDirective)
