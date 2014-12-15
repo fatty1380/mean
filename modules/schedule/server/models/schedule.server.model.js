@@ -39,7 +39,7 @@ var ScheduleSchema = new Schema({
     },
     days: {
         type: [Boolean],
-        default: [false, false, false, false, false, false, false]
+        default: [null, null, null, null, null, null, null]
     }
 });
 
