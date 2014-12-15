@@ -7,14 +7,14 @@
     </os-page-header>
 
     <div class="row">
-        <div class="col-md-8" style="border-right: 1px solid #CCC">
+        <div class="col-md-8">
             <os-company company="vm.company"></os-company>
 
             <os-job-list header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}" show-post="vm.authentication.user._id === vm.company.owner._id" ></os-job-list>
         </div>
 
         <div class="gutter right col-md-4">
-            <span id="evilNonSemanticSpacer"></span>
+            <span class="evilNonSemanticSpacer"></span>
 
             <div class="profile-floater">
                 <img data-ng-src="{{vm.imageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
@@ -23,7 +23,7 @@
                 </a>
             </div>
 
-            <os-map-location zipCode='{{vm.company.zipCode}}'></os-map-location>
+            <os-map-location zip-code='{{vm.company.zipCode}}'></os-map-location>
         </div>
     </div>
 </section>

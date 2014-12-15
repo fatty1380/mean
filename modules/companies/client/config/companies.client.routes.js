@@ -75,17 +75,6 @@
             }
         }).
 
-        state('companies.me', {
-            url: '/me',
-            templateUrl: 'modules/companies/views/view-company.client.view.html',
-            parent: 'companies',
-            controller: 'CompaniesController',
-            controllerAs: 'vm',
-            resolve: {
-                company: user_resolve
-            }
-        }).
-
         state('companies.view', {
             url: '/:companyId',
             templateUrl: 'modules/companies/views/view-company.client.view.html',

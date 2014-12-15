@@ -23,27 +23,28 @@ angular.module('companies')
     ])
     // TODO : Move to CORE Module
     .directive('osPageHeader', function() {
-    	var ddo = {
-                templateUrl: 'modules/core/views/templates/os-page-header.client.template.html',
-    		scope: {
-    			title: '@',
-    			editSref: '@?',
-    			showEdit: '=?',
+        var ddo = {
+            templateUrl: 'modules/core/views/templates/os-page-header.client.template.html',
+            scope: {
+                title: '@',
+                editSref: '@?',
+                showEdit: '=?',
                 btnShow: '=?',
                 btnText: '@?',
-                btnSref: '@?'
-    		},
-    		transclude: true,
-    		restrict: 'E',
-    		controller: ['$transclude', function(transclude) {
-    			var dm = this;
+                btnSref: '@?',
+                level: '@?'
+            },
+            transclude: true,
+            restrict: 'E',
+            controller: ['$transclude', function(transclude) {
+                var dm = this;
 
-    			dm.hover = false;
-    			dm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
-    		}],
-    		controllerAs: 'dm',
-    		bindToController: true
-    	};
+                dm.hover = false;
+                dm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
+            }],
+            controllerAs: 'dm',
+            bindToController: true
+        };
 
-    	return ddo;
+        return ddo;
     });
