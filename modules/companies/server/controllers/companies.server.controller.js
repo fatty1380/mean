@@ -158,7 +158,7 @@ exports.companyByID = function(req, res, next, id) {
         .findById(id)
         .populate('owner', 'displayName')
         .exec(function(err, company) {
-            if (err) return next(err);
+            if (err) { return next(err); }
 
             req.company = company;
             next();

@@ -175,7 +175,7 @@ exports.jobByID = function(req, res, next, id) {
         .populate('location')
         .populate('company')
         .exec(function(err, job) {
-            if (err) return next(err);
+            if (err) { return next(err); }
             req.job = job;
             next();
         });

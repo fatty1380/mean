@@ -120,7 +120,7 @@ exports.list = function(req, res) {
  */
 exports.addressByID = function(req, res, next, id) {
     Address.findById(id).populate('user', 'displayName').exec(function(err, address) {
-        if (err) return next(err);
+        if (err) { return next(err); }
         req.address = address;
         next();
     });

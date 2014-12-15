@@ -405,7 +405,7 @@ exports.bgcheckByID = function(req, res, next, id) {
     Bgcheck.findById(id)
         .populate('user', 'displayName')
         .exec(function(err, bgcheck) {
-            if (err) return next(err);
+            if (err) { return next(err); }
             req.bgcheck = bgcheck;
             next();
         });

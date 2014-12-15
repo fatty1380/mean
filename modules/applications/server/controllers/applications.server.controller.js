@@ -178,7 +178,7 @@ exports.applicationByID = function(req, res, next, id) {
             select: 'displayName id'
         })
         .exec(function(err, application) {
-            if (err) return next(err);
+            if (err) { return next(err); }
 
             req.application = application;
             next();

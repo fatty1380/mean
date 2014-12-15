@@ -85,7 +85,7 @@ exports.forgot = function(req, res, next) {
 			});
 		}
 	], function(err) {
-		if (err) return next(err);
+		if (err) { return next(err); }
 	});
 };
 
@@ -183,7 +183,7 @@ exports.reset = function(req, res, next) {
 			});
 		}
 	], function(err) {
-		if (err) return next(err);
+		if (err) { return next(err); }
 	});
 };
 

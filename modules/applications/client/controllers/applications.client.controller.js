@@ -127,7 +127,7 @@
 
         $scope.initList = function() {
 
-            var isAdmin = $scope.authentication.user.roles.indexOf('admin') !== -1;
+            var isAdmin = $scope.authentication.isAdmin();
             var userType = $scope.authentication.user.type;
 
             if ($state.is('applications.list') && isAdmin) {

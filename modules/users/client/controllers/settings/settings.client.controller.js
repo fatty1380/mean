@@ -15,7 +15,7 @@
         this.user = Authentication.user;
 
         // If user is not signed in then redirect back home
-        if (!this.user) $location.path('/');
+        if (!this.user) { $location.path('/'); }
 
         if (!!$stateParams.userId) {
             if ($stateParams.userId !== this.user._id && !this.user.isAdmin) {

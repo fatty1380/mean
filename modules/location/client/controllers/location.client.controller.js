@@ -2,15 +2,18 @@
     'use strict';
 
     function LocationController($scope, uiGmapGoogleMapApi) {
+
+        var vm = this;
+
         // Do stuff with your $scope.
         // Note: Some of the directives require at least something to be defined originally!
         // e.g. $scope.markers = []
         $scope.search = $scope.zipCode || 'Phoenix, AZ';
-        $scope.map = { zoom: 8 };
+        $scope.map = { zoom: 10 };
 
         $scope.geoCode = function(maps) {
             if ($scope.search && $scope.search.length > 0) {
-                if (!this.geocoder) this.geocoder = new maps.Geocoder();
+                if (!this.geocoder) { this.geocoder = new maps.Geocoder(); }
                 this.geocoder.geocode({
                     'address': $scope.search
                 }, function(results, status) {
