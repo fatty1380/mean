@@ -1,123 +1,38 @@
-<section data-ng-controller="DriversController" data-ng-init="init()">
-    User Name: {{authentication.user.displayName}}
-    <section class="container" data-ng-if="!driver.user">
-        {{authentication.user.displayName}} has not yet created a driver profile
+<section class="container-fluid">
+    <os-page-header title="{{vm.user.displayName}}" edit-sref="drivers.edit({driverId: '{{vm.driver._id}}'})" show-edit="vm.authentication.user._id === vm.driver.user._id">
+        Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
+    </os-page-header>
 
-        <button type="button" class="btn btn-primary" ui-sref="drivers.create" data-ng-show="canEdit">Create Your Driver Profile</button>
+    <div class="row">
 
-    </section>
-    <section class="container" data-ng-if="!!driver.user">
-        <div class="col-md-2 text-center">
-            <img ng-src="modules/core/img/avatars/person.png" style="max-width: 100px; margin-top: 10px; border: 1px solid #333; padding: 10px;" />
+        <div class="col-md-8">
+
+            <os-driver-view model="vm.driver"></os-driver-view>
+
+            <section class="container-fluid" data-ng-if="!vm.driver.user">
+                {{vm.user.displayName}} has not yet created a driver profile
+
+                <button type="button" class="btn btn-primary" ui-sref="drivers.create" data-ng-show="vm.canEdit">Create Your Driver Profile</button>
+
+            </section>
+
         </div>
 
-        <div class="col-md-10">
+        <div class="gutter right col-md-4">
+            <span class="evilNonSemanticSpacer"></span>
 
-            <span class="h3">{{driver.user.displayName}}</span>
-            <small class="pull-right">
-                <label>isActive</label>
-                <span class="label" data-ng-bind="driver.isActive ? 'YES' : 'NO'" ng-class="driver.isActive ? 'label-success' : 'label-danger'"></span>
-                <label>isDeleted</label>
-                <span class="label" data-ng-bind="driver.isDeleted ? 'YES' : 'NO'" ng-class="!driver.isDeleted ? 'label-success' : 'label-danger'"></span>
-            </small>
-            <span class="pull-right">
-                <div data-ng-show="authentication.user._id == driver.user._id">
-                    <a class="btn btn-primary" href="/drivers/{{driver._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
-                    </a>
-                    <a class="btn btn-primary" data-ng-click="remove();">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                </div>
-            </span>
-
-            <div class="row-fluid">
-                <span class="h5">
-                    <small>Member Since {{driver.created | date: 'longDate'}}</small>
-                </span>
-
+            <div class="profile-floater">
+                <img data-ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
+                <a class="btn btn-link" data-ui-sref="settings.picture">edit
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
             </div>
 
-            <div class="row-fluid">
-                <p ng-bind-html="driver.about"></p>
-
-            </div>
-
-            <span ng-show="driver.experience.length > 0">
-                <label>Experience:</label>
-                <span ng-repeat="exp in driver.experience">
-                    {{exp.title || 'Job'}} - {{exp.time.start | date: 'shortDate'}} to {{exp.time.end | date: 'shortDate'}}
-                    <span ng-hide="$last">,</span>&nbsp;
-            </span>
-            <p ng-show="driver.experience.length == 0">None</p>
-            </span>
-
-            <div class="row-fluid">
-                <div class="col-md-4">
-                    <label>Location:</label>
-                    <span class="text-danger">TODO: Directivize</span>
-                    <address ng-show="driver.user.addresses.length > 0" ng-repeat="address in driver.user.addresses">
-                        <strong>{{address.type}} [{{$index+1}} of {{driver.user.addresses.length}}]</strong>
-                        <br/> {{address.city}}, {{address.state}} {{address.zipCode}}
-                    </address>
-
-                    <p ng-show="!driver.user.addresses || driver.user.addresses.length <= 0">No Address on File</p>
-                </div>
-
-                <div class="col-md-4">
-                    <label>Licenses ({{driver.licenses.length}})</label>
-                    <span class="text-danger">TODO: Directivize</span>
-                    <div ng-show="driver.licenses.length > 0" ng-repeat="license in driver.licenses">
-
-                        <p><i class="fa fa-credit-card fa-2x"></i>&nbsp;{{license.state}} Driver License</p>
-
-                        <p><i class="fa fa-credit-card fa-2x"></i>&nbsp;{{license.type}} - Class {{license.ratings}}</p>
-                        <p>
-                            <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter" class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
-                        </p>
-                    </div>
-                    <p ng-show="driver.licenses.length === 0">No License on File</p>
-                </div>
-            </div>
-
-            <div class="row-fluid profile-row col-md-12">
-                <label for="schedule">Availability</label>
-                <div class="col-md-12 availability_matrix" name="schedule">
-                    <div class="container-fluid well">
-                        <div class="col-md-12">
-                            <div class="row availability-header">
-                                <div class="col-md-5">
-                                    <h6 class="heading profile-label profile-label-1">Time</h6>
-                                </div>
-                                <div class="col-md-1">
-                                    <h6 class="heading profile-label profile-label-1">M</h6>
-                                </div>
-                                <div class="col-md-1">
-                                    <h6 class="heading profile-label profile-label-1">Tu</h6>
-                                </div>
-                                <div class="col-md-1">
-                                    <h6 class="heading profile-label profile-label-1">W</h6>
-                                </div>
-                                <div class="col-md-1">
-                                    <h6 class="heading profile-label profile-label-1">Th</h6>
-                                </div>
-                                <div class="col-md-1">
-                                    <h6 class="heading profile-label profile-label-1">F</h6>
-                                </div>
-                                <div class="col-md-1">
-                                    <h6 class="heading profile-label profile-label-1">Sa</h6>
-                                </div>
-                                <div class="col-md-1">
-                                    <h6 class="heading profile-label profile-label-1">Su</h6>
-                                </div>
-                            </div>
-                            <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in driver.schedule'></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <os-map-location zip-code="{{vm.driver.addresses[0].zipCode}}"></os-map-location>
         </div>
 
+    </div>
 
-    </section>
+
+
 </section>

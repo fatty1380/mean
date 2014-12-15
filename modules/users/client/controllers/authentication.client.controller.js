@@ -10,14 +10,14 @@
             switch (userType) {
                 case 'driver':
                     $log.debug('[HomeController] Re-Routing to driver\'s profile page');
-                    $state.go('drivers.me');
+                    $state.go('drivers.home');
                     break;
                 case 'owner':
                     $log.debug('[HomeController] Re-Routing to the user\'s companies');
                     $state.go('companies.home');
                     break;
                 default:
-                    if ($scope.authentication.user.roles.indexOf('admin') !== -1) {
+                    if ($scope.authentication.isAdmin()) {
                         $state.go('users.list');
                         break;
                     }
@@ -72,6 +72,7 @@
                 .success(function(response) {
                     // If successful we assign the response to the global user model
                     $scope.authentication.user = response;
+                    debugger;
 
                     redirect(response.type);
                 }).error(function(response) {

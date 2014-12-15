@@ -1,92 +1,50 @@
-<section ng-init="view = driver">
-    <span class="col-md-12 opaque-bg">
 
-        <div class="row">
-            <div class="col-md-10">
-                <h4>Driver Information</h4>
-            </div>
-            <div class="col-md-2">
-                <a class="btn btn-default btn-sm" ng-click="editMode = !editMode" data-ng-hide="editMode">
-                    <i class="fa fa-pencil">
-            </i>edit</a>
-            </div>
-        </div>
+    <section name="os-driver.directive">
 
-        <!-- Driver's License Information -->
-        <div class="row-fluid profile-row">
-            <label for="licenses">Driver's License</label>
-            <button class="btn pull-right btn-small btn-link" ng-click="addLicense()" ng-show="{{user.driver.licenses.length === 0}}">
-                Add License
-            </button>
-            <div data-ng-repeat="license in user.driver.licenses" name="licenses">
-                <div ng-include="'modules/drivers/views/templates/license.client.template.html'"></div>
+        <!-- Driver Template Begin -->
+        <div ng-if="::!inline">
+            <os-page-header title="Driver Information" level="h3">
+            </os-page-header>
+
+            <div class="row col-sm-12">
+                <div data-ng-bind-html="vm.driver.about"></div>
             </div>
 
-        </div>
-
-        <!-- Driver's Experience Breakdown -->
-        <div class="row-fluid profile-row">
-            <label for="experience">Experience</label>
-            <button class="btn pull-right btn-small btn-link" ng-click="addExperience()" ng-show="{{user.driver.experience.length === 0}}">
-                Add Experience
-            </button>
-            <div data-ng-repeat="exp in user.driver.experience" name="experience">
-                <div class="input-group" name="experience">
-                    <span class="col-md-6 col-offset-md-1">
-                        <p>{{exp.type}}</p>
-                    </span>
-                    <span class="col-md-4">
-                        <p>{{exp.duration}}</p>
-                    </span>
+            <div class="row col-sm-12" ng-show="vm.driver.experience.length > 0">
+                <label>Experience:</label>
+                <div ng-repeat="exp in vm.driver.experience">
+                    {{exp.title || 'Job'}} - {{exp.time.start | date: 'shortDate'}} to {{exp.time.end | date: 'shortDate'}}
+                    <span ng-hide="$last">,&nbsp;</span>
+                    <p ng-show="vm.driver.experience.length === 0">None Added</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Driver's Availability -->
-        <div class="row-fluid profile-row">
-            <label for="schedule">Availability</label>
-            <div class="col-md-12 availability_matrix" name="schedule">
-                <div class="container-fluid well">
-                    <div class="col-md-12">
-                        <div class="row availability-header">
-                            <div class="col-md-5">
-                                <h6 class="heading profile-label profile-label-1">Time</h6>
-                            </div>
-                            <div class="col-md-1">
-                                <h6 class="heading profile-label profile-label-1">M</h6>
-                            </div>
-                            <div class="col-md-1">
-                                <h6 class="heading profile-label profile-label-1">Tu</h6>
-                            </div>
-                            <div class="col-md-1">
-                                <h6 class="heading profile-label profile-label-1">W</h6>
-                            </div>
-                            <div class="col-md-1">
-                                <h6 class="heading profile-label profile-label-1">Th</h6>
-                            </div>
-                            <div class="col-md-1">
-                                <h6 class="heading profile-label profile-label-1">F</h6>
-                            </div>
-                            <div class="col-md-1">
-                                <h6 class="heading profile-label profile-label-1">Sa</h6>
-                            </div>
-                            <div class="col-md-1">
-                                <h6 class="heading profile-label profile-label-1">Su</h6>
-                            </div>
-                        </div>
-                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in user.driver.schedule'></div>
-                    </div>
+            <div class="row col-sm-12">
+                <label>Location:</label>
+                <span class="text-danger">TODO: Directivize</span>
+                <address ng-show="vm.driver.user.addresses.length > 0" ng-repeat="address in vm.driver.user.addresses">
+                    <strong>{{address.type}} [{{$index+1}} of {{vm.driver.user.addresses.length}}]</strong>
+                    <br/> {{address.city}}, {{address.state}} {{address.zipCode}}
+                </address>
+
+                <p ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">No Address on File</p>
+            </div>
+
+            <div class="row col-sm-12">
+                <label>Licenses ({{vm.driver.licenses.length}})</label>
+                <div ng-repeat="license in vm.driver.licenses">
+
+                    <p>
+                        <i class="fa fa-credit-card"></i> &nbsp;{{license.state}}<span ng-if="license.type"> {{license.type}}</span> Driver License
+                        <span ng-if="license.rating">: Class {{license.rating}}</span>
+                        <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter" class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
+                    </p>
+
                 </div>
+                <p ng-show="vm.driver.licenses.length === 0">No License on File</p>
             </div>
-        </div>
 
-        <div class="profile-row" data-ng-show="editMode">
+            <os-view-schedule model="vm.driver.schedule"></os-view-schedule>
 
-            <hr/>
-            <div class="text-right form-group">
-                <button type="cancel" class="btn btn-large btn-link" ng-click="cancel()">cancel</button>
-                <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
-            </div>
         </div>
-    </span>
-</section>
+    </section>

@@ -1,75 +1,13 @@
-<section data-ng-controller="DriversController" data-ng-init="find()">
-    <section class="container">
-        <div class="page-header">
-            <h1>Drivers</h1>
+<section class="container-fluid">
+    <os-page-header title="All Drivers"> </os-page-header>
+    <div class="list-group">
+        <div data-ng-repeat="driver in vm.drivers">
+            <a data-ng-href="drivers/{{driver._id}}" class="list-group-item container-fluid">
+                <os-driver-inline model="driver"></os-driver-inline>
+            </a>
         </div>
-        <div class="list-group">
-            <div data-ng-repeat="driver in drivers">
-                <a data-ng-href="drivers/{{driver._id}}" class="list-group-item container-fluid">
-                    <div class="col-md-2 text-center">
-                        <img ng-src="modules/core/img/avatars/person.png" style="max-width: 100px; margin-top: 10px; border: 1px solid #333; padding: 10px;" />
-                    </div>
-
-                    <div class="col-md-10">
-
-                        <span class="h3">{{driver.user.displayName}}</span>
-                        <small class="pull-right">
-                            <label>isActive</label>
-                            <span class="label" data-ng-bind="driver.isActive ? 'YES' : 'NO'" ng-class="driver.isActive ? 'label-success' : 'label-danger'"></span>
-                            <label>isDeleted</label>
-                            <span class="label" data-ng-bind="driver.isDeleted ? 'YES' : 'NO'" ng-class="!driver.isDeleted ? 'label-success' : 'label-danger'"></span>
-                        </small>
-
-                        <div class="row-fluid">
-                            <span class="h5">
-                                <small>Member Since {{driver.created | date: 'longDate'}}</small>
-                            </span>
-
-                        </div>
-
-                        <div class="row-fluid">
-                            <p>{{driver.user.about || 'Sed posuere consectetur est at lobortis. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Aenean lacinia bibendum nulla sed consectetur. Donec id elit non mi porta gravida at eget metus. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Sed posuere consectetur est at lobortis.'}}</p>
-
-                        </div>
-
-                        <span ng-show="driver.experience.length > 0">
-                            <label>Experience:</label>
-                            <span ng-repeat="exp in driver.experience">
-                                {{exp.title || 'Job'}} - {{exp.time.start | date: 'shortDate'}} to {{exp.time.end | date: 'shortDate'}}
-                                <span ng-hide="$last">,</span>&nbsp;
-                            </span>
-                            <p ng-show="driver.experience.length == 0">None</p>
-                        </span>
-
-                        <div class="row-fluid">
-                            <div class="col-md-4">
-                                <label>Location:</label>
-                                <address ng-show="driver.user.addresses.length > 0" ng-repeat="address in driver.addresses">
-                                    {{address.city}}, {{address.state}}} {{address.zip}} [{{0}} of {{driver.addresses.length}}]
-                                    <br/>
-                                </address>
-
-                                <p ng-show="!driver.user.addresses || driver.user.addresses.length <= 0">No Address on File</p>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label>Licenses</label>
-                                <div ng-show="driver.licenses.length > 0" ng-repeat="license in driver.licenses">
-                                    <p><i class="fa fa-credit-card fa-2x"></i>&nbsp;{{license.type}} - Class {{license.ratings}}</p>
-                                    <p>
-                                        <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter" class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
-                                    </p>
-                                </div>
-                                <p ng-show="driver.licenses.length == 0">No License on File</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </a>
-            </div>
-        </div>
-        <div class="alert alert-warning text-center" data-ng-hide="!drivers.$resolved || drivers.length">
-            No Drivers yet, why don't you <a href="/drivers/create">create one</a>?
-        </div>
-    </section>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="vm.drivers.length > 0">
+        No Drivers yet, why don't you <a data-ng-sref="drivers.create">create one</a>?
+    </div>
 </section>

@@ -1,10 +1,10 @@
-<section data-ng-controller="DriversController" data-ng-init="init()">
+<section>
     <section class="container-fluid">
         <div>
-            <h1>{{action}} Driver Profile for {{(driver.user || authentication.user).displayName}}</h1>
+            <h1>{{vm.action}} Driver Profile for {{(vm.driver.user || vm.user).displayName}}</h1>
         </div>
         <div class="driver create">
-            <form name="driverForm" class="form-horizontal" data-ng-submit="submit()" novalidate>
+            <form name="vm.driverForm" class="form-horizontal" data-ng-submit="vm.submit(this.$valid)" novalidate>
                 <fieldset>
 
                     <!-- Biography -->
@@ -12,7 +12,7 @@
                     <div class="container-fluid well">
                         <div class="row profile-row">
                             <div class="col-sm-12">
-                                <os-html-edit model="driver.about"></os-html-edit>
+                                <os-html-edit model="vm.driver.about"></os-html-edit>
                             </div>
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                                         <small>The state which issued the license</small>
                                     </label>
                                     <div class="controls col-sm-6" syle>
-                                        <select class="form-control" data-ng-model="driver.licenses[0].state">
+                                        <select class="form-control" data-ng-model="vm.driver.licenses[0].state">
                                             <option value="AZ">AZ</option>
                                             <option value="CA">CA</option>
                                             <option value="NV">NV</option>
@@ -46,7 +46,7 @@
                                         <small>The license ID Number</small>
                                     </label>
                                     <div class="controls col-sm-6">
-                                        <input type="text" data-ng-model="driver.licenses[0].number" class="form-control" placeholder="eg: A1298702" required></input>
+                                        <input type="text" data-ng-model="vm.driver.licenses[0].number" class="form-control" placeholder="eg: A1298702" required></input>
                                     </div>
                                 </div>
 
@@ -57,7 +57,7 @@
                                         <small>The date your license was issued</small>
                                     </label>
                                     <div class="controls col-sm-6">
-                                        <os-date-picker dp-class="margin-bottom-sm" model="driver.licenses[0].issued" required="false"></os-date-picker>
+                                        <os-date-picker dp-class="margin-bottom-sm" model="vm.driver.licenses[0].issued" required="false"></os-date-picker>
                                     </div>
 
                                 </div>
@@ -68,7 +68,7 @@
                                         <small>The date your license expires</small>
                                     </label>
                                     <div class="controls col-sm-6">
-                                        <os-date-picker dp-class="margin-bottom-sm" model="driver.licenses[0].expires" required="false"></os-date-picker>
+                                        <os-date-picker dp-class="margin-bottom-sm" model="vm.driver.licenses[0].expires" required="false"></os-date-picker>
                                     </div>
                                 </div>
 
@@ -78,7 +78,7 @@
                                         <small>Your birthdate</small>
                                     </label>
                                     <div class="controls col-sm-6">
-                                        <os-date-picker dp-class="margin-bottom-sm" model="driver.licenses[0].dateOfBirth" required="false"></os-date-picker>
+                                        <os-date-picker dp-class="margin-bottom-sm" model="vm.driver.licenses[0].dateOfBirth" required="false"></os-date-picker>
                                     </div>
                                 </div>
                             </div>
@@ -90,7 +90,7 @@
                                         <small>is this a commercial or standard license</small>
                                     </label>
                                     <div class="controls col-sm-6">
-                                        <select class="form-control" data-ng-model="driver.licenses[0].type">
+                                        <select class="form-control" data-ng-model="vm.driver.licenses[0].type">
                                             <option>Standard</option>
                                             <option>Commercial</option>
                                         </select>
@@ -104,7 +104,7 @@
                                     </label>
                                     <div class="controls col-sm-6">
                                         <div class="btn-group">
-                                            <label ng-repeat="val in ratings" class="btn btn-primary btn-sm" ng-model="driver.licenses[0].rating" btn-radio="val">{{val}}</label>
+                                            <label ng-repeat="val in ratings" class="btn btn-primary btn-sm" ng-model="vm.driver.licenses[0].rating" btn-radio="val">{{val}}</label>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +117,7 @@
                                     </label>
                                     <div class="controls col-sm-6">
                                         <div class="btn-group btn-group-vertical">
-                                            <label ng-repeat="endorsement in driver.licenses[0].endorsements" class="btn btn-primary btn-md pull-left" ng-model="endorsement.value" btn-checkbox>{{endorsement.key}}
+                                            <label ng-repeat="endorsement in vm.driver.licenses[0].endorsements" class="btn btn-primary btn-md pull-left" ng-model="endorsement.value" btn-checkbox>{{endorsement.key}}
                                                 <span data-ng-show="endorsement.value" class="fa fa-check-circle pull-left"></span>
                                                 <span data-ng-hide="endorsement.value" class="fa fa-circle-o pull-left"></span>
                                             </label>
@@ -134,9 +134,9 @@
                     <div class="container-fluid well">
                         <div class="row profile-row">
                             <div class="col-sm-12">
-                                <div class="form-group " ng-show="driver.experience && !!driver.experience.length">
-                                    <div data-ng-repeat="exp in driver.experience" name="experience">
-                                        <os-driver-experience model="exp" edit-mode="true" edit-enable="true" add-fn="addExperience()" drop-fn="dropExperience()"></os-driver-experience>
+                                <div class="form-group " ng-show="vm.driver.experience && !!vm.driver.experience.length">
+                                    <div data-ng-repeat="exp in vm.driver.experience" name="experience">
+                                        <os-driver-experience model="exp" edit-mode="true" edit-enable="true" add-fn="vm.addExperience()" drop-fn="vm.dropExperience()"></os-driver-experience>
                                         <hr>
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@
 
                         <div class="row profile-row">
                             <div class="col-sm-12 text-center">
-                                <button class="btn btn-primary" ng-click="addExperience()" ng-hide="driver.experience && driver.experience.length > 0">
+                                <button class="btn btn-primary" ng-click="addExperience()" ng-hide="vm.driver.experience && vm.driver.experience.length > 0">
                                     <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Experience
                                 </button>
                             </div>
@@ -156,7 +156,7 @@
                     <h3>Availability</h3>
                     <!-- Driver's Availability -->
                     <div class="container-fluid well">
-                        <div class="row profile-row" ng-show="driver.schedule && !!driver.schedule.length">
+                        <div class="row profile-row" ng-show="vm.driver.schedule && !!vm.driver.schedule.length">
                             <div class="col-md-12 availability_matrix" name="schedule">
                                 <div class="container-fluid well">
                                     <div class="col-md-12">
@@ -186,13 +186,13 @@
                                                 <h6 class="heading profile-label profile-label-1">Su</h6>
                                             </div>
                                         </div>
-                                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in driver.schedule'></div>
+                                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in vm.driver.schedule'></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row profile-row" ng-hide="driver.schedule">
+                        <div class="row profile-row" ng-hide="vm.driver.schedule">
                             <div class="col-sm-8 col-sm-offset-2">
                                 <alert type="info text-center">
                                     <i class="fa fa-info-circle text-info fa-2x pull-left" style="padding-right: 10px;"></i>
@@ -205,8 +205,8 @@
                     <div class="form-group">
                         <input type="submit" value="Update" class="btn btn-default">
                     </div>
-                    <div data-ng-show="error" class="text-danger">
-                        <strong data-ng-bind="error"></strong>
+                    <div data-ng-show="vm.error" class="text-danger">
+                        <strong data-ng-bind="vm.error"></strong>
                     </div>
                 </fieldset>
             </form>

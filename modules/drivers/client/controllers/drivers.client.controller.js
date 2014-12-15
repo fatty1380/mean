@@ -6,7 +6,7 @@
         $scope.authentication = Authentication;
         //$scope.driver = Drivers;
         //$scope.driverUser = DriverUser;
-        $scope.canEdit = $state.is('drivers.me') || ($stateParams.driverId === Authentication.user.id);
+        $scope.canEdit = $state.is('drivers.home') || ($stateParams.driverId === Authentication.user.id);
 
         // Local Variables
         $scope.experience = [];
@@ -77,14 +77,10 @@
         }];
 
         $scope.init = function() {
-            if ($state.is('drivers.view') || $state.is('drivers.me')) {
+            if ($state.is('drivers.view') || $state.is('drivers.home')) {
                 $scope.action = 'Edit';
                 return $scope.findOne();
             } else if ($state.is('drivers.create')) {
-                $scope.driver = {
-                    experience: [],
-                    licenses: [{}]
-                };
                 $scope.submit = $scope.create;
                 $scope.action = 'New';
             } else {
@@ -95,47 +91,7 @@
         };
 
 
-        // Create new Driver
-        $scope.create = function() {
 
-            if (!$scope.driverForm.$valid) {
-                $scope.error = 'Please fill in required fields';
-                return;
-            }
-
-            if (!$scope.driver.licenses || !$scope.driver.licenses[0]) {
-                $scope.error = 'Please fill in information about your driver\'s license';
-                return;
-            }
-
-            // TODO: determine if this is necessary on the client side or if it is better handled on the server
-            angular.forEach($scope.driver.experience, function(exp, i) {
-                var start = new Date(exp.time.start.year, exp.time.start.month - 1);
-                var end = new Date(exp.time.end.year, exp.time.end.month - 1);
-
-                exp.time.start = start;
-                exp.time.end = end;
-
-                $log.debug('Start %o vs %o', start, exp.time.start, $scope.experience[i].time.start);
-            });
-
-            if ($scope.driver.experience && $scope.driver.experience.length > 0) {
-                $log.debug('After iter: %o', $scope.experience[0].time.start);
-            }
-
-            // Create new Driver object
-            var driver = new Drivers.ById($scope.driver);
-
-            // Redirect after save
-            driver.$save(function(response) {
-                $log.debug('Successfully created new Driver');
-                $state.go('drivers.view', {
-                    driverId: response._id
-                });
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-        };
 
         // Remove existing Driver
         $scope.remove = function(driver) {
@@ -154,45 +110,14 @@
             }
         };
 
-        // Update existing Driver
-        $scope.update = function() {
-            var driver = $scope.driver;
-
-            driver.$update(function(response) {
-                debugger;
-                $state.go('drivers.view', {
-                    driverId: response._id
-                });
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-        };
-
-        // Find a list of Drivers
-        $scope.find = function() {
-            $scope.drivers = Drivers.ById.query();
-        };
-
         // Find existing Driver
         $scope.findOne = function(userId) {
             var id = userId || $stateParams.driverId;
 
-            if (id && id === 'me') {
+            if (id && id === 'home') {
                 $scope.canEdit = true;
-
-                $scope.driver = Drivers.ByUser.get({
-                    userId: $scope.authentication.user._id
-                }, function() {
-                    $log.info('Successfully loaded LoggedInUser Driver Profile');
-                }, handleFindError);
             } else if (id) {
                 $scope.canEdit = (id === $scope.authentication.user._id);
-
-                $scope.driver = Drivers.ById.get({
-                    driverId: id
-                }, function(id) {
-                    $log.info('Successfully loaded Driver Profile for id: %s', id);
-                }, handleFindError);
             }
         };
 
@@ -206,39 +131,7 @@
 
         };
 
-        $scope.dropExperience = function(exp) {
-            exp = exp || this.exp;
-
-            if (exp) {
-
-                for (var i in $scope.driver.experience) {
-                    if ($scope.driver.experience[i] === exp) {
-                        $scope.driver.experience.splice(i, 1);
-                    }
-                }
-            }
-        };
-
-        $scope.addExperience = function() {
-            event.preventDefault();
-
-            $scope.driver.experience.push({
-                text: '',
-                time: {
-                    start: {
-                        month: null,
-                        year: null
-                    },
-                    end: {
-                        month: null,
-                        year: null
-                    }
-                },
-                location: '',
-                isFresh: true
-            });
-        };
-
+        // Move to directive and/or filter
         $scope.endorsementFilter = function(item) {
             return item.value === true;
         };

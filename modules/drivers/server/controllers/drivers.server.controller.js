@@ -21,7 +21,7 @@ var executeQuery = function(req, res, next) {
 
     Driver.find(query)
         .sort(sort)
-        .populate('user', 'displayName')
+        .populate('user', 'displayName created profileImageURL addresses')
         .exec(function(err, drivers) {
             if (err) {
                 return res.status(400).send({

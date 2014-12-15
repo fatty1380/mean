@@ -11,7 +11,7 @@ function DriverFactory($resource) {
             }
         }),
         ByUser: $resource('api/users/:userId/driver', {
-            userId: '@userId'
+            userId: '@_userId'
         })
     };
 }
