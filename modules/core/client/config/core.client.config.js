@@ -6,13 +6,19 @@
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
             $log.debug('[CoreConfig] Entering state: %o. %o', toState.name, toState);
 
+            if (toState.authenticate && !Auth.isLoggedIn()) {
+                $log.error('State \'%s\' requires authentication but no user is signed in', toState.name);
+                event.preventDefault();
+                $state.go('intro');
+                return;
+            }
+
             if (Auth.user && toState.url === '/') {
-                debugger;
                 switch (Auth.user.type) {
                     case 'driver':
                         $log.debug('[HomeController] Re-Routing to driver\'s profile page');
                         event.preventDefault();
-                        $state.go('drivers.me');
+                        $state.go('drivers.home');
                         break;
                     case 'owner':
                         $log.debug('[HomeController] Re-Routing to the user\'s company home');
@@ -20,7 +26,7 @@
                         $state.go('companies.home');
                         break;
                     default:
-                        if (Auth.user.roles.indexOf('admin') !== -1) {
+                        if (Auth.isAdmin()) {
                             $state.go('users.list');
                         }
                         $log.warn('Unknown User Type');

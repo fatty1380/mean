@@ -33,7 +33,7 @@
         };
 
         this.initList = function() {
-            if (Authentication.user.roles.indexOf('admin') !== -1) {
+            if (Authentication.isAdmin()) {
                 this.users = Profiles.query();
             } else {
                 $location.path('/');

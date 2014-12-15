@@ -7,7 +7,7 @@
         $scope.navbarClass = 'navbar-inverse';
 
         // Get the topbar menu
-        if ($scope.authentication.user && $scope.authentication.user.roles.indexOf('admin') !== -1) {
+        if ($scope.authentication.user && $scope.authentication.isAdmin()) {
             $scope.menu = Menus.getMenu('adminbar');
             $scope.navbarClass = 'navbar-inverse';
         } else {
