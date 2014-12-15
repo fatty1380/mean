@@ -1,37 +1,101 @@
 {
+    //"node": true, // Enable globals available when code is running inside of the NodeJS runtime environment.
+    //"mocha": true, // Enable globals available when code is running inside of the Mocha tests.
+    //"jasmine": true, // Enable globals available when code is running inside of the Jasmine tests.
+    //"browser": true, // Standard browser globals e.g. `window`, `document`.
+    //"esnext": true, // Allow ES.next specific features such as `const` and `let`.
+    //"bitwise": false, // Prohibit bitwise operators (&, |, ^, etc.).
+    //"camelcase": false, // Permit only camelcase for `var` and `object indexes`.
+    //"curly": false, // Require {} for every new block or scope.
+    "eqeqeq": true, // Require triple equals i.e. `===`.
+    //"immed": true, // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
+    //"latedef": true, // Prohibit variable use before definition.
+    //"newcap": true, // Require capitalization of all constructor functions e.g. `new F()`.
+    //"noarg": true, // Prohibit use of `arguments.caller` and `arguments.callee`.
+    //"quotmark": "single", // Define quotes to string values.
+    "regexp": true, // Prohibit `.` and `[^...]` in regular expressions.
+    //"undef": true, // Require all non-global variables be declared before they are used.
+    //"unused": false, // Warn unused variables.
+    //"strict": true, // Require `use strict` pragma in every file.
+    "trailing": true, // Prohibit trailing whitespaces.
+    "smarttabs": false, // Suppresses warnings about mixed tabs and spaces
+
+    //"indent": 4, // Specify indentation spacing
+    "devel": true, // Allow development statements e.g. `console.log();`.
+    "debug": true, // Allow debug statements e.g. `debugger;`.
+    //"noempty": true, // Prohibit use of empty blocks.
+
+
+    "bitwise": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "es3": false,
+    "forin": true,
+    "freeze": true,
+    "immed": true, // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
+    "indent": 4,
+    "latedef": "nofunc",
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonbsp": true,
+    "nonew": true,
+    "plusplus": false,
+    "quotmark": "single",
+    "undef": true,
+    "unused": false,
+    "strict": true, // Changed // Require `use strict` pragma in every file.
+    "maxparams": 10,
+    "maxdepth": 5,
+    "maxstatements": 40,
+    "maxcomplexity": 8,
+    //"maxlen": 150,
+
+    "asi": false,
+    "boss": false,
+    "debug": false,
+    "eqnull": true,
+    "esnext": false,
+    "evil": false,
+    "expr": false,
+    "funcscope": false,
+    "globalstrict": false,
+    "iterator": false,
+    "lastsemic": false,
+    "laxbreak": false,
+    "laxcomma": false,
+    "loopfunc": true,
+    "maxerr": false,
+    "moz": false,
+    "multistr": false,
+    "notypeof": false,
+    "proto": false,
+    "scripturl": false,
+    "shadow": false,
+    "sub": true,
+    "supernew": false,
+    "validthis": false,
+    "noyield": false,
+
+    "browser": true,
+    "node": true,
     "node": true, // Enable globals available when code is running inside of the NodeJS runtime environment.
     "mocha": true, // Enable globals available when code is running inside of the Mocha tests.
     "jasmine": true, // Enable globals available when code is running inside of the Jasmine tests.
     "browser": true, // Standard browser globals e.g. `window`, `document`.
-    "esnext": true, // Allow ES.next specific features such as `const` and `let`.
-    "bitwise": false, // Prohibit bitwise operators (&, |, ^, etc.).
-    "camelcase": false, // Permit only camelcase for `var` and `object indexes`.
-    "curly": false, // Require {} for every new block or scope.
-    "eqeqeq": true, // Require triple equals i.e. `===`.
-    "immed": true, // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
-    "latedef": true, // Prohibit variable use before definition.
-    "newcap": true, // Require capitalization of all constructor functions e.g. `new F()`.
-    "noarg": true, // Prohibit use of `arguments.caller` and `arguments.callee`.
-    "quotmark": "single", // Define quotes to string values.
-    "regexp": true, // Prohibit `.` and `[^...]` in regular expressions.
-    "undef": true, // Require all non-global variables be declared before they are used.
-    "unused": false, // Warn unused variables.
-    "strict": true, // Require `use strict` pragma in every file.
-    "trailing": true, // Prohibit trailing whitespaces.
-    "smarttabs": false, // Suppresses warnings about mixed tabs and spaces
-    "globals": { // Globals variables.
-        "angular": true,
-        "io": true,
-        "ApplicationConfiguration": true
+
+    "globals": {
+        "angular": false,
+        "$": false,
+        "io": true,                         // https://github.com/johnpapa/angularjs-styleguide#style-y240
+        "ApplicationConfiguration": true    // May conflict with https://github.com/johnpapa/angularjs-styleguide#style-y240
     },
+
     "predef": [ // Extra globals.
         "inject",
         "by",
         "browser",
         "element"
-    ],
-    "indent": 4, // Specify indentation spacing
-    "devel": true, // Allow development statements e.g. `console.log();`.
-    "debug": true,
-    "noempty": true // Prohibit use of empty blocks.
+    ]
 }
