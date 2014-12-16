@@ -1,11 +1,25 @@
 <section name="os-job-list.directive">
-    <h3 ng-if="!!dm.header">{{dm.header}}
-        <button ng-if="dm.showPost" class="btn btn-primary pull-right" ui-sref="jobs.create({companyId: dm.companyId})">Post Job</button>
-    </h3>
-    <div class="list-group">
-        <a data-ng-repeat="job in dm.jobs | limitTo: dm.limitTo" data-ng-href="jobs/{{job._id}}" class="list-group-item">
-            <small><os-job job="job" inline="true"></os-job></small>
-        </a>
-        <button ng-show="dm.jobs.length > dm.limitTo" class="btn btn-link text-center" ui-sref="jobs.list({companyId: dm.companyId})">view all ...</button>
+    <div data-ng-class="{'panel panel-default': !!dm.header}">
+        <div class="panel-heading" ng-if="!!dm.header"><span class="h4">{{dm.header}}
+        <button ng-if="dm.showPost" class="btn btn-primary pull-right"
+                ui-sref="jobs.create({companyId: dm.companyId})">Post Job
+        </button>
+        </span>
+
+        </div>
+
+        <div ng-class="{'panel-body': !!dm.header}">
+            <div class="list-group">
+                <a data-ng-repeat="job in dm.jobs | limitTo: dm.limitTo" data-ng-href="jobs/{{job._id}}"
+                   class="list-group-item">
+                    <small>
+                        <os-job job="job" inline="true"></os-job>
+                    </small>
+                </a>
+                <button ng-show="dm.jobs.length > dm.limitTo" class="btn btn-link text-center"
+                        ui-sref="jobs.list({companyId: dm.companyId})">view all ...
+                </button>
+            </div>
+        </div>
     </div>
 </section>

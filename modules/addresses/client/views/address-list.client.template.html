@@ -1,14 +1,14 @@
 <!-- os-address-list : address-list.client.template.html -->
 <section class="row">
-    <div ng-repeat="(a,address) in listCtrl.addresses track by a">
-        <os-address address="listCtrl.addresses[a]" enable-edit="listCtrl.enableEdit"></os-address>
+    <div ng-repeat="(a,address) in vm.addresses track by a" class="col-sm-4">
+        <os-address address="vm.addresses[a]" enable-edit="vm.enableEdit"></os-address>
 
-        <os-edit-address address="listCtrl.addresses[a]" enable-edit="listCtrl.enableEdit"></os-edit-address>
+        <os-edit-address address="vm.addresses[a]" enable-edit="vm.enableEdit"></os-edit-address>
     </div>
 
-    <button type="button" class="btn btn-default" value="add" ng-click="listCtrl.addAddress()">
+    <button type="button" class="btn btn-default" value="add" ng-click="vm.addAddress()" data-ng-show="vm.addEnabled()">
         <i class="fa fa-plus fa-2x"></i>
     </button>
 
-    <div ng-if="listCtrl.addresses.length < 1">Fill out your profile by adding an address!</div>
+    <div ng-if="vm.addresses.length < 1">Fill out your profile by adding an address!</div>
 </section>

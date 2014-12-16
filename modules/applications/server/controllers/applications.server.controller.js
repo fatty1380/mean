@@ -32,7 +32,7 @@ var executeQuery = function(req, res) {
             }
 
             req.applications = applications || [];
-            console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %s', req.applications.length, query);
+            console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %j', req.applications.length, query);
             res.json(req.applications);
         });
 };
@@ -42,10 +42,13 @@ var executeQuery = function(req, res) {
  */
 exports.create = function(req, res) {
     var application = new Application(req.body);
-    var messages = req.body.messages;
+
+    console.log('[ApplicationController.create] req.job: %o, req.body.jobId: %o', req.job, req.body.jobId);
 
     application.user = req.user;
     application.job = req.job || req.body.jobId; // TODO: Figure out why this is not populated!
+
+    console.log('[ApplicationController.create] Creating new application: %o', application);
 
     application.save(function(err) {
         if (err) {

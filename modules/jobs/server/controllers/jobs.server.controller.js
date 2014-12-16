@@ -21,7 +21,7 @@ var executeQuery = function(req, res) {
     Job.find(query)
         .sort(sort)
         .populate('user', 'displayName')
-        .populate('location')
+        .populate('company')
         .exec(function(err, jobs) {
             if (err) {
                 return res.status(400).send({
@@ -52,7 +52,9 @@ var getErrorMessage = function(err) {
         }
     } else {
         for (var errName in err.errors) {
-            if (err.errors[errName].message) message = err.errors[errName].message;
+            if (err.errors[errName].message) {
+                message = err.errors[errName].message;
+            }
         }
     }
 
@@ -103,6 +105,8 @@ exports.read = function(req, res) {
  */
 exports.update = function(req, res) {
     var job = req.job;
+
+    debugger;
 
     job = _.extend(job, req.body);
 
@@ -170,12 +174,15 @@ exports.queryByCompanyID = function(req, res) {
  */
 exports.jobByID = function(req, res, next, id) {
 
+    console.log('Loading job by id %s', id);
+
     Job.findById(id)
         .populate('user', 'displayName')
-        .populate('location')
         .populate('company')
         .exec(function(err, job) {
-            if (err) { return next(err); }
+            if (err) {
+                return next(err);
+            }
             req.job = job;
             next();
         });

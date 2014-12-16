@@ -1,0 +1,57 @@
+<section>
+    <div data-ng-if="vm.displayMode === 'minimal'" class="row">
+        <dl class="dl-horizontal">
+            <dt>Status:</dt>
+            <dd><span class="label label-info">{{vm.application.job.postStatus}}</span></dd>
+            <dt>Applied On:</dt>
+            <dd>{{vm.application.created | date:'short'}}</dd>
+        </dl>
+    </div>
+
+    <tr data-ng-if="vm.displayMode === 'table'">
+        <td>
+            <span class="label label-info">{{vm.application.job.postStatus}}</span>
+            &nbsp;
+            {{vm.application.user.displayName}}
+        </td>
+        <td data-ng-bind="vm.application.created"></td>
+        <td data-ng-bind="vm.application.modified"></td>
+        <td data-ng-bind="vm.application.messages.length"></td>
+    </tr>
+
+    <div data-ng-if="vm.displayMode === 'inline'" class="row">
+        <dl class="dl-horizontal">
+            <dt>Applicant:</dt>
+            <dd>{{vm.application.user.displayName}}</dd>
+            <dt>Job:</dt>
+            <dd>{{vm.application.job.name || 'UNKNOWN'}}
+                <span class="label label-info">{{vm.application.job.postStatus}}</span>
+            </dd>
+            <dt>Applied On:</dt>
+            <dd>{{vm.application.created | date:'short'}}</dd>
+        </dl>
+    </div>
+
+    <div data-ng-if="!!~vm.displayMode || vm.displayMode === 'normal'" class="row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>Job:</dt>
+                <dd>{{vm.application.job.name || 'UNKNOWN'}}
+                    <span class="label label-info">{{vm.application.job.postStatus}}</span>
+                </dd>
+                <dt>Applicant:</dt>
+                <dd>{{vm.application.user.displayName}}</dd>
+                <dt>Applied On:</dt>
+                <dd>{{vm.application.created | date:'short'}}</dd>
+            </dl>
+        </div>
+        <div class="col-md-8">
+            <dl class="dl-horizontal" ng-repeat="message in vm.application.messages | orderBy:'-created' | limitTo: 1">
+                <dt>Last Message:</dt>
+                <dd>{{message.text | limitTo : 100}}</dd>
+                <dt>Sent:</dt>
+                <dd>{{message.created | date: 'short'}}</dd>
+            </dl>
+        </div>
+    </div>
+</section>

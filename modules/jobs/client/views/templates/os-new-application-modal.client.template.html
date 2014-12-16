@@ -1,16 +1,36 @@
-<span ng-click="showModal
-()" ng-transclude>Apply</span>
+<span ng-click="vm.showModal()" ng-transclude>Apply</span>
 
 <script type="text/ng-template" id="applyModal.html">
-    <div class="modal-header">
-        <h3 class="modal-title">Apply for a job</h3>
+    <div class="modal-header bg-primary" ng-init="yo()">
+        <span class="h4" data-ng-bind="vm.placeholders.title">Apply to job</span>
+
+        <div class="pull-right">
+            <button type="button" class="close modal-title" ng-click="$dismiss('cancel')">
+                <span aria-hidden="true">&times;<span class="sr-only">Close</span></span>
+            </button>
+        </div>
     </div>
-    <div class="modal-body">
-        <div ng-include="'/modules/applications/views/templates/create-application.client.template.html'"></div>
-    </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    </div>
+    <form class="form-horizontal" data-ng-submit="vm.createApplication()" novalidate>
+        <div class="modal-body">
+            <fieldset>
+                <label class="control-label" for="name">Message</label>
+
+                <div class="controls">
+                    <textarea type="text" data-ng-model="vm.message" id="name" class="form-control"
+                              placeholder="{{vm.placeholders.intro}}" required></textarea>
+                </div>
+            </fieldset>
+        </div>
+        </div>
+        <div class="modal-footer">
+            <div class="pull-right">
+                <input type="button" class="btn btn-link" value="cancel" ng-click="$dismiss('cancel')">
+                <input type="button" class="btn btn-default" value="Save as draft" ng-click="vm.saveDraft()">
+                <input type="submit" class="btn btn-success" ng-class="{disabled:!vm.job}" value="Apply!">
+            </div>
+            <div data-ng-show="error" class="text-danger text-center">
+                <strong data-ng-bind="vm.error"></strong>
+            </div>
+        </div>
+    </form>
 </script>

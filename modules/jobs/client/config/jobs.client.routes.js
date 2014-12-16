@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function company_resolve(rsrc, params, auth) {
@@ -51,74 +51,79 @@
         // Jobs state routing
         $stateProvider.
 
-        state('jobs', {
-            abstract: true,
-            url: '/jobs',
-            template: '<div ui-view></div>',
-            parent: 'fixed-opaque',
-            resolve: {
-                job: function() {},
-                jobs: function() {},
-                company: function() {},
-            }
-        }).
+            state('jobs', {
+                abstract: true,
+                url: '/jobs',
+                template: '<div ui-view></div>',
+                parent: 'fixed-opaque',
+                resolve: {
+                    job: function () {
+                    },
+                    jobs: function () {
+                    },
+                    company: function () {
+                    }
+                }
+            }).
 
-        state('jobs.list', {
-            url: '',
-            templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
-            controller: 'JobsController',
-            resolve: {
-                jobs: list_user_resolve
-            },
-            parent: 'jobs'
-        }).
+            state('jobs.list', {
+                url: '',
+                templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
+                controller: 'JobsController',
+                resolve: {
+                    jobs: list_user_resolve
+                },
+                parent: 'jobs'
+            }).
 
-        state('jobs.mine', {
-            url: '/me',
-            templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
-            controller: 'JobsController',
-            resolve: {
-                jobs: list_user_resolve,
-                company: company_resolve
-            },
-            parent: 'jobs'
-        }).
+            state('jobs.mine', {
+                url: '/me',
+                templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
+                controller: 'JobsController',
+                resolve: {
+                    jobs: list_user_resolve,
+                    company: company_resolve
+                },
+                parent: 'jobs'
+            }).
 
-        state('jobs.create', {
-            url: '/create/:companyId',
-            templateUrl: 'modules/jobs/views/edit-job.client.view.html',
-            controller: 'JobsController',
-            resolve: {
-                company: company_resolve
-            },
-            parent: 'jobs'
-        }).
+            state('jobs.create', {
+                url: '/create/:companyId',
+                templateUrl: 'modules/jobs/views/edit-job.client.view.html',
+                controller: 'JobsController',
+                resolve: {
+                    company: company_resolve
+                },
+                parent: 'jobs'
+            }).
 
-        state('jobs.view', {
-            url: '/:jobId',
-            templateUrl: 'modules/jobs/views/view-job.client.view.html',
-            controller: 'JobsController',
-            resolve: {
-                job: job_resolve
-            },
-            parent: 'jobs'
-        }).
+            state('jobs.view', {
+                url: '/:jobId',
+                templateUrl: 'modules/jobs/views/view-job.client.view.html',
+                controller: 'JobViewController',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    job: job_resolve
+                },
+                parent: 'jobs'
+            }).
 
-        state('jobs.edit', {
-            url: '/:jobId/edit',
-            templateUrl: 'modules/jobs/views/edit-job.client.view.html',
-            controller: 'JobsController',
-            resolve: {
-                job: job_resolve
-            },
-            parent: 'jobs'
-        }).
+            state('jobs.edit', {
+                url: '/:jobId/edit',
+                templateUrl: 'modules/jobs/views/edit-job.client.view.html',
+                controller: 'JobsController',
+                resolve: {
+                    job: job_resolve
+                },
+                parent: 'jobs'
+            }).
 
-        state('jobs.apply', {
-            url: '/:jobId/apply',
-            //templateUrl: 'modules/jobs/views/list-my-jobs.client.view.html',
-            parent: 'jobs'
-        });
+            state('jobs.apply', {
+                url: '/:jobId/apply',
+                //templateUrl: 'modules/jobs/views/list-my-jobs.client.view.html',
+                parent: 'jobs'
+            });
     }
 
 

@@ -1,6 +1,6 @@
 <section data-ng-controller="ApplicationsController" data-ng-init="findOne()">
     <section class="container">
-        <span class="h3" data-ng-bind="application.job.name"></span class="h3">
+        <span class="h3" data-ng-bind="application.job.name"></span>
         <div class="pull-right" data-ng-show="authentication.user._id == application.user._id">
             <a class="btn btn-primary" href="/applications/{{application._id}}/edit">
                 <i class="glyphicon glyphicon-edit"></i>

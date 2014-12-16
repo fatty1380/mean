@@ -13,56 +13,7 @@
             }
         };
 
-        // Create new Application
-        $scope.createApplication = function() {
 
-            if (!$scope.job || !$scope.job._id) {
-                $scope.error = $scope.placeholders.errors.noJob;
-                return;
-            }
-
-            $log.debug('[AppController.create]', 'Creating new Application');
-            // Create new Application object
-            var application = new Applications.ByJob({
-                jobId: $scope.job._id,
-                status: 'submitted'
-            });
-
-            saveApplication(application);
-        };
-
-        $scope.saveDraft = function() {
-            $log.debug('[AppController.saveDraft]', 'Creating new Draft Application');
-            // Create new Application object
-            var application = new Applications.ById({
-                status: 'draft'
-            });
-
-            saveApplication(application);
-        };
-
-        var saveApplication = function(application) {
-            if (!$scope.message || $scope.message.length < 1) {
-                $scope.error = $scope.placeholders.errors.noMessage;
-                return;
-            }
-
-            application.jobId = $scope.job && $scope.job._id && ($scope.job._id);
-            application.messages = [{
-                text: $scope.message,
-                status: 'sent',
-                sender: $scope.authentication.user._id
-            }];
-
-            // Redirect after save
-            application.$save(function(response) {
-                // Clear form fields
-                $scope.message = '';
-                $location.path('applications/' + response._id);
-            }, function(errorResponse) {
-                $scope.error = errorResponse.data.message;
-            });
-        };
 
         // Remove existing Application
         $scope.remove = function(application) {
@@ -121,7 +72,7 @@
          * Used to find all applications for the given job
          */
         $scope.initJobList = function(job) {
-            $scope.listTitle = 'Applications';
+            $scope.listTitle = Authentication.user.type === 'driver' ? 'My Application Status' : 'Applications';
             $scope.findAll(job);
         };
 

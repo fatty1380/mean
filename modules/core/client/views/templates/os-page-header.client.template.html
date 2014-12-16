@@ -1,12 +1,12 @@
 <!-- os-page-header directive : os-page-header.client.template -->
-<div class="page-header well" ng-mouseenter="dm.hover=true" ng-mouseleave="dm.hover=false">
-    <h1>{{dm.title}}
+<div class="page-header" ng-class="{well : !dm.level}" ng-mouseenter="dm.hover=true" ng-mouseleave="dm.hover=false">
+    <h1 class="{{dm.level}}">{{dm.title}}
         <span data-ng-if="!!dm.editSref" data-ng-show="dm.showEdit">
             <a class="btn btn-link" ui-sref="{{::dm.editSref}}">edit
                 <i class="fa fa-pencil-square-o"></i>
             </a>
         </span>
-        <button ng-if="dm.btnShow || (!!dm.btnText && !!dm.btnSref)" class="btn btn-primary pull-right" ui-sref="{{dm.btnSref}}">{{::dm.btnText}}</button>
+        <button ng-if="dm.btnShow && (!!dm.btnText && !!dm.btnSref)" class="btn btn-primary pull-right" ui-sref="{{dm.btnSref}}">{{::dm.btnText}}</button>
     </h1>
     <!-- Sub-heading -->
     <small ng-if="dm.includeTransclude"><em class="text-muted" ng-transclude></em></small>

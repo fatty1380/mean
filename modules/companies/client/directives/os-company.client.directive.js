@@ -39,6 +39,9 @@ angular.module('companies')
             controller: ['$transclude', function(transclude) {
                 var dm = this;
 
+                dm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
+                dm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
+
                 dm.hover = false;
                 dm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
             }],

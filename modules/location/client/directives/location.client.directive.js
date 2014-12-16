@@ -13,7 +13,8 @@
                 style: '@?',
                 zipCode: '@?'
             },
-            controller: 'LocationController'
+            controller: 'LocationController',
+            controllerAs: 'vm'
         };
     }
 

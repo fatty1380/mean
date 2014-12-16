@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     // Jobs controller
@@ -6,6 +6,8 @@
 
         $scope.authentication = Authentication;
         $scope.user = Authentication.user;
+
+        $scope.enableEdit = false;
 
         $scope.job = job;
         $scope.jobs = jobs;
@@ -15,51 +17,76 @@
         $scope.showAddressDetails = false;
         $scope.formMode = [];
 
-        if ($state.is('jobs.create')) {
-            $scope.job = {
-                payRate: {
-                    min: null,
-                    max: null
-                },
-                postStatus: 'draft',
-                companyId: !!$scope.company && $scope.company._id || $stateParams.companyId
-            };
-        }
+        var defaultAddr = {type: 'main', streetAddresses: ['']};
+
+        activate();
 
         function activate() {
-            if (!$scope.company) {
-                $scope.company = ($stateParams.companyId) ? Companies.ById.get({
-                    companyId: $stateParams.companyId
-                }) : Companies.ByUser.get({
-                    userId: $scope.user._id
-                });
+            if ($state.is('jobs.create')) {
+
+                if (!$scope.company) {
+                    $scope.company = ($stateParams.companyId) ? Companies.ById.get({
+                        companyId: $stateParams.companyId
+                    }) : Companies.ByUser.get({
+                        userId: $scope.user._id
+                    });
+                }
+
+                $scope.job = {
+                    payRate: {
+                        min: null,
+                        max: null
+                    },
+                    location: [defaultAddr],
+                    postStatus: 'draft',
+                    companyId: !!$scope.company && $scope.company._id || $stateParams.companyId
+                };
             }
+            else if ($state.is('jobs.edit')) {
+                if (!$scope.job.location) {
+                    $scope.job.location = [];
+                }
+
+                if ($scope.job.location.length === 0) {
+                    $scope.job.location.push(defaultAddr);
+                }
+            }
+
+            if ($scope.user.type === 'driver') {
+                $scope.enableEdit = false;
+            }
+            else if ($scope.user.type === 'owner') {
+                $scope.enableEdit = $scope.user._id === ($scope.company && ($scope.company.owner._id || $scope.company.owner));
+            }
+
+            $log.debug('[JobCtrl.activate] %s enableEdit: %o', $scope.user.type, $scope.enableEdit);
+
         }
 
         $log.debug('State Params: %o', $stateParams);
 
         $scope.types = ['main', 'home', 'business', 'billing', 'other'];
-        activate();
 
-        $scope.showAddressDetails = function() {
+        $scope.showAddressDetails = function () {
             event.preventDefault();
 
             $scope.showAddressDetails = true;
         };
 
-        $scope.upsert = function() {
+        $scope.upsert = function () {
             if ($state.is('jobs.create')) {
                 return $scope.create();
             }
-            if ($scope.mode === 'edit') {
+            if ($state.is('jobs.edit')) {
                 return $scope.update();
             }
 
             $log.warn('Unknown Form Mode: "%s"', $scope.mode);
+            $scope.error = 'Unknown Form Mode';
         };
 
         // Create new Job
-        $scope.create = function() {
+        $scope.create = function () {
 
             debugger; // todo - check companyId status
             $scope.job.companyId = $scope.job.companyId || $scope.company._id;
@@ -74,9 +101,9 @@
             var job = new Jobs.ById($scope.job);
 
             // Redirect after save
-            job.$save(function(response) {
+            job.$save(function (response) {
                 $location.path('jobs/' + response._id);
-            }, function(errorResponse) {
+            }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
 
@@ -85,7 +112,7 @@
             ///this.name = '';
         };
 
-        $scope.delist = function(job) {
+        $scope.delist = function (job) {
             job = job || $scope.job;
 
             if (!job) {
@@ -96,7 +123,7 @@
         };
 
         // Remove existing Job
-        $scope.remove = function(job) {
+        $scope.remove = function (job) {
             if (job) {
                 job.$remove();
 
@@ -106,24 +133,24 @@
                     }
                 }
             } else {
-                $scope.job.$remove(function() {
+                $scope.job.$remove(function () {
                     $location.path('jobs');
                 });
             }
         };
 
         // Update existing Job
-        $scope.update = function() {
+        $scope.update = function () {
             var job = $scope.job;
 
-            job.$update(function() {
+            job.$update(function () {
                 $location.path('jobs/' + job._id);
-            }, function(errorResponse) {
+            }, function (errorResponse) {
                 $scope.error = errorResponse.data.message;
             });
         };
 
-        $scope.initList = function() {
+        $scope.initList = function () {
             if ($state.is('jobs.list')) {
                 $scope.listTitle = 'Outset Job Listings';
                 $scope.find();
@@ -134,9 +161,10 @@
         };
 
         // Find a list of Jobs
-        $scope.find = function() {
+        $scope.find = function () {
 
             if (!!$scope.jobs) {
+                $log.debug('[JobsController.find()] %d jobs already loaded', $scope.jobs.length);
                 return;
             }
 
@@ -152,8 +180,9 @@
         };
 
         // Find a list of 'My' Jobs.
-        $scope.findMine = function() {
+        $scope.findMine = function () {
             if (!!$scope.jobs) {
+                $log.debug('[JobsController.findMine()] %d jobs already loaded', $scope.jobs.length);
                 return;
             }
 
@@ -162,7 +191,7 @@
             });
         };
         // Find existing Job
-        $scope.findOne = function() {
+        $scope.findOne = function () {
             if ($state.is('jobs.create')) {
                 $scope.pageTitle = 'Post New Job';
                 return;
@@ -175,7 +204,6 @@
             });
         };
     }
-
 
 
     JobsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', '$log', 'Authentication', 'Jobs', 'Companies', 'job', 'jobs', 'company'];

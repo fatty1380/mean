@@ -1,21 +1,21 @@
 <!-- os-address : address.client.template.html -->
-<div class="col-sm-4" ng-hide="viewCtrl.enableEdit">
+<div class="col-sm-4" ng-hide="vm.enableEdit">
     <div class="panel">
         <div class="panel-heading">
-            <strong>{{viewCtrl.address.type}}</strong>
-            <button type="button" class="pull-right btn-link" value="edit" ng-click="viewCtrl.editAddress(this)">
+            <span class="h4">{{vm.address.typeVal}}</span>
+            <button data-ng-if="vm.enableEdit" type="button" class="pull-right btn-link" value="edit" ng-click="vm.editAddress(this)">
                 <i class="fa fa-pencil"></i>
             </button>
-            <button type="button" class="pull-right btn-link" value="delete" ng-click="viewCtrl.remove(this)">
+            <button data-ng-if="vm.enableEdit" type="button" class="pull-right btn-link" value="delete" ng-click="vm.remove(this)">
                 <i class="fa fa-trash-o"></i>
             </button>
         </div>
         <div class="panel-body">
             <address>
-                <div ng-repeat="(s,street) in viewCtrl.address.streetAddresses track by s">
-                    {{street}}
+                <div ng-repeat="(s,street) in vm.address.streetAddresses track by s">
+                    {{vm.address.streetAddresses[s]}}
                 </div>
-                {{viewCtrl.address.city}}, {{viewCtrl.address.state}} {{viewCtrl.address.zipCode}}
+                {{vm.address.city}}, {{vm.address.state}} {{vm.address.zipCode}}
                 <br/>
             </address>
         </div>
@@ -25,32 +25,27 @@
 
 <script type="text/ng-template" id="addressEditModal.html">
 
-<div class="modal-header">
-    <span class="modal-title h3 text-center">Add Address</span>
-    <div class="pull-right">
-        <button class="btn btn-text" ng-click="$dismiss('cancel')">X</button>
-    </div>
-</div>
+    <div class="modal-header">
+        <span class="modal-title h3 text-center">Add Address</span>
 
-<form role="form" data-ng-submit="signin()" class="signin form-horizontal" spellcheck="false" novalidate>
-    <div class="modal-body">
-
-        <os-edit-address address="viewCtrl.address" enable-edit="true"></os-edit-address>
-
-    </div>
-
-    <div class="modal-footer">
-        <div class="text-center form-group">
-            <button type="submit" class="btn btn-primary">Add</button>
-        </div>
-        <div data-ng-show="error" class="text-center text-danger">
-            <strong data-ng-bind="error"></strong>
+        <div class="pull-right">
+            <button class="btn btn-text" ng-click="$dismiss('cancel')">X</button>
         </div>
     </div>
 
-    </div>
+    <form role="form" data-ng-submit="signin()" class="signin form-horizontal" spellcheck="false" novalidate>
+        <div class="modal-body">
+            <os-edit-address address="vm.address" enable-edit="true"></os-edit-address>
+        </div>
 
-
-</form>
+        <div class="modal-footer">
+            <div class="text-center form-group">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+            <div data-ng-show="error" class="text-center text-danger">
+                <strong data-ng-bind="error"></strong>
+            </div>
+        </div>
+    </form>
 
 </script>

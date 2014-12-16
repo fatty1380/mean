@@ -26,6 +26,13 @@ var AddressSchema = new Schema({
         required: 'Please specify an address type',
         enum: ['main', 'home', 'business', 'billing', 'other'],
     },
+
+    typeOther: {
+        type: String,
+        default: null,
+        trim: true,
+    },
+
     streetAddresses: {
         type: [String],
         default: [''],
