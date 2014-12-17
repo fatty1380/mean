@@ -37,14 +37,14 @@ var CompanySchema = new Schema({
     about: {
         type: String,
         default: '',
-        required: 'Please provide some information about your business',
+        required: 'Please provide some information about your business'
     },
 
     phone: {
         type: String,
         trim: true,
         default: '',
-        match: [/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/],
+        match: [/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/]
     },
 
     email: {

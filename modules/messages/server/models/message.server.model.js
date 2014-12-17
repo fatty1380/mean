@@ -21,7 +21,7 @@ var MessageSchema = new Schema({
     status: {
         type: String,
         enum: ['draft', 'sent', 'read', 'deleted', 'ignored'],
-        default: 'draft',
+        default: 'draft'
     },
     created: {
         type: Date,

@@ -100,8 +100,8 @@ var UserSchema = new Schema({
         type: String,
         trim: true,
         default: '',
-        match: [/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/],
-        // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
+        match: [/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/]
+		// TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
 
     /**
@@ -115,7 +115,7 @@ var UserSchema = new Schema({
     displayName: {
         type: String,
         trim: true
-    },
+    }
 });
 
 UserSchema.post('init', function(next) {

@@ -28,23 +28,23 @@ var LicenseSchema = new Schema({
     type: {
         type: String,
         enum: ['standard', 'commercial'],
-        default: 'standard',
+        default: 'standard'
     },
     number: {
         type: String,
         trim: true,
-        default: '',
+        default: ''
     },
     dateOfBirth: {
         type: Date,
         default: '',
-        trim: true,
+        trim: true
     },
     state: {
         type: String,
         trim: true,
         default: 'AZ',
-        validate: [validateLocalStrategyProperty, 'Please select your state'],
+        validate: [validateLocalStrategyProperty, 'Please select your state']
     },
     rating: {
         type: String,
@@ -55,23 +55,23 @@ var LicenseSchema = new Schema({
             key: String,
             value: Boolean
         }],
-        default: [],
+        default: []
     },
     issued: {
         type: Date,
-        default: null,
+        default: null
     },
     expires: {
         type: Date,
-        default: null,
+        default: null
     },
     created: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     },
     modified: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     }
 });
 

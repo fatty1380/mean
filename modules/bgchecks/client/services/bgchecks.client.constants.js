@@ -38,7 +38,7 @@ var stubs = {
         'governmentId': '201211141',
         'gender': 'Male',
         'birthDate': 260427600000
-    },
+    }
 };
 
 angular.module('bgchecks').constant('StubValues', stubs);

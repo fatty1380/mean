@@ -29,44 +29,44 @@ module.exports.base_schedule = [{
     'description': 'Early Morning',
     'time': {
         'start': 3,
-        'end': 9,
-    },
+        'end': 9
+    }
 }, {
     'description': 'Morning',
     'time': {
         'start': 6,
-        'end': 12,
-    },
+        'end': 12
+    }
 }, {
     'description': 'Mid-day',
     'time': {
         'start': 10,
-        'end': 3,
-    },
+        'end': 3
+    }
 }, {
     'description': 'Afternoon',
     'time': {
         'start': 12,
-        'end': 17,
-    },
+        'end': 17
+    }
 }, {
     'description': 'Evening',
     'time': {
         'start': 16,
-        'end': 20,
-    },
+        'end': 20
+    }
 }, {
     'description': 'Night',
     'time': {
         'start': 18,
-        'end': 2,
-    },
+        'end': 2
+    }
 }, {
     'description': 'Overnight',
     'time': {
         'start': 20,
-        'end': 4,
-    },
+        'end': 4
+    }
 }, ];
 
 module.exports.us_states = [{

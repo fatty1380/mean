@@ -24,32 +24,32 @@ var AddressSchema = new Schema({
         type: String,
         default: 'main',
         required: 'Please specify an address type',
-        enum: ['main', 'home', 'business', 'billing', 'other'],
+        enum: ['main', 'home', 'business', 'billing', 'other']
     },
 
     typeOther: {
         type: String,
         default: null,
-        trim: true,
+        trim: true
     },
 
     streetAddresses: {
         type: [String],
         default: [''],
-        trim: true,
+        trim: true
         //validate: [validateStreetAddressValue, 'Please provide a valid street address'],
     },
 
     city: {
         type: String,
         default: '',
-        trim: true,
+        trim: true
     },
 
     state: {
         type: String,
         default: '',
-        required: 'Please specify a State',
+        required: 'Please specify a State'
         //enum: constants.state_abbreviations(),
     },
 
@@ -57,8 +57,8 @@ var AddressSchema = new Schema({
         type: String,
         default: '',
         match: [/\d{5,5}/],
-        trim: true,
-    },
+        trim: true
+    }
 });
 
 AddressSchema.methods.checkConfig = function() {

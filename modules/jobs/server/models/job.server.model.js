@@ -15,7 +15,7 @@ var JobSchema = new Schema({
 
     user: {
         type: Schema.ObjectId,
-        ref: 'User',
+        ref: 'User'
     },
 
     company: {
@@ -33,7 +33,7 @@ var JobSchema = new Schema({
         type: String,
         default: '',
         required: 'Please fill in a Job Description',
-        trim: true,
+        trim: true
     },
 
     location: ['Address'],
@@ -41,12 +41,12 @@ var JobSchema = new Schema({
     payRate: {
         min: {
             type: Number,
-            default: 0,
+            default: 0
         },
         max: {
             type: Number,
-            default: 0,
-        },
+            default: 0
+        }
     },
 
     views: [{
@@ -68,14 +68,14 @@ var JobSchema = new Schema({
 
     isDeleted: {
         type: Boolean,
-        default: false,
+        default: false
     },
     posted: {
         type: Date
     },
     created: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     },
     modified: {
         type: Date,

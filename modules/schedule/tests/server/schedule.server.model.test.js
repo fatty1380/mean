@@ -22,9 +22,9 @@ describe('Schedule Model Unit Tests:', function() {
         schedule = new Schedule({
             time: {
                 start: 0,
-                end: 6,
+                end: 6
             },
-            description: 'Midnight to 6 AM',
+            description: 'Midnight to 6 AM'
         });
 
         done();

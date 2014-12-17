@@ -3,7 +3,8 @@
 angular.module('companies')
     .directive('osCompany', [
         function() {
-            var ddo = {
+            var ddo;
+            ddo = {
                 templateUrl: 'modules/companies/views/templates/view-company.client.template.html',
                 scope: {
                     company: '=',
@@ -11,7 +12,7 @@ angular.module('companies')
                 },
                 restrict: 'E',
                 replace: true,
-                controller: function() {
+                controller: function () {
                     //debugger;
                 },
                 controllerAs: 'dm',
@@ -23,7 +24,8 @@ angular.module('companies')
     ])
     // TODO : Move to CORE Module
     .directive('osPageHeader', function() {
-        var ddo = {
+        var ddo;
+        ddo = {
             templateUrl: 'modules/core/views/templates/os-page-header.client.template.html',
             scope: {
                 title: '@',
@@ -36,7 +38,7 @@ angular.module('companies')
             },
             transclude: true,
             restrict: 'E',
-            controller: ['$transclude', function(transclude) {
+            controller: ['$transclude', function (transclude) {
                 var dm = this;
 
                 dm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;

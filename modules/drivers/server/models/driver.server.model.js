@@ -28,7 +28,7 @@ var DriverSchema = new Schema({
     user: {
         type: Schema.ObjectId,
         ref: 'User',
-        required: true,
+        required: true
     },
 
     licenses: ['License'],
@@ -53,27 +53,27 @@ var DriverSchema = new Schema({
         },
         location: {
             type: String
-        },
+        }
     }],
 
     isActive: {
         type: Boolean,
-        default: true,
+        default: true
     },
     isDeleted: {
         type: Boolean,
-        default: false,
+        default: false
     },
 
     created: {
         type: Date,
-        default: Date.now,
+        default: Date.now
     },
 
     modified: {
         type: Date,
-        default: Date.now,
-    },
+        default: Date.now
+    }
 });
 
 DriverSchema.pre('save', function(next) {

@@ -94,7 +94,7 @@ var ApplicationSchema = new Schema({
     },
     isRejected: {
         type: Boolean
-    },
+    }
 
     /* Virtual Members - END */
 });

@@ -172,7 +172,7 @@
 
             if (user && user.type === 'owner') {
                 $scope.jobs = Jobs.ByUser.query({
-                    userId: Authentication.user._id,
+                    userId: Authentication.user._id
                 });
             } else {
                 $scope.jobs = Jobs.ById.query();
@@ -187,7 +187,7 @@
             }
 
             $scope.jobs = Jobs.ByUser.query({
-                userId: Authentication.user._id,
+                userId: Authentication.user._id
             });
         };
         // Find existing Job

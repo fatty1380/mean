@@ -44,7 +44,7 @@
             }
 
             return true;
-        }
+        };
 
         vm.removeEnabled = function() {
             if (!vm.enableEdit) {
@@ -56,7 +56,7 @@
             }
 
             return true;
-        }
+        };
 
         vm.addAddress = function () {
             // Prevent vm from bubbling up;

@@ -33,7 +33,7 @@ var ApplicationsService = function($resource) {
                 isArray: true
             },
             save: {
-                method: 'POST',
+                method: 'POST'
             }
         }),
         ById: $resource('api/applications/:id', {

@@ -69,7 +69,7 @@
                     text: 'job 2',
                     time: '2 years',
                     location: 'nowhere'
-                }],
+                }]
 
             });
 
@@ -103,7 +103,7 @@
                     text: 'job 2',
                     time: '2 years',
                     location: 'nowhere'
-                }],
+                }]
 
             });
 
@@ -137,7 +137,7 @@
                     text: 'job 2',
                     time: '2 years',
                     location: 'nowhere'
-                }],
+                }]
             });
 
             // Create a sample Driver response
@@ -156,7 +156,7 @@
                     text: 'job 2',
                     time: '2 years',
                     location: 'nowhere'
-                }],
+                }]
             });
 
             // Fixture mock form input values
@@ -208,7 +208,7 @@
                     text: 'job 2',
                     time: '2 years',
                     location: 'nowhere'
-                }],
+                }]
             });
 
             // Mock Driver in scope

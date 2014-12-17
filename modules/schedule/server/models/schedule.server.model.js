@@ -23,13 +23,13 @@ var ScheduleSchema = new Schema({
             type: Number,
             default: 0,
             min: 0,
-            max: 23,
+            max: 23
         },
         end: {
             type: Number,
             default: 1,
             min: 0,
-            max: 23,
+            max: 23
         }
     },
     description: {

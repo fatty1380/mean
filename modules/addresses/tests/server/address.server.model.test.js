@@ -24,7 +24,7 @@ describe('Address Model Unit Tests:', function() {
             streetAddresses: ['123 Anystreet'],
             city: 'Any Town',
             state: 'AZ',
-            zipCode: '83421',
+            zipCode: '83421'
         });
 
         done();
