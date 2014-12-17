@@ -7,7 +7,8 @@
         //
         // Creates:
         //
-        var directive = {
+        var ddo;
+        ddo = {
             transclude: true,
             templateUrl: 'modules/jobs/views/templates/os-new-application-modal.client.template.html',
             restrict: 'EA',
@@ -20,7 +21,7 @@
             bindToController: true
         };
 
-        return directive;
+        return ddo;
     }
 
     function NewApplicationModalController($modal, $log) {
@@ -28,12 +29,6 @@
         var vm = this;
 
         vm.isOpen = false;
-        vm.placeholders = {intro: 'yo mama\'s so fat, she needs 64 bits of addressable space', title: 'shit dawg'};
-
-        vm.yo = function () {
-            debugger;
-            $log.debug('sup! new app modal controller');
-        }
 
         vm.showModal = function (size) {
             var modalInstance = $modal.open({
@@ -72,11 +67,6 @@
         vm.createApplication = createApplication;
         vm.saveDraft = saveDraft;
 
-        vm.yo = function () {
-            debugger;
-            $log.debug('sup! app create controller');
-        }
-
         // Bindable Variables ___________________________________________________________
         vm.job = job;
         vm.placeholders = {
@@ -105,7 +95,7 @@
             });
 
             saveApplication(application);
-        };
+        }
 
         function saveDraft() {
             $log.debug('[AppController.saveDraft]', 'Creating new Draft Application');
@@ -115,7 +105,7 @@
             });
 
             saveApplication(application);
-        };
+        }
 
         var saveApplication = function (application) {
             if (!vm.message || vm.message.length < 1) {
