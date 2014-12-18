@@ -18,14 +18,14 @@ module.exports.state_abbreviations = function() {
 
     abbreviations = [];
 
-    for (var i = 0; i < module.exports.us_states.length; i++) {
-        abbreviations.push(module.exports.us_states[i]['alpha-2']);
+    for (var i = 0; i < module.exports.usStates.length; i++) {
+        abbreviations.push(module.exports.usStates[i]['alpha-2']);
     }
 
     return abbreviations;
 };
 
-module.exports.base_schedule = [{
+module.exports.baseSchedule = [{
     'description': 'Early Morning',
     'time': {
         'start': 3,
@@ -69,7 +69,7 @@ module.exports.base_schedule = [{
     }
 }, ];
 
-module.exports.us_states = [{
+module.exports.usStates = [{
     'name': 'Alabama',
     'alpha-2': 'AL'
 }, {

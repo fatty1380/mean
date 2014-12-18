@@ -10,20 +10,20 @@
 
             <div ng-repeat="(s,street) in vm.address.streetAddresses track by s">
                 <input type="text" id="street-address" name="street-address" class="form-control"
-                       data-ng-model="vm.address.streetAddresses[s]" placeholder="Street Address {{$index+1}}">
+                       data-ng-model="vm.address.streetAddresses[s]" ng-model-options="{ updateOn: 'blur' }" placeholder="Street Address {{$index+1}}">
             </div>
 
             <label class="sr-only" for="city">City</label>
             <input type="text" id="city" name="city" class="form-control" data-ng-model="vm.address.city"
-                   placeholder="City">
+                   ng-model-options="{ updateOn: 'blur' }" placeholder="City">
 
             <label class="sr-only" for="state">State</label>
             <input type="text" id="state" name="state" class="form-control" data-ng-model="vm.address.state"
-                   placeholder="State">
+                   ng-model-options="{ updateOn: 'blur' }" placeholder="State">
 
             <label class="sr-only" for="address-zip">Zip Code</label>
             <input type="text" id="address-zip" name="zip" class="form-control" data-ng-model="vm.address.zipCode"
-                   placeholder="ZIP">
+                   ng-model-options="{ updateOn: 'blur' }" placeholder="ZIP">
         </div>
     </div>
 </section>

@@ -145,11 +145,7 @@
         };
 
         $scope.switchHelper = function(value) {
-
-            if (!value || value.length === 0)
-                return true;
-            else
-                return false;
+            return !value || value.length === 0 ? true : false;
         };
 
         $scope.cancel = function() {

@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function driver_resolve(rsrc, params) {
+    function driverResolve(rsrc, params) {
         if (!!params.driverId) {
             var val = params.driverId;
             console.log('Searching for driver ID: %s', val);
@@ -14,7 +14,7 @@
         return {};
     }
 
-    function user_resolve(rsrc, params, auth) {
+    function userResolve(rsrc, params, auth) {
         var val;
         if (!!params.userId) {
             console.log('Searching for driver data for user %s', params.userId);
@@ -23,7 +23,6 @@
             console.log('Searching for driver data for logged in user');
             val = auth.user._id;
         }
-        debugger;
 
         return rsrc.ByUser.get({
             userId: val
@@ -36,11 +35,13 @@
                 console.log('Unable to find driver');
                 return null;
             }
-            else throw error;
+            else {
+                throw error;
+            }
         });
     }
 
-    function driver_list_resolve(rsrc) {
+    function driverListResolve(rsrc) {
         return rsrc.ById.query().$promise;
     }
 
@@ -60,7 +61,7 @@
             templateUrl: 'modules/drivers/views/list-drivers.client.view.html',
             parent: 'drivers',
             resolve: {
-                drivers: driver_list_resolve
+                drivers: driverListResolve
             },
             controller: 'DriversListController',
             controllerAs: 'vm',
@@ -72,7 +73,7 @@
             templateUrl: 'modules/drivers/views/edit-driver.client.view.html',
             parent: 'drivers',
             resolve: {
-                driver: user_resolve
+                driver: userResolve
             },
             controller: 'DriverEditController',
             controllerAs: 'vm',
@@ -87,7 +88,7 @@
             controllerAs: 'vm',
             bindToController: true,
             resolve: {
-                driver: user_resolve
+                driver: userResolve
             },
             authenticate: true
         }).
@@ -97,7 +98,7 @@
             templateUrl: 'modules/drivers/views/view-driver.client.view.html',
             parent: 'drivers',
             resolve: {
-                driver: driver_resolve
+                driver: driverResolve
             },
             controller: 'DriverViewController',
             controllerAs: 'vm',
@@ -109,7 +110,7 @@
             templateUrl: 'modules/drivers/views/edit-driver.client.view.html',
             parent: 'drivers',
             resolve: {
-                driver: driver_resolve
+                driver: driverResolve
             },
             controller: 'DriverEditController',
             controllerAs: 'vm',
@@ -118,9 +119,9 @@
     }
 
     // Dependency Injection
-    driver_list_resolve.$inject = ['Drivers'];
-    driver_resolve.$inject = ['Drivers', '$stateParams'];
-    user_resolve.$inject = ['Drivers', '$stateParams', 'Authentication'];
+    driverListResolve.$inject = ['Drivers'];
+    driverResolve.$inject = ['Drivers', '$stateParams'];
+    userResolve.$inject = ['Drivers', '$stateParams', 'Authentication'];
     config.$inject = ['$stateProvider'];
 
     //Setting up route

@@ -14,7 +14,7 @@ var should = require('should'),
  */
 var user, driver;
 
-var scheduleCount = constants.base_schedule.length;
+var scheduleCount = constants.baseSchedule.length;
 
 /**
  * Unit tests

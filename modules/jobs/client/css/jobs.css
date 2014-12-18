@@ -10,7 +10,7 @@
 .job-item .panel.job-info > .panel-heading button {
     color: #333;
 }
-.job-item .panel.job-info > .panel-heading button.active {
+.job-item .panel.job-info > .panel-heading button:active {
     color: black;
     font-weight: bold;
     border-bottom: 1px solid black;

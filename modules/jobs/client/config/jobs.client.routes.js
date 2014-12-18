@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function company_resolve(rsrc, params, auth) {
+    function companyResolve(rsrc, params, auth) {
         if (!!params.companyId) {
             var val = params.companyId;
             console.log('Searching for company ID: %s', val);
@@ -25,7 +25,7 @@
         return {};
     }
 
-    function job_resolve(rsrc, params) {
+    function jobResolve(rsrc, params) {
         var val = params.jobId;
         console.log('Searching for job ID: %s', val);
 
@@ -34,7 +34,7 @@
         }).$promise : null;
     }
 
-    function list_user_resolve(rsrc, params, auth) {
+    function listUserResolve(rsrc, params, auth) {
         if (auth.user && auth.user.type === 'owner') {
             return rsrc.ByUser.query({
                 userId: auth.user._id,
@@ -69,9 +69,11 @@
             state('jobs.list', {
                 url: '',
                 templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
-                controller: 'JobsController',
+                controller: 'JobsListController',
+                controllerAs: 'vm',
+                bindToController: true,
                 resolve: {
-                    jobs: list_user_resolve
+                    jobs: listUserResolve
                 },
                 parent: 'jobs'
             }).
@@ -79,10 +81,12 @@
             state('jobs.mine', {
                 url: '/me',
                 templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
-                controller: 'JobsController',
+                controller: 'JobsListController',
+                controllerAs: 'vm',
+                bindToController: true,
                 resolve: {
-                    jobs: list_user_resolve,
-                    company: company_resolve
+                    jobs: listUserResolve,
+                    company: companyResolve
                 },
                 parent: 'jobs'
             }).
@@ -90,9 +94,11 @@
             state('jobs.create', {
                 url: '/create/:companyId',
                 templateUrl: 'modules/jobs/views/edit-job.client.view.html',
-                controller: 'JobsController',
+                controller: 'JobEditController',
+                controllerAs: 'vm',
+                bindToController: true,
                 resolve: {
-                    company: company_resolve
+                    company: companyResolve
                 },
                 parent: 'jobs'
             }).
@@ -104,7 +110,7 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    job: job_resolve
+                    job: jobResolve
                 },
                 parent: 'jobs'
             }).
@@ -112,9 +118,11 @@
             state('jobs.edit', {
                 url: '/:jobId/edit',
                 templateUrl: 'modules/jobs/views/edit-job.client.view.html',
-                controller: 'JobsController',
+                controller: 'JobEditController',
+                controllerAs: 'vm',
+                bindToController: true,
                 resolve: {
-                    job: job_resolve
+                    job: jobResolve
                 },
                 parent: 'jobs'
             }).
@@ -128,9 +136,9 @@
 
 
     // Dependency Injection
-    company_resolve.$inject = ['Companies', '$stateParams', 'Authentication'];
-    job_resolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
-    list_user_resolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
+    companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
+    jobResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
+    listUserResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
     config.$inject = ['$stateProvider'];
 
     //Setting up route

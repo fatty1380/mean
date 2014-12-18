@@ -1,24 +1,28 @@
-(function() {
+(function () {
     'use strict';
 
     function LocationDirective() {
         return {
             priority: 0,
-            template: '<ui-gmap-google-map center=\'map.center\' zoom=\'map.zoom\' draggable=\'map.draggable\' style=\'{{map.style}}\'></ui-gmap-google-map>',
+            template: '<map disable-default-u-i="true" scrollwheel="false" draggable="false"></map>',
             replace: false,
             transclude: false,
             restrict: 'E',
             scope: {
+                address: '=?',
                 center: '@?',
                 style: '@?',
                 zipCode: '@?'
             },
             controller: 'LocationController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            bindToController: true
         };
     }
 
 
-    angular.module('location').directive('osMapLocation', LocationDirective);
+    angular.module('location')
+        .directive('osMapLocation', LocationDirective);
+
 
 })();

@@ -75,14 +75,16 @@
             <div ng-show="dm.showSection( 'description') ">
                 <div class="panel-heading" ng-show="dm.showSection('all')"><span class="h4">Description</span></div>
                 <div class="panel-body ">
-                    <div ng-bind-html="dm.job.description"></div>
+                    <div ng-bind-html="dm.job.description">No Description Listed</div>
                     <hr/>
                 </div>
             </div>
 
             <div ng-show="dm.showSection( 'requirements') ">
                 <div class="panel-heading" ng-show="dm.showSection('all')"><span class="h4">Requirements</span></div>
-                <div class="panel-body ">{{ dm.job.requirements || 'none listed'}}
+                <div class="panel-body ">
+                    <ul><li ng-repeat="req in dm.job.requirements"><span ng-bind-html="req"></span></li></ul>
+                    <div ng-hide="!!dm.job.requirements && !!dm.job.requirements.length">No Requirements Listed</div>
                     <hr/>
                 </div>
             </div>
@@ -103,7 +105,5 @@
                 <div class="panel-body "><p data-ng-bind-html="dm.job.company.about">not available</p></div>
             </div>
         </div>
-        </div>
-
     </section>
 </section>

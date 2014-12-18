@@ -23,8 +23,9 @@ module.exports = {
                 'public/lib/textAngular/src/textAngular-sanitize.js',
                 'public/lib/textAngular/src/textAngularSetup.js',
                 'public/lib/textAngular/src/textAngular.js',
-                'public/lib/angular-google-maps/dist/angular-google-maps.js',
-                'public/lib/lodash/dist/lodash.js'
+                'public/lib/ngmap/build/scripts/ng-map.js',
+                'public/lib/lodash/dist/lodash.js',
+                '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry' // TODO: use gmapApiProvider
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },

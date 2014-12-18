@@ -105,8 +105,6 @@ exports.list = function(req, res, next) {
 };
 
 exports.readProfile = function(req, res) {
-	debugger;
-
     if (!req.profile) {
         return res.status(404).send({
             message: 'No profile found'

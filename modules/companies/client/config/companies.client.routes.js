@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function company_resolve(rsrc, params) {
+    function companyResolve(rsrc, params) {
         if (!!params.companyId) {
             var val = params.companyId;
             console.log('Searching for company ID: %s', val);
@@ -13,7 +13,7 @@
         return {};
     }
 
-    function user_resolve(rsrc, params, auth) {
+    function userResolve(rsrc, params, auth) {
         var val;
         if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
@@ -58,7 +58,7 @@
             controller: 'CompaniesController',
             controllerAs: 'vm',
             resolve: {
-                company: user_resolve
+                company: userResolve
             }
         }).
 
@@ -82,7 +82,7 @@
             controller: 'CompaniesController',
             controllerAs: 'vm',
             resolve: {
-                company: company_resolve
+                company: companyResolve
             }
         }).
 
@@ -93,14 +93,14 @@
             controller: 'CompaniesController',
             controllerAs: 'vm',
             resolve: {
-                company: company_resolve
+                company: companyResolve
             }
         });
     }
 
     // Dependency Injection
-    company_resolve.$inject = ['Companies', '$stateParams'];
-    user_resolve.$inject = ['Companies', '$stateParams', 'Authentication'];
+    companyResolve.$inject = ['Companies', '$stateParams'];
+    userResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
     config.$inject = ['$stateProvider'];
 
     //Setting up route

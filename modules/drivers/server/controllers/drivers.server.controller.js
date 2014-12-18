@@ -110,7 +110,7 @@ exports.create = function(req, res) {
     }
 
     if (driver.schedule.length === 0) {
-        _.forEach(constants.base_schedule, function(val, key) {
+        _.forEach(constants.baseSchedule, function(val, key) {
             driver.schedule.push(new Schedule(val));
         });
     }

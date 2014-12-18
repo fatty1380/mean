@@ -17,8 +17,7 @@
                     <span class="h4">Location: {{ vm.job.location[0].zipCode }}</span>
                 </div>
                 <div class="panel-body">
-                    <os-map-location data-ng-if="vm.job.location[0]"
-                                     zip-code="{{vm.job.location[0].zipCode}}"></os-map-location>
+                    <os-map-location address="vm.job.location[0]"></os-alt-map-location>
                     <div class="text-center" data-ng-hide="vm.job.location[0]">No Location Available</div>
                 </div>
             </div>
@@ -43,7 +42,7 @@
                     <div ng-if="authentication.user._id == vm.job.user._id" data-ng-show="applications.length> 0"
                         class="row ">
                         <span class="col-md-12 ">
-                            <div ng-include=" '/modules/applications/views/templates/list-applications.client.template.html' ">
+                            <div ng-include=" '/modules/applications/views/templates/list-applications.client.template.html' " ng-init="displayMode='table'">
                             </div>
                         </span>
                     </div>

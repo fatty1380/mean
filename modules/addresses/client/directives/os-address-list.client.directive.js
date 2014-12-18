@@ -35,39 +35,23 @@
         activate();
 
         vm.addEnabled = function() {
-            if (!vm.enableEdit) {
-                return false;
-            }
-
-            if (vm.addresses.length >= vm.maxCount) {
-                return false;
-            }
-
-            return true;
+            return !vm.enableEdit ? false : vm.addresses.length < vm.maxCount;
         };
 
         vm.removeEnabled = function() {
-            if (!vm.enableEdit) {
-                return false;
-            }
-
-            if (vm.required && vm.addresses.length === 1) {
-                return false;
-            }
-
-            return true;
+            return !vm.enableEdit || vm.required && vm.addresses.length === 1 ? false : true;
         };
 
         vm.addAddress = function () {
             // Prevent vm from bubbling up;
             event.preventDefault();
 
-            var addr = new Address({
+            var address = new Address({
                 type: 'select type',
                 streetAddresses: ['', '']
             });
 
-            vm.addresses.push(addr);
+            vm.addresses.push(address);
         };
 
         vm.removeAddress = function (address) {

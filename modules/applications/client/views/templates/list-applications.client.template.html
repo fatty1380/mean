@@ -1,11 +1,16 @@
 <section>
-    <div class="list-group">
+    <div class="list-group" data-ng-if="displayMode !== 'table'">
         <a data-ng-repeat="application in applications" data-ng-href="applications/{{application._id}}" class="list-group-item">
-            <div class="container-fluid">
-                <os-view-application display-mode="normal" model="application"></os-view-application>
-            </div>
+                <os-view-application display-mode="displayMode || normal" model="application"></os-view-application>
         </a>
     </div>
+
+    <table data-ng-if="displayMode === 'table'">
+        <th><td>Name</td><td>Posted</td><td>Updated</td><td>Message Ct</td></th>
+        <span data-ng-repeat="application in applications" data-ng-sref="applications.view({applicationId: {{application._id}} })">
+             <os-view-application display-mode="displayMode || table" model="application"></os-view-application>
+        </span>
+        </table>
     <div class="text-center" data-ng-hide="!applications.$resolved || applications.length">
         <p>{{::noItemsText}}</p>
     </div>

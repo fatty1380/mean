@@ -56,13 +56,13 @@ var AddressSchema = new Schema({
     zipCode: {
         type: String,
         default: '',
-        match: [/\d{5,5}/],
+        match: [/\d{5}(\-\d{4})?/],
         trim: true
     }
 });
 
 AddressSchema.methods.checkConfig = function() {
-    console.log('config enums: ' + constants.us_states);
+    console.log('config enums: ' + constants.usStates);
 
     console.log('config abbreviations: ' + constants.state_abbreviations());
 };

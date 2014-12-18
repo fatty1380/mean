@@ -24,7 +24,9 @@ var getErrorMessage = function(err) {
         }
     } else {
         for (var errName in err.errors) {
-            if (err.errors[errName].message) message = err.errors[errName].message;
+            if (err.errors[errName].message) {
+                message = err.errors[errName].message;
+            }
         }
     }
 

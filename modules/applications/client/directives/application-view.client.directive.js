@@ -12,7 +12,6 @@
             },
             controller: function () {
                 var vm = this;
-                debugger;
                 vm.displayMode = vm.displayMode || 'normal';
             },
             controllerAs: 'vm',

@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
     var applicationModuleName = 'outset';
-    var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'textAngular', 'uiGmapgoogle-maps'];
+    var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'textAngular', 'ngMap'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {

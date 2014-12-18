@@ -71,7 +71,7 @@ gulp.task('jshint', function () {
         .src(_.union(defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e))
         .pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
-        .pipe(plugins.jshint.reporter('default'))
+        //.pipe(plugins.jshint.reporter('default'))
 //        .pipe(plugins.jshint.reporter('fail'))
         ;
 });

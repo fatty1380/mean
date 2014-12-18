@@ -1,18 +1,18 @@
-<section data-ng-init="findOne()">
+<section>
     <!-- edit-job.client.view.html -->
     <section class="container-fluid">
-        <os-page-header title="{{ pageTitle || 'Edit Job'}}">
+        <os-page-header title="{{ vm.pageTitle || 'Edit Job'}}">
             <span ng-show="!!company">For {{company.name}}</span>
         </os-page-header>
         <div class="col-md-12">
-            <form class="form-horizontal" data-ng-submit="upsert()" novalidate>
+            <form class="form-horizontal" data-ng-submit="vm.submit()" novalidate>
                 <fieldset>
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <span class="h4"><label class="control-label" for="name">Headline</label></span>
                         </div>
                         <div class="panel-body">
-                            <input type="text" data-ng-model="job.name" id="name" class="form-control"
+                            <input type="text" data-ng-model="vm.job.name" id="name" class="form-control"
                                    placeholder="Job Headline" required>
                         </div>
                     </div>
@@ -22,13 +22,22 @@
                             <span class="h4"><label class="control-label" for="description">Description</label></span>
                         </div>
                         <div class="panel-body">
-                            <os-html-edit id="description" model="job.description"></os-html-edit>
+                            <os-html-edit id="description" model="vm.job.description"></os-html-edit>
                         </div>
 
-                        <div class="panel-heading" data-ng-click="showPreview = !showPreview">Preview</div>
-                        <div class="panel-body" data-ng-show="showPreview" ng-bind-html="job.description"></div>
+                        <div class="panel-heading" data-ng-click="vm.showPreview = !vm.showPreview">Preview</div>
+                        <div class="panel-body" data-ng-show="vm.showPreview" ng-bind-html="vm.job.description"></div>
                     </div>
 
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="h4"><label class="control-label" for="requirements">Requirements</label></span>
+                        </div>
+                        <div class="panel-body">
+                            <os-html-edit id="requirements" model="vm.requirements"></os-html-edit>
+                        </div>
+                    </div>
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -36,13 +45,12 @@
                         </div>
                         <div class="panel-body">
                             <div class="col-sm-4">
-                                <os-edit-address address="job.location[0]"
-                                                 enable-edit="vm.enableEdit"></os-edit-address>
+                                <os-edit-address address="vm.job.location[0]" id="location"></os-edit-address>
                             </div>
 
                             <div class="col-sm-8">
-                                <os-map-location address="job.location[0]"
-                                                 zip-code="{{job.location[0].zipCode}}"></os-map-location>
+                                <os-map-location address="vm.job.location[0]"
+                                                 zip-code="{{vm.job.location[0].zipCode}}"></os-map-location>
                             </div>
                         </div>
                     </div>
@@ -57,9 +65,9 @@
                         </div>
                         <div class="panel-body">
                             <div class="controls form-horizontal">
-                                <input type="text" data-ng-model="job.payRate.min" id="payMin" class="form-control"
+                                <input type="text" data-ng-model="vm.job.payRate.min" id="payMin" class="form-control"
                                        placeholder="$min" required>&nbsp;-&nbsp;
-                                <input type="text" data-ng-model="job.payRate.max" id="payMax" class="form-control"
+                                <input type="text" data-ng-model="vm.job.payRate.max" id="payMax" class="form-control"
                                        placeholder="$max" required>
                             </div>
                         </div>
@@ -70,15 +78,17 @@
                             <span class="h4"><label class="control-label" for="name">Post Status</label></span>
                         </div>
                         <div class="panel-body">
-                            <div class="badge" data-ng-model="job.postStatus">{{job.postStatus || 'UNKNOWN' }}</div>
+                            <div class="badge" data-ng-model="vm.job.postStatus">UNKNOWN</div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-default">
+                    <div class="pull-right">
+                        <input type="button" class="btn btn-link" value="cancel" ng-click="vm.cancel()">
+                        <input type="button" class="btn btn-default" value="Save as draft" ng-click="vm.saveDraft()">
+                        <input type="submit" class="btn btn-success" ng-class="{disabled:!vm.job}" value="Save">
                     </div>
-                    <div data-ng-show="error" class="text-danger">
-                        <strong data-ng-bind="error"></strong>
+                    <div data-ng-show="error" class="text-danger text-center">
+                        <strong data-ng-bind="vm.error"></strong>
                     </div>
                 </fieldset>
             </form>

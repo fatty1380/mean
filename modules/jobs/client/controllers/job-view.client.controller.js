@@ -2,7 +2,7 @@
     'use strict';
 
     // Jobs controller
-    function JobViewController($scope, $stateParams, $location, $state, $modal, $log, Authentication, Jobs, Companies, job, jobs, company) {
+    function JobViewController($stateParams, $state, $log, Authentication, job) {
 
         var vm = this;
 
@@ -12,10 +12,7 @@
         vm.enableEdit = false;
 
         vm.job = job;
-        vm.company = company || job && typeof job.company === 'object' && job.company || undefined;
-
-        // Init addressDetails for creation.
-        vm.showAddressDetails = false;
+        vm.company = job && typeof job.company === 'object' && job.company || undefined;
 
         activate();
 
@@ -28,19 +25,9 @@
                 vm.enableEdit = vm.user._id === (vm.company && (vm.company.owner._id || vm.company.owner));
             }
 
-            $log.debug('[JobCtrl.activate] %s enableEdit: %o', vm.user.type, vm.enableEdit);
+            $log.debug('[JobViewCtrl.activate] %s enableEdit: %o', vm.user.type, vm.enableEdit);
 
         }
-
-        $log.debug('State Params: %o', $stateParams);
-
-        vm.types = ['main', 'home', 'business', 'billing', 'other'];
-
-        vm.showAddressDetails = function () {
-            event.preventDefault();
-
-            vm.showAddressDetails = true;
-        };
 
         vm.delist = function (job) {
             job = job || vm.job;
@@ -64,14 +51,14 @@
                 }
             } else {
                 vm.job.$remove(function () {
-                    $location.path('jobs');
+                    $state.go('home');
                 });
             }
         };
     }
 
 
-    JobViewController.$inject = ['$scope', '$stateParams', '$location', '$state', '$modal', '$log', 'Authentication', 'Jobs', 'Companies', 'job', 'jobs', 'company'];
+    JobViewController.$inject = ['$stateParams', '$state', '$log', 'Authentication','job'];
 
     angular.module('jobs')
         .controller('JobViewController', JobViewController);

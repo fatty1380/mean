@@ -5,11 +5,11 @@ var constants = require('../models/outset.constants');
 exports.getConfig = function(req, res, next, varName) {
 
     switch (varName) {
-        case 'us_states':
-            req.configVal = constants.us_states;
+        case 'usStates':
+            req.configVal = constants.usStates;
             return next();
-        case 'base_schedule':
-            req.configVal = constants.base_schedule;
+        case 'baseSchedule':
+            req.configVal = constants.baseSchedule;
             return next();
         default:
             next();
@@ -18,8 +18,8 @@ exports.getConfig = function(req, res, next, varName) {
 
 exports.getAllConfigs = function(req, res) {
     var response = {
-        base_schedule: constants.base_schedule,
-        us_states: constants.us_states
+        baseSchedule: constants.baseSchedule,
+        usStates: constants.usStates
     };
 
     res.jsonp(response);

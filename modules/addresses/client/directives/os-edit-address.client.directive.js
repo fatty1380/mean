@@ -7,7 +7,7 @@
             restrict: 'E',
             scope: {
                 address: '=',
-                enableEdit: '=' // boolean
+                enableEdit: '=?' // boolean
             },
             controller: 'OsEditAddressController',
             controllerAs: 'vm',

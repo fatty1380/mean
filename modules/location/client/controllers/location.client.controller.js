@@ -1,26 +1,43 @@
-(function() {
+(function () {
     'use strict';
 
-    function LocationController($scope, uiGmapGoogleMapApi) {
-
+    function LocationController($scope, $log) {
         var vm = this;
 
-        // Do stuff with your $scope.
-        // Note: Some of the directives require at least something to be defined originally!
-        // e.g. $scope.markers = []
-        $scope.search = $scope.zipCode || 'Phoenix, AZ';
-        $scope.map = { zoom: 10 };
+        vm.search = 'United States';
+        vm.range;
 
-        $scope.geoCode = function(maps) {
-            if ($scope.search && $scope.search.length > 0) {
-                if (!this.geocoder) { this.geocoder = new maps.Geocoder(); }
-                this.geocoder.geocode({
-                    'address': $scope.search
-                }, function(results, status) {
-                    if (status === maps.GeocoderStatus.OK) {
-                        var loc = results[0].geometry.location;
-                        $scope.search = results[0].formatted_address;
-                        $scope.gotoLocation(loc.lat(), loc.lng());
+        function getSearchString() {
+            var str = '';
+            //str = !!vm.address.streetAddresses ? vm.address.streetAddresses.join(' ').trim() : '';
+            str += !!vm.address.city ? (!!str ? ', ' : '') + vm.address.city : '';
+            str += !!vm.address.state ? (!!str ? ', ' : '') + vm.address.state : '';
+
+            if (!str.trim()) {
+                str = vm.address.zipCode || 'United States';
+            }
+
+            $log.debug('new search : %s', str);
+
+            return str.trim();
+        }
+
+
+        vm.geoCode = function (maps) {
+            if (vm.search && vm.search.length > 0) {
+                if (!vm.geocoder) {
+                    vm.geocoder = new vm.gmaps.Geocoder();
+                }
+                vm.geocoder.geocode({
+                    'address': vm.search
+                }, function (results, status) {
+                    if (status === vm.gmaps.GeocoderStatus.OK) {
+                        $log.info('[LocationCtrl] OK - %d results. First location: %o', results.length, results[0]);
+                        var result = results[0];
+                        var loc = result.geometry.location;
+                        vm.search = result.formatted_address;
+                        vm.gotoLocation(loc, result.geometry.viewport);
+
                     } else {
                         alert('Sorry, this search produced no results.');
                     }
@@ -28,28 +45,70 @@
             }
         };
 
-        $scope.gotoLocation = function(lat, lon) {
-            if ($scope.map.latitude !== lat || $scope.map.longitude !== lon) {
-                $scope.map.center = {
-                    latitude: lat,
-                    longitude: lon
-                };
-                if (!$scope.$$phase) $scope.$apply('map');
+        vm.gotoLocation = function (center, viewport) {
+
+            vm.map.setCenter(center);
+
+            var r;
+
+            if (!!viewport) {
+                vm.map.fitBounds(viewport);
+
+                r = Math.max(
+                    google.maps.geometry.spherical.computeDistanceBetween(viewport.getSouthWest(), viewport.getCenter()),
+                    google.maps.geometry.spherical.computeDistanceBetween(viewport.getNorthEast(), viewport.getCenter())
+                );
+            }
+
+            if (!!r) {
+                vm.range = new google.maps.Circle({
+                    strokeColor: '#0000FF',
+                    strokeOpacity: 0.5,
+                    strokeWeight: 2,
+                    fillColor: '#0000FF',
+                    fillOpacity: 0.25,
+                    center: viewport.getCenter(),
+                    map: vm.map,
+                    radius: r
+                });
             }
         };
 
-        // uiGmapGoogleMapApi is a promise.
-        // The 'then' callback function provides the google.maps object.
-        uiGmapGoogleMapApi.then(function(maps) {
-            $scope.googleVersion = maps.version;
 
-            $scope.geoCode(maps);
+        $scope.$on('mapInitialized', function (event, map) {
+            vm.map = map;
+            vm.gmaps = $scope.google.maps;
 
+            vm.search = getSearchString();
+
+            vm.geoCode();
         });
+
+        $scope.$watch('vm.address', processChange);
+        $scope.$watch('vm.address.zipCode', processChange);
+        $scope.$watch('vm.address.city', processChange);
+        $scope.$watch('vm.address.state', processChange);
+
+        function processChange(newVal, oldVal, scope) {
+            if (newVal !== oldVal) {
+
+                var search = getSearchString();
+
+                if (vm.search !== search) {
+                    vm.search = search;
+
+                    if(vm.range) {
+                        vm.range.setMap(null);
+                    }
+
+                    vm.geoCode();
+                }
+            }
+        }
     }
 
-    LocationController.$inject = ['$scope', 'uiGmapGoogleMapApi'];
+    LocationController.$inject = ['$scope', '$log'];
 
-    angular.module('location', ['uiGmapgoogle-maps'])
+    angular.module('location')
         .controller('LocationController', LocationController);
 })();

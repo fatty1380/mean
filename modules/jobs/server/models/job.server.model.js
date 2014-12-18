@@ -36,6 +36,13 @@ var JobSchema = new Schema({
         trim: true
     },
 
+    requirements: [{
+        type: String,
+        trim: true,
+        default: '',
+        match: [/("<\/?[biu]>"|[^<>]){1,110}/, 'Please keep requirements under 100 characters']
+    }],
+
     location: ['Address'],
 
     payRate: {
