@@ -3,6 +3,7 @@
 module.exports = function(app) {
     var users = require('../../../../modules/users/server/controllers/users.server.controller');
     var bgchecks = require('../controllers/bgchecks.server.controller');
+    var everifile = require('../controllers/everifile.server.controller');
 
     // Bgchecks Routes
     app.route('/api/bgchecks')
@@ -13,6 +14,9 @@ module.exports = function(app) {
         .get(bgchecks.read)
         .put(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.update)
         .delete(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.delete);
+
+    app.route('/api/users/:userId/bgchecks')
+        .get(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.listByUser);
 
     // DEBUGGING Routes
     /* Order of operations
@@ -28,36 +32,31 @@ module.exports = function(app) {
      *     "OFAC" for reportType
      *     120 for reportId
      */
-    app.route('/api/bgcheck/login')
-        .get(bgchecks.login);
+    app.route('/api/everifile/login')
+        .get(everifile.login);
 
-    app.route('/api/bgcheck/logout')
-        .get(bgchecks.logout);
+    app.route('/api/everifile/logout')
+        .get(everifile.logout);
 
-    app.route('/api/bgcheck/applicants')
-        .get(bgchecks.getAllApplicants);
+    app.route('/api/everifile/applicants')
+        .get(everifile.hasSession, everifile.getApplicants);
 
-    app.route('/api/bgcheck/applicants/:applicantId')
-        .get(bgchecks.readApplicant);
+    app.route('/api/everifile/applicants/:applicantId')
+        .get(everifile.getApplicant);
 
-    app.route('/api/bgcheck/applicants/:applicantId/report/:reportType')
-        .get(bgchecks.runReport);
+    app.route('/api/everifile/applicants/:applicantId/report/:reportType')
+        .get(everifile.runReport);
 
-    app.route('/api/bgcheck/report/:reportId')
-        .get(bgchecks.getReport);
+    app.route('/api/everifile/report/:reportId')
+        .get(everifile.getReport);
 
-    app.route('/api/bgcheck/report/:reportId/pdf')
-        .get(bgchecks.getPdfReport);
+    app.route('/api/everifile/report/:reportId/pdf')
+        .get(everifile.getPdfReport);
 
-    app.param('reportId', bgchecks.checkReportStatus);
-    app.param('applicantId', bgchecks.getApplicant);
-
-
-    //app.param('reportType', bgchecks.);
-    //app.param('applicantId', bgchecks.);
+    app.param('reportId', everifile.checkReportStatus);
+    app.param('applicantId', everifile.getApplicant);
 
     // Finish by binding the Bgcheck middleware
     app.param('bgcheckId', bgchecks.bgcheckByID);
-    app.param('reportId', bgchecks.checkReportStatus);
     app.param('applicantId', bgchecks.getApplicant);
 };

@@ -6,6 +6,8 @@
     var BGChecksController = function($scope, $stateParams, $location, $http, $log, Authentication, Bgchecks, Stubs) {
         $scope.authentication = Authentication;
 
+        $scope.pdfUrl = 'modules/bgchecks/img/defaultReport.pdf';
+
         // Watch for changes on the selected applicant
         $scope.$watch('applicant', function(newValue, oldValue) {
             if (newValue === oldValue) {

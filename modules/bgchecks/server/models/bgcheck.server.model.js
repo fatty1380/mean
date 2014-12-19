@@ -20,6 +20,13 @@ var BgcheckSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'User'
     },
+
+    type: {
+        type: String,
+        //enum: ['OFAC'],
+        default: 'OFAC'
+    },
+
     created: {
         type: Date,
         default: Date.now

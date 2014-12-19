@@ -72,7 +72,6 @@
                 .success(function(response) {
                     // If successful we assign the response to the global user model
                     $scope.authentication.user = response;
-                    debugger;
 
                     redirect(response.type);
                 }).error(function(response) {
