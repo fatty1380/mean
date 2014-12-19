@@ -18,7 +18,8 @@
     "autofill-event": "~1.0.0",
     "textAngular": "~1.3",
     "lodash": "~2.4.1",
-    "ngmap": "~1.2.0"
+    "ngmap": "~1.2.0",
+    "angular-pdf-viewer": "~0.2.0"
   },
   "resolutions": {
     "angular": "~1.3"

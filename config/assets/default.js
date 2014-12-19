@@ -25,6 +25,8 @@ module.exports = {
                 'public/lib/textAngular/src/textAngular.js',
                 'public/lib/ngmap/build/scripts/ng-map.js',
                 'public/lib/lodash/dist/lodash.js',
+                'public/lib/pdfjs-dist/build/pdf.combined.js',
+                'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry' // TODO: use gmapApiProvider
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
