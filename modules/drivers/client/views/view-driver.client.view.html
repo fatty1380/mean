@@ -1,5 +1,6 @@
 <section class="container-fluid">
-    <os-page-header title="{{vm.user.displayName}}" edit-sref="drivers.edit({driverId: '{{vm.driver._id}}'})" show-edit="vm.authentication.user._id === vm.driver.user._id">
+    <os-page-header title="{{vm.user.displayName}}" edit-sref="drivers.edit({driverId: '{{vm.driver._id}}'})"
+                    show-edit="vm.auth.user._id === vm.driver.user._id">
         Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
     </os-page-header>
 
@@ -7,14 +8,18 @@
 
         <div class="col-md-8">
 
-            <os-driver-view model="vm.driver"></os-driver-view>
+            <div>
+                <os-driver-view model="vm.driver"></os-driver-view>
 
-            <section class="container-fluid" data-ng-if="!vm.driver.user">
-                {{vm.user.displayName}} has not yet created a driver profile
+                <div data-ng-if="!vm.driver.user">
+                    {{vm.user.displayName}} has not yet created a driver profile
 
-                <button type="button" class="btn btn-primary" ui-sref="drivers.create" data-ng-show="vm.canEdit">Create Your Driver Profile</button>
-
-            </section>
+                    <button type="button" class="btn btn-primary" ui-sref="drivers.create" data-ng-show="vm.canEdit">
+                        Create
+                        Your Driver Profile
+                    </button>
+                </div>
+            </div>
 
         </div>
 
@@ -22,17 +27,21 @@
             <span class="evilNonSemanticSpacer"></span>
 
             <div class="profile-floater">
-                <img data-ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
+                <img data-ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}"
+                     class="img-thumbnail user-profile-picture">
                 <a class="btn btn-link" data-ui-sref="settings.picture">edit
                     <i class="fa fa-pencil-square-o"></i>
                 </a>
             </div>
 
-            <os-map-location zip-code="{{vm.driver.addresses[0].zipCode}}"></os-map-location>
+            <div class="well">
+                <os-map-location zip-code="{{vm.driver.addresses[0].zipCode}}"></os-map-location>
+            </div>
+
+            <os-bg-check-summary user="vm.user"></os-bg-check-summary>
         </div>
 
     </div>
-
 
 
 </section>

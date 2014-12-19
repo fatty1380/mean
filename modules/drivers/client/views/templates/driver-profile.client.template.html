@@ -1,50 +1,49 @@
+<section name="os-driver.directive" class="well container-fluid">
+    <os-page-header title="Driver Information" level="h3">
+    </os-page-header>
 
-    <section name="os-driver.directive">
+    <div class="row col-sm-12">
+        <div data-ng-bind-html="vm.driver.about"></div>
+    </div>
 
-        <!-- Driver Template Begin -->
-        <div ng-if="::!inline">
-            <os-page-header title="Driver Information" level="h3">
-            </os-page-header>
+    <div class="row col-sm-12" ng-show="vm.driver.experience.length > 0">
+        <label>Experience:</label>
 
-            <div class="row col-sm-12">
-                <div data-ng-bind-html="vm.driver.about"></div>
-            </div>
+        <div ng-repeat="exp in vm.driver.experience">
+            {{exp.title || 'Job'}} - {{exp.time.start | date: 'shortDate'}} to {{exp.time.end | date: 'shortDate'}}
+            <span ng-hide="$last">,&nbsp;</span>
 
-            <div class="row col-sm-12" ng-show="vm.driver.experience.length > 0">
-                <label>Experience:</label>
-                <div ng-repeat="exp in vm.driver.experience">
-                    {{exp.title || 'Job'}} - {{exp.time.start | date: 'shortDate'}} to {{exp.time.end | date: 'shortDate'}}
-                    <span ng-hide="$last">,&nbsp;</span>
-                    <p ng-show="vm.driver.experience.length === 0">None Added</p>
-                </div>
-            </div>
+            <p ng-show="vm.driver.experience.length === 0">None Added</p>
+        </div>
+    </div>
 
-            <div class="row col-sm-12">
-                <label>Location:</label>
-                <span class="text-danger">TODO: Directivize</span>
-                <address ng-show="vm.driver.user.addresses.length > 0" ng-repeat="address in vm.driver.user.addresses">
-                    <strong>{{address.type}} [{{$index+1}} of {{vm.driver.user.addresses.length}}]</strong>
-                    <br/> {{address.city}}, {{address.state}} {{address.zipCode}}
-                </address>
+    <div class="row col-sm-12">
+        <label>Location:</label>
+        <span class="text-danger">TODO: Directivize</span>
+        <address ng-show="vm.driver.user.addresses.length > 0" ng-repeat="address in vm.driver.user.addresses">
+            <strong>{{address.type}} [{{$index+1}} of {{vm.driver.user.addresses.length}}]</strong>
+            <br/> {{address.city}}, {{address.state}} {{address.zipCode}}
+        </address>
 
-                <p ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">No Address on File</p>
-            </div>
+        <p ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">No Address on File</p>
+    </div>
 
-            <div class="row col-sm-12">
-                <label>Licenses ({{vm.driver.licenses.length}})</label>
-                <div ng-repeat="license in vm.driver.licenses">
+    <div class="row col-sm-12">
+        <label>Licenses ({{vm.driver.licenses.length}})</label>
 
-                    <p>
-                        <i class="fa fa-credit-card"></i> &nbsp;{{license.state}}<span ng-if="license.type"> {{license.type}}</span> Driver License
-                        <span ng-if="license.rating">: Class {{license.rating}}</span>
-                        <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter" class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
-                    </p>
+        <div ng-repeat="license in vm.driver.licenses">
 
-                </div>
-                <p ng-show="vm.driver.licenses.length === 0">No License on File</p>
-            </div>
-
-            <os-view-schedule model="vm.driver.schedule"></os-view-schedule>
+            <p>
+                <i class="fa fa-credit-card"></i> &nbsp;{{license.state}}<span
+                    ng-if="license.type"> {{license.type}}</span> Driver License
+                <span ng-if="license.rating">: Class {{license.rating}}</span>
+                <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter"
+                      class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
+            </p>
 
         </div>
-    </section>
+        <p ng-show="vm.driver.licenses.length === 0">No License on File</p>
+    </div>
+
+    <os-view-schedule model="vm.driver.schedule"></os-view-schedule>
+</section>

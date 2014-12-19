@@ -9,6 +9,7 @@
         vm.driver = driver;
         vm.user = null;
         vm.canEdit = false;
+        vm.auth = Authentication;
 
         // Functions:
         vm.endorsementFilter = endorsementFilter;

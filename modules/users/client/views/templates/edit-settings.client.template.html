@@ -16,8 +16,18 @@
         </div>
 
         <div class="form-group">
+            <label for="username">Username</label>
+            <div class="input-group margin-bottom-sm" id="username">
+                <span class="input-group-addon">
+                    <i class="fa fa-envelope-o fa-fw"></i>
+                </span>
+                <input class="form-control-static" type="text" placeholder="Username" data-ng-bind="ctrl.profile.username">
+            </div>
+        </div>
+
+        <div class="form-group">
             <label for="email">Email</label>
-            <div class="input-group margin-bottom-sm" name="email">
+            <div class="input-group margin-bottom-sm" id="email">
                 <span class="input-group-addon">
                     <i class="fa fa-envelope-o fa-fw"></i>
                 </span>
