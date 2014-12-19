@@ -1,29 +1,33 @@
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('companies')
-    .directive('osCompany', [
-        function() {
-            var ddo;
-            ddo = {
-                templateUrl: 'modules/companies/views/templates/view-company.client.template.html',
-                scope: {
-                    company: '=',
-                    inline: '='
-                },
-                restrict: 'E',
-                replace: true,
-                controller: function () {
-                    //debugger;
-                },
-                controllerAs: 'dm',
-                bindToController: true
-            };
+    function CompanyDirectiveController (Authentication) {
+        var dm = this;
 
-            return ddo;
-        }
-    ])
-    // TODO : Move to CORE Module
-    .directive('osPageHeader', function() {
+        dm.user = Authentication.user;
+
+        dm.createText = 'Before posting any jobs, you will need to create your company profile. Click the button below to continue.';
+    }
+
+    function CompanyDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: 'modules/companies/views/templates/view-company.client.template.html',
+            scope: {
+                company: '=',
+                inline: '='
+            },
+            restrict: 'E',
+            replace: true,
+            controller: 'CompanyDirectiveController',
+            controllerAs: 'dm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
+    function PageHeaderDirective () {
         var ddo;
         ddo = {
             templateUrl: 'modules/core/views/templates/os-page-header.client.template.html',
@@ -52,4 +56,14 @@ angular.module('companies')
         };
 
         return ddo;
-    });
+    }
+
+    CompanyDirectiveController.$inject = ['Authentication'];
+
+    angular.module('companies')
+        .controller('CompanyDirectiveController', CompanyDirectiveController)
+        .directive('osCompany', CompanyDirective)
+        // TODO : Move to CORE Module
+        .directive('osPageHeader', PageHeaderDirective);
+
+})();

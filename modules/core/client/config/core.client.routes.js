@@ -36,7 +36,7 @@
         }).
 
         state('home', {
-            abstract: true
+                url: '/h'
         });
     }
 

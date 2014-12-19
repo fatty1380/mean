@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function JobListController(Jobs, $log, $state) {
+    function JobListController (Jobs, $log, $state) {
         var dm = this;
 
         dm.limitTo = dm.limitTo || 10;
@@ -10,8 +10,12 @@
         dm.driverId = dm.driverId || (dm.driver && dm.driver.user._id);
 
         if (!dm.companyId && !dm.driverId && !dm.srcJobs) {
-            $log.error('[%s] Must Specify a company or driver, or set srcJobs pre-load', 'JobListController');
-            $state.go('home');
+            $log.warn('[%s] should Specify a company or driver, or set srcJobs pre-load', 'JobListController');
+
+            if($state.includes('jobs')) {
+                $log.error('[%s] Routing back to user\'s home page', 'JobListController');
+                $state.go('home');
+            }
         }
 
         if (!!dm.companyId && !!dm.driverId) {

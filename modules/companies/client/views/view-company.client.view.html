@@ -1,38 +1,65 @@
-<section class="container-fluid">
-    <os-page-header title="{{vm.company.name}}" edit-sref="companies.edit({companyId: '{{vm.company._id}}'})" show-edit="vm.authentication.user._id === vm.company.owner._id">
-        Joined on
-        <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>.
-        Owner:
-        <span data-ng-bind="vm.company.owner.displayName"></span>
-    </os-page-header>
+    <section class="container-fluid">
 
-    <div class="row">
-        <div class="col-md-8">
-            <os-company company="vm.company"></os-company>
+        <os-page-header ng-if="!!vm.company" title="{{vm.company.name}}"
+                        edit-sref="companies.edit({companyId: '{{vm.company._id}}'})"
+                        show-edit="vm.user._id === vm.company.owner._id">
+            Joined on
+            <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>.
+            Owner:
+            <span data-ng-bind="vm.company.owner.displayName"></span>
+        </os-page-header>
 
-            <os-job-list header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}" show-post="vm.authentication.user._id === vm.company.owner._id" ></os-job-list>
-        </div>
+        <os-page-header ng-if="!vm.company" title="{{vm.user.displayName}}">
+            Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
+        </os-page-header>
 
-        <div class="gutter right col-md-4">
-            <span class="evilNonSemanticSpacer"></span>
-
-            <div class="profile-floater">
-                <img data-ng-src="{{vm.imageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
-                <a class="btn btn-link" href="/companies/{{vm.company._id}}/edit/picture">edit
-                    <i class="fa fa-pencil-square-o"></i>
-                </a>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="h4">Where we are</span>
-                </div>
-                <div class="panel-body">
-                    <os-map-location zip-code='{{vm.company.zipCode}}'></os-map-location>
-                    <os-address model="vm.company.location[0]"></os-address>
+        <div class="row" ng-if="!!vm.company" ng-show="vm.showPhotoEdit">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <span class="h4">Change Profile Picture
+                    <div class="pull-right">
+                        <button type="button" class="close modal-title" ng-click="vm.hideModal()"><span
+                                aria-hidden="true">&times;<span class="sr-only">Close</span></button>
+                    </div></span>
+                    </div>
+                    <div class="panel-body">
+                        <os-picture-uploader model="vm.company" title="{{vm.company.name}}" mode="company"
+                                             success-callback="vm.successFunction"></os-picture-uploader>
+                    </div>
                 </div>
             </div>
-
         </div>
-    </div>
-</section>
+
+        <div class="row">
+            <div class="col-md-8" data-ng-class="{'col-md-offset-2': !vm.company}">
+                <os-company company="vm.company"></os-company>
+
+                <os-job-list ng-if="!!vm.company" header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}"
+                             show-post="vm.user._id === vm.company.owner._id"></os-job-list>
+            </div>
+
+            <div class="gutter right col-md-4" ng-if="!!vm.company">
+                <span class="evilNonSemanticSpacer"></span>
+
+                <div class="profile-floater" ng-hide="vm.showPhotoEdit">
+                    <img data-ng-src="{{vm.company.profileImageURL || vm.user.profileImageURL}}"
+                         alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
+                    <a class="btn btn-link" data-ng-click="vm.showModal()">edit
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="h4">Where we are</span>
+                    </div>
+                    <div class="panel-body">
+                        <os-map-location zip-code='{{vm.company.zipCode}}'></os-map-location>
+                        <os-address model="vm.company.location[0]"></os-address>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>

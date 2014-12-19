@@ -245,6 +245,11 @@ os-debug-info > div.collapsed > div {
     right: 40px;
 }
 
+.profile-floater > img.user-profile-picture {
+    max-height: 150px;
+    height:auto;
+}
+
 .profile-floater > a {
     opacity: 0.1;
     width: 100%;

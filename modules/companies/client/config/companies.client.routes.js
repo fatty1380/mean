@@ -24,7 +24,19 @@
         }
         return rsrc.ByUser.get({
             userId: val
-        }).$promise;
+        }).$promise.then(function(value, arg2, arg3) {
+                debugger;
+                console.log('Successfully got driver %o', value);
+            },
+            function(error) {
+                if(error.status === 404) {
+                    console.log('Unable to find company');
+                    return null;
+                }
+                else {
+                    throw error;
+                }
+            });
     }
 
     function config($stateProvider) {

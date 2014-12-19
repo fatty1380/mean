@@ -5,23 +5,9 @@
     function CompaniesController($scope, $state, $stateParams, $location, Authentication, Companies, company) {
         var vm = this;
 
-        console.log('coVal: %o', company);
-
         vm.authentication = Authentication;
-        vm.imageURL = vm.authentication.user.profileImageURL; // TODO: Change to Company Image URL
+        vm.user = Authentication.user;
         vm.company = company;
-
-        function activate() {
-            if (!!vm.company && !!vm.company._id) {
-                console.log('hooray! %s', vm.company._id);
-            } else if ($state.is('companies.home') || $stateParams.companyId === 'home') {
-                vm.findOneByUser(vm.authentication.user);
-            } else {
-                vm.findOne();
-            }
-
-        }
-
 
         // REGION : Page Action methods
 
@@ -92,7 +78,7 @@
 
         vm.init = function() {
             if ($state.is('companies.home') || $stateParams.companyId === 'home') {
-                vm.findByUser(vm.authentication.user);
+                vm.findByUser(vm.user);
             } else {
                 vm.findOne();
             }
@@ -115,9 +101,26 @@
             }
         };
 
+        // Change Picture Success method:
+        vm.successFunction = function (fileItem, response, status, headers) {
+            debugger;
+            // Populate user object
+            vm.company = response;
 
+            vm.showPhotoEdit = false;
+        };
 
-        activate();
+        vm.showPhotoEdit = false;
+
+        vm.showModal = function() {
+            vm.showPhotoEdit = true;
+
+            // check about 'vm.photoEdit' modal
+        };
+
+        vm.hideModal = function() {
+            vm.showPhotoEdit = false;
+        };
     }
 
     CompaniesController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Companies', 'company'];

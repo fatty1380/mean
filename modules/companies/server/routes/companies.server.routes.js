@@ -17,9 +17,12 @@ module.exports = function(app) {
     app.route('/api/companies/:companyId/drivers')
         .get(companies.listDrivers);
 
+    app.route('/api/companies/:companyId/picture')
+        .post(companies.changeProfilePicture);
+
     app.route('/api/users/:userId/companies')
         //.get(companies.companiesByUserID);
-        .get(companies.companyByUserID);
+        .get(companies.companyByUserID, companies.read);
 
     // Finish by binding the Company middleware
     app.param('companyId', companies.companyByID);

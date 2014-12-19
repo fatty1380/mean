@@ -34,6 +34,8 @@ var CompanySchema = new Schema({
         match: [/^\d{5}$/, 'Please provide a valid ZIP code for the location of your business']
     },
 
+    locations: ['Address'],
+
     about: {
         type: String,
         default: '',
