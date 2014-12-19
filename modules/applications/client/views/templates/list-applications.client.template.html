@@ -1,13 +1,13 @@
 <section>
     <div class="list-group" data-ng-if="displayMode !== 'table'">
-        <a data-ng-repeat="application in applications" data-ng-href="applications/{{application._id}}" class="list-group-item">
+        <a data-ng-repeat="application in applications" data-ui-sref="applications.view({applicationId: '{{application._id}}' })" class="list-group-item">
                 <os-view-application display-mode="displayMode || normal" model="application"></os-view-application>
         </a>
     </div>
 
     <table data-ng-if="displayMode === 'table'">
         <th><td>Name</td><td>Posted</td><td>Updated</td><td>Message Ct</td></th>
-        <span data-ng-repeat="application in applications" data-ng-sref="applications.view({applicationId: {{application._id}} })">
+        <span data-ng-repeat="application in applications" data-ui-sref="applications.view({applicationId: '{{application._id}}' })">
              <os-view-application display-mode="displayMode || table" model="application"></os-view-application>
         </span>
         </table>

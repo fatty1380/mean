@@ -10,7 +10,7 @@ angular.module('applications').config(['$stateProvider',
             abstract: true,
             url: '/applications',
             template: '<div ui-view></div>',
-            parent: 'full-opaque'
+            parent: 'fixed-opaque'
         }).
 
         state('applications.list', {
