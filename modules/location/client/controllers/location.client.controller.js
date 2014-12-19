@@ -6,15 +6,30 @@
 
         vm.search = 'United States';
         vm.range;
+        vm.showCircle = true;
+        vm.radiusMod = 1;
 
         function getSearchString() {
             var str = '';
+            vm.showCircle = true;
+            vm.radiusMod = 1;
+
             //str = !!vm.address.streetAddresses ? vm.address.streetAddresses.join(' ').trim() : '';
-            str += !!vm.address.city ? (!!str ? ', ' : '') + vm.address.city : '';
-            str += !!vm.address.state ? (!!str ? ', ' : '') + vm.address.state : '';
+            str += vm.address && !!vm.address.city ? (!!str ? ', ' : '') + vm.address.city : '';
+            str += vm.address && !!vm.address.state ? (!!str ? ', ' : '') + vm.address.state : '';
 
             if (!str.trim()) {
-                str = vm.address.zipCode || 'United States';
+                if (vm.address && vm.address.zipCode) {
+                    str = vm.address.zipCode;
+                    vm.radiusMod = 5;
+                }
+                else {
+                    str = 'United States';
+                    vm.showCircle = false;
+                }
+
+            } else {
+                vm.radiusMod = 1;
             }
 
             $log.debug('new search : %s', str);
@@ -54,13 +69,13 @@
             if (!!viewport) {
                 vm.map.fitBounds(viewport);
 
-                r = Math.max(
+                r = vm.radiusMod * Math.max(
                     google.maps.geometry.spherical.computeDistanceBetween(viewport.getSouthWest(), viewport.getCenter()),
                     google.maps.geometry.spherical.computeDistanceBetween(viewport.getNorthEast(), viewport.getCenter())
                 );
             }
 
-            if (!!r) {
+            if (!!r && vm.showCircle) {
                 vm.range = new google.maps.Circle({
                     strokeColor: '#0000FF',
                     strokeOpacity: 0.5,
@@ -97,7 +112,7 @@
                 if (vm.search !== search) {
                     vm.search = search;
 
-                    if(vm.range) {
+                    if (vm.range) {
                         vm.range.setMap(null);
                     }
 
