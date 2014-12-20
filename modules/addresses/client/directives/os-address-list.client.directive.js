@@ -9,7 +9,8 @@
                 addresses: '=models',
                 enableEdit: '=?', // boolean
                 maxCount: '=?',
-                required: '=?'
+                required: '=?',
+                fullWidth: '=?'
             },
             controller: 'OsAddressListController',
             controllerAs: 'vm',
@@ -18,43 +19,58 @@
     }
 
 
-    function AddressListController(Address) {
+    function AddressListController() {
 
         var vm = this;
 
+        // #region bindable methods
+
+        vm.updateFunctionality = updateFunctionality;
+        vm.addAddress = addAddress;
+        vm.removeAddress = removeAddress;
+
+        // #region initialization & activation
+
         vm.maxCount = vm.maxCount || 10;
-        //vm.enableEdit = !!vm.enableEdit; // Default to _false_ if undefined
-        vm.required = !!~vm.required; // Default to _true_ if undefined
+
+        vm.required = (typeof vm.required === 'boolean' ? vm.required : !!~vm.required); // Default to _true_ if undefined
+        vm.fullWidth = (typeof vm.fullWidth === 'boolean' ? vm.fullWidth : !!vm.fullWidth); // Default to _false_ if undefined
+        vm.enableEdit = (typeof vm.enableEdit === 'boolean' ? vm.enableEdit : !!vm.enableEdit); // Default to _false_ if undefined
+        vm.canAdd = vm.canRemove = vm.enableEdit;
 
         function activate() {
-            if(!!vm.required && vm.addresses.length == 0) {
-                vm.addresses.push({type: 'main', streetAddresses: ['']});
+            if (vm.required && (!vm.addresses || vm.addresses.length === 0)) {
+                pushStub();
             }
+
+            updateFunctionality();
         }
 
         activate();
 
-        vm.addEnabled = function() {
-            return !vm.enableEdit ? false : vm.addresses.length < vm.maxCount;
-        };
+        // #region public method implementation
 
-        vm.removeEnabled = function() {
+        function updateFunctionality() {
+            vm.canAdd = addEnabled();
+            vm.canRemove = removeEnabled();
+        }
+
+        function addEnabled() {
+            return !vm.enableEdit ? false : !vm.addresses || vm.addresses.length < vm.maxCount;
+        }
+
+        function removeEnabled() {
             return !vm.enableEdit || vm.required && vm.addresses.length === 1 ? false : true;
-        };
+        }
 
-        vm.addAddress = function () {
+        function addAddress() {
             // Prevent vm from bubbling up;
             event.preventDefault();
 
-            var address = new Address({
-                type: 'select type',
-                streetAddresses: ['', '']
-            });
+            pushStub();
+        }
 
-            vm.addresses.push(address);
-        };
-
-        vm.removeAddress = function (address) {
+        function removeAddress(address) {
             if (address) {
                 for (var i in vm.addresses) {
                     if (vm.addresses[i] === address) {
@@ -62,14 +78,29 @@
                     }
                 }
             }
+        }
+
+        // #region private members
+
+        function pushStub() {
+            if (!vm.addresses) {
+                vm.addresses = [];
+            }
+
+            vm.addresses.push(angular.copy(addressStub));
+        }
+
+        var addressStub = {
+            type: '',
+            streetAddresses: ['', '']
         };
 
     }
 
-    AddressListController.$inject = ['Addresses'];
 
     angular.module('addresses')
         .directive('osAddressList', AddressListDirective)
         .controller('OsAddressListController', AddressListController);
 
-})();
+})
+();
