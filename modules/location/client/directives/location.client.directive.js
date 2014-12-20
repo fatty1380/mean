@@ -4,7 +4,7 @@
     function LocationDirective() {
         return {
             priority: 0,
-            template: '<map disable-default-u-i="true" scrollwheel="false" draggable="false"></map>',
+            template: '<map disable-default-u-i="true" scrollwheel="false" draggable="false" zoom-control="true"></map>',
             replace: false,
             transclude: false,
             restrict: 'E',
@@ -12,7 +12,7 @@
                 address: '=?',
                 center: '@?',
                 style: '@?',
-                zipCode: '@?'
+                zipCode: '=?'
             },
             controller: 'LocationController',
             controllerAs: 'vm',

@@ -21,7 +21,11 @@
             if (!str.trim()) {
                 if (vm.address && vm.address.zipCode) {
                     str = vm.address.zipCode;
-                    vm.radiusMod = 5;
+                    vm.radiusMod = 3;
+                }
+                else if (!!vm.zipCode) {
+                    str = vm.zipCode;
+                    vm.radiusMod = 3;
                 }
                 else {
                     str = 'United States';
@@ -103,6 +107,8 @@
         $scope.$watch('vm.address.zipCode', processChange);
         $scope.$watch('vm.address.city', processChange);
         $scope.$watch('vm.address.state', processChange);
+        $scope.$watch('vm.zipCode', processChange);
+
 
         function processChange(newVal, oldVal, scope) {
             if (newVal !== oldVal) {
