@@ -25,51 +25,9 @@
 
         // REGION : CRUD Methods
 
-        // Create new Company
-        vm.create = function() {
-            // Create new Company object
-            var company = new Companies.ById(vm.company);
 
-            debugger; //todo: confirm vm.company works
 
-            // Redirect after save
-            company.$save(function(response) {
-                $location.path('companies/' + response._id);
 
-                // Clear form fields
-                vm.name = '';
-            }, function(errorResponse) {
-                vm.error = errorResponse.data.message;
-            });
-        };
-
-        // Remove existing Company
-        vm.remove = function(company) {
-            if (company) {
-                company.$remove();
-
-                for (var i in vm.companies) {
-                    if (vm.companies[i] === company) {
-                        vm.companies.splice(i, 1);
-                    }
-                }
-            } else {
-                vm.company.$remove(function() {
-                    $location.path('companies');
-                });
-            }
-        };
-
-        // Update existing Company
-        vm.update = function() {
-            var company = vm.company;
-
-            company.$update(function() {
-                $location.path('companies/' + company._id);
-            }, function(errorResponse) {
-                vm.error = errorResponse.data.message;
-            });
-        };
 
         // Find a list of Companies
         vm.find = function() {

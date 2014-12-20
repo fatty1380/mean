@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    function newCompany(auth) {
+        return {
+            owner: auth.user
+        };
+    }
+
     function companyResolve(rsrc, params) {
         if (!!params.companyId) {
             var val = params.companyId;
@@ -76,14 +82,12 @@
 
         state('companies.create', {
             url: '/create',
-            templateUrl: 'modules/companies/views/create-company.client.view.html',
+            templateUrl: 'modules/companies/views/edit-company.client.view.html',
             parent: 'companies',
-            controller: 'CompaniesController',
+            controller: 'CompanyEditController',
             controllerAs: 'vm',
             resolve: {
-                company: function() {
-                    return {};
-                }
+                company: newCompany
             }
         }).
 
@@ -102,7 +106,7 @@
             url: '/{companyId}/edit',
             templateUrl: 'modules/companies/views/edit-company.client.view.html',
             parent: 'companies',
-            controller: 'CompaniesController',
+            controller: 'CompanyEditController',
             controllerAs: 'vm',
             resolve: {
                 company: companyResolve
@@ -113,6 +117,7 @@
     // Dependency Injection
     companyResolve.$inject = ['Companies', '$stateParams'];
     userResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
+    newCompany.$inject = ['Authentication'];
     config.$inject = ['$stateProvider'];
 
     //Setting up route
