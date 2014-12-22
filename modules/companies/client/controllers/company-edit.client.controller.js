@@ -37,8 +37,6 @@
             // Create new Company object
             var company = new Companies.ById(vm.company);
 
-            debugger; //todo: confirm vm.company works
-
             // Redirect after save
             company.$save(function(response) {
                 $state.go('companies.home', {companyId: response._id});
@@ -46,7 +44,7 @@
                 // Clear the form object
                 vm.company = null;
             }, function(errorResponse) {
-                vm.error = errorResponse.data.message;
+                vm.error = errorResponse.data.message || errorResponse.data.error.message;
             });
         }
 

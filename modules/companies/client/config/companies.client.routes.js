@@ -3,7 +3,7 @@
 
     function newCompany(auth) {
         return {
-            owner: auth.user
+            ownerId: auth.user._id
         };
     }
 
@@ -20,6 +20,12 @@
     }
 
     function userResolve(rsrc, params, auth) {
+
+        if (!!params.companyId) {
+            console.log('userResolve has a companyId: rerouting');
+            return companyResolve(rsrc, params);
+        }
+
         var val;
         if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
@@ -30,9 +36,9 @@
         }
         return rsrc.ByUser.get({
             userId: val
-        }).$promise.then(function(value, arg2, arg3) {
-                debugger;
-                console.log('Successfully got driver %o', value);
+        }).$promise.then(function(value) {
+                console.log('Successfully got company %o', value);
+                return value;
             },
             function(error) {
                 if(error.status === 404) {

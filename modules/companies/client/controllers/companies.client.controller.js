@@ -44,8 +44,6 @@
 
         // Find existing Company
         vm.findOne = function() {
-            debugger;
-
             vm.company = vm.company || Companies.ById.get({
                 companyId: $stateParams.companyId
             });
@@ -61,7 +59,6 @@
 
         // Change Picture Success method:
         vm.successFunction = function (fileItem, response, status, headers) {
-            debugger;
             // Populate user object
             vm.company = response;
 

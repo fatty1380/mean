@@ -5,6 +5,7 @@
     function FormActionsDirective() {
 
         var template =
+                '<div data-ng-show="vm.errorText" class="pull-left text-danger"><strong data-ng-bind="vm.errorText"></strong></div>'  +
                 '<div class="pull-right">' +
                 '   <input ng-if="vm.showCancel" type="button" class="btn btn-link" value="{{vm.cancelText}}" ng-click="vm.cancel()">' +
                 '   <input ng-if="vm.showAlt" type="button" class="btn btn-default" value="{{vm.altText}}" ng-click="vm.alt()">' +
@@ -20,7 +21,8 @@
                 cancelFn: '&?',
                 cancelText: '@?',
                 altFn: '&?',
-                altText: '@?'
+                altText: '@?',
+                errorText: '=?'
             },
             controller: function() {
                 var vm = this;

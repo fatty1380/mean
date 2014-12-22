@@ -1,15 +1,17 @@
 <section name="os-job-list.directive">
     <div data-ng-class="{'panel panel-default': !!dm.header}">
-        <div class="panel-heading" ng-if="!!dm.header"><span class="h4">{{dm.header}}
-        <button ng-if="dm.showPost" class="btn btn-primary pull-right"
-                ui-sref="jobs.create({companyId: dm.companyId})">Post Job
-        </button>
-        </span>
 
+        <div class="panel-heading" ng-if="!!dm.header">
+            <div class="btn-group btn-group-sm pull-right">
+                <button ng-if="dm.showPost && !!dm.jobs.length" class="btn btn-primary"
+                        ui-sref="jobs.create({companyId: dm.companyId})">Post Job
+                </button>
+            </div>
+            <h4>{{dm.header}}</h4>
         </div>
 
         <div ng-class="{'panel-body': !!dm.header}">
-            <div class="list-group">
+            <div class="list-group" ng-if="!!dm.jobs.length">
                 <a data-ng-repeat="job in dm.jobs | limitTo: dm.limitTo" data-ng-href="jobs/{{job._id}}"
                    class="list-group-item">
                     <small>
@@ -19,6 +21,19 @@
                 <button ng-show="dm.jobs.length > dm.limitTo" class="btn btn-link text-center"
                         ui-sref="jobs.list({companyId: dm.companyId})">view all ...
                 </button>
+            </div>
+
+            <div class="text-center" ng-if="!dm.jobs.length">
+                <p class="text-muted">
+                    <span data-ng-if="!dm.showPost">{{ dm.noResultsText || 'No jobs have been posted'}}</span>
+                    <span data-ng-if="dm.showPost">
+                        <p>Get started today by clicking the button below:</p>
+                    <button class="btn btn-primary btn-lg" ng-if="dm.showPost"
+                            ui-sref="jobs.create({companyId: dm.companyId})">Post a Job Now!
+                    </button>
+                    </span>
+                </p>
+
             </div>
         </div>
     </div>

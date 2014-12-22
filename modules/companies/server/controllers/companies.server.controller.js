@@ -41,18 +41,27 @@ var executeQuery = function (req, res) {
  * Create a Company
  */
 exports.create = function (req, res) {
-    console.log('[CompaniesCtrl.create] Start');
 
     var company = new Company(req.body);
-    company.owner = req.user;
+    var ownerId = req.body.ownerId || req.user._id;
+
+    console.log('Creating company for owner: [%s]: %j', ownerId, company);
+
+    company.owner = mongoose.Types.ObjectId(ownerId);
     company.agents = [];
+
+    console.log('now saving company w owner [%s], %j', company.owner, company);
+
 
     company.save(function (err) {
         if (err) {
+            console.log('Saving company failed with error: %j', err);
             return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+                message: errorHandler.getErrorMessage(err),
+                error: err
             });
         } else {
+            console.log('Successfully saved company: %j', company);
             res.json(company);
         }
     });
@@ -86,7 +95,8 @@ exports.update = function (req, res) {
     company.save(function (err) {
         if (err) {
             return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+                message: errorHandler.getErrorMessage(err),
+                error: err
             });
         } else {
             res.json(company);
