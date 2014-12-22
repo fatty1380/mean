@@ -5,9 +5,13 @@
         var vm = this;
 
         vm.search = 'United States';
-        vm.range;
+        vm.range = null;
         vm.showCircle = true;
         vm.radiusMod = 1;
+
+        if (!vm.address && !!vm.addresses && !!vm.addresses.length) {
+            vm.address = vm.addresses[0];
+        }
 
         function getSearchString() {
             var str = '';

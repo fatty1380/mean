@@ -10,6 +10,7 @@
             restrict: 'E',
             scope: {
                 address: '=?',
+                addresses: '=?',
                 center: '@?',
                 style: '@?',
                 zipCode: '=?'

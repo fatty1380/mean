@@ -55,8 +55,8 @@
                         <span class="h4">Where we are</span>
                     </div>
                     <div class="panel-body">
-                        <os-map-location zip-code='{{vm.company.zipCode}}'></os-map-location>
-                        <os-address model="vm.company.location[0]"></os-address>
+                        <os-map-location zip-code='vm.company.zipCode' addresses="vm.company.locations"></os-map-location>
+                        <os-address model="vm.company.locations[0]"></os-address>
                     </div>
                 </div>
 

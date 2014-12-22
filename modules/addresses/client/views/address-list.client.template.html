@@ -1,6 +1,6 @@
 <!-- os-address-list : address-list.client.template.html -->
 <section ng-class="{'row' : !vm.fullWidth}">
-    <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}">
+    <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}" ng-animate="'animate'">
         <div ng-class="{'form-group': !vm.fullWidth}">
         <os-address address="vm.addresses[a]" enable-edit="vm.enableEdit"></os-address>
 

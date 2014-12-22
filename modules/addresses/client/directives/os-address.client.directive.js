@@ -31,7 +31,6 @@
         activate();
 
         vm.editAddress = function () {
-            debugger;
             var modalInstance = $modal.open({
                 templateUrl: 'addressEditModal.html',
                 controllerAs: 'modalCtrl'
@@ -57,4 +56,5 @@
     angular.module('addresses')
         .directive('osAddress', AddressItemDirective)
         .controller('OsAddressItemController', AddressItemController);
+
 })();
