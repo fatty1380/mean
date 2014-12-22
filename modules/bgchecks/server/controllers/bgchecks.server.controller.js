@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
 errorHandler = require('../../../core/server/controllers/errors.server.controller'),
-Bgcheck      = mongoose.model('Bgcheck'),
+Bgcheck      = mongoose.model('BackgroundReport'),
 everifile    = require('./everifile.server.controller'),
 _            = require('lodash');
 

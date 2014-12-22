@@ -53,6 +53,9 @@ module.exports = function(app) {
     app.route('/api/everifile/report/:reportId/pdf')
         .get(everifile.getPdfReport);
 
+    app.route('/api/everifile/reportTypes')
+        .post(everifile.hasSession, everifile.getAvailableReports, everifile.updateAvailableReports);
+
     app.param('reportId', everifile.checkReportStatus);
     app.param('applicantId', everifile.getApplicant);
 
