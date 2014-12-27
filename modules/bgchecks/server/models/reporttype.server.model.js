@@ -4,7 +4,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-Schema       = mongoose.Schema;
+Schema       = mongoose.Schema,
+Q            = require('q'),
+_            = require('lodash');
 
 /**
  * Report Type Schema
@@ -58,10 +60,7 @@ var ReportTypeSchema = new Schema({
      * Additional information for Outset Use
      */
 
-    fields: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ReportFieldDefinition'
-    }],
+    fields: ['ReportFieldDefinition'],
 
     /* Enabled/Disabled Control */
     enabled: {

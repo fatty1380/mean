@@ -37,7 +37,7 @@ var DriverSchema = new Schema({
 
     about: {
         type: String,
-        default: '<p>Sed posuere consectetur est at lobortis. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p><p> Aenean lacinia bibendum nulla sed consectetur. Donec id elit non mi porta gravida at eget metus.</p>'
+        default: ''
     },
 
     experience: [{
@@ -53,6 +53,19 @@ var DriverSchema = new Schema({
         },
         location: {
             type: String
+        }
+    }],
+
+    bgReportApplicantId: [{
+       system: {
+           type: String,
+           default: 'everifile',
+           required: true,
+           unique: true
+       },
+        id: {
+            type: Number,
+            required: true
         }
     }],
 
