@@ -37,12 +37,16 @@ angular.module('core').service('Menus', [
 
         function validateRole(userRoles, validRoles) {
             for (var userRoleIndex in userRoles) {
-                for (var roleIndex in validRoles) {
-                    if (validRoles[roleIndex] === userRoles[userRoleIndex]) {
-                        return true;
-                    }
-                    if (validRoles[roleIndex] === '*') {
-                        return true;
+                if (userRoles.hasOwnProperty(userRoleIndex)) {
+                    for (var roleIndex in validRoles) {
+                        if (validRoles.hasOwnProperty(roleIndex)) {
+                            if (validRoles[roleIndex] === userRoles[userRoleIndex]) {
+                                return true;
+                            }
+                            if (validRoles[roleIndex] === '*') {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
@@ -52,11 +56,13 @@ angular.module('core').service('Menus', [
 
         function validateType(userType, validTypes) {
             for (var typeIndex in validTypes) {
-                if (validTypes[typeIndex] === userType) {
-                    return true;
-                }
-                if (validTypes[typeIndex] === '*') {
-                    return true;
+                if (validTypes.hasOwnProperty(typeIndex)) {
+                    if (validTypes[typeIndex] === userType) {
+                        return true;
+                    }
+                    if (validTypes[typeIndex] === '*') {
+                        return true;
+                    }
                 }
             }
 
@@ -120,24 +126,29 @@ angular.module('core').service('Menus', [
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
-            // Push new menu item
-            this.menus[menuId].items.push({
-                title: options.title || '',
-                state: options.state || '',
-                type: options.type || 'item',
-                class: options.class,
-                isPublic: ((options.isPublic === null || typeof options.isPublic === 'undefined') ? this.menus[menuId].isPublic : options.isPublic),
-                roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].roles : options.roles),
-                userTypes: ((options.userTypes === null || typeof options.userTypes === 'undefined') ? this.menus[menuId].userTypes : options.userTypes),
-                position: options.position || 100,
+            var menuItemDefault = {
+                title: '',
+                state: '',
+                type: 'item',
+                class: undefined,
+                isPublic: this.menus[menuId].isPublic,
+                roles: this.menus[menuId].roles,
+                userTypes: this.menus[menuId].userTypes,
+                position: 100,
                 items: [],
                 shouldRender: shouldRender
-            });
+            };
+
+            // Push new menu item
+            var newItem = angular.extend(menuItemDefault, options);
+            this.menus[menuId].items.push(newItem);
 
             // Add submenu items
             if (options.items) {
                 for (var i in options.items) {
-                    this.addSubMenuItem(menuId, options.link, options.items[i]);
+                    if (options.items.hasOwnProperty(i)) {
+                        this.addSubMenuItem(menuId, options.link, options.items[i]);
+                    }
                 }
             }
 
@@ -152,19 +163,24 @@ angular.module('core').service('Menus', [
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
+            var menuSubItemDefault = {
+                title: '',
+                state: '',
+                position: 0,
+                shouldRender: shouldRender
+            };
+
             // Search for menu item
             for (var itemIndex in this.menus[menuId].items) {
                 if (this.menus[menuId].items[itemIndex].state === parentItemState) {
-                    // Push new submenu item
-                    this.menus[menuId].items[itemIndex].items.push({
-                        title: options.title || '',
-                        state: options.state || '',
-                        isPublic: ((options.isPublic === null || typeof options.isPublic === 'undefined') ? this.menus[menuId].items[itemIndex].isPublic : options.isPublic),
-                        roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
-                        userTypes: ((options.userTypes === null || typeof options.userTypes === 'undefined') ? this.menus[menuId].items[itemIndex].userTypes : options.userTypes),
-                        position: options.position || 0,
-                        shouldRender: shouldRender
+                    menuSubItemDefault = angular.extend(menuSubItemDefault, {
+                        isPublic: this.menus[menuId].items[itemIndex].isPublic,
+                        roles: this.menus[menuId].items[itemIndex].roles,
+                        userTypes: this.menus[menuId].items[itemIndex].userTypes
                     });
+                    // Push new submenu item
+                    var newSubMenuItem = angular.extend(menuSubItemDefault, options);
+                    this.menus[menuId].items[itemIndex].items.push(newSubMenuItem);
                 }
             }
 
@@ -193,11 +209,15 @@ angular.module('core').service('Menus', [
             // Validate that the menu exists
             this.validateMenuExistance(menuId);
 
+            var menuItems;
+
             // Search for menu item to remove
-            for (var itemIndex in this.menus[menuId].items) {
-                for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
-                    if (this.menus[menuId].items[itemIndex].items[subitemIndex].link === submenuItemURL) {
-                        this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
+            for (var itemIndex in (menuItems = this.menus[menuId].items)) {
+                if (menuItems.hasOwnProperty(itemIndex)) {
+                    for (var subitemIndex in this.menus[menuId].items[itemIndex].items) {
+                        if (this.menus[menuId].items[itemIndex].items[subitemIndex].link === submenuItemURL) {
+                            this.menus[menuId].items[itemIndex].items.splice(subitemIndex, 1);
+                        }
                     }
                 }
             }
@@ -216,4 +236,6 @@ angular.module('core').service('Menus', [
             roles: ['admin']
         });
     }
-]);
+
+])
+;

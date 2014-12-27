@@ -6,13 +6,6 @@
 var glob = require('glob'),
 	chalk = require('chalk');
 
-/* Add "endsWith" method to the String Class */
-if (typeof String.prototype.endsWith !== 'function') {
-    String.prototype.endsWith = function(suffix) {
-        return this.indexOf(suffix, this.length - suffix.length) !== -1;
-    };
-}
-
 /**
  * Module init function.
  */

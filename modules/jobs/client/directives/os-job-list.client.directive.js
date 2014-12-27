@@ -1,13 +1,10 @@
 (function() {
     'use strict';
 
-
     function JobListController (Jobs, $log, $state) {
         var dm = this;
 
         dm.limitTo = dm.limitTo || 10;
-        dm.companyId = dm.companyId || (dm.company && dm.company._id);
-        dm.driverId = dm.driverId || (dm.driver && dm.driver.user._id);
 
         if (!dm.companyId && !dm.driverId && !dm.srcJobs) {
             $log.warn('[%s] should Specify a company or driver, or set srcJobs pre-load', 'JobListController');
@@ -47,9 +44,7 @@
             scope: {
                 header: '@?',
                 companyId: '@?',
-                company: '=?',
                 driverId: '@?',
-                driver: '=?',
                 srcJobs: '=?',
                 showPost: '=?',
                 limitTo: '@?'

@@ -7,7 +7,7 @@ var _ = require('lodash');
 
 var abbreviations;
 
-module.exports.state_abbreviations = function() {
+module.exports.stateAbbreviations = function() {
     if (abbreviations !== undefined) {
         console.log('returning cached abbreviations');
         return abbreviations;

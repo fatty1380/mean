@@ -1,7 +1,7 @@
 'use strict';
 
 // Init the application configuration module for AngularJS application
-var ApplicationConfiguration = (function() {
+var ApplicationConfiguration = (function() { // jshint ignore:line
 	// Init module configuration options
     var applicationModuleName = 'outset';
     var applicationModuleVendorDependencies = ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'textAngular', 'ngMap', 'pdf'];

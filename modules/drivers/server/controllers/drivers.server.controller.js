@@ -4,25 +4,25 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Driver = mongoose.model('Driver'),
-    License = mongoose.model('License'),
-    Schedule = mongoose.model('Schedule'),
-    constants = require('../../../../modules/core/server/models/outset.constants'),
-    errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
-    _ = require('lodash');
+Driver       = mongoose.model('Driver'),
+License      = mongoose.model('License'),
+Schedule     = mongoose.model('Schedule'),
+constants    = require('../../../../modules/core/server/models/outset.constants'),
+errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
+_            = require('lodash');
 
 /**
  * "Instance" Methods
  */
 
-var executeQuery = function(req, res, next) {
+var executeQuery = function (req, res, next) {
     var query = req.query || {};
     var sort = req.sort || '';
 
     Driver.find(query)
         .sort(sort)
         .populate('user', 'displayName created profileImageURL addresses')
-        .exec(function(err, drivers) {
+        .exec(function (err, drivers) {
             if (err) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
@@ -37,10 +37,10 @@ var executeQuery = function(req, res, next) {
 
 // Searches for a single instance of a driver, based on the passed in 'driverFind' function;
 
-var executeFind = function(req, res, next, driverFind) {
+var executeFind = function (req, res, next, driverFind) {
     driverFind
         .populate('user')
-        .exec(function(err, driver) {
+        .exec(function (err, driver) {
             if (err) {
                 console.log('[Driver.executeFind] Driver search errored: ', err.message);
                 if (!!next) {
@@ -76,7 +76,7 @@ var executeFind = function(req, res, next, driverFind) {
 /**
  * Get the error message from error object
  */
-var getErrorMessage = function(err) {
+var getErrorMessage = function (err) {
     var message = '';
 
     if (err.code) {
@@ -90,7 +90,9 @@ var getErrorMessage = function(err) {
         }
     } else {
         for (var errName in err.errors) {
-            if (err.errors[errName].message) message = err.errors[errName].message;
+            if (err.errors[errName].message) {
+                message = err.errors[errName].message;
+            }
         }
     }
 
@@ -100,7 +102,7 @@ var getErrorMessage = function(err) {
 /**
  * Create a Driver
  */
-exports.create = function(req, res) {
+exports.create = function (req, res) {
     debugger;
     var driver = new Driver(req.body);
     driver.user = req.user;
@@ -110,12 +112,12 @@ exports.create = function(req, res) {
     }
 
     if (driver.schedule.length === 0) {
-        _.forEach(constants.baseSchedule, function(val, key) {
+        _.forEach(constants.baseSchedule, function (val, key) {
             driver.schedule.push(new Schedule(val));
         });
     }
 
-    driver.save(function(err) {
+    driver.save(function (err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
@@ -129,7 +131,7 @@ exports.create = function(req, res) {
 /**
  * Show the current Driver
  */
-exports.read = function(req, res) {
+exports.read = function (req, res) {
     console.log('[Driver.read] Result: ', req.driver);
 
     if (!req.driver) {
@@ -144,13 +146,13 @@ exports.read = function(req, res) {
 /**
  * Update a Driver
  */
-exports.update = function(req, res) {
+exports.update = function (req, res) {
     console.log('[Driver.Controller] update()');
     var driver = req.driver;
 
     driver = _.extend(driver, req.body);
 
-    driver.save(function(err) {
+    driver.save(function (err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
@@ -164,10 +166,10 @@ exports.update = function(req, res) {
 /**
  * Delete an Driver
  */
-exports.delete = function(req, res) {
+exports.delete = function (req, res) {
     var driver = req.driver;
 
-    driver.remove(function(err) {
+    driver.remove(function (err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
@@ -181,7 +183,7 @@ exports.delete = function(req, res) {
 /**
  * List of *ALL* Drivers
  */
-exports.list = function(req, res) {
+exports.list = function (req, res) {
     console.log('[Driver.Controller] list()');
 
     req.sort = '-created';
@@ -190,7 +192,7 @@ exports.list = function(req, res) {
 };
 
 
-exports.driverByUserID = function(req, res, next) {
+exports.driverByUserID = function (req, res, next) {
     console.log('[Driver.driverByUserId] start');
     var userId = req.params.userId || req.query.userId;
 
@@ -204,7 +206,7 @@ exports.driverByUserID = function(req, res, next) {
     next();
 };
 
-exports.me = function(req, res, next) {
+exports.me = function (req, res, next) {
     executeFind(req, res, next, Driver.findOne({
         user: req.user.id
     }));
@@ -213,7 +215,7 @@ exports.me = function(req, res, next) {
 /**
  * Driver middleware
  */
-exports.driverByID = function(req, res, next, id) {
+exports.driverByID = function (req, res, next, id) {
     console.log('[Driver.driverById] start ');
 
     if ((/^[a-f\d]{24}$/i).test(id)) {
@@ -227,7 +229,7 @@ exports.driverByID = function(req, res, next, id) {
 /**
  * Driver authorization middleware
  */
-exports.hasAuthorization = function(req, res, next) {
+exports.hasAuthorization = function (req, res, next) {
     if (req.driver.user.id !== req.user.id) {
         return res.send(403, 'User is not authorized');
     }

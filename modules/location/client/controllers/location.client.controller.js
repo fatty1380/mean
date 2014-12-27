@@ -58,7 +58,7 @@
                         $log.info('[LocationCtrl] OK - %d results. First location: %o', results.length, results[0]);
                         var result = results[0];
                         var loc = result.geometry.location;
-                        vm.search = result.formatted_address;
+                        vm.search = result.formatted_address; // jshint ignore:line
                         vm.gotoLocation(loc, result.geometry.viewport);
 
                     } else {

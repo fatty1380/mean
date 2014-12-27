@@ -27,7 +27,7 @@ module.exports = function(config) {
 				displayName: profile.displayName,
 				email: profile.emails[0].value,
 				username: profile.username,
-				profileImageURL: (providerData.avatar_url) ? providerData.avatar_url : undefined,
+				profileImageURL: (providerData.avatar_url) ? providerData.avatar_url : undefined, // jshint ignore: line
 				provider: 'github',
 				providerIdentifierField: 'id',
 				providerData: providerData

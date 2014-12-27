@@ -50,7 +50,7 @@ var AddressSchema = new Schema({
         type: String,
         default: '',
         required: 'Please specify a State'
-        //enum: constants.state_abbreviations(),
+        //enum: constants.stateAbbreviations(),
     },
 
     zipCode: {
@@ -64,7 +64,7 @@ var AddressSchema = new Schema({
 AddressSchema.methods.checkConfig = function() {
     console.log('config enums: ' + constants.usStates);
 
-    console.log('config abbreviations: ' + constants.state_abbreviations());
+    console.log('config abbreviations: ' + constants.stateAbbreviations());
 };
 
 mongoose.model('Address', AddressSchema);

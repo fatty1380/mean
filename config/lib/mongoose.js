@@ -30,7 +30,7 @@ module.exports.connect = function(cb) {
 			_this.loadModels();
 
 			// Call callback FN
-			if (cb) cb(db);
+			if (cb) {cb(db);}
 		}
 	});
 };
