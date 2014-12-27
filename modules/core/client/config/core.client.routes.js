@@ -30,6 +30,12 @@
             parent: 'full-clear'
         }).
 
+            state('headline-bg', {
+                abstract: true,
+                templateUrl: 'modules/core/views/headline-bg.client.view.html',
+                parent: 'full-clear'
+            }).
+
         state('intro', {
             url: '/',
             templateUrl: 'modules/core/views/intro.client.view.html'
