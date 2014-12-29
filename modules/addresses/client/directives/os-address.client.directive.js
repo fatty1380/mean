@@ -7,7 +7,9 @@
             restrict: 'E',
             scope: {
                 address: '=model',
-                enableEdit: '=?' // boolean
+                isEditing: '=?', // boolean
+                allowEdit: '=?',
+                enableRemove: '&?'
             },
             controller: 'OsAddressItemController',
             controllerAs: 'vm',
@@ -19,7 +21,8 @@
 
         var vm = this;
 
-        vm.enableEdit = !!this.enableEdit; // Default to _false_ if undefined
+        vm.allowEdit = !!this.allowEdit; // Default to _false_ if undefined
+        vm.enableRemove = vm.enableRemove || function() { return vm.allowEdit; };
         vm.isOpen = false;
 
         function activate() {

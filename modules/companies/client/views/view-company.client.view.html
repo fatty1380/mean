@@ -56,7 +56,8 @@
                     </div>
                     <div class="panel-body">
                         <os-map-location zip-code='vm.company.zipCode' addresses="vm.company.locations"></os-map-location>
-                        <os-address model="vm.company.locations[0]"></os-address>
+
+                        <os-address-list models="vm.company.locations" can-edit="false" full-width="true"></os-address-list>
                     </div>
                 </div>
 

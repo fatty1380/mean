@@ -19,7 +19,6 @@
     function EditAddressController($log) {
         var vm = this;
 
-        vm.enableEdit = !!~this.enableEdit; // Default to _true_ if undefined
         vm.enableRemove = !!~this.enableRemove;
 
         vm.types = ['main', 'home', 'business', 'billing'];

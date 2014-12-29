@@ -3,9 +3,7 @@
     <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}"
          ng-animate="'animate'">
         <div ng-class="{'form-group': !vm.fullWidth}">
-            <div>
-                <os-address model="vm.addresses[a]" is-editing="vm.isEditing" allow-edit="vm.allowEdit" enable-remove="vm.removeEnabled()"></os-address>
-            </div>
+            <os-edit-address address="vm.addresses[a]" enable-remove="vm.canRemove"></os-edit-address>
         </div>
     </div>
 
@@ -15,7 +13,6 @@
             <i class="fa fa-plus"></i>
             <span ng-if="!vm.addresses.length">add address details ...</span>
         </button>
-
     </div>
 
     <div ng-if="!vm.fullWidth && (!vm.addresses || vm.address.length < 1)" class="text-center">Fill out your profile by

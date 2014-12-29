@@ -7,7 +7,8 @@
             restrict: 'E',
             scope: {
                 addresses: '=models',
-                enableEdit: '=?', // boolean
+                isEditing: '=?', // boolean
+                allowEdit: '=?',
                 maxCount: '=?',
                 required: '=?',
                 fullWidth: '=?'
@@ -16,6 +17,15 @@
             controllerAs: 'vm',
             bindToController: true
         };
+    }
+
+    function AddressListEditDirective() {
+        debugger;
+        var base = AddressListDirective();
+
+        base.templateUrl= 'modules/addresses/views/address-list-edit.client.template.html';
+
+        return base;
     }
 
 
@@ -35,8 +45,9 @@
 
         vm.required = (typeof vm.required === 'boolean' ? vm.required : !!~vm.required); // Default to _true_ if undefined
         vm.fullWidth = (typeof vm.fullWidth === 'boolean' ? vm.fullWidth : !!vm.fullWidth); // Default to _false_ if undefined
-        vm.enableEdit = (typeof vm.enableEdit === 'boolean' ? vm.enableEdit : !!vm.enableEdit); // Default to _false_ if undefined
-        vm.canAdd = vm.canRemove = vm.enableEdit;
+        vm.isEditing = (typeof vm.isEditing === 'boolean' ? vm.isEditing : !!vm.isEditing); // Default to _false_ if undefined
+        vm.canEdit = (typeof vm.canEdit === 'boolean' ? vm.canEdit : !!~vm.canEdit); // Default to _true_ if undefined
+        vm.canAdd = vm.canRemove = vm.canEdit;
 
         function activate() {
             if (vm.required && (!vm.addresses || vm.addresses.length === 0)) {
@@ -56,11 +67,11 @@
         }
 
         function addEnabled() {
-            return !vm.enableEdit ? false : !vm.addresses || vm.addresses.length < vm.maxCount;
+            return !vm.canEdit ? false : !vm.addresses || vm.addresses.length < vm.maxCount;
         }
 
         function removeEnabled() {
-            return !vm.enableEdit || vm.required && vm.addresses.length === 1 ? false : true;
+            return !vm.canEdit || vm.required && vm.addresses.length === 1 ? false : true;
         }
 
         function addAddress() {
@@ -100,6 +111,7 @@
 
     angular.module('addresses')
         .directive('osAddressList', AddressListDirective)
+        .directive('osEditAddressList', AddressListEditDirective)
         .controller('OsAddressListController', AddressListController);
 
 })
