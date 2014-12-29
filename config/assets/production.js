@@ -8,6 +8,7 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
                 'public/lib/components-font-awesome/css/font-awesome.min.css',
                 'public/lib/textAngular/src/textAngular.min.css',
+                'public/lib/moment/moment.js'
             ],
             js: [
                 'public/lib/angular/angular.min.js',
@@ -21,7 +22,8 @@ module.exports = {
                 'public/lib/textAngular/src/textAngular-sanitize.min.js',
                 'public/lib/textAngular/src/textAngular.min.js',
                 'public/lib/angular-google-maps/dist/angular-google-maps.min.js',
-                'public/lib/lodash/dist/lodash.min.js'
+                'public/lib/lodash/dist/lodash.min.js',
+                'public/lib/moment/min/moment-with-locales.min.js'
             ]
         },
         css: 'public/dist/application.min.css',

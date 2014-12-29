@@ -7,7 +7,7 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.css',
                 'public/lib/components-font-awesome/css/font-awesome.css',
-                'public/lib/textAngular/src/textAngular.css',
+                'public/lib/textAngular/src/textAngular.css'
             ],
             js: [
                 'public/lib/angular/angular.js',
@@ -27,7 +27,8 @@ module.exports = {
                 'public/lib/lodash/dist/lodash.js',
                 'public/lib/pdfjs-dist/build/pdf.combined.js',
                 'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
-                '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry' // TODO: use gmapApiProvider
+                '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
+                'public/lib/moment/moment.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },
