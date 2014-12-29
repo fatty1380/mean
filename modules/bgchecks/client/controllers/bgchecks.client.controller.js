@@ -15,7 +15,7 @@
                 return;
             }
 
-            $scope.selectApplicant(newValue.applicantId);
+            $scope.selectApplicant(newValue.remoteApplicantId);
         });
 
         $scope.loadApplicants = function() {

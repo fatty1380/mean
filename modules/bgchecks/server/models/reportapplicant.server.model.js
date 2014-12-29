@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
 Schema       = mongoose.Schema,
-crypto = require('crypto');
+crypto       = require('crypto');
 
 var ReportApplicantSchema = new Schema({
 
@@ -16,11 +16,21 @@ var ReportApplicantSchema = new Schema({
         required: true
     },
 
-    govId: {
+    remoteSystem: {
+        type: String,
+        default: 'everifile'
+    },
+
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    governmentId: {
         type: String,
         default: '',
-        trim: true,
-        match: [/^\d{9}$/g, 'Please enter a valid Government ID']
+        trim: true
     },
 
     salt: {
@@ -31,19 +41,6 @@ var ReportApplicantSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'BackgroundReport'
     }],
-
-    /** Outset Specific Values ------------------------------------------*/
-
-    /** To be used for mapping local values to remote schema
-     * For Example: 'user.firstName' maps to 'firstName'
-     * If there is no local mapping defined, we will not attempt autofill
-     */
-    localMapping: String,
-
-    /** Boolean flag to indicate that certain data is sensitive
-     * For Example: SSN will need to be handled carefully
-     */
-    isSensitive: Boolean,
 
 
     /** Bookkeeping Information ------------------------------------------*/
@@ -67,21 +64,55 @@ ReportApplicantSchema.pre('save', function (next) {
 /**
  * Hook a pre save method to hash the password
  */
-ReportApplicantSchema.pre('save', function(next) {
-    this.govId = this.govId && this.govId.replace(/\D/g,''); // Replace non-numeric values
 
-    if (this.govId && this.govId.length === 9) {
-        this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-        this.govId = this.getHashedValue(this.govId);
+ReportApplicantSchema.post('init', function(next) {
+    debugger; next();
+}) ;
+ReportApplicantSchema.post('save', function(next) {
+    debugger; next();
+}) ;
+ReportApplicantSchema.post('validate', function(next) {
+    debugger; next();
+}) ;
+ReportApplicantSchema.post('remove', function(next) {
+    debugger; next();
+}) ;
+ReportApplicantSchema.pre('validate', function(next) {
+    debugger; next();
+}) ;
+ReportApplicantSchema.pre('remove', function(next) {
+    debugger; next();
+}) ;
+ReportApplicantSchema.pre('save', function (next) {
+
+    debugger; // TODO - A: Why is this saving, B: Is sensitive data removed
+
+    next();
+});
+ReportApplicantSchema.pre('init', function (next) {
+
+    if (this.hasOwnProperty('applicantId')) {
+        this.remoteId = this.applicantId;
     }
+
+    this.governmentId = this.governmentId && this.governmentId.replace(/\D/g, ''); // Replace non-numeric values
+
+    if (this.governmentId && this.governmentId.length === 9) {
+        this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
+        this.governmentId = this.getHashedValue(this.governmentId);
+    } else {
+        console.log('Invalid Government ID for Applicant - setting to null', this.remoteId);
+        this.governmentId = null;
+    }
+
 
     next();
 });
 
 /**
- * Create instance method for hashing a govId
+ * Create instance method for hashing a SSN or other sensitive data
  */
-ReportApplicantSchema.methods.getHashedValue = function(govId) {
+ReportApplicantSchema.methods.getHashedValue = function (govId) {
     if (this.salt && govId) {
         return crypto.pbkdf2Sync(govId, this.salt, 10000, 64).toString('base64');
     } else {
@@ -92,8 +123,8 @@ ReportApplicantSchema.methods.getHashedValue = function(govId) {
 /**
  * Create instance method for authenticating user
  */
-ReportApplicantSchema.methods.authenticate = function(govId) {
-    return this.govId === this.getHashedValue(govId);
+ReportApplicantSchema.methods.validateId = function (govId) {
+    return this.governmentId === this.getHashedValue(govId);
 };
 
 mongoose.model('ReportApplicant', ReportApplicantSchema);

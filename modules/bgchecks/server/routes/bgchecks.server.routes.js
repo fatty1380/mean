@@ -1,82 +1,90 @@
 'use strict';
 
 module.exports = function (app) {
-    var users = require('../../../../modules/users/server/controllers/users.server.controller');
-    var bgchecks = require('../controllers/bgchecks.server.controller');
-    var everifile = require('../controllers/everifile.server.controller');
-    //
-    //// Bgchecks Routes
-    //app.route('/api/bgchecks')
-    //    .get(bgchecks.list)
-    //    .post(users.requiresLogin, bgchecks.create);
-    //
-    //app.route('/api/bgchecks/:bgcheckId')
-    //    .get(bgchecks.read)
-    //    .put(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.update)
-    //    .delete(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.delete);
-    //
-    //app.route('/api/users/:userId/bgchecks')
-    //    .get(users.requiresLogin, bgchecks.hasAuthorization, bgchecks.listByUser);
+    var acl = require('../policies/bgchecks.server.policy'),
+        users = require('../../../../modules/users/server/controllers/users.server.controller'),
+        bgchecks = require('../controllers/bgchecks.server.controller');
 
 
-    // Live eVerifile API Routes:
-
-    app.route('/api/reports')
-        .get(bgchecks.availableReportTypes, bgchecks.list.reports);
-        //.post(everifile.hasSession, everifile.getUpdatedReportTypes, everifile.getReportFields, everifile.updateAvailableReports, bgchecks.list.reports);
-
-    app.route('/api/reports/update')
+    // Report Type centric routes
+    /**
+     * GET:
+     * Returns a list of report types based on what is saved locally.
+     * This is the most common method for local hosting.
+     *
+     * POST:
+     * This updates the Report definitions from the remote server.
+     * this will likely be called occasionally.
+     */
+    app.route('/api/reports/types')
+        .get(bgchecks.availableReportTypes, bgchecks.list.reports)
         .post(bgchecks.UpdateReportDefinitionsFromServer, bgchecks.SaveUpdatedReportDefinitions, bgchecks.list.reports);
-
-    app.route('/api/reports/:sku')
+    /**
+     * This returns a Report Defintion, including all necessary Field Definitions.
+     * This will be used by the render-report page.
+     */
+    app.route('/api/reports/types/:sku')
         .get(bgchecks.read.report);
 
-    app.route('/api/reports/:sku/fields')
-        .get(bgchecks.read.fields);
 
-    //.get(everifile.updateReportDetails, bgchecks.getReportDetails);
+    // Applicant Centered Routes
 
-    // DEBUGGING Routes
-    /* Order of operations
-     * ---------------------------------------------------
-     * /bgcheck/login
-     * /bgcheck/applicants
-     * /bgcheck/applicants/:applicantId
-     * /bgcheck/applicants/:applicantId/report/:reportType
-     * /bgcheck/report/:reportId
-     * /bgcheck/logout
+    /**
+     *  * path: /api/users/:userId/driver/applicant
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: If it exists, will return an Applicant for the specified user
+     *      notes: query parameters may be passed in URL
+     *      responseClass: Applicant
+     *      nickname: Get Applicant for User
      *
-     * use 54 for applicantId
-     *     "OFAC" for reportType
-     *     120 for reportId
+     * prerequisites:
+     *      Request must be poplulated with a Driver object
      */
+    app.route('/api/users/:userId/driver/applicant')
+        .all(acl.isAllowed)
+        .get(bgchecks.applicant.get, bgchecks.applicant.getRemote, bgchecks.applicant.read)
+        .post(bgchecks.applicant.create, bgchecks.applicant.save);
 
-    //app.route('/api/everifile/login')
-    //    .get(everifile.login);
+    /**
+     *  * path: /api/reports/applicants
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: returns a list of applicants
+     *      notes: query parameters may be passed in URL
+     *      responseClass: [Applicant]
+     *      nickname: Get All Applicants
+     */
+    app.route('/api/reports/applicants')
+        .get(acl.isAllowed, bgchecks.applicant.list);
 
-    app.route('/api/everifile/logout')
-        .get(everifile.logout);
+    app.route('/api/reports/applicants/:applicantId')
+        .get(acl.isAllowed, bgchecks.applicant.get);
 
-    //app.route('/api/everifile/applicants')
-    //    .get(everifile.hasSession, everifile.getApplicants);
 
-    app.route('/api/everifile/applicants/:applicantId')
-        .get(everifile.getApplicant);
+    /** REPORTS --------------------------------------- */
+    app.route('/api/reports')
+        .get(bgchecks.report.applicantStatus) // Get status of all reports for applicant
+        .post(bgchecks.report.create); // Create a new report
 
-    app.route('/api/everifile/applicants/:applicantId/report/:reportType')
-        .get(everifile.runReport);
+    app.route('/api/users/:userId/reports')
+        .get(bgchecks.report.applicantStatus) // get status of all reports for applicant
+        .post(bgchecks.report.create); // create a new report
 
-    app.route('/api/everifile/report/:reportId')
-        .get(everifile.getReport);
+    app.route('/api/reports/:reportId')
+        .get(bgchecks.report.get) // Get the results of a report - maybe update if not complete?
+        .post(bgchecks.report.status); // Update the report status (?)
 
-    app.route('/api/everifile/report/:reportId/pdf')
-        .get(everifile.getPdfReport);
-
-    app.param('reportId', everifile.checkReportStatus);
-    app.param('applicantId', everifile.getApplicant);
 
     // Finish by binding the Bgcheck middleware
-    app.param('bgcheckId', bgchecks.bgcheckByID);
-    app.param('applicantId', everifile.getApplicant);
-    app.param('sku', bgchecks.reportBySKU);
+    app.param('sku', bgchecks.reportDefinitionBySKU);
+    app.param('applicantId', bgchecks.applicantByID);
+    app.param('reportId', bgchecks.reportByID);
+
+
+    /** DEBUG/TEST Routes **/
+
+
+    app.route('/api/createApplicantTest')
+        .post(bgchecks.applicant.create);
 };

@@ -11,14 +11,25 @@ var mongoose = require('mongoose'),
  */
 var BackgroundReportSchema = new Schema({
 
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
+
     remoteId: {
         type: Number,
         required: true
     },
 
-    type: {
+    remoteApplicantId: {
+        type: Number,
+        required: true
+    },
+
+    reportSku: {
         type: String,
-        ref: 'ReportType'
+        default: ''
     },
 
     /** According to 'Report Status Codes' in the eVERIFILE API Document
@@ -38,6 +49,10 @@ var BackgroundReportSchema = new Schema({
         type: String,
         enum: ['SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
     },
+
+    requiredData: [{
+        type: String
+    }],
 
     data: {
         isComplete: Boolean,
@@ -66,6 +81,11 @@ var BackgroundReportSchema = new Schema({
     modified: {
         type: Date,
         default: Date.now
+    },
+
+    completed: {
+        type: Date,
+        default: null
     }
 });
 

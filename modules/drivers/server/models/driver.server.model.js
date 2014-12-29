@@ -56,19 +56,6 @@ var DriverSchema = new Schema({
         }
     }],
 
-    bgReportApplicantId: [{
-       system: {
-           type: String,
-           default: 'everifile',
-           required: true,
-           unique: true
-       },
-        id: {
-            type: Number,
-            required: true
-        }
-    }],
-
     isActive: {
         type: Boolean,
         default: true

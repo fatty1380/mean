@@ -3,13 +3,41 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-Bgcheck      = mongoose.model('BackgroundReport'),
-ReportType   = mongoose.model('ReportType'),
-unirest      = require('unirest'),
-Q            = require('q'),
-moment       = require('moment'),
-_            = require('lodash');
+var mongoose    = require('mongoose'),
+Bgcheck         = mongoose.model('BackgroundReport'),
+ReportType      = mongoose.model('ReportType'),
+ReportApplicant = mongoose.model('ReportApplicant'),
+unirest         = require('unirest'),
+Q               = require('q'),
+moment          = require('moment'),
+_               = require('lodash');
+
+
+/** eVERIFILE Service
+ * ----------------------------
+ * The eVERIFILE service will make requests to the eVERIFILE API and
+ * return a promise that will be fulfilled once completed. These methods
+ * should not be used directly by any routes, but instead by the base
+ * bgchecks/reports controller to manage flow.
+ *
+ */
+
+/** SECTION: Public, Bound Members */
+
+exports.GetSession = GetSession;
+exports.SetSKUFilter = SetSKUFilter;
+exports.GetReportTypeDefinitions = GetReportTypeDefinitions;
+
+exports.GetAllApplicants = GetAllApplicants;
+exports.GetApplicant = GetApplicant;
+exports.CreateApplicant = CreateApplicant;
+
+exports.RunReport = RunReport;
+exports.GetReportStatus = GetReportStatus;
+exports.GetReportStatusByApplicant = GetReportStatusByApplicant;
+exports.GetPdfReport = function () { throw new Error('Not Implemented'); };
+exports.GetSummaryReportPDF = GetSummaryReportPDF;
+exports.GetRawReport = GetRawReport;
 
 
 /**
@@ -60,21 +88,6 @@ var Cookie = {
     }
 };
 
-/** eVERIFILE Service
- * ----------------------------
- * The eVERIFILE service will make requests to the eVERIFILE API and
- * return a promise that will be fulfilled once completed. These methods
- * should not be used directly by any routes, but instead by the base
- * bgchecks/reports controller to manage flow.
- *
- */
-
-/** SECTION: Public, Bound Members */
-
-exports.GetSession = GetSession;
-exports.SetSKUFilter = SetSKUFilter;
-exports.GetReportTypeDefinitions = GetReportTypeDefinitions;
-
 /**
  * GetSession : Returns a promise containing a session cookie to use in subsequent requests
  * @returns {Promise.promise|Cookie}
@@ -122,6 +135,8 @@ function GetSession() {
 
     return deferredGetSession.promise;
 }
+
+/** SECTION : Report Definitions ---------------------------------------------------- */
 
 function SetSKUFilter(filter) {
     enabledSKUs = _.map(filter, function (str) {
@@ -176,79 +191,13 @@ function GetReportTypeDefinitions(cookie, filter, enable) {
     return deferredGetReportTypes.promise;
 }
 
-function GetAllApplicants(cookie) {
-    console.log('[GetAllApplicants] Requesting all applicants from everifile server');
+/** PRIVATE : Report Definitions ---------------------------------------------------- */
 
-    var deferred = Q.defer();
-
-    unirest.get(baseUrl + '/rest/applicant')
-        .jar(cookie)
-        .end(function (response) {
-            console.log('[GetAllApplicants] Got response Body: %j', response.body);
-
-            if (response.error) {
-                deferred.reject(response.body.reason);
-            }
-
-            console.log('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
-
-            deferred.resolve(response.body.applicants);
-        });
-}
-
-function GetApplicant(cookie, id) {
-    console.log('[GetAllApplicants] Requesting all applicants from everifile server');
-
-    var deferred = Q.defer();
-
-    unirest.get(baseUrl + '/rest/applicant')
-        .jar(cookie)
-        .end(function (response) {
-            console.log('[GetAllApplicants] Got response Body: %j', response.body);
-
-            if (response.error) {
-                deferred.reject(response.body.reason);
-            }
-
-            console.log('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
-
-            deferred.resolve(response.body.applicants);
-        });
-}
-
-
-function CreateApplicant(cookie) {
-    console.log('[GetAllApplicants] Requesting all applicants from everifile server');
-
-    var deferred = Q.defer();
-
-    unirest.get(baseUrl + '/rest/applicant')
-        .jar(cookie)
-        .end(function (response) {
-            console.log('[GetAllApplicants] Got response Body: %j', response.body);
-
-            if (response.error) {
-                deferred.reject(response.body.reason);
-            }
-
-            console.log('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
-
-            deferred.resolve(response.body.applicants);
-        });
-}
-
-/** SECTION: Private Methods **/
-
-function filterBySku(reportTypeData) {
-    return enabledSKUs.indexOf(reportTypeData.sku.toUpperCase()) >= 0;
-}
-
-
-function updateReportFields(reportTypes, cookie) {
+function updateReportFields(reportTypes, cookieJar) {
     console.log('[updateReportFields] updating %d report types', reportTypes.length);
 
     var fields = reportTypes.map(function (reportType) {
-        return getUpdatedReportFieldsPromise(reportType, cookie);
+        return getUpdatedReportFieldsPromise(reportType, cookieJar);
     });
 
     var defer = Q.defer();
@@ -265,7 +214,7 @@ function updateReportFields(reportTypes, cookie) {
     return defer.promise;
 }
 
-function getUpdatedReportFieldsPromise(reportType, reqCookie) {
+function getUpdatedReportFieldsPromise(reportType, cookieJar) {
 
     var sku = reportType.sku;
     console.log('Getting Report Fields for SKU "%s"', sku);
@@ -275,7 +224,7 @@ function getUpdatedReportFieldsPromise(reportType, reqCookie) {
     if (reportType.enabled) {
         unirest
             .get(baseUrl + '/rest/report/' + sku + '/fields')
-            .jar(reqCookie)
+            .jar(cookieJar)
             .end(function (response) {
 
                 if (response.error) {
@@ -297,3 +246,276 @@ function getUpdatedReportFieldsPromise(reportType, reqCookie) {
 
     return deferred.promise;
 }
+
+/** END : Report Definitions ---------------------------------------------------- */
+
+
+/** SECTION : Remote Applicants ------------------------------------------------- */
+
+function GetAllApplicants(cookie) {
+    console.log('[GetAllApplicants] Requesting all applicants from everifile server');
+
+    var deferred = Q.defer();
+
+    unirest.get(baseUrl + '/rest/applicant')
+        .jar(cookie.jar)
+        .end(function (response) {
+            console.log('[GetAllApplicants] Got response Body: %j', response.body);
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            console.log('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
+
+            var applicantModels = _.map(response.body.applicants, initReportApplicantModel);
+
+            deferred.resolve(applicantModels);
+        });
+
+    return deferred.promise;
+}
+
+function initReportApplicantModel(model) {
+    var newModel = new ReportApplicant(model);
+
+    newModel.remoteId = model.applicantId;
+
+    console.log('[CreateApplicant] Clearing govId from response object');
+    model.governmentId = null;
+
+    debugger;   // TODO: newModel does not contain all of old model! Should we save it? SSN is not salted, arrgh
+
+    return newModel;
+}
+
+function GetApplicant(cookie, id) {
+    console.log('[GetApplicant] Requesting applicant "%d" from everifile server', id);
+
+    var deferred = Q.defer();
+
+    unirest.get(baseUrl + '/rest/applicant/' + id)
+        .jar(cookie.jar)
+        .end(function (response) {
+            console.log('[GetApplicant] Got response Body: %j', response.body);
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            var applicant = response.body;
+
+            var applicantModel = initReportApplicantModel(applicant);
+
+            deferred.resolve(applicant);
+        });
+
+    return deferred.promise;
+}
+
+
+function CreateApplicant(cookie, newApplicant) {
+    console.log('[CreateApplicant] Creating a new applicant');
+
+    var deferred = Q.defer();
+
+    unirest.post(baseUrl + '/rest/applicant')
+        .headers({'Content-Type': 'application/json'})
+        .send(newApplicant)
+        .jar(cookie.jar)
+        .end(function (response) {
+            console.log('[CreateApplicant] Got response Body: %j', response.body);
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            var applicant = response.body;
+
+            var model = initReportApplicantModel(applicant);
+            debugger; // check govId
+
+            console.log('[CreateApplicant] Clearing govId from response object');
+            applicant.governmentId = null;
+
+            model.save(function (err) {
+                if (err) {
+                    console.error('Unable to save ReportApplicant due to %j', err);
+                } else {
+                    console.log('Successfully saved ReportApplicant. Resolving promise with full applicant data');
+                    applicant.remoteId = model.remoteId;
+                }
+
+                deferred.resolve(applicant);
+            });
+
+        });
+
+    return deferred.promise;
+}
+/** SECTION : Remote Applicants ------------------------------------------------- */
+
+
+/** SECTION: Report Manipulation ------------------------------------------------------------- */
+
+function RunReport(cookie, bgReport) {
+    console.log('[CreateApplicant] ');
+
+    var deferred = Q.defer();
+
+    unirest.post(baseUrl + '/rest/report')
+        .jar(cookie.jar)
+        .query({
+            reportSku: bgReport.type.sku,
+            remoteApplicantId: bgReport.remoteApplicantId
+        })
+        .end(function (response) {
+            console.log(response.body);
+            console.log(response.error);
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            if (bgReport.remoteApplicantId !== response.body.applicant.id) {
+                var message = 'Mismatched Applicants : Response report is for different applicant than request!';
+                console.error('ERROR! %s, request: %d vs response: %d', message, bgReport.remoteApplicantId, response.body.applicant.id);
+                deferred.reject(new Error(message));
+            }
+
+            var sampleResponse = {
+                'id': 4,
+                'applicant': {'id': 14},
+                'report': {'sku': 'G_EDUVRF'},
+                'reportCheckStatus': {
+                    'timestamp': '2014-12-12',
+                    'status': 'INVOKED',
+                    'requiredData': []
+                },
+                'startDate': 1360959827087,
+                'completedDate': null,
+                'resource_key': 'lastName',
+                'name': 'lastName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            };
+
+
+            updateReportStatus(bgReport, response.body).then(function (success) {
+                deferred.resolve(success);
+            });
+        }
+    );
+
+    return deferred.promise;
+}
+function GetReportStatus(cookie, remoteId) {
+    console.log('[CreateApplicant] ');
+
+    var deferred = Q.defer();
+
+    unirest.get(baseUrl + '/rest/reportCheck/' + id)
+        .jar(cookie.jar)
+        .end(function (response) {
+            console.log(response.body);
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            var reportCheck = response.body.reportCheckStatus;
+
+            if (reportCheck.status.toUpperCase() === 'COMPLETED') {
+                req.reportCheck = response.body;
+                next();
+            } else {
+                res.jsonp(reportCheck);
+            }
+        });
+
+    return deferred.promise;
+}
+function GetReportStatusByApplicant(cookie, applicantId) {
+    console.log('[CreateApplicant] ');
+
+    var deferred = Q.defer();
+
+    unirest.get(baseUrl + '/rest/applicant/' + applicantId + '/reports')
+        .jar(cookie.jar)
+        .end(function (response) {
+            console.log(response.body);
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            var reportCheck = response.body.reportCheckStatus;
+
+            if (reportCheck.status.toUpperCase() === 'COMPLETED') {
+                req.reportCheck = response.body;
+                next();
+            } else {
+                res.jsonp(reportCheck);
+            }
+        });
+
+    return deferred.promise;
+}
+function GetSummaryReportPDF(cookie, bgReport) {
+    console.log('[GetSummaryReportPDF] ');
+
+    var deferred = Q.defer();
+
+    unirest.get(baseUrl + '/rest/reportSummary/find/' + bgReport.remoteApplicantId + '/report/pdf')
+        .jar(cookie.jar)
+        .end(function (response) {
+            debugger;
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            deferred.resolve(response.body);
+        });
+
+    return deferred.promise;
+}
+function GetRawReport(cookie, bgReport) {
+    console.log('[GetRawReport] ');
+
+    var deferred = Q.defer();
+
+    unirest.get(baseUrl + '/rest/reportCheck/' + bgReport.remoteId + '/report')
+        .jar(cookie.jar)
+        .end(function (response) {
+            console.log(response.body);
+
+            if (response.error) {
+                deferred.reject(response.body.reason);
+            }
+
+            res.jsonp(response.body);
+        });
+
+    return deferred.promise;
+}
+
+/** Report Manipulation : Private Methods ------------------------------------------------------------- */
+
+function updateReportStatus(bgReport, body) {
+    if (!bgReport.remoteId) {
+        bgReport.remoteId = body.id;
+        bgReport.reportSku = body.report.sku;
+    }
+
+    bgReport.status = body.reportCheckStatus.status;
+    bgReport.updateStatusChecks.push(body.reportCheckStatus);
+    bgReport.completed = !!body.completedDate ? moment(body.completedDate) : null;
+    bgReport.requiredData = body.reportCheckStatus.requiredData;
+}
+/** END: Report Manipulation ------------------------------------------------------------- */
+
+/** SECTION: Private Methods **/
+
+

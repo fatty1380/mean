@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	crypto = require('crypto');
+	crypto = require('crypto'),
+	_ = require('lodash');
 
 /**
  * A Validation function for local strategy properties
@@ -122,6 +123,10 @@ UserSchema.post('init', function(next) {
     if (!this.displayName) {
         this.displayName = this.firstName + ' ' + this.lastName;
   	}
+
+	this.isAdmin = _.contains(this.roles, 'admin');
+	this.isDriver = this.type === 'driver';
+	this.isOwner = this.type === 'owner';
 });
 
 /**
@@ -140,48 +145,6 @@ UserSchema.pre('save', function(next) {
     this.modified = Date.now();
     next();
 });
-
-
-UserSchema.methods.migrate = function() {
-
-    var changed = false;
-
-    if (!this.type) {
-        var types = this.getValue('types');
-
-        if (!!types && types.length) {
-            // Move the "Types" data into "type"
-            console.log('Migrating user.types --> user.type: ', types);
-            this.type = types[0];
-            this.setValue('types', undefined);
-            changed = true;
-        }
-    }
-
-    if (this.types && this.type) {
-        console.log('Removing value for user.types');
-        this.types = undefined;
-        changed = true;
-    }
-
-    if (this.getValue('types')) {
-        console.log('Removing value for user[types]');
-        this.setValue('types', undefined);
-        changed = true;
-    }
-
-    if (changed) {
-        this.save(function(err) {
-            if (err) {
-                console.err('Unable to save migrated user: %o', err);
-            } else {
-                console.log('Saved migrated user: %o', this);
-            }
-        });
-    }
-
-    return changed;
-};
 
 /**
  * Create instance method for hashing a password

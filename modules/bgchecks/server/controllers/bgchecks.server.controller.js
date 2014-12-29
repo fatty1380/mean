@@ -3,18 +3,43 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-errorHandler = require('../../../core/server/controllers/errors.server.controller'),
-Bgcheck      = mongoose.model('BackgroundReport'),
-ReportType   = mongoose.model('ReportType'),
-Q            = require('q'),
-everifile    = require('./everifile.server.service'),
-_            = require('lodash');
+var mongoose    = require('mongoose'),
+errorHandler    = require('../../../core/server/controllers/errors.server.controller'),
+Bgcheck         = mongoose.model('BackgroundReport'),
+ReportType      = mongoose.model('ReportType'),
+ReportApplicant = mongoose.model('ReportApplicant'),
+Q               = require('q'),
+everifile       = require('./everifile.server.service'),
+_               = require('lodash');
 
 
 exports.availableReportTypes = availableReportTypes;
-exports.updateReport = updateReport;
 
+
+exports.UpdateReportDefinitionsFromServer = UpdateReportDefinitionsFromServer;
+exports.SaveUpdatedReportDefinitions = SaveUpdatedReportDefinitions;
+
+exports.applicant = {
+    create: CreateNewRemoteApplicant,
+    save: SaveNewApplicant,
+    list: GetAllRemoteApplicants,
+    getRemote: GetRemoteApplicantData,
+    get: GetReportApplicant,
+    read: ReadReportApplicant
+};
+
+exports.report = {
+    create: CreateNewReport,
+    applicantStatus: CheckApplicantReportStatus,
+    status: CheckReportStatus,
+    get: GetReportData,
+    loadPDF: LoadPDFData // this should only be used internally?
+};
+
+/** Bound Router Middleware ------------------------------------------ **/
+exports.reportDefinitionBySKU = reportBySKU;
+exports.applicantByID = applicantByID;
+exports.reportByID = reportByID;
 
 exports.list = {
     reports: function (req, res) {
@@ -33,11 +58,12 @@ exports.read = {
     }
 };
 
+/** BEGIN : Implementation -------------------------------------------- **/
 
 function availableReportTypes(req, res, next) {
     console.log('[availableReportTypes] loading all available report types');
     ReportType.find({'enabled': true})
-        .populate('fields')
+        //.populate('fields')
         .exec(function (err, reportTypes) {
             if (err) {
                 return res.status(400).send({
@@ -53,20 +79,20 @@ function availableReportTypes(req, res, next) {
         });
 }
 
-exports.requestReport = function (req, res) {
+function requestReport(req, res) {
     var user = req.user;
 
     var reportOptions = getReportInfo(user);
 
     req.reportType = reportOptions.reportType;
-    req.applicantId = reportOptions.applicantId;
+    req.remoteApplicantId = reportOptions.remoteApplicantId;
 
 
-};
+}
 
 function getReportInfo(user) {
     return {
-        applicantId: 54,
+        remoteApplicantId: 54,
         reportType: 'OFAC'
     };
 }
@@ -74,7 +100,7 @@ function getReportInfo(user) {
 /**
  * Create a Bgcheck
  */
-exports.create = function (req, res) {
+function create(req, res) {
     var bgcheck = new Bgcheck(req.body);
     bgcheck.user = req.user;
 
@@ -87,23 +113,12 @@ exports.create = function (req, res) {
             res.jsonp(bgcheck);
         }
     });
-};
-
-exports.readApplicant = function (req, res) {
-
-    if (!req.applicant) {
-        return res.status(404).send({
-            message: 'No applicant found'
-        });
-    }
-
-    res.jsonp(req.applicant);
-};
+}
 
 /**
  * Update a Bgcheck
  */
-exports.update = function (req, res) {
+function update(req, res) {
     var bgcheck = req.bgcheck;
 
     bgcheck = _.extend(bgcheck, req.body);
@@ -117,7 +132,7 @@ exports.update = function (req, res) {
             res.jsonp(bgcheck);
         }
     });
-};
+}
 
 /**
  * Delete an Bgcheck
@@ -149,78 +164,13 @@ exports.listByUser = function (req, res) {
     this.list(req, res);
 };
 
-/**
- * Bgcheck middleware
- */
-exports.bgcheckByID = function (req, res, next, id) {
-    Bgcheck.findById(id)
-        .populate('user', 'displayName')
-        .exec(function (err, bgcheck) {
-            if (err) {
-                return next(err);
-            }
-            req.bgcheck = bgcheck;
-            next();
-        });
-};
 
-function updateReport(req, res, next) {
+/** Router Middleware ------------------------------------------ **/
 
-    if (!req.reportType) {
-        console.log('[updateReport] No Report Type present in request, error!');
-
-        return res.status(404).send({
-            message: 'No Report Type present in request, error!'
-        });
-    }
-
-    var reportType = req.reportType;
-    var sku = req.sku = req.reportType.sku;
-    var newFields = req.fieldDefs;
-
-    console.log('Updating Report "%s"', sku);
-
-    var deferred = Q.defer();
-
-    console.log('Current fields for report %s: %o', sku, reportType.fields);
-    console.log('Updating with new data: %o', newFields);
-
-    _.extend(reportType.fields, newFields);
-    console.log('Updating to extended version: %o', newFields);
-
-    reportType.save(function (err) {
-        debugger;
-
-        if (err) {
-            console.log('[updateReport] Error in db save');
-            return deferred.reject(err);
-        }
-
-        console.log('[handlePromiseResponse] Returning report def : %o', reportType);
-
-        return deferred.resolve(reportType);
-    });
-
-    deferred.promise.then(function (success) {
-        console.log('[handlePromiseResponse] Got updated report: %o', success);
-        debugger;
-        req.reportType = success;
-
-        console.log('DIDIT: Setting the fields onto the report SKUs in teh DB');
-
-        next();
-
-    }, function (reject) {
-        debugger;
-        return next(new Error(reject));
-    });
-}
-
-exports.reportBySKU = function reportBySKU(req, res, next, id) {
+function reportBySKU(req, res, next, id) {
     console.log('Looking up report for SKU: %s', id);
 
     ReportType.findOne({'sku': id})
-        .populate('fields')
         .exec(function (err, reportType) {
             if (err) {
                 console.log('ReportBySKU] ERROR: ', err);
@@ -232,7 +182,25 @@ exports.reportBySKU = function reportBySKU(req, res, next, id) {
             req.reportType = reportType;
             next();
         });
-};
+}
+
+/**
+ * Bgcheck middleware
+ */
+
+function applicantByID(req, res, next, id) {
+    debugger;
+    req.applicantId = id;
+    ReportApplicant
+        .findById(id)
+        .exec(function (err, applicant) {
+            if (err) {
+                return next(err);
+            }
+            req.applicant = applicant;
+            next();
+        });
+}
 
 /**
  * Bgcheck authorization middleware
@@ -266,7 +234,7 @@ function listHandler(req, res, name, vals) {
         }
     }
 
-    if(!!req.failures && req.failures.length > 0) {
+    if (!!req.failures && req.failures.length > 0) {
         return res.json({reports: vals, failures: req.failures});
     }
 
@@ -285,13 +253,14 @@ function readHandler(req, res, name, value) {
 
 
 /** ----------------------------------------------------- **/
-exports.UpdateReportDefinitionsFromServer = function UpdateReportDefinitionsFromServer(req, res, next) {
+/** This is the good stuff!                               **/
+/** ----------------------------------------------------- **/
+function UpdateReportDefinitionsFromServer(req, res, next) {
 
     var skus = [''];
 
-    everifile
-        .GetSession()
-        .then(function (session) {
+    everifile.GetSession().then(
+        function (session) {
             everifile.GetReportTypeDefinitions(session, true, true).then(
                 function (results) {
                     req.reportTypes = handleSettledPromises(results, req, 'reportTypes', 'failures');
@@ -302,10 +271,10 @@ exports.UpdateReportDefinitionsFromServer = function UpdateReportDefinitionsFrom
             console.log('UpdateReportDefinitionsFromServer failed due to error: %j', error);
             next(error);
         });
-};
+}
 
 
-exports.SaveUpdatedReportDefinitions = function SaveUpdatedReportDefinitions(req, res, next) {
+function SaveUpdatedReportDefinitions(req, res, next) {
 
     if (!req.reportTypes) {
         console.log('[SaveUpdatedReportDefinitions] No Report types present in request!');
@@ -343,7 +312,7 @@ exports.SaveUpdatedReportDefinitions = function SaveUpdatedReportDefinitions(req
         });
 
 
-};
+}
 
 // private ,,,
 
@@ -413,5 +382,311 @@ function reportTypeUpsert(dbValue, newReport) {
             return Q.resolve(doc);
         }, function (err) {
             return Q.reject(err);
+        });
+}
+
+/** SECTION : Applicants ---------------------------------------------------- */
+
+function CreateNewRemoteApplicant(req, res, next) {
+
+    //var applicant = {
+    //    'middleName': 'Norman',
+    //    'lastName': 'Smith',
+    //    'nameSuffix': 'MD',
+    //    'aliases': [{
+    //        'lastName': 'McDonald', 'firstName': 'Ronald'
+    //    }],
+    //    'currentAddress': {
+    //        'street2': 'Suite 200',
+    //        'street1': '101 Oak Street',
+    //        'postalCode': '30302',
+    //        'state': 'georgia',
+    //        'country': 'united_states',
+    //        'city': 'Atlanta'
+    //    },
+    //    'governmentId': '201211141',
+    //    'gender': 'male',
+    //    'birthDate': 19780101,
+    //    'firstName': 'Bob',
+    //    'hasApplicantRequestedForReceivingReport': 'true'
+    //};
+    //console.warn('[CreateNewRemoteApplicant] Creating temporary applicant');
+
+    if (!req.user) {
+
+
+        console.warn('[CreateNewRemoteApplicant] No User, no problem!');
+    }
+
+    var applicant = req.body;
+
+    everifile.GetSession().then(
+        function (session) {
+            everifile.CreateApplicant(session, applicant).then(
+                function (applicant) {
+                    console.log('[CreateNewRemoteApplicant] Got applicant data from eVerifile: %j', applicant);
+
+                    req.remoteApplicant = applicant;
+
+                    next();
+                },
+                function (reject) {
+                    // Catch the error, check for 404/401
+                }
+            );
+        }, function (error) {
+            console.log('[GetAllRemoteApplicants] failed due to error: %j', error);
+            next(error);
+        });
+}
+
+function SaveNewApplicant(req, res, next) {
+
+    var applicant = new ReportApplicant(req.remoteApplicant);
+
+    applicant.user = req.user;
+    applicant.remoteId = req.remoteApplicant.applicantId;
+
+    applicant.save(function (err) {
+        if (err) {
+            console.log('Saving ReportApplicant failed with error: %j', err);
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err),
+                error: err
+            });
+
+        }
+
+        console.log('Successfully saved ReportApplicant: %j', applicant);
+
+        applicant.remoteData = req.remoteApplicant;
+        res.json(applicant);
+    });
+}
+
+function GetAllRemoteApplicants(req, res, next) {
+
+    if (!req.user || !req.user.isAdmin) {
+        var message = 'No User, No Deal - only admins here';
+        console.error('[GetAllRemoteApplicants] %s', message);
+        return res.status(404);
+    }
+
+    everifile.GetSession().then(
+        function (session) {
+            everifile.GetAllApplicants(session).then(
+                function (applicantModels) {
+                    console.log('[GetAllRemoteApplicants] Got %d applicant models from eVerifile');
+
+                    res.json(applicantModels);
+                },
+                function (reject) {
+                    // Catch the error, check for 404/401
+                }
+            );
+        }, function (error) {
+            console.log('[GetAllRemoteApplicants] failed due to error: %j', error);
+            next(error);
+        });
+}
+
+function GetReportApplicant(req, res, next) {
+    var query;
+
+    if (req.remoteApplicantId) {
+        console.log('[GetReportApplicant] Searching based on req.applicantId');
+        query = {remoteId: req.remoteApplicantId};
+    } else if (req.userId) {
+        console.log('[GetReportApplicant] Searching based on req.userId');
+        query = {user: req.userId};
+    } else if (req.user) {
+        console.log('[GetReportApplicant] Searching based on req.user');
+        query = {user: req.user._id};
+    }
+
+    console.log('[GetReportApplicant] Searching for report applicant with query %j', query);
+
+    ReportApplicant.findOne(query)
+        .exec(function (err, localApplicant) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+
+            req.applicant = localApplicant;
+            req.remoteApplicantId = (localApplicant || {}).remoteId;
+            next();
+        });
+
+}
+
+function GetRemoteApplicantData(req, res, next) {
+    if (!req.user && !req.applicant && !req.remoteApplicantId) {
+        var message = 'Incoming request must have some way to determine the remoteApplicantId';
+        console.error('[GetRemoteApplicantData] %s', message);
+        return next(new Error(message));
+    }
+
+    if (!req.remoteApplicantId) {
+        /**
+         * In order to find a remote applicant, we must assume that we have saved that
+         * data into the local collectino of report applicants. If this is true, the object
+         * req.applicant will be populated from the previous method: GetReportApplicant.
+         *
+         * If it is not populated, we will assume that no remote applicant exists and one
+         * should be created.
+         *
+         * In the future, we may choose to search for applicants, but maybe not.
+          */
+
+
+        if (req.applicant && req.applicant.remoteId) {
+            console.log('Using req.applicant remoteId: %s', req.applicant.remoteId);
+            req.remoteApplicantId = req.applicant.remoteId;
+        } else {
+            console.log('[GetRemoteApplicantData] Unable to search for applicant from request data');
+            req.remoteApplicant = null;
+            return next();
+        }
+    } else {
+        console.log('Using req.remoteApplicantId remoteId: %s', req.remoteApplicantId);
+    }
+
+    var id = req.remoteApplicantId;
+
+    everifile.GetSession().then(
+        function (session) {
+            everifile.GetApplicant(session, id).then(
+                function (remoteApplicant) {
+
+                    console.log('[GetRemoteApplicantData] Got applicant model from eVerifile: %j', remoteApplicant);
+                    req.applicant.remoteData = remoteApplicant;
+                    req.remoteApplicant = remoteApplicant;
+                },
+                function (reject) {
+                    debugger;
+                    // Catch the error, check for 404/401
+                }
+            );
+        }, function (error) {
+            console.log('UpdateReportDefinitionsFromServer failed due to error: %j', error);
+            next(error);
+        });
+}
+
+function ReadReportApplicant(req, res) {
+    console.log('[ReportApplicant.read] Returning applicant %j', req.applicant);
+
+    if (!req.applicant) {
+        return res.status(404).send({
+            message: 'No applicant found'
+        });
+    }
+
+    if (!!req.remoteApplicant && !req.applicant.remoteData) {
+        req.applicant.remoteData = req.remoteApplicant;
+    }
+
+    res.json(req.applicant);
+}
+
+/** SECTION : Report Manipulation ------------------------------------------------------ **/
+function CreateNewReport(req, res, next) {
+
+    var bgcheck = new Bgcheck(req.body);
+    bgcheck.user = req.user;
+
+    everifile.GetSession().then(
+        function (session) {
+            everifile.RunReport(session, bgcheck).then(
+                function (bgReport) {
+                    console.log('[CreateNewReport] Created remote report: %j', bgReport);
+
+                    bgReport.save(function (err) {
+                        if (err) {
+                            return res.status(400).send({
+                                message: errorHandler.getErrorMessage(err)
+                            });
+                        }
+
+                        res.jsonp(bgReport);
+                    });
+                }
+            );
+        },
+        function (error) {
+            console.log('[CreateNewReport] failed due to error: %j', error);
+            next(error);
+        });
+
+}
+function CheckApplicantReportStatus(req, res, next) {
+    everifile.GetSession().then(
+        function (session) {
+            everifile.RunReport(session, bgcheck).then(
+                function (bgReport) {
+
+                }
+            );
+        },
+        function (error) {
+            console.log('[CreateNewReport] failed due to error: %j', error);
+            next(error);
+        });
+}
+function CheckReportStatus(req, res, next) {
+    everifile.GetSession().then(
+        function (session) {
+            everifile.RunReport(session, bgcheck).then(
+                function (bgReport) {
+
+                }
+            );
+        },
+        function (error) {
+            console.log('[CreateNewReport] failed due to error: %j', error);
+            next(error);
+        });
+}
+function GetReportData(req, res, next) {
+    everifile.GetSession().then(
+        function (session) {
+            everifile.RunReport(session, bgcheck).then(
+                function (bgReport) {
+
+                }
+            );
+        },
+        function (error) {
+            console.log('[CreateNewReport] failed due to error: %j', error);
+            next(error);
+        });
+}
+function LoadPDFData(req, res, next) {
+    everifile.GetSession().then(
+        function (session) {
+            everifile.RunReport(session, bgcheck).then(
+                function (bgReport) {
+
+                }
+            );
+        },
+        function (error) {
+            console.log('[CreateNewReport] failed due to error: %j', error);
+            next(error);
+        });
+}
+
+/** Section : Report Middleware --------------------------------------------------------- **/
+function reportByID(req, res, next, id) {
+    Bgcheck.findById(id)
+        .populate('user', 'displayName')
+        .exec(function (err, bgcheck) {
+            if (err) {
+                return next(err);
+            }
+            req.bgcheck = bgcheck;
+            next();
         });
 }

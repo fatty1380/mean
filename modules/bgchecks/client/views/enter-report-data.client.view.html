@@ -1,171 +1,92 @@
 <section class="story-section section section-on-bg">
-    <h2 class="title container text-center">Order your {{vm.sku || vm.skus}} report today!</h2>
+    <h2 class="title container text-center">Order your {{vm.report.description}} today!</h2>
+
     <div class="story-container container text-center">
         <div class="story-container-inner">
             <div class="about">
-                <p>Tell users the story behind the product. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</p>
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, <a href="#">pretium quis</a>, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.</p>
-                <blockquote class="belife">We believe sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</blockquote>
-            </div>
-            <!--//about-->
-            <div class="team row">
-                <h3 class="title">Meet the team</h3>
-                <div class="member col-md-4 col-sm-6 col-xs-12">
-                    <div class="member-inner">
-                        <figure class="profile">
-                            <img class="img-responsive" src="assets/images/team/member-1.png" alt="" />
-                            <figcaption class="info">
-                                <span class="name">Mark Cooper</span>
-                                <br />
-                                <span class="job-title">Co-Founder</span>
+                <p ng-bind-html="vm.introText"></p>
 
-                            </figcaption>
-                        </figure>
-                        <!--//profile-->
-                        <div class="social">
-                            <ul class="social-list list-inline">
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a>
-                                </li>
-                            </ul>
-                            <!--//social-list-->
-                        </div>
-                        <!--//social-->
-                    </div>
-                    <!--//member-inner-->
-                </div>
-                <!--//member-->
-                <div class="member col-md-4 col-sm-6 col-xs-12">
-                    <div class="member-inner">
-                        <figure class="profile">
-                            <img class="img-responsive" src="assets/images/team/member-2.png" alt="" />
-                            <figcaption class="info"><span class="name">Jack Tang</span>
-                                <br /><span class="job-title">Co-Founder</span>
-                            </figcaption>
-                        </figure>
-                        <!--//profile-->
-                        <div class="social">
-                            <ul class="social-list list-inline">
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a>
-                                </li>
-                            </ul>
-                            <!--//social-list-->
-                        </div>
-                        <!--//social-->
-                    </div>
-                    <!--//member-inner-->
-                </div>
-                <!--//member-->
-                <div class="member col-md-4 col-sm-6 col-xs-12">
-                    <div class="member-inner">
-                        <figure class="profile">
-                            <img class="img-responsive" src="assets/images/team/member-3.png" alt="" />
-                            <figcaption class="info"><span class="name">Anna Perry</span>
-                                <br /><span class="job-title">Product/UX Designer</span>
-                            </figcaption>
-                        </figure>
-                        <!--//profile-->
-                        <div class="social">
-                            <ul class="social-list list-inline">
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-dribbble"></i></a>
-                                </li>
-                            </ul>
-                            <!--//social-list-->
-                        </div>
-                        <!--//social-->
-                    </div>
-                    <!--//member-inner-->
-                </div>
-                <!--//member-->
-                <div class="member col-md-4 col-sm-6 col-xs-12">
-                    <div class="member-inner">
-                        <figure class="profile">
-                            <img class="img-responsive" src="assets/images/team/member-4.png" alt="" />
-                            <figcaption class="info"><span class="name">Tim Robertson</span>
-                                <br /><span class="job-title">Back-end Developer</span>
-                            </figcaption>
-                        </figure>
-                        <!--//profile-->
-                        <div class="social">
-                            <ul class="social-list list-inline">
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-github-alt"></i></a>
-                                </li>
-                            </ul>
-                            <!--//social-list-->
-                        </div>
-                        <!--//social-->
-                    </div>
-                    <!--//member-inner-->
-                </div>
-                <!--//member-->
-                <div class="member col-md-4 col-sm-6 col-xs-12">
-                    <div class="member-inner">
-                        <figure class="profile">
-                            <img class="img-responsive" src="assets/images/team/member-5.png" alt="" />
-                            <figcaption class="info"><span class="name">Rachel Wu</span>
-                                <br /><span class="job-title">Front-end Developer</span>
-                            </figcaption>
-                        </figure>
-                        <!--//profile-->
-                        <div class="social">
-                            <ul class="social-list list-inline">
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-github-alt"></i></a>
-                                </li>
-                            </ul>
-                            <!--//social-list-->
-                        </div>
-                        <!--//social-->
-                    </div>
-                    <!--//member-inner-->
-                </div>
-                <!--//member-->
-                <div class="member col-md-4 col-sm-6 col-xs-12">
-                    <div class="member-inner">
-                        <figure class="profile">
-                            <img class="img-responsive" src="assets/images/team/member-6.png" alt="" />
-                            <figcaption class="info"><span class="name">Carl Allison</span>
-                                <br /><span class="job-title">Mobile Developer</span>
-                            </figcaption>
-                        </figure>
-                        <!--//profile-->
-                        <div class="social">
-                            <ul class="social-list list-inline">
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a>
-                                </li>
-                                <li><a href="#"><i class="fa fa-github-alt"></i></a>
-                                </li>
-                            </ul>
-                            <!--//social-list-->
-                        </div>
-                        <!--//social-->
-                    </div>
-                    <!--//member-inner-->
-                </div>
-                <!--//member-->
+                <p ng-bind-html="vm.getStartedText"></p>
             </div>
-            <!--//team-->
+            <!--//form data-->
+            <div class="form-data row">
+                <h3 class="title">Let's get started!</h3>
+
+
+                <form data-name="reportFieldData" class="form-horizontal" data-ng-submit="vm.submit(this, event)"
+                      novalidate>
+                    <fieldset>
+                        <div class="form-group" ng-repeat="field in vm.report.fields">
+                            <!-- field = { description, length, name, required, type } -->
+                            <label for="{{field.name}}" class="col-sm-2 control-label">{{field.description}} </label>
+
+                            <div class="col-sm-10">
+                                <input ng-if="!!field.ngType" type="{{field.ngType}}" class="form-control"
+                                       id="{{field.name}}" ng-model="vm.model[field.name]"
+                                       maxlength="{{field.ngMaxLength}}" required="{{field.required}}"/>
+
+                                <div class="" ng-if="field.isArray">
+                                    <div ng-repeat="(i,arrayItem) in vm.model[field.name]">
+                                        <div ng-repeat="df1 in field.dataFields" class="well">
+                                            <div class="col-xs-12" style="vertical-align: baseline;">
+                                                <label class="pull-left">Alias #{{i+1}}</label>
+                                                <button type="button" class="btn btn-close pull-right">&times;</button>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <hr/>
+
+                                            <div ng-repeat="df2 in df1.dataFields" class="form-group">
+                                                <label class="col-sm-3 control-label">{{df2.description}}</label>
+
+                                                <div class="col-sm-8">
+                                                    <input ng-if="!!df2.ngType || df2.type === 'string' || true"
+                                                           type="{{df2.ngType || text}}" class="form-control"
+                                                           id="{{df2.name}}"
+                                                           ng-model="vm.model[field.name][i][df2.name]"
+                                                           maxlength="{{df2.length}}" required="{{df2.required}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <button type="button" data-ng-click="vm.model[field.name].push({})">Add</button>
+                                </div>
+
+                                <div class="well" ng-if="field.isObject">
+                                    <div ng-repeat="dataField in field.dataFields" class="form-group">
+
+                                        <label class="col-sm-3 control-label">{{dataField.description}}</label>
+
+                                        <div class="col-sm-8">
+                                            <input ng-if="!!dataField.ngType || dataField.type === 'string' || true"
+                                                   type="{{dataField.ngType || text}}" class="form-control"
+                                                   id="{{dataField.name}}"
+                                                   ng-model="vm.model[field.name][dataField.name]"
+                                                   maxlength="{{dataField.length}}" required="{{dataField.required}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <span ng-if="field.isPickList">{{vm.model[field.name]}}</span>
+                                <select ng-if="field.isPickList"
+                                        ng-options="item.value as item.description for item in field.pickList"
+                                        ng-model="vm.model[field.name]">
+                                </select>
+
+                                <!--  <option ng-repeat="option in field.pickList" value="{{option.name}}">
+                                        {{option.description}}
+                                    </option> -->
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+                </form>
+            </div>
+            <!--//form data-->
             <div class="press-kit text-center">
-                <h3 class="title">Press Kit</h3>
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec.</p>
-                <p>Please <a href="contact.html">contact us</a> if you need more materials.</p>
-                <a class="btn btn-cta btn-cta-secondary" href="#">Download Press Kit</a>
+                <a class="btn btn-cta btn-cta-secondary" href="#">Save and Continue ...</a>
             </div>
             <!--//press-kit-->
         </div>

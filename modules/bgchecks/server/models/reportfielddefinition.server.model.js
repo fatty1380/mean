@@ -16,7 +16,7 @@ var ReportFieldDefinitionSchema = new Schema({
     length: Number,
     type: {
         type: String,
-        enum: ['string', 'datelong', 'string', 'state', 'country', 'object', 'array']
+        enum: ['string', 'datelong', 'state', 'country', 'object', 'array']
     },
     required: Boolean,
 

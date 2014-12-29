@@ -4,8 +4,116 @@
 		"selected_items":
 		[
 			[
-				"Applications",
-				"ApplicationsController"
+				"direc",
+				"directivelong	Angular.js"
+			],
+			[
+				"dire",
+				"verbose_directive	AngularJS"
+			],
+			[
+				"endorsem",
+				"endorsementDisplay"
+			],
+			[
+				"Schedule",
+				"ScheduleViewDirective"
+			],
+			[
+				"controll",
+				"controller	AngularJS"
+			],
+			[
+				"os-h",
+				"ngDir_os-page-header	AngularJS"
+			],
+			[
+				"ExperienceD",
+				"ExperienceDirectiveController"
+			],
+			[
+				"dir",
+				"directivelong	Angular.js"
+			],
+			[
+				"directiv",
+				"verbose_directive	AngularJS"
+			],
+			[
+				"$log",
+				"angular: $log.error"
+			],
+			[
+				"__",
+				"__dirname"
+			],
+			[
+				"NewAppli",
+				"NewApplicationModalController"
+			],
+			[
+				"repe",
+				"repeat-x  (value)"
+			],
+			[
+				"SigninMod",
+				"SigninModalDirective"
+			],
+			[
+				"Signupmoda",
+				"SignupModalDirective"
+			],
+			[
+				"isNu",
+				"angular.isUndefined"
+			],
+			[
+				"os-p",
+				"ngDir_os-profile-badge	AngularJS"
+			],
+			[
+				"transparen",
+				"transparent  (value)"
+			],
+			[
+				"$prov",
+				"$locationProvider	AngularJS"
+			],
+			[
+				"$provi",
+				"$routeProvider	AngularJS"
+			],
+			[
+				"Dashboard",
+				"DashboardController"
+			],
+			[
+				"$location",
+				"angular: $location"
+			],
+			[
+				"back",
+				"background-color:   (property)"
+			],
+			[
+				"License",
+				"LicenseSchema"
+			],
+			[
+				"Bgch",
+				"BgcheckSchema"
+			],
+			[
+				"Compna",
+				"CompanySchema"
+			],
+			[
+				"log",
+				"console.log"
+			],
+			[
+				"Company",
+				"CompanySchema"
 			],
 			[
 				"Drivers",
@@ -52,132 +160,34 @@
 	"buffers":
 	[
 		{
-			"file": "app/models/driver.server.model.js",
+			"file": "modules/addresses/client/controllers/addresses.client.controller.js",
 			"settings":
 			{
-				"buffer_size": 2219,
+				"buffer_size": 2304,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/models/schedule.server.model.js",
+			"file": "modules/addresses/client/directives/os-address-list.client.directive.js",
 			"settings":
 			{
-				"buffer_size": 928,
+				"buffer_size": 2920,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/routes/applications.server.routes.js",
+			"file": "modules/jobs/client/views/edit-job.client.view.html",
 			"settings":
 			{
-				"buffer_size": 1055,
+				"buffer_size": 4872,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/controllers/applications.server.controller.js",
+			"file": "modules/jobs/server/controllers/jobs.server.controller.js",
 			"settings":
 			{
-				"buffer_size": 4340,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/routes/bgchecks.server.routes.js",
-			"settings":
-			{
-				"buffer_size": 1950,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/controllers/bgchecks.server.controller.js",
-			"settings":
-			{
-				"buffer_size": 10670,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/controllers/companies.server.controller.js",
-			"settings":
-			{
-				"buffer_size": 3238,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/routes/companies.server.routes.js",
-			"settings":
-			{
-				"buffer_size": 890,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public/config.js",
-			"settings":
-			{
-				"buffer_size": 871,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public/modules/core/views/header.client.view.html",
-			"settings":
-			{
-				"buffer_size": 3233,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "Searching 314 files for \"angular-ui-router\" (regex)\n\n/Volumes/Fatty/Outset/bower.json:\n   11      \"angular-bootstrap\": \"~0.11.2\",\n   12      \"angular-ui-utils\": \"~0.1.1\",\n   13:     \"angular-ui-router\": \"~0.2.10\",\n   14      \"components-font-awesome\": \"~4.1.0\",\n   15      \"font-awesome\": \"~4.1.0\",\n\n/Volumes/Fatty/Outset/config/env/all.js:\n   23  				'public/lib/angular-resource/angular-resource.js',\n   24  				'public/lib/angular-animate/angular-animate.js',\n   25: 				'public/lib/angular-ui-router/release/angular-ui-router.js',\n   26  				'public/lib/angular-ui-utils/ui-utils.js',\n   27  				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js'\n\n/Volumes/Fatty/Outset/config/env/production.js:\n   13  				'public/lib/angular-resource/angular-resource.min.js',\n   14  				'public/lib/angular-animate/angular-animate.min.js',\n   15: 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',\n   16  				'public/lib/angular-ui-utils/ui-utils.min.js',\n   17  				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'\n\n/Volumes/Fatty/Outset/config/env/secure.js:\n   15          'public/lib/angular-resource/angular-resource.min.js',\n   16          'public/lib/angular-animate/angular-animate.min.js',\n   17:         'public/lib/angular-ui-router/release/angular-ui-router.min.js',\n   18          'public/lib/angular-ui-utils/ui-utils.min.js',\n   19          'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'\n\n7 matches across 4 files\n\n\nSearching 315 files for \"header.client.view\" (regex)\n\n/Volumes/Fatty/Outset/app/views/layout.server.view.html:\n   50  \n   51  <body scroll class=\"ng-cloak\">\n   52: 	<header data-ng-include=\"'/modules/core/views/header.client.view.html'\" class=\"navbar navbar-fixed-top navbar-inverse\"></header>\n   53  	<section class=\"content\">\n   54  		<section class=\"container\">\n\n1 match in 1 file\n",
-			"settings":
-			{
-				"buffer_size": 1840,
-				"line_ending": "Unix",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "app/views/layout.server.view.html",
-			"settings":
-			{
-				"buffer_size": 2648,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public/modules/applications/config/applications.client.config.js",
-			"settings":
-			{
-				"buffer_size": 685,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "config/env/all.js",
-			"settings":
-			{
-				"buffer_size": 1274,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "config/env/production.js",
-			"settings":
-			{
-				"buffer_size": 1951,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "config/env/secure.js",
-			"settings":
-			{
-				"buffer_size": 2155,
+				"buffer_size": 3908,
 				"line_ending": "Unix"
 			}
 		}
@@ -185,15 +195,51 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 27.0,
 		"selected_items":
 		[
 			[
-				"instal",
-				"Package Control: Install Package"
+				"packagecontrol",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"JSHINT",
+				"JSHint: Set Plugin Options"
 			],
 			[
 				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Package Control: List Packages"
+			],
+			[
+				"installpa",
+				"Package Control: Install Package"
+			],
+			[
+				"package control",
+				"Package Control: Discover Packages"
+			],
+			[
+				"installpac",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"AngularJS: Rebuild Search Index"
+			],
+			[
+				"anguarjs",
+				"AngularJS: Rebuild Search Index"
+			],
+			[
+				"instal",
 				"Package Control: Install Package"
 			],
 			[
@@ -221,20 +267,12 @@
 				"Indent XML"
 			],
 			[
-				"",
-				"API-Completion-Package: Settings – User"
-			],
-			[
 				"api ",
 				"API-Completion-Package: Settings – User"
 			],
 			[
 				"install pac",
 				"Package Control: Install Package"
-			],
-			[
-				"package control",
-				"Package Control: Disable Package"
 			],
 			[
 				"packa install",
@@ -253,13 +291,16 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 746.0
+		"width": 602.0
 	},
 	"console":
 	{
-		"height": 126.0,
+		"height": 501.0,
 		"history":
 		[
+			"ls",
+			"la",
+			"AngularJS",
 			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
 		]
 	},
@@ -274,163 +315,154 @@
 	},
 	"expanded_folders":
 	[
-		"/Volumes/Fatty/Outset",
-		"/Volumes/Fatty/Outset/app",
-		"/Volumes/Fatty/Outset/app/controllers",
-		"/Volumes/Fatty/Outset/app/controllers/users",
-		"/Volumes/Fatty/Outset/app/models",
-		"/Volumes/Fatty/Outset/app/routes",
-		"/Volumes/Fatty/Outset/config",
-		"/Volumes/Fatty/Outset/config/env",
-		"/Volumes/Fatty/Outset/public",
-		"/Volumes/Fatty/Outset/public/modules",
-		"/Volumes/Fatty/Outset/public/modules/applications",
-		"/Volumes/Fatty/Outset/public/modules/companies",
-		"/Volumes/Fatty/Outset/public/modules/companies/config",
-		"/Volumes/Fatty/Outset/public/modules/core",
-		"/Volumes/Fatty/Outset/public/modules/core/config",
-		"/Volumes/Fatty/Outset/public/modules/core/controllers",
-		"/Volumes/Fatty/Outset/public/modules/core/css",
-		"/Volumes/Fatty/Outset/public/modules/core/directives",
-		"/Volumes/Fatty/Outset/public/modules/core/less",
-		"/Volumes/Fatty/Outset/public/modules/core/services",
-		"/Volumes/Fatty/Outset/public/modules/core/tests",
-		"/Volumes/Fatty/Outset/public/modules/core/views",
-		"/Volumes/Fatty/Outset/public/modules/drivers",
-		"/Volumes/Fatty/Outset/public/modules/drivers/config",
-		"/Volumes/Fatty/Outset/public/modules/users",
-		"/Volumes/Fatty/Outset/public/modules/users/services"
+		"/Users/patf/Outset/Source/data",
+		"/Users/patf/Outset/Source/modules",
+		"/Users/patf/Outset/Source/modules/drivers",
+		"/Users/patf/Outset/Source/modules/drivers/client",
+		"/Users/patf/Outset/Source/modules/drivers/client/config",
+		"/Users/patf/Outset/Source/modules/drivers/client/controllers",
+		"/Users/patf/Outset/Source/modules/drivers/client/directives",
+		"/Users/patf/Outset/Source/modules/drivers/client/views",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/templates",
+		"/Users/patf/Outset/Source/modules/jobs",
+		"/Users/patf/Outset/Source/modules/jobs/client",
+		"/Users/patf/Outset/Source/modules/jobs/client/directives",
+		"/Users/patf/Outset/Source/modules/location",
+		"/Users/patf/Outset/Source/modules/location/client",
+		"/Users/patf/Outset/Source/modules/location/client/directives",
+		"/Users/patf/Outset/Source/modules/schedule",
+		"/Users/patf/Outset/Source/modules/schedule/client"
 	],
 	"file_history":
 	[
-		"/Volumes/Fatty/Outset/public/application.js",
-		"/Volumes/Fatty/Outset/public/modules/dashboard/views/templates/dashboard-header.client.template.html",
-		"/Volumes/Fatty/Outset/public/modules/core/tests/header.client.controller.test.js",
-		"/Volumes/Fatty/Outset/public/modules/core/controllers/header.client.controller.js",
-		"/Volumes/Fatty/Outset/public/humans.txt",
-		"/Volumes/Fatty/Outset/bower.json",
-		"/Volumes/Fatty/Outset/public/modules/drivers/controllers/drivers.client.controller.js",
-		"/Volumes/Fatty/Outset/app/routes/jobs.server.routes.js",
-		"/Volumes/Fatty/Outset/app/routes/drivers.server.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/config/applications.client.config.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/views/templates/list-applications.client.template.html",
-		"/Volumes/Fatty/Outset/public/modules/applications/views/templates/create-application.client.template.html",
-		"/Volumes/Fatty/Outset/public/modules/applications/controllers/applications.client.controller.js",
-		"/Volumes/Fatty/Outset/public/lib/components-font-awesome/scss/_bordered-pulled.scss",
-		"/Volumes/Fatty/Outset/public/lib/bootstrap/less/close.less",
-		"/Volumes/Fatty/Outset/Resources/mocks/driver/stylesheets/bootstrap-responsive.css",
-		"/Volumes/Fatty/Outset/public/lib/components-font-awesome/composer.json",
-		"/Volumes/Fatty/Outset/app/models/company.server.model.js",
-		"/Volumes/Fatty/Outset/app/tests/company.server.model.test.js",
-		"/Volumes/Fatty/Outset/public/modules/companies/companies.client.module.js",
-		"/Volumes/Fatty/Outset/public/modules/companies/config/companies.client.config.js",
-		"/Volumes/Fatty/Outset/public/modules/companies/config/companies.client.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/companies/controllers/companies.client.controller.js",
-		"/Volumes/Fatty/Outset/public/modules/companies/services/companies.client.service.js",
-		"/Volumes/Fatty/Outset/public/modules/companies/tests/companies.client.controller.test.js",
-		"/Volumes/Fatty/Outset/public/modules/core/css/core.css",
-		"/Volumes/Fatty/Outset/public/modules/bgchecks/services/bgchecks.client.service.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/applications.client.module.js",
-		"/Volumes/Fatty/Outset/public/dist/application.min.css",
-		"/Volumes/Fatty/Outset/app/routes/addresses.server.routes.js",
-		"/Volumes/Fatty/Outset/app/controllers/addresses.server.controller.js",
-		"/Volumes/Fatty/Outset/app/models/address.server.model.js",
-		"/Volumes/Fatty/Outset/public/modules/addresses/services/addresses.client.service.js",
-		"/Volumes/Fatty/Outset/public/modules/jobs/config/jobs.client.config.js",
-		"/Volumes/Fatty/Outset/public/modules/drivers/config/drivers.client.config.js",
-		"/Volumes/Fatty/Outset/public/modules/drivers/services/drivers.client.service.js",
-		"/Volumes/Fatty/Outset/app/controllers/drivers.server.controller.js",
-		"/Volumes/Fatty/Outset/app/controllers/users/users.profile.server.controller.js",
-		"/Volumes/Fatty/Outset/package.json",
-		"/Volumes/Fatty/Outset/Resources/mocks/employer/popover-add-driver.html",
-		"/Volumes/Fatty/Outset/Procfile",
-		"/Volumes/Fatty/Outset/public/modules/jobs/jobs.client.module.js",
-		"/Volumes/Fatty/Outset/app/controllers/jobs.server.controller.js",
-		"/Volumes/Fatty/Outset/app/models/job.server.model.js",
-		"/Volumes/Fatty/Outset/app/controllers/companies.server.controller.js",
-		"/Volumes/Fatty/Outset/app/routes/companies.server.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/drivers/drivers.client.module.js",
-		"/Volumes/Fatty/Outset/app/models/driver.server.model.js",
-		"/Volumes/Fatty/Outset/Resources/mocks/driver/driver-dashboard-submitted-apps.html",
-		"/Volumes/Fatty/Outset/public/modules/users/services/profile.client.service.js",
-		"/Volumes/Fatty/Outset/public/modules/users/controllers/profile.client.controller.js",
-		"/Volumes/Fatty/Outset/app/controllers/applications.server.controller.js",
-		"/Volumes/Fatty/Outset/app/models/application.server.model.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/views/view-application.client.view.html",
-		"/Volumes/Fatty/Outset/public/modules/users/config/users.client.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/users/services/users.client.service.js",
-		"/Volumes/Fatty/Outset/app/models/user.server.model.js",
-		"/Volumes/Fatty/Outset/public/modules/jobs/views/templates/job.client.template.html",
-		"/Volumes/Fatty/Outset/public/modules/jobs/views/view-job.client.view.html",
-		"/Volumes/Fatty/Outset/public/modules/jobs/views/list-jobs.client.view.html",
-		"/Volumes/Fatty/Outset/app/routes/applications.server.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/services/applications.client.service.js",
-		"/Volumes/Fatty/Outset/config/strategies/local.js",
-		"/Volumes/Fatty/Outset/public/lib/bootstrap/less/list-group.less",
-		"/Volumes/Fatty/Outset/outset-init.sh",
-		"/Volumes/Fatty/Outset/public/modules/jobs/controllers/jobs.client.controller.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/views/list-applications.client.view.html",
-		"/Volumes/Fatty/Outset/public/modules/jobs/config/jobs.client.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/config/applications.client.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/applications/views/create-application.client.view.html",
-		"/Volumes/Fatty/Outset/public/modules/dashboard/views/dashboard.client.view.html",
-		"/Volumes/Fatty/Outset/public/lib/components-font-awesome/less/list.less",
-		"/Volumes/Fatty/Outset/app/models/license.server.model.js",
-		"/Volumes/Fatty/Outset/public/modules/jobs/views/list-my-jobs.client.view.html",
-		"/Volumes/Fatty/Outset/public/modules/core/services/menus.client.service.js",
-		"/Volumes/Fatty/Outset/public/modules/jobs/services/jobs.client.service.js",
-		"/Volumes/Fatty/Outset/app/routes/users.server.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/drivers/config/drivers.client.routes.js",
-		"/Volumes/Fatty/Outset/app/routes/core.server.routes.js",
-		"/Volumes/Fatty/Outset/gruntfile.js",
-		"/Volumes/Fatty/Outset/public/modules/jobs/views/create-job.client.view.html",
-		"/Volumes/Fatty/Outset/karma.conf.js",
-		"/Volumes/Fatty/Outset/config/express.js",
-		"/Volumes/Fatty/Outset/app/routes/bgchecks.server.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/jobs/views/edit-job.client.view.html",
-		"/Volumes/Fatty/Outset/Resources/mocks/driver/driver-dashboard-jobs.html",
-		"/Volumes/Fatty/Outset/Resources/mocks/driver/driver-dashboard-profile.html",
-		"/Volumes/Fatty/Outset/public/modules/dashboard/config/dashboard.client.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/dashboard/dashboard.client.module.js",
-		"/Volumes/Fatty/Outset/public/modules/users/services/authentication.client.service.js",
-		"/Volumes/Fatty/Outset/public/modules/core/core.client.module.js",
-		"/Volumes/Fatty/Outset/public/lib/components-font-awesome/component.json",
-		"/Volumes/Fatty/Outset/app/controllers/bgchecks.server.controller.js",
-		"/Volumes/Fatty/Outset/public/lib/bootstrap/less/button-groups.less",
-		"/Volumes/Fatty/Outset/public/modules/addresses/addresses.client.module.js",
-		"/Volumes/Fatty/Outset/public/modules/bgchecks/config/bgchecks.client.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/core/config/core.client.routes.js",
-		"/Volumes/Fatty/Outset/public/modules/users/controllers/authentication.client.controller.js",
-		"/Volumes/Fatty/Outset/public/modules/dashboard/css/dashboard.css",
-		"/Volumes/Fatty/Outset/Resources/mocks/driver/popover-driver-application.html",
-		"/Volumes/Fatty/Outset/public/modules/jobs/css/jobs.css",
-		"/Volumes/Fatty/Outset/app/controllers/users.server.controller.js",
-		"/Volumes/Fatty/Outset/public/modules/users/controllers/settings.client.controller.js",
-		"/Volumes/Fatty/Outset/public/modules/core/controllers/home.client.controller.js",
-		"/Volumes/Fatty/Outset/public/modules/drivers/views/edit-driver.client.view.html",
-		"/Volumes/Fatty/Outset/public/modules/users/views/templates/user-profile.client.template.html",
-		"/Volumes/Fatty/Outset/public/modules/users/views/settings/profile.client.view.html",
-		"/Users/patf/Documents/Outset/public/modules/drivers/drivers.client.module.js",
-		"/Users/patf/Documents/Outset/public/modules/drivers/views/templates/driver-profile.client.template.html",
-		"/Users/patf/Documents/Outset/app/models/user.server.model.js",
-		"/Users/patf/Documents/Outset/public/modules/users/config/users.client.config.js",
-		"/Users/patf/Documents/Outset/app/controllers/users.server.controller.js",
-		"/Users/patf/Documents/Outset/public/modules/drivers/services/drivers.client.service.js",
-		"/Users/patf/Documents/Outset/public/modules/drivers/controllers/drivers.client.controller.js",
-		"/Users/patf/Documents/Outset/app/models/driver.server.model.js",
-		"/Users/patf/Documents/Outset/app/controllers/drivers.server.controller.js",
-		"/Users/patf/Documents/Outset/config/env/development.js",
-		"/Users/patf/Documents/Outset/public/lib/jquery/src/deprecated.js",
-		"/Users/patf/Documents/Outset/public/modules/drivers/views/view-driver.client.view.html",
-		"/Users/patf/Documents/Outset/public/modules/core/css/fonts.css",
-		"/Users/patf/Documents/Outset/public/lib/bootstrap/less/forms.less",
-		"/Users/patf/Documents/Outset/config/strategies/facebook.js",
-		"/Users/patf/Documents/Outset/app/models/job.server.model.js",
-		"/Users/patf/Documents/Outset/public/modules/users/users.client.module.js",
-		"/Users/patf/Documents/Outset/public/modules/users/css/users.css",
-		"/Users/patf/Documents/Outset/public/application.js",
-		"/Users/patf/Documents/Outset/app/routes/users.server.routes.js",
-		"/Users/patf/Documents/Outset/public/modules/users/views/templates/driver-profile.client.template.html"
+		"/Users/patf/Downloads/products-WB0N38R04/velocity/about.html",
+		"/Users/patf/Outset/Source/modules/jobs/server/models/job.server.model.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/views/templates/job-list.client.template.html",
+		"/Users/patf/Outset/Source/modules/jobs/client/views/templates/job.client.template.html",
+		"/Users/patf/Outset/Source/modules/companies/client/views/list-companies.client.view.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/controllers/drivers-list.client.controller.js",
+		"/Users/patf/Outset/Source/modules/addresses/client/directives/os-address-list.client.directive.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/directives/os-job.client.directive.js",
+		"/Users/patf/Outset/Source/modules/addresses/client/views/address-list.client.template.html",
+		"/Users/patf/Outset/Source/modules/addresses/client/directives/os-address.client.directive.js",
+		"/Users/patf/Outset/Source/app.env",
+		"/Users/patf/Outset/Source/modules/companies/client/views/view-company.client.view.html",
+		"/Users/patf/Outset/Source/modules/users/client/css/users.css",
+		"/Users/patf/Outset/Source/modules/schedule/client/views/view-schedule.client.view.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/list-drivers.client.view.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/config/drivers.client.config.js",
+		"/Users/patf/Outset/Source/modules/location/client/directives/location.client.directive.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/config/drivers.client.routes.js",
+		"/Users/patf/Outset/Source/modules/users/client/views/templates/schedule.client.template.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/templates/driver-inline.client.template.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/templates/driver.client.template.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/templates/driver-profile.client.template.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/directives/os-driver-inline.client.directive.js",
+		"/Users/patf/Outset/Source/modules/users/server/models/user.server.model.js",
+		"/Users/patf/Outset/Source/modules/drivers/server/models/driver.server.model.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/view-driver.client.view.html",
+		"/Users/patf/Outset/Source/modules/drivers/server/controllers/drivers.server.controller.js",
+		"/Users/patf/Outset/Source/modules/addresses/client/addresses.client.module.js",
+		"/Users/patf/Outset/Source/Resources/mocks/employer/popover-add-driver.html",
+		"/Users/patf/Outset/Source/modules/users/client/services/users.client.service.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/templates/driver-badge.client.template.html",
+		"/Users/patf/Outset/Source/public/lib/angular-ui-router/src/viewDirective.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/views/view-job.client.view.html",
+		"/Users/patf/Outset/Source/Resources/mocks/driver/driver-dashboard-jobs.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/controllers/drivers.client.controller.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/directives/os-driver-view.client.directive.js",
+		"/Users/patf/Outset/Source/modules/users/client/directives/signup-modal.client.directive.js",
+		"/Users/patf/Outset/Source/Resources/mocks/driver/stylesheets/license-template.css",
+		"/Users/patf/Outset/Source/Resources/mocks/driver/license-template.html",
+		"/Users/patf/Outset/Source/modules/schedule/server/models/schedule.server.model.js",
+		"/Users/patf/Outset/Source/modules/core/client/css/core.css",
+		"/Users/patf/Outset/Source/modules/drivers/client/controllers/driver.edit.client.controller.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/services/drivers.client.service.js",
+		"/Users/patf/Outset/Source/public/lib/angular-google-maps/src/coffee/directives/api/i-rectangle.coffee",
+		"/Users/patf/Outset/Source/public/lib/bootstrap/less/list-group.less",
+		"/Users/patf/Outset/Source/modules/license/server/models/license.server.model.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/drivers.client.module.js",
+		"/Users/patf/Outset/Source/modules/schedule/client/schedule.client.module.js",
+		"/Users/patf/Outset/Source/server.js",
+		"/Users/patf/Outset/Source/generate-ssl-certs.sh",
+		"/Users/patf/Outset/Source/modules/companies/client/config/companies.client.routes.js",
+		"/Users/patf/Outset/Source/modules/schedule/client/directives/schedule.client.directive.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/views/edit-driver.client.view.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/controllers/driver.view.client.controller.js",
+		"/Users/patf/Outset/Source/modules/core/client/views/templates/os-page-header.client.template.html",
+		"/Users/patf/Outset/Source/modules/companies/client/views/templates/view-company.client.template.html",
+		"/Users/patf/Outset/Source/modules/companies/client/services/companies.client.service.js",
+		"/Users/patf/Outset/Source/modules/companies/client/directives/os-company.client.directive.js",
+		"/Users/patf/Outset/Source/package.json",
+		"/Users/patf/Outset/Source/public/lib/bootstrap/less/pager.less",
+		"/Users/patf/Outset/Source/modules/core/client/controllers/header.client.controller.js",
+		"/Users/patf/Library/Application Support/Sublime Text 3/Packages/User/angular.iife-directive.sublime-snippet",
+		"/Users/patf/Outset/Source/modules/drivers/tests/client/drivers.client.controller.test.js",
+		"/Users/patf/Outset/Source/modules/schedule/client/controllers/view-schedule.client.controller.js",
+		"/Users/patf/Outset/Source/LICENSE.md",
+		"/Users/patf/Outset/Source/Resources/mocks/driver/driver-dashboard-submitted-apps.html",
+		"/Users/patf/Outset/Source/modules/schedule/schedule.client.module.js",
+		"/Users/patf/Outset/Source/modules/core/client/config/core.client.config.js",
+		"/Users/patf/Outset/Source/modules/companies/client/views/templates/company-list.client.template.html",
+		"/Users/patf/Outset/Source/modules/companies/tests/company.server.model.test.js",
+		"/Users/patf/Outset/Source/modules/applications/client/controllers/applications.client.controller.js",
+		"/Users/patf/Outset/Source/modules/users/client/directives/login-modal.client.directive.js",
+		"/Users/patf/Outset/Source/modules/users/client/services/authentication.client.service.js",
+		"/Users/patf/Outset/Source/modules/users/client/controllers/authentication.client.controller.js",
+		"/Users/patf/Outset/Source/modules/users/client/controllers/profile.client.controller.js",
+		"/Users/patf/Outset/Source/Resources/mocks/driver/driver-dashboard-profile.html",
+		"/Users/patf/Outset/Source/modules/core/client/views/intro.client.view.html",
+		"/Users/patf/Outset/Source/modules/users/client/views/templates/login-modal.client.template.html",
+		"/Users/patf/Outset/Source/modules/users/client/views/templates/signup-modal.client.template.html",
+		"/Users/patf/Outset/Source/modules/users/client/views/templates/signup-modal.client.script.html",
+		"/Users/patf/Outset/Source/modules/users/client/views/authentication/signup.client.view.html",
+		"/Users/patf/Outset/Source/modules/users/client/views/authentication/signin.client.view.html",
+		"/Users/patf/Outset/Source/Resources/mocks/home/signup.html",
+		"/Users/patf/Outset/Source/modules/core/client/config/core.client.routes.js",
+		"/Users/patf/Outset/Source/modules/users/client/config/users.client.config.js",
+		"/Users/patf/Outset/Source/modules/companies/server/controllers/companies.server.controller.js",
+		"/Users/patf/Outset/Source/modules/companies/server/models/company.server.model.js",
+		"/Users/patf/Outset/Source/modules/users/client/users.client.module.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/controllers/jobs.client.controller.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/views/list-jobs.client.view.html",
+		"/Users/patf/Outset/Source/modules/location/client/controllers/location.client.controller.js",
+		"/Users/patf/Outset/Source/modules/companies/server/routes/companies.server.routes.js",
+		"/Users/patf/Outset/Source/modules/location/client/config/location.client.config.js",
+		"/Users/patf/Outset/Source/modules/location/client/location.client.module.js",
+		"/Users/patf/Outset/Source/modules/applications/client/views/create-application.client.view.html",
+		"/Users/patf/Outset/Source/modules/drivers/client/controllers/driver.create.client.controller.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/views/edit-job.client.view.html",
+		"/Users/patf/Outset/Source/modules/addresses/client/directives/os-edit-address.client.directive.js",
+		"/Users/patf/Outset/Source/modules/drivers/client/directives/os-experience.client.directive.js",
+		"/Users/patf/Outset/Source/modules/jobs/server/controllers/jobs.server.controller.js",
+		"/Users/patf/Outset/Source/scratchPad.html",
+		"/Users/patf/Outset/Source/modules/companies/client/views/edit-company.client.view.html",
+		"/Users/patf/Outset/Source/public/lib/angular-google-maps/example/many-polylines.html",
+		"/Users/patf/Outset/Source/public/lib/angular-google-maps/example/many-polygons.html",
+		"/Users/patf/Outset/Source/modules/jobs/client/directives/os-new-application-modal.client.directive.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/config/jobs.client.routes.js",
+		"/Users/patf/Outset/Source/modules/companies/client/controllers/companies.client.controller.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/views/templates/os-new-application-modal.client.template.html",
+		"/Users/patf/Outset/Source/public/lib/angular-google-maps/src/coffee/providers/map-loader.coffee",
+		"/Users/patf/Outset/Source/modules/dashboard/client/views/templates/dashboard-header.client.template.html",
+		"/Users/patf/Outset/Source/modules/companies/client/views/templates/company-dashboard.client.template.html",
+		"/Users/patf/Outset/Source/Resources/Data Generation/Company.Owner.Ids.csv",
+		"/Users/patf/Outset/Source/Resources/Data Generation/Company.User.Data.js",
+		"/Users/patf/Outset/Source/modules/users/client/directives/os-profile.client.directive.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/css/jobs.css",
+		"/Users/patf/Outset/Source/public/lib/angular-google-maps/example/assets/scripts/controllers/issue-622-many-markers-destroy.js",
+		"/Users/patf/Outset/Source/public/lib/angular-google-maps/example/assets/scripts/controllers/overlay-map-type.js",
+		"/Users/patf/Outset/Source/modules/applications/client/views/templates/list-applications.client.template.html",
+		"/Users/patf/Outset/Source/modules/addresses/client/views/edit-address.client.template.html",
+		"/Users/patf/Outset/Source/modules/core/client/views/templates/base-view.client.template.html",
+		"/Users/patf/Outset/Source/Resources/mocks/employer/empl-dash-job-postings-active.html",
+		"/Users/patf/Outset/Source/Resources/mocks/employer/stylesheets/empl-dash-job-postings-active.css",
+		"/Users/patf/Outset/Source/modules/jobs/client/services/jobs.client.service.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/jobs.client.module.js",
+		"/Users/patf/Outset/Source/modules/jobs/client/config/jobs.client.config.js",
+		"/Users/patf/Outset/Source/public/lib/bootstrap/less/navbar.less",
+		"/Users/patf/Outset/Source/public/lib/angular-ui-router/src/templateFactory.js",
+		"/Users/patf/Outset/Source/public/lib/angular-ui-router/release/angular-ui-router.js"
 	],
 	"find":
 	{
@@ -441,8 +473,50 @@
 		"height": 93.0,
 		"where_history":
 		[
-			"-*/lib/*,-*/public/dist/*",
-			"-*/lib/*,-/public/dist/*",
+			"-*.min.*,-public/dist/*, -public/lib/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map",
+			"-*.min.*,-public/dist/*, -public/lib/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map,*/client/*",
+			"-*.min.*,-public/dist/*, -public/lib/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map",
+			"-*.min.*,-public/dist/*, -public/lib/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map,*/drivers/*/*.html",
+			"-*.min.*,-public/dist/*, -public/lib/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map,*/client/*,*/drivers/*/*.html",
+			"-*.min.*,-public/dist/*, -public/lib/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map,*/client/*",
+			"-*.min.*,-public/dist/*, -public/lib/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map,",
+			"-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map,",
+			"/Users/patf/Outset/Source/modules/core/client/img/brand",
+			"-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map",
+			"-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map,*/views/*",
+			"-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*,-*.map",
+			"-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*",
+			"",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*",
+			"*.less",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,-*/mocks/*",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log, *.html",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log",
+			"*client.service*",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,*/client/*,-core.server.routes.js",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,*/server/*,-core.server.routes.js",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,*/server/*",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log,modules/*/client",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*,-*.log",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage/*",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*,-coverage*",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*",
+			"",
+			"-*.min.js, -public/lib",
+			"-*.min.js",
+			"",
+			"public/modules/*",
+			"",
+			"-*/lib/*,-*.min.*,-public/dist/*,-*/tests/*",
+			"-*/lib/*,-*.min.*,-public/dist/*",
+			"-*/lib/*,-*.min.*,-public/dist/*,public/modules/*.js",
+			"-*/lib/*,-*.min.*,-public/dist/*",
+			"-*/lib/*,-*.min.*",
+			"",
+			"-*/lib/*,-*.min.*",
 			"-*/lib/*",
 			"",
 			"-node_modules/*",
@@ -458,145 +532,171 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"header.client.view",
-			"angular-ui-router",
-			"ngroute",
-			"ngRoute",
-			"'../../app/controllers/[^\\.]+'",
-			"'../../app/controllers/companies'",
-			"require('./errors')",
-			"article",
-			"'../../app/controllers/applications'",
-			"'../../app/controllers/users'",
-			"\"",
-			"authentication.user.",
-			"$scope.authentication.user.",
-			"user",
-			"h3",
-			"h1",
-			"angular.module(",
-			"list-applications.client.view.html",
-			"activeModule",
-			"$location",
-			"$stateParams",
-			"addSubMenuItem =",
-			"myjobs",
-			"/myjobs",
-			"listJobs",
-			"list-jobs.client.view",
-			"Outset Job Listings",
-			"openScope",
+			"job.location.",
 			"this",
-			"create",
-			"$scope.appService",
-			"app = express",
-			"DEBUG",
-			"app.get",
-			"appService",
-			"('Applications'",
-			"Applications.",
-			"Applications",
-			"profile/applications",
-			"users/me",
-			"/users/me",
-			":jobId/apply",
-			"jobs.list",
-			"DriverUser.",
-			"Drivers.",
-			"Profile.Drivers",
-			"b>",
-			"b",
-			"<br>",
-			"/drivers",
-			"Companies.",
-			"ProfileCompan",
-			"ProfileCompanies",
-			"Profile.Companies",
-			"'Applications'",
-			"User.Applications",
-			"Job.Applications",
-			"queryByJob",
-			"applications/user",
-			"applications/job/",
-			"mine",
-			"applications/mine",
-			"profiles/",
-			"users/accounts",
-			"queryByJobID =",
-			"applications/job/",
-			"/applications/job/",
-			"job",
-			"Job",
-			"job details",
-			"write a short cover",
-			"/mine",
-			"/applications/mine",
-			".query(",
-			".query",
-			"query",
-			"license",
-			"License",
-			"license",
-			"License",
-			"license",
-			"ng-repeat",
-			"findOne",
-			"addLicense",
+			"address",
+			"driver.user.",
+			"state",
+			"driver.user",
+			"row ",
+			"OsDriverView",
+			"osDriverView",
+			"state.go",
+			"false",
+			"track by",
+			"schedule.day[0]",
+			"day",
+			"schedule.day[0]",
+			"'",
+			"availability-row",
+			"h2",
+			"view",
+			"os-page-header.client.template",
+			"module('module')",
+			"\"",
+			"ng-include",
+			"driver-profile.client.template",
+			"Directive",
+			"directive",
+			"Directive",
+			"directive",
+			"Directive",
+			"$scope",
 			"switchHelper",
+			"vm\\.(driver[^s])",
+			"([^\\.])drivers",
+			"([^\\.])driver",
+			"{{",
+			"DriversController",
+			"endorsementDisplay",
+			" = function",
+			"$scope.",
+			"endorsementFilter",
 			"span",
-			"margin-bottom-sm",
-			"driverfactory",
-			"span8",
-			"h5",
-			"span",
-			"col-md-6",
-			"col-md-offset-1",
-			"span8",
-			"span4",
-			"span6",
-			"license",
-			"drivers",
-			"Drivers",
-			"drivers",
-			"/settings/profile",
-			"/settings/profile/edit",
-			"profile-edit",
-			"home",
-			"/drivers/",
-			"driverId",
-			"data-ng-controller=\"SettingsController\"",
-			"findOne",
-			"userId",
-			"userByID",
-			"/users/",
-			"$http.post('/",
-			"$scope.user.licenses.length'",
-			"location.path('",
-			"sign up as a",
-			"remove(",
-			"remove = function",
-			"jobById",
-			"jobId",
-			".jobId",
-			"span8",
-			"see full job details",
-			"dashboard.css",
-			"bg-primary",
+			"'schedule'",
+			"'location'",
+			"Controller",
+			"div",
+			"change profile picture",
+			"'",
+			"ng-show",
+			"vm.driverForm",
+			"\"",
+			"$scope",
+			".user.roles.indexOf('admin') !== -1",
+			"indexOf('admin')",
+			"'admin'",
+			"↵",
+			"\"$\\n^\"",
+			"^\\d+\\: ",
+			"Profiles.get",
+			"joblistcontroller",
+			"()",
+			"os-map-location",
+			"company",
+			"DriverEditController",
+			"authentication.",
+			"driver.",
+			"$scope",
+			"update",
+			"{{",
+			"[^\\.]driver",
 			"driver",
-			"Schedule",
-			"<input ",
-			"$location.path('"
+			"model",
+			"$scope",
+			"model",
+			"DriversController",
+			"$scope.",
+			"find()",
+			"'me'",
+			"me",
+			"company",
+			"Companies",
+			"drivers.me",
+			"companies.me",
+			"os-page-header",
+			"osPageHeader",
+			"user_jobs_resolve",
+			"list_user_resolve",
+			"company_resolve",
+			"job_resolve",
+			"toggleApplication",
+			"$scope.company",
+			"$scope.company\n",
+			"user_resolve",
+			"Companies",
+			"jobs",
+			"ctrl.",
+			"$scope",
+			"setDisplay",
+			"showSection",
+			"job.",
+			"inline",
+			"job.client.template.html",
+			"<os-job ",
+			"os-job",
+			"job.client.template.html",
+			"{{vm.company._id}}",
+			"vm.",
+			"mode",
+			"activate",
+			"\"",
+			"this",
+			"<os-",
+			"view-company.client.template",
+			"div",
+			"span",
+			"vm.",
+			"company-list.client.template",
+			"(model|os-|bind|\\{\\{|ng-)",
+			"(model|os-|bind|\\{\\{)",
+			"(model|os-|bind)",
+			"model",
+			"bind",
+			"biudn",
+			"\\{\\{([ ]?)",
+			"\\{\\{",
+			"\\{\\{((?!vm).)",
+			"\\{\\{[^v]",
+			"\\{\\{[^v][^m]",
+			"{{[^v][^m]"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
-			"'../../app/controllers/companies.server.controller'",
-			"require('./errors.server.controller')",
-			"'../../app/controllers/applications.server.controller'",
-			"'../../app/controllers/users.server.controller'",
+			"$1",
+			"$1vm.drivers",
+			"{{vm.",
+			".isAdmin()",
+			"\\n",
+			"",
+			"drivers.home",
+			"{{$1vm.",
+			"{{vm.",
+			"template: '<div ui-view></div>',",
+			"MenuItem('adminbar'",
+			"settings.profile",
+			"settings.edit",
+			"",
+			"\\1api/",
+			"require('../../../../modules/users/server/controllers/users.server.controller')",
+			"errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),",
+			"'",
+			"fixed-clear.client.view.html",
+			"$location.path",
+			"debugger; $location.path",
+			"$log.debug(",
+			"ObjectId(\"\\1\"), __v: 0",
+			"ObjectId(\"\\1\")",
+			"\"owner\":ObjectId(\"\\1\")",
+			"\"owner\":ObjectId(\"{0}\")",
+			"}\n  \n{",
+			"}\n  \n  {",
+			"debugger; return res.send(403, ",
+			"json",
 			"center-block",
 			"'museo_sans500'",
 			"museo_sans500",
@@ -616,1217 +716,11 @@
 			[
 				{
 					"buffer": 0,
-					"file": "app/models/driver.server.model.js",
+					"file": "modules/addresses/client/controllers/addresses.client.controller.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2219,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								93,
-								93
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/models/schedule.server.model.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 928,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								112,
-								112
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "app/routes/applications.server.routes.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1055,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								119,
-								90
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "app/controllers/applications.server.controller.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4340,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2309,
-								2309
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1491.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "app/routes/bgchecks.server.routes.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1950,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								225,
-								225
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "app/controllers/bgchecks.server.controller.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10670,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								120,
-								139
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "app/controllers/companies.server.controller.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3238,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								690,
-								690
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "app/routes/companies.server.routes.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 890,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								95,
-								72
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "public/config.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 871,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								864,
-								864
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "public/modules/core/views/header.client.view.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3233,
+						"buffer_size": 2304,
 						"regions":
 						{
 						},
@@ -1839,7 +733,7 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -1851,59 +745,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 1,
+					"file": "modules/addresses/client/directives/os-address-list.client.directive.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1840,
+						"buffer_size": 2920,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										183,
-										200
-									],
-									[
-										486,
-										503
-									],
-									[
-										512,
-										529
-									],
-									[
-										854,
-										871
-									],
-									[
-										880,
-										897
-									],
-									[
-										1242,
-										1259
-									],
-									[
-										1268,
-										1285
-									],
-									[
-										1667,
-										1685
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
 							[
-								1659,
-								1659
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1917,21 +772,8 @@
 									"codeintel_scan_files_in_project": false,
 									"javascriptExtraPaths":
 									[
+										"./Packages/SublimeCodeIntel/libs/codeintel2/lib_srcs/node.js"
 									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
 								}
 							},
 							"codeintel_enabled_languages":
@@ -1995,55 +837,48 @@
 								"JavaScript":
 								[
 									"/build/",
-									"/min/"
+									"/min/",
+									"/dist/"
 								]
 							},
 							"codeintel_scan_files_in_project": true,
 							"codeintel_selected_catalogs":
 							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
+								"HTML5"
 							],
 							"codeintel_snippets": true,
 							"codeintel_syntax_map":
 							{
-								"Python Django": "Python"
+								"JavaScript": "Node.js"
 							},
 							"codeintel_tooltips": "popup",
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 2,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
 							"sublime_auto_complete": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 612.0,
+						"translation.y": 568.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "app/views/layout.server.view.html",
+					"buffer": 2,
+					"file": "modules/jobs/client/views/edit-job.client.view.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2648,
+						"buffer_size": 4872,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1938,
-								1938
+								0,
+								0
 							]
 						],
 						"settings":
@@ -2057,21 +892,8 @@
 									"codeintel_scan_files_in_project": false,
 									"javascriptExtraPaths":
 									[
+										"./Packages/SublimeCodeIntel/libs/codeintel2/lib_srcs/node.js"
 									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
 								}
 							},
 							"codeintel_enabled_languages":
@@ -2135,25 +957,25 @@
 								"JavaScript":
 								[
 									"/build/",
-									"/min/"
+									"/min/",
+									"/dist/"
 								]
 							},
 							"codeintel_scan_files_in_project": true,
 							"codeintel_selected_catalogs":
 							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
+								"HTML5"
 							],
 							"codeintel_snippets": true,
 							"codeintel_syntax_map":
 							{
-								"Python Django": "Python"
+								"JavaScript": "Node.js"
 							},
 							"codeintel_tooltips": "popup",
 							"sublime_auto_complete": true,
 							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -2163,20 +985,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
-					"file": "public/modules/applications/config/applications.client.config.js",
+					"buffer": 3,
+					"file": "modules/jobs/server/controllers/jobs.server.controller.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 685,
+						"buffer_size": 3908,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								37,
-								37
+								1438,
+								1438
 							]
 						],
 						"settings":
@@ -2190,21 +1012,8 @@
 									"codeintel_scan_files_in_project": false,
 									"javascriptExtraPaths":
 									[
+										"./Packages/SublimeCodeIntel/libs/codeintel2/lib_srcs/node.js"
 									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
 								}
 							},
 							"codeintel_enabled_languages":
@@ -2268,437 +1077,31 @@
 								"JavaScript":
 								[
 									"/build/",
-									"/min/"
+									"/min/",
+									"/dist/"
 								]
 							},
 							"codeintel_scan_files_in_project": true,
 							"codeintel_selected_catalogs":
 							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
+								"HTML5"
 							],
 							"codeintel_snippets": true,
 							"codeintel_syntax_map":
 							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"history_list_is_closing": true,
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 2,
-			"sheets":
-			[
-				{
-					"buffer": 13,
-					"file": "config/env/all.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1274,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								913,
-								864
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
+								"JavaScript": "Node.js"
 							},
 							"codeintel_tooltips": "popup",
 							"sublime_auto_complete": true,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "config/env/production.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1951,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								723,
-								723
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "config/env/secure.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2155,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								747,
-								747
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 639.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -2706,11 +1109,11 @@
 	],
 	"incremental_find":
 	{
-		"height": 25.0
+		"height": 26.0
 	},
 	"input":
 	{
-		"height": 31.0
+		"height": 34.0
 	},
 	"layout":
 	{
@@ -2721,18 +1124,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.424561287144,
 			1.0
 		],
 		"rows":
@@ -2742,6 +1138,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 118.0
+	},
 	"output.find_results":
 	{
 		"height": 0.0
@@ -2749,7 +1149,7 @@
 	"project": "outset.sublime-project",
 	"replace":
 	{
-		"height": 46.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -2758,516 +1158,516 @@
 		"selected_items":
 		[
 			[
-				"applicasercon",
-				"app/controllers/applications.server.controller.js"
+				"jobsercontrol",
+				"modules/jobs/server/controllers/jobs.server.controller.js"
 			],
 			[
-				"header",
-				"public/modules/core/views/header.client.view.html"
+				"editjob",
+				"modules/jobs/client/views/edit-job.client.view.html"
 			],
 			[
-				"bower.json",
-				"bower.json"
+				"oslisdire",
+				"modules/addresses/client/directives/os-address-list.client.directive.js"
 			],
 			[
-				"compan",
-				"app/routes/companies.server.routes.js"
+				"addreslisclicontr",
+				"modules/addresses/client/controllers/addresses.client.controller.js"
 			],
 			[
-				"bgchser",
-				"app/routes/bgchecks.server.routes.js"
+				"addressclidire",
+				"modules/addresses/client/directives/os-address.client.directive.js"
 			],
 			[
-				"applicatcliconfi",
-				"public/modules/applications/config/applications.client.config.js"
+				"usercss",
+				"modules/users/client/css/users.css"
 			],
 			[
-				"addressserou",
-				"app/routes/addresses.server.routes.js"
+				"viewdriverclitemp",
+				"modules/drivers/client/views/templates/driver-profile.client.template.html"
 			],
 			[
-				"driversermod",
-				"app/models/driver.server.model.js"
+				"drivclitemplate",
+				"modules/drivers/client/views/templates/driver.client.template.html"
 			],
 			[
-				"packag",
-				"package.json"
-			],
-			[
-				"jobscliecon",
-				"public/modules/jobs/config/jobs.client.config.js"
-			],
-			[
-				"companiesclienconf",
-				"public/modules/companies/config/companies.client.config.js"
-			],
-			[
-				"drivecliecontr",
-				"public/modules/drivers/controllers/drivers.client.controller.js"
-			],
-			[
-				"driverservice",
-				"public/modules/drivers/services/drivers.client.service.js"
-			],
-			[
-				"drivserroutes",
-				"app/routes/drivers.server.routes.js"
-			],
-			[
-				"driversercon",
-				"app/controllers/drivers.server.controller.js"
-			],
-			[
-				"profserver",
-				"app/controllers/users/users.profile.server.controller.js"
-			],
-			[
-				"userclirou",
-				"public/modules/users/config/users.client.routes.js"
-			],
-			[
-				"applicliencontrol",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"applicasercontr",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"applicaser",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"applisermod",
-				"app/models/application.server.model.js"
-			],
-			[
-				"applicacliencontr",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"listapp",
-				"public/modules/applications/views/templates/list-applications.client.template.html"
-			],
-			[
-				"list-applica",
-				"public/modules/applications/views/list-applications.client.view.html"
-			],
-			[
-				"job.clie",
-				"public/modules/jobs/views/templates/job.client.template.html"
-			],
-			[
-				"applicsercontrol",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"applicasermod",
-				"app/models/application.server.model.js"
-			],
-			[
-				"job",
-				"app/models/job.server.model.js"
-			],
-			[
-				"appliccliencontrol",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"applicationscliecontrol",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"applicationcliencontrol",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"listappli",
-				"public/modules/applications/views/list-applications.client.view.html"
-			],
-			[
-				"joblist",
-				"public/modules/jobs/views/list-jobs.client.view.html"
-			],
-			[
-				"jobcliecontrol",
-				"public/modules/jobs/controllers/jobs.client.controller.js"
-			],
-			[
-				"core.css",
-				"public/modules/core/css/core.css"
-			],
-			[
-				"applisercont",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"appliserrou",
-				"app/routes/applications.server.routes.js"
-			],
-			[
-				"applicationclieservice",
-				"public/modules/applications/services/applications.client.service.js"
-			],
-			[
-				"applicsermod",
-				"app/models/application.server.model.js"
-			],
-			[
-				"applicationcli",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"applicliencontr",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"applications",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"applicclicontro",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"applicationsserrou",
-				"app/routes/applications.server.routes.js"
-			],
-			[
-				"appliclicon",
-				"public/modules/applications/controllers/applications.client.controller.js"
-			],
-			[
-				"jobsserrou",
-				"app/routes/jobs.server.routes.js"
-			],
-			[
-				"applicserrou",
-				"app/routes/applications.server.routes.js"
-			],
-			[
-				"jobsserrout",
-				"app/routes/jobs.server.routes.js"
-			],
-			[
-				"applicaserroutes",
-				"app/routes/applications.server.routes.js"
-			],
-			[
-				"job.clitemp",
-				"public/modules/jobs/views/templates/job.client.template.html"
-			],
-			[
-				"jobview",
-				"public/modules/jobs/views/view-job.client.view.html"
-			],
-			[
-				"applicaclieservi",
-				"public/modules/applications/services/applications.client.service.js"
-			],
-			[
-				"applicatsermod",
-				"app/models/application.server.model.js"
-			],
-			[
-				"applicationsser",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"jobssercon",
-				"app/controllers/jobs.server.controller.js"
-			],
-			[
-				"companiserrou",
-				"app/routes/companies.server.routes.js"
-			],
-			[
-				"companisercon",
-				"app/controllers/companies.server.controller.js"
-			],
-			[
-				"companiessercontrol",
-				"app/controllers/companies.server.controller.js"
-			],
-			[
-				"usercliser",
-				"public/modules/users/services/users.client.service.js"
-			],
-			[
-				"jobcliser",
-				"public/modules/jobs/services/jobs.client.service.js"
-			],
-			[
-				"drivercliser",
-				"public/modules/drivers/services/drivers.client.service.js"
-			],
-			[
-				"compancliser",
-				"public/modules/companies/services/companies.client.service.js"
-			],
-			[
-				"bgchcliser",
-				"public/modules/bgchecks/services/bgchecks.client.service.js"
-			],
-			[
-				"appcliser",
-				"public/modules/applications/services/applications.client.service.js"
-			],
-			[
-				"addrescliser",
-				"public/modules/addresses/services/addresses.client.service.js"
-			],
-			[
-				"jobclirou",
-				"public/modules/jobs/config/jobs.client.routes.js"
-			],
-			[
-				"drivclirou",
-				"public/modules/drivers/config/drivers.client.routes.js"
-			],
-			[
-				"dashclirou",
-				"public/modules/dashboard/config/dashboard.client.routes.js"
-			],
-			[
-				"corclirou",
-				"public/modules/core/config/core.client.routes.js"
-			],
-			[
-				"userserrou",
-				"app/routes/users.server.routes.js"
-			],
-			[
-				"jobclieser",
-				"public/modules/jobs/services/jobs.client.service.js"
-			],
-			[
-				"jobclitempl",
-				"public/modules/jobs/views/templates/job.client.template.html"
-			],
-			[
-				"jobserrou",
-				"app/routes/jobs.server.routes.js"
-			],
-			[
-				"jobsser",
-				"app/controllers/jobs.server.controller.js"
-			],
-			[
-				"applicationserroutes",
-				"app/routes/applications.server.routes.js"
-			],
-			[
-				"applisercontrol",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"jobclienview",
-				"public/modules/jobs/views/view-job.client.view.html"
-			],
-			[
-				"jobcliencontrol",
-				"public/modules/jobs/controllers/jobs.client.controller.js"
-			],
-			[
-				"jobclientempl",
-				"public/modules/jobs/views/templates/job.client.template.html"
-			],
-			[
-				"applicclierou",
-				"public/modules/applications/config/applications.client.routes.js"
-			],
-			[
-				"applicaroutes",
-				"app/routes/applications.server.routes.js"
-			],
-			[
-				"applicationsercon",
-				"app/controllers/applications.server.controller.js"
-			],
-			[
-				"applicationsermo",
-				"app/models/application.server.model.js"
-			],
-			[
-				"drivercliecon",
-				"public/modules/drivers/controllers/drivers.client.controller.js"
-			],
-			[
-				"user-pro",
-				"public/modules/users/views/templates/user-profile.client.template.html"
-			],
-			[
-				"driverser",
-				"app/models/driver.server.model.js"
-			],
-			[
-				"driverclicon",
-				"public/modules/drivers/controllers/drivers.client.controller.js"
-			],
-			[
-				"user-prof",
-				"public/modules/users/views/templates/user-profile.client.template.html"
-			],
-			[
-				"drivcliencont",
-				"public/modules/drivers/controllers/drivers.client.controller.js"
-			],
-			[
-				"driverserrou",
-				"app/routes/drivers.server.routes.js"
-			],
-			[
-				"usersservrou",
-				"app/routes/users.server.routes.js"
+				"drivsercontrol",
+				"modules/drivers/server/controllers/drivers.server.controller.js"
 			],
 			[
 				"drivermodel",
-				"app/models/driver.server.model.js"
+				"modules/drivers/server/models/driver.server.model.js"
 			],
 			[
-				"driverservercon",
-				"app/controllers/drivers.server.controller.js"
+				"usermodel",
+				"modules/users/server/models/user.server.model.js"
 			],
 			[
-				"usersser",
-				"app/controllers/users.server.controller.js"
+				"usmodel",
+				"modules/users/server/models/user.server.model.js"
 			],
 			[
-				"usercliencon",
-				"public/modules/users/controllers/authentication.client.controller.js"
+				"driv-template",
+				"modules/drivers/client/views/templates/driver-profile.client.template.html"
 			],
 			[
-				"userss",
-				"app/controllers/users.server.controller.js"
+				"driv-view",
+				"modules/drivers/client/views/view-driver.client.view.html"
 			],
 			[
-				"fonts",
-				"public/modules/core/css/fonts.css"
+				"driver-profil",
+				"modules/drivers/client/views/templates/driver-profile.client.template.html"
 			],
 			[
-				"jobsservcon",
-				"app/controllers/jobs.server.controller.js"
+				"dricliconfi",
+				"modules/drivers/client/config/drivers.client.config.js"
 			],
 			[
-				"usercliencont",
-				"public/modules/users/controllers/authentication.client.controller.js"
+				"driveditcon",
+				"modules/drivers/client/controllers/driver.edit.client.controller.js"
 			],
 			[
-				"driversclientcon",
-				"public/modules/drivers/controllers/drivers.client.controller.js"
+				"list-drivers",
+				"modules/drivers/client/views/list-drivers.client.view.html"
 			],
 			[
-				"driverscli",
-				"public/modules/drivers/drivers.client.module.js"
+				"schedulemodel",
+				"modules/schedule/server/models/schedule.server.model.js"
 			],
 			[
-				"drivclicon",
-				"public/modules/drivers/controllers/drivers.client.controller.js"
+				"scheudhtml",
+				"modules/schedule/client/views/view-schedule.client.view.html"
 			],
 			[
-				"authcli",
-				"public/modules/users/controllers/authentication.client.controller.js"
+				"core.css",
+				"modules/core/client/css/core.css"
 			],
 			[
-				"settings.c",
-				"public/modules/users/controllers/settings.client.controller.js"
+				"schedulehtml",
+				"modules/users/client/views/templates/schedule.client.template.html"
 			],
 			[
-				"d",
-				"app/models/driver.server.model.js"
+				"pageheader",
+				"modules/core/client/views/templates/os-page-header.client.template.html"
 			],
 			[
-				"driverserve",
-				"app/models/driver.server.model.js"
+				"drivclicontroll",
+				"modules/drivers/client/controllers/driver.view.client.controller.js"
 			],
 			[
-				"user.ser",
-				"app/models/user.server.model.js"
+				"drivcontrol",
+				"modules/drivers/client/controllers/drivers.client.controller.js"
 			],
 			[
-				"auth",
-				"public/modules/users/controllers/authentication.client.controller.js"
+				"listdri",
+				"modules/drivers/client/views/list-drivers.client.view.html"
 			],
 			[
-				"driverserver",
-				"app/models/driver.server.model.js"
+				"view-sched",
+				"modules/schedule/client/views/view-schedule.client.view.html"
 			],
 			[
-				"jobscontrol",
-				"app/controllers/jobs.server.controller.js"
+				"viedricontroll",
+				"modules/drivers/client/controllers/driver.view.client.controller.js"
 			],
 			[
-				"app.js",
-				"public/application.js"
+				"licensermodel",
+				"modules/license/server/models/license.server.model.js"
 			],
 			[
-				"driproftem",
-				"public/modules/users/views/templates/driver-profile.client.template.html"
+				"driversemode",
+				"modules/drivers/server/models/driver.server.model.js"
 			],
 			[
-				"usermod",
-				"app/models/user.server.model.js"
+				"view-company",
+				"modules/companies/client/views/templates/view-company.client.template.html"
 			],
 			[
-				"outset",
-				"outset-init.sh"
+				"companytemplate",
+				"modules/companies/client/views/templates/view-company.client.template.html"
 			],
 			[
-				"test",
-				"test.sh"
+				"",
+				"modules/companies/client/views/view-company.client.view.html"
 			],
 			[
-				"outs",
-				"outset-init.sh"
+				"usersermodl",
+				"modules/users/server/models/user.server.model.js"
 			],
 			[
-				"settings",
-				"public/modules/users/controllers/settings.client.controller.js"
+				"drivclicontrol",
+				"modules/drivers/client/controllers/drivers.client.controller.js"
 			],
 			[
-				"authcliencon",
-				"public/modules/users/controllers/authentication.client.controller.js"
+				"loginmod",
+				"modules/users/client/directives/login-modal.client.directive.js"
 			],
 			[
-				"jobser",
-				"app/models/job.server.model.js"
+				"login",
+				"modules/users/client/views/templates/login-modal.client.template.html"
 			],
 			[
-				"jobs.client.contr",
-				"public/modules/jobs/controllers/jobs.client.controller.js"
+				"intro",
+				"modules/core/client/views/intro.client.view.html"
 			],
 			[
-				"jobs.server.rou",
-				"app/routes/jobs.server.routes.js"
+				"corclirout",
+				"modules/core/client/config/core.client.routes.js"
 			],
 			[
-				"user.server.mo",
-				"app/models/user.server.model.js"
+				"usercliservi",
+				"modules/users/client/services/users.client.service.js"
 			],
 			[
-				"gruntfil",
-				"gruntfile.js"
+				"usersermodel",
+				"modules/users/server/models/user.server.model.js"
 			],
 			[
-				"driver-pro",
-				"public/modules/users/views/templates/driver-profile.client.template.html"
+				"corecliconfig",
+				"modules/core/client/config/core.client.config.js"
 			],
 			[
-				"edit",
-				"public/modules/users/views/settings/edit-profile.client.view.html"
+				"driverviewcontro",
+				"modules/drivers/client/controllers/driver.view.client.controller.js"
 			],
 			[
-				"user.css",
-				"public/modules/users/css/users.css"
+				"companservice",
+				"modules/companies/client/services/companies.client.service.js"
 			],
 			[
-				"schedul",
-				"public/modules/users/views/templates/schedule.client.template.html"
+				"driverservice",
+				"modules/drivers/client/services/drivers.client.service.js"
 			],
 			[
-				"edit-pro",
-				"public/modules/users/views/settings/edit-profile.client.view.html"
+				"coreroutes",
+				"modules/core/client/config/core.client.routes.js"
+			],
+			[
+				"compsermodel",
+				"modules/companies/server/models/company.server.model.js"
+			],
+			[
+				"locacontroll",
+				"modules/location/client/controllers/location.client.controller.js"
+			],
+			[
+				"locatclidir",
+				"modules/location/client/directives/location.client.directive.js"
+			],
+			[
+				"locationclicon",
+				"modules/location/client/config/location.client.config.js"
+			],
+			[
+				"edit-drivercli",
+				"modules/drivers/client/views/edit-driver.client.view.html"
+			],
+			[
+				"compcliroutes",
+				"modules/companies/client/config/companies.client.routes.js"
+			],
+			[
+				"view-driver",
+				"modules/drivers/client/views/view-driver.client.view.html"
+			],
+			[
+				"drivroutes",
+				"modules/drivers/client/config/drivers.client.routes.js"
+			],
+			[
+				"driverrouts",
+				"modules/drivers/client/config/drivers.client.routes.js"
+			],
+			[
+				"company-",
+				"modules/companies/client/views/view-company.client.view.html"
+			],
+			[
+				"driver",
+				"Resources/mocks/driver/driver-dashboard-jobs.html"
+			],
+			[
+				"compandirec",
+				"modules/companies/client/directives/os-company.client.directive.js"
+			],
+			[
+				"os-page-he",
+				"modules/core/client/views/templates/os-page-header.client.template.html"
+			],
+			[
+				"jobdirec",
+				"modules/jobs/client/directives/os-job.client.directive.js"
+			],
+			[
+				"job.ser.cont",
+				"modules/jobs/server/controllers/jobs.server.controller.js"
+			],
+			[
+				"view-job",
+				"modules/jobs/client/views/view-job.client.view.html"
+			],
+			[
+				"edit-job",
+				"modules/jobs/client/views/edit-job.client.view.html"
+			],
+			[
+				"job.clien.templ",
+				"modules/jobs/client/views/templates/job.client.template.html"
+			],
+			[
+				"joblist",
+				"modules/jobs/client/views/list-jobs.client.view.html"
+			],
+			[
+				"jobslist",
+				"modules/jobs/client/views/templates/job-list.client.template.html"
+			],
+			[
+				"jobcliroutes",
+				"modules/jobs/client/config/jobs.client.routes.js"
+			],
+			[
+				"jobcontroll",
+				"modules/jobs/client/controllers/jobs.client.controller.js"
+			],
+			[
+				"os-job",
+				"modules/jobs/client/directives/os-job.client.directive.js"
+			],
+			[
+				"job-list",
+				"modules/jobs/client/views/templates/job-list.client.template.html"
+			],
+			[
+				"companclicontr",
+				"modules/companies/client/controllers/companies.client.controller.js"
+			],
+			[
+				"os-coma",
+				"modules/companies/client/directives/os-company.client.directive.js"
+			],
+			[
+				"view-company.cli",
+				"modules/companies/client/views/view-company.client.view.html"
+			],
+			[
+				"introcli",
+				"modules/core/client/views/intro.client.view.html"
+			],
+			[
+				"core.cs",
+				"modules/core/client/css/core.css"
+			],
+			[
+				"pack",
+				"package.json"
+			],
+			[
+				"coreclicon",
+				"modules/core/client/config/core.client.config.js"
+			],
+			[
+				"jobcliser",
+				"modules/jobs/client/services/jobs.client.service.js"
+			],
+			[
+				"compansercontrol",
+				"modules/companies/server/controllers/companies.server.controller.js"
+			],
+			[
+				"compserroutes",
+				"modules/companies/server/routes/companies.server.routes.js"
+			],
+			[
+				"comservice",
+				"modules/companies/client/services/companies.client.service.js"
+			],
+			[
+				"locationcontroll",
+				"modules/location/client/controllers/location.client.controller.js"
+			],
+			[
+				"edit-comp",
+				"modules/companies/client/views/edit-company.client.view.html"
+			],
+			[
+				"companydire",
+				"modules/companies/client/directives/os-company.client.directive.js"
+			],
+			[
+				"corecss",
+				"modules/core/client/css/core.css"
+			],
+			[
+				"jobcli",
+				"modules/jobs/client/views/templates/job.client.template.html"
+			],
+			[
+				"listjob",
+				"modules/jobs/client/views/templates/job-list.client.template.html"
+			],
+			[
+				"jobsermod",
+				"modules/jobs/server/models/job.server.model.js"
+			],
+			[
+				"clienservice",
+				"modules/companies/client/services/companies.client.service.js"
+			],
+			[
+				"jobserrou",
+				"modules/jobs/server/routes/jobs.server.routes.js"
+			],
+			[
+				"job.clicontroll",
+				"modules/jobs/client/controllers/jobs.client.controller.js"
+			],
+			[
+				"jobsercontr",
+				"modules/jobs/server/controllers/jobs.server.controller.js"
+			],
+			[
+				"compsercontrol",
+				"modules/companies/server/controllers/companies.server.controller.js"
+			],
+			[
+				"jobcliddir",
+				"modules/jobs/client/directives/os-job.client.directive.js"
+			],
+			[
+				"compacliservi",
+				"modules/companies/client/services/companies.client.service.js"
+			],
+			[
+				"usersermode",
+				"modules/users/server/models/user.server.model.js"
+			],
+			[
+				"core.c",
+				"modules/core/client/css/core.css"
+			],
+			[
+				"companysermod",
+				"modules/companies/server/models/company.server.model.js"
+			],
+			[
+				"viewcompclitempl",
+				"modules/companies/client/views/templates/view-company.client.template.html"
+			],
+			[
+				"os-compa",
+				"modules/companies/client/directives/os-company.client.directive.js"
+			],
+			[
+				"companiclicontrol",
+				"modules/companies/client/controllers/companies.client.controller.js"
+			],
+			[
+				"view-companyclie",
+				"modules/companies/client/views/view-company.client.view.html"
+			],
+			[
+				"os-debugtempl",
+				"modules/core/client/views/templates/os-debug-info.client.template.html"
+			],
+			[
+				"intro.cli",
+				"modules/core/client/views/intro.client.view.html"
+			],
+			[
+				"licenmodel",
+				"modules/license/server/models/license.server.model.js"
+			],
+			[
+				"view-drivercliview",
+				"modules/drivers/client/views/view-driver.client.view.html"
+			],
+			[
+				"dricliser",
+				"modules/drivers/client/services/drivers.client.service.js"
+			],
+			[
+				"driserrout",
+				"modules/drivers/server/routes/drivers.server.routes.js"
+			],
+			[
+				"drivsercont",
+				"modules/drivers/server/controllers/drivers.server.controller.js"
+			],
+			[
+				"driversermod",
+				"modules/drivers/server/models/driver.server.model.js"
+			],
+			[
+				"driversermo",
+				"modules/drivers/server/models/driver.server.model.js"
+			],
+			[
+				"experclitemp",
+				"modules/drivers/client/views/templates/experience.client.template.html"
+			],
+			[
+				"driclicontr",
+				"modules/drivers/client/controllers/drivers.client.controller.js"
+			],
+			[
+				"corecliroutes",
+				"modules/core/client/config/core.client.routes.js"
+			],
+			[
+				"driver.cliservi",
+				"modules/drivers/client/services/drivers.client.service.js"
+			],
+			[
+				"companclientemplate",
+				"modules/companies/client/views/edit-company.client.view.html"
+			],
+			[
+				"os-debuclitempl",
+				"modules/core/client/views/templates/os-debug-info.client.template.html"
+			],
+			[
+				"osdebu",
+				"modules/core/client/directives/os-debug-info.client.directive.js"
+			],
+			[
+				"drivercliconfi",
+				"modules/drivers/client/config/drivers.client.config.js"
+			],
+			[
+				"driverscontroller",
+				"modules/drivers/client/controllers/drivers.client.controller.js"
+			],
+			[
+				"driclirout",
+				"modules/drivers/client/config/drivers.client.routes.js"
+			],
+			[
+				"drivmodel",
+				"modules/drivers/server/models/driver.server.model.js"
+			],
+			[
+				"jobclicser",
+				"modules/jobs/client/services/jobs.client.service.js"
+			],
+			[
+				"compancliccontroll",
+				"modules/companies/client/controllers/companies.client.controller.js"
+			],
+			[
+				"companclicser",
+				"modules/companies/client/services/companies.client.service.js"
+			],
+			[
+				"jobclient",
+				"modules/jobs/client/views/templates/job.client.template.html"
+			],
+			[
+				"oshtmleditcli",
+				"modules/core/client/directives/os-html-edit.client.directive.js"
+			],
+			[
+				"companycliview",
+				"modules/companies/client/views/edit-company.client.view.html"
 			]
 		],
 		"width": 0.0
@@ -3282,23 +1682,24 @@
 	},
 	"select_symbol":
 	{
-		"height": 0.0,
+		"height": 392.0,
 		"selected_items":
 		[
 		],
-		"width": 0.0
+		"width": 431.0
 	},
 	"selected_group": 0,
 	"settings":
 	{
 	},
-	"show_minimap": true,
+	"show_minimap": false,
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 271.0,
+	"side_bar_width": 396.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
+		"max_columns": 4
 	}
 }
