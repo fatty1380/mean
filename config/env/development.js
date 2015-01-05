@@ -39,5 +39,10 @@ module.exports = {
 				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
 			}
 		}
-	}
+	},
+    braintree: {
+        MerchantId : process.env.BRAINTREE_MERCHANT_ID || '9thy557h7r7t5x95',
+        PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'sfnrsv2k6c78574s',
+        PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '9da8cb7ae133c4021633f00e495fbf77'
+    }
 };

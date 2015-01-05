@@ -28,7 +28,8 @@ module.exports = {
                 'public/lib/pdfjs-dist/build/pdf.combined.js',
                 'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
-                'public/lib/moment/moment.js'
+                'public/lib/moment/moment.js',
+                'https://js.braintreegateway.com/v2/braintree.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },
