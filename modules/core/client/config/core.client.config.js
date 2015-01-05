@@ -35,6 +35,16 @@
                 }
             }
         });
+
+        $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
+            $log.error('State Change error from %s to %s', fromState.name, toState.name, error);
+
+            debugger;
+
+            event.preventDefault();
+            $log.warn('Rerouting back to source state');
+            $state.go(fromState.name, {error: error});
+        });
     }
 
     reroute.$inject = ['$rootScope', '$state', 'Authentication', '$log'];
