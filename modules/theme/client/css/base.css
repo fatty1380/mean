@@ -509,10 +509,10 @@ input[type="button"] {
   color: #999999;
   font-size: 18px;
 }
-.section-on-bg .title {
+.section-on-bg > .title {
   color: #fff;
 }
-.section-on-bg .intro {
+.section-on-bg > .intro {
   color: #fff;
   -webkit-opacity: 0.8;
   -moz-opacity: 0.8;
@@ -1608,7 +1608,7 @@ input[type="button"] {
   display: block;
 }
 .blog-slider .flex-direction-nav a.flex-prev {
-  left: 5%!important;
+  left: 5% !important;
 }
 .blog-slider .flex-direction-nav a.flex-prev:before {
   content: "";
@@ -1619,7 +1619,7 @@ input[type="button"] {
   height: 50px;
 }
 .blog-slider .flex-direction-nav a.flex-next {
-  right: 5%!important;
+  right: 5% !important;
 }
 .blog-slider .flex-direction-nav a.flex-next:before {
   content: "";
@@ -1630,10 +1630,10 @@ input[type="button"] {
   height: 50px;
 }
 .blog-slider:hover .flex-prev {
-  left: 5%!important;
+  left: 5% !important;
 }
 .blog-slider:hover .flex-next {
-  right: 5%!important;
+  right: 5% !important;
 }
 .blog-slider .flex-caption {
   padding-top: 90px;
@@ -2265,6 +2265,47 @@ input[type="button"] {
 }
 .has-full-screen-bg .header h1.logo a {
   margin: 0 auto;
+}
+.search-section {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.search-section .form-group {
+  position: relative;
+}
+.search-section .form-group.search:before {
+  content: "\f002";
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  left: 10px;
+  top: 12px;
+  color: #999999;
+}
+.search-section .form-control {
+  font-size: 16px;
+  padding-left: 30px;
+  font-size: 14px;
+}
+.search-section .form-control::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #999999;
+}
+.search-section .form-control:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #999999;
+}
+.search-section .form-control::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #999999;
+}
+.search-section .form-control:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #999999;
 }
 .access-section {
   padding-bottom: 200px;

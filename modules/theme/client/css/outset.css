@@ -1,0 +1,421 @@
+/** Body **/
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  background-color: #0e2d4c;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width: 100%;
+  height: 100%;
+}
+/** Simple Stylings **/
+.strong {
+  font-weight: bold !important;
+}
+.stronger {
+  font-weight: bolder !important;
+}
+.application {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+.application .title {
+  font-size: 36px;
+  font-weight: 300;
+  margin-top: 0;
+}
+.application .intro {
+  color: #999999;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+.application .item {
+  padding: 90px 0;
+  border-bottom: 1px solid #eeeeee;
+}
+.application .item.last-item {
+  border-bottom: none;
+}
+.application .item .title {
+  font-size: 26px;
+  color: #4a6781;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+.application .item .desc {
+  margin-bottom: 60px;
+}
+.application .item .desc .fa {
+  margin-right: 5px;
+}
+.application .item .chat-entry {
+  border: solid 0 1px 1px 1px #eeeeee;
+  background-color: #f5f5f5;
+}
+.application .item .chat-entry .btn {
+  margin: auto;
+}
+.application .item .chat-entry .input {
+  text-align: left;
+}
+.application .item .chat-section {
+  border: solid 1px #eee;
+  border-top: solid 2px #5da830;
+  max-height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.application .item .chat-section .chat-box.chat-text-space p {
+  margin-bottom: 10px;
+}
+.application .item .chat-section .chat-box {
+  padding: 5px;
+  background: #fff;
+  margin-bottom: 0px;
+  color: #666666;
+  position: relative;
+}
+.application .item .chat-section .chat-box h2 {
+  font-size: 14px;
+  line-height: 18px;
+}
+.application .item .chat-section .chat-box h2 small {
+  color: #cccccc;
+  font-size-adjust: -3;
+}
+.application .item .chat-section .chat-box p {
+  margin-bottom: 0;
+}
+.application .item .chat-section .chat-box .chat-profile {
+  position: absolute;
+}
+.application .item .chat-section .chat-box .chat-content {
+  margin-left: 90px;
+  background: #f5f5f5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  font-size: 14px;
+  padding: 15px;
+}
+.application .item .chat-section .chat-box .chat-content:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 25px;
+}
+.application .item .chat-section .chat-box.other .chat-profile {
+  left: 20px;
+}
+.application .item .chat-section .chat-box.other .chat-content {
+  border-left: 4px solid #e8e8e8;
+  margin-left: 90px;
+  margin-right: 120px;
+}
+.application .item .chat-section .chat-box.other .chat-content:before {
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #e8e8e8;
+  left: 100px;
+}
+.application .item .chat-section .chat-box.other .timestamp,
+.application .item .chat-section .chat-box.other blockquote {
+  text-align: left;
+}
+.application .item .chat-section .chat-box.me .chat-profile {
+  right: 20px;
+}
+.application .item .chat-section .chat-box.me .chat-content {
+  border-right: 4px solid #e8e8e8;
+  margin-left: 120px;
+  margin-right: 90px;
+}
+.application .item .chat-section .chat-box.me .chat-content:before {
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #e8e8e8;
+  right: 100px;
+}
+.application .item .chat-section .chat-box.me .timestamp,
+.application .item .chat-section .chat-box.me blockquote {
+  text-align: right;
+}
+.application .item .chat-section .chat-box blockquote {
+  border-left: none;
+  font-style: italic;
+  color: #666666;
+  font-size: 16px;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.application .item .chat-section .chat-box .timestamp {
+  color: #999999;
+  font-size: 13px;
+  margin-bottom: 0;
+}
+.application .item .chat-section .chat-box .timestamp a {
+  color: #999999;
+}
+.application .item .chat-section .chat-box .timestamp a:hover {
+  color: #808080;
+}
+/* ======= Standardized Header BG Page : based on "story" ======= */
+.content-section {
+  padding-top: 90px;
+  position: relative;
+  z-index: 10;
+}
+.content-section .title {
+  font-size: 36px;
+  margin-bottom: 60px;
+  margin-top: 0;
+  color: #fff;
+  font-weight: 300;
+}
+.content-section .content-container-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  text-align: left;
+}
+.content-section .about {
+  padding: 30px;
+}
+.content-section .message {
+  border-color: #f19180;
+  padding: 15px 30px;
+  font-family: 'Roboto slab', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 20px;
+  margin: 60px 30px;
+  color: #666666;
+}
+.content-section .section {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+.content-section .section .title {
+  color: #444444;
+  font-size: 28px;
+}
+.headline-bg.headline-sm .content-section {
+  padding-top: 10px;
+}
+.clear-bg {
+  background-color: #cccccc;
+  background-color: transparent;
+}
+.semi-bg {
+  background-color: #cccccc;
+  background-color: rgba(238, 238, 238, 0.4);
+}
+.opaque-bg {
+  background-color: #cccccc;
+  background-color: rgba(238, 238, 238, 0.9);
+}
+.blue-bg {
+  background-color: #0e2d4c;
+}
+.headline-bg {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 600px;
+  background: #253340 url('/modules/core/img/home-country-road.jpg') no-repeat fixed 0% 25%;
+  -moz-background-size: auto;
+  -o-background-size: auto;
+  background-size: auto;
+}
+.headline-bg > .overlay {
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(100%, rgba(0, 0, 0, 0.5)));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=0);
+  /* IE6-9 */
+  width: 100%;
+  height: 100%;
+}
+.headline-bg.headline-sm {
+  height: 200px;
+}
+.landing-page {
+  /* Intro Sections - EG: Examples; */
+}
+.landing-page .hero {
+  position: relative;
+  overflow: hidden;
+  background: url('/modules/core/img/home-country-road.jpg') no-repeat top fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 75%;
+  font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
+}
+.landing-page .hero .black_mask,
+.landing-page .hero .container-fluid {
+  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-size: cover;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.landing-page .hero .signup .btn {
+  padding: 10px 20px;
+  margin-top: 20px;
+  margin-bottom: 80px;
+  border-radius: 0;
+}
+.landing-page .section {
+  background-color: #FFF;
+  padding: 25px 0;
+  color: #333;
+  min-height: 25%;
+}
+.landing-page .section.subhero {
+  padding: 0 0;
+}
+.landing-page .section.subhero .container {
+  padding: 25px 0;
+}
+.landing-page .section .darken {
+  background-color: #f6f6f6!important;
+}
+.landing-page .section .three-cols h2 {
+  text-align: center;
+}
+.landing-page .section .three-cols .lead {
+  text-align: justify;
+}
+.landing-page .intro-break {
+  position: relative;
+  overflow: hidden;
+  background: url('/modules/core/img/phx_skyline.png') no-repeat center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 250px;
+  font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
+}
+.landing-page .brand-lead {
+  text-align: center;
+  position: relative;
+  top: 2em;
+}
+.landing-page .leader {
+  text-align: center;
+  position: relative;
+  top: 2em;
+  color: #fff;
+}
+.landing-page .leader h1 {
+  font-size: 64px;
+}
+.landing-page div.fade-blue {
+  background: url('/modules/core/img/fade-blue.png') repeat-x;
+}
+.landing-page div.fade-black {
+  background: url('/modules/core/img/fade-black.png') repeat-x;
+}
+.landing-page div.fade-white {
+  background: url('/modules/core/img/fade-white.png') repeat-x;
+}
+.landing-page div.section-fade {
+  height: 49px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.landing-page .intro-spacer {
+  float: left;
+  width: 200px;
+  border-top: 3px solid #e7e7e7;
+}
+.landing-page .img-responsive {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.landing-page .section-heading {
+  margin-bottom: 30px;
+}
+.landing-page .lead {
+  font-size: 18px;
+  font-weight: 400;
+}
+.landing-page img {
+  vertical-align: middle;
+}
+header.navbar {
+  background: #a1a1a1;
+  background: rgba(161, 161, 161, 0.4);
+}
+header.navbar .header-profile-image {
+  opacity: 0.8;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+header.navbar .open .header-profile-image,
+header.navbar a:hover .header-profile-image {
+  opacity: 1;
+}
+header.navbar .user-header-dropdown-toggle {
+  padding-top: 11px !important;
+  padding-bottom: 11px !important;
+}
+header.navbar .logo div.brand-img {
+  display: block;
+  height: 40px;
+  width: 144px;
+  position: relative;
+  top: -10px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+header.navbar .navbar-inverse .logo div.brand-img {
+  background: url('/modules/core/img/brand/logo-white.png') no-repeat;
+}
+header.navbar .navbar-default .logo div.brand-img {
+  background: url('/modules/core/img/brand/logo-blue.png') no-repeat;
+}
