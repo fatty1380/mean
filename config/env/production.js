@@ -36,5 +36,10 @@ module.exports = {
                 pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
             }
         }
+    },
+    braintree: {
+        MerchantId : process.env.BRAINTREE_MERCHANT_ID || 'BRAINTREE_MERCHANT_ID',
+        PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'BRAINTREE_PUBLIC_KEY',
+        PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || 'BRAINTREE_PRIVATE_KEY'
     }
 };
