@@ -1,15 +1,18 @@
-(function() {
+(function () {
     'use strict';
 
-    function JobListController (Jobs, $log, $state) {
+    function JobListController(Jobs, $log, $state, auth) {
         var dm = this;
 
         dm.limitTo = dm.limitTo || 10;
+        dm.filter = {'company': undefined};
+
+        dm.myJobsOnly = false;
 
         if (!dm.companyId && !dm.driverId && !dm.srcJobs) {
             $log.warn('[%s] should Specify a company or driver, or set srcJobs pre-load', 'JobListController');
 
-            if($state.includes('jobs')) {
+            if ($state.includes('jobs')) {
                 $log.error('[%s] Routing back to user\'s home page', 'JobListController');
                 $state.go('home');
             }
@@ -33,6 +36,32 @@
         } else {
             dm.jobs = [];
         }
+
+        dm.showMore = function () {
+            dm.limitTo += 10;
+        };
+
+        dm.toggleFilterMine = function () {
+            if ((dm.myJobsOnly = !dm.myJobsOnly)) {
+                dm.filter.company = { owner: auth.user._id };
+            }
+            else {
+                dm.filter.company = undefined;
+            }
+        };
+
+        dm.searchTermFilter = function(job) {
+            if(!dm.searchTerms) {
+                return true;
+            }
+
+            var terms = dm.searchTerms.split(' ');
+            var reg = new RegExp('(?=' + terms.join(')(?=') + ')');
+
+            job.searchText = job.searchText || [job.name, job.description, job.requirements].join(' ');
+
+            return reg.test(job.searchText);
+        };
     }
 
     function JobListDirective() {
@@ -47,7 +76,7 @@
                 driverId: '@?',
                 srcJobs: '=?',
                 showPost: '=?',
-                limitTo: '@?'
+                limitTo: '=?'
             },
             controller: JobListController,
             controllerAs: 'dm',
@@ -55,7 +84,7 @@
         };
     }
 
-    JobListController.$inject = ['Jobs', '$log', '$state'];
+    JobListController.$inject = ['Jobs', '$log', '$state', 'Authentication'];
 
     angular.module('jobs')
         .directive('osJobList', JobListDirective);

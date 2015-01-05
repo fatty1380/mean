@@ -1,25 +1,52 @@
-<section name="os-job-list.directive">
-    <div data-ng-class="{'panel panel-default': !!dm.header}">
+<section name="os-job-list.directive" class="jobs">
 
+    <div data-ng-class="{'panel panel-default': !!dm.header}">
         <div class="panel-heading" ng-if="!!dm.header">
             <div class="btn-group btn-group-sm pull-right">
                 <button ng-if="dm.showPost && !!dm.jobs.length" class="btn btn-primary"
                         ui-sref="jobs.create({companyId: dm.companyId})">Post Job
                 </button>
             </div>
-            <h4>{{dm.header}}</h4>
+            <h4>{{dm.header}} </h4>
+        </div>
+
+        <div class="panel panel-default search-section">
+            <form class="panel-body form-inline">
+                <label class="form-label" for="job-search">Search: </label>
+
+                <div class="form-group search">
+                    <input id="job-search" ng-model="dm.searchTerms" type="search"
+                           class="form-control job-search"
+                           ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 300, 'blur': 0 } }"
+                           placeholder="search terms ...">
+                </div>
+                <div class="form-group filter">
+                    <button type="button" class="btn btn-link" ng-click="dm.toggleFilterMine()">{{dm.myJobsOnly ?
+                        'clear' : 'Mine Only'}}
+                    </button>
+                </div>
+            </form>
         </div>
 
         <div ng-class="{'panel-body': !!dm.header}">
             <div class="list-group" ng-if="!!dm.jobs.length">
-                <a data-ng-repeat="job in dm.jobs | limitTo: dm.limitTo" data-ng-href="jobs/{{job._id}}"
+                <a data-ng-repeat="job in (dm.jobs | filter: dm.filter | filter: dm.searchTermFilter | limitTo: dm.limitTo)"
+                   data-ng-href="jobs/{{job._id}}"
                    class="list-group-item">
-                    <small>
-                        <os-job job="job" inline="true"></os-job>
-                    </small>
+                    <div class="row">
+                        <div class="col-sm-2 text-center">
+                            <img data-ng-src="{{job.company.profileImageURL}}" alt="{{message.username}}"
+                                 class="list-profile-image"/>
+                        </div>
+                        <div class="col-sm-10">
+                            <small>
+                                <os-job job="job" inline="true"></os-job>
+                            </small>
+                        </div>
+                    </div>
                 </a>
-                <button ng-show="dm.jobs.length > dm.limitTo" class="btn btn-link text-center"
-                        ui-sref="jobs.list({companyId: dm.companyId})">view all ...
+                <button ng-show="dm.jobs.length > dm.limitTo" class="btn btn-link text-center" ng-click="dm.showMore()">
+                    view more ...
                 </button>
             </div>
 
@@ -33,7 +60,6 @@
                     </button>
                     </span>
                 </p>
-
             </div>
         </div>
     </div>

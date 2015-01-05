@@ -1,28 +1,41 @@
 (function () {
     'use strict';
 
+    function handle404s(err, $q) {
+        // recover here if err is 404
+        if (err.status === 404) {
+            return null;
+        } //returning recovery
+        // otherwise return a $q.reject
+        return $q.reject(err);
+    }
+
     function companyResolve(rsrc, params, auth) {
+var promise;
+
         if (!!params.companyId) {
             var val = params.companyId;
             console.log('Searching for company ID: %s', val);
 
-            return rsrc.ById.get({
+            promise = rsrc.ById.get({
                 companyId: val
             }).$promise;
         } else if (!!params.jobId) {
             console.log('Not resolving company - find it in the job');
+            return null;
         } else if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
-            return rsrc.ByUser.get({
+            promise = rsrc.ByUser.get({
                 userId: params.userId
             }).$promise;
         } else {
             console.log('Searching for company data for logged in user');
-            return rsrc.ByUser.get({
+            promise = rsrc.ByUser.get({
                 userId: auth.user._id
             }).$promise;
         }
-        return {};
+
+        return promise.catch(handle404s);
     }
 
     function jobResolve(rsrc, params) {
@@ -31,20 +44,30 @@
 
         return !!val ? rsrc.ById.get({
             jobId: val
-        }).$promise : null;
+        }).$promise.catch(handle404s) : null;
     }
 
     function listUserResolve(rsrc, params, auth) {
+        var promise;
+
         if (auth.user && auth.user.type === 'owner') {
-            return rsrc.ByUser.query({
+            promise = rsrc.ByUser.query({
                 userId: auth.user._id,
                 companyId: params.companyId
             }).$promise;
         } else if (auth.user) {
-            return rsrc.ById.query().$promise;
+            promise = rsrc.ByUser.query({
+                userId: auth.user._id
+            }).$promise;
         } else {
             return [];
         }
+
+        return promise.catch(handle404s);
+    }
+
+    function listAllResolve(rsrc) {
+        return rsrc.ById.query().$promise;
     }
 
     function config($stateProvider) {
@@ -73,7 +96,7 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    jobs: listUserResolve
+                    jobs: listAllResolve
                 },
                 parent: 'jobs'
             }).
@@ -139,6 +162,7 @@
     companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
     jobResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
     listUserResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
+    listAllResolve.$inject = ['Jobs'];
     config.$inject = ['$stateProvider'];
 
     //Setting up route
