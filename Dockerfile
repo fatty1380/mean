@@ -15,7 +15,7 @@ RUN npm install
 RUN bower install --config.interactive=false --allow-root
 
 ENV NODE_ENV production
-ENV DB_1_PORT_27017_TCP_ADDReb "172.31.7.158"
+ENV DB_1_PORT_27017_TCP_ADDR "172.31.7.158"
 ENV GOOGLE_ANALYTICS_TRACKING_ID "UA-52626400-1"
 
 ENV MAILER_FROM "Outset <info@joinoutset.com>"
