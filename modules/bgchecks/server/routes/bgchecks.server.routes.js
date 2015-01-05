@@ -64,12 +64,12 @@ module.exports = function (app) {
 
     /** REPORTS --------------------------------------- */
     app.route('/api/reports')
-        .get(bgchecks.report.applicantStatus) // Get status of all reports for applicant
-        .post(bgchecks.report.create); // Create a new report
+        .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // Get status of all reports for applicant
+        .post(bgchecks.applicant.get, bgchecks.report.create); // Create a new report
 
     app.route('/api/users/:userId/reports')
-        .get(bgchecks.report.applicantStatus) // get status of all reports for applicant
-        .post(bgchecks.report.create); // create a new report
+        .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // get status of all reports for applicant
+        .post(bgchecks.applicant.get, bgchecks.report.create); // create a new report
 
     app.route('/api/reports/:reportId')
         .get(bgchecks.report.get) // Get the results of a report - maybe update if not complete?

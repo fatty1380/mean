@@ -257,8 +257,6 @@ function readHandler(req, res, name, value) {
 /** ----------------------------------------------------- **/
 function UpdateReportDefinitionsFromServer(req, res, next) {
 
-    var skus = [''];
-
     everifile.GetSession().then(
         function (session) {
             everifile.GetReportTypeDefinitions(session, true, true).then(
@@ -622,9 +620,11 @@ function CreateNewReport(req, res, next) {
 
 }
 function CheckApplicantReportStatus(req, res, next) {
+    var remoteId = req.applicantId;
+
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, bgcheck).then(
+            everifile.RunReport(session, remoteId).then(
                 function (bgReport) {
 
                 }
@@ -636,9 +636,11 @@ function CheckApplicantReportStatus(req, res, next) {
         });
 }
 function CheckReportStatus(req, res, next) {
+    var remoteId = req.reportId;
+
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, bgcheck).then(
+            everifile.RunReport(session, remoteId).then(
                 function (bgReport) {
 
                 }
@@ -650,9 +652,11 @@ function CheckReportStatus(req, res, next) {
         });
 }
 function GetReportData(req, res, next) {
+    var remoteId = req.reportId;
+
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, bgcheck).then(
+            everifile.RunReport(session, remoteId).then(
                 function (bgReport) {
 
                 }
@@ -664,9 +668,11 @@ function GetReportData(req, res, next) {
         });
 }
 function LoadPDFData(req, res, next) {
+    var remoteId = req.applicantId;
+
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, bgcheck).then(
+            everifile.RunReport(session, remoteId).then(
                 function (bgReport) {
 
                 }

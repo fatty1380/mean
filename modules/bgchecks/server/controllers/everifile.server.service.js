@@ -9,7 +9,7 @@ ReportType      = mongoose.model('ReportType'),
 ReportApplicant = mongoose.model('ReportApplicant'),
 unirest         = require('unirest'),
 Q               = require('q'),
-moment          = require('moment'),
+//moment          = require('moment'),
 _               = require('lodash');
 
 
@@ -35,7 +35,9 @@ exports.CreateApplicant = CreateApplicant;
 exports.RunReport = RunReport;
 exports.GetReportStatus = GetReportStatus;
 exports.GetReportStatusByApplicant = GetReportStatusByApplicant;
-exports.GetPdfReport = function () { throw new Error('Not Implemented'); };
+exports.GetPdfReport = function () {
+    throw new Error('Not Implemented');
+};
 exports.GetSummaryReportPDF = GetSummaryReportPDF;
 exports.GetRawReport = GetRawReport;
 
@@ -192,6 +194,10 @@ function GetReportTypeDefinitions(cookie, filter, enable) {
 }
 
 /** PRIVATE : Report Definitions ---------------------------------------------------- */
+
+function filterBySku(reportTypeData) {
+    return enabledSKUs.indexOf(reportTypeData.sku.toUpperCase()) >= 0;
+}
 
 function updateReportFields(reportTypes, cookieJar) {
     console.log('[updateReportFields] updating %d report types', reportTypes.length);
@@ -415,7 +421,7 @@ function GetReportStatus(cookie, remoteId) {
 
     var deferred = Q.defer();
 
-    unirest.get(baseUrl + '/rest/reportCheck/' + id)
+    unirest.get(baseUrl + '/rest/reportCheck/' + remoteId)
         .jar(cookie.jar)
         .end(function (response) {
             console.log(response.body);
@@ -426,12 +432,7 @@ function GetReportStatus(cookie, remoteId) {
 
             var reportCheck = response.body.reportCheckStatus;
 
-            if (reportCheck.status.toUpperCase() === 'COMPLETED') {
-                req.reportCheck = response.body;
-                next();
-            } else {
-                res.jsonp(reportCheck);
-            }
+            deferred.resolve(response.body);
         });
 
     return deferred.promise;
@@ -452,12 +453,8 @@ function GetReportStatusByApplicant(cookie, applicantId) {
 
             var reportCheck = response.body.reportCheckStatus;
 
-            if (reportCheck.status.toUpperCase() === 'COMPLETED') {
-                req.reportCheck = response.body;
-                next();
-            } else {
-                res.jsonp(reportCheck);
-            }
+
+            deferred.resolve(response.body);
         });
 
     return deferred.promise;
@@ -495,7 +492,7 @@ function GetRawReport(cookie, bgReport) {
                 deferred.reject(response.body.reason);
             }
 
-            res.jsonp(response.body);
+            deferred.resolve(response.body);
         });
 
     return deferred.promise;
