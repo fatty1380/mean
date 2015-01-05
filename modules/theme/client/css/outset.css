@@ -273,55 +273,111 @@ body {
 .headline-bg.headline-sm {
   height: 200px;
 }
-.landing-page {
-  /* Intro Sections - EG: Examples; */
+.bg-slider-wrapper {
+  height: 75%;
 }
-.landing-page .hero {
-  position: relative;
-  overflow: hidden;
-  background: url('/modules/core/img/home-country-road.jpg') no-repeat top fixed;
+.bg-slider-wrapper .flexslider {
+  margin: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.bg-slider-wrapper .flexslider .slide {
+  display: block;
+  height: 780px;
+}
+.bg-slider-wrapper .flexslider .slide.slide-1 {
+  background: #253340 url('/modules/core/img/home-country-road.jpg') no-repeat 50% top !important;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  height: 75%;
-  font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
 }
-.landing-page .hero .black_mask,
-.landing-page .hero .container-fluid {
+.bg-slider-wrapper .black_mask {
   background-color: transparent;
   background-color: rgba(0, 0, 0, 0.5);
   background-size: cover;
   position: relative;
   width: 100%;
   height: 100%;
+  z-index: 3;
 }
-.landing-page .hero .signup .btn {
-  padding: 10px 20px;
-  margin-top: 20px;
+.landing-page {
+  /* Intro Sections - EG: Examples; */
+}
+.landing-page .promo {
+  padding-top: 80px;
+  position: relative;
+  color: #fff;
   margin-bottom: 80px;
-  border-radius: 0;
+  height: 75%;
+  z-index: 10;
 }
-.landing-page .section {
+.landing-page .promo .title {
+  margin-top: 20px;
+}
+.landing-page .promo.section .intro {
+  color: #f5f5f5;
+}
+.landing-page .promo .btn-cta {
+  font-size: 18px;
+}
+.landing-page .promo .btn-link {
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  -webkit-opacity: 0.7;
+  -moz-opacity: 0.7;
+  opacity: 0.7;
+  text-decoration: none;
+}
+.landing-page .promo .btn-link:hover {
+  -webkit-opacity: 1;
+  -moz-opacity: 1;
+  opacity: 1;
+  text-decoration: none;
+}
+.landing-page .promo .btn-link:focus {
+  outline: none;
+}
+.landing-page .promo .btn-link .fa {
+  margin-right: 5px;
+  font-size: 18px;
+  position: relative;
+  top: 2px;
+}
+.landing-page .sections-wrapper .section {
   background-color: #FFF;
   padding: 25px 0;
-  color: #333;
   min-height: 25%;
 }
-.landing-page .section.subhero {
+.landing-page .sections-wrapper .section.subhero {
   padding: 0 0;
 }
-.landing-page .section.subhero .container {
+.landing-page .sections-wrapper .section.subhero .container {
   padding: 25px 0;
 }
-.landing-page .section .darken {
-  background-color: #f6f6f6!important;
+.landing-page .sections-wrapper .section .darken {
+  background-color: #f6f6f6 !important;
 }
-.landing-page .section .three-cols h2 {
+.landing-page .sections-wrapper .section .three-cols h2 {
   text-align: center;
 }
-.landing-page .section .three-cols .lead {
+.landing-page .sections-wrapper .section .three-cols .lead {
   text-align: justify;
+}
+.landing-page .sections-wrapper .section .three-cols .col-md-4 > p {
+  padding: 0 15px;
 }
 .landing-page .intro-break {
   position: relative;
@@ -332,7 +388,6 @@ body {
   -o-background-size: cover;
   background-size: cover;
   height: 250px;
-  font-family: 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
 }
 .landing-page .brand-lead {
   text-align: center;
@@ -383,6 +438,34 @@ body {
 .landing-page img {
   vertical-align: middle;
 }
+i.fa.fa-stack-1x.text-primary {
+  top: -4px;
+}
+h1.logo a {
+  max-width: 200px !important;
+}
+h1.logo a img {
+  padding: 0 10px;
+  margin: 0 10px;
+}
+h1.logo .logo-title {
+  vertical-align: middle;
+  line-height: 1.6;
+  min-height: 40px;
+  min-width: 140px;
+}
+header.header h1.logo a {
+  background: #0e2d4c;
+}
+header.header h1.logo .logo-title {
+  background: url('/modules/core/img/brand/logo-white.png') no-repeat center;
+}
+header.header.navbar-fixed-top h1.logo a {
+  background: #FFF;
+}
+header.header.navbar-fixed-top h1.logo .logo-title {
+  background: url('/modules/core/img/brand/logo-blue.png') no-repeat center !important;
+}
 header.navbar {
   background: #a1a1a1;
   background: rgba(161, 161, 161, 0.4);
@@ -401,21 +484,4 @@ header.navbar a:hover .header-profile-image {
 header.navbar .user-header-dropdown-toggle {
   padding-top: 11px !important;
   padding-bottom: 11px !important;
-}
-header.navbar .logo div.brand-img {
-  display: block;
-  height: 40px;
-  width: 144px;
-  position: relative;
-  top: -10px;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-header.navbar .navbar-inverse .logo div.brand-img {
-  background: url('/modules/core/img/brand/logo-white.png') no-repeat;
-}
-header.navbar .navbar-default .logo div.brand-img {
-  background: url('/modules/core/img/brand/logo-blue.png') no-repeat;
 }

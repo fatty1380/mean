@@ -1,28 +1,26 @@
 <section data-ng-controller="HomeController" class="home landing-page">
 
-    <header class="hero">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="brand-lead col-xs-12">
-                    <img src="/modules/core/img/brand/title_white.png"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="leader col-sm-8 col-sm-offset-2 col-xs-12">
-                    <h1>Transportation Hiring</h1>
-
-                    <h2>The best way to find and fill transportation jobs</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="leader col-sm-8 col-sm-offset-2 col-xs-12">
-                    <signup-modal class="signup">
-                        <button class="btn btn-success btn-large center-block" signup-modal>Sign Up Today</button>
-                    </signup-modal>
-                </div>
-            </div>
+    <div class="bg-slider-wrapper">
+        <div class="flexslider bg-slider">
+            <div class="slide slide-1 flex-active-slide"
+                 style="width: 100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;"></div>
         </div>
-    </header>
+        <div class="black_mask container-fluid"></div>
+    </div>
+
+    <section class="promo section section-on-bg">
+        <div class="container text-center">
+            <div class="brand-lead ">
+                <img src="/modules/core/img/brand/title_white.png"/>
+            </div>
+            <h2 class="title">Transportation Hiring</h2>
+
+            <p class="intro">The best way to find and fill transportation jobs</p>
+
+            <p><a class="btn btn-cta btn-cta-primary" signup-modal>Sign Up Today</a></p>
+        </div>
+        <!--//container-->
+    </section>
 
     <div class="sections-wrapper">
 
@@ -32,9 +30,10 @@
                 <div class="container">
                     <div class="row three-cols">
                         <div class="col-md-4">
-                            <h2 class="section-heading">Transportation Focused Hiring</h2>
+                            <h2 class="section-heading">Transportation Focused</h2>
 
-                            <p class="lead">The hiring website designed specifically for the Transporation Industry. Driver
+                            <p class="lead">The hiring website designed specifically for the Transporation Industry.
+                                Driver
                                 and
                                 Employer information is consolidated all in one place.</p>
                         </div>
@@ -65,16 +64,16 @@
                         <div class="col-md-4">
                             <p class="text-center">
                         <span class="fa-stack fa-4x">
-                          <i class="fa fa-square-o fa-stack-2x"></i>
-                          <i class="fa fa-car fa-stack-1x"></i>
+                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
+                          <i class="fa fa-car fa-stack-1x text-primary"></i>
                         </span>
                             </p>
                         </div>
                         <div class="col-md-4">
                             <p class="text-center">
                         <span class="fa-stack fa-4x">
-                          <i class="fa fa-square-o fa-stack-2x"></i>
-                          <i class="fa fa-users fa-stack-1x"></i>
+                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
+                          <i class="fa fa-users fa-stack-1x text-primary"></i>
                         </span>
                             </p>
                         </div>
@@ -89,8 +88,6 @@
             <div class="container">
                 <h2 class="title text-center">How Can Outset Help You?</h2>
 
-                <p class="intro text-center">Whether you are a driver, an owner-operator or a transportation employer, our marketplace will help you find and fill jobs more quickly.</p>
-
                 <div class="row item">
                     <div class="content col-md-4 col-sm-12 col-xs-12">
                         <h3 class="title">Transportation Focused</h3>
@@ -98,15 +95,19 @@
                         <div class="desc">
                             <p>A hiring website designed specifically and ideally for the Transportation industry.</p>
 
-                            <p>Pairing a community of qualified drivers, with transparent information and top quality driving jobs.
-                             Outset is taking the pain out of transportation hiring by allowing drivers to make their applications more competative by provifing additional upfront information to prospective employers.</p>
+                            <p>Pairing a community of qualified drivers, with transparent information and top quality
+                                driving jobs.
+                                Outset is taking the pain out of transportation hiring by allowing drivers to make their
+                                applications more competative by provifing additional upfront information to prospective
+                                employers.</p>
                         </div>
                     </div>
                     <!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
-                        <img class="img-responsive" src="/modules/theme/images/figures/figure-1.png" alt="">
-                        <figcaption class="figure-caption">(Screenshot: Coral - App &amp; website startup kit)
-                        </figcaption>
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0"
+                            fit-vids>
+                        <iframe class="image-responsive video-container" width="853" height="480"
+                                src="//www.youtube.com/embed/Pwxa7Qeb-70?controls=0&amp;showinfo=0" frameborder="0"
+                                allowfullscreen></iframe>
                     </figure>
                 </div>
                 <!--//item-->
@@ -118,21 +119,21 @@
                         <div class="desc">
                             <p>Manage your Reputation and Driving Career.</p>
 
-                            <p>Create a comprehensive driver profile including your driving experience, qualifications & reports. 
-                            Give yourself a competitive advantage by hosting a Background Check, MVR and Drug Test in your profile. 
-                            Use the reports over and over when applying, and share with as many employers as you like through our secure system. </p>
+                            <p>Create a comprehensive driver profile including your driving experience, qualifications &
+                                reports.
+                                Give yourself a competitive advantage by hosting a Background Check, MVR and Drug Test
+                                in your profile.
+                                Use the reports over and over when applying, and share with as many employers as you
+                                like through our secure system. </p>
 
-                            <p class="text-center"><a class="btn btn-cta btn-cta-secondary" signup-modal signup-type="driver">Create your Driver Profile Now!</a></p>
+                            <p class="text-center"><a class="btn btn-cta btn-cta-secondary" signup-modal
+                                                      signup-type="driver">Create your Driver Profile Now!</a></p>
                         </div>
                     </div>
                     <!--//content-->
                     <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
                         <img class="img-responsive" src="/modules/theme/images/figures/figure-2.png" alt="">
 
-                        <div class="control text-center">
-                            <button type="button" class="play-trigger" data-toggle="modal" data-target="#modal-video"
-                                    data-backdrop="static" data-keyboard="false"><i class="fa fa-play"></i></button>
-                        </div>
                         <!--//control-->
                     </figure>
                 </div>
@@ -145,129 +146,38 @@
                         <div class="desc">
                             <p>Take the guess work out of your driver hiring. </p>
 
-                            <p>Post jobs seamlessly, and manage the entire hiring process through your account. Review applicant’s Backgrounds and MVR’s before the interview. 
-                            Have confidence in your hiring process with access to more information upfront and only hire the best.</p>
+                            <p>Post jobs seamlessly, and manage the entire hiring process through your account. Review
+                                applicant’s Backgrounds and MVR’s before the interview.
+                                Have confidence in your hiring process with access to more information upfront and only
+                                hire the best.</p>
 
-                            <p class="text-center"><a class="btn btn-cta btn-cta-secondary" signup-modal signup-type="owner">Post your First Job Now!</a></p>
+                            <p class="text-center"><a class="btn btn-cta btn-cta-secondary" signup-modal
+                                                      signup-type="owner">Post your First Job Now!</a></p>
 
                         </div>
                     </div>
                     <!--//content-->
                     <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
                         <img class="img-responsive" src="/modules/theme/images/figures/figure-3.png" alt="">
-                        <figcaption class="figure-caption">(Screenshot: <a
-                                href="http://themes.3rdwavemedia.com/website-templates/responsive-bootstrap-theme-for-startups-tempo/?ref=3wm"
-                                target="_blank">Tempo - Bootstrap template for startups)</a></figcaption>
-
                     </figure>
                 </div>
                 <!--//item-->
-
-
-                <div class="feature-lead text-center">
-                    <h4 class="title">Want to discover all the features?</h4>
-
-                    <p><a class="btn btn-cta btn-cta-secondary" href="features.html">Take a Tour</a></p>
-                </div>
             </div>
             <!--//container-->
         </section>
         <!--//why-->
 
-        <!-- ******Testimonials Section****** -->
-        <section class="section testimonials">
-            <div class="container">
-                <h2 class="title text-center">Want to try Outset for yourself?</h2>
-
-                <div id="testimonials-carousel" class="carousel slide" data-ride="carousel">
-                    <ol class="carousel-indicators">
-                        <li data-target="#testimonials-carousel" data-slide-to="0" class=""></li>
-                        <li data-target="#testimonials-carousel" data-slide-to="1" class="active"></li>
-                        <li data-target="#testimonials-carousel" data-slide-to="2" class=""></li>
-                    </ol>
-                    <!--//carousel-indicators-->
-                    <div class="carousel-inner">
-                        <div class="item">
-                            <figure class="profile"><img src="/modules/theme/images/people/profile-m-1.png" alt="">
-                            </figure>
-                            <div class="content">
-                                <blockquote>
-                                    <i class="fa fa-quote-left"></i>
-
-                                    <p>We used Velocity as a front-end design template for our product site. Lorem ipsum
-                                        dolor sit amet, consectetur adipiscing elit. Vestibulum elit tortor, consectetur
-                                        vitae varius at, interdum eget libero. Morbi.</p>
-                                </blockquote>
-                                <p class="source">Kevin Knight<br><span class="title">Co-Founder, Startup Hub</span></p>
-                            </div>
-                            <!--//content-->
-                        </div>
-                        <!--//item-->
-                        <div class="item active">
-                            <figure class="profile"><img src="/modules/theme/images/people/profile-m-2.png" alt="">
-                            </figure>
-                            <div class="content">
-                                <blockquote>
-                                    <i class="fa fa-quote-left"></i>
-
-                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
-                                        praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias
-                                        excepturi sint.</p>
-                                </blockquote>
-                                <p class="source">Diana Luna<br><span class="title">Entrepreneur, Maecenas</span></p>
-                            </div>
-                            <!--//content-->
-                        </div>
-                        <!--//item-->
-                        <div class="item">
-                            <figure class="profile"><img src="/modules/theme/images/people/profile-m-3.png" alt="">
-                            </figure>
-                            <div class="content">
-                                <blockquote>
-                                    <i class="fa fa-quote-left"></i>
-
-                                    <p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum
-                                        soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime
-                                        placeat facere.</p>
-                                </blockquote>
-                                <p class="source">Tony Lee<br><span class="title">CTO, Lorem Ipsum</span></p>
-                            </div>
-                            <!--//content-->
-                        </div>
-                        <!--//item-->
-                    </div>
-                    <!--//carousel-inner-->
-
-                </div>
-                <!--//carousel-->
-            </div>
-            <!--//container-->
-        </section>
-        <!--//testimonials-->
-
         <!-- ******CTA Section****** -->
         <section id="cta-section" class="section cta-section text-center home-cta-section">
             <div class="container">
-                <h2 class="title">Ready to promote your product online?</h2>
+                <h2 class="title text-center">Ready to try Outset for yourself?</h2>
 
-                <p class="intro">More than <span class="counting">300,000</span> users are using Velocity</p>
-
-                <p><a class="btn btn-cta btn-cta-primary"
-                      href="http://themes.3rdwavemedia.com/website-templates/responsive-bootstrap-theme-for-products-velocity/"
-                      target="_blank">Get Velocity Now</a></p>
+                <p><a class="btn btn-cta btn-cta-primary" signup-modal>Click here to sign up!</a></p>
             </div>
             <!--//container-->
         </section>
         <!--//cta-section-->
 
-    </div>
-
-    <div class="intro-break"></div>
-
-    <div class="intro-section darken">
-        <div class="container vcenter">
-            <h3>Contact Us</h3>
-        </div>
     </div>
 
 </section>
