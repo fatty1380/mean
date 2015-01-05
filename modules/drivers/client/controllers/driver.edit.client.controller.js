@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     // Drivers controller
@@ -20,8 +20,10 @@
             licenses: [{}]
         };
 
+
+
         function activate() {
-            debugger;
+
             if ($state.is('drivers.create')) {
                 if (!!vm.driver._id) {
                     $state.go('drivers.edit', {driverId: vm.driver._id});
@@ -29,13 +31,12 @@
             }
         }
 
-        function submit(isValid, data) {
-            if (!isValid) {
-                vm.error = 'Please fill in required fields';
+        function submit() {
+            if (vm.driverForm.$invalid) {
+                debugger;
+                vm.error = vm.driverForm.$error;
                 return;
             }
-
-            console.log('Got the following form data: %j', data);
 
             if ($state.is('drivers.create')) {
                 return vm.create();
@@ -55,7 +56,7 @@
             }
 
             // TODO: determine if this is necessary on the client side or if it is better handled on the server
-            angular.forEach(vm.driver.experience, function(exp, i) {
+            angular.forEach(vm.driver.experience, function (exp, i) {
                 var start = new Date(exp.time.start.year, exp.time.start.month - 1);
                 var end = new Date(exp.time.end.year, exp.time.end.month - 1);
 
@@ -73,22 +74,26 @@
             var driver = new Drivers.ById(vm.driver);
 
             // Redirect after save
-            driver.$save(function(response) {
+            driver.$save(function (response) {
                 $log.debug('Successfully created new Driver');
                 $state.go('drivers.view', {
                     driverId: response._id
                 });
-            }, function(errorResponse) {
+            }, function (errorResponse) {
                 vm.error = errorResponse.data.message;
             });
         }
 
         // Update existing Driver
         function update() {
+            if(vm.driverForm.$pristine) {
+                $state.go('drivers.home');
+            }
+
             var driver = vm.driver;
 
-            driver.$update(function(response) {
-                debugger;
+            driver.$update(function (response) {
+
                 if (response.user._id === vm.user._id) {
                     $state.go('drivers.home');
                 } else {
@@ -96,7 +101,7 @@
                         driverId: response._id
                     });
                 }
-            }, function(errorResponse) {
+            }, function (errorResponse) {
                 vm.error = errorResponse.data.message;
             });
         }

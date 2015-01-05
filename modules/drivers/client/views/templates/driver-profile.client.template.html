@@ -19,11 +19,7 @@
 
     <div class="row col-sm-12">
         <label>Location:</label>
-        <span class="text-danger">TODO: Directivize</span>
-        <address ng-show="vm.driver.user.addresses.length > 0" ng-repeat="address in vm.driver.user.addresses">
-            <strong>{{address.type}} [{{$index+1}} of {{vm.driver.user.addresses.length}}]</strong>
-            <br/> {{address.city}}, {{address.state}} {{address.zipCode}}
-        </address>
+        <os-address-list models="vm.driver.user.addresses" can-edit="false"></os-address-list>
 
         <p ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">No Address on File</p>
     </div>

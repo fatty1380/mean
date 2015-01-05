@@ -1,12 +1,14 @@
 <section class="experience">
-    <section class="edit" ng-show="expctrl.editMode">
+    <ng-form name="experienceForm" class="edit" ng-show="expctrl.editMode">
         <div class="row">
             <label class="col-sm-2 control-label">Title
                 <br/>
                 <small>Your title at this position</small>
             </label>
+
             <div class="controls col-sm-9 controls">
-                <input type="text" data-ng-model="expctrl.model.title" class="form-control" placeholder="Short Title" required></input>
+                <input type="text" data-ng-model="expctrl.model.title" class="form-control" placeholder="Short Title"
+                       required/>
             </div>
         </div>
 
@@ -15,68 +17,48 @@
                 <br/>
                 <small>Describe your experience</small>
             </label>
+
             <div class="controls col-sm-9 controls">
-                <os-html-edit model="expctrl.model.description"></os-html-edit>
+                <textarea name="description" class="form-control" data-ng-model="expctrl.model.description"
+                          rows="3"></textarea>
+                <!--<os-html-edit model="expctrl.model.description"></os-html-edit>-->
             </div>
         </div>
 
-        <div class="row">
+        <ng-form class="form-inline row">
 
-            <label class="col-sm-2 control-label">Time
-                <br/>
+            <label class="col-sm-2 control-label">
                 <small>when were you at this job</small>
             </label>
 
-            <label class="col-sm-1 control-label">Start</label>
-            <div class="col-sm-3 controls">
-                <div class="input-group">
-                    <div class="input-group-btn">
-                        <div class="btn-group" dropdown is-open="status.start.isopen">
-                            <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="disabled">
-                                {{months[expctrl .model.time.start.month-1].value || "Month"}}
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li ng-repeat="currMonth in months" ng-click="expctrl.model.time.start.month = currMonth.key">
-                                    <a>{{currMonth.value}}</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <input type="text" data-ng-model="expctrl.model.time.start.year" class="form-control" placeholder="year (eg: 2013)" required></input>
-                </div>
+            <div class="form-group col-sm-4">
+                <label class="control-label text-right col-sm-4">Start</label>
+
+                    <input type="text" data-ng-model="expctrl.model.time.start" class="form-control"
+                           placeholder="Month, Year" required></input>
             </div>
 
-            <label class="col-sm-1 control-label">End</label>
-            <div class="col-sm-3 controls">
-                <div class="input-group">
-                    <div class="input-group-btn">
-                        <div class="btn-group" dropdown is-open="status.end.isopen">
-                            <button type="button" class="btn btn-default dropdown-toggle" ng-disabled="disabled">
-                                {{months[expctrl.model.time.end.month-1].value || "Month"}}
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li ng-repeat="currMonth in months" ng-click="expctrl.model.time.end.month = currMonth.key">
-                                    <a>{{currMonth.value}}</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <input type="text" data-ng-model="expctrl.model.time.end.year" class="form-control" placeholder="year (eg: 2013)" />
-                </div>
+            <div class="form-group col-sm-4">
+                <label class="control-label text-right col-sm-4">to</label>
+
+                    <input type="text" data-ng-model="expctrl.model.time.end" class="form-control"
+                           placeholder="Month, Year"/>
             </div>
-        </div>
+            <div class="form-group col-sm-2"></div>
+        </ng-form>
 
         <div class="row">
-            <label class="col-sm-2 control-label">Location
-                <br/>
+            <label class="col-sm-2 control-label">
                 <small>Where was this job?</small>
             </label>
+
             <div class="col-md-9 controls">
-                <input type="text" data-ng-model="expctrl.model.location" class="form-control" placeholder="Where" required />
+                <input type="text" data-ng-model="expctrl.model.location" class="form-control" placeholder="Where"
+                       required/>
             </div>
         </div>
+
+        <div class="clearfix"></div>
 
         <div class="row">
             <div class="col-sm-11">
@@ -96,12 +78,18 @@
             </div>
         </div>
 
-    </section>
+    </ng-form>
 
     <section class="experience view" ng-hide="expctrl.editMode">
         <div class="row">
-            <h4>{{expctrl.model.title}} <small ng-if="expctrl.editEnable"><button class="btn btn-link" ng-click="expctrl.edit()"><i class="fa fa-pencil"></i> edit</button></small></h4>
+            <h4>{{expctrl.model.title}}
+                <small ng-if="expctrl.editEnable">
+                    <button class="btn btn-link" ng-click="expctrl.edit()"><i class="fa fa-pencil"></i> edit</button>
+                </small>
+            </h4>
             <p data-ng-bind-html="expctrl.model.description"></p>
-            <p>{{expctrl.model.time.start.month}}/{{expctrl.model.time.start.year}} to {{expctrl.model.time.end.month}}/{{expctrl.model.time.end.year}}, {{expctrl.model.location}}</p>
+
+            <p>{{expctrl.model.time.start.month}}/{{expctrl.model.time.start.year}} to
+                {{expctrl.model.time.end.month}}/{{expctrl.model.time.end.year}}, {{expctrl.model.location}}</p>
     </section>
 </section>

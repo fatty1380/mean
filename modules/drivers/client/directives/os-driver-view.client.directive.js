@@ -1,6 +1,19 @@
 (function() {
     'use strict';
 
+    var simpleController = function(auth) {
+        var vm = this;
+        vm.auth = auth;
+
+        vm.canEdit = function(user) {
+            user = user || vm.driver.user;
+
+            return vm.auth.user._id === user._id;
+        };
+    };
+
+    simpleController.$inject = ['Authentication'];
+
     function OsDriverView() {
         return {
             priority: 0,
@@ -11,9 +24,7 @@
             scope: {
                 driver: '=model'
             },
-            controller: function() {
-                var vm = this;
-            },
+            controller: simpleController,
             controllerAs: 'vm',
             bindToController: true
         };

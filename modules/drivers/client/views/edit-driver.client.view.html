@@ -4,11 +4,13 @@
             <h1>{{vm.action}} Driver Profile for {{(vm.driver.user || vm.user).displayName}}</h1>
         </div>
         <div class="driver create">
-            <form name="vm.driverForm" class="form-horizontal" data-ng-submit="vm.submit(this.$valid)" novalidate>
+            <form name="vm.driverForm" class="form-horizontal" data-ng-submit="vm.submit(this, this.data)" novalidate>
                 <fieldset>
 
                     <!-- Biography -->
-                    <h3>Background <small>Include an introduction to yourself here to help employers know who you are</small></h3>
+                    <h3>Background
+                        <small>Include an introduction to yourself here to help employers know who you are</small>
+                    </h3>
                     <div class="container-fluid well">
                         <div class="row profile-row">
                             <div class="col-sm-12">
@@ -18,125 +20,31 @@
                     </div>
 
                     <!-- Driver's License Information -->
-                    <h3>Driver's License <small>This information will improve the visibility of your profile and will not be shared without your permission</h3>
+                    <h3>Driver's License
+                        <small>This information will improve the visibility of your profile and will not be shared
+                            without your permission</small>
+                    </h3>
 
-                    <div class="container-fluid well">
-                        <div class="row profile-row">
-                            <div class="col-sm-5">
-                                <div class="form-group row">
-                                    <label class="col-sm-6 control-label">State
-                                        <br/>
-                                        <small>The state which issued the license</small>
-                                    </label>
-                                    <div class="controls col-sm-6" syle>
-                                        <select class="form-control" data-ng-model="vm.driver.licenses[0].state">
-                                            <option value="AZ">AZ</option>
-                                            <option value="CA">CA</option>
-                                            <option value="NV">NV</option>
-                                            <option value="------">------</option>
-                                            <option value="-more-">-more-</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-
-                                    <label class="col-sm-6 control-label">DL Number
-                                        <br/>
-                                        <small>The license ID Number</small>
-                                    </label>
-                                    <div class="controls col-sm-6">
-                                        <input type="text" data-ng-model="vm.driver.licenses[0].number" class="form-control" placeholder="eg: A1298702" required></input>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-
-                                    <label class="col-sm-6 control-label">Issued
-                                        <br/>
-                                        <small>The date your license was issued</small>
-                                    </label>
-                                    <div class="controls col-sm-6">
-                                        <os-date-picker dp-class="margin-bottom-sm" model="vm.driver.licenses[0].issued" required="false"></os-date-picker>
-                                    </div>
-
-                                </div>
-
-                                <div class="row">
-                                    <label class="col-sm-6 control-label">Expiration
-                                        <br/>
-                                        <small>The date your license expires</small>
-                                    </label>
-                                    <div class="controls col-sm-6">
-                                        <os-date-picker dp-class="margin-bottom-sm" model="vm.driver.licenses[0].expires" required="false"></os-date-picker>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <label class="col-sm-6 control-label">Date of Birth
-                                        <br/>
-                                        <small>Your birthdate</small>
-                                    </label>
-                                    <div class="controls col-sm-6">
-                                        <os-date-picker dp-class="margin-bottom-sm" model="vm.driver.licenses[0].dateOfBirth" required="false"></os-date-picker>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-6 control-label">License Type
-                                        <br/>
-                                        <small>is this a commercial or standard license</small>
-                                    </label>
-                                    <div class="controls col-sm-6">
-                                        <select class="form-control" data-ng-model="vm.driver.licenses[0].type">
-                                            <option>Standard</option>
-                                            <option>Commercial</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <label class="col-sm-6 control-label">Class Rating
-                                        <br/>
-                                        <small>the license class rating</small>
-                                    </label>
-                                    <div class="controls col-sm-6">
-                                        <div class="btn-group">
-                                            <label ng-repeat="val in ratings" class="btn btn-primary btn-sm" ng-model="vm.driver.licenses[0].rating" btn-radio="val">{{val}}</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <label class="col-sm-6 control-label">Endorsements
-
-                                        <br/>
-                                        <small>any endorsements on the license</small>
-                                    </label>
-                                    <div class="controls col-sm-6">
-                                        <div class="btn-group btn-group-vertical">
-                                            <label ng-repeat="endorsement in vm.driver.licenses[0].endorsements" class="btn btn-primary btn-md pull-left" ng-model="endorsement.value" btn-checkbox>{{endorsement.key}}
-                                                <span data-ng-show="endorsement.value" class="fa fa-check-circle pull-left"></span>
-                                                <span data-ng-hide="endorsement.value" class="fa fa-circle-o pull-left"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="well">
+                        <os-edit-license model="vm.driver.license[0]"></os-edit-license>
                     </div>
 
                     <!-- Driver's Experience Breakdown -->
-                    <h3>Experience <small>Add information about past Experience to help employers know more about you and your background</small></h3>
+                    <h3>Experience
+                        <small>Add information about past Experience to help employers know more about you and your
+                            background
+                        </small>
+                    </h3>
 
                     <div class="container-fluid well">
                         <div class="row profile-row">
                             <div class="col-sm-12">
-                                <div class="form-group " ng-show="vm.driver.experience && !!vm.driver.experience.length">
+                                <div class="form-group "
+                                     ng-show="vm.driver.experience && !!vm.driver.experience.length">
                                     <div data-ng-repeat="exp in vm.driver.experience" name="experience">
-                                        <os-driver-experience model="exp" edit-mode="true" edit-enable="true" add-fn="vm.addExperience()" drop-fn="vm.dropExperience()"></os-driver-experience>
+                                        <os-driver-experience model="exp" edit-mode="true" edit-enable="true"
+                                                              add-fn="vm.addExperience()"
+                                                              drop-fn="vm.dropExperience()"></os-driver-experience>
                                         <hr>
                                     </div>
                                 </div>
@@ -145,7 +53,8 @@
 
                         <div class="row profile-row">
                             <div class="col-sm-12 text-center">
-                                <button type="button" class="btn btn-primary" ng-click="vm.addExperience()" ng-hide="vm.driver.experience && vm.driver.experience.length > 0">
+                                <button type="button" class="btn btn-primary" ng-click="vm.addExperience()"
+                                        ng-hide="vm.driver.experience && vm.driver.experience.length > 0">
                                     <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Experience
                                 </button>
                             </div>
@@ -186,7 +95,8 @@
                                                 <h6 class="heading profile-label profile-label-1">Su</h6>
                                             </div>
                                         </div>
-                                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'" ng-repeat='schedule in vm.driver.schedule'></div>
+                                        <div ng-include="'modules/users/views/templates/schedule.client.template.html'"
+                                             ng-repeat='schedule in vm.driver.schedule'></div>
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +105,8 @@
                         <div class="row profile-row" ng-hide="vm.driver.schedule">
                             <div class="col-sm-8 col-sm-offset-2">
                                 <alert type="info text-center">
-                                    <i class="fa fa-info-circle text-info fa-2x pull-left" style="padding-right: 10px;"></i>
+                                    <i class="fa fa-info-circle text-info fa-2x pull-left"
+                                       style="padding-right: 10px;"></i>
                                     <span>You will be able to set your schedule after saving your primary information</span>
                                 </alert>
                             </div>
