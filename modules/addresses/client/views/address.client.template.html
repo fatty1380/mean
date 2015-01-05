@@ -1,13 +1,13 @@
 <!-- os-address : address.client.template.html -->
 <div class="panel" ng-if="!!vm.address">
      <div class="panel-heading">
-        <span class="h4">{{vm.address.typeVal}}</span>
-        <button data-ng-if="vm.allowEdit" type="button" class="pull-right btn-link" value="edit"
+        <span class="h4">{{vm.getAddressType()}}</span>
+        <button data-ng-if="vm.canEdit" type="button" class="pull-right btn-link" value="edit"
                 ng-click="vm.editAddress(this)">
             <i class="fa fa-pencil"></i>
         </button>
-        <button data-ng-show="vm.enableRemove()" type="button" class="pull-right btn-link" value="delete"
-                ng-click="vm.remove(this)">
+        <button data-ng-show="vm.canRemove()" type="button" class="pull-right btn-link" value="delete"
+                ng-click="vm.removeAddress">
             <i class="fa fa-trash-o"></i>
         </button>
     </div>
@@ -23,7 +23,7 @@
 </div>
 
 
-<script type="text/ng-template" id="addressEditModal.html" ng-if="vm.allowEdit">
+<script type="text/ng-template" id="addressEditModal.html" ng-if="vm.canEdit">
 
     <div class="modal-header">
         <span class="modal-title h3 text-center">Add Address</span>
@@ -35,12 +35,13 @@
 
     <form role="form" data-ng-submit="signin()" class="signin form-horizontal" spellcheck="false" novalidate>
         <div class="modal-body">
-            <os-edit-address address="vm.address" enable-edit="true"></os-edit-address>
+            Address: {{ vm.address }}, Text: {{ vm.text }}, debugger? {{ debugger; }}
+            <os-edit-address model="vm.address" enable-edit="true"></os-edit-address>
         </div>
 
         <div class="modal-footer">
             <div class="text-center form-group">
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">{{vm.text.submit || 'Save' }}</button>
             </div>
             <div data-ng-show="error" class="text-center text-danger">
                 <strong data-ng-bind="error"></strong>

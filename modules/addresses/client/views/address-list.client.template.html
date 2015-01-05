@@ -3,12 +3,10 @@
     <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}"
          ng-animate="'animate'">
         <div ng-class="{'form-group': !vm.fullWidth}">
-            <div>
-                <os-address model="vm.addresses[a]" is-editing="vm.isEditing" allow-edit="vm.allowEdit" enable-remove="vm.removeEnabled()"></os-address>
-            </div>
+            <os-address data-ng-if="!vm.inlineEdit" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>
+            <os-edit-address data-ng-if="vm.inlineEdit" model="vm.addresses[a]" can-remove="vm.canRemove" remove="vm.removeAddress"></os-edit-address>
         </div>
     </div>
-
 
     <div ng-show="vm.canAdd">
         <button type="button" class="btn btn-default btn-block" value="add" ng-click="vm.addAddress()">

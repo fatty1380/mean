@@ -6,9 +6,8 @@
             templateUrl: 'modules/addresses/views/edit-address.client.template.html',
             restrict: 'E',
             scope: {
-                address: '=',
-                enableEdit: '=?', // boolean
-                enableRemove: '=?'
+                address: '=model',
+                canRemove: '&?'
             },
             controller: 'OsEditAddressController',
             controllerAs: 'vm',
@@ -19,18 +18,20 @@
     function EditAddressController($log) {
         var vm = this;
 
-        vm.enableRemove = !!~this.enableRemove;
+        vm.canRemove = !!this.canRemove && this.canRemove() || function() { return true; };
 
         vm.types = ['main', 'home', 'business', 'billing'];
         vm.type = {
             isopen: false
         };
 
-        if (!vm.address.streetAddresses) {
-            vm.address.streetAddresses = [];
-        }
-        while (vm.address.streetAddresses.length < 2) {
-            vm.address.streetAddresses.push('');
+        if (!!vm.address) {
+            if (!vm.address.streetAddresses) {
+                vm.address.streetAddresses = [];
+            }
+            while (vm.address.streetAddresses.length < 2) {
+                vm.address.streetAddresses.push('');
+            }
         }
 
         vm.setType = function(newType, $event) {

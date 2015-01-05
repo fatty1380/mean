@@ -6,12 +6,13 @@
             templateUrl: 'modules/addresses/views/address-list.client.template.html',
             restrict: 'E',
             scope: {
-                addresses: '=models',
-                isEditing: '=?', // boolean
-                allowEdit: '=?',
-                maxCount: '=?',
-                required: '=?',
-                fullWidth: '=?'
+                addresses: '=?models',
+                isEditing: '=?', // false
+                canEdit: '=?', // true
+                maxCount: '=?', // 10
+                required: '=?', // true
+                fullWidth: '=?',
+                inlineEdit: '=?' // false
             },
             controller: 'OsAddressListController',
             controllerAs: 'vm',
@@ -19,35 +20,31 @@
         };
     }
 
-    function AddressListEditDirective() {
-        debugger;
-        var base = AddressListDirective();
-
-        base.templateUrl= 'modules/addresses/views/address-list-edit.client.template.html';
-
-        return base;
-    }
-
-
     function AddressListController() {
 
         var vm = this;
 
         // #region bindable methods
-
         vm.updateFunctionality = updateFunctionality;
         vm.addAddress = addAddress;
         vm.removeAddress = removeAddress;
+        vm.canRemove = removeEnabled;
+        vm.canAdd = addEnabled;
 
         // #region initialization & activation
-
-        vm.maxCount = vm.maxCount || 10;
-
-        vm.required = (typeof vm.required === 'boolean' ? vm.required : !!~vm.required); // Default to _true_ if undefined
-        vm.fullWidth = (typeof vm.fullWidth === 'boolean' ? vm.fullWidth : !!vm.fullWidth); // Default to _false_ if undefined
         vm.isEditing = (typeof vm.isEditing === 'boolean' ? vm.isEditing : !!vm.isEditing); // Default to _false_ if undefined
         vm.canEdit = (typeof vm.canEdit === 'boolean' ? vm.canEdit : !!~vm.canEdit); // Default to _true_ if undefined
+        vm.maxCount = vm.maxCount || 10;
+        vm.required = (typeof vm.required === 'boolean' ? vm.required : !!~vm.required); // Default to _true_ if undefined
+        vm.fullWidth = (typeof vm.fullWidth === 'boolean' ? vm.fullWidth : !!vm.fullWidth); // Default to _false_ if undefined
+        vm.inlineEdit = (typeof vm.inlineEdit === 'boolean' ? vm.inlineEdit : !!vm.inlineEdit); // Default to _false_ if undefined
+
         vm.canAdd = vm.canRemove = vm.canEdit;
+
+        vm.addressStub = {
+            type: '',
+            streetAddresses: ['', '']
+        };
 
         function activate() {
             if (vm.required && (!vm.addresses || vm.addresses.length === 0)) {
@@ -82,6 +79,7 @@
         }
 
         function removeAddress(address) {
+            debugger;
             if (address) {
                 for (var i in vm.addresses) {
                     if (vm.addresses[i] === address) {
@@ -98,20 +96,14 @@
                 vm.addresses = [];
             }
 
-            vm.addresses.push(angular.copy(addressStub));
+            vm.addresses.push(angular.copy(vm.addressStub));
         }
-
-        var addressStub = {
-            type: '',
-            streetAddresses: ['', '']
-        };
 
     }
 
 
     angular.module('addresses')
         .directive('osAddressList', AddressListDirective)
-        .directive('osEditAddressList', AddressListEditDirective)
         .controller('OsAddressListController', AddressListController);
 
 })

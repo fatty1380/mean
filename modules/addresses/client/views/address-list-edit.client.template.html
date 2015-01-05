@@ -3,7 +3,7 @@
     <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}"
          ng-animate="'animate'">
         <div ng-class="{'form-group': !vm.fullWidth}">
-            <os-edit-address address="vm.addresses[a]" enable-remove="vm.canRemove"></os-edit-address>
+            <os-edit-address address="vm.addresses[a]" can-remove="vm.canRemove"></os-edit-address>
         </div>
     </div>
 

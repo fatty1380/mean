@@ -8,8 +8,9 @@
             scope: {
                 address: '=model',
                 isEditing: '=?', // boolean
-                allowEdit: '=?',
-                enableRemove: '&?'
+                canEdit: '=?',
+                canRemove: '&?',
+                remove: '&?'
             },
             controller: 'OsAddressItemController',
             controllerAs: 'vm',
@@ -21,8 +22,8 @@
 
         var vm = this;
 
-        vm.allowEdit = !!this.allowEdit; // Default to _false_ if undefined
-        vm.enableRemove = vm.enableRemove || function() { return vm.allowEdit; };
+        vm.canEdit = !!this.canEdit; // Default to _false_ if undefined
+        vm.canRemove = vm.canRemove || function() { return vm.canEdit; };
         vm.isOpen = false;
 
         function activate() {
@@ -31,12 +32,34 @@
             }
         }
 
-        activate();
+        vm.getAddressType = function() {
+            if(vm.address.type === 'other') {
+                return vm.address.typeOther;
+            }
+
+            return vm.address.type || 'address';
+        };
 
         vm.editAddress = function () {
             var modalInstance = $modal.open({
                 templateUrl: 'addressEditModal.html',
-                controllerAs: 'modalCtrl'
+                controllerAs: 'vm',
+                controller: function($scope,  address, text) {
+                    debugger;
+                    var vm = this;
+                    vm.address = address;
+                    vm.text = text;
+
+                    $scope.vm = vm;
+                },
+                resolve: {
+                    address: function() {
+                        return vm.address;
+                    },
+                    text: function() {
+                        return { submit : 'Save' };
+                    }
+                }
             });
 
             modalInstance.result.then(function (result) {
@@ -52,6 +75,17 @@
                 vm.isOpen = true;
             });
         };
+
+        vm.removeAddress = function() {
+            if(!!vm.remove) {
+                vm.remove(vm.address);
+            } else {
+                debugger;
+                vm.address = null;
+            }
+        };
+
+        activate();
     }
 
     AddressItemController.$inject = ['$modal'];
