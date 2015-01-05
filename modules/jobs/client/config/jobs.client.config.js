@@ -2,17 +2,11 @@
 
 // Configuring the Jobs module
 function menus(Menus, Auth) {
-    Menus.addMenuItem('topbar', {
-        title: 'Job Postings',
-        state: 'jobs.mine',
-        userTypes: ['owner'],
-        position: 10
-    });
 
     Menus.addMenuItem('topbar', {
         title: 'Job Postings',
         state: 'jobs.list',
-        userTypes: ['driver'],
+        userTypes: ['driver', 'owner'],
         position: 10
     });
 

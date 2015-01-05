@@ -4,34 +4,35 @@
 
     function EditProfileController($http, $location, $log, Users, Authentication) {
 
-        //this.profile = null;
+        var vm = this;
 
-        if(!this.profile) {
+        if(!vm.profile) {
             $log.warn('[EditProfileController] No profile passed to osEditProfile Directive');
         }
 
-        this.profile = this.profile || Authentication.user;
+        vm.profile = vm.profile || Authentication.user;
 
-        $log.info('[EditProfileController] Profile %o', this.profile);
+        $log.info('[EditProfileController] Profile %o', vm.profile);
 
         // Update a user profile
-        this.updateUserProfile = function(isValid) {
+        vm.updateUserProfile = function(isValid) {
             if (isValid) {
-                this.success = this.error = null;
-                var user = new Users(this.user);
+                vm.success = vm.error = null;
+
+                var user = new Users(vm.profile);
 
                 user.$update(function(response) {
-                    this.success = true;
+                    vm.success = true;
                     Authentication.user = response;
                 }, function(response) {
-                    this.error = response.data.message;
+                    vm.error = response.data.message;
                 });
             } else {
-                this.submitted = true;
+                vm.submitted = true;
             }
         };
 
-        this.cancel = function() {
+        vm.cancel = function() {
             alert('Cancel not yet implemented');
         };
     }

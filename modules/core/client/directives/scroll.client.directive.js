@@ -1,20 +1,21 @@
 'use strict';
 
 function ScrollDirective($window) {
-    return function(scope, element, attrs) {
-        angular.element($window).bind('scroll', function() {
-            if (scope.showInfo || scope.showSignup) {
-                return;
-            }
-
-            if (this.pageYOffset > 0) {
-                scope.showInfo = true;
-                scope.$apply();
-            }
-        });
+    return {
+        scope: {
+            scroll: '=scrollPosition'
+        },
+        link: function (scope, element, attrs) {
+            var windowEl = angular.element($window);
+            var handler = function () {
+                scope.scroll = windowEl.scrollTop();
+            };
+            windowEl.on('scroll', scope.$apply.bind(scope, handler));
+            handler();
+        }
     };
 }
 
 ScrollDirective.$inject = ['$window'];
 
-angular.module('core').directive('scroll', ScrollDirective);
+angular.module('core').directive('scrollPosition', ScrollDirective);

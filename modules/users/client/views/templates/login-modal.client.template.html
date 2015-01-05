@@ -6,7 +6,7 @@
     <div class="modal-header bg-primary" ng-init="isOpen = true;">
         <span class="modal-title h3 text-center">Login to your account</span>
         <div class="pull-right">
-            <button type="button" class="close modal-title" ng-click="$dismiss('cancel')"><span aria-hidden="true">&times;<span class="sr-only">Close</span></button>
+            <button type="button" class="close modal-title" ng-click="$dismiss('cancel')"><span aria-hidden="true">&times;<span class="sr-only">Close</span></span></button>
         </div>
     </div>
 
@@ -36,7 +36,7 @@
                 <button type="submit" class="btn btn-primary">Sign in</button>
             </div>
             <div class="forgot-password text-center" ng-show="error">
-                <a href="/password/forgot">Forgot your password?</a>
+                <a ui-sref="password.forgot">Forgot your password?</a>
             </div>
             <div data-ng-show="error" class="text-center text-danger">
                 <strong data-ng-bind="error"></strong>

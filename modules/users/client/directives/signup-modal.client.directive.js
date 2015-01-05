@@ -8,7 +8,8 @@
             restrict: 'EA',
             scope: {
                 signin: '&',
-                title: '@?'
+                title: '@?',
+                signupType: '@?'
             },
             controller: 'SignupModalController'
         };
@@ -22,7 +23,10 @@
             var modalInstance = $modal.open({
                 templateUrl: 'signupModal.html',
                 controller: 'AuthenticationController',
-                size: 'lg'
+                size: 'lg',
+                resolve: {
+                    signupType: function() { return $scope.signupType; }
+                }
             });
 
             modalInstance.result.then(function(result) {
