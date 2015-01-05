@@ -1,0 +1,30 @@
+<section>
+    <div class="list-group" data-ng-if="vm.displayMode !== 'table'">
+        <a data-ng-repeat="application in vm.applications"
+           data-ui-sref="applications.view({applicationId: '{{application._id}}' })" class="list-group-item">
+            <os-view-application display-mode="{{vm.displayMode || normal}}" model="application"></os-view-application>
+        </a>
+    </div>
+
+    <table data-ng-if="vm.displayMode === 'table'" style="width: 100%;">
+        <thead>
+        <tr>
+            <td>Applicant</td>
+            <td>Updated</td>
+            <td>Messages</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="application in vm.applications" data-ui-sref="applications.view({applicationId: application._id})">
+            <td>{{application.user.firstName || application.user.displayName}}
+            </td>
+            <td data-ng-bind="application.modified | date:dateShort"></td>
+            <td>{{application.messages.length}}&nbsp;<span class="label label-info pull-right">{{application.status}}</span></td>
+            <!--<os-view-application display-mode="{{vm.displayMode || 'table'}}" model="application"></os-view-application>-->
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center" data-ng-hide="!vm.applications.$resolved || vm.applications.length">
+        <p>{{::noItemsText}}</p>
+    </div>
+</section>

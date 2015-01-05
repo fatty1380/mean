@@ -62,13 +62,22 @@ var ApplicationSchema = new Schema({
         default: 'draft'
     },
 
+
+
     /**
      * Mesages
      * -------
      * This represents the communications between the applicant and company
      */
-    messages: ['Message'],
+    messages: [{
+        type: Schema.ObjectId,
+        ref: 'Message'
+    }],
 
+    connection: {
+        type: Schema.ObjectId,
+        ref: 'Connection'
+    },
 
     created: {
         type: Date,

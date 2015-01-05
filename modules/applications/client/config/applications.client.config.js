@@ -4,7 +4,7 @@
 function menus(Menus, Auth) {
 
     Menus.addMenuItem('topbar', {
-        title: 'Active Applications',
+        title: 'Applicants',
         state: 'applications.mine',
         userTypes: ['owner'],
         position: 20

@@ -1,6 +1,6 @@
 <section>
-    <section class="container" data-ng-controller="ApplicationsController" data-ng-init="initList()">
+    <section class="container">
         <h3>{{listTitle}}</h3>
-        <div ng-include="'modules/applications/views/templates/list-applications.client.template.html'"></div>
+        <os-list-applications applications="vm.applications" display-mode="normal" ></os-list-applications>
     </section>
 </section>

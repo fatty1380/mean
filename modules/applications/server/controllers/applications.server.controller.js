@@ -4,27 +4,28 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
-    Application = mongoose.model('Application'),
-    Message = mongoose.model('Message'),
-    User = mongoose.model('User'),
-    Job = mongoose.model('Job'),
-    _ = require('lodash');
+errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
+Application  = mongoose.model('Application'),
+Message      = mongoose.model('Message'),
+User         = mongoose.model('User'),
+Job          = mongoose.model('Job'),
+_            = require('lodash');
 
 /**
  * "Instance" Methods
  */
 
-var executeQuery = function(req, res) {
+var executeQuery = function (req, res) {
 
     var query = req.query || {};
-    var sort = req.sort || '';
+    var sort = req.sort || '-created';
 
     Application.find(query)
         .sort(sort)
-        .populate('user', 'displayName')
+        .populate('user', 'displayName profileImageURL')
         .populate('job', 'name driverStatus postStatus')
-        .exec(function(err, applications) {
+        .populate('company', 'name profileImageURL')
+        .exec(function (err, applications) {
             if (err) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
@@ -40,17 +41,18 @@ var executeQuery = function(req, res) {
 /**
  * Create a Application
  */
-exports.create = function(req, res) {
+exports.create = function (req, res) {
     var application = new Application(req.body);
 
     console.log('[ApplicationController.create] req.job: %o, req.body.jobId: %o', req.job, req.body.jobId);
 
     application.user = req.user;
     application.job = req.job || req.body.jobId; // TODO: Figure out why this is not populated!
+    application.company = req.job.company; // This should be populated by jobByID Middleware
 
     console.log('[ApplicationController.create] Creating new application: %o', application);
 
-    application.save(function(err) {
+    application.save(function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -64,7 +66,7 @@ exports.create = function(req, res) {
 /**
  * Show the current Application
  */
-exports.read = function(req, res) {
+exports.read = function (req, res) {
     if (!req.application) {
         return res.status(404).send({
             message: 'No application found'
@@ -77,12 +79,12 @@ exports.read = function(req, res) {
 /**
  * Update a Application
  */
-exports.update = function(req, res) {
+exports.update = function (req, res) {
     var application = req.application;
 
     application = _.extend(application, req.body);
 
-    application.save(function(err) {
+    application.save(function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -95,7 +97,7 @@ exports.update = function(req, res) {
             }];
 
             Application.populate(application.messages, opts,
-                function(err, messages) {
+                function (err, messages) {
                     res.json(application);
                 });
         }
@@ -105,10 +107,10 @@ exports.update = function(req, res) {
 /**
  * Delete an Application
  */
-exports.delete = function(req, res) {
+exports.delete = function (req, res) {
     var application = req.application;
 
-    application.remove(function(err) {
+    application.remove(function (err) {
         if (err) {
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -122,13 +124,14 @@ exports.delete = function(req, res) {
 /**
  * List of *ALL* Applications
  */
-exports.list = function(req, res) {
+exports.listAll = function (req, res) {
+    debugger; // TODO : route to correct list
     req.sort = '-created';
 
     executeQuery(req, res);
 };
 
-exports.queryByJobID = function(req, res) {
+exports.queryByJobID = function (req, res) {
     var jobId = req.params.jobId;
 
     if (!jobId) {
@@ -155,11 +158,30 @@ exports.queryByJobID = function(req, res) {
 
 };
 
-exports.loadMine = function(req, res) {
+exports.queryByCompanyID = function (req, res) {
+    var companyId = req.company && req.company._id || req.params.companyId;
+
+    if (!companyId) {
+        console.log('[ApplicationsCtrl.queryByCompanyID]', 'Cannot search without a companyId');
+        return res.status(400).send({
+            message: 'Must include companyId in request to find Applications by company'
+        });
+    }
+
+    req.query = {
+        company: companyId
+    };
+
+    req.sort = '-modified';
+
+    executeQuery(req, res);
+};
+
+exports.loadMine = function (req, res) {
     return this.queryByUserID(req, res, null, req.user._id);
 };
 
-exports.queryByUserID = function(req, res) {
+exports.queryByUserID = function (req, res) {
     req.query = {
         user: req.params.userId
     };
@@ -167,21 +189,41 @@ exports.queryByUserID = function(req, res) {
     executeQuery(req, res);
 };
 
+exports.getByJobId = function (req, res, next) {
+    var query = {
+        job: req.params.jobId,
+        user: req.params.userId
+    };
+
+    Application.findOne(query)
+        .exec(function (err, application) {
+            if (err) {
+                return next(err);
+            }
+
+            req.application = application;
+            next();
+        });
+};
+
 /**
  * Application middleware
  */
-exports.applicationByID = function(req, res, next, id) {
+exports.applicationByID = function (req, res, next, id) {
 
     Application.findById(id)
         .populate('user', 'displayName')
         .populate('job', 'name user company')
+        .populate('messages')
         .populate({
             path: 'messages.sender',
             model: 'User',
             select: 'displayName id'
         })
-        .exec(function(err, application) {
-            if (err) { return next(err); }
+        .exec(function (err, application) {
+            if (err) {
+                return next(err);
+            }
 
             req.application = application;
             next();
@@ -191,7 +233,7 @@ exports.applicationByID = function(req, res, next, id) {
 /**
  * Application authorization middleware
  */
-exports.hasAuthorization = function(req, res, next) {
+exports.hasAuthorization = function (req, res, next) {
     if (req.application.user.id !== req.user.id && !req.application.job.user.equals(req.user.id)) {
         return res.status(403).send('User is not authorized');
     }

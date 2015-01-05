@@ -45,6 +45,13 @@ var ApplicationsService = function($resource) {
             save: {
                 method: 'POST'
             }
+        }),
+        ByCompany: $resource('api/companies/:companyId/applications', {
+            companyId: '@companyId'
+        }),
+        ForDriver: $resource('api/jobs/:jobId/applications/:userId', {
+            jobId: '@jobId',
+            userId: '@userId'
         })
     };
 

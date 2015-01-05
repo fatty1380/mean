@@ -1,6 +1,92 @@
 (function() {
     'use strict';
 
+    function ApplicationMainController(application, auth, $state, $log, $scope, Socket) {
+        var vm = this;
+        vm.application = application;
+        vm.messageMode = 'text';
+        vm.isopen = false;
+        vm.myId = auth.user._id;
+
+        vm.postMessage = function() {
+            vm.application.messages.push({
+                text: vm.application.message,
+                status: 'sent',
+                sender: auth.user._id
+            });
+
+            if (!!Socket) {
+                var message = {
+                    text: vm.message
+                };
+
+                // Emit a 'chatMessage' message event
+                Socket.emit('chatMessage', message);
+
+                // Clear the message text
+                vm.message = '';
+            } else {
+
+                application.$update(function () {
+                    vm.application.message = '';
+                }, processError);
+            }
+        };
+
+        // Update existing Application
+        vm.application.update = function() {
+            var application = vm.application.application;
+
+            application.$update(function(retval) {
+                debugger; // todo: check retval
+            }, processError);
+        };
+
+        /** Private Methods --------------------------------------------- */
+        var processError = function(errorResponse) {
+
+            switch (errorResponse.status) {
+                case 403:
+                    vm.error = 'Sorry, you cannot make changes to this application';
+                    $state.go('home');
+                    break;
+                default:
+                    vm.error = errorResponse.data.message;
+            }
+        };
+
+
+        /** Chat Methods ------------------------------------------------ */
+
+
+        var room = vm.application._id;
+
+        if (!!Socket) {
+
+            Socket.emit('join-room', room);
+
+            Socket.on('connect', function() {
+                $log.info('[AppCtrl] Connecting to chat room: %s', room);
+                Socket.emit('join-room', room);
+            });
+
+            // Add an event listener to the 'chatMessage' event
+            Socket.on('chatMessage', function (message) {
+                console.log('[AppCtrl] Incoming message: %o', message);
+                vm.application.messages.unshift(message);
+            });
+
+            // Remove the event listener when the controller instance is destroyed
+            $scope.$on('$destroy', function () {
+                Socket.removeListener('chatMessage').leave(room);
+            });
+        } else {
+            $log.warn('Socket is undefined in this context');
+        }
+    }
+
+    ApplicationMainController.$inject = ['application', 'auth', '$state', '$log', '$scope', 'Socket'];
+
     // Applications controller
     function ApplicationsController($scope, $stateParams, $location, $state, $log, Authentication, Applications) {
         $scope.authentication = Authentication;
@@ -12,8 +98,6 @@
                 noMessage: 'Please enter a message before submitting your application'
             }
         };
-
-
 
         // Remove existing Application
         $scope.remove = function(application) {
@@ -29,40 +113,6 @@
                 $scope.application.$remove(function() {
                     $location.path('applications');
                 });
-            }
-        };
-
-        $scope.postMessage = function() {
-            var application = $scope.application;
-
-            application.messages.push({
-                text: $scope.message,
-                status: 'sent',
-                sender: $scope.authentication.user._id
-            });
-
-            application.$update(function() {
-                $scope.message = '';
-            }, processError);
-        };
-
-        // Update existing Application
-        $scope.update = function() {
-            var application = $scope.application;
-
-            application.$update(function() {
-                $location.path('applications/' + application._id);
-            }, processError);
-        };
-
-        var processError = function(errorResponse) {
-            switch (errorResponse.status) {
-                case 403:
-                    $scope.error = 'Sorry, you cannot make changes to this application';
-                    $location.path('/settings/profile/');
-                    break;
-                default:
-                    $scope.error = errorResponse.data.message;
             }
         };
 
@@ -117,24 +167,12 @@
             }
 
         };
-
-        // Find a list of 'My' Jobs.
-        $scope.findMine = function(type) {
-            $scope.applications = Applications.ByUser.query({
-                userId: Authentication.user._id,
-                userType: type
-            });
-        };
-
-        // Find existing Application
-        $scope.findOne = function() {
-            $scope.application = Applications.ById.get({
-                id: $stateParams.applicationId
-            });
-        };
     }
 
+    ApplicationMainController.$inject = ['application', 'Authentication', '$state', '$log', '$scope', 'Socket'];
     ApplicationsController.$inject = ['$scope', '$stateParams', '$location', '$state', '$log', 'Authentication', 'Applications'];
 
-    angular.module('applications').controller('ApplicationsController', ApplicationsController);
+    angular.module('applications')
+        .controller('ApplicationsController', ApplicationsController)
+    .controller('ApplicationMainController', ApplicationMainController);
 })();

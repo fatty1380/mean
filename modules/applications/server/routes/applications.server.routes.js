@@ -6,7 +6,7 @@ module.exports = function(app) {
 
     // Applications Routes
     app.route('/api/applications')
-        .get(applications.list)
+        .get(applications.listAll)
         .post(users.requiresLogin, applications.create);
 
     app.route('/api/applications/:applicationId')
@@ -17,6 +17,12 @@ module.exports = function(app) {
     app.route('/api/jobs/:jobId/applications')
         .get(applications.queryByJobID) // ,
         .post(users.requiresLogin, applications.create);
+
+    app.route('/api/jobs/:jobId/applications/:userId')
+        .get(applications.getByJobId, applications.read);
+
+    app.route('/api/companies/:companyId/applications')
+        .get(applications.queryByCompanyID);
 
     app.route('/api/users/:userId/applications')
         .get(applications.queryByUserID);
