@@ -9,11 +9,14 @@
                 replace: false,
                 restrict: 'E',
                 scope: {
-                    model: '='
+                    model: '=',
+                    toolbar: '=?'
                 },
+                controllerAs: 'vm',
+                bindToController: true,
                 controller: function($scope, $element, $attrs, $transclude) {
-
-                    var toolbar = [
+                    var vm = this;
+                    var toolbar = vm.toolbar || [
                         ['h1', 'h2', 'h3', 'p'],
                         ['bold', 'italics', 'underline'],
                         ['ul', 'ol'],
