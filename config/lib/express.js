@@ -74,7 +74,7 @@ module.exports.initMiddleware = function(app) {
         app.locals.cache = 'memory';
 
         // Enable logger (morgan) write to access.log file.
-        var accessLogStream = fs.createWriteStream(__dirname + '/../../log/access.log', {
+        var accessLogStream = fs.createWriteStream('/var/log/nodejs/express_access.log', {
             flags: 'a'
         });
         app.use(morgan('combined', {
