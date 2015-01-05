@@ -15,6 +15,7 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
             if (this.socket) {
                 this.socket.on(eventName, function(data) {
                     $timeout(function() {
+                        console.log('[Socket.on] %s: %o', eventName, data);
                         callback(data);
                     });
                 });
@@ -24,6 +25,7 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
         // Wrap the Socket.io 'emit' method
         this.emit = function(eventName, data) {
             if (this.socket) {
+                console.log('[Socket.emit] %s: %o', eventName, data);
                 this.socket.emit(eventName, data);
             }
         };
