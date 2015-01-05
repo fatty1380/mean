@@ -21,3 +21,12 @@ Outset-Logo_*.png
 scratchpad.*
 public
 log
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+modules/theme/client/images/team
+modules/theme/client/images/press
+modules/theme/client/images
+modules/core/client/img
