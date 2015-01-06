@@ -5,6 +5,9 @@ module.exports = {
     app: {
         title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs'
     },
+    logs: {
+        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
+    },
     facebook: {
         clientID: process.env.FACEBOOK_ID || 'APP_ID',
         clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
