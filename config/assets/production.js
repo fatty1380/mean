@@ -21,7 +21,7 @@ module.exports = {
                 'public/lib/textAngular/dist/textAngular-rangy.min.js',
                 'public/lib/textAngular/dist/textAngular-sanitize.min.js',
                 'public/lib/textAngular/dist/textAngular.min.js',
-                'public/lib/ngmap/build/scripts/ng-map.js',
+                'public/lib/ngmap/build/scripts/ng-map.min.js',
                 'public/lib/lodash/dist/lodash.min.js',
                 'public/lib/pdfjs-dist/build/pdf.combined.js',
                 'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
