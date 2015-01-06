@@ -5,7 +5,9 @@
     function handle404s(err, $q) {
         debugger;
         // recover here if err is 404
-        if (err.status === 404) return null; //returning recovery
+        if (err.status === 404) {
+            return null;
+        } //returning recovery
         // otherwise return a $q.reject
         return $q.reject(err);
     }

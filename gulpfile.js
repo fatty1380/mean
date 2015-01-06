@@ -168,7 +168,7 @@ gulp.task('lint', function (done) {
 
 // Lint project files and minify them into two production files.
 gulp.task('build', function (done) {
-    runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
+    runSequence('lint', ['uglify', 'cssmin'], done);
 });
 
 // Run the project tests
@@ -178,7 +178,7 @@ gulp.task('test', function (done) {
 
 // Run the project in development mode
 gulp.task('default', function (done) {
-    runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
+    runSequence('debug', done);
 });
 
 // Run the project in debug mode
@@ -188,5 +188,5 @@ gulp.task('debug', function (done) {
 
 // Run the project in production mode
 gulp.task('prod', function (done) {
-    runSequence('build', 'lint', ['nodemon', 'watch'], done);
+    runSequence('env:prod', 'build', ['nodemon', 'watch'], done);
 });

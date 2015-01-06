@@ -1,6 +1,8 @@
 @import "mixins.less";
 @import "theme-default.less";
 
+@outset-blue: #0e2d4c;
+
 /** Body **/
 html, body {
   width              : 100%;
@@ -463,41 +465,76 @@ i.fa.fa-stack-1x.text-primary {
   top : -4px;
 }
 
-h1.logo {
+.header {
 
-  a {
-    max-width : 200px !important;
+  &.navbar-fixed-top h1.logo, &.navbar-flex-top h1.logo {
+    font-family   : "Roboto Slab", arial, sans-serif;
+    margin-top    : 0;
+    margin-bottom : 0;
+    font-weight   : bold;
+    font-size     : 15px;
+    float         : left;
 
-    img {
-      padding : 0 10px;
-      margin  : 0 10px;
+    a {
+      padding-top    : 15px;
+      padding-right  : 30px;
+      padding-bottom : 15px;
+      padding-left   : 30px;
+      display        : inline-block;
+      text-align     : center;
+      line-height    : 1.4;
+      .border-radiuses(0, 4px, 4px, 0);
+      position       : relative;
+      font-size      : 20px;
+
+      &:hover {
+        text-decoration : none;
+      }
+
+      .logo-title {
+        min-width           : 200px;
+        min-height          : 40px;
+        background-position : center;
+        background-repeat   : no-repeat;
+      }
     }
   }
-  .logo-title {
-    vertical-align : middle;
-    line-height    : 1.6;
-    min-height     : 40px;
-    min-width      : 140px;
+
+  &.navbar-fixed-top h1.logo {
+    a {
+      color            : @outset-blue;
+      background-color : #FFF;
+      .transition (color 0.4s ease-in-out);
+    }
+
+    a .logo-title {
+      background-image : url('/modules/core/img/brand/logo-blue.png');
+    }
   }
+
+  &.navbar-flex-top h1.logo {
+    a {
+      color            : #fff;
+      background-color : @outset-blue;
+      .transition (color 0.4s ease-in-out);
+    }
+
+    a .logo-title {
+      background-image : url('/modules/core/img/brand/logo-white.png');
+    }
+  }
+
 }
 
-header.header {
-
-  h1.logo {
-    a {
-      background : @outset-blue;
-    }.logo-title {
-       background : url('/modules/core/img/brand/logo-white.png') no-repeat center;
-     }
-  }
-  &.navbar-fixed-top {
-    h1.logo {
-      a {
-        background : #FFF;
-      }
-      .logo-title {
-        background : url('/modules/core/img/brand/logo-blue.png') no-repeat center !important;
-      }
+/** Responsive Override **/
+@media (min-width : 992px) {
+  .header.navbar-fixed-top {
+    h1.logo a {
+      padding-top    : 15px;
+      padding-right  : 30px;
+      padding-bottom : 15px;
+      padding-left   : 30px;
+      .border-radiuses(0, 4px, 4px, 0);
     }
   }
 }
@@ -522,6 +559,81 @@ header {
     .user-header-dropdown-toggle {
       padding-top    : 11px !important;
       padding-bottom : 11px !important;
+    }
+  }
+}
+
+/***** PRICING *******/
+.pricing {
+  .price-lead {
+    height : 550px;
+    > .row {
+      position : relative;
+      top      : 100px;
+    }
+    .title {
+      font-size   : 42px;
+      font-weight : 400;
+      text-shadow : 0 0 50px #000;
+    }
+  }
+  .title {
+    padding : 20px 0;
+  }
+  .item {
+    -webkit-transition : -webkit-transform .2s, -webkit-box-shadow .2s;
+    transition         : transform .2s;
+    top                : 15px;
+
+    &:hover {
+      z-index           : 15;
+      -ms-transform     : scale(1.03); /* IE 9 */
+      -webkit-transform : scale(1.03); /* Chrome, Safari, Opera */
+      transform         : scale(1.03);
+    }
+    &.best-buy .item-content {
+      padding-bottom : 0;
+    }
+    &.horizontal .item-content {
+      padding     : 0 15px;
+      padding-top : 0 !important;
+      font-size   : 14px;
+    }
+    &.horizontal .item-inner .item-content > * {
+      display        : table-cell;
+      vertical-align : middle;
+    }
+    .item-inner {
+      -webkit-transition : -webkit-transform .2s, -webkit-box-shadow .2s;
+      transition         : transform .2s;
+      &:hover {
+        background : #FFF;
+      }
+    }
+    .fa-stack {
+      .price-figure-inner .number {
+        color : #f3f3f3;
+      }
+      .price-figure-inner .currency {
+        color : #f0f0f0;
+      }
+      .text-primary {
+        color : #0e2d4c;
+      }
+    }
+    .feature-list li {
+      .fa {
+        margin-right : 5px;
+      }
+      .fa-check {
+        color : #4a6781;
+      }
+      .fa-plus {
+        color : #3c763d;
+      }
+      .fa-times {
+        color : #999999;
+      }
     }
   }
 }

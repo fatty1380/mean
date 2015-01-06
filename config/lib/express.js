@@ -74,12 +74,12 @@ module.exports.initMiddleware = function(app) {
         app.locals.cache = 'memory';
 
         // Enable logger (morgan) write to access.log file.
-        var accessLogStream = fs.createWriteStream(config.log.access + 'express_access.log', {
-            flags: 'a'
-        });
-        app.use(morgan('combined', {
-            stream: accessLogStream
-        }));
+        //var accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
+        //    flags: 'a'
+        //});
+        //app.use(morgan('combined', {
+        //    stream: accessLogStream
+        //}));
     }
 
     // Request body parsing middleware should be above methodOverride

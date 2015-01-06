@@ -198,9 +198,9 @@ exports.reset = function (req, res, next) {
                 done(err, emailHTML, user);
             });
         },
-        function (emailHTML, user, done) {
-            var message = getMessage(emailHTML);
-        },
+        //function (emailHTML, user, done) {
+        //    var message = emailer.getMessage(emailHTML);
+        //},
         function (emailHTML, user, done) {
 
             console.log('Sending email: %s', emailHTML);

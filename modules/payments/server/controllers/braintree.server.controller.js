@@ -4,8 +4,6 @@ var path      = require('path'),
     config    = require(path.resolve('./config/config')),
     braintree = require('braintree');
 
-console.log('starting braintree with config: %j', config);
-
 var gateway;
 
 if (config.braintree &&
@@ -37,7 +35,7 @@ exports.getToken = function (req, res) {
 
 exports.postNonce = function (req, res) {
     if (gateway) {
-        var nonce = req.body.payment_method_nonce;
+        var nonce = req.body.payment_method_nonce; // jshint ignore: line
         debugger;
 
         gateway.transaction.sale({

@@ -1,41 +1,11 @@
 'use strict';
 
+exports.sendMessage = sendMessage;
+
 var mandrill = require('mandrill-api/mandrill');
-var mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA');
+var mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: Move to CONFIG
 
-exports.sendMessage = function(mailOptions)
-{
-
-    var message = getMessage(mailOptions);
-    var async = false;
-    var ipPool = 'Main Pool';
-
-    console.log('Full Message Object: %j', message);
-
-    mandrillClient.messages.send({
-        'message': message,
-        'async': async,
-        'ip_pool': ipPool
-    }, function (result) {
-        console.log(result);
-        /*
-         [{
-         'email': 'recipient.email@example.com',
-         'status': 'sent',
-         'reject_reason': 'hard-bounce',
-         '_id': 'abc123abc123abc123abc123abc123'
-         }]
-         */
-        return;
-    }, function (e) {
-        // Mandrill returns the error as an object with name and message keys
-        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-        return e;
-    });
-};
-
-var getMessage = function (options) {
+function getMessage(options) {
 
     console.log('options: %j', options);
 
@@ -80,4 +50,36 @@ var getMessage = function (options) {
     };
 
     return message;
-};
+}
+
+function sendMessage(mailOptions)
+{
+
+    var message = getMessage(mailOptions);
+    var async = false;
+    var ipPool = 'Main Pool';
+
+    console.log('Full Message Object: %j', message);
+
+    mandrillClient.messages.send({
+        'message': message,
+        'async': async,
+        'ip_pool': ipPool
+    }, function (result) {
+        console.log(result);
+        /*
+         [{
+         'email': 'recipient.email@example.com',
+         'status': 'sent',
+         'reject_reason': 'hard-bounce',
+         '_id': 'abc123abc123abc123abc123abc123'
+         }]
+         */
+        return;
+    }, function (e) {
+        // Mandrill returns the error as an object with name and message keys
+        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+        return e;
+    });
+}

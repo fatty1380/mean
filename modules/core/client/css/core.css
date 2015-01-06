@@ -111,8 +111,8 @@ os-debug-info > div.collapsed > div {
 .animate-leave.animate-leave-active,
 .animate-enter {
     opacity: 0;
-    width: 0px;
-    height: 0px;
+    width: 0;
+    height: 0;
 }
 
 .animate-enter.animate-enter-active,

@@ -7,7 +7,8 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.css',
                 'public/lib/components-font-awesome/css/font-awesome.css',
-                'public/lib/textAngular/src/textAngular.css'
+                'public/lib/textAngular/src/textAngular.css',
+                'public/lib/animate.css/animate.css'
             ],
             js: [
                 'public/lib/angular/angular.js',
@@ -17,7 +18,6 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.js',
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'public/lib/angular-file-upload/angular-file-upload.js',
-                'public/lib/angular-route/angular-route.js', /*?*/
                 'public/lib/autofill-event/src/autofill-event.js',
                 'public/lib/textAngular/dist/textAngular-rangy.min.js',
                 'public/lib/textAngular/src/textAngular-sanitize.js',
@@ -28,7 +28,7 @@ module.exports = {
                 'public/lib/pdfjs-dist/build/pdf.combined.js',
                 'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
-                'public/lib/moment/moment.js',
+                'public/lib/moment/min/moment-with-locales.js',
                 'https://js.braintreegateway.com/v2/braintree.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']

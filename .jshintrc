@@ -78,6 +78,7 @@
         "browser",
         "element",
         "google",
-        "moment"
+        "moment",
+        "braintree"
     ]
 }

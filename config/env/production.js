@@ -1,12 +1,15 @@
 'use strict';
 
+console.log('env.production: LAP: %s', process.env.LOG_ACCESS_PATH);
+console.log('env.production: BTREE: %s', process.env.BRAINTREE_MERCHANT_ID);
+
 module.exports = {
     db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
     app: {
         title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs'
     },
     logs: {
-        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
+        access: process.env.LOG_ACCESS_PATH || '~/Outset/Source/log/' // '/var/log/nodejs/'
     },
     facebook: {
         clientID: process.env.FACEBOOK_ID || 'APP_ID',

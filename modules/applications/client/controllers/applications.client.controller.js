@@ -85,8 +85,6 @@
         }
     }
 
-    ApplicationMainController.$inject = ['application', 'auth', '$state', '$log', '$scope', 'Socket'];
-
     // Applications controller
     function ApplicationsController($scope, $stateParams, $location, $state, $log, Authentication, Applications) {
         $scope.authentication = Authentication;
