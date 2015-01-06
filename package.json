@@ -18,7 +18,8 @@
   "scripts": {
     "start": "grunt",
     "test": "grunt test",
-    "prepublish": "node_modules/.bin/bower install --config.interactive=false --allow-root"
+    "prepublish": "node_modules/.bin/bower install --config.interactive=false --allow-root",
+    "postinstall": "node_modules/.bin/bower install -F"
   },
   "dependencies": {
     "acl": "~0.4.4",
