@@ -2,6 +2,7 @@
 @import "theme-default.less";
 
 @outset-blue: #0e2d4c;
+@subtle-white: #f6f6f6;
 
 /** Body **/
 html, body {
@@ -255,10 +256,8 @@ body {
   top                  : 0;
   left                 : 0;
   height               : 600px;
-  background           : #253340 url('/modules/core/img/home-country-road.jpg') no-repeat fixed 0% 25%; background-size : auto;
-  -moz-background-size : auto;
-  -o-background-size   : auto;
-  background-size      : auto;
+  background           : @outset-blue url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  .background-size(cover);
 
   > .overlay {
     background : -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%); /* FF3.6+ */
@@ -277,23 +276,11 @@ body {
 }
 
 .bg-slider-wrapper {
-  height : 75%;
-
-  .flexslider {
-    margin : 0;
-    .box-shadow(none);
-    border : none;
-    .border-radius(0);
-
-    .slide {
-      display : block;
-      height  : 780px;
-      &.slide-1 {
-        background : @color-2 url('/modules/core/img/home-country-road.jpg') no-repeat 50% top !important;
-        .background-size(cover);
-      }
-    }
-  }
+  height              : 100%;
+  width: 100%;
+  max-height: 780px!important;
+  background          :  @subtle-white url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  .background-size(cover);
 
   .black_mask {
     background-color : transparent;
@@ -307,6 +294,9 @@ body {
 }
 
 .landing-page {
+
+
+
   .promo {
     padding-top   : 80px;
     position      : relative;
@@ -320,7 +310,7 @@ body {
     }
 
     &.section .intro {
-      color : @smoky-white;
+      color : @subtle-white;
     }
 
     .btn-cta {
@@ -363,7 +353,7 @@ body {
     }
 
     .darken {
-      background-color : #f6f6f6 !important;
+      background-color : @subtle-white !important;
     }
     .three-cols {
       h2 {
@@ -388,11 +378,8 @@ body {
   .intro-break {
     position                : relative;
     overflow                : hidden;
-    background              : url('/modules/core/img/phx_skyline.png') no-repeat center fixed;
-    -webkit-background-size : cover;
-    -moz-background-size    : cover;
-    -o-background-size      : cover;
-    background-size         : cover;
+    background              : url('/modules/core/img/phx_skyline.png') no-repeat center top fixed;
+    .background-size(cover);
     height                  : 250px;
     //font-family             : 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
   }
@@ -414,18 +401,6 @@ body {
     font-size : 64px;
   }
 
-  div.fade-blue {
-    background : url('/modules/core/img/fade-blue.png') repeat-x;
-  }
-
-  div.fade-black {
-    background : url('/modules/core/img/fade-black.png') repeat-x;
-  }
-
-  div.fade-white {
-    background : url('/modules/core/img/fade-white.png') repeat-x;
-  }
-
   div.section-fade {
     height   : 49px;
     position : absolute;
@@ -434,13 +409,7 @@ body {
   }
 
   /* Intro Sections - EG: Examples; */
-
-  .intro-spacer {
-    float      : left;
-    width      : 200px;
-    border-top : 3px solid #e7e7e7;
-  }
-
+  
   .img-responsive {
     display   : block;
     max-width : 100%;
@@ -466,8 +435,9 @@ i.fa.fa-stack-1x.text-primary {
 }
 
 .header {
+  .transition (background-color 0.4s ease-in-out);
 
-  &.navbar-fixed-top h1.logo, &.navbar-flex-top h1.logo {
+  &.navbar-fixed-top h1.logo, & h1.logo {
     font-family   : "Roboto Slab", arial, sans-serif;
     margin-top    : 0;
     margin-bottom : 0;
@@ -476,6 +446,7 @@ i.fa.fa-stack-1x.text-primary {
     float         : left;
 
     a {
+      .transition (background-color 0.4s ease-in-out);
       padding-top    : 15px;
       padding-right  : 30px;
       padding-bottom : 15px;
@@ -492,8 +463,8 @@ i.fa.fa-stack-1x.text-primary {
       }
 
       .logo-title {
-        min-width           : 200px;
-        min-height          : 40px;
+        min-width           : 108px;
+        min-height          : 36px;
         background-position : center;
         background-repeat   : no-repeat;
       }
@@ -503,16 +474,17 @@ i.fa.fa-stack-1x.text-primary {
   &.navbar-fixed-top h1.logo {
     a {
       color            : @outset-blue;
-      background-color : #FFF;
-      .transition (color 0.4s ease-in-out);
+      background-color : transparent;
+      .transition (background-color 0.4s ease-in-out);
+      .transition (background-image 0.4s ease-in-out);
     }
 
     a .logo-title {
-      background-image : url('/modules/core/img/brand/logo-blue.png');
+      background-image : url('/modules/core/img/brand/logo-dblue.png');
     }
   }
 
-  &.navbar-flex-top h1.logo {
+  & h1.logo {
     a {
       color            : #fff;
       background-color : @outset-blue;
@@ -539,8 +511,49 @@ i.fa.fa-stack-1x.text-primary {
   }
 }
 
+/* Small devices (tablets, 768px and up) */
+@media (min-width : 768px) {
+  .main-nav.navbar-right {
+    float : right !important;
+  }
+}
+
+/* Extra small devices (phones, less than 768px) */
+@media (max-width : 767px) {
+
+  header.header, header.header.navbar-fixed-top {
+    height : 40px;
+
+    h1.logo {
+      a {
+        padding-top      : 2px;
+        padding-right    : 0;
+        padding-bottom   : 0;
+        padding-left     : 0;
+        .border-radiuses(0, 0, 0, 0);
+        background-color : transparent;
+
+        .logo-title {
+          background-image : url('/modules/core/img/brand/logo-dblue.png');
+          background-size  : 50%;
+        }
+      }
+    }
+
+    .main-nav {
+      margin-top : 0;
+
+      .navbar-toggle {
+        top : 3px;
+      }
+    }
+
+  }
+
+}
+
 header {
-  &.navbar {
+  &.header {
     background : rgb(161, 161, 161);
     background : rgba(161, 161, 161, 0.4);
 

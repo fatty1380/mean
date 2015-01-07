@@ -22,8 +22,8 @@ if (typeof PDFJS === 'undefined') {
   (typeof window !== 'undefined' ? window : this).PDFJS = {};
 }
 
-PDFJS.version = '1.0.1029';
-PDFJS.build = '50fe7c8';
+PDFJS.version = '1.0.1059';
+PDFJS.build = '34bed63';
 
 (function pdfjsWrapper() {
   // Use strict in our context only - users might not want it
@@ -470,6 +470,8 @@ var XRefParseException = (function XRefParseExceptionClosure() {
 
 
 function bytesToString(bytes) {
+  assert(bytes !== null && typeof bytes === 'object' &&
+         bytes.length !== undefined, 'Invalid argument for bytesToString');
   var length = bytes.length;
   var MAX_ARGUMENT_COUNT = 8192;
   if (length < MAX_ARGUMENT_COUNT) {
@@ -485,6 +487,7 @@ function bytesToString(bytes) {
 }
 
 function stringToBytes(str) {
+  assert(typeof str === 'string', 'Invalid argument for stringToBytes');
   var length = str.length;
   var bytes = new Uint8Array(length);
   for (var i = 0; i < length; ++i) {
@@ -8985,9 +8988,9 @@ var Page = (function PageClosure() {
  */
 var PDFDocument = (function PDFDocumentClosure() {
   var FINGERPRINT_FIRST_BYTES = 1024;
-
   var EMPTY_FINGERPRINT = '\x00\x00\x00\x00\x00\x00\x00' +
     '\x00\x00\x00\x00\x00\x00\x00\x00\x00';
+
   function PDFDocument(pdfManager, arg, password) {
     if (isStream(arg)) {
       init.call(this, pdfManager, arg, password);
@@ -9199,11 +9202,13 @@ var PDFDocument = (function PDFDocumentClosure() {
       return shadow(this, 'documentInfo', docInfo);
     },
     get fingerprint() {
-      var xref = this.xref, hash, fileID = '';
+      var xref = this.xref, idArray, hash, fileID = '';
 
-      if (xref.trailer.has('ID') &&
-          xref.trailer.get('ID')[0] !== EMPTY_FINGERPRINT) {
-        hash = stringToBytes(xref.trailer.get('ID')[0]);
+      if (xref.trailer.has('ID')) {
+        idArray = xref.trailer.get('ID');
+      }
+      if (idArray && isArray(idArray) && idArray[0] !== EMPTY_FINGERPRINT) {
+        hash = stringToBytes(idArray[0]);
       } else {
         if (this.stream.ensureRange) {
           this.stream.ensureRange(0,
@@ -39290,7 +39295,7 @@ var CCITTFaxStream = (function CCITTFaxStreamClosure() {
 
       if (!this.eoblock && this.row === this.rows - 1) {
         this.eof = true;
-      } else if (this.eoline || !this.byteAlign) {
+      } else {
         code1 = this.lookBits(12);
         if (this.eoline) {
           while (code1 !== EOF && code1 !== 1) {
