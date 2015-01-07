@@ -3380,6 +3380,30 @@ body {
 .stronger {
   font-weight: bolder !important;
 }
+.pad-left {
+  padding-left: 15px!important;
+}
+.pad-right {
+  padding-right: 15px!important;
+}
+.pad-bottom {
+  padding-bottom: 15px!important;
+}
+.pad-top {
+  padding-top: 15px!important;
+}
+.mgn-left {
+  margin-left: 15px!important;
+}
+.mgn-right {
+  margin-right: 15px!important;
+}
+.mgn-bottom {
+  margin-bottom: 15px!important;
+}
+.mgn-top {
+  margin-top: 15px!important;
+}
 .application {
   padding-top: 80px;
   padding-bottom: 80px;
@@ -4009,4 +4033,20 @@ header.header .user-header-dropdown-toggle {
 }
 .pricing .item .feature-list li .fa-times {
   color: #999999;
+}
+.modal.tos .modal-dialog {
+  width: 80%!important;
+  max-width: 1024px!important;
+}
+[tos] button.btn-link,
+tos button.btn-link {
+  pading-left: 0px!important;
+  padding-right: 0px!important;
+  padding: 0 0!important;
+}
+[tos] ol,
+tos ol,
+[tos] ol > li,
+tos ol > li {
+  list-style-type: none!important;
 }
