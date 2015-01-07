@@ -6,7 +6,7 @@ module.exports = {
             css: [
                 'public/lib/bootstrap/dist/css/bootstrap.min.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
-                'public/lib/components-font-awesome/css/font-awesome.min.css',
+                '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css',
                 'public/lib/textAngular/src/textAngular.min.css',
                 'public/lib/animate.css/animate.min.css'
             ],
