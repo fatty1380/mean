@@ -3604,10 +3604,11 @@ body {
   top: 0;
   left: 0;
   height: 600px;
-  background: #253340 url('/modules/core/img/home-country-road.jpg') no-repeat fixed 0% 25%;
-  -moz-background-size: auto;
-  -o-background-size: auto;
-  background-size: auto;
+  background: #0e2d4c url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 .headline-bg > .overlay {
   background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%);
@@ -3631,29 +3632,10 @@ body {
   height: 200px;
 }
 .bg-slider-wrapper {
-  height: 75%;
-}
-.bg-slider-wrapper .flexslider {
-  margin: 0;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  border: none;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-}
-.bg-slider-wrapper .flexslider .slide {
-  display: block;
-  height: 780px;
-}
-.bg-slider-wrapper .flexslider .slide.slide-1 {
-  background: #253340 url('/modules/core/img/home-country-road.jpg') no-repeat 50% top !important;
+  height: 100%;
+  width: 100%;
+  max-height: 780px!important;
+  background: #f6f6f6 url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -3683,7 +3665,7 @@ body {
   margin-top: 20px;
 }
 .landing-page .promo.section .intro {
-  color: #f5f5f5;
+  color: #f6f6f6;
 }
 .landing-page .promo .btn-cta {
   font-size: 18px;
@@ -3739,7 +3721,7 @@ body {
 .landing-page .intro-break {
   position: relative;
   overflow: hidden;
-  background: url('/modules/core/img/phx_skyline.png') no-repeat center fixed;
+  background: url('/modules/core/img/phx_skyline.png') no-repeat center top fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -3760,25 +3742,11 @@ body {
 .landing-page .leader h1 {
   font-size: 64px;
 }
-.landing-page div.fade-blue {
-  background: url('/modules/core/img/fade-blue.png') repeat-x;
-}
-.landing-page div.fade-black {
-  background: url('/modules/core/img/fade-black.png') repeat-x;
-}
-.landing-page div.fade-white {
-  background: url('/modules/core/img/fade-white.png') repeat-x;
-}
 .landing-page div.section-fade {
   height: 49px;
   position: absolute;
   bottom: 0;
   width: 100%;
-}
-.landing-page .intro-spacer {
-  float: left;
-  width: 200px;
-  border-top: 3px solid #e7e7e7;
 }
 .landing-page .img-responsive {
   display: block;

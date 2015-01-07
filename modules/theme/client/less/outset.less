@@ -2,6 +2,7 @@
 @import "theme-default.less";
 
 @outset-blue: #0e2d4c;
+@subtle-white: #f6f6f6;
 
 /** Body **/
 html, body {
@@ -255,10 +256,8 @@ body {
   top                  : 0;
   left                 : 0;
   height               : 600px;
-  background           : #253340 url('/modules/core/img/home-country-road.jpg') no-repeat fixed 0% 25%; background-size : auto;
-  -moz-background-size : auto;
-  -o-background-size   : auto;
-  background-size      : auto;
+  background           : @outset-blue url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  .background-size(cover);
 
   > .overlay {
     background : -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5) 100%); /* FF3.6+ */
@@ -277,23 +276,11 @@ body {
 }
 
 .bg-slider-wrapper {
-  height : 75%;
-
-  .flexslider {
-    margin : 0;
-    .box-shadow(none);
-    border : none;
-    .border-radius(0);
-
-    .slide {
-      display : block;
-      height  : 780px;
-      &.slide-1 {
-        background : @color-2 url('/modules/core/img/home-country-road.jpg') no-repeat 50% top !important;
-        .background-size(cover);
-      }
-    }
-  }
+  height              : 100%;
+  width: 100%;
+  max-height: 780px!important;
+  background          :  @subtle-white url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  .background-size(cover);
 
   .black_mask {
     background-color : transparent;
@@ -307,6 +294,9 @@ body {
 }
 
 .landing-page {
+
+
+
   .promo {
     padding-top   : 80px;
     position      : relative;
@@ -320,7 +310,7 @@ body {
     }
 
     &.section .intro {
-      color : @smoky-white;
+      color : @subtle-white;
     }
 
     .btn-cta {
@@ -363,7 +353,7 @@ body {
     }
 
     .darken {
-      background-color : #f6f6f6 !important;
+      background-color : @subtle-white !important;
     }
     .three-cols {
       h2 {
@@ -388,11 +378,8 @@ body {
   .intro-break {
     position                : relative;
     overflow                : hidden;
-    background              : url('/modules/core/img/phx_skyline.png') no-repeat center fixed;
-    -webkit-background-size : cover;
-    -moz-background-size    : cover;
-    -o-background-size      : cover;
-    background-size         : cover;
+    background              : url('/modules/core/img/phx_skyline.png') no-repeat center top fixed;
+    .background-size(cover);
     height                  : 250px;
     //font-family             : 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
   }
@@ -414,18 +401,6 @@ body {
     font-size : 64px;
   }
 
-  div.fade-blue {
-    background : url('/modules/core/img/fade-blue.png') repeat-x;
-  }
-
-  div.fade-black {
-    background : url('/modules/core/img/fade-black.png') repeat-x;
-  }
-
-  div.fade-white {
-    background : url('/modules/core/img/fade-white.png') repeat-x;
-  }
-
   div.section-fade {
     height   : 49px;
     position : absolute;
@@ -434,13 +409,7 @@ body {
   }
 
   /* Intro Sections - EG: Examples; */
-
-  .intro-spacer {
-    float      : left;
-    width      : 200px;
-    border-top : 3px solid #e7e7e7;
-  }
-
+  
   .img-responsive {
     display   : block;
     max-width : 100%;
@@ -555,16 +524,14 @@ i.fa.fa-stack-1x.text-primary {
   header.header, header.header.navbar-fixed-top {
     height : 40px;
 
-
     h1.logo {
       a {
-        padding-top    : 2px;
-        padding-right  : 0;
-        padding-bottom : 0;
-        padding-left   : 0;
+        padding-top      : 2px;
+        padding-right    : 0;
+        padding-bottom   : 0;
+        padding-left     : 0;
         .border-radiuses(0, 0, 0, 0);
-        background-color: transparent;
-
+        background-color : transparent;
 
         .logo-title {
           background-image : url('/modules/core/img/brand/logo-dblue.png');
@@ -574,16 +541,14 @@ i.fa.fa-stack-1x.text-primary {
     }
 
     .main-nav {
-      margin-top: 0;
+      margin-top : 0;
 
       .navbar-toggle {
-        top: 3px;
+        top : 3px;
       }
     }
 
-
   }
-
 
 }
 
