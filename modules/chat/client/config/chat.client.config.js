@@ -7,11 +7,13 @@
             // Set top bar menu items
             Menus.addMenuItem('adminbar', {
                 title: 'Chat',
-                state: 'chat'
+                state: 'chat',
+                roles: ['Admin']
             });
             Menus.addMenuItem('topbar', {
                 title: 'Chat',
-                state: 'chat'
+                state: 'chat',
+                roles: ['Admin']
             });
         }
     ]);
