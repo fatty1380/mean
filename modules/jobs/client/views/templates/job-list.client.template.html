@@ -1,6 +1,25 @@
 <section name="os-job-list.directive" class="jobs">
 
-    <div data-ng-class="{'panel panel-default': !!dm.header}">
+    <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-if="!dm.isEnabled">
+        <h3>Jobs are <em>Coming Soon!</em></h3>
+
+        <p>Before opening up the site to employers, we are giving you time to build your profile and get your reports
+            ready.</p>
+
+        <p>
+        <ul>
+            <li>The more information you provide, the better your chances</li>
+            <li>Applicants who have reports in their profile are <u>8x more likely</u> to be hired!</li>
+            <li>You always have total control over who sees your information</li>
+        </ul>
+        </p>
+
+        <p>So put your best foot forward, and we’ll let you know when its time to apply!</p>
+        <button class="btn btn-primary center-block" ui-sref="home">Back to your Profile Page</button>
+        <p></p>
+    </div>
+
+    <div data-ng-class="{'panel panel-default': !!dm.header}" data-ng-if="dm.isEnabled">
         <div class="panel-heading" ng-if="!!dm.header">
             <div class="btn-group btn-group-sm pull-right">
                 <button ng-if="dm.showPost && !!dm.jobs.length" class="btn btn-primary"
@@ -10,7 +29,7 @@
             <h4>{{dm.header}} </h4>
         </div>
 
-        <div class="panel panel-default search-section">
+        <div class="panel panel-default search-section" data-ng-if="!!dm.jobs.length">
             <form class="panel-body form-inline">
                 <label class="form-label" for="job-search">Search: </label>
 
@@ -28,8 +47,10 @@
             </form>
         </div>
 
+        <h1>{{dm.jobs.length}} and si {{!!dm.jobs.length}}</h1>
+
         <div ng-class="{'panel-body': !!dm.header}">
-            <div class="list-group" ng-if="!!dm.jobs.length">
+            <div class="list-group" data-ng-if="!!dm.jobs.length">
                 <a data-ng-repeat="job in (dm.jobs | filter: dm.filter | filter: dm.searchTermFilter | limitTo: dm.limitTo)"
                    data-ng-href="jobs/{{job._id}}"
                    class="list-group-item">

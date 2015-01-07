@@ -7,24 +7,58 @@
     <div class="row">
 
         <div class="col-md-8">
-
             <div>
-                <os-driver-view model="vm.driver"></os-driver-view>
+                <os-driver-view data-ng-if="vm.driver" model="vm.driver"></os-driver-view>
 
-                <div data-ng-if="!vm.driver.user">
-                    {{vm.user.displayName}} has not yet created a driver profile
+                <div class="well" data-ng-show="!vm.driver || !vm.driver.user">
+                    <div class="panel panel-info" data-ng-if="!vm.canEdit">
+                        <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
+                            soon!</p>
+                    </div>
 
-                    <button type="button" class="btn btn-primary" ui-sref="drivers.create" data-ng-show="vm.canEdit">
-                        Create
-                        Your Driver Profile
+                    <div class="panel panel-info" data-ng-if="vm.canEdit">
+                        <h4>Hello {{vm.user.displayName}} and Welcome to Outset!<br>
+                            <small>You’re one step closer to your next job and managing your driving career.</small>
+                        </h4>
+
+                        <p>
+                            Here’s a few things you can do to make your job applications competitive:
+                        <ol>
+                            <li>Create a comprehensive driving profile, with a profile picture and past work experience.
+                                <br/><span class="center-block text-info text-center">Remember the more information you provide, the
+                                           better your chances</span>
+                            </li>
+
+                            <li>Show you’re reliable - order reports like Background Checks, MVR’s and Drug Tests to be
+                                hosted in your Profile.
+                                <br/><span class="center-block text-info text-center">Applicants who have reports in their profile
+                                           are 8x more likely to be hired! <br/><small>(Don’t
+                                           worry, you have total control over who sees your information)</small></span>
+                            </li>
+
+                            <li>Apply to the best driving jobs around!</li>
+                        </ol>
+
+                        </p>
+                    </div>
+
+                    <div class="panel panel-success"><strong>Special Note:</strong> Outset will be available to drivers
+                        only for one week, so you can build your profile and get your reports ready. So put your best
+                        foot forward, and we’ll let you know when its time to apply!
+                    </div>
+
+                    <button type="button" class="btn btn-primary center-block" ui-sref="drivers.create"
+                            data-ng-show="vm.canEdit">
+                        Create Your Driver Profile
                     </button>
                 </div>
             </div>
-
         </div>
 
         <div class="gutter right col-md-4">
             <span class="evilNonSemanticSpacer"></span>
+
+            <os-bg-check-summary user="vm.user"></os-bg-check-summary>
 
             <div class="profile-floater">
                 <img data-ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}"
@@ -34,11 +68,9 @@
                 </a>
             </div>
 
-            <div class="well">
+            <div class="well" data-ng-if="!!vm.driver.user.addresses">
                 <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
             </div>
-
-            <os-bg-check-summary user="vm.user"></os-bg-check-summary>
         </div>
 
     </div>

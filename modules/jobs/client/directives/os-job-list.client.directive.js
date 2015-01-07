@@ -4,6 +4,9 @@
     function JobListController(Jobs, $log, $state, auth) {
         var dm = this;
 
+        // TODO : LAUNCH DISABLE FUNCTIONALITY
+        dm.isEnabled = false;
+
         dm.limitTo = dm.limitTo || 10;
         dm.filter = {'company': undefined};
 

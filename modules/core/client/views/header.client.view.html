@@ -1,14 +1,21 @@
-<header class="header" scroll-position="scroll"
-        data-ng-class="{'navbar-fixed-top' : scroll > 0 }">
-    <div class="container-fluid {{navbarClass}}" data-ng-controller="HeaderController">
+<header class="header" data-ng-controller="HeaderController"
+        data-ng-class="{'navbar-fixed-top' : scroll > 0, 'navbar-landing' : !authentication.user }">
+    <div class="container-fluid {{navbarClass}}">
         <h1 class="logo">
             <a href="index.html" ui-sref="{{stateLink}}"><div class="logo-title"></div></a>
         </h1>
         <!--//logo-->
-        <nav class="main-nav navbar-right" role="navigation">
+        <nav class="main-nav" role="navigation">
             <div class="navbar-header">
+                <ul class="navbar-toggle" data-ng-hide="authentication.user">
+                    <li style="display:inline-block;">
+                        <a login-modal>Log In</a></li>
+                    <li style="display:inline-block;">
+                        <a signup-modal>Sign Up</a>
+                    </li>
+                </ul>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse"
-                        data-ng-click="toggleCollapsibleMenu()">
+                        data-ng-click="toggleCollapsibleMenu()" data-ng-show="authentication.user">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -36,6 +43,35 @@
                         <a ng-switch-default data-ui-sref="{{item.state}}" data-ng-bind="item.title"></a>
                     </li>
                 </ul>
+                <!-- navbar-right : used for logged in user's settings -->
+                <ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown">
+                            <img data-ng-src="{{authentication.user.profileImageURL}}"
+                                 alt="{{authentication.user.displayName}}"
+                                 class="header-profile-image"/>
+                            <span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li data-ui-sref-active="active">
+                                <a data-ui-sref="settings.profile">Edit Profile</a>
+                            </li>
+                            <li data-ui-sref-active="active">
+                                <a data-ui-sref="settings.picture">Change Profile Picture</a>
+                            </li>
+                            <li data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">
+                                <a data-ui-sref="settings.password">Change Password</a>
+                            </li>
+                            <li data-ui-sref-active="active">
+                                <a data-ui-sref="settings.accounts">Manage Social Accounts</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="/api/auth/signout" target="_self">Signout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
 
             <div class="navbar-collapse collapse">
@@ -50,35 +86,6 @@
             </div>
             <!--//navabr-collapse-->
 
-            <!-- navbar-right : used for logged in user's settings -->
-            <ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown">
-                        <img data-ng-src="{{authentication.user.profileImageURL}}"
-                             alt="{{authentication.user.displayName}}"
-                             class="header-profile-image"/>
-                        <span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li data-ui-sref-active="active">
-                            <a data-ui-sref="settings.profile">Edit Profile</a>
-                        </li>
-                        <li data-ui-sref-active="active">
-                            <a data-ui-sref="settings.picture">Change Profile Picture</a>
-                        </li>
-                        <li data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">
-                            <a data-ui-sref="settings.password">Change Password</a>
-                        </li>
-                        <li data-ui-sref-active="active">
-                            <a data-ui-sref="settings.accounts">Manage Social Accounts</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="/api/auth/signout" target="_self">Signout</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
         </nav>
         <!--//main-nav-->
     </div>

@@ -3757,6 +3757,10 @@ body {
   position: relative;
   top: 2em;
 }
+.landing-page .brand-lead img {
+  width: 80%;
+  max-width: 913px;
+}
 .landing-page .leader {
   text-align: center;
   position: relative;
@@ -3862,16 +3866,18 @@ i.fa.fa-stack-1x.text-primary {
 .header.navbar-fixed-top h1.logo a .logo-title {
   background-image: url('/modules/core/img/brand/logo-dblue.png');
 }
-.header h1.logo a {
+.header.navbar-landing h1.logo a {
   color: #fff;
   background-color: #0e2d4c;
-  -webkit-transition: color 0.4s ease-in-out;
-  -moz-transition: color 0.4s ease-in-out;
-  -ms-transition: color 0.4s ease-in-out;
-  -o-transition: color 0.4s ease-in-out;
+}
+.header.navbar-landing h1.logo a .logo-title {
+  background-image: url('/modules/core/img/brand/logo-white.png');
+}
+.header h1.logo a {
+  background-color: transparent;
 }
 .header h1.logo a .logo-title {
-  background-image: url('/modules/core/img/brand/logo-white.png');
+  background-image: url('/modules/core/img/brand/logo-dblue.png');
 }
 /** Responsive Override **/
 @media (min-width: 992px) {
@@ -3947,8 +3953,11 @@ i.fa.fa-stack-1x.text-primary {
   }
 }
 header.header {
-  background: #a1a1a1;
-  background: rgba(161, 161, 161, 0.4);
+  background-color: #a1a1a1;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+header.header.navbar-landing {
+  background-color: rgba(161, 161, 161, 0.4);
 }
 header.header .header-profile-image {
   opacity: 0.8;

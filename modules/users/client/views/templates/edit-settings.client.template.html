@@ -2,6 +2,7 @@
     <fieldset class="create">
         <div class="form-group">
             <label class="control-label" for="name">Name</label>
+
             <div class="form-inline margin-bottom-sm" name="name" id="name">
                 <div class="input-group margin-bottom-sm" name="First">
                     <span class="input-group-addon">First</span>
@@ -16,31 +17,29 @@
         </div>
 
         <div class="form-group">
-            <label for="username">Username</label>
-            <div class="input-group margin-bottom-sm" id="username">
-                <span class="input-group-addon">
-                    <i class="fa fa-envelope-o fa-fw"></i>
-                </span>
-                <input class="form-control-static" type="text" placeholder="Username" data-ng-bind="vm.profile.username">
-            </div>
-        </div>
+            <label for="email">Email/Username</label>
 
-        <div class="form-group">
-            <label for="email">Email</label>
             <div class="input-group margin-bottom-sm" id="email">
                 <span class="input-group-addon">
                     <i class="fa fa-envelope-o fa-fw"></i>
                 </span>
-                <input class="form-control" type="text" placeholder="Email address" data-ng-model="vm.profile.email">
+
+                <p class="form-control-static" type="text" placeholder="Email address"
+                   data-ng-bind="vm.profile.email"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="panel panel-info col-md-10 col-md-offset-1">
+                <h4>Looking for your username?</h4>
+
+                <p>In order to keep accounts linked with people, we use your email address as your username. If you'd
+                    like to change it, please <a href="mailto:accounts@joinoutset.com">let us know</a>!</p>
             </div>
         </div>
 
         <div class="form-group">
             <label for="addresses">Addresses</label>
-            <button class="btn pull-right btn-small btn-link" ng-click="vm.addAddress()">
-                Add Address
-            </button>
-
             <div class="container-fluid" id="addresses">
                 <os-address-list models="vm.profile.addresses" inline-edit="true" required="false"></os-address-list>
             </div>
@@ -49,8 +48,10 @@
         <!-- Driver's Telephone -->
         <div class="form-group">
             <label for="phone">Phone</label>
+
             <div class="input-group margin-bottom-sm" id="phone">
-                <input class="form-control" type="tel" name="phone" data-ng-model="vm.profile.phone" placeholder="(xxx) xxx-xxxx">
+                <input class="form-control" type="tel" name="phone" data-ng-model="vm.profile.phone"
+                       placeholder="(xxx) xxx-xxxx">
                 <span class="input-group-addon">
                     <i class="fa fa-phone fa-fw"></i>
                 </span>
@@ -59,14 +60,14 @@
 
         <div class="form-group" data-ng-show="vm.show">
             <div class="text-right form-group">
-                <button type="button" value="cancel" class="btn btn-large btn-link" ng-click="vm.cancel()">cancel</button>
+                <button type="button" value="cancel" class="btn btn-large btn-link" ng-click="vm.cancel()">cancel
+                </button>
                 <button type="submit" value="update" class="btn btn-large btn-primary">Save Profile</button>
             </div>
             <div data-ng-show="vm.error" class="text-center text-danger">
                 <strong data-ng-bind="vm.error"></strong>
             </div>
         </div>
-
 
 
     </fieldset>

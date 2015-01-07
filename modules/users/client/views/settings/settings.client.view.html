@@ -1,7 +1,6 @@
-<section data-ng-controller="SettingsController as viewCtrl">
-	<div class="page-header">
-		<h1>Settings</h1>
-	</div>
+<section class="container" data-ng-controller="SettingsController as viewCtrl">
+	<os-page-header title="{{vm.listTitle || 'Account Settings'}}"></os-page-header>
+
 	<div class="row">
 		<nav class="col-sm-3 col-md-3">
 			<ul class="nav nav-pills nav-stacked">
@@ -14,13 +13,13 @@
 				<li data-ui-sref-active="active" data-ng-show="viewCtrl.user.provider === 'local'">
 					<a data-ui-sref="settings.password">Change Password</a>
 				</li>
-				<li data-ui-sref-active="active">
+				<li data-ui-sref-active="active" data-ng-if="false">
 					<a data-ui-sref="settings.accounts">Manage Social Accounts</a>
 				</li>
 			</ul>
 		</nav>
 		<div class="col-sm-9 col-md-8 settings-view">
-			<div data-ui-view></div>
+			<div data-ui-view class="well"></div>
 		</div>
 	</div>
 </section>
