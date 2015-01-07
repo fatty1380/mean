@@ -29,5 +29,4 @@ log
 modules/theme/client/images/team
 modules/theme/client/images/press
 modules/theme/client/images
-modules/core/client/img
 *.log
