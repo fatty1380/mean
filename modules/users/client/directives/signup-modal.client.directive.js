@@ -11,42 +11,79 @@
                 title: '@?',
                 signupType: '@?'
             },
-            controller: 'SignupModalController'
+            controller: 'SignupModalController',
+            controllerAs: 'vm',
+            bindToController: true
         };
     }
 
-    function SignupModalController($scope, $modal, $log) {
+    function SignupModalController($modal, $log) {
+        var vm = this;
 
-        $scope.isOpen = false;
+        vm.isOpen = false;
 
-        $scope.showSignup = function() {
+        vm.showSignup = function() {
             var modalInstance = $modal.open({
                 templateUrl: 'signupModal.html',
-                controller: 'AuthenticationController',
+                controller: 'SignupController',
                 size: 'lg',
                 resolve: {
-                    signupType: function() { return $scope.signupType; }
-                }
+                    signupType: function() { return vm.signupType; }
+                },
+                controllerAs: 'vm'
             });
 
             modalInstance.result.then(function(result) {
                 $log.info('Modal result %o', result);
-                $scope.isOpen = false;
+                vm.isOpen = false;
             }, function(result) {
                 $log.info('Modal dismissed at: ' + new Date());
-                $scope.isOpen = false;
+                vm.isOpen = false;
             });
 
             modalInstance.opened.then(function(args) {
-                $scope.isOpen = true;
+                vm.isOpen = true;
             });
         };
     }
 
-    SignupModalController.$inject = ['$scope', '$modal', '$log'];
+    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, $scope) {
+        var vm = $scope.vm = this;
+        vm.auth = Authentication;
+        vm.credentials = { signupType: signupType, terms: '' };
+
+        vm.hello = 'HELLO';
+
+        vm.signup = function() {
+
+            $log.debug('[Auth.Ctrl.signup] signing up with credentials: ', vm.credentials);
+
+            $log.debug('assigning email to username');
+            vm.credentials.username = vm.credentials.email;
+
+            $http.post('/api/auth/signup', vm.credentials)
+                .success(function(response) {
+                    // If successful we assign the response to the global user model
+                    vm.auth.user = response;
+
+                    $log.debug('Successfully created %o USER Profile', response.type);
+
+                    $modalInstance.close(response.type);
+
+                    $state.go('home');
+                }).error(function(response) {
+                    console.error(response.message);
+                    vm.error = response.message;
+                });
+        };
+    }
+
+    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', '$scope'];
+    SignupModalController.$inject = ['$modal', '$log'];
 
     angular.module('users')
         .directive('signupModal', SignupModalDirective)
-        .controller('SignupModalController', SignupModalController);
+        .controller('SignupModalController', SignupModalController)
+        .controller('SignupController', SignupController);
 
 })();

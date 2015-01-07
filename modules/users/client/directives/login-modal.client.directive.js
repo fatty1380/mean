@@ -39,30 +39,11 @@
         };
     }
 
-    function ModalFocusDirective($timeout, $parse) {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                var model = $parse(attrs.modalFocus);
-
-                scope.$watch(model, function(value) {
-                    console.log('value=', value);
-                    if (value === true) {
-                        $timeout(function() {
-                            element[0].focus();
-                        });
-                    }
-                });
-            }
-        };
-    }
 
     SigninModalController.$inject = ['$scope', '$modal', '$log'];
-    ModalFocusDirective.$inject = ['$timeout', '$parse'];
 
     angular.module('users')
         .directive('loginModal', SigninModalDirective)
-        .controller('LoginModalController', SigninModalController)
-        .directive('modalFocus', ModalFocusDirective);
+        .controller('LoginModalController', SigninModalController);
 
 })();
