@@ -56,10 +56,9 @@
 
         vm.signup = function() {
 
-            $log.debug('[Auth.Ctrl.signup] signing up with credentials: ', vm.credentials);
-
             $log.debug('assigning email to username');
             vm.credentials.username = vm.credentials.email;
+            vm.credentials.type = vm.credentials.signupType;
 
             $http.post('/api/auth/signup', vm.credentials)
                 .success(function(response) {

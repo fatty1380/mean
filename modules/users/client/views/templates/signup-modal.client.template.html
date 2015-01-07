@@ -113,11 +113,9 @@
         </div>
 
         <div class="modal-footer" ng-show="vm.credentials.signupType">
-            <div class="form-group">
                 <button type="submit" class="btn btn-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
                     Up!
                 </button>
-            </div>
             <div data-ng-show="vm.error" class="text-center text-danger">
                 <strong data-ng-bind="vm.error"></strong>
             </div>
