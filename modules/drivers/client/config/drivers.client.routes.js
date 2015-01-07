@@ -2,14 +2,26 @@
     'use strict';
 
 
+    function handle404s(err, $q) {
+        debugger;
+        // recover here if err is 404
+        if (err.status === 404) {
+            return null;
+        } //returning recovery
+        // otherwise return a $q.reject
+        return $q.reject(err);
+    }
+
     function driverResolve(rsrc, params) {
         if (!!params.driverId) {
             var val = params.driverId;
             console.log('Searching for driver ID: %s', val);
 
-            return rsrc.ById.get({
+            var drivers = rsrc.ById.get({
                 driverId: val
             }).$promise;
+
+            return drivers;
         }
         return {};
     }
@@ -24,21 +36,11 @@
             val = auth.user._id;
         }
 
-        return rsrc.ByUser.get({
+        var driver = rsrc.ByUser.get({
             userId: val
-        }).$promise.then(function(value) {
-            console.log('Successfully got driver %o', value);
-            return value;
-        },
-        function(error) {
-            if(error.status === 404) {
-                console.log('Unable to find driver');
-                return null;
-            }
-            else {
-                throw error;
-            }
-        });
+        }).$promise;
+
+        return driver.catch(handle404s);
     }
 
     function driverListResolve(rsrc) {

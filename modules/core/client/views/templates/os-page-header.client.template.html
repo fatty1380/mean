@@ -1,13 +1,16 @@
+<h2 class="title container text-center" data-ng-bind="dm.title"></h2>
+
 <!-- os-page-header directive : os-page-header.client.template -->
-<div class="page-header" ng-class="{well : !dm.level}" ng-mouseenter="dm.hover=true" ng-mouseleave="dm.hover=false">
-    <h1 class="{{dm.level}}">{{dm.title}}
-        <span data-ng-if="!!dm.editSref" data-ng-show="dm.showEdit">
+<div class="page-header" data-ng-if="!!dm.editSref || dm.btnShow && (!!dm.btnText && !!dm.btnSref)" ng-class="{well : !dm.level}" ng-mouseenter="dm.hover=true" ng-mouseleave="dm.hover=false">
+    <span data-ng-if="!!dm.editSref" data-ng-show="dm.showEdit">
             <a class="btn btn-link" ui-sref="{{::dm.editSref}}">edit
                 <i class="fa fa-pencil-square-o"></i>
             </a>
         </span>
-        <button ng-if="dm.btnShow && (!!dm.btnText && !!dm.btnSref)" class="btn btn-primary pull-right" ui-sref="{{dm.btnSref}}">{{::dm.btnText}}</button>
-    </h1>
+    <button ng-if="dm.btnShow && (!!dm.btnText && !!dm.btnSref)" class="btn btn-primary pull-right"
+            ui-sref="{{dm.btnSref}}">{{::dm.btnText}}
+    </button>
+
     <!-- Sub-heading -->
     <small ng-if="dm.includeTransclude"><em class="text-muted" ng-transclude></em></small>
 </div>

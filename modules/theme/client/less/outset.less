@@ -416,6 +416,11 @@ body {
     text-align : center;
     position   : relative;
     top        : 2em;
+
+    img {
+      width : 80%;
+      max-width: 913px;
+    }
   }
 
   .leader {
@@ -512,15 +517,24 @@ i.fa.fa-stack-1x.text-primary {
     }
   }
 
-  & h1.logo {
+  &.navbar-landing h1.logo {
     a {
       color            : #fff;
       background-color : @outset-blue;
-      .transition (color 0.4s ease-in-out);
     }
 
     a .logo-title {
       background-image : url('/modules/core/img/brand/logo-white.png');
+    }
+  }
+
+  & h1.logo {
+    a {
+      background-color : transparent;
+    }
+
+    a .logo-title {
+      background-image : url('/modules/core/img/brand/logo-dblue.png');
     }
   }
 
@@ -582,8 +596,12 @@ i.fa.fa-stack-1x.text-primary {
 
 header {
   &.header {
-    background : rgb(161, 161, 161);
-    background : rgba(161, 161, 161, 0.4);
+    background-color : rgb(161, 161, 161);
+
+    &.navbar-landing {
+      background-color : rgba(161, 161, 161, 0.4);
+    }
+    background-color : rgba(255, 255, 255, 0.8);
 
     .header-profile-image {
       opacity       : 0.8;
