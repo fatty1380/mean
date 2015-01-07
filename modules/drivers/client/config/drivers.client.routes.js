@@ -2,12 +2,14 @@
     'use strict';
 
 
-    function handle404s(err, $q) {
-        debugger;
+    function handle404s(err, $q, $log) {
         // recover here if err is 404
         if (err.status === 404) {
+            $log.warn('No Driver found ... resolving as null', err);
             return null;
         } //returning recovery
+
+        $log.error('Hard Error when retrieiving Driver', err);
         // otherwise return a $q.reject
         return $q.reject(err);
     }
