@@ -79,11 +79,18 @@ module.exports = function (grunt) {
 					ext: 'js,html',
 					watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
 				}
+			},
+			default: {
+				script: 'server.js',
+				options: {
+					ext: 'js,html',
+					watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+				}
 			}
 		},
 		concurrent: {
-			default: ['nodemon', 'watch'],
-			debug: ['nodemon', 'watch', 'node-inspector'],
+			default: ['nodemon:default', 'watch'],
+			debug: ['nodemon:dev', 'watch', 'node-inspector'],
 			options: {
 				logConcurrentOutput: true
 			}
