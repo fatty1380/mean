@@ -1,5 +1,5 @@
 <section class="experience">
-    <ng-form name="experienceForm" class="edit" ng-show="expctrl.editMode">
+    <ng-form name="vm.experienceForm" class="edit" ng-show="vm.editMode" data-ng-submit="vm.save($event)">
         <div class="row">
             <label class="col-sm-2 control-label">Title
                 <br/>
@@ -7,7 +7,7 @@
             </label>
 
             <div class="controls col-sm-9 controls">
-                <input type="text" data-ng-model="expctrl.model.title" class="form-control" placeholder="Short Title"
+                <input type="text" data-ng-model="vm.model.title" class="form-control" placeholder="Short Title"
                        required/>
             </div>
         </div>
@@ -19,13 +19,13 @@
             </label>
 
             <div class="controls col-sm-9 controls">
-                <textarea name="description" class="form-control" data-ng-model="expctrl.model.description"
+                <textarea name="description" class="form-control" data-ng-model="vm.model.description"
                           rows="3"></textarea>
-                <!--<os-html-edit model="expctrl.model.description"></os-html-edit>-->
+                <!--<os-html-edit model="vm.model.description"></os-html-edit>-->
             </div>
         </div>
 
-        <ng-form class="form-inline row">
+        <div class="form-inline row">
 
             <label class="col-sm-2 control-label">
                 <small>when were you at this job</small>
@@ -34,18 +34,18 @@
             <div class="form-group col-sm-4">
                 <label class="control-label text-right col-sm-4">Start</label>
 
-                    <input type="text" data-ng-model="expctrl.model.time.start" class="form-control"
-                           placeholder="Month, Year" required></input>
+                <input type="text" data-ng-model="vm.model.time.start" class="form-control"
+                       placeholder="Month, Year" required/>
             </div>
 
             <div class="form-group col-sm-4">
                 <label class="control-label text-right col-sm-4">to</label>
 
-                    <input type="text" data-ng-model="expctrl.model.time.end" class="form-control"
-                           placeholder="Month, Year"/>
+                <input type="text" data-ng-model="vm.model.time.end" class="form-control"
+                       placeholder="Month, Year"/>
             </div>
             <div class="form-group col-sm-2"></div>
-        </ng-form>
+        </div>
 
         <div class="row">
             <label class="col-sm-2 control-label">
@@ -53,7 +53,7 @@
             </label>
 
             <div class="col-md-9 controls">
-                <input type="text" data-ng-model="expctrl.model.location" class="form-control" placeholder="Where"
+                <input type="text" data-ng-model="vm.model.location" class="form-control" placeholder="Where"
                        required/>
             </div>
         </div>
@@ -63,33 +63,37 @@
         <div class="row">
             <div class="col-sm-11">
                 <div class="pull-right">
-                    <button class="btn btn-link" ng-click="expctrl.cancel()">
+                    <button type="button" class="btn btn-link" ng-click="vm.cancel()">
                         cancel
                     </button>
 
-                    <button class="btn btn-primary" ng-click="expctrl.save({add: false})">
-                        <i class="fa fa-check-circle" style="padding-right: 10px;"></i> Save
+                    <button type="submit" class="btn btn-primary" >
+                        <i class="fa fa-check-circle" style="padding-right: 10px;"></i>Save
                     </button>
 
-                    <button class="btn btn-primary" ng-if="!!expctrl.addFn" ng-click="expctrl.save({add: true})">
-                        <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Save &amp; Add
+                    <button type="submit" class="btn btn-primary" ng-if="!!vm.addFn">
+                        <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Another
                     </button>
+                </div>
+                <div data-ng-show="vm.error" class="text-danger text-center">
+                    <strong data-ng-bind="vm.error"></strong>
                 </div>
             </div>
         </div>
 
     </ng-form>
 
-    <section class="experience view" ng-hide="expctrl.editMode">
+    <section class="experience view" ng-hide="vm.editMode">
         <div class="row">
-            <h4>{{expctrl.model.title}}
-                <small ng-if="expctrl.editEnable">
-                    <button class="btn btn-link" ng-click="expctrl.edit()"><i class="fa fa-pencil"></i> edit</button>
+            <h4>{{vm.model.title}}
+                <small ng-if="vm.editEnable">
+                    <button class="btn btn-link" ng-click="vm.edit()"><i class="fa fa-pencil"></i> edit</button>
                 </small>
             </h4>
-            <p data-ng-bind-html="expctrl.model.description"></p>
+            <p data-ng-bind-html="vm.model.description"></p>
 
-            <p>{{expctrl.model.time.start.month}}/{{expctrl.model.time.start.year}} to
-                {{expctrl.model.time.end.month}}/{{expctrl.model.time.end.year}}, {{expctrl.model.location}}</p>
+            <p>{{vm.model.time.start.month}}/{{vm.model.time.start.year}} to
+                {{vm.model.time.end.month}}/{{vm.model.time.end.year}}, {{vm.model.location}}</p>
+        </div>
     </section>
 </section>

@@ -1,4 +1,6 @@
 (function() {
+    'use strict';
+
     function PageHeaderDirective() {
         var ddo;
         ddo = {

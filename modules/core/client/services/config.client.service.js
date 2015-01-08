@@ -8,6 +8,10 @@
                 var rsrc = $resource('api/config/states');
                 return rsrc.query();
             },
+            getCountries: function() {
+                var rsrc = $resource('api/config/countries');
+                return rsrc.query();
+            },
             getBaseSchedule: function() {
                 var rsrc = $resource('api/config/baseSchedule');
                 return rsrc.query();

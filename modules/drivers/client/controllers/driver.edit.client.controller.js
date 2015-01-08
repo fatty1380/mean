@@ -34,9 +34,7 @@
         function submit() {
             debugger;
             if (vm.driverForm.$invalid) {
-                debugger;
-                vm.error = vm.driverForm.$error;
-                return;
+                return false;
             }
 
             if ($state.is('drivers.create')) {

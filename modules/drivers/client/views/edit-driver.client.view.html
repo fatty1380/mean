@@ -6,6 +6,9 @@
         <form name="vm.driverForm" class="form-horizontal" data-ng-submit="vm.submit(this, this.data)" novalidate>
             <fieldset>
 
+                <div class="well">
+                    <pre>{{vm.driver}}</pre>
+                </div>
                 <!-- Biography -->
                 <h3>About Me
                     <small>Include an introduction to yourself here to help employers know who you are</small>
@@ -13,7 +16,7 @@
                 <div class="container-fluid well">
                     <div class="row profile-row">
                         <div class="col-sm-12">
-                            <os-html-edit model="vm.driver.about"></os-html-edit>
+                            <os-html-edit id="description" model="vm.driver.about"></os-html-edit>
                         </div>
                     </div>
                 </div>
@@ -26,9 +29,6 @@
                     </small>
                 </h3>
 
-                <div class="well">
-                    <pre>{{vm.driver.licenses[0]}}</pre>
-                </div>
 
                 <div class="well">
                     <os-edit-license model="vm.driver.licenses[0]"></os-edit-license>
