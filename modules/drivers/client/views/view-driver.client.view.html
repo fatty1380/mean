@@ -5,7 +5,6 @@
     </os-page-header>
 
     <div class="row">
-
         <div class="col-md-8">
             <div>
                 <os-driver-view data-ng-if="vm.driver" model="vm.driver"></os-driver-view>
@@ -17,7 +16,7 @@
                     </div>
 
                     <div class="panel panel-info" data-ng-if="vm.canEdit">
-                        <h4>Hello {{vm.user.displayName}} and Welcome to Outset!<br>
+                        <h4>Hi {{vm.user.firstName}}, Welcome to Outset!<br>
                             <small>You’re one step closer to your next job and managing your driving career.</small>
                         </h4>
 
@@ -68,7 +67,7 @@
                 </a>
             </div>
 
-            <div class="well" data-ng-if="!!vm.driver.user.addresses">
+            <div class="well" data-ng-if="!!vm.driver.user.addresses && !!vm.driver.user.addresses.length">
                 <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
             </div>
         </div>

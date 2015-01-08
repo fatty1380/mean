@@ -47,6 +47,15 @@ body {
 .mgn-top {
   margin-top: 15px!important;
 }
+.text-center-force {
+  text-align: center!important;
+}
+.text-left-force {
+  text-align: left!important;
+}
+.text-right-force {
+  text-align: right!important;
+}
 .application {
   padding-top: 80px;
   padding-bottom: 80px;
@@ -211,6 +220,14 @@ body {
   color: #fff;
   font-weight: 300;
 }
+.content-section .title.h3 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+.content-section .title.h4 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
 .content-section .content-container-inner {
   max-width: 900px;
   margin: 0 auto;
@@ -244,11 +261,14 @@ body {
   padding-bottom: 60px;
 }
 .content-section .section .title {
-  color: #444444;
+  color: #333333;
   font-size: 28px;
 }
-.headline-bg.headline-sm .content-section {
-  padding-top: 10px;
+.headline-bg.headline-sm + .content-section {
+  padding-top: 80px;
+}
+.headline-bg.headline-sm + .content-section os-page-header h2 {
+  margin-bottom: 20px;
 }
 .clear-bg {
   background-color: #cccccc;
@@ -595,6 +615,15 @@ i.fa.fa-stack-1x.text-primary {
     top: 3px;
   }
 }
+.well os-page-header .h1,
+.well os-page-header .h2,
+.well os-page-header .h3,
+.well os-page-header .h4,
+.well os-page-header .h5,
+.well os-page-header .h6 {
+  color: #333333;
+  text-align: left!important;
+}
 header.header {
   background-color: #a1a1a1;
   background-color: rgba(255, 255, 255, 0.8);
@@ -616,6 +645,45 @@ header.header a:hover .header-profile-image {
 header.header .user-header-dropdown-toggle {
   padding-top: 11px !important;
   padding-bottom: 11px !important;
+}
+/***** FORMS *********/
+form {
+  /* XS and SMALL (Tablets and phones, 992px and lower) */
+}
+form .form-group label > small {
+  color: #777777;
+  display: block;
+}
+form .form-group label > small:before {
+  top: -5px;
+}
+form .form-group.disabled label,
+form .form-group .disabled label,
+form .form-group.disabled .btn,
+form .form-group .disabled .btn {
+  color: #777777 !important;
+}
+form .form-group.disabled .btn,
+form .form-group .disabled .btn {
+  border-color: #dfdfdf !important;
+}
+form .form-group.disabled .btn.active,
+form .form-group .disabled .btn.active,
+form .form-group.disabled .btn:hover,
+form .form-group .disabled .btn:hover,
+form .form-group.disabled .btn:active,
+form .form-group .disabled .btn:active {
+  background: transparent!important;
+  cursor: default;
+}
+form .form-group label.disabled {
+  color: #777777;
+}
+@media (max-width: 992px) {
+  form .form-group label.control-label {
+    display: block;
+    text-align: left!important;
+  }
 }
 /***** PRICING *******/
 .pricing .price-lead {

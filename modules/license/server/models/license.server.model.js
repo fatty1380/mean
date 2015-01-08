@@ -4,20 +4,39 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+Schema       = mongoose.Schema,
+path         = require('path'),
+config       = require(path.resolve('./modules/core/server/controllers/config.server.controller'));
 
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function(property) {
-    return ((this.provider !== 'local' && !this.updated) || property.length);
+var validateState = function (property) {
+
+    if (!property) {
+        return true;
+    }
+
+    return config.validate('states', property);
 };
 
 /**
  * A method to retrieve any enum values
  */
-var getEnumValues = function() {
+var getEnumValues = function () {
     var enums;
+};
+
+
+var DateString = {
+    value: {
+        type: String,
+        default: ''
+    },
+    parseFormat: {
+        type: String,
+        default: 'YYYYMMDD'
+    }
 };
 
 /**
@@ -41,10 +60,10 @@ var LicenseSchema = new Schema({
         trim: true
     },
     state: {
-        type: String,
+        type: Schema.Types.Mixed,
         trim: true,
-        default: 'AZ',
-        validate: [validateLocalStrategyProperty, 'Please select your state']
+        default: null,
+        validate: [validateState, 'Please select a state from the available options']
     },
     rating: {
         type: String,
@@ -57,14 +76,12 @@ var LicenseSchema = new Schema({
         }],
         default: []
     },
-    issued: {
-        type: Date,
-        default: null
-    },
+    issued: DateString,
     expires: {
         type: Date,
         default: null
     },
+
     created: {
         type: Date,
         default: Date.now
@@ -75,9 +92,9 @@ var LicenseSchema = new Schema({
     }
 });
 
-LicenseSchema.pre('save', function(next){
-  this.modified = Date.now;
-  next();
+LicenseSchema.pre('save', function (next) {
+    this.modified = Date.now;
+    next();
 });
 
 mongoose.model('License', LicenseSchema);

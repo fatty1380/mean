@@ -1,6 +1,8 @@
 @import "mixins.less";
 @import "theme-default.less";
 
+@import "/public/lib/bootstrap/less/variables.less";
+
 @outset-blue: #0e2d4c;
 @subtle-white: #f6f6f6;
 
@@ -45,8 +47,6 @@ body {
   padding-top: 15px!important;
 }
 
-
-
 .mgn-left {
   margin-left: 15px!important;
 }
@@ -58,6 +58,16 @@ body {
 }
 .mgn-top {
   margin-top: 15px!important;
+}
+
+.text-center-force {
+  text-align: center!important;
+}
+.text-left-force {
+  text-align: left!important;
+}
+.text-right-force {
+  text-align: right!important;
 }
 
 .application {
@@ -220,6 +230,16 @@ body {
     margin-top    : 0;
     color         : #fff;
     font-weight   : 300;
+
+    &.h3 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    &.h4 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
   }
   .content-container-inner { // .story-container-inner
     max-width  : 900px;
@@ -254,8 +274,12 @@ body {
 }
 
 .headline-bg.headline-sm {
-  .content-section {
-    padding-top : 10px;
+  +.content-section {
+    padding-top : 80px;
+
+    os-page-header h2 {
+      margin-bottom: 20px;
+    }
   }
 }
 
@@ -594,6 +618,15 @@ i.fa.fa-stack-1x.text-primary {
 
 }
 
+.well {
+  os-page-header {
+    .h1, .h2, .h3, .h4, .h5, .h6 {
+      color: @text-color;
+      text-align: left!important;
+    }
+  }
+}
+
 header {
   &.header {
     background-color : rgb(161, 161, 161);
@@ -618,6 +651,50 @@ header {
     .user-header-dropdown-toggle {
       padding-top    : 11px !important;
       padding-bottom : 11px !important;
+    }
+  }
+}
+
+/***** FORMS *********/
+form {
+  .form-group {
+    label > small {
+      color: @text-muted;
+      display: block;
+      &:before {
+        top: -5px;
+      }
+    }
+
+    &.disabled, .disabled {
+      label, .btn {
+        color: @text-muted!important;
+      }
+      .btn {
+        border-color: lighten(desaturate(@color, 100%), 25%)!important;
+
+        &.active, &:hover, &:active {
+          background : transparent!important;
+          cursor: default;
+        }
+      }
+    }
+
+    label.disabled {
+      color: @text-muted;
+    }
+
+    .btn-group {
+
+    }
+
+  }
+
+  /* XS and SMALL (Tablets and phones, 992px and lower) */
+  @media (max-width: 992px) {
+    .form-group label.control-label {
+      display: block;
+      text-align : left!important;
     }
   }
 }

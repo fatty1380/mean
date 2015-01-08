@@ -1,23 +1,25 @@
-'use strict';
+(function () {
+    'use strict';
 
 //Drivers service used to communicate Drivers REST endpoints
-function DriverFactory($resource) {
-    return {
-        ById: $resource('api/drivers/:driverId', {
-            driverId: '@_id'
-        }, {
-            update: {
-                method: 'PUT'
-            }
-        }),
-        ByUser: $resource('api/users/:userId/driver', {
-            userId: '@_userId'
-        })
-    };
-}
+    function DriverFactory($resource) {
+        return {
+            ById: $resource('api/drivers/:driverId', {
+                driverId: '@_id'
+            }, {
+                update: {
+                    method: 'PUT'
+                }
+            }),
+            ByUser: $resource('api/users/:userId/driver', {
+                userId: '@_userId'
+            })
+        };
+    }
 
-DriverFactory.$inject = ['$resource'];
+    DriverFactory.$inject = ['$resource'];
 
-angular
-    .module('drivers')
-    .factory('Drivers', DriverFactory);
+    angular
+        .module('drivers')
+        .factory('Drivers', DriverFactory);
+})();
