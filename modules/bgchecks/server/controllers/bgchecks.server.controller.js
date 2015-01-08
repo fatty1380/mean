@@ -493,10 +493,6 @@ function GetReportApplicant(req, res, next) {
         query = {user: req.user._id};
     }
 
-    // OVERRIDE!
-    query = {remoteId: 44679};
-    req.remoteApplicantId = 44679;
-
     console.log('[GetReportApplicant] Searching for report applicant with query %j', query);
 
     ReportApplicant.findOne(query)
@@ -570,7 +566,7 @@ function ReadReportApplicant(req, res) {
 
     console.log('[ReportApplicant.read] Combining values from req.applicant and req.remoteApplicant');
 
-    var retval = _.extend(req.remoteApplicant, req.applicant.toObject());
+    var retval = req._.extend(req.remoteApplicant, req.applicant.toObject());
 
     console.log('[ReportApplicant.read] Combined Applicant: %j', retval);
 
