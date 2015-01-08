@@ -4051,6 +4051,10 @@ form .form-group .disabled .btn:active {
 form .form-group label.disabled {
   color: #777777;
 }
+form .form-group label.optional {
+  font-weight: normal;
+  color: #404040;
+}
 @media (max-width: 992px) {
   form .form-group label.control-label {
     display: block;

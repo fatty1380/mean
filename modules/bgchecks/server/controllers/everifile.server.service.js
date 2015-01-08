@@ -9,7 +9,9 @@ ReportType      = mongoose.model('ReportType'),
 ReportApplicant = mongoose.model('ReportApplicant'),
 unirest         = require('unirest'),
 Q               = require('q'),
-//moment          = require('moment'),
+moment            = require('moment'),
+path            = require('path'),
+config          = require(path.resolve('./config/config')),
 _               = require('lodash');
 
 
@@ -47,10 +49,16 @@ exports.GetRawReport = GetRawReport;
  * TODO: Move to config;
  */
 
-var enabledSKUs = ['NBDS', 'PKG_PREMIUM', 'ESCRECUP', 'MVRDOM'];
-var baseUrl = 'https://renovo-api-test.everifile.com/renovo';
-var username = 'api@dswheels.com';
-var password = 'Test#123';
+var enabledSKUs = ['NBDS', 'PKG_PREMIUM', 'ES_ECUPIT', 'MVRDOM'];
+
+var server = {
+    baseUrl: 'https://renovo-api-test.everifile.com/renovo',
+    username: 'api@dswheels.com',
+    password: 'Test#123'
+};
+
+debugger;
+server = _.extend(server, config.services.everifile);
 
 var Cookie = {
     jar: null, // CookieJar
@@ -105,14 +113,14 @@ function GetSession() {
         var newJar = unirest.jar(true);
 
         var postData = {
-            'username': username,
-            'password': password
+            'username': server.username,
+            'password': server.password
         };
 
-        console.log('[GetSession] with credentials %j to baseUrl %s', postData, baseUrl);
+        console.log('[GetSession] with credentials %j to baseUrl %s', postData, server.baseUrl);
 
         // post login request to get new session;
-        unirest.post(baseUrl + '/rest/session')
+        unirest.post(server.baseUrl + '/rest/session')
             .type('json')
             .send(postData)
             .jar(newJar)
@@ -152,7 +160,7 @@ function GetReportTypeDefinitions(cookie, filter, enable) {
 
     var deferredGetReportTypes = Q.defer();
 
-    unirest.get(baseUrl + '/rest/report')
+    unirest.get(server.baseUrl + '/rest/report')
         .jar(cookie.jar)
         .end(function (response) {
 
@@ -229,7 +237,7 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
 
     if (reportType.enabled) {
         unirest
-            .get(baseUrl + '/rest/report/' + sku + '/fields')
+            .get(server.baseUrl + '/rest/report/' + sku + '/fields')
             .jar(cookieJar)
             .end(function (response) {
 
@@ -263,7 +271,7 @@ function GetAllApplicants(cookie) {
 
     var deferred = Q.defer();
 
-    unirest.get(baseUrl + '/rest/applicant')
+    unirest.get(server.baseUrl + '/rest/applicant')
         .jar(cookie.jar)
         .end(function (response) {
             console.log('[GetAllApplicants] Got response Body: %j', response.body);
@@ -274,7 +282,7 @@ function GetAllApplicants(cookie) {
 
             console.log('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
 
-            var applicantModels = _.map(response.body.applicants, initReportApplicantModel);
+            var applicantModels = _.map(response.body.applicants, sanitizeReportApplicant);
 
             deferred.resolve(applicantModels);
         });
@@ -282,17 +290,21 @@ function GetAllApplicants(cookie) {
     return deferred.promise;
 }
 
-function initReportApplicantModel(model) {
-    var newModel = new ReportApplicant(model);
+function sanitizeReportApplicant(model) {
 
-    newModel.remoteId = model.applicantId;
+    model.remoteId = model.applicantId;
 
-    console.log('[CreateApplicant] Clearing govId from response object');
-    model.governmentId = null;
+    if(model.hasOwnProperty('governmentId')) {
+        console.log('[initReportApplicantModel] Clearing govId from response object');
+        model.governmentId = null;
+    }
 
-    debugger;   // TODO: newModel does not contain all of old model! Should we save it? SSN is not salted, arrgh
+    if(model.hasOwnProperty('driversLicense')) {
+        console.log('[initReportApplicantModel] Clearing dlId from response object');
+        model.driversLicense = null;
+    }
 
-    return newModel;
+    return model;
 }
 
 function GetApplicant(cookie, id) {
@@ -300,20 +312,18 @@ function GetApplicant(cookie, id) {
 
     var deferred = Q.defer();
 
-    unirest.get(baseUrl + '/rest/applicant/' + id)
+    unirest.get(server.baseUrl + '/rest/applicant/' + id)
         .jar(cookie.jar)
         .end(function (response) {
-            console.log('[GetApplicant] Got response Body: %j', response.body);
+            console.log('[GetApplicant] Got response Body for: %j', response.body.firstName + ' ' + response.body.lastName);
 
             if (response.error) {
                 deferred.reject(response.body.reason);
             }
 
-            var applicant = response.body;
+            var applicantModel = sanitizeReportApplicant(response.body);
 
-            var applicantModel = initReportApplicantModel(applicant);
-
-            deferred.resolve(applicant);
+            deferred.resolve(applicantModel);
         });
 
     return deferred.promise;
@@ -324,8 +334,13 @@ function CreateApplicant(cookie, newApplicant) {
     console.log('[CreateApplicant] Creating a new applicant');
 
     var deferred = Q.defer();
+    debugger;
 
-    unirest.post(baseUrl + '/rest/applicant')
+    var upsert;
+
+    if(newApplicant.remoteId)
+
+    unirest.post(server.baseUrl + '/rest/applicant')
         .headers({'Content-Type': 'application/json'})
         .send(newApplicant)
         .jar(cookie.jar)
@@ -333,28 +348,12 @@ function CreateApplicant(cookie, newApplicant) {
             console.log('[CreateApplicant] Got response Body: %j', response.body);
 
             if (response.error) {
-                deferred.reject(response.body.reason);
+                console.log('[CreateApplicant] Full Error Response: \n\n%j\n\n', response);
+
+                deferred.reject(response.body.reason + '[' +JSON.stringify(response.error) + ']');
             }
 
-            var applicant = response.body;
-
-            var model = initReportApplicantModel(applicant);
-            debugger; // check govId
-
-            console.log('[CreateApplicant] Clearing govId from response object');
-            applicant.governmentId = null;
-
-            model.save(function (err) {
-                if (err) {
-                    console.error('Unable to save ReportApplicant due to %j', err);
-                } else {
-                    console.log('Successfully saved ReportApplicant. Resolving promise with full applicant data');
-                    applicant.remoteId = model.remoteId;
-                }
-
-                deferred.resolve(applicant);
-            });
-
+            deferred.resolve(response.body);
         });
 
     return deferred.promise;
@@ -369,7 +368,7 @@ function RunReport(cookie, bgReport) {
 
     var deferred = Q.defer();
 
-    unirest.post(baseUrl + '/rest/report')
+    unirest.post(server.baseUrl + '/rest/report')
         .jar(cookie.jar)
         .query({
             reportSku: bgReport.type.sku,
@@ -421,7 +420,7 @@ function GetReportStatus(cookie, remoteId) {
 
     var deferred = Q.defer();
 
-    unirest.get(baseUrl + '/rest/reportCheck/' + remoteId)
+    unirest.get(server.baseUrl + '/rest/reportCheck/' + remoteId)
         .jar(cookie.jar)
         .end(function (response) {
             console.log(response.body);
@@ -442,7 +441,7 @@ function GetReportStatusByApplicant(cookie, applicantId) {
 
     var deferred = Q.defer();
 
-    unirest.get(baseUrl + '/rest/applicant/' + applicantId + '/reports')
+    unirest.get(server.baseUrl + '/rest/applicant/' + applicantId + '/reports')
         .jar(cookie.jar)
         .end(function (response) {
             console.log(response.body);
@@ -464,7 +463,7 @@ function GetSummaryReportPDF(cookie, bgReport) {
 
     var deferred = Q.defer();
 
-    unirest.get(baseUrl + '/rest/reportSummary/find/' + bgReport.remoteApplicantId + '/report/pdf')
+    unirest.get(server.baseUrl + '/rest/reportSummary/find/' + bgReport.remoteApplicantId + '/report/pdf')
         .jar(cookie.jar)
         .end(function (response) {
             debugger;
@@ -483,7 +482,7 @@ function GetRawReport(cookie, bgReport) {
 
     var deferred = Q.defer();
 
-    unirest.get(baseUrl + '/rest/reportCheck/' + bgReport.remoteId + '/report')
+    unirest.get(server.baseUrl + '/rest/reportCheck/' + bgReport.remoteId + '/report')
         .jar(cookie.jar)
         .end(function (response) {
             console.log(response.body);

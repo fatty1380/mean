@@ -42,7 +42,6 @@ var ReportApplicantSchema = new Schema({
         ref: 'BackgroundReport'
     }],
 
-
     /** Bookkeeping Information ------------------------------------------*/
 
     created: {
@@ -66,28 +65,28 @@ ReportApplicantSchema.pre('save', function (next) {
  */
 
 ReportApplicantSchema.post('init', function(next) {
-    debugger; next();
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
 }) ;
 ReportApplicantSchema.post('save', function(next) {
-    debugger; next();
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
 }) ;
 ReportApplicantSchema.post('validate', function(next) {
-    debugger; next();
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
 }) ;
 ReportApplicantSchema.post('remove', function(next) {
-    debugger; next();
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
 }) ;
 ReportApplicantSchema.pre('validate', function(next) {
-    debugger; next();
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
 }) ;
 ReportApplicantSchema.pre('remove', function(next) {
-    debugger; next();
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
 }) ;
 ReportApplicantSchema.pre('save', function (next) {
 
-    debugger; // TODO - A: Why is this saving, B: Is sensitive data removed
+    if (typeof(next) === 'function') { debugger; // TODO - A: Why is this saving, B: Is sensitive data removed
 
-    next();
+    next(); } else { console.log('UnknownNext: %j', next);}
 });
 ReportApplicantSchema.pre('init', function (next) {
 

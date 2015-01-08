@@ -40,6 +40,11 @@ var applicantFactory = function ($resource) {
         ByUser: $resource('/api/users/:userId/driver/applicant', {
             userId: '@userId',
             reportSource: '@reportSource'
+        }, {
+            get: {
+                method: 'GET',
+                isArray: false
+            }
         }),
         ListAll: function (query) {
             var retVal = $resource('/api/reports/applicants');
