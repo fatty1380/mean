@@ -35,7 +35,7 @@
         vm.isEditing = (typeof vm.isEditing === 'boolean' ? vm.isEditing : !!vm.isEditing); // Default to _false_ if undefined
         vm.canEdit = (typeof vm.canEdit === 'boolean' ? vm.canEdit : !!~vm.canEdit); // Default to _true_ if undefined
         vm.maxCount = vm.maxCount || 10;
-        vm.required = (typeof vm.required === 'boolean' ? vm.required : !!~vm.required); // Default to _true_ if undefined
+        vm.required = vm.canEdit && (typeof vm.required === 'boolean' ? vm.required : !!~vm.required); // Default to canEdit if undefined
         vm.fullWidth = (typeof vm.fullWidth === 'boolean' ? vm.fullWidth : !!vm.fullWidth); // Default to _false_ if undefined
         vm.inlineEdit = (typeof vm.inlineEdit === 'boolean' ? vm.inlineEdit : !!vm.inlineEdit); // Default to _false_ if undefined
 

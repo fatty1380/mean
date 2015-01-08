@@ -2,7 +2,7 @@
     'use strict';
 
     function handleBadRoute($injector, $location) {
-        console.log('Unknown URL pattern :(');
+        console.log('Unknown URL pattern: %s', $location.url());
 
         $injector.invoke(['Authentication', '$log', function (auth, $log) {
             if (!auth.isLoggedIn()) {

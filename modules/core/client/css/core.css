@@ -16,24 +16,20 @@
     border-color: #FA787E;
 }
 
-.ng-valid.ng-dirty {
-    border-color: #78FA89;
-}
-
 /* Forms Specific Styling */
 
-div.controls > input, div.controls > .input-group {
-    top: 10px;
-    position: relative;
-}
+/*div.controls > input, div.controls > .input-group {*/
+    /*top: 10px;*/
+    /*position: relative;*/
+/*}*/
 
-div.controls > label.control-label {
-    float: right;
-}
+/*div.controls > label.control-label {*/
+    /*float: right;*/
+/*}*/
 
-label > small {
-    font-weight: normal;
-}
+/*label > small {*/
+    /*font-weight: normal;*/
+/*}*/
 
 /* Home/Intro Styling */
 

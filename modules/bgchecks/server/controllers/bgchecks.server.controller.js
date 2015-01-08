@@ -74,7 +74,6 @@ function availableReportTypes(req, res, next) {
 
             console.log('[availableReportTypes] loaded reports: %j', reportTypes);
 
-            debugger;
             res.json(reportTypes);
         });
 }
