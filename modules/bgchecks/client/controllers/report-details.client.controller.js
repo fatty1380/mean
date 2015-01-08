@@ -170,5 +170,5 @@
     angular.module('bgchecks')
         .controller('ReportDetailsController', ReportDetailsController)
         .filter('TitleCase', capFilter);
-    ;
+
 })();

@@ -51,7 +51,7 @@
             debugger;
 
             if(_.isEmpty(vm.driver.licenses[0])) {
-                $log.debug('No license information entered, ignoring ...')
+                $log.debug('No license information entered, ignoring ...');
                 vm.driver.licenses = null;
             } else if (vm.driverForm['vm.licenseForm'].$invalid) {
                 vm.error = vm.driverForm['vm.licenseForm'].$error;

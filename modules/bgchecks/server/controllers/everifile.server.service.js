@@ -330,19 +330,23 @@ function GetApplicant(cookie, id) {
 }
 
 
-function CreateApplicant(cookie, newApplicant) {
+function CreateApplicant(cookie, applicant) {
     console.log('[CreateApplicant] Creating a new applicant');
 
     var deferred = Q.defer();
     debugger;
 
-    var upsert;
+    var method;
 
-    if(newApplicant.remoteId)
+    if(applicant.remoteId) {
+        method = 'PUT';
+    } else {
+        method = 'POST';
+    }
 
-    unirest.post(server.baseUrl + '/rest/applicant')
+    unirest[method](server.baseUrl + '/rest/applicant')
         .headers({'Content-Type': 'application/json'})
-        .send(newApplicant)
+        .send(applicant)
         .jar(cookie.jar)
         .end(function (response) {
             console.log('[CreateApplicant] Got response Body: %j', response.body);
