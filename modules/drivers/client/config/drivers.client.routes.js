@@ -1,13 +1,14 @@
 (function() {
     'use strict';
 
-
     function handle404s(err, $q) {
-        debugger;
         // recover here if err is 404
         if (err.status === 404) {
+            console.warn('No Driver found ... resolving as null', err);
             return null;
         } //returning recovery
+
+        console.error('Hard Error when retrieiving Driver', err);
         // otherwise return a $q.reject
         return $q.reject(err);
     }
@@ -48,6 +49,7 @@
     }
 
     function config($stateProvider) {
+
         // Drivers state routing
         $stateProvider.
 
@@ -96,7 +98,7 @@
         }).
 
         state('drivers.view', {
-            url: '/:driverId',
+            url: '/{driverId:^[0-9a-fA-F]{24}$}',
             templateUrl: 'modules/drivers/views/view-driver.client.view.html',
             parent: 'drivers',
             resolve: {
@@ -108,7 +110,7 @@
         }).
 
         state('drivers.edit', {
-            url: '/:driverId/edit',
+            url: '/{driverId:^[0-9a-fA-F]{24}$}/edit',
             templateUrl: 'modules/drivers/views/edit-driver.client.view.html',
             parent: 'drivers',
             resolve: {

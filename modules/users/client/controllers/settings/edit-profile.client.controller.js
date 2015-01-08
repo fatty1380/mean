@@ -23,12 +23,14 @@
 
                 user.$update(function(response) {
                     vm.success = true;
-                    Authentication.user = response;
+                    vm.profile = Authentication.user = response;
+
+                    vm.userForm.$setPristine();
                 }, function(response) {
                     vm.error = response.data.message;
                 });
             } else {
-                vm.submitted = true;
+                vm.error = vm.userForm.$error();
             }
         };
 

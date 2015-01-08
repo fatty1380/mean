@@ -20,11 +20,11 @@ exports.UpdateReportDefinitionsFromServer = UpdateReportDefinitionsFromServer;
 exports.SaveUpdatedReportDefinitions = SaveUpdatedReportDefinitions;
 
 exports.applicant = {
-    create: CreateNewRemoteApplicant,
-    save: SaveNewApplicant,
     list: GetAllRemoteApplicants,
+    create: UpsertRemoteApplicant,
+    save: SaveNewApplicant,
+    get: GetReportApplicant, /* Searches for local ReportApplicant and sets req.applicant */
     getRemote: GetRemoteApplicantData,
-    get: GetReportApplicant,
     read: ReadReportApplicant
 };
 
@@ -61,8 +61,18 @@ exports.read = {
 /** BEGIN : Implementation -------------------------------------------- **/
 
 function availableReportTypes(req, res, next) {
-    console.log('[availableReportTypes] loading all available report types');
-    ReportType.find({'enabled': true})
+    console.log('[availableReportTypes] request query: %j', req.query);
+    var query;
+    if(req.query.returnAll) {
+        query = {};
+        console.log('[availableReportTypes] loading all report types');
+    }
+    else {
+        query = {'enabled':true};
+        console.log('[availableReportTypes] loading all enabled report types');
+    }
+
+    ReportType.find(query)
         //.populate('fields')
         .exec(function (err, reportTypes) {
             if (err) {
@@ -74,7 +84,6 @@ function availableReportTypes(req, res, next) {
 
             console.log('[availableReportTypes] loaded reports: %j', reportTypes);
 
-            debugger;
             res.json(reportTypes);
         });
 }
@@ -150,20 +159,6 @@ exports.delete = function (req, res) {
         }
     });
 };
-
-/**
- * List of Bgchecks
- */
-exports.listByUser = function (req, res) {
-
-    if (req.params.userId) {
-        req.query = {user: req.params.userId};
-    }
-
-    debugger;
-    this.list(req, res);
-};
-
 
 /** Router Middleware ------------------------------------------ **/
 
@@ -385,51 +380,45 @@ function reportTypeUpsert(dbValue, newReport) {
 
 /** SECTION : Applicants ---------------------------------------------------- */
 
-function CreateNewRemoteApplicant(req, res, next) {
-
-    //var applicant = {
-    //    'middleName': 'Norman',
-    //    'lastName': 'Smith',
-    //    'nameSuffix': 'MD',
-    //    'aliases': [{
-    //        'lastName': 'McDonald', 'firstName': 'Ronald'
-    //    }],
-    //    'currentAddress': {
-    //        'street2': 'Suite 200',
-    //        'street1': '101 Oak Street',
-    //        'postalCode': '30302',
-    //        'state': 'georgia',
-    //        'country': 'united_states',
-    //        'city': 'Atlanta'
-    //    },
-    //    'governmentId': '201211141',
-    //    'gender': 'male',
-    //    'birthDate': 19780101,
-    //    'firstName': 'Bob',
-    //    'hasApplicantRequestedForReceivingReport': 'true'
-    //};
-    //console.warn('[CreateNewRemoteApplicant] Creating temporary applicant');
-
-    if (!req.user) {
-
-
-        console.warn('[CreateNewRemoteApplicant] No User, no problem!');
-    }
+function UpsertRemoteApplicant(req, res, next) {
 
     var applicant = req.body;
+    var message = 'Requesting user does not match applicant user';
+
+    if(!!applicant.user && !req.user._id.equals(applicant.user)){
+        message = message + ' (' + req.user._id + '!=' + applicant.user + ')';
+        console.error('[UpsertRemoteApplicant] %s', message);
+        res.status(401).send({message: message});
+    }
 
     everifile.GetSession().then(
         function (session) {
             everifile.CreateApplicant(session, applicant).then(
                 function (applicant) {
-                    console.log('[CreateNewRemoteApplicant] Got applicant data from eVerifile: %j', applicant);
+                    console.log('[UpsertRemoteApplicant] Got applicant response from eVerifile: %j', applicant);
 
-                    req.remoteApplicant = applicant;
+                    // This response is minimal: likely only an applicantId
+                    var model = new ReportApplicant({
+                        remoteId: applicant.applicantId,
+                        user: req.user
+                    });
 
-                    next();
+                    model.save(function (err) {
+                        if (err) {
+                            console.error('Unable to save ReportApplicant due to %j', err);
+                        } else {
+                            console.log('Successfully saved ReportApplicant. Resolving promise with full applicant data');
+                            applicant.remoteId = model.remoteId;
+                        }
+
+                        req.remoteApplicant = applicant;
+
+                        next();
+                    });
                 },
                 function (reject) {
-                    // Catch the error, check for 404/401
+                    console.log('[UpsertRemoteApplicant] Error response: %j', reject, reject);
+                    next(reject);
                 }
             );
         }, function (error) {
@@ -440,10 +429,12 @@ function CreateNewRemoteApplicant(req, res, next) {
 
 function SaveNewApplicant(req, res, next) {
 
-    var applicant = new ReportApplicant(req.remoteApplicant);
+    var applicantId = req.remoteApplicant && req.remoteApplicant.applicantId;
 
-    applicant.user = req.user;
-    applicant.remoteId = req.remoteApplicant.applicantId;
+    var applicant = new ReportApplicant({
+        remoteId: applicantId,
+        user: req.user
+    });
 
     applicant.save(function (err) {
         if (err) {
@@ -452,7 +443,6 @@ function SaveNewApplicant(req, res, next) {
                 message: errorHandler.getErrorMessage(err),
                 error: err
             });
-
         }
 
         console.log('Successfully saved ReportApplicant: %j', applicant);
@@ -479,7 +469,8 @@ function GetAllRemoteApplicants(req, res, next) {
                     res.json(applicantModels);
                 },
                 function (reject) {
-                    // Catch the error, check for 404/401
+                    console.log('[GetAllRemoteApplicants] Error response: %j', reject, reject);
+                    next(reject);
                 }
             );
         }, function (error) {
@@ -496,11 +487,15 @@ function GetReportApplicant(req, res, next) {
         query = {remoteId: req.remoteApplicantId};
     } else if (req.userId) {
         console.log('[GetReportApplicant] Searching based on req.userId');
-        query = {user: req.userId};
+        query = {user: mongoose.Types.ObjectId(req.userId)};
     } else if (req.user) {
         console.log('[GetReportApplicant] Searching based on req.user');
         query = {user: req.user._id};
     }
+
+    // OVERRIDE!
+    query = {remoteId: 44679};
+    req.remoteApplicantId = 44679;
 
     console.log('[GetReportApplicant] Searching for report applicant with query %j', query);
 
@@ -512,81 +507,74 @@ function GetReportApplicant(req, res, next) {
                 });
             }
 
+            console.log('[GetReportApplicant] Result: %j', localApplicant);
+
             req.applicant = localApplicant;
-            req.remoteApplicantId = (localApplicant || {}).remoteId;
             next();
         });
 
 }
 
+/**
+ * In order to find a remote applicant, we must assume that we have saved that
+ * data into the local collection of report applicants. If this is true, the object
+ * req.applicant will be populated from the previous method: GetReportApplicant.
+ *
+ * If it is not populated, we will assume that no remote applicant exists and one
+ * should be created.
+ *
+ * In the future, we may choose to search for applicants, but maybe not.
+ */
 function GetRemoteApplicantData(req, res, next) {
-    if (!req.user && !req.applicant && !req.remoteApplicantId) {
+    if (!req.applicant && !req.remoteApplicantId) {
         var message = 'Incoming request must have some way to determine the remoteApplicantId';
         console.error('[GetRemoteApplicantData] %s', message);
         return next(new Error(message));
     }
 
-    if (!req.remoteApplicantId) {
-        /**
-         * In order to find a remote applicant, we must assume that we have saved that
-         * data into the local collectino of report applicants. If this is true, the object
-         * req.applicant will be populated from the previous method: GetReportApplicant.
-         *
-         * If it is not populated, we will assume that no remote applicant exists and one
-         * should be created.
-         *
-         * In the future, we may choose to search for applicants, but maybe not.
-          */
+    var id = req.remoteApplicantId || req.applicant && req.applicant.remoteId;
 
-
-        if (req.applicant && req.applicant.remoteId) {
-            console.log('Using req.applicant remoteId: %s', req.applicant.remoteId);
-            req.remoteApplicantId = req.applicant.remoteId;
-        } else {
-            console.log('[GetRemoteApplicantData] Unable to search for applicant from request data');
-            req.remoteApplicant = null;
-            return next();
-        }
-    } else {
-        console.log('Using req.remoteApplicantId remoteId: %s', req.remoteApplicantId);
+    if (req.remoteApplicantId) {
+        console.log('Using req.remoteApplicantId remoteId source');
+    } else if (id) {
+        console.log('Using req.applicant for remoteId source');
+    } else if (!id) {
+        console.log('[GetRemoteApplicantData] Unable to search for applicant from request data');
+        req.remoteApplicant = null;
+        return next();
     }
-
-    var id = req.remoteApplicantId;
 
     everifile.GetSession().then(
         function (session) {
             everifile.GetApplicant(session, id).then(
                 function (remoteApplicant) {
 
-                    console.log('[GetRemoteApplicantData] Got applicant model from eVerifile: %j', remoteApplicant);
-                    req.applicant.remoteData = remoteApplicant;
+                    console.log('[GetRemoteApplicantData] Got applicant info from eVerifile: %j', remoteApplicant);
                     req.remoteApplicant = remoteApplicant;
-                },
-                function (reject) {
-                    debugger;
-                    // Catch the error, check for 404/401
+                    next();
                 }
             );
         }, function (error) {
-            console.log('UpdateReportDefinitionsFromServer failed due to error: %j', error);
+            console.log('[GetRemoteApplicantData] failed due to error: %j', error);
             next(error);
         });
 }
 
 function ReadReportApplicant(req, res) {
-    console.log('[ReportApplicant.read] Returning applicant %j', req.applicant);
 
-    if (!req.applicant) {
+    if (!req.applicant && !req.remoteApplicant) {
         return res.status(404).send({
-            message: 'No applicant found'
+            message: 'No local or remote applicant found'
         });
     }
 
-    if (!!req.remoteApplicant && !req.applicant.remoteData) {
-        req.applicant.remoteData = req.remoteApplicant;
-    }
+    console.log('[ReportApplicant.read] Combining values from req.applicant and req.remoteApplicant');
 
-    res.json(req.applicant);
+    var retval = _.extend(req.remoteApplicant, req.applicant.toObject());
+
+    console.log('[ReportApplicant.read] Combined Applicant: %j', retval);
+
+    res.json(retval);
 }
 
 /** SECTION : Report Manipulation ------------------------------------------------------ **/

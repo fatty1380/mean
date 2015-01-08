@@ -1,4 +1,5 @@
-<h2 class="title container text-center" data-ng-bind="dm.title"></h2>
+<h2 ng-if="!dm.level" class="title container-fluid text-center" data-ng-bind="dm.title"></h2>
+<span ng-if="dm.level" class="title container-fluid text-center {{dm.level}}" data-ng-bind="dm.title"></span>
 
 <!-- os-page-header directive : os-page-header.client.template -->
 <div class="page-header" data-ng-if="!!dm.editSref || dm.btnShow && (!!dm.btnText && !!dm.btnSref)" ng-class="{well : !dm.level}" ng-mouseenter="dm.hover=true" ng-mouseleave="dm.hover=false">

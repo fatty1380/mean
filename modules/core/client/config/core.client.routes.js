@@ -1,9 +1,35 @@
 (function () {
     'use strict';
 
+    function handleBadRoute($injector, $location) {
+        console.log('Unknown URL pattern: %s', $location.url());
+
+        $injector.invoke(['Authentication', '$log', function (auth, $log) {
+            if (!auth.isLoggedIn()) {
+                $location.path('/');
+            }
+            else {
+                switch (auth.user.type) {
+                    case 'driver':
+                        $log.debug('[Route.Otherwise] Re-Routing to driver\'s profile page');
+                        $location.path('/drivers/home');
+                        break;
+                    case 'owner':
+                        $log.debug('[Route.Otherwise] Re-Routing to the user\'s company home');
+                        $location.path('/companies/home');
+                        break;
+                    default:
+                        $log.warn('[Route.Otherwise] Unknown Destination');
+                        $location.path('/');
+                }
+            }
+
+        }]);
+    }
+
     function config($stateProvider, $urlRouterProvider) {
         // Redirect to home view when route not found
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise(handleBadRoute);
 
         // Home state routing
         $stateProvider.
@@ -47,6 +73,7 @@
             });
     }
 
+    handleBadRoute.$inject = ['$injector', '$location', '$state', 'Authentication', '$log'];
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
 
     // Setting up route

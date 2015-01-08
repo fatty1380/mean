@@ -2,40 +2,49 @@
     'use strict';
 
     function ExperienceDirectiveController($scope, $element, $attrs, $transclude) {
-        this.editMode = typeof this.editMode === undefined ? true : !!this.editMode;
-        this.editEnable = typeof this.editEnable === undefined ? true : !!this.editEnable;
 
-        this.pristine = angular.copy(this.model);
+        var vm = this;
 
-        this.edit = function() {
-            this.pristine = angular.copy(this.model);
-            this.editMode = true;
+        vm.editMode = typeof vm.editMode === undefined ? true : !!vm.editMode;
+        vm.editEnable = typeof vm.editEnable === undefined ? true : !!vm.editEnable;
+
+        vm.pristine = angular.copy(vm.model);
+
+        vm.edit = function() {
+            vm.pristine = angular.copy(vm.model);
+            vm.editMode = true;
         };
 
-        this.cancel = function() {
-            if (this.model.isFresh) {
+        vm.cancel = function() {
+            if (vm.model.isFresh) {
                 // This is a brand-new experience object
-                if (this.dropFn) {
-                    this.dropFn(this.model);
+                if (vm.dropFn) {
+                    vm.dropFn(vm.model);
                 } else {
-                    this.model = null;
+                    vm.model = null;
                 }
             } else {
-                this.model = angular.copy(this.pristine);
+                vm.model = angular.copy(vm.pristine);
             }
 
-            this.editMode = false;
+            vm.editMode = false;
         };
 
 
-        this.save = function(options) {
-            if (options) {
-                if (!!options.add && !!this.addFn) {
-                    this.addFn();
+        vm.save = function(event) {
+            debugger;
+            if(vm.experienceForm.$valid) {
+                var options = event.clickOptions;
+                if (options && options.hasOwnProperty('add')) {
+                    var addMore = vm.addFn && vm.addFn();
                 }
+            } else{
+                event.stopPropigation();
+                vm.error = 'Please correct the errors above before saving this experience';
+                return false;
             }
 
-            this.editMode = false;
+            vm.editMode = false;
         };
     }
 
@@ -53,7 +62,7 @@
                 dropFn: '&?'
             },
             controller: ExperienceDirectiveController,
-            controllerAs: 'expctrl',
+            controllerAs: 'vm',
             bindToController: true
         };
     }

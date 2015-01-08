@@ -1,9 +1,10 @@
 (function () {
     'use strict';
 
-    function EditLicenseController($scope, $log, ngModelController) {
+    function EditLicenseController($scope, $log, appConfig) {
         var vm = this;
 
+        vm.licenseTypes = ['Standard', 'Commercial'];
         vm.ratings = ['A', 'B', 'C', 'D', 'G'];
         vm.endorsements = [{
             key: 'HME',
@@ -31,25 +32,25 @@
             value: false
         }];
 
-        if (vm.model) {
-            $log.debug('[EditLicense] Displaying License: %o', vm.model);
+        if (_.isEmpty(vm.license)) {
+            $log.warn('[EditLicense] Assuming we are creating a new license. Is this OK?');
         } else {
-            $log.warn('[EditLicense] Assuming we are creating a new license');
-
-            vm.model = {};
+            $log.debug('[EditLicense] Displaying License for editing: %o', vm.license);
         }
+
+        vm.states = appConfig.getStates();
 
         vm.dateFormat = 'MM/DD/YYYY';
         vm.maskFormat = '99/99/9999';
         vm.parseFormat = 'MMDDYYYY';
 
         vm.shadow = {
-            expires: vm.model.expires,
-            dateOfBirth: vm.model.dateOfBirth
+            expires: vm.license && vm.license.expires || '',
+            dateOfBirth: vm.license && vm.license.dateOfBirth || ''
         };
 
         $scope.$watch('vm.shadow.expires', function (val) {
-            $log.info('vm.model.expires, %o, %o', this, val);
+            $log.info('vm.license.expires, %o, %o', this, val);
 
             var m;
 
@@ -57,7 +58,7 @@
                 m = moment(val, vm.parseFormat);
 
                 if (m.isValid()) {
-                    vm.model.expires = m;
+                    vm.license.expires = m;
                 }
             }
 
@@ -65,7 +66,7 @@
         });
 
         $scope.$watch('vm.shadow.dateOfBirth', function (val) {
-            $log.info('vm.model.dateOfBirth, %o, %o', this, val);
+            $log.info('vm.license.dateOfBirth, %o, %o', this, val);
 
             var m;
 
@@ -73,7 +74,7 @@
                 m = moment(val, vm.parseFormat);
 
                 if (m.isValid()) {
-                    vm.model.dateOfBirth = m;
+                    vm.license.dateOfBirth = m;
                 }
             }
 
@@ -98,7 +99,7 @@
         return ddo;
     }
 
-    EditLicenseController.$inject = ['$scope', '$log'];
+    EditLicenseController.$inject = ['$scope', '$log', 'AppConfig'];
 
     angular.module('license')
         .controller('EditLicenseController', EditLicenseController)

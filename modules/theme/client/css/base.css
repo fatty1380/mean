@@ -58,9 +58,24 @@ a.btn-cta-secondary,
 }
 a.btn-cta-secondary:hover,
 .btn-cta-secondary:hover {
-  background: #ec6952;
+  background: #eb6149;
+  border: 2px solid #ec6952;
+  color: #e6e6e6;
+}
+a.btn-cta-secondary:hover.active,
+.btn-cta-secondary:hover.active {
+  background: #ef7d69;
+}
+a.btn-cta-secondary:active,
+.btn-cta-secondary:active {
+  background: #e9553b;
   border: 2px solid #ec6952;
   color: #fff;
+}
+a.btn-cta-secondary.active,
+.btn-cta-secondary.active {
+  background: #ec6952;
+  color: #ffffff;
 }
 a.btn-ghost,
 .btn-ghost {

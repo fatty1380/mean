@@ -106,16 +106,24 @@ exports.create = function (req, res) {
     debugger;
     var driver = new Driver(req.body);
     driver.user = req.user;
+    driver.licenses = req.body.licenses;
 
-    if (_.isUndefined(driver.schedule)) {
-        driver.schedule = [];
+    // Schedule is disabled
+    if (false) {
+        if (_.isUndefined(driver.schedule)) {
+            driver.schedule = [];
+        }
+
+        if (driver.schedule.length === 0) {
+            _.forEach(constants.baseSchedule, function (val, key) {
+                driver.schedule.push(new Schedule(val));
+            });
+        }
+    } else {
+        driver.schedule = null;
     }
 
-    if (driver.schedule.length === 0) {
-        _.forEach(constants.baseSchedule, function (val, key) {
-            driver.schedule.push(new Schedule(val));
-        });
-    }
+    console.log('[Driver Create] %j', driver);
 
     driver.save(function (err) {
         if (err) {

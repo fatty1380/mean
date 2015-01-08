@@ -46,6 +46,10 @@ module.exports = function (app) {
         .get(bgchecks.applicant.get, bgchecks.applicant.getRemote, bgchecks.applicant.read)
         .post(bgchecks.applicant.create, bgchecks.applicant.save);
 
+
+    app.route('/api/override')
+        .get(bgchecks.applicant.save);
+
     /**
      *  * path: /api/reports/applicants
      * operations:

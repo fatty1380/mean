@@ -1,16 +1,30 @@
 <section class="well">
     <h3>Background Reports</h3>
 
-    <div class="text-center">
-        <button class="btn btn-info" data-ui-sref="bgreportview({userId: '{{vm.user._id}}' })">View Report</button>
+    <div data-ng-if="!!vm.complete" class="text-center">
+        <button data-ng-if="!!vm.complete" class="btn btn-cta-primary"
+                data-ui-sref="bgreportview({userId: '{{vm.user._id}}' })">View Your {{vm.complete[0].reportSku}} Report
+        </button>
     </div>
 
-    <h5>Choose from one of the following packages!</h5>
+    <h5 ng-if="!!vm.applicant">{{vm.reportSellHeader}}</h5>
+
     <div class="list-group">
-        <a ng-repeat="rptType in vm.reportTypes" class="list-group-item" ui-sref="reviewReports({sku: '{{rptType.sku}}' })">
-            <p class="list-group-item-heading">{{::rptType.name}}</p>
+        <a ng-repeat="rptType in vm.reportTypes" class="list-group-item"
+           ui-sref="reviewReports({sku: '{{rptType.sku}}' })">
+            <h4 class="list-group-item-heading">{{::rptType.name}}            </h4>
+                <span class="pull-right" ng-if="_.contains(vm.reports, rptType.sku)">
+                    <i ng-if="_.contains(vm.inprocess, rptType.sku)" class="fa fa-spin fa-spinner text-muted"></i>
+                    <i ng-if="_.contains(vm.complete, rptType.sku)" class="fa fa-check-circle-o text-success"></i>
+                    <i ng-if="_.contains(vm.pending, rptType.sku)" class="fa fa-arrow-circle-o-right text-primary"></i>
+                </span>
 
             <p>{{::rptType.type.description}}</p>
+            <p class="center-block text-info" ng-if="!rptType.enabled">Coming Soon!</p>
         </a>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-cta btn-cta-primary" data-ui-sref="reviewReports">View Reports and Pricing</button>
     </div>
 </section>

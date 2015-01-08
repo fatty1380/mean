@@ -3,54 +3,57 @@
         <div class="row profile-row">
             <div class="col-sm-6">
 
-                <div class="form-group row">
-                    <label class="col-sm-6 control-label">License Type
-                    </label>
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label">License Type</label>
 
-                    <div class="controls col-sm-6">
-                        <select class="form-control" data-ng-model="vm.model.type" name="licenseType">
-                            <option ng-selected="true">Standard</option>
-                            <option>Commercial</option>
-                        </select>
+                    <div class="controls col-sm-10 col-md-6">
+                        <div class="btn-group">
+                            <label ng-repeat="licenseType in vm.licenseTypes" class="btn btn-cta-secondary btn-sm"
+                                   ng-model="vm.license.type"
+                                   btn-radio="licenseType">{{licenseType}}</label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label class="col-sm-6 control-label">State
-                        <br/>
-                        <small>The state which issued the license</small>
+                <div class="form-group" ng-class="{'disabled':vm.license.type != 'Commercial'}">
+                    <label class="control-label col-sm-6">
+                        Class Rating
                     </label>
 
-                    <div class="controls col-sm-6" syle>
-                        <select class="form-control" data-ng-model="vm.model.state" name="licenseState">
-                            <option value="AZ">AZ</option>
-                            <option value="CA">CA</option>
-                            <option value="NV">NV</option>
-                            <option value="------">------</option>
-                            <option value="-more-">-more-</option>
-                        </select>
+                    <div class="controls col-sm-10 col-md-6 ">
+                        <div class="btn-group">
+                            <label ng-repeat="val in vm.ratings" class="btn btn-cta-secondary btn-sm"
+                                   ng-model="vm.license.rating"
+                                   btn-radio="val">{{val}}</label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label class="col-sm-6 control-label">Expiration
-                        <br/>
-                        <small>The date your license expires</small>
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label">State
                     </label>
 
-                    <div class="controls col-sm-6">
+                    <div class="controls col-sm-10 col-md-6" syle>
+                        <input type="text" ng-model="vm.license.state" typeahead="state as state.name for state in vm.states | filter:$viewValue | limitTo:8" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label">Expiration Date </label>
+
+                    <div class="controls col-sm-10 col-md-6">
                         <input type="text" class="form-control" ng-model="vm.shadow.expires" ui-mask="{{vm.maskFormat}}"
-                               placeholder="{{vm.dateFormat}}"  name="expires" id="expiration"/>
+                               placeholder="{{vm.dateFormat}}" name="expires" id="expiration"/>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label class="col-sm-6 control-label">Date of Birth
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label">Date of Birth
                         <br/>
                         <small>Your birthdate</small>
                     </label>
 
-                    <div class="controls col-sm-6">
+                    <div class="controls col-sm-10 col-md-6">
                         <input type="text" class="form-control" ng-model="vm.shadow.dateOfBirth"
                                ui-mask="{{vm.maskFormat}}" placeholder="{{vm.dateFormat}}" name="dob"/>
                     </div>
@@ -59,35 +62,19 @@
 
             <div class="col-sm-6">
 
-                <div class="row">
-                    <label class="col-sm-6 control-label">Class Rating
-                        <br/>
-                        <small>the license class rating</small>
+
+                <div class="form-group">
+                    <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>
+                        <small>any endorsements on your license?</small>
                     </label>
 
-                    <div class="controls col-sm-6">
-                        <div class="btn-group">
-                            <label ng-repeat="val in vm.ratings" class="btn btn-primary btn-sm"
-                                   ng-model="vm.model.rating"
-                                   btn-radio="val">{{val}}</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <label class="col-sm-6 control-label">Endorsements
-
-                        <br/>
-                        <small>any endorsements on the license</small>
-                    </label>
-
-                    <div class="controls col-sm-6">
-                        <div class="btn-group btn-group-vertical">
+                    <div class="controls col-md-8 col-md-offset-2 col-xs-12">
+                        <div class="btn-group btn-group-vertical center-block">
                             <label ng-repeat="endorsement in vm.endorsements"
-                                   class="btn btn-primary btn-md container-fluid" ng-model="endorsement.value"
-                                   btn-checkbox>
-                                <div data-ng-class="{'fa-circle-o': !endorsement.value, 'fa-check-circle':endorsement.value}"
-                                     class="fa pull-left"></div>
+                                   class="btn btn-cta-secondary btn-md container-fluid" ng-model="vm.license.endorsements[endorsement.key]"
+                                   btn-checkbox data-ng-class="{'active':endorsement.value}">
+                                <i data-ng-class="{'fa-circle-o': !endorsement.value, 'fa-check-circle':endorsement.value}"
+                                   class="fa pull-left"></i>
                                 <div class="col-xs-4 text-left">{{endorsement.key}}</div>
                                 <div class="col-xs-7 text-left">
                                     <small>{{endorsement.description}}

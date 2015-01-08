@@ -1,42 +1,14 @@
 (function() {
     'use strict';
 
+    // TODO: Strip!!!
+
     // Drivers controller
     function DriversController($scope, $state, $stateParams, $location, $http, $window, $log, Authentication, Drivers) {
         $scope.authentication = Authentication;
         //$scope.driver = Drivers;
         //$scope.driverUser = DriverUser;
         $scope.canEdit = $state.is('drivers.home') || ($stateParams.driverId === Authentication.user.id);
-
-        // Local Variables
-        $scope.experience = [];
-        $scope.ratings = ['A', 'B', 'C', 'D', 'M', 'G'];
-        $scope.rating = {
-            model: undefined
-        };
-
-        // Date Picker Ctrl
-
-
-        $scope.endorsements = [{
-            key: 'HME (Hazardous Materials)',
-            value: false
-        }, {
-            key: 'P (Passenger)',
-            value: false
-        }, {
-            key: 'S (School Bus)',
-            value: false
-        }, {
-            key: 'Double-Triple Trailer',
-            value: false
-        }, {
-            key: 'Tank Vehicle',
-            value: false
-        }, {
-            key: 'Motorcycle',
-            value: false
-        }];
 
         $scope.months = [{
             'key': '1',

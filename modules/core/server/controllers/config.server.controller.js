@@ -1,11 +1,12 @@
 'use strict';
 
-var constants = require('../models/outset.constants');
+var constants = require('../models/outset.constants'),
+    _ = require('lodash');
 
 exports.getConfig = function(req, res, next, varName) {
 
     switch (varName) {
-        case 'usStates':
+        case 'states':
             req.configVal = constants.usStates;
             return next();
         case 'baseSchedule':
@@ -34,3 +35,27 @@ exports.read = function(req, res) {
 
     return res.json(req.configVal);
 };
+
+exports.validate = function(varName, value) {
+    switch(varName) {
+        case 'states': return validateState(value);
+    }
+};
+
+function validateState(value) {
+    debugger;
+    if(_.contains(constants.usStates, value)) {
+        console.log('validateState: Contains!');
+        return true;
+    }
+    if(_.find(constants.usStates, value)) {
+        console.log('validateState: find!');
+        return true;
+    }
+    if(_.filter(constants.usStates, value)) {
+        console.log('validateState: filter!');
+        return true;
+    }
+
+    return false;
+}

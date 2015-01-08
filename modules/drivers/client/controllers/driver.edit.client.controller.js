@@ -32,10 +32,9 @@
         }
 
         function submit() {
+            debugger;
             if (vm.driverForm.$invalid) {
-                debugger;
-                vm.error = vm.driverForm.$error;
-                return;
+                return false;
             }
 
             if ($state.is('drivers.create')) {
@@ -49,9 +48,13 @@
 
         // Create new Driver
         function create() {
+            debugger;
 
-            if (!vm.driver.licenses || !vm.driver.licenses[0]) {
-                vm.error = 'Please fill in information about your driver\'s license';
+            if(_.isEmpty(vm.driver.licenses[0])) {
+                $log.debug('No license information entered, ignoring ...');
+                vm.driver.licenses = null;
+            } else if (vm.driverForm['vm.licenseForm'].$invalid) {
+                vm.error = vm.driverForm['vm.licenseForm'].$error;
                 return;
             }
 
@@ -86,6 +89,7 @@
 
         // Update existing Driver
         function update() {
+            debugger;
             if(vm.driverForm.$pristine) {
                 $state.go('drivers.home');
             }
