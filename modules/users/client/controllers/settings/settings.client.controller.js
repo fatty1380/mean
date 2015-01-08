@@ -10,7 +10,7 @@
 
     'use strict';
 
-    function SettingsController($scope, $http, $stateParams, $location, $log, Users, Authentication) {
+    function SettingsController($stateParams, $location, $log, Authentication) {
 
         this.user = Authentication.user;
 
@@ -25,7 +25,7 @@
         }
     }
 
-    SettingsController.$inject = ['$scope', '$http', '$stateParams', '$location', '$log', 'Users', 'Authentication'];
+    SettingsController.$inject = ['$stateParams', '$location', '$log', 'Authentication'];
 
     angular
         .module('users')
