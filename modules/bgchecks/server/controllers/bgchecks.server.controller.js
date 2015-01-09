@@ -524,7 +524,7 @@ function GetReportApplicant(req, res, next) {
 function GetRemoteApplicantData(req, res, next) {
     if (!req.applicant && !req.remoteApplicantId) {
         var message = 'Cannot find applicant without access to existing remoteApplicantId';
-        console.debug('[GetRemoteApplicantData] %s', message);
+        console.log('[GetRemoteApplicantData] %s', message);
         return next();
     }
 
