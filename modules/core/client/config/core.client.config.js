@@ -9,7 +9,7 @@
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 
             if(isRedirectInProgress && !event.defaultPrevented) {
-                $log.warn('[CoreConfig] stateChangeStart already in progress [%s]. Stopping redirec to "%s"', redirectString, toState.name);
+                $log.warn('[CoreConfig] stateChangeStart already in progress [%s]. Stopping redirect to "%s"', redirectString, toState.name);
                 return;
             }
 
