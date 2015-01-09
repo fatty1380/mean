@@ -4,37 +4,28 @@ console.log('env.production: LAP: %s', process.env.LOG_ACCESS_PATH);
 console.log('env.production: BTREE: %s', process.env.BRAINTREE_MERCHANT_ID);
 
 module.exports = {
-    db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
+    db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/outset',
     app: {
-        title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs'
+        title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs',
+        keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
     },
     logs: {
-        access: process.env.LOG_ACCESS_PATH || '~/Outset/Source/log/' // '/var/log/nodejs/'
+        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
     },
-    facebook: {
-        clientID: process.env.FACEBOOK_ID || 'APP_ID',
-        clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
-        callbackURL: '/api/auth/facebook/callback'
-    },
-    twitter: {
-        clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-        clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
-        callbackURL: '/api/auth/twitter/callback'
-    },
-    google: {
-        clientID: process.env.GOOGLE_ID || 'APP_ID',
-        clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
-        callbackURL: '/api/auth/google/callback'
-    },
-    linkedin: {
-        clientID: process.env.LINKEDIN_ID || 'APP_ID',
-        clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
-        callbackURL: '/api/auth/linkedin/callback'
-    },
-    github: {
-        clientID: process.env.GITHUB_ID || 'APP_ID',
-        clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
-        callbackURL: '/api/auth/github/callback'
+    services: {
+        everifile: {
+            baseUrl : process.env.EVERIFILE_BASE_URL || 'https://renovo.everifile.com/renovo',
+            username : process.env.EVERIFILE_USERNAME || 'api@joinoutset.com',
+            password : process.env.EVERIFILE_PASS || 'fax7^kaY'
+        },
+        braintree: {
+            MerchantId : process.env.BRAINTREE_MERCHANT_ID,
+            PublicKey: process.env.BRAINTREE_PUBLIC_KEY,
+            PrivateKey: process.env.BRAINTREE_PRIVATE_KEY
+        },
+        google: {
+            analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
+        }
     },
     mailer: {
         from: process.env.MAILER_FROM || 'MAILER_FROM',
@@ -45,10 +36,5 @@ module.exports = {
                 pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
             }
         }
-    },
-    braintree: {
-        MerchantId : process.env.BRAINTREE_MERCHANT_ID || 'BRAINTREE_MERCHANT_ID',
-        PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'BRAINTREE_PUBLIC_KEY',
-        PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || 'BRAINTREE_PRIVATE_KEY'
     }
 };
