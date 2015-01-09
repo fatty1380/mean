@@ -5,19 +5,22 @@
 
         var vm = this;
 
-        vm.months = AppConfig.getMonths();
+        vm.months = vm.months || AppConfig.getMonths();
+
+        console.log('Got %d Months', vm.months.length);
 
         vm.editMode = typeof vm.editMode === undefined ? true : !!vm.editMode;
         vm.editEnable = typeof vm.editEnable === undefined ? true : !!vm.editEnable;
 
-        vm.pristine = angular.copy(vm.model);
+        vm.revertValue = angular.copy(vm.model);
 
         vm.edit = function() {
-            vm.pristine = angular.copy(vm.model);
+            vm.revertValue = angular.copy(vm.model);
             vm.editMode = true;
         };
 
         vm.cancel = function() {
+            debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
                 if (vm.dropFn) {
@@ -26,7 +29,7 @@
                     vm.model = null;
                 }
             } else {
-                vm.model = angular.copy(vm.pristine);
+                vm.model = angular.copy(vm.revertValue);
             }
 
             vm.editMode = false;
@@ -34,7 +37,12 @@
 
 
         vm.save = function(event) {
-            debugger;
+            if(vm.experienceForm.$pristine && vm.model.isFresh) {
+                vm.model = null;
+                vm.experienceForm.$setValidity('model', true);
+                vm.experienceForm.$setSubmitted();
+                return true;
+            }
             if(vm.experienceForm.$valid) {
                 var options = event.clickOptions;
                 if (options && options.hasOwnProperty('add')) {
