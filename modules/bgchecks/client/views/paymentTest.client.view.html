@@ -1,4 +1,24 @@
-<form id="checkout" method="post" action="/checkout">
-    <div id="dropin"></div>
-    <input type="submit" value="Pay $10">
-</form>
+
+
+
+<section class="content-section" data-ng-controller="PasswordController">
+    <h3 class="title container text-center">Enter Payment Information</h3>
+
+    <div class="content-container container text-center">
+        <div class="content-container-inner">
+            <div class="about">
+                <p class="text-center">Please enter your payment information below</p>
+
+                <div class="container-fluid row">
+                    <div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
+
+                        <form id="checkout" method="post" action="/checkout">
+                            <div id="dropin"></div>
+                            <input type="submit" value="Pay $10">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -20,14 +20,16 @@
                         <div class="form-group" ng-repeat="field in vm.report.fields">
                             <!-- field = { description, length, name, required, type } -->
                             <label for="{{field.name}}" class="col-sm-2 control-label"
-                                   data-ng-class="{'optional':!field.required}">{{field.description | TitleCase}} </label>
+                                   data-ng-class="{'optional':!field.required}">{{field.description |
+                                titlecase}} </label>
 
                             <div class="col-sm-10">
                                 <input ng-if="!!field.ngType" type="{{field.ngType}}" class="form-control"
                                        id="{{field.name}}" ng-model="vm.model[field.name]"
                                        maxlength="{{field.ngMaxLength}}" required="{{field.required}}"/>
 
-                                <date-input ng-if="field.isDate" format="field.format" model="vm.model[field.name]" required="field.required"></date-input>
+                                <date-input ng-if="field.isDate" format="field.format" model="vm.model[field.name]"
+                                            required="field.required" class="form-control"></date-input>
 
                                 <!-- States -->
                                 <input ng-if="field.type==='state'" type="text" ng-model="vm.model[field.name]"
@@ -61,7 +63,9 @@
                                                            ng-model="vm.model[field.name][i][df2.name]"
                                                            maxlength="{{df2.length}}" required="{{df2.required}}"/>
 
-                                                    <date-input ng-if="df2.isDate" format="df2.format" model="vm.model[df2.name]" required="df2.required"></date-input>
+                                                    <date-input ng-if="df2.isDate" format="df2.format"
+                                                                model="vm.model[df2.name]" class="form-control"
+                                                                required="df2.required"></date-input>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,12 +88,14 @@
                                                    ng-model="vm.model[field.name][dataField.name]"
                                                    maxlength="{{dataField.length}}" required="{{dataField.required}}"/>
 
-                                            <date-input ng-if="dataField.isDate" format="dataField.format" model="vm.model[dataField.name]" required="dataField.required"></date-input>
+                                            <date-input ng-if="dataField.isDate" format="dataField.format"
+                                                        model="vm.model[dataField.name]" class="form-control"
+                                                        required="dataField.required"></date-input>
                                         </div>
                                     </div>
                                 </div>
 
-                                <select ng-if="field.isPickList"
+                                <select ng-if="field.isPickList" class="form-control"
                                         ng-options="item.value as item.description for item in field.pickList"
                                         ng-model="vm.model[field.name]">
                                 </select>
@@ -117,7 +123,8 @@
                       class="form-horizontal" data-ng-submit="vm.execute($event)"
                       novalidate>
                     <fieldset>
-                        <div class="form-group" ng-repeat="field in vm.report.fields" data-ng-init="value = vm.applicant[field.name]">
+                        <div class="form-group" ng-repeat="field in vm.report.fields"
+                             data-ng-init="value = vm.applicant[field.name]">
 
                             <div class="col-sm-10">
                                 <input ng-if="!_.isArray(value)" type="{{field.ngType}}" class="form-control"

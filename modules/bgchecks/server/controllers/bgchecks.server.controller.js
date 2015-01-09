@@ -82,7 +82,7 @@ function availableReportTypes(req, res, next) {
                 });
             }
 
-            console.log('[availableReportTypes] loaded reports: %j', reportTypes);
+            console.log('[availableReportTypes] loaded %d reports', reportTypes && reportTypes.length || -1);
 
             res.json(reportTypes);
         });
@@ -545,7 +545,7 @@ function GetRemoteApplicantData(req, res, next) {
             everifile.GetApplicant(session, id).then(
                 function (remoteApplicant) {
 
-                    console.log('[GetRemoteApplicantData] Got applicant info from eVerifile: %j', remoteApplicant);
+                    console.log('[GetRemoteApplicantData] Got remoteApplicant info: %j', remoteApplicant);
                     req.remoteApplicant = remoteApplicant;
                     next();
                 }
@@ -564,9 +564,9 @@ function ReadReportApplicant(req, res) {
         });
     }
 
-    console.log('[ReportApplicant.read] Combining values from req.applicant and req.remoteApplicant');
+    console.log('[ReportApplicant.read] Combining values from req.applicant[%s] and req.remoteApplicant[%s]', !!req.remoteApplicant ? 'X' : ' ', !!req.applicant ? 'X' : ' ');
 
-    var retval = req._.extend(req.remoteApplicant, req.applicant.toObject());
+    var retval = _.extend(req.remoteApplicant, (req.applicant || {}).toObject());
 
     console.log('[ReportApplicant.read] Combined Applicant: %j', retval);
 

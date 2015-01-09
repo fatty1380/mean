@@ -1,6 +1,5 @@
 @import "mixins.less";
 @import "theme-default.less";
-
 @import "/public/lib/bootstrap/less/variables.less";
 
 @outset-blue: #0e2d4c;
@@ -25,6 +24,96 @@ body {
   height           : 100%;
 }
 
+/** Button Stylings **/
+a {
+  color : @color;
+  .transition (all 0.4s ease-in-out);
+  &:hover {
+    text-decoration : underline;
+    color           : darken(@color, 10%);
+  }
+}
+
+.btn, a.btn {
+  .transition (all 0.4s ease-in-out);
+  font-weight : bold;
+  .fa {
+    color        : #fff;
+    margin-right : 5px;
+  }
+}
+
+a.btn-cta, .btn-cta {
+  padding : 8px 30px;
+}
+
+a.btn-cta-primary, .btn-cta-primary {
+  background : @color;
+  border     : 2px solid @color;
+  color      : #fff;
+  &:hover {
+    background : darken(@color, 5%);
+    border     : 2px solid darken(@color, 5%);
+    color      : #fff;
+  }
+}
+
+a.btn-cta-secondary, .btn-cta-secondary {
+  background : none;
+  border     : 2px solid @color;
+  color      : @color;
+  &:hover {
+    background : darken(@color, 2%);
+    border     : 2px solid @color;
+    color      : darken(#fff, 10%);
+    &.active {
+      background : lighten(@color, 5%);
+    }
+  }
+  &:active {
+    background : darken(@color, 5%);
+    border     : 2px solid @color;
+    color      : #fff;
+  }
+  &.active {
+    background : @color;
+    color: #fff
+  }
+}
+
+a.btn-ghost, .btn-ghost {
+  background     : none;
+  border         : 1px solid #fff;
+  color          : #fff !important;
+  padding        : 8px 20px;
+  vertical-align : middle;
+  &:hover {
+    background : lighten(@color-2, 20%);
+    border     : 1px solid lighten(@color-2, 20%);
+    color      : #fff;
+  }
+  .fa {
+    margin-right : 10px;
+    font-size    : 22px;
+  }
+  .text {
+    position : relative;
+    top      : -2px;
+  }
+}
+
+/** Btn Sizing **/
+
+
+.btn-cta {
+  font-size : 18px;
+}
+
+.btn-cta {
+  font-size : 20px;
+}
+
+
 /** Simple Stylings **/
 .strong {
   font-weight : bold !important;
@@ -35,39 +124,47 @@ body {
 }
 
 .pad-left {
-  padding-left: 15px!important;
+  padding-left : 15px !important;
 }
+
 .pad-right {
-  padding-right: 15px!important;
+  padding-right : 15px !important;
 }
+
 .pad-bottom {
-  padding-bottom: 15px!important;
+  padding-bottom : 15px !important;
 }
+
 .pad-top {
-  padding-top: 15px!important;
+  padding-top : 15px !important;
 }
 
 .mgn-left {
-  margin-left: 15px!important;
+  margin-left : 15px !important;
 }
+
 .mgn-right {
-  margin-right: 15px!important;
+  margin-right : 15px !important;
 }
+
 .mgn-bottom {
-  margin-bottom: 15px!important;
+  margin-bottom : 15px !important;
 }
+
 .mgn-top {
-  margin-top: 15px!important;
+  margin-top : 15px !important;
 }
 
 .text-center-force {
-  text-align: center!important;
+  text-align : center !important;
 }
+
 .text-left-force {
-  text-align: left!important;
+  text-align : left !important;
 }
+
 .text-right-force {
-  text-align: right!important;
+  text-align : right !important;
 }
 
 .application {
@@ -232,13 +329,13 @@ body {
     font-weight   : 300;
 
     &.h3 {
-      font-size: 28px;
-      margin-bottom: 20px;
+      font-size     : 28px;
+      margin-bottom : 20px;
     }
 
     &.h4 {
-      font-size: 20px;
-      margin-bottom: 10px;
+      font-size     : 20px;
+      margin-bottom : 10px;
     }
   }
   .content-container-inner { // .story-container-inner
@@ -274,12 +371,11 @@ body {
 }
 
 .headline-bg.headline-sm {
-  +.content-section {
+  + .content-section {
     padding-top : 10px;
 
-
     os-page-header h2, h3 {
-      margin-bottom: 20px;
+      margin-bottom : 20px;
     }
   }
 }
@@ -304,12 +400,12 @@ body {
 }
 
 .headline-bg {
-  position             : absolute;
-  width                : 100%;
-  top                  : 0;
-  left                 : 0;
-  height               : 600px;
-  background           : @outset-blue url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  position   : absolute;
+  width      : 100%;
+  top        : 0;
+  left       : 0;
+  height     : 600px;
+  background : @outset-blue url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
   .background-size(cover);
 
   > .overlay {
@@ -329,10 +425,10 @@ body {
 }
 
 .bg-slider-wrapper {
-  height              : 100%;
-  width: 100%;
-  max-height: 780px!important;
-  background          :  @subtle-white url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  height     : 100%;
+  width      : 100%;
+  max-height : 780px !important;
+  background : @subtle-white url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
   .background-size(cover);
 }
 
@@ -347,8 +443,6 @@ body {
 }
 
 .landing-page {
-
-
 
   .promo {
     padding-top   : 80px;
@@ -429,11 +523,11 @@ body {
   }
 
   .intro-break {
-    position                : relative;
-    overflow                : hidden;
-    background              : url('/modules/core/img/phx_skyline.png') no-repeat center top fixed;
+    position   : relative;
+    overflow   : hidden;
+    background : url('/modules/core/img/phx_skyline.png') no-repeat center top fixed;
     .background-size(cover);
-    height                  : 250px;
+    height     : 250px;
     //font-family             : 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
   }
 
@@ -443,8 +537,8 @@ body {
     top        : 2em;
 
     img {
-      width : 80%;
-      max-width: 913px;
+      width     : 80%;
+      max-width : 913px;
     }
   }
 
@@ -467,7 +561,7 @@ body {
   }
 
   /* Intro Sections - EG: Examples; */
-  
+
   .img-responsive {
     display   : block;
     max-width : 100%;
@@ -619,11 +713,20 @@ i.fa.fa-stack-1x.text-primary {
 
 }
 
+os-html-edit {
+  ta-editor {
+    min-height : 96px !important;
+  }
+  button[disabled] {
+    display : none !important;
+  }
+}
+
 .well {
   os-page-header {
     .h1, .h2, .h3, .h4, .h5, .h6 {
-      color: @text-color;
-      text-align: left!important;
+      color      : @text-color;
+      text-align : left !important;
     }
   }
 }
@@ -656,51 +759,71 @@ header {
   }
 }
 
+footer {
+
+  .btn-cta, a.btn-cta {
+    padding : 9px 10px;
+  }
+
+}
+
 /***** FORMS *********/
 form {
+
+  .form-control {
+    .box-shadow(none);
+    height       : 40px;
+    border-color : darken(@divider, 10%);
+    .placeholder(lighten(@grey, 5%));
+    &:focus {
+      border-color : darken(@divider, 5%);
+      .box-shadow(none);
+    }
+
+  }
+
   .form-group {
     label > small {
-      color: @text-muted;
-      display: block;
+      color   : @text-muted;
+      display : block;
       &:before {
-        top: -5px;
+        top : -5px;
       }
     }
 
     &.disabled, .disabled {
       label, .btn {
-        color: @text-muted!important;
+        color : @text-muted !important;
       }
       .btn {
-        border-color: lighten(desaturate(@color, 100%), 25%)!important;
+        border-color : lighten(desaturate(@color, 100%), 25%) !important;
 
         &.active, &:hover, &:active {
-          background : transparent!important;
-          cursor: default;
+          background : transparent !important;
+          cursor     : default;
         }
       }
     }
 
     label.disabled {
-      color: @text-muted;
+      color : @text-muted;
     }
 
     .btn-group {
-
     }
 
     label.optional {
-      font-weight: normal;
-      color: lighten(@text-color, 5%);
+      font-weight : normal;
+      color       : lighten(@text-color, 5%);
     }
 
   }
 
   /* XS and SMALL (Tablets and phones, 992px and lower) */
-  @media (max-width: 992px) {
+  @media (max-width : 992px) {
     .form-group label.control-label {
-      display: block;
-      text-align : left!important;
+      display    : block;
+      text-align : left !important;
     }
   }
 }
@@ -783,21 +906,20 @@ form {
 .modal {
   &.tos {
     .modal-dialog {
-      width: 80%!important;
-      max-width: 1024px!important;
+      width     : 80% !important;
+      max-width : 1024px !important;
     }
   }
 }
 
 [tos], tos {
   button.btn-link {
-    pading-left: 0px!important;
-    padding-right: 0px!important;
-    padding: 0 0!important;
+    pading-left   : 0px !important;
+    padding-right : 0px !important;
+    padding       : 0 0 !important;
   }
 
-  ol, ol > li
-  {
-    list-style-type: none!important;
+  ol, ol > li {
+    list-style-type : none !important;
   }
 }

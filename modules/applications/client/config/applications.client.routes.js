@@ -20,7 +20,7 @@
             state('applications', {
                 abstract: true,
                 url: '/applications',
-                template: '<div ui-view></div>',
+                template: '<div ui-view class="content-section"></div>',
                 parent: 'fixed-opaque'
             }).
 

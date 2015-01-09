@@ -19,13 +19,16 @@ module.exports = {
             password : process.env.EVERIFILE_PASS || 'fax7^kaY'
         },
         braintree: {
-            MerchantId : process.env.BRAINTREE_MERCHANT_ID,
-            PublicKey: process.env.BRAINTREE_PUBLIC_KEY,
-            PrivateKey: process.env.BRAINTREE_PRIVATE_KEY
+            MerchantId : process.env.BRAINTREE_MERCHANT_ID || '6j7bz2twxmx9rj7t',
+            PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'xqrh68985wmfk4vt',
+            PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '3169dd9c4ea4dfb51e1ef43203620307'
         },
         google: {
             analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
         }
+    },
+    reports: {
+
     },
     mailer: {
         from: process.env.MAILER_FROM || 'MAILER_FROM',

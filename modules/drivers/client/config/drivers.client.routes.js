@@ -30,11 +30,11 @@
     function userResolve(rsrc, params, auth) {
         var val;
         if (!!params.userId) {
-            console.log('Searching for driver data for user %s', params.userId);
             val = params.userId;
+            console.log('Searching for driver data for user %s', val);
         } else {
-            console.log('Searching for driver data for logged in user');
             val = auth.user._id;
+            console.log('Searching for driver data for logged in user: %s', val);
         }
 
         var driver = rsrc.ByUser.get({
@@ -56,7 +56,7 @@
         state('drivers', {
             abstract: true,
             url: '/drivers',
-            template: '<div ui-view></div>',
+            template: '<div ui-view class="content-section"></div>',
             parent: 'fixed-opaque'
         }).
 

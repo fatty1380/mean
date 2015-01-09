@@ -46,7 +46,7 @@ angular.module('users').config(['$stateProvider',
         state('users', {
             abstract: true,
             url: '/users',
-            template: '<div ui-view></div>',
+            template: '<div ui-view class="content-section"></div>',
             parent: 'full-opaque'
         }).
 

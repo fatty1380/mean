@@ -11,7 +11,7 @@
     }
 
     function companyResolve(rsrc, params, auth) {
-var promise;
+        var promise;
 
         if (!!params.companyId) {
             var val = params.companyId;
@@ -77,7 +77,7 @@ var promise;
             state('jobs', {
                 abstract: true,
                 url: '/jobs',
-                template: '<div ui-view></div>',
+                template: '<div ui-view class="content-section"></div>',
                 parent: 'fixed-opaque',
                 resolve: {
                     job: function () {

@@ -91,6 +91,7 @@ module.exports = function (grunt) {
 		concurrent: {
 			default: ['nodemon:default', 'watch'],
 			debug: ['nodemon:dev', 'watch', 'node-inspector'],
+			nowatch: ['nodemon:default'],
 			options: {
 				logConcurrentOutput: true
 			}
@@ -231,6 +232,8 @@ module.exports = function (grunt) {
 
 	// Run the project in development mode
 	grunt.registerTask('default', ['env:dev', 'lint', 'concurrent:default']);
+
+	grunt.registerTask('nowatch', ['env:dev', 'lint', 'concurrent:nowatch']);
 
 	// Run the project in debug mode
 	grunt.registerTask('debug', ['env:dev', 'lint', 'concurrent:debug']);

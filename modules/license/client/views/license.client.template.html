@@ -9,7 +9,7 @@
                     <div class="controls col-sm-10 col-md-6">
                         <div class="btn-group">
                             <label ng-repeat="licenseType in vm.licenseTypes" class="btn btn-cta-secondary btn-sm"
-                                   ng-model="vm.license.type"
+                                   ng-model="vm.license.type" ng-required="true"
                                    btn-radio="licenseType">{{licenseType}}</label>
                         </div>
                     </div>
@@ -42,8 +42,7 @@
                     <label class="col-sm-12 col-md-6 control-label">Expiration Date </label>
 
                     <div class="controls col-sm-10 col-md-6">
-                        <input type="text" class="form-control" ng-model="vm.shadow.expires" ui-mask="{{vm.maskFormat}}"
-                               placeholder="{{vm.dateFormat}}" name="expires" id="expiration"/>
+                        <date-input model="vm.license.expires" class="form-control" name="expires" placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>
                     </div>
                 </div>
 
@@ -54,8 +53,7 @@
                     </label>
 
                     <div class="controls col-sm-10 col-md-6">
-                        <input type="text" class="form-control" ng-model="vm.shadow.dateOfBirth"
-                               ui-mask="{{vm.maskFormat}}" placeholder="{{vm.dateFormat}}" name="dob"/>
+                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob" placeholder="{{vm.dateFormat}}"></date-input>
                     </div>
                 </div>
             </div>
