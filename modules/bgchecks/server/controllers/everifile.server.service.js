@@ -344,7 +344,7 @@ function CreateApplicant(cookie, applicant) {
         method = 'POST';
     }
 
-    unirest[method](server.baseUrl + '/rest/applicant')
+    unirest(method,server.baseUrl + '/rest/applicant')
         .headers({'Content-Type': 'application/json'})
         .send(applicant)
         .jar(cookie.jar)

@@ -65,34 +65,35 @@ ReportApplicantSchema.pre('save', function (next) {
  */
 
 ReportApplicantSchema.post('init', function(next) {
-    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext[post:init]: %j', next);}
 }) ;
 ReportApplicantSchema.post('save', function(next) {
-    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext[post:save]: %j', next);}
 }) ;
 ReportApplicantSchema.post('validate', function(next) {
-    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext[post:validate]: %j', next);}
 }) ;
 ReportApplicantSchema.post('remove', function(next) {
-    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext[post:remove]: %j', next);}
 }) ;
 ReportApplicantSchema.pre('validate', function(next) {
-    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext[pre:validate]: %j', next);}
 }) ;
 ReportApplicantSchema.pre('remove', function(next) {
-    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext: %j', next);}
+    if (typeof(next) === 'function') { debugger; next(); } else { console.log('UnknownNext[pre:remove]: %j', next);}
 }) ;
 ReportApplicantSchema.pre('save', function (next) {
 
     if (typeof(next) === 'function') { debugger; // TODO - A: Why is this saving, B: Is sensitive data removed
 
-    next(); } else { console.log('UnknownNext: %j', next);}
+    next(); } else { console.log('UnknownNext[pre:save]: %j', next);}
 });
 ReportApplicantSchema.pre('init', function (next) {
 
     if (this.hasOwnProperty('applicantId')) {
         this.remoteId = this.applicantId;
     }
+
 
     this.governmentId = this.governmentId && this.governmentId.replace(/\D/g, ''); // Replace non-numeric values
 
