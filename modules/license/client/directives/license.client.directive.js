@@ -78,7 +78,7 @@
                 }
             }
 
-            vm.licenseForm.dob.$valid = !m || m.isValid();
+            //vm.licenseForm.dob.$valid = !m || m.isValid();
         });
     }
 

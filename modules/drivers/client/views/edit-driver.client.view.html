@@ -1,14 +1,10 @@
 <section class="container-fluid">
     <os-page-header
-            title="{{vm.action}} Driver Profile for {{(vm.driver.user || vm.user).displayName}}"></os-page-header>
+            title="Driver Profile"></os-page-header>
 
     <div class="driver create well">
         <form name="vm.driverForm" class="form-horizontal" data-ng-submit="vm.submit(this, this.data)" novalidate>
             <fieldset>
-
-                <div class="well">
-                    <pre>{{vm.driver}}</pre>
-                </div>
                 <!-- Biography -->
                 <h3>About Me
                     <small>Include an introduction to yourself here to help employers know who you are</small>

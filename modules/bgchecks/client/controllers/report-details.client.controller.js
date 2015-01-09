@@ -162,13 +162,15 @@
         };
     }
 
+    angular.module('core')
+        .filter('titlecase', capFilter);
+
     function Ctrl($scope) {
         $scope.msg = 'hello, world.';
     }
 
     ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log'];
     angular.module('bgchecks')
-        .controller('ReportDetailsController', ReportDetailsController)
-        .filter('TitleCase', capFilter);
+        .controller('ReportDetailsController', ReportDetailsController);
 
 })();

@@ -48,8 +48,8 @@ var DriverSchema = new Schema({
             type: String
         },
         time: {
-            start: Date,
-            end: Date
+            start: { m: Number, y: Number },
+            end: { m: Number, y: Number }
         },
         location: {
             type: String

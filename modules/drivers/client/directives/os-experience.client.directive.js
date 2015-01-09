@@ -1,9 +1,11 @@
 (function() {
     'use strict';
 
-    function ExperienceDirectiveController($scope, $element, $attrs, $transclude) {
+    function ExperienceDirectiveController(AppConfig) {
 
         var vm = this;
+
+        vm.months = AppConfig.getMonths();
 
         vm.editMode = typeof vm.editMode === undefined ? true : !!vm.editMode;
         vm.editEnable = typeof vm.editEnable === undefined ? true : !!vm.editEnable;
@@ -38,7 +40,7 @@
                 if (options && options.hasOwnProperty('add')) {
                     var addMore = vm.addFn && vm.addFn();
                 }
-            } else{
+            } else {
                 event.stopPropigation();
                 vm.error = 'Please correct the errors above before saving this experience';
                 return false;
@@ -67,7 +69,7 @@
         };
     }
 
-    ExperienceDirectiveController.$inject = ['$scope', '$element', '$attrs', '$transclude'];
+    ExperienceDirectiveController.$inject = ['AppConfig'];
 
     angular.module('drivers').directive('osDriverExperience', ExperienceDirective);
 

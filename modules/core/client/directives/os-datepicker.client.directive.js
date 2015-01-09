@@ -70,6 +70,8 @@
                 }
             }
 
+            $element;
+
             debugger; // try to set form validity
         });
     }
@@ -91,11 +93,7 @@
             restrict: 'E',
             scope: {
                 model: '=',
-                required: '=?',
-                format: '=?',
-                //id: '@?',
-                name: '@?',
-                class: '@?'
+                format: '=?'
             },
             controller: dpCtrl,
             controllerAs: 'vm',
