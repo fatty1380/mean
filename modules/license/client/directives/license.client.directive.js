@@ -41,45 +41,10 @@
         vm.states = appConfig.getStates();
 
         vm.dateFormat = 'MM/DD/YYYY';
-        vm.maskFormat = '99/99/9999';
-        vm.parseFormat = 'MMDDYYYY';
 
-        vm.shadow = {
-            expires: vm.license && vm.license.expires || '',
-            dateOfBirth: vm.license && vm.license.dateOfBirth || ''
+        vm.submit = function(form) {
+            debugger;
         };
-
-        $scope.$watch('vm.shadow.expires', function (val) {
-            $log.info('vm.license.expires, %o, %o', this, val);
-
-            var m;
-
-            if (!!val) {
-                m = moment(val, vm.parseFormat);
-
-                if (m.isValid()) {
-                    vm.license.expires = m;
-                }
-            }
-
-            vm.licenseForm.expires.$valid = !m || m.isValid();
-        });
-
-        $scope.$watch('vm.shadow.dateOfBirth', function (val) {
-            $log.info('vm.license.dateOfBirth, %o, %o', this, val);
-
-            var m;
-
-            if (!!val) {
-                m = moment(val, vm.parseFormat);
-
-                if (m.isValid()) {
-                    vm.license.dateOfBirth = m;
-                }
-            }
-
-            //vm.licenseForm.dob.$valid = !m || m.isValid();
-        });
     }
 
     function EditLicenseDirective() {

@@ -21,8 +21,11 @@
                 if(!months) {
                     months = [];
                     while(months.length < 12) {
-                        months.push({num: months.length+1, name: moment().month(length).format("MMMM")});
+                        var m = moment().month(months.length);
+                        months.push({num: m.format('MM'), name: m.format('MMMM')});
                     }
+
+                    console.log('ConfigFactory] Returning newly generated months', JSON.stringify(months));
                 }
                 return months;
             }

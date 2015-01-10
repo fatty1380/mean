@@ -31,11 +31,10 @@
         <div ng-repeat="license in vm.driver.licenses">
 
             <p>
-                <i class="fa fa-credit-card"></i> &nbsp;{{license.state}}<span
-                    ng-if="license.type"> {{license.type}}</span> Driver License
-                <span ng-if="license.rating">: Class {{license.rating}}</span>
-                <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter"
-                      class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
+                <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}<span
+                    ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span> Driver License
+                <span ng-repeat="(name, val) in license.endorsements"
+                      class="label label-success">{{name}}&nbsp;</span>
             </p>
 
         </div>

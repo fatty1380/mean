@@ -28,12 +28,26 @@
                 if (!!vm.driver._id) {
                     $state.go('drivers.edit', {driverId: vm.driver._id});
                 }
+
+                //addExperience();
             }
         }
 
         function submit() {
-            debugger;
+
+            if (vm.driverForm['vm.experienceForm'] && vm.driverForm['vm.experienceForm'].$pristine) {
+                debugger;
+                console.log ('Experience untouched ...');
+                if(vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
+                    console.log('nuked experience');
+                    vm.driver.experience = [];
+                }
+                vm.driverForm.$setValidity('vm.experienceForm', true);
+
+            }
             if (vm.driverForm.$invalid) {
+                debugger;
+                vm.error = 'Please correct the errors above';
                 return false;
             }
 
@@ -58,20 +72,7 @@
                 return;
             }
 
-            // TODO: determine if this is necessary on the client side or if it is better handled on the server
-            angular.forEach(vm.driver.experience, function (exp, i) {
-                var start = new Date(exp.time.start.year, exp.time.start.month - 1);
-                var end = new Date(exp.time.end.year, exp.time.end.month - 1);
-
-                exp.time.start = start;
-                exp.time.end = end;
-
-                $log.debug('Start %o vs %o', start, exp.time.start, vm.driver.experience[i].time.start);
-            });
-
-            if (vm.driver.experience && vm.driver.experience.length > 0) {
-                $log.debug('After iter: %o', vm.driver.experience[0].time.start);
-            }
+            vm.driver.experience = _.compact(vm.driver.experience);
 
             // Create new Driver object
             var driver = new Drivers.ById(vm.driver);
@@ -131,14 +132,8 @@
             vm.driver.experience.push({
                 text: '',
                 time: {
-                    start: {
-                        month: null,
-                        year: null
-                    },
-                    end: {
-                        month: null,
-                        year: null
-                    }
+                    start: {},
+                    end: {}
                 },
                 location: '',
                 isFresh: true

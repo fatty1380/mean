@@ -3,19 +3,22 @@
             title="Driver Profile"></os-page-header>
 
     <div class="driver create well">
-        <form name="vm.driverForm" class="form-horizontal" data-ng-submit="vm.submit(this, this.data)" novalidate>
+        <form name="vm.driverForm" class="form-horizontal" ng-submit="vm.submit()" novalidate>
             <fieldset>
                 <!-- Biography -->
                 <h3>About Me
                     <small>Include an introduction to yourself here to help employers know who you are</small>
                 </h3>
                 <div class="container-fluid well">
+                    <input class="sr-only" name="description"  type="hidden" ng-model="vm.driver.about" ng-required="true"/>
+                    <div ng-if="vm.driverForm.description.$pristine && vm.driverForm.description.$invalid" class="text-danger">Please add some information about yourself</div>
                     <div class="row profile-row">
                         <div class="col-sm-12">
-                            <os-html-edit id="description" model="vm.driver.about"></os-html-edit>
+                            <os-html-edit model="vm.driver.about"></os-html-edit>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Driver's License Information -->
                 <h3>Driver License
