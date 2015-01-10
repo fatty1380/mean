@@ -2,7 +2,7 @@
     'use strict';
 
 // Configuring the Jobs module
-    function menus(Menus, Auth) {
+    function menus(Menus) {
 
         Menus.addMenuItem('topbar', {
             title: 'Job Postings',
@@ -34,7 +34,7 @@
 
     }
 
-    menus.$inject = ['Menus', 'Authentication'];
+    menus.$inject = ['Menus'];
 
     angular
         .module('jobs')

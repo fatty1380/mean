@@ -1,4 +1,5 @@
-'use strict';
+(function(){
+	'use strict';
 
 //Setting up route
 angular.module('addresses').config(['$stateProvider',
@@ -23,3 +24,4 @@ angular.module('addresses').config(['$stateProvider',
 		});
 	}
 ]);
+})();

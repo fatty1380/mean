@@ -160,7 +160,7 @@
 
     // Dependency Injection
     companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
-    jobResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
+    jobResolve.$inject = ['Jobs', '$stateParams'];
     listUserResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
     listAllResolve.$inject = ['Jobs'];
     config.$inject = ['$stateProvider'];

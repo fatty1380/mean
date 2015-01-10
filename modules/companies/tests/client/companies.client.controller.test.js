@@ -1,7 +1,8 @@
-'use strict';
 
 (function() {
-	// Companies Controller Spec
+	'use strict';
+
+// Companies Controller Spec
 	describe('Companies Controller Tests', function() {
 		// Initialize global variables
 		var CompaniesController,

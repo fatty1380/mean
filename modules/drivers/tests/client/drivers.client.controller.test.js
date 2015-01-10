@@ -1,6 +1,6 @@
-'use strict';
-
 (function() {
+    'use strict';
+
     // Drivers Controller Spec
     describe('Drivers Controller Tests', function() {
         // Initialize global variables

@@ -1,14 +1,15 @@
 (function() {
     'use strict';
 
-    var simpleController = function(auth) {
+    var OsDriverViewController = function(Authentication) {
         var vm = this;
-        vm.auth = auth;
+        vm.Authentication = Authentication;
 
         vm.canEdit = function(user) {
             user = user || vm.driver.user;
+            console.log('User %s edits? %s v %s', user.firstName, vm.Authentication.user._id, user._id);
 
-            return vm.auth.user._id === user._id;
+            return vm.Authentication.user._id === user._id;
         };
 
         vm.getExperienceString = function(experience) {
@@ -32,8 +33,6 @@
         };
     };
 
-    simpleController.$inject = ['Authentication'];
-
     function OsDriverView() {
         return {
             priority: 0,
@@ -44,15 +43,16 @@
             scope: {
                 driver: '=model'
             },
-            controller: simpleController,
+            controller: 'OsDriverViewController',
             controllerAs: 'vm',
             bindToController: true
         };
     }
 
-    OsDriverView.$inject = [];
+    OsDriverViewController.$inject = ['Authentication'];
 
     angular
         .module('drivers')
+        .controller('OsDriverViewController', OsDriverViewController)
         .directive('osDriverView', OsDriverView);
 })();

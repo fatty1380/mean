@@ -1,4 +1,4 @@
-'use strict';
+(function(){'use strict';
 
 var xdescribe = function(description) {
     console.log('Skipping tests: \'%s\'', description);
@@ -192,3 +192,6 @@ var xdescribe = function(description) {
         }));
     });
 }());
+
+
+})();

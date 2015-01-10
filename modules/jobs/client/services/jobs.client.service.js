@@ -1,26 +1,30 @@
-'use strict';
+(function () {
+    'use strict';
 
 //Jobs service used to communicate Jobs REST endpoints
-function JobsService($resource) {
-    return {
-        ById: $resource('api/jobs/:jobId', {
-            jobId: '@_id'
-        }, {
-            update: {
-                method: 'PUT'
-            }
-        }),
-        ByUser: $resource('api/users/:userId/jobs', {
-            userId: '@userId'
-        }),
-        ByCompany: $resource('api/companies/:companyId/jobs', {
-            companyId: '@companyId'
-        })
-    };
-}
+    function JobsService($resource) {
+        return {
+            ById: $resource('api/jobs/:jobId', {
+                jobId: '@_id'
+            }, {
+                update: {
+                    method: 'PUT'
+                }
+            }),
+            ByUser: $resource('api/users/:userId/jobs', {
+                userId: '@userId'
+            }),
+            ByCompany: $resource('api/companies/:companyId/jobs', {
+                companyId: '@companyId'
+            })
+        };
+    }
 
-JobsService.$inject = ['$resource'];
+    JobsService.$inject = ['$resource'];
 
-angular
-    .module('jobs')
-    .factory('Jobs', JobsService);
+    angular
+        .module('jobs')
+        .factory('Jobs', JobsService);
+
+
+})();

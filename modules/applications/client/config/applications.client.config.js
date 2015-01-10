@@ -2,7 +2,7 @@
     'use strict';
 
     // Configuring the Job Applications module
-    function menus(Menus, Auth) {
+    function menus(Menus) {
 
         Menus.addMenuItem('topbar', {
             title: 'Applicants',
@@ -38,7 +38,7 @@
         });
     }
 
-    menus.$inject = ['Menus', 'Authentication'];
+    menus.$inject = ['Menus'];
 
     angular
         .module('applications')
