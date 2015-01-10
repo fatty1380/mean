@@ -1,4 +1,4 @@
-<div class="row alert alert-info" role="alert" ng-click="toggle()" ng-class="{collapsed: collapsed}">
+<div ng-if="enabled" class="row alert alert-info" role="alert" ng-click="toggle()" ng-class="{collapsed: collapsed}">
     <div ng-repeat="info in debugInfo" ng-hide="collapsed">
         <span class="col-xs-3 col-md-2 text-right">
             <b>{{info.key}}:</b>

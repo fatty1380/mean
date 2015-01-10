@@ -2,7 +2,7 @@
     'use strict';
 
 //Drivers service used to communicate Drivers REST endpoints
-    function ConfigFactory($resource) {
+    function ConfigFactory($resource, $log) {
         var months;
         return {
             getStates: function() {
@@ -28,11 +28,19 @@
                     console.log('ConfigFactory] Returning newly generated months', JSON.stringify(months));
                 }
                 return months;
+            },
+            get: function(config) {
+                var rsrc = $resource('api/config/'+config);
+
+                return rsrc.get().catch(function(err) {
+                    $log.log('[AppCfg] "%s" is not an available config', config, err);
+                    return false;
+                });
             }
         };
     }
 
-    ConfigFactory.$inject = ['$resource'];
+    ConfigFactory.$inject = ['$resource', '$log'];
 
     angular
         .module('core')

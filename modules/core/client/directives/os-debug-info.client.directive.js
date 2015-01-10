@@ -15,49 +15,52 @@
                 };
             }
         ])
-        .controller('OsDebugInfoController', ['$scope', '$rootScope', '$location', '$state', '$log', 'Authentication',
+        .controller('OsDebugInfoController', ['$scope', '$rootScope', '$location', '$state', '$log', 'Authentication', 'AppConfig',
 
-            function($scope, $rootScope, $location, $state, $log, Auth) {
+            function($scope, $rootScope, $location, $state, $log, Auth, AppConfig) {
 
                 $scope.debugInfo = [];
                 $scope.collapsed = true;
 
-                var updateInfo = function(event, toState, toParams, fromState, fromParams) {
+                if($scope.enabled = AppConfig.get('debug')) {
 
-                    $log.debug('[DebugInfo] Entering state: %o. %o', toState.name, toState);
+                    var updateInfo = function (event, toState, toParams, fromState, fromParams) {
 
-                    $scope.debugInfo.length = 0;
+                        $log.debug('[DebugInfo] Entering state: %o. %o', toState.name, toState);
 
-                    if (!!toState && !!toState.name) {
+                        $scope.debugInfo.length = 0;
+
+                        if (!!toState && !!toState.name) {
+                            $scope.debugInfo.push({
+                                key: 'State',
+                                value: toState.name
+                            });
+                        }
+
+                        if (!!toState && !!toState.name) {
+                            $scope.debugInfo.push({
+                                key: 'Parent',
+                                value: (toState.parent && toState.parent.name) || 'n/a'
+                            });
+                        }
+
                         $scope.debugInfo.push({
-                            key: 'State',
-                            value: toState.name
+                            key: 'Path',
+                            value: $location.$$path
                         });
-                    }
 
-                    if (!!toState && !!toState.name) {
                         $scope.debugInfo.push({
-                            key: 'Parent',
-                            value: (toState.parent && toState.parent.name) || 'n/a'
+                            key: 'UserId',
+                            value: Auth.user._id
                         });
-                    }
+                    };
 
-                    $scope.debugInfo.push({
-                        key: 'Path',
-                        value: $location.$$path
-                    });
+                    $scope.toggle = function () {
+                        $scope.collapsed = !$scope.collapsed;
+                    };
 
-                    $scope.debugInfo.push({
-                        key: 'UserId',
-                        value: Auth.user._id
-                    });
-                };
-
-                $scope.toggle = function() {
-                    $scope.collapsed = !$scope.collapsed;
-                };
-
-                $rootScope.$on('$stateChangeSuccess', updateInfo);
+                    $rootScope.$on('$stateChangeSuccess', updateInfo);
+                }
             }
         ])
         .filter('sanitize', [
