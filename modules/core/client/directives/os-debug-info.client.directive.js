@@ -22,7 +22,7 @@
                 $scope.debugInfo = [];
                 $scope.collapsed = true;
 
-                if($scope.enabled = AppConfig.get('debug')) {
+                if(!!($scope.enabled = AppConfig.get('debug'))) {
 
                     var updateInfo = function (event, toState, toParams, fromState, fromParams) {
 
