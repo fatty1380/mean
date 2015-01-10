@@ -172,7 +172,7 @@ module.exports.faqs = [
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'Why should I order a Background Check, Motor Vehicle Report and/or Drug Test?',
         answer: 'Getting these reports dramatically increases your chances of being hired. These reports help you stand out from the crowd.  Employers will see that you have these reports, which will save them time and speed up the hiring process.',
         keywords: ['separate', 'any', 'keywords', 'terms', 'here']
@@ -184,7 +184,7 @@ module.exports.faqs = [
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'How am I charged for my Reports?',
         answer: 'Background Checks, Motor Vehicle Reports & Drug Tests are billed as a one-time payment.  Payment can be made with Visa, MasterCard and American Express.',
         keywords: ['term', 'term']
@@ -196,49 +196,49 @@ module.exports.faqs = [
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'What do the Background Checks cover?',
         answer: '<li>item 1</li>Social Security Number verification – Verifies your identity and shows your work elegibilty. <li>item 2</li> County Courthouse Records Report- A search of the records on file in each county where the user is known to have lived in the past 7 years. This type of search can find criminal records in jurisdictions that do not provide information to the national criminal records database. <li>item 3</li> National Criminal Records Search- A National Criminal Database search draws from over 505 million records from thousands of jurisdictions, including databases with terrorist and sex offender information. ',
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'What does a Motor Vehicle Report cover?',
         answer: 'This is a motor vehicle search of public driving records. Please note that the motor vehicle check is solely for the current state of residence or the state where the driver\'s license is held.',
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'What does the Drug Test Cover?',
         answer: 'This is an inperson screening that will check for the following illegal or controlled substances in your system: Amphetamines, Barbituates, Benzodiazepines, Cocaine, Opiates, Marijuana, Methadone, Methanphetamines, PCP.',
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'Who can see my Background Check , Motor Vehicle Report and Drug Test?',
         answer: 'Your Reports  are only visible to people that you specifically grant access to. When you apply to a job, you may give permission to that employer by checking a box on your application. This allows the job poster to access 	your Reportst. ',
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'How do I remove access to my Reports?',
         answer: 'You can remove particular employer\'s access to your reports by canceling the \"connection\" you have with the Employer. If you have granted access to your reports, the employer can only actuallys see them once they have \"Connected\" with you as an applicant, so you will only need to cancel their access to your reports if a connection has been established',
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'How long does a Background Check take to run?',
         answer: 'The background check usually takes 4-7 days to complete.',
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'How long does a Motor Vehicle Report take to run?',
         answer: 'Depending on the state, the Motor Vehicle Report takes between 1-10 days to complete.',
         keywords: ['term', 'term']
     },
     {
-        category: 'driver',
+        category: 'bgreport',
         question: 'What personal information is displayed on my background check?',
         answer: 'The only information that is visible to prospective employers is your full legal name, your city and state, the fact that your SSN was verified, and the results of your criminal history report.',
         keywords: ['term', 'term']

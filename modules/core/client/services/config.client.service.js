@@ -56,22 +56,16 @@
             getReports: function () {
                 var rsrc = $resource('api/config/reports');
                 return rsrc.get();
-            }
-
-            ,
+            },
             getFaqs: function (myfilter) {
                 var d = $q.defer();
                 if (!faqs) {
                     var rsrc = $resource('api/config/faqs');
                     rsrc.query().$promise.then(function (resp) {
                         $log.debug('faq response: %o', resp);
-                        faqs = resp;
+                        faqs = _.filter(resp, myfilter || {});
 
-                        //.then(function(val) {
-                        //    return _.filter(faqs, myfilter);
-                        //});
-
-                        d.resolve(resp);
+                        d.resolve(faqs);
                     }, function (err) {
                         $log.debug('got faq error: %o', err);
                     });

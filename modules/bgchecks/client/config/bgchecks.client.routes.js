@@ -8,7 +8,7 @@
 
         vm.reports = reports;
 
-        vm.faqs = AppConfig.getFaqs({category: 'driver'}).then(function(vals) {
+        vm.faqs = AppConfig.getFaqs({category: 'bgreport'}).then(function(vals) {
 
             console.log('[FAQ] promise resolved with %d vals', vals.length);
 

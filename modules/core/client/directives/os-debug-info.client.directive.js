@@ -6,9 +6,9 @@
         $scope.debugInfo = [];
         $scope.collapsed = true;
 
-        var enabled = AppConfig.get('debug');
+        var enabled = false; // AppConfig.get('debug');
         $log.error('Debug is : %o', enabled);
-        if (!!($scope.enabled = false)) {
+        if (enabled && false) {
 
             var updateInfo = function (event, toState, toParams, fromState, fromParams) {
 
@@ -46,6 +46,8 @@
             };
 
             $rootScope.$on('$stateChangeSuccess', updateInfo);
+        } else {
+            $log.info('not enabling os-debug-info');
         }
     }
 
