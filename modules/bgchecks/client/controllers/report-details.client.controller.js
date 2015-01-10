@@ -170,19 +170,10 @@
 
     function capFilter() {
         return function (input, all) {
-            return (
-                !!input ?
-                    (input
-                        .replace('/_/g', ' ') // Replace Underscores
-                        .replace('/[a-z][A-Z]/g', function (txt) { // Split Camel Case
-                            console.log('Text from "%s" to "%s"', txt, txt.charAt(0) + ' ' + txt.charAt(1));
-                            return txt.charAt(0) + ' ' + txt.charAt(1);
-                        })
-                        .replace(/([^\W_]+[^\s-]*) */g, function (txt) {
-                            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                        })
-                    )
-                    : '');
+            return (!!input) ? /^[A-Z]+$/.test(input) ? input :
+                input.print(0).replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) { return txt.charAt(0) + ' ' + txt.charAt(1); })
+                    .replace(/([^\W_]+[^\s-]*) */g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); })
+                : '';
         };
     }
 
