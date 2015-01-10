@@ -153,7 +153,7 @@
                     $log.error('this is a workaround to test form validation!');
 
                     vm.verify = true;
-                    vm.applicant = _.mapValues(vm.model, function(val) { console.log(val); return val });
+                    vm.applicant = _.mapValues(vm.model, function(val) { console.log(val); return val; });
                     debugger;
                 }
 

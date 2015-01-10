@@ -1,4 +1,5 @@
-'use strict';
+(function() {
+    'use strict';
 
 //Menu service used for managing  menus
 angular.module('core').service('Menus', [
@@ -239,3 +240,6 @@ angular.module('core').service('Menus', [
 
 ])
 ;
+
+
+})();

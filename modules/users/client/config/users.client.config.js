@@ -28,7 +28,7 @@
         ]);
     }
 
-    function menus(Menus, Auth) {
+    function menus(Menus) {
 
         // Setup Admin-Only menu Items
         Menus.addMenuItem('adminbar', {
@@ -50,7 +50,7 @@
     }
 
     config.$inject = ['$httpProvider'];
-    menus.$inject = ['Menus', 'Authentication'];
+    menus.$inject = ['Menus'];
 
     angular
         .module('users', ['core'])

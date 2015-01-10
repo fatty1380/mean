@@ -1,4 +1,5 @@
-'use strict';
+(function() {
+    'use strict';
 
 //Bgchecks service used to communicate Bgchecks REST endpoints
 var bgCheckFactory = function ($resource) {
@@ -69,3 +70,6 @@ angular.module('bgchecks')
     .factory('Reports', reportFactory)
     .factory('Bgchecks', bgCheckFactory)
     .factory('Applicants', applicantFactory);
+
+
+})();

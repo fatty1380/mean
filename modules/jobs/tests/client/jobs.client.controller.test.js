@@ -1,6 +1,6 @@
-'use strict';
-
 (function() {
+    'use strict';
+
     // Jobs Controller Spec
     describe('Jobs Controller Tests', function() {
         // Initialize global variables
