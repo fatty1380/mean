@@ -857,6 +857,13 @@ form .form-group label.optional {
     text-align: left !important;
   }
 }
+os-bg-check-summary > .pricing {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+os-bg-check-summary > .pricing h3 {
+  margin-top: 0;
+}
 /***** PRICING *******/
 .pricing.section.section-on-bg {
   padding-top: 0;

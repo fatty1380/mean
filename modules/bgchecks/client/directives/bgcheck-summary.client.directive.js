@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ReportsSummaryController(Reports, Applicants, $log) {
+    function ReportsSummaryController(Reports, Applicants, $log, $state) {
         var vm = this;
 
         Reports.Types.list({returnAll: true}).$promise
@@ -47,6 +47,10 @@
                 vm.reportSellHeader = 'Add additional packages to your profile!';
             }
         };
+
+        vm.viewReports = function() {
+            $state.go('reviewReports');
+        };
     }
 
     function BgCheckSummaryDirective() {
@@ -66,7 +70,7 @@
         return ddo;
     }
 
-    ReportsSummaryController.$inject = ['Reports', 'Applicants', '$log'];
+    ReportsSummaryController.$inject = ['Reports', 'Applicants', '$log', '$state'];
 
     angular
         .module('bgchecks')

@@ -223,8 +223,8 @@ input[type="button"] {
 .header .main-nav .nav .nav-item {
   font-weight: normal;
   text-transform: uppercase;
-  font-size: 13px;
-  margin-right: 15px;
+  font-size: 15px;
+  margin-right: 5px;
 }
 .header .main-nav .nav .nav-item.active a {
   color: #ec6952;
@@ -243,11 +243,10 @@ input[type="button"] {
   background: #ec6952;
 }
 .header .main-nav .nav .nav-item a {
-  color: #fff;
-  color: rgba(255, 255, 255, 0.8);
+  color: #ec6952 !important;
 }
 .header .main-nav .nav .nav-item a:hover {
-  color: #ec6952;
+  color: #e74124;
   background: none;
 }
 .header .main-nav .nav .nav-item a:focus {
