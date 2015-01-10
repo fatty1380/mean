@@ -171,7 +171,7 @@
     function capFilter() {
         return function (input, all) {
             return (!!input) ? /^[A-Z]+$/.test(input) ? input :
-                input.print(0).replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) { return txt.charAt(0) + ' ' + txt.charAt(1); })
+                input.replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) { return txt.charAt(0) + ' ' + txt.charAt(1); })
                     .replace(/([^\W_]+[^\s-]*) */g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); })
                 : '';
         };

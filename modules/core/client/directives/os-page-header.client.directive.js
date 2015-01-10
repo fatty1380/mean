@@ -7,12 +7,14 @@
             templateUrl: 'modules/core/views/templates/os-page-header.client.template.html',
             scope: {
                 title: '@',
+                subTitle: '@?',
                 editSref: '@?',
                 showEdit: '=?',
                 btnShow: '=?',
                 btnText: '@?',
                 btnSref: '@?',
-                level: '@?'
+                level: '@?',
+                pictureUrl: '=?'
             },
             transclude: true,
             restrict: 'E',

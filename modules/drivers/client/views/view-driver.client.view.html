@@ -1,10 +1,10 @@
 <section class="container-fluid">
-    <os-page-header title="{{vm.user.displayName}}" edit-sref="drivers.edit({driverId: '{{vm.driver._id}}'})"
-                    show-edit="vm.auth.user._id === vm.driver.user._id">
+    <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
+                    sub-title="Welcome, {{vm.user.displayName}}" show-edit="vm.canEdit" picture-url="vm.user.profileImageURL" >
         Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
     </os-page-header>
 
-    <div class="row">
+    <div class="row ">
         <div class="col-md-8">
             <div>
                 <os-driver-view data-ng-if="vm.driver" model="vm.driver"></os-driver-view>
@@ -55,17 +55,10 @@
         </div>
 
         <div class="gutter right col-md-4">
-            <span class="evilNonSemanticSpacer"></span>
 
             <os-bg-check-summary user="vm.user"></os-bg-check-summary>
 
-            <div class="profile-floater">
-                <img data-ng-src="{{vm.user.profileImageURL}}" alt="{{vm.user.displayName}}"
-                     class="img-thumbnail user-profile-picture">
-                <a class="btn btn-link" data-ui-sref="settings.picture">edit
-                    <i class="fa fa-pencil-square-o"></i>
-                </a>
-            </div>
+
 
             <!-- data-ng-if="!!vm.driver.user.addresses && !!vm.driver.user.addresses.length" -->
             <div class="well">

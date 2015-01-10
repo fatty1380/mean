@@ -380,6 +380,37 @@ a.btn-ghost, .btn-ghost {
   }
 }
 
+/* Page Headers and Profiles */
+
+.profile-floater {
+  position: absolute;
+  height: 150px;
+  top: 90px;
+  right: 0;
+  text-align: center;
+
+  > div {
+    max-height : 150px;
+    > img.user-profile-picture {
+      margin     : auto;
+      max-height: inherit;
+    }
+    > a {
+      opacity  : 0.1;
+      width    : 100%;
+      right    : 0;
+      left     : 0;
+      bottom   : 10px;
+      position : absolute;
+    }
+    &:hover > a {
+      opacity          : 1;
+      //background-color : rgb(255, 255, 255);
+      //background-color : rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
 .clear-bg {
   background-color : @light-grey;
   background-color : transparent;
@@ -767,8 +798,13 @@ footer {
 
 }
 
+
+
 /***** FORMS *********/
 form {
+  textarea.form-control {
+    height: auto!important;
+  }
 
   .form-control {
     .box-shadow(none);
@@ -830,20 +866,31 @@ form {
 
 /***** PRICING *******/
 .pricing {
+  &.section.section-on-bg {
+    padding-top: 0;
+  }
   .price-lead {
-    height : 550px;
+    height : 350px;
+    margin-bottom: 50px;
     > .row {
       position : relative;
-      top      : 100px;
+      top      : 0px;
     }
     .title {
       font-size   : 42px;
       font-weight : 400;
       text-shadow : 0 0 50px #000;
+      color: white;
+
+      &.secondary {
+        padding-top: 30px;
+        font-size : 36px;
+      }
     }
+
   }
   .title {
-    padding : 20px 0;
+    padding: 0 0 0 0;
   }
   .item {
     -webkit-transition : -webkit-transform .2s, -webkit-box-shadow .2s;
@@ -867,6 +914,9 @@ form {
     &.horizontal .item-inner .item-content > * {
       display        : table-cell;
       vertical-align : middle;
+    }
+    .heading .title {
+      font-size: 22px;
     }
     .item-inner {
       -webkit-transition : -webkit-transform .2s, -webkit-box-shadow .2s;
@@ -921,5 +971,23 @@ form {
 
   ol, ol > li {
     list-style-type : none !important;
+  }
+}
+
+.license .endorsement {
+  margin: 0 4px;
+}
+
+.faq {
+
+  .panel {
+
+    .panel-heading {
+      padding : 15px 30px;
+    }
+    .panel-body {
+      padding     : 10px 15px;
+      color       : @text-color-secondary;
+    }
   }
 }

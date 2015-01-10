@@ -9,6 +9,7 @@
         vm.submit = submit;
         vm.update = update;
         vm.create = create;
+        vm.cancel = cancel;
         vm.dropExperience = dropExperience;
         vm.addExperience = addExperience;
 
@@ -88,6 +89,10 @@
             });
         }
 
+        function cancel() {
+            $state.go('drivers.view', {driverId: vm.driver._id});
+        }
+
         // Update existing Driver
         function update() {
             debugger;
@@ -127,7 +132,6 @@
         }
 
         function addExperience() {
-            event.preventDefault();
 
             vm.driver.experience.push({
                 text: '',

@@ -7,7 +7,8 @@
                 <div class="row">
                     <h3 class="title text-center">Get started with a standalone Motor Vehicle Report</h3>
 
-                    <div class="item horizontal price-1 col-lg-4 col-md-6 col-sm-8 col-lg-offset-4 col-md-offset-3 col-sm-offset-2 col-xs-12 text-center" ui-sref="orderReports({sku:'MVRDOM'})">
+                    <div class="item horizontal price-1 col-lg-4 col-md-6 col-sm-8 col-lg-offset-4 col-md-offset-3 col-sm-offset-2 col-xs-12 text-center"
+                         ui-sref="orderReports({sku:vm.packages.base.sku})">
 
                         <div class="item-inner">
                             <div class="row item-content">
@@ -15,11 +16,11 @@
                                     <span class="fa-stack fa-3x">
                                         <i class="fa fa-certificate fa-stack-2x text-primary"></i>
                                         <span class="price-figure"><span class="price-figure-inner fa fa-stack-1x"><span
-                                                    class="currency">$</span><span class="number">5</span></span></span>
+                                                    class="currency">$</span><span class="number">{{vm.packages.base.price || 5}}</span></span></span>
                                     </span>
                                 </div>
                                 <div class="col-md-9 col-xs-8">
-                                    <h3 class="lead">Motor Vehicle Report<br>
+                                    <h3 class="lead">{{vm.packages.base.title || 'Motor Vehicle Report'}}<br>
                                         <span class="small">Show employers your clean driving record!</span></h3>
                                 </div>
                             </div>
@@ -28,22 +29,25 @@
                         <!--//item-inner-->
                     </div>
                     <!--//item-->
+                    <div class="clearfix"></div>
+
+                    <h3 class="title secondary text-center">...or add a complete package to really shine!</h3>
                 </div>
 
             </div>
 
-            <h3 class="title text-center">...or add a complete package to really shine!</h3>
 
             <div class="price-cols row">
                 <div class="items-wrapper col-md-10 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
-                    <div class="item price-1 col-md-4 col-sm-4 col-xs-12 text-center">
+                    <div class="item price-1 col-md-4 col-sm-4 col-xs-12 text-center"
+                         ui-sref="orderReports({sku:vm.packages.good.sku})">
                         <div class="item-inner">
                             <div class="heading">
-                                <h3 class="title">Good</h3>
+                                <h3 class="title" ng-bind="vm.packages.good.title">Good</h3>
 
                                 <p class="price-figure"><span class="price-figure-inner"><span
-                                        class="currency">$</span><span class="number">14.95</span><br><span
-                                        class="unit"> per month</span></span></p>
+                                        class="currency">$</span><span class="number" ng-bind="vm.packages.good.price">14.95</span><br><span
+                                        class="unit"></span></span></p>
                             </div>
                             <div class="item-content">
                                 <ul class="list-unstyled feature-list">
@@ -58,14 +62,15 @@
                     </div>
                     <!--//item-->
 
-                    <div class="item price-2 col-md-4 col-sm-4 col-xs-12 text-center best-buy">
+                    <div class="item price-2 col-md-4 col-sm-4 col-xs-12 text-center best-buy"
+                         ui-sref="orderReports({sku:vm.packages.better.sku})">
                         <div class="item-inner">
                             <div class="heading">
-                                <h3 class="title">Better</h3>
+                                <h3 class="title" ng-bind="vm.packages.better.title">Better</h3>
 
                                 <p class="price-figure"><span class="price-figure-inner"><span
-                                        class="currency">$</span><span class="number">39.95</span><br><span
-                                        class="unit">per month</span></span></p>
+                                        class="currency">$</span><span class="number" ng-bind="vm.packages.better.price">39.95</span><br><span
+                                        class="unit"></span></span></p>
                             </div>
                             <div class="item-content">
                                 <ul class="list-unstyled feature-list">
@@ -91,14 +96,15 @@
                     </div>
                     <!--//item-->
 
-                    <div class="item price-3 col-md-4 col-sm-4 col-xs-12 text-center">
+                    <div class="item price-3 col-md-4 col-sm-4 col-xs-12 text-center"
+                         ui-sref="orderReports({sku:vm.packages.best.sku})">
                         <div class="item-inner">
                             <div class="heading">
-                                <h3 class="title">Best</h3>
+                                <h3 class="title" ng-bind="vm.packages.best.title">Best</h3>
 
                                 <p class="price-figure"><span class="price-figure-inner"><span
-                                        class="currency">$</span><span class="number">79.95</span><br><span
-                                        class="unit">per month</span></span></p>
+                                        class="currency">$</span><span class="number"ng-bind="vm.packages.best.price">85.95</span><br><span
+                                        class="unit"></span></span></p>
                             </div>
                             <div class="item-content">
                                 <ul class="list-unstyled feature-list">
@@ -118,7 +124,7 @@
             </div>
             <!--//row-->
 
-            <div class="row" ng-if="vm.showDrugTest">
+            <div class="row" ng-if="vm.packages.drugs.enabled">
                 <div class="item horizontal price-1 col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3 col-xs-12 text-center">
 
                     <div class="item-inner">
@@ -153,216 +159,23 @@
         <div class="container">
             <h2 class="title text-center">Frequently Asked Questions</h2>
 
-            <div class="row">
+            <accordion class="row">
                 <div class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">
-                    <div class="panel">
-                        <div class="panel-heading">
+                    <accordion-group class="panel" ng-repeat="faq in vm.faqs">
+                        <accordion-heading class="panel-heading">
                             <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
                                                        class="panel-toggle" href="#faq1"><i
-                                    class="fa fa-plus-square"></i>Can I viverra sit amet quam eget lacinia?</a></h4>
-                        </div>
+                                    class="fa fa-plus-square"></i>{{faq.question}}</a></h4>
+                        </accordion-heading>
 
-                        <div class="panel-collapse collapse" id="faq1">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <!--//panel-->
-
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
-                                                       class="panel-toggle" href="#faq2"><i
-                                    class="fa fa-plus-square"></i>What is the ipsum dolor sit amet quam tortor?</a></h4>
-                        </div>
-
-                        <div class="panel-collapse collapse" id="faq2">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <!--//panel-->
-
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
-                                                       class="panel-toggle" href="#faq3"><i
-                                    class="fa fa-plus-square"></i>How does the morbi quam tortor work?</a></h4>
-                        </div>
-
-                        <div class="panel-collapse collapse" id="faq3">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <!--//panel-->
-
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
-                                                       class="panel-toggle" href="#faq4"><i
-                                    class="fa fa-plus-square"></i>Can I ipsum dolor sit amet nascetur ridiculus?</a>
-                            </h4>
-                        </div>
-
-                        <div class="panel-collapse collapse" id="faq4">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <!--//panel-->
-
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
-                                                       class="panel-toggle" href="#faq5"><i
-                                    class="fa fa-plus-square"></i>Is it possible to tellus eget auctor condimentum?</a>
-                            </h4>
-                        </div>
-
-                        <div class="panel-collapse collapse" id="faq5">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <!--//panel-->
-
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
-                                                       class="panel-toggle" href="#faq6"><i
-                                    class="fa fa-plus-square"></i>Would it elementum turpis semper imperdiet?</a></h4>
-                        </div>
-
-                        <div class="panel-collapse collapse" id="faq6">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <!--//panel-->
-
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
-                                                       class="panel-toggle" href="#faq7"><i
-                                    class="fa fa-plus-square"></i>How can I imperdiet lorem sem non nisl?</a></h4>
-                        </div>
-
-                        <div class="panel-collapse collapse" id="faq7">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
-                    <!--//panel-->
-
-                    <div class="panel">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
-                                                       class="panel-toggle" href="#faq8"><i
-                                    class="fa fa-plus-square"></i>Can I imperdiet massa ut?</a></h4>
-                        </div>
-
-                        <div class="panel-collapse collapse" id="faq8">
-                            <div class="panel-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life
-                                accusamus terry richardson ad squid. 3 wolf moon officia
-                                aute, non cupidatat skateboard dolor brunch. Food truck
-                                quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
-                                sunt aliqua put a bird on it squid single-origin coffee
-                                nulla assumenda shoreditch et. Nihil anim keffiyeh
-                                helvetica, craft beer labore wes anderson cred nesciunt
-                                sapiente ea proident. Ad vegan excepteur butcher vice lomo.
-                                Leggings occaecat craft beer farm-to-table, raw denim
-                                aesthetic synth nesciunt you probably haven't heard of them
-                                accusamus labore sustainable VHS.
-                            </div>
-                        </div>
-                    </div>
+                            <p class="panel-body" data-ng-bind-html="faq.answer">
+                            </p>
+                            <div class="label label-muted hidden" ng-repeat="key in faq.keywords track by $index">{{key}}</div>
+                    </accordion-group>
                     <!--//panel-->
                 </div>
-            </div>
+            </accordion>
             <!--//row-->
-            <div class="contact-lead text-center">
-                <h4 class="title">Have more questions?</h4>
-                <a class="btn btn-cta btn-cta-secondary" href="contact.html">Get in touch</a>
-            </div>
         </div>
         <!--//container-->
     </section>

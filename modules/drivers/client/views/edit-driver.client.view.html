@@ -10,13 +10,11 @@
                     <small>Include an introduction to yourself here to help employers know who you are</small>
                 </h3>
                 <div class="container-fluid well">
-                    <input class="sr-only" name="description"  type="hidden" ng-model="vm.driver.about" ng-required="true"/>
-                    <div ng-if="vm.driverForm.description.$pristine && vm.driverForm.description.$invalid" class="text-danger">Please add some information about yourself</div>
-                    <div class="row profile-row">
-                        <div class="col-sm-12">
-                            <os-html-edit model="vm.driver.about"></os-html-edit>
-                        </div>
+                    <div ng-if="vm.driverForm.description.$pristine && vm.driverForm.description.$invalid"
+                         class="text-danger">Please add some information about yourself
                     </div>
+                    <textarea class="form-control" rows="10" name="description" ng-model="vm.driver.about"
+                              ng-required="true"></textarea>
                 </div>
 
 
@@ -46,9 +44,9 @@
                             <div class="form-group "
                                  ng-show="vm.driver.experience && !!vm.driver.experience.length">
                                 <div data-ng-repeat="exp in vm.driver.experience" name="experience">
-                                    <os-driver-experience model="exp" edit-mode="true" edit-enable="true"
-                                                          add-fn="vm.addExperience()"
-                                                          drop-fn="vm.dropExperience()"></os-driver-experience>
+                                    <os-driver-experience model="exp" edit-enable="true" edit-mode="false"
+                                                          add-fn="vm.addExperience" is-last="$last"
+                                                          drop-fn="vm.dropExperience"></os-driver-experience>
                                     <hr>
                                 </div>
                             </div>

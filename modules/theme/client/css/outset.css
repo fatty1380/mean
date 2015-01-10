@@ -370,6 +370,32 @@ a.btn-ghost .text,
 .headline-bg.headline-sm + .content-section h3 {
   margin-bottom: 20px;
 }
+/* Page Headers and Profiles */
+.profile-floater {
+  position: absolute;
+  height: 150px;
+  top: 90px;
+  right: 0;
+  text-align: center;
+}
+.profile-floater > div {
+  max-height: 150px;
+}
+.profile-floater > div > img.user-profile-picture {
+  margin: auto;
+  max-height: inherit;
+}
+.profile-floater > div > a {
+  opacity: 0.1;
+  width: 100%;
+  right: 0;
+  left: 0;
+  bottom: 10px;
+  position: absolute;
+}
+.profile-floater > div:hover > a {
+  opacity: 1;
+}
 .clear-bg {
   background-color: #cccccc;
   background-color: transparent;
@@ -760,6 +786,9 @@ footer a.btn-cta {
 form {
   /* XS and SMALL (Tablets and phones, 992px and lower) */
 }
+form textarea.form-control {
+  height: auto!important;
+}
 form .form-control {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -829,20 +858,29 @@ form .form-group label.optional {
   }
 }
 /***** PRICING *******/
+.pricing.section.section-on-bg {
+  padding-top: 0;
+}
 .pricing .price-lead {
-  height: 550px;
+  height: 350px;
+  margin-bottom: 50px;
 }
 .pricing .price-lead > .row {
   position: relative;
-  top: 100px;
+  top: 0px;
 }
 .pricing .price-lead .title {
   font-size: 42px;
   font-weight: 400;
   text-shadow: 0 0 50px #000;
+  color: white;
+}
+.pricing .price-lead .title.secondary {
+  padding-top: 30px;
+  font-size: 36px;
 }
 .pricing .title {
-  padding: 20px 0;
+  padding: 0 0 0 0;
 }
 .pricing .item {
   -webkit-transition: -webkit-transform 0.2s, -webkit-box-shadow 0.2s;
@@ -868,6 +906,9 @@ form .form-group label.optional {
 .pricing .item.horizontal .item-inner .item-content > * {
   display: table-cell;
   vertical-align: middle;
+}
+.pricing .item .heading .title {
+  font-size: 22px;
 }
 .pricing .item .item-inner {
   -webkit-transition: -webkit-transform 0.2s, -webkit-box-shadow 0.2s;
@@ -912,4 +953,14 @@ tos ol,
 [tos] ol > li,
 tos ol > li {
   list-style-type: none !important;
+}
+.license .endorsement {
+  margin: 0 4px;
+}
+.faq .panel .panel-heading {
+  padding: 15px 30px;
+}
+.faq .panel .panel-body {
+  padding: 10px 15px;
+  color: #666666;
 }

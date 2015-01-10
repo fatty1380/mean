@@ -5,6 +5,21 @@ module.exports = {
 	app: {
         title: 'Outset - Development Environment'
 	},
+	services: {
+		everifile: {
+			baseUrl : process.env.EVERIFILE_BASE_URL || 'https://renovo.everifile.com/renovo',
+			username : process.env.EVERIFILE_USERNAME || 'api@joinoutset.com',
+			password : process.env.EVERIFILE_PASS || 'fax7^kaY'
+		},
+		braintree: {
+			MerchantId : process.env.BRAINTREE_MERCHANT_ID || '9thy557h7r7t5x95',
+			PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'sfnrsv2k6c78574s',
+			PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '9da8cb7ae133c4021633f00e495fbf77'
+		},
+		google: {
+			analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
+		}
+	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'MAILER_FROM',
 		options: {
@@ -14,10 +29,5 @@ module.exports = {
 				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
 			}
 		}
-	},
-    braintree: {
-        MerchantId : process.env.BRAINTREE_MERCHANT_ID || '9thy557h7r7t5x95',
-        PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'sfnrsv2k6c78574s',
-        PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '9da8cb7ae133c4021633f00e495fbf77'
-    }
+	}
 };

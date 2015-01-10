@@ -3,7 +3,7 @@
 
 //Drivers service used to communicate Drivers REST endpoints
     function ConfigFactory($resource, $log, $q) {
-        var months;
+        var months, faqs;
         return {
             getStates: function () {
                 var rsrc = $resource('api/config/states');
@@ -41,11 +41,37 @@
                     });
 
                 return d.promise;
+            },
+            getReports: function() {
+                var rsrc = $resource('api/config/reports');
+                return rsrc.get();
+            },
+            getFaqs: function(myfilter) {
+                var d = $q.defer();
+                if(!faqs) {
+                    var rsrc = $resource('api/config/faqs');
+                    rsrc.query().$promise.then(function(resp) {
+                        $log.debug('faq response: %o', resp);
+                        faqs = resp;
+
+                        //.then(function(val) {
+                        //    return _.filter(faqs, myfilter);
+                        //});
+
+                        d.resolve(resp);
+                    }, function(err) {
+                        $log.debug('got faq error: %o', err);
+                    });
+                } else {
+                    d.resolve(faqs);
+                }
+
+                return d.promise;
             }
         };
     }
 
-    ConfigFactory.$inject = ['$resource', '$log'];
+    ConfigFactory.$inject = ['$resource', '$log', '$q'];
 
     angular
         .module('core')

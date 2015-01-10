@@ -45,8 +45,11 @@
 
         vm.format = vm.format || 'YYYY-MM-DD';
         vm.display = 'L'; // Locale Specific "Date" Format
-        vm.displayFormat = moment().format('L').replace(/\d{4}/, 'YYYY').replace(/\d{2}/, 'MM').replace(/\d{2}/, 'DD');
+        vm.displayFormat = vm.dformat || moment().format('L').replace(/\d{4}/, 'YYYY').replace(/\d{2}/, 'MM').replace(/\d{2}/, 'DD');
         vm.required = vm.required === undefined && $attrs.required !== undefined || !!vm.required;
+
+        vm.mask = vm.dformat && vm.dformat.replace(/\w/g,'9') || '99/99/9999';
+        console.log('got mask %s from %s', vm.mask, vm.dformat);
 
         var t = getDate(vm.model, vm.format);
         vm.shadow = !!t ? t.format(vm.displayFormat) : t;
@@ -62,10 +65,11 @@
                 if(moment.isMoment(newVal)) {
                     m = newVal;
                 } else {
-                    m = moment(newVal, 'L');
+                    m = moment(newVal, vm.displayFormat);
                 }
 
                 if (m.isValid()) {
+                    $log.info('[osDp] validDate %o --> %s', m, m.format(vm.format));
                     vm.model = m.format(vm.format);
                 }
             }
@@ -89,7 +93,10 @@
             restrict: 'E',
             scope: {
                 model: '=',
-                format: '=?'
+                format: '=?',
+                dformat: '@?',
+                isRequired : '=?',
+                osName : '=?'
             },
             controller: dpCtrl,
             controllerAs: 'vm',
