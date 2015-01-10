@@ -1,26 +1,26 @@
-(function() {
+(function () {
     'use strict';
 
 //Drivers service used to communicate Drivers REST endpoints
-    function ConfigFactory($resource, $log) {
+    function ConfigFactory($resource, $log, $q) {
         var months;
         return {
-            getStates: function() {
+            getStates: function () {
                 var rsrc = $resource('api/config/states');
                 return rsrc.query();
             },
-            getCountries: function() {
+            getCountries: function () {
                 var rsrc = $resource('api/config/countries');
                 return rsrc.query();
             },
-            getBaseSchedule: function() {
+            getBaseSchedule: function () {
                 var rsrc = $resource('api/config/baseSchedule');
                 return rsrc.query();
             },
-            getMonths: function() {
-                if(!months) {
+            getMonths: function () {
+                if (!months) {
                     months = [];
-                    while(months.length < 12) {
+                    while (months.length < 12) {
                         var m = moment().month(months.length);
                         months.push({num: m.format('MM'), name: m.format('MMMM')});
                     }
@@ -29,13 +29,18 @@
                 }
                 return months;
             },
-            get: function(config) {
-                var rsrc = $resource('api/config/'+config);
+            get: function (config) {
+                var rsrc = $resource('api/config/' + config);
+                var d = $q.defer();
+                rsrc.get().$promise.then(
+                    function (resp) {
+                        d.resolve(resp);
+                    }, function (err) {
+                        $log.log('[AppCfg] "%s" is not an available', config, err);
+                        return false;
+                    });
 
-                return rsrc.get().catch(function(err) {
-                    $log.log('[AppCfg] "%s" is not an available config', config, err);
-                    return false;
-                });
+                return d.promise;
             }
         };
     }

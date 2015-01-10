@@ -7,8 +7,6 @@ var mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: M
 
 function getMessage(options) {
 
-    console.log('options: %j', options);
-
     var message = {
         'html': options.html,
         'text': 'Example text content',

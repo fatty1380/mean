@@ -45,7 +45,8 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
         $scope.resetUserPassword = function () {
             $scope.success = $scope.error = null;
 
-            $http.post('/api/auth/reset/' + $stateParams.token, $scope.passwordDetails).success(function (response) {
+            $http.post('/api/auth/reset/' + $stateParams.token, $scope.passwordDetails).success(
+                function (response) {
                 // If successful show success message and clear form
                 $scope.passwordDetails = null;
 
@@ -55,6 +56,7 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
                 // And redirect to the index page
                 $state.go('password.reset.success');
             }).error(function (response) {
+                console.log('hmmm, that was\'nt suppoased to happen: ', response);
                 $scope.error = response.message;
             });
         };
