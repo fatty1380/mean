@@ -38,7 +38,7 @@
                                 <!-- States -->
                                 <input ng-if="field.type==='state'" type="text" ng-model="vm.model[field.name]"
                                        typeahead="state.id as state.name for state in vm.states | filter:$viewValue | limitTo:8"
-                                       class="form-control" >
+                                       class="form-control" autocomplete="off">
 
                                 <!-- Countries -->
                                 <!-- TODO: typeahead="country.id as country.name for country in vm.countries | filter:$viewValue | limitTo:8" -->
