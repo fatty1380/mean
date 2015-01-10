@@ -69,10 +69,6 @@
                     vm.model = m.format(vm.format);
                 }
             }
-
-            $element;
-
-            debugger; // try to set form validity
         });
     }
 

@@ -119,7 +119,13 @@
          * Or sets the form into "verify" state
          * */
         vm.submit = function submit(event) {
+
             debugger;
+
+            if(vm.reportForm.$invalid) {
+                vm.error = 'Please correct all errors above';
+                return false;
+            }
 
             vm.model.userId = auth.user._id;
 
@@ -143,9 +149,21 @@
                     $log.error('failed to create applicant: %o', err);
                 }
 
+                if('TODO: THIS IS AA WORKAROUND') {
+                    $log.error('this is a workaround to test form validation!');
+
+                    vm.verify = true;
+                    vm.applicant = _.mapValues(vm.model, function(val) { console.log(val); return val });
+                    debugger;
+                }
+
                 vm.error = err.message || err.data.message;
                 return false;
             });
+        };
+
+        vm.execute = function execute(event) {
+            alert('yay');
         };
 
     }
