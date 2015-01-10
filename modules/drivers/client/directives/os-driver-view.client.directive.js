@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var simpleController = function(Authentication) {
+    var OsDriverViewController = function(Authentication) {
         var vm = this;
         vm.Authentication = Authentication;
 
@@ -49,10 +49,10 @@
         };
     }
 
-    simpleController.$inject = ['Authentication'];
+    OsDriverViewController.$inject = ['Authentication'];
 
     angular
         .module('drivers')
-        .controller('OsDriverViewController', simpleController)
+        .controller('OsDriverViewController', OsDriverViewController)
         .directive('osDriverView', OsDriverView);
 })();

@@ -1,6 +1,6 @@
 <section name="os-driver.directive" class="panel panel-default">
     <div class="panel-heading">
-        <h4>About Me<a data-ng-if="vm.auth.user._id === vm.driver.user._id" class="btn btn-link pull-right"
+        <h4>About Me<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
                        ui-sref="drivers.edit({driverId: vm.driver._id })">edit driver profile
             <i class="fa fa-pencil-square-o"></i>
         </a></h4>
@@ -19,10 +19,10 @@
         <p>{{exp.description | limitTo : 1000}}</p>
         <hr ng-hide="$last"/>
 
-        <p ng-show="vm.driver.experience.length === 0">None Added</p>
+        <p ng-hide="!!vm.driver.experience.length">None Added</p>
     </div>
 
-    <div class="panel-heading">Location<a data-ng-if="vm.auth.user._id === vm.driver.user._id" class="btn btn-link pull-right"
+    <div class="panel-heading">Location<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
                                           ui-sref="settings.profile">edit location
         <i class="fa fa-pencil-square-o"></i></a></div>
     <div class="panel-body">

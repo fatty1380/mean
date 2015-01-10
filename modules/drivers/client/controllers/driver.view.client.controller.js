@@ -5,6 +5,8 @@
     function DriverViewController($state, $log, $stateParams, Authentication, Profiles, driver) {
         var vm = this;
 
+        $log.info('Loading driverViewController');
+
         // Variables:
         vm.driver = driver;
         vm.user = null;

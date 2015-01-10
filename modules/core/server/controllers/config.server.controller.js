@@ -22,7 +22,7 @@ exports.getConfig = function(req, res, next, varName) {
             console.log('got %d faqs to return', req.configVal.length);
             return next();
         case 'debug':
-            req.configVal = false;
+            req.configVal = {debug: false};
             return next();
         default:
             next();

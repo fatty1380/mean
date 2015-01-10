@@ -34,23 +34,36 @@
                 var d = $q.defer();
                 rsrc.get().$promise.then(
                     function (resp) {
-                        d.resolve(resp);
-                    }, function (err) {
+
+                        if (resp.hasOwnProperty(config)) {
+                            d.resolve(resp[config]);
+                        } else {
+                            d.resolve(resp);
+                        }
+                    },
+                    function (err) {
                         $log.log('[AppCfg] "%s" is not an available', config, err);
                         return false;
-                    });
+                    }
+                );
 
-                return d.promise;
+                d.promise.then(function(f) {
+                    return f;
+                }, function(e) {
+                    return e;
+                });
             },
-            getReports: function() {
+            getReports: function () {
                 var rsrc = $resource('api/config/reports');
                 return rsrc.get();
-            },
-            getFaqs: function(myfilter) {
+            }
+
+            ,
+            getFaqs: function (myfilter) {
                 var d = $q.defer();
-                if(!faqs) {
+                if (!faqs) {
                     var rsrc = $resource('api/config/faqs');
-                    rsrc.query().$promise.then(function(resp) {
+                    rsrc.query().$promise.then(function (resp) {
                         $log.debug('faq response: %o', resp);
                         faqs = resp;
 
@@ -59,7 +72,7 @@
                         //});
 
                         d.resolve(resp);
-                    }, function(err) {
+                    }, function (err) {
                         $log.debug('got faq error: %o', err);
                     });
                 } else {
