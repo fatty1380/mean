@@ -9,7 +9,7 @@ ReportType      = mongoose.model('ReportType'),
 ReportApplicant = mongoose.model('ReportApplicant'),
 unirest         = require('unirest'),
 Q               = require('q'),
-moment            = require('moment'),
+moment          = require('moment'),
 path            = require('path'),
 config          = require(path.resolve('./config/config')),
 _               = require('lodash');
@@ -50,6 +50,7 @@ exports.GetRawReport = GetRawReport;
  */
 
 var enabledSKUs = ['NBDS', 'PKG_PREMIUM', 'ES_ECUPIT', 'MVRDOM'];
+var fieldTranslations = {'PKG_PREMIUM': ['SSNVAL', 'CRIMESC', 'FORM_EVER']};
 
 var server = {
     baseUrl: 'https://renovo-api-test.everifile.com/renovo',
@@ -233,32 +234,66 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
     var sku = reportType.sku;
     console.log('Getting Report Fields for SKU "%s"', sku);
 
-    var deferred = Q.defer();
+    if (!!fieldTranslations[sku]) {
+        console.log('Translating sku %s into %j', sku, fieldTranslations[sku]);
 
-    if (reportType.enabled) {
-        unirest
-            .get(server.baseUrl + '/rest/report/' + sku + '/fields')
-            .jar(cookieJar)
-            .end(function (response) {
+        var componentFields = fieldTranslations[sku].map(function(reportType) {
+            return getUpdatedReportFieldsPromise(reportType, cookieJar);
+        });
 
-                if (response.error) {
-                    console.log('[getUpdatedReportFieldsPromise] Error in response: %j', response.body);
+        var defer = Q.defer();
 
-                    return deferred.reject(response.body.reason);
+        Q.allSettled(componentFields).then(
+            function (processedFields) {
+                console.log('[TranslatedReportFields] Coalescing %d field sources: %j', processedFields);
+
+                var retFields = {};
+
+                var i;
+                for(i = 0; i < processedFields.length; i++) {
+                    retFields = _.extend(retFields, processedFields[i]);
+
+                    console.log('[Coalesce_%d] %j', i, retFields);
                 }
 
-                console.log('[getUpdatedReportFieldsPromise] Got Fields: %j', response.body);
+                defer.resolve(retFields);
+            },
+            function (error) {
+                defer.reject(error);
+            }
+        );
 
-                reportType.fields = response.body.fields;
-
-                return deferred.resolve(reportType);
-            });
-    } else {
-        console.log('Not loading fields for disabled report type: %s', sku);
-        return deferred.resolve(reportType);
+        return defer.promise;
     }
+    else {
 
-    return deferred.promise;
+        var deferred = Q.defer();
+
+        if (reportType.enabled) {
+            unirest
+                .get(server.baseUrl + '/rest/report/' + sku + '/fields')
+                .jar(cookieJar)
+                .end(function (response) {
+
+                    if (response.error) {
+                        console.log('[getUpdatedReportFieldsPromise] Error in response: %j', response.body);
+
+                        return deferred.reject(response.body.reason);
+                    }
+
+                    console.log('[getUpdatedReportFieldsPromise] Got Fields: %j', response.body);
+
+                    reportType.fields = response.body.fields;
+
+                    return deferred.resolve(reportType);
+                });
+        } else {
+            console.log('Not loading fields for disabled report type: %s', sku);
+            return deferred.resolve(reportType);
+        }
+
+        return deferred.promise;
+    }
 }
 
 /** END : Report Definitions ---------------------------------------------------- */
@@ -294,12 +329,12 @@ function sanitizeReportApplicant(model) {
 
     model.remoteId = model.applicantId;
 
-    if(model.hasOwnProperty('governmentId')) {
+    if (model.hasOwnProperty('governmentId')) {
         console.log('[initReportApplicantModel] Clearing govId from response object');
         model.governmentId = null;
     }
 
-    if(model.hasOwnProperty('driversLicense')) {
+    if (model.hasOwnProperty('driversLicense')) {
         console.log('[initReportApplicantModel] Clearing dlId from response object');
         model.driversLicense = null;
     }
@@ -338,13 +373,13 @@ function CreateApplicant(cookie, applicant) {
 
     var method;
 
-    if(applicant.remoteId) {
+    if (applicant.remoteId) {
         method = 'PUT';
     } else {
         method = 'POST';
     }
 
-    unirest(method,server.baseUrl + '/rest/applicant')
+    unirest(method, server.baseUrl + '/rest/applicant')
         .headers({'Content-Type': 'application/json'})
         .send(applicant)
         .jar(cookie.jar)
@@ -354,7 +389,7 @@ function CreateApplicant(cookie, applicant) {
             if (response.error) {
                 console.log('[CreateApplicant] Full Error Response: \n\n%j\n\n', response);
 
-                deferred.reject(response.body.reason + '[' +JSON.stringify(response.error) + ']');
+                deferred.reject(response.body.reason + '[' + JSON.stringify(response.error) + ']');
             }
 
             deferred.resolve(response.body);

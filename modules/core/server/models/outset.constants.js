@@ -25,6 +25,43 @@ module.exports.stateAbbreviations = function () {
     return abbreviations;
 };
 
+module.exports.report_packages = {
+    base: {
+        title: 'Motor Vehicle Report',
+        price: '5',
+        sku: 'MVRDOM',
+        skus: ['MVRDOM'],
+        enabled: true
+    },
+    good: {
+        title: 'Good',
+        price: '14.50',
+        sku: 'NBDS+MVRDOM',
+        skus: [{sku: 'NBDS'}, {sku: 'MVRDOM'}],
+        enabled: true
+    },
+    better: {
+        title: 'Premium',
+        price: '44.95',
+        sku: 'PKG_PREMIUM',
+        skus: [{sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
+        enabled: true
+    },
+    best: {
+        title: 'Enterprise',
+        price: '84.95',
+        sku: 'PKG_PREMIUM+ES_ECUPIT',
+        skus: [{sku: 'ES_ECUPIT'}, {sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
+        enabled: true
+    },
+    drugs: {
+        title: 'Drug Test',
+        price: '40',
+        sku: 'ES_ECUPIT',
+        enabled: false
+    }
+};
+
 module.exports.baseSchedule = [{
     'description': 'Early Morning',
     'time': {
@@ -120,3 +157,185 @@ module.exports.usStates = [{id: 'alabama', name: 'Alabama', 'alpha-2': 'AL'},
     {id: 'west_virginia', name: 'West Virginia', 'alpha-2': 'WV'},
     {id: 'wisconsin', name: 'Wisconsin', 'alpha-2': 'WI'},
     {id: 'wyoming', name: 'Wyoming', 'alpha-2': 'WY'}];
+
+module.exports.faqs = [
+    {
+        category: 'driver',
+        question: 'How do I sign up as a Driver looking for work?',
+        answer: 'Signing up is easy.  Go to www.joinoutset.com and Click the <b>Sign Up</b> button.  When prompted, let us know that you\'re a Driver.  After that, we\'ll ask you a few more simple questions to help create your account.  Once your account is created, you can begin to build your profile.',
+        keywords: ['separate', 'any', 'keywords', 'terms', 'here']
+    },
+    {
+        category: 'driver',
+        question: 'How do I get Employers interested in me?',
+        answer: 'Building a strong profile is the best way to get noticed and contacted by employers.  Every job posted on Outset receives multiple applications; those with the strongest profiles stand out from the crowd and motivate the employer to make contact. To build a strong profile, make sure to include reports such as a Background Check and Motor Vehicle Record, as well as your past employment history and a clear picture of yourself.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'Why should I order a Background Check, Motor Vehicle Report and/or Drug Test?',
+        answer: 'Getting these reports dramatically increases your chances of being hired. These reports help you stand out from the crowd.  Employers will see that you have these reports, which will save them time and speed up the hiring process.',
+        keywords: ['separate', 'any', 'keywords', 'terms', 'here']
+    },
+    {
+        category: 'driver',
+        question: 'Who will see my profile information?',
+        answer: 'The only people that will see your profile will be the hiring managers for the jobs that you apply for. Once you apply, they will see your basic profile.  If they decide to connect with you, they\'ll see a more detailed version of your profile which will include any Reports you have hosted in your profile.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'How am I charged for my Reports?',
+        answer: 'Background Checks, Motor Vehicle Reports & Drug Tests are billed as a one-time payment.  Payment can be made with Visa, MasterCard and American Express.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'How do I communicate with the Employer?',
+        answer: 'After you have submitted your job application the Employer will review your basic profile information and decide whether they would like to \"Connect\" with you. Once this connection is made, you will be able to freely communicate with the employer via Outset\'s messaging capability.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'What do the Background Checks cover?',
+        answer: '<li>item 1</li>Social Security Number verification – Verifies your identity and shows your work elegibilty. <li>item 2</li> County Courthouse Records Report- A search of the records on file in each county where the user is known to have lived in the past 7 years. This type of search can find criminal records in jurisdictions that do not provide information to the national criminal records database. <li>item 3</li> National Criminal Records Search- A National Criminal Database search draws from over 505 million records from thousands of jurisdictions, including databases with terrorist and sex offender information. ',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'What does a Motor Vehicle Report cover?',
+        answer: 'This is a motor vehicle search of public driving records. Please note that the motor vehicle check is solely for the current state of residence or the state where the driver\'s license is held.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'What does the Drug Test Cover?',
+        answer: 'This is an inperson screening that will check for the following illegal or controlled substances in your system: Amphetamines, Barbituates, Benzodiazepines, Cocaine, Opiates, Marijuana, Methadone, Methanphetamines, PCP.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'Who can see my Background Check , Motor Vehicle Report and Drug Test?',
+        answer: 'Your Reports  are only visible to people that you specifically grant access to. When you apply to a job, you may give permission to that employer by checking a box on your application. This allows the job poster to access 	your Reportst. ',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'How do I remove access to my Reports?',
+        answer: 'You can remove particular employer\'s access to your reports by canceling the \"connection\" you have with the Employer. If you have granted access to your reports, the employer can only actuallys see them once they have \"Connected\" with you as an applicant, so you will only need to cancel their access to your reports if a connection has been established',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'How long does a Background Check take to run?',
+        answer: 'The background check usually takes 4-7 days to complete.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'How long does a Motor Vehicle Report take to run?',
+        answer: 'Depending on the state, the Motor Vehicle Report takes between 1-10 days to complete.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'driver',
+        question: 'What personal information is displayed on my background check?',
+        answer: 'The only information that is visible to prospective employers is your full legal name, your city and state, the fact that your SSN was verified, and the results of your criminal history report.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'How do I sign up to post jobs and driving opportunities?',
+        answer: 'Signing up is easy.  Go to www.joinoutset.com and Click the [Sign Up] button.  When prompted, let us know that you are an Employer.  After that, we\'ll ask you a few more simple questions to help create your account.  Once your account is created, you can subscribe and post your first job!',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'Why should I use Outset to find my drivers?',
+        answer: 'Outset is a place designed for drivers to manage their careers, and make themselves more marketable in the job market. As a result, we porvide great tools for drivers to "pre-qualify" themselves for your jobs by providing Background Checks, Motor Vehicle Reports & Drug Tests upfront. Which means you get more qualified applicants, and easy place to manage the process, so you spend less time on hiring',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'What do I need to build a strong profile?',
+        answer: 'Building a strong profile is the best way to get noticed and contacted by potential employess.  Every job posted on Outset receives multiple applications; those with the strongest profiles stand out from the crowd and motivate the employee to apply to make contact. To build a strong profile, make sure to include your Logo or a clear picture, 1-2 paragraphs about your company & any awards or iteams that help you stand out.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'How do I post a job?',
+        answer: 'You can create a new job from any page by clicking the Create New Job Posting] button.  This will take you to a page where you can create your own posting.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'How many job postings can I create?',
+        answer: 'You can create and save as many postings as you would like.  However, you can only have as many ACTIVE postings per month as your subscription allows.  You can activate or de-activate existing postings as often as needed, but at any time you can only have as many active postings as your subscription allows.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'Why was my job posting not approved?',
+        answer: 'Every job posting is reviewed by the Outset team prior to going active.  Postings must include at least two relevant, detailed sentences in your short description. You may also not include telephone numbers, external links or web addresses in your job posting.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'How do I Close/De-Activate my job posting?',
+        answer: 'You can manage any job posting from the [Job Postings] section.  Find the posting you would like to de-activate and click the [De-Activate Posting] button.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'employer',
+        question: 'How do I view and/or re-activate my inactive job postings?',
+        answer: 'You can manage any job posting from the [Job Postings] section.  Click the [Show Inactive Postings] link on the left side of the page. Find the posting you would like to re-activate and click the [Activate Posting] button.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'managing applicants',
+        question: 'When will I start getting applicants?',
+        answer: 'Once your job posting is approved and activated, it will be immediately available to applicants.  ',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'managing applicants',
+        question: 'Where can I view the applicants for my job postings?',
+        answer: 'Applicants will show up in the [Job Postings] section underneath each specific job posting.  Click on any job posting to see a list of the applicants for that job.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'managing applicants',
+        question: 'How do I contact applicants?',
+        answer: 'In order to contact an applicant, you must \'connect\' with them first. To connect, click the [Full Profile and Connect] button on their application and you will be shown the applicant\'s full profile. If you decide to connect, click the [Connect] button. Once you have connected with an applicant, click the [Messaging] link under their picture. You\'ll be able to send and receive messages from them.  At this point you can set up time to talk in person or over the phone.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'managing applicants',
+        question: 'How do I view an applicant\'s Background Check or Motor Vehicle Report?',
+        answer: 'Once you have "Connected" with an applicant you will have full access to their reports if available.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'managing applicants',
+        question: 'What should I do with applicants I\'ve decided not to work with?',
+        answer: 'If you do not want to work with and applicant, click the [Decline] button on their application.  The applicant will then be informed that they were declined for this job posting.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'subsciptions and billing',
+        question: 'How is my subscription billed?',
+        answer: 'Your subscription period is 30 days long.  You will be billed on the 1st day for the next subscription period.  Billing starts on the day that you purchase your subscription.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'subsciptions and billing',
+        question: 'How do I change my subscription plan?',
+        answer: 'You can change your plan by clicking the [Change] link next to your current plan in your [Profile] Section.  Your bill will be pro-rated to reflect the change in your subscription plan.',
+        keywords: ['term', 'term']
+    },
+    {
+        category: 'subsciptions and billing',
+        question: 'How do I change my credit card on file?',
+        answer: 'To change your billing information, click the Settings Icon (shaped like a gear) in the upper right hand corner of the screen of every page.  You can also click the [Edit Account Settings] button near your name on your profile page.',
+        keywords: ['term', 'term']
+    }];

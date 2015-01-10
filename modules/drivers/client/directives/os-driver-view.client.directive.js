@@ -10,6 +10,26 @@
 
             return vm.auth.user._id === user._id;
         };
+
+        vm.getExperienceString = function(experience) {
+            var retval = '<strong>' + experience.title + '</strong>';
+
+            retval += ' ' + vm.getDateRange(experience.time);
+
+            return retval;
+        };
+
+        vm.getDateRange = function(time) {
+            var s,e;
+
+            if(time.start && (s = moment(time.start))) {
+                if (time.end && (e = moment(time.end))) {
+                    return s.format('MMMM, YYYY') + ' - ' + e.format('MMMM, YYYY');
+                }
+                return s.format('MMMM, YYYY') + ' - present';
+            }
+            return null;
+        };
     };
 
     simpleController.$inject = ['Authentication'];

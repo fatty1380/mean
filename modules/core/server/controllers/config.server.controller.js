@@ -12,6 +12,18 @@ exports.getConfig = function(req, res, next, varName) {
         case 'baseSchedule':
             req.configVal = constants.baseSchedule;
             return next();
+        case 'reports':
+            req.configVal = constants.report_packages;
+            return next();
+        case 'faqs':
+            var filter = req.query;
+            console.log('looking up faqs with filter: %j', filter);
+            req.configVal = constants.faqs;
+            console.log('got %d faqs to return', req.configVal.length);
+            return next();
+        case 'debug':
+            req.configVal = false;
+            return next();
         default:
             next();
     }

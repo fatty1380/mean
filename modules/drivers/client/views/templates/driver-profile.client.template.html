@@ -1,40 +1,48 @@
-<section name="os-driver.directive" class="well container-fluid">
-    <os-page-header title="Driver Profile" level="h4">
-    </os-page-header>
+<section name="os-driver.directive" class="panel panel-default">
+    <div class="panel-heading">
+        <h4>About Me<a data-ng-if="vm.auth.user._id === vm.driver.user._id" class="btn btn-link pull-right"
+                       ui-sref="drivers.edit({driverId: vm.driver._id })">edit driver profile
+            <i class="fa fa-pencil-square-o"></i>
+        </a></h4>
+    </div>
 
-    <h4>About Me</h4>
-    <div class="row col-sm-12">
+    <div class="panel-body">
         <div data-ng-bind-html="vm.driver.about"></div>
     </div>
 
-    <div class="row col-sm-12" ng-show="vm.driver.experience.length > 0">
-        <label>Experience:</label>
-
-        <div ng-repeat="exp in vm.driver.experience">
-            {{exp.title || 'Job'}} - {{exp.time.start | date: 'shortDate'}} to {{exp.time.end | date: 'shortDate'}}
-            <span ng-hide="$last">,&nbsp;</span>
-
-            <p ng-show="vm.driver.experience.length === 0">None Added</p>
-        </div>
+    <div class="panel-heading" ng-show="vm.driver.experience.length > 0">
+        <h4>Experience:</h4>
     </div>
 
-    <div class="row col-sm-12">
-        <label>Location:</label>
+    <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
+        <strong>{{exp.title}}</strong><label class="pull-right" data-ng-bind="vm.getDateRange(exp.time)"></label>
+        <p>{{exp.description | limitTo : 1000}}</p>
+        <hr ng-hide="$last"/>
+
+        <p ng-show="vm.driver.experience.length === 0">None Added</p>
+    </div>
+
+    <div class="panel-heading">Location<a data-ng-if="vm.auth.user._id === vm.driver.user._id" class="btn btn-link pull-right"
+                                          ui-sref="settings.profile">edit location
+        <i class="fa fa-pencil-square-o"></i></a></div>
+    <div class="panel-body">
         <os-address-list models="vm.driver.user.addresses" can-edit="false"></os-address-list>
 
         <p ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">No Address on File</p>
     </div>
 
-    <div class="row col-sm-12">
-        <label>License</label>
+    <div class="panel-heading">License</div>
+    <div class="panel-body">
 
-        <div ng-repeat="license in vm.driver.licenses">
+        <div ng-repeat="license in vm.driver.licenses" class="license">
 
             <p>
                 <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}<span
-                    ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span> Driver License
+                    ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>
+                Driver License
+                <span class="pull-right">
                 <span ng-repeat="(name, val) in license.endorsements"
-                      class="label label-success">{{name}}&nbsp;</span>
+                      class="endorsement label label-success">{{name}}&nbsp;</span></span>
             </p>
 
         </div>

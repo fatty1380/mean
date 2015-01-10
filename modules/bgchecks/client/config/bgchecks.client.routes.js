@@ -1,13 +1,57 @@
 (function () {
     'use strict';
 
-    function ReportListController(reports, $stateParams) {
+    function ReportListController(reports, $stateParams, AppConfig) {
         var vm = this;
 
         vm.skus = $stateParams.sku;
 
         vm.reports = reports;
 
+        vm.faqs = AppConfig.getFaqs({category: 'driver'}).then(function(vals) {
+
+            console.log('[FAQ] promise resolved with %d vals', vals.length);
+
+            vm.faqs = vals;
+            return vals;
+        });
+
+        vm.packages = AppConfig.getReports() || {
+            base: {
+                title: 'Motor Vehicle Report',
+                price: '5',
+                sku: 'MVRDOM',
+                skus: ['MVRDOM'],
+                enabled: true
+            },
+            good: {
+                title: 'Good',
+                price: '14.50',
+                sku: 'NBDS+MVRDOM',
+                skus: [{sku: 'NBDS'}, {sku: 'MVRDOM'}],
+                enabled: true
+            },
+            better: {
+                title: 'Premium',
+                price: '44.95',
+                sku: 'PKG_PREMIUM',
+                skus: [{sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
+                enabled: true
+            },
+            best: {
+                title: 'Enterprise',
+                price: '84.95',
+                sku: 'PKG_PREMIUM+ES_ECUPIT',
+                skus: [{sku: 'ES_ECUPIT'}, {sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
+                enabled: true
+            },
+            drugs: {
+                title: 'Drug Test',
+                price: '40',
+                sku: 'ES_ECUPIT',
+                enabled: false
+            }
+        };
     }
 
     function resolveApplicantForUser(Applicants, Authentication, $q) {
@@ -15,8 +59,8 @@
         var getApplicant = Applicants.ByUser.get({userId: userId});
 
         return getApplicant.$promise.catch(
-            function(error) {
-                if(error.status === 404) {
+            function (error) {
+                if (error.status === 404) {
                     console.log('No Existing Applicant for User');
                     return null;
                 }
@@ -29,6 +73,7 @@
 
     function resolveReportDetails(Reports, $stateParams) {
         var sku = $stateParams.sku;
+        debugger; // determine multi sku ;)
 
         var getDetails = Reports.get(sku);
 
@@ -106,7 +151,7 @@
                 url: '/reports/:sku/pay',
                 templateUrl: 'modules/bgchecks/views/paymentTest.client.view.html',
                 parent: 'fixed-opaque',
-                controller: function() {
+                controller: function () {
                     debugger;
                     braintree.setup('eyJ2ZXJzaW9uIjoxLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIzNTBhZDhkMjk4ZTU4NDc3OGFiODMyYTgzNDFkYThiMDI3NDUxYzJiOTY3ZWRjZDc4NTAwZmQ4MGMzNTllNGZlfGNyZWF0ZWRfYXQ9MjAxNS0wMS0wNFQwMDozNzo0Ni44MzA3ODU0NDIrMDAwMFx1MDAyNm1lcmNoYW50X2lkPWRjcHNweTJicndkanIzcW5cdTAwMjZwdWJsaWNfa2V5PTl3d3J6cWszdnIzdDRuYzgiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvZGNwc3B5MmJyd2RqcjNxbi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwicGF5bWVudEFwcHMiOltdLCJjbGllbnRBcGlVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvZGNwc3B5MmJyd2RqcjNxbi9jbGllbnRfYXBpIiwiYXNzZXRzVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhdXRoVXJsIjoiaHR0cHM6Ly9hdXRoLnZlbm1vLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhbmFseXRpY3MiOnsidXJsIjoiaHR0cHM6Ly9jbGllbnQtYW5hbHl0aWNzLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb20ifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwidGhyZWVEU2VjdXJlIjp7Imxvb2t1cFVybCI6Imh0dHBzOi8vYXBpLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb206NDQzL21lcmNoYW50cy9kY3BzcHkyYnJ3ZGpyM3FuL3RocmVlX2Rfc2VjdXJlL2xvb2t1cCJ9LCJwYXlwYWxFbmFibGVkIjp0cnVlLCJwYXlwYWwiOnsiZGlzcGxheU5hbWUiOiJBY21lIFdpZGdldHMsIEx0ZC4gKFNhbmRib3gpIiwiY2xpZW50SWQiOm51bGwsInByaXZhY3lVcmwiOiJodHRwOi8vZXhhbXBsZS5jb20vcHAiLCJ1c2VyQWdyZWVtZW50VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3RvcyIsImJhc2VVcmwiOiJodHRwczovL2Fzc2V0cy5icmFpbnRyZWVnYXRld2F5LmNvbSIsImFzc2V0c1VybCI6Imh0dHBzOi8vY2hlY2tvdXQucGF5cGFsLmNvbSIsImRpcmVjdEJhc2VVcmwiOm51bGwsImFsbG93SHR0cCI6dHJ1ZSwiZW52aXJvbm1lbnROb05ldHdvcmsiOnRydWUsImVudmlyb25tZW50Ijoib2ZmbGluZSIsIm1lcmNoYW50QWNjb3VudElkIjoic3RjaDJuZmRmd3N6eXR3NSIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlfQ==', 'dropin', {
                         container: 'dropin'
@@ -121,7 +166,7 @@
     resolveReports.$inject = ['Reports', '$stateParams'];
     resolveReportDetails.$inject = ['Reports', '$stateParams'];
 
-    ReportListController.$inject = ['reports', '$stateParams'];
+    ReportListController.$inject = ['reports', '$stateParams', 'AppConfig'];
 
     //Setting up route
     angular.module('bgchecks')

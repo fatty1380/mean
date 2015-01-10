@@ -34,6 +34,29 @@
         // Home state routing
         $stateProvider.
 
+            state('superbase', {
+                abstract:true,
+                template: '<div ui-view class="superbase"></div>',
+                params: {
+                    'delay' : {
+                        value: '0',
+                        squash: true
+                    }
+                },
+                resolve : {
+                    waitforit : function($stateParams, $timeout) {
+                        if(!!$stateParams.delay) {
+                            debugger;
+                            console.log('Waiting for %d seconds', $stateParams.delay);
+                            $timeout(function() { return 'waited'; }, $stateParams.delay*1000);
+                        }
+                        else {
+                            return 'go ahead';
+                        }
+                    }
+                }
+            }).
+
             state('full-clear', {
                 abstract: true,
                 templateUrl: 'modules/core/views/full-clear.client.view.html'
@@ -64,7 +87,8 @@
 
             state('intro', {
                 url: '/',
-                templateUrl: 'modules/core/views/intro.client.view.html'
+                templateUrl: 'modules/core/views/intro.client.view.html',
+                parent: 'superbase'
                 //templateUrl: 'modules/landing/views/landing.client.view.html'
             }).
 

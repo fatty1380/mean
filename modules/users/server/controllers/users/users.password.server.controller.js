@@ -217,7 +217,7 @@ exports.reset = function (req, res, next) {
 
             console.log('With options: %j', mailOptions);
 
-            var e = emailer.sendMessage(emailHTML, mailOptions);
+            var e = emailer.sendMessage(mailOptions);
 
             if (!e) {
                 res.send({
