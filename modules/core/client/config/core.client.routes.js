@@ -57,6 +57,12 @@
                 }
             }).
 
+            state('privacy', {
+                url: '/privacy',
+                templateUrl: 'modules/core/views/templates/privacy.template.html',
+                parent: 'fixed-opaque'
+            }).
+
             state('full-clear', {
                 abstract: true,
                 templateUrl: 'modules/core/views/full-clear.client.view.html'
