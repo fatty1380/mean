@@ -240,4 +240,7 @@ module.exports = function (grunt) {
 
 	// Run the project in production mode
 	grunt.registerTask('prod', ['build', 'env:prod', 'concurrent:default']);
+
+	// Run the project in production mode
+	grunt.registerTask('runprod', ['env:prod', 'concurrent:default']);
 };
