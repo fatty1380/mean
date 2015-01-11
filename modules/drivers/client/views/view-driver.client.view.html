@@ -61,8 +61,20 @@
 
 
             <!-- data-ng-if="!!vm.driver.user.addresses && !!vm.driver.user.addresses.length" -->
-            <div class="well">
+            <div class="panel">
+                <div class="panel-heading">
+                    Location
+                    <a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
+                                                      ui-sref="settings.profile">edit location
+                    <i class="fa fa-pencil-square-o"></i></a></div>
                 <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
+                <div class="panel-body" ng-show="vm.driver.user.addresses && vm.driver.user.addresses.length" >
+                    <os-address-list ng-if="vm.canEdit" models="vm.driver.user.addresses" can-edit="false" full-width="true"></os-address-list>
+                    <p ng-if="!vm.canEdit" ng-init="vm.addr = vm.driver.user.addresses[0]">{{vm.addr.city && (vm.addr.city + ', ')}}{{vm.addr.state}} {{vm.addr.zipCode}}</p>
+                </div>
+                <div class="panel-body" ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">
+                    <p >No Address on File</p>
+                </div>
             </div>
         </div>
 

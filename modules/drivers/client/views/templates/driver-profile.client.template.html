@@ -22,15 +22,6 @@
         <p ng-hide="!!vm.driver.experience.length">None Added</p>
     </div>
 
-    <div class="panel-heading">Location<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
-                                          ui-sref="settings.profile">edit location
-        <i class="fa fa-pencil-square-o"></i></a></div>
-    <div class="panel-body">
-        <os-address-list models="vm.driver.user.addresses" can-edit="false"></os-address-list>
-
-        <p ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">No Address on File</p>
-    </div>
-
     <div class="panel-heading">License</div>
     <div class="panel-body">
 
