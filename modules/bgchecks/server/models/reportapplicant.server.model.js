@@ -101,7 +101,7 @@ ReportApplicantSchema.pre('init', function (next) {
         this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
         this.governmentId = this.getHashedValue(this.governmentId);
     } else {
-        console.log('Invalid Government ID for Applicant - setting to null', this.remoteId);
+        console.log('[ApplicantSchema] pre.init: Invalid Government ID for Applicant - setting to null', this.remoteId);
         this.governmentId = null;
     }
 

@@ -4,27 +4,40 @@ var path      = require('path'),
     config    = require(path.resolve('./config/config')),
     braintree = require('braintree');
 
-var gateway;
 
-if (config.braintree &&
-    (config.braintree.MerchantId && config.braintree.PublicKey && config.braintree.PrivateKey)) {
-    gateway = braintree.connect({
-        environment: braintree.Environment.Sandbox,
-        merchantId: config.braintree.MerchantId,
-        publicKey: config.braintree.PublicKey,
-        privateKey: config.braintree.PrivateKey
-    });
-    // TODO : add error checking code
+function getGateway() {
+
+    if (config.services.braintree &&
+        (config.services.braintree.MerchantId && config.services.braintree.PublicKey && config.services.braintree.PrivateKey)) {
+
+        return braintree.connect({
+            environment: braintree.Environment.Sandbox,
+            merchantId: config.services.braintree.MerchantId,
+            publicKey: config.services.braintree.PublicKey,
+            privateKey: config.services.braintree.PrivateKey
+        });
+        // TODO : add error checking code
+    }
+    return null;
+
 }
 
 exports.getToken = function (req, res) {
+
+    var gateway = getGateway();
+
     if (gateway) {
         gateway.clientToken.generate({
             customerId: req.user._id
         }, function (err, response) {
-            var clientToken = response.clientToken;
+            if(err) {
+                console.log('Error getting token: %j', err);
+                return res.status(500).send(err);
+            }
+            console.log('got response %j', response);
+            //var clientToken = response.clientToken;
 
-            res.json(clientToken);
+            res.json(response);
         });
     } else {
         res.status(500).send({

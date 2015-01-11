@@ -50,7 +50,7 @@ var applicantFactory = function ($resource) {
         ListAll: function (query) {
             var retVal = $resource('/api/reports/applicants');
 
-            return retVal.query();
+            return retVal.query().promise;
         },
         get: function (query) {
             var retVal = $resource('/api/reports/applicants/:applicantId', {

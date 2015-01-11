@@ -1,7 +1,7 @@
 
 
 
-<section class="content-section" data-ng-controller="PasswordController">
+<section class="content-section">
     <h3 class="title container text-center">Enter Payment Information</h3>
 
     <div class="content-container container text-center">
@@ -12,9 +12,9 @@
                 <div class="container-fluid row">
                     <div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
 
-                        <form id="checkout" method="post" action="/checkout">
-                            <div id="dropin"></div>
-                            <input type="submit" value="Pay $10">
+                        <form name="vm.paymentAuthForm" ng-submit="vm.postPayment($event)">
+                            <div id="dropin" name="dropin"></div>
+                            <button type="submit" class="btn btn-cta btn-cta-payment" value="Pay $10"> </button>
                         </form>
                     </div>
                 </div>

@@ -10,7 +10,7 @@
             </div>
             <!--//form data-->
             <div class="form-data row">
-                <h3 class="title">Let's get started!</h3>
+                <h3 class="title" ng-hide="vm.verify">Let's get started!</h3>
 
 
                 <form name="vm.reportForm" data-ng-hide="vm.verify"
@@ -24,7 +24,8 @@
                                    data-ng-class="{'optional':!field.required}">{{field.description |
                                 titlecase}} </label>
 
-                            <input type="hidden" ng-model="vm.model[field.name]" name="hidden_{{field.name}}" ng-required="field.required" ng-maxlength="field.ngMaxLength || field.length"/>
+                            <input type="hidden" ng-model="vm.model[field.name]" name="hidden_{{field.name}}"
+                                   ng-required="field.required" ng-maxlength="field.ngMaxLength || field.length"/>
 
                             <div class="col-sm-10">
                                 <input ng-if="!!field.ngType" type="{{field.ngType}}" class="form-control"
@@ -56,7 +57,8 @@
                                             </div>
                                             <hr/>
 
-                                            <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index" class="form-group"
+                                            <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"
+                                                 class="form-group"
                                                  ng-class="{'has-error':vm.reportForm[field.name+'_'+i+'_'+df2.name].$invalid && (vm.reportForm.$submitted || vm.reportForm[field.name+'_'+i+'_'+df2.name].$touched)}">
                                                 <label class="col-sm-3 control-label"
                                                        data-ng-class="{'optional':!df2.required}">{{df2.description}}</label>
@@ -71,7 +73,7 @@
                                                     <date-input ng-if="df2.isDate" format="df2.format"
                                                                 name="{{field.name}}_{{i}}_{{df2.name}}"
                                                                 model="vm.model[df2.name]" class="form-control"
-                                                                ></date-input>
+                                                            ></date-input>
                                                     <!--ng-required="df2.required"-->
                                                 </div>
                                             </div>
@@ -99,7 +101,7 @@
                                             <date-input ng-if="dataField.isDate" format="dataField.format"
                                                         model="vm.model[dataField.name]" class="form-control"
                                                         name="{field.name}}_{{dataField.name}}"
-                                                        ></date-input>
+                                                    ></date-input>
                                             <!--ng-required="dataField.required"-->
                                         </div>
                                     </div>
@@ -118,7 +120,11 @@
                     </fieldset>
 
                     <div class="press-kit text-center">
-                        <button type="submit" class="btn btn-cta btn-cta-primary">Save and Continue ...</button>
+                        <p>By submitting this form, you will create a new applicant record which will be used ot process
+                            your report.</p>
+                        <button type="submit" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
+                                ng-click="vm.disabled=true;">Save and Continue ...
+                        </button>
                         <div data-ng-show="vm.error" class="text-danger">
                             <strong data-ng-bind="vm.error"></strong>
                         </div>
@@ -128,30 +134,30 @@
                 </form>
 
 
+                <h3 class="title" ng-show="vm.verify && !vm.pay">Please verify your information</h3>
                 <!-- BEGIN : Verify Applicant -->
                 <form data-name="vm.applicantForm" data-ng-show="vm.verify"
                       class="form-horizontal" data-ng-submit="vm.execute($event)"
                       novalidate>
                     <fieldset>
                         <div class="form-group" ng-repeat="field in vm.report.fields"
-                             data-ng-init="value = vm.applicant[field.name]">
+                             data-ng-init="vm.applicant[field.name]">
                             <label class="col-sm-2 control-label"
                                    data-ng-class="{'optional':!field.required}">{{field.description |
                                 titlecase}} </label>
 
                             <div class="col-sm-10">
                                 <p ng-if="!_.isArray(value)" type="{{field.ngType}}" class="form-control-static"
-                                       ng-model="vm.applicant[field.name]"/>
+                                   ng-bind="vm.applicant[field.name]"/>
 
                                 <div ng-if="_.isArray(value)" class="form-group container-fluid"
                                      ng-repeat="(subkey, subvalue) in value" ng-attr-id="key">
-                                    <label class="col-sm-4 control-label">{{fields[subkey].description
-                                        ||
+                                    <label class="col-sm-4 control-label">{{fields[subkey].description ||
                                         subkey}}</label>
 
                                     <div class="col-sm-8">
-                                        <input class="form-control form-control-static" name="{{subkey}}"
-                                               ng-model="subvalue"/>
+                                        <p class="form-control form-control-static" name="{{subkey}}"
+                                           ng-bind="subvalue"></p>
 
                                     </div>
                                 </div>
@@ -162,7 +168,13 @@
                     </fieldset>
 
                     <div class="press-kit text-center">
-                        <button type="submit" class="btn btn-cta btn-cta-primary">Save and Continue ...</button>
+                        <p>If this information all appears correct, continue by clicking the button below.</p>
+                        <button type="button" class="btn btn-cta" ng-class="{'disabled':!!vm.disabled}"
+                                ng-click="vm.verify=false; vm.error=null;"><i class="fa fa-arrow-circle-left"></i>&nbsp;Make Changes
+                        </button>
+                        <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
+                                ui-sref="payments({sku:vm.report.sku})">Continue ...&nbsp;<i class="fa fa-arrow-right"></i>
+                        </button>
                         <div data-ng-show="vm.error" class="text-danger">
                             <strong data-ng-bind="vm.error"></strong>
                         </div>
@@ -170,6 +182,7 @@
 
 
                 </form>
+
             </div>
             <!--//form data-->
             <!--//press-kit-->
