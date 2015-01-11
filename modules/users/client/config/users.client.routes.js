@@ -37,7 +37,18 @@
 
                 state('settings.picture', {
                     url: '/picture',
-                    templateUrl: 'modules/users/views/settings/change-profile-picture.client.view.html'
+                    templateUrl: 'modules/users/views/settings/change-profile-picture.client.view.html',
+                    resolve: {
+                        user : ['Authentication', function(auth) {
+                            return auth.user;
+                        }]
+                    },
+                    controller: ['user', function(user) {
+                        var vm = this;
+                        vm.user = user;
+                    }],
+                    controllerAs: 'vm',
+                    bindToController: true
                 }).
 
             /** === Users Parent State ======================================================

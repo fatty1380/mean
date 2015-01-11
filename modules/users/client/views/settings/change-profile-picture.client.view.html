@@ -1,6 +1,6 @@
-<section class="row" data-ng-controller="ChangeProfilePictureController">
+<section class="row">
     <div class="center-block">
-        <os-picture-uploader model="user" title="{{user.displayName}}" mode="user"
+        <os-picture-uploader model="vm.user" title="{{vm.user.displayName}}" mode="user"
                              success-callback="successFunction"></os-picture-uploader>
     </div>
 </section>

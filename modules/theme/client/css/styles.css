@@ -3742,6 +3742,10 @@ a.btn-ghost .text,
   margin-bottom: 20px;
 }
 /* Page Headers and Profiles */
+img.user-profile-picture {
+  height: 200px;
+  width: 200px;
+}
 .profile-floater {
   position: absolute;
   height: 150px;
@@ -3750,22 +3754,31 @@ a.btn-ghost .text,
   text-align: center;
 }
 .profile-floater > div {
-  max-height: 150px;
+  height: 200px;
+  width: 200px;
+  overflow: hidden;
 }
 .profile-floater > div > img.user-profile-picture {
-  margin: auto;
-  max-height: inherit;
+  position: absolute;
+  bottom: 10px;
 }
 .profile-floater > div > a {
   opacity: 0.1;
-  width: 100%;
-  right: 0;
-  left: 0;
+  width: 200px;
   bottom: 10px;
   position: absolute;
 }
+.profile-floater > div > a i {
+  display: none;
+}
 .profile-floater > div:hover > a {
   opacity: 1;
+  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.profile-floater > div:hover > a i {
+  display: inline;
+  color: #000066!important;
 }
 .clear-bg {
   background-color: #cccccc;

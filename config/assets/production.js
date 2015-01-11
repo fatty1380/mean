@@ -8,7 +8,8 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
                 '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css',
                 'public/lib/textAngular/src/textAngular.min.css',
-                'public/lib/animate.css/animate.min.css'
+                'public/lib/animate.css/animate.min.css',
+                'public/lib/ngImgCrop/compile/minified/ng-img-crop.css'
             ],
             js: [
                 'public/lib/angular/angular.min.js',
@@ -27,7 +28,8 @@ module.exports = {
                 'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
                 'public/lib/moment/min/moment-with-locales.min.js',
-                'https://js.braintreegateway.com/v2/braintree.js'
+                'https://js.braintreegateway.com/v2/braintree.js',
+                'public/lib/ngImgCrop/compile/minified/ng-img-crop.js'
             ]
         },
         css: 'public/dist/application.min.css',

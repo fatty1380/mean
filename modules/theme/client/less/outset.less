@@ -381,6 +381,11 @@ a.btn-ghost, .btn-ghost {
 }
 
 /* Page Headers and Profiles */
+// All uploaded pictures should now be 200x200
+img.user-profile-picture {
+  height: 200px;
+  width: 200px;
+}
 
 .profile-floater {
   position: absolute;
@@ -390,23 +395,31 @@ a.btn-ghost, .btn-ghost {
   text-align: center;
 
   > div {
-    max-height : 150px;
+    height : 200px;
+    width: 200px;
+    overflow:hidden;
+
     > img.user-profile-picture {
-      margin     : auto;
-      max-height: inherit;
+      position:absolute;
+      bottom: 10px
     }
     > a {
       opacity  : 0.1;
-      width    : 100%;
-      right    : 0;
-      left     : 0;
-      bottom   : 10px;
+      width: 200px;
+      bottom: 10px;
       position : absolute;
+      i {
+        display: none;
+      }
     }
     &:hover > a {
       opacity          : 1;
-      //background-color : rgb(255, 255, 255);
-      //background-color : rgba(255, 255, 255, 0.5);
+      background-color : rgb(255, 255, 255);
+      background-color : rgba(255, 255, 255, 0.5);
+      i {
+        display: inline;
+        color: #000066!important;
+      }
     }
   }
 }

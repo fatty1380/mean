@@ -12,7 +12,7 @@
     <button ng-if="dm.btnShow && (!!dm.btnText && !!dm.btnSref)" class="btn btn-primary pull-right"
             ui-sref="{{dm.btnSref}}">{{::dm.btnText}}
     </button>
-    <div class="profile-floater col-sm-4" data-ng-if="!!dm.pictureUrl"><div>
+    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!dm.pictureUrl"><div>
         <img data-ng-src="{{dm.pictureUrl}}" alt="profile picture"
              class="img-thumbnail user-profile-picture">
         <a class="btn btn-link" data-ui-sref="settings.picture" data-ng-if="dm.showEdit">edit
