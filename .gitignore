@@ -30,3 +30,8 @@ modules/theme/client/images/team
 modules/theme/client/images/press
 modules/theme/client/images
 *.log
+modules/theme/client/css/base.css
+modules/theme/client/css/mixins.css
+modules/theme/client/css/outset.css
+modules/theme/client/css/responsive.css
+modules/theme/client/css/theme-default.css
