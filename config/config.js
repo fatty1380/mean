@@ -133,6 +133,8 @@ var initGlobalConfigFiles = function (config, assets) {
  * Initialize global configuration
  */
 var initGlobalConfig = function () {
+    console.log('[ENVIRONMENT CONFIG] \n%s', JSON.stringify(process.env, undefined, 2));
+
     // Validate NDOE_ENV existance
     validateEnvironmentVariable();
 
