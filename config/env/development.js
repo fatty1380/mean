@@ -15,6 +15,8 @@ module.exports = {
     https: {
         enabled: true,
         port: 8443,
+        privateKeyPath: './config/sslcerts/key.pem',
+        publicKeyPath: './config/sslcerts/cert.pem',
         passphrase: 'password'
     },
     services: {

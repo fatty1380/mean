@@ -15,6 +15,12 @@ module.exports = {
         title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs',
         keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
     },
+    https: {
+        enabled: true,
+        port: 443,
+        privateKeyPath: '',
+        publicKeyPath: ''
+    },
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
     },

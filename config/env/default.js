@@ -15,8 +15,8 @@ module.exports = {
     https: {
         enabled: false,
         port: 0,
-        privateKeyPath: './config/sslcerts/key.pem',
-        publicKeyPath: './config/sslcerts/cert.pem'
+        privateKeyPath: '',
+        publicKeyPath: ''
     },
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
