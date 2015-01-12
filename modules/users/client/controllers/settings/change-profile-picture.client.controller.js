@@ -6,7 +6,6 @@
 
         vm.uploader = null;
         vm.uploadUrl = 'api/users/picture';
-        vm.imageURL = vm.model.profileImageURL;
 
         vm.newImage = null;
         vm.croppedImage = null;
@@ -26,6 +25,8 @@
 
                 return;
             }
+
+            vm.imageURL = vm.model.profileImageURL;
 
             if (!vm.mode && !vm.apiUrl) {
                 vm.initialized = false;
