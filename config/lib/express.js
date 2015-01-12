@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var config     = require('../config'),
+chalk          = require('chalk'),
 express        = require('express'),
 morgan         = require('morgan'),
 bodyParser     = require('body-parser'),
@@ -227,13 +228,15 @@ module.exports.initHttps = function (app) {
 
         var options = {};
 
-        if(!!config.https.privateKeyPath) {
-            options.key = fs.readFileSync(config.https.privateKeyPath, 'utf8');;
+        if (!!config.https.privateKeyPath) {
+            options.key = fs.readFileSync(config.https.privateKeyPath, 'utf8');
+            ;
         }
-        if(!!config.https.publicKeyPath) {
-            options.cert = fs.readFileSync(config.https.publicKeyPath, 'utf8');;
+        if (!!config.https.publicKeyPath) {
+            options.cert = fs.readFileSync(config.https.publicKeyPath, 'utf8');
+            ;
         }
-        if(!!config.https.passphrase) {
+        if (!!config.https.passphrase) {
             options.passphrase = config.https.passphrase;
         }
 
@@ -243,7 +246,7 @@ module.exports.initHttps = function (app) {
         try {
             // Create HTTPS Server
             httpsServer = https.createServer(options, app);
-        } catch(err) {
+        } catch (err) {
             console.error(chalk.red('Unable to initialize HTTPS Server', err));
         }
         // Return HTTPS server instance
@@ -296,7 +299,7 @@ module.exports.init = function (db) {
     this.configureSocketIO(httpServer, db);
 
     var httpsServer = this.initHttps(app);
-    if(httpsServer) {
+    if (httpsServer) {
         this.configureSocketIO(httpsServer, db);
     }
 
