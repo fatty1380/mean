@@ -152,7 +152,7 @@ var initGlobalConfig = function () {
     var environmentConfig = require(path.join(process.cwd(), 'config/env/', process.env.NODE_ENV)) || {};
 
     // Merge config files
-    var config = _.extend(defaultConfig, environmentConfig);
+    var config = _.merge(defaultConfig, environmentConfig);
 
     // Initialize global globbed files
     initGlobalConfigFiles(config, assets);

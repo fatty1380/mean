@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    db: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+    db: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset',
 	app: {
         title: 'Outset - Development Environment'
 	},
@@ -18,6 +18,14 @@ module.exports = {
 		},
 		google: {
 			analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
+		},
+		s3: {
+			enabled: true,
+			s3Options: {
+				bucket: 'outset-public-resources',
+				accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
+				secretAccessKey: process.env.S3_SECRET_KEY || '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'
+			}
 		}
 	},
 	mailer: {
