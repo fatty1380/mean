@@ -7,13 +7,10 @@ var config = require('../config'),
     passport = require('passport'),
     socketio = require('socket.io'),
 	session = require('express-session'),
-	MongoStore = require('connect-mongo')(session),
-    http = require('http');
+	MongoStore = require('connect-mongo')(session);
 
 // Define the Socket.io configuration method
-module.exports = function(app, db) {
-	// Create a new HTTP server
-    var server = http.createServer(app);
+module.exports = function(server, db) {
 
     // Create a new Socket.io server
     var io = socketio.listen(server);

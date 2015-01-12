@@ -5,6 +5,19 @@ module.exports = {
         keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
         runtimeMode: process.env.NODE_ENV
     },
+    db: {
+        uri: 'mongodb://localhost/outset-dev',
+        options: {
+            user: '',
+            pass: ''
+        }
+    },
+    https: {
+        enabled: false,
+        port: 0,
+        privateKeyPath: '',
+        publicKeyPath: ''
+    },
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
     },
@@ -70,7 +83,6 @@ module.exports = {
         clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
         callbackURL: '/api/auth/github/callback'
     }
-}
-;
+};
 
 // TODO: Change sessionSecret to secure, random, value

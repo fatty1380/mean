@@ -14,11 +14,14 @@
             <div class="form-group tvm.newImage text-center" ng-show="vm.uploader.queue.length">
                 <h4>Preview:</h4>
 
-                <div><img ng-src="{{(vm.useCropped || vm.isCropping) ? vm.croppedImage : vm.newImage}}" class="img-thumbnail user-profile-picture"/></div>
+                <div><img ng-src="{{(vm.useCropped || vm.isCropping) ? vm.croppedImage : vm.newImage}}"
+                          class="img-thumbnail user-profile-picture"/></div>
 
-                <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping" >
+                <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">
                     <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>
-                    <button class="btn btn-primary" data-ng-click="vm.isCropping=true;">{{ vm.useCropped ? 'Adjust' : 'Crop'}} Image</button>
+                    <button class="btn btn-primary" data-ng-click="vm.isCropping=true;">{{ vm.useCropped ? 'Adjust' :
+                        'Crop'}} Image
+                    </button>
                     <button class="btn btn-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>
                 </div>
             </div>
@@ -26,6 +29,7 @@
             <div class="form-group tvm.newImage" ng-show="vm.isCropping">
                 <hr>
                 <h4>Use the circle to select the best part of the image</h4>
+
                 <div class="text-center form-group" data-ng-show="vm.isCropping">
                     <button class="btn btn-link" data-ng-click="vm.isCropping = false">Cancel</button>
                     <button class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>
@@ -46,8 +50,7 @@
         </fieldset>
         </fieldset>
     </form>
-    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable t
-        o initialize the image uploader. Please try
-        again later.
+    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable to initialize
+        the image uploader. Please try again later.
     </div>
 </section>

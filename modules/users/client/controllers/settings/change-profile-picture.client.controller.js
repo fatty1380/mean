@@ -81,7 +81,7 @@
                 if ($window.FileReader) {
                     var fileReader = new FileReader();
                     fileReader.readAsDataURL(fileItem._file);
-                    vm.success=vm.error=null;
+                    vm.success = vm.error = null;
 
                     fileReader.onload = function (fileReaderEvent) {
                         $timeout(function () {
@@ -162,12 +162,10 @@
         function cancelUpload() {
             vm.uploader.clearQueue();
 
-            vm.newImage = null;
-            vm.croppedImage = null;
-            vm.isCropping = false;
-            vm.useCropped = false;
-
             vm.imageURL = vm.model.profileImageURL;
+
+            vm.newImage = vm.croppedImage = null;
+            vm.isCropping = vm.useCropped = false;
         }
 
 

@@ -4,10 +4,22 @@ console.log('env.production: LAP: %s', process.env.LOG_ACCESS_PATH);
 console.log('env.production: BTREE: %s', process.env.BRAINTREE_MERCHANT_ID);
 
 module.exports = {
-    db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'ec2-54-148-79-252.us-west-2.compute.amazonaws.com') + '/outset',
+    db: {
+        uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'ec2-54-148-79-252.us-west-2.compute.amazonaws.com') + '/outset',
+        options: {
+            user: '',
+            pass: ''
+        }
+    },
     app: {
         title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs',
         keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
+    },
+    https: {
+        enabled: true,
+        port: 443,
+        privateKeyPath: '',
+        publicKeyPath: ''
     },
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'

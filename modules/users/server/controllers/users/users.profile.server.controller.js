@@ -18,14 +18,10 @@ var client;
 var publicURL;
 
 if (!!config.services.s3 && config.services.s3.enabled) {
-    console.log('Configuring S3 Client with options: %j', config.services.s3);
-
     var options = config.services.s3.clientConfig;
     options.s3Options = config.services.s3.s3Options;
     client = s3.createClient(options);
 
-} else {
-    console.log('[NO S3] S3 Options: %j', config.services.s3);
 }
 
 /**
