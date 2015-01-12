@@ -3973,6 +3973,10 @@ i.fa.fa-stack-1x.text-primary {
   -ms-transition: background-color 0.4s ease-in-out;
   -o-transition: background-color 0.4s ease-in-out;
 }
+.header.navbar-fixed-top .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary,
+.header .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary:hover {
+  color: #ffffff!important;
+}
 .header.navbar-fixed-top h1.logo,
 .header h1.logo {
   font-family: "Roboto Slab", arial, sans-serif;
@@ -4025,8 +4029,6 @@ i.fa.fa-stack-1x.text-primary {
   background-repeat: no-repeat;
 }
 .header.navbar-fixed-top h1.logo a {
-  color: #0e2d4c;
-  background-color: transparent;
   -webkit-transition: background-color 0.4s ease-in-out;
   -moz-transition: background-color 0.4s ease-in-out;
   -ms-transition: background-color 0.4s ease-in-out;
@@ -4035,13 +4037,34 @@ i.fa.fa-stack-1x.text-primary {
   -moz-transition: background-image 0.4s ease-in-out;
   -ms-transition: background-image 0.4s ease-in-out;
   -o-transition: background-image 0.4s ease-in-out;
+  color: #0e2d4c;
+  background-color: transparent;
 }
 .header.navbar-fixed-top h1.logo a .logo-title {
   background-image: url('/modules/core/img/brand/logo-dblue.png');
 }
-.header.navbar-landing h1.logo a {
-  color: #fff;
+.header.navbar-fixed-top.navbar-landing h1.logo a {
+  -webkit-transition: background-color 0.4s ease-in-out;
+  -moz-transition: background-color 0.4s ease-in-out;
+  -ms-transition: background-color 0.4s ease-in-out;
+  -o-transition: background-color 0.4s ease-in-out;
+  -webkit-transition: background-image 0.4s ease-in-out;
+  -moz-transition: background-image 0.4s ease-in-out;
+  -ms-transition: background-image 0.4s ease-in-out;
+  -o-transition: background-image 0.4s ease-in-out;
   background-color: #0e2d4c;
+}
+.header.navbar-landing h1.logo a {
+  -webkit-transition: background-color 0.4s ease-in-out;
+  -moz-transition: background-color 0.4s ease-in-out;
+  -ms-transition: background-color 0.4s ease-in-out;
+  -o-transition: background-color 0.4s ease-in-out;
+  -webkit-transition: background-image 0.4s ease-in-out;
+  -moz-transition: background-image 0.4s ease-in-out;
+  -ms-transition: background-image 0.4s ease-in-out;
+  -o-transition: background-image 0.4s ease-in-out;
+  color: #fff;
+  background-color: transparent;
 }
 .header.navbar-landing h1.logo a .logo-title {
   background-image: url('/modules/core/img/brand/logo-white.png');
@@ -4051,6 +4074,10 @@ i.fa.fa-stack-1x.text-primary {
 }
 .header h1.logo a .logo-title {
   background-image: url('/modules/core/img/brand/logo-dblue.png');
+}
+.header .nav li.nav-item {
+  cursor: pointer;
+  cursor: hand;
 }
 /** Responsive Override **/
 @media (min-width: 992px) {

@@ -633,6 +633,10 @@ i.fa.fa-stack-1x.text-primary {
 .header {
   .transition (background-color 0.4s ease-in-out);
 
+  &.navbar-fixed-top .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary,  .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary:hover {
+    color: #ffffff!important;
+  }
+
   &.navbar-fixed-top h1.logo, & h1.logo {
     font-family   : "Roboto Slab", arial, sans-serif;
     margin-top    : 0;
@@ -669,10 +673,10 @@ i.fa.fa-stack-1x.text-primary {
 
   &.navbar-fixed-top h1.logo {
     a {
-      color            : @outset-blue;
-      background-color : transparent;
       .transition (background-color 0.4s ease-in-out);
       .transition (background-image 0.4s ease-in-out);
+      color            : @outset-blue;
+      background-color : transparent;
     }
 
     a .logo-title {
@@ -680,10 +684,20 @@ i.fa.fa-stack-1x.text-primary {
     }
   }
 
+  &.navbar-fixed-top.navbar-landing h1.logo {
+    a {
+      .transition (background-color 0.4s ease-in-out);
+      .transition (background-image 0.4s ease-in-out);
+      background-color: @outset-blue;
+    }
+  }
+
   &.navbar-landing h1.logo {
     a {
+      .transition (background-color 0.4s ease-in-out);
+      .transition (background-image 0.4s ease-in-out);
       color            : #fff;
-      background-color : @outset-blue;
+      background-color : transparent;
     }
 
     a .logo-title {
@@ -699,6 +713,11 @@ i.fa.fa-stack-1x.text-primary {
     a .logo-title {
       background-image : url('/modules/core/img/brand/logo-dblue.png');
     }
+  }
+
+  .nav li.nav-item {
+    cursor: pointer;
+    cursor: hand;
   }
 
 }
