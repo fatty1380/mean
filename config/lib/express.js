@@ -3,28 +3,30 @@
 /**
  * Module dependencies.
  */
-var config = require('../config'),
-    express = require('express'),
-    morgan = require('morgan'),
-    bodyParser = require('body-parser'),
-    session = require('express-session'),
-    MongoStore = require('connect-mongo')(session),
-    multer = require('multer'),
-    favicon = require('serve-favicon'),
-    compress = require('compression'),
-    methodOverride = require('method-override'),
-    cookieParser = require('cookie-parser'),
-    helmet = require('helmet'),
-    passport = require('passport'),
-    flash = require('connect-flash'),
-    consolidate = require('consolidate'),
-    path = require('path'),
-    fs = require('fs');
+var config     = require('../config'),
+express        = require('express'),
+morgan         = require('morgan'),
+bodyParser     = require('body-parser'),
+session        = require('express-session'),
+MongoStore     = require('connect-mongo')(session),
+multer         = require('multer'),
+favicon        = require('serve-favicon'),
+compress       = require('compression'),
+methodOverride = require('method-override'),
+cookieParser   = require('cookie-parser'),
+helmet         = require('helmet'),
+passport       = require('passport'),
+flash          = require('connect-flash'),
+consolidate    = require('consolidate'),
+path           = require('path'),
+fs             = require('fs'),
+http           = require('http'),
+https          = require('https');
 
 /**
  * Initialize local variables
  */
-module.exports.initLocalVariables = function(app) {
+module.exports.initLocalVariables = function (app) {
     // Setting application local variables
     app.locals.title = config.app.title;
     app.locals.description = config.app.description;
@@ -35,7 +37,7 @@ module.exports.initLocalVariables = function(app) {
     app.locals.cssFiles = config.files.client.css;
 
     // Passing the request url to environment locals
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         res.locals.host = req.protocol + '://' + req.hostname;
         res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
         next();
@@ -45,7 +47,7 @@ module.exports.initLocalVariables = function(app) {
 /**
  * Initialize application middleware
  */
-module.exports.initMiddleware = function(app) {
+module.exports.initMiddleware = function (app) {
     // Showing stack errors
     app.set('showStackError', true);
 
@@ -54,7 +56,7 @@ module.exports.initMiddleware = function(app) {
 
     // Should be placed before express.static
     app.use(compress({
-        filter: function(req, res) {
+        filter: function (req, res) {
             return (/json|text|javascript|css/).test(res.getHeader('Content-Type'));
         },
         level: 9
@@ -103,7 +105,7 @@ module.exports.initMiddleware = function(app) {
 /**
  * Configure view engine
  */
-module.exports.initViewEngine = function(app) {
+module.exports.initViewEngine = function (app) {
     // Set swig as the template engine
     app.engine('server.view.html', consolidate[config.templateEngine]);
 
@@ -115,7 +117,7 @@ module.exports.initViewEngine = function(app) {
 /**
  * Configure Express session
  */
-module.exports.initSession = function(app, db) {
+module.exports.initSession = function (app, db) {
     // Express MongoDB session storage
     app.use(session({
         saveUninitialized: true,
@@ -131,8 +133,8 @@ module.exports.initSession = function(app, db) {
 /**
  * Invoke modules server configuration
  */
-module.exports.initModulesConfiguration = function(app, db) {
-    config.files.server.configs.forEach(function(configPath) {
+module.exports.initModulesConfiguration = function (app, db) {
+    config.files.server.configs.forEach(function (configPath) {
         require(path.resolve(configPath))(app, db);
     });
 };
@@ -140,7 +142,7 @@ module.exports.initModulesConfiguration = function(app, db) {
 /**
  * Configure Helmet headers configuration
  */
-module.exports.initHelmetHeaders = function(app) {
+module.exports.initHelmetHeaders = function (app) {
     // Use helmet to secure Express headers
     app.use(helmet.xframe());
     app.use(helmet.xssFilter());
@@ -152,12 +154,12 @@ module.exports.initHelmetHeaders = function(app) {
 /**
  * Configure the modules static routes
  */
-module.exports.initModulesClientRoutes = function(app) {
+module.exports.initModulesClientRoutes = function (app) {
     // Setting the app router and static folder
     app.use('/', express.static(path.resolve('./public')));
 
     // Globbing static routing
-    config.folders.client.forEach(function(staticPath) {
+    config.folders.client.forEach(function (staticPath) {
         app.use(staticPath.replace('/client', ''), express.static(path.resolve('./' + staticPath)));
     });
 };
@@ -165,9 +167,9 @@ module.exports.initModulesClientRoutes = function(app) {
 /**
  * Configure the modules ACL policies
  */
-module.exports.initModulesServerPolicies = function(app) {
+module.exports.initModulesServerPolicies = function (app) {
     // Globbing policy files
-    config.files.server.policies.forEach(function(policyPath) {
+    config.files.server.policies.forEach(function (policyPath) {
         require(path.resolve(policyPath)).invokeRolesPolicies();
     });
 };
@@ -175,9 +177,9 @@ module.exports.initModulesServerPolicies = function(app) {
 /**
  * Configure the modules server routes
  */
-module.exports.initModulesServerRoutes = function(app) {
+module.exports.initModulesServerRoutes = function (app) {
     // Globbing routing files
-    config.files.server.routes.forEach(function(routePath) {
+    config.files.server.routes.forEach(function (routePath) {
         require(path.resolve(routePath))(app);
     });
 };
@@ -185,11 +187,13 @@ module.exports.initModulesServerRoutes = function(app) {
 /**
  * Configure error handling
  */
-module.exports.initErrorRoutes = function(app) {
+module.exports.initErrorRoutes = function (app) {
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         // If the error object doesn't exists
-        if (!err) { return next(); }
+        if (!err) {
+            return next();
+        }
 
         // Log it
         console.error(err.stack);
@@ -199,7 +203,7 @@ module.exports.initErrorRoutes = function(app) {
     });
 
     // Assume 404 since no middleware responded
-    app.use(function(req, res) {
+    app.use(function (req, res) {
         // Redirect to not found page
         res.redirect('/not-found');
     });
@@ -208,7 +212,7 @@ module.exports.initErrorRoutes = function(app) {
 /**
  * Configure Socket.io
  */
-module.exports.configureSocketIO = function(app, db) {
+module.exports.configureSocketIO = function (app, db) {
     // Load the Socket.io configuration
     var server = require('./socket.io')(app, db);
 
@@ -216,10 +220,41 @@ module.exports.configureSocketIO = function(app, db) {
     return server;
 };
 
+module.exports.initHttps = function (app) {
+    if (config.https.enabled && !!config.https.port) {
+        // Log SSL usage
+        console.log('Initializing HTTPS Server Protocol');
+
+        var options = {};
+
+        if(!!config.https.privateKeyPath) {
+            options.key = fs.readFileSync(config.https.privateKeyPath, 'utf8');;
+        }
+        if(!!config.https.publicKeyPath) {
+            options.cert = fs.readFileSync(config.https.publicKeyPath, 'utf8');;
+        }
+        if(!!config.https.passphrase) {
+            options.passphrase = config.https.passphrase;
+        }
+
+        console.log('Initializing HTTPS Server Options: %j', options);
+
+        var httpsServer;
+        try {
+            // Create HTTPS Server
+            httpsServer = https.createServer(options, app);
+        } catch(err) {
+            console.error(chalk.red('Unable to initialize HTTPS Server', err));
+        }
+        // Return HTTPS server instance
+        return httpsServer;
+    }
+}
+
 /**
  * Initialize the Express application
  */
-module.exports.init = function(db) {
+module.exports.init = function (db) {
     // Initialize express app
     var app = express();
 
@@ -253,8 +288,17 @@ module.exports.init = function(db) {
     // Initialize error routes
     this.initErrorRoutes(app);
 
-    // Configure Socket.io
-    app = this.configureSocketIO(app, db);
+    // Create a new HTTP server
+    var httpServer = http.createServer(app);
 
-    return app;
+    // Configure Socket.io
+    //httpServer = ?
+    this.configureSocketIO(httpServer, db);
+
+    var httpsServer = this.initHttps(app);
+    if(httpsServer) {
+        this.configureSocketIO(httpsServer, db);
+    }
+
+    return {http: httpServer, https: httpsServer};
 };

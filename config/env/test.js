@@ -1,7 +1,13 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/outset-test',
+	db: {
+		db: 'mongodb://localhost/outset-test',
+		options: {
+			user: '',
+			pass: ''
+		}
+	},
 	port: 3001,
 	app: {
 		title: 'outset - Test Environment'
