@@ -30,3 +30,9 @@ modules/theme/client/images/team
 modules/theme/client/images/press
 modules/theme/client/images
 *.log
+theme-default.css
+responsive.css
+base.css
+mixins.css
+outset.css
+config/sslcerts

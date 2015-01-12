@@ -43,6 +43,17 @@ module.exports.initLocalVariables = function (app) {
         res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
         next();
     });
+
+    //if (process.env.NODE_ENV === 'production') {
+    //    app.use(function (req, res, next) {
+    //        if (req.headers['x-forwarded-proto'] !== 'https') {
+    //            console.log('[EXPRESS.ROUTER] x-forward-proto');
+    //            return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    //        }
+    //        return next();
+    //    });
+    //}
+
 };
 
 /**
@@ -76,13 +87,17 @@ module.exports.initMiddleware = function (app) {
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
 
-        // Enable logger (morgan) write to access.log file.
-        //var accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
-        //    flags: 'a'
-        //});
-        //app.use(morgan('combined', {
-        //    stream: accessLogStream
-        //}));
+        try {
+            // Enable logger (morgan) write to access.log file.
+            var accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
+                flags: 'a'
+            });
+            app.use(morgan('combined', {
+                stream: accessLogStream
+            }));
+        } catch (err) {
+            console.error(chalk.red('Unable to init morgan logger', err))
+        }
     }
 
     // Request body parsing middleware should be above methodOverride
