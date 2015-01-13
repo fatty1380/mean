@@ -10,6 +10,8 @@
         vm.applicant = applicant;
         vm.report = report;
 
+        vm.price = vm.report.promo || vm.report.price;
+
         braintree.setup(vm.token, 'dropin', {
             container: 'dropin',
             form: 'paymentAuthForm',
@@ -27,7 +29,7 @@
                 nonce: nonce,
                 sku: vm.report.sku,
                 applicantId: vm.applicant._id,
-                price : vm.report.price
+                price : vm.price
             };
 
             var payment = new (Payments.Nonce())(opts);

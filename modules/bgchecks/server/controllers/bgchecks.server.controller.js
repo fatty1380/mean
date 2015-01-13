@@ -3,16 +3,16 @@
 /**
  * Module dependencies.
  */
-var mongoose    = require('mongoose'),
-errorHandler    = require('../../../core/server/controllers/errors.server.controller'),
-Bgcheck         = mongoose.model('BackgroundReport'),
-ReportType      = mongoose.model('ReportType'),
+var mongoose = require('mongoose'),
+errorHandler = require('../../../core/server/controllers/errors.server.controller'),
+Bgcheck = mongoose.model('BackgroundReport'),
+ReportType = mongoose.model('ReportType'),
 ReportApplicant = mongoose.model('ReportApplicant'),
-Q               = require('q'),
-everifile       = require('./everifile.server.service'),
-path            = require('path'),
-constants    = require(path.resolve('./modules/core/server/models/outset.constants')),
-_               = require('lodash');
+Q = require('q'),
+everifile = require('./everifile.server.service'),
+path = require('path'),
+constants = require(path.resolve('./modules/core/server/models/outset.constants')),
+_ = require('lodash');
 
 
 exports.availableReportTypes = availableReportTypes;
@@ -149,9 +149,9 @@ exports.delete = function (req, res) {
 function reportBySKU(req, res, next, id) {
     console.log('Looking up report for SKU: %s', id);
 
-    var rpt = _.find(constants.reportPackages, {'sku' : id});
+    var rpt = _.find(constants.reportPackages, {'sku': id});
 
-    if(rpt) {
+    if (rpt) {
         console.log('Found hardcoded report type for SKU %s ... Returning', id);
 
         req.reportType = rpt;
@@ -376,39 +376,59 @@ function reportTypeUpsert(dbValue, newReport) {
 
 function UpsertRemoteApplicant(req, res, next) {
 
-    var applicant = req.body;
+    var formApplicantRsrc = req.body;
+    var formData = formApplicantRsrc.reportSource;
+
+    console.log('[UpserRemoteApplicant] SENSITIVE REMOVE: Form Data: $s', JSON.stringify(formData, undefined, 2));
+
+    debugger; // check that request body has correct ssn/dlid s
+
     var message = 'Requesting user does not match applicant user';
 
-    if (!!applicant.user && !req.user._id.equals(applicant.user)) {
-        message = message + ' (' + req.user._id + '!=' + applicant.user + ')';
+    if (!req.user._id.equals(formApplicantRsrc.userId)) {
+        message = message + ' (' + req.user._id + '!=' + formApplicantRsrc.userId + ')';
         console.error('[UpsertRemoteApplicant] %s', message);
         res.status(401).send({message: message});
     }
 
     everifile.GetSession().then(
         function (session) {
-            everifile.CreateApplicant(session, applicant).then(
-                function (applicant) {
-                    console.log('[UpsertRemoteApplicant] Got applicant response from eVerifile: %j', applicant);
+            everifile.CreateApplicant(session, formData).then(
+                function (applicantUpsertResponse) {
+                    console.log('[UpsertRemoteApplicant] Got applicant response from eVerifile: %j', applicantUpsertResponse);
 
-                    // This response is minimal: likely only an applicantId
-                    var model = new ReportApplicant({
-                        remoteId: applicant.applicantId,
-                        user: req.user
-                    });
 
-                    model.save(function (err) {
-                        if (err) {
-                            console.error('Unable to save ReportApplicant due to %j', err);
-                        } else {
-                            console.log('Successfully saved ReportApplicant. Resolving promise with full applicant data');
-                            applicant.remoteId = model.remoteId;
-                        }
+                    req.remoteApplicant = applicantUpsertResponse;
 
-                        req.remoteApplicant = applicant;
+                    if (applicantUpsertResponse.updated) {
 
+
+                        ReportApplicant.findOne({
+                            'remoteId': applicantUpsertResponse.applicantId,
+                            'remoteSystem': 'everifile'
+                        }).
+                            exec(function (err, localApplicant) {
+                                if (err || !localApplicant) {
+                                    return res.status(400).send({
+                                        message: 'Unable to find your data in our system',
+                                        response: applicantUpsertResponse
+                                    });
+                                }
+
+                                if (localApplicant.remoteId !== applicantUpsertResponse.applicantId) {
+                                    console.error('Mismatched remoteIds between %j and %j', applicantUpsertResponse, localApplicant);
+                                }
+
+                                res.json(localApplicant);
+                                return;
+                            });
+                    }
+                    else {
+                        console.log('[UpsertRemoteApplicant] Continuing to next to save teh applicant ...');
                         next();
-                    });
+                    }
+
+
                 },
                 function (reject) {
                     console.log('[UpsertRemoteApplicant] Error response: %j', reject, reject);
@@ -482,7 +502,7 @@ function GetReportApplicant(req, res, next) {
     } else if (req.applicantId || req.query.applicantId) {
         console.log('[GetReportApplicant] Searching based on req.applicantId');
         query = {_id: req.applicantId || req.query.applicantId};
-    }else if (req.userId) {
+    } else if (req.userId) {
         console.log('[GetReportApplicant] Searching based on req.userId');
         query = {user: mongoose.Types.ObjectId(req.userId)};
     } else if (req.user) {
@@ -587,7 +607,7 @@ function CreateNewReport(req, res, next) {
 
             var deferrals = [];
 
-            _.forEach(remoteSkus, function(remoteSku) {
+            _.forEach(remoteSkus, function (remoteSku) {
 
                 var defer = Q.defer();
                 deferrals.push(defer);
@@ -609,14 +629,12 @@ function CreateNewReport(req, res, next) {
                 );
             });
 
-            Q.allSettled(deferrals).then(function(success) {
+            Q.allSettled(deferrals).then(function (success) {
                 console.log('Finished Report reqeuesting!');
                 debugger;
                 // TODO, more!
                 res.json(success);
             });
-
-
 
 
         },
@@ -626,6 +644,32 @@ function CreateNewReport(req, res, next) {
         });
 
 }
+
+module.exports.rerunReport = function ReRunReport(req, res, next) {
+    var remoteId = req.applicantId;
+
+    everifile.GetSession().then(
+        function (session) {
+            everifile.RunReport(session, "MVRDOM", 44679).then(
+                function (bgReport) {
+                    console.log('[CreateNewReport] Created remote report: %j', bgReport);
+
+                    bgReport.save(function (err) {
+                        if (err) {
+                            return res.status(500).send({message: errorHandler.getErrorMessage(err)});
+                        }
+
+                       res.json(bgReport);
+                    });
+                }
+            );
+        },
+        function (error) {
+            console.log('[CreateNewReport] failed due to error: %j', error);
+            next(error);
+        });
+}
+
 function CheckApplicantReportStatus(req, res, next) {
     var remoteId = req.applicantId;
 

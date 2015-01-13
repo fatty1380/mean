@@ -84,22 +84,60 @@ exports.postNonce = function (req, res, next) {
         });
     }
 
+    var price = req.body.price;
+
+    if (!price) {
+        console.error('[postNonce] Invalid Price : %s', price);
+    }
+
+    if (price !== req.reportType.price && price !== req.reportType.promo) {
+        console.error('[postNonce] mismatched Price : %s', price);
+        return res.status(500).send({
+            message: 'No Pricing information found'
+        });
+    }
+
+    var nonce = req.body.nonce || req.query.nonce; // jshint ignore: line
+
+    if (!nonce) {
+        console.error('[postNonce] no NONCE, no sale!');
+        return res.status(500).send({
+            message: 'No Payment Information found in request'
+        });
+    }
+
     if (!gateway) {
         initGateway();
         debugger;
     }
 
     if (gateway) {
-        var nonce = req.body.nonce || req.query.nonce; // jshint ignore: line
 
         var reportType = req.reportType;
 
-        console.log('[postNonce] Processing payment for report type: %j', reportType);
+        var saleInformation = {
+            amount: price,
+            paymentMethodNonce: nonce,
+            //orderId: 'todo',
+            customer: {
+                id: req.user.id,
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                phone: req.user.phone,
+                email: req.user.email
+            },
+            options: {
+                storeInVaultOnSuccess: true,
+                submitForSettlement: true
+            },
+            //customFields: {
+            //    sku: reportType
+            //}
+        };
 
-        gateway.transaction.sale({
-            amount: reportType.price,
-            paymentMethodNonce: nonce
-        }, function (err, result) {
+        console.log('[postNonce] Ordering %s and processing payment with options: %j', reportType, saleInformation);
+
+        gateway.transaction.sale(saleInformation, function (err, result) {
 
             if (err) {
                 console.error('Transaction failed with error', err);
