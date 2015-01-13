@@ -462,7 +462,7 @@ module.exports.fields = {
             'required': false
         },
         {
-            'description': 'Driver License ID',
+            'description': 'Driver License #',
             'name': 'driversLicense',
             'length': 15,
             'type': 'string',
@@ -871,7 +871,7 @@ module.exports.fields = {
             "required": false
         },
         {
-            'description': 'Driver License ID',
+            'description': 'Driver License #',
             'name': 'driversLicense',
             'length': 15,
             'type': 'string',
@@ -1458,7 +1458,7 @@ module.exports.individualFields = {
                 'required': false
             },
             {
-                'description': 'Driver License ID',
+                'description': 'Driver License #',
                 'name': 'driversLicense',
                 'length': 15,
                 'type': 'string',

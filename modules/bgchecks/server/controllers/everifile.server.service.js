@@ -345,7 +345,7 @@ function sanitizeReportApplicant(model) {
     return model;
 }
 
-function GetApplicant(cookie, id) {
+function GetApplicant(cookie, id, noSanitize) {
     console.log('[GetApplicant] Requesting applicant "%d" from everifile server', id);
 
     var deferred = Q.defer();
@@ -368,25 +368,31 @@ function GetApplicant(cookie, id) {
 }
 
 
-function UpsertApplicant(cookie, applicant) {
-    console.log('[UpsertApplicant] %s an applicant', !!applicant.remoteId?'Updating':'Creating');
+function UpsertApplicant(cookie, applicantData) {
+    console.log('[UpsertApplicant] %s an applicant', !!applicantData.applicantId?'Updating':'Creating');
 
     var deferred = Q.defer();
     debugger;
 
-    var method;
+    var method, trailer;
 
-    if (applicant.remoteId) {
+    if (applicantData.applicantId) {
         method = 'PUT';
+        trailer = '/' + applicantData.applicantId;
     } else {
         method = 'POST';
     }
 
-    console.log('%s /rest/applicant %j', method, applicant);
+    console.log('%s /rest/applicant %j', method, applicantData);
 
-    unirest(method, server.baseUrl + '/rest/applicant')
+    debugger; // check applicant data. Should we be using applicant.toObject()? merging with the report field def?
+                // Ensure that response Body contains Gov ID
+
+    var requestBody = applicantData;
+
+    unirest(method, server.baseUrl + '/rest/applicant' + trailer)
         .headers({'Content-Type': 'application/json'})
-        .send(applicant)
+        .send(requestBody)
         .jar(cookie.jar)
         .end(function (response) {
             console.log('[UpsertApplicant] Got response Body: %j', response.body);
@@ -396,7 +402,7 @@ function UpsertApplicant(cookie, applicant) {
                 if (response.statusCode === 406) {
                     console.log('[UpsertApplicant] Applicant already exists, searching...');
 
-                    SearchForApplicant(cookie, applicant).then(
+                    SearchForApplicant(cookie, requestBody).then(
                         function (success) {
                             console.log('[UpsertApplicant] Success! found applicantId: %s! ', success.applicantId);
                             deferred.resolve(success);
@@ -404,13 +410,13 @@ function UpsertApplicant(cookie, applicant) {
                             console.log('[UpsertApplicant] Applicant search failed');
                             deferred.reject(err);
                         });
-                } else if(response.statusCode === 405) {
-                    console.log('[UpsertApplicant] 405 error is chill, right?');
-                    deferred.resolve(applicant);
                 } else {
                     deferred.reject(response.body.reason + '[' + JSON.stringify(response.error) + ']');
                 }
             } else {
+
+                response.existingApplicant = method === 'PUT' ? true : false;
+
                 deferred.resolve(response.body);
             }
         });
@@ -474,7 +480,7 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
 
     var reportResponseData = {
         reportSku: remoteSku,
-        remoteApplicantId: remoteApplicantId
+        applicantId: remoteApplicantId
     };
 
     var deferred = Q.defer();
@@ -490,15 +496,15 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
                 return deferred.reject(response.body.reason);
             }
 
-            if (respose.status === 204) {
-                console.eror('Bastards didn\'t give us any info! - 204:no Content');
+            if (response.status === 204) {
+                console.error('Bastards didn\'t give us any info! - 204:no Content');
 
                 return deferred.resolve(reportResponseData);
             }
 
             if (reportResponseData.remoteApplicantId !== response.body.applicant.id) {
                 var message = 'Mismatched Applicants : Response report is for different applicant than request!';
-                console.error('ERROR! %s, request: %d vs response: %d', message, bgReport.remoteApplicantId, response.body.applicant.id);
+                console.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
                 return deferred.reject(new Error(message));
             }
 

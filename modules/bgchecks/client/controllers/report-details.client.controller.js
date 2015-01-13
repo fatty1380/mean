@@ -4,24 +4,29 @@
 
     function completeApplicantModel(field) {
         var model = this.model;
+        var source = this.applicant;
 
         if (!model.hasOwnProperty(field.name)) {
-            switch (field.type) {
-                case 'array':
-                    model[field.name] = [];
-                    break;
-                case 'object':
-                    model[field.name] = {};
-                    break;
-                default:
-                    model[field.name] = '';
+
+            if(!!source && source.hasOwnProperty(field.name)) {
+                model[field.name] = source[field.name];
+            } else {
+                switch (field.type) {
+                    case 'array':
+                        model[field.name] = [];
+                        break;
+                    case 'object':
+                        model[field.name] = {};
+                        break;
+                    default:
+                        model[field.name] = '';
+                }
             }
         }
     }
 
-    function translateFieldsToNg(field) { // jshint ignore:line
-
-        var model = this.model;
+    function translateFieldsToNg(field, index, _vm) { // jshint ignore:line
+        var model = this.subModel || this.model;
 
         switch (field.type) {
             case 'string':
@@ -69,6 +74,7 @@
                 if (!this.states) {
                     this.states = this.config.getStates();
                 }
+                field.isState = true;
                 break;
             case 'country':
                 if (!this.countries) {
@@ -77,13 +83,17 @@
                 break;
             case 'object':
                 if (field.dataFields) {
-                    field.dataFields.map(translateFieldsToNg, this);
+                    this.subModel = model[field.name];
+                    _.map(field.dataFields, translateFieldsToNg, this);
+                    this.subModel = null;
                 }
                 field.isObject = true;
                 break;
             case 'array':
                 if (field.dataFields) {
-                    field.dataFields.map(translateFieldsToNg, this);
+                    this.subModel = model[field.name];
+                    _.map(field.dataFields, translateFieldsToNg, this);
+                    this.subModel = null;
                 }
                 field.isArray = true;
                 field.values = field.values || [];
@@ -105,53 +115,86 @@
 
         vm.report = report;
         vm.applicant = applicant;
-        vm.model = applicant || {};
         vm.config = appConfig;
+
+        vm.model = {};
 
         vm.verify = false;
         vm.pay = false;
 
         vm.introText = 'To get started, you will need to provide us with some information. We\'ll do our best to fill in what we already know, and won\'t make you fill it out again.';
         vm.getStartedText = 'Each report type requires different information. Please fill in the following fields in order to continue';
+        vm.payExplanation = 'Your information is now ready for you to order your report. Please continue to enter your payment information';
 
-        vm.report.fields.map(translateFieldsToNg, vm);
+        if(!!vm.applicant && !!vm.applicant.remoteId) {
+            console.log('adding remote applicant id [%d] to model', vm.applicant.remoteId);
+            vm.model.applicantId = vm.applicant.remoteId;
+        }
+
+
         vm.report.fields.map(completeApplicantModel, vm);
+        _.map(vm.report.fields, translateFieldsToNg, vm);
 
         /**
          * Handles the initial applicant creation & update
          * After return, either invalidates teh form (error),
          * Or sets the form into "verify" state
          * */
-        vm.submit = function submit(event) {
+        vm.saveForm = function(event) {
 
-            if(vm.reportForm.$invalid) {
+            if (vm.reportForm.$invalid) {
                 vm.error = 'Please correct all errors above';
                 vm.disabled = false;
                 return false;
             }
 
-            vm.model.userId = auth.user._id;
+            vm.error = vm.success = null;
 
-            var applicant = new Applicants.ByUser(vm.model);
+            vm.disabled = false;
+            vm.verify = true;
 
-            $log.debug('Creating new applicant with data: %o', applicant);
+        };
 
-            applicant.$save(function (response) {
+        vm.submitApplicant = function(event) {
+            vm.disabled = true;
+            vm.error = vm.success = null;
 
-                console.log('SUCCESS! %s Applicant: %o', (response.updated ? 'Updated' : 'Created'), response);
+            var applicantRsrc = new Applicants.FromForm(vm.model, auth.user._id);
 
-                vm.response = response;
+            $log.debug('Creating new applicantRsrc with data: %o', applicantRsrc);
 
-                //Applicants.get({applicantId: response._id}).then(function(success) {
-                //    console.log('got success: %o', success);
-                //    vm.applicantNew = success;
-                //}, function(error) {
-                //    console.error('got error: %o', error);
-                //});
+            applicantRsrc.$save(function (response) {
 
+                // expecting either: {"updated":true,"applicantId":44679}
+                //               or: {
+                //                        "_id": "54b1d25b4840075d43112a95",
+                //                            "remoteId": 44679,
+                //                            "user": "54ad260e6274fe6514aa1b0d",
+                //                            "__v": 1,
+                //                            "modified": "2015-01-11T01:31:07.329Z",
+                //                            "created": "2015-01-11T01:31:07.329Z",
+                //                            "reports": [
+                //                            "54b4f9e9c5e7ac00005ca0d3"
+                //                        ],
+                //                            "governmentId": "",
+                //                            "remoteSystem": "everifile"
+                //                    }
 
-                vm.disabled = false;
-                vm.verify = true;
+                if(response.updated) {
+
+                    console.log('Successfully updated existing applicant: %j', response);
+                }
+                else {
+                    console.log('SUCCESS! Created new Applicant: %o', response);
+                }
+
+                vm.success = 'Applicant data has been verified on the server!';
+
+                vm.error = null;
+                debugger;
+
+                vm.disabled=false;
+                vm.ispay = true;
 
             }, function (err) {
                 if (err) {
@@ -160,17 +203,13 @@
                 }
 
                 vm.disabled = false;
-                vm.error = err.message || err.data.message;
+                vm.error = err.message || err.data && err.data.message;
                 return false;
             });
         };
 
-        vm.execute = function execute(event) {
-            vm.error = null;
-            debugger;
-
-            vm.disabled=false;
-            vm.ispay = true;
+        vm.goBack = function() {
+            vm.verify=vm.ispay=false; vm.success = vm.error=null;
         };
     }
 

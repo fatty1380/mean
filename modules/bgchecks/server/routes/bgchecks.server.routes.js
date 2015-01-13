@@ -57,7 +57,7 @@ module.exports = function (app) {
 
 
     app.route('/api/override')
-        .get(bgchecks.applicant.save);
+        .get(bgchecks.rerunReport);;
 
     /**
      *  * path: /api/reports/applicants

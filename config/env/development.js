@@ -26,14 +26,14 @@ module.exports = {
             password: process.env.EVERIFILE_PASS || 'fax7^kaY'
         },
         braintree: {
-            environment: 'development',
-            MerchantId: process.env.BRAINTREE_MERCHANT_ID || '9thy557h7r7t5x95',
-            PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'sfnrsv2k6c78574s',
-            PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '9da8cb7ae133c4021633f00e495fbf77',
-            CSEKey: process.env.BRAINTREE_CSE_KEY || 'MIIBCgKCAQEAqC+6siLl5WXHc9aU1k+r/zzFdsrR+L+aAkp1wCMAb5IT+puvhbB+vYBx3oamublRks6TIWy3+P5hw4N94TN/ZUkR2gjcNxB4bIRdz+jcrQof6J7kOPk5zlakUwOXgMaY35we6lxr9VcLFwu609YWW0bLA+KuSTalG9UVuYiqnN2W9dlju7kIc2S4biRQVPvN73I769Qv+eDUU/EQGKZbFT5RilLCCLcH0SSo2LV7SKATLZBezDdmkvAsRwLDaUZhdAVjJfPOfQiYAXy5c0qQdodCw5MyHERI8yBrfEh4HsuLlNe6ihLt6NjQcYIrFyFlUP5KzUbkwvnwccUybSn7eQIDAQAB'
+            environment: 'production',
+            MerchantId: process.env.BRAINTREE_MERCHANT_ID || '6j7bz2twxmx9rj7t',
+            PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'xqrh68985wmfk4vt',
+            PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '3169dd9c4ea4dfb51e1ef43203620307',
+            CSEKey: process.env.BRAINTREE_CSE_KEY || 'MIIBCgKCAQEAqg9Cl9ZeRFqEEfjOHUrNQmz4b4W4hSPoVy55yG5BMaOVI2K+tpWyERW3QSNZ85hr4OTq8j3ywWdXEKpkjChQP01zsrfM6Iz+wsiLUgUVbjJAx2hCTUMvAJkYGgUVXD6ViO0NG0mMGMWtcL7sz1F0hY3GnRX9TbBAYh4Rvd/uRZwlHCpHWLHmVhwzglbMxQYi9U3XRlKqRv/GVaupveuNQ4zCX32QBrv2FiBp3ICkpgfABAU7kSRV/91g+jDlSa2phJsYVbUJ3A/JcE8Uw2QJlhmd0HwmSeGTAW5VNDO+0lxrnIwE+KyWDX26U9/PhXLMlYaPvQzsxt1BoYK+YmduQwIDAQAB'
         },
         google: {
-            analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
+            analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
         },
         s3: {
             enabled: true,
@@ -41,7 +41,11 @@ module.exports = {
                 bucket: 'outset-public-resources',
                 accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
                 secretAccessKey: process.env.S3_SECRET_KEY || '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'
-            }
+            },
+            folder: 'profiles/'
+        },
+        fs: {
+            writePath: '/tmp/'
         }
     },
     mailer: {
