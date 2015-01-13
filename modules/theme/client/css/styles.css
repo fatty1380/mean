@@ -4075,6 +4075,9 @@ i.fa.fa-stack-1x.text-primary {
 .header h1.logo a .logo-title {
   background-image: url('/modules/core/img/brand/logo-dblue.png');
 }
+.header.navbar-landing .nav li.nav-item:hover {
+  color: white;
+}
 .header .nav li.nav-item {
   cursor: pointer;
   cursor: hand;

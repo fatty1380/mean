@@ -23,6 +23,7 @@
                 $log.error('State \'%s\' requires authentication but no user is signed in', toState.name);
                 event.preventDefault();
                 $state.go('intro');
+                return;
             }
 
 
@@ -33,18 +34,19 @@
                         $log.debug('[HomeController] Re-Routing to driver\'s profile page');
                         event.preventDefault();
                         $state.go('drivers.home');
-                        break;
+                        return;
                     case 'owner':
                         isRedirectInProgress = true;
                         $log.debug('[HomeController] Re-Routing to the user\'s company home');
                         event.preventDefault();
                         $state.go('companies.home');
-                        break;
+                        return;
                     default:
                         $log.warn('[HomeController] Unknown User Type');
                         if (Auth.isAdmin()) {
                             $log.warn('[HomeController] Admin User - routing to user list');
                             $state.go('users.list');
+                            return;
                         }
                 }
             }
@@ -60,6 +62,12 @@
             $log.error('State Change error from %s to %s', fromState.name, toState.name, error);
 
             debugger;
+            if(error.status === 403) {
+                event.preventDefault();
+                $log.warn('User does not have access to %s', toState.name);
+                $state.go('authentication');
+                return;
+            }
 
             if(fromState && fromState.name) {
                 event.preventDefault();

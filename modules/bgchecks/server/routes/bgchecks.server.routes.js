@@ -24,7 +24,7 @@ module.exports = function (app) {
      * This will be used by the render-report page.
      */
     app.route('/api/reports/types/:sku')
-        .get(bgchecks.read.report);
+        .get(acl.isAllowed, bgchecks.read.report);
 
 
     // Applicant Centered Routes

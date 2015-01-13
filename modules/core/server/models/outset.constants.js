@@ -25,42 +25,7 @@ module.exports.stateAbbreviations = function () {
     return abbreviations;
 };
 
-module.exports.report_packages = {
-    base: {
-        title: 'Motor Vehicle Report',
-        price: '5',
-        sku: 'MVRDOM',
-        skus: ['MVRDOM'],
-        enabled: true
-    },
-    good: {
-        title: 'Good',
-        price: '14.50',
-        sku: 'NBDS+MVRDOM',
-        skus: [{sku: 'NBDS'}, {sku: 'MVRDOM'}],
-        enabled: true
-    },
-    better: {
-        title: 'Premium',
-        price: '44.95',
-        sku: 'PKG_PREMIUM',
-        skus: [{sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
-        enabled: true
-    },
-    best: {
-        title: 'Enterprise',
-        price: '84.95',
-        sku: 'PKG_PREMIUM+ES_ECUPIT',
-        skus: [{sku: 'ES_ECUPIT'}, {sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
-        enabled: true
-    },
-    drugs: {
-        title: 'Drug Test',
-        price: '40',
-        sku: 'ES_ECUPIT',
-        enabled: false
-    }
-};
+
 
 module.exports.baseSchedule = [{
     'description': 'Early Morning',
@@ -339,3 +304,1910 @@ module.exports.faqs = [
         answer: 'To change your billing information, click the Settings Icon (shaped like a gear) in the upper right hand corner of the screen of every page.  You can also click the [Edit Account Settings] button near your name on your profile page.',
         keywords: ['term', 'term']
     }];
+
+module.exports.fields = {
+    'OUTSET_MVR': [
+        {
+            'description': 'First Name',
+            'name': 'firstName',
+            'length': 50,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'Middle Name',
+            'name': 'middleName',
+            'length': 50,
+            'type': 'string',
+            'required': false
+        },
+        {
+            'description': 'Last Name',
+            'name': 'lastName',
+            'length': 50,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'Suffix',
+            'name': 'nameSuffix',
+            'length': 50,
+            'type': 'string',
+            'required': false
+        },
+        {
+            'description': 'Birth Date',
+            'name': 'birthDate',
+            'type': 'datelong',
+            'required': true
+        },
+        {
+            'description': 'SSN',
+            'name': 'governmentId',
+            'length': 9,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'Gender',
+            'name': 'gender',
+            'pickList': [
+                {
+                    'description': 'not_specified',
+                    'value': ''
+                },
+                {
+                    'description': 'Male',
+                    'value': 'male'
+                },
+                {
+                    'description': 'Female',
+                    'value': 'female'
+                }
+            ],
+            'type': 'string',
+            'required': false
+        },
+        {
+            'dataFields': [
+                {
+                    'description': 'Street Address',
+                    'name': 'street1',
+                    'length': 100,
+                    'type': 'string',
+                    'required': true
+                },
+                {
+                    'description': 'Apt. #',
+                    'name': 'street2',
+                    'length': 50,
+                    'type': 'string',
+                    'required': false
+                },
+                {
+                    'description': 'City',
+                    'name': 'city',
+                    'length': 50,
+                    'type': 'string',
+                    'required': true
+                },
+                {
+                    'description': 'State',
+                    'name': 'state',
+                    'type': 'state',
+                    'required': true
+                },
+                {
+                    'description': 'Zip/Postal Code',
+                    'name': 'postalCode',
+                    'length': 10,
+                    'type': 'string',
+                    'required': true
+                },
+                {
+                    'description': 'Country',
+                    'name': 'country',
+                    'length': 25,
+                    'type': 'country',
+                    'required': true
+                },
+                {
+                    'description': 'Occupy Date',
+                    'name': 'occupyDate',
+                    'type': 'datelong',
+                    'required': false
+                }
+            ],
+            'description': 'Current Address',
+            'name': 'currentAddress',
+            'type': 'object',
+            'required': false
+        },
+        {
+            'dataFields': [
+                {
+                    'dataFields': [
+                        {
+                            'description': 'First Name',
+                            'name': 'firstName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
+                        },
+                        {
+                            'description': 'Middle Name',
+                            'name': 'middleName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': false
+                        },
+                        {
+                            'description': 'Last Name',
+                            'name': 'lastName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
+                        }
+                    ],
+                    'description': 'Alias',
+                    'name': 'alias',
+                    'type': 'object',
+                    'required': false
+                }
+            ],
+            'description': 'Aliases',
+            'name': 'aliases',
+            'length': 3,
+            'type': 'array',
+            'required': false
+        },
+        {
+            'description': 'driversLicense',
+            'name': 'driversLicense',
+            'length': 15,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'driversLicenseState',
+            'name': 'driversLicenseState',
+            'type': 'state',
+            'required': true
+        }
+    ],
+    'OUTSET_BASE': [
+        {
+            'description': 'First Name',
+            'name': 'firstName',
+            'length': 50,
+            'type': 'string',
+            'required': true
+        }, {
+            'description': 'Middle Name',
+            'name': 'middleName',
+            'length': 50,
+            'type': 'string',
+            'required': false
+        }, {
+            'description': 'Last Name',
+            'name': 'lastName',
+            'length': 50,
+            'type': 'string',
+            'required': true
+        }, {
+            'description': 'Suffix',
+            'name': 'nameSuffix',
+            'length': 50,
+            'type': 'string',
+            'required': false
+        }, {
+            'description': 'Birth Date',
+            'name': 'birthDate',
+            'type': 'datelong',
+            'required': true
+        }, {
+            'description': 'SSN',
+            'name': 'governmentId',
+            'length': 9,
+            'type': 'string',
+            'required': true
+        }, {
+            'description': 'Gender',
+            'name': 'gender',
+            'pickList': [{
+                'description': 'not_specified',
+                'value': ''
+            }, {
+                'description': 'Male',
+                'value': 'male'
+            }, {
+                'description': 'Female',
+                'value': 'female'
+            }],
+            'type': 'string',
+            'required': false
+        }, {
+            'dataFields': [{
+                'description': 'Street Address',
+                'name': 'street1',
+                'length': 100,
+                'type': 'string',
+                'required': true
+            }, {
+                'description': 'Apt. #',
+                'name': 'street2',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            }, {
+                'description': 'City',
+                'name': 'city',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            }, {
+                'description': 'State',
+                'name': 'state',
+                'type': 'state',
+                'required': true
+            }, {
+                'description': 'Zip/Postal Code',
+                'name': 'postalCode',
+                'length': 10,
+                'type': 'string',
+                'required': true
+            }, {
+                'description': 'Country',
+                'name': 'country',
+                'length': 25,
+                'type': 'country',
+                'required': true
+            }, {
+                'description': 'Occupy Date',
+                'name': 'occupyDate',
+                'type': 'datelong',
+                'required': false
+            }],
+            'description': 'Current Address',
+            'name': 'currentAddress',
+            'type': 'object',
+            'required': true
+        }, {
+            'dataFields': [{
+                'dataFields': [{
+                    'description': 'First Name',
+                    'name': 'firstName',
+                    'length': 50,
+                    'type': 'string',
+                    'required': true
+                }, {
+                    'description': 'Middle Name',
+                    'name': 'middleName',
+                    'length': 50,
+                    'type': 'string',
+                    'required': false
+                }, {
+                    'description': 'Last Name',
+                    'name': 'lastName',
+                    'length': 50,
+                    'type': 'string',
+                    'required': true
+                }],
+                'description': 'Alias',
+                'name': 'alias',
+                'type': 'object',
+                'required': false
+            }],
+            'description': 'Aliases',
+            'name': 'aliases',
+            'length': 3,
+            'type': 'array',
+            'required': false
+        }],
+    'OUTSET_PREMIUM': [
+        {
+            "description": "First Name",
+            "name": "firstName",
+            "length": 50,
+            "type": "string",
+            "required": true
+        },
+        {
+            "description": "Middle Name",
+            "name": "middleName",
+            "length": 50,
+            "type": "string",
+            "required": false
+        },
+        {
+            "description": "Last Name",
+            "name": "lastName",
+            "length": 50,
+            "type": "string",
+            "required": true
+        },
+        {
+            "description": "Suffix",
+            "name": "nameSuffix",
+            "length": 50,
+            "type": "string",
+            "required": false
+        },
+        {
+            "description": "Birth Date",
+            "name": "birthDate",
+            "length": 11,
+            "type": "datelong",
+            "required": false
+        },
+        {
+            "description": "SSN",
+            "name": "governmentId",
+            "type": "string",
+            "required": true,
+            "length": 9
+        },
+        {
+            "description": "Gender",
+            "name": "gender",
+            "length": 6,
+            "type": "string",
+            "required": false,
+            "pickList": [
+                {
+                    "description": "not_specified",
+                    "value": ""
+                },
+                {
+                    "description": "Male",
+                    "value": "male"
+                },
+                {
+                    "description": "Female",
+                    "value": "female"
+                }
+            ]
+        },
+        {
+            "description": "Current Address",
+            "name": "currentAddress",
+            "dataFields": [
+                {
+                    "description": "Street Address",
+                    "name": "street1",
+                    "length": 30,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "Apt. #",
+                    "name": "street2",
+                    "length": 30,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "City",
+                    "name": "city",
+                    "length": 50,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "State",
+                    "name": "state",
+                    "length": 50,
+                    "type": "state",
+                    "required": false
+                },
+                {
+                    "description": "Zip/Postal Code",
+                    "name": "postalCode",
+                    "length": 10,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "Country",
+                    "name": "country",
+                    "length": 25,
+                    "type": "country",
+                    "required": true
+                },
+                {
+                    "description": "Occupy Date",
+                    "name": "occupyDate",
+                    "type": "datelong",
+                    "required": false
+                }
+            ],
+            "type": "object",
+            "required": true
+        },
+        {
+            'dataFields': [
+                {
+                    'dataFields': [
+                        {
+                            'description': 'companyName',
+                            'name': 'companyName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
+                        },
+                        {
+                            'description': 'companyPhone',
+                            'name': 'companyPhone',
+                            'length': 20,
+                            'type': 'string',
+                            'required': false
+                        },
+                        {
+                            'dataFields': [
+                                {
+                                    'description': 'Street Address',
+                                    'name': 'street1',
+                                    'length': 20,
+                                    'type': 'string',
+                                    'required': false
+                                },
+                                {
+                                    'description': 'Apt. #',
+                                    'name': 'street2',
+                                    'length': 20,
+                                    'type': 'string',
+                                    'required': false
+                                },
+                                {
+                                    'description': 'City',
+                                    'name': 'city',
+                                    'length': 50,
+                                    'type': 'string',
+                                    'required': true
+                                },
+                                {
+                                    'description': 'State',
+                                    'name': 'state',
+                                    'length': 30,
+                                    'type': 'state',
+                                    'required': true
+                                },
+                                {
+                                    'description': 'Zip/Postal Code',
+                                    'name': 'postalCode',
+                                    'length': 10,
+                                    'type': 'string',
+                                    'required': false
+                                },
+                                {
+                                    'description': 'Country',
+                                    'name': 'country',
+                                    'length': 50,
+                                    'type': 'country',
+                                    'required': true
+                                }
+                            ],
+                            'description': 'Address',
+                            'name': 'address',
+                            'type': 'object',
+                            'required': false
+                        },
+                        {
+                            'description': 'applicantBeginDate',
+                            'name': 'applicantBeginDate',
+                            'length': 15,
+                            'type': 'datelong',
+                            'required': true
+                        },
+                        {
+                            'description': 'applicantEndDate',
+                            'name': 'applicantEndDate',
+                            'length': 15,
+                            'type': 'datelong',
+                            'required': false
+                        },
+                        {
+                            'description': 'applicantJobPosition',
+                            'name': 'applicantJobPosition',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
+                        },
+                        {
+                            'description': 'applicantAnnualSalary',
+                            'name': 'applicantAnnualSalary',
+                            'length': 12,
+                            'type': 'string',
+                            'required': false
+                        }
+                    ],
+                    'description': 'employmentDetail',
+                    'name': 'employmentDetail',
+                    'type': 'object',
+                    'required': false
+                }
+            ],
+            'description': 'employmentHistory',
+            'name': 'employmentHistory',
+            'type': 'array',
+            'required': true
+        },
+        {
+            "dataFields": [
+                {
+                    "dataFields": [
+                        {
+                            "description": "First Name",
+                            "name": "firstName",
+                            "length": 50,
+                            "type": "string",
+                            "required": true
+                        },
+                        {
+                            "description": "Middle Name",
+                            "name": "middleName",
+                            "length": 50,
+                            "type": "string",
+                            "required": false
+                        },
+                        {
+                            "description": "Last Name",
+                            "name": "lastName",
+                            "length": 50,
+                            "type": "string",
+                            "required": true
+                        }
+                    ],
+                    "description": "Alias",
+                    "name": "alias",
+                    "type": "object",
+                    "required": false
+                }
+            ],
+            "description": "Aliases",
+            "name": "aliases",
+            "length": 3,
+            "type": "array",
+            "required": false
+        }
+    ],
+    'OUTSET_ENTERPRISE': [
+        {
+            "description": "First Name",
+            "name": "firstName",
+            "length": 50,
+            "type": "string",
+            "required": true
+        },
+        {
+            "description": "Middle Name",
+            "name": "middleName",
+            "length": 50,
+            "type": "string",
+            "required": false
+        },
+        {
+            "description": "Last Name",
+            "name": "lastName",
+            "length": 50,
+            "type": "string",
+            "required": true
+        },
+        {
+            "description": "Suffix",
+            "name": "nameSuffix",
+            "length": 50,
+            "type": "string",
+            "required": false
+        },
+        {
+            "description": "Birth Date",
+            "name": "birthDate",
+            "length": 11,
+            "type": "datelong",
+            "required": false
+        },
+        {
+            "description": "SSN",
+            "name": "governmentId",
+            "type": "string",
+            "required": true,
+            "length": 9
+        },
+        {
+            "description": "Gender",
+            "name": "gender",
+            "length": 6,
+            "type": "string",
+            "required": false,
+            "pickList": [
+                {
+                    "description": "not_specified",
+                    "value": ""
+                },
+                {
+                    "description": "Male",
+                    "value": "male"
+                },
+                {
+                    "description": "Female",
+                    "value": "female"
+                }
+            ]
+        },
+        {
+            "description": "Current Address",
+            "name": "currentAddress",
+            "dataFields": [
+                {
+                    "description": "Street Address",
+                    "name": "street1",
+                    "length": 30,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "Apt. #",
+                    "name": "street2",
+                    "length": 30,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "City",
+                    "name": "city",
+                    "length": 50,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "State",
+                    "name": "state",
+                    "length": 50,
+                    "type": "state",
+                    "required": false
+                },
+                {
+                    "description": "Zip/Postal Code",
+                    "name": "postalCode",
+                    "length": 10,
+                    "type": "string",
+                    "required": false
+                },
+                {
+                    "description": "Country",
+                    "name": "country",
+                    "length": 25,
+                    "type": "country",
+                    "required": true
+                },
+                {
+                    "description": "Occupy Date",
+                    "name": "occupyDate",
+                    "type": "datelong",
+                    "required": false
+                }
+            ],
+            "type": "object",
+            "required": true
+        },
+        {
+            'dataFields': [
+                {
+                    'dataFields': [
+                        {
+                            'description': 'companyName',
+                            'name': 'companyName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
+                        },
+                        {
+                            'description': 'companyPhone',
+                            'name': 'companyPhone',
+                            'length': 20,
+                            'type': 'string',
+                            'required': false
+                        },
+                        {
+                            'dataFields': [
+                                {
+                                    'description': 'Street Address',
+                                    'name': 'street1',
+                                    'length': 20,
+                                    'type': 'string',
+                                    'required': false
+                                },
+                                {
+                                    'description': 'Apt. #',
+                                    'name': 'street2',
+                                    'length': 20,
+                                    'type': 'string',
+                                    'required': false
+                                },
+                                {
+                                    'description': 'City',
+                                    'name': 'city',
+                                    'length': 50,
+                                    'type': 'string',
+                                    'required': true
+                                },
+                                {
+                                    'description': 'State',
+                                    'name': 'state',
+                                    'length': 30,
+                                    'type': 'state',
+                                    'required': true
+                                },
+                                {
+                                    'description': 'Zip/Postal Code',
+                                    'name': 'postalCode',
+                                    'length': 10,
+                                    'type': 'string',
+                                    'required': false
+                                },
+                                {
+                                    'description': 'Country',
+                                    'name': 'country',
+                                    'length': 50,
+                                    'type': 'country',
+                                    'required': true
+                                }
+                            ],
+                            'description': 'Address',
+                            'name': 'address',
+                            'type': 'object',
+                            'required': false
+                        },
+                        {
+                            'description': 'applicantBeginDate',
+                            'name': 'applicantBeginDate',
+                            'length': 15,
+                            'type': 'datelong',
+                            'required': true
+                        },
+                        {
+                            'description': 'applicantEndDate',
+                            'name': 'applicantEndDate',
+                            'length': 15,
+                            'type': 'datelong',
+                            'required': false
+                        },
+                        {
+                            'description': 'applicantJobPosition',
+                            'name': 'applicantJobPosition',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
+                        },
+                        {
+                            'description': 'applicantAnnualSalary',
+                            'name': 'applicantAnnualSalary',
+                            'length': 12,
+                            'type': 'string',
+                            'required': false
+                        }
+                    ],
+                    'description': 'employmentDetail',
+                    'name': 'employmentDetail',
+                    'type': 'object',
+                    'required': false
+                }
+            ],
+            'description': 'employmentHistory',
+            'name': 'employmentHistory',
+            'type': 'array',
+            'required': true
+        },
+        {
+            "dataFields": [
+                {
+                    "dataFields": [
+                        {
+                            "description": "First Name",
+                            "name": "firstName",
+                            "length": 50,
+                            "type": "string",
+                            "required": true
+                        },
+                        {
+                            "description": "Middle Name",
+                            "name": "middleName",
+                            "length": 50,
+                            "type": "string",
+                            "required": false
+                        },
+                        {
+                            "description": "Last Name",
+                            "name": "lastName",
+                            "length": 50,
+                            "type": "string",
+                            "required": true
+                        }
+                    ],
+                    "description": "Alias",
+                    "name": "alias",
+                    "type": "object",
+                    "required": false
+                }
+            ],
+            "description": "Aliases",
+            "name": "aliases",
+            "length": 3,
+            "type": "array",
+            "required": false
+        }
+    ],
+    'OUTSET_DRUGS': [
+        {
+            'description': 'First Name',
+            'name': 'firstName',
+            'length': 50,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'Last Name',
+            'name': 'lastName',
+            'length': 50,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'Birth Date',
+            'name': 'birthDate',
+            'type': 'datelong',
+            'required': false
+        },
+        {
+            'description': 'SSN',
+            'name': 'governmentId',
+            'length': 9,
+            'type': 'string',
+            'required': false
+        },
+        {
+            'description': 'Email',
+            'name': 'email',
+            'type': 'string',
+            'required': false
+        },
+        {
+            'dataFields': [
+                {
+                    'description': 'Street Address',
+                    'name': 'street1',
+                    'length': 100,
+                    'type': 'string',
+                    'required': false
+                },
+                {
+                    'description': 'Apt. #',
+                    'name': 'street2',
+                    'length': 50,
+                    'type': 'string',
+                    'required': false
+                },
+                {
+                    'description': 'City',
+                    'name': 'city',
+                    'length': 50,
+                    'type': 'string',
+                    'required': false
+                },
+                {
+                    'description': 'State',
+                    'name': 'state',
+                    'type': 'state',
+                    'required': false
+                },
+                {
+                    'description': 'Zip/Postal Code',
+                    'name': 'postalCode',
+                    'length': 10,
+                    'type': 'string',
+                    'required': false
+                }
+            ],
+            'description': 'Current Address',
+            'name': 'currentAddress',
+            'type': 'object',
+            'required': false
+        }
+    ]
+}
+
+
+
+module.exports.reportPackages = {
+    base: {
+        title: 'Motor Vehicle Report',
+        name: 'Motor Vehicle Report',
+        description: 'Motor Vehicle Report',
+        price: '5',
+        promo: '1',
+        sku: 'OUTSET_MVR',
+        fields: module.exports.fields.OUTSET_MVR,
+        skus: ['MVRDOM'],
+        enabled: true
+    },
+    good: {
+        title: 'Good',
+        name: 'National Background Report and Motor Vehicle Report',
+        description: 'National Background Report and Motor Vehicle Report',
+        price: '14.50',
+        sku: 'OUTSET_BASE',
+        fields: module.exports.fields.OUTSET_BASE,
+        skus: ['NBDS', 'MVRDOM'],
+        enabled: true
+    },
+    better: {
+        title: 'Premium',
+        name: 'Premium Background Report and Motor Vehicle Report',
+        description: 'Premium Background Report and Motor Vehicle Report',
+        price: '44.95',
+        sku: 'OUTSET_PREMIUM',
+        fields: module.exports.fields.OUTSET_PREMIUM,
+        skus: ['PKG_PREMIMUM', 'MVRDOM'],
+        enabled: true
+    },
+    best: {
+        title: 'Enterprise',
+        name: 'Enterprise Background Report, Motor Vehicle Report and Drug Test',
+        description: 'Enterprise Background Report, Motor Vehicle Report and Drug Test',
+        price: '84.95',
+        sku: 'OUTSET_ENTERPRISE',
+        fields: module.exports.fields.OUTSET_ENTERPRISE,
+        skus: ['PKG_PREMIMUM', 'MVRDOM', 'ES_ECUPIT'],
+        enabled: true
+    },
+    drugs: {
+        title: 'Drug Test',
+        name: 'Drug Test',
+        description: '',
+        price: '40',
+        sku: 'OUTSET_DRUGS',
+        fields: module.exports.fields.OUTSET_DRUGS,
+        skus: ['ES_ECUPIT'],
+        enabled: false
+    },
+    fieldSkus: ['MVRDOM', 'NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER', 'ES_ECUPIT']
+};
+
+module.exports.individualFields = {
+    MVRDOM: {
+        'fields': [
+            {
+                'description': 'First Name',
+                'name': 'firstName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Middle Name',
+                'name': 'middleName',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Last Name',
+                'name': 'lastName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Suffix',
+                'name': 'nameSuffix',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Birth Date',
+                'name': 'birthDate',
+                'type': 'datelong',
+                'required': true
+            },
+            {
+                'description': 'SSN',
+                'name': 'governmentId',
+                'length': 9,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Gender',
+                'name': 'gender',
+                'pickList': [
+                    {
+                        'description': 'not_specified',
+                        'value': ''
+                    },
+                    {
+                        'description': 'Male',
+                        'value': 'male'
+                    },
+                    {
+                        'description': 'Female',
+                        'value': 'female'
+                    }
+                ],
+                'type': 'string',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'description': 'Street Address',
+                        'name': 'street1',
+                        'length': 100,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Apt. #',
+                        'name': 'street2',
+                        'length': 50,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'City',
+                        'name': 'city',
+                        'length': 50,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'State',
+                        'name': 'state',
+                        'type': 'state',
+                        'required': true
+                    },
+                    {
+                        'description': 'Zip/Postal Code',
+                        'name': 'postalCode',
+                        'length': 10,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Country',
+                        'name': 'country',
+                        'length': 25,
+                        'type': 'country',
+                        'required': true
+                    },
+                    {
+                        'description': 'Occupy Date',
+                        'name': 'occupyDate',
+                        'type': 'datelong',
+                        'required': false
+                    }
+                ],
+                'description': 'Current Address',
+                'name': 'currentAddress',
+                'type': 'object',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'dataFields': [
+                            {
+                                'description': 'First Name',
+                                'name': 'firstName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            },
+                            {
+                                'description': 'Middle Name',
+                                'name': 'middleName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': false
+                            },
+                            {
+                                'description': 'Last Name',
+                                'name': 'lastName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            }
+                        ],
+                        'description': 'Alias',
+                        'name': 'alias',
+                        'type': 'object',
+                        'required': false
+                    }
+                ],
+                'description': 'Aliases',
+                'name': 'aliases',
+                'length': 3,
+                'type': 'array',
+                'required': false
+            },
+            {
+                'description': 'driversLicense',
+                'name': 'driversLicense',
+                'length': 15,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'driversLicenseState',
+                'name': 'driversLicenseState',
+                'type': 'state',
+                'required': true
+            }
+        ]
+    },
+    'NBDS': {
+        'fields': [
+            {
+                'description': 'First Name',
+                'name': 'firstName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Middle Name',
+                'name': 'middleName',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Last Name',
+                'name': 'lastName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Suffix',
+                'name': 'nameSuffix',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Birth Date',
+                'name': 'birthDate',
+                'type': 'datelong',
+                'required': true
+            },
+            {
+                'description': 'SSN',
+                'name': 'governmentId',
+                'length': 9,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Gender',
+                'name': 'gender',
+                'pickList': [
+                    {
+                        'description': 'not_specified',
+                        'value': ''
+                    },
+                    {
+                        'description': 'Male',
+                        'value': 'male'
+                    },
+                    {
+                        'description': 'Female',
+                        'value': 'female'
+                    }
+                ],
+                'type': 'string',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'description': 'Street Address',
+                        'name': 'street1',
+                        'length': 100,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Apt. #',
+                        'name': 'street2',
+                        'length': 50,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'City',
+                        'name': 'city',
+                        'length': 50,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'State',
+                        'name': 'state',
+                        'type': 'state',
+                        'required': true
+                    },
+                    {
+                        'description': 'Zip/Postal Code',
+                        'name': 'postalCode',
+                        'length': 10,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Country',
+                        'name': 'country',
+                        'length': 25,
+                        'type': 'country',
+                        'required': true
+                    },
+                    {
+                        'description': 'Occupy Date',
+                        'name': 'occupyDate',
+                        'type': 'datelong',
+                        'required': false
+                    }
+                ],
+                'description': 'Current Address',
+                'name': 'currentAddress',
+                'type': 'object',
+                'required': true
+            },
+            {
+                'dataFields': [
+                    {
+                        'dataFields': [
+                            {
+                                'description': 'First Name',
+                                'name': 'firstName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            },
+                            {
+                                'description': 'Middle Name',
+                                'name': 'middleName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': false
+                            },
+                            {
+                                'description': 'Last Name',
+                                'name': 'lastName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            }
+                        ],
+                        'description': 'Alias',
+                        'name': 'alias',
+                        'type': 'object',
+                        'required': false
+                    }
+                ],
+                'description': 'Aliases',
+                'name': 'aliases',
+                'length': 3,
+                'type': 'array',
+                'required': false
+            }
+        ]
+    },
+    SSNVAL: {
+        'fields': [
+            {
+                'description': 'First Name',
+                'name': 'firstName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Middle Name',
+                'name': 'middleName',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Last Name',
+                'name': 'lastName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Suffix',
+                'name': 'nameSuffix',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Birth Date',
+                'name': 'birthDate',
+                'type': 'datelong',
+                'required': true
+            },
+            {
+                'description': 'SSN',
+                'name': 'governmentId',
+                'length': 9,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Gender',
+                'name': 'gender',
+                'pickList': [
+                    {
+                        'description': 'not_specified',
+                        'value': ''
+                    },
+                    {
+                        'description': 'Male',
+                        'value': 'male'
+                    },
+                    {
+                        'description': 'Female',
+                        'value': 'female'
+                    }
+                ],
+                'type': 'string',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'description': 'Street Address',
+                        'name': 'street1',
+                        'length': 100,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Apt. #',
+                        'name': 'street2',
+                        'length': 50,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'City',
+                        'name': 'city',
+                        'length': 50,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'State',
+                        'name': 'state',
+                        'type': 'state',
+                        'required': true
+                    },
+                    {
+                        'description': 'Zip/Postal Code',
+                        'name': 'postalCode',
+                        'length': 10,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Country',
+                        'name': 'country',
+                        'length': 25,
+                        'type': 'country',
+                        'required': true
+                    },
+                    {
+                        'description': 'Occupy Date',
+                        'name': 'occupyDate',
+                        'type': 'datelong',
+                        'required': false
+                    }
+                ],
+                'description': 'Current Address',
+                'name': 'currentAddress',
+                'type': 'object',
+                'required': true
+            },
+            {
+                'dataFields': [
+                    {
+                        'dataFields': [
+                            {
+                                'description': 'First Name',
+                                'name': 'firstName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            },
+                            {
+                                'description': 'Middle Name',
+                                'name': 'middleName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': false
+                            },
+                            {
+                                'description': 'Last Name',
+                                'name': 'lastName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            }
+                        ],
+                        'description': 'Alias',
+                        'name': 'alias',
+                        'type': 'object',
+                        'required': false
+                    }
+                ],
+                'description': 'Aliases',
+                'name': 'aliases',
+                'length': 3,
+                'type': 'array',
+                'required': false
+            }
+        ]
+    },
+    CRIMESC: {
+        'fields': [
+            {
+                'description': 'First Name',
+                'name': 'firstName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Middle Name',
+                'name': 'middleName',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Last Name',
+                'name': 'lastName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Suffix',
+                'name': 'nameSuffix',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Birth Date',
+                'name': 'birthDate',
+                'type': 'datelong',
+                'required': true
+            },
+            {
+                'description': 'SSN',
+                'name': 'governmentId',
+                'length': 9,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Gender',
+                'name': 'gender',
+                'pickList': [
+                    {
+                        'description': 'not_specified',
+                        'value': ''
+                    },
+                    {
+                        'description': 'Male',
+                        'value': 'male'
+                    },
+                    {
+                        'description': 'Female',
+                        'value': 'female'
+                    }
+                ],
+                'type': 'string',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'description': 'Street Address',
+                        'name': 'street1',
+                        'length': 100,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Apt. #',
+                        'name': 'street2',
+                        'length': 50,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'City',
+                        'name': 'city',
+                        'length': 50,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'State',
+                        'name': 'state',
+                        'type': 'state',
+                        'required': true
+                    },
+                    {
+                        'description': 'Zip/Postal Code',
+                        'name': 'postalCode',
+                        'length': 10,
+                        'type': 'string',
+                        'required': true
+                    },
+                    {
+                        'description': 'Country',
+                        'name': 'country',
+                        'length': 25,
+                        'type': 'country',
+                        'required': true
+                    },
+                    {
+                        'description': 'Occupy Date',
+                        'name': 'occupyDate',
+                        'type': 'datelong',
+                        'required': false
+                    }
+                ],
+                'description': 'Current Address',
+                'name': 'currentAddress',
+                'type': 'object',
+                'required': true
+            },
+            {
+                'dataFields': [
+                    {
+                        'dataFields': [
+                            {
+                                'description': 'First Name',
+                                'name': 'firstName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            },
+                            {
+                                'description': 'Middle Name',
+                                'name': 'middleName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': false
+                            },
+                            {
+                                'description': 'Last Name',
+                                'name': 'lastName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            }
+                        ],
+                        'description': 'Alias',
+                        'name': 'alias',
+                        'type': 'object',
+                        'required': false
+                    }
+                ],
+                'description': 'Aliases',
+                'name': 'aliases',
+                'length': 3,
+                'type': 'array',
+                'required': false
+            }
+        ]
+    },
+    'FORM_EVER': {
+        'fields': [
+            {
+                'description': 'First Name',
+                'name': 'firstName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Middle Name',
+                'name': 'middleName',
+                'length': 50,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Last Name',
+                'name': 'lastName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Birth Date',
+                'name': 'birthDate',
+                'length': 11,
+                'type': 'datelong',
+                'required': false
+            },
+            {
+                'description': 'SSN',
+                'name': 'governmentId',
+                'length': 11,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Gender',
+                'name': 'gender',
+                'length': 6,
+                'pickList': [
+                    {
+                        'description': 'not_specified',
+                        'value': ''
+                    },
+                    {
+                        'description': 'Male',
+                        'value': 'male'
+                    },
+                    {
+                        'description': 'Female',
+                        'value': 'female'
+                    }
+                ],
+                'type': 'string',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'description': 'Street Address',
+                        'name': 'street1',
+                        'length': 30,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'Apt. #',
+                        'name': 'street2',
+                        'length': 30,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'City',
+                        'name': 'city',
+                        'length': 50,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'State',
+                        'name': 'state',
+                        'length': 50,
+                        'type': 'state',
+                        'required': false
+                    },
+                    {
+                        'description': 'Zip/Postal Code',
+                        'name': 'postalCode',
+                        'length': 10,
+                        'type': 'string',
+                        'required': false
+                    }
+                ],
+                'description': 'Current Address',
+                'name': 'currentAddress',
+                'type': 'object',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'dataFields': [
+                            {
+                                'description': 'companyName',
+                                'name': 'companyName',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            },
+                            {
+                                'description': 'companyPhone',
+                                'name': 'companyPhone',
+                                'length': 20,
+                                'type': 'string',
+                                'required': false
+                            },
+                            {
+                                'dataFields': [
+                                    {
+                                        'description': 'Street Address',
+                                        'name': 'street1',
+                                        'length': 20,
+                                        'type': 'string',
+                                        'required': false
+                                    },
+                                    {
+                                        'description': 'Apt. #',
+                                        'name': 'street2',
+                                        'length': 20,
+                                        'type': 'string',
+                                        'required': false
+                                    },
+                                    {
+                                        'description': 'City',
+                                        'name': 'city',
+                                        'length': 50,
+                                        'type': 'string',
+                                        'required': true
+                                    },
+                                    {
+                                        'description': 'State',
+                                        'name': 'state',
+                                        'length': 30,
+                                        'type': 'state',
+                                        'required': true
+                                    },
+                                    {
+                                        'description': 'Zip/Postal Code',
+                                        'name': 'postalCode',
+                                        'length': 10,
+                                        'type': 'string',
+                                        'required': false
+                                    },
+                                    {
+                                        'description': 'Country',
+                                        'name': 'country',
+                                        'length': 50,
+                                        'type': 'country',
+                                        'required': true
+                                    }
+                                ],
+                                'description': 'Address',
+                                'name': 'address',
+                                'type': 'object',
+                                'required': false
+                            },
+                            {
+                                'description': 'applicantBeginDate',
+                                'name': 'applicantBeginDate',
+                                'length': 15,
+                                'type': 'datelong',
+                                'required': true
+                            },
+                            {
+                                'description': 'applicantEndDate',
+                                'name': 'applicantEndDate',
+                                'length': 15,
+                                'type': 'datelong',
+                                'required': false
+                            },
+                            {
+                                'description': 'applicantJobPosition',
+                                'name': 'applicantJobPosition',
+                                'length': 50,
+                                'type': 'string',
+                                'required': true
+                            },
+                            {
+                                'description': 'applicantAnnualSalary',
+                                'name': 'applicantAnnualSalary',
+                                'length': 12,
+                                'type': 'string',
+                                'required': false
+                            }
+                        ],
+                        'description': 'employmentDetail',
+                        'name': 'employmentDetail',
+                        'type': 'object',
+                        'required': false
+                    }
+                ],
+                'description': 'employmentHistory',
+                'name': 'employmentHistory',
+                'type': 'array',
+                'required': true
+            }
+        ]
+    },
+    'ES_ECUPIT': {
+        'fields': [
+            {
+                'description': 'First Name',
+                'name': 'firstName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Last Name',
+                'name': 'lastName',
+                'length': 50,
+                'type': 'string',
+                'required': true
+            },
+            {
+                'description': 'Birth Date',
+                'name': 'birthDate',
+                'type': 'datelong',
+                'required': false
+            },
+            {
+                'description': 'SSN',
+                'name': 'governmentId',
+                'length': 9,
+                'type': 'string',
+                'required': false
+            },
+            {
+                'description': 'Email',
+                'name': 'email',
+                'type': 'string',
+                'required': false
+            },
+            {
+                'dataFields': [
+                    {
+                        'description': 'Street Address',
+                        'name': 'street1',
+                        'length': 100,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'Apt. #',
+                        'name': 'street2',
+                        'length': 50,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'City',
+                        'name': 'city',
+                        'length': 50,
+                        'type': 'string',
+                        'required': false
+                    },
+                    {
+                        'description': 'State',
+                        'name': 'state',
+                        'type': 'state',
+                        'required': false
+                    },
+                    {
+                        'description': 'Zip/Postal Code',
+                        'name': 'postalCode',
+                        'length': 10,
+                        'type': 'string',
+                        'required': false
+                    }
+                ],
+                'description': 'Current Address',
+                'name': 'currentAddress',
+                'type': 'object',
+                'required': false
+            }
+        ]
+    }
+};

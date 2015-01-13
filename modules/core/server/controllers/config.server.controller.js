@@ -13,7 +13,7 @@ exports.getConfig = function(req, res, next, varName) {
             req.configVal = constants.baseSchedule;
             return next();
         case 'reports':
-            req.configVal = constants.report_packages;
+            req.configVal = constants.reportPackages;
             return next();
         case 'faqs':
             var filter = req.query;
