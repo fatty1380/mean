@@ -94,7 +94,6 @@
 
         if (sensitive.test(field.name) || sensitive.test(field.description)) {
             field.ngSensitive = true;
-            field.ngType = 'password';
         }
 
         return field;

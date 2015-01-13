@@ -19,7 +19,7 @@ var BackgroundReportSchema = new Schema({
 
     remoteId: {
         type: Number,
-        required: true
+        default: -1
     },
 
     remoteApplicantId: {
@@ -27,9 +27,10 @@ var BackgroundReportSchema = new Schema({
         required: true
     },
 
-    reportSku: {
+    localReportSku: {
         type: String,
-        default: ''
+        default: '',
+        required: true
     },
 
     /** According to 'Report Status Codes' in the eVERIFILE API Document
@@ -47,7 +48,7 @@ var BackgroundReportSchema = new Schema({
      */
     status: {
         type: String,
-        enum: ['SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
+        enum: ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
     },
 
     requiredData: [{
@@ -61,11 +62,17 @@ var BackgroundReportSchema = new Schema({
         raw: Schema.Types.Mixed
     },
 
+    paymentInfo: {
+        type: Schema.Types.Mixed,
+        default: null
+    },
+
     /**
      * This contains an array of the results of each ReportCheckStatus API Call
      */
     updateStatusChecks: [{
-        type: Schema.Types.Mixed
+        type: Schema.Types.Mixed,
+        default: null
     }],
 
     nextUpdateCheck: {

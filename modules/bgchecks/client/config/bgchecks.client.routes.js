@@ -1,30 +1,7 @@
 (function () {
     'use strict';
 
-    function PaymentController(Payments, token) {
-        var vm = this;
 
-        braintree.setup('eyJ2ZXJzaW9uIjoxLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIzNTBhZDhkMjk4ZTU4NDc3OGFiODMyYTgzNDFkYThiMDI3NDUxYzJiOTY3ZWRjZDc4NTAwZmQ4MGMzNTllNGZlfGNyZWF0ZWRfYXQ9MjAxNS0wMS0wNFQwMDozNzo0Ni44MzA3ODU0NDIrMDAwMFx1MDAyNm1lcmNoYW50X2lkPWRjcHNweTJicndkanIzcW5cdTAwMjZwdWJsaWNfa2V5PTl3d3J6cWszdnIzdDRuYzgiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvZGNwc3B5MmJyd2RqcjNxbi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwicGF5bWVudEFwcHMiOltdLCJjbGllbnRBcGlVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvZGNwc3B5MmJyd2RqcjNxbi9jbGllbnRfYXBpIiwiYXNzZXRzVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhdXRoVXJsIjoiaHR0cHM6Ly9hdXRoLnZlbm1vLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhbmFseXRpY3MiOnsidXJsIjoiaHR0cHM6Ly9jbGllbnQtYW5hbHl0aWNzLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb20ifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwidGhyZWVEU2VjdXJlIjp7Imxvb2t1cFVybCI6Imh0dHBzOi8vYXBpLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb206NDQzL21lcmNoYW50cy9kY3BzcHkyYnJ3ZGpyM3FuL3RocmVlX2Rfc2VjdXJlL2xvb2t1cCJ9LCJwYXlwYWxFbmFibGVkIjp0cnVlLCJwYXlwYWwiOnsiZGlzcGxheU5hbWUiOiJBY21lIFdpZGdldHMsIEx0ZC4gKFNhbmRib3gpIiwiY2xpZW50SWQiOm51bGwsInByaXZhY3lVcmwiOiJodHRwOi8vZXhhbXBsZS5jb20vcHAiLCJ1c2VyQWdyZWVtZW50VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3RvcyIsImJhc2VVcmwiOiJodHRwczovL2Fzc2V0cy5icmFpbnRyZWVnYXRld2F5LmNvbSIsImFzc2V0c1VybCI6Imh0dHBzOi8vY2hlY2tvdXQucGF5cGFsLmNvbSIsImRpcmVjdEJhc2VVcmwiOm51bGwsImFsbG93SHR0cCI6dHJ1ZSwiZW52aXJvbm1lbnROb05ldHdvcmsiOnRydWUsImVudmlyb25tZW50Ijoib2ZmbGluZSIsIm1lcmNoYW50QWNjb3VudElkIjoic3RjaDJuZmRmd3N6eXR3NSIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlfQ==', 'dropin', {
-            container: 'dropin'
-        });
-
-        vm.postPayment = function (event) {
-            debugger;
-            var formVal = vm.paymentAuthForm.dropin;
-
-            var payment = new Payments.Nonce(formVal);
-
-            payment.$save(function(response) {
-                debugger;
-                console.log('Holy crap! Response: %o', response);
-            });
-        };
-    }
-
-
-    PaymentController.$inject = ['Payments'];
-    angular.module('payments')
-        .controller('PaymentController', PaymentController);
 
     /** ------------------------------------------ **/
 
@@ -177,17 +154,18 @@
                 url: '/reports/:sku/pay',
                 templateUrl: 'modules/bgchecks/views/paymentTest.client.view.html',
                 parent: 'fixed-opaque',
-                controllerAs: 'vm',
-                bindToController: true,
-                controller: 'PaymentController',
                 resolve: {
+                    report: resolveReportDetails,
                     token: ['Payments', function(payments) {
                         var mytoken = payments.getToken();
-                        debugger;
-                        return mytoken;
+                        return mytoken.$promise;
 
-                    }]
-                }
+                    }],
+                    applicant: resolveApplicantForUser
+                },
+                controller: 'PaymentController',
+                controllerAs: 'vm',
+                bindToController: true
             });
     }
 

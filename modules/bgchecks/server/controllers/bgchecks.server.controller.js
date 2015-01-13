@@ -90,24 +90,6 @@ function availableReportTypes(req, res, next) {
         });
 }
 
-function requestReport(req, res) {
-    var user = req.user;
-
-    var reportOptions = getReportInfo(user);
-
-    req.reportType = reportOptions.reportType;
-    req.remoteApplicantId = reportOptions.remoteApplicantId;
-
-
-}
-
-function getReportInfo(user) {
-    return {
-        remoteApplicantId: 54,
-        reportType: 'OFAC'
-    };
-}
-
 /**
  * Create a Bgcheck
  */
@@ -494,10 +476,13 @@ function GetAllRemoteApplicants(req, res, next) {
 function GetReportApplicant(req, res, next) {
     var query;
 
-    if (req.remoteApplicantId) {
+    if (req.remoteApplicantId || req.query.remoteApplicantId) {
+        console.log('[GetReportApplicant] Searching based on req.remoteId');
+        query = {remoteId: req.remoteApplicantId || req.query.remoteApplicantId};
+    } else if (req.applicantId || req.query.applicantId) {
         console.log('[GetReportApplicant] Searching based on req.applicantId');
-        query = {remoteId: req.remoteApplicantId};
-    } else if (req.userId) {
+        query = {_id: req.applicantId || req.query.applicantId};
+    }else if (req.userId) {
         console.log('[GetReportApplicant] Searching based on req.userId');
         query = {user: mongoose.Types.ObjectId(req.userId)};
     } else if (req.user) {
@@ -587,27 +572,53 @@ function ReadReportApplicant(req, res) {
 
 /** SECTION : Report Manipulation ------------------------------------------------------ **/
 function CreateNewReport(req, res, next) {
+    var bgcheck = req.bgcheck;
 
-    var bgcheck = new Bgcheck(req.body);
-    bgcheck.user = req.user;
+    console.log('[CreateNewReport] START for bgcheck %j', bgcheck);
 
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, bgcheck).then(
-                function (bgReport) {
-                    console.log('[CreateNewReport] Created remote report: %j', bgReport);
 
-                    bgReport.save(function (err) {
-                        if (err) {
-                            return res.status(400).send({
-                                message: errorHandler.getErrorMessage(err)
-                            });
-                        }
+            var reportPackage = _.find(constants.reportPackages, {sku: bgcheck.localReportSku});
 
-                        res.jsonp(bgReport);
-                    });
-                }
-            );
+            console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, reportPackage.skus);
+
+            var remoteSkus = reportPackage.skus;
+
+            var deferrals = [];
+
+            _.forEach(remoteSkus, function(remoteSku) {
+
+                var defer = Q.defer();
+                deferrals.push(defer);
+
+                var remoteApplicant = bgcheck.remoteApplicantId;
+
+                everifile.RunReport(session, remoteSku, remoteApplicant).then(
+                    function (bgReport) {
+                        console.log('[CreateNewReport] Created remote report: %j', bgReport);
+
+                        bgReport.save(function (err) {
+                            if (err) {
+                                defer.reject(errorHandler.getErrorMessage(err));
+                            }
+
+                            defer.resolve(bgReport);
+                        });
+                    }
+                );
+            });
+
+            Q.allSettled(deferrals).then(function(success) {
+                console.log('Finished Report reqeuesting!');
+                debugger;
+                // TODO, more!
+                res.json(success);
+            });
+
+
+
+
         },
         function (error) {
             console.log('[CreateNewReport] failed due to error: %j', error);

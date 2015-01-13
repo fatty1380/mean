@@ -462,14 +462,14 @@ module.exports.fields = {
             'required': false
         },
         {
-            'description': 'driversLicense',
+            'description': 'Driver License ID',
             'name': 'driversLicense',
             'length': 15,
             'type': 'string',
             'required': true
         },
         {
-            'description': 'driversLicenseState',
+            'description': 'Driver License State',
             'name': 'driversLicenseState',
             'type': 'state',
             'required': true
@@ -869,6 +869,19 @@ module.exports.fields = {
             "length": 3,
             "type": "array",
             "required": false
+        },
+        {
+            'description': 'Driver License ID',
+            'name': 'driversLicense',
+            'length': 15,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'Driver License State',
+            'name': 'driversLicenseState',
+            'type': 'state',
+            'required': true
         }
     ],
     'OUTSET_ENTERPRISE': [
@@ -1136,6 +1149,19 @@ module.exports.fields = {
             "length": 3,
             "type": "array",
             "required": false
+        },
+        {
+            'description': 'Driver Licence ID',
+            'name': 'driversLicense',
+            'length': 15,
+            'type': 'string',
+            'required': true
+        },
+        {
+            'description': 'Driver License State',
+            'name': 'driversLicenseState',
+            'type': 'state',
+            'required': true
         }
     ],
     'OUTSET_DRUGS': [
@@ -1432,14 +1458,14 @@ module.exports.individualFields = {
                 'required': false
             },
             {
-                'description': 'driversLicense',
+                'description': 'Driver License ID',
                 'name': 'driversLicense',
                 'length': 15,
                 'type': 'string',
                 'required': true
             },
             {
-                'description': 'driversLicenseState',
+                'description': 'Driver License State',
                 'name': 'driversLicenseState',
                 'type': 'state',
                 'required': true

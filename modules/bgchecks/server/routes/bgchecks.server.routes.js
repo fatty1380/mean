@@ -2,8 +2,10 @@
 
 module.exports = function (app) {
     var acl = require('../policies/bgchecks.server.policy'),
-        users = require('../../../../modules/users/server/controllers/users.server.controller'),
-        bgchecks = require('../controllers/bgchecks.server.controller');
+        bgchecks = require('../controllers/bgchecks.server.controller'),
+        path = require('path'),
+        users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
+        braintree = require(path.resolve('./modules/payments/server/controllers/braintree.server.controller'));
 
 
     // Report Type centric routes
@@ -17,14 +19,21 @@ module.exports = function (app) {
      * this will likely be called occasionally.
      */
     app.route('/api/reports/types')
-        .get(bgchecks.availableReportTypes, bgchecks.list.reports)
+        .get(bgchecks.availableReportTypes, bgchecks.list.reports);
+
+    app.route('/api/reports/:remoteSystem/update')
         .post(bgchecks.UpdateReportDefinitionsFromServer, bgchecks.SaveUpdatedReportDefinitions, bgchecks.list.reports);
+
+
     /**
      * This returns a Report Defintion, including all necessary Field Definitions.
      * This will be used by the render-report page.
      */
     app.route('/api/reports/types/:sku')
         .get(acl.isAllowed, bgchecks.read.report);
+
+    app.route('/api/reports/types/:sku/create')
+        .post(acl.isAllowed, bgchecks.applicant.get, braintree.postNonce, bgchecks.report.create);
 
 
     // Applicant Centered Routes
@@ -89,6 +98,6 @@ module.exports = function (app) {
     /** DEBUG/TEST Routes **/
 
 
-    app.route('/api/createApplicantTest')
-        .post(bgchecks.applicant.create);
+    //app.route('/api/createApplicantTest')
+    //    .post(bgchecks.applicant.create);
 };

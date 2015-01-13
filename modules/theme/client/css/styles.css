@@ -4203,6 +4203,10 @@ form {
 form textarea.form-control {
   height: auto!important;
 }
+form .readonly-validation p.form-control-static {
+  boder-bottom: 1px dotted #666666;
+  padding-bottom: 2px;
+}
 form .form-control {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;

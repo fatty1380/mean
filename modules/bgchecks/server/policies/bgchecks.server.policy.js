@@ -27,6 +27,9 @@ exports.invokeRolesPolicies = function () {
     }, {
         roles : ['admin', 'user'],
         allows: [{
+            resources: '/api/reports/types/:sku/create',
+            permissions: ['post']
+        },{
             resources: '/api/users/:userId/driver/applicant',
             permissions: ['get', 'post']
         },{

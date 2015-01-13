@@ -137,7 +137,7 @@
                 <h3 class="title" ng-show="vm.verify && !vm.pay">Please verify your information</h3>
                 <!-- BEGIN : Verify Applicant -->
                 <form data-name="vm.applicantForm" data-ng-show="vm.verify"
-                      class="form-horizontal" data-ng-submit="vm.execute($event)"
+                      class="form-horizontal readonly-validation" data-ng-submit="vm.execute($event)"
                       novalidate>
                     <fieldset>
                         <div class="form-group" ng-repeat="field in vm.report.fields"
@@ -148,19 +148,7 @@
 
                             <div class="col-sm-10">
                                 <p ng-if="!field.isObject && !field.isArray" type="{{field.ngType}}" class="form-control-static"
-                                   ng-bind="vm.applicant[field.name]"/>
-
-                                <div ng-if="_.isArray(value)" class="form-group container-fluid"
-                                     ng-repeat="(subkey, subvalue) in value" ng-attr-id="key">
-                                    <label class="col-sm-4 control-label">{{fields[subkey].description ||
-                                        subkey}}</label>
-
-                                    <div class="col-sm-8">
-                                        <p class="form-control form-control-static" name="{{subkey}}"
-                                           ng-bind="subvalue"></p>
-
-                                    </div>
-                                </div>
+                                   ng-bind="vm.applicant[field.name] || '&nbsp'"/>
 
                                 <div ng-if="field.isObject" class="form-group container-fluid"
                                      ng-repeat="(subkey, subvalue) in value" ng-attr-id="key">
@@ -169,69 +157,24 @@
 
                                     <div class="col-sm-8">
                                         <p ng-if="!field.isObject && !field.isArray" type="{{field.ngType}}" class="form-control-static"
-                                           ng-bind="subvalue"/>
+                                           ng-bind="subvalue || '&nbsp'"/>
                                     </div>
                                 </div>
 
                                 <div class="well" ng-if="field.isObject">
-                                    <div ng-repeat="dataField in field.dataFields" class="form-group"
-                                         ng-class="{'has-error':vm.reportForm[field.name+'_'+dataField.name].$invalid && (vm.reportForm.$submitted || vm.reportForm[field.name+'_'+dataField.name].$touched)}">
-
+                                    <div ng-repeat="dataField in field.dataFields" class="form-group">
                                         <label class="col-sm-3 control-label"
                                                data-ng-class="{'optional':!dataField.required}">{{dataField.description}}</label>
 
                                         <div class="col-sm-8">
-
                                             <p ng-if="!dataField.isDate" type="{{field.ngType}}" class="form-control-static"
-                                               ng-bind="vm.applicant[field.name][dataField.name]"/>
+                                               ng-bind="vm.applicant[field.name][dataField.name] || '&nbsp'"/>
 
-                                            <p ng-if="!dataField.isDate" type="{{field.ngType}}" class="form-control-static"
-                                               ng-bind="moment(vm.applicant[field.name][dataField.name]).format(dataField.format)"/>
-
-                                            <date-input ng-if="dataField.isDate" format="dataField.format"
-                                                        model="vm.model[dataField.name]" class="form-control"
-                                                        name="{field.name}}_{{dataField.name}}"
-                                                    ></date-input>
-                                            <!--ng-required="dataField.required"-->
-                                        </div>client
-                                    </div>
-                                </div>
-
-                                <div class="" ng-if="field.isArray">
-                                    <div ng-repeat="(i,arrayItem) in vm.model[field.name]">
-                                        <div ng-repeat="df1 in field.dataFields" class="well">
-                                            <div class="col-xs-12" style="vertical-align: baseline;">
-                                                <label class="pull-left">{{df1.description}} #{{i+1}}</label>
-                                                <button type="button" class="btn btn-close pull-right" data-ng-click="vm.model[field.name].splice($index, 1);">&times;</button>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                            <hr/>
-
-                                            <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"
-                                                 class="form-group"
-                                                 ng-class="{'has-error':vm.reportForm[field.name+'_'+i+'_'+df2.name].$invalid && (vm.reportForm.$submitted || vm.reportForm[field.name+'_'+i+'_'+df2.name].$touched)}">
-                                                <label class="col-sm-3 control-label"
-                                                       data-ng-class="{'optional':!df2.required}">{{df2.description}}</label>
-
-                                                <div class="col-sm-8">
-                                                    <input ng-if="!!df2.ngType || df2.type === 'string' || !df2.isDate"
-                                                           type="{{df2.ngType || text}}" class="form-control"
-                                                           name="{{field.name}}_{{i}}_{{df2.name}}"
-                                                           ng-model="vm.model[field.name][i][df2.name]"
-                                                           maxlength="{{df2.length}}" ng-required="df2.required"/>
-
-                                                    <date-input ng-if="df2.isDate" format="df2.format"
-                                                                name="{{field.name}}_{{i}}_{{df2.name}}"
-                                                                model="vm.model[df2.name]" class="form-control"
-                                                            ></date-input>
-                                                    <!--ng-required="df2.required"-->
-                                                </div>
-                                            </div>
+                                            <p ng-if="dataField.isDate" type="{{field.ngType}}" class="form-control-static"
+                                               ng-bind="moment(vm.applicant[field.name][dataField.name]).format('MM/DD/YYYY') || '&nbsp'"/>
+                                            <input type="hidden" value="{{vm.applicant[field.name][dataField.name]}}">
                                         </div>
-
-
                                     </div>
-                                    <button type="button" data-ng-click="vm.model[field.name].push({})">Add</button>
                                 </div>
 
                             </div>
