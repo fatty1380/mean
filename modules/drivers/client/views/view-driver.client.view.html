@@ -7,9 +7,9 @@
     <div class="row ">
         <div class="col-md-8">
             <div>
-                <os-driver-view data-ng-if="vm.driver" model="vm.driver"></os-driver-view>
+                <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
 
-                <div class="well" data-ng-show="!vm.driver || !vm.driver.user">
+                <div class="well" data-ng-show="!vm.driver || !vm.driver.about">
                     <div class="panel panel-info" data-ng-if="!vm.canEdit">
                         <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
                             soon!</p>
