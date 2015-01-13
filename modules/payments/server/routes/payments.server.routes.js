@@ -5,6 +5,4 @@ module.exports = function(app) {
 
     app.route('/api/payments/token').get(braintree.getToken);
 
-    app.route('/api/payments').post(braintree.postNonce);
-
 };

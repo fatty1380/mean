@@ -1,8 +1,37 @@
 {% extends 'layout.server.view.html' %}
 
 {% block content %}
-<h1>Server Error</h1>
-<pre>
-	{{error}}
-</pre>
+<section class="content-section" data-ng-controller="PasswordController">
+    <h3 class="title container text-center">Server Error</h3>
+
+    <div class="content-container container text-center">
+        <div class="content-container-inner">
+            <div class="about">
+                <p class="text-center">We're Sorry, but something went wrong. Please try again later</p>
+
+                <div class="container-fluid row">
+                    <div>
+
+                        <div class="col-xs-12">
+                            <div data-ng-show="success" class="text-center text-success">
+                                <button class="btn btn-primary" ui-sref="home">Return Home</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script type="application/javascript">
+    (function () {
+        setTimeout(function () {
+            this.window.location = '/'
+        }, 10000);
+    })();
+</script>
+
 {% endblock %}

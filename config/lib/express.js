@@ -87,7 +87,10 @@ module.exports.initMiddleware = function (app) {
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
 
-        try {
+        var exist = fs.existsSync(config.logs.access);
+        var perm = fs.statSync(config.logs.access, 2);
+        if (exist && perm)
+        {
             // Enable logger (morgan) write to access.log file.
             var accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
                 flags: 'a'
@@ -95,8 +98,6 @@ module.exports.initMiddleware = function (app) {
             app.use(morgan('combined', {
                 stream: accessLogStream
             }));
-        } catch (err) {
-            console.error(chalk.red('Unable to init morgan logger', err))
         }
     }
 

@@ -1,21 +1,65 @@
-
-
-
 <section class="content-section">
     <h3 class="title container text-center">Enter Payment Information</h3>
 
     <div class="content-container container text-center">
         <div class="content-container-inner">
             <div class="about">
-                <p class="text-center">Please enter your payment information below</p>
-
                 <div class="container-fluid row">
-                    <div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-6">
 
-                        <form name="vm.paymentAuthForm" ng-submit="vm.postPayment($event)">
-                            <div id="dropin" name="dropin"></div>
-                            <button type="submit" class="btn btn-cta btn-cta-payment" value="Pay $10"> </button>
+                    <div class="col-xs-12 col-md-offset-2 col-md-8">
+                        <h4>Order Details</h4>
+
+                        <div class="row">
+                            <div class="col-sm-10">{{vm.report.description}}</div>
+                            <div class="col-sm-2">{{vm.getPriceString(vm.report.price)}}</div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+
+
+                <div class="container-fluid row" ng-hide="vm.success">
+                    <div class="col-xs-12 col-md-offset-2 col-md-8">
+                        <h4>Payment Information
+                            <small>Please enter your credit card, or use PayPal</small>
+                        </h4>
+
+                        <br/>
+
+                        <form id="paymentAuthForm" name="vm.paymentAuthForm" method="POST" action="/api/payments/create/">
+                            <div id="dropin"></div>
+                            <br/>
+                            <hr/>
+                            <button type="submit" class="btn btn-cta btn-cta-primary center-block"
+                                    ng-class="{'disabled': vm.paymentAuthForm.$submitted}">Purchase and Order Reports
+                            </button>
                         </form>
+                    </div>
+                </div>
+
+
+                <div class="container-fluid row" ng-show="vm.success">
+
+                    <div class="col-xs-12 col-md-offset-2 col-md-8">
+                        <h4>Order Complete!</h4>
+
+                        <p>{{vm.success}}</p>
+
+                        <div class="row">
+                            <div class="col sm-offset-1 col-sm-6">Report Status</div>
+                            <div class="col-sm-4">{{vm.report.status}}</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-cta btn-cta-secondary center-block" ui-sref="home">
+                            Return Home...
+                        </button>
+
+
+                        <div class="row">
+                            <div class="col-sm-10">{{vm.report.description}}</div>
+                            <div class="col-sm-2">{{vm.getPriceString(vm.report.price)}}</div>
+                        </div>
+                        <hr>
                     </div>
                 </div>
             </div>

@@ -14,12 +14,21 @@
                         isArray: false
                     }
                 });
-                debugger;
 
                 return rsrc.get();
             },
             Nonce: function() {
-                return $resource('/api/payments');
+                return $resource('/api/reports/types/:sku/create', {
+                    sku: '@sku',
+                    nonce: '@nonce',
+                    price: '@price',
+                    applicantId: '@applicantId',
+                    payment_nonce_id: 'payment_nonce_id'
+                }, {
+                    $save: {
+                        method: 'POST'
+                    }
+                });
             }
         };
 

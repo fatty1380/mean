@@ -237,8 +237,6 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
     var sku = reportType.sku;
     console.log('Getting Report Fields for SKU "%s"', sku);
 
-
-    reportPackages
     if (!!fieldTranslations[sku]) {
         console.log('Translating sku %s into %j', sku, fieldTranslations[sku]);
 
@@ -336,12 +334,12 @@ function sanitizeReportApplicant(model) {
 
     if (model.hasOwnProperty('governmentId')) {
         console.log('[initReportApplicantModel] Clearing govId from response object');
-        model.governmentId = null;
+        model.governmentId = 'XXXXXXXXX';
     }
 
     if (model.hasOwnProperty('driversLicense')) {
         console.log('[initReportApplicantModel] Clearing dlId from response object');
-        model.driversLicense = null;
+        model.driversLicense = 'XXXXXXXX';
     }
 
     return model;
@@ -471,26 +469,34 @@ function SearchForApplicant(cookie, applicant) {
 
 /** SECTION: Report Manipulation ------------------------------------------------------------- */
 
-function RunReport(cookie, bgReport) {
+function RunReport(cookie, remoteSku, remoteApplicantId) {
     console.log('[RunReport] ');
+
+    var reportResponseData = {
+        reportSku: remoteSku,
+        remoteApplicantId: remoteApplicantId
+    };
 
     var deferred = Q.defer();
 
     unirest.post(server.baseUrl + '/rest/report')
         .jar(cookie.jar)
-        .query({
-            reportSku: bgReport.type.sku,
-            remoteApplicantId: bgReport.remoteApplicantId
-        })
+        .query(reportResponseData)
         .end(function (response) {
-            console.log(response.body);
+            console.log(response);
             console.log(response.error);
 
             if (response.error) {
                 return deferred.reject(response.body.reason);
             }
 
-            if (bgReport.remoteApplicantId !== response.body.applicant.id) {
+            if (respose.status === 204) {
+                console.eror('Bastards didn\'t give us any info! - 204:no Content');
+
+                return deferred.resolve(reportResponseData);
+            }
+
+            if (reportResponseData.remoteApplicantId !== response.body.applicant.id) {
                 var message = 'Mismatched Applicants : Response report is for different applicant than request!';
                 console.error('ERROR! %s, request: %d vs response: %d', message, bgReport.remoteApplicantId, response.body.applicant.id);
                 return deferred.reject(new Error(message));
@@ -515,7 +521,7 @@ function RunReport(cookie, bgReport) {
             };
 
 
-            updateReportStatus(bgReport, response.body).then(function (success) {
+            updateReportStatus(reportResponseData, response.body).then(function (success) {
                 deferred.resolve(success);
             });
         }
@@ -617,6 +623,8 @@ function updateReportStatus(bgReport, body) {
     bgReport.updateStatusChecks.push(body.reportCheckStatus);
     bgReport.completed = !!body.completedDate ? moment(body.completedDate) : null;
     bgReport.requiredData = body.reportCheckStatus.requiredData;
+
+    Q.resolve(bgReport);
 }
 /** END: Report Manipulation ------------------------------------------------------------- */
 
