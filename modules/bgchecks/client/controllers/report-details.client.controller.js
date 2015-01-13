@@ -109,7 +109,7 @@
         vm.model = applicant || {};
         vm.config = appConfig;
 
-        vm.verify = !!applicant;
+        vm.verify = false;
         vm.pay = false;
 
         vm.introText = 'To get started, you will need to provide us with some information. We\'ll do our best to fill in what we already know, and won\'t make you fill it out again.';
@@ -173,7 +173,6 @@
             vm.disabled=false;
             vm.ispay = true;
         };
-
     }
 
     function capFilter() {
@@ -187,10 +186,6 @@
 
     angular.module('core')
         .filter('titlecase', capFilter);
-
-    function Ctrl($scope) {
-        $scope.msg = 'hello, world.';
-    }
 
     ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$q'];
     angular.module('bgchecks')

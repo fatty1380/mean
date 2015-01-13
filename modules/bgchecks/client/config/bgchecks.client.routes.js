@@ -100,9 +100,6 @@
 
     function resolveReportDetails(Reports, $stateParams) {
         var sku = $stateParams.sku;
-        if (sku !== 'MVRDOM') {
-            debugger;
-        } // determine multi sku ;)
 
         var getDetails = Reports.get(sku);
 
@@ -147,7 +144,7 @@
             state('orderReports', {
                 url: '/reports/:sku/order',
                 templateUrl: 'modules/bgchecks/views/enter-report-data.client.view.html',
-                parent: 'headline-bg',
+                parent: 'fixed-opaque',
                 controller: 'ReportDetailsController',
                 controllerAs: 'vm',
                 bindToController: true,

@@ -12,6 +12,7 @@ Q               = require('q'),
 moment          = require('moment'),
 path            = require('path'),
 config          = require(path.resolve('./config/config')),
+constants          = require(path.resolve('./modules/core/server/models/outset.constants')),
 _               = require('lodash');
 
 
@@ -50,8 +51,9 @@ exports.GetRawReport = GetRawReport;
  * TODO: Move to config;
  */
 
-var enabledSKUs = ['NBDS', 'PKG_PREMIUM', 'ES_ECUPIT', 'MVRDOM'];
-var fieldTranslations = {'PKG_PREMIUM': ['SSNVAL', 'CRIMESC', 'FORM_EVER']};
+var reportPackages = constants.reportPackages;
+var enabledSKUs = constants.reportPackages.fieldSkus;
+var fieldTranslations = {'PKG_PREMIUM': ['NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER']};
 
 var server = {
     baseUrl: 'https://renovo-api-test.everifile.com/renovo',
@@ -235,6 +237,8 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
     var sku = reportType.sku;
     console.log('Getting Report Fields for SKU "%s"', sku);
 
+
+    reportPackages
     if (!!fieldTranslations[sku]) {
         console.log('Translating sku %s into %j', sku, fieldTranslations[sku]);
 

@@ -21,18 +21,22 @@ exports.invokeRolesPolicies = function () {
     }, {
         roles: ['user', 'guest'],
         allows: [{
-            resources: '/api/reports/applicants/:applicantId',
+            resources: '/api/reports/types',
             permissions: ['get']
-        }, {
-            resources: '/api/reports/applicants',
-            permissions: []
         }]
     }, {
         roles : ['admin', 'user'],
         allows: [{
             resources: '/api/users/:userId/driver/applicant',
             permissions: ['get', 'post']
-        }]
+        },{
+            resources: '/api/reports/applicants/:applicantId',
+            permissions: ['get']
+        },{
+            resources: '/api/reports/types/:sku',
+            permissions: '*'
+        }
+        ]
     }]);
 };
 
@@ -46,6 +50,8 @@ exports.isAllowed = function (req, res, next) {
     if (req.report && req.user && req.report.user.id === req.user.id) {
         return next();
     }
+
+    console.log('[ACLPolicy] Validating %j for %s to path %s', roles, req.method, req.route.path);
 
     // Check for user roles
     acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {

@@ -10,6 +10,8 @@ ReportType      = mongoose.model('ReportType'),
 ReportApplicant = mongoose.model('ReportApplicant'),
 Q               = require('q'),
 everifile       = require('./everifile.server.service'),
+path            = require('path'),
+constants    = require(path.resolve('./modules/core/server/models/outset.constants')),
 _               = require('lodash');
 
 
@@ -63,12 +65,12 @@ exports.read = {
 function availableReportTypes(req, res, next) {
     console.log('[availableReportTypes] request query: %j', req.query);
     var query;
-    if(req.query.returnAll) {
+    if (req.query.returnAll) {
         query = {};
         console.log('[availableReportTypes] loading all report types');
     }
     else {
-        query = {'enabled':true};
+        query = {'enabled': true};
         console.log('[availableReportTypes] loading all enabled report types');
     }
 
@@ -165,6 +167,15 @@ exports.delete = function (req, res) {
 function reportBySKU(req, res, next, id) {
     console.log('Looking up report for SKU: %s', id);
 
+    var rpt = _.find(constants.reportPackages, {'sku' : id});
+
+    if(rpt) {
+        console.log('Found hardcoded report type for SKU %s ... Returning', id);
+
+        req.reportType = rpt;
+        return next();
+    }
+
     ReportType.findOne({'sku': id})
         .exec(function (err, reportType) {
             if (err) {
@@ -177,6 +188,7 @@ function reportBySKU(req, res, next, id) {
             req.reportType = reportType;
             next();
         });
+
 }
 
 /**
@@ -385,7 +397,7 @@ function UpsertRemoteApplicant(req, res, next) {
     var applicant = req.body;
     var message = 'Requesting user does not match applicant user';
 
-    if(!!applicant.user && !req.user._id.equals(applicant.user)){
+    if (!!applicant.user && !req.user._id.equals(applicant.user)) {
         message = message + ' (' + req.user._id + '!=' + applicant.user + ')';
         console.error('[UpsertRemoteApplicant] %s', message);
         res.status(401).send({message: message});
