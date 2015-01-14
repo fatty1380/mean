@@ -20,10 +20,16 @@
             return vals;
         });
 
+        vm.text = {
+            lead: 'Order Reports to Include with your Job Applications&hellip;',
+            sub: '&hellip;and become 8-12x more likely to get the interview.'
+        };
+
         vm.packages = AppConfig.getReports() || {
             base: {
                 title: 'Motor Vehicle Report',
                 price: '5',
+                promo: '1',
                 sku: 'MVRDOM',
                 skus: ['MVRDOM'],
                 enabled: true

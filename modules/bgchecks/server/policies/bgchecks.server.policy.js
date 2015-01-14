@@ -59,13 +59,17 @@ exports.isAllowed = function (req, res, next) {
     // Check for user roles
     acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
         if (err) {
+            console.error('[ACLPolicy] NOPE - ERROR %j', err);
+
             // An authorization error occurred.
             return res.status(500).send('Unexpected authorization error');
         } else {
             if (isAllowed) {
+                console.error('[ACLPolicy] Come On In!');
                 // Access granted! Invoke next middleware
                 return next();
             } else {
+                console.error('[ACLPolicy] No sir, door\'s locked!');
                 return res.status(403).json({
                     message: 'User is not authorized'
                 });

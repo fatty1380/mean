@@ -9,6 +9,19 @@
         $scope.showInfo = false;
         $scope.showSignup = false;
 
+        $scope.lead1 = {
+            header: 'Transportation Focused',
+            text: 'The hiring website designed specifically for the Transporation Industry. Driver and Employer information is consolidated all in one place.'
+        };
+        $scope.lead2 = {
+            header: 'A Place for Drivers',
+            text: 'Manage your reputation and driving career with hosted credentials and government reports on your resume based profile.'
+        };
+        $scope.lead3 = {
+            header: 'An Employer\'s Hiring Hub',
+            text: 'Increase the certainty in your hiring process with higher quality and motivated individuals, with access to driver information as soon as you connect.'
+        };
+
         $scope.gotoSignup = function() {
             $scope.showMain = false;
             $scope.showInfo = false;

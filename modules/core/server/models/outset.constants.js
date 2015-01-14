@@ -1258,7 +1258,7 @@ module.exports.reportPackages = {
         enabled: true
     },
     good: {
-        title: 'Good',
+        title: 'Basic',
         name: 'National Background Report and Motor Vehicle Report',
         description: 'National Background Report and Motor Vehicle Report',
         price: '14.50',

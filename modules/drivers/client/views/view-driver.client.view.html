@@ -1,6 +1,6 @@
 <section class="container-fluid">
     <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
-                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix" show-edit="vm.canEdit"
+                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;" show-edit="vm.canEdit"
                     picture-url="vm.user.profileImageURL">
         Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
     </os-page-header>
@@ -17,32 +17,22 @@
 
                 <div class="panel panel-default" data-ng-show="vm.canEdit && (!vm.driver || !vm.driver.about)">
                     <div class="content-container-inner">
-                        <h3 class="text-center">Time to Create Your Driver Profile</h3>
+                        <h3 class="text-center no-margin">Time to Create Your Driver Profile</h3>
+
                         <div class="about">
 
-                            <div class="container-fluid row">
-                                <p>When creating your profile, remember these things:
+                            <div class="container-fluid row no-pad-sides">
+                                <p><span class="bigger stronger">Remember:</span>
                                 <ul class="fa-ul">
-                                    <li><i class="fa fa-li fa-star"></i>You will be applying to jobs with your Driver Profile.
-                                    </li>
-                                    <li><i class="fa fa-li fa-star"></i>More information in your profile = better jobs:<br>
-                                        include your reports (Background Check etc.), experience and endorsements.
-                                    </li>
-                                    <li><i class="fa fa-li fa-star"></i>Show you’re reliable <br>get reports like Background
-                                        Checks, MVR’s & Drug Tests to be hosted in your Profile.
-                                    </li>
-                                    <li><i class="fa fa-li fa-star"></i>Applicants who have a report are <strong>8-12x more likely to
-                                        be hired!</strong>
-                                    </li>
-                                    <li><i class="fa fa-li fa-star"></i>Jobs will be available on Outset in 1 week, <br> Get your
-                                        Profile
-                                        Ready!
+                                    <li class="pad-bottom" data-ng-repeat="item in vm.text.bulletPoints"><i
+                                            class="fa fa-li fa-check text-success fa-lg pad-bottom"></i><span ng-bind-html="item"></span>
                                     </li>
                                 </ul>
                                 </p>
                             </div>
-\
-                            <button type="button" class="btn btn-cta btn-cta-primary center-block" ui-sref="drivers.create"
+
+                            <button type="button" class="btn btn-cta btn-cta-primary center-block"
+                                    ui-sref="drivers.create"
                                     data-ng-show="vm.canEdit">
                                 Create Your Driver Profile
                             </button>
