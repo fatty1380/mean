@@ -353,7 +353,7 @@ module.exports.fields = {
             'name': 'gender',
             'pickList': [
                 {
-                    'description': 'not_specified',
+                    'description': '',
                     'value': ''
                 },
                 {
@@ -515,7 +515,7 @@ module.exports.fields = {
             'description': 'Gender',
             'name': 'gender',
             'pickList': [{
-                'description': 'not_specified',
+                'description': '',
                 'value': ''
             }, {
                 'description': 'Male',
@@ -655,7 +655,7 @@ module.exports.fields = {
             "required": false,
             "pickList": [
                 {
-                    "description": "not_specified",
+                    "description": "",
                     "value": ""
                 },
                 {
@@ -935,7 +935,7 @@ module.exports.fields = {
             "required": false,
             "pickList": [
                 {
-                    "description": "not_specified",
+                    "description": "",
                     "value": ""
                 },
                 {
@@ -1349,7 +1349,7 @@ module.exports.individualFields = {
                 'name': 'gender',
                 'pickList': [
                     {
-                        'description': 'not_specified',
+                        'description': '',
                         'value': ''
                     },
                     {
@@ -1520,7 +1520,7 @@ module.exports.individualFields = {
                 'name': 'gender',
                 'pickList': [
                     {
-                        'description': 'not_specified',
+                        'description': '',
                         'value': ''
                     },
                     {
@@ -1678,7 +1678,7 @@ module.exports.individualFields = {
                 'name': 'gender',
                 'pickList': [
                     {
-                        'description': 'not_specified',
+                        'description': '',
                         'value': ''
                     },
                     {
@@ -1836,7 +1836,7 @@ module.exports.individualFields = {
                 'name': 'gender',
                 'pickList': [
                     {
-                        'description': 'not_specified',
+                        'description': '',
                         'value': ''
                     },
                     {
@@ -1989,7 +1989,7 @@ module.exports.individualFields = {
                 'length': 6,
                 'pickList': [
                     {
-                        'description': 'not_specified',
+                        'description': '',
                         'value': ''
                     },
                     {

@@ -25,6 +25,7 @@ exports.getConfig = function(req, res, next, varName) {
             req.configVal = {debug: false};
             return next();
         default:
+            req.configVal = {varName: null};
             next();
     }
 };
