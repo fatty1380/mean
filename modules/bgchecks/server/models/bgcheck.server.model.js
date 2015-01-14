@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+Schema       = mongoose.Schema;
 
 /**
  * BackgroundReport Schema
@@ -33,6 +33,12 @@ var BackgroundReportSchema = new Schema({
         required: true
     },
 
+    remoteReportSkus: {
+        type: String,
+        default: '',
+        required: false
+    },
+
     /** According to 'Report Status Codes' in the eVERIFILE API Document
      * Submitted - has been received by the reporting engine and being processed
      * Invoked - 3rd party vendor has been called and accepted the request
@@ -46,14 +52,22 @@ var BackgroundReportSchema = new Schema({
      * Completed - data vendor indicated that the report is finished
      * Rejected - data for applicant info did not pass validation against report field schema (i.e. missing required fields)
      */
-    status: {
-        type: String,
-        enum: ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
-    },
-
-    requiredData: [{
-        type: String
+    /**
+     * This contains an array of the results of each ReportCheckStatus API Call
+     */
+    statuses: [{
+        sku: String,
+        value: {
+            type: String,
+            enum: ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
+        },
+        requiredData: [{
+            type: String
+        }],
+        completed: Boolean
     }],
+
+
 
     data: {
         isComplete: Boolean,
@@ -66,14 +80,6 @@ var BackgroundReportSchema = new Schema({
         type: Schema.Types.Mixed,
         default: null
     },
-
-    /**
-     * This contains an array of the results of each ReportCheckStatus API Call
-     */
-    updateStatusChecks: [{
-        type: Schema.Types.Mixed,
-        default: null
-    }],
 
     nextUpdateCheck: {
         type: Date,
@@ -96,9 +102,9 @@ var BackgroundReportSchema = new Schema({
     }
 });
 
-BackgroundReportSchema.pre('save', function(next){
-  this.modified = Date.now;
-  next();
+BackgroundReportSchema.pre('save', function (next) {
+    this.modified = Date.now();
+    next();
 });
 
 mongoose.model('BackgroundReport', BackgroundReportSchema);

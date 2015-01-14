@@ -479,12 +479,12 @@ function SearchForApplicant(cookie, applicant) {
 /** SECTION: Report Manipulation ------------------------------------------------------------- */
 
 function RunReport(cookie, remoteSku, remoteApplicantId) {
-    console.log('[RunReport] ');
 
     var reportResponseData = {
         reportSku: remoteSku,
         applicantId: remoteApplicantId
     };
+    console.log('[RunReport] Executing with parameters: %j', reportResponseData);
 
     var deferred = Q.defer();
 
@@ -492,8 +492,8 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
         .jar(cookie.jar)
         .query(reportResponseData)
         .end(function (response) {
-            console.log(response);
-            console.log(response.error);
+            console.log('[RunReport] Response Body: %j', response.body);
+            console.log('[RunReport] Response Error: %j', response.error);
 
             if (response.error) {
                 return deferred.reject(response.body.reason);
@@ -505,7 +505,10 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
                 return deferred.resolve(reportResponseData);
             }
 
-            if (parseInt(reportResponseData.remoteApplicantId) !== parseInt(response.body.applicant.id)) {
+            var resultId = parseInt(reportResponseData.applicantId);
+            var inherantId = parseInt(response.body.applicant.id);
+
+            if (resultId !== inherantId) {
                 var message = 'Mismatched Applicants : Response report is for different applicant than request!';
                 console.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
                 return deferred.reject(new Error(message));
@@ -529,10 +532,10 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
                 'required': true
             };
 
+            var resolution = updateReportStatus(reportResponseData, response.body);
+            console.log('[RunReport] Resolving with data: %j', resolution);
 
-            updateReportStatus(reportResponseData, response.body).then(function (success) {
-                deferred.resolve(success);
-            });
+            deferred.resolve(resolution);
         }
     );
 
@@ -622,18 +625,18 @@ function GetRawReport(cookie, bgReport) {
 
 /** Report Manipulation : Private Methods ------------------------------------------------------------- */
 
-function updateReportStatus(bgReport, body) {
-    if (!bgReport.remoteId) {
-        bgReport.remoteId = body.id;
-        bgReport.reportSku = body.report.sku;
+function updateReportStatus(reportStatusResponse, body) {
+    if (!reportStatusResponse.remoteId) {
+        reportStatusResponse.remoteId = body.id;
+        reportStatusResponse.reportSku = body.report.sku;
     }
 
-    bgReport.status = body.reportCheckStatus.status;
-    bgReport.updateStatusChecks.push(body.reportCheckStatus);
-    bgReport.completed = !!body.completedDate ? moment(body.completedDate) : null;
-    bgReport.requiredData = body.reportCheckStatus.requiredData;
+    reportStatusResponse.status = body.reportCheckStatus.status;
+    reportStatusResponse.timestamp = body.reportCheckStatus.timestamp;
+    reportStatusResponse.completed = !!body.completedDate ? moment(body.completedDate) : null;
+    reportStatusResponse.requiredData = body.reportCheckStatus.requiredData;
 
-    Q.resolve(bgReport);
+    return reportStatusResponse;
 }
 /** END: Report Manipulation ------------------------------------------------------------- */
 

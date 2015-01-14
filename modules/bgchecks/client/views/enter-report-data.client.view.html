@@ -61,7 +61,7 @@
 
                                 <!-- Countries -->
                                 <!-- TODO: typeahead="country.id as country.name for country in vm.countries | filter:$viewValue | limitTo:8" -->
-                                <input ng-if="field.type==='contry'" type="text" ng-model="vm.model[field.name]"
+                                <input ng-if="field.isCountry'" type="text" ng-model="vm.model[field.name]"
                                        class="form-control" ng-required="field.required"
                                        ng-maxlength="field.length">
 
@@ -79,10 +79,10 @@
                                             <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"
                                                  class="form-group"
                                                  ng-class="{'has-error':vm.reportForm[field.name+'_'+i+'_'+df2.name].$invalid && (vm.reportForm.$submitted || vm.reportForm[field.name+'_'+i+'_'+df2.name].$touched)}">
-                                                <label class="col-sm-3 control-label"
-                                                       data-ng-class="{'optional':!df2.required}">{{df2.description}}</label>
+                                                <label class="col-md-4 control-label"
+                                                       data-ng-class="{'optional':!df2.required}">{{df2.description | titlecase}}</label>
 
-                                                <div class="col-sm-8">
+                                                <div class="col-md-8">
                                                     <input ng-if="!!df2.ngType || df2.type === 'string' || !df2.isDate"
                                                            type="{{df2.ngType || text}}" class="form-control"
                                                            name="{{field.name}}_{{i}}_{{df2.name}}"
@@ -108,8 +108,8 @@
                                     <div ng-repeat="dataField in field.dataFields" class="form-group"
                                          ng-class="{'has-error':vm.reportForm[field.name+'_'+dataField.name].$invalid && (vm.reportForm.$submitted || vm.reportForm[field.name+'_'+dataField.name].$touched)}">
 
-                                        <label class="col-sm-3 control-label"
-                                               data-ng-class="{'optional':!dataField.required}">{{dataField.description}}</label>
+                                        <label class="col-sm-4 control-label"
+                                               data-ng-class="{'optional':!dataField.required}">{{dataField.description | titlecase}}</label>
 
                                         <div class="col-sm-8">
                                             <input ng-if="!dataField.isDate && !dataField.isState"

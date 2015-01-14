@@ -54,7 +54,14 @@
 
         vm.hello = 'HELLO';
 
-        vm.signup = function() {
+        vm.signup = function(event) {
+
+            if(!vm.credentials.terms) {
+                vm.error = 'Please agree to the terms and conditions before signing up';
+                event.preventDefault();
+                return;
+            }
+
 
             $log.debug('assigning email to username');
             vm.credentials.username = vm.credentials.email;

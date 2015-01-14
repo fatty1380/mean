@@ -10,15 +10,15 @@
                         <h4>Order Details</h4>
 
                         <div class="row">
-                            <div class="col-sm-10">{{vm.report.description}}</div>
-                            <div class="col-sm-2">{{vm.getPriceString(vm.price)}}</div>
+                            <div class="col-sm-10">{{::vm.report.description}}</div>
+                            <div class="col-sm-2">{{::vm.getPriceString(vm.price)}}</div>
                         </div>
                         <hr>
                     </div>
                 </div>
 
 
-                <div class="container-fluid row" ng-hide="vm.success">
+                <div class="container-fluid row" ng-hide="vm.success" ng-class="{'disabled':vm.processing}">
                     <div class="col-xs-12 col-md-offset-2 col-md-8">
                         <h4>Payment Information
                             <small>Please enter your credit card, or use PayPal</small>
@@ -31,7 +31,7 @@
                             <br/>
                             <hr/>
                             <button type="submit" class="btn btn-cta btn-cta-primary center-block"
-                                    ng-class="{'disabled': vm.paymentAuthForm.$submitted}">Purchase and Order Reports
+                                    ng-class="{'disabled': vm.paymentAuthForm.$submitted || vm.processing}">Purchase Reports
                             </button>
                         </form>
                     </div>
@@ -41,24 +41,14 @@
                 <div class="container-fluid row" ng-show="vm.success">
 
                     <div class="col-xs-12 col-md-offset-2 col-md-8">
-                        <h4>Order Complete!</h4>
+                        <h4 class="text-center">Order Complete!</h4>
 
                         <p>{{vm.success}}</p>
-
-                        <div class="row">
-                            <div class="col sm-offset-1 col-sm-6">Report Status</div>
-                            <div class="col-sm-4">{{vm.report.status}}</div>
-                        </div>
+                        <br>
 
                         <button type="submit" class="btn btn-cta btn-cta-secondary center-block" ui-sref="home">
                             Return Home...
                         </button>
-
-
-                        <div class="row">
-                            <div class="col-sm-10">{{vm.report.description}}</div>
-                            <div class="col-sm-2">{{vm.getPriceString(vm.report.price)}}</div>
-                        </div>
                         <hr>
                     </div>
                 </div>

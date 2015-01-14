@@ -46,26 +46,47 @@ function initGateway() {
 
 exports.getToken = function (req, res) {
 
-    initGateway();
+    if (!gateway) {
+        initGateway();
+        debugger;
+    }
 
     if (gateway) {
-        gateway.clientToken.generate({
-            //customerId: req.user._id
-        }, function (err, response) {
-            if (err) {
-                console.log('Error getting token: %j', err);
-                return res.status(500).send(err);
-            }
-            console.log('got response %j', response);
-            //var clientToken = response.clientToken;
 
-            res.json(response);
-        });
+        var generator = !!req.braintreeCustomer ? {customerId: req.braintreeCustomer.id} : {};
+
+        gateway.clientToken.generate(generator,
+            function (err, response) {
+                if (err) {
+                    console.log('Error getting token: %j', err);
+                    return res.status(500).send(err);
+                }
+
+                console.log('got response %j', response);
+
+                res.json(response);
+            });
     } else {
         res.status(500).send({
             message: 'Unable to initialize Braintree Payment Gateway'
         });
     }
+};
+
+exports.findCustomer = function (req, res, next) {
+    if (!gateway) {
+        initGateway();
+        debugger;
+    }
+
+    gateway.customer.find(req.user.id, function (err, customer) {
+        if (err) {
+            console.log('[Braintree] Find Customer failed with error: %j', err);
+        }
+
+        req.braintreeCustomer = customer;
+        next();
+    });
 };
 
 exports.postNonce = function (req, res, next) {
@@ -118,14 +139,6 @@ exports.postNonce = function (req, res, next) {
         var saleInformation = {
             amount: price,
             paymentMethodNonce: nonce,
-            //orderId: 'todo',
-            customer: {
-                id: req.user.id,
-                firstName: req.user.firstName,
-                lastName: req.user.lastName,
-                phone: req.user.phone,
-                email: req.user.email
-            },
             options: {
                 storeInVaultOnSuccess: true,
                 submitForSettlement: true
@@ -134,6 +147,21 @@ exports.postNonce = function (req, res, next) {
             //    sku: reportType
             //}
         };
+
+        if (req.braintreeCustomer) {
+            console.log('[postNonce] Existing customer, no need to send date, it\'s in the nonce!');
+            //saleInformation.customer = {customerId: req.braintreeCustomer.id};
+        }
+        else {
+            console.log('[postNonce] Creating new customer');
+            saleInformation.customer = {
+                id: req.user.id,
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                phone: req.user.phone,
+                email: req.user.email
+            };
+        }
 
         console.log('[postNonce] Ordering %s and processing payment with options: %j', reportType, saleInformation);
 
@@ -148,7 +176,7 @@ exports.postNonce = function (req, res, next) {
 
             console.log('[PostNonce] Payment Result: %j', result);
 
-            if(result.success) {
+            if (result.success) {
                 console.error('OVERRIDING SUCCESS CODE FOR TESTING');
 
                 var bgcheck = new Bgcheck({
