@@ -3,16 +3,16 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-errorHandler = require('../../../core/server/controllers/errors.server.controller'),
-Bgcheck = mongoose.model('BackgroundReport'),
-ReportType = mongoose.model('ReportType'),
+var mongoose    = require('mongoose'),
+errorHandler    = require('../../../core/server/controllers/errors.server.controller'),
+Bgcheck         = mongoose.model('BackgroundReport'),
+ReportType      = mongoose.model('ReportType'),
 ReportApplicant = mongoose.model('ReportApplicant'),
-Q = require('q'),
-everifile = require('./everifile.server.service'),
-path = require('path'),
-constants = require(path.resolve('./modules/core/server/models/outset.constants')),
-_ = require('lodash');
+Q               = require('q'),
+everifile       = require('./everifile.server.service'),
+path            = require('path'),
+constants       = require(path.resolve('./modules/core/server/models/outset.constants')),
+_               = require('lodash');
 
 
 exports.availableReportTypes = availableReportTypes;
@@ -605,35 +605,51 @@ function CreateNewReport(req, res, next) {
 
             var remoteSkus = reportPackage.skus;
 
-            var deferrals = [];
-
-            _.forEach(remoteSkus, function (remoteSku) {
+            var deferrals = _.map(remoteSkus, function (remoteSku) {
 
                 var defer = Q.defer();
-                deferrals.push(defer);
 
                 var remoteApplicant = bgcheck.remoteApplicantId;
 
                 everifile.RunReport(session, remoteSku, remoteApplicant).then(
-                    function (bgReport) {
-                        console.log('[CreateNewReport] Created remote report: %j', bgReport);
+                    function (remoteReportStatus) {
+                        console.log('[CreateNewReport] Created remote report: %j', remoteReportStatus);
 
-                        bgReport.save(function (err) {
-                            if (err) {
-                                defer.reject(errorHandler.getErrorMessage(err));
-                            }
+                        var status = {
+                            remoteId: remoteReportStatus.remoteId,
+                            sku: remoteReportStatus.reportSku,
+                            value: remoteReportStatus.status.toUpperCase(),
+                            requiredData: remoteReportStatus.requiredData,
+                            completed: remoteReportStatus.completed,
+                            timestamp: remoteReportStatus.timestamp
+                        };
 
-                            defer.resolve(bgReport);
-                        });
+                        defer.resolve(status);
                     }
                 );
+
+                return defer.promise;
             });
 
-            Q.allSettled(deferrals).then(function (success) {
-                console.log('Finished Report reqeuesting!');
-                debugger;
+            Q.allSettled(deferrals).then(function (statusUpdates) {
+                console.log('Finished Report requests!');
+
+                statusUpdates.map(function(statusUpdate) {
+                    bgcheck.statuses.push(statusUpdate.value);
+                });
+
+                bgcheck.statuses = bgcheck.statuses.concat(statusUpdates);
+
+                bgcheck.save(function (err) {
+                    if (err) {
+                        console.log(errorHandler.getErrorMessage(err));
+                        res.status(500).send({message: errorHandler.getErrorMessage(err)});
+                        return;
+                    }
+
+                    res.json(bgcheck);
+                });
                 // TODO, more!
-                res.json(success);
             });
 
 
@@ -652,23 +668,23 @@ module.exports.rerunReport = function ReRunReport(req, res, next) {
         function (session) {
             everifile.RunReport(session, "MVRDOM", 44679).then(
                 function (bgReport) {
-                    console.log('[CreateNewReport] Created remote report: %j', bgReport);
+                    console.log('[rerunReport] Created remote report: %j', bgReport);
 
                     bgReport.save(function (err) {
                         if (err) {
                             return res.status(500).send({message: errorHandler.getErrorMessage(err)});
                         }
 
-                       res.json(bgReport);
+                        res.json(bgReport);
                     });
                 }
             );
         },
         function (error) {
-            console.log('[CreateNewReport] failed due to error: %j', error);
+            console.log('[rerunReport] failed due to error: %j', error);
             next(error);
         });
-}
+};
 
 function CheckApplicantReportStatus(req, res, next) {
     var remoteId = req.applicantId;

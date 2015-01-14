@@ -33,7 +33,7 @@ module.exports = function (app) {
         .get(acl.isAllowed, bgchecks.read.report);
 
     app.route('/api/reports/types/:sku/create')
-        .post(acl.isAllowed, bgchecks.applicant.get, braintree.postNonce, bgchecks.report.create);
+        .post(acl.isAllowed, bgchecks.applicant.get, braintree.findCustomer, braintree.postNonce, bgchecks.report.create);
 
 
     // Applicant Centered Routes
@@ -57,7 +57,7 @@ module.exports = function (app) {
 
 
     app.route('/api/override')
-        .get(bgchecks.rerunReport);;
+        .get(bgchecks.rerunReport);
 
     /**
      *  * path: /api/reports/applicants

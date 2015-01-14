@@ -1,6 +1,7 @@
 <section class="container-fluid">
     <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
-                    sub-title="Welcome, {{vm.user.displayName}}" show-edit="vm.canEdit" picture-url="vm.user.profileImageURL" >
+                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix" show-edit="vm.canEdit"
+                    picture-url="vm.user.profileImageURL">
         Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
     </os-page-header>
 
@@ -9,47 +10,45 @@
             <div>
                 <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
 
-                <div class="well" data-ng-show="!vm.driver || !vm.driver.about">
-                    <div class="panel panel-info" data-ng-if="!vm.canEdit">
-                        <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
-                            soon!</p>
+                <div class="panel panel-info" data-ng-if="!vm.canEdit && (!vm.driver || !vm.driver.about)">
+                    <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
+                        soon!</p>
+                </div>
+
+                <div class="panel panel-default" data-ng-show="vm.canEdit && (!vm.driver || !vm.driver.about)">
+                    <div class="content-container-inner">
+                        <h3 class="text-center">Time to Create Your Driver Profile</h3>
+                        <div class="about">
+
+                            <div class="container-fluid row">
+                                <p>When creating your profile, remember these things:
+                                <ul class="fa-ul">
+                                    <li><i class="fa fa-li fa-star"></i>You will be applying to jobs with your Driver Profile.
+                                    </li>
+                                    <li><i class="fa fa-li fa-star"></i>More information in your profile = better jobs:<br>
+                                        include your reports (Background Check etc.), experience and endorsements.
+                                    </li>
+                                    <li><i class="fa fa-li fa-star"></i>Show you’re reliable <br>get reports like Background
+                                        Checks, MVR’s & Drug Tests to be hosted in your Profile.
+                                    </li>
+                                    <li><i class="fa fa-li fa-star"></i>Applicants who have a report are <strong>8-12x more likely to
+                                        be hired!</strong>
+                                    </li>
+                                    <li><i class="fa fa-li fa-star"></i>Jobs will be available on Outset in 1 week, <br> Get your
+                                        Profile
+                                        Ready!
+                                    </li>
+                                </ul>
+                                </p>
+                            </div>
+\
+                            <button type="button" class="btn btn-cta btn-cta-primary center-block" ui-sref="drivers.create"
+                                    data-ng-show="vm.canEdit">
+                                Create Your Driver Profile
+                            </button>
+
+                        </div>
                     </div>
-
-                    <div class="panel panel-info" data-ng-if="vm.canEdit">
-                        <h4>Hi {{vm.user.firstName}}, Welcome to Outset!<br>
-                            <small>You’re one step closer to your next job and managing your driving career.</small>
-                        </h4>
-
-                        <p>
-                            Here’s a few things you can do to make your job applications competitive:
-                        <ol>
-                            <li>Create a comprehensive driving profile, with a profile picture and past work experience.
-                                <br/><span class="center-block text-info text-center">Remember the more information you provide, the
-                                           better your chances</span>
-                            </li>
-
-                            <li>Show you’re reliable - order reports like Background Checks, MVR’s and Drug Tests to be
-                                hosted in your Profile.
-                                <br/><span class="center-block text-info text-center">Applicants who have reports in their profile
-                                           are 8x more likely to be hired! <br/><small>(Don’t
-                                           worry, you have total control over who sees your information)</small></span>
-                            </li>
-
-                            <li>Apply to the best driving jobs around!</li>
-                        </ol>
-
-                        </p>
-                    </div>
-
-                    <div class="panel panel-success"><strong>Special Note:</strong> Outset will be available to drivers
-                        only for one week, so you can build your profile and get your reports ready. So put your best
-                        foot forward, and we’ll let you know when its time to apply!
-                    </div>
-
-                    <button type="button" class="btn btn-primary center-block" ui-sref="drivers.create"
-                            data-ng-show="vm.canEdit">
-                        Create Your Driver Profile
-                    </button>
                 </div>
             </div>
         </div>
@@ -59,21 +58,23 @@
             <os-bg-check-summary user="vm.user"></os-bg-check-summary>
 
 
-
             <!-- data-ng-if="!!vm.driver.user.addresses && !!vm.driver.user.addresses.length" -->
             <div class="panel">
                 <div class="panel-heading">
                     Location
                     <a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
-                                                      ui-sref="settings.profile">edit location
-                    <i class="fa fa-pencil-square-o"></i></a></div>
+                       ui-sref="settings.profile">edit location
+                        <i class="fa fa-pencil-square-o"></i></a></div>
                 <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
-                <div class="panel-body" ng-show="vm.driver.user.addresses && vm.driver.user.addresses.length" >
-                    <os-address-list ng-if="vm.canEdit" models="vm.driver.user.addresses" can-edit="false" full-width="true"></os-address-list>
-                    <p ng-if="!vm.canEdit" ng-init="vm.addr = vm.driver.user.addresses[0]">{{vm.addr.city && (vm.addr.city + ', ')}}{{vm.addr.state}} {{vm.addr.zipCode}}</p>
+                <div class="panel-body" ng-show="vm.driver.user.addresses && vm.driver.user.addresses.length">
+                    <os-address-list ng-if="vm.canEdit" models="vm.driver.user.addresses" can-edit="false"
+                                     full-width="true"></os-address-list>
+                    <p ng-if="!vm.canEdit" ng-init="vm.addr = vm.driver.user.addresses[0]">{{vm.addr.city &&
+                        (vm.addr.city +
+                        ', ')}}{{vm.addr.state}} {{vm.addr.zipCode}}</p>
                 </div>
                 <div class="panel-body" ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">
-                    <p >No Address on File</p>
+                    <p>No Address on File</p>
                 </div>
             </div>
         </div>
