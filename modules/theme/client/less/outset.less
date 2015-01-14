@@ -130,6 +130,39 @@ a.btn-ghost, .btn-ghost {
   font-weight : bolder !important;
 }
 
+.bigger {
+  font-size: larger;
+}
+
+.no-pad {
+  padding-top: 0!important;
+  padding-left: 0!important;
+  padding-bottom: 0!important;
+  padding-right: 0!important;
+}
+.no-pad-sides {
+  padding-left: 0!important;
+  padding-right: 0!important;
+}
+.no-pad-top {
+  padding-top: 0!important;
+}
+.no-pad-bottom {
+  padding-bottom: 0!important;
+}
+.no-pad-left {
+  padding-left: 0!important;
+}
+.no-pad-right {
+  padding-right: 0!important;
+}
+.no-margin {
+  margin-top: 0!important;
+  margin-left: 0!important;
+  margin-bottom: 0!important;
+  margin-right: 0!important;
+}
+
 .pad-left {
   padding-left : 15px !important;
 }
@@ -411,7 +444,7 @@ img.user-profile-picture {
       bottom: 10px
     }
     > a {
-      opacity  : 0.1;
+      opacity  : 0.5;
       width: 200px;
       bottom: 10px;
       position : absolute;
@@ -509,6 +542,7 @@ img.user-profile-picture {
 
     &.section .intro {
       color : @subtle-white;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
     }
 
     .btn-cta {
@@ -547,6 +581,11 @@ img.user-profile-picture {
       padding : 0 0;
       .container {
         padding : 25px 0;
+      }
+
+      .container.panel {
+        position: relative;
+        top: -40px;
       }
     }
 
@@ -588,8 +627,8 @@ img.user-profile-picture {
     top        : 2em;
 
     img {
-      width     : 80%;
-      max-width : 913px;
+      width     : 65%;
+      max-width : 800px;
     }
   }
 
@@ -630,6 +669,10 @@ img.user-profile-picture {
 
   img {
     vertical-align : middle;
+  }
+
+  .cta-section {
+    background: @outset-blue none!important;
   }
 }
 

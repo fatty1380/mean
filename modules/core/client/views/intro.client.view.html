@@ -12,7 +12,7 @@
             </div>
             <h2 class="title">Transportation Hiring</h2>
 
-            <p class="intro">The best way to find and fill transportation jobs</p>
+            <p class="intro stronger">The best way to find and fill transportation jobs</p>
 
             <p><a class="btn btn-cta btn-cta-primary" signup-modal>Sign Up Today</a></p>
         </div>
@@ -24,29 +24,21 @@
         <!-- ******Leader Section ****** -->
         <div id="subhero" class="section subhero container-fluid">
             <div class="darken">
-                <div class="container">
+                <div class="container panel">
                     <div class="row three-cols">
                         <div class="col-md-4">
-                            <h2 class="section-heading">Transportation Focused</h2>
-
-                            <p class="lead">The hiring website designed specifically for the Transporation Industry.
-                                Driver
-                                and
-                                Employer information is consolidated all in one place.</p>
+                            <h2 class="section-heading">{{lead1.header}}</h2>
+                            <p class="lead" ng-bind-html="lead1.text"></p>
                         </div>
                         <div class="col-md-4">
-                            <h2 class="section-heading">A Place for Drivers</h2>
+                            <h2 class="section-heading">{{lead2.header}}</h2>
 
-                            <p class="lead">Manage your <em>reputation</em> and driving career with hosted credentials
-                                and
-                                government reports on your resume based profile</p>
+                            <p class="lead" ng-bind-html="lead2.text"></p>
                         </div>
                         <div class="col-md-4">
-                            <h2 class="section-heading">An Employer's Hiring Hub</h2>
+                            <h2 class="section-heading">{{lead3.header}}</h2>
 
-                            <p class="lead">Increase the certainty in your hiring process with higher quality and
-                                motivated
-                                individuals, with access to driver information as soon as you connect</p>
+                            <p class="lead" ng-bind-html="lead3.text"></p>
                         </div>
                     </div>
                     <div class="row three-cols">
@@ -95,7 +87,7 @@
                             <p>Pairing a community of qualified drivers, with transparent information and top quality
                                 driving jobs.
                                 Outset is taking the pain out of transportation hiring by allowing drivers to make their
-                                applications more competative by provifing additional upfront information to prospective
+                                applications more competitive by providing additional upfront information to prospective
                                 employers.</p>
                         </div>
                     </div>

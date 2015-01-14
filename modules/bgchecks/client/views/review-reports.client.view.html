@@ -1,10 +1,10 @@
-<section class="pricing section section-on-bg">
+<section class="pricing section section-on-bg no-pad-bottom">
     <div class="container">
 
 
         <div class="price-lead">
             <div class="row">
-                <h3 class="title text-center">Get started with a standalone Motor Vehicle Report</h3>
+                <h3 class="title text-center" ng-bind-html="vm.text.lead"></h3>
 
                 <div class="item horizontal price-1 col-lg-4 col-md-6 col-sm-8 col-lg-offset-4 col-md-offset-3 col-sm-offset-2 col-xs-12 text-center"
                      ui-sref="orderReports({'sku':vm.packages.base.sku})">
@@ -20,7 +20,7 @@
                             </div>
                             <div class="col-md-9 col-xs-8">
                                 <h3 class="lead">{{vm.packages.base.title || 'Motor Vehicle Report'}}<br>
-                                    <span class="small">Show employers your clean driving record!</span></h3>
+                                    <span class="small" style="text-wrap: none;">Show employers your clean driving record!</span></h3>
                             </div>
                         </div>
                         <!--//item-content-->
@@ -30,7 +30,7 @@
                 <!--//item-->
                 <div class="clearfix"></div>
 
-                <h3 class="title secondary text-center">...or add a complete package to really shine!</h3>
+                <h3 class="title secondary text-center" data-ng-bind-html="vm.text.sub"></h3>
             </div>
 
         </div>
@@ -51,8 +51,8 @@
                         </div>
                         <div class="item-content">
                             <ul class="list-unstyled feature-list">
-                                <li><i class="fa fa-check"></i>National Criminal Background Report</li>
-                                <li><i class="fa fa-check"></i>Motor Vehicle Report (MVR)</li>
+                                <li class="text-success"><i class="fa fa-plus text-success"></i><strong>National Criminal Background Check</strong></li>
+                                <li class="text-success"><i class="fa fa-plus text-success"></i><strong>Motor Vehicle Report (MVR)</strong></li>
                             </ul>
 
                         </div>
@@ -74,6 +74,7 @@
                         </div>
                         <div class="item-content">
                             <ul class="list-unstyled feature-list">
+                                <li><i class="fa fa-check"></i>Everything from <em>{{::vm.packages.good.title}}</em></li>
                                 <li class="text-success"><i class="fa fa-plus text-success"></i>
                                     <strong>County Criminal Background Check</strong>
                                 </li>
@@ -83,7 +84,6 @@
                                 <li class="text-success"><i class="fa fa-plus text-success"></i>
                                     <strong>SSN Verification</strong>
                                 </li>
-                                <li><i class="fa fa-check"></i>Everything from <em>Good</em></li>
                             </ul>
                         </div>
                         <!--//item-content-->
@@ -109,9 +109,9 @@
                         </div>
                         <div class="item-content">
                             <ul class="list-unstyled feature-list">
-                                <li class="text-success"><i class="fa fa-plus text-success"></i><strong>Drug
+                                <li><i class="fa fa-check"></i>Everything from <em>{{::vm.packages.better.title}}</em></li>
+                                <li class="text-success"><i class="fa fa-plus text-success"></i><strong>Comprehensive 9-Panel <br>Drug
                                     Test</strong></li>
-                                <li><i class="fa fa-check"></i>Everything from <em>Better</em></li>
                             </ul>
 
                         </div>
@@ -158,7 +158,7 @@
 <section class="container-fluid opaque-bg">
     <section class="faq section has-bg-color">
         <div class="container">
-            <h2 class="title text-center">Frequently Asked Questions</h2>
+            <h2 class="title text-center mgn-bottom">Frequently Asked Questions</h2> <hr>
 
             <accordion class="row">
                 <div class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">

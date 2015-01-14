@@ -6,8 +6,8 @@
         $scope.debugInfo = [];
         $scope.collapsed = true;
 
-        var enabled = false; // AppConfig.get('debug');
-        $log.error('Debug is : %o', enabled);
+        var enabled = !!AppConfig.get('debug');
+
         if (enabled && false) {
 
             var updateInfo = function (event, toState, toParams, fromState, fromParams) {

@@ -3498,6 +3498,37 @@ a.btn-ghost .text,
 .stronger {
   font-weight: bolder !important;
 }
+.bigger {
+  font-size: larger;
+}
+.no-pad {
+  padding-top: 0!important;
+  padding-left: 0!important;
+  padding-bottom: 0!important;
+  padding-right: 0!important;
+}
+.no-pad-sides {
+  padding-left: 0!important;
+  padding-right: 0!important;
+}
+.no-pad-top {
+  padding-top: 0!important;
+}
+.no-pad-bottom {
+  padding-bottom: 0!important;
+}
+.no-pad-left {
+  padding-left: 0!important;
+}
+.no-pad-right {
+  padding-right: 0!important;
+}
+.no-margin {
+  margin-top: 0!important;
+  margin-left: 0!important;
+  margin-bottom: 0!important;
+  margin-right: 0!important;
+}
 .pad-left {
   padding-left: 15px !important;
 }
@@ -3768,7 +3799,7 @@ img.user-profile-picture {
   bottom: 10px;
 }
 .profile-floater > div > a {
-  opacity: 0.1;
+  opacity: 0.5;
   width: 200px;
   bottom: 10px;
   position: absolute;
@@ -3868,6 +3899,7 @@ img.user-profile-picture {
 }
 .landing-page .promo.section .intro {
   color: #f6f6f6;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
 .landing-page .promo .btn-cta {
   font-size: 18px;
@@ -3908,6 +3940,10 @@ img.user-profile-picture {
 .landing-page .sections-wrapper .section.subhero .container {
   padding: 25px 0;
 }
+.landing-page .sections-wrapper .section.subhero .container.panel {
+  position: relative;
+  top: -40px;
+}
 .landing-page .sections-wrapper .section .darken {
   background-color: #f6f6f6 !important;
 }
@@ -3936,8 +3972,8 @@ img.user-profile-picture {
   top: 2em;
 }
 .landing-page .brand-lead img {
-  width: 80%;
-  max-width: 913px;
+  width: 65%;
+  max-width: 800px;
 }
 .landing-page .leader {
   text-align: center;
@@ -3968,6 +4004,9 @@ img.user-profile-picture {
 }
 .landing-page img {
   vertical-align: middle;
+}
+.landing-page .cta-section {
+  background: #0e2d4c none !important;
 }
 i.fa.fa-stack-1x.text-primary {
   top: -4px;

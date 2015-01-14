@@ -13,8 +13,8 @@
                 return;
             }
 
-            $log.debug('[CoreConfig] Leaving state: %s "%s" %o Entering state: %s "%s" %o', fromState.name, fromState.url, fromState, toState.name, toState.url, toState, event);
-            //$log.debug('[CoreConfig] Entering state: %o. %o', toState.name, toState);
+            $log.info('[CoreConfig] Leaving state: %s "%s" %o Entering state: %s "%s" %o', fromState.name, fromState.url, fromState, toState.name, toState.url, toState, event);
+            //$log.info('[CoreConfig] Entering state: %o. %o', toState.name, toState);
 
             redirectString = fromState.name + ' --> ' + toState.name;
 
@@ -31,13 +31,13 @@
                 switch (Auth.user.type) {
                     case 'driver':
                         isRedirectInProgress = true;
-                        $log.debug('[HomeController] Re-Routing to driver\'s profile page');
+                        $log.info('[HomeController] Re-Routing to driver\'s profile page');
                         event.preventDefault();
                         $state.go('drivers.home');
                         return;
                     case 'owner':
                         isRedirectInProgress = true;
-                        $log.debug('[HomeController] Re-Routing to the user\'s company home');
+                        $log.info('[HomeController] Re-Routing to the user\'s company home');
                         event.preventDefault();
                         $state.go('companies.home');
                         return;
@@ -55,7 +55,7 @@
         $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
             isRedirectInProgress = false;
 
-            $log.debug('[CoreConfig] $stateChangeSuccess completed: From state: %s "%s" %o To state: %s "%s" %o', fromState.name, fromState.url, fromState, toState.name, toState.url, toState, event);
+            $log.info('[CoreConfig] $stateChangeSuccess completed: From state: %s "%s" %o To state: %s "%s" %o', fromState.name, fromState.url, fromState, toState.name, toState.url, toState, event);
         } );
 
         $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
