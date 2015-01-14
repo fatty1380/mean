@@ -48,16 +48,31 @@
             $scope.resetUserPassword = function () {
                 $scope.success = $scope.error = null;
 
-                $http.post('/api/auth/reset/' + $stateParams.token, $scope.passwordDetails).success(
+                $http.post('/api/auth/reset/' + $stateParams.token, $scope.passwordDetails)
+                    .success(
                     function (response) {
                         // If successful show success message and clear form
                         $scope.passwordDetails = null;
+                        $scope.success = true;
 
                         // Attach user profile
                         Authentication.user = response;
 
-                        // And redirect to the index page
-                        $state.go('password.reset.success');
+                        function updateMsg(ct) {
+                            ct--;
+
+                            $scope.msg = ' in ' + ct;
+
+                            if (ct > 0) {
+                                return $timeout(function () {
+                                    updateMsg(ct);
+                                }, 1000);
+                            } else {
+                                $state.go('home');
+                            }
+                        }
+
+                        updateMsg(10);
                     }).error(function (response) {
                         console.log('hmmm, that was\'nt suppoased to happen: ', response);
                         $scope.error = response.message;

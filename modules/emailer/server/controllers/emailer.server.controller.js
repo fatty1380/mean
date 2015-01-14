@@ -1,6 +1,10 @@
 'use strict';
 
 exports.sendMessage = sendMessage;
+exports.sendTemplate = sendTemplate;
+exports.sendTemplateBySlug = sendGenericTemplateEmail;
+
+var _ = require('lodash');
 
 var mandrill = require('mandrill-api/mandrill');
 var mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: Move to CONFIG
@@ -8,33 +12,6 @@ var mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: M
 function getMessage(options) {
 
     var message = {
-        'html': options.html,
-        'text': 'Example text content',
-        'subject': options.subject,
-        'from_email': 'info@joinoutset.com',
-        'from_name': 'Outset',
-        'to': [{
-            'email': options.to.email,
-            'name': options.to.name,
-            'type': 'to'
-        }],
-        'headers': {
-            'Reply-To': 'info@joinoutset.com'
-        },
-        'important': false,
-        'track_opens': null,
-        'track_clicks': null,
-        'auto_text': null,
-        'auto_html': null,
-        'inline_css': null,
-        'url_strip_qs': null,
-        'preserve_recipients': null,
-        'view_content_link': null,
-        'bcc_address': null,
-        'tracking_domain': null,
-        'signing_domain': null,
-        'return_path_domain': null,
-        'merge': false,
         'merge_language': 'mailchimp',
         'tags': [
             'password-resets'
@@ -47,11 +24,70 @@ function getMessage(options) {
         }
     };
 
-    return message;
+    return _.extend(message, options);
 }
 
-function sendMessage(mailOptions)
-{
+function sendGenericTemplateEmail(templateName, user) {
+
+    console.log('Sending email template: %s', templateName);
+
+    var mailOptions = {
+        to: [{
+            email: user.email,
+            name: user.displayName
+        }],
+        inline_css: true,
+
+        global_merge_vars: [
+            {
+                name: 'USERNAME',
+                content: user.firstName
+            }
+        ]
+    };
+
+    console.log('With options: %j', mailOptions);
+
+    var e = sendTemplate(templateName, mailOptions);
+
+    if (!e) {
+        return {
+            message: 'An email has been sent to ' + user.email + ' with further instructions.'
+        };
+    }
+
+    else {
+        return e;
+    }
+
+}
+
+function sendTemplate(templateName, mailOptions) {
+
+    var message = getMessage(mailOptions);
+    var async = false;
+    var ipPool = 'Main Pool';
+
+    console.log('Full Message Object: %j', message);
+
+    mandrillClient.messages.sendTemplate({
+        'template_name': templateName,
+        'template_content': {},
+        'message': message,
+        'async': async,
+        'ip_pool': ipPool
+    }, function (result) {
+        console.log('Emailer] Successful Result: %j', result);
+        return;
+    }, function (e) {
+        // Mandrill returns the error as an object with name and message keys
+        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+        return e;
+    });
+}
+
+function sendMessage(mailOptions) {
 
     var message = getMessage(mailOptions);
     var async = false;
@@ -64,15 +100,7 @@ function sendMessage(mailOptions)
         'async': async,
         'ip_pool': ipPool
     }, function (result) {
-        console.log(result);
-        /*
-         [{
-         'email': 'recipient.email@example.com',
-         'status': 'sent',
-         'reject_reason': 'hard-bounce',
-         '_id': 'abc123abc123abc123abc123abc123'
-         }]
-         */
+        console.log('Emailer] Successful Result: %j', result);
         return;
     }, function (e) {
         // Mandrill returns the error as an object with name and message keys

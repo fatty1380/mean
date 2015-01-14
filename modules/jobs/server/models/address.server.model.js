@@ -63,8 +63,6 @@ var AddressSchema = new Schema({
 
 AddressSchema.methods.checkConfig = function() {
     console.log('config enums: ' + constants.usStates);
-
-    console.log('config abbreviations: ' + constants.stateAbbreviations());
 };
 
 mongoose.model('Address', AddressSchema);
