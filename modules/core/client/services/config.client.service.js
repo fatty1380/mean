@@ -10,8 +10,7 @@
                 return rsrc.query();
             },
             getCountries: function () {
-                var rsrc = $resource('api/config/countries');
-                return rsrc.query();
+                return this.get('countries');
             },
             getBaseSchedule: function () {
                 var rsrc = $resource('api/config/baseSchedule');
@@ -43,14 +42,15 @@
                     },
                     function (err) {
                         $log.log('[AppCfg] "%s" is not an available', config, err);
-                        return false;
+                        d.reject(err);
                     }
                 );
 
                 d.promise.then(function(f) {
                     return f;
                 }, function(e) {
-                    return e;
+                    $log.warn('Swallowing error: %o', e);
+                    return null;
                 });
             },
             getReports: function () {

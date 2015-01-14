@@ -7,10 +7,21 @@
             <div class="form-data row" ng-hide="vm.verify">
                 <h3 class="text-center">Let's get started!</h3>
 
-                <div class="about" ng-hide="vm.verify">
+                <div class="about text-center" ng-hide="vm.verify">
                     <p ng-bind-html="vm.introText"></p>
 
                     <p ng-bind-html="vm.getStartedText"></p>
+                </div>
+
+                <hr/>
+
+                <div class="well" ng-if="vm.debugMode">
+                    <h5>Current Address</h5>
+                    <pre>{{vm.model['currentAddress']}}</pre>
+                    <h5>Aliases</h5>
+                    <pre>{{vm.model['aliases']}}</pre>
+                    <h5>Current Address</h5>
+                    <pre style="overflow-y: scroll; max-height:200px">{{vm.model | prettyPrint }}</pre>
                 </div>
 
 
@@ -21,14 +32,14 @@
                         <div class="form-group" ng-repeat="field in vm.report.fields"
                              ng-class="{'has-error':(vm.reportForm[field.name].$invalid || vm.reportForm['hidden_'+field.name].$invalid) && (vm.reportForm.$submitted || vm.reportForm[field.name].$touched)}">
                             <!-- field = { description, length, name, required, type } -->
-                            <label class="col-sm-2 control-label"
-                                   data-ng-class="{'optional':!field.required}">{{field.description |
-                                titlecase}} </label>
+                            <label class="col-sm-3 control-label"
+                                   data-ng-class="{'optional':!field.required}">
+                                {{field.description | titlecase}} </label>
 
                             <input type="hidden" ng-model="vm.model[field.name]" name="hidden_{{field.name}}"
                                    ng-required="field.required" ng-maxlength="field.ngMaxLength || field.length"/>
 
-                            <div class="col-sm-10">
+                            <div class="col-sm-9 col-md-8">
                                 <input ng-if="!!field.ngType" type="{{field.ngType}}" class="form-control"
                                        name="{{field.name}}" ng-model="vm.model[field.name]"
                                        maxlength="{{field.ngMaxLength}}" ng-required="field.required"/>
@@ -37,8 +48,14 @@
                                             class="form-control"></date-input>
                                 <!-- ng-required="field.required" -->
 
+
+                                <input ng-if="!!field.ngSensitive" type="text" ng-model="vm.model[field.name]"
+                                       name="{{field.name}}" ng-required="vm.required"
+                                       ui-mask="999-99-9999" class="form-control"/>
+
+
                                 <!-- States -->
-                                <input ng-if="field.type==='state'" type="text" ng-model="vm.model[field.name]"
+                                <input ng-if="field.isState" type="text" ng-model="vm.model[field.name]"
                                        typeahead="state.id as state.name for state in vm.states | filter:$viewValue | limitTo:8"
                                        class="form-control" autocomplete="off">
 
@@ -74,7 +91,8 @@
 
                                                     <date-input ng-if="df2.isDate" format="df2.format"
                                                                 name="{{field.name}}_{{i}}_{{df2.name}}"
-                                                                model="vm.model[df2.name]" class="form-control"
+                                                                model="vm.model[field.name][i][df2.name]"
+                                                                class="form-control"
                                                             ></date-input>
                                                     <!--ng-required="df2.required"-->
                                                 </div>
@@ -101,12 +119,14 @@
                                                    ng-maxlength="dataField.length" ng-required="dataField.required"/>
 
                                             <date-input ng-if="dataField.isDate" format="dataField.format"
-                                                        model="vm.model[dataField.name]" class="form-control"
+                                                        model="vm.model[field.name][dataField.name]"
+                                                        class="form-control"
                                                         name="{field.name}}_{{dataField.name}}"
                                                     ></date-input>
 
                                             <!-- States -->
-                                            <input ng-if="dataField.isState" type="text" ng-model="vm.model[dataField.name]"
+                                            <input ng-if="dataField.isState" type="text"
+                                                   ng-model="vm.model[field.name][dataField.name]"
                                                    typeahead="state.id as state.name for state in vm.states | filter:$viewValue | limitTo:8"
                                                    class="form-control" autocomplete="off">
                                         </div>
@@ -125,6 +145,10 @@
                         </div>
                     </fieldset>
 
+                    <br/>
+                    <hr/>
+                    <br/>
+
                     <div class="press-kit text-center">
                         <p>You will have a chance to review your information on the next page.</p>
                         <button type="submit" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
@@ -141,47 +165,77 @@
 
             <div class="form-data row" ng-show="vm.verify">
 
-                <h3 ng-show="vm.verify && !vm.pay" ng-init="$element.focus()">Please verify your information</h3>
+                <h3 ng-show="vm.verify && !vm.pay" ng-init="$element.focus()" class="text-center">Please verify your
+                    information</h3>
                 <!-- BEGIN : Verify Applicant -->
+                <p class="text-center" ng-if="vm.reviewText" ng-bind-html="vm.reviewText"></p>
+
                 <div data-ng-show="vm.verify" class="form-horizontal readonly-validation">
-                    <fieldset>
+                    <fieldset ng-class="{'text-muted': vm.disabled || vm.ispay}">
                         <div class="form-group" ng-repeat="field in vm.report.fields"
                              data-ng-init="vm.model[field.name]">
-                            <label class="col-sm-2 control-label"
-                                   data-ng-class="{'optional':!field.required}">{{field.description |
-                                titlecase}} </label>
+                            <label class="col-sm-3 control-label"
+                                   data-ng-class="{'optional':!field.required}">
+                                {{field.description | titlecase}}
+                            </label>
 
-                            <div class="col-sm-10">
-                                <p ng-if="!field.isObject && !field.isArray" type="{{field.ngType}}"
-                                   class="form-control-static"
-                                   ng-bind="vm.model[field.name] || '&nbsp'"/>
+                            <div class="col-sm-9 col-md-8" ng-class="{'text-muted': !vm.model[field.name]}">
+                                <p ng-if="!field.isObject && !field.isArray && !field.isDate" type="{{field.ngType}}"
+                                   class="form-control-static">
+                                    {{(vm.model[field.name] | titlecase) || 'not specified'}}
+                                </p>
 
-                                <div ng-if="field.isObject" class="form-group container-fluid"
-                                     ng-repeat="(subkey, subvalue) in value" ng-attr-id="key">
-                                    <label class="col-sm-4 control-label">{{fields[subkey].description ||
-                                        subkey}}</label>
+                                <p ng-if="field.isDate"
+                                   class="form-control-static">
+                                    {{(vm.model[field.name] | isoDatePrint) || '--'}}</p>
 
-                                    <div class="col-sm-8">
-                                        <p ng-if="!field.isObject && !field.isArray" type="{{field.ngType}}"
-                                           class="form-control-static"
-                                           ng-bind="subvalue || '&nbsp'"/>
+                                <div ng-if="field.isArray">
+                                    <div ng-if="!vm.model[field.name] || !vm.model[field.name].length"><p
+                                            class="text-muted">none specified</p></div>
+                                    <div ng-repeat="(i,arrayItem) in vm.model[field.name]">
+                                        <div ng-repeat="df1 in field.dataFields" class="well">
+                                            <div class="col-xs-12" style="vertical-align: baseline;">
+                                                <label class="pull-left">{{df1.description}} #{{i+1}}</label>
+                                            </div>
+                                            <hr/>
+
+                                            <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"
+                                                 class="form-group">
+                                                <label class="col-sm-3 control-label">{{df2.description}}</label>
+
+                                                <div class="col-sm-8"
+                                                     ng-class="{'text-muted': !vm.model[field.name][i][df2.name]}">
+
+                                                    <p ng-if="!df2.isDate" class="form-control-static">
+                                                        {{(vm.model[field.name][i][df2.name] | titlecase) || '--'}}</p>
+
+                                                    <p ng-if="df2.isDate" class="form-control-static">
+                                                        {{(vm.model[field.name][i][df2.name] | isoDatePrint) || '--'}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     </div>
                                 </div>
+
 
                                 <div class="well" ng-if="field.isObject">
                                     <div ng-repeat="dataField in field.dataFields" class="form-group">
                                         <label class="col-sm-3 control-label"
                                                data-ng-class="{'optional':!dataField.required}">{{dataField.description}}</label>
 
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-8"
+                                             ng-class="{'text-muted': !vm.model[field.name][dataField.name]}">
                                             <p ng-if="!dataField.isDate" type="{{field.ngType}}"
-                                               class="form-control-static"
-                                               ng-bind="vm.model[field.name][dataField.name] || '&nbsp'"/>
+                                               class="form-control-static">{{(vm.model[field.name][dataField.name] |
+                                                titlecase) || '--'}}</p>
 
                                             <p ng-if="dataField.isDate" type="{{field.ngType}}"
-                                               class="form-control-static"
-                                               ng-bind="moment(vm.model[field.name][dataField.name]).format('MM/DD/YYYY') || '&nbsp'"/>
-                                            <input type="hidden" value="{{vm.model[field.name][dataField.name]}}">
+                                               class="form-control-static">{{(vm.model[field.name][dataField.name] |
+                                                isoDatePrint) || '--'}}</p>
+                                            <pre ng-if="vm.debugMode">{{vm.model[field.name][dataField.name]}}</pre>
                                         </div>
                                     </div>
                                 </div>
@@ -192,30 +246,34 @@
 
                     </fieldset>
 
+                    <br/>
+                    <hr/>
+                    <br/>
 
                     <div class="press-kit text-center" ng-hide="vm.ispay">
-                        <p>Continuing from here will create a new piece of secure data in our system that we can use to run reports on your request. We will not run any reports without your further action.</p>
+                        <p ng-bind-html="vm.createText"></p>
                         <button type="button" class="btn btn-cta" ng-class="{'disabled':!!vm.disabled}"
-                                ng-click="vm.goBack()"><i class="fa fa-arrow-circle-left"></i>&nbsp;Make
+                                ng-click="vm.goBack()"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;Make
                             Changes
                         </button>
                         <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
-                                ng-click="vm.submitApplicant($event)">Save and Continue ...
+                                ng-click="vm.submitApplicant($event)">Save and Continue&nbsp;&nbsp;<i
+                                class="fa fa-arrow-right"></i>
                         </button>
                         <p ng-show="vm.disabled">Please wait, this may take a moment</p>
+
                         <div data-ng-show="vm.error" class="text-danger">
                             <strong data-ng-bind="vm.error"></strong>
                         </div>
                     </div>
 
                     <div class="press-kit text-center" ng-show="vm.ispay">
-                        <p>{{vm.payExplanation}}</p>
-                        <button type="button" class="btn btn-cta" ng-class="{'disabled':!!vm.disabled}"
-                                ng-click="vm.goBack()"><i class="fa fa-arrow-circle-left"></i>&nbsp;Make
-                            Changes
+                        <p ng-bind-html="vm.payExplanation"></p>
+                        <button type="button" class="btn btn-link text-muted" ng-class="{'disabled':!!vm.disabled}"
+                                ui-sref="home">cancel
                         </button>
                         <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
-                                ui-sref="payments({sku:vm.report.sku})">Continue ...&nbsp;<i
+                                ui-sref="payments({sku:vm.report.sku})">Continue to Payment&nbsp;&nbsp;<i
                                 class="fa fa-arrow-right"></i>
                         </button>
                         <div data-ng-show="vm.error" class="text-danger">

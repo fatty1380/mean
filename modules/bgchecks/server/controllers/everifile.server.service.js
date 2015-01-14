@@ -334,12 +334,12 @@ function sanitizeReportApplicant(model) {
 
     if (model.hasOwnProperty('governmentId')) {
         console.log('[initReportApplicantModel] Clearing govId from response object');
-        model.governmentId = 'XXXXXXXXX';
+        model.governmentId = '';
     }
 
     if (model.hasOwnProperty('driversLicense')) {
         console.log('[initReportApplicantModel] Clearing dlId from response object');
-        model.driversLicense = 'XXXXXXXX';
+        model.driversLicense = '';
     }
 
     return model;
@@ -381,16 +381,19 @@ function UpsertApplicant(cookie, applicantData) {
         trailer = '/' + applicantData.applicantId;
     } else {
         method = 'POST';
+        trailer = '';
     }
 
-    console.log('%s /rest/applicant %j', method, applicantData);
+    var requestBody = applicantData;
+    var endpoint = server.baseUrl + '/rest/applicant' + trailer;
+
+    console.log('%s %s : %j', method, endpoint, requestBody);
 
     debugger; // check applicant data. Should we be using applicant.toObject()? merging with the report field def?
                 // Ensure that response Body contains Gov ID
 
-    var requestBody = applicantData;
 
-    unirest(method, server.baseUrl + '/rest/applicant' + trailer)
+    unirest(method, endpoint)
         .headers({'Content-Type': 'application/json'})
         .send(requestBody)
         .jar(cookie.jar)
@@ -502,7 +505,7 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
                 return deferred.resolve(reportResponseData);
             }
 
-            if (reportResponseData.remoteApplicantId !== response.body.applicant.id) {
+            if (parseInt(reportResponseData.remoteApplicantId) !== parseInt(response.body.applicant.id)) {
                 var message = 'Mismatched Applicants : Response report is for different applicant than request!';
                 console.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
                 return deferred.reject(new Error(message));

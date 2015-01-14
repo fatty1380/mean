@@ -8,7 +8,7 @@
 
         if (!model.hasOwnProperty(field.name)) {
 
-            if(!!source && source.hasOwnProperty(field.name)) {
+            if (!!source && source.hasOwnProperty(field.name)) {
                 model[field.name] = source[field.name];
             } else {
                 switch (field.type) {
@@ -71,15 +71,10 @@
 
                 break;
             case 'state':
-                if (!this.states) {
-                    this.states = this.config.getStates();
-                }
                 field.isState = true;
                 break;
             case 'country':
-                if (!this.countries) {
-                    this.countries = this.config.getCountries();
-                }
+                field.isCountry = true;
                 break;
             case 'object':
                 if (field.dataFields) {
@@ -103,6 +98,7 @@
         var sensitive = /^governmentId|SSN$/i;
 
         if (sensitive.test(field.name) || sensitive.test(field.description)) {
+            field.ngType = null;
             field.ngSensitive = true;
         }
 
@@ -111,6 +107,8 @@
 
     function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $q) {
         var vm = this;
+
+        vm.debugMode = appConfig.get('debug');
 
 
         vm.report = report;
@@ -122,25 +120,40 @@
         vm.verify = false;
         vm.pay = false;
 
-        vm.introText = 'To get started, you will need to provide us with some information. We\'ll do our best to fill in what we already know, and won\'t make you fill it out again.';
-        vm.getStartedText = 'Each report type requires different information. Please fill in the following fields in order to continue';
+        vm.introText = 'To get started, you will need to provide us with some information. We\'ll do our best to store any information that you enter, but we will never store sensitive information such as your SSN or Driver License ID Number';
+        vm.getStartedText = 'Each report type requires different information. Please fill in the following fields in order to continue. All required fields are <b>Marked in Bold</b>, and we will outline any fields that <span class="cta-outline">need your attention</span> in red.';
+        vm.createText = 'Continuing from here will create a new piece of secure data in our system that we can use to run reports on your request. We will not run any reports without your further action. Please note, that this may take a moment to complete.';
         vm.payExplanation = 'Your information is now ready for you to order your report. Please continue to enter your payment information';
 
-        if(!!vm.applicant && !!vm.applicant.remoteId) {
-            console.log('adding remote applicant id [%d] to model', vm.applicant.remoteId);
-            vm.model.applicantId = vm.applicant.remoteId;
-        }
+
+        vm.states = null;
+        vm.countries = null;
+
+        (function activate() {
+            if (!!vm.applicant && !!vm.applicant.remoteId) {
+                console.log('adding remote applicant id [%d] to model', vm.applicant.remoteId);
+                vm.model.applicantId = vm.applicant.remoteId;
+            }
 
 
-        vm.report.fields.map(completeApplicantModel, vm);
-        _.map(vm.report.fields, translateFieldsToNg, vm);
+            vm.report.fields.map(completeApplicantModel, vm);
+            _.map(vm.report.fields, translateFieldsToNg, vm);
+
+
+            if (!vm.states) {
+                vm.states = vm.config.getStates();
+            }
+            if (!vm.countries) {
+                vm.countries = vm.config.getCountries();
+            }
+        })();
 
         /**
          * Handles the initial applicant creation & update
          * After return, either invalidates teh form (error),
          * Or sets the form into "verify" state
          * */
-        vm.saveForm = function(event) {
+        vm.saveForm = function (event) {
 
             if (vm.reportForm.$invalid) {
                 vm.error = 'Please correct all errors above';
@@ -155,7 +168,7 @@
 
         };
 
-        vm.submitApplicant = function(event) {
+        vm.submitApplicant = function (event) {
             vm.disabled = true;
             vm.error = vm.success = null;
 
@@ -180,7 +193,7 @@
                 //                            "remoteSystem": "everifile"
                 //                    }
 
-                if(response.updated) {
+                if (response.updated) {
 
                     console.log('Successfully updated existing applicant: %j', response);
                 }
@@ -191,9 +204,8 @@
                 vm.success = 'Applicant data has been verified on the server!';
 
                 vm.error = null;
-                debugger;
 
-                vm.disabled=false;
+                vm.disabled = false;
                 vm.ispay = true;
 
             }, function (err) {
@@ -208,22 +220,42 @@
             });
         };
 
-        vm.goBack = function() {
-            vm.verify=vm.ispay=false; vm.success = vm.error=null;
+        vm.goBack = function () {
+            vm.verify = vm.ispay = false;
+            vm.success = vm.error = null;
         };
     }
 
     function capFilter() {
         return function (input, all) {
             return (!!input) ? /^[A-Z]+$/.test(input) ? input :
-                input.replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) { return txt.charAt(0) + ' ' + txt.charAt(1); })
-                    .replace(/([^\W_]+[^\s-]*) */g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); })
+                input.replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) {
+                    return txt.charAt(0) + ' ' + txt.charAt(1);
+                })
+                    .replace(/([^\W_]+[^\s-]*) */g, function (txt) {
+                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                    })
                 : '';
         };
     }
 
+    function prettyPrint() {
+        return function (input) {
+            return (!!input) ? JSON.stringify(input, undefined, 2) : '';
+        };
+    }
+
+    function isoDateFilter() {
+        return function (input, parseFmt) {
+            var format = parseFmt || 'YYYYMMDD';
+            return (!!input) ? moment(input,format).format('L') : '';
+        };
+    }
+
     angular.module('core')
-        .filter('titlecase', capFilter);
+        .filter('titlecase', capFilter)
+        .filter('prettyPrint', prettyPrint)
+        .filter('isoDatePrint', isoDateFilter);
 
     ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$q'];
     angular.module('bgchecks')
