@@ -349,15 +349,17 @@ function GetApplicant(cookie, id, noSanitize) {
     console.log('[GetApplicant] Requesting applicant "%d" from everifile server', id);
 
     var deferred = Q.defer();
+    var endpoint = server.baseUrl + '/rest/applicant/' + (id || '');
 
-    unirest.get(server.baseUrl + '/rest/applicant/' + id)
+    unirest.get(endpoint)
         .jar(cookie.jar)
         .end(function (response) {
-            console.log('[GetApplicant] Got response Body for: %j', response.body.firstName + ' ' + response.body.lastName);
-
             if (response.error) {
+                console.error('[%d] Error at endpoint GET `%s`\n\t\tBody: %j',  response.error.status, endpoint, response.body)
                 return deferred.reject(response.body.reason);
             }
+
+            console.log('[GetApplicant] Got response Body for: %j', response.body.firstName + ' ' + response.body.lastName);
 
             var applicantModel = sanitizeReportApplicant(response.body);
 

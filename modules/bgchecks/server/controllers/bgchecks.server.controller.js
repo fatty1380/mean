@@ -178,7 +178,6 @@ function reportBySKU(req, res, next, id) {
  */
 
 function applicantByID(req, res, next, id) {
-    debugger;
     req.applicantId = id;
     ReportApplicant
         .findById(id)
