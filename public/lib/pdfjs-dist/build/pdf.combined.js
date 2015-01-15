@@ -22,8 +22,8 @@ if (typeof PDFJS === 'undefined') {
   (typeof window !== 'undefined' ? window : this).PDFJS = {};
 }
 
-PDFJS.version = '1.0.1076';
-PDFJS.build = '5bf87c6';
+PDFJS.version = '1.0.1086';
+PDFJS.build = '465f52e';
 
 (function pdfjsWrapper() {
   // Use strict in our context only - users might not want it
@@ -1690,6 +1690,9 @@ PDFJS.disableStream = (PDFJS.disableStream === undefined ?
  * Disable pre-fetching of PDF file data. When range requests are enabled PDF.js
  * will automatically keep fetching more data even if it isn't needed to display
  * the current page. This default behavior can be disabled.
+ *
+ * NOTE: It is also necessary to disable streaming, see above,
+ *       in order for disabling of pre-fetching to work correctly.
  * @var {boolean}
  */
 PDFJS.disableAutoFetch = (PDFJS.disableAutoFetch === undefined ?
@@ -20935,7 +20938,7 @@ var SpecialPUASymbols = {
   '63731': 0x23A9, // braceleftbt (0xF8F3)
   '63740': 0x23AB, // bracerighttp (0xF8FC)
   '63741': 0x23AC, // bracerightmid (0xF8FD)
-  '63742': 0x23AD, // bracerightmid (0xF8FE)
+  '63742': 0x23AD, // bracerightbt (0xF8FE)
   '63726': 0x23A1, // bracketlefttp (0xF8EE)
   '63727': 0x23A2, // bracketleftex (0xF8EF)
   '63728': 0x23A3, // bracketleftbt (0xF8F0)
@@ -22875,7 +22878,7 @@ var Font = (function FontClosure() {
       // to be used with the canvas.font.
       var fontName = name.replace(/[,_]/g, '-');
       var isStandardFont = !!stdFontMap[fontName] ||
-        (nonStdFontMap[fontName] && !!stdFontMap[nonStdFontMap[fontName]]);
+        !!(nonStdFontMap[fontName] && stdFontMap[nonStdFontMap[fontName]]);
       fontName = stdFontMap[fontName] || nonStdFontMap[fontName] || fontName;
 
       this.bold = (fontName.search(/bold/gi) !== -1);
@@ -41822,11 +41825,6 @@ var JpxImage = (function JpxImageClosure() {
               context.QCC = [];
               context.COC = [];
               break;
-            case 0xFF55: // Tile-part lengths, main header (TLM)
-              var Ltlm = readUint16(data, position); // Marker segment length
-              // Skip tile length markers
-              position += Ltlm;
-              break;
             case 0xFF5C: // Quantization default (QCD)
               length = readUint16(data, position);
               var qcd = {};
@@ -42016,6 +42014,9 @@ var JpxImage = (function JpxImageClosure() {
               length = tile.dataEnd - position;
               parseTilePackets(context, data, position, length);
               break;
+            case 0xFF55: // Tile-part lengths, main header (TLM)
+            case 0xFF57: // Packet length, main header (PLM)
+            case 0xFF58: // Packet length, tile-part header (PLT)
             case 0xFF64: // Comment (COM)
               length = readUint16(data, position);
               // skipping content
@@ -42356,7 +42357,7 @@ var JpxImage = (function JpxImageClosure() {
     r = 0;
     c = 0;
     p = 0;
-    
+
     this.nextPacket = function JpxImage_nextPacket() {
       // Section B.12.1.3 Resolution-position-component-layer
       for (; r <= maxDecompositionLevelsCount; r++) {
@@ -42440,7 +42441,7 @@ var JpxImage = (function JpxImageClosure() {
     var componentsCount = siz.Csiz;
     var precinctsSizes = getPrecinctSizesInImageScale(tile);
     var l = 0, r = 0, c = 0, px = 0, py = 0;
-    
+
     this.nextPacket = function JpxImage_nextPacket() {
       // Section B.12.1.5 Component-position-resolution-layer
       for (; c < componentsCount; ++c) {

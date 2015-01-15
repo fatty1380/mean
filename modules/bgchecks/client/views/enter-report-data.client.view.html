@@ -48,7 +48,7 @@
                                 <!-- States -->
                                 <select ng-if="field.isState" class="form-control"
                                         ng-options="state.id as state.name for state in vm.states"
-                                        ng-model="vm.model[field.name]" ng-required="field.required" autocomplete="off" >
+                                        ng-model="vm.model[field.name]" ng-required="field.required" autocomplete="off">
                                 </select>
 
                                 <!-- Countries -->
@@ -116,7 +116,7 @@
                                             <select ng-if="dataField.isState" class="form-control"
                                                     ng-options="state.id as state.name for state in vm.states"
                                                     ng-model="vm.model[field.name][dataField.name]"
-                                                    ng-required="dataField.required" autocomplete="off" >
+                                                    ng-required="dataField.required" autocomplete="off">
                                             </select>
 
                                             <p class="form-control-static" ng-if="dataField.isCountry" ng-init="vm.model[field.name][dataField.name] = 'united_states'">United States</p>
