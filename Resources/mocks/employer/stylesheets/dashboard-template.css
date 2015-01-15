@@ -39,16 +39,16 @@ body {
   background: rgba(255, 255, 255, 0);
 }
 .container .center-block {
-  margin: 20px 0px 20px 0px;
+  margin: 20px 0 20px 0;
   width: 780px;
 }
 .container .center-block .span4 .well {
   background: rgba(245, 245, 245, 0.808594);
-  padding: 10px 0px 0px 0px;
+  padding: 10px 0 0 0;
   border: 1px solid #000000;
-  margin: 0px;
+  margin: 0;
   height: 234px;
 }
 .container .row-fluid .span6.span6-1 {
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px 0;
 }

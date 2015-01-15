@@ -1,0 +1,49 @@
+<section name="os-company.directive">
+    <!-- os-company directive : view-company.client.template.html -->
+    <div ng-if="::inline">
+        <div class="row">
+            <div class="col-md-8">
+                <h4 class="list-group-item-heading">{{dm.company.name}}</h4>
+            </div>
+            <div class="col-md-4">
+                <small class="list-group-item-text">
+                    <p class="text-right">Added on<span data-ng-bind="dm.company.created | date:'shortDate'"></span></p>
+                </small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 opaque-bg">
+                <span class="nowrap"
+                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ dm.company.about | limitTo : 100 }}</span>
+            </div>
+            <div class="col-md-4">
+                <label>Location:
+                    <strong>{{dm.company.zipCode}}</strong>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="::!inline">
+        <div class="panel panel-default" ng-if="!!dm.company">
+            <div class="panel-heading"><span class="h4">About Us</span></div>
+            <div class="panel-body">
+                <div data-ng-bind-html="dm.company.about"></div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-if="!dm.company">
+            <div ng-if="dm.createEnabled" class="panel-heading"><span class="h4">Please create your company profile</span></div>
+            <div class="panel-body">
+                <p class="text-muted">Hi {{::dm.user.firstName}},<br/>{{::dm.createText}}</p>
+                <br/>
+                <p class="text-right"><img src="/modules/core/img/brand/logo-blue.png" alt="The Outset Team"/></p>
+                <div ng-if="dm.createEnabled" class="text-center">
+                    <button type="button" class="btn btn-primary btn-lg" ui-sref="companies.create">Get Started!</button>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+    <!-- os-company directive : END -->
+</section>

@@ -1,0 +1,44 @@
+<section name="os-driver.directive" class="panel panel-default">
+    <div class="panel-heading">
+        <h4>About Me<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
+                       ui-sref="drivers.edit({driverId: vm.driver._id })">edit driver profile
+            <i class="fa fa-pencil-square-o"></i>
+        </a></h4>
+    </div>
+
+    <div class="panel-body">
+        <div data-ng-bind-html="vm.driver.about"></div>
+    </div>
+
+    <div class="panel-heading" ng-show="vm.driver.experience.length > 0">
+        <h4>Experience:</h4>
+    </div>
+
+    <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
+        <strong>{{exp.title}}</strong><label class="pull-right" data-ng-bind="vm.getDateRange(exp.time)"></label>
+        <p>{{exp.description | limitTo : 1000}}</p>
+        <hr ng-hide="$last"/>
+
+        <p ng-hide="!!vm.driver.experience.length">None Added</p>
+    </div>
+
+    <div class="panel-heading">License</div>
+    <div class="panel-body">
+
+        <div ng-repeat="license in vm.driver.licenses" class="license">
+
+            <p>
+                <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}<span
+                    ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>
+                Driver License
+                <span class="pull-right">
+                <span ng-repeat="(name, val) in license.endorsements"
+                      class="endorsement label label-success">{{name}}&nbsp;</span></span>
+            </p>
+
+        </div>
+        <p ng-show="!vm.driver.licenses || vm.driver.licenses.length <= 0">No License on File</p>
+    </div>
+
+    <os-view-schedule data-ng-if="false" model="vm.driver.schedule"></os-view-schedule>
+</section>

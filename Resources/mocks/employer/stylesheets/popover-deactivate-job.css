@@ -37,13 +37,13 @@
    background: rgba(245, 245, 245, 0.773438);
    padding: 5px;
    margin: 5px;
-   -moz-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   -webkit-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   -o-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   -moz-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -webkit-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -o-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
  }
  .container-fluid .row-fluid .span12 .well .heading-1.heading-2 {
-   margin: 50px 0px 10px 0px;
+   margin: 50px 0 10px 0;
  }
  .container-fluid .row-fluid .span12 .well form .form-actions {
    background: rgba(245, 245, 245, 0);
@@ -52,5 +52,5 @@
    font-family:"museo-sans";
  }
  .container-fluid .row-fluid .span12 .well form .form-actions .btn-primary {
-   margin: 0px 10px 0px 0px;
+   margin: 0 10px 0 0;
  }

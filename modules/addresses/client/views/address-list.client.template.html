@@ -1,0 +1,22 @@
+<!-- os-address-list : address-list.client.template.html -->
+<section ng-class="{'row' : !vm.fullWidth}">
+    <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}"
+         ng-animate="'animate'">
+        <div ng-class="{'form-group': !vm.fullWidth}">
+            <os-address data-ng-if="!vm.inlineEdit" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>
+            <os-edit-address data-ng-if="vm.inlineEdit" model="vm.addresses[a]" can-remove="vm.canRemove" remove="vm.removeAddress"></os-edit-address>
+        </div>
+    </div>
+
+    <div ng-show="vm.canAdd">
+        <button type="button" class="btn btn-default btn-block" value="add" ng-click="vm.addAddress()">
+            <i class="fa fa-plus"></i>
+            <span ng-if="!vm.addresses.length">add address details ...</span>
+        </button>
+
+    </div>
+
+    <div ng-if="!vm.fullWidth && (!vm.addresses || vm.address.length < 1)" class="text-center">Fill out your profile by
+        adding an address!
+    </div>
+</section>

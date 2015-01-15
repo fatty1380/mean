@@ -1,50 +1,59 @@
 'use strict';
 
+console.log('env.production: LAP: %s', process.env.LOG_ACCESS_PATH);
+console.log('env.production: BTREE: %s', process.env.BRAINTREE_MERCHANT_ID);
+
 module.exports = {
-    db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/outset',
-    assets: {
-        lib: {
-            css: [
-                'public/lib/bootstrap/dist/css/bootstrap.min.css',
-                'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
-            ],
-            js: [
-                'public/lib/angular/angular.min.js',
-                'public/lib/angular-resource/angular-resource.min.js',
-                'public/lib/angular-animate/angular-animate.min.js',
-                'public/lib/angular-ui-router/release/angular-ui-router.min.js',
-                'public/lib/angular-ui-utils/ui-utils.min.js',
-                'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
-            ]
+    db: {
+        uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'ec2-54-148-79-252.us-west-2.compute.amazonaws.com') + '/outset',
+        options: {
+            user: '',
+            pass: ''
+        }
+    },
+    app: {
+        title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs',
+        keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
+    },
+    https: {
+        enabled: true,
+        port: 443,
+        privateKeyPath: '',
+        publicKeyPath: ''
+    },
+    logs: {
+        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
+    },
+    services: {
+        everifile: {
+            baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo.everifile.com/renovo',
+            username: process.env.EVERIFILE_USERNAME || 'api@joinoutset.com',
+            password: process.env.EVERIFILE_PASS || 'fax7^kaY'
         },
-        css: 'public/dist/application.min.css',
-        js: 'public/dist/application.min.js'
+        braintree: {
+            environment: 'production',
+            MerchantId: process.env.BRAINTREE_MERCHANT_ID || '6j7bz2twxmx9rj7t',
+            PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'xqrh68985wmfk4vt',
+            PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '3169dd9c4ea4dfb51e1ef43203620307',
+            CSEKey: process.env.BRAINTREE_CSE_KEY || 'MIIBCgKCAQEAqg9Cl9ZeRFqEEfjOHUrNQmz4b4W4hSPoVy55yG5BMaOVI2K+tpWyERW3QSNZ85hr4OTq8j3ywWdXEKpkjChQP01zsrfM6Iz+wsiLUgUVbjJAx2hCTUMvAJkYGgUVXD6ViO0NG0mMGMWtcL7sz1F0hY3GnRX9TbBAYh4Rvd/uRZwlHCpHWLHmVhwzglbMxQYi9U3XRlKqRv/GVaupveuNQ4zCX32QBrv2FiBp3ICkpgfABAU7kSRV/91g+jDlSa2phJsYVbUJ3A/JcE8Uw2QJlhmd0HwmSeGTAW5VNDO+0lxrnIwE+KyWDX26U9/PhXLMlYaPvQzsxt1BoYK+YmduQwIDAQAB'
+        },
+        google: {
+            analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
+        },
+        s3: {
+            enabled: true,
+            s3Options: {
+                bucket: 'outset-public-resources',
+                accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
+                secretAccessKey: process.env.S3_SECRET_KEY || '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'
+            },
+            folder: 'profiles/'
+        },
+        fs: {
+            writePath: '/tmp/'
+        }
     },
-    facebook: {
-        clientID: process.env.FACEBOOK_ID || 'APP_ID',
-        clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
-        callbackURL: 'http://localhost:3000/auth/facebook/callback'
-    },
-    twitter: {
-        clientID: process.env.TWITTER_KEY || 'CONSUMER_KEY',
-        clientSecret: process.env.TWITTER_SECRET || 'CONSUMER_SECRET',
-        callbackURL: 'http://localhost:3000/auth/twitter/callback'
-    },
-    google: {
-        clientID: process.env.GOOGLE_ID || 'APP_ID',
-        clientSecret: process.env.GOOGLE_SECRET || 'APP_SECRET',
-        callbackURL: 'http://localhost:3000/auth/google/callback'
-    },
-    linkedin: {
-        clientID: process.env.LINKEDIN_ID || 'APP_ID',
-        clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
-        callbackURL: 'http://localhost:3000/auth/linkedin/callback'
-    },
-    github: {
-        clientID: process.env.GITHUB_ID || 'APP_ID',
-        clientSecret: process.env.GITHUB_SECRET || 'APP_SECRET',
-        callbackURL: 'http://localhost:3000/auth/github/callback'
-    },
+    reports: {},
     mailer: {
         from: process.env.MAILER_FROM || 'MAILER_FROM',
         options: {

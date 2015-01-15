@@ -46,7 +46,7 @@ body {
   height: 108px;
   position: absolute;
   top: 878px;
-  left: 0px;
+  left: 0;
 }
 #absolute-wrapper .navbar {
   height: 42px;
@@ -67,7 +67,7 @@ body {
   line-height: 36px;
 }
 #absolute-wrapper .nav.nav-1 {
-  margin: 0px;
+  margin: 0;
 }
 #absolute-wrapper .nav.nav-1 li a {
   font-family:"museo-sans";
@@ -80,7 +80,7 @@ body {
 .navbar.navbar-1 .navbar-inner {
   background: #0e2d4c;
   border: none;
-  border-radius: 0px;
+  border-radius: 0;
   height: 67px;
   padding-left: 20px;
   padding-right: 20px;
@@ -111,7 +111,7 @@ body {
   color: #0e2d4c;
 }
 .container .heading.heading-5 {
-  padding: 80px 0px 0px 0px;
+  padding: 80px 0 0 0;
   text-shadow: 1px 1px 1px #000000;
   font-size: 100px;
   line-height: 64px;
@@ -120,18 +120,18 @@ body {
   opacity: 0.5;
 }
 .container .image.image-2 {
-  -moz-box-shadow: 1px 1px 2px 0px #000000;
-  -webkit-box-shadow: 1px 1px 2px 0px #000000;
-  -o-box-shadow: 1px 1px 2px 0px #000000;
-  box-shadow: 1px 1px 2px 0px #000000;
+  -moz-box-shadow: 1px 1px 2px 0 #000000;
+  -webkit-box-shadow: 1px 1px 2px 0 #000000;
+  -o-box-shadow: 1px 1px 2px 0 #000000;
+  box-shadow: 1px 1px 2px 0 #000000;
 }
 .container .heading-1.heading-2.heading-3.heading-6 {
   text-shadow: 1px 1px 2px #000000;
   font-size: 50px;
-  margin: 15px 0px 10px 0px;
+  margin: 15px 0 10px 0;
 }
 .container .row-fluid.row-fluid-1 {
-  padding: 10px 0px 0px 0px;
+  padding: 10px 0 0 0;
 }
 .container .row-fluid-1 .span6 .btn-success {
   background: #5475b6;
@@ -145,10 +145,10 @@ body {
   margin-top: 80px;
 }
 .container .heading-3.heading-7 {
-  text-shadow: 0px 1px 2px #000000;
+  text-shadow: 0 1px 2px #000000;
 }
 .container .row-fluid.row-fluid-2 {
-  padding: 30px 0px 0px 0px;
+  padding: 30px 0 0 0;
 }
 .container .row-fluid-2 .span4 p {
   font-family:"museo-sans";

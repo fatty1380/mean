@@ -1,0 +1,90 @@
+<ng-form name="vm.licenseForm" ng-submit="vm.submit(this)">
+    <div class="container-fluid license-details">
+        <div class="row profile-row">
+            <div class="col-sm-6">
+
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.type.$invalid}">License Type</label>
+
+                    <div class="controls col-sm-10 col-md-6">
+                        <div class="btn-group">
+                            <label ng-repeat="licenseType in vm.licenseTypes" class="btn btn-cta-secondary btn-sm"
+                                   ng-model="vm.license.type" ng-required="true" name="type"
+                                   btn-radio="licenseType">{{licenseType}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-class="{'disabled':vm.license.type != 'Commercial'}">
+                    <label class="control-label col-sm-6">
+                        Class Rating
+                    </label>
+
+                    <div class="controls col-sm-10 col-md-6 ">
+                        <div class="btn-group">
+                            <label ng-repeat="val in vm.ratings" class="btn btn-cta-secondary btn-sm"
+                                   ng-model="vm.license.rating" name="classRating"
+                                   btn-radio="val">{{val}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.state.$invalid}">State
+                    </label>
+
+                    <div class="controls col-sm-10 col-md-6" syle>
+                        <input type="text" ng-model="vm.license.state" autocomplete="off"
+                               typeahead="state as state.name for state in vm.states | filter:$viewValue | limitTo:8"
+                               name="state" ng-required="true" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.expires.$invalid}">Expiration Date </label>
+
+                    <div class="controls col-sm-10 col-md-6">
+                        <date-input model="vm.license.expires" class="form-control" name="expires" placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.dob.$invalid}">Date of Birth
+                        <br/>
+                        <small>Your birthdate</small>
+                    </label>
+
+                    <div class="controls col-sm-10 col-md-6">
+                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob" placeholder="{{vm.dateFormat}}"></date-input>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+
+
+                <div class="form-group">
+                    <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>
+                        <small>any endorsements on your license?</small>
+                    </label>
+
+                    <div class="controls col-md-8 col-md-offset-2 col-xs-12">
+                        <div class="btn-group btn-group-vertical center-block">
+                            <label ng-repeat="endorsement in vm.endorsements"
+                                   class="btn btn-cta-secondary btn-md container-fluid" ng-model="vm.license.endorsements[endorsement.key]"
+                                   btn-checkbox data-ng-class="{'active':endorsement.value}">
+                                <i data-ng-class="{'fa-circle-o': !endorsement.value, 'fa-check-circle':endorsement.value}"
+                                   class="fa pull-left"></i>
+                                <div class="col-xs-4 text-left">{{endorsement.key}}</div>
+                                <div class="col-xs-7 text-left">
+                                    <small>{{endorsement.description}}
+                                    </small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-form>

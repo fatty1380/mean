@@ -7,11 +7,32 @@ public/lib
 app/tests/coverage/
 .bower-*/
 .idea/
+uploads
+modules/users/client/img/profie/uploads
+config/sslcert/*.pem
 
-/* Outset Additions */
-*.pem
+## Outset Additions ##
 data
 readonly_rsa
 *.pub
 coverage
 *.orig
+Outset-Logo_*.png
+scratchpad.*
+public
+log
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+modules/theme/client/images/team
+modules/theme/client/images/press
+modules/theme/client/images
+*.log
+modules/theme/client/css/base.css
+modules/theme/client/css/mixins.css
+modules/theme/client/css/outset.css
+modules/theme/client/css/responsive.css
+modules/theme/client/css/theme-default.css
+config/sslcerts

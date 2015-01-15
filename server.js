@@ -1,35 +1,47 @@
 'use strict';
+
 /**
  * Module dependencies.
  */
-var init = require('./config/init')(),
-	config = require('./config/config'),
-	mongoose = require('mongoose');
+var config = require('./config/config'),
+chalk      = require('chalk'),
+mongoose   = require('./config/lib/mongoose'),
+express    = require('./config/lib/express');
 
-/**
- * Main application entry file.
- * Please note that the order of loading is important.
- */
+// Initialize mongoose
+mongoose.connect(function (db) {
 
-// Bootstrap db connection
-var db = mongoose.connect(config.db, function(err) {
-	if (err) {
-		console.error('\x1b[31m', 'Could not connect to MongoDB!');
-		console.log(err);
-	}
+    // Init 'rootRequire' function:
+    global.rootRequire = function (name) {
+        console.log('[RootRequire] %s | %s', __dirname, name);
+        var res = require(__dirname + '/' + name);
+        console.log('[RootRequire] got %s for %s', JSON.stringify(res), name.substring(1 + name.lastIndexOf('/')));
+        return res;
+    };
+
+    // Initialize express
+    var app = express.init(db);
+
+    // Start the app by listening on <port>
+    app.http.listen(config.port);
+
+    if(app.https) {
+        app.https.listen(config.https.port);
+    }
+
+    // Logging initialization
+    console.log('--');
+    console.log(chalk.green(config.app.title + ' application started'));
+    console.log(chalk.green('Environment:\t\t\t' + process.env.NODE_ENV));
+    console.log(chalk.green('Port:\t\t\t\t' + config.port));
+    console.log(chalk.green('Database:\t\t\t' + config.db.uri));
+    if (config.https.enabled) {
+        if(!!app.https) {
+            console.log(chalk.green('HTTPs:\t\t\t\ton:%s'), config.https.port);
+        }
+        else {
+            console.log(chalk.red('HTTPs:\t\t\t\terror:%s'), config.https.port);
+        }
+    }
+    console.log('--');
 });
-
-// Init the express application
-var app = require('./config/express')(db);
-
-// Bootstrap passport config
-require('./config/passport')();
-
-// Start the app by listening on <port>
-app.listen(config.port);
-
-// Expose app
-exports = module.exports = app;
-
-// Logging initialization
-console.log('MEAN.JS application started on port ' + config.port);

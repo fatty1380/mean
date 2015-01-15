@@ -27,7 +27,7 @@ body {
 }
 .container-fluid {
   background: #f5f5f5;
-  padding: 0px;
+  padding: 0;
 }
 .container-fluid .well.well-1 {
   background: #0e2d4c;
@@ -35,7 +35,7 @@ body {
 .container-fluid .well.well-2 {
   border: none;
   padding: 10px;
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid .well.well-2 .heading {
   font-family:"museo-sans";
@@ -53,9 +53,9 @@ body {
   width: 256px;
 }
 .container-fluid .well.well-2 .form-horizontal .form-actions {
-  margin: 0px;
+  margin: 0;
   border: none;
-  padding: 0px 20px 0px 0px;
+  padding: 0 20px 0 0;
 }
 .container-fluid .well.well-2 .form-horizontal .form-actions .btn-primary {
   background: #436f8e;

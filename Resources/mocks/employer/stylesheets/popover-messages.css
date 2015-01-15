@@ -47,19 +47,19 @@ body {
   color: rgba(14, 45, 76, 0.476562);
 }
 .container-fluid p.p-5 {
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid p.p-6 {
   font-size: 10px;
 }
 .container-fluid p.p-7 {
-  margin: 5px 0px 10px 0px;
+  margin: 5px 0 10px 0;
 }
 .container-fluid p.p-8 {
   text-align: center;
 }
 .container-fluid p.p-9 {
-  margin: 10px 0px 10px 0px;
+  margin: 10px 0 10px 0;
 }
 .container-fluid .heading {
   font-family:"museo-sans";
@@ -73,11 +73,11 @@ body {
   font-size: 18px;
 }
 .container-fluid .heading.heading-3 {
-  margin: 10px 0px 20px 0px;
+  margin: 10px 0 20px 0;
   font-size: 30px;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12.span12-1 {
-  padding: 0px 0px 20px 0px;
+  padding: 0 0 20px 0;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .well {
   background: rgba(245, 245, 245, 0);
@@ -89,39 +89,39 @@ body {
   border: none;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .well .image {
-  -moz-box-shadow: 0px 1px 2px 0px #000000;
-  -webkit-box-shadow: 0px 1px 2px 0px #000000;
-  -o-box-shadow: 0px 1px 2px 0px #000000;
-  box-shadow: 0px 1px 2px 0px #000000;
+  -moz-box-shadow: 0 1px 2px 0 #000000;
+  -webkit-box-shadow: 0 1px 2px 0 #000000;
+  -o-box-shadow: 0 1px 2px 0 #000000;
+  box-shadow: 0 1px 2px 0 #000000;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .heading-1.heading-2 {
-  margin: 10px 0px 0px 0px;
+  margin: 10px 0 0 0;
   border-bottom: 2px solid #0e2d4c;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .row-fluid .span12 .heading-2 {
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .row-fluid .span6 .icon.icon-map-marker {
   font-size: 22px;
   color: #f4821c;
-  margin: 5px 0px 0px 0px;
+  margin: 5px 0 0 0;
   height: 22px;
   width: 23px;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .row-fluid .span6 .icon.icon-credit-card {
   font-size: 19px;
-  margin: 5px 0px 0px 0px;
+  margin: 5px 0 0 0;
   color: #0e2d4c;
   height: 25px;
   width: 19px;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .row-fluid .span6 .p-3.p-6.p-10 {
-  margin: 5px 0px 10px 5px;
+  margin: 5px 0 10px 5px;
 }
 .container-fluid .row-fluid .span4 .row-fluid .span12-1 .row-fluid .span6 .icon.icon-time {
   font-size: 24px;
   color: #0e2d4c;
-  margin: 5px 0px 0px 0px;
+  margin: 5px 0 0 0;
   height: 24px;
   width: 24px;
 }
@@ -135,11 +135,11 @@ body {
 .container-fluid .row-fluid .span8 .well.well-1 .well {
   padding: 10px 20px 10px 10px;
   border: 2px solid #e3e3e3;
-  -moz-box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
-  -webkit-box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
-  -o-box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
-  box-shadow: 0px 1px 2px 0px #000000, 0px 1px 2px 0px #000000;
-  margin: 0px;
+  -moz-box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
+  -webkit-box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
+  -o-box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
+  box-shadow: 0 1px 2px 0 #000000, 0 1px 2px 0 #000000;
+  margin: 0;
   height: 492px;
 }
 .container-fluid .row-fluid .span8 .well.well-1 .well .p-3.p-8 {
@@ -149,26 +149,26 @@ body {
   margin: 10px;
 }
 .container-fluid .row-fluid .span8 .well.well-1 .well .row-fluid-1 .span1 .image {
-  -moz-box-shadow: 0px 1px 2px 0px #000000;
-  -webkit-box-shadow: 0px 1px 2px 0px #000000;
-  -o-box-shadow: 0px 1px 2px 0px #000000;
-  box-shadow: 0px 1px 2px 0px #000000;
+  -moz-box-shadow: 0 1px 2px 0 #000000;
+  -webkit-box-shadow: 0 1px 2px 0 #000000;
+  -o-box-shadow: 0 1px 2px 0 #000000;
+  box-shadow: 0 1px 2px 0 #000000;
 }
 .container-fluid .row-fluid .span8 .well.well-1 .well .row-fluid .span1 .image.image-1 {
-  -moz-box-shadow: 0px 1px 2px 0px #000000;
-  -webkit-box-shadow: 0px 1px 2px 0px #000000;
-  -o-box-shadow: 0px 1px 2px 0px #000000;
-  box-shadow: 0px 1px 2px 0px #000000;
+  -moz-box-shadow: 0 1px 2px 0 #000000;
+  -webkit-box-shadow: 0 1px 2px 0 #000000;
+  -o-box-shadow: 0 1px 2px 0 #000000;
+  box-shadow: 0 1px 2px 0 #000000;
 }
 .container-fluid .row-fluid .span8 .well.well-1 .row-fluid.row-fluid-2 {
-  margin: 10px 0px 0px 0px;
+  margin: 10px 0 0 0;
 }
 .container-fluid .row-fluid .span8 .well.well-1 .row-fluid-2 .span12 form {
-  margin: 0px;
+  margin: 0;
 }
 .container-fluid .row-fluid .span8 .well.well-1 .row-fluid-2 .span12 form input.textinput {
   font-family:"museo-sans";
-  margin: 0px 0px 5px 0px;
+  margin: 0 0 5px 0;
 }
 .container-fluid .row-fluid .span8 .well.well-1 .row-fluid-2 .span12 .btn-success {
   background: #62c462;
@@ -181,10 +181,10 @@ body {
 }
 .container-fluid .row-fluid .span8 .well.well-2 {
   padding: 3px;
-  -moz-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-  -webkit-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-  -o-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-  box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+  -moz-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+  -webkit-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+  -o-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+  box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
 }
 .container-fluid .row-fluid .span8 .well.well-2 .row-fluid .span3 .image {
   height: 36px;

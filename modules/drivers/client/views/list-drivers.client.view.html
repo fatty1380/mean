@@ -1,0 +1,13 @@
+<section class="container-fluid">
+    <os-page-header title="All Drivers"> </os-page-header>
+    <div class="list-group">
+        <div data-ng-repeat="driver in vm.drivers">
+            <a data-ng-href="drivers/{{driver._id}}" class="list-group-item container-fluid">
+                <os-driver-inline model="driver"></os-driver-inline>
+            </a>
+        </div>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="vm.drivers.length > 0">
+        No Drivers yet, why don't you <a data-ui-sref="drivers.create">create one</a>?
+    </div>
+</section>

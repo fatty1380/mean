@@ -1,0 +1,56 @@
+<section class="container-fluid">
+    <form class="signin form-horizontal" ng-show="vm.initialized">
+        <fieldset>
+            <div class="form-group text-center" ng-hide="vm.uploader.queue.length">
+                <img data-ng-src="{{vm.imageURL}}" alt="{{vm.title}}" class="img-thumbnail user-profile-picture">
+            </div>
+
+            <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">
+                <span class="btn btn-default btn-file">
+                    Select Image <input type="file" nv-file-select uploader="vm.uploader">
+                </span>
+            </div>
+
+            <div class="form-group tvm.newImage text-center" ng-show="vm.uploader.queue.length">
+                <h4>Preview:</h4>
+
+                <div><img ng-src="{{(vm.useCropped || vm.isCropping) ? vm.croppedImage : vm.newImage}}"
+                          class="img-thumbnail user-profile-picture"/></div>
+
+                <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">
+                    <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>
+                    <button class="btn btn-primary" data-ng-click="vm.isCropping=true;">{{ vm.useCropped ? 'Adjust' :
+                        'Crop'}} Image
+                    </button>
+                    <button class="btn btn-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>
+                </div>
+            </div>
+
+            <div class="form-group tvm.newImage" ng-show="vm.isCropping">
+                <hr>
+                <h4>Use the circle to select the best part of the image</h4>
+
+                <div class="text-center form-group" data-ng-show="vm.isCropping">
+                    <button class="btn btn-link" data-ng-click="vm.isCropping = false">Cancel</button>
+                    <button class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>
+                </div>
+
+                <div class="cropArea center-block" class="img-thumbnail user-profile-picture"
+                     style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">
+                    <img-crop image="vm.newImage" result-image="vm.croppedImage"></img-crop>
+                </div>
+            </div>
+
+            <div data-ng-show="vm.success" class="text-center text-success">
+                <strong>Profile Picture Changed Successfully</strong>
+            </div>
+            <div data-ng-show="vm.error" class="text-center text-danger">
+                <strong data-ng-bind="vm.error"></strong>
+            </div>
+        </fieldset>
+        </fieldset>
+    </form>
+    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable to initialize
+        the image uploader. Please try again later.
+    </div>
+</section>

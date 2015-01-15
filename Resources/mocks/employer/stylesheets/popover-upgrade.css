@@ -32,10 +32,10 @@
    padding: 5px;
  }
  .container-fluid .row-fluid .span12 .well.well-2 {
-   -moz-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   -webkit-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   -o-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   -moz-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -webkit-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -o-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
  }
  .container-fluid .row-fluid .span12 .well.well-3 {
    background: rgba(245, 245, 245, 0.769531);
@@ -44,7 +44,7 @@
    border: 1px solid #333333;
  }
  .container-fluid .row-fluid .span12 .well.well-5 {
-   margin: 10px 0px 0px 0px;
+   margin: 10px 0 0 0;
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading {
    font-family:"museo-sans";
@@ -52,7 +52,7 @@
    color: #0e2d4c;
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading.heading-1 {
-   margin: 20px 0px 0px 0px;
+   margin: 20px 0 0 0;
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading.heading-2 {
    font-size: 14px;
@@ -67,8 +67,8 @@
    color: #0e2d4c;
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .row-fluid .span2 .heading-2.heading-4 {
-   margin-top: 0px;
-   margin-bottom: 0px;
+   margin-top: 0;
+   margin-bottom: 0;
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .row-fluid .span2 .well.well-4.well-6 {
    background: rgba(245, 245, 245, 0.777344);
@@ -77,10 +77,10 @@
    background: rgba(245, 245, 245, 0.789062);
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading-3.heading-5 {
-   margin: 30px 0px 10px 0px;
+   margin: 30px 0 10px 0;
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .heading-2.heading-3 {
-   margin: 0px;
+   margin: 0;
  }
  .container-fluid .row-fluid .span12 .well.well-1.well-2.well-5 .pull-center.pull-center-1 {
    font-family:"museo-sans";
@@ -98,5 +98,5 @@
    background-image: -webkit-linear-gradient(270deg, #0088cc 0%, #0044cc 100%);
    background-image: -o-linear-gradient(270deg, #0088cc 0%, #0044cc 100%);
    background-image: linear-gradient(180deg, #0088cc 0%, #0044cc 100%);
-   margin: 0px 5px 0px 0px;
+   margin: 0 5px 0 0;
  }

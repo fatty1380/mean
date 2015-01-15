@@ -1,0 +1,75 @@
+<section class="container-fluid">
+    <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
+                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;" show-edit="vm.canEdit"
+                    picture-url="vm.user.profileImageURL">
+        Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
+    </os-page-header>
+
+    <div class="row ">
+        <div class="col-md-8">
+            <div>
+                <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
+
+                <div class="panel panel-info" data-ng-if="!vm.canEdit && (!vm.driver || !vm.driver.about)">
+                    <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
+                        soon!</p>
+                </div>
+
+                <div class="panel panel-default" data-ng-show="vm.canEdit && (!vm.driver || !vm.driver.about)">
+                    <div class="content-container-inner">
+                        <h3 class="text-center no-margin">Time to Create Your Driver Profile</h3>
+
+                        <div class="about">
+
+                            <div class="container-fluid row no-pad-sides">
+                                <p><span class="bigger stronger">Remember:</span>
+                                <ul class="fa-ul">
+                                    <li class="pad-bottom" data-ng-repeat="item in vm.text.bulletPoints"><i
+                                            class="fa fa-li fa-check text-success fa-lg pad-bottom"></i><span ng-bind-html="item"></span>
+                                    </li>
+                                </ul>
+                                </p>
+                            </div>
+
+                            <button type="button" class="btn btn-cta btn-cta-primary center-block"
+                                    ui-sref="drivers.create"
+                                    data-ng-show="vm.canEdit">
+                                Create Your Driver Profile
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gutter right col-md-4">
+
+            <os-bg-check-summary user="vm.user"></os-bg-check-summary>
+
+
+            <!-- data-ng-if="!!vm.driver.user.addresses && !!vm.driver.user.addresses.length" -->
+            <div class="panel">
+                <div class="panel-heading">
+                    Location
+                    <a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
+                       ui-sref="settings.profile">edit location
+                        <i class="fa fa-pencil-square-o"></i></a></div>
+                <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
+                <div class="panel-body" ng-show="vm.driver.user.addresses && vm.driver.user.addresses.length">
+                    <os-address-list ng-if="vm.canEdit" models="vm.driver.user.addresses" can-edit="false"
+                                     full-width="true"></os-address-list>
+                    <p ng-if="!vm.canEdit" ng-init="vm.addr = vm.driver.user.addresses[0]">{{vm.addr.city &&
+                        (vm.addr.city +
+                        ', ')}}{{vm.addr.state}} {{vm.addr.zipCode}}</p>
+                </div>
+                <div class="panel-body" ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">
+                    <p>No Address on File</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>

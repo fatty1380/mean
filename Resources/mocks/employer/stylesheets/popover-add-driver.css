@@ -41,14 +41,14 @@
    margin: 5px;
  }
  .container-fluid .row-fluid .span12 .well.well-1 .well {
-   -moz-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   -webkit-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   -o-box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
-   box-shadow: 0px 1px 2px 0px #000000, inset 0px 1px 1px 0px rgba(0, 0, 0, 0.046875);
+   -moz-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -webkit-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -o-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
    padding: 10px;
  }
  .container-fluid .row-fluid .span12 .well.well-1 .well .row-fluid .span12 p {
-   margin: 0px;
+   margin: 0;
    font-family:"museo-sans";
    font-weight: bold;
    color: rgba(14, 45, 76, 0.476562);
@@ -61,5 +61,5 @@
    font-family:"museo-sans";
  }
  .container-fluid .row-fluid .span12 .well.well-1 form .form-actions .btn-primary {
-   margin: 0px 20px 0px 0px;
+   margin: 0 20px 0 0;
  }

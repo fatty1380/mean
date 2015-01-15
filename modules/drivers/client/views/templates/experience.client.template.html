@@ -1,0 +1,131 @@
+<section class="experience">
+    <ng-form name="vm.experienceForm" class="edit" ng-show="vm.isEditing">
+        <div class="row"
+             ng-class="{'has-error':(vm.experienceForm.title.$invalid || vm.experienceForm['hidden_title'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.title.$touched)}">
+            <label class="col-sm-2 control-label">Title
+                <br/>
+                <small>Your title at this position</small>
+            </label>
+
+            <div class="controls col-sm-9 controls">
+                <input type="text" name="title" data-ng-model="vm.model.title" class="form-control"
+                       placeholder="Short Title"
+                       ng-required="true"/>
+            </div>
+        </div>
+
+        <div class="row"
+             ng-class="{'has-error':(vm.experienceForm.description.$invalid || vm.experienceForm['hidden_description'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.description.$touched)}">
+            <label class="col-sm-2 control-label">About
+                <br/>
+                <small>Describe your experience</small>
+            </label>
+
+            <div class="controls col-sm-9 controls">
+                <textarea name="description" class="form-control" data-ng-model="vm.model.description"
+                          rows="3" ng-required="true"></textarea>
+                <!--<os-html-edit model="vm.model.description"></os-html-edit>-->
+            </div>
+        </div>
+
+        <div class="form-inline">
+            <label class="col-sm-2 control-label"
+                   ng-class="{'has-error':(vm.experienceForm.time_start.$invalid || vm.experienceForm['hidden_time_start'].$invalid) && vm.experienceForm.$submitted}">
+                Time
+            </label>
+
+            <div class="col-sm-9 controls">
+                <div class="row">
+                    <div class="col-sm-5 input-group"
+                         ng-class="{'has-error':(vm.experienceForm.time_start.$invalid || vm.experienceForm['hidden_time_start'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">
+                        <div class="input-group-addon">{{ 'start' | titlecase }}</div>
+                        <date-input class="form-control" model="vm.model.time.start" os-name="time_start"
+                                    dformat="MM/DD/YYYY"></date-input>
+
+                        <input type="hidden" ng-model="vm.model.time.start" ng-required="vm.isRequired"
+                               name="hidden_time_start">
+                        <!--<input type="text" ng-model="vm.model.time.start.start.m" Placeholder="Month"-->
+                        <!--typeahead="month.num as month.name for month in vm.months | filter:$viewValue | limitTo:12"-->
+                        <!--class="form-control"  name="start_month">-->
+                        <!--<input type="number" min="1900" max="2100" placeholder="Year" ng-model="vm.model.time.start.start.y" class="form-control"-->
+                        <!--ng-required="true" name="start_year">-->
+                    </div>
+
+                    <div class="col-sm-5 input-group"
+                         ng-class="{'has-error':(vm.experienceForm.time_end.$invalid || vm.experienceForm['hidden_time_end'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">
+                        <div class="input-group-addon">{{ 'end' | titlecase }}</div>
+
+                        <date-input class="form-control" model="vm.model.time.end" os-name="time_end"></date-input>
+                        <input type="hidden" ng-model="vm.model.time.end" ng-required="vm.isRequired"
+                               name="hidden_time_end">
+
+                        <!--<input type="text" ng-model="vm.model.time.end.m" Placeholder="Month"-->
+                        <!--typeahead="month.num as month.name for month in vm.months | filter:$viewValue | limitTo:12"-->
+                        <!--class="form-control" name="end_month">-->
+                        <!--<input type="number" min="1900" max="2100" placeholder="Year" ng-model="vm.model.time.end.y" class="form-control"-->
+                        <!--name="end_year">-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row"
+             ng-class="{'has-error':(vm.experienceForm.location.$invalid || vm.experienceForm['hidden_location'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.location.$touched)}">
+            <label class="col-sm-2 control-label">
+                <small>Where was this job?</small>
+            </label>
+
+            <div class="col-md-9 controls">
+                <input type="text" data-ng-model="vm.model.location" class="form-control" placeholder="Where"
+                       required name="location"/>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-link" ng-click="vm.cancel($event)">
+                        cancel
+                    </button>
+
+                    <button type="button" class="btn btn-primary" ng-click="vm.save('save')">
+                        <i class="fa fa-check-circle" style="padding-right: 10px;"></i>Save
+                    </button>
+
+                    <button type="button" class="btn btn-primary" ng-click="vm.save('add')" ng-if="!!vm.addFn">
+                        <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Another
+                    </button>
+                </div>
+                <div data-ng-show="vm.error" class="text-danger text-center">
+                    <strong data-ng-bind="vm.error"></strong>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </ng-form>
+
+    <section class="experience view panel panel-default" ng-hide="vm.isEditing">
+        <div class="panel-heading">
+            <h4>{{vm.model.title}}<br>
+                <small>
+                    <div data-ng-bind="vm.model.location"></div>
+                    <div data-ng-bind="vm.getDateRange(vm.model.time)"></div>
+                </small>
+                <small ng-if="vm.editEnable" class="pull-right">
+                    <button type="button" class="btn btn-primary" ng-click="vm.edit()"><i class="fa fa-pencil"></i> edit
+                    </button>
+                </small>
+            </h4>
+            <p data-ng-bind="vm.model.description"></p>
+        </div>
+    </section>
+    <div class="pull-right" data-ng-show="vm.isLast && !vm.isEditing">
+        <button type="button" class="btn btn-primary" ng-click="vm.push()" ng-if="!!vm.push">
+            <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Another
+        </button>
+    </div>
+</section>

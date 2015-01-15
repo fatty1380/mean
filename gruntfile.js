@@ -1,207 +1,246 @@
 'use strict';
 
-module.exports = function(grunt) {
-    // Unified Watch Object
-    var watchFiles = {
-        serverViews: ['app/views/**/*.*'],
-        serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', 'app/**/*.js'],
-        clientViews: ['public/modules/**/views/**/*.html'],
-        clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
-        clientCSS: ['public/modules/**/*.css'],
-        clientLESS: ['public/modules/**/*.less'],
-        serverMochaTests: ['app/tests/**/*.js']
-    };
+/**
+ * Module dependencies.
+ */
+var _ = require('lodash'),
+	defaultAssets = require('./config/assets/default'),
+	testAssets = require('./config/assets/test');
 
-    // Project Configuration
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        watch: {
-            serverViews: {
-                files: watchFiles.serverViews,
-                options: {
-                    livereload: true
-                }
-            },
-            serverJS: {
-                files: watchFiles.serverJS,
-                tasks: ['jshint'],
-                options: {
-                    livereload: true
-                }
-            },
-            clientViews: {
-                files: watchFiles.clientViews,
-                options: {
-                    livereload: true,
-                }
-            },
-            clientJS: {
-                files: watchFiles.clientJS,
-                tasks: ['jshint'],
-                options: {
-                    livereload: true
-                }
-            },
-            clientCSS: {
-                files: watchFiles.clientCSS,
-                tasks: ['csslint'],
-                options: {
-                    livereload: true
-                }
-            },
-            clientLESS: {
-                files: watchFiles.clientLESS,
-                tasks: ['less', 'csslint'],
-                options: {
-                    livereload: true,
-                }
-            },
-        },
-        jshint: {
-            all: {
-                src: watchFiles.clientJS.concat(watchFiles.serverJS),
-                options: {
-                    jshintrc: true
-                }
-            }
-        },
-        csslint: {
-            options: {
-                csslintrc: '.csslintrc',
-            },
-            all: {
-                src: watchFiles.clientCSS
-            }
-        },
-        uglify: {
-            production: {
-                options: {
-                    mangle: false
-                },
-                files: {
-                    'public/dist/application.min.js': 'public/dist/application.js'
-                }
-            }
-        },
-        cssmin: {
-            combine: {
-                files: {
-                    'public/dist/application.min.css': '<%= applicationCSSFiles %>'
-                }
-            },
-            noRebase: true,
-        },
-        nodemon: {
-            dev: {
-                script: 'server.js',
-                options: {
-                    nodeArgs: ['--debug'],
-                    ext: 'js, html',
-                    watch: watchFiles.serverViews.concat(watchFiles.serverJS)
-                }
-            }
-        },
-        'node-inspector': {
-            custom: {
-                options: {
-                    'web-port': 1337,
-                    'web-host': 'localhost',
-                    'debug-port': 5858,
-                    'save-live-edit': true,
-                    'no-preload': true,
-                    'stack-trace-limit': 50,
-                    'hidden': []
-                }
-            }
-        },
-        ngmin: {
-            production: {
-                files: {
-                    'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
-                }
-            }
-        },
-        concurrent: {
-            default: ['nodemon', 'watch'],
-            debug: ['nodemon', 'watch', 'node-inspector'],
-            options: {
-                logConcurrentOutput: true
-            }
-        },
-        env: {
-            test: {
-                NODE_ENV: 'test'
-            }
-        },
-        mochaTest: {
-            src: watchFiles.serverMochaTests,
-            options: {
-                reporter: 'spec',
-                require: 'server.js'
-            }
-        },
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js'
-            }
-        },
-        less: {
-            development: {
-                options: {
-                    paths: ['public/less'],
-                },
-                files: {
-                    'public/less/modules.css': '<%= applicationLESSFiles %>', // 'public/modules/**/css/*.less'
-                }
-            }
-        },
-        // Launch mongod if necessary:
-        shell: {
-            mongo: {
-                command: 'sh mongod-check-and-start.sh',
-                options: {
-                    async: true
-                }
-            },
-        },
-    });
+module.exports = function (grunt) {
+	// Project Configuration
+	grunt.initConfig({
+		pkg: grunt.file.readJSON('package.json'),
+		env: {
+			test: {
+				NODE_ENV: 'test'
+			},
+			dev: {
+				NODE_ENV: 'development'
+			},
+			prod: {
+				NODE_ENV: 'production'
+			}
+		},
+		watch: {
+			serverViews: {
+				files: defaultAssets.server.views,
+				options: {
+					livereload: true
+				}
+			},
+			serverJS: {
+				files: defaultAssets.server.allJS,
+				tasks: ['jshint'],
+				options: {
+					livereload: true
+				}
+			},
+			clientViews: {
+				files: defaultAssets.client.views,
+				options: {
+					livereload: true
+				}
+			},
+			clientJS: {
+				files: defaultAssets.client.js,
+				tasks: ['jshint'],
+				options: {
+					livereload: true
+				}
+			},
+			clientCSS: {
+				files: defaultAssets.client.css,
+				tasks: ['csslint'],
+				options: {
+					livereload: true
+				}
+			},
+			clientSCSS: {
+				files: defaultAssets.client.sass,
+				tasks: ['sass', 'csslint'],
+				options: {
+					livereload: true
+				}
+			},
+			clientLESS: {
+				files: defaultAssets.client.less,
+				tasks: ['less', 'csslint'],
+				options: {
+					livereload: true
+				}
+			}
+		},
+		nodemon: {
+			dev: {
+				script: 'server.js',
+				options: {
+					nodeArgs: ['--debug'],
+					ext: 'js,html',
+					watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+				}
+			},
+			default: {
+				script: 'server.js',
+				options: {
+					ext: 'js,html',
+					watch: _.union(defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+				}
+			}
+		},
+		concurrent: {
+			default: ['nodemon:default', 'watch'],
+			debug: ['nodemon:dev', 'watch', 'node-inspector'],
+			nowatch: ['nodemon:default'],
+			options: {
+				logConcurrentOutput: true
+			}
+		},
+		jshint: {
+			all: {
+				src: _.union(defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e),
+				options: {
+					jshintrc: true,
+					node: true,
+					mocha: true,
+					jasmine: true
+				}
+			}
+		},
+		csslint: {
+			options: {
+				csslintrc: '.csslintrc'
+			},
+			all: {
+				src: defaultAssets.client.css
+			}
+		},
+		ngAnnotate: {
+			production: {
+				files: {
+					'public/dist/application.js': defaultAssets.client.js
+				}
+			}
+		},
+		uglify: {
+			production: {
+				options: {
+					mangle: false
+				},
+				files: {
+					'public/dist/application.min.js': 'public/dist/application.js'
+				}
+			}
+		},
+		cssmin: {
+			combine: {
+				files: {
+					'public/dist/application.min.css': defaultAssets.client.css
+				}
+			}
+		},
+		sass: {
+			dist: {
+				files: [{
+					expand: true,
+					src: defaultAssets.client.sass,
+					ext: '.css',
+					rename: function(base, src) {
+						return  src.replace('/scss/', '/css/');
+					}
+				}]
+			}
+		},
+		less: {
+			dist: {
+				files: [{
+					expand: true,
+					src: defaultAssets.client.less,
+					ext: '.css',
+					rename: function(base, src) {
+						return  src.replace('/less/', '/css/');
+					}
+				}]
+			}
+		},
+		'node-inspector': {
+			custom: {
+				options: {
+					'web-port': 1337,
+					'web-host': 'localhost',
+					'debug-port': 5858,
+					'save-live-edit': true,
+					'no-preload': true,
+					'stack-trace-limit': 50,
+					'hidden': []
+				}
+			}
+		},
+		mochaTest: {
+			src: testAssets.tests.server,
+			options: {
+				reporter: 'spec'
+			}
+		},
+		karma: {
+			unit: {
+				configFile: 'karma.conf.js'
+			}
+		},
+		protractor: {
+			options: {
+				configFile: 'protractor.conf.js',
+				keepAlive: true,
+				noColor: false
+			},
+			e2e: {
+				options: {
+					args: {} // Target-specific arguments
+				}
+			}
+		}
+	});
 
-    // Load NPM tasks
-    require('load-grunt-tasks')(grunt);
+	// Load NPM tasks 
+	require('load-grunt-tasks')(grunt);
 
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+	// Making grunt default to force in order not to break the project.
+	grunt.option('force', true);
 
-    // Load grunt-shell-spawn in support of launching mongod (if necessary)
-    grunt.loadNpmTasks('grunt-shell-spawn');
+	// Connect to the MongoDB instance and load the models
+	grunt.task.registerTask('mongoose', 'Task that connects to the MongoDB instance and loads the application models.', function() {
+		// Get the callback
+		var done = this.async();
 
-    // Making grunt default to force in order not to break the project.
-    grunt.option('force', true);
+		// Use mongoose configuration
+		var mongoose = require('./config/lib/mongoose.js');
 
-    // A Task for loading the configuration object
-    grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function() {
-        var init = require('./config/init')();
-        var config = require('./config/config');
+		// Connect to database
+		mongoose.connect(function(db) {
+			done();
+		});
+	});
 
-        grunt.config.set('applicationJavaScriptFiles', config.assets.js);
-        grunt.config.set('applicationCSSFiles', config.assets.css);
-        grunt.config.set('applicationLESSFiles', config.assets.less);
-        grunt.config.set('applicationFontFiles', config.assets.fonts);
-    });
+	// Lint CSS and JavaScript files.
+	grunt.registerTask('lint', ['sass', 'less', 'jshint', 'csslint']);
 
+	// Lint project files and minify them into two production files.
+	grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
 
-    // Default task(s).
-    grunt.registerTask('default', ['lint', 'concurrent:default', 'csslint', 'less']);
+	// Run the project tests
+	grunt.registerTask('test', ['env:test', 'mongoose', 'mochaTest', 'karma:unit']);
 
-    // Debug task.
-    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
+	// Run the project in development mode
+	grunt.registerTask('default', ['env:dev', 'lint', 'concurrent:default']);
 
-    // Lint task(s).
-    grunt.registerTask('lint', ['jshint', 'csslint']);
+	grunt.registerTask('nowatch', ['env:dev', 'lint', 'concurrent:nowatch']);
 
-    // Build task(s).
-    grunt.registerTask('build', ['lint', 'loadConfig', 'ngmin', 'uglify', 'cssmin', 'csslint', 'less']);
+	// Run the project in debug mode
+	grunt.registerTask('debug', ['env:dev', 'lint', 'concurrent:debug']);
 
-    // Test task.
-    grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
+	// Run the project in production mode
+	grunt.registerTask('prod', ['build', 'env:prod', 'concurrent:default']);
+
+	// Run the project in production mode
+	grunt.registerTask('runprod', ['env:prod', 'concurrent:default']);
 };

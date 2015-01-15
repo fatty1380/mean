@@ -1,0 +1,172 @@
+<section data-ng-controller="HomeController" class="home landing-page">
+
+
+    <div class="bg-slider-wrapper">
+        <div class="black_mask container-fluid"></div>
+    </div>
+
+    <section class="promo section">
+        <div class="container text-center">
+            <div class="brand-lead ">
+                <img src="/modules/core/img/brand/title_white.png"/>
+            </div>
+            <h2 class="title">Transportation Hiring</h2>
+
+            <p class="intro stronger">The best way to find and fill transportation jobs</p>
+
+            <p><a class="btn btn-cta btn-cta-primary" signup-modal>Sign Up Today</a></p>
+        </div>
+        <!--//container-->
+    </section>
+
+    <div class="sections-wrapper">
+
+        <!-- ******Leader Section ****** -->
+        <div id="subhero" class="section subhero container-fluid">
+            <div class="darken">
+                <div class="container panel">
+                    <div class="row three-cols">
+                        <div class="col-md-4">
+                            <h2 class="section-heading">{{lead1.header}}</h2>
+                            <p class="lead" ng-bind-html="lead1.text"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h2 class="section-heading">{{lead2.header}}</h2>
+
+                            <p class="lead" ng-bind-html="lead2.text"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h2 class="section-heading">{{lead3.header}}</h2>
+
+                            <p class="lead" ng-bind-html="lead3.text"></p>
+                        </div>
+                    </div>
+                    <div class="row three-cols">
+                        <div class="col-md-4">
+                            <p class="text-center">
+                        <span class="fa-stack fa-4x">
+                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
+                          <i class="fa fa-crosshairs fa-stack-1x text-primary"></i>
+                        </span>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="text-center">
+                        <span class="fa-stack fa-4x">
+                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
+                          <i class="fa fa-car fa-stack-1x text-primary"></i>
+                        </span>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="text-center">
+                        <span class="fa-stack fa-4x">
+                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
+                          <i class="fa fa-users fa-stack-1x text-primary"></i>
+                        </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ******Why Section****** -->
+        <section id="why" class="section why">
+            <div class="container">
+                <h2 class="title text-center">How Can Outset Help You?</h2>
+
+                <div class="row item">
+                    <div class="content col-md-4 col-sm-12 col-xs-12">
+                        <h3 class="title">Transportation Focused</h3>
+
+                        <div class="desc">
+                            <p>A hiring website designed specifically and ideally for the Transportation industry.</p>
+
+                            <p>Pairing a community of qualified drivers, with transparent information and top quality
+                                driving jobs.
+                                Outset is taking the pain out of transportation hiring by allowing drivers to make their
+                                applications more competitive by providing additional upfront information to prospective
+                                employers.</p>
+                        </div>
+                    </div>
+                    <!--//content-->
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0"
+                            fit-vids>
+                        <iframe class="image-responsive video-container" width="853" height="480"
+                                src="//www.youtube.com/embed/Pwxa7Qeb-70?controls=0&amp;showinfo=0" frameborder="0"
+                                allowfullscreen></iframe>
+                    </figure>
+                </div>
+                <!--//item-->
+
+                <div class="row item">
+                    <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
+                        <h3 class="title">For Drivers</h3>
+
+                        <div class="desc">
+                            <p>Manage your Reputation and Driving Career.</p>
+
+                            <p>Create a comprehensive driver profile including your driving experience, qualifications &
+                                reports.
+                                Give yourself a competitive advantage by hosting a Background Check, MVR and Drug Test
+                                in your profile.
+                                Use the reports over and over when applying, and share with as many employers as you
+                                like through our secure system. </p>
+
+                            <p class="text-center"><a class="btn btn-cta btn-cta-secondary" signup-modal
+                                                      signup-type="driver">Create your Driver Profile Now!</a></p>
+                        </div>
+                    </div>
+                    <!--//content-->
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
+                        <img class="img-responsive" src="/modules/core/img/landing-driver.png" alt="">
+
+                        <!--//control-->
+                    </figure>
+                </div>
+                <!--//item-->
+
+                <div class="row item last-item">
+                    <div class="content col-md-4 col-sm-12 col-xs-12">
+                        <h3 class="title">For Employers</h3>
+
+                        <div class="desc">
+                            <p>Take the guess work out of your driver hiring. </p>
+
+                            <p>Post jobs seamlessly, and manage the entire hiring process through your account. Review
+                                applicant’s Backgrounds and MVR’s before the interview.
+                                Have confidence in your hiring process with access to more information upfront and only
+                                hire the best.</p>
+
+                            <p class="text-center"><a class="btn btn-cta btn-cta-secondary" signup-modal
+                                                      signup-type="owner">Post your First Job Now!</a></p>
+
+                        </div>
+                    </div>
+                    <!--//content-->
+                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
+                        <img class="img-responsive" src="/modules/core/img/landing-employer.png" alt="">
+                    </figure>
+                </div>
+                <!--//item-->
+            </div>
+            <!--//container-->
+        </section>
+        <!--//why-->
+
+        <!-- ******CTA Section****** -->
+        <section id="cta-section" class="section cta-section text-center home-cta-section">
+            <div class="container">
+                <h2 class="title text-center">Ready to try Outset for yourself?</h2>
+
+                <p><a class="btn btn-cta btn-cta-primary" signup-modal>Click here to sign up!</a></p>
+            </div>
+            <!--//container-->
+        </section>
+        <!--//cta-section-->
+
+    </div>
+
+</section>

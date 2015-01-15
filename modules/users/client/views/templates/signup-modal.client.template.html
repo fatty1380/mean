@@ -1,0 +1,126 @@
+<span ng-click="vm.showSignup()" ng-transclude>Signup</span>
+<!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->
+
+<script type="text/ng-template" id="signupModal.html">
+    <div class="modal-header bg-primary">
+
+        <div ng-hide="vm.credentials.signupType" class="container-fluid">
+            <section class="signup-type">
+                <div class="row text-center">
+                    <div class="col-xs-12 h2">I want to ... {{vm.credentials.signupType}}</div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-xs-6" ng-click="vm.credentials.signupType = 'driver'">
+                        <div>
+                            <img src="modules/users/img/steering-wheel.png" class="image"/>
+                            <br/>
+
+                            <div class="heading h3">Drive</div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6" ng-click="vm.credentials.signupType = 'owner'">
+                        <div>
+                            <img src="modules/users/img/owner-group.png" class="image"/>
+                            <br/>
+
+                            <div class="heading h3">Hire</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div ng-show="vm.credentials.signupType">
+            <span class="modal-title h3 text-center">
+                <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i
+                        class="fa fa-arrow-left fa-2x"></i></button>&nbsp;
+                Sign up as {{vm.credentials.signupType == 'owner' ? 'an' : 'a'}} {{vm.credentials.signupType}}
+            </span>
+
+            <div class="pull-right">
+                <button type="button" class="close modal-title"
+                        ng-click="$dismiss('cancel:'+vm.credentials.signupType)"><span aria-hidden="true">
+                    <i class="fa fa-close fa-2x"></i>
+                    <span class="sr-only">Close</span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <form role="form" data-ng-submit="vm.signup($event)" class="signin form-horizontal" spellcheck="false" novalidate>
+
+        <div class="modal-body" ng-show="vm.credentials.signupType">
+
+            <div class="form-group">
+                <label for="firstName" class="col-sm-2 control-label">First Name</label>
+
+                <div class="col-sm-10">
+                    <input modal-focus="!!vm.credentials.signupType" type="text" required id="firstName"
+                           name="firstName" class="form-control" data-ng-model="vm.credentials.firstName"
+                           placeholder="First Name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName" class="col-sm-2 control-label">Last Name</label>
+
+                <div class="col-sm-10">
+                    <input type="text" id="lastName" name="lastName" class="form-control"
+                           data-ng-model="vm.credentials.lastName" placeholder="Last Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">Email</label>
+
+                <div class="col-sm-10">
+                    <input type="text" id="email" name="email" class="form-control" data-ng-model="vm.credentials.email"
+                           placeholder="Email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-sm-2 control-label">Password</label>
+
+                <div class="col-sm-10">
+                    <input type="password" id="password" name="password" class="form-control"
+                           data-ng-model="vm.credentials.password" placeholder="Password">
+                    <br/>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+                           data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer" ng-show="vm.credentials.signupType">
+            <div class="col-sm-2 ">
+                <label class="strong text-right" style="height:30px;">
+                Terms
+            </label>
+            </div>
+
+            <div class="col-sm-10">
+                <p class="text-left">Do you agree to all conditions in the Outset <span tos>Terms of Service</span>
+                    <i class="fa"
+                       ng-class="{'fa-question' : !vm.credentials.terms, 'fa-check-circle text-success fa-2x': vm.credentials.terms=='yes', 'fa-times-circle-o text-danger' : vm.credentials.terms=='no'}"></i>
+                    <button ng-hide="vm.credentials.terms === 'yes'" type="button"
+                            ng-click="vm.credentials.terms='yes'" class="btn btn-success btn-sm mgn-left">Yes,
+                        I Agree!
+                    </button>
+                </p>
+            </div>
+
+        </div>
+
+        <div class="modal-footer" ng-show="vm.credentials.signupType">
+                <button type="submit" class="btn btn-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
+                    Up!
+                </button>
+            <div data-ng-show="vm.error" class="text-center text-danger">
+                <strong data-ng-bind="vm.error"></strong>
+            </div>
+        </div>
+    </form>
+
+
+</script>
