@@ -9,6 +9,9 @@ exports.getConfig = function(req, res, next, varName) {
         case 'states':
             req.configVal = constants.usStates;
             return next();
+        case 'states':
+            req.configVal = constants.countries;
+            return next();
         case 'baseSchedule':
             req.configVal = constants.baseSchedule;
             return next();

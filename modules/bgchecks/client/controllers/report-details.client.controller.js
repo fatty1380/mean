@@ -248,7 +248,7 @@
     function isoDateFilter() {
         return function (input, parseFmt) {
             var format = parseFmt || 'YYYYMMDD';
-            return (!!input) ? moment(input,format).format('L') : '';
+            return (!!input) ? moment(input, format).format('L') : '';
         };
     }
 

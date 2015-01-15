@@ -7,27 +7,8 @@ var _ = require('lodash');
 
 var abbreviations;
 
-module.exports.stateAbbreviations = function () {
-    if (abbreviations !== undefined) {
-        console.log('returning cached abbreviations');
-        return abbreviations;
-    }
-
-
-    console.log('generating fresh abbreviations');
-
-    abbreviations = [];
-
-    for (var i = 0; i < module.exports.usStates.length; i++) {
-        abbreviations.push(module.exports.usStates[i]['alpha-2']);
-    }
-
-    return abbreviations;
-};
-
-
-
-module.exports.baseSchedule = [{
+module.exports.baseSchedule = [
+    {
     'description': 'Early Morning',
     'time': {
         'start': 3,
@@ -70,6 +51,8 @@ module.exports.baseSchedule = [{
         'end': 4
     }
 },];
+
+module.exports.countries = [{id: 'united_states', name: 'United States', 'alpha-2': 'US', 'alpha-3':'USA'}];
 
 module.exports.usStates = [{id: 'alabama', name: 'Alabama', 'alpha-2': 'AL'},
     {id: 'alaska', name: 'Alaska', 'alpha-2': 'AK'},
@@ -411,12 +394,12 @@ module.exports.fields = {
                     'type': 'country',
                     'required': true
                 },
-                {
-                    'description': 'Occupy Date',
-                    'name': 'occupyDate',
-                    'type': 'datelong',
-                    'required': false
-                }
+                //{
+                //    'description': 'Occupy Date',
+                //    'name': 'occupyDate',
+                //    'type': 'datelong',
+                //    'required': false
+                //}
             ],
             'description': 'Current Address',
             'name': 'currentAddress',
@@ -562,12 +545,14 @@ module.exports.fields = {
                 'length': 25,
                 'type': 'country',
                 'required': true
-            }, {
-                'description': 'Occupy Date',
-                'name': 'occupyDate',
-                'type': 'datelong',
-                'required': false
-            }],
+            }
+            //    , {
+            //    'description': 'Occupy Date',
+            //    'name': 'occupyDate',
+            //    'type': 'datelong',
+            //    'required': false
+            //}
+            ],
             'description': 'Current Address',
             'name': 'currentAddress',
             'type': 'object',
@@ -714,12 +699,12 @@ module.exports.fields = {
                     "type": "country",
                     "required": true
                 },
-                {
-                    "description": "Occupy Date",
-                    "name": "occupyDate",
-                    "type": "datelong",
-                    "required": false
-                }
+                //{
+                //    "description": "Occupy Date",
+                //    "name": "occupyDate",
+                //    "type": "datelong",
+                //    "required": false
+                //}
             ],
             "type": "object",
             "required": true
@@ -994,12 +979,12 @@ module.exports.fields = {
                     "type": "country",
                     "required": true
                 },
-                {
-                    "description": "Occupy Date",
-                    "name": "occupyDate",
-                    "type": "datelong",
-                    "required": false
-                }
+                //{
+                //    "description": "Occupy Date",
+                //    "name": "occupyDate",
+                //    "type": "datelong",
+                //    "required": false
+                //}
             ],
             "type": "object",
             "required": true
@@ -1407,12 +1392,12 @@ module.exports.individualFields = {
                         'type': 'country',
                         'required': true
                     },
-                    {
-                        'description': 'Occupy Date',
-                        'name': 'occupyDate',
-                        'type': 'datelong',
-                        'required': false
-                    }
+                    //{
+                    //    'description': 'Occupy Date',
+                    //    'name': 'occupyDate',
+                    //    'type': 'datelong',
+                    //    'required': false
+                    //}
                 ],
                 'description': 'Current Address',
                 'name': 'currentAddress',
@@ -1578,12 +1563,12 @@ module.exports.individualFields = {
                         'type': 'country',
                         'required': true
                     },
-                    {
-                        'description': 'Occupy Date',
-                        'name': 'occupyDate',
-                        'type': 'datelong',
-                        'required': false
-                    }
+                    //{
+                    //    'description': 'Occupy Date',
+                    //    'name': 'occupyDate',
+                    //    'type': 'datelong',
+                    //    'required': false
+                    //}
                 ],
                 'description': 'Current Address',
                 'name': 'currentAddress',
@@ -1736,12 +1721,12 @@ module.exports.individualFields = {
                         'type': 'country',
                         'required': true
                     },
-                    {
-                        'description': 'Occupy Date',
-                        'name': 'occupyDate',
-                        'type': 'datelong',
-                        'required': false
-                    }
+                    //{
+                    //    'description': 'Occupy Date',
+                    //    'name': 'occupyDate',
+                    //    'type': 'datelong',
+                    //    'required': false
+                    //}
                 ],
                 'description': 'Current Address',
                 'name': 'currentAddress',
@@ -1894,12 +1879,12 @@ module.exports.individualFields = {
                         'type': 'country',
                         'required': true
                     },
-                    {
-                        'description': 'Occupy Date',
-                        'name': 'occupyDate',
-                        'type': 'datelong',
-                        'required': false
-                    }
+                    //{
+                    //    'description': 'Occupy Date',
+                    //    'name': 'occupyDate',
+                    //    'type': 'datelong',
+                    //    'required': false
+                    //}
                 ],
                 'description': 'Current Address',
                 'name': 'currentAddress',

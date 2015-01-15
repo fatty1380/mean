@@ -9,7 +9,8 @@ errorHandler = require(path.resolve('./modules/core/server/controllers/errors.se
 mongoose     = require('mongoose'),
 passport     = require('passport'),
 User         = mongoose.model('User'),
-Driver       = mongoose.model('Driver');
+Driver       = mongoose.model('Driver'),
+emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller'));
 
 
 // DRY Simple Login Function
@@ -69,6 +70,9 @@ exports.signup = function (req, res) {
 
                     login(req, res, user);
                 });
+
+                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', user);
+
             }
             else {
                 login(req, res, user);
