@@ -154,7 +154,7 @@
                 </form>
             </div>
 
-            <div class="form-data row" ng-show="vm.verify">
+            <div class="form-data row" ng-show="vm.verify && !vm.ispay">
 
                 <h3 ng-show="vm.verify && !vm.pay" ng-init="$element.focus()" class="text-center">Please verify your
                     information</h3>
@@ -248,7 +248,7 @@
                             Changes
                         </button>
                         <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
-                                ng-click="vm.submitApplicant($event)">Save and Continue&nbsp;&nbsp;<i
+                                ng-click="vm.submitApplicant($event)">Continue&nbsp;&nbsp;<i
                                 class="fa fa-arrow-right"></i>
                         </button>
                         <p ng-show="vm.disabled">Please wait, this may take a moment</p>
@@ -258,21 +258,23 @@
                         </div>
                     </div>
 
+
+                </div>
+
+                <div class="form-data-row">
                     <div class="press-kit text-center" ng-show="vm.ispay">
                         <p ng-bind-html="vm.payExplanation"></p>
                         <button type="button" class="btn btn-link text-muted" ng-class="{'disabled':!!vm.disabled}"
                                 ui-sref="home">cancel
                         </button>
                         <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
-                                ui-sref="payments({sku:vm.report.sku})">Continue to Payment&nbsp;&nbsp;<i
+                                ui-sref="reportpayments({sku:vm.report.sku})">Continue to Payment&nbsp;&nbsp;<i
                                 class="fa fa-arrow-right"></i>
                         </button>
                         <div data-ng-show="vm.error" class="text-danger">
                             <strong data-ng-bind="vm.error"></strong>
                         </div>
                     </div>
-
-
                 </div>
 
             </div>
