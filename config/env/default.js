@@ -51,6 +51,9 @@ module.exports = {
         },
         fs: {
             writePath: './modules/users/client/img/profile/uploads/'
+        },
+        hipchat: {
+            apiToken: ''
         }
     },
     port: process.env.PORT || 3000,

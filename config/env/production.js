@@ -51,6 +51,9 @@ module.exports = {
         },
         fs: {
             writePath: '/tmp/'
+        },
+        hipchat: {
+            apiToken: '7ed389522a6b4b664521eb6e683056'
         }
     },
     reports: {},
