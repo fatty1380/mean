@@ -1,4 +1,4 @@
-<ng-form name="vm.licenseForm" ng-submit="vm.submit(this)">
+<ng-form name="vm.licenseForm">
     <div class="container-fluid license-details">
         <div class="row profile-row">
             <div class="col-sm-6">
@@ -67,14 +67,15 @@
                     <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>
                         <small>any endorsements on your license?</small>
                     </label>
-
+                    <pre class='row'>{{vm.license.endorsements}}</pre>
+                    <pre class='row'>{{vm.endorsements}}</pre>
                     <div class="controls col-md-8 col-md-offset-2 col-xs-12">
                         <div class="btn-group btn-group-vertical center-block">
                             <label ng-repeat="endorsement in vm.endorsements"
-                                   class="btn btn-cta-secondary btn-md container-fluid" ng-model="vm.license.endorsements[endorsement.key]"
+                                   class="btn btn-cta-secondary btn-md container-fluid"
+                                   ng-model="vm.license.endorsements[endorsement.key]"
                                    btn-checkbox data-ng-class="{'active':endorsement.value}">
-                                <i data-ng-class="{'fa-circle-o': !endorsement.value, 'fa-check-circle':endorsement.value}"
-                                   class="fa pull-left"></i>
+                                <i class="fa pull-left"></i>
                                 <div class="col-xs-4 text-left">{{endorsement.key}}</div>
                                 <div class="col-xs-7 text-left">
                                     <small>{{endorsement.description}}

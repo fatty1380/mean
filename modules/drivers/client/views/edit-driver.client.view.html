@@ -2,9 +2,9 @@
     <os-page-header
             title="Driver Profile"></os-page-header>
 
-    <div class="driver create well">
-        <form name="vm.driverForm" class="form-horizontal" ng-submit="vm.submit()" novalidate>
-            <fieldset>
+    <div class="driver create panel panel-default">
+        <form name="vm.driverForm" class="form-horizontal" novalidate>
+            <fieldset class="container-fluid">
                 <!-- Biography -->
                 <h3>About Me
                     <small>Include an introduction to yourself here to help employers know who you are</small>
@@ -15,6 +15,44 @@
                     </div>
                     <textarea class="form-control" rows="10" name="description" ng-model="vm.driver.about"
                               ng-required="true"></textarea>
+                </div>
+
+                <h3>Interests
+                    <small>Tell us about what kind of jobs you are interested in. Select from the list or add your
+                        own.
+                    </small>
+                </h3>
+
+                <div class="container-fluid well">
+                    <div class="row">
+                        <pre ng-if="vm.debug">{{vm.driver.interests}}</pre>
+
+                        <!-- List of available Interests -->
+                        <label ng-repeat="interest in vm.interestOptions"
+                               class="btn btn-cta-secondary btn-md no-border"
+                               ng-model="vm.driver.interests[interest.key]"
+                               btn-checkbox data-ng-class="{'active':interest.value}">
+                            <i class="fa pull-left"></i>
+
+                            <div class="col-xs-12">{{interest.key}}</div>
+                        </label>
+                        <br>
+
+                        <!-- Input for "other" -->
+                        <label class="btn btn-cta-secondary oset-input btn-md"
+                               data-ng-class="{'active':vm.newInterest != null}">
+
+                            <div ng-click="vm.toggleInterest()">{{ vm.newInterest != null ? 'cancel' : 'other ...'}}
+                            </div>
+                            <input ng-show="vm.newInterest != null" type="text" style="display: inline;"
+                                   ng-model="vm.newInterest">
+
+                            <div style="display: inline;" ng-show="vm.newInterest !== null" ng-click="vm.addInterest()">
+                                add&nbsp;<i class="fa fa-plus"></i>
+                            </div>
+
+                        </label>
+                    </div>
                 </div>
 
 
@@ -121,7 +159,7 @@
 
                 <div class="pull-right">
                     <input type="button" class="btn btn-link" value="cancel" ng-click="vm.cancel()">
-                    <input type="submit" class="btn btn-success" value="Save">
+                    <input type="submit" class="btn btn-success" value="Save" ng-click="vm.submit()">
                 </div>
                 <div data-ng-show="vm.error" class="text-danger text-center">
                     <strong data-ng-bind="vm.error"></strong>

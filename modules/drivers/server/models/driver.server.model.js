@@ -55,6 +55,13 @@ var DriverSchema = new Schema({
             type: String
         }
     }],
+    interests: {
+        type: [{
+            key: String,
+            value: Boolean
+        }],
+        default: []
+    },
 
     isActive: {
         type: Boolean,

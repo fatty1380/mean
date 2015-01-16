@@ -24,11 +24,10 @@ body {
   height           : 100%;
 }
 
-
 span.cta-outline {
-  border: 1px solid #a94442;
-  border-radius: 4px;
-  padding: 4px;
+  border        : 1px solid #a94442;
+  border-radius : 4px;
+  padding       : 4px;
 }
 
 /** Button Stylings **/
@@ -65,26 +64,25 @@ a.btn-cta-primary, .btn-cta-primary {
   }
 }
 
-a.btn-cta-secondary, .btn-cta-secondary {
+a.btn.btn-cta-secondary, .btn.btn-cta-secondary {
   background : none;
   border     : 2px solid @color;
   color      : @color;
   &:hover {
-    background : darken(@color, 2%);
+    background-color : lighten(@color, 90%);
     border     : 2px solid @color;
-    color      : darken(#fff, 10%);
-    &.active {
-      background : lighten(@color, 5%);
-    }
+    color      : darken(@color, 10%);
+    &.active { color : lighten(@color, 90%); }
   }
   &:active {
-    background : darken(@color, 5%);
+    background : lighten(@color, 95%);
+    &.active { background-color: lighten(@color, 10%); }
     border     : 2px solid @color;
     color      : #fff;
   }
   &.active {
     background : @color;
-    color: #fff
+    color      : #fff
   }
 }
 
@@ -111,7 +109,6 @@ a.btn-ghost, .btn-ghost {
 
 /** Btn Sizing **/
 
-
 .btn-cta {
   font-size : 18px;
 }
@@ -119,7 +116,6 @@ a.btn-ghost, .btn-ghost {
 .btn-cta {
   font-size : 20px;
 }
-
 
 /** Simple Stylings **/
 .strong {
@@ -131,36 +127,42 @@ a.btn-ghost, .btn-ghost {
 }
 
 .bigger {
-  font-size: larger;
+  font-size : larger;
 }
 
 .no-pad {
-  padding-top: 0!important;
-  padding-left: 0!important;
-  padding-bottom: 0!important;
-  padding-right: 0!important;
+  padding-top    : 0 !important;
+  padding-left   : 0 !important;
+  padding-bottom : 0 !important;
+  padding-right  : 0 !important;
 }
+
 .no-pad-sides {
-  padding-left: 0!important;
-  padding-right: 0!important;
+  padding-left  : 0 !important;
+  padding-right : 0 !important;
 }
+
 .no-pad-top {
-  padding-top: 0!important;
+  padding-top : 0 !important;
 }
+
 .no-pad-bottom {
-  padding-bottom: 0!important;
+  padding-bottom : 0 !important;
 }
+
 .no-pad-left {
-  padding-left: 0!important;
+  padding-left : 0 !important;
 }
+
 .no-pad-right {
-  padding-right: 0!important;
+  padding-right : 0 !important;
 }
+
 .no-margin {
-  margin-top: 0!important;
-  margin-left: 0!important;
-  margin-bottom: 0!important;
-  margin-right: 0!important;
+  margin-top    : 0 !important;
+  margin-left   : 0 !important;
+  margin-bottom : 0 !important;
+  margin-right  : 0 !important;
 }
 
 .pad-left {
@@ -423,33 +425,33 @@ a.btn-ghost, .btn-ghost {
 /* Page Headers and Profiles */
 // All uploaded pictures should now be 200x200
 img.user-profile-picture {
-  height: 200px;
-  width: 200px;
+  height : 200px;
+  width  : 200px;
 }
 
 .profile-floater {
-  position: absolute;
-  height: 150px;
-  top: 90px;
-  right: 0;
-  text-align: center;
+  position   : absolute;
+  height     : 150px;
+  top        : 90px;
+  right      : 0;
+  text-align : center;
 
   > div {
-    height : 200px;
-    width: 200px;
-    overflow:hidden;
+    height   : 200px;
+    width    : 200px;
+    overflow : hidden;
 
     > img.user-profile-picture {
-      position:absolute;
-      bottom: 10px
+      position : absolute;
+      bottom   : 10px
     }
     > a {
       opacity  : 0.5;
-      width: 200px;
-      bottom: 10px;
+      width    : 200px;
+      bottom   : 10px;
       position : absolute;
       i {
-        display: none;
+        display : none;
       }
     }
     &:hover > a {
@@ -457,8 +459,8 @@ img.user-profile-picture {
       background-color : rgb(255, 255, 255);
       background-color : rgba(255, 255, 255, 0.5);
       i {
-        display: inline;
-        color: #000066!important;
+        display : inline;
+        color   : #000066 !important;
       }
     }
   }
@@ -541,8 +543,8 @@ img.user-profile-picture {
     }
 
     &.section .intro {
-      color : @subtle-white;
-      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+      color       : @subtle-white;
+      text-shadow : 0 1px 1px rgba(0, 0, 0, 0.5);
     }
 
     .btn-cta {
@@ -584,8 +586,8 @@ img.user-profile-picture {
       }
 
       .container.panel {
-        position: relative;
-        top: -40px;
+        position : relative;
+        top      : -40px;
       }
     }
 
@@ -672,7 +674,7 @@ img.user-profile-picture {
   }
 
   .cta-section {
-    background: @outset-blue none!important;
+    background : @outset-blue none !important;
   }
 }
 
@@ -683,8 +685,8 @@ i.fa.fa-stack-1x.text-primary {
 .header {
   .transition (background-color 0.4s ease-in-out);
 
-  &.navbar-fixed-top .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary,  .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary:hover {
-    color: #ffffff!important;
+  &.navbar-fixed-top .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary, .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary:hover {
+    color : #ffffff !important;
   }
 
   &.navbar-fixed-top h1.logo, & h1.logo {
@@ -738,7 +740,7 @@ i.fa.fa-stack-1x.text-primary {
     a {
       .transition (background-color 0.4s ease-in-out);
       .transition (background-image 0.4s ease-in-out);
-      background-color: @outset-blue;
+      background-color : @outset-blue;
     }
   }
 
@@ -766,12 +768,12 @@ i.fa.fa-stack-1x.text-primary {
   }
 
   &.navbar-landing .nav li.nav-item:hover {
-    color: white;
+    color : white;
   }
 
   .nav li.nav-item {
-    cursor: pointer;
-    cursor: hand;
+    cursor : pointer;
+    cursor : hand;
   }
 
 }
@@ -884,17 +886,15 @@ footer {
 
 }
 
-
-
 /***** FORMS *********/
 form {
   textarea.form-control {
-    height: auto!important;
+    height : auto !important;
   }
 
   .readonly-validation p.form-control-static {
-    boder-bottom: 1px dotted @text-color-secondary;
-    padding-bottom: 2px;
+    boder-bottom   : 1px dotted @text-color-secondary;
+    padding-bottom : 2px;
   }
 
   .form-control {
@@ -946,6 +946,78 @@ form {
 
   }
 
+  label.no-border {
+    &, :hover, :active {
+      border: none!important;
+    }
+    margin: 0 4px;
+  }
+
+  label.btn-cta-secondary {
+    &.active {
+      .box-shadow(none);
+    }
+
+    &:active, &:hover {
+      .box-shadow(inset 0 3px 5px rgba(0, 0, 0, .125));
+    }
+
+    i.fa {
+      padding-top: 3px;
+      color : inherit!important;
+    }
+    i.fa::before {
+      content: "\F10C"; // fa-circle-o
+      position: absolute;
+    }
+
+    &:hover i.fa::before  {
+      content: "\F128"; // fa-question
+    }
+
+    &.active i.fa::before  {
+      content: "\F058"; // fa-check-circle
+    }
+
+    &.active:hover i.fa::before  {
+      content: "\F00C"; // fa-check
+    }
+
+    &.oset-input {
+      * {
+        display: inline;
+        .transition (all 0.3s ease-in-out)
+      }
+      input {
+        color: @color;
+        outline: none;
+      }
+    }
+  }
+
+
+
+  button, input {
+    &.input-inline {
+      i {
+        padding-left  : 8px;
+        padding-right : 5px;
+      }
+    }
+  }
+  .input-inline {
+    &button {
+      padding : 0;
+      i {
+        padding-left  : 8px;
+        padding-right : 5px;
+      }
+    }
+
+    &input {
+    }
+  }
+
   /* XS and SMALL (Tablets and phones, 992px and lower) */
   @media (max-width : 992px) {
     .form-group label.control-label {
@@ -954,22 +1026,24 @@ form {
     }
   }
 }
+
 os-bg-check-summary > .pricing {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top    : 0;
+  padding-bottom : 0;
 
   h3 {
     margin-top : 0;
   }
 }
+
 /***** PRICING *******/
 .pricing {
   &.section.section-on-bg {
-    padding-top: 0;
+    padding-top : 0;
   }
   .price-lead {
-    height : 350px;
-    margin-bottom: 50px;
+    height        : 350px;
+    margin-bottom : 50px;
     > .row {
       position : relative;
       top      : 0px;
@@ -978,17 +1052,17 @@ os-bg-check-summary > .pricing {
       font-size   : 42px;
       font-weight : 400;
       text-shadow : 0 0 50px #000;
-      color: white;
+      color       : white;
 
       &.secondary {
-        padding-top: 30px;
-        font-size : 36px;
+        padding-top : 30px;
+        font-size   : 36px;
       }
     }
 
   }
   .title {
-    padding: 0 0 0 0;
+    padding : 0 0 0 0;
   }
   .item {
     -webkit-transition : -webkit-transform .2s, -webkit-box-shadow .2s;
@@ -1014,7 +1088,7 @@ os-bg-check-summary > .pricing {
       vertical-align : middle;
     }
     .heading .title {
-      font-size: 22px;
+      font-size : 22px;
     }
     .item-inner {
       -webkit-transition : -webkit-transform .2s, -webkit-box-shadow .2s;
@@ -1073,7 +1147,7 @@ os-bg-check-summary > .pricing {
 }
 
 .license .endorsement {
-  margin: 0 4px;
+  margin : 0 4px;
 }
 
 .faq {
@@ -1084,8 +1158,8 @@ os-bg-check-summary > .pricing {
       padding : 15px 30px;
     }
     .panel-body {
-      padding     : 10px 15px;
-      color       : @text-color-secondary;
+      padding : 10px 15px;
+      color   : @text-color-secondary;
     }
   }
 }
