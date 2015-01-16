@@ -3,9 +3,9 @@
 
 <!-- os-page-header directive : os-page-header.client.template -->
 <div class="page-header" data-ng-if="!!dm.subTitle || !!dm.editSref || dm.btnShow && (!!dm.btnText && !!dm.btnSref)" ng-class="{well : !dm.level}" ng-mouseenter="dm.hover=true" ng-mouseleave="dm.hover=false">
-    <span data-ng-if="!!dm.subTitle" class="h3" data-ng-bind="dm.subTitle"></span>
+    <span class="h3" data-ng-bind="dm.subTitle">&nbsp;</span>
     <span data-ng-if="!!dm.editSref" data-ng-show="dm.showEdit">
-            <a class="btn btn-link" ui-sref="{{::dm.editSref}}">edit
+            <a class="btn btn-link" ng-click="dm.editFn">edit
                 <i class="fa fa-pencil-square-o"></i>
             </a>
         </span>

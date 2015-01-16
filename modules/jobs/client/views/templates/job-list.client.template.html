@@ -1,6 +1,6 @@
 <section name="os-job-list.directive" class="jobs">
 
-    <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-if="!dm.isEnabled">
+    <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-if="!dm.config.list">
         <h3>Jobs are <em>Coming Soon!</em></h3>
 
         <p>Before opening up the site to employers, we are giving you time to build your profile and get your reports
@@ -19,7 +19,7 @@
         <p></p>
     </div>
 
-    <div data-ng-class="{'panel panel-default': !!dm.header}" data-ng-if="dm.isEnabled">
+    <div data-ng-class="{'panel panel-default': !!dm.header}" data-ng-if="dm.config.list">
         <div class="panel-heading" ng-if="!!dm.header">
             <div class="btn-group btn-group-sm pull-right">
                 <button ng-if="dm.showPost && !!dm.jobs.length" class="btn btn-primary"
@@ -46,8 +46,6 @@
                 </div>
             </form>
         </div>
-
-        <h1>{{dm.jobs.length}} and si {{!!dm.jobs.length}}</h1>
 
         <div ng-class="{'panel-body': !!dm.header}">
             <div class="list-group" data-ng-if="!!dm.jobs.length">

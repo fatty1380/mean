@@ -1,25 +1,6 @@
 <section>
 
-    <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-if="!dm.isEnabled">
-        <h3>Your job search, all in one place, <em>Coming Soon!</em></h3>
-
-        <p>Once we have opened the site to employers, your entire job search will be available here.</p>
-        <p>Until then, take the time to build your profile and get your reports ready.</p>
-
-        <p>
-        <ul>
-            <li>The more information you provide, the better your chances</li>
-            <li>Applicants who have reports in their profile are <u>8x more likely</u> to be hired!</li>
-            <li>You always have total control over who sees your information</li>
-        </ul>
-        </p>
-
-        <p>So put your best foot forward, and we’ll let you know when its time to apply!</p>
-        <button class="btn btn-primary center-block" ui-sref="home">Back to your Profile Page</button>
-        <p></p>
-    </div>
-
-    <div data-ng-class="{'panel panel-default': !!dm.header}" data-ng-if="dm.isEnabled">
+    <div data-ng-class="{'panel panel-default': !!vm.header}" data-ng-if="vm.config.list">
         <div class="list-group" data-ng-if="vm.displayMode !== 'table'">
             <a data-ng-repeat="application in vm.applications"
                data-ui-sref="applications.view({applicationId: '{{application._id}}' })" class="list-group-item">

@@ -8,17 +8,18 @@
             scope: {
                 title: '@',
                 subTitle: '@?',
-                editSref: '@?',
                 showEdit: '=?',
                 btnShow: '=?',
                 btnText: '@?',
                 btnSref: '@?',
                 level: '@?',
-                pictureUrl: '=?'
+                pictureUrl: '=?',
+                editSref: '@?',
+                pictureEditFn: '&?'
             },
             transclude: true,
             restrict: 'E',
-            controller: ['$transclude', function (transclude) {
+            controller: ['$transclude', '$log', '$state', function (transclude, $log, $state) {
                 var dm = this;
 
                 dm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
@@ -26,6 +27,20 @@
 
                 dm.hover = false;
                 dm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
+
+                dm.editFn = function() {
+                    debugger;
+
+                    if(!!dm.pictureEditFn) {
+                        $log.debug('calling pictureEditFn');
+                        return dm.pictureEditFn();
+                    }
+
+                    if(!!dm.editSref) {
+                        $log.debug('reouting to editSref `%s` for picture.', dm.editSref);
+                        $state.go(dm.editSref);
+                    }
+                };
             }],
             controllerAs: 'dm',
             bindToController: true

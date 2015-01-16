@@ -1,9 +1,13 @@
 'use strict';
 
-var constants = require('../models/outset.constants'),
-    _ = require('lodash');
+var path      = require('path'),
+    config    = require(path.resolve('./config/config')),
+    constants = require('../models/outset.constants'),
+    _         = require('lodash');
 
-exports.getConfig = function(req, res, next, varName) {
+exports.getConfig = function (req, res, next, varName) {
+
+    console.log('[CONFIG] Looking up config for `%s`', varName);
 
     switch (varName) {
         case 'states':
@@ -27,13 +31,17 @@ exports.getConfig = function(req, res, next, varName) {
         case 'debug':
             req.configVal = {debug: false};
             return next();
+        case 'modules' :
+            console.log('[CONFIG] returning module configs: %j', config.modules);
+            req.configVal = config.modules;
+            return next();
         default:
             req.configVal = {varName: null};
             next();
     }
 };
 
-exports.getAllConfigs = function(req, res) {
+exports.getAllConfigs = function (req, res) {
     var response = {
         baseSchedule: constants.baseSchedule,
         usStates: constants.usStates
@@ -42,7 +50,7 @@ exports.getAllConfigs = function(req, res) {
     res.jsonp(response);
 };
 
-exports.read = function(req, res) {
+exports.read = function (req, res) {
     if (!req.configVal) {
         return res.status(404).send({
             message: 'No config found'
@@ -52,23 +60,24 @@ exports.read = function(req, res) {
     return res.json(req.configVal);
 };
 
-exports.validate = function(varName, value) {
-    switch(varName) {
-        case 'states': return validateState(value);
+exports.validate = function (varName, value) {
+    switch (varName) {
+        case 'states':
+            return validateState(value);
     }
 };
 
 function validateState(value) {
     debugger;
-    if(_.contains(constants.usStates, value)) {
+    if (_.contains(constants.usStates, value)) {
         console.log('validateState: Contains!');
         return true;
     }
-    if(_.find(constants.usStates, value)) {
+    if (_.find(constants.usStates, value)) {
         console.log('validateState: find!');
         return true;
     }
-    if(_.filter(constants.usStates, value)) {
+    if (_.filter(constants.usStates, value)) {
         console.log('validateState: filter!');
         return true;
     }

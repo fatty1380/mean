@@ -6,10 +6,15 @@
 
         dm.user = Authentication.user;
 
-        dm.createEnabled = false;
-        dm.createText = 'Thanks for signing up. Right now our site is only available to drivers to give them a chance to fill out their profiles and order reports. You will receive an email once the site is available for job postings.';
-        //dm.createText = 'Thanks for signing up. We are in a limited release at this time as we build up our marketplace. We will be launching soon to employers like you with the best source for transportation hiring. Don\'t worry, we will give you time to setup your profile before we open the gates. Look for our launch email soon.';
-        //dm.createText = 'Before posting any jobs, you will need to create your company profile. Click the button below to continue.';
+        dm.createEnabled = dm.config.create;
+
+        if(dm.createEnabled) {
+            dm.createText = 'Before posting any jobs, you will need to create your company profile. Click the button below to continue.';
+        }
+        else {
+            dm.createText = 'Thanks for signing up. Right now our site is only available to drivers to give them a chance to fill out their profiles and order reports. You will receive an email once the site is available for job postings.';
+        }
+
     }
 
     function CompanyDirective() {
@@ -18,7 +23,8 @@
             templateUrl: 'modules/companies/views/templates/view-company.client.template.html',
             scope: {
                 company: '=',
-                inline: '='
+                inline: '=',
+                config: '=?'
             },
             restrict: 'E',
             replace: true,

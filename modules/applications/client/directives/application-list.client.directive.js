@@ -12,16 +12,17 @@
                 job: '=?',
                 company: '=?',
                 user: '=?',
-                applications: '=?'
+                applications: '=?',
+                config: '=?'
             },
             controller: function (Applications, Authentication, $log) {
                 var vm = this;
 
-                vm.isEnabled = false;
-
                 vm.displayMode = vm.displayMode || 'normal';
                 vm.company = vm.company || vm.job && vm.job.company;
                 vm.user = vm.user || Authentication.user;
+                vm.config = vm.config || {};
+
                 vm.noItemsText = 'No job applications yet';
 
                 vm.findAll = function () {

@@ -1,6 +1,6 @@
 <section name="os-company.directive">
     <!-- os-company directive : view-company.client.template.html -->
-    <div ng-if="::inline">
+    <div ng-if="inline">
         <div class="row">
             <div class="col-md-8">
                 <h4 class="list-group-item-heading">{{dm.company.name}}</h4>
@@ -25,23 +25,23 @@
         </div>
     </div>
 
-    <div ng-if="::!inline">
+    <div ng-if="!inline">
         <div class="panel panel-default" ng-if="!!dm.company">
             <div class="panel-heading"><span class="h4">About Us</span></div>
             <div class="panel-body">
                 <div data-ng-bind-html="dm.company.about"></div>
             </div>
         </div>
-        <div class="panel panel-default" ng-if="!dm.company">
-            <div ng-if="dm.createEnabled" class="panel-heading"><span class="h4">Please create your company profile</span></div>
+        <div class="panel panel-default" ng-if="!dm.company && dm.createEnabled">
+            <div class="panel-heading"><span class="h4">Please create your company profile</span></div>
             <div class="panel-body">
-                <p class="text-muted">Hi {{::dm.user.firstName}},<br/>{{::dm.createText}}</p>
-                <br/>
-                <p class="text-right"><img src="/modules/core/img/brand/logo-blue.png" alt="The Outset Team"/></p>
-                <div ng-if="dm.createEnabled" class="text-center">
+                <p class="text-muted">Hi {{::dm.user.firstName}},<br/>{{::dm.createText}}</p><br/>
+
+                <p class="text-right" ng-if="!dm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png" alt="The Outset Team"/></p>
+                <div class="text-center" ng-if="dm.createEnabled">
                     <button type="button" class="btn btn-primary btn-lg" ui-sref="companies.create">Get Started!</button>
                 </div>
-                <br/>
+
             </div>
         </div>
     </div>

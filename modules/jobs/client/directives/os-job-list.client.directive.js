@@ -4,11 +4,10 @@
     function JobListController(Jobs, $log, $state, auth) {
         var dm = this;
 
-        // TODO : LAUNCH DISABLE FUNCTIONALITY
-        dm.isEnabled = false;
+        dm.config = dm.config || {};
 
         dm.limitTo = dm.limitTo || 10;
-        dm.filter = {'company': undefined};
+        dm.filter = {};
 
         dm.myJobsOnly = false;
 
@@ -46,10 +45,12 @@
 
         dm.toggleFilterMine = function () {
             if ((dm.myJobsOnly = !dm.myJobsOnly)) {
-                dm.filter.company = { owner: auth.user._id };
+                dm.filter.company = dm.companyId;
             }
             else {
-                dm.filter.company = undefined;
+                if(dm.filter.hasOwnProperty('company')) {
+                    delete dm.filter['company'];
+                }
             }
         };
 
@@ -79,7 +80,8 @@
                 driverId: '@?',
                 srcJobs: '=?',
                 showPost: '=?',
-                limitTo: '=?'
+                limitTo: '=?',
+                config: '=?'
             },
             controller: JobListController,
             controllerAs: 'dm',

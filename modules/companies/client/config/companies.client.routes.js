@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function newCompany(auth) {
@@ -19,6 +19,10 @@
         return {};
     }
 
+    function moduleConfigResolve(AppConfig, auth) {
+        return AppConfig.getModuleConfig(auth.user.type, 'company');
+    }
+
     function userResolve(rsrc, params, auth) {
 
         if (!!params.companyId) {
@@ -36,12 +40,12 @@
         }
         return rsrc.ByUser.get({
             userId: val
-        }).$promise.then(function(value) {
+        }).$promise.then(function (value) {
                 console.log('Successfully got company %o', value);
                 return value;
             },
-            function(error) {
-                if(error.status === 404) {
+            function (error) {
+                if (error.status === 404) {
                     console.log('Unable to find company');
                     return null;
                 }
@@ -55,74 +59,80 @@
         // Companies state routing
         $stateProvider.
 
-        state('companies', {
-            abstract: true,
-            url: '/companies',
-            template: '<div ui-view class="content-section"></div>',
-            parent: 'fixed-opaque'
-        }).
+            state('companies', {
+                abstract: true,
+                url: '/companies',
+                template: '<div ui-view class="content-section"></div>',
+                parent: 'fixed-opaque'
+            }).
 
-        state('companies.list', {
-            url: '/list',
-            templateUrl: 'modules/companies/views/list-companies.client.view.html',
-            parent: 'companies',
-            controller: 'CompaniesController',
-            controllerAs: 'vm',
-            resolve: {
-                companies: function(rsrc) {
-                    return rsrc.ById.query().$promise;
+            state('companies.list', {
+                url: '/list',
+                templateUrl: 'modules/companies/views/list-companies.client.view.html',
+                parent: 'companies',
+                controller: 'CompaniesController',
+                controllerAs: 'vm',
+                resolve: {
+                    companies: function (rsrc) {
+                        return rsrc.ById.query().$promise;
+                    },
+                    config: moduleConfigResolve
                 }
-            }
-        }).
+            }).
 
-        state('companies.home', {
-            url: '/home',
-            templateUrl: 'modules/companies/views/view-company.client.view.html',
-            parent: 'companies',
-            controller: 'CompaniesController',
-            controllerAs: 'vm',
-            resolve: {
-                company: userResolve
-            }
-        }).
+            state('companies.home', {
+                url: '/home',
+                templateUrl: 'modules/companies/views/view-company.client.view.html',
+                parent: 'companies',
+                controller: 'CompaniesController',
+                controllerAs: 'vm',
+                resolve: {
+                    company: userResolve,
+                    config: moduleConfigResolve
+                }
+            }).
 
-        state('companies.create', {
-            url: '/create',
-            templateUrl: 'modules/companies/views/edit-company.client.view.html',
-            parent: 'companies',
-            controller: 'CompanyEditController',
-            controllerAs: 'vm',
-            resolve: {
-                company: newCompany
-            }
-        }).
+            state('companies.create', {
+                url: '/create',
+                templateUrl: 'modules/companies/views/edit-company.client.view.html',
+                parent: 'companies',
+                controller: 'CompanyEditController',
+                controllerAs: 'vm',
+                resolve: {
+                    company: newCompany,
+                    config: moduleConfigResolve
+                }
+            }).
 
-        state('companies.view', {
-            url: '/:companyId',
-            templateUrl: 'modules/companies/views/view-company.client.view.html',
-            parent: 'companies',
-            controller: 'CompaniesController',
-            controllerAs: 'vm',
-            resolve: {
-                company: companyResolve
-            }
-        }).
+            state('companies.view', {
+                url: '/:companyId',
+                templateUrl: 'modules/companies/views/view-company.client.view.html',
+                parent: 'companies',
+                controller: 'CompaniesController',
+                controllerAs: 'vm',
+                resolve: {
+                    company: companyResolve,
+                    config: moduleConfigResolve
+                }
+            }).
 
-        state('companies.edit', {
-            url: '/{companyId}/edit',
-            templateUrl: 'modules/companies/views/edit-company.client.view.html',
-            parent: 'companies',
-            controller: 'CompanyEditController',
-            controllerAs: 'vm',
-            resolve: {
-                company: companyResolve
-            }
-        });
+            state('companies.edit', {
+                url: '/{companyId}/edit',
+                templateUrl: 'modules/companies/views/edit-company.client.view.html',
+                parent: 'companies',
+                controller: 'CompanyEditController',
+                controllerAs: 'vm',
+                resolve: {
+                    company: companyResolve,
+                    config: moduleConfigResolve
+                }
+            });
     }
 
     // Dependency Injection
     companyResolve.$inject = ['Companies', '$stateParams'];
     userResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
+    moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
     newCompany.$inject = ['Authentication'];
     config.$inject = ['$stateProvider'];
 
