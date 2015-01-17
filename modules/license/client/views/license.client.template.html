@@ -67,8 +67,7 @@
                     <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>
                         <small>any endorsements on your license?</small>
                     </label>
-                    <pre class='row'>{{vm.license.endorsements}}</pre>
-                    <pre class='row'>{{vm.endorsements}}</pre>
+                    <pre class='row' ng-if="vm.debug">{{vm.license.endorsements}}</pre>
                     <div class="controls col-md-8 col-md-offset-2 col-xs-12">
                         <div class="btn-group btn-group-vertical center-block">
                             <label ng-repeat="endorsement in vm.endorsements"
@@ -85,6 +84,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -950,7 +950,7 @@ form {
     &, :hover, :active {
       border: none!important;
     }
-    margin: 0 4px;
+    margin: 4px 8px;
   }
 
   label.btn-cta-secondary {
@@ -1024,6 +1024,20 @@ form {
       display    : block;
       text-align : left !important;
     }
+  }
+}
+
+label.no-border {
+  &, :hover, :active {
+    border: none!important;
+    cursor: auto;
+  }
+  margin: 4px 4px;
+}
+
+label.btn-cta-secondary {
+  &.active {
+    .box-shadow(none);
   }
 }
 

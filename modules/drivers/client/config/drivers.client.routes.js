@@ -98,7 +98,7 @@
         }).
 
         state('drivers.view', {
-            url: '/{driverId:^[0-9a-fA-F]{24}$}',
+            url: '/{driverId:[0-9a-fA-F]{24}}',
             templateUrl: 'modules/drivers/views/view-driver.client.view.html',
             parent: 'drivers',
             resolve: {
@@ -110,7 +110,7 @@
         }).
 
         state('drivers.edit', {
-            url: '/{driverId:^[0-9a-fA-F]{24}$}/edit',
+            url: '/{driverId:[0-9a-fA-F]{24}}/edit',
             templateUrl: 'modules/drivers/views/edit-driver.client.view.html',
             parent: 'drivers',
             resolve: {

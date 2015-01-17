@@ -5,6 +5,8 @@
     function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig) {
         var vm = this;
 
+        vm.debug = AppConfig.get('debug');
+
         // Functions:
         vm.submit = submit;
         vm.update = update;
@@ -16,11 +18,13 @@
         // Variables:
         vm.user = Authentication.user;
         vm.action = $state.current.name.replace('drivers.', '');
-        vm.driver = _.defaults(driver, {experience: [], licenses: [{}], interests: {}});
+        vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
 
         // Driver Interests ---------------------------------------------------------
 
         vm.newInterest = null;
+
+        vm.driverInterests = vm.driver.interests;
 
         vm.interestOptions = (AppConfig.get('interests') || {
             driver: [
@@ -33,8 +37,20 @@
             ]
         }).driver;
 
-        vm.toggleInterest = function() {
-            if(vm.newInterest === null) {
+        _.each(vm.interestOptions, function (option) {
+
+            if (_.find(vm.driverInterests, {key: option.key})) {
+                console.log('driver already contains %s', option);
+            }
+            else {
+                console.log('pushing interest option %s', option);
+                vm.driverInterests.push(option);
+            }
+
+        });
+
+        vm.toggleInterest = function (interest) {
+            if (vm.newInterest === null) {
                 vm.newInterest = '';
             } else {
                 vm.newInterest = null;
@@ -42,8 +58,14 @@
         };
 
         vm.addInterest = function () {
-            if(!!vm.newInterest) {
-                vm.driver.interests[vm.newInterest] = true;
+            if (!!vm.newInterest) {
+                var existing = _.find(vm.driver.interests, {key: vm.newInterest});
+
+                if (existing) {
+                    existing.value = true;
+                } else {
+                    vm.driver.interests.push({key: vm.newInterest, value: true});
+                }
             }
             vm.newInterest = null;
         };
@@ -53,7 +75,7 @@
         function activate() {
 
             if ($state.is('drivers.create')) {
-                if (!!vm.driver._id) {
+                if (!!vm.driver && !!vm.driver._id) {
                     $state.go('drivers.edit', {driverId: vm.driver._id});
                 }
 

@@ -24,19 +24,18 @@
                 </h3>
 
                 <div class="container-fluid well">
-                    <div class="row">
-                        <pre ng-if="vm.debug">{{vm.driver.interests}}</pre>
+                    <div class="row text-center">
+                        <pre ng-if="vm.debug">driver.interests: {{vm.driver.interests}}</pre>
 
                         <!-- List of available Interests -->
-                        <label ng-repeat="interest in vm.interestOptions"
+                        <label ng-repeat="interest in vm.driver.interests"
                                class="btn btn-cta-secondary btn-md no-border"
-                               ng-model="vm.driver.interests[interest.key]"
-                               btn-checkbox data-ng-class="{'active':interest.value}">
+                               ng-click="interest.value = !interest.value"
+                               data-ng-class="{'active':interest.value}">
                             <i class="fa pull-left"></i>
 
                             <div class="col-xs-12">{{interest.key}}</div>
                         </label>
-                        <br>
 
                         <!-- Input for "other" -->
                         <label class="btn btn-cta-secondary oset-input btn-md"
@@ -52,9 +51,9 @@
                             </div>
 
                         </label>
+
                     </div>
                 </div>
-
 
                 <!-- Driver's License Information -->
                 <h3>Driver License
@@ -159,7 +158,7 @@
 
                 <div class="pull-right">
                     <input type="button" class="btn btn-link" value="cancel" ng-click="vm.cancel()">
-                    <input type="submit" class="btn btn-success" value="Save" ng-click="vm.submit()">
+                    <input type="button" class="btn btn-success" value="Save" ng-click="vm.submit()">
                 </div>
                 <div data-ng-show="vm.error" class="text-danger text-center">
                     <strong data-ng-bind="vm.error"></strong>
