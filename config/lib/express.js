@@ -244,11 +244,11 @@ module.exports.initHttps = function (app) {
 
         var options = {};
 
-        if (!!config.https.privateKeyPath) {
+        if (!!config.https.privateKeyPath && fs.existsSync(config.https.privateKeyPath)) {
             options.key = fs.readFileSync(config.https.privateKeyPath, 'utf8');
             ;
         }
-        if (!!config.https.publicKeyPath) {
+        if (!!config.https.publicKeyPath && fs.existsSync(config.https.publicKeyPath)) {
             options.cert = fs.readFileSync(config.https.publicKeyPath, 'utf8');
             ;
         }
