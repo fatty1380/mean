@@ -105,7 +105,7 @@
         return field;
     }
 
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $q) {
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');
@@ -120,10 +120,10 @@
         vm.verify = false;
         vm.pay = false;
 
-        vm.introText = 'To get started, you will need to provide us with some information. We\'ll do our best to store any information that you enter, but we will never store sensitive information such as your SSN or Driver License ID Number';
-        vm.getStartedText = 'Each report type requires different information. Please fill in the following fields in order to continue. All required fields are <b>Marked in Bold</b>, and we will outline any fields that <span class="cta-outline">need your attention</span> in red.';
-        vm.createText = 'Continuing from here will create a new piece of secure data in our system that we can use to run reports on your request. We will not run any reports without your further action. Please note, that this may take a moment to complete.';
-        vm.payExplanation = 'Your information is now ready for you to order your report. Please continue to enter your payment information';
+        vm.introText = 'To get started, you will need to provide us with some information, we will never store sensitive information such as your SSN or Driver License ID Number';
+        vm.getStartedText = 'All required fields are <b>Marked in Bold</b>, and we will outline any fields that <span class="cta-outline">need your attention</span> in red.';
+        vm.createText = 'Please review your information and click continue when ready. Please note, that this may take a moment to complete.';
+        vm.payExplanation = 'Please click continue to enter your payment information';
 
 
         vm.states = null;
@@ -205,8 +205,8 @@
 
                 vm.error = null;
 
-                vm.disabled = false;
-                vm.ispay = true;
+
+                return $state.go('reportpayments', {'sku': vm.report.sku});
 
             }, function (err) {
                 if (err) {
@@ -257,7 +257,7 @@
         .filter('prettyPrint', prettyPrint)
         .filter('isoDatePrint', isoDateFilter);
 
-    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$q'];
+    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state'];
     angular.module('bgchecks')
         .controller('ReportDetailsController', ReportDetailsController);
 
