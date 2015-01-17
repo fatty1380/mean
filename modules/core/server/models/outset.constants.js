@@ -9,50 +9,50 @@ var abbreviations;
 
 module.exports.baseSchedule = [
     {
-    'description': 'Early Morning',
-    'time': {
-        'start': 3,
-        'end': 9
-    }
-}, {
-    'description': 'Morning',
-    'time': {
-        'start': 6,
-        'end': 12
-    }
-}, {
-    'description': 'Mid-day',
-    'time': {
-        'start': 10,
-        'end': 3
-    }
-}, {
-    'description': 'Afternoon',
-    'time': {
-        'start': 12,
-        'end': 17
-    }
-}, {
-    'description': 'Evening',
-    'time': {
-        'start': 16,
-        'end': 20
-    }
-}, {
-    'description': 'Night',
-    'time': {
-        'start': 18,
-        'end': 2
-    }
-}, {
-    'description': 'Overnight',
-    'time': {
-        'start': 20,
-        'end': 4
-    }
-},];
+        'description': 'Early Morning',
+        'time': {
+            'start': 3,
+            'end': 9
+        }
+    }, {
+        'description': 'Morning',
+        'time': {
+            'start': 6,
+            'end': 12
+        }
+    }, {
+        'description': 'Mid-day',
+        'time': {
+            'start': 10,
+            'end': 3
+        }
+    }, {
+        'description': 'Afternoon',
+        'time': {
+            'start': 12,
+            'end': 17
+        }
+    }, {
+        'description': 'Evening',
+        'time': {
+            'start': 16,
+            'end': 20
+        }
+    }, {
+        'description': 'Night',
+        'time': {
+            'start': 18,
+            'end': 2
+        }
+    }, {
+        'description': 'Overnight',
+        'time': {
+            'start': 20,
+            'end': 4
+        }
+    },];
 
-module.exports.countries = [{id: 'united_states', name: 'United States', 'alpha-2': 'US', 'alpha-3':'USA'}];
+module.exports.countries = [{id: 'united_states', name: 'United States', 'alpha-2': 'US', 'alpha-3': 'USA'}];
 
 module.exports.usStates = [{id: 'alabama', name: 'Alabama', 'alpha-2': 'AL'},
     {id: 'alaska', name: 'Alaska', 'alpha-2': 'AK'},
@@ -546,12 +546,12 @@ module.exports.fields = {
                 'type': 'country',
                 'required': true
             }
-            //    , {
-            //    'description': 'Occupy Date',
-            //    'name': 'occupyDate',
-            //    'type': 'datelong',
-            //    'required': false
-            //}
+                //    , {
+                //    'description': 'Occupy Date',
+                //    'name': 'occupyDate',
+                //    'type': 'datelong',
+                //    'required': false
+                //}
             ],
             'description': 'Current Address',
             'name': 'currentAddress',
@@ -591,123 +591,123 @@ module.exports.fields = {
         }],
     'OUTSET_PREMIUM': [
         {
-            "description": "First Name",
-            "name": "firstName",
-            "length": 50,
-            "type": "string",
-            "required": true
+            'description': 'First Name',
+            'name': 'firstName',
+            'length': 50,
+            'type': 'string',
+            'required': true
         },
         {
-            "description": "Middle Name",
-            "name": "middleName",
-            "length": 50,
-            "type": "string",
-            "required": false
+            'description': 'Middle Name',
+            'name': 'middleName',
+            'length': 50,
+            'type': 'string',
+            'required': false
         },
         {
-            "description": "Last Name",
-            "name": "lastName",
-            "length": 50,
-            "type": "string",
-            "required": true
+            'description': 'Last Name',
+            'name': 'lastName',
+            'length': 50,
+            'type': 'string',
+            'required': true
         },
         {
-            "description": "Suffix",
-            "name": "nameSuffix",
-            "length": 50,
-            "type": "string",
-            "required": false
+            'description': 'Suffix',
+            'name': 'nameSuffix',
+            'length': 50,
+            'type': 'string',
+            'required': false
         },
         {
-            "description": "Birth Date",
-            "name": "birthDate",
-            "length": 11,
-            "type": "datelong",
-            "required": false
+            'description': 'Birth Date',
+            'name': 'birthDate',
+            'length': 11,
+            'type': 'datelong',
+            'required': false
         },
         {
-            "description": "SSN",
-            "name": "governmentId",
-            "type": "string",
-            "required": true,
-            "length": 9
+            'description': 'SSN',
+            'name': 'governmentId',
+            'type': 'string',
+            'required': true,
+            'length': 9
         },
         {
-            "description": "Gender",
-            "name": "gender",
-            "length": 6,
-            "type": "string",
-            "required": false,
-            "pickList": [
+            'description': 'Gender',
+            'name': 'gender',
+            'length': 6,
+            'type': 'string',
+            'required': false,
+            'pickList': [
                 {
-                    "description": "",
-                    "value": ""
+                    'description': '',
+                    'value': ''
                 },
                 {
-                    "description": "Male",
-                    "value": "male"
+                    'description': 'Male',
+                    'value': 'male'
                 },
                 {
-                    "description": "Female",
-                    "value": "female"
+                    'description': 'Female',
+                    'value': 'female'
                 }
             ]
         },
         {
-            "description": "Current Address",
-            "name": "currentAddress",
-            "dataFields": [
+            'description': 'Current Address',
+            'name': 'currentAddress',
+            'dataFields': [
                 {
-                    "description": "Street Address",
-                    "name": "street1",
-                    "length": 30,
-                    "type": "string",
-                    "required": false
+                    'description': 'Street Address',
+                    'name': 'street1',
+                    'length': 30,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "Apt. #",
-                    "name": "street2",
-                    "length": 30,
-                    "type": "string",
-                    "required": false
+                    'description': 'Apt. #',
+                    'name': 'street2',
+                    'length': 30,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "City",
-                    "name": "city",
-                    "length": 50,
-                    "type": "string",
-                    "required": false
+                    'description': 'City',
+                    'name': 'city',
+                    'length': 50,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "State",
-                    "name": "state",
-                    "length": 50,
-                    "type": "state",
-                    "required": false
+                    'description': 'State',
+                    'name': 'state',
+                    'length': 50,
+                    'type': 'state',
+                    'required': false
                 },
                 {
-                    "description": "Zip/Postal Code",
-                    "name": "postalCode",
-                    "length": 10,
-                    "type": "string",
-                    "required": false
+                    'description': 'Zip/Postal Code',
+                    'name': 'postalCode',
+                    'length': 10,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "Country",
-                    "name": "country",
-                    "length": 25,
-                    "type": "country",
-                    "required": true
+                    'description': 'Country',
+                    'name': 'country',
+                    'length': 25,
+                    'type': 'country',
+                    'required': true
                 },
                 //{
-                //    "description": "Occupy Date",
-                //    "name": "occupyDate",
-                //    "type": "datelong",
-                //    "required": false
+                //    'description': 'Occupy Date',
+                //    'name': 'occupyDate',
+                //    'type': 'datelong',
+                //    'required': false
                 //}
             ],
-            "type": "object",
-            "required": true
+            'type': 'object',
+            'required': true
         },
         {
             'dataFields': [
@@ -818,42 +818,42 @@ module.exports.fields = {
             'required': true
         },
         {
-            "dataFields": [
+            'dataFields': [
                 {
-                    "dataFields": [
+                    'dataFields': [
                         {
-                            "description": "First Name",
-                            "name": "firstName",
-                            "length": 50,
-                            "type": "string",
-                            "required": true
+                            'description': 'First Name',
+                            'name': 'firstName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
                         },
                         {
-                            "description": "Middle Name",
-                            "name": "middleName",
-                            "length": 50,
-                            "type": "string",
-                            "required": false
+                            'description': 'Middle Name',
+                            'name': 'middleName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': false
                         },
                         {
-                            "description": "Last Name",
-                            "name": "lastName",
-                            "length": 50,
-                            "type": "string",
-                            "required": true
+                            'description': 'Last Name',
+                            'name': 'lastName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
                         }
                     ],
-                    "description": "Alias",
-                    "name": "alias",
-                    "type": "object",
-                    "required": false
+                    'description': 'Alias',
+                    'name': 'alias',
+                    'type': 'object',
+                    'required': false
                 }
             ],
-            "description": "Aliases",
-            "name": "aliases",
-            "length": 3,
-            "type": "array",
-            "required": false
+            'description': 'Aliases',
+            'name': 'aliases',
+            'length': 3,
+            'type': 'array',
+            'required': false
         },
         {
             'description': 'Driver License #',
@@ -871,123 +871,123 @@ module.exports.fields = {
     ],
     'OUTSET_ENTERPRISE': [
         {
-            "description": "First Name",
-            "name": "firstName",
-            "length": 50,
-            "type": "string",
-            "required": true
+            'description': 'First Name',
+            'name': 'firstName',
+            'length': 50,
+            'type': 'string',
+            'required': true
         },
         {
-            "description": "Middle Name",
-            "name": "middleName",
-            "length": 50,
-            "type": "string",
-            "required": false
+            'description': 'Middle Name',
+            'name': 'middleName',
+            'length': 50,
+            'type': 'string',
+            'required': false
         },
         {
-            "description": "Last Name",
-            "name": "lastName",
-            "length": 50,
-            "type": "string",
-            "required": true
+            'description': 'Last Name',
+            'name': 'lastName',
+            'length': 50,
+            'type': 'string',
+            'required': true
         },
         {
-            "description": "Suffix",
-            "name": "nameSuffix",
-            "length": 50,
-            "type": "string",
-            "required": false
+            'description': 'Suffix',
+            'name': 'nameSuffix',
+            'length': 50,
+            'type': 'string',
+            'required': false
         },
         {
-            "description": "Birth Date",
-            "name": "birthDate",
-            "length": 11,
-            "type": "datelong",
-            "required": false
+            'description': 'Birth Date',
+            'name': 'birthDate',
+            'length': 11,
+            'type': 'datelong',
+            'required': false
         },
         {
-            "description": "SSN",
-            "name": "governmentId",
-            "type": "string",
-            "required": true,
-            "length": 9
+            'description': 'SSN',
+            'name': 'governmentId',
+            'type': 'string',
+            'required': true,
+            'length': 9
         },
         {
-            "description": "Gender",
-            "name": "gender",
-            "length": 6,
-            "type": "string",
-            "required": false,
-            "pickList": [
+            'description': 'Gender',
+            'name': 'gender',
+            'length': 6,
+            'type': 'string',
+            'required': false,
+            'pickList': [
                 {
-                    "description": "",
-                    "value": ""
+                    'description': '',
+                    'value': ''
                 },
                 {
-                    "description": "Male",
-                    "value": "male"
+                    'description': 'Male',
+                    'value': 'male'
                 },
                 {
-                    "description": "Female",
-                    "value": "female"
+                    'description': 'Female',
+                    'value': 'female'
                 }
             ]
         },
         {
-            "description": "Current Address",
-            "name": "currentAddress",
-            "dataFields": [
+            'description': 'Current Address',
+            'name': 'currentAddress',
+            'dataFields': [
                 {
-                    "description": "Street Address",
-                    "name": "street1",
-                    "length": 30,
-                    "type": "string",
-                    "required": false
+                    'description': 'Street Address',
+                    'name': 'street1',
+                    'length': 30,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "Apt. #",
-                    "name": "street2",
-                    "length": 30,
-                    "type": "string",
-                    "required": false
+                    'description': 'Apt. #',
+                    'name': 'street2',
+                    'length': 30,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "City",
-                    "name": "city",
-                    "length": 50,
-                    "type": "string",
-                    "required": false
+                    'description': 'City',
+                    'name': 'city',
+                    'length': 50,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "State",
-                    "name": "state",
-                    "length": 50,
-                    "type": "state",
-                    "required": false
+                    'description': 'State',
+                    'name': 'state',
+                    'length': 50,
+                    'type': 'state',
+                    'required': false
                 },
                 {
-                    "description": "Zip/Postal Code",
-                    "name": "postalCode",
-                    "length": 10,
-                    "type": "string",
-                    "required": false
+                    'description': 'Zip/Postal Code',
+                    'name': 'postalCode',
+                    'length': 10,
+                    'type': 'string',
+                    'required': false
                 },
                 {
-                    "description": "Country",
-                    "name": "country",
-                    "length": 25,
-                    "type": "country",
-                    "required": true
+                    'description': 'Country',
+                    'name': 'country',
+                    'length': 25,
+                    'type': 'country',
+                    'required': true
                 },
                 //{
-                //    "description": "Occupy Date",
-                //    "name": "occupyDate",
-                //    "type": "datelong",
-                //    "required": false
+                //    'description': 'Occupy Date',
+                //    'name': 'occupyDate',
+                //    'type': 'datelong',
+                //    'required': false
                 //}
             ],
-            "type": "object",
-            "required": true
+            'type': 'object',
+            'required': true
         },
         {
             'dataFields': [
@@ -1098,42 +1098,42 @@ module.exports.fields = {
             'required': true
         },
         {
-            "dataFields": [
+            'dataFields': [
                 {
-                    "dataFields": [
+                    'dataFields': [
                         {
-                            "description": "First Name",
-                            "name": "firstName",
-                            "length": 50,
-                            "type": "string",
-                            "required": true
+                            'description': 'First Name',
+                            'name': 'firstName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
                         },
                         {
-                            "description": "Middle Name",
-                            "name": "middleName",
-                            "length": 50,
-                            "type": "string",
-                            "required": false
+                            'description': 'Middle Name',
+                            'name': 'middleName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': false
                         },
                         {
-                            "description": "Last Name",
-                            "name": "lastName",
-                            "length": 50,
-                            "type": "string",
-                            "required": true
+                            'description': 'Last Name',
+                            'name': 'lastName',
+                            'length': 50,
+                            'type': 'string',
+                            'required': true
                         }
                     ],
-                    "description": "Alias",
-                    "name": "alias",
-                    "type": "object",
-                    "required": false
+                    'description': 'Alias',
+                    'name': 'alias',
+                    'type': 'object',
+                    'required': false
                 }
             ],
-            "description": "Aliases",
-            "name": "aliases",
-            "length": 3,
-            "type": "array",
-            "required": false
+            'description': 'Aliases',
+            'name': 'aliases',
+            'length': 3,
+            'type': 'array',
+            'required': false
         },
         {
             'description': 'Driver Licence ID',
@@ -1226,9 +1226,7 @@ module.exports.fields = {
             'required': false
         }
     ]
-}
-
-
+};
 
 module.exports.reportPackages = {
     base: {
@@ -2221,4 +2219,15 @@ module.exports.individualFields = {
             }
         ]
     }
+};
+
+module.exports.interests = {
+    driver: [
+        'Courier',
+        'Local CDL',
+        'Long Haul CDL',
+        'Taxi/Limo',
+        'Ridesharing (Uber/Lyft)',
+        'Non-Emergency Medical'
+    ]
 };

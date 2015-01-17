@@ -2,8 +2,10 @@
     'use strict';
 
     // Drivers controller
-    function DriverEditController($state, $log, Drivers, Authentication, driver) {
+    function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig) {
         var vm = this;
+
+        vm.debug = AppConfig.get('debug');
 
         // Functions:
         vm.submit = submit;
@@ -16,17 +18,64 @@
         // Variables:
         vm.user = Authentication.user;
         vm.action = $state.current.name.replace('drivers.', '');
-        vm.driver = driver || {
-            experience: [],
-            licenses: [{}]
+        vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
+
+        // Driver Interests ---------------------------------------------------------
+
+        vm.newInterest = null;
+
+        vm.driverInterests = vm.driver.interests;
+
+        vm.interestOptions = (AppConfig.get('interests') || {
+            driver: [
+                {key: 'Courier', value: false},
+                {key: 'Local CDL', value: false},
+                {key: 'Long Haul CDL', value: false},
+                {key: 'Taxi/Limo', value: false},
+                {key: 'Ridesharing (Uber/Lyft)', value: false},
+                {key: 'Non-Emergency Medical', value: false}
+            ]
+        }).driver;
+
+        _.each(vm.interestOptions, function (option) {
+
+            if (_.find(vm.driverInterests, {key: option.key})) {
+                console.log('driver already contains %s', option);
+            }
+            else {
+                console.log('pushing interest option %s', option);
+                vm.driverInterests.push(option);
+            }
+
+        });
+
+        vm.toggleInterest = function (interest) {
+            if (vm.newInterest === null) {
+                vm.newInterest = '';
+            } else {
+                vm.newInterest = null;
+            }
         };
 
+        vm.addInterest = function () {
+            if (!!vm.newInterest) {
+                var existing = _.find(vm.driver.interests, {key: vm.newInterest});
 
+                if (existing) {
+                    existing.value = true;
+                } else {
+                    vm.driver.interests.push({key: vm.newInterest, value: true});
+                }
+            }
+            vm.newInterest = null;
+        };
+
+        // Driver Interests -- END ----------------------------------------------------
 
         function activate() {
 
             if ($state.is('drivers.create')) {
-                if (!!vm.driver._id) {
+                if (!!vm.driver && !!vm.driver._id) {
                     $state.go('drivers.edit', {driverId: vm.driver._id});
                 }
 
@@ -35,11 +84,11 @@
         }
 
         function submit() {
-
+            debugger;
             if (vm.driverForm['vm.experienceForm'] && vm.driverForm['vm.experienceForm'].$pristine) {
-                debugger;
-                console.log ('Experience untouched ...');
-                if(vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
+
+                console.log('Experience untouched ...');
+                if (vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
                     console.log('nuked experience');
                     vm.driver.experience = [];
                 }
@@ -65,7 +114,7 @@
         function create() {
             debugger;
 
-            if(_.isEmpty(vm.driver.licenses[0])) {
+            if (_.isEmpty(vm.driver.licenses[0])) {
                 $log.debug('No license information entered, ignoring ...');
                 vm.driver.licenses = null;
             } else if (vm.driverForm['vm.licenseForm'].$invalid) {
@@ -96,7 +145,7 @@
         // Update existing Driver
         function update() {
             debugger;
-            if(vm.driverForm.$pristine) {
+            if (vm.driverForm.$pristine) {
                 $state.go('drivers.home');
             }
 
@@ -148,7 +197,8 @@
 
     }
 
-    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver'];
+    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig'];
 
     angular.module('drivers').controller('DriverEditController', DriverEditController);
-})();
+})
+();
