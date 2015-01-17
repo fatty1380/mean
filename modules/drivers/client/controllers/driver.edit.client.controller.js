@@ -144,11 +144,6 @@
 
         // Update existing Driver
         function update() {
-            debugger;
-            if (vm.driverForm.$pristine) {
-                $state.go('drivers.home');
-            }
-
             var driver = vm.driver;
 
             driver.$update(function (response) {
