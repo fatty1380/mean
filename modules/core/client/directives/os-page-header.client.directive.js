@@ -20,29 +20,29 @@
             transclude: true,
             restrict: 'E',
             controller: ['$transclude', '$log', '$state', function (transclude, $log, $state) {
-                var dm = this;
+                var vm = this;
 
-                dm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
-                dm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
+                vm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
+                vm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
 
-                dm.hover = false;
-                dm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
+                vm.hover = false;
+                vm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
 
-                dm.editFn = function() {
-                    debugger;
+                vm.showHeader = !!vm.subTitle || !!vm.editSref || vm.btnShow && (!!vm.btnText && !!vm.btnSref);
 
-                    if(!!dm.pictureEditFn) {
+                vm.editFn = function() {
+                    if(!!vm.pictureEditFn) {
                         $log.debug('calling pictureEditFn');
-                        return dm.pictureEditFn();
+                        return vm.pictureEditFn();
                     }
 
-                    if(!!dm.editSref) {
-                        $log.debug('reouting to editSref `%s` for picture.', dm.editSref);
-                        $state.go(dm.editSref);
+                    if(!!vm.editSref) {
+                        $log.debug('reouting to editSref `%s` for picture.', vm.editSref);
+                        $state.go(vm.editSref);
                     }
                 };
             }],
-            controllerAs: 'dm',
+            controllerAs: 'vm',
             bindToController: true
         };
 
