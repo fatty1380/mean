@@ -4,6 +4,7 @@
 
 @outset-blue: #0e2d4c;
 @subtle-white: #f6f6f6;
+@body-bgcolor: darken(#fff, 2%);
 
 /** Body **/
 html, body {
@@ -17,7 +18,7 @@ html, body {
 }
 
 body {
-  background-color : #0e2d4c;
+  background-color : @body-bgcolor;
   padding-top      : 50px;
   padding-bottom   : 50px;
   width            : 100%;
@@ -520,7 +521,7 @@ img.user-profile-picture {
 
 .black_mask {
   background-color : transparent;
-  background-color : rgba(0, 0, 0, 0.5); // TODO: Filterize?
+  background-color : fade(@outset-blue, 70%); // TODO: Filterize?
   background-size  : cover;
   position         : relative;
   width            : 100%;
