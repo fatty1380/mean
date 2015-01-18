@@ -18,15 +18,26 @@
                         <div class="panel-body">
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" data-ng-show="!!vm.editName" for="name">Business
+                                <label class="col-sm-3 control-label" for="name">Business
                                     Name
                                     <br/>
                                     <small class="text-muted">the name of your business</small>
                                 </label>
 
-                                <div class="controls col-sm-8" data-ng-show="!!vm.editName">
-                                    <input type="text" data-ng-model="vm.company.name" id="name" class="form-control h5"
-                                           placeholder="Name" required/>
+                                <div class="controls col-sm-8">
+                                    <div ng-class="{'input-group' : !!vm.hasTitle}">
+                                        <input type="text" data-ng-model="vm.company.name"  data-ng-show="!!vm.editName || !!vm.editing"
+                                               id="name" class="form-control h5" placeholder="Name" required/>
+                                        <p type="text" data-ng-show="!vm.editName && !vm.editing"
+                                              class="h4 static-control" placeholder="Name" required>{{vm.company.name}}</p>
+                                        <span class="input-group-btn" ng-if="!!vm.hasTitle"><button type="button" class="btn btn-link" ng-click="vm.editing = !vm.editing">
+                                            <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editing, 'fa-edit':!vm.editing}"></i><span ng-if="!vm.editing">&nbsp;edit</span>
+                                        </button></span>
+                                    </div>
+
+
+
+
                                 </div>
                             </div>
 
@@ -59,8 +70,7 @@
 
                                     <div class="input-group">
                                         <span class="input-group-addon">@</span>
-                                        <input type="text" data-ng-model="vm.company.zipCode" id="zip"
-                                               class="form-control"
+                                        <input type="text" data-ng-model="vm.company.zipCode" id="zip" class="form-control"
                                                placeholder="XXXXX" ng-model-options="{ updateOn: 'blur' }"/>
                                     </div>
                                 </div>

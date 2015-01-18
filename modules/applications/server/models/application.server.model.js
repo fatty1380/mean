@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+Schema       = mongoose.Schema;
 
 /**
  * (Job) Application Schema
@@ -63,12 +63,16 @@ var ApplicationSchema = new Schema({
     },
 
 
-
     /**
      * Mesages
      * -------
      * This represents the communications between the applicant and company
      */
+    introduction: {
+        type: String,
+        required: true
+    },
+
     messages: [{
         type: Schema.ObjectId,
         ref: 'Message'
@@ -108,9 +112,9 @@ var ApplicationSchema = new Schema({
     /* Virtual Members - END */
 });
 
-ApplicationSchema.pre('save', function(next){
-  this.modified = Date.now;
-  next();
+ApplicationSchema.pre('save', function (next) {
+    this.modified = Date.now;
+    next();
 });
 
 mongoose.model('Application', ApplicationSchema);

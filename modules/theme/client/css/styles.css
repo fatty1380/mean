@@ -3883,6 +3883,11 @@ img.user-profile-picture {
   height: 100%;
   z-index: 3;
 }
+.btn .fa,
+a.btn .fa {
+  color: inherit!important;
+  margin-right: 5px;
+}
 .landing-page {
   /* Intro Sections - EG: Examples; */
 }

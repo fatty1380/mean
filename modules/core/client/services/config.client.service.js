@@ -53,6 +53,23 @@
                     return null;
                 });
             },
+            getAsync: function (config) {
+                var rsrc = $resource('api/config/' + config);
+
+                return rsrc.get().$promise.then(
+                    function (success) {
+                        if (success.hasOwnProperty(config)) {
+                            $q.resolve(success[config]);
+                        } else {
+                            $q.resolve(success);
+                        }
+                    },
+                    function (err) {
+                        $log.log('[AppCfg] "%s" is not an available', config, err);
+                        $q.resolve(null);
+                    }
+                );
+            },
             getReports: function () {
                 var rsrc = $resource('api/config/reports');
                 return rsrc.get();

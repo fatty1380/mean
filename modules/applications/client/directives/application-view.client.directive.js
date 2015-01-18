@@ -19,17 +19,19 @@
                 if (vm.application) {
                     $log.debug('[ViewApplicationDirective] Displaying as %s: %o', vm.displayMode, vm.application);
                 } else if (vm.job && vm.user) {
-                    var p = Applications.ForDriver.get({jobId: vm.job._id, userId: vm.user._id}).$promise;
+                    Applications.ForDriver.get({jobId: vm.job._id, userId: vm.user._id})
+                        .$promise.then(function (success) {
+                            vm.application = success;
 
-                    p.then(function (success) {
-                        vm.application = success;
-
-                        vm.lastMessage = vm.application.messages[0];
-                    }, function (failure) {
-                        $log.error('Unable to lookup application based on job and user: %o', failure);
-                        debugger;
-                    });
-
+                            vm.lastMessage = vm.application.messages[0];
+                        }, function (failure) {
+                            if (failure.status === 404) {
+                                return undefined;
+                            } else {
+                                $log.error('Unable to lookup application based on job and user: %o', failure);
+                                debugger;
+                            }
+                        });
                 }
             },
             controllerAs: 'vm',

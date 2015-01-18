@@ -9,7 +9,7 @@
         vm.user = Authentication.user;
         vm.config = moduleConfig || {};
 
-        vm.enableEdit = !!vm.configs.edit;
+        vm.enableEdit = !!vm.config.edit;
 
         vm.jobs = jobs;
         vm.company = company;

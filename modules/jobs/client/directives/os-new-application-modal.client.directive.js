@@ -69,13 +69,17 @@
 
         // Bindable Variables ___________________________________________________________
         vm.job = job;
+        vm.application = {};
         vm.placeholders = {
+            messageHeading: 'Introduction',
+            messageSubHeading: 'This will serve as your introduction to the employer',
             intro: 'Write a short message explaining why you\'re a good fit for the position.',
             errors: {
                 noJob: 'You must select a job to apply to first, or you can save as a draft',
                 noMessage: 'Please enter a message before submitting your application'
             },
-            title: 'New job application'
+            title: 'New job application',
+            disclaimer: 'Sample Disclaimer Text goes here ... Outset reserves the right to modify these Terms from time to time at our sole discretion and without any notice. Changes to our Terms become effective on the date they are posted and your continued use of Outset after any changes to Terms will signify your agreement to be bound by them.'
         };
 
         // Implementation _______________________________________________________________
@@ -83,46 +87,66 @@
         // Create new Application
         function createApplication() {
 
-            if (!vm.job || !vm.job._id) {
-                vm.error = vm.placeholders.errors.noJob;
-                return;
+            if(validateApplication(true)) {
+
+                $log.debug('[AppController.create]', 'Creating new Application');
+                // Create new Application object
+                var application = new Applications.ByJob({
+                    status: 'submitted',
+                    agreement: vm.application.termsAccepted
+
+                });
+
+                saveApplication(application);
             }
-
-            $log.debug('[AppController.create]', 'Creating new Application');
-            // Create new Application object
-            var application = new Applications.ByJob({
-                status: 'submitted'
-            });
-
-            saveApplication(application);
         }
 
         function saveDraft() {
-            $log.debug('[AppController.saveDraft]', 'Creating new Draft Application');
-            // Create new Application object
-            var application = new Applications.ById({
-                status: 'draft'
-            });
+            if (validateApplication(false)) {
 
-            saveApplication(application);
+                $log.debug('[AppController.saveDraft]', 'Creating new Draft Application');
+                // Create new Application object
+                var application = new Applications.ById({
+                    status: 'draft'
+                });
+
+                saveApplication(application);
+            }
         }
 
-        var saveApplication = function (application) {
-            if (!vm.message || vm.message.length < 1) {
-                vm.error = vm.placeholders.errors.noMessage;
-                return;
+        var validateApplication = function (termsRequired) {
+
+            if (!vm.job || !vm.job._id) {
+                vm.error = vm.placeholders.errors.noJob;
+                return false;
             }
 
+            if (vm.applicantForm.$invalid) {
+                if (!vm.application.message) {
+                    vm.error = vm.placeholders.errors.noMessage;
+                }
+                else if (termsRequired && !vm.application.termsAccepted) {
+                    vm.error = 'You must accept the terms before submitting your application';
+                }
+                else {
+                    vm.error = 'Please correct the errors above in order to submit your application';
+                }
+
+                return false;
+            }
+
+            return true;
+        };
+
+        var saveApplication = function (application) {
             application.jobId = vm.job && vm.job._id && (vm.job._id);
-            application.messages = [{
-                text: vm.message,
-                status: 'sent'
-            }];
+            application.introduction = vm.application.message;
+            application.agreement = vm.application.termsAccepted;
 
             // Redirect after save
             application.$save(function (response) {
                 // Clear form fields
-                vm.message = '';
+
                 $modalInstance.close(response._id);
                 $state.go('applications.view', {applicationId: response._id});
             }, function (errorResponse) {

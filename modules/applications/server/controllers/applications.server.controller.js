@@ -44,13 +44,13 @@ var executeQuery = function (req, res) {
 exports.create = function (req, res) {
     var application = new Application(req.body);
 
-    console.log('[ApplicationController.create] req.job: %o, req.body.jobId: %o', req.job, req.body.jobId);
+    console.log('[ApplicationController.create] req.job: %j, req.body.jobId: %j', req.job, req.body.jobId);
 
     application.user = req.user;
-    application.job = req.job || req.body.jobId; // TODO: Figure out why this is not populated!
+    application.job = req.job;// || req.body.jobId; // TODO: Figure out why this is not populated!
     application.company = req.job.company; // This should be populated by jobByID Middleware
 
-    console.log('[ApplicationController.create] Creating new application: %o', application);
+    console.log('[ApplicationController.create] Creating new application: %j', application);
 
     application.save(function (err) {
         if (err) {
