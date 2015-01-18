@@ -8,9 +8,17 @@
 
                 <p class="intro">
                     <em class="text-muted">
-                        <span data-ng-bind="vm.application.user.displayName"></span> applied on
-                        <span data-ng-bind="vm.application.created | date:'mediumDate'"></span>
+                        <small>
+                            <span data-ng-bind="vm.application.user.displayName"></span> applied on
+                            <span data-ng-bind="vm.application.created | date:'mediumDate'"></span>
+                        </small>
                     </em>
+                <hr>
+                </p>
+
+                <p>
+                    {{vm.application.introduction}}
+                <hr/>
                 </p>
 
                 <div class="container-fluid">
@@ -34,7 +42,8 @@
                                     <div ng-if="message.type === 'message'">
                                         <div class="chat-profile">
                                             <img class="img-responsive img-circle"
-                                                 ng-src="{{message.profileImageURL || message.sender.profileImageURL}}" alt="{{message.sender.displayName}}">
+                                                 ng-src="{{message.profileImageURL || message.sender.profileImageURL}}"
+                                                 alt="{{message.sender.displayName}}">
                                         </div>
                                         <!--//profile-->
                                         <div class="chat-content">
@@ -44,44 +53,16 @@
                                     </div>
                                 </div>
 
-                                <div class="chat-box me">
+                                <!-- TODO: Optimize the classes, make "other" default, and only add "me" to required classes ... or something -->
+                                <div class="chat-box" ng-repeat="message in vm.application.messages"
+                                     ng-class="{'me':message.sender._id === vm.auth.user._id, 'other': message.sender._id !== vm.auth.user._id }">
                                     <div class="chat-profile">
-                                        <img class="img-responsive img-circle"
-                                             src="/modules/theme/images/people/profile-s-2.png" alt="">
+                                        <img class="img-responsive img-circle" ng-src="message.sender.profileImageURL">
                                     </div>
                                     <!--//profile-->
                                     <div class="chat-content">
-                                        <blockquote><p>Nice template! It’s practical and there is no gimmicks. Very easy
-                                            to customise as well!</p></blockquote>
-                                        <p class="timestamp">Dec 19, 2014 at 9:37pm</p>
-                                    </div>
-                                    <!--//quote-content-->
-                                </div>
-
-                                <div class="chat-box other">
-                                    <div class="chat-profile">
-                                        <img class="img-responsive img-circle"
-                                             src="/modules/theme/images/people/profile-s-3.png" alt="">
-                                    </div>
-                                    <!--//profile-->
-                                    <div class="chat-content">
-                                        <blockquote><p>Nice template! It’s practical and there is no gimmicks. Very easy
-                                            to customise as well!</p></blockquote>
-                                        <p class="timestamp">Dec 19, 2014 at 9:37pm</p>
-                                    </div>
-                                    <!--//quote-content-->
-                                </div>
-
-                                <div class="chat-box other">
-                                    <div class="chat-profile">
-                                        <img class="img-responsive img-circle"
-                                             src="/modules/theme/images/people/profile-s-3.png" alt="">
-                                    </div>
-                                    <!--//profile-->
-                                    <div class="chat-content">
-                                        <blockquote><p>Nice template! It’s practical and there is no gimmicks. Very easy
-                                            to customise as well!</p></blockquote>
-                                        <p class="timestamp">Dec 19, 2014 at 9:37pm</p>
+                                        <blockquote><p>{{message.text}}</p></blockquote>
+                                        <p class="timestamp">{{message.created | date: longdate }}</p>
                                     </div>
                                     <!--//quote-content-->
                                 </div>
