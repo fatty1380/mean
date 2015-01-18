@@ -17,8 +17,14 @@
         if (!!vm.company) {
             vm.canEdit = !!vm.config.edit && vm.company.owner._id === Authentication.user._id;
 
-            if (vm.canEdit) {
-                vm.titleText = 'My Company Profile';
+            if(!!vm.company.name) {
+                var name = vm.company.name;
+
+                if(name.charAt(name.length-1).toLowerCase() === 's') {
+                    vm.titleText = name + '\' Profile';
+                } else {
+                    vm.titleText = name + '\'s Profile';
+                }
             }
         }
         else if ($state.is('companies.home')) {

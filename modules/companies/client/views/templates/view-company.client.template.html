@@ -26,20 +26,20 @@
     </div>
 
     <div ng-if="!inline">
-        <div class="panel panel-default" ng-if="!!dm.company">
+        <div class="panel panel-default" ng-if="!!dm.company && dm.company.about">
             <div class="panel-heading"><span class="h4">About Us</span></div>
             <div class="panel-body">
                 <div data-ng-bind-html="dm.company.about"></div>
             </div>
         </div>
-        <div class="panel panel-default" ng-if="!dm.company && dm.createEnabled">
+        <div class="panel panel-default" ng-if="(!dm.company || !dm.company.about) && dm.createEnabled">
             <div class="panel-heading"><span class="h4">Please create your company profile</span></div>
             <div class="panel-body">
                 <p class="text-muted">Hi {{::dm.user.firstName}},<br/>{{::dm.createText}}</p><br/>
 
                 <p class="text-right" ng-if="!dm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png" alt="The Outset Team"/></p>
                 <div class="text-center" ng-if="dm.createEnabled">
-                    <button type="button" class="btn btn-primary btn-lg" ui-sref="companies.create">Get Started!</button>
+                    <button type="button" class="btn btn-cta-primary btn-lg" ui-sref="companies.create">Get Started!</button>
                 </div>
 
             </div>

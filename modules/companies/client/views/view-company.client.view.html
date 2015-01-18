@@ -1,7 +1,5 @@
     <section class="container-fluid">
 
-
-
         <os-page-header title="{{vm.titleText}}"
                         sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;" show-edit="vm.canEdit"
                         picture-url="vm.imageURL" picture-edit-fn="vm.showModal()">
@@ -30,7 +28,7 @@
             <div class="col-md-8" data-ng-class="{'col-md-offset-2': !vm.company}">
                 <os-company company="vm.company" config="vm.config"></os-company>
 
-                <os-job-list ng-if="!!vm.company" header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}"
+                <os-job-list ng-if="!!vm.company && vm.company.about" header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}"
                              show-post="vm.user._id === vm.company.owner._id"></os-job-list>
             </div>
 
