@@ -38,8 +38,7 @@ var CompanySchema = new Schema({
 
     about: {
         type: String,
-        default: '',
-        required: 'Please provide some information about your business'
+        default: ''
     },
 
     phone: {

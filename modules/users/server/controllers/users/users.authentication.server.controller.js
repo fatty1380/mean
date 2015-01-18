@@ -10,6 +10,7 @@ mongoose     = require('mongoose'),
 passport     = require('passport'),
 User         = mongoose.model('User'),
 Driver       = mongoose.model('Driver'),
+Company       = mongoose.model('Company'),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller'));
 
 
@@ -33,7 +34,7 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    console.log('[Auth.Ctrl] signup() ', req.body);
+    console.log('[Auth.Ctrl] signup() %j', req.body);
 
     // Init Variables
     var user = new User(req.body);
@@ -61,11 +62,11 @@ exports.signup = function (req, res) {
                 debugger;
                 console.log('[SIGNUP] - Creating new Driver for user');
 
-                var driver = new Driver();
-                driver.user = user;
+                var driver = new Driver({'user': user});
+
                 driver.save(function (err) {
                     if (err) {
-                        console.log('[SIGNUP] - err creating new driver', err);
+                        console.error('[SIGNUP] - err creating new driver', err);
                     }
 
                     login(req, res, user);
@@ -75,7 +76,20 @@ exports.signup = function (req, res) {
 
             }
             else {
-                login(req, res, user);
+                debugger;
+                console.log('[SIGNUP] - Creating new Company for user');
+
+                var company = new Company({'owner': user, 'name': req.body.companyName});
+
+                company.save(function (err) {
+                    if (err) {
+                        console.error('[SIGNUP] - err creating new Company', err);
+                    }
+
+                    login(req, res, user);
+                });
+
+                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user);
             }
         }
     });

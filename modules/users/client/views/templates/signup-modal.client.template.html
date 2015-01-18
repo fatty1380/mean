@@ -52,13 +52,23 @@
 
         <div class="modal-body" ng-show="vm.credentials.signupType">
 
+            <div class="form-group" ng-show="vm.credentials.signupType === 'owner'">
+                <label for="companyName" class="col-sm-2 control-label">Business Name</label>
+
+                <div class="col-sm-10">
+                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'owner'"
+                           type="text" id="companyName" name="companyName" class="form-control"
+                           data-ng-model="vm.credentials.companyName" placeholder="Name of your Business">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="firstName" class="col-sm-2 control-label">First Name</label>
 
                 <div class="col-sm-10">
-                    <input modal-focus="!!vm.credentials.signupType" type="text" required id="firstName"
-                           name="firstName" class="form-control" data-ng-model="vm.credentials.firstName"
-                           placeholder="First Name">
+                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'driver'"
+                           type="text" required id="firstName" name="firstName" class="form-control"
+                           data-ng-model="vm.credentials.firstName" placeholder="First Name">
                 </div>
             </div>
 
@@ -95,8 +105,8 @@
         <div class="modal-footer" ng-show="vm.credentials.signupType">
             <div class="col-sm-2 ">
                 <label class="strong text-right" style="height:30px;">
-                Terms
-            </label>
+                    Terms
+                </label>
             </div>
 
             <div class="col-sm-10">
@@ -113,9 +123,9 @@
         </div>
 
         <div class="modal-footer" ng-show="vm.credentials.signupType">
-                <button type="submit" class="btn btn-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
-                    Up!
-                </button>
+            <button type="submit" class="btn btn-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
+                Up!
+            </button>
             <div data-ng-show="vm.error" class="text-center text-danger">
                 <strong data-ng-bind="vm.error"></strong>
             </div>
