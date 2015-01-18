@@ -2,17 +2,17 @@
     'use strict';
 
     function CompanyDirectiveController(Authentication) {
-        var dm = this;
+        var vm = this;
 
-        dm.user = Authentication.user;
+        vm.user = Authentication.user;
 
-        dm.createEnabled = dm.config.create;
+        vm.createEnabled = vm.config.create;
 
-        if(dm.createEnabled) {
-            dm.createText = 'Before posting any jobs, you will need to create your company profile. Click the button below to continue.';
+        if(vm.createEnabled) {
+            vm.createText = 'Before posting any jobs, you will need to create your company profile. Click the button below to continue.';
         }
         else {
-            dm.createText = 'Thanks for signing up. Right now our site is only available to drivers to give them a chance to fill out their profiles and order reports. You will receive an email once the site is available for job postings.';
+            vm.createText = 'Thanks for signing up. Right now our site is only available to drivers to give them a chance to fill out their profiles and order reports. You will receive an email once the site is available for job postings.';
         }
 
     }
@@ -29,7 +29,7 @@
             restrict: 'E',
             replace: true,
             controller: 'CompanyDirectiveController',
-            controllerAs: 'dm',
+            controllerAs: 'vm',
             bindToController: true
         };
 
