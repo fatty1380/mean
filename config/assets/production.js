@@ -30,7 +30,7 @@ module.exports = {
                 'public/lib/moment/min/moment-with-locales.min.js',
                 'https://js.braintreegateway.com/v2/braintree.js',
                 'public/lib/ngImgCrop/compile/minified/ng-img-crop.js',
-                '//cdnjs.com/libraries/angular-scroll'
+                'https://cdnjs.cloudflare.com/ajax/libs/angular-scroll/0.6.4/angular-scroll.min.js'
             ]
         },
         css: 'public/dist/application.min.css',
