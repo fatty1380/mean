@@ -7,9 +7,9 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
- * Message Schema
+ * Subscription Schema
  */
-var MessageSchema = new Schema({
+var SubscriptionSchema = new Schema({
     sender: {
         type: Schema.ObjectId,
         ref: 'User'
@@ -33,4 +33,5 @@ var MessageSchema = new Schema({
     }
 });
 
-mongoose.model('Message', MessageSchema);
+mongoose.model('Subscription', SubscriptionSchema);
+
