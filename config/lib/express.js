@@ -240,19 +240,20 @@ module.exports.configureSocketIO = function (app, db) {
 module.exports.initHttps = function (app) {
     if (config.https.enabled && !!config.https.port) {
         // Log SSL usage
-        console.log('Initializing HTTPS Server Protocol');
+        console.log('Initializing HTTPS Server Protocol: %j', config.https);
 
         var options = {};
 
         if (!!config.https.privateKeyPath && fs.existsSync(config.https.privateKeyPath)) {
+            console.log('using private key at path: %s', config.https.privateKeyPath);
             options.key = fs.readFileSync(config.https.privateKeyPath, 'utf8');
-            ;
         }
         if (!!config.https.publicKeyPath && fs.existsSync(config.https.publicKeyPath)) {
+            console.log('using public key at path: %s', config.https.publicKeyPath);
             options.cert = fs.readFileSync(config.https.publicKeyPath, 'utf8');
-            ;
         }
         if (!!config.https.passphrase) {
+            console.log('... with key passphrase');
             options.passphrase = config.https.passphrase;
         }
 
