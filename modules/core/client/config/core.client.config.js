@@ -80,6 +80,13 @@
         });
     }
 
+    function scrollTopChange($rootScope, $document, $log) {
+        $rootScope.$on('$stateChangeSuccess', function () {
+            $document.scrollTo(-50, 0);
+        });
+    }
+
+    scrollTopChange.$inject = ['$rootScope', '$document', '$log'];
     reroute.$inject = ['$rootScope', '$state', 'Authentication', '$log'];
 
     // Setting up route

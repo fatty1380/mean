@@ -4323,7 +4323,7 @@ form label.no-border {
 form label.no-border,
 form label.no-border :hover,
 form label.no-border :active {
-  border: none!important;
+  border: none !important;
 }
 form label.btn-cta-secondary.active {
   -webkit-box-shadow: none;
@@ -4338,7 +4338,7 @@ form label.btn-cta-secondary:hover {
 }
 form label.btn-cta-secondary i.fa {
   padding-top: 3px;
-  color: inherit!important;
+  color: inherit !important;
 }
 form label.btn-cta-secondary i.fa::before {
   content: "\F10C";
@@ -4388,7 +4388,7 @@ label.no-border {
 label.no-border,
 label.no-border :hover,
 label.no-border :active {
-  border: none!important;
+  border: none !important;
   cursor: auto;
 }
 label.btn-cta-secondary.active {
@@ -4509,4 +4509,8 @@ tos ol > li {
 .faq .panel .panel-body {
   padding: 10px 15px;
   color: #666666;
+}
+.payment-form .dropin {
+  background-color: white;
+  padding-top: 20px;
 }

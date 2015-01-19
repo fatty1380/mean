@@ -71,13 +71,13 @@ a.btn.btn-cta-secondary, .btn.btn-cta-secondary {
   color      : @color;
   &:hover {
     background-color : lighten(@color, 90%);
-    border     : 2px solid @color;
-    color      : darken(@color, 10%);
+    border           : 2px solid @color;
+    color            : darken(@color, 10%);
     &.active { color : lighten(@color, 90%); }
   }
   &:active {
     background : lighten(@color, 95%);
-    &.active { background-color: lighten(@color, 10%); }
+    &.active { background-color : lighten(@color, 10%); }
     border     : 2px solid @color;
     color      : #fff;
   }
@@ -949,9 +949,9 @@ form {
 
   label.no-border {
     &, :hover, :active {
-      border: none!important;
+      border : none !important;
     }
-    margin: 4px 8px;
+    margin : 4px 8px;
   }
 
   label.btn-cta-secondary {
@@ -964,39 +964,37 @@ form {
     }
 
     i.fa {
-      padding-top: 3px;
-      color : inherit!important;
+      padding-top : 3px;
+      color       : inherit !important;
     }
     i.fa::before {
-      content: "\F10C"; // fa-circle-o
-      position: absolute;
+      content  : "\F10C"; // fa-circle-o
+      position : absolute;
     }
 
-    &:hover i.fa::before  {
-      content: "\F128"; // fa-question
+    &:hover i.fa::before {
+      content : "\F128"; // fa-question
     }
 
-    &.active i.fa::before  {
-      content: "\F058"; // fa-check-circle
+    &.active i.fa::before {
+      content : "\F058"; // fa-check-circle
     }
 
-    &.active:hover i.fa::before  {
-      content: "\F00C"; // fa-check
+    &.active:hover i.fa::before {
+      content : "\F00C"; // fa-check
     }
 
     &.oset-input {
       * {
-        display: inline;
+        display : inline;
         .transition (all 0.3s ease-in-out)
       }
       input {
-        color: @color;
-        outline: none;
+        color   : @color;
+        outline : none;
       }
     }
   }
-
-
 
   button, input {
     &.input-inline {
@@ -1030,10 +1028,10 @@ form {
 
 label.no-border {
   &, :hover, :active {
-    border: none!important;
-    cursor: auto;
+    border : none !important;
+    cursor : auto;
   }
-  margin: 4px 4px;
+  margin : 4px 4px;
 }
 
 label.btn-cta-secondary {
@@ -1176,5 +1174,12 @@ os-bg-check-summary > .pricing {
       padding : 10px 15px;
       color   : @text-color-secondary;
     }
+  }
+}
+
+.payment-form {
+  .dropin {
+    background-color : white;
+    padding-top      : 20px;
   }
 }

@@ -105,7 +105,7 @@
         return field;
     }
 
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state) {
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');
@@ -120,8 +120,9 @@
         vm.verify = false;
         vm.pay = false;
 
-        vm.introText = 'To get started, you will need to provide us with some information, we will never store sensitive information such as your SSN or Driver License ID Number';
-        vm.getStartedText = 'All required fields are <b>Marked in Bold</b>, and we will outline any fields that <span class="cta-outline">need your attention</span> in red.';
+        vm.introText = 'All reports are run by leading verification company, eEverifile. Outset will never store your Social Security , Driver License or Credit Card numbers.';
+        vm.getStartedText = 'All required fields are <b>Marked in Bold</b>';
+        vm.correctErrorsText = 'Please review any answers that are <span class="cta-outline">marked in red</span> below.';
         vm.createText = 'Please review your information and click continue when ready. Please note, that this may take a moment to complete.';
         vm.payExplanation = 'Please click continue to enter your payment information';
 
@@ -129,12 +130,13 @@
         vm.states = null;
         vm.countries = null;
 
-        (function activate() {
+        function activate() {
             if (!!vm.applicant && !!vm.applicant.remoteId) {
                 console.log('adding remote applicant id [%d] to model', vm.applicant.remoteId);
                 vm.model.applicantId = vm.applicant.remoteId;
             }
 
+            vm.price = vm.report.promo || vm.report.price;
 
             vm.report.fields.map(completeApplicantModel, vm);
             _.map(vm.report.fields, translateFieldsToNg, vm);
@@ -146,7 +148,7 @@
             if (!vm.countries) {
                 vm.countries = vm.config.getCountries();
             }
-        })();
+        }
 
         /**
          * Handles the initial applicant creation & update
@@ -154,6 +156,11 @@
          * Or sets the form into "verify" state
          * */
         vm.saveForm = function (event) {
+            vm.disabled=true;
+
+            $document.scrollTopAnimated(0, 300).then(function() {
+                $log.debug('Scrolled to top!');
+            });
 
             if (vm.reportForm.$invalid) {
                 vm.error = 'Please correct all errors above';
@@ -163,35 +170,22 @@
 
             vm.error = vm.success = null;
 
-            vm.disabled = false;
+            vm.disabled = vm.creating =  false;
             vm.verify = true;
 
         };
 
         vm.submitApplicant = function (event) {
-            vm.disabled = true;
+            vm.disabled = vm.creating = true;
             vm.error = vm.success = null;
+
+            vm.showSpinner();
 
             var applicantRsrc = new Applicants.FromForm(vm.model, auth.user._id);
 
             $log.debug('Creating new applicantRsrc with data: %o', applicantRsrc);
 
             applicantRsrc.$save(function (response) {
-
-                // expecting either: {"updated":true,"applicantId":44679}
-                //               or: {
-                //                        "_id": "54b1d25b4840075d43112a95",
-                //                            "remoteId": 44679,
-                //                            "user": "54ad260e6274fe6514aa1b0d",
-                //                            "__v": 1,
-                //                            "modified": "2015-01-11T01:31:07.329Z",
-                //                            "created": "2015-01-11T01:31:07.329Z",
-                //                            "reports": [
-                //                            "54b4f9e9c5e7ac00005ca0d3"
-                //                        ],
-                //                            "governmentId": "",
-                //                            "remoteSystem": "everifile"
-                //                    }
 
                 if (response.updated) {
 
@@ -206,13 +200,18 @@
                 vm.error = null;
 
 
-                return $state.go('reportpayments', {'sku': vm.report.sku});
+                $state.go('reportpayments', {'sku': vm.report.sku});
+
+                vm.spinnerModal.dismiss('done');
 
             }, function (err) {
                 if (err) {
                     $log.error('failed to create applicant: %o', err);
 
                 }
+                vm.spinnerModal.dismiss('done');
+
+                vm.error = 'Sorry, but something went wrong trying to create your report applicant. Please try again later';
 
                 vm.disabled = false;
                 vm.error = err.message || err.data && err.data.message;
@@ -221,9 +220,26 @@
         };
 
         vm.goBack = function () {
-            vm.verify = vm.ispay = false;
+            vm.verify = vm.creating = vm.ispay = false;
             vm.success = vm.error = null;
         };
+
+        vm.showSpinner = function() {
+            vm.spinnerModal = $modal.open({
+                templateUrl: 'spinnerModal.html',
+                backdrop: 'static'
+
+            });
+        };
+
+
+        vm.getPriceString = function (price) {
+            var base = Number(price);
+            var next = base.toFixed(2);
+            return '$' + next;
+        };
+
+        activate();
     }
 
     function capFilter() {
@@ -257,7 +273,7 @@
         .filter('prettyPrint', prettyPrint)
         .filter('isoDatePrint', isoDateFilter);
 
-    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state'];
+    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document'];
     angular.module('bgchecks')
         .controller('ReportDetailsController', ReportDetailsController);
 
