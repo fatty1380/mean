@@ -3973,10 +3973,8 @@ img.user-profile-picture {
 .landing-page .sections-wrapper .section.subhero {
   padding: 0 0;
 }
-.landing-page .sections-wrapper .section.subhero .container {
+.landing-page .sections-wrapper .section.subhero .panel {
   padding: 25px 0;
-}
-.landing-page .sections-wrapper .section.subhero .container.panel {
   position: relative;
   top: -40px;
 }
