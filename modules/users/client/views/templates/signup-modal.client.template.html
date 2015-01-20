@@ -7,21 +7,23 @@
         <div ng-hide="vm.credentials.signupType" class="container-fluid">
             <section class="signup-type">
                 <div class="row text-center">
-                    <div class="col-xs-12 h2">I want to ... {{vm.credentials.signupType}}</div>
+                    <h2 class="lead-question">I want to ... {{vm.credentials.signupType}}</h2>
                 </div>
                 <div class="row text-center">
-                    <div class="col-xs-6" ng-click="vm.credentials.signupType = 'driver'">
-                        <div>
-                            <img src="modules/users/img/steering-wheel.png" class="image"/>
-                            <br/>
+                    <div class="col-sm-6" ng-click="vm.selectType('driver', $event)">
+                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
+                            <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>
+                            <br class="hidden-xs"/>
 
                             <div class="heading h3">Drive</div>
                         </div>
                     </div>
-                    <div class="col-xs-6" ng-click="vm.credentials.signupType = 'owner'">
-                        <div>
-                            <img src="modules/users/img/owner-group.png" class="image"/>
-                            <br/>
+                    <br class="visible-xs"/>
+
+                    <div class="col-sm-6" ng-click="vm.selectType('owner', $event)">
+                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
+                            <img src="modules/users/img/owner-group.png" class="img-responsive center-block"/>
+                            <br class="hidden-xs"/>
 
                             <div class="heading h3">Hire</div>
                         </div>
@@ -30,7 +32,8 @@
             </section>
         </div>
 
-        <div ng-show="vm.credentials.signupType">
+
+        <div class="hidden-xs" ng-show="vm.credentials.signupType">
             <span class="modal-title h3 text-center">
                 <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i
                         class="fa fa-arrow-left fa-2x"></i></button>&nbsp;
@@ -44,6 +47,22 @@
                     <span class="sr-only">Close</span></span>
                 </button>
             </div>
+        </div>
+
+        <div class="visible-xs" ng-show="vm.credentials.signupType">
+            <span class="modal-title h4 text-center">
+                <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i
+                        class="fa fa-arrow-left fa-lg"></i></button>&nbsp;
+                {{vm.credentials.signupType | titlecase }} Sign Up
+            </span>
+
+            <span class="pull-right">
+                <button type="button" class="close modal-title"
+                        ng-click="$dismiss('cancel:'+vm.credentials.signupType)"><span aria-hidden="true">
+                    <i class="fa fa-close fa-lg"></i>
+                    <span class="sr-only">Close</span></span>
+                </button>
+            </span>
         </div>
     </div>
 
@@ -95,8 +114,8 @@
         <div class="modal-footer" ng-show="vm.credentials.signupType">
             <div class="col-sm-2 ">
                 <label class="strong text-right" style="height:30px;">
-                Terms
-            </label>
+                    Terms
+                </label>
             </div>
 
             <div class="col-sm-10">
@@ -113,9 +132,9 @@
         </div>
 
         <div class="modal-footer" ng-show="vm.credentials.signupType">
-                <button type="submit" class="btn btn-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
-                    Up!
-                </button>
+            <button type="submit" class="btn btn-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
+                Up!
+            </button>
             <div data-ng-show="vm.error" class="text-center text-danger">
                 <strong data-ng-bind="vm.error"></strong>
             </div>

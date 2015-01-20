@@ -31,17 +31,15 @@ span.cta-outline {
   padding       : 4px;
 }
 
-
-
 .content > section > *:last-child {
-  padding-bottom: 50px;
+  padding-bottom : 50px;
 }
 
 /* Map Container */
 .angular-google-map-container {
-  min-height: 300px;
-  width: 100%;
-  border: 1px solid #AAA;
+  min-height : 300px;
+  width      : 100%;
+  border     : 1px solid #AAA;
 }
 
 /** Button Stylings **/
@@ -542,6 +540,32 @@ img.user-profile-picture {
   z-index          : 3;
 }
 
+@media (max-width : 768px) {
+
+  .container {
+    padding-left  : 0 !important;
+    padding-right : 0 !important;
+
+    .row {
+      margin-left  : 0 !important;
+      margin-right : 0 !important;
+    }
+  }
+
+  .signup-type {
+    .lead-question {
+      //padding-bottom: 2em;
+    }
+
+    .type-option {
+      border : 2px solid @outset-blue;
+      .border-radius(1.2em);
+      padding: 1em;
+      margin-bottom: 1em;
+    }
+  }
+}
+
 .landing-page {
 
   .promo {
@@ -640,7 +664,11 @@ img.user-profile-picture {
   .brand-lead {
     text-align : center;
     position   : relative;
-    top        : 2em;
+    top        : 1.5em;
+
+    @media (max-width : 767px) {
+      top : 0em;
+    }
 
     img {
       width     : 65%;
@@ -689,6 +717,17 @@ img.user-profile-picture {
 
   .cta-section {
     background : @outset-blue none !important;
+  }
+}
+
+// Restrict hoizontal scrolling in mobile devices
+// from: http://stackoverflow.com/questions/19337482/twitter-bootstrap-3-horizontal-scrolling-issue
+@media (max-width : 767px) {
+  .container {
+    padding-right : 0;
+    padding-left  : 0;
+    margin-right  : auto;
+    margin-left   : auto;
   }
 }
 

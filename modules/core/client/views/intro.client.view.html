@@ -6,7 +6,7 @@
     </div>
 
     <section class="promo section">
-        <div class="container text-center">
+        <div class="container-fluid text-center">
             <div class="brand-lead ">
                 <img src="/modules/core/img/brand/title_white.png"/>
             </div>
@@ -22,13 +22,17 @@
     <div class="sections-wrapper">
 
         <!-- ******Leader Section ****** -->
-        <div id="subhero" class="section subhero container-fluid">
+        <div id="subhero" class="section subhero container">
             <div class="darken">
-                <div class="container panel">
+                <div class="panel">
                     <div class="row three-cols">
                         <div class="col-md-4">
                             <h2 class="section-heading">{{lead1.header}}</h2>
-                            <p class="lead" ng-bind-html="lead1.text"></p>
+
+                            <p class="lead">
+                                <span class="lead" ng-bind-html="lead1.text"></span>
+                            </p>
+
                         </div>
                         <div class="col-md-4">
                             <h2 class="section-heading">{{lead2.header}}</h2>
@@ -41,7 +45,7 @@
                             <p class="lead" ng-bind-html="lead3.text"></p>
                         </div>
                     </div>
-                    <div class="row three-cols">
+                    <div class="row three-cols hidden-xs hidden-sm">
                         <div class="col-md-4">
                             <p class="text-center">
                         <span class="fa-stack fa-4x">
@@ -78,7 +82,7 @@
                 <h2 class="title text-center">How Can Outset Help You?</h2>
 
                 <div class="row item">
-                    <div class="content col-md-4 col-sm-12 col-xs-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
                         <h3 class="title">Transportation Focused</h3>
 
                         <div class="desc">
@@ -102,7 +106,7 @@
                 <!--//item-->
 
                 <div class="row item">
-                    <div class="content col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
+                    <div class="col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
                         <h3 class="title">For Drivers</h3>
 
                         <div class="desc">
@@ -129,7 +133,7 @@
                 <!--//item-->
 
                 <div class="row item last-item">
-                    <div class="content col-md-4 col-sm-12 col-xs-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
                         <h3 class="title">For Employers</h3>
 
                         <div class="desc">

@@ -3896,6 +3896,29 @@ img.user-profile-picture {
   height: 100%;
   z-index: 3;
 }
+@media (max-width: 768px) {
+  .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .container .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .signup-type .type-option {
+    border: 2px solid #0e2d4c;
+    -webkit-border-radius: 1.2em;
+    -moz-border-radius: 1.2em;
+    -ms-border-radius: 1.2em;
+    -o-border-radius: 1.2em;
+    border-radius: 1.2em;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+}
 .landing-page {
   /* Intro Sections - EG: Examples; */
 }
@@ -3982,7 +4005,12 @@ img.user-profile-picture {
 .landing-page .brand-lead {
   text-align: center;
   position: relative;
-  top: 2em;
+  top: 1.5em;
+}
+@media (max-width: 767px) {
+  .landing-page .brand-lead {
+    top: 0em;
+  }
 }
 .landing-page .brand-lead img {
   width: 65%;
@@ -4020,6 +4048,14 @@ img.user-profile-picture {
 }
 .landing-page .cta-section {
   background: #0e2d4c none !important;
+}
+@media (max-width: 767px) {
+  .container {
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: auto;
+    margin-left: auto;
+  }
 }
 i.fa.fa-stack-1x.text-primary {
   top: -4px;
