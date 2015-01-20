@@ -395,7 +395,7 @@ a.btn-ghost, .btn-ghost {
   .content-container-inner { // .story-container-inner
     max-width  : 900px;
     margin     : 0 auto;
-    background : #fff;
+    background-color : #FFF;
     padding    : 30px;
     .border-radius(4px);
     text-align : left;
@@ -558,10 +558,10 @@ img.user-profile-picture {
     }
 
     .type-option {
-      border : 2px solid @outset-blue;
+      border        : 2px solid @outset-blue;
       .border-radius(1.2em);
-      padding: 1em;
-      margin-bottom: 1em;
+      padding       : 1em;
+      margin-bottom : 1em;
     }
   }
 }
@@ -620,7 +620,7 @@ img.user-profile-picture {
     &.subhero {
       padding : 0 0;
       .panel {
-        padding : 25px 0;
+        padding  : 25px 0;
         position : relative;
         top      : -40px;
       }
@@ -732,18 +732,30 @@ i.fa.fa-stack-1x.text-primary {
   top : -4px;
 }
 
-
 header {
   &.header {
-    background-color : rgb(161, 161, 161);
 
     &.navbar-landing {
-      background-color : rgba(161, 161, 161, 0.4);
+      background-color : rgba(255, 255, 255, 0.9);
+      //background-color : rgba(161, 161, 161, 0.4);
 
       &.navbar-fixed-top {
-        background-color : rgba(216,216,216, 0.8);
+        //background-color : rgba(216,216,216, 0.8);
+        background-color : rgba(255, 255, 255, 0.95);
       }
     }
+
+    h1.logo {
+      a {
+        color            : @outset-blue;
+        background-color : transparent!important;
+      }
+
+      a .logo-title {
+        background-image : url('/modules/core/img/brand/logo-dblue.png');
+      }
+    }
+
     background-color : rgba(255, 255, 255, 0.8);
 
     .header-profile-image {
@@ -767,7 +779,6 @@ header {
 
 .header {
   .transition (background-color 0.4s ease-in-out);
-
 
   a {
     .transition (background-color 0.4s ease-in-out);
@@ -811,43 +822,6 @@ header {
     }
   }
 
-  &.navbar-fixed-top h1.logo {
-    a {
-      color            : @outset-blue;
-      background-color : transparent;
-    }
-
-    a .logo-title {
-      background-image : url('/modules/core/img/brand/logo-dblue.png');
-    }
-  }
-
-  &.navbar-fixed-top.navbar-landing h1.logo {
-    a {
-      background-color : @outset-blue;
-    }
-  }
-
-  &.navbar-landing h1.logo {
-    a {
-      color            : #fff;
-      background-color : transparent;
-    }
-
-    a .logo-title {
-      background-image : url('/modules/core/img/brand/logo-white.png');
-    }
-  }
-
-  & h1.logo {
-    a {
-      background-color : transparent;
-    }
-
-    a .logo-title {
-      background-image : url('/modules/core/img/brand/logo-dblue.png');
-    }
-  }
 
   &.navbar-landing .nav li.nav-item:hover {
     color : white;
@@ -1160,7 +1134,7 @@ os-bg-check-summary > .pricing {
       -webkit-transition : -webkit-transform .2s, -webkit-box-shadow .2s;
       transition         : transform .2s;
       &:hover {
-        background : #FFF;
+        background-color : #FFF;
       }
     }
     .fa-stack {
