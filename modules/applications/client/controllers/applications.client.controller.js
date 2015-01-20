@@ -7,6 +7,7 @@
         vm.messageMode = 'text';
         vm.isopen = false;
         vm.myId = auth.user._id;
+        vm.user = auth.user;
 
         vm.postMessage = function() {
             vm.application.messages.push({
@@ -73,7 +74,7 @@
             // Add an event listener to the 'chatMessage' event
             Socket.on('chatMessage', function (message) {
                 console.log('[AppCtrl] Incoming message: %o', message);
-                vm.application.messages.unshift(message);
+                vm.application.messages.push(message);
             });
 
             // Remove the event listener when the controller instance is destroyed

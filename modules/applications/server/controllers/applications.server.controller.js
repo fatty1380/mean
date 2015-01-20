@@ -34,6 +34,8 @@ var executeQuery = function (req, res) {
 
             req.applications = applications || [];
             console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %j', req.applications.length, query);
+
+            console.log('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
             res.json(req.applications);
         });
 };
@@ -212,8 +214,9 @@ exports.getByJobId = function (req, res, next) {
 exports.applicationByID = function (req, res, next, id) {
 
     Application.findById(id)
-        .populate('user', 'displayName')
-        .populate('job', 'name user company')
+        .populate('user', 'displayName profileImageURL')
+        .populate('job')
+        .populate('company', 'name owner agents profileImageURL')
         .populate('messages')
         .populate({
             path: 'messages.sender',
@@ -224,6 +227,7 @@ exports.applicationByID = function (req, res, next, id) {
             if (err) {
                 return next(err);
             }
+            console.log('[Application.byId] %s', JSON.stringify(application, undefined, 2));
 
             req.application = application;
             next();

@@ -142,6 +142,18 @@ a.btn-ghost, .btn-ghost {
   font-size : larger;
 }
 
+.big {
+  font-size : large;
+}
+
+.smaller {
+  font-size : smaller !important;
+}
+
+.small {
+  font-size : small !important;
+}
+
 .no-pad {
   padding-top    : 0 !important;
   padding-left   : 0 !important;
@@ -222,8 +234,8 @@ a.btn-ghost, .btn-ghost {
 }
 
 .application {
-  padding-top    : 80px;
-  padding-bottom : 80px;
+  padding-top    : 40px;
+  padding-bottom : 40px;
   .title {
     font-size   : 36px;
     font-weight : 300;
@@ -273,10 +285,18 @@ a.btn-ghost, .btn-ghost {
       overflow-x : hidden;
       .chat-box {
         padding       : 5px;
-        background    : #fff;
+        background-color    : #FFF;
         margin-bottom : 0px;
         color         : @darker-grey;
         position      : relative;
+
+        &.me {
+          text-align : right;
+        }
+        &.other {
+          text-align : left;
+        }
+
         h2 {
           font-size   : 14px;
           line-height : 18px;
