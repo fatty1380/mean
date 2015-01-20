@@ -3930,6 +3930,29 @@ img.user-profile-picture {
   height: 75%;
   z-index: 10;
 }
+.landing-page .promo .brand-lead {
+  text-align: center;
+  position: relative;
+}
+@media (min-width: 767px) {
+  .landing-page .promo .brand-lead {
+    top: 1.2em;
+  }
+}
+@media (min-width: 992px) {
+  .landing-page .promo .brand-lead {
+    top: 1.4em;
+  }
+}
+@media (max-width: 767px) {
+  .landing-page .promo .brand-lead {
+    top: 0em;
+  }
+}
+.landing-page .promo .brand-lead img {
+  width: 50%;
+  max-width: 700px;
+}
 .landing-page .promo .title {
   margin-top: 20px;
 }
@@ -3999,20 +4022,6 @@ img.user-profile-picture {
   -o-background-size: cover;
   background-size: cover;
   height: 250px;
-}
-.landing-page .brand-lead {
-  text-align: center;
-  position: relative;
-  top: 1.5em;
-}
-@media (max-width: 767px) {
-  .landing-page .brand-lead {
-    top: 0em;
-  }
-}
-.landing-page .brand-lead img {
-  width: 65%;
-  max-width: 800px;
 }
 .landing-page .leader {
   text-align: center;

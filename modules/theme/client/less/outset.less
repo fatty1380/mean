@@ -576,6 +576,29 @@ img.user-profile-picture {
     height        : 75%;
     z-index       : 10;
 
+    .brand-lead {
+      text-align : center;
+      position   : relative;
+
+
+      @media (min-width : 767px) {
+        top : 1.2em;
+      }
+
+      @media (min-width: 992px) {
+        top: 1.4em;
+      }
+
+      @media (max-width : 767px) {
+        top : 0em;
+      }
+
+      img {
+        width     : 50%;
+        max-width : 700px;
+      }
+    }
+
     .title {
       margin-top : 20px;
     }
@@ -656,21 +679,6 @@ img.user-profile-picture {
     .background-size(cover);
     height     : 250px;
     //font-family             : 'Pathway Gothic One', 'alternate-gothic-no-2-d', sans-serif;
-  }
-
-  .brand-lead {
-    text-align : center;
-    position   : relative;
-    top        : 1.5em;
-
-    @media (max-width : 767px) {
-      top : 0em;
-    }
-
-    img {
-      width     : 65%;
-      max-width : 800px;
-    }
   }
 
   .leader {
