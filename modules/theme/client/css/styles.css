@@ -4058,11 +4058,46 @@ img.user-profile-picture {
 i.fa.fa-stack-1x.text-primary {
   top: -4px;
 }
+header.header {
+  background-color: #a1a1a1;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+header.header.navbar-landing {
+  background-color: rgba(161, 161, 161, 0.4);
+}
+header.header.navbar-landing.navbar-fixed-top {
+  background-color: rgba(216, 216, 216, 0.8);
+}
+header.header .header-profile-image {
+  opacity: 0.8;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+header.header .open .header-profile-image,
+header.header a:hover .header-profile-image {
+  opacity: 1;
+}
+header.header .user-header-dropdown-toggle {
+  padding-top: 11px !important;
+  padding-bottom: 11px !important;
+}
 .header {
   -webkit-transition: background-color 0.4s ease-in-out;
   -moz-transition: background-color 0.4s ease-in-out;
   -ms-transition: background-color 0.4s ease-in-out;
   -o-transition: background-color 0.4s ease-in-out;
+}
+.header a {
+  -webkit-transition: background-color 0.4s ease-in-out;
+  -moz-transition: background-color 0.4s ease-in-out;
+  -ms-transition: background-color 0.4s ease-in-out;
+  -o-transition: background-color 0.4s ease-in-out;
+  -webkit-transition: background-image 0.4s ease-in-out;
+  -moz-transition: background-image 0.4s ease-in-out;
+  -ms-transition: background-image 0.4s ease-in-out;
+  -o-transition: background-image 0.4s ease-in-out;
 }
 .header.navbar-fixed-top .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary,
 .header .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary:hover {
@@ -4079,10 +4114,6 @@ i.fa.fa-stack-1x.text-primary {
 }
 .header.navbar-fixed-top h1.logo a,
 .header h1.logo a {
-  -webkit-transition: background-color 0.4s ease-in-out;
-  -moz-transition: background-color 0.4s ease-in-out;
-  -ms-transition: background-color 0.4s ease-in-out;
-  -o-transition: background-color 0.4s ease-in-out;
   padding-top: 15px;
   padding-right: 30px;
   padding-bottom: 15px;
@@ -4120,14 +4151,6 @@ i.fa.fa-stack-1x.text-primary {
   background-repeat: no-repeat;
 }
 .header.navbar-fixed-top h1.logo a {
-  -webkit-transition: background-color 0.4s ease-in-out;
-  -moz-transition: background-color 0.4s ease-in-out;
-  -ms-transition: background-color 0.4s ease-in-out;
-  -o-transition: background-color 0.4s ease-in-out;
-  -webkit-transition: background-image 0.4s ease-in-out;
-  -moz-transition: background-image 0.4s ease-in-out;
-  -ms-transition: background-image 0.4s ease-in-out;
-  -o-transition: background-image 0.4s ease-in-out;
   color: #0e2d4c;
   background-color: transparent;
 }
@@ -4135,25 +4158,9 @@ i.fa.fa-stack-1x.text-primary {
   background-image: url('/modules/core/img/brand/logo-dblue.png');
 }
 .header.navbar-fixed-top.navbar-landing h1.logo a {
-  -webkit-transition: background-color 0.4s ease-in-out;
-  -moz-transition: background-color 0.4s ease-in-out;
-  -ms-transition: background-color 0.4s ease-in-out;
-  -o-transition: background-color 0.4s ease-in-out;
-  -webkit-transition: background-image 0.4s ease-in-out;
-  -moz-transition: background-image 0.4s ease-in-out;
-  -ms-transition: background-image 0.4s ease-in-out;
-  -o-transition: background-image 0.4s ease-in-out;
   background-color: #0e2d4c;
 }
 .header.navbar-landing h1.logo a {
-  -webkit-transition: background-color 0.4s ease-in-out;
-  -moz-transition: background-color 0.4s ease-in-out;
-  -ms-transition: background-color 0.4s ease-in-out;
-  -o-transition: background-color 0.4s ease-in-out;
-  -webkit-transition: background-image 0.4s ease-in-out;
-  -moz-transition: background-image 0.4s ease-in-out;
-  -ms-transition: background-image 0.4s ease-in-out;
-  -o-transition: background-image 0.4s ease-in-out;
   color: #fff;
   background-color: transparent;
 }
@@ -4206,11 +4213,13 @@ i.fa.fa-stack-1x.text-primary {
 /* Extra small devices (phones, less than 768px) */
 @media (max-width: 767px) {
   header.header,
-  header.header.navbar-fixed-top {
+  header.header.navbar-fixed-top,
+  header.header.navbar-fixed-top.navbar-landing {
     height: 40px;
   }
   header.header h1.logo a,
-  header.header.navbar-fixed-top h1.logo a {
+  header.header.navbar-fixed-top h1.logo a,
+  header.header.navbar-fixed-top.navbar-landing h1.logo a {
     padding-top: 2px;
     padding-right: 0;
     padding-bottom: 0;
@@ -4233,16 +4242,19 @@ i.fa.fa-stack-1x.text-primary {
     background-color: transparent;
   }
   header.header h1.logo a .logo-title,
-  header.header.navbar-fixed-top h1.logo a .logo-title {
+  header.header.navbar-fixed-top h1.logo a .logo-title,
+  header.header.navbar-fixed-top.navbar-landing h1.logo a .logo-title {
     background-image: url('/modules/core/img/brand/logo-dblue.png');
     background-size: 50%;
   }
   header.header .main-nav,
-  header.header.navbar-fixed-top .main-nav {
+  header.header.navbar-fixed-top .main-nav,
+  header.header.navbar-fixed-top.navbar-landing .main-nav {
     margin-top: 0;
   }
   header.header .main-nav .navbar-toggle,
-  header.header.navbar-fixed-top .main-nav .navbar-toggle {
+  header.header.navbar-fixed-top .main-nav .navbar-toggle,
+  header.header.navbar-fixed-top.navbar-landing .main-nav .navbar-toggle {
     top: 3px;
   }
 }
@@ -4260,28 +4272,6 @@ os-html-edit button[disabled] {
 .well os-page-header .h6 {
   color: #333333;
   text-align: left !important;
-}
-header.header {
-  background-color: #a1a1a1;
-  background-color: rgba(255, 255, 255, 0.8);
-}
-header.header.navbar-landing {
-  background-color: rgba(161, 161, 161, 0.4);
-}
-header.header .header-profile-image {
-  opacity: 0.8;
-  height: 28px;
-  width: 28px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-header.header .open .header-profile-image,
-header.header a:hover .header-profile-image {
-  opacity: 1;
-}
-header.header .user-header-dropdown-toggle {
-  padding-top: 11px !important;
-  padding-bottom: 11px !important;
 }
 footer .btn-cta,
 footer a.btn-cta {

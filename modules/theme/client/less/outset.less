@@ -732,8 +732,47 @@ i.fa.fa-stack-1x.text-primary {
   top : -4px;
 }
 
+
+header {
+  &.header {
+    background-color : rgb(161, 161, 161);
+
+    &.navbar-landing {
+      background-color : rgba(161, 161, 161, 0.4);
+
+      &.navbar-fixed-top {
+        background-color : rgba(216,216,216, 0.8);
+      }
+    }
+    background-color : rgba(255, 255, 255, 0.8);
+
+    .header-profile-image {
+      opacity       : 0.8;
+      height        : 28px;
+      width         : 28px;
+      border-radius : 50%;
+      margin-right  : 5px;
+    }
+
+    .open .header-profile-image, a:hover .header-profile-image {
+      opacity : 1;
+    }
+
+    .user-header-dropdown-toggle {
+      padding-top    : 11px !important;
+      padding-bottom : 11px !important;
+    }
+  }
+}
+
 .header {
   .transition (background-color 0.4s ease-in-out);
+
+
+  a {
+    .transition (background-color 0.4s ease-in-out);
+    .transition (background-image 0.4s ease-in-out);
+  }
 
   &.navbar-fixed-top .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary, .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary:hover {
     color : #ffffff !important;
@@ -748,7 +787,6 @@ i.fa.fa-stack-1x.text-primary {
     float         : left;
 
     a {
-      .transition (background-color 0.4s ease-in-out);
       padding-top    : 15px;
       padding-right  : 30px;
       padding-bottom : 15px;
@@ -775,8 +813,6 @@ i.fa.fa-stack-1x.text-primary {
 
   &.navbar-fixed-top h1.logo {
     a {
-      .transition (background-color 0.4s ease-in-out);
-      .transition (background-image 0.4s ease-in-out);
       color            : @outset-blue;
       background-color : transparent;
     }
@@ -788,16 +824,12 @@ i.fa.fa-stack-1x.text-primary {
 
   &.navbar-fixed-top.navbar-landing h1.logo {
     a {
-      .transition (background-color 0.4s ease-in-out);
-      .transition (background-image 0.4s ease-in-out);
       background-color : @outset-blue;
     }
   }
 
   &.navbar-landing h1.logo {
     a {
-      .transition (background-color 0.4s ease-in-out);
-      .transition (background-image 0.4s ease-in-out);
       color            : #fff;
       background-color : transparent;
     }
@@ -851,7 +883,7 @@ i.fa.fa-stack-1x.text-primary {
 /* Extra small devices (phones, less than 768px) */
 @media (max-width : 767px) {
 
-  header.header, header.header.navbar-fixed-top {
+  header.header, header.header.navbar-fixed-top, header.header.navbar-fixed-top.navbar-landing {
     height : 40px;
 
     h1.logo {
@@ -896,34 +928,6 @@ os-html-edit {
     .h1, .h2, .h3, .h4, .h5, .h6 {
       color      : @text-color;
       text-align : left !important;
-    }
-  }
-}
-
-header {
-  &.header {
-    background-color : rgb(161, 161, 161);
-
-    &.navbar-landing {
-      background-color : rgba(161, 161, 161, 0.4);
-    }
-    background-color : rgba(255, 255, 255, 0.8);
-
-    .header-profile-image {
-      opacity       : 0.8;
-      height        : 28px;
-      width         : 28px;
-      border-radius : 50%;
-      margin-right  : 5px;
-    }
-
-    .open .header-profile-image, a:hover .header-profile-image {
-      opacity : 1;
-    }
-
-    .user-header-dropdown-toggle {
-      padding-top    : 11px !important;
-      padding-bottom : 11px !important;
     }
   }
 }
