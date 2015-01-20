@@ -31,7 +31,8 @@ module.exports = {
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
                 'public/lib/moment/min/moment-with-locales.js',
                 'https://js.braintreegateway.com/v2/braintree.js',
-                'public/lib/ngImgCrop/compile/minified/ng-img-crop.js'
+                'public/lib/ngImgCrop/compile/minified/ng-img-crop.js',
+                'public/lib/angular-scroll/angular-scroll.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },

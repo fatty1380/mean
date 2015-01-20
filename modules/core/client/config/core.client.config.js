@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function reroute($rootScope, $state, Auth, $log) {
@@ -6,9 +6,9 @@
         var isRedirectInProgress = false;
         var redirectString;
 
-        $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 
-            if(isRedirectInProgress && !event.defaultPrevented) {
+            if (isRedirectInProgress && !event.defaultPrevented) {
                 $log.warn('[CoreConfig] stateChangeStart already in progress [%s]. Stopping redirect to "%s"', redirectString, toState.name);
                 return;
             }
@@ -52,24 +52,24 @@
             }
         });
 
-        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
             isRedirectInProgress = false;
 
             $log.info('[CoreConfig] $stateChangeSuccess completed: From state: %s "%s" %o To state: %s "%s" %o', fromState.name, fromState.url, fromState, toState.name, toState.url, toState, event);
-        } );
+        });
 
         $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
             $log.error('State Change error from %s to %s', fromState.name, toState.name, error);
 
             $log.warn('Error Status: %d in transition', error.status);
-            if(error.status === 403) {
+            if (error.status === 403) {
                 event.preventDefault();
                 $log.warn('User does not have access to %s', toState.name);
                 $state.go('authentication');
                 return;
             }
 
-            if(fromState && fromState.name) {
+            if (fromState && fromState.name) {
                 event.preventDefault();
                 $log.warn('Rerouting back to source state');
                 $state.go(fromState.name, {error: error});
@@ -80,11 +80,19 @@
         });
     }
 
+    function scrollTopChange($rootScope, $document, $log) {
+        $rootScope.$on('$stateChangeSuccess', function () {
+            $document.scrollTo(-50, 0);
+        });
+    }
+
+    scrollTopChange.$inject = ['$rootScope', '$document', '$log'];
     reroute.$inject = ['$rootScope', '$state', 'Authentication', '$log'];
 
     // Setting up route
     angular
         .module('core')
-        .run(reroute);
+        .run(reroute)
+        .run(scrollTopChange);
 })();
 

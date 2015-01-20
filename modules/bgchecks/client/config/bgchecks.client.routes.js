@@ -156,7 +156,7 @@
                     }
                 }
             }).
-            state('payments', {
+            state('reportpayments', {
                 url: '/reports/:sku/pay',
                 templateUrl: 'modules/bgchecks/views/paymentTest.client.view.html',
                 parent: 'fixed-opaque',

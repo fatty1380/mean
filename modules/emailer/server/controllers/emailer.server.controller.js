@@ -13,9 +13,6 @@ function getMessage(options) {
 
     var message = {
         'merge_language': 'mailchimp',
-        'tags': [
-            'password-resets'
-        ],
         'google_analytics_domains': [
             'joinoutset.com'
         ],

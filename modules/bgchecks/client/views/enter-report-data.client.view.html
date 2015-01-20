@@ -1,24 +1,28 @@
 <section class="content-section">
-    <h3 class="title container text-center">Order your {{vm.report.description}} today!</h3>
+    <h3 class="title container text-center">Applicant Information</h3>
 
     <div class="content-container container text-center">
         <div class="content-container-inner">
+
             <!--//form data-->
-            <div class="form-data row" ng-hide="vm.verify">
-                <h3 class="text-center">Let's get started!</h3>
+            <div class="form-data row" ng-hide="vm.verify" id="enterData">
+                <div class="about row">
+                    <div class="col-sm-3">
+                        <img class="img-responsive" src="./modules/bgchecks/img/everifile_logo.png">
+                    </div>
+                    <div class="col-sm-9" ng-hide="vm.verify">
+                        <p ng-bind-html="vm.introText"></p>
 
-                <div class="about text-center" ng-hide="vm.verify">
-                    <p ng-bind-html="vm.introText"></p>
+                        <p ng-bind-html="vm.getStartedText"></p>
 
-                    <p ng-bind-html="vm.getStartedText"></p>
+                        <p ng-show="!!vm.error && !vm.verify" ng-bind-html="vm.correctErrorsText"></p>
+                    </div>
                 </div>
-
                 <hr/>
 
 
                 <form name="vm.reportForm" data-ng-hide="vm.verify"
-                      class="form-horizontal" data-ng-submit="vm.saveForm($event)"
-                      novalidate>
+                      class="form-horizontal" ng-submit="vm.saveForm($event)" novalidate>
                     <fieldset>
                         <div class="form-group" ng-repeat="field in vm.report.fields"
                              ng-class="{'has-error':(vm.reportForm[field.name].$invalid || vm.reportForm['hidden_'+field.name].$invalid) && (vm.reportForm.$submitted || vm.reportForm[field.name].$touched)}">
@@ -52,7 +56,8 @@
                                 </select>
 
                                 <!-- Countries -->
-                                <p class="form-control-static" ng-if="field.isCountry" ng-init="vm.model[field.name] = 'united_states'">United States</p>
+                                <p class="form-control-static" ng-if="field.isCountry"
+                                   ng-init="vm.model[field.name] = 'united_states'">United States</p>
 
                                 <div class="" ng-if="field.isArray">
                                     <div ng-repeat="(i,arrayItem) in vm.model[field.name]">
@@ -69,7 +74,8 @@
                                                  class="form-group"
                                                  ng-class="{'has-error':vm.reportForm[field.name+'_'+i+'_'+df2.name].$invalid && (vm.reportForm.$submitted || vm.reportForm[field.name+'_'+i+'_'+df2.name].$touched)}">
                                                 <label class="col-md-4 control-label"
-                                                       data-ng-class="{'optional':!df2.required}">{{df2.description | titlecase}}</label>
+                                                       data-ng-class="{'optional':!df2.required}">{{df2.description |
+                                                    titlecase}}</label>
 
                                                 <div class="col-md-8">
                                                     <input ng-if="!!df2.ngType || df2.type === 'string' || !df2.isDate"
@@ -98,7 +104,8 @@
                                          ng-class="{'has-error':vm.reportForm[field.name+'_'+dataField.name].$invalid && (vm.reportForm.$submitted || vm.reportForm[field.name+'_'+dataField.name].$touched)}">
 
                                         <label class="col-sm-4 control-label"
-                                               data-ng-class="{'optional':!dataField.required}">{{dataField.description | titlecase}}</label>
+                                               data-ng-class="{'optional':!dataField.required}">{{dataField.description
+                                            | titlecase}}</label>
 
                                         <div class="col-sm-8">
                                             <input ng-if="!dataField.isDate && !dataField.isState && !dataField.isCountry"
@@ -119,7 +126,9 @@
                                                     ng-required="dataField.required" autocomplete="off">
                                             </select>
 
-                                            <p class="form-control-static" ng-if="dataField.isCountry" ng-init="vm.model[field.name][dataField.name] = 'united_states'">United States</p>
+                                            <p class="form-control-static" ng-if="dataField.isCountry"
+                                               ng-init="vm.model[field.name][dataField.name] = 'united_states'">United
+                                                States</p>
                                         </div>
                                     </div>
                                 </div>
@@ -140,21 +149,41 @@
                     <hr/>
                     <br/>
 
-                    <div class="press-kit text-center">
-                        <p>You will have a chance to review your information on the next page.</p>
-                        <button type="submit" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
-                                ng-click="vm.disabled=true;">Save and Continue ...
-                        </button>
-                        <div data-ng-show="vm.error" class="text-danger">
-                            <strong data-ng-bind="vm.error"></strong>
+
+                    <div class="about row">
+                        <div class="col-sm-3">
+                            <!-- Begin DigiCert site seal HTML and JavaScript -->
+                            <div id="DigiCertClickID_MNfovC8_" data-language="en_US">
+                                <a href="https://www.digicert.com/ssl-certificate.htm">SSL Certificates</a>
+                            </div>
+                            <script type="text/javascript">
+                                var __dcid = __dcid || [];
+                                __dcid.push(["DigiCertClickID_MNfovC8_", "5", "s", "black", "MNfovC8_"]);
+                                (function () {
+                                    var cid = document.createElement("script");
+                                    cid.async = true;
+                                    cid.src = "//seal.digicert.com/seals/cascade/seal.min.js";
+                                    var s = document.getElementsByTagName("script");
+                                    var ls = s[(s.length - 1)];
+                                    ls.parentNode.insertBefore(cid, ls.nextSibling);
+                                }());
+                            </script>
+                            <!-- End DigiCert site seal HTML and JavaScript -->
+                        </div>
+                        <div class="col-sm-9 press-kit text-center">
+                            <p>You will have a chance to review your information on the next page.</p>
+                            <button type="submit" class="btn btn-cta btn-cta-primary"
+                                    ng-class="{'disabled':!!vm.disabled}">Save and Continue ...
+                            </button>
+                            <div data-ng-show="vm.error" class="text-danger">
+                                <strong data-ng-bind="vm.error"></strong>
+                            </div>
                         </div>
                     </div>
-
-
                 </form>
             </div>
 
-            <div class="form-data row" ng-show="vm.verify">
+            <div class="form-data row" ng-show="vm.verify && !vm.ispay" id="verifyData">
 
                 <h3 ng-show="vm.verify && !vm.pay" ng-init="$element.focus()" class="text-center">Please verify your
                     information</h3>
@@ -239,58 +268,104 @@
 
                     <br/>
                     <hr/>
+                    <div class="container-fluid row">
+
+                        <div class="col-sm-3">
+                            <img class="img-responsive" src="./modules/bgchecks/img/everifile_logo.png">
+                        </div>
+                        <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                            <h4>Order Details</h4>
+
+                            <div class="row">
+                                <div class="col-sm-10">{{::vm.report.description}}</div>
+                                <div class="col-sm-2">{{::vm.getPriceString(vm.price)}}</div>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
                     <br/>
 
-                    <div class="press-kit text-center" ng-hide="vm.ispay">
-                        <p ng-bind-html="vm.createText"></p>
-                        <button type="button" class="btn btn-cta" ng-class="{'disabled':!!vm.disabled}"
-                                ng-click="vm.goBack()"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;Make
-                            Changes
-                        </button>
-                        <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
-                                ng-click="vm.submitApplicant($event)">Save and Continue&nbsp;&nbsp;<i
-                                class="fa fa-arrow-right"></i>
-                        </button>
-                        <p ng-show="vm.disabled">Please wait, this may take a moment</p>
+                    <div class="about row">
+                        <div class="col-sm-3">
+                            <!-- Begin DigiCert site seal HTML and JavaScript -->
+                            <div id="DigiCertClickID_MNfovC8_" data-language="en_US">
+                                <a href="https://www.digicert.com/ssl-certificate.htm">SSL Certificates</a>
+                            </div>
+                            <script type="text/javascript">
+                                var __dcid = __dcid || [];
+                                __dcid.push(["DigiCertClickID_MNfovC8_", "5", "s", "black", "MNfovC8_"]);
+                                (function () {
+                                    var cid = document.createElement("script");
+                                    cid.async = true;
+                                    cid.src = "//seal.digicert.com/seals/cascade/seal.min.js";
+                                    var s = document.getElementsByTagName("script");
+                                    var ls = s[(s.length - 1)];
+                                    ls.parentNode.insertBefore(cid, ls.nextSibling);
+                                }());
+                            </script>
+                            <!-- End DigiCert site seal HTML and JavaScript -->
+                        </div>
+                        <div class="col-sm-9 press-kit text-center">
+                            <p ng-bind-html="vm.createText"></p>
+                            <button type="button" class="btn btn-cta" ng-class="{'disabled':!!vm.disabled}"
+                                    ng-click="vm.goBack()"><i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;Make
+                                Changes
+                            </button>
+                            <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
+                                    ng-click="vm.submitApplicant($event)">Continue&nbsp;&nbsp;<i
+                                    class="fa fa-arrow-right"></i>
+                            </button>
+                            <p ng-show="vm.disabled">Please wait, this may take a moment</p>
 
-                        <div data-ng-show="vm.error" class="text-danger">
-                            <strong data-ng-bind="vm.error"></strong>
+                            <div data-ng-show="vm.error" class="text-danger">
+                                <strong data-ng-bind="vm.error"></strong>
+                            </div>
                         </div>
                     </div>
 
+                </div>
+
+                <div class="form-data-row">
                     <div class="press-kit text-center" ng-show="vm.ispay">
                         <p ng-bind-html="vm.payExplanation"></p>
                         <button type="button" class="btn btn-link text-muted" ng-class="{'disabled':!!vm.disabled}"
                                 ui-sref="home">cancel
                         </button>
                         <button type="button" class="btn btn-cta btn-cta-primary" ng-class="{'disabled':!!vm.disabled}"
-                                ui-sref="payments({sku:vm.report.sku})">Continue to Payment&nbsp;&nbsp;<i
+                                ui-sref="reportpayments({sku:vm.report.sku})"><i class="fa fa-lock"></i>&nbsp;Continue to Payment&nbsp;&nbsp;<i
                                 class="fa fa-arrow-right"></i>
                         </button>
                         <div data-ng-show="vm.error" class="text-danger">
                             <strong data-ng-bind="vm.error"></strong>
                         </div>
                     </div>
-
-
                 </div>
 
+                <script type="text/ng-template" id="spinnerModal.html">
+                    <div class="label label-default center-block">
+                        <br/>
+
+                        <p><i class="fa fa-cog fa-4x fa-spin"></i></p>
+
+                        <p class="h3">Creating Applicant</p>
+                    </div>
+                </script>
+
             </div>
-
-
-
-            <div class="well" ng-if="vm.debugMode">
-                <h5>Current Address</h5>
-                <pre>{{vm.model['currentAddress']}}</pre>
-                <h5>Aliases</h5>
-                <pre>{{vm.model['aliases']}}</pre>
-                <h5>Current Address</h5>
-                <pre style="overflow-y: scroll; max-height:200px">{{vm.model | prettyPrint }}</pre>
-            </div>
-            <!--//form data-->
-            <!--//press-kit-->
         </div>
-        <!--//content-container-->
+
+        <div class="well" ng-if="vm.debugMode">
+            <h5>Current Address</h5>
+            <pre>{{vm.model['currentAddress']}}</pre>
+            <h5>Aliases</h5>
+            <pre>{{vm.model['aliases']}}</pre>
+            <h5>Current Address</h5>
+            <pre style="overflow-y: scroll; max-height:200px">{{vm.model | prettyPrint }}</pre>
+        </div>
+        <!--//form data-->
+        <!--//press-kit-->
+    </div>
+    <!--//content-container-->
     </div>
     <!--//container-->
 </section>

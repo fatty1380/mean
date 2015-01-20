@@ -13,7 +13,7 @@ module.exports = {
         }
     },
     https: {
-        enabled: true,
+        enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
         port: 8443,
         privateKeyPath: './config/sslcerts/key.pem',
         publicKeyPath: './config/sslcerts/cert.pem',

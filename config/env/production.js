@@ -16,7 +16,7 @@ module.exports = {
         keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
     },
     https: {
-        enabled: true,
+        enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
         port: 443,
         privateKeyPath: '',
         publicKeyPath: ''
@@ -51,6 +51,9 @@ module.exports = {
         },
         fs: {
             writePath: '/tmp/'
+        },
+        hipchat: {
+            apiToken: '7ed389522a6b4b664521eb6e683056'
         }
     },
     reports: {},

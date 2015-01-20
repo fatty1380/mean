@@ -47,12 +47,17 @@
         };
     }
 
-    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, $scope) {
+    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, $scope, $document) {
         var vm = $scope.vm = this;
         vm.auth = Authentication;
         vm.credentials = { signupType: signupType, terms: '' };
 
         vm.hello = 'HELLO';
+
+        vm.selectType = function(type, $event) {
+            vm.credentials.signupType = type;
+            //$document.scrollTopAnimated(0,30);
+        };
 
         vm.signup = function(event) {
 
@@ -84,7 +89,7 @@
         };
     }
 
-    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', '$scope'];
+    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', '$scope', '$document'];
     SignupModalController.$inject = ['$modal', '$log'];
 
     angular.module('users')

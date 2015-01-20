@@ -158,7 +158,11 @@ exports.update = function (req, res) {
     console.log('[Driver.Controller] update()');
     var driver = req.driver;
 
+    console.log('Driver Props: interests: %j\nendorsements: %j', req.body.interests, req.body.licenses[0].endorsements);
+
     driver = _.extend(driver, req.body);
+    console.log('Driver Extended: interests: %j\nendorsements: %j', driver.interests, driver.licenses[0].endorsements);
+
 
     driver.save(function (err) {
         if (err) {
@@ -166,6 +170,8 @@ exports.update = function (req, res) {
                 message: getErrorMessage(err)
             });
         } else {
+            console.log('Driver Saved: interests: %j\nlicenses[0].endorsements: %j\n\n\n\n\n\n\n', driver.interests, driver.licenses[0].endorsements);
+
             res.json(driver);
         }
     });

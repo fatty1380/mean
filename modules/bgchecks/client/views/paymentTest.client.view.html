@@ -6,35 +6,48 @@
             <div class="about">
                 <div class="container-fluid row">
 
-                    <div class="col-xs-12 col-md-offset-2 col-md-8">
+                    <div class="col-sm-3">
+                        <img class="img-responsive" src="./modules/bgchecks/img/everifile_logo.png">
+                    </div>
+                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
                         <h4>Order Details</h4>
 
                         <div class="row">
                             <div class="col-sm-10">{{::vm.report.description}}</div>
                             <div class="col-sm-2">{{::vm.getPriceString(vm.price)}}</div>
                         </div>
-                        <hr>
                     </div>
                 </div>
+                <hr>
 
 
-                <div class="container-fluid row" ng-hide="vm.success" ng-class="{'disabled':vm.processing}">
-                    <div class="col-xs-12 col-md-offset-2 col-md-8">
-                        <h4>Payment Information
-                            <small>Please enter your credit card, or use PayPal</small>
-                        </h4>
 
-                        <br/>
+                <div class="container-fluid row" ng-hide="vm.success" class="payment-form"
+                     ng-class="{'disabled':vm.processing}">
+                    <form id="paymentAuthForm" name="vm.paymentAuthForm" method="POST" action="/api/payments/create/">
+                        <div class="well col-xs-12 col-md-offset-2 col-md-8">
+                            <h4>Payment Information
+                                <small>Please enter your credit card, or use PayPal</small>
+                            </h4>
 
-                        <form id="paymentAuthForm" name="vm.paymentAuthForm" method="POST" action="/api/payments/create/">
-                            <div id="dropin"></div>
-                            <br/>
-                            <hr/>
-                            <button type="submit" class="btn btn-cta btn-cta-primary center-block"
-                                    ng-class="{'disabled': vm.paymentAuthForm.$submitted || vm.processing}">Purchase Reports
-                            </button>
-                        </form>
-                    </div>
+                            <div id="dropin" class="dropin"></div>
+
+                            <div class="row">
+                                <button type="submit" class="btn btn-cta btn-cta-primary center-block"
+                                        ng-class="{'disabled': vm.paymentAuthForm.$submitted || vm.processing}">
+                                    <i class="fa fa-lock"></i>&nbsp;Purchase Reports
+                                </button>
+                            </div>
+                            <div class="row text-center">
+                                <br>
+                                <a href="https://www.braintreegateway.com/merchants/YOUR_MERCHANT_ID/verified"
+                                   target="_blank" class="center-block">
+                                    <img src="https://braintree-badges.s3.amazonaws.com/07.png" class="" border="0"/>
+                                </a>
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
 
 
