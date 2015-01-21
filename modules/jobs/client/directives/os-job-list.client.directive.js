@@ -13,6 +13,7 @@
             vm.debug = !!success;
         });
 
+        vm.showSearch = vm.showSearch === undefined ? true : !!vm.showSearch;
         vm.limitTo = vm.limitTo || 10;
         vm.filter = {};
 
@@ -37,6 +38,9 @@
                 vm.jobs = vm.srcJobs;
             }
             else if (!!vm.companyId) {
+                vm.filter.company = { '_id' : vm.companyId };
+                vm.myJobsOnly = true;
+
                 vm.jobs = Jobs.ByCompany.query({
                     companyId: vm.companyId
                 });
@@ -55,7 +59,7 @@
 
         vm.toggleFilterMine = function () {
             if ((vm.myJobsOnly = !vm.myJobsOnly)) {
-                vm.filter.company = vm.companyId;
+                vm.filter.company = { '_id' : vm.companyId };
             }
             else {
                 if (vm.filter.hasOwnProperty('company')) {
@@ -92,7 +96,8 @@
                 srcJobs: '=?',
                 showPost: '=?',
                 limitTo: '=?',
-                config: '=?'
+                config: '=?',
+                showSearch: '=?'
             },
             controller: JobListController,
             controllerAs: 'vm',

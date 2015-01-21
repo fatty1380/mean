@@ -69,6 +69,9 @@ exports.signup = function (req, res) {
                         console.error('[SIGNUP] - err creating new driver', err);
                     }
 
+                    user.driver = driver;
+                    user.save();
+
                     login(req, res, user);
                 });
 
@@ -85,6 +88,9 @@ exports.signup = function (req, res) {
                     if (err) {
                         console.error('[SIGNUP] - err creating new Company', err);
                     }
+
+                    user.company = company;
+                    user.save();
 
                     login(req, res, user);
                 });
@@ -110,18 +116,48 @@ exports.signin = function (req, res, next) {
             user.password = undefined;
             user.salt = undefined;
 
-            user.isAdmin = user.roles.indexOf('admin') !== -1;
+            debugger;
 
-            console.log('[Auth.Ctrl] signin() user=)', user);
+            if(user.isDriver && !user.driver) {
 
-            req.login(user, function (err) {
-                if (err) {
-                    res.status(400).send(err);
-                } else {
-                    console.log('Logged In User is a %s', user.type);
-                    res.json(user);
-                }
-            });
+                Driver.findOne({
+                    user: user
+                }).exec(function (err, driver) {
+                    if (err) {
+                        console.log('Error finding driver for user %s', user._id);
+                    }
+
+                    if(!!driver) {
+                        console.log('Found Driver %s for user %s', driver._id, user._id);
+                        user.driver = driver;
+                        user.save();
+                    }
+
+                    login(req, res, user);
+                });
+            }
+            else if(user.isOwner && !user.company) {
+
+                Company.findOne({
+                    owner: user
+                }).exec(function (err, company) {
+                    if (err) {
+                        console.log('Error finding company for user %s', user._id);
+                    }
+
+                    if(!!company) {
+                        console.log('Found Company %s for user %s', company._id, user._id);
+                        user.company = company;
+                        user.save();
+                    }
+
+                    login(req, res, user);
+                });
+            }
+            else {
+              login(req, res, user);
+            }
+
         }
     })(req, res, next);
 };

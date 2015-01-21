@@ -38,34 +38,34 @@
 
                     <div class="chat-section">
 
-                        <div class="row chat-box" ng-repeat="message in vm.application.messages"
+                        <div class="row chat-box" ng-repeat="message in vm.application.messages" ng-init="message.username = message.username || message.sender.username"
                              ng-class="{'me': message.username === vm.user.username, 'other': message.username !== vm.user.username }">
 
                             <div class="col-sm-2">
                                 <img class="img-responsive img-circle" ng-show="message.username !== vm.user.username"
-                                     ng-src="{{message.profileImageURL}}">
+                                     ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
                             </div>
 
                             <div class="col-sm-8" ng-if="message.type === 'status'">
                                 <blockquote><p></p></blockquote>
-                                <span class="timestamp smaller">{{message.username}} {{message.text}} : {{message.created | date: 'short' }}</span>
+                                <span class="timestamp smaller">{{message.sender.displayName}} {{message.text}} : {{message.created | date: 'short' }}</span>
                             </div>
 
-                            <div class="col-sm-8" ng-if="message.type === 'message'">
+                            <div class="col-sm-8" ng-if="message.type === 'message' || message.type === undefined">
                                 <blockquote><p>{{message.text}}</p></blockquote>
                                 <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
                             </div>
 
                             <div class="col-sm-2">
                                 <img class="img-responsive img-circle" ng-show="message.username === vm.user.username"
-                                     ng-src="{{message.profileImageURL}}">
+                                     ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
                             </div>
 
                         </div>
 
                     </div>
                     <div class="chat-entry">
-                        <form data-ng-submit="vm.postMessage()" novalidate>
+                        <form data-ng-submit="vm.postMessage()" name="vm.messageText" novalidate>
                             <div class="col-md-9">
                                 <input type="text" ng-show="vm.messageMode === 'text'"
                                        data-ng-model="vm.message" class="form-control"
@@ -105,6 +105,11 @@
                         </form>
                     </div>
                 </div>
+            </div>
+
+            <div class="row item">
+                <h3>Application Messages (raw)</h3>
+                <pre>{{vm.rawMessages}}</pre>
             </div>
         </div>
     </div>

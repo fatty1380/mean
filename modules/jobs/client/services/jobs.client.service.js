@@ -16,7 +16,20 @@
             }),
             ByCompany: $resource('api/companies/:companyId/jobs', {
                 companyId: '@companyId'
-            })
+            }),
+            listByCompany: function(query) {
+                var rsrc = $resource('/api/companies/:companyId/jobs/applications', {
+                    companyId: '@companyId'
+                }, {
+                    query: {
+                        method: 'GET',
+                        isArray: true
+                    }
+                });
+
+                return rsrc.query(query).$promise;
+            }
+
         };
     }
 

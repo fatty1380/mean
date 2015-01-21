@@ -17,14 +17,6 @@
         var _this = this;
 
         _this._data = {
-            ByUser: $resource('api/users/:userId/applications', {
-                userId: '@userId'
-            }, {
-                query: {
-                    method: 'GET',
-                    isArray: true
-                }
-            }),
             ByJob: $resource('api/jobs/:jobId/applications', {
                 jobId: '@jobId'
             }, {
@@ -46,9 +38,31 @@
                     method: 'POST'
                 }
             }),
-            ByCompany: $resource('api/companies/:companyId/applications', {
-                companyId: '@companyId'
-            }),
+            listByUser: function (query) {
+                var rsrc = $resource('api/users/:userId/applications', {
+                    userId: '@userId'
+                }, {
+                    query: {
+                        method: 'GET',
+                        isArray: true
+                    }
+                });
+
+                return rsrc.query(query).$promise;
+            },
+            listByCompany: function (query) {
+                var rsrc = $resource('api/companies/:companyId/applications', {
+                    companyId: '@companyId'
+                }, {
+                    query: {
+                        method: 'GET',
+                        isArray: true
+                    }
+                });
+
+                return rsrc.query(query).$promise;
+
+            },
             ForDriver: $resource('api/jobs/:jobId/applications/:userId', {
                 jobId: '@jobId',
                 userId: '@userId'
@@ -63,4 +77,5 @@
     angular.module('applications').factory('Applications', ApplicationsService);
 
 
-})();
+})
+();

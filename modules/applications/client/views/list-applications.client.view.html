@@ -1,10 +1,10 @@
 
     <section class="container-fluid">
         <os-page-header title="{{vm.listTitle || 'My Active Job Applications'}}"
-                sub-title="{{vm.applications.length || 'No Active'}} Job Applications"></os-page-header>
+                sub-title="{{!!vm.jobs ? vm.jobs.length + ' Active Job Posts' : vm.applications.length ? vm.applications.length + ' Job Applicants' : 'No Active Posts'}}"></os-page-header>
 
         <!-- No Applications / Disabled Intro Text -->
-        <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-if="!vm.isEnabled || !vm.applications.length">
+        <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-show="!vm.config.list || !vm.applications.length">
             <h3 ng-bind-html="vm.bodyCopy.heading"></h3>
 
             <div ng-bind-html="vm.bodyCopy.intro"></div>

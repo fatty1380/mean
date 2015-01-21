@@ -25,40 +25,18 @@
 
                 vm.noItemsText = 'No job applications yet';
 
-                vm.findAll = function () {
-                    $log.debug('[AppController.find] Searching for applications');
+                if(vm.applications && vm.applications.length) {
+                    var first = vm.applications[0];
 
-                    var jobId = vm.job && vm.job._id;
+                    if(first.hasOwnProperty('job')) {
+                        $log.debug('Looking at a list of applications');
+                    } else if (first.hasOwnProperty('applications')) {
+                        $log.debug('Looking at a list of jobs :)');
 
-                    var promise;
-
-                    if (jobId) {
-                        $log.debug('[AppController.find] Looking for applications on jobID %o', jobId);
-
-                        promise = Applications.ByJob.query({
-                            jobId: jobId
-                        }).$promise;
-                    } else if (vm.user.type === 'driver') {
-                        promise = Applications.ByUser.query({
-                            userId: vm.user._id
-                        }).$promise;
-                    } else if (vm.user.type === 'owner' && vm.company) {
-                        promise = Applications.ByCompany.query({
-                            companyId: vm.company._id
-                        }).$promise;
+                        vm.jobs = vm.applications;
                     }
-
-                    promise.then(function (applications) {
-                        $log.debug('[AppController.find] Found %d applications', applications.length);
-                        vm.applications = applications;
-                    }, function (error) {
-                        $log.error('[AppController.find] Error finding applications %o', error);
-                    });
-                };
-
-                if (!vm.applications) {
-                    vm.findAll();
                 }
+
             },
             controllerAs: 'vm',
             bindToController: true

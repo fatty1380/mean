@@ -8,28 +8,34 @@
         vm.isopen = false;
         vm.myId = auth.user._id;
         vm.user = auth.user;
+        vm.room = vm.application._id;
+
+        vm.rawMessages = JSON.stringify(application.messages, undefined, 2);
 
         vm.postMessage = function() {
             vm.application.messages.push({
-                text: vm.application.message,
+                text: vm.message,
                 status: 'sent',
                 sender: auth.user._id
             });
 
             if (!!Socket) {
                 var message = {
+                    scope: 'applications',
                     text: vm.message
                 };
 
+                console.log('[AppCtrl.PostMessage] Emitting Message');
                 // Emit a 'chatMessage' message event
                 Socket.emit('chatMessage', message);
 
                 // Clear the message text
                 vm.message = '';
+
             } else {
 
                 application.$update(function () {
-                    vm.application.message = '';
+                    vm.message = '';
                 }, processError);
             }
         };
@@ -60,26 +66,25 @@
         /** Chat Methods ------------------------------------------------ */
 
 
-        var room = vm.application._id;
 
         if (!!Socket) {
-
-            Socket.emit('join-room', room);
-
+            console.log('[AppCtrl] socket exists. Adding `connect` handler');
             Socket.on('connect', function() {
-                $log.info('[AppCtrl] Connecting to chat room: %s', room);
-                Socket.emit('join-room', room);
+                $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
+                Socket.emit('join-room', vm.room);
             });
 
+            console.log('[AppCtrl] socket exists. Adding `chatMessage` handler');
             // Add an event listener to the 'chatMessage' event
             Socket.on('chatMessage', function (message) {
                 console.log('[AppCtrl] Incoming message: %o', message);
                 vm.application.messages.push(message);
             });
 
+            console.log('[AppCtrl] socket exists. Adding `$destroy` handler');
             // Remove the event listener when the controller instance is destroyed
             $scope.$on('$destroy', function () {
-                Socket.removeListener('chatMessage').leave(room);
+                Socket.removeListener('chatMessage').leave(vm.room);
             });
         } else {
             $log.warn('Socket is undefined in this context');

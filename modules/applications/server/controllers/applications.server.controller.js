@@ -49,8 +49,8 @@ exports.create = function (req, res) {
     console.log('[ApplicationController.create] req.job: %j, req.body.jobId: %j', req.job, req.body.jobId);
 
     application.user = req.user;
-    application.job = req.job;// || req.body.jobId; // TODO: Figure out why this is not populated!
-    application.company = req.job.company; // This should be populated by jobByID Middleware
+    application.job = req.job;
+    application.company = req.job.company;
 
     console.log('[ApplicationController.create] Creating new application: %j', application);
 
@@ -60,6 +60,17 @@ exports.create = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
+            debugger;
+            req.job.applications.push(application);
+            req.job.save(function(err) {
+                if(err) {
+                    console.log('error saving job application to job');
+                }
+                else {
+                    console.log('saved job application to job');
+                }
+            });
+
             res.json(application);
         }
     });
@@ -184,6 +195,17 @@ exports.loadMine = function (req, res) {
 };
 
 exports.queryByUserID = function (req, res) {
+    if(req.user.type === 'driver') {
+        req.query = {
+            user: req.params.userId
+        };
+    }
+    else if(req.user.type === 'owner') {
+        req.query = {
+            'company.owner': req.userId
+        };
+    }
+
     req.query = {
         user: req.params.userId
     };
@@ -218,19 +240,30 @@ exports.applicationByID = function (req, res, next, id) {
         .populate('job')
         .populate('company', 'name owner agents profileImageURL')
         .populate('messages')
-        .populate({
-            path: 'messages.sender',
-            model: 'User',
-            select: 'displayName id'
-        })
+        .populate('messages.sender')
         .exec(function (err, application) {
             if (err) {
                 return next(err);
             }
-            console.log('[Application.byId] %s', JSON.stringify(application, undefined, 2));
 
             req.application = application;
-            next();
+
+            var options = {
+                path: 'messages.sender',
+                model: 'User'
+            };
+
+            Application.populate(application, options, function (err, populated ) {
+                if(err) {
+                    console.log('error retrieving application, returning non-populated version', err);
+                    next();
+                }
+                console.log('[Application.byId] %s', JSON.stringify(populated, undefined, 2));
+
+                req.application = populated;
+                next();
+            });
+
         });
 };
 
@@ -242,4 +275,46 @@ exports.hasAuthorization = function (req, res, next) {
         return res.status(403).send('User is not authorized');
     }
     next();
+};
+
+exports.persistMessage = function(applicationId, message) {
+    debugger;
+    var msg = new Message({
+        sender: message.sender,
+        text: message.text,
+        status: message.status || 'sent'
+    });
+
+    console.log('Saving new message object to DB: %j', msg);
+
+    msg.save(function (err, newMessage) {
+        console.log('saved');
+        debugger;
+        if (err) {
+            console.log('CRAP - Couldn\'t save message, %j', err);
+            debugger;
+        }
+        else {
+            console.log('SAVED message object to DB: %j', newMessage);
+            debugger;
+
+            Application.findOneAndUpdate(
+                {_id: applicationId},
+                {$push: {messages: msg}},
+                {safe: true, upsert: true},
+                function (err, model) {
+                    console.log('saved');
+                    debugger;
+                    if (err) {
+                        console.log('Couldn\'t save application with message, %j', err);
+                    }
+
+                    console.log('saved application: ' + model);
+
+                }
+            );
+        }
+    });
+
+
 };

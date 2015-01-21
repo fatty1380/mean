@@ -6,7 +6,7 @@
 
         Menus.addMenuItem('topbar', {
             title: 'Applicants',
-            state: 'applications.mine',
+            state: 'applications.company',
             userTypes: ['owner'],
             position: 20
         });

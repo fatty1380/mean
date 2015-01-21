@@ -1,11 +1,94 @@
 <section>
 
     <div data-ng-class="{'panel panel-default': !!vm.header}" data-ng-if="vm.config.list">
-        <div class="list-group" data-ng-if="vm.displayMode !== 'table'">
+
+        <div ng-if="vm.jobs" ng-repeat="job in vm.jobs" class="row">
+            <h3>{{job.name}}
+                <small class="pull-right" ng-show="!!job.applications.length">{{job.applications.length}}
+                    Applicant{{job.applications.length > 1 ? 's' : ''}}
+                </small>
+            </h3>
+
+            <div class="list-group">
+                <a data-ng-repeat="application in job.applications"
+                   ng-init="user = application.user; driver = user.driver"
+                   class="list-group-item">
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <img ng-src="{{application.user.profileImageURL}}" class="img-responsive">
+                        </div>
+
+                        <div class="col-sm-10">
+
+                            <dl class="dl-horizontal">
+                                <dt>Applicant:</dt>
+                                <dd class="h4 stronger">{{application.user.displayName}}
+                                    <small class="pull-right">Applied {{application.created | date: 'short'}}</small>
+                                </dd>
+                                <dt>License:</dt>
+                                <dd>
+                                        <p>
+                                            <i class="fa fa-credit-card"></i> &nbsp;{{driver.licenses[0].state.name}}
+                                        <span ng-show="driver.licenses[0].type">
+                                            <span ng-if="driver.licenses[0].rating"> Class {{driver.licenses[0].rating | uppercase }}</span>
+                                            {{driver.licenses[0].type}}
+                                        </span>
+                                            Driver License
+                                        <span class="pad-left">
+                                            <span ng-repeat="(name, val) in driver.licenses[0].endorsements"
+                                                  class="endorsement label label-success mgn-left">{{name}}&nbsp;</span></span>
+                                        </p>
+                                </dd>
+                                <dt>Interests</dt>
+                                <dd>
+                                    <p>
+                                        <span ng-repeat="interest in visibleInterests = (driver.interests | filter: {value: true})"
+                                              class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
+
+                                        <span ng-show="!visibleInterests.length">
+                                            <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>
+                                        </span>
+                                    </p>
+                                </dd>
+                                <dt>Cover Letter:</dt>
+                                <dd accordion>
+                                    <accordion-group heading="Click here to see the applicant's cover letter">
+                                        <p data-ng-bind-html="application.introduction"></p>
+                                    </accordion-group>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                            <button type="button" class="btn btn-primary"
+                                    data-ui-sref="applications.view({applicationId: '{{application._id}}' })">Review
+                            </button>
+                            <button type="button" class="btn btn-success">Connect</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="list-group" ng-if="!job.applications || !job.applications.length">
+                <div class="list-group-item text-center">
+                    <h4>No one has applied to this job yet. Would you like to <a ui-sref="jobs.edit({'jobId':job._id})">edit
+                        your post?</a></h4>
+                </div>
+
+            </div>
+        </div>
+
+        <div ng-if="!vm.jobs" class="list-group" data-ng-if="vm.displayMode !== 'table'">
             <a data-ng-repeat="application in vm.applications"
                data-ui-sref="applications.view({applicationId: '{{application._id}}' })" class="list-group-item">
                 <os-view-application display-mode="{{vm.displayMode || normal}}"
                                      model="application"></os-view-application>
+
+                <pre>{{application | prettyPrint}}</pre>
             </a>
         </div>
 

@@ -2,35 +2,85 @@
     'use strict';
 
 
-    function handle404s(err, $q) {
-        debugger;
+    function handle404s(err) {
         // recover here if err is 404
         if (err.status === 404) {
             return null;
         } //returning recovery
-        // otherwise return a $q.reject
-        return $q.reject(err);
+
+        return err;
     }
 
     function moduleConfigResolve(AppConfig, auth) {
         return AppConfig.getModuleConfig(auth.user.type, 'applications');
     }
 
+    function myApplications(auth, apps) {
+        var query = {
+            userId: auth.user._id
+        };
+
+        var applications;
+
+        if (auth.user.type === 'owner') {
+            query.companyId = auth.user.company || auth.user.company._id;
+            applications = apps.listByCompany(query);
+        } else {
+            applications = apps.listByUser(query);
+        }
+
+        return applications.catch(function (err) {
+            if (err.status === 404) {
+                return [];
+            }
+
+            return err;
+        });
+
+    }
+
+    function myJobsWithApplications(auth, jobs) {
+        var query = {
+            userId: auth.user,
+            companyId: auth.user.company
+        };
+
+        return jobs.listByCompany(query).catch(function(err) {
+            if (err.status === 404) {
+                return [];
+            }
+            return err;
+        });
+    }
+
     function resolveApplications(Authentication, Applications, $stateParams) {
 
+        debugger;
+        var userId = _.isObject($stateParams.userId) ? Authentication.user._id : $stateParams.userId;
+        var userType = _.isObject($stateParams.userId) ? Authentication.user.type : null;
+        var companyId = _.isObject($stateParams.companyId) ? null : $stateParams.companyId;
+
         var query = {
-            userId: $stateParams.userId || Authentication.user._id,
-            userType: Authentication.user.type
+            userId: userId
         };
 
         if (!!$stateParams.companyId) {
-            query.companyId = $stateParams.companyId;
+            query.companyId = companyId;
         }
 
-        var applications = Applications.ByUser.query({
-            userId: Authentication.user._id,
-            userType: Authentication.user.type
-        }).$promise;
+        if (!!$stateParams.userType) {
+            query.userType = userType;
+        }
+
+        var applications;
+
+        if (Authentication.user.type === 'owner') {
+            applications = Applications.WithJobs(query);
+        }
+        else if (Authentication.user.type === 'driver') {
+            applications = Applications.ByUser.query(query).$promise;
+        }
+
 
         return applications.catch(handle404s);
     }
@@ -39,6 +89,7 @@
         var vm = this;
         vm.applications = applications;
         vm.config = moduleConfig || {};
+
 
         if (Authentication.user.type === 'driver') {
             vm.bodyCopy = {
@@ -106,12 +157,25 @@
                 url: '/me',
                 templateUrl: 'modules/applications/views/list-applications.client.view.html',
                 resolve: {
-                    applications: resolveApplications
+                    applications: myApplications
                 },
                 controller: 'ApplicationListController',
                 controllerAs: 'vm',
                 bindToController: true
             }).
+
+            state('applications.company', {
+                url: '/mine',
+                templateUrl: 'modules/applications/views/list-applications.client.view.html',
+                resolve: {
+                    applications: myJobsWithApplications
+                },
+                controller: 'ApplicationListController',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
+
+
 
             state('applications.create', {
                 url: '/create',
@@ -123,6 +187,7 @@
                 templateUrl: 'modules/applications/views/view-application.client.view.html',
                 resolve: {
                     application: function ($stateParams, Applications) {
+
                         var promise = Applications.ById.get({
                             id: $stateParams.applicationId
                         }).$promise;
@@ -141,6 +206,8 @@
             });
     }
 
+    myJobsWithApplications.$inject = ['Authentication', 'Jobs'];
+    myApplications.$inject = ['Authentication', 'Applications'];
     resolveApplications.$inject = ['Authentication', 'Applications', '$stateParams'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
 

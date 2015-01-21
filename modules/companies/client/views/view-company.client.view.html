@@ -29,7 +29,7 @@
                 <os-company company="vm.company" config="vm.config"></os-company>
 
                 <os-job-list ng-if="!!vm.company && vm.company.about" header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}"
-                             show-post="vm.user._id === vm.company.owner._id"></os-job-list>
+                             show-post="vm.user._id === vm.company.owner._id" show-search="false"></os-job-list>
             </div>
 
             <div class="gutter right col-md-4" ng-if="!!vm.company">

@@ -59,14 +59,14 @@
                 return rsrc.get().$promise.then(
                     function (success) {
                         if (success.hasOwnProperty(config)) {
-                            $q.resolve(success[config]);
+                            return $q.when(success[config]);
                         } else {
-                            $q.resolve(success);
+                            return $q.when(success);
                         }
                     },
                     function (err) {
                         $log.log('[AppCfg] "%s" is not an available', config, err);
-                        $q.resolve(null);
+                        return $q.when(null);
                     }
                 );
             },
