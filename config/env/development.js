@@ -12,6 +12,9 @@ module.exports = {
             pass: ''  
         }
     },
+    logs: {
+        access: process.env.LOG_ACCESS_PATH || './log/'
+    },
     https: {
         enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
         port: 8443,

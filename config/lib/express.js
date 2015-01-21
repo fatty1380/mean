@@ -77,28 +77,36 @@ module.exports.initMiddleware = function (app) {
     // Initialize favicon middleware
     app.use(favicon('./modules/core/client/img/brand/favicon.ico'));
 
+    var accessLogStream, streamType;
+
     // Environment dependent middleware
     if (process.env.NODE_ENV === 'development') {
-        // Enable logger (morgan)
-        app.use(morgan('dev'));
-
         // Disable views cache
         app.set('view cache', false);
+
+        streamType = 'dev'
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
 
+        streamType = 'combined';
+    }
+
+    if (!!config.logs.access) {
         var exist = fs.existsSync(config.logs.access);
         var perm = fs.statSync(config.logs.access, 2);
-        if (exist && perm)
-        {
+        if (exist && perm) {
             // Enable logger (morgan) write to access.log file.
-            var accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
+            accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
                 flags: 'a'
             });
             app.use(morgan('combined', {
                 stream: accessLogStream
             }));
         }
+    }
+    else {
+        // Enable logger (morgan)
+        app.use(morgan(streamType));
     }
 
     // Request body parsing middleware should be above methodOverride
