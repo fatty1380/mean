@@ -24,15 +24,19 @@
                 <oset-applicant class="col-sm-10 col-sm-offset-1" application="vm.application"></oset-applicant>
             </div>
 
-            <div class="row item" ng-hide="vm.connecting || vm.application.connection || vm.application.connection.isValid">
-                <p class="text-center col-sm-10 col-sm-offset-1">In order to view reports and chat with this applicant, you must first <em>Connect</em>
+            <div class="row item"
+                 ng-hide="vm.connecting || vm.application.connection || vm.application.connection.isValid">
+                <p class="text-center col-sm-10 col-sm-offset-1">In order to view reports and chat with this applicant,
+                    you must first <em>Connect</em>
                     with them using the button below. This will count against your monthly allotment of
                     connections.</em></p>
 
                 <div class="col-xs-12 text-right col-sm-10 col-sm-offset-1">
                     <button type="button" class="btn btn-cta btn-cta-primary"><i class="fa fa-trash"></i>Reject
                     </button>
-                    <button type="button" class="btn btn-cta btn-cta-secondary" ng-click="vm.createConnection()">Connect</button>
+                    <button type="button" class="btn btn-cta btn-cta-secondary" ng-click="vm.createConnection()">
+                        Connect
+                    </button>
                 </div>
             </div>
 
@@ -41,7 +45,8 @@
             </div>
 
             <div class="row item" ng-show="vm.newlyConnected">
-                <p class="text-center">You are now connected to {{vm.application.user.displayName}}. You will now be able to view any reports they have ordered and message directly with them.</p>
+                <p class="text-center">You are now connected to {{vm.application.user.displayName}}. You will now be
+                    able to view any reports they have ordered and message directly with them.</p>
             </div>
 
             <div class="row item" ng-show="vm.application.connection">
@@ -54,14 +59,10 @@
                              ng-init="message.username = message.username || message.sender.username"
                              ng-class="{'me': message.username === vm.user.username, 'other': message.username !== vm.user.username }">
 
+                            <span ng-if="message.type !== 'status'">
                             <div class="col-sm-2">
-                                <img class="img-responsive img-circle" ng-show="message.username !== vm.user.username"
+                                <img class="profile-image medium" ng-show="message.username !== vm.user.username"
                                      ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
-                            </div>
-
-                            <div class="col-sm-8" ng-if="message.type === 'status'">
-                                <blockquote><p></p></blockquote>
-                                <span class="timestamp smaller">{{message.sender.displayName}} {{message.text}} : {{message.created | date: 'short' }}</span>
                             </div>
 
                             <div class="col-sm-8" ng-if="message.type === 'message' || message.type === undefined">
@@ -70,52 +71,62 @@
                             </div>
 
                             <div class="col-sm-2">
-                                <img class="img-responsive img-circle" ng-show="message.username === vm.user.username"
+                                <img class="profile-image medium" ng-show="message.username === vm.user.username"
                                      ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
+                            </div>
+                            </span>
+
+                            <div class="col-sm-8 col-sm-offset-2 text-center" ng-if="message.type === 'status'">
+                                <p>
+                                    <span class="timestamp smaller">{{message.sender.displayName}} {{message.text}} : {{message.created | date: 'short' }}</span>
+                                </p>
                             </div>
 
                         </div>
 
                     </div>
                     <div class="chat-entry">
-                        <form data-ng-submit="vm.postMessage()" name="vm.messageText" novalidate>
+                        <div class="row">
                             <div class="col-md-9">
                                 <input type="text" ng-show="vm.messageMode === 'text'"
-                                       data-ng-model="vm.message" class="form-control"
-                                       placeholder="new message ..." required/>
-                                        <textarea type="text" ng-show="vm.messageMode === 'multiline'" rows="3"
-                                                  data-ng-model="vm.message" class="form-control"
-                                                  placeholder="new message..." required></textarea>
-                                <os-html-edit ng-show="vm.messageMode === 'html'" toolbar="[]"
+                                       data-ng-model="vm.message" class="form-control "
+                                       placeholder="new message ..."/>
+
+                                <textarea type="text" ng-show="vm.messageMode === 'multiline'" rows="3"
+                                          data-ng-model="vm.message" class="form-control"
+                                          placeholder="new message..."></textarea>
+
+                                <os-html-edit ng-show="vm.messageMode === 'html'"
                                               model="vm.message"></os-html-edit>
                             </div>
                             <div class="col-md-3">
-                                <div class="btn-group" dropdown>
-                                    <button type="submit" class="btn btn-primary" value="send">Send</button>
-                                    <button type="button" class="btn btn-primary dropdown-toggle"
-                                            is-open="vm.isopen">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Message Type Options</span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#"
-                                               ng-click="vm.messageMode='text'; vm.isopen = false;"
-                                               ng-class="{'strong' : vm.messageMode === 'text'}">Text</a></li>
-                                        <li><a href="#"
-                                               ng-click="vm.messageMode='multiline'; vm.isopen = false;"
-                                               ng-class="{'strong' : vm.messageMode === 'multiline'}">Multi-line</a>
-                                        </li>
-                                        <li><a href="#"
-                                               ng-click="vm.messageMode='html'; vm.isopen = false;"
-                                               ng-class="{'strong' : vm.messageMode === 'html'}">Formatted</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <!--<div class="btn-group" dropdown>-->
+                                    <button type="button" class="btn btn-primary btn-block" value="send" ng-click="vm.postMessage();"
+                                            ng-class="{'disabled':(vm.sending || !vm.message)}">Send</button>
+                                    <!--<button type="button" class="btn btn-primary dropdown-toggle"-->
+                                            <!--is-open="vm.isopen">-->
+                                        <!--<span class="caret"></span>-->
+                                        <!--<span class="sr-only">Message Type Options</span>-->
+                                    <!--</button>-->
+                                    <!--<ul class="dropdown-menu" role="menu">-->
+                                        <!--<li><a href="#"-->
+                                               <!--ng-click="vm.messageMode='text'; vm.isopen = false;"-->
+                                               <!--ng-class="{'strong' : vm.messageMode === 'text'}">Text</a></li>-->
+                                        <!--<li><a href="#"-->
+                                               <!--ng-click="vm.messageMode='multiline'; vm.isopen = false;"-->
+                                               <!--ng-class="{'strong' : vm.messageMode === 'multiline'}">Multi-line</a>-->
+                                        <!--</li>-->
+                                        <!--<li><a href="#"-->
+                                               <!--ng-click="vm.messageMode='html'; vm.isopen = false;"-->
+                                               <!--ng-class="{'strong' : vm.messageMode === 'html'}">Formatted</a>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
                             </div>
                             <div data-ng-show="vm.error" class="text-danger">
                                 <strong data-ng-bind="vm.error"></strong>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>

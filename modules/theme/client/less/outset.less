@@ -269,24 +269,32 @@ a.btn-ghost, .btn-ghost {
       }
     }
     .chat-entry {
-      border           : solid 0 1px 1px 1px @divider;
+      border           : solid 1px @divider;
+      border-top       : solid 2px @ribbon;
       background-color : @smoky-white;
+
       .btn {
-        margin : auto;
+        margin         : auto;
+        vertical-align : 50%;
+        display        : block;
       }
-      .input {
+      input, textarea {
         text-align : left;
       }
     }
     .chat-section {
-      border     : solid 1px #eee;
+      min-height : 400px;
+      max-height : 800px;
+      height     : 40%;
+      overflow-y : scroll;
+      overflow-x : hidden;
+      border     : solid 1px @divider;
       border-top : solid 2px @ribbon;
+
       .chat-box.chat-text-space p {
         margin-bottom : 10px;
       }
-      max-height : 600px;
-      overflow-y : scroll;
-      overflow-x : hidden;
+
       .chat-box {
         padding          : 5px;
         background-color : #FFF;
@@ -1472,4 +1480,44 @@ os-bg-check-summary > .pricing {
     }
   }
 
+}
+
+text-angular {
+
+  .ta-toolbar.focussed {
+    margin-left: 0px;
+    padding: 5px;
+    display          : block;
+    background-color : @smoky-white;
+    border           : 1px solid @divider;
+  }
+
+  .ta-editor {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  a.btn-cta-toolbar, .btn-cta-toolbar {
+    background : @smoky-white;
+    border     : 2px solid @divider;
+    &, & .fa {
+      color : @text-color-secondary;
+    }
+    &:hover {
+      background : darken(@smoky-white, 2%);
+      &, & .fa { color : darken(@text-color-secondary, 10%); }
+      &.active {
+        background : darken(@divider, 5%);
+      }
+    }
+    &:active {
+      background : @divider;
+      border     : 2px solid @divider;
+      &, & .fa { color : darken(@text-color, 2%); }
+    }
+    &.active {
+      background : @divider;
+      &, & .fa { color : @text-color; }
+    }
+  }
 }

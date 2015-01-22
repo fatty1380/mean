@@ -93,7 +93,7 @@ var LicenseSchema = new Schema({
 });
 
 LicenseSchema.pre('save', function (next) {
-    this.modified = Date.now;
+    this.modified = Date.now();
     next();
 });
 

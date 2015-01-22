@@ -4,7 +4,7 @@
     function ApplicationMainController(application, auth, $state, $log, $scope, Socket, Applications) {
         var vm = this;
         vm.application = application;
-        vm.messageMode = 'text';
+        vm.messageMode = 'multiline';
         vm.isopen = false;
         vm.myId = auth.user._id;
         vm.user = auth.user;
@@ -12,7 +12,67 @@
 
         vm.rawMessages = JSON.stringify(application.messages, undefined, 2);
 
+        // Update existing Application
+        vm.application.update = function () {
+            var application = vm.application.application;
+
+            application.$update(function (retval) {
+                debugger; // todo: check retval
+            }, processError);
+        };
+
+        var activate = function() {
+            if(vm.application.connection && vm.application.connection.isValid) {
+                $log.debug('creating socket for connection');
+                vm.initSocket();
+            }
+            else {
+                $log.debug('No connection, or invalid connection - not creating socket.');
+            }
+        };
+
+        /** Private Methods --------------------------------------------- */
+        var processError = function (errorResponse) {
+
+            switch (errorResponse.status) {
+                case 403:
+                    vm.error = 'Sorry, you cannot make changes to this application';
+                    $state.go('home');
+                    break;
+                default:
+                    vm.error = errorResponse.data.message;
+            }
+        };
+
+        /** Connection Methods ------------------------------------------- */
+
+        vm.createConnection = function () {
+            vm.connecting = true;
+            if (vm.application.connection) {
+                $log.debug('Existing Connection: %o', vm.application.connection);
+                debugger;
+            }
+
+            Applications.createConnection(vm.application).then(function (newConnection) {
+                debugger;
+                $log.debug('Created new connection! %o', newConnection);
+                vm.application.connection = newConnection;
+                vm.newlyConnected = true;
+                vm.initSocket();
+                return newConnection;
+            }, function(err) {
+                $log.debug('New connection failed: %o', err);
+                return err;
+            }).then(function () {
+                debugger;
+                vm.connecting = false;
+            });
+        };
+
+
+        /** Chat Methods ------------------------------------------------ */
         vm.postMessage = function () {
+            vm.sending = true;
             vm.application.messages.push({
                 text: vm.message,
                 status: 'sent',
@@ -31,87 +91,43 @@
 
                 // Clear the message text
                 vm.message = '';
+                vm.sending = false;
 
             } else {
-
                 application.$update(function () {
                     vm.message = '';
+                    vm.sending = false;
                 }, processError);
             }
         };
 
-        // Update existing Application
-        vm.application.update = function () {
-            var application = vm.application.application;
+        vm.initSocket = function() {
 
-            application.$update(function (retval) {
-                debugger; // todo: check retval
-            }, processError);
-        };
+            if (!!Socket) {
+                $log.debug('[AppCtrl] socket exists. Adding `connect` handler');
+                Socket.on('connect', function () {
+                    $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
+                    Socket.emit('join-room', vm.room);
+                });
 
-        /** Private Methods --------------------------------------------- */
-        var processError = function (errorResponse) {
+                $log.debug('[AppCtrl] socket exists. Adding `chatMessage` handler');
+                // Add an event listener to the 'chatMessage' event
+                Socket.on('chatMessage', function (message) {
+                    $log.debug('[AppCtrl] Incoming message: %o', message);
+                    vm.application.messages.push(message);
+                });
 
-            switch (errorResponse.status) {
-                case 403:
-                    vm.error = 'Sorry, you cannot make changes to this application';
-                    $state.go('home');
-                    break;
-                default:
-                    vm.error = errorResponse.data.message;
+                $log.debug('[AppCtrl] socket exists. Adding `$destroy` handler');
+                // Remove the event listener when the controller instance is destroyed
+                $scope.$on('$destroy', function () {
+                    Socket.removeListener('chatMessage').leave(vm.room);
+                });
+            } else {
+                $log.warn('Socket is undefined in this context');
             }
         };
 
-        /** Connetion Methods ------------------------------------------- */
-
-        vm.createConnection = function () {
-            vm.connecting = true;
-            if (vm.application.connection) {
-                $log.debug('Existing Connection: %o', vm.application.connection);
-                debugger;
-            }
-
-            Applications.createConnection(vm.application).then(function (newConnection) {
-                debugger;
-                $log.debug('Created new connection! %o', newConnection);
-                vm.application.connection = newConnection;
-                vm.newlyConnected = true;
-                return newConnection;
-            }, function(err) {
-                $log.debug('New connection failed: %o', err);
-                return err;
-            }).then(function () {
-                debugger;
-                vm.connecting = false;
-            });
-        };
-
-
-        /** Chat Methods ------------------------------------------------ */
-
-
-        if (!!Socket) {
-            $log.debug('[AppCtrl] socket exists. Adding `connect` handler');
-            Socket.on('connect', function () {
-                $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
-                Socket.emit('join-room', vm.room);
-            });
-
-            $log.debug('[AppCtrl] socket exists. Adding `chatMessage` handler');
-            // Add an event listener to the 'chatMessage' event
-            Socket.on('chatMessage', function (message) {
-                $log.debug('[AppCtrl] Incoming message: %o', message);
-                vm.application.messages.push(message);
-            });
-
-            $log.debug('[AppCtrl] socket exists. Adding `$destroy` handler');
-            // Remove the event listener when the controller instance is destroyed
-            $scope.$on('$destroy', function () {
-                Socket.removeListener('chatMessage').leave(vm.room);
-            });
-        } else {
-            $log.warn('Socket is undefined in this context');
-        }
+        activate();
     }
 
     ApplicationMainController.$inject = ['application', 'Authentication', '$state', '$log', '$scope', 'Socket', 'Applications'];
