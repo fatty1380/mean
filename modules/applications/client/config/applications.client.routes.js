@@ -45,7 +45,7 @@
             companyId: auth.user.company
         };
 
-        return jobs.listByCompany(query).catch(function(err) {
+        return jobs.listByCompany(query).catch(function (err) {
             if (err.status === 404) {
                 return [];
             }
@@ -125,7 +125,7 @@
             state('applications', {
                 abstract: true,
                 url: '/applications',
-                template: '<div ui-view class="content-section"></div>',
+                template: '<div ui-view class="content-section something"></div>',
                 parent: 'fixed-opaque',
                 params: {
                     companyId: {
@@ -175,7 +175,14 @@
                 bindToController: true
             }).
 
+            state('applications.reject', {
+                url: '/reject',
+                resolve: {
+                    application: ['$stateParams', 'Applications', function ($stateParams, Applications) {
 
+                    }]
+                }
+            }).
 
             state('applications.create', {
                 url: '/create',
@@ -186,14 +193,15 @@
                 url: '/:applicationId',
                 templateUrl: 'modules/applications/views/view-application.client.view.html',
                 resolve: {
-                    application: function ($stateParams, Applications) {
+                    application: ['$stateParams', 'Applications', function ($stateParams, Applications) {
 
-                        var promise = Applications.ById.get({
-                            id: $stateParams.applicationId
-                        }).$promise;
+                        var query = {
+                            applicationId: $stateParams.applicationId,
+                            action: 'view'
+                        };
 
-                        return promise.catch(handle404s);
-                    }
+                        return Applications.getApplication(query).catch(handle404s);
+                    }]
                 },
                 controller: 'ApplicationMainController',
                 controllerAs: 'vm',

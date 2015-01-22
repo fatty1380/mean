@@ -14,6 +14,9 @@ module.exports = function(app) {
         .put(users.requiresLogin, applications.hasAuthorization, applications.update)
         .delete(users.requiresLogin, applications.hasAuthorization, applications.delete);
 
+    app.route('/api/applications/:applicationId/connect')
+        .post(applications.createConnection);
+
     app.route('/api/jobs/:jobId/applications')
         .get(applications.queryByJobID) // ,
         .post(users.requiresLogin, applications.create);

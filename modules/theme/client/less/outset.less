@@ -35,7 +35,7 @@ span.cta-outline {
   padding-bottom : 50px;
 
   &.superbase {
-    padding-bottom: 0!important;
+    padding-bottom : 0 !important;
   }
 }
 
@@ -288,11 +288,11 @@ a.btn-ghost, .btn-ghost {
       overflow-y : scroll;
       overflow-x : hidden;
       .chat-box {
-        padding       : 5px;
-        background-color    : #FFF;
-        margin-bottom : 0px;
-        color         : @darker-grey;
-        position      : relative;
+        padding          : 5px;
+        background-color : #FFF;
+        margin-bottom    : 0px;
+        color            : @darker-grey;
+        position         : relative;
 
         &.me {
           text-align : right;
@@ -582,10 +582,10 @@ img.user-profile-picture {
     }
 
     .type-option {
-      border : 2px solid @outset-blue;
+      border        : 2px solid @outset-blue;
       .border-radius(1.2em);
-      padding: 1em;
-      margin-bottom: 1em;
+      padding       : 1em;
+      margin-bottom : 1em;
     }
   }
 }
@@ -644,7 +644,7 @@ img.user-profile-picture {
     &.subhero {
       padding : 0 0;
       .panel {
-        padding : 25px 0;
+        padding  : 25px 0;
         position : relative;
         top      : -40px;
       }
@@ -738,7 +738,7 @@ img.user-profile-picture {
 
   .cta-section {
     background : @outset-blue none !important;
-    padding: 50px 0 75px 0!important;
+    padding    : 50px 0 75px 0 !important;
   }
 }
 
@@ -757,7 +757,6 @@ i.fa.fa-stack-1x.text-primary {
   top : -4px;
 }
 
-
 header {
   &.header {
     background-color : rgb(161, 161, 161);
@@ -766,7 +765,7 @@ header {
       background-color : rgba(161, 161, 161, 0.4);
 
       &.navbar-fixed-top {
-        background-color : rgba(216,216,216, 0.8);
+        background-color : rgba(216, 216, 216, 0.8);
       }
     }
     background-color : rgba(255, 255, 255, 0.8);
@@ -792,7 +791,6 @@ header {
 
 .header {
   .transition (background-color 0.4s ease-in-out);
-
 
   a {
     .transition (background-color 0.4s ease-in-out);
@@ -1216,6 +1214,20 @@ os-bg-check-summary > .pricing {
   }
 }
 
+.profile-image {
+  &.small {
+    width  : 28px;
+    height : 28px;
+  }
+  &.medium {
+    width  : 56px;
+    height : 56px;
+  }
+  &.round {
+    border-right : 50%;
+  }
+}
+
 .modal {
   &.tos {
     .modal-dialog {
@@ -1260,4 +1272,204 @@ os-bg-check-summary > .pricing {
     background-color : white;
     padding-top      : 20px;
   }
+}
+
+.application {
+  .cover-letter {
+    accordion-group .panel.panel-default {
+      border     : none;
+      background : transparent;
+      color      : inherit;
+    }
+  }
+}
+
+.date-label {
+  background : @smoky-white;
+  display    : inline-block;
+  width      : 50px;
+  height     : 60px;
+  text-align : center;
+  font-size  : 13px;
+  position   : absolute;
+  left       : 15px;
+  top        : 30px;
+  color      : #fff;
+  .month {
+    background     : @color-2;
+    display        : block;
+    font-size      : 13px;
+    text-transform : uppercase;
+    padding        : 2px 0;
+  }
+
+  .date-number {
+    clear       : left;
+    display     : block;
+    padding-top : 5px;
+    font-size   : 18px;
+    font-family : 'open sans', arial, sans-serif;
+    font-weight : 500;
+    color       : @color-2;
+  }
+
+}
+
+// NEW LIST STYLES /////
+.blog-archive {
+
+  .job-list .post .content {
+    padding-left : 80px;
+  }
+
+  .post {
+    position : relative;
+  }
+
+}
+
+.post {
+  position : relative;
+  .date-label {
+    background : @smoky-white;
+    display    : inline-block;
+    width      : 50px;
+    height     : 60px;
+    text-align : center;
+    font-size  : 13px;
+    position   : absolute;
+    left       : 15px;
+    top        : 30px;
+    color      : #fff;
+    .month {
+      background     : @color-2;
+      display        : block;
+      font-size      : 13px;
+      text-transform : uppercase;
+      padding        : 2px 0;
+    }
+
+    .date-number {
+      clear       : left;
+      display     : block;
+      padding-top : 5px;
+      font-size   : 18px;
+      font-family : 'open sans', arial, sans-serif;
+      font-weight : 500;
+      color       : @color-2;
+    }
+
+  }
+
+}
+
+.application-list {
+  margin-top : 40px;
+  .page-title {
+    margin-top    : 0;
+    margin-bottom : 60px;
+    font-weight   : 300;
+    font-size     : 36px;
+    padding-top   : 80px;
+    .fa {
+      color        : lighten(@color-2, 10%);
+      margin-right : 10px;
+      font-size    : 30px;
+    }
+  }
+  .job-list .post .content .post-title {
+    font-size : 24px;
+  }
+  .job-list .post .content .meta ul {
+    border-top     : none;
+    border-bottom  : 1px solid @divider;
+    padding-bottom : 15px;
+    padding-top    : 5px;
+  }
+  .blog-category-list {
+    .post {
+      margin-bottom : 60px;
+    }
+  }
+
+}
+
+.application-list {
+  .post {
+    padding       : 0 15px;
+    margin-bottom : 30px;
+    .post-inner {
+      padding  : 0;
+      position : relative;
+      border   : 1px solid @divider;
+      .border-radius(4px);
+      .box-shadow(0 4px 1px rgba(0, 0, 0, .05));
+    }
+
+    .post-thumb {
+      background : @color-2;
+      overflow   : hidden;
+      .border-radiuses(4px, 0, 0, 4px);
+      img {
+        .opacity(1);
+        .transition(all .2s ease-in-out;);
+        .border-radiuses(4px, 0, 0, 4px);
+        margin     : 0 auto;
+        text-align : center;
+
+        &:hover {
+          .transform (scale(1.1));
+          .opacity(0.6);
+          .transition(all .4s ease-in-out;);
+        }
+
+      }
+
+    }
+    .content {
+      padding        : 30px;
+      padding-left   : 80px;
+      padding-bottom : 15px;
+      color          : @text-color-secondary;
+
+      .post-title {
+        margin-top : 0;
+        font-size  : 18px;
+        a {
+          color : @color-2;
+        }
+
+      }
+      .post-entry {
+        margin-bottom : 15px;
+      }
+      .meta {
+        font-size     : 13px;
+        color         : @grey;
+        margin-bottom : 0;
+        ul {
+          margin-left : 0;
+          border-top  : 1px solid @divider;
+          padding-top : 15px;
+        }
+        li {
+          &:first-child {
+            padding-left : 0;
+          }
+          &.post-author {
+          }
+          .fa {
+            margin-right : 5px;
+          }
+          a {
+            color : @grey;
+            &:hover {
+              color : @color;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

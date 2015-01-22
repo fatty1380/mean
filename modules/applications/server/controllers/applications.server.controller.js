@@ -9,6 +9,7 @@ Application  = mongoose.model('Application'),
 Message      = mongoose.model('Message'),
 User         = mongoose.model('User'),
 Job          = mongoose.model('Job'),
+Connection = mongoose.model('Connection'),
 _            = require('lodash');
 
 /**
@@ -62,8 +63,8 @@ exports.create = function (req, res) {
         } else {
             debugger;
             req.job.applications.push(application);
-            req.job.save(function(err) {
-                if(err) {
+            req.job.save(function (err) {
+                if (err) {
                     console.log('error saving job application to job');
                 }
                 else {
@@ -95,10 +96,13 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
     var application = req.application;
 
+    debugger;
+
     application = _.extend(application, req.body);
 
     application.save(function (err) {
         if (err) {
+            console.log('[APPLICATION.Update] %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
@@ -195,12 +199,12 @@ exports.loadMine = function (req, res) {
 };
 
 exports.queryByUserID = function (req, res) {
-    if(req.user.type === 'driver') {
+    if (req.user.type === 'driver') {
         req.query = {
             user: req.params.userId
         };
     }
-    else if(req.user.type === 'owner') {
+    else if (req.user.type === 'owner') {
         req.query = {
             'company.owner': req.userId
         };
@@ -236,11 +240,11 @@ exports.getByJobId = function (req, res, next) {
 exports.applicationByID = function (req, res, next, id) {
 
     Application.findById(id)
-        .populate('user', 'displayName profileImageURL')
+        .populate({path: 'user', model: 'User'})
         .populate('job')
         .populate('company', 'name owner agents profileImageURL')
         .populate('messages')
-        .populate('messages.sender')
+        .populate('connection')
         .exec(function (err, application) {
             if (err) {
                 return next(err);
@@ -248,17 +252,28 @@ exports.applicationByID = function (req, res, next, id) {
 
             req.application = application;
 
-            var options = {
-                path: 'messages.sender',
-                model: 'User'
-            };
+            if(req.application.isNew && req.user.isOwner) {
+                debugger;
 
-            Application.populate(application, options, function (err, populated ) {
-                if(err) {
+                application.status = 'read';
+                application.save(function(err, newapp) {
+                    if(err) { console.log('ERROR Saving applicatino with new status'); }
+                    else { console.log('Saved application status to %s', newapp.status); }
+                });
+            }
+
+
+            var options = [
+                {path: 'messages.sender', model: 'User'},
+                {path: 'user.driver', model: 'Driver'},
+                {path: 'connection.isValid'}
+            ];
+
+            Application.populate(application, options, function (err, populated) {
+                if (err) {
                     console.log('error retrieving application, returning non-populated version', err);
                     next();
                 }
-                console.log('[Application.byId] %s', JSON.stringify(populated, undefined, 2));
 
                 req.application = populated;
                 next();
@@ -266,6 +281,7 @@ exports.applicationByID = function (req, res, next, id) {
 
         });
 };
+
 
 /**
  * Application authorization middleware
@@ -277,7 +293,7 @@ exports.hasAuthorization = function (req, res, next) {
     next();
 };
 
-exports.persistMessage = function(applicationId, message) {
+exports.persistMessage = function (applicationId, message) {
     debugger;
     var msg = new Message({
         sender: message.sender,
@@ -318,3 +334,52 @@ exports.persistMessage = function(applicationId, message) {
 
 
 };
+
+/** CONNECTIONS ------------------------------------------------------ */
+exports.createConnection = function(req, res) {
+    // do error checking;
+
+    if(req.application) {
+        var connection, cnxn = {
+            company: req.application.company,
+            user: req.application.user,
+            status: 'full'
+        };
+
+        if(req.application.connection) {
+            console.log('[CreateConnection] Updating existing connection');
+            connection = _.extend(req.application.connection, cnxn);
+        }
+        else {
+            console.log('[CreateConnection] Creating new connection');
+            connection = new Connection(cnxn);
+        }
+
+
+        console.log('[CreateConnection] Saving connection: %j', connection);
+
+        connection.save(function (err) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                if(!req.application.connection) {
+                    req.application.connection = connection;
+
+                    req.application.save(function(err, newApp) {
+                        if(err) {
+                            console.error('[CreateConnection] error saving connection to application', err);
+                        }
+                        console.log('[CreateConnection] Did %sSave Connection to application', !!newApp.connection ? '' : 'NOT ');
+                    });
+                }
+
+                res.json(connection);
+            }
+        });
+    }
+    else {
+        res.status(404).send({message: 'no application found'});
+    }
+}

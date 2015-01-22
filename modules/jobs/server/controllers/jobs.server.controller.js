@@ -38,7 +38,6 @@ exports.executeQuery = function (req, res, next) {
             });
         }
 
-        debugger;
         req.jobs = jobs || [];
 
         if (req.jobs.length > 0 && !!_.find(req.populate, {'property': 'applications'})) {
@@ -56,6 +55,7 @@ exports.executeQuery = function (req, res, next) {
 
                 var options = [
                     {path: 'applications.user.driver', model: 'Driver'},
+                    {path: 'applications.connection', model: 'Connection'}
                 ];
 
                 req.jobs = populated;

@@ -1,6 +1,28 @@
 (function () {
     'use strict';
 
+    function ViewApplicantDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: 'modules/applications/views/templates/os-applicant.client.template.html',
+            restrict: 'E',
+            scope: {
+                application: '='
+            },
+            controller: function ctrl() {
+                var vm = this;
+
+                vm.applicant = vm.application.user;
+                vm.driver = vm.applicant.driver;
+                vm.license = vm.driver && vm.driver.licenses[0];
+            },
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
     function ViewApplicationDirective() {
         var ddo;
         ddo = {
@@ -42,6 +64,7 @@
     }
 
     angular.module('applications')
-        .directive('osViewApplication', ViewApplicationDirective);
+        .directive('osViewApplication', ViewApplicationDirective)
+    .directive('osetApplicant', ViewApplicantDirective);
 
 })();

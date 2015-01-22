@@ -133,7 +133,7 @@ var UserSchema = new Schema({
         type: String,
         trim: true
     }
-});
+}, {'toJSON': { virtuals: true }});
 
 UserSchema.post('init', function(next) {
     if (!this.displayName) {
@@ -204,7 +204,7 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 
 UserSchema.virtual('isAdmin')
     .get(function() {
-        return this.roles.indexOf('admin') !== -1;
+        return !!this.roles && this.roles.indexOf('admin') !== -1;
     });
 
 

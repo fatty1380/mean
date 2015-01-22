@@ -3,10 +3,11 @@
                     sub-title="{{vm.application.job.name}}"></os-page-header>
 
     <div class="application panel panel-default">
-        <div class="container-fluid">
+        <div class="panel-body">
             <div class="row" ng-if="vm.user.type==='driver'">
                 <h4 class="strong col-xs-12">Employer: {{vm.application.company.name}}
-                    <small class="pull-right">Applied on {{vm.application.created | date:'mediumDate'}}</small><hr/>
+                    <small class="pull-right">Applied on {{vm.application.created | date:'mediumDate'}}</small>
+                    <hr/>
                 </h4>
                 <div class="col-sm-4">
                     <img class="img-responsive center-block" ng-src="{{vm.application.company.profileImageURL}}"/>
@@ -17,28 +18,40 @@
                     </p>
                 </div>
             </div>
+
+
             <div class="row" ng-if="vm.user.type==='owner'">
-                <h4 class="strong col-xs-12">Applicant: {{vm.application.user.displayName}}
-                    <small class="pull-right">Applied on {{vm.application.created | date:'mediumDate'}}</small><hr/>
-                </h4>
-                <div class="col-sm-4">
-                    <img class="img-responsive center-block" ng-src="{{vm.application.user.profileImageURL}}"/>
-                </div>
-                <div class="col-sm-8">
-                    <p>
-                        {{vm.application.introduction}}
-                    </p>
+                <oset-applicant class="col-sm-10 col-sm-offset-1" application="vm.application"></oset-applicant>
+            </div>
+
+            <div class="row item" ng-hide="vm.connecting || vm.application.connection || vm.application.connection.isValid">
+                <p class="text-center col-sm-10 col-sm-offset-1">In order to view reports and chat with this applicant, you must first <em>Connect</em>
+                    with them using the button below. This will count against your monthly allotment of
+                    connections.</em></p>
+
+                <div class="col-xs-12 text-right col-sm-10 col-sm-offset-1">
+                    <button type="button" class="btn btn-cta btn-cta-primary"><i class="fa fa-trash"></i>Reject
+                    </button>
+                    <button type="button" class="btn btn-cta btn-cta-secondary" ng-click="vm.createConnection()">Connect</button>
                 </div>
             </div>
 
+            <div class="row item" ng-show="vm.connecting">
+                <h3 class="text-center"><i class="fa fa-spinner fa-spin"></i>&nbsp;Connecting...</h3>
+            </div>
 
-            <div class="row item">
+            <div class="row item" ng-show="vm.newlyConnected">
+                <p class="text-center">You are now connected to {{vm.application.user.displayName}}. You will now be able to view any reports they have ordered and message directly with them.</p>
+            </div>
+
+            <div class="row item" ng-show="vm.application.connection">
                 <div class="col-md-8">
                     <h3 class="title">Messages</h3>
 
                     <div class="chat-section">
 
-                        <div class="row chat-box" ng-repeat="message in vm.application.messages" ng-init="message.username = message.username || message.sender.username"
+                        <div class="row chat-box" ng-repeat="message in vm.application.messages"
+                             ng-init="message.username = message.username || message.sender.username"
                              ng-class="{'me': message.username === vm.user.username, 'other': message.username !== vm.user.username }">
 
                             <div class="col-sm-2">
@@ -105,11 +118,6 @@
                         </form>
                     </div>
                 </div>
-            </div>
-
-            <div class="row item">
-                <h3>Application Messages (raw)</h3>
-                <pre>{{vm.rawMessages}}</pre>
             </div>
         </div>
     </div>

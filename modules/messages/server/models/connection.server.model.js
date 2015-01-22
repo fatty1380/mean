@@ -4,7 +4,8 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    moment = require('moment');
 
 
 /**
@@ -50,7 +51,20 @@ var ConnectionSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, {'toJSON': { virtuals: true }});
+
+ConnectionSchema.virtual('isValid')
+.get(function() {
+        return checkValidity(this);
+    });
+
+ConnectionSchema.virtual('remainingDays')
+.get(function() {
+        if(this.isValid) {
+            return moment(this.validTo).diff(moment(), 'days');
+        }
+        return -1;
+    });
 
 ConnectionSchema.pre('save', function(next) {
     debugger;
@@ -61,7 +75,37 @@ ConnectionSchema.pre('save', function(next) {
         console.log('Connection valid until: %s', this.validTo);
     }
 
+    //this.isValid = checkValidity(this);
+
     next();
 });
+
+
+//
+//UserSchema.post('init', function(next) {
+//    if (!this.displayName) {
+//        this.displayName = this.firstName + ' ' + this.lastName;
+//    }
+//}
+
+function checkValidity(cnxn) {
+    var now = moment();
+
+    if(!!cnxn.validTo) {
+        return now.isBefore(cnxn.validTo);
+    }
+    if(!!cnxn.validFrom && !!cnxn.validForDays) {
+        var validTo = moment(cnxn.validFrom).add(cnxn.validForDays, 'd');
+        return now.isBefore(validTo);
+    }
+    if(_.contains(['closed', 'revoked'], cnxn.status)) {
+        console.log('[Connection] Status is %s', cnxn.status);
+        return false;
+    }
+
+    console.log('[Connection] Status is valid');
+    return true;
+
+}
 
 mongoose.model('Connection', ConnectionSchema);

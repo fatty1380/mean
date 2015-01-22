@@ -12,7 +12,7 @@
 }]);
      */
 
-    var ApplicationsService = function ($resource) {
+    var ApplicationsService = function ($resource, $log) {
 
         var _this = this;
 
@@ -38,6 +38,30 @@
                     method: 'POST'
                 }
             }),
+            setStatus: function(id, status) {
+                var AppRsrc = $resource('api/applications/:id', {
+                        id: '@_id'
+                    }, {
+                    update: {
+                        method: 'PUT'
+                    }
+                });
+
+                return new AppRsrc({_id: id, 'status': status}).$update();
+            },
+            getApplication: function (query) {
+
+                if(!query || !query.hasOwnProperty('applicationId')) {
+                    $log.warning('Cannot get application without application ID');
+                    return null;
+                }
+
+                var rsrc = $resource('api/applications/:applicationId', {
+                    applicationId: '@applicationId'
+                });
+
+                return rsrc.get(query).$promise;
+            },
             listByUser: function (query) {
                 var rsrc = $resource('api/users/:userId/applications', {
                     userId: '@userId'
@@ -63,6 +87,18 @@
                 return rsrc.query(query).$promise;
 
             },
+            createConnection: function(application) {
+                var rsrc = $resource('/api/applications/:applicationId/connect', {
+                    applicationId: '@_id'
+                }, {
+                    get: {
+                        method: 'POST',
+                        isArray: false
+                    }
+                });
+
+                return rsrc.get(application).$promise;
+            },
             ForDriver: $resource('api/jobs/:jobId/applications/:userId', {
                 jobId: '@jobId',
                 userId: '@userId'
@@ -72,7 +108,7 @@
         return _this._data;
     };
 
-    ApplicationsService.$inject = ['$resource'];
+    ApplicationsService.$inject = ['$resource', '$log'];
 
     angular.module('applications').factory('Applications', ApplicationsService);
 
