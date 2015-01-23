@@ -4755,12 +4755,15 @@ tos ol > li {
   color: #ec6952;
 }
 text-angular .ta-toolbar.focused {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   margin-left: 0px;
-  margin-bottom: 5px;
-  padding: 5px;
+  margin-bottom: 0px;
+  padding: 7px 5px 9px 5px;
   display: block;
   background-color: #f5f5f5;
   border: 1px solid #cccccc;
+  border-bottom-width: 0;
 }
 text-angular .ta-editor {
   border-top-left-radius: 0;
