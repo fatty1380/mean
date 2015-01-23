@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ProfilePictureController($timeout, $window, FileUploader, $log) {
+    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs) {
         var vm = this;
 
         vm.uploader = null;
@@ -14,6 +14,8 @@
         vm.useCropped = false;
 
         vm.saveCrop = saveCrop;
+
+        vm.shape = vm.shape || 'circle';
 
         vm.uploadProfilePicture = uploadProfilePicture;
         vm.cancelUpload = cancelUpload;
@@ -98,11 +100,11 @@
                 // Show success message
                 vm.success = true;
 
-                // Populate user object
+                // Populate model object
                 vm.model = response;
 
-                if (!!vm.successCallback()) {
-                    vm.successCallback()(fileItem, response, status, headers);
+                if (angular.isDefined($attrs.successCallback)) {
+                    vm.successCallback(fileItem, response, status, headers);
                 }
 
                 // Clear upload buttons
@@ -113,6 +115,10 @@
             vm.uploader.onErrorItem = function (fileItem, response, status, headers) {
                 // Clear upload buttons
                 vm.cancelUpload();
+
+                if (angular.isDefined($attrs.failCallback)) {
+                    vm.failCallback()(fileItem, response, status, headers);
+                }
 
                 // Show error message
                 vm.error = response.message;
@@ -171,7 +177,7 @@
 
     }
 
-    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log'];
+    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs'];
 
 
     angular.module('users')

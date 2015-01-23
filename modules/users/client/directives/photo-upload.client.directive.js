@@ -51,6 +51,7 @@
                 model: '=',
                 title: '@',
                 mode: '@?',
+                shape: '@?',
                 apiUrl: '@?',
                 successCallback: '&?',
                 failCallback: '&?'

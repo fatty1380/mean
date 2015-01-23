@@ -19,7 +19,7 @@
             },
             transclude: true,
             restrict: 'E',
-            controller: ['$transclude', '$log', '$state', function (transclude, $log, $state) {
+            controller: ['$transclude', '$log', '$state', '$attrs', function (transclude, $log, $state, $attrs) {
                 var vm = this;
 
                 vm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
@@ -31,7 +31,7 @@
                 vm.showHeader = !!vm.subTitle || !!vm.editSref || vm.btnShow && (!!vm.btnText && !!vm.btnSref);
 
                 vm.editFn = function() {
-                    if(!!vm.pictureEditFn) {
+                    if(!!angular.isDefined($attrs.pictureEditFn)) {
                         $log.debug('calling pictureEditFn');
                         return vm.pictureEditFn();
                     }
