@@ -104,7 +104,7 @@
                 vm.model = response;
 
                 if (angular.isDefined($attrs.successCallback)) {
-                    vm.successCallback(fileItem, response, status, headers);
+                    vm.successCallback()(fileItem, response, status, headers);
                 }
 
                 // Clear upload buttons
@@ -131,6 +131,11 @@
         activate();
 
         // Method Implementations _________________________________________________________________
+
+
+        vm.startCrop = function() {
+            vm.isCropping = true;
+        };
 
         function saveCrop() {
             vm.useCropped = true;
