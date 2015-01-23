@@ -134,7 +134,7 @@
                     driverId: response._id
                 });
             }, function (errorResponse) {
-                vm.error = errorResponse.data.message;
+                vm.error = !errorResponse.data || errorResponse.status === 0 ? 'Error saving your profile. Please try again later.' : errorResponse.data.message;
             });
         }
 
