@@ -53,7 +53,7 @@
                     function (response) {
                         // If successful show success message and clear form
                         $scope.passwordDetails = null;
-                        $scope.success = true;
+                        $scope.success = 'Password Changed Successfully!';
 
                         // Attach user profile
                         Authentication.user = response;
@@ -72,10 +72,14 @@
                             }
                         }
 
-                        updateMsg(10);
+                        // Route user to 'home' if this was the password reset form.
+                        if ($state.is('password.reset.form')) {
+                            updateMsg(6);
+                        }
+
                     }).error(function (response) {
                         console.log('hmmm, that was\'nt suppoased to happen: ', response);
-                        $scope.error = response.message;
+                        $scope.error = response.data && response.data.message || response.message || 'Sorry, an error occurred';
                     });
             };
         }

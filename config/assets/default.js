@@ -9,7 +9,7 @@ module.exports = {
                 'public/lib/components-font-awesome/css/font-awesome.css',
                 'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.css',
-                'public/lib/ngImgCrop/compile/minified/ng-img-crop.css'
+                'public/lib/ngImgCrop/compile/unminified/ng-img-crop.css'
             ],
             js: [
                 'public/lib/angular/angular.js',
@@ -32,7 +32,7 @@ module.exports = {
                 'public/lib/moment/min/moment-with-locales.js',
                 'public/lib/angular-moment/angular-moment.js',
                 'https://js.braintreegateway.com/v2/braintree.js',
-                'public/lib/ngImgCrop/compile/minified/ng-img-crop.js',
+                'public/lib/ngImgCrop/compile/unminified/ng-img-crop.js',
                 'public/lib/angular-scroll/angular-scroll.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
