@@ -180,6 +180,13 @@ UserSchema.methods.authenticate = function(password) {
 	return this.password === this.hashPassword(password);
 };
 
+UserSchema.methods.cleanse = function() {
+    console.log('[UserSchema] Cleansing sensitive Data');
+
+    this.password = null;
+    this.salt = null;
+};
+
 /**
  * Find possible not used username
  */

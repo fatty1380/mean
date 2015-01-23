@@ -10,13 +10,14 @@ mongoose     = require('mongoose'),
 passport     = require('passport'),
 User         = mongoose.model('User'),
 Driver       = mongoose.model('Driver'),
-Company       = mongoose.model('Company'),
+Company      = mongoose.model('Company'),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller'));
 
 
 // DRY Simple Login Function
 var login = function (req, res, user) {
     console.log('[Auth.Ctrl] login()');
+
     req.login(user, function (err) {
         if (err) {
             res.status(400).send(err);
@@ -34,14 +35,13 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    console.log('[Auth.Ctrl] signup() %j', req.body);
+    console.log('[Auth.Ctrl] signup.%s(%s)', req.body.type, req.body.username);
 
     // Init Variables
     var user = new User(req.body);
     var message = null;
 
     var userType = req.body.type;
-
     // Add missing user fields
     user.provider = 'local';
     user.displayName = user.firstName + ' ' + user.lastName;
@@ -53,10 +53,8 @@ exports.signup = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-
-            // Remove sensitive data before login
-            user.password = undefined;
-            user.salt = undefined;
+            // Clean Username and Password from the object...
+            user.cleanse();
 
             if (userType === 'driver') {
                 debugger;
@@ -69,16 +67,22 @@ exports.signup = function (req, res) {
                         console.error('[SIGNUP] - err creating new driver', err);
                     }
 
-                    user.driver = driver;
-                    user.save();
+                    user = _.extend(user, {driver : driver});
 
-                    login(req, res, user);
+                    user.save(function (err) {
+                        if (err) {
+                            console.log('Error Saving Driver back to User... oh well');
+                        }
+
+                        login(req, res, user);
+                    });
+
                 });
 
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', user);
 
             }
-            else {
+            else if (userType === 'owner') {
                 debugger;
                 console.log('[SIGNUP] - Creating new Company for user');
 
@@ -89,16 +93,28 @@ exports.signup = function (req, res) {
                         console.error('[SIGNUP] - err creating new Company', err);
                     }
 
-                    user.company = company;
-                    user.save();
+                    user = _.extend(user, {company : company});
 
-                    login(req, res, user);
+                    user.save(function (err) {
+                        if (err) {
+                            console.log('Error Saving Company back to User... oh well');
+                        }
+
+                        login(req, res, user);
+                    });
                 });
 
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user, 'chad@joinoutset.com');
             }
+            else {
+                console.log('[SIGNPU] - Creating new User of type `%s` ... what to do?', userType);
+
+                login(req, res, user);
+            }
         }
     });
+
+
 };
 
 /**
@@ -112,13 +128,11 @@ exports.signin = function (req, res, next) {
             console.error(info, err);
             res.status(400).send(info);
         } else {
-            // Remove sensitive data before login
-            user.password = undefined;
-            user.salt = undefined;
 
-            debugger;
+            user.cleanse();
+            debugger; // TODO: Dude, seriously, defer this shit
 
-            if(user.isDriver && !user.driver) {
+            if (user.isDriver && !user.driver) {
 
                 Driver.findOne({
                     user: user
@@ -127,16 +141,24 @@ exports.signin = function (req, res, next) {
                         console.log('Error finding driver for user %s', user._id);
                     }
 
-                    if(!!driver) {
+                    if (!!driver) {
                         console.log('Found Driver %s for user %s', driver._id, user._id);
-                        user.driver = driver;
-                        user.save();
-                    }
 
-                    login(req, res, user);
+                        user = _.extend(user, {driver : driver});
+
+                        user.save(function (err) {
+                            if (err) {
+                                console.log('Error Saving Driver back to User... oh well');
+                            }
+
+                            login(req, res, user);
+                        });
+                    } else {
+                        login(req, res, user);
+                    }
                 });
             }
-            else if(user.isOwner && !user.company) {
+            else if (user.isOwner && !user.company) {
 
                 Company.findOne({
                     owner: user
@@ -145,17 +167,26 @@ exports.signin = function (req, res, next) {
                         console.log('Error finding company for user %s', user._id);
                     }
 
-                    if(!!company) {
+                    if (!!company) {
                         console.log('Found Company %s for user %s', company._id, user._id);
-                        user.company = company;
-                        user.save();
-                    }
 
-                    login(req, res, user);
+                        user = _.extend(user, {company : company});
+
+                        user.save(function (err) {
+                            if (err) {
+                                console.log('Error Saving Company back to User... oh well');
+                            }
+
+                            login(req, res, user);
+                        });
+                    }
+                    else {
+                        login(req, res, user);
+                    }
                 });
             }
             else {
-              login(req, res, user);
+                login(req, res, user);
             }
 
         }
