@@ -95,7 +95,7 @@ exports.signup = function (req, res) {
                     login(req, res, user);
                 });
 
-                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user);
+                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user, 'chad@joinoutset.com');
             }
         }
     });

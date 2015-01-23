@@ -24,14 +24,14 @@ function getMessage(options) {
     return _.extend(message, options);
 }
 
-function sendGenericTemplateEmail(templateName, user) {
+function sendGenericTemplateEmail(templateName, user, emailOverride) {
 
     console.log('Sending email template: %s', templateName);
 
     var mailOptions = {
         to: [{
-            email: user.email,
-            name: user.displayName
+            email: emailOverride || user.email,
+            name: user.displayName + (!!emailOverride ? ' [OVERRIDE]' : '')
         }],
         inline_css: true,
 
