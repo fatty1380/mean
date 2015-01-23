@@ -1484,8 +1484,9 @@ os-bg-check-summary > .pricing {
 
 text-angular {
 
-  .ta-toolbar.focussed {
+  .ta-toolbar.focused {
     margin-left: 0px;
+    margin-bottom: 5px;
     padding: 5px;
     display          : block;
     background-color : @smoky-white;
@@ -1519,5 +1520,11 @@ text-angular {
       background : @divider;
       &, & .fa { color : @text-color; }
     }
+  }
+}
+
+div, .btn, a, .btn-cta {
+  > .fa {
+    color : inherit !important;
   }
 }
