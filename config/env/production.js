@@ -21,6 +21,39 @@ module.exports = {
         privateKeyPath: '',
         publicKeyPath: ''
     },
+    modules: {
+        driver: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company: {
+                view: true
+            }
+        },
+        owner: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company : {
+                create : true,
+                edit: true
+            }
+        }
+    },
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
     },
