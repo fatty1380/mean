@@ -60,7 +60,7 @@ exports.forgot = function (req, res, next) {
             },
             function (token, user, done) {
 
-                var resetURL = 'https://www.joinoutset.com/api/auth/reset/' + token;
+                var resetURL = 'http://localhost:3000/api/auth/reset/' + token;
                 var templateName = 'outset-password-reset';
 
                 console.log('Sending email template: %s', templateName);
@@ -148,6 +148,7 @@ exports.reset = function (req, res, next) {
 
                         user.save(function (err) {
                             if (err) {
+                                console.log('Error of some sort: %j', err);
                                 return res.status(400).send({
                                     message: errorHandler.getErrorMessage(err)
                                 });
@@ -165,11 +166,13 @@ exports.reset = function (req, res, next) {
                             }
                         });
                     } else {
+                        console.log('Passwords do not match');
                         return res.status(400).send({
                             message: 'Passwords do not match'
                         });
                     }
                 } else {
+                    console.log('Password reset token is invalid or has expired.');
                     return res.status(400).send({
                         message: 'Password reset token is invalid or has expired.'
                     });
@@ -206,9 +209,7 @@ exports.reset = function (req, res, next) {
             var e = emailer.sendMessage(mailOptions);
 
             if (!e) {
-                res.send({
-                    message: 'An email has been sent to ' + user.email + ' with further instructions.'
-                });
+                console.log('An email has been sent to ' + user.email + ' with confirmation');
             }
 
             done(e);

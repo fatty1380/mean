@@ -11,12 +11,30 @@
 
                 $http.post('/api/users/password', $scope.passwordDetails).success(function (response) {
                     // If successful show success message and clear form
-                    $scope.success = true;
+                    $scope.success = 'Password successfully changed.';
                     $scope.passwordDetails = null;
 
-                    $timeout(function () {
-                        $state.go('home', {'delay': 5});
-                    }, (5000));
+
+                    $scope.ct = 5;
+                    $scope.msg = ' in ' + $scope.ct;
+
+                    function updateMsg(ct) {
+                        ct--;
+
+                        $scope.msg = ' in ' + ct;
+
+                        if (ct > 0) {
+                            return $timeout(function () {
+                                updateMsg(ct);
+                            }, 1000);
+                        } else {
+                            $state.go('home');
+                        }
+                    }
+
+                    updateMsg($scope.ct);
+
+
                 }).error(function (response) {
                     $scope.error = response.message;
                 });
