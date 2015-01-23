@@ -1218,3 +1218,50 @@ os-bg-check-summary > .pricing {
     padding-top      : 20px;
   }
 }
+
+text-angular {
+
+  .ta-toolbar.focused {
+    margin-left: 0px;
+    margin-bottom: 5px;
+    padding: 5px;
+    display          : block;
+    background-color : @smoky-white;
+    border           : 1px solid @divider;
+  }
+
+  .ta-editor {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  a.btn-cta-toolbar, .btn-cta-toolbar {
+    background : @smoky-white;
+    border     : 2px solid @divider;
+    &, & .fa {
+      color : @text-color-secondary;
+    }
+    &:hover {
+      background : darken(@smoky-white, 2%);
+      &, & .fa { color : darken(@text-color-secondary, 10%); }
+      &.active {
+        background : darken(@divider, 5%);
+      }
+    }
+    &:active {
+      background : @divider;
+      border     : 2px solid @divider;
+      &, & .fa { color : darken(@text-color, 2%); }
+    }
+    &.active {
+      background : @divider;
+      &, & .fa { color : @text-color; }
+    }
+  }
+}
+
+div, .btn, a, .btn-cta {
+  > .fa {
+    color : inherit !important;
+  }
+}
