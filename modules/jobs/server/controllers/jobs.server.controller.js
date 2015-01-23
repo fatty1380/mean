@@ -10,7 +10,7 @@ Address      = mongoose.model('Address'),
 Application  = mongoose.model('Application'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 companies    = require(path.resolve('./modules/companies/server/controllers/companies.server.controller')),
-Q            = require('Q');
+Q            = require('q');
 
 /**
  * "Instance" Methods
