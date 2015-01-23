@@ -5,7 +5,7 @@
         var vm = this;
 
         vm.company = company;
-        vm.submit = function() { $log.error('[CompanyEditController] No method assigned for form submission'); };
+        vm.submit = submit;
         vm.cancel = cancel;
         vm.submitClass = '';
         vm.editName = false;
@@ -15,14 +15,14 @@
                 $log.error('[CompanyEditController] No company available in state %s', $state.current.name);
             }
             if($state.is('companies.create')) {
-                vm.submit = create;
                 vm.submitText = 'Create';
                 vm.pageTitle = 'Create your new company profile';
                 vm.editName = true;
+                vm.editing = true;
             } else if($state.is('companies.edit')) {
-                vm.submit = update;
                 vm.submitText = 'Update';
                 vm.pageTitle = vm.company.name;
+                vm.hasTitle = true;
             } else if($state.is('companies.remove')) {
                 vm.submit = remove;
                 vm.submitText = 'Remove';
@@ -31,6 +31,14 @@
         }
 
         activate();
+
+        function submit() {
+            if(vm.company._id) {
+                return update();
+            } else {
+                return create();
+            }
+        }
 
         // Create new Company
         function create() {

@@ -8,26 +8,41 @@
             scope: {
                 title: '@',
                 subTitle: '@?',
-                editSref: '@?',
                 showEdit: '=?',
                 btnShow: '=?',
                 btnText: '@?',
                 btnSref: '@?',
                 level: '@?',
-                pictureUrl: '=?'
+                pictureUrl: '=?',
+                editSref: '@?',
+                pictureEditFn: '&?'
             },
             transclude: true,
             restrict: 'E',
-            controller: ['$transclude', function (transclude) {
-                var dm = this;
+            controller: ['$transclude', '$log', '$state', function (transclude, $log, $state) {
+                var vm = this;
 
-                dm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
-                dm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
+                vm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
+                vm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
 
-                dm.hover = false;
-                dm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
+                vm.hover = false;
+                vm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
+
+                vm.showHeader = !!vm.subTitle || !!vm.editSref || vm.btnShow && (!!vm.btnText && !!vm.btnSref);
+
+                vm.editFn = function() {
+                    if(!!vm.pictureEditFn) {
+                        $log.debug('calling pictureEditFn');
+                        return vm.pictureEditFn();
+                    }
+
+                    if(!!vm.editSref) {
+                        $log.debug('reouting to editSref `%s` for picture.', vm.editSref);
+                        $state.go(vm.editSref);
+                    }
+                };
             }],
-            controllerAs: 'dm',
+            controllerAs: 'vm',
             bindToController: true
         };
 

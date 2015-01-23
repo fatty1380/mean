@@ -1,5 +1,26 @@
 
     <section class="container-fluid">
-        <os-page-header title="{{vm.listTitle || 'My Active Job Applications'}}"></os-page-header>
-        <os-list-applications applications="vm.applications" display-mode="normal" ></os-list-applications>
+        <os-page-header title="{{vm.listTitle || 'My Active Job Applications'}}"
+                sub-title="{{!!vm.jobs ? vm.jobs.length + ' Active Job Posts' : vm.applications.length ? vm.applications.length + ' Job Applicants' : 'No Active Posts'}}"></os-page-header>
+
+        <!-- No Applications / Disabled Intro Text -->
+        <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-show="!vm.config.list || !vm.applications.length">
+            <h3 ng-bind-html="vm.bodyCopy.heading"></h3>
+
+            <div ng-bind-html="vm.bodyCopy.intro"></div>
+
+            <p ng-if="vm.bodyCopy.bullets && !!vm.bodyCopy.bullets.length">
+            <ul>
+                <li ng-repeat="bullet in vm.bodyCopy.bullets" ng-bind-html="bullet"></li>
+            </ul>
+            </p>
+
+            <span ng-bind-html="vm.bodyCopy.wrap"></span>
+            <button class="btn btn-primary center-block" ui-sref="home">{{vm.bodyCopy.homeTxt}}</button>
+            <p></p>
+        </div>
+
+        <!-- List of applications -->
+
+        <os-list-applications applications="vm.applications" display-mode="normal" config="vm.config"></os-list-applications>
     </section>

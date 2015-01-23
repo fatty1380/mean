@@ -55,7 +55,7 @@ var ReportApplicantSchema = new Schema({
 });
 
 ReportApplicantSchema.pre('save', function (next) {
-    this.modified = Date.now;
+    this.modified = Date.now();
     next();
 });
 

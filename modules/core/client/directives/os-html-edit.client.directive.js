@@ -9,7 +9,7 @@
             restrict: 'E',
             scope: {
                 model: '=',
-                toolbar: '=?', // Toolbar argument currently not available
+                toolbar: '=?',
                 osRequired: '=?'
             },
             controllerAs: 'vm',
@@ -64,7 +64,7 @@
 
     angular.module('core')
         .config(TextAngularProvider)
-        .directive('osHtmlEdit', HtmlEditDirective);
+        .directive('osHtmlEdit', HtmlEditDirective)
 
 
 })();

@@ -10,6 +10,10 @@
         return $q.reject(err);
     }
 
+    function moduleConfigResolve(AppConfig, auth) {
+        return AppConfig.getModuleConfig(auth.user.type, 'jobs');
+    }
+
     function companyResolve(rsrc, params, auth) {
         var promise;
 
@@ -28,11 +32,13 @@
             promise = rsrc.ByUser.get({
                 userId: params.userId
             }).$promise;
-        } else {
+        } else if (auth.user.type === 'owner') {
             console.log('Searching for company data for logged in user');
             promise = rsrc.ByUser.get({
                 userId: auth.user._id
             }).$promise;
+        } else {
+            return null;
         }
 
         return promise.catch(handle404s);
@@ -85,7 +91,8 @@
                     jobs: function () {
                     },
                     company: function () {
-                    }
+                    },
+                    config: moduleConfigResolve
                 }
             }).
 
@@ -96,7 +103,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    jobs: listAllResolve
+                    jobs: listAllResolve,
+                    company: companyResolve
                 },
                 parent: 'jobs'
             }).
@@ -163,6 +171,7 @@
     jobResolve.$inject = ['Jobs', '$stateParams'];
     listUserResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
     listAllResolve.$inject = ['Jobs'];
+    moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
     config.$inject = ['$stateProvider'];
 
     //Setting up route

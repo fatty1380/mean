@@ -1,6 +1,11 @@
 <section>
     <section class="container-fluid">
-        <os-page-header title="{{vm.listTitle}}" btn-show="vm.enableEdit" btn-text="Post Job" btn-sref="jobs.create({companyId: '{{vm.company._id}}' })"></os-page-header>
-        <os-job-list src-jobs="vm.jobs" company="vm.company" company-id="{{vm.company._id}}"></os-job-list>
+        <os-page-header title="{{vm.listTitle}}" btn-show="vm.enableEdit" btn-text="Post Job"
+                        btn-sref="jobs.create({companyId: '{{vm.company._id}}' })"
+                        sub-title="There are currently {{vm.jobs.length}} open jobs.">
+
+
+        </os-page-header>
+        <os-job-list src-jobs="vm.jobs" company-id="{{vm.company._id}}" config="vm.config"></os-job-list>
     </section>
 </section>

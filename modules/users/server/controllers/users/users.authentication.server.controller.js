@@ -10,6 +10,7 @@ mongoose     = require('mongoose'),
 passport     = require('passport'),
 User         = mongoose.model('User'),
 Driver       = mongoose.model('Driver'),
+Company       = mongoose.model('Company'),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller'));
 
 
@@ -33,7 +34,7 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    console.log('[Auth.Ctrl] signup() ', req.body);
+    console.log('[Auth.Ctrl] signup() %j', req.body);
 
     // Init Variables
     var user = new User(req.body);
@@ -61,12 +62,15 @@ exports.signup = function (req, res) {
                 debugger;
                 console.log('[SIGNUP] - Creating new Driver for user');
 
-                var driver = new Driver();
-                driver.user = user;
+                var driver = new Driver({'user': user});
+
                 driver.save(function (err) {
                     if (err) {
-                        console.log('[SIGNUP] - err creating new driver', err);
+                        console.error('[SIGNUP] - err creating new driver', err);
                     }
+
+                    user.driver = driver;
+                    user.save();
 
                     login(req, res, user);
                 });
@@ -75,7 +79,23 @@ exports.signup = function (req, res) {
 
             }
             else {
-                login(req, res, user);
+                debugger;
+                console.log('[SIGNUP] - Creating new Company for user');
+
+                var company = new Company({'owner': user, 'name': req.body.companyName});
+
+                company.save(function (err) {
+                    if (err) {
+                        console.error('[SIGNUP] - err creating new Company', err);
+                    }
+
+                    user.company = company;
+                    user.save();
+
+                    login(req, res, user);
+                });
+
+                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user, 'chad@joinoutset.com');
             }
         }
     });
@@ -96,18 +116,48 @@ exports.signin = function (req, res, next) {
             user.password = undefined;
             user.salt = undefined;
 
-            user.isAdmin = user.roles.indexOf('admin') !== -1;
+            debugger;
 
-            console.log('[Auth.Ctrl] signin() user=)', user);
+            if(user.isDriver && !user.driver) {
 
-            req.login(user, function (err) {
-                if (err) {
-                    res.status(400).send(err);
-                } else {
-                    console.log('Logged In User is a %s', user.type);
-                    res.json(user);
-                }
-            });
+                Driver.findOne({
+                    user: user
+                }).exec(function (err, driver) {
+                    if (err) {
+                        console.log('Error finding driver for user %s', user._id);
+                    }
+
+                    if(!!driver) {
+                        console.log('Found Driver %s for user %s', driver._id, user._id);
+                        user.driver = driver;
+                        user.save();
+                    }
+
+                    login(req, res, user);
+                });
+            }
+            else if(user.isOwner && !user.company) {
+
+                Company.findOne({
+                    owner: user
+                }).exec(function (err, company) {
+                    if (err) {
+                        console.log('Error finding company for user %s', user._id);
+                    }
+
+                    if(!!company) {
+                        console.log('Found Company %s for user %s', company._id, user._id);
+                        user.company = company;
+                        user.save();
+                    }
+
+                    login(req, res, user);
+                });
+            }
+            else {
+              login(req, res, user);
+            }
+
         }
     })(req, res, next);
 };

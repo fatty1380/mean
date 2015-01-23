@@ -1,0 +1,52 @@
+<div class="applicant">
+    <div class="h4 stronger">{{vm.applicant.displayName}}
+        <small class="pull-right">Applied {{vm.application.created | date: 'short'}}</small>
+    </div>
+    <hr/>
+
+    <div class="col-sm-2">
+        <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive">
+    </div>
+
+    <div class="col-sm-10">
+
+        <dl class="dl-horizontal">
+            <dt>License:</dt>
+            <dd>
+                <p>
+                    <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}
+                    <span ng-show="vm.license.type">
+                        <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>
+                        {{vm.license.type}}
+                    </span>
+                    Driver License
+                    <span class="pad-left">
+                        <span ng-repeat="(name, val) in vm.license.endorsements"
+                              class="endorsement label label-success mgn-left">{{name}}&nbsp;</span></span>
+                </p>
+            </dd>
+            <dt>Reports</dt>
+            <dd><em class="text-muted">No reports on file</em></dd>
+            <dt>Interests</dt>
+            <dd>
+                <p>
+                    <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
+                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
+
+                    <span ng-show="!visibleInterests.length">
+                        <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>
+                    </span>
+                </p>
+            </dd>
+            <dt>Cover Letter:</dt>
+            <dd accordion class="cover-letter">
+                <accordion-group>
+                    <accordion-heading ng-class="{'h5': item.title }">
+                        Click here to see the applicant's cover letter...
+                    </accordion-heading>
+                    <p data-ng-bind-html="vm.application.introduction"></p>
+                </accordion-group>
+            </dd>
+        </dl>
+    </div>
+</div>

@@ -2,7 +2,11 @@
     <form class="signin form-horizontal" ng-show="vm.initialized">
         <fieldset>
             <div class="form-group text-center" ng-hide="vm.uploader.queue.length">
-                <img data-ng-src="{{vm.imageURL}}" alt="{{vm.title}}" class="img-thumbnail user-profile-picture">
+                <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"
+                     alt="{{vm.title}}" class="img-thumbnail user-profile-picture">
+
+                <div data-ng-hide="!!vm.imageURL" class="text-center img-thumbnail user-profile-picture">
+                    <i class="fa fa-question fa-4x center-block"></i></div>
             </div>
 
             <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">

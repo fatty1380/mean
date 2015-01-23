@@ -5,7 +5,7 @@
     function menus(Menus, Auth) {
         // Set top bar menu items
         Menus.addMenuItem('topbar', {
-            title: 'Dashboard',
+            title: '<i class="fa fa-home fa-lg"/>',
             state: 'companies.home',
             userTypes: ['owner'],
             position: 1

@@ -4,41 +4,86 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Job = mongoose.model('Job'),
-    Address = mongoose.model('Address'),
-    errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
-    _ = require('lodash');
+_            = require('lodash'), path = require('path'),
+Job          = mongoose.model('Job'),
+Address      = mongoose.model('Address'),
+Application  = mongoose.model('Application'),
+errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+companies    = require(path.resolve('./modules/companies/server/controllers/companies.server.controller')),
+Q            = require('Q');
 
 /**
  * "Instance" Methods
  */
 
-var executeQuery = function(req, res) {
+exports.executeQuery = function (req, res, next) {
 
     var query = req.query || {};
     var sort = req.sort || '';
+    var populate = [{property: 'user', fields: 'displayName'}, {property: 'company', fields: null}];
+    if (req.populate) {
+        req.populate = _.union(populate, req.populate);
+    }
 
-    Job.find(query)
-        .sort(sort)
+    var base = Job.find(query)
         .populate('user', 'displayName')
         .populate('company')
-        .exec(function(err, jobs) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            }
+        .populate('applications')
+        .sort(sort);
 
-            req.jobs = jobs || [];
-            console.log('[JobsCtrl.executeQuery] Found %d jobs for query %j', req.jobs.length, query);
-            res.json(req.jobs);
-        });
+    base.exec(function (err, jobs) {
+        if (err) {
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        }
+
+        req.jobs = jobs || [];
+
+        if (req.jobs.length > 0 && !!_.find(req.populate, {'property': 'applications'})) {
+
+            var options = [
+                {path: 'applications.user', model: 'User'},
+            ];
+
+            Job.populate(jobs, options, function (err, populated) {
+                if (err) {
+                    console.log('error looking up users for applications, returning non-populated version', err);
+                    next();
+                }
+                console.log('[Job.ExecuteQuery1] %s', JSON.stringify(populated[1].applications[0].toObject(), undefined, 2));
+
+                var options = [
+                    {path: 'applications.user.driver', model: 'Driver'},
+                    {path: 'applications.connection', model: 'Connection'}
+                ];
+
+                req.jobs = populated;
+
+                Job.populate(jobs, options, function (err, populated) {
+                    if (err) {
+                        console.log('error looking up users for applications, returning non-populated version', err);
+                        next();
+                    }
+                    console.log('[Job.ExecuteQuery1] %s', JSON.stringify(populated[1].applications[0].toObject(), undefined, 2));
+
+                    req.jobs = populated;
+                    next();
+
+                });
+
+            });
+        }
+        else {
+            next();
+        }
+    });
 };
 
 /**
  * Get the error message from error object
  */
-var getErrorMessage = function(err) {
+var getErrorMessage = function (err) {
     var message = '';
 
     if (err.code) {
@@ -64,7 +109,7 @@ var getErrorMessage = function(err) {
 /**
  * Create a Job
  */
-exports.create = function(req, res) {
+exports.create = function (req, res) {
 
     var job = new Job(req.body);
 
@@ -74,7 +119,7 @@ exports.create = function(req, res) {
     job.postStatus = 'posted';
     job.posted = Date.now();
 
-    job.save(function(err) {
+    job.save(function (err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
@@ -90,7 +135,7 @@ exports.create = function(req, res) {
 /**
  * Show the current Job
  */
-exports.read = function(req, res) {
+exports.read = function (req, res) {
     if (!req.job) {
         return res.status(404).send({
             message: 'No job found'
@@ -101,16 +146,24 @@ exports.read = function(req, res) {
 };
 
 /**
+ * List of Jobs stored in request
+ */
+exports.list = function (req, res) {
+    console.log('[JobsCtrl.executeQuery] Found %d jobs for query %j', req.jobs.length, req.query);
+    res.json(req.jobs);
+};
+
+/**
  * Update a Job
  */
-exports.update = function(req, res) {
+exports.update = function (req, res) {
     var job = req.job;
 
     debugger;
 
     job = _.extend(job, req.body);
 
-    job.save(function(err) {
+    job.save(function (err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
@@ -124,10 +177,10 @@ exports.update = function(req, res) {
 /**
  * Delete an Job
  */
-exports.delete = function(req, res) {
+exports.delete = function (req, res) {
     var job = req.job;
 
-    job.remove(function(err) {
+    job.remove(function (err) {
         if (err) {
             return res.send(400, {
                 message: getErrorMessage(err)
@@ -138,48 +191,52 @@ exports.delete = function(req, res) {
     });
 };
 
-/**
- * List of Jobs
- */
-exports.list = function(req, res) {
+
+exports.queryAll = function (req, res, next) {
     req.sort = '-created';
 
-    executeQuery(req, res);
+    next();
 };
 
 /** * List of a user's posted jobs
  */
-exports.queryByUserID = function(req, res) {
+exports.queryByUserID = function (req, res, next) {
     req.query = {
         user: req.params.userId
     };
 
-    executeQuery(req, res);
+    next();
 };
 
 /**
  * List of a company's posted jobs
  */
-exports.queryByCompanyID = function(req, res) {
+exports.queryByCompanyID = function (req, res, next) {
 
     req.query = {
         company: req.params.companyId
     };
 
-    executeQuery(req, res);
+    next();
+};
+
+exports.populateApplications = function (req, res, next) {
+    req.populate = [{property: 'applications', fields: ''}];
+
+    next();
 };
 
 /**
  * Job middleware
  */
-exports.jobByID = function(req, res, next, id) {
+exports.jobByID = function (req, res, next, id) {
 
     console.log('Loading job by id %s', id);
 
     Job.findById(id)
         .populate('user', 'displayName')
         .populate('company')
-        .exec(function(err, job) {
+        .exec(function (err, job) {
             if (err) {
                 return next(err);
             }
@@ -191,7 +248,7 @@ exports.jobByID = function(req, res, next, id) {
 /**
  * Job authorization middleware
  */
-exports.hasAuthorization = function(req, res, next) {
+exports.hasAuthorization = function (req, res, next) {
     if (req.job.user.id !== req.user.id) {
         return res.send(403, 'User is not authorized');
     }

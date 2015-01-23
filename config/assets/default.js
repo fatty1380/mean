@@ -30,6 +30,7 @@ module.exports = {
                 'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
                 'public/lib/moment/min/moment-with-locales.js',
+                'public/lib/angular-moment/angular-moment.js',
                 'https://js.braintreegateway.com/v2/braintree.js',
                 'public/lib/ngImgCrop/compile/minified/ng-img-crop.js',
                 'public/lib/angular-scroll/angular-scroll.js'

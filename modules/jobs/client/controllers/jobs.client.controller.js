@@ -2,13 +2,14 @@
     'use strict';
 
     // Jobs controller
-    function JobsListController($state, Authentication, jobs, company) {
+    function JobsListController($state, Authentication, jobs, company, moduleConfig) {
         var vm = this;
 
         vm.authentication = Authentication;
         vm.user = Authentication.user;
+        vm.config = moduleConfig || {};
 
-        vm.enableEdit = false;
+        vm.enableEdit = !!vm.config.edit;
 
         vm.jobs = jobs;
         vm.company = company;
@@ -20,6 +21,7 @@
                 vm.listTitle = (vm.user.type === 'driver') ? 'My Jobs' : 'My Job Postings';
             }
 
+            // TODO: Split out into Edit/Create/List permissions
             if (vm.user.type === 'driver') {
                 vm.enableEdit = false;
             }
@@ -34,7 +36,7 @@
         activate();
     }
 
-    JobsListController.$inject = ['$state', 'Authentication','jobs', 'company'];
+    JobsListController.$inject = ['$state', 'Authentication','jobs', 'company', 'config'];
 
     angular.module('jobs')
         .controller('JobsListController', JobsListController);

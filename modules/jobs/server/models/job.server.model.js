@@ -4,20 +4,26 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Address = mongoose.model('Address'),
-    Company = mongoose.model('Company'),
-    Schema = mongoose.Schema;
+Address      = mongoose.model('Address'),
+Company      = mongoose.model('Company'),
+Schema       = mongoose.Schema;
 
 /**
  * Job Schema
  */
 var JobSchema = new Schema({
 
+    /**
+     * The User who posted the job
+     */
     user: {
         type: Schema.ObjectId,
         ref: 'User'
     },
 
+    /**
+     * The company who is hiring for the job
+     */
     company: {
         type: Schema.ObjectId,
         ref: 'Company'
@@ -67,6 +73,11 @@ var JobSchema = new Schema({
         }
     }],
 
+    applications: [{
+        type: Schema.ObjectId,
+        ref: 'Application'
+    }],
+
     postStatus: {
         type: String,
         default: 'draft',
@@ -90,8 +101,9 @@ var JobSchema = new Schema({
     }
 });
 
-JobSchema.pre('save', function(next) {
-    this.modified = Date.now;
+
+JobSchema.pre('save', function (next) {
+    this.modified = Date.now();
     next();
 });
 

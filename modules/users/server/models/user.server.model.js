@@ -106,6 +106,22 @@ var UserSchema = new Schema({
     },
 
     /**
+     * Driver & Company Links
+     */
+    driver: {
+        type: Schema.ObjectId,
+        ref: 'Driver',
+        default: null
+    },
+
+    company: {
+        type: Schema.ObjectId,
+        ref: 'Company',
+        default: null
+    },
+
+
+    /**
      * Addresses holds one or more Address Objects, nested
      * locally within the User model
      */
@@ -117,7 +133,7 @@ var UserSchema = new Schema({
         type: String,
         trim: true
     }
-});
+}, {'toJSON': { virtuals: true }});
 
 UserSchema.post('init', function(next) {
     if (!this.displayName) {
@@ -185,5 +201,22 @@ UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 		}
 	});
 };
+
+UserSchema.virtual('isAdmin')
+    .get(function() {
+        return !!this.roles && this.roles.indexOf('admin') !== -1;
+    });
+
+
+UserSchema.virtual('isDriver')
+    .get(function() {
+        return this.type === 'driver';
+    });
+
+
+UserSchema.virtual('isOwner')
+    .get(function() {
+        return this.type === 'owner';
+    });
 
 mongoose.model('User', UserSchema);

@@ -10,18 +10,21 @@
             </button>
         </div>
     </div>
-    <form class="form-horizontal" data-ng-submit="vm.createApplication()" novalidate>
+    <form class="form-horizontal" name="vm.applicantForm" data-ng-submit="vm.createApplication()" novalidate>
         <div class="modal-body">
             <fieldset>
-                <label class="control-label" for="name">Message</label>
+                <label class="control-label" for="name">{{vm.placeholders.messageHeading}}
+                    <small ng-bind="vm.placeholders.messageSubHeading"></small>
+                </label>
 
                 <div class="controls">
-                    <textarea type="text" data-ng-model="vm.message" id="name" class="form-control"
+                    <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"
                               placeholder="{{vm.placeholders.intro}}" required></textarea>
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox"> <strong>Disclaimer: </strong><span data-ng-bind="vm.disclaimer">Sample Disclaimer Text goes here ... Outset reserves the right to modify these Terms from time to time at our sole discretion and without any notice. Changes to our Terms become effective on the date they are posted and your continued use of Outset after any changes to Terms will signify your agreement to be bound by them.</span>
+                        <input type="checkbox" data-ng-model="vm.application.termsAccepted" data-ng-required="true" name="disclaimer"/>
+                        <strong>Disclaimer: </strong><span data-ng-bind="vm.placeholders.disclaimer"></span>
                     </label>
                 </div>
             </fieldset>

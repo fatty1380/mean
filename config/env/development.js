@@ -6,7 +6,7 @@ module.exports = {
         title: 'Outset - Development Environment'
     },
     db: {
-        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        //uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
         options: {
             user: '',
             pass: ''  
@@ -21,6 +21,39 @@ module.exports = {
         privateKeyPath: './config/sslcerts/key.pem',
         publicKeyPath: './config/sslcerts/cert.pem',
         passphrase: 'password'
+    },
+    modules: {
+        driver: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company: {
+                view: true
+            }
+        },
+        owner: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company : {
+                create : true,
+                edit: true
+            }
+        }
     },
     services: {
         everifile: {

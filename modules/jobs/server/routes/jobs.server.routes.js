@@ -6,7 +6,7 @@ module.exports = function(app) {
 
     // Jobs Routes
     app.route('/api/jobs')
-        .get(jobs.list)
+        .get(jobs.queryAll, jobs.executeQuery, jobs.list)
         .post(users.requiresLogin, jobs.create);
 
     app.route('/api/jobs/:jobId')
@@ -15,10 +15,13 @@ module.exports = function(app) {
         .delete(users.requiresLogin, jobs.hasAuthorization, jobs.delete);
 
     app.route('/api/users/:userId/jobs')
-        .get(jobs.queryByUserID);
+        .get(jobs.queryByUserID, jobs.executeQuery, jobs.list);
+
+    app.route('/api/companies/:companyId/jobs/applications')
+        .get(jobs.queryByCompanyID, jobs.populateApplications, jobs.executeQuery, jobs.list);
 
     app.route('/api/companies/:companyId/jobs')
-        .get(jobs.queryByCompanyID);
+        .get(jobs.queryByCompanyID, jobs.executeQuery, jobs.list);
 
     // Finish by binding the Job middleware
     app.param('jobId', jobs.jobByID);

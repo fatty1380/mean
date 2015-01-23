@@ -1,27 +1,30 @@
-<h2 ng-if="!dm.level" class="title container-fluid text-center" data-ng-bind="dm.title"></h2>
-<span ng-if="dm.level" class="title container-fluid text-center {{dm.level}}" data-ng-bind="dm.title"></span>
+<h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"></h2>
+<span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"></span>
 
 <!-- os-page-header directive : os-page-header.client.template -->
-<div class="page-header" data-ng-if="!!dm.subTitle || !!dm.editSref || dm.btnShow && (!!dm.btnText && !!dm.btnSref)" ng-class="{well : !dm.level}" ng-mouseenter="dm.hover=true" ng-mouseleave="dm.hover=false">
-    <span data-ng-if="!!dm.subTitle" class="h3" data-ng-bind="dm.subTitle"></span>
-    <span data-ng-if="!!dm.editSref" data-ng-show="dm.showEdit">
-            <a class="btn btn-link" ui-sref="{{::dm.editSref}}">edit
+<div class="page-header" data-ng-if="vm.showHeader" ng-class="{well : !vm.level}"
+     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">
+
+    <span class="h3" data-ng-bind="vm.subTitle">&nbsp;</span>
+    <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">
+            <a class="btn btn-link" ng-click="vm.editFn">edit
                 <i class="fa fa-pencil-square-o"></i>
             </a>
         </span>
-    <button ng-if="dm.btnShow && (!!dm.btnText && !!dm.btnSref)" class="btn btn-primary pull-right"
-            ui-sref="{{dm.btnSref}}">{{::dm.btnText}}
+    <button ng-if="vm.btnShow && (!!vm.btnText && !!vm.btnSref)" class="btn btn-primary pull-right"
+            ui-sref="{{vm.btnSref}}">{{::vm.btnText}}
     </button>
-    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!dm.pictureUrl"><div>
-        <img data-ng-src="{{dm.pictureUrl}}" alt="profile picture"
-             class="img-thumbnail user-profile-picture">
-        <a class="btn btn-link" data-ui-sref="settings.picture" data-ng-if="dm.showEdit">edit
-            <i class="fa fa-pencil-square-o"></i>
-        </a>
+    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!vm.pictureUrl">
+        <div>
+            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
+                 class="img-thumbnail user-profile-picture">
+            <a class="btn btn-link" data-ng-click="vm.editFn()" data-ng-if="vm.showEdit">edit
+                <i class="fa fa-pencil-square-o"></i>
+            </a>
         </div>
     </div>
 
     <!-- Sub-heading -->
-    <small ng-if="dm.includeTransclude"><em class="text-muted" ng-transclude></em></small>
+    <small ng-if="vm.includeTransclude"><em class="text-muted" ng-transclude></em></small>
 </div>
 <!-- os-page-header directive : END -->
