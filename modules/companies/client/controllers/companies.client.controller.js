@@ -41,6 +41,7 @@
         vm.successFunction = function (fileItem, response, status, headers) {
             // Populate user object
             vm.company = response;
+            vm.imageURL = vm.company.profileImageURL;
 
             vm.showPhotoEdit = false;
         };

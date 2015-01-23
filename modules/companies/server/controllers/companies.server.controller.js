@@ -6,7 +6,8 @@
 var mongoose = require('mongoose'),
 errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
 fs           = require('fs'),
-
+path         = require('path'),
+fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
 Company      = mongoose.model('Company'),
 _            = require('lodash');
 
@@ -110,48 +111,55 @@ exports.update = function (req, res) {
  */
 exports.changeProfilePicture = function (req, res) {
     console.log('[CompaniesCtrl.changeProfilePicture] Start');
-
-
-    console.log('Owner %j vs User %j', req.company.owner, req.user);
-
-
     var company = req.company;
-    var message = null;
+    var user = req.user;
 
-    if (company) {
-        fs.writeFile('./modules/companies/client/img/profile/uploads/' + req.files.file.name, req.files.file.buffer, function (uploadError) {
-            if (uploadError) {
-                console.log('[CompaniesCtrl.changeProfilePicture] Upload Error: %j', uploadError);
-                return res.status(400).send({
-                    message: 'Error occurred while uploading profile picture'
-                });
-            } else {
-                company.profileImageURL = 'modules/companies/img/profile/uploads/' + req.files.file.name;
-
-                company.save(function (saveError) {
-                    if (saveError) {
-                        return res.status(400).send({
-                            message: errorHandler.getErrorMessage(saveError)
-                        });
-                    } else {
-                        req.login(company, function (err) {
-                            if (err) {
-                                res.status(400).send(err);
-                            } else {
-                                console.log('[CompaniesCtrl.changeProfilePicture] Success! %j', company);
-
-                                res.json(company);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    } else {
-        res.status(400).send({
+    if (!user) {
+        return res.status(400).send({
             message: 'User is not signed in'
         });
     }
+
+    if (!company) {
+        return res.status(400).send({
+            message: 'No Available Company Profile'
+        });
+    }
+
+    console.log('ownerId:`%s` %s `%s`:userId', company.owner._id, (company.owner._id.equals(user._id) ? '==' : '!='), user._id);
+    console.log('Company Agents:`%s` %s `%s`:userId', company.agents, (_.contains(company.agents, user) ? '==' : '!='), user._id);
+
+    if (!company.owner._id.equals(user._id) && !_.contains(company.agents, user)) {
+        return res.status(400).send({
+            message: 'User does not have access to edit this company'
+        });
+    }
+
+    fileUploader.saveFileToCloud(req.files, 'companies').then(
+        function(successURL) {
+            console.log('successfully uploaded company profile picture to %s', successURL);
+
+            company.profileImageURL = successURL;
+
+            company.save(function(saveError) {
+                if (saveError) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(saveError)
+                    });
+                }
+
+                console.log('[CompaniesCtrl.changeProfilePicture] Success! %j', company);
+
+                res.json(company);
+
+            });
+
+        }, function(error) {
+            return res.status(400).send({
+                message: 'Unable to save Company Profile Picture. Please try again later'
+            });
+        }
+    );
 };
 
 /**

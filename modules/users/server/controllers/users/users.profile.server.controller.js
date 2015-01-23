@@ -6,23 +6,13 @@
 var _        = require('lodash'),
 fs           = require('fs'),
 path         = require('path'),
+fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 config       = require(path.resolve('./config/config')),
 mongoose     = require('mongoose'),
 passport     = require('passport'),
 User         = mongoose.model('User'),
 Q            = require('q');
-
-var s3 = require('s3');
-var client;
-var publicURL;
-
-if (!!config.services.s3 && config.services.s3.enabled) {
-    var options = config.services.s3.clientConfig;
-    options.s3Options = config.services.s3.s3Options;
-    client = s3.createClient(options);
-
-}
 
 /**
  * Update user details
@@ -62,117 +52,53 @@ exports.update = function (req, res) {
     }
 };
 
-var getFileURL = function (filename) {
-    var localFileLocation = config.services.fs.writePath + filename;
-    if (!!client) {
 
-        console.log('[getFileURL] Attempting S3 Upload');
-        var deferred = Q.defer();
-        var params = {
-            localFile: localFileLocation,
-
-            s3Params: {
-                Bucket: config.services.s3.s3Options.bucket,
-                Key: config.services.s3.folder + filename,
-                ACL: 'public-read'
-            }
-        };
-
-
-        console.log('[getFileURL] Uploading with parameters: %j', params);
-
-
-        var uploader = client.uploadFile(params);
-        uploader.on('error', function (err) {
-            console.error('[getFileURL] unable to upload:', err.stack);
-
-            deferred.reject(err);
-        });
-        uploader.on('end', function (data) {
-            console.log('[getFileURL] done uploading, got data: %j', data);
-
-            var publicURL = s3.getPublicUrlHttp(params.s3Params.Bucket, params.s3Params.Key);
-
-            console.log('[getFileURL] Got public URL: %s', publicURL);
-
-            deferred.resolve(publicURL);
-        });
-
-        return deferred.promise;
-    }
-    else {
-
-        console.log('[getFileURL] No S3 Configured - using local url: %s', publicURL);
-        return localFileLocation;
-    }
-};
 
 /**
  * Update profile picture
  */
 exports.changeProfilePicture = function (req, res) {
     var user = req.user;
-    var message = null;
 
     if (user) {
-        fs.writeFile(config.services.fs.writePath + req.files.file.name, req.files.file.buffer,
-            function (uploadError) {
-                if (uploadError) {
-                    return res.status(400).send({
-                        message: 'Error occurred while uploading profile picture'
-                    });
-                } else {
+        fileUploader.saveFileToCloud(req.files).then(
+            function (successURL) {
 
+                console.log('successfully uploaded profile picture to %s', successURL);
 
-                    getFileURL(req.files.file.name)
-                        .then(function (url) {
-                            console.log('[ChangeProfilePicture.S3] - S3 request completed with url: "%s"', url);
-                            return url;
-                        }, function (err) {
-                            console.log('[ChangeProfilePicture.S3] - S3 failed with err: %j', err);
+                user.profileImageURL = successURL;
 
-                            var url = config.services.fs.writePath + req.files.file.name;
-                            console.log('[ChangeProfilePicture.S3] resolving with base URL', url);
+                console.log('[ChangeProfilePicture] - Saving User with URL: %s', user.profileImageURL);
 
-                            return url;
-
-                        })
-                        .then(function (url) {
-                            user.profileImageURL = url;
-
-                            console.log('[ChangeProfilePicture] - Saving User with URL: %s', user.profileImageURL);
-
-                            user.save(function (saveError) {
-                                if (saveError) {
-                                    return res.status(400).send({
-                                        message: errorHandler.getErrorMessage(saveError)
-                                    });
-                                } else {
-                                    req.login(user, function (err) {
-                                        if (err) {
-                                            res.status(400).send(err);
-                                        } else {
-                                            res.json(user);
-                                        }
-                                    });
-                                }
-                            });
+                user.save(function (saveError) {
+                    if (saveError) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(saveError)
                         });
-
-
-                }
+                    } else {
+                        req.login(user, function (err) {
+                            if (err) {
+                                res.status(400).send(err);
+                            } else {
+                                res.json(user);
+                            }
+                        });
+                    }
+                });
+            },
+            function (error) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(error)
+                });
             }
-        )
-        ;
-
+        );
     }
     else {
         res.status(400).send({
             message: 'User is not signed in'
         });
     }
-}
-;
+};
 
 exports.list = function (req, res, next) {
     User
