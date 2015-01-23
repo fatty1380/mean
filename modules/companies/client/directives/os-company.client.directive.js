@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function CompanyDirectiveController(Authentication) {
+    function CompanyDirectiveController(Authentication, $state) {
         var vm = this;
 
         vm.user = Authentication.user;
@@ -14,6 +14,16 @@
         else {
             vm.createText = 'Thanks for signing up. Right now our site is only available to drivers to give them a chance to fill out their profiles and order reports. You will receive an email once the site is available for job postings.';
         }
+
+        vm.credit = function() {
+            debugger;
+            if(vm.company && vm.company._id) {
+                $state.go('companies.edit', {'companyId': vm.company._id});
+            }
+            else {
+                $state.go('companies.create');
+            }
+        };
 
     }
 
@@ -36,7 +46,7 @@
         return ddo;
     }
 
-    CompanyDirectiveController.$inject = ['Authentication'];
+    CompanyDirectiveController.$inject = ['Authentication', '$state'];
 
     angular.module('companies')
         .controller('CompanyDirectiveController', CompanyDirectiveController)

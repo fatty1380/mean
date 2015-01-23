@@ -30,9 +30,7 @@
         }).$promise.catch(function (error) {
                 if (error.status === 404) {
                     console.log('Unable to find company');
-                    return {
-                        ownerId: auth.user._id
-                    };
+                    return null;
                 }
                 else {
                     throw error;
@@ -90,20 +88,13 @@
             }).
 
             state('companies.create', {
-                url: '/create/{companyId:[0-9a-fA-F]{24}}',
+                url: '/create',
                 templateUrl: 'modules/companies/views/edit-company.client.view.html',
                 parent: 'companies',
                 controller: 'CompanyEditController',
                 controllerAs: 'vm',
-                params: {
-                    companyId: {
-                        default: null,
-                        isArray: true,
-                        squish: true
-                    }
-                },
                 resolve: {
-                    company: companyResolve,
+                    company: function() { return null; },
                     config: moduleConfigResolve
                 }
             }).
@@ -124,6 +115,7 @@
 // Dependency Injection
     companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
+
     config.$inject = ['$stateProvider'];
 
 //Setting up route

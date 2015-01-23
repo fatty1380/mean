@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function CompanyEditController($state, $log, Companies, company) {
+    function CompanyEditController($state, $log, auth, Companies, company) {
         var vm = this;
 
         vm.company = company;
@@ -11,29 +11,39 @@
         vm.editName = false;
 
         function activate() {
-            if (!vm.company) {
+            if ($state.is('companies.create')) {
+                if (!vm.company || _.isEmpty(vm.company)) {
+                    $log.debug('no existing company object, creating a blank stub');
+                    vm.company = {
+                        ownerId: auth.user._id
+                    };
+                }
+            }
+
+            if (!vm.company || _.isEmpty(vm.company)) {
                 $log.error('[CompanyEditController] No company available in state %s', $state.current.name);
             }
-            if($state.is('companies.create')) {
+            else if ($state.is('companies.create')) {
                 vm.submitText = 'Create';
                 vm.pageTitle = 'Create your new company profile';
                 vm.editName = true;
                 vm.editing = true;
-            } else if($state.is('companies.edit')) {
+            } else if ($state.is('companies.edit')) {
                 vm.submitText = 'Update';
                 vm.pageTitle = vm.company.name;
                 vm.hasTitle = true;
-            } else if($state.is('companies.remove')) {
+            } else if ($state.is('companies.remove')) {
                 vm.submit = remove;
                 vm.submitText = 'Remove';
                 vm.submitClass = 'btn-danger';
             }
+
         }
 
         activate();
 
         function submit() {
-            if(vm.company._id) {
+            if (vm.company._id) {
                 return update();
             } else {
                 return create();
@@ -46,30 +56,30 @@
             var company = new Companies.ById(vm.company);
 
             // Redirect after save
-            company.$save(function(response) {
+            company.$save(function (response) {
                 $state.go('companies.home', {companyId: response._id});
 
                 // Clear the form object
                 vm.company = null;
-            }, function(errorResponse) {
+            }, function (errorResponse) {
                 vm.error = errorResponse.data.message || errorResponse.data.error.message;
             });
         }
 
         // Remove existing Company
         function remove() {
-                vm.company.$remove(function() {
-                    $state.go('home');
-                });
+            vm.company.$remove(function () {
+                $state.go('home');
+            });
         }
 
         // Update existing Company
         function update() {
             var company = vm.company;
 
-            company.$update(function() {
+            company.$update(function () {
                 $state.go('companies.home', {companyId: company._id});
-            }, function(errorResponse) {
+            }, function (errorResponse) {
                 vm.error = errorResponse.data.message;
             });
         }
@@ -80,7 +90,7 @@
         }
     }
 
-    CompanyEditController.$inject = ['$state', '$log', 'Companies', 'company'];
+    CompanyEditController.$inject = ['$state', '$log', 'Authentication', 'Companies', 'company'];
 
     angular.module('companies')
         .controller('CompanyEditController', CompanyEditController);

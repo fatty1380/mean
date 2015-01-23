@@ -12,58 +12,30 @@
 
         vm.canEdit = false;
         vm.titleText = 'Company Profile';
-        vm.imageURL = '';
+        vm.imageURL = vm.user.profileImageURL;
+
+        console.log('[CompaniesCtrl] Init w/ Company: %o', vm.company);
 
         if (!!vm.company) {
-            vm.canEdit = !!vm.config.edit && vm.company.owner._id === Authentication.user._id;
+            vm.canEdit = !!vm.config.edit && !!vm.company.owner && vm.company.owner._id === Authentication.user._id;
 
-            if(!!vm.company.name) {
+            if (!!vm.company.name) {
                 var name = vm.company.name;
 
-                if(name.charAt(name.length-1).toLowerCase() === 's') {
+                if (name.charAt(name.length - 1).toLowerCase() === 's') {
                     vm.titleText = name + '\' Profile';
                 } else {
                     vm.titleText = name + '\'s Profile';
                 }
             }
+
+            vm.imageURL = vm.company.profileImageURL || vm.user.profileImageURL;
         }
         else if ($state.is('companies.home')) {
             vm.canEdit = !!vm.config.edit;
         } else {
             debugger;
         }
-
-        vm.imageURL = vm.company.profileImageURL || vm.user.profileImageURL;
-
-        // REGION : CRUD Methods
-
-        // Find a list of Companies
-        vm.find = function () {
-            vm.companies = Companies.ById.query();
-        };
-
-        vm.init = function () {
-            if ($state.is('companies.home') || $stateParams.companyId === 'home') {
-                vm.findByUser(vm.user);
-            } else {
-                vm.findOne();
-            }
-        };
-
-        // Find existing Company
-        vm.findOne = function () {
-            vm.company = vm.company || Companies.ById.get({
-                companyId: $stateParams.companyId
-            });
-        };
-
-        vm.findOneByUser = function (user) {
-            if (user.type === 'owner') {
-                vm.company = Companies.ByUser.get({
-                    userId: user._id
-                });
-            }
-        };
 
         // Change Picture Success method:
         vm.successFunction = function (fileItem, response, status, headers) {

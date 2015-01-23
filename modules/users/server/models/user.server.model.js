@@ -139,10 +139,6 @@ UserSchema.post('init', function(next) {
     if (!this.displayName) {
         this.displayName = this.firstName + ' ' + this.lastName;
   	}
-
-	this.isAdmin = _.contains(this.roles, 'admin');
-	this.isDriver = this.type === 'driver';
-	this.isOwner = this.type === 'owner';
 });
 
 /**
