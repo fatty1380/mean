@@ -44,15 +44,15 @@ module.exports.initLocalVariables = function (app) {
         next();
     });
 
-    //if (process.env.NODE_ENV === 'production') {
-    //    app.use(function (req, res, next) {
-    //        if (req.headers['x-forwarded-proto'] !== 'https') {
-    //            console.log('[EXPRESS.ROUTER] x-forward-proto');
-    //            return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    //        }
-    //        return next();
-    //    });
-    //}
+    if (process.env.NODE_ENV === 'production') {
+        app.use(function (req, res, next) {
+            if (req.headers['x-forwarded-proto'] !== 'https') {
+                console.log('[EXPRESS.ROUTER] x-forward-proto');
+                return res.redirect(['https://', req.get('Host'), req.url].join(''));
+            }
+            return next();
+        });
+    }
 
 };
 
