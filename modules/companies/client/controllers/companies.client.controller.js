@@ -44,6 +44,7 @@
             vm.imageURL = vm.company.profileImageURL;
 
             vm.showPhotoEdit = false;
+            vm.hideModal();
         };
 
         vm.showPhotoEdit = false;

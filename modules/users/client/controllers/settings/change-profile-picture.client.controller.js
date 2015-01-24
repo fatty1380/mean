@@ -174,6 +174,7 @@
             vm.uploader.clearQueue();
 
             vm.imageURL = vm.model.profileImageURL;
+            vm.success = vm.error = null;
 
             vm.newImage = vm.croppedImage = null;
             vm.isCropping = vm.useCropped = false;
