@@ -51,7 +51,6 @@ exports.executeQuery = function (req, res, next) {
                     console.log('error looking up users for applications, returning non-populated version', err);
                     next();
                 }
-                console.log('[Job.ExecuteQuery1] %s', JSON.stringify(populated[1].applications[0].toObject(), undefined, 2));
 
                 var options = [
                     {path: 'applications.user.driver', model: 'Driver'},
@@ -65,7 +64,6 @@ exports.executeQuery = function (req, res, next) {
                         console.log('error looking up users for applications, returning non-populated version', err);
                         next();
                     }
-                    console.log('[Job.ExecuteQuery1] %s', JSON.stringify(populated[1].applications[0].toObject(), undefined, 2));
 
                     req.jobs = populated;
                     next();

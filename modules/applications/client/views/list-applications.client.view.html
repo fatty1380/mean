@@ -1,7 +1,10 @@
 
     <section class="container-fluid">
         <os-page-header title="{{vm.listTitle || 'My Active Job Applications'}}"
-                sub-title="{{!!vm.jobs ? vm.jobs.length + ' Active Job Posts' : vm.applications.length ? vm.applications.length + ' Job Applicants' : 'No Active Posts'}}"></os-page-header>
+                        btn-show="vm.enableEdit"
+                        btn-text="Post New Job"
+                sub-title="{{vm.subtitle}}">
+        </os-page-header>
 
         <!-- No Applications / Disabled Intro Text -->
         <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-show="!vm.config.list || !vm.applications.length">
@@ -16,11 +19,10 @@
             </p>
 
             <span ng-bind-html="vm.bodyCopy.wrap"></span>
-            <button class="btn btn-primary center-block" ui-sref="home">{{vm.bodyCopy.homeTxt}}</button>
+            <button class="btn btn-oset-primary center-block" ui-sref="home">{{vm.bodyCopy.homeTxt}}</button>
             <p></p>
         </div>
 
         <!-- List of applications -->
-
         <os-list-applications applications="vm.applications" display-mode="normal" config="vm.config"></os-list-applications>
     </section>

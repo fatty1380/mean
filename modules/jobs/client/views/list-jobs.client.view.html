@@ -1,11 +1,29 @@
-<section>
-    <section class="container-fluid">
-        <os-page-header title="{{vm.listTitle}}" btn-show="vm.enableEdit" btn-text="Post Job"
-                        btn-sref="jobs.create({companyId: '{{vm.company._id}}' })"
-                        sub-title="There are currently {{vm.jobs.length}} open jobs.">
+<section class="container-fluid">
+    <os-page-header title="{{vm.listTitle || 'Open Job Postings'}}"
+                    btn-sref="jobs.create({companyId: '{{vm.company._id}}' })"
+                    btn-show="vm.enableEdit"
+                    btn-text="Post New Job"
+                    sub-title="{{vm.subtitle}}">
 
+    </os-page-header>
 
-        </os-page-header>
-        <os-job-list src-jobs="vm.jobs" company-id="{{vm.company._id}}" config="vm.config"></os-job-list>
-    </section>
+    <!-- No jobs / Disabled Intro Text -->
+    <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-show="!vm.config.list || !vm.jobs.length">
+        <h3 ng-bind-html="vm.bodyCopy.heading"></h3>
+
+        <div ng-bind-html="vm.bodyCopy.intro"></div>
+
+        <p ng-if="vm.bodyCopy.bullets && !!vm.bodyCopy.bullets.length">
+        <ul>
+            <li ng-repeat="bullet in vm.bodyCopy.bullets" ng-bind-html="bullet"></li>
+        </ul>
+        </p>
+
+        <span ng-bind-html="vm.bodyCopy.wrap"></span>
+        <button class="btn btn-oset-primary center-block" ui-sref="home">{{vm.bodyCopy.homeTxt}}</button>
+        <p></p>
+    </div>
+
+    <!-- List of jobs -->
+    <os-job-list src-jobs="vm.jobs" company-id="{{vm.company._id}}" config="vm.config"></os-job-list>
 </section>

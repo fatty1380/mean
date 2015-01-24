@@ -67,8 +67,6 @@
         return ddo;
     }
 
-    JobApplicationListController.$inject= ['Applications', 'Authentication', '$log'];
-
     angular.module('applications')
         .controller('JobApplicationListController', JobApplicationListController)
         .directive('osListApplications', ListApplicationsDirective);
