@@ -3,6 +3,7 @@
 @import "/public/lib/bootstrap/less/variables.less";
 
 @outset-blue: #0e2d4c;
+@outset-blue-2: darken(#5DA830, 20%);
 @subtle-white: #f6f6f6;
 @body-bgcolor: darken(#fff, 2%);
 
@@ -1362,6 +1363,65 @@ os-bg-check-summary > .pricing {
     }
   }
 
+}
+
+// ** BUTTONS ** /
+
+
+
+a.btn-oset-primary, .btn-oset-primary {
+  background : @outset-blue;
+  border     : 2px solid @outset-blue;
+  color      : #fff;
+  &:hover {
+    background : darken(@outset-blue, 5%);
+    border     : 2px solid darken(@outset-blue, 5%);
+    color      : #fff;
+  }
+}
+
+a.btn-oset-success, .btn-oset-success {
+  background : none;
+  border     : 2px solid @outset-blue;
+  color      : @outset-blue;
+  &:hover {
+    background : darken(@outset-blue, 2%);
+    border     : 2px solid @outset-blue;
+    color      : darken(#fff, 10%);
+    &.active {
+      background : lighten(@outset-blue, 5%);
+    }
+  }
+  &:active {
+    background : darken(@outset-blue, 5%);
+    border     : 2px solid @outset-blue;
+    color      : #fff;
+  }
+  &.active {
+    background : @outset-blue;
+    color: #fff
+  }
+}
+
+a.btn-oset-ghost, .btn-oset-ghost {
+  background     : none;
+  border         : 1px solid #fff;
+  color          : #fff !important;
+  padding        : 8px 20px;
+  vertical-align : middle;
+  &:hover {
+    background : lighten(@outset-blue-2, 20%);
+    border     : 1px solid lighten(@outset-blue-2, 20%);
+    color      : #fff;
+  }
+  .fa {
+    margin-right : 10px;
+    font-size    : 22px;
+  }
+  .text {
+    position : relative;
+    top      : -2px;
+  }
 }
 
 text-angular {

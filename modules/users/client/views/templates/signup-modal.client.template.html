@@ -135,7 +135,7 @@
                     <i class="fa"
                        ng-class="{'fa-question' : !vm.credentials.terms, 'fa-check-circle text-success fa-2x': vm.credentials.terms=='yes', 'fa-times-circle-o text-danger' : vm.credentials.terms=='no'}"></i>
                     <button ng-hide="vm.credentials.terms === 'yes'" type="button"
-                            ng-click="vm.credentials.terms='yes'" class="btn btn-success btn-sm mgn-left">Yes,
+                            ng-click="vm.credentials.terms='yes'" class="btn btn-oset-success btn-sm mgn-left">Yes,
                         I Agree!
                     </button>
                 </p>
@@ -144,7 +144,7 @@
         </div>
 
         <div class="modal-footer" ng-show="vm.credentials.signupType">
-            <button type="submit" class="btn btn-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
+            <button type="submit" class="btn btn-oset-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
                 Up!
             </button>
             <div data-ng-show="vm.error" class="text-center text-danger">
