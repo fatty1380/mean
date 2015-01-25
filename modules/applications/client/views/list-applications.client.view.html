@@ -1,7 +1,8 @@
 
     <section class="container-fluid">
         <os-page-header title="{{vm.listTitle || 'My Active Job Applications'}}"
-                        btn-show="vm.enableEdit"
+                        btn-sref="jobs.create({companyId: '{{vm.company._id}}' })"
+                        btn-show="vm.user.type === 'owner' && vm.enableEdit"
                         btn-text="Post New Job"
                 sub-title="{{vm.subtitle}}">
         </os-page-header>

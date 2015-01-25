@@ -3,20 +3,21 @@
         <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="row">
             <dl class="dl-horizontal">
                 <dt>Status:</dt>
-                <dd><span class="label label-info">{{vm.application.status}}</span></dd>
+                <dd>
+                    <os-application-status-badge model="vm.application"></os-application-status-badge>
+                </dd>
                 <dt>Applied On:</dt>
                 <dd>{{vm.application.created | date:'short'}}</dd>
             </dl>
             <div class="text-center" data-ng-if="vm.displayMode === 'mine'">
-                <button type="button" class="btn btn-info"
-                        ui-sref="applications.view({ applicationId: vm.application._id })">view application
+                <button type="button" class="btn-link read-more strong mgn-left"
+                        ui-sref="applications.view({applicationId: vm.application._id})">
+                    <i class="fa fa-external-link fa-lg mgn-left"></i>Review
                 </button>
             </div>
         </div>
 
-        <section data-ng-if="vm.displayMode === 'table'" class="application-table-row">
-
-        </section>
+        <section data-ng-if="vm.displayMode === 'table'" class="application-table-row"></section>
 
         <div data-ng-if="vm.displayMode === 'inline'" class="row">
             <dl class="dl-horizontal">
@@ -58,7 +59,7 @@
     <section ng-show="!vm.application">
         <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->
         <div data-ng-if="!!vm.job && vm.user.type === 'driver'">
-            <button class="btn btn-oset-primary btn-lg btn-block" os-new-application-modal job='vm.job'>
+            <button class="btn btn-cta-primary btn-lg btn-block bigger" os-new-application-modal job='vm.job'>
                 apply now!
             </button>
         </div>

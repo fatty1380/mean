@@ -5,7 +5,7 @@
 <div class="page-header" data-ng-if="vm.showHeader" ng-class="{well : !vm.level}"
      ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">
 
-    <span class="h3" data-ng-bind="vm.subTitle">&nbsp;</span>
+    <span class="h3" data-ng-bind-html="vm.subTitle">&nbsp;</span>
     <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">
             <a class="btn btn-link" ng-click="vm.editFn">edit
                 <i class="fa fa-pencil-square-o"></i>

@@ -1,65 +1,42 @@
 (function () {
     'use strict';
 
-    function JobApplicationListController(Applications, Authentication, $log) {
-        var vm = this;
-
-        vm.ApplicationFactory = Applications;
-        vm.displayMode = vm.displayMode || 'normal';
-        vm.company = vm.company || vm.job && vm.job.company;
-        vm.user = vm.user || Authentication.user;
-        vm.config = vm.config || {};
-
-        vm.noItemsText = 'No job applications yet';
-
-        if(vm.applications && vm.applications.length) {
-            var first = vm.applications[0];
-
-            if(first.hasOwnProperty('job')) {
-                $log.debug('Looking at a list of applications');
-            } else if (first.hasOwnProperty('applications')) {
-                $log.debug('Looking at a list of jobs :)');
-
-                vm.jobs = vm.applications;
-            }
-        }
-
-        vm.setApplicationStatus = function(application, status, $event, state) {
-            $event.stopPropagation();
-            debugger;
-            var app = vm.ApplicationFactory.setStatus(application._id, status);
-
-            app.then(function(success) {
-                $log.debug('[setApplicationStatus] %s', success);
-                application = success;
-            }, function(reject) {
-                debugger;
-                $log.warn('[setApplicationStatus] %s', reject);
-            });
-
-            state.application.status = status;
-            state.application.isNew = state.application.isConnected = false;
-            state.application.isRejected = true;
-            state.application.disabled = true;
-        };
-
-    }
-
-    function ListApplicationsDirective() {
+    function ApplicationStatusBadgeDirective() {
         var ddo;
 
         ddo = {
-            templateUrl: 'modules/applications/views/templates/os-list-applications.client.template.html',
+            template: '<span class="label {{vm.labelClass}}" ng-if="vm.model">{{ vm.labelText | uppercase }}</span>',
             restrict: 'E',
             scope: {
-                displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
-                job: '=?',
-                company: '=?',
-                user: '=?',
-                applications: '=?',
-                config: '=?'
+                model: '='
             },
-            controller: 'JobApplicationListController',
+            controller: function () {
+                var vm = this;
+
+                if (!!vm.model) {
+
+                    if (vm.model.isNew) {
+                        vm.labelClass = 'label-primary';
+                        vm.labelText = 'unreviewed';
+                    } else if (vm.model.isConnected) {
+                        if (vm.model.connection.isValid && vm.model.connection.remainingDays >= 5) {
+                            vm.labelClass = 'label-success';
+                            vm.labelText = 'connected';
+                        }
+                        else if (vm.model.connection.isValid && vm.model.connection.remainingDays < 5) {
+                            vm.labelClass = 'label-warning';
+                            vm.labelText = 'expires-soon';
+                        } else if (!vm.model.connection.isValid) {
+                            vm.labelClass = 'label-danger';
+                            vm.labelText = 'expired';
+                        }
+                    } else if (vm.model.isRejected) {
+                        vm.labelClass = 'label-danger';
+                        vm.labelText = vm.model.status;
+                    }
+
+                }
+            },
             controllerAs: 'vm',
             bindToController: true
         };
@@ -68,7 +45,6 @@
     }
 
     angular.module('applications')
-        .controller('JobApplicationListController', JobApplicationListController)
-        .directive('osListApplications', ListApplicationsDirective);
+        .directive('osApplicationStatusBadge', ApplicationStatusBadgeDirective);
 
 })();

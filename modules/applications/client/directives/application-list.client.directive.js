@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function JobApplicationListController(Applications, Authentication, $log) {
+    function JobApplicationListController(Applications, Authentication, $log, $state) {
         var vm = this;
 
         vm.ApplicationFactory = Applications;
@@ -41,6 +41,12 @@
             state.application.isNew = state.application.isConnected = false;
             state.application.isRejected = true;
             state.application.disabled = true;
+        };
+
+        vm.showTab = function (jobId, tabname) {
+
+            vm.visibleJob = jobId;
+            vm.visibleTab = tabname;
         };
 
     }

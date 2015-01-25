@@ -1,10 +1,12 @@
 <section name="os-list-applications.directive" class="application-list">
 
     <div class="row">
-        <div class="job-list blog-category-list">
+        <div class="job-list blog-category-list" ng-switch="vm.user.type">
+
+            <!-- Iterate over the list of jobs ... For Owners -->
 
             <article class="post col-sm-12"
-                     ng-if="vm.jobs" ng-repeat="job in vm.jobs"
+                     ng-switch-when="owner" ng-repeat="job in vm.jobs"
                      ng-show="vm.visibleJob === job._id || !vm.visibleJob">
                 <div class="post-inner">
                     <div class="content">
@@ -12,116 +14,228 @@
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
                             <span class="date-number">{{job.posted | amDateFormat : 'd'}}</span>
                         </div>
-                        <h3 class="post-title">{{job.name}}</h3>
+                        <h3 class="post-title">{{job.name}}
+                        </h3>
+
 
                         <!--meta-->
-                        <div class="post-entry pull-right">
-                            <a class="read-more strong" ng-click="vm.visibleJob = job._id"
-                               href="#{{job._id}}/applicants">
-                                <i class="fa fa-users fa-lg mgn-right"></i>{{job.applications.length || '0'}} Applicants
-                            </a>
-                            <a class="read-more strong mgn-left"><i class="fa fa-lg fa-file-text mgn-right"></i>View
-                                Description</a>
-                            <a class="read-more strong mgn-left" ui-sref="jobs.edit({jobId: job._id})">
-                                <i class="fa fa-external-link fa-lg mgn-right"></i>Edit
-                            </a>
-                            <a class="read-more strong mgn-left" ng-click="vm.visibleJob = null"
-                               ng-class="{'disabled':!vm.visibleJob}">
-                                <i class="fa fa-close fa-lg mgn-right"></i>
-                            </a>
+                        <div class="row">
+                            <div class="pull-right">
+                                <button type="button" class="btn-tab btn-link read-more strong"
+                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleJob}">
+                                    <i class="fa fa-close fa-lg mgn-right"></i>
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong"
+                                        ng-click="vm.showTab(job._id, 'applicants')"
+                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'applicants'}"
+                                        href="#{{job._id}}#applicants">
+                                    <i class="fa fa-users fa-lg mgn-right"></i>{{job.applications.length}} Applicants
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                                        ng-click="vm.showTab(job._id, 'details')"
+                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'details'}"
+                                        href="#{{job._id}}#details">
+                                    <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                                        ui-sref="applications.view({applicationId: application._id})">
+                                    <i class="fa fa-edit fa-lg mgn-right"></i>Edit
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="post-entry col-sm-12" ng-show="vm.visibleJob === job._id">
+                        <div class="row  tab-body" ng-show="vm.visibleJob === job._id">
+                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'applicants'">
+                                <table class="table" ng-if="job.applications && job.applications.length">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Applicant</th>
+                                        <th class="hidden-sm"></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr data-ng-repeat="application in job.applications"
+                                        ng-init="user = application.user; driver = user.driver; license = driver.licenses[0]"
+                                        ui-sref="applications.view({'applicationId': application._id})"
+                                        ng-class="{'disabled': application.disabled}">
+                                        <td>{{$index+1}}</td>
+                                        <td><img ng-src="{{user.profileImageURL}}"
+                                                 class="profile-image medium center-block">
+                                        </td>
+                                        <td>
+                                            <span class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>
+                                            <br>
+                                            <os-application-status-badge
+                                                    model="application"></os-application-status-badge>
+                                        </td>
+                                        <td>
+                                            <dl class="dl-horizontal">
+                                                <dt>License</dt>
+                                                <dd>{{license.type.toLowerCase()==='commercial' ? 'CDL Class ' +
+                                                    license.rating.toUpperCase(): 'Standard License'}}
+                                                </dd>
+                                                <dt>Endorsements</dt>
+                                                <dd><span ng-repeat="(name, val) in license.endorsements"
+                                                          class="endorsement label label-success mgn-right">{{name}}&nbsp;</span></span>
+                                                </dd>
+                                                <dt>Interests</dt>
+                                                <dd><span
+                                                        ng-repeat="interest in visibleInterests = (driver.interests | filter: {value: true})"
+                                                        class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
+                                                </dd>
+                                                <dt>Intro</dt>
+                                                <dd ng-bind-html="application.introduction | limitTo : 75"></dd>
+                                            </dl>
+                                        </td>
+                                        <td>
+                                            <a class="read-more strong align-right"
+                                               ui-sref="applications.view({applicationId: application._id, action: 'read'})">
+                                                Review<i class="fa fa-external-link fa-lg mgn-left"></i>
+                                            </a>
+                                            <br>
+                                            <a class="read-more align-right"
+                                               ng-click="vm.setApplicationStatus(job.applications[$index], 'rejected', $event, this)">
+                                                Reject<i class="fa fa-close fa-lg mgn-left"></i>
+                                            </a>
 
-                            <table class="table" ng-if="job.applications && job.applications.length">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Applicant</th>
-                                    <th class="hidden-sm"></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr data-ng-repeat="application in job.applications"
-                                    ng-init="user = application.user; driver = user.driver; license = driver.licenses[0]"
-                                    ui-sref="applications.view({'applicationId': application._id})" ng-class="{'disabled': application.disabled}">
-                                    <td>{{$index+1}}</td>
-                                    <td><img ng-src="{{user.profileImageURL}}"
-                                             class="profile-image medium center-block">
-                                    </td>
-                                    <td>
-                                        <span class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>
-                                        <br>
-                                            <span ng-show="application.isNew"
-                                                  class="label label-primary">UNREVIEWED</span>
-                                            <span ng-show="application.isConnected && application.connection.isValid && application.connection.remainingDays >= 5"
-                                                  class="label label-success">CONNECTED</span>
-                                            <span ng-show="application.isConnected && application.connection.isValid && application.connection.remainingDays < 5"
-                                                  class="label label-warning">EXPIRES SOON</span>
-                                            <span ng-show="application.isConnected && !application.connection.isValid"
-                                                  class="label label-danger">EXPIRED</span>
-                                            <span ng-show="application.isRejected || application.isDeleted"
-                                                  class="label label-danger">{{application.status | uppercase}}</span>
-                                    </td>
-                                    <td>
-                                        <dl class="dl-horizontal">
-                                            <dt>License</dt>
-                                            <dd>{{license.type.toLowerCase()==='commercial' ? 'CDL Class ' +
-                                                license.rating.toUpperCase(): 'Standard License'}}
-                                            </dd>
-                                            <dt>Endorsements</dt>
-                                            <dd><span ng-repeat="(name, val) in license.endorsements"
-                                                      class="endorsement label label-success mgn-right">{{name}}&nbsp;</span></span>
-                                            </dd>
-                                            <dt>Interests</dt>
-                                            <dd><span
-                                                    ng-repeat="interest in visibleInterests = (driver.interests | filter: {value: true})"
-                                                    class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
-                                            </dd>
-                                            <dt>Intro</dt>
-                                            <dd ng-bind-html="application.introduction | limitTo : 75"></dd>
-                                        </dl>
-                                    </td>
-                                    <td>
-                                        <a class="read-more strong align-right"
-                                           ui-sref="applications.view({applicationId: application._id, action: 'read'})">
-                                            Review<i class="fa fa-external-link fa-lg mgn-left"></i>
-                                        </a>
-                                        <br>
-                                        <a class="read-more align-right"
-                                           ng-click="vm.setApplicationStatus(job.applications[$index], 'rejected', $event, this)">
-                                            Reject<i class="fa fa-close fa-lg mgn-left"></i>
-                                        </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
 
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                <div class="list-group" ng-if="!(job.applications && job.applications.length)"
+                                     ng-show="vm.visibleJob === job._id">
+                                    <div class="list-group-item text-center">
+                                        <h4>No one has applied to this job yet. Would you like to <a
+                                                ui-sref="jobs.edit({'jobId':job._id})">edit
+                                            your post?</a></h4>
+                                    </div>
 
-
-                            <div class="list-group" ng-if="!job.applications || !job.applications.length"
-                                 ng-show="vm.visibleJob === job._id">
-                                <div class="list-group-item text-center">
-                                    <h4>No one has applied to this job yet. Would you like to <a
-                                            ui-sref="jobs.edit({'jobId':job._id})">edit
-                                        your post?</a></h4>
                                 </div>
-
                             </div>
 
+                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'details'">
+                                <h4>Description</h4>
 
+                                <p ng-bind-html="job.description"></p>
+                                <h4>Requirements</h4>
+
+                                <p ng-bind-html="job.requirements"></p>
+                            </div>
                         </div>
+                        <a class="read-more strong pull-right" ng-click="vm.visibleJob = null"
+                           ng-class="{'hidden':!vm.visibleJob}"> </a>
                     </div>
-                    <!--//content-->
+
                 </div>
+
                 <!--//post-inner-->
             </article>
             <!--//post-->
 
+
+            <!-- Iterate over the list of applications ... For Drivers -->
+
+            <article class="post job-post col-sm-12"
+                     ng-switch-when="driver" ng-repeat="application in vm.applications"
+                     ng-init="job = application.job"
+                     ng-show="vm.visibleJob === job._id || !vm.visibleJob">
+                <div class="post-inner">
+                    <div class="content">
+                        <img ng-src="{{application.company.profileImageURL}}"
+                             class="col-xs-hidden col-sm-2 img-responsive medium">
+
+                        <h3 class="post-title col-sm-10">{{job.name}}</h3>
+
+                        <table class="table">
+                            <tbody>
+                            <tr ng-init="user = application.user; driver = user.driver; license = driver.licenses[0]"
+                                ui-sref="applications.view({'applicationId': application._id})"
+                                ng-class="{'disabled': application.disabled}">
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dt>Applied On</dt>
+                                        <dd>{{application.created | date: datelong}}</dd>
+                                        <dt>Status</dt>
+                                        <dd>
+                                            <os-application-status-badge
+                                                    model="application"></os-application-status-badge>
+                                        </dd>
+                                    </dl>
+
+                                </td>
+                                <td>
+                                    <a class="read-more strong align-right btn-block"
+                                       ui-sref="applications.view({applicationId: application._id, action: 'read'})">
+                                        </i>
+                                    </a>
+                                    <br>
+                                    <a class="read-more align-right btn-block"
+                                       ng-click="vm.setApplicationStatus(job.applications[$index], 'deleted', $event, this)">
+                                        Withdraw<i class="fa fa-close fa-lg mgn-left"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+                        <!--meta-->
+                        <div class="row">
+                            <div class="pull-right">
+                                <button type="button" class="btn-tab btn-link read-more strong"
+                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleJob}">
+                                    <i class="fa fa-close fa-lg mgn-right"></i>
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong"
+                                        ng-click="vm.showTab(job._id, 'application')"
+                                        href="#{{job._id}}#applicants"
+                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'application'}">
+                                    <i class="fa fa-lg fa-file-text mgn-right"></i> Your Application
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                                        ng-click="vm.showTab(job._id, 'details')"
+                                        href="#{{job._id}}#details"
+                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'details'}">
+                                    <i class="fa fa-lg fa-info mgn-right"></i> Job Description
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                                        ui-sref="applications.view({applicationId: application._id})">
+                                    <i class="fa fa-external-link fa-lg mgn-left"></i>Review
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row  tab-body" ng-show="vm.visibleJob === job._id">
+                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'application'">
+                                <div class="post-entry col-sm-10 col-sm-offset-1">
+                                    <dt>Intro</dt>
+                                    <dd ng-bind-html="application.introduction"></dd>
+                                </div>
+                            </div>
+
+                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'details'">
+                                <h4>Description</h4>
+
+                                <p ng-bind-html="job.description"></p>
+                                <h4>Requirements</h4>
+
+                                <p ng-bind-html="job.requirements"></p>
+                            </div>
+                        </div>
+                        <a class="read-more strong pull-right" ng-click="vm.visibleJob = null"
+                           ng-class="{'hidden':!vm.visibleJob}"> </a>
+                    </div>
+
+
+                    <!--//content-->
+                </div>
+                <!--//post-inner-->
+            </article>
         </div>
     </div>
 </section>
