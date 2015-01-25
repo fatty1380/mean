@@ -10,6 +10,7 @@
         vm.subtitle = !!vm.applications && vm.applications.length ? vm.applications.length + ' Job Applicants' : 'No Active Posts';
 
         vm.enableEdt = !!vm.config.edit;
+        vm.user = auth.user;
 
 
         if (auth.user.type === 'driver') {

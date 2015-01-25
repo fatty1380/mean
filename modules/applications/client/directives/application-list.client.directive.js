@@ -44,7 +44,6 @@
         };
 
         vm.showTab = function (jobId, tabname) {
-
             vm.visibleJob = jobId;
             vm.visibleTab = tabname;
         };

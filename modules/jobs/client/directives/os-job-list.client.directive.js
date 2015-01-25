@@ -17,6 +17,7 @@
         vm.limitTo = vm.limitTo || 10;
         vm.filter = {};
 
+        vm.user = auth.user;
         vm.myJobsOnly = false;
 
         function activate() {
@@ -79,6 +80,11 @@
             job.searchText = job.searchText || [job.name, job.description, job.requirements].join(' ');
 
             return reg.test(job.searchText);
+        };
+
+        vm.showTab = function (jobId, tabname) {
+            vm.visibleJob = jobId;
+            vm.visibleTab = tabname;
         };
 
         activate();
