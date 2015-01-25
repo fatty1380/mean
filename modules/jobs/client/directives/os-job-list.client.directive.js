@@ -38,7 +38,7 @@
                 vm.jobs = vm.srcJobs;
             }
             else if (!!vm.companyId) {
-                vm.filter.company = { '_id' : vm.companyId };
+                vm.filter.company = {'_id': vm.companyId};
                 vm.myJobsOnly = true;
 
                 vm.jobs = Jobs.ByCompany.query({
@@ -59,7 +59,7 @@
 
         vm.toggleFilterMine = function () {
             if ((vm.myJobsOnly = !vm.myJobsOnly)) {
-                vm.filter.company = { '_id' : vm.companyId };
+                vm.filter.company = {'_id': vm.companyId};
             }
             else {
                 if (vm.filter.hasOwnProperty('company')) {
@@ -99,7 +99,7 @@
                 config: '=?',
                 showSearch: '=?'
             },
-            controller: JobListController,
+            controller: 'JobListController',
             controllerAs: 'vm',
             bindToController: true
         };
@@ -108,6 +108,7 @@
     JobListController.$inject = ['Jobs', '$log', '$state', 'AppConfig', 'Authentication'];
 
     angular.module('jobs')
+        .controller('JobListController', JobListController)
         .directive('osJobList', JobListDirective);
 
 })();

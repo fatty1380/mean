@@ -2,11 +2,11 @@
     'use strict';
 
     // Jobs controller
-    function JobsListController($state, Authentication, jobs, company, moduleConfig) {
+    function JobsListController($state, auth, jobs, company, moduleConfig) {
         var vm = this;
 
-        vm.authentication = Authentication;
-        vm.user = Authentication.user;
+        vm.auth = auth;
+        vm.user = auth.user;
         vm.config = moduleConfig || {};
 
         vm.enableEdit = !!vm.config.edit;
