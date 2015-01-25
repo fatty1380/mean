@@ -44,10 +44,12 @@ module.exports.initLocalVariables = function (app) {
         next();
     });
 
-    if (process.env.NODE_ENV === 'production') {
+    console.log('EXPRESS ROUTER: config: %j', config.https)
+
+    if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
         app.use(function (req, res, next) {
-            if (req.headers['x-forwarded-proto'] !== 'https') {
-                console.log('[EXPRESS.ROUTER] x-forward-proto');
+            if ((config.https.enabled) && (!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'] !== 'https') {
+                console.log('[EXPRESS.ROUTER] HTTPS Redirect %s', req.get('Host'));
                 return res.redirect(['https://', req.get('Host'), req.url].join(''));
             }
             return next();

@@ -12,6 +12,7 @@
 
             <div class="btn-group pull-right">
                 <label class="btn btn-cta-secondary btn-sm"
+                       ng-if="vm.user.type === 'owner'"
                        ng-click="vm.toggleFilterMine()" btn-checkbox
                        ng-model="vm.filters.mine" name="mine">My Jobs</label>
                 <label class="btn btn-cta-secondary btn-sm"
