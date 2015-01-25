@@ -4,6 +4,7 @@
 
 @outset-blue: #0e2d4c;
 @outset-blue-2: darken(#5DA830, 20%);
+@outset-success: darken(@ribbon, 15%);
 @subtle-white: #f6f6f6;
 @body-bgcolor: darken(#fff, 2%);
 
@@ -1317,6 +1318,12 @@ os-bg-check-summary > .pricing {
       }
 
     }
+
+    &.job-post {
+      .content {
+        padding-left: 30px!important;
+      }
+    }
     .content {
       padding        : 30px;
       padding-left   : 80px;
@@ -1380,7 +1387,7 @@ a.btn-oset-primary, .btn-oset-primary {
   }
 }
 
-a.btn-oset-success, .btn-oset-success {
+a.btn-oset-secondary, .btn-oset-secondary {
   background : none;
   border     : 2px solid @outset-blue;
   color      : @outset-blue;
@@ -1399,6 +1406,29 @@ a.btn-oset-success, .btn-oset-success {
   }
   &.active {
     background : @outset-blue;
+    color: #fff
+  }
+}
+
+a.btn-oset-success, .btn-oset-success {
+  background : none;
+  border     : 2px solid @outset-success;
+  color      : @outset-success;
+  &:hover {
+    background : darken(@outset-success, 2%);
+    border     : 2px solid @outset-success;
+    color      : darken(#fff, 10%);
+    &.active {
+      background : lighten(@outset-success, 5%);
+    }
+  }
+  &:active {
+    background : darken(@outset-success, 5%);
+    border     : 2px solid @outset-success;
+    color      : #fff;
+  }
+  &.active {
+    background : @outset-success;
     color: #fff
   }
 }
@@ -1472,4 +1502,31 @@ div, .btn, a, .btn-cta {
   > .fa {
     color : inherit !important;
   }
+}
+
+.btn-tab {
+  padding: 4px 8px;
+  color : @color;
+  .transition (all 0.4s ease-in-out);
+  &:hover {
+    text-decoration : underline;
+    color           : darken(@color, 10%);
+  }
+
+  &.active {
+    background-color: @color;
+    color: #FFFFFF;
+  }
+}
+
+.tab-body {
+  border-top: 2px solid @color;
+}
+
+.bg-primary {
+  background-color: @outset-blue;
+}
+
+.bg-success {
+  background-color: @outset-success;
 }

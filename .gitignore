@@ -36,3 +36,4 @@ modules/theme/client/css/outset.css
 modules/theme/client/css/responsive.css
 modules/theme/client/css/theme-default.css
 config/sslcerts
+convenience.css

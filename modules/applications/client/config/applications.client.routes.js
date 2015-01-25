@@ -187,8 +187,6 @@
     resolveApplications.$inject = ['Authentication', 'Applications', '$stateParams'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
 
-    ApplicationListController.$inject = ['Authentication', 'applications', 'config'];
-
     config.$inject = ['$stateProvider'];
 
     angular.module('applications')
