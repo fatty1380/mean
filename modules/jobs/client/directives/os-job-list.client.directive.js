@@ -59,13 +59,82 @@
         };
 
         vm.toggleFilterMine = function () {
-            if ((vm.myJobsOnly = !vm.myJobsOnly)) {
+            // Toggling into the filtered state
+            if (!vm.filters.mine) {
                 vm.filter.company = {'_id': vm.companyId};
             }
             else {
                 if (vm.filter.hasOwnProperty('company')) {
                     delete vm.filter['company'];
                 }
+            }
+            vm.filters.clear = !(vm.filters.today || vm.filters.week || vm.filters.unseen || !vm.filters.mine);
+        };
+        var filterProto = {
+            numDays: 0,
+            day: false,
+            week: false,
+            unseen: false,
+            mine: false,
+            clear: true
+        };
+
+        vm.filters = _.clone(filterProto);
+
+        vm.toggleFilter = function(filter) {
+            var predicate = '';
+            switch(filter) {
+                case 'today':
+                    if(vm.filters.numDays === 1) {
+                        vm.filters.numDays = 0;
+                    } else {
+                        vm.filters.week = false;
+                        vm.filters.numDays = 1;
+                    }
+                    break;
+                case 'week':
+                    if(vm.filters.numDays === 7) {
+                        vm.filters.numDays = 0;
+                    } else {
+                        vm.filters.day = false;
+                        vm.filters.numDays = 7;
+                    }
+                    break;
+                case 'unseen':
+                    break;
+                case 'clear':
+                    debugger;
+                    vm.filters.clearStuff = true;
+                    vm.filters = _.clone(filterProto);
+                    return;
+            }
+
+            vm.filters.clear = !(vm.filters.today || vm.filters.week || vm.filters.unseen || vm.filters.mine);
+        };
+
+        function filterToggle(name, predicate) {
+
+            var val = vm.filters[name];
+
+            if(!!val) {
+                vm.filter[name] = predicate;
+            } else {
+                if (vm.filter.hasOwnProperty(name)) {
+                    delete vm.filter[name];
+                }
+            }
+        }
+
+        vm.predicate = 'posted';
+        vm.reverse = true;
+
+        vm.toggleSort = function(field, reverse) {
+
+            if(field === vm.predicate) {
+                vm.reverse = !vm.reverse;
+            } else {
+                vm.predicate = field;
+                vm.reverse = !!reverse;
             }
         };
 
@@ -116,5 +185,17 @@
     angular.module('jobs')
         .controller('JobListController', JobListController)
         .directive('osJobList', JobListDirective);
+
+    angular.module('core').filter('withinPastDays', function(){
+        return function(items, field, days){
+            if(!days) { return items.filter(function(){return true;}); }
+
+            var timeStart = moment().subtract(days, 'days');
+            console.log('filtering back %s days to %s', days, timeStart.format('L'));
+            return items.filter(function(item){
+                return (moment(item[field]).isAfter(timeStart));
+            });
+        };
+    });
 
 })();

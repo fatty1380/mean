@@ -1,18 +1,60 @@
 <section name="os-job-list.directive" class="outset-list">
+    <div class="panel panel-default search-section" data-ng-if="!!vm.showSearch && !!vm.jobs.length">
+        <form class="panel-body form-inline">
+            <label class="form-label" for="job-search">Search: </label>
+
+            <div class="form-group search">
+                <input id="job-search" ng-model="vm.searchTerms" type="search"
+                       class="form-control job-search"
+                       ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 300, 'blur': 0 } }"
+                       placeholder="search terms ...">
+            </div>
+
+            <div class="btn-group pull-right">
+                <label class="btn btn-cta-secondary btn-sm"
+                       ng-click="vm.toggleFilterMine()" btn-checkbox
+                       ng-model="vm.filters.mine" name="mine">My Jobs</label>
+                <label class="btn btn-cta-secondary btn-sm"
+                       ng-click="vm.toggleFilter('today')" btn-checkbox
+                       ng-model="vm.filters.day" name="newest">New Today</label>
+                <label class="btn btn-cta-secondary btn-sm"
+                       ng-click="vm.toggleFilter('week')" btn-checkbox
+                       ng-model="vm.filters.week" name="newest">New This Week</label>
+                <label class="btn btn-cta-secondary btn-sm hidden"
+                       ng-click="vm.toggleFilter('unseen')" btn-checkbox
+                       ng-model="vm.filters.unseen" name="unseen">Unseen</label>
+                <label class="btn btn-cta-secondary btn-sm"
+                       ng-click="vm.toggleFilter('clear')" btn-checkbox
+                       ng-class="{'disabled' : vm.filters.clear}"
+                       ng-model="vm.filters.clearStuff"
+                       name="unseen"><i class="fa fa-times"></i></label>
+            </div>
+
+            <div class="btn-group pull-right" role="group" aria-label="...">
+                <button type="button" class="btn btn-link" ng-click="vm.toggleSort('posted',true)">
+                    Posting Date <i class="fa" ng-class="{'fa-sort-amount-desc':vm.reverse, 'fa-sort-amount-asc':!vm.reverse}"></i>
+                </button>
+            </div>
+        </form>
+    </div>
 
     <div class="row">
         <div class="job-list blog-category-list">
 
-            <div class="row" ng-if="vm.debug"><pre>{{vm.user}}</pre></div>
+            <div class="row" ng-if="vm.debug">
+                <pre>{{vm.user}}</pre>
+            </div>
+            <!--data-ng-repeat="job in (vm.jobs | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | limitTo: vm.limitTo)"-->
 
             <article class="post col-sm-12"
-                     ng-if="vm.jobs" ng-repeat="job in vm.jobs"
+                     data-ng-repeat="job in (vm.jobs | filter: vm.filter | withinPastDays: 'posted': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse  | limitTo: vm.limitTo)"
+                     ng-if="vm.jobs"
                      ng-show="vm.visibleJob === job._id || !vm.visibleJob">
                 <div class="post-inner">
                     <div class="content">
                         <div class="date-label">
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
-                            <span class="date-number">{{job.posted | amDateFormat : 'd'}}</span>
+                            <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
                         <h3 class="post-title">{{job.name}}</h3>
 
@@ -38,9 +80,13 @@
                                     <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
-                                        ui-sref="jobs.edit({applicationId: job._id})"
+                                        ui-sref="jobs.edit({jobId: job._id})"
                                         ng-show="job.company._id === (vm.companyId || vm.user.company.id)">
                                     <i class="fa fa-edit fa-lg mgn-right"></i>Edit
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                                        ui-sref="jobs.view({jobId: application._id})">
+                                    <i class="fa fa-external-link fa-lg mgn-right"></i>Review
                                 </button>
                             </div>
                         </div>
@@ -132,7 +178,7 @@
                     </div>
                     <!--//content-->
                 </div>
-                        <!--//post-inner-->
+                <!--//post-inner-->
             </article>
             <!--//post-->
 

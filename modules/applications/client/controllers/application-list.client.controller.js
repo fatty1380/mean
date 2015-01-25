@@ -12,6 +12,8 @@
         vm.enableEdt = !!vm.config.edit;
         vm.user = auth.user;
 
+        vm.enableHeaderEdit = vm.user.type === 'owner' && vm.config.enableEdit;
+
 
         if (auth.user.type === 'driver') {
             vm.bodyCopy = {

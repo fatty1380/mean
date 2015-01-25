@@ -4354,42 +4354,42 @@ form label.no-border :hover,
 form label.no-border :active {
   border: none !important;
 }
-form label.btn-cta-secondary.active {
+form label.btn-cta-secondary.oset-toggles.active {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
 }
-form label.btn-cta-secondary:active,
-form label.btn-cta-secondary:hover {
+form label.btn-cta-secondary.oset-toggles:active,
+form label.btn-cta-secondary.oset-toggles:hover {
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
-form label.btn-cta-secondary i.fa {
+form label.btn-cta-secondary.oset-toggles i.fa {
   padding-top: 3px;
   color: inherit !important;
 }
-form label.btn-cta-secondary i.fa::before {
+form label.btn-cta-secondary.oset-toggles i.fa::before {
   content: "\F10C";
   position: absolute;
 }
-form label.btn-cta-secondary:hover i.fa::before {
+form label.btn-cta-secondary.oset-toggles:hover i.fa::before {
   content: "\F128";
 }
-form label.btn-cta-secondary.active i.fa::before {
+form label.btn-cta-secondary.oset-toggles.active i.fa::before {
   content: "\F058";
 }
-form label.btn-cta-secondary.active:hover i.fa::before {
+form label.btn-cta-secondary.oset-toggles.active:hover i.fa::before {
   content: "\F00C";
 }
-form label.btn-cta-secondary.oset-input * {
+form label.btn-cta-secondary.oset-toggles.oset-input * {
   display: inline;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
 }
-form label.btn-cta-secondary.oset-input input {
+form label.btn-cta-secondary.oset-toggles.oset-input input {
   color: #ec6952;
   outline: none;
 }
@@ -4570,6 +4570,9 @@ tos ol > li {
   left: 15px;
   top: 30px;
   color: #fff;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
 }
 .date-label .month {
   background: #253340;
@@ -4664,6 +4667,7 @@ tos ol > li {
 }
 .application-list .post .post-inner,
 .outset-list .post .post-inner {
+  background: #FFFFFF;
   padding: 0;
   position: relative;
   border: 1px solid #cccccc;

@@ -922,7 +922,7 @@ form {
     margin : 4px 8px;
   }
 
-  label.btn-cta-secondary {
+  label.btn-cta-secondary.oset-toggles {
     &.active {
       .box-shadow(none);
     }
@@ -1187,6 +1187,8 @@ os-bg-check-summary > .pricing {
   left       : 15px;
   top        : 30px;
   color      : #fff;
+  .box-shadow(1px 1px 3px rgba(0, 0, 0, .15));
+
   .month {
     background     : @color-2;
     display        : block;
@@ -1291,6 +1293,7 @@ os-bg-check-summary > .pricing {
     padding       : 0 15px;
     margin-bottom : 30px;
     .post-inner {
+      background : #FFFFFF;
       padding  : 0;
       position : relative;
       border   : 1px solid @divider;

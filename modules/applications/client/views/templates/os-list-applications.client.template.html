@@ -12,7 +12,7 @@
                     <div class="content">
                         <div class="date-label">
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
-                            <span class="date-number">{{job.posted | amDateFormat : 'd'}}</span>
+                            <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
                         <h3 class="post-title">{{job.name}}
                         </h3>
@@ -38,7 +38,7 @@
                                     <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
-                                        ui-sref="jobs.edit({applicationId: job._id})">
+                                        ui-sref="jobs.edit({jobId: job._id})">
                                     <i class="fa fa-edit fa-lg mgn-right"></i>Edit
                                 </button>
                             </div>
@@ -205,7 +205,7 @@
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ui-sref="applications.view({applicationId: application._id})">
-                                    <i class="fa fa-external-link fa-lg mgn-left"></i>Review
+                                    <i class="fa fa-external-link fa-lg mgn-right"></i>Review
                                 </button>
                             </div>
                         </div>

@@ -28,7 +28,7 @@
 
                         <!-- List of available Interests -->
                         <label ng-repeat="interest in vm.driver.interests"
-                               class="btn btn-cta-secondary btn-md no-border"
+                               class="btn btn-cta-secondary btn-md no-border oset-toggles"
                                ng-click="interest.value = !interest.value"
                                data-ng-class="{'active':interest.value}">
                             <i class="fa pull-left"></i>
@@ -37,7 +37,7 @@
                         </label>
 
                         <!-- Input for "other" -->
-                        <label class="btn btn-cta-secondary oset-input btn-md"
+                        <label class="btn btn-cta-secondary oset-input btn-md oset-toggles"
                                data-ng-class="{'active':vm.newInterest != null}">
 
                             <div ng-click="vm.toggleInterest()">{{ vm.newInterest != null ? 'cancel' : 'other ...'}}

@@ -9,6 +9,7 @@
         vm.myId = auth.user._id;
         vm.user = auth.user;
         vm.room = vm.application._id;
+        vm.text = {};
 
         vm.rawMessages = JSON.stringify(application.messages, undefined, 2);
 
@@ -21,14 +22,18 @@
             }, processError);
         };
 
-        var activate = function() {
-            if(vm.application.connection && vm.application.connection.isValid) {
+        var activate = function () {
+            if (vm.application.connection && vm.application.connection.isValid) {
                 $log.debug('creating socket for connection');
                 vm.initSocket();
             }
             else {
                 $log.debug('No connection, or invalid connection - not creating socket.');
             }
+
+            vm.text.noconnection = (vm.user.type === 'driver')
+                ? 'The employer has not yet connected with you. Once they have, they will have access to your full profile and will be able to chat with you right here.'
+                : 'In order to view reports and chat with this applicant, you must first <em>Connect</em> with them using the button below. This will count against your monthly allotment of connections.';
         };
 
         /** Private Methods --------------------------------------------- */
@@ -60,7 +65,7 @@
                 vm.newlyConnected = true;
                 vm.initSocket();
                 return newConnection;
-            }, function(err) {
+            }, function (err) {
                 $log.debug('New connection failed: %o', err);
                 return err;
             }).then(function () {
@@ -101,7 +106,7 @@
             }
         };
 
-        vm.initSocket = function() {
+        vm.initSocket = function () {
 
             if (!!Socket) {
                 $log.debug('[AppCtrl] socket exists. Adding `connect` handler');

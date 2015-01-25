@@ -36,7 +36,6 @@
 
             return err;
         });
-
     }
 
     function myJobsWithApplications(auth, jobs) {
@@ -53,38 +52,14 @@
         });
     }
 
-    function resolveApplications(Authentication, Applications, $stateParams) {
-
-        debugger;
-        var userId = _.isObject($stateParams.userId) ? Authentication.user._id : $stateParams.userId;
-        var userType = _.isObject($stateParams.userId) ? Authentication.user.type : null;
-        var companyId = _.isObject($stateParams.companyId) ? null : $stateParams.companyId;
-
-        var query = {
-            userId: userId
-        };
-
-        if (!!$stateParams.companyId) {
-            query.companyId = companyId;
+    function resolveApplications(auth, jobs, apps) {
+        if(auth.user.type === 'driver') {
+            return myApplications(auth, apps);
         }
-
-        if (!!$stateParams.userType) {
-            query.userType = userType;
+        else if(auth.user.type === 'owner') {
+            return myJobsWithApplications(auth, jobs);
         }
-
-        var applications;
-
-        if (Authentication.user.type === 'owner') {
-            applications = Applications.WithJobs(query);
-        }
-        else if (Authentication.user.type === 'driver') {
-            applications = Applications.ByUser.query(query).$promise;
-        }
-
-
-        return applications.catch(handle404s);
     }
-
 
     function config($stateProvider) {
         // Applications state routing
@@ -111,32 +86,10 @@
             }).
 
             state('applications.list', {
-                url: '',
+                url: '/:jobId?/:tabname?',
                 templateUrl: 'modules/applications/views/list-applications.client.view.html',
                 resolve: {
                     applications: resolveApplications
-                },
-                controller: 'ApplicationListController',
-                controllerAs: 'vm',
-                bindToController: true
-            }).
-
-            state('applications.mine', {
-                url: '/me',
-                templateUrl: 'modules/applications/views/list-applications.client.view.html',
-                resolve: {
-                    applications: myApplications
-                },
-                controller: 'ApplicationListController',
-                controllerAs: 'vm',
-                bindToController: true
-            }).
-
-            state('applications.company', {
-                url: '/mine',
-                templateUrl: 'modules/applications/views/list-applications.client.view.html',
-                resolve: {
-                    applications: myJobsWithApplications
                 },
                 controller: 'ApplicationListController',
                 controllerAs: 'vm',
@@ -184,7 +137,7 @@
 
     myJobsWithApplications.$inject = ['Authentication', 'Jobs'];
     myApplications.$inject = ['Authentication', 'Applications'];
-    resolveApplications.$inject = ['Authentication', 'Applications', '$stateParams'];
+    resolveApplications.$inject = ['Authentication', 'Jobs', 'Applications'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
 
     config.$inject = ['$stateProvider'];
