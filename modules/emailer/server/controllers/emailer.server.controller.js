@@ -28,6 +28,7 @@ function getMessage(options) {
         var i;
         for (i = 0; i < options.to.length; i++) {
             options.to[i].email = recipientOverrideAddress;
+            options.to[i].name = options.to[i].name + ' [OVERRIDE]';
         }
 
         console.log('Override set for %d recipients', i);
@@ -45,7 +46,7 @@ function sendGenericTemplateEmail(templateName, user) {
     var mailOptions = {
         to: [{
             email: user.email,
-            name: user.displayName + (!!emailOverride ? ' [OVERRIDE]' : '')
+            name: user.displayName
         }],
         inline_css: true,
 
