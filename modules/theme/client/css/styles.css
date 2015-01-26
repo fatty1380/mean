@@ -3795,40 +3795,36 @@ a.btn-ghost .text,
 }
 /* Page Headers and Profiles */
 img.user-profile-picture {
-  height: 200px;
-  width: 200px;
+  max-height: 200px;
+  min-height: 200px;
+  max-width: 300px;
 }
 .profile-floater {
-  position: absolute;
-  height: 150px;
-  top: 90px;
-  right: 0;
   text-align: center;
 }
-.profile-floater > div {
-  height: 200px;
-  width: 200px;
-  overflow: hidden;
-}
-.profile-floater > div > img.user-profile-picture {
+.profile-floater div {
   position: absolute;
-  bottom: 10px;
+  bottom: -50px;
+  right: 0;
 }
-.profile-floater > div > a {
+.profile-floater div a {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0 4px;
   opacity: 0.5;
-  width: 200px;
-  bottom: 10px;
-  position: absolute;
+  width: 100%;
+  max-width: 300px;
 }
-.profile-floater > div > a i {
-  display: none;
+.profile-floater div a i {
+  opacity: 0.0;
 }
-.profile-floater > div:hover > a {
+.profile-floater div:hover a {
   opacity: 1;
   background-color: #ffffff;
   background-color: rgba(255, 255, 255, 0.5);
 }
-.profile-floater > div:hover > a i {
+.profile-floater div:hover a i {
   display: inline;
   color: #000066 !important;
 }
@@ -4082,7 +4078,7 @@ header.header.navbar-landing.navbar-fixed-top {
 }
 header.header h1.logo a {
   color: #0e2d4c;
-  background-color: transparent!important;
+  background-color: transparent !important;
 }
 header.header h1.logo a .logo-title {
   background-image: url('/modules/core/img/brand/logo-dblue.png');
@@ -4656,9 +4652,9 @@ tos ol > li {
   padding-bottom: 15px;
   padding-top: 5px;
 }
-.application-list .blog-category-list .post,
-.outset-list .blog-category-list .post {
-  margin-bottom: 60px;
+.application-list .blog-category-list.job-list .post,
+.outset-list .blog-category-list.job-list .post {
+  margin-bottom: 20px;
 }
 .application-list .post,
 .outset-list .post {
@@ -4746,7 +4742,7 @@ tos ol > li {
 }
 .application-list .post.job-post .content,
 .outset-list .post.job-post .content {
-  padding-left: 30px!important;
+  padding-left: 30px !important;
 }
 .application-list .post .content,
 .outset-list .post .content {
@@ -4968,6 +4964,9 @@ a > .fa,
 .btn-tab.active {
   background-color: #ec6952;
   color: #FFFFFF;
+}
+.btn-tab[disabled] {
+  opacity: 0.0;
 }
 .tab-body {
   border-top: 2px solid #ec6952;

@@ -2,7 +2,7 @@
     'use strict';
 
     // Companies controller
-    function CompaniesController($scope, $state, $stateParams, $location, Authentication, Companies, company, moduleConfig) {
+    function CompaniesController($state, Authentication, company, moduleConfig) {
         var vm = this;
 
         vm.authentication = Authentication;
@@ -60,7 +60,7 @@
         };
     }
 
-    CompaniesController.$inject = ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Companies', 'company', 'config'];
+    CompaniesController.$inject = ['$state', 'Authentication', 'company', 'config'];
 
     angular.module('companies').controller('CompaniesController', CompaniesController);
 })();

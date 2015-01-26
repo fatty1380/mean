@@ -2,7 +2,7 @@
     <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
                     sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
                     show-edit="vm.canEdit" btn-sref="settings.profile"
-                    picture-url="vm.user.profileImageURL" edit-sref="settings.picture">
+                    picture-url="vm.user.profileImageURL" edit-pic-sref="settings.picture">
         Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
     </os-page-header>
 

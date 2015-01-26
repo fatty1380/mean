@@ -70,6 +70,7 @@
             }
             vm.filters.clear = !(vm.filters.today || vm.filters.week || vm.filters.unseen || !vm.filters.mine);
         };
+
         var filterProto = {
             numDays: 0,
             day: false,
@@ -90,6 +91,7 @@
                     } else {
                         vm.filters.week = false;
                         vm.filters.numDays = 1;
+                        vm.filters.clear = false;
                     }
                     break;
                 case 'week':
@@ -98,17 +100,15 @@
                     } else {
                         vm.filters.day = false;
                         vm.filters.numDays = 7;
+                        vm.filters.clear = false;
                     }
                     break;
                 case 'unseen':
                     break;
                 case 'clear':
-                    debugger;
                     vm.filters = _.clone(filterProto);
                     return;
             }
-
-            vm.filters.clear = !(vm.filters.today || vm.filters.week || vm.filters.unseen || vm.filters.mine);
         };
 
         function filterToggle(name, predicate) {

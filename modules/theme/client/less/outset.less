@@ -325,12 +325,12 @@ a.btn-ghost, .btn-ghost {
     }
   }
   .content-container-inner { // .story-container-inner
-    max-width  : 900px;
-    margin     : 0 auto;
+    max-width        : 900px;
+    margin           : 0 auto;
     background-color : #FFF;
-    padding    : 30px;
+    padding          : 30px;
     .border-radius(4px);
-    text-align : left;
+    text-align       : left;
   }
   .about {
     padding : 30px;
@@ -369,36 +369,36 @@ a.btn-ghost, .btn-ghost {
 /* Page Headers and Profiles */
 // All uploaded pictures should now be 200x200
 img.user-profile-picture {
-  height : 200px;
-  width  : 200px;
+  max-height : 200px;
+  min-height : 200px;
+  max-width  : 300px;
+
 }
 
 .profile-floater {
-  position   : absolute;
-  height     : 150px;
-  top        : 90px;
-  right      : 0;
+  //position   : absolute;
+  //right      : 0;
   text-align : center;
 
-  > div {
-    height   : 200px;
-    width    : 200px;
-    overflow : hidden;
-
-    > img.user-profile-picture {
-      position : absolute;
-      bottom   : 10px
+  div {
+    position : absolute;
+    bottom   : -50px;
+    right    : 0;
+    img.user-profile-picture {
     }
-    > a {
-      opacity  : 0.5;
-      width    : 200px;
-      bottom   : 10px;
-      position : absolute;
+    a {
+      position  : absolute;
+      bottom    : 0;
+      right     : 0;
+      margin    : 0 4px;
+      opacity   : 0.5;
+      width     : 100%;
+      max-width : 300px;
       i {
-        display : none;
+        opacity : 0.0;
       }
     }
-    &:hover > a {
+    &:hover a {
       opacity          : 1;
       background-color : rgb(255, 255, 255);
       background-color : rgba(255, 255, 255, 0.5);
@@ -407,7 +407,9 @@ img.user-profile-picture {
         color   : #000066 !important;
       }
     }
+
   }
+
 }
 
 .clear-bg {
@@ -512,13 +514,12 @@ img.user-profile-picture {
       text-align : center;
       position   : relative;
 
-
       @media (min-width : 767px) {
         top : 1.2em;
       }
 
-      @media (min-width: 992px) {
-        top: 1.4em;
+      @media (min-width : 992px) {
+        top : 1.4em;
       }
 
       @media (max-width : 767px) {
@@ -689,7 +690,7 @@ header {
     h1.logo {
       a {
         color            : @outset-blue;
-        background-color : transparent!important;
+        background-color : transparent !important;
       }
 
       a .logo-title {
@@ -762,7 +763,6 @@ header {
       }
     }
   }
-
 
   &.navbar-landing .nav li.nav-item:hover {
     color : white;
@@ -1280,9 +1280,9 @@ os-bg-check-summary > .pricing {
     padding-bottom : 15px;
     padding-top    : 5px;
   }
-  .blog-category-list {
+  .blog-category-list.job-list {
     .post {
-      margin-bottom : 60px;
+      margin-bottom : 20px;
     }
   }
 
@@ -1294,9 +1294,9 @@ os-bg-check-summary > .pricing {
     margin-bottom : 30px;
     .post-inner {
       background : #FFFFFF;
-      padding  : 0;
-      position : relative;
-      border   : 1px solid @divider;
+      padding    : 0;
+      position   : relative;
+      border     : 1px solid @divider;
       .border-radius(4px);
       .box-shadow(0 4px 1px rgba(0, 0, 0, .05));
     }
@@ -1324,7 +1324,7 @@ os-bg-check-summary > .pricing {
 
     &.job-post {
       .content {
-        padding-left: 30px!important;
+        padding-left : 30px !important;
       }
     }
     .content {
@@ -1377,8 +1377,6 @@ os-bg-check-summary > .pricing {
 
 // ** BUTTONS ** /
 
-
-
 a.btn-oset-primary, .btn-oset-primary {
   background : @outset-blue;
   border     : 2px solid @outset-blue;
@@ -1409,7 +1407,7 @@ a.btn-oset-secondary, .btn-oset-secondary {
   }
   &.active {
     background : @outset-blue;
-    color: #fff
+    color      : #fff
   }
 }
 
@@ -1432,7 +1430,7 @@ a.btn-oset-success, .btn-oset-success {
   }
   &.active {
     background : @outset-success;
-    color: #fff
+    color      : #fff
   }
 }
 
@@ -1460,20 +1458,20 @@ a.btn-oset-ghost, .btn-oset-ghost {
 text-angular {
 
   .ta-toolbar.focused {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    margin-left: 0px;
-    margin-bottom: 0px;
-    padding: 7px 5px 9px 5px;
-    display          : block;
-    background-color : @smoky-white;
-    border           : 1px solid @divider;
-    border-bottom-width : 0;
+    border-top-left-radius  : 4px;
+    border-top-right-radius : 4px;
+    margin-left             : 0px;
+    margin-bottom           : 0px;
+    padding                 : 7px 5px 9px 5px;
+    display                 : block;
+    background-color        : @smoky-white;
+    border                  : 1px solid @divider;
+    border-bottom-width     : 0;
   }
 
   .ta-editor {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    border-top-left-radius  : 0;
+    border-top-right-radius : 0;
   }
 
   a.btn-cta-toolbar, .btn-cta-toolbar {
@@ -1508,8 +1506,8 @@ div, .btn, a, .btn-cta {
 }
 
 .btn-tab {
-  padding: 4px 8px;
-  color : @color;
+  padding : 4px 8px;
+  color   : @color;
   .transition (all 0.4s ease-in-out);
   &:hover {
     text-decoration : underline;
@@ -1517,24 +1515,28 @@ div, .btn, a, .btn-cta {
   }
 
   &.active {
-    background-color: @color;
-    color: #FFFFFF;
+    background-color : @color;
+    color            : #FFFFFF;
+  }
+
+  &[disabled] {
+    opacity : 0.0;
   }
 }
 
 .tab-body {
-  border-top: 2px solid @color;
-  padding-top: 10px;
+  border-top  : 2px solid @color;
+  padding-top : 10px;
 }
 
 .bg-primary {
-  background-color: @outset-blue;
+  background-color : @outset-blue;
 }
 
 .bg-success {
-  background-color: @outset-success;
+  background-color : @outset-success;
 }
 
 *[href] {
-  cursor: pointer;
+  cursor : pointer;
 }

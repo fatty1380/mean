@@ -179,8 +179,8 @@ UserSchema.methods.authenticate = function(password) {
 UserSchema.methods.cleanse = function() {
     console.log('[UserSchema] Cleansing sensitive Data');
 
-    this.password = null;
-    this.salt = null;
+    this.password = undefined;
+    this.salt = undefined;
 };
 
 /**

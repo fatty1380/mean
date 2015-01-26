@@ -10,30 +10,35 @@
                        placeholder="search terms ...">
             </div>
 
-            <div class="btn-group pull-right">
-                <label class="btn btn-cta-secondary btn-sm"
-                       ng-if="vm.user.type === 'owner'"
-                       ng-click="vm.toggleFilterMine()" btn-checkbox
-                       ng-model="vm.filters.mine" name="mine">My Jobs</label>
-                <label class="btn btn-cta-secondary btn-sm"
-                       ng-click="vm.toggleFilter('today')" btn-checkbox
-                       ng-model="vm.filters.day" name="newest">New Today</label>
-                <label class="btn btn-cta-secondary btn-sm"
-                       ng-click="vm.toggleFilter('week')" btn-checkbox
-                       ng-model="vm.filters.week" name="newest">New This Week</label>
-                <label class="btn btn-cta-secondary btn-sm hidden"
-                       ng-click="vm.toggleFilter('unseen')" btn-checkbox
-                       ng-model="vm.filters.unseen" name="unseen">Unseen</label>
-                <label class="btn btn-cta-secondary btn-sm"
-                       ng-click="vm.toggleFilter('clear')"
-                       ng-class="{'disabled' : vm.filters.clear}"
-                       name="clear"><i class="fa fa-times"></i></label>
-            </div>
+            <div class="form-group pull-right">
 
-            <div class="btn-group pull-right" role="group" aria-label="...">
-                <button type="button" class="btn btn-link" ng-click="vm.toggleSort('posted',true)">
-                    Posting Date <i class="fa" ng-class="{'fa-sort-amount-desc':vm.reverse, 'fa-sort-amount-asc':!vm.reverse}"></i>
-                </button>
+                <div class="btn-group">
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-if="vm.user.type === 'owner'"
+                           ng-click="vm.toggleFilterMine()" btn-checkbox
+                           ng-model="vm.filters.mine" name="mine">My Jobs</label>
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-if="!!vm.user.driver.jobStatuses"
+                           ng-click="vm.toggleFilter('unseen')" btn-checkbox
+                           ng-model="vm.filters.unseen" name="unseen">New</label>
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-click="vm.toggleFilter('today')" btn-checkbox
+                           ng-model="vm.filters.day" name="newest">New Today</label>
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-click="vm.toggleFilter('week')" btn-checkbox
+                           ng-model="vm.filters.week" name="newest">New This Week</label>
+                </div>
+
+                <button type="button" class="btn-tab btn-link read-more btn-sm"
+                        ng-click="vm.toggleFilter('clear')"
+                        ng-disabled="vm.filters.clear"
+                        name="clear"><i class="fa fa-times"></i></button>
+
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-link" ng-click="vm.toggleSort('posted',true)">
+                        Posting Date <i class="fa" ng-class="{'fa-sort-amount-desc':vm.reverse, 'fa-sort-amount-asc':!vm.reverse}"></i>
+                    </button>
+                </div>
             </div>
         </form>
     </div>

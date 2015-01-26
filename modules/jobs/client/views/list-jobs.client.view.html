@@ -8,7 +8,7 @@
     </os-page-header>
 
     <!-- No jobs / Disabled Intro Text -->
-    <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-show="!vm.config.list || !vm.jobs.length">
+    <div class="panel panel-success col-md-8 col-md-offset-2" data-ng-show="vm.user && (!vm.config.list || !vm.jobs.length)">
         <h3 ng-bind-html="vm.bodyCopy.heading"></h3>
 
         <div ng-bind-html="vm.bodyCopy.intro"></div>

@@ -12,9 +12,10 @@
                 btnShow: '=?',
                 btnText: '@?',
                 btnSref: '@?',
+                editSref: '@?',
                 level: '@?',
                 pictureUrl: '=?',
-                editSref: '@?',
+                editPicSref: '@?',
                 pictureEditFn: '&?'
             },
             transclude: true,
@@ -24,6 +25,7 @@
 
                 vm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
                 vm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
+                vm.showPicEdit = (!!angular.isDefined($attrs.pictureEditFn) || !!angular.isDefined($attrs.editPicSref)) && vm.showEdit;
 
                 vm.hover = false;
                 vm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
