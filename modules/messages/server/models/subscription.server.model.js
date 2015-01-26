@@ -10,18 +10,30 @@ var mongoose = require('mongoose'),
  * Subscription Schema
  */
 var SubscriptionSchema = new Schema({
-    sender: {
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
-    text: {
+    name: {
         type: String,
-        default: ''
+        required: true
+    },
+    sku: {
+        type: String,
+        required: true
+    },
+    used: {
+        type: Number,
+        required: true
+    },
+    available: {
+        type: Number,
+        required: true
+    },
+    renews: {
+        type: Date,
+        default: null
     },
     status: {
         type: String,
-        enum: ['draft', 'sent', 'read', 'deleted', 'ignored'],
-        default: 'draft'
+        enum: ['active', 'expired', 'pending'],
+        default: 'active'
     },
     created: {
         type: Date,

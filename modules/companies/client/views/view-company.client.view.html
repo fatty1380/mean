@@ -45,10 +45,33 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
+                        <span class="h4">Subscription Information</span>
+                    </div>
+                    <div class="panel-body" ng-if="vm.company.subscriptions && vm.company.subscriptions.length">
+                        <dl>
+                            <dt>Subscription</dt>
+                            <dd>{{vm.company.subscriptions[0].name}}</dd>
+                            <dt>Renews</dt>
+                            <dd>{{vm.company.subscriptions[0].renews | amDateFormat : 'L'}}</dd>
+                            <dt>Status</dt>
+                            <dd>Used {{vm.company.subscriptions[0].used}} of {{vm.company.subscriptions[0].available}} Jobs</dd>
+                        </dl>
+
+                    </div>
+                    <div class="panel-body" ng-if="!vm.company.subscriptions.length">
+                        <p>Before you post your first job, you will need to sign up for a subscription.</p>
+
+                        <button type="button" class="btn btn-oset-primary center-block" ui-sref="subscriptionsReview">Review Subscription Options...</button>
+
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
                         <span class="h4">Where we are</span>
                     </div>
                     <div class="panel-body">
-                        <os-map-location zip-code='vm.company.zipCode' addresses="vm.company.locations"></os-map-location>
+                        <os-map-location zip-code='vm.company.zipCode' addresses="vm.company.locations"  precision="exact"></os-map-location>
 
                         <os-address-list models="vm.company.locations" can-edit="false" full-width="true"></os-address-list>
                     </div>

@@ -38,6 +38,13 @@
             });
     }
 
+
+
+    function resolveSubscriptions() {
+        //return Reports.Types.list().$promise;
+        return {};
+    }
+
     function config($stateProvider) {
         // Companies state routing
         $stateProvider.
@@ -94,7 +101,9 @@
                 controller: 'CompanyEditController',
                 controllerAs: 'vm',
                 resolve: {
-                    company: function() { return null; },
+                    company: function () {
+                        return null;
+                    },
                     config: moduleConfigResolve
                 }
             }).
@@ -108,6 +117,19 @@
                 resolve: {
                     company: companyResolve,
                     config: moduleConfigResolve
+                }
+            }).
+
+
+            state('subscriptionsReview', {
+                url: '/subscriptions',
+                templateUrl: 'modules/companies/views/review-subscriptions.client.view.html',
+                parent: 'headline-bg',
+                controller: 'SubscriptionListController',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    subscriptions: resolveSubscriptions
                 }
             });
     }
