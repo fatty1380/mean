@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function PageHeaderDirective() {
@@ -30,15 +30,10 @@
 
                 vm.showHeader = !!vm.subTitle || !!vm.editSref || vm.btnShow && (!!vm.btnText && !!vm.btnSref);
 
-                vm.editFn = function() {
-                    if(!!angular.isDefined($attrs.pictureEditFn)) {
+                vm.editPicFn = function () {
+                    if (!!angular.isDefined($attrs.pictureEditFn)) {
                         $log.debug('calling pictureEditFn');
                         return vm.pictureEditFn();
-                    }
-
-                    if(!!vm.editSref) {
-                        $log.debug('reouting to editSref `%s` for picture.', vm.editSref);
-                        $state.go(vm.editSref);
                     }
                 };
             }],

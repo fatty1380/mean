@@ -11,7 +11,7 @@
 
     <span class="h3" data-ng-bind-html="vm.subTitle">&nbsp;</span>
     <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">
-            <a class="btn btn-link" ng-click="vm.editFn">edit
+            <a class="btn btn-link" ui-sref="{{vm.editSref}}">edit
                 <i class="fa fa-pencil-square-o"></i>
             </a>
         </span>
@@ -22,7 +22,7 @@
         <div>
             <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
                  class="img-thumbnail user-profile-picture">
-            <a class="btn btn-link" data-ng-click="vm.editFn()" data-ng-if="vm.showEdit">edit
+            <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.showEdit">edit
                 <i class="fa fa-pencil-square-o"></i>
             </a>
         </div>

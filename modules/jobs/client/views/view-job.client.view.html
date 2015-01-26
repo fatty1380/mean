@@ -17,6 +17,11 @@
                 <os-view-application job="vm.job" user="vm.user" display-mode="mine"></os-view-application>
             </div>
 
+            <div class="company-image panel panel-default"
+                 data-ng-if="vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id">
+                <img ng-src="{{vm.job.company.profileImageURL}}" class="img-responsive"/>
+            </div>
+
             <div class="panel panel-default" data-ng-if="vm.user.type === 'owner' && vm.enableEdit">
                 <div class="panel-heading ">
                     <span class="h4">Applications</span>
