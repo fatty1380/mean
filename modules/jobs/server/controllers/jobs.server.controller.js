@@ -166,6 +166,7 @@ exports.update = function (req, res) {
 
     job.save(function (err) {
         if (err) {
+            console.log('[Job.Update] Error Saving job: %j', err);
             return res.send(400, {
                 message: getErrorMessage(err)
             });

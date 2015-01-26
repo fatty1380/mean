@@ -26,7 +26,6 @@
         var defaultAddress = {type: 'main', streetAddresses: [], zipOnly: true};
         vm.types = ['main', 'home', 'business', 'billing', 'other'];
         vm.pageTitle = 'Edit Job';
-        vm.requirements = '<ul><li></li></ul>';
 
         activate();
 
@@ -44,6 +43,7 @@
                         min: null,
                         max: null
                     },
+                    requirements: '<ul><li></li></ul>',
                     location: [defaultAddress],
                     postStatus: 'draft',
                     companyId: !!vm.company && vm.company._id || $stateParams.companyId
@@ -58,7 +58,7 @@
                     vm.job.location.push(defaultAddress);
                 }
 
-                vm.requirements = '<ul><li>' + (vm.job.requirements || []).join('</li><li>') + '</li></ul>';
+
             }
 
 
@@ -74,13 +74,6 @@
         var reg = /<li>(.*?)<\/li>/ig;
 
         function submit() {
-
-            vm.job.requirements = [];
-            var result, i=0;
-            while(!!(result = reg.exec(vm.requirements)) && i<100) {
-                $log.debug('Matched requirement #%d: \'%o\'', ++i, result[1]);
-                vm.job.requirements.push(result[1]);
-            }
 
             if ($state.is('jobs.create')) {
                 return vm.create();

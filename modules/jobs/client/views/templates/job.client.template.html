@@ -83,8 +83,7 @@
             <div ng-show="dm.showSection( 'requirements') ">
                 <div class="panel-heading" ng-show="dm.showSection('all')"><span class="h4">Requirements</span></div>
                 <div class="panel-body ">
-                    <ul><li ng-repeat="req in dm.job.requirements"><span ng-bind-html="req"></span></li></ul>
-                    <div ng-hide="!!dm.job.requirements && !!dm.job.requirements.length">No Requirements Listed</div>
+                    <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>
                     <hr/>
                 </div>
             </div>
