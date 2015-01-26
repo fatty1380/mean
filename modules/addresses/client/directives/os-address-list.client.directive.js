@@ -3,7 +3,26 @@
 
     function AddressListDirective() {
         return {
-            templateUrl: 'modules/addresses/views/address-list.client.template.html',
+            templateUrl: 'modules/addresses/views/address-list.client.template.html'          ,
+            restrict: 'E',
+            scope: {
+                addresses: '=?models',
+                isEditing: '=?', // false
+                canEdit: '=?', // true
+                maxCount: '=?', // 10
+                required: '=?', // true
+                fullWidth: '=?',
+                inlineEdit: '=?' // false
+            },
+            controller: 'OsAddressListController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }
+
+    function AddressListEditDirective() {
+        return {
+            templateUrl: 'modules/addresses/views/address-list-edit.client.template.html'          ,
             restrict: 'E',
             scope: {
                 addresses: '=?models',
@@ -42,8 +61,7 @@
         vm.canAdd = vm.canRemove = vm.canEdit;
 
         vm.addressStub = {
-            type: '',
-            streetAddresses: ['', '']
+            streetAddresses: ['','']
         };
 
         function activate() {
@@ -104,6 +122,7 @@
 
     angular.module('addresses')
         .directive('osAddressList', AddressListDirective)
+        .directive('osEditAddressList', AddressListEditDirective)
         .controller('OsAddressListController', AddressListController);
 
 })

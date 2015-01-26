@@ -44,12 +44,13 @@
                             <span class="h4"><label class="control-label" for="location">Location</label></span>
                         </div>
                         <div class="panel-body">
+                            <div class="row"><pre>{{vm.job.location[0]}}</pre></div>
                             <div class="col-sm-4">
-                                <os-edit-address address="vm.job.location[0]" id="location"></os-edit-address>
+                                <os-edit-address model="vm.job.location[0]" id="location"></os-edit-address>
                             </div>
 
                             <div class="col-sm-8">
-                                <os-map-location address="vm.job.location[0]"
+                                <os-map-location address="vm.job.location[0]" precision="approximate"
                                                  zip-code="vm.job.location[0].zipCode"></os-map-location>
                             </div>
                         </div>

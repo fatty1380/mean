@@ -238,6 +238,11 @@ exports.jobByID = function (req, res, next, id) {
             if (err) {
                 return next(err);
             }
+
+            if(!!req.user && !!req.user.driver) {
+                debugger;
+            }
+
             req.job = job;
             next();
         });

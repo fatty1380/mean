@@ -1,12 +1,12 @@
 <!-- os-address-list : address-list.client.template.html -->
 <section ng-class="{'row' : !vm.fullWidth}">
     <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}"
-         ng-animate="'animate'">
+         ng-animate="'animate'" ng-form="vm.addressForms[$index]">
         <div ng-class="{'form-group': !vm.fullWidth}">
-            <os-edit-address address="vm.addresses[a]" can-remove="vm.canRemove"></os-edit-address>
+            <os-edit-address model="vm.addresses[a]" can-remove="vm.canRemove"></os-edit-address>
         </div>
+        <pre>ADDRESS FROM #{{$index}}: {{vm.addressForms}}</pre>
     </div>
-
 
     <div ng-show="vm.canAdd">
         <button type="button" class="btn btn-default btn-block" value="add" ng-click="vm.addAddress()">
