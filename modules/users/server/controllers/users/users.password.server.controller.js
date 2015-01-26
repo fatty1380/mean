@@ -214,20 +214,6 @@ exports.reset = function (req, res, next) {
 
             done(e);
         }
-        // If valid email, send reset email using service
-        //function(emailHTML, user, done) {
-        //	var smtpTransport = nodemailer.createTransport(config.mailer.options);
-        //	var mailOptions = {
-        //		to: user.email,
-        //		from: config.mailer.from,
-        //		subject: 'Your password has been changed',
-        //		html: emailHTML
-        //	};
-        //
-        //	smtpTransport.sendMail(mailOptions, function(err) {
-        //		done(err, 'done');
-        //	});
-        //}
     ], function (err) {
         if (err) {
             return next(err);

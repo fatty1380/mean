@@ -6,7 +6,7 @@ module.exports = {
         title: 'Outset - Development Environment'
     },
     db: {
-        //uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset',
         options: {
             user: '',
             pass: ''  
@@ -84,6 +84,7 @@ module.exports = {
         }
     },
     mailer: {
+        toOverride: 'pat@joinoutset.com',
         from: process.env.MAILER_FROM || 'MAILER_FROM',
         options: {
             service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',

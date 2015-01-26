@@ -17,9 +17,10 @@ module.exports = {
     },
     https: {
         enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
-        port: 443,
-        privateKeyPath: '',
-        publicKeyPath: ''
+        port: 8443,
+        privateKeyPath: './config/sslcerts/key.pem',
+        publicKeyPath: './config/sslcerts/cert.pem',
+        passphrase: 'password'
     },
     modules: {
         driver: {
@@ -91,6 +92,7 @@ module.exports = {
     },
     reports: {},
     mailer: {
+        toOverride: 'chad@joinoutset.com',
         from: process.env.MAILER_FROM || 'MAILER_FROM',
         options: {
             service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',

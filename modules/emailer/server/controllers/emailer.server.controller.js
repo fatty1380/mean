@@ -4,10 +4,11 @@ exports.sendMessage = sendMessage;
 exports.sendTemplate = sendTemplate;
 exports.sendTemplateBySlug = sendGenericTemplateEmail;
 
-var _ = require('lodash');
-
-var mandrill = require('mandrill-api/mandrill');
-var mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: Move to CONFIG
+var _              = require('lodash'),
+    path           = require('path'),
+    config         = require(path.resolve('./config/config')),
+    mandrill       = require('mandrill-api/mandrill'),
+    mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: Move to CONFIG
 
 function getMessage(options) {
 
@@ -21,16 +22,29 @@ function getMessage(options) {
         }
     };
 
+    if (!!recipientOverrideAddress) {
+        console.log('Override of Recipient Email Address. Sending to: %s', recipientOverrideAddress);
+
+        var i;
+        for (i = 0; i < options.to.length; i++) {
+            options.to[i].email = recipientOverrideAddress;
+        }
+
+        console.log('Override set for %d recipients', i);
+    }
+
     return _.extend(message, options);
 }
 
-function sendGenericTemplateEmail(templateName, user, emailOverride) {
+var recipientOverrideAddress = config.mailer.toOverride;
+
+function sendGenericTemplateEmail(templateName, user) {
 
     console.log('Sending email template: %s', templateName);
 
     var mailOptions = {
         to: [{
-            email: emailOverride || user.email,
+            email: user.email,
             name: user.displayName + (!!emailOverride ? ' [OVERRIDE]' : '')
         }],
         inline_css: true,

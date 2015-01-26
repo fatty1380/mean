@@ -11,7 +11,8 @@ passport     = require('passport'),
 User         = mongoose.model('User'),
 Driver       = mongoose.model('Driver'),
 Company      = mongoose.model('Company'),
-emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller'));
+emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+Q            = require('q');
 
 
 // DRY Simple Login Function
@@ -62,20 +63,22 @@ exports.signup = function (req, res) {
 
                 var driver = new Driver({'user': user});
 
-                driver.save(function (err) {
+                driver.save(function (err, newDriver) {
                     if (err) {
                         console.error('[SIGNUP] - err creating new driver', err);
                     }
 
-                    user = _.extend(user, {driver : driver});
-
-                    user.save(function (err) {
-                        if (err) {
-                            console.log('Error Saving Driver back to User... oh well');
-                        }
-
+                    if(!!newDriver) {
+                        updateAndLogin(user.id, {driver: newDriver._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
+                    }
+                    else {
                         login(req, res, user);
-                    });
+                    }
 
                 });
 
@@ -88,23 +91,25 @@ exports.signup = function (req, res) {
 
                 var company = new Company({'owner': user, 'name': req.body.companyName});
 
-                company.save(function (err) {
+                company.save(function (err, newCompany) {
                     if (err) {
                         console.error('[SIGNUP] - err creating new Company', err);
                     }
 
-                    user = _.extend(user, {company : company});
-
-                    user.save(function (err) {
-                        if (err) {
-                            console.log('Error Saving Company back to User... oh well');
-                        }
-
+                    if(!!newCompany) {
+                        updateAndLogin(user.id, {company: newCompany._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
+                    }
+                    else {
                         login(req, res, user);
-                    });
+                    }
                 });
 
-                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user, 'chad@joinoutset.com');
+                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user);
             }
             else {
                 console.log('[SIGNPU] - Creating new User of type `%s` ... what to do?', userType);
@@ -138,21 +143,18 @@ exports.signin = function (req, res, next) {
                     user: user
                 }).exec(function (err, driver) {
                     if (err) {
-                        console.log('Error finding driver for user %s', user._id);
+                        console.log('Error finding driver for user %s', user.id);
                     }
 
                     if (!!driver) {
-                        console.log('Found Driver %s for user %s', driver._id, user._id);
+                        console.log('Found Driver %s for user %s', driver.id, user.id);
 
-                        user = _.extend(user, {driver : driver});
-
-                        user.save(function (err) {
-                            if (err) {
-                                console.log('Error Saving Driver back to User... oh well');
-                            }
-
-                            login(req, res, user);
-                        });
+                        updateAndLogin(user.id, {driver: driver._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
                     } else {
                         login(req, res, user);
                     }
@@ -164,21 +166,18 @@ exports.signin = function (req, res, next) {
                     owner: user
                 }).exec(function (err, company) {
                     if (err) {
-                        console.log('Error finding company for user %s', user._id);
+                        console.log('Error finding company for user %s', user.id);
                     }
 
                     if (!!company) {
-                        console.log('Found Company %s for user %s', company._id, user._id);
+                        console.log('Found Company %s for user %s', company.id, user.id);
 
-                        user = _.extend(user, {company : company});
-
-                        user.save(function (err) {
-                            if (err) {
-                                console.log('Error Saving Company back to User... oh well');
-                            }
-
-                            login(req, res, user);
-                        });
+                        updateAndLogin(user.id, {company: company._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
                     }
                     else {
                         login(req, res, user);
@@ -192,6 +191,28 @@ exports.signin = function (req, res, next) {
         }
     })(req, res, next);
 };
+
+function updateAndLogin(id, update) {
+
+    var deferred = Q.defer();
+
+    var query = {'_id': id};
+    var options = {new: false};
+
+    update.modified = Date.now();
+
+    User.findOneAndUpdate(query, update, options, function (err, updatedUser) {
+        if (err) {
+            console.log('got an error');
+        }
+
+        updatedUser.cleanse();
+
+        deferred.resolve(updatedUser);
+    });
+
+    return deferred.promise;
+}
 
 /**
  * Signout
