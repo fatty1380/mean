@@ -28,7 +28,7 @@
                 </div>
                 <div class="panel-body">
                     <os-list-applications job="vm.job" display-mode="table"></os-list-applications>
-                    <pre>{{vm.job.applications}}</pre>
+                    <pre ng-if="vm.debug">{{vm.job.applications}}</pre>
                 </div>
             </div>
 

@@ -117,8 +117,11 @@ exports.create = function (req, res) {
     job.postStatus = 'posted';
     job.posted = Date.now();
 
+    console.log('[Job.Create] Creating new job: %j', job);
+
     job.save(function (err) {
         if (err) {
+            console.log('[Job.Create] Error Creating new job: %j', err);
             return res.send(400, {
                 message: getErrorMessage(err)
             });
