@@ -63,5 +63,8 @@
                 apply now!
             </button>
         </div>
+        <div data-ng-if="!!vm.job && vm.user.type === 'owner'">
+            Sorry, no applicants yet. Please check back later.
+        </div>
     </section>
 </section>

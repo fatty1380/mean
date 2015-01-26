@@ -1,5 +1,9 @@
-<h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"></h2>
-<span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"></span>
+<div class="row" style="height: 39px;">
+    <h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"
+        ng-class="{'col-sm-8':!!vm.pictureUrl}"></h2>
+    <span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"
+          ng-class="{'col-sm-8':!!vm.pictureUrl}"></span>
+</div>
 
 <!-- os-page-header directive : os-page-header.client.template -->
 <div class="page-header" data-ng-if="vm.showHeader" ng-class="{well : !vm.level}"
@@ -25,6 +29,6 @@
     </div>
 
     <!-- Sub-heading -->
-    <small ng-if="vm.includeTransclude"><em class="text-muted" ng-transclude></em></small>
+    <small ng-if="vm.includeTransclude"><br/><em class="text-muted" ng-transclude></em></small>
 </div>
 <!-- os-page-header directive : END -->

@@ -104,7 +104,6 @@
                     break;
                 case 'clear':
                     debugger;
-                    vm.filters.clearStuff = true;
                     vm.filters = _.clone(filterProto);
                     return;
             }

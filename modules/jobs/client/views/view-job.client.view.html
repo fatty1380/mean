@@ -1,6 +1,6 @@
 <section class="container-fluid">
-    <os-page-header title="{{vm.job.name}}" edit-sref="jobs.edit({jobId: '{{vm.job._id}}'})"
-                    show-edit="vm.enableEdit">
+    <os-page-header title="Job Details" edit-sref="jobs.edit({jobId: '{{vm.job._id}}'})"
+                    show-edit="vm.enableEdit" sub-title="{{vm.job.name}}">
         Posted on
         <span data-ng-bind="vm.job.created | date:'mediumDate'"></span> by
         <span data-ng-bind="vm.job.user.displayName"></span>
@@ -17,6 +17,16 @@
                 <os-view-application job="vm.job" user="vm.user" display-mode="mine"></os-view-application>
             </div>
 
+            <div class="panel panel-default" data-ng-if="vm.user.type === 'owner' && vm.enableEdit">
+                <div class="panel-heading ">
+                    <span class="h4">Applications</span>
+                </div>
+                <div class="panel-body">
+                    <os-list-applications job="vm.job" display-mode="table"></os-list-applications>
+                    <pre>{{vm.job.applications}}</pre>
+                </div>
+            </div>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="h4">Location: {{ vm.job.location[0].zipCode }}</span>
@@ -24,15 +34,6 @@
                 <div class="panel-body">
                     <os-map-location address="vm.job.location[0]"></os-map-location>
                     <div class="text-center" data-ng-hide="vm.job.location[0]">No Location Available</div>
-                </div>
-            </div>
-
-            <div class="panel panel-default" data-ng-if="vm.user.type === 'owner' && vm.enableEdit">
-                <div class="panel-heading ">
-                    <span class="h4">Applications</span>
-                </div>
-                <div class="panel-body">
-                    <os-list-applications job="vm.job" display-mode="table"></os-list-applications>
                 </div>
             </div>
 

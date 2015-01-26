@@ -25,10 +25,9 @@
                        ng-click="vm.toggleFilter('unseen')" btn-checkbox
                        ng-model="vm.filters.unseen" name="unseen">Unseen</label>
                 <label class="btn btn-cta-secondary btn-sm"
-                       ng-click="vm.toggleFilter('clear')" btn-checkbox
+                       ng-click="vm.toggleFilter('clear')"
                        ng-class="{'disabled' : vm.filters.clear}"
-                       ng-model="vm.filters.clearStuff"
-                       name="unseen"><i class="fa fa-times"></i></label>
+                       name="clear"><i class="fa fa-times"></i></label>
             </div>
 
             <div class="btn-group pull-right" role="group" aria-label="...">
@@ -57,7 +56,7 @@
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
                             <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
-                        <h3 class="post-title">{{job.name}}</h3>
+                        <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>
 
                         <pre ng-if="vm.debug">Job: {{job}}</pre>
                         <!--meta-->

@@ -35,6 +35,12 @@
 
             <div class="gutter right col-md-4" ng-if="!!vm.company">
 
+                <button class="btn btn-cta-primary btn-lg btn-block bigger mgn-bottom"
+                        dta-ng-if="vm.canEdit"
+                        ui-href="jobs.create({'companyId' : (vm.company._id || vm.company) }">
+                    Post a New Job!
+                </button>
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <span class="h4">Where we are</span>

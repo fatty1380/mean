@@ -4979,3 +4979,6 @@ a > .fa,
 .bg-success {
   background-color: #3c6d1f;
 }
+*[href] {
+  cursor: pointer;
+}
