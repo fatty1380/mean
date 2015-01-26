@@ -6,11 +6,11 @@
 </div>
 
 <!-- os-page-header directive : os-page-header.client.template -->
-<div class="page-header row" data-ng-if="vm.showHeader" ng-class="{well : !vm.level}"
+<div class="page-header row" data-ng-if="vm.showHeader || vm.includeTransclude" ng-class="{well : !vm.level}"
      ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">
 
     <div ng-class="{'col-sm-8':!!vm.pictureUrl}">
-        <span class="h3" data-ng-bind-html="vm.subTitle">&nbsp;</span>
+        <span class="h3" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>
         <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">
             <a class="btn btn-link" ui-sref="{{vm.editSref}}">edit
                 <i class="fa fa-pencil-square-o"></i>
@@ -21,7 +21,7 @@
         </button>
 
         <!-- Sub-heading -->
-        <small ng-if="vm.includeTransclude"><br/><em class="text-muted" ng-transclude></em></small>
+        <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>
     </div>
 
     <div class="profile-floater col-sm-4 center-block" data-ng-if="!!vm.pictureUrl">

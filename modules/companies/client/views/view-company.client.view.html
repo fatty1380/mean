@@ -1,7 +1,9 @@
     <section class="container-fluid">
 
         <os-page-header title="{{vm.titleText}}"
-                        sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;" show-edit="!!vm.company && vm.canEdit"
+                        sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
+                        show-edit="!!vm.company && vm.canEdit"
+                        edit-sref="companies.edit({'companyId': '{{vm.company._id}}'})"
                         picture-url="vm.imageURL" picture-edit-fn="vm.showModal()">
             Member Since <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>
         </os-page-header>
