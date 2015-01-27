@@ -65,6 +65,6 @@
 
     angular.module('applications')
         .directive('osViewApplication', ViewApplicationDirective)
-    .directive('osetApplicant', ViewApplicantDirective);
+        .directive('osetApplicant', ViewApplicantDirective);
 
 })();

@@ -21,10 +21,14 @@
         if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
             val = params.userId;
-        } else {
+        } else if (!!auth.user) {
             console.log('Searching for company data for logged in user');
             val = auth.user._id;
+        } else {
+            return null;
         }
+
+
         return rsrc.ByUser.get({
             userId: val
         }).$promise.catch(function (error) {

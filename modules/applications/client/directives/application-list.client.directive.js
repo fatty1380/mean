@@ -1,8 +1,33 @@
 (function () {
     'use strict';
 
-    function JobApplicationListController(Applications, Authentication, $log, $state) {
+    function ListApplicationsDirective() {
+        var ddo;
+
+        ddo = {
+            templateUrl: 'modules/applications/views/templates/os-list-applications.client.template.html',
+            restrict: 'E',
+            scope: {
+                displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
+                job: '=?',
+                company: '=?',
+                user: '=?',
+                applications: '=?',
+                config: '=?'
+            },
+            controller: 'JobApplicationListController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
+    function JobApplicationListController(Applications, Authentication, $log, $state, params, location) {
         var vm = this;
+
+        vm.visibleJob = params.jobId;
+        vm.visibleTab = params.tabname;
 
         vm.ApplicationFactory = Applications;
         vm.displayMode = vm.displayMode || 'normal';
@@ -46,31 +71,14 @@
         vm.showTab = function (jobId, tabname) {
             vm.visibleJob = jobId;
             vm.visibleTab = tabname;
+            debugger;
+
+            $state.transitionTo('applications.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
         };
 
     }
 
-    function ListApplicationsDirective() {
-        var ddo;
-
-        ddo = {
-            templateUrl: 'modules/applications/views/templates/os-list-applications.client.template.html',
-            restrict: 'E',
-            scope: {
-                displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
-                job: '=?',
-                company: '=?',
-                user: '=?',
-                applications: '=?',
-                config: '=?'
-            },
-            controller: 'JobApplicationListController',
-            controllerAs: 'vm',
-            bindToController: true
-        };
-
-        return ddo;
-    }
+    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location'];
 
     angular.module('applications')
         .controller('JobApplicationListController', JobApplicationListController)

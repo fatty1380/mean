@@ -34,6 +34,10 @@
                         vm.labelClass = 'label-danger';
                         vm.labelText = vm.model.status;
                     }
+                    else {
+                        vm.labelClass = 'label-default';
+                        vm.labelText = vm.model.status;
+                    }
 
                 }
             },

@@ -72,12 +72,10 @@
                 parent: 'fixed-opaque',
                 params: {
                     companyId: {
-                        default: null,
-                        isArray: false
+                        default: null
                     },
                     userId: {
-                        default: null,
-                        isArray: false
+                        default: null
                     }
                 },
                 resolve: {
@@ -86,7 +84,7 @@
             }).
 
             state('applications.list', {
-                url: '/:jobId?/:tabname?',
+                url: '/list/:jobId?/:tabname?',
                 templateUrl: 'modules/applications/views/list-applications.client.view.html',
                 resolve: {
                     applications: resolveApplications
