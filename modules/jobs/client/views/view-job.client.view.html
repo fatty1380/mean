@@ -52,7 +52,10 @@
                         </span>
 
                         <span ng-if="!!vm.job.payString || vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">
-                            <strong>Pay: </strong><span ng-bind="vm.job.payString"> ${{ vm.job.payRate.min }} to ${{ vm.job.payRate.max }}</span>
+                            <strong>Pay: </strong>
+                                <span ng-show="!!vm.job.payRate.min">{{ vm.job.payRate.min | currency }}</span>
+                                <span ng-show="!!vm.job.payRate.max"><span ng-show="!!vm.job.payRate.min"> to </span>{{ vm.job.payRate.max | currency }}</span>
+                                <span ng-show="!!vm.job.payString && !!vm.job.payRate.period"> per {{vm.job.payRate.period}}</span>
                         </span>
 
                     </dl>

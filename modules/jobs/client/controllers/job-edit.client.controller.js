@@ -57,12 +57,7 @@
                 if (vm.job.location.length === 0) {
                     vm.job.location.push(defaultAddress);
                 }
-
-
             }
-
-
-
         }
 
         // Method Implementations
@@ -74,6 +69,14 @@
         var reg = /<li>(.*?)<\/li>/ig;
 
         function submit() {
+            vm.disabled = true;
+
+            if(vm.jobForm.$invalid) {
+                vm.error = 'Please correct all errors above';
+                vm.disabled = false;
+                return false;
+            }
+            vm.error = vm.success = null;
 
             if ($state.is('jobs.create')) {
                 return vm.create();
@@ -82,6 +85,7 @@
                 return vm.update();
             }
 
+            vm.disabled=false;
             $log.warn('Unknown Form Mode: "%s"', vm.mode);
             vm.error = 'Unknown Form Mode';
         }
@@ -113,6 +117,7 @@
                     vm.error = 'Unable to save changes at this time';
                     $log.error('[JobEditCtrl] Error Saving New Job: %o', job, errorResponse);
                 }
+                vm.disabled=false;
             });
 
             // Clear form fields
@@ -136,6 +141,7 @@
                     vm.error = 'Unable to save changes at this time';
                     $log.error('[JobEditCtrl] Error Saving New Job: %o', job, errorResponse);
                 }
+                vm.disabled=false;
             });
         }
     }

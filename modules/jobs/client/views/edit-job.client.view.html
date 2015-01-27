@@ -12,7 +12,7 @@
             </span></span>
         </os-page-header>
         <div class="col-md-12">
-            <form class="" data-ng-submit="vm.submit()">
+            <form class="" name="vm.jobForm" data-ng-submit="vm.submit()" novalidate>
                 <fieldset>
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -72,7 +72,7 @@
 
                                 <div class="input-group">
                                     <div class="input-group-addon">$</div>
-                                    <input type="text" class="form-control"
+                                    <input type="number" class="form-control"
                                            name="payMin" id="payMin"
                                            data-ng-model="vm.job.payRate.min">
                                 </div>
@@ -82,10 +82,9 @@
 
                                 <div class="input-group">
                                     <div class="input-group-addon">$</div>
-                                    <input type="text" class="form-control"
+                                    <input type="number" class="form-control"
                                            id="payMax" placeholder="Amount"
                                            data-ng-model="vm.job.payRate.max">
-                                    <div class="input-group-addon">.00</div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -113,7 +112,7 @@
                     <div class="pull-right">
                         <input type="button" class="btn btn-link" value="cancel" ng-click="vm.cancel()">
                         <input type="button" class="btn btn-default" value="Save as draft" ng-if="!vm.job._id" ng-click="vm.saveDraft()">
-                        <input type="submit" class="btn btn-oset-success" ng-class="{disabled:!vm.job}" value="Save">
+                        <input type="submit" class="btn btn-oset-success" ng-disabled="vm.disabled" ng-class="{disabled:!vm.job}" value="Save">
                     </div>
                     <div data-ng-show="vm.error" class="text-danger text-center">
                         <strong data-ng-bind="vm.error"></strong>
