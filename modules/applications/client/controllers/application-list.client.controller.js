@@ -43,7 +43,7 @@
 
             if(!!vm.jobs) {
                 var applicationCount = _.reduce(vm.jobs, function(sum, job) {
-                    return sum + job.applications.length;
+                    return sum + (!!job.applications) && job.applications.length;
                 });
 
                 if (vm.jobs.length > 0) {
