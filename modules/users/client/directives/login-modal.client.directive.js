@@ -64,15 +64,12 @@
         };
     }
 
-    function LoginController($http, $state, $modalInstance, $log, Authentication, $scope, srefRedirect) {
-        debugger; //check for scope!
+    function LoginController($http, $state, $modalInstance, $log, Authentication, srefRedirect) {
         var vm = this;
         vm.auth = Authentication;
         vm.srefRedirect = srefRedirect;
 
         vm.credentials = {};
-
-        debugger;
 
         vm.signin = function () {
 
@@ -102,7 +99,7 @@
         };
     }
 
-    LoginController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', '$scope', 'srefRedirect'];
+    LoginController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect'];
 
 
     LoginModalController.$inject = ['$scope', '$modal', '$log', '$attrs'];
