@@ -4751,6 +4751,15 @@ tos ol > li {
   padding-bottom: 15px;
   color: #666666;
 }
+.application-list .post .content.lead-content,
+.outset-list .post .content.lead-content {
+  padding-bottom: 0px;
+}
+.application-list .post .content.body,
+.outset-list .post .content.body {
+  padding-top: 0px;
+  padding-left: 30px;
+}
 .application-list .post .content .post-title,
 .outset-list .post .content .post-title {
   margin-top: 0;

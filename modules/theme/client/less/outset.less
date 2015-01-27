@@ -1299,6 +1299,7 @@ os-bg-check-summary > .pricing {
       border     : 1px solid @divider;
       .border-radius(4px);
       .box-shadow(0 4px 1px rgba(0, 0, 0, .05));
+
     }
 
     .post-thumb {
@@ -1332,6 +1333,15 @@ os-bg-check-summary > .pricing {
       padding-left   : 80px;
       padding-bottom : 15px;
       color          : @text-color-secondary;
+
+      &.lead-content {
+        padding-bottom: 0px;
+      }
+
+      &.body {
+        padding-top: 0px;
+        padding-left: 30px;
+      }
 
       .post-title {
         margin-top : 0;

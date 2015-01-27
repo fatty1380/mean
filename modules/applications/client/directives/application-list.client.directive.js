@@ -53,12 +53,10 @@
 
             if (!!vm.visibleId) {
                 if (!!vm.jobs && !_.find(vm.jobs, {'_id': vm.visibleId})) {
-                    debugger;
                     vm.visibleId = vm.visibleTab = null;
                     $state.transitionTo('applications.list', {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
                 }
                 else if (!vm.jobs && !_.find(vm.applications, {'_id': vm.visibleId})) {
-                    debugger;
                     vm.visibleId = vm.visibleTab = null;
                     $state.transitionTo('applications.list', {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
                 }
@@ -67,7 +65,7 @@
 
         vm.setApplicationStatus = function(application, status, $event, state) {
             $event.stopPropagation();
-            debugger;
+
             var app = vm.ApplicationFactory.setStatus(application._id, status);
 
             app.then(function(success) {
@@ -87,8 +85,6 @@
         vm.showTab = function (itemId, tabName) {
             vm.visibleId = itemId;
             vm.visibleTab = tabName;
-            debugger;
-
             $state.transitionTo('applications.list', {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
         };
 

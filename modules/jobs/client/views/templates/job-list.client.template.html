@@ -56,7 +56,7 @@
                      ng-if="vm.jobs"
                      ng-show="vm.visibleJob === job._id || !vm.visibleJob">
                 <div class="post-inner">
-                    <div class="content">
+                    <div class="content lead-content">
                         <div class="date-label">
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
                             <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
@@ -95,7 +95,9 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="content body">
                         <div class="row  tab-body" ng-show="vm.visibleJob === job._id">
                             <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'applicants'">
                                 <table class="table" ng-if="job.applications && job.applications.length">
