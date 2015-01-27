@@ -5,9 +5,9 @@
     function menus(Menus, Auth) {
 
         Menus.addMenuItem('topbar', {
-            title: 'Dashboard',
+            title: '<i class="fa fa-home fa-lg"/>',
             state: 'drivers.home',
-            position: 1,
+            position: 100,
             userTypes: ['driver']
         });
 

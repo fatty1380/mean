@@ -8,6 +8,9 @@
         <nav class="main-nav" role="navigation">
             <div class="navbar-header">
                 <ul class="navbar-toggle" data-ng-hide="authentication.user">
+                    <li style="display:inline-block;" class="mgn-right">
+                        <a ui-sref="jobs.list">Jobs</a>
+                    </li>
                     <li style="display:inline-block;">
                         <a login-modal>Log In</a></li>
                     <li style="display:inline-block;" class="hidden-xs">
@@ -45,15 +48,20 @@
                 </ul>
                 <!-- navbar-right : used for logged in user's settings -->
                 <ul class="nav navbar-nav pull-right" data-ng-show="authentication.user">
-                    <li class="">
+                    <li class="" tooltip="change your user preferences and settings here"
+                        tooltip-placement="bottom" tooltip-popup-delay="500">
                         <a ui-sref="settings.profile">
-                            <img data-ng-src="{{authentication.user.profileImageURL}}"
-                                 alt="{{authentication.user.displayName}}"
-                                 class="header-profile-image"/>
-                            <span data-ng-bind="authentication.user.displayName"></span></b>
+                            <i class="fa fa-cog fa-lg"></i>
+                            <!--<img data-ng-src="{{authentication.user.profileImageURL}}"-->
+                                 <!--alt="{{authentication.user.displayName}}"-->
+                                 <!--class="header-profile-image"/>-->
+                            <!--<span data-ng-bind="authentication.user.displayName"></span></b>-->
                         </a>
                     </li>
-                    <li><a href="/api/auth/signout" target="_self"><small>signout</small></a></li>
+                    <li><a href="/api/auth/signout" target="_self" tooltip="Hi {{authentication.user.displayName | titlecase }}, click here to logout"
+                           tooltip-placement="bottom" tooltip-popup-delay="1000"><small>signout</small></a></li>
+
+
                     <li class="dropdown" ng-if="false">
                         <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown">
                             <img data-ng-src="{{authentication.user.profileImageURL}}"
@@ -85,6 +93,9 @@
 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
+                    <li class="nav-item stronger mgn-right">
+                        <a ui-sref="jobs.list">Jobs</a>
+                    </li>
                     <li class="nav-item">
                         <a login-modal>Log In</a></li>
                     <li class="nav-item nav-item-cta last" signup-modal>
