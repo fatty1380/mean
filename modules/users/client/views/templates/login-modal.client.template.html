@@ -41,7 +41,7 @@
             <div class="text-center form-group">
                 <button type="submit" class="btn btn-oset-primary">Sign in</button>
             </div>
-            <div class="forgot-password text-center mgn-vert" ng-show="error">
+            <div class="forgot-password text-center mgn-vert" ng-show="vm.error">
                 <a ui-sref="password.forgot" data-ng-click="$dismiss('forgot')">Forgot your password?</a>
             </div>
             <div data-ng-show="vm.error" class="text-center text-danger mgn-top">
