@@ -3,7 +3,8 @@
 module.exports = {
 
     app: {
-        title: 'Outset - Development Environment'
+        title: 'Outset - Development Environment',
+        useLocalhost: true
     },
     db: {
         uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset',

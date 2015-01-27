@@ -60,7 +60,7 @@ exports.forgot = function (req, res, next) {
             },
             function (token, user, done) {
 
-                var resetURL = 'http://localhost:3000/api/auth/reset/' + token;
+                var resetURL = ((!!config.app.useLocalhost) ? 'http://localhost:3000' : 'https://www.joinoutset.com') + '/api/auth/reset/' + token;
                 var templateName = 'outset-password-reset';
 
                 console.log('Sending email template: %s', templateName);
