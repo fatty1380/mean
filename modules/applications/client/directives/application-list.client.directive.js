@@ -26,8 +26,8 @@
     function JobApplicationListController(Applications, Authentication, $log, $state, params) {
         var vm = this;
 
-        vm.visibleJob = params.jobId;
-        vm.visibleTab = params.tabname;
+        vm.visibleId = params.itemId;
+        vm.visibleTab = params.tabName;
 
         vm.ApplicationFactory = Applications;
         vm.displayMode = vm.displayMode || 'normal';
@@ -37,21 +37,31 @@
 
         vm.noItemsText = 'No job applications yet';
 
-        if(!!vm.visibleJob && !_.find(vm.jobs, {'_id':vm.visibleJob})) {
-            debugger;
-            vm.visibleJob = vm.visibleTab = null;
-            $state.transitionTo('applications.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
-        }
+        function activate() {
 
-        if(vm.applications && vm.applications.length) {
-            var first = vm.applications[0];
+            if (vm.applications && vm.applications.length) {
+                var first = vm.applications[0];
 
-            if(first.hasOwnProperty('job')) {
-                $log.debug('Looking at a list of applications');
-            } else if (first.hasOwnProperty('applications')) {
-                $log.debug('Looking at a list of jobs :)');
+                if (first.hasOwnProperty('job')) {
+                    $log.debug('Looking at a list of applications');
+                } else if (first.hasOwnProperty('applications')) {
+                    $log.debug('Looking at a list of jobs :)');
 
-                vm.jobs = vm.applications;
+                    vm.jobs = vm.applications;
+                }
+            }
+
+            if (!!vm.visibleId) {
+                if (!!vm.jobs && !_.find(vm.jobs, {'_id': vm.visibleId})) {
+                    debugger;
+                    vm.visibleId = vm.visibleTab = null;
+                    $state.transitionTo('applications.list', {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+                }
+                else if (!vm.jobs && !_.find(vm.applications, {'_id': vm.visibleId})) {
+                    debugger;
+                    vm.visibleId = vm.visibleTab = null;
+                    $state.transitionTo('applications.list', {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+                }
             }
         }
 
@@ -74,13 +84,15 @@
             state.application.disabled = true;
         };
 
-        vm.showTab = function (jobId, tabname) {
-            vm.visibleJob = jobId;
-            vm.visibleTab = tabname;
+        vm.showTab = function (itemId, tabName) {
+            vm.visibleId = itemId;
+            vm.visibleTab = tabName;
             debugger;
 
-            $state.transitionTo('applications.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
+            $state.transitionTo('applications.list', {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
         };
+
+        activate();
 
     }
 

@@ -7,7 +7,7 @@
 
             <article class="post col-sm-12"
                      ng-switch-when="owner" ng-repeat="job in vm.jobs"
-                     ng-show="vm.visibleJob === job._id || !vm.visibleJob">
+                     ng-show="vm.visibleId === job._id || !vm.visibleId">
                 <div class="post-inner">
                     <div class="content">
                         <div class="date-label">
@@ -21,18 +21,18 @@
                         <div class="row">
                             <div class="pull-right">
                                 <button type="button" class="btn-tab btn-link read-more strong"
-                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleJob}">
+                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
                                     <i class="fa fa-close fa-lg mgn-right"></i>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong"
                                         ng-click="vm.showTab(job._id, 'applicants')"
-                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'applicants'}"
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}"
                                         href="#{{job._id}}#applicants">
                                     <i class="fa fa-users fa-lg mgn-right"></i>{{job.applications.length}} Applicants
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(job._id, 'details')"
-                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'details'}"
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}"
                                         href="#{{job._id}}#details">
                                     <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
                                 </button>
@@ -43,7 +43,7 @@
                             </div>
                         </div>
 
-                        <div class="row  tab-body" ng-show="vm.visibleJob === job._id">
+                        <div class="row  tab-body" ng-show="vm.visibleId === job._id">
                             <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'applicants'">
                                 <table class="table" ng-if="job.applications && job.applications.length">
                                     <thead>
@@ -95,7 +95,7 @@
                                                 Review<i class="fa fa-external-link fa-lg mgn-left"></i>
                                             </a>
                                             <br>
-                                            <a class="read-more align-right"
+                                            <a class="read-more align-right hidden"
                                                ng-click="vm.setApplicationStatus(job.applications[$index], 'rejected', $event, this)">
                                                 Reject<i class="fa fa-close fa-lg mgn-left"></i>
                                             </a>
@@ -106,7 +106,7 @@
                                 </table>
 
                                 <div class="list-group" ng-if="!(job.applications && job.applications.length)"
-                                     ng-show="vm.visibleJob === job._id">
+                                     ng-show="vm.visibleId === job._id">
                                     <div class="list-group-item text-center">
                                         <h4>No one has applied to this job yet. Would you like to <a
                                                 ui-sref="jobs.edit({'jobId':job._id})">edit
@@ -125,8 +125,8 @@
                                 <p ng-bind-html="job.requirements"></p>
                             </div>
                         </div>
-                        <a class="read-more strong pull-right" ng-click="vm.visibleJob = null"
-                           ng-class="{'hidden':!vm.visibleJob}"> </a>
+                        <a class="read-more strong pull-right" ng-click="vm.visibleId = null"
+                           ng-class="{'hidden':!vm.visibleId}"> </a>
                     </div>
 
                 </div>
@@ -141,7 +141,7 @@
             <article class="post job-post col-sm-12"
                      ng-switch-when="driver" ng-repeat="application in vm.applications"
                      ng-init="job = application.job"
-                     ng-show="vm.visibleJob === job._id || !vm.visibleJob">
+                     ng-show="vm.visibleId === job._id || !vm.visibleId">
                 <div class="post-inner">
                     <div class="content">
                         <img ng-src="{{application.company.profileImageURL}}"
@@ -187,19 +187,19 @@
                         <div class="row">
                             <div class="pull-right">
                                 <button type="button" class="btn-tab btn-link read-more strong"
-                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleJob}">
+                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
                                     <i class="fa fa-close fa-lg mgn-right"></i>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong"
                                         ng-click="vm.showTab(job._id, 'application')"
                                         href="#{{job._id}}#applicants"
-                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'application'}">
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'application'}">
                                     <i class="fa fa-lg fa-file-text mgn-right"></i> Your Application
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(job._id, 'details')"
                                         href="#{{job._id}}#details"
-                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'details'}">
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}">
                                     <i class="fa fa-lg fa-info mgn-right"></i> Job Description
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
@@ -209,7 +209,7 @@
                             </div>
                         </div>
 
-                        <div class="row  tab-body" ng-show="vm.visibleJob === job._id">
+                        <div class="row  tab-body" ng-show="vm.visibleId === job._id">
                             <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'application'">
                                 <div class="post-entry col-sm-10 col-sm-offset-1">
                                     <dt>Intro</dt>
@@ -226,8 +226,8 @@
                                 <p ng-bind-html="job.requirements"></p>
                             </div>
                         </div>
-                        <a class="read-more strong pull-right" ng-click="vm.visibleJob = null"
-                           ng-class="{'hidden':!vm.visibleJob}"> </a>
+                        <a class="read-more strong pull-right" ng-click="vm.visibleId = null"
+                           ng-class="{'hidden':!vm.visibleId}"> </a>
                     </div>
 
 
