@@ -162,7 +162,7 @@
             vm.visibleJob = jobId;
             vm.visibleTab = tabname;
 
-            $state.transitionTo('jobs.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
+            $state.transitionTo($state.current, {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
         };
 
         activate();

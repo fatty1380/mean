@@ -85,7 +85,7 @@
         vm.showTab = function (itemId, tabName) {
             vm.visibleId = itemId;
             vm.visibleTab = tabName;
-            $state.transitionTo('applications.list', {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
+            $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
         };
 
         activate();

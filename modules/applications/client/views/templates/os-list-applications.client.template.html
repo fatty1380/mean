@@ -26,14 +26,12 @@
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong"
                                         ng-click="vm.showTab(job._id, 'applicants')"
-                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}"
-                                        href="#{{job._id}}#applicants">
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}">
                                     <i class="fa fa-users fa-lg mgn-right"></i>{{job.applications.length}} Applicants
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(job._id, 'details')"
-                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}"
-                                        href="#{{job._id}}#details">
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}">
                                     <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
@@ -195,13 +193,11 @@
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong"
                                         ng-click="vm.showTab(application._id, 'application')"
-                                        href="#{{job._id}}#applicants"
                                         ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'application'}">
                                     <i class="fa fa-lg fa-file-text mgn-right"></i> Your Application
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(application._id, 'details')"
-                                        href="#{{job._id}}#details"
                                         ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}">
                                     <i class="fa fa-lg fa-info mgn-right"></i> Job Description
                                 </button>
