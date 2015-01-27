@@ -1,8 +1,11 @@
 (function () {
     'use strict';
 
-    function JobListController(Jobs, $log, $state, config, auth) {
+    function JobListController(Jobs, $log, $state, config, auth, params) {
         var vm = this;
+
+        vm.visibleJob = params.jobId;
+        vm.visibleTab = params.tabname;
 
         vm.config = vm.config || config.getModuleConfig(auth.user.type, 'jobs')
             .then(function (success) {
@@ -14,7 +17,7 @@
         });
 
         vm.showSearch = vm.showSearch === undefined ? true : !!vm.showSearch;
-        vm.limitTo = vm.limitTo || 10;
+        vm.limitTo = vm.limitTo || 100;
         vm.filter = {};
 
         vm.user = auth.user;
@@ -52,10 +55,15 @@
             } else {
                 vm.jobs = [];
             }
+
+            if(!!vm.visibleJob && !_.find(vm.jobs, {'_id':vm.visibleJob})) {
+                vm.visibleJob = vm.visibleTab = null;
+                $state.transitionTo('jobs.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
+            }
         }
 
         vm.showMore = function () {
-            vm.limitTo += 10;
+            vm.limitTo += 100;
         };
 
         vm.toggleFilterMine = function () {
@@ -143,7 +151,7 @@
             }
 
             var terms = vm.searchTerms.split(' ');
-            var reg = new RegExp('(?=' + terms.join(')(?=') + ')');
+            var reg = new RegExp('(?=' + terms.join(')(?=') + ')','i');
 
             job.searchText = job.searchText || [job.name, job.description, job.requirements].join(' ');
 
@@ -153,6 +161,8 @@
         vm.showTab = function (jobId, tabname) {
             vm.visibleJob = jobId;
             vm.visibleTab = tabname;
+
+            $state.transitionTo('jobs.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
         };
 
         activate();
@@ -179,7 +189,7 @@
         };
     }
 
-    JobListController.$inject = ['Jobs', '$log', '$state', 'AppConfig', 'Authentication'];
+    JobListController.$inject = ['Jobs', '$log', '$state', 'AppConfig', 'Authentication', '$stateParams'];
 
     angular.module('jobs')
         .controller('JobListController', JobListController)

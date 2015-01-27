@@ -23,7 +23,7 @@
         return ddo;
     }
 
-    function JobApplicationListController(Applications, Authentication, $log, $state, params, location) {
+    function JobApplicationListController(Applications, Authentication, $log, $state, params) {
         var vm = this;
 
         vm.visibleJob = params.jobId;
@@ -36,6 +36,12 @@
         vm.config = vm.config || {};
 
         vm.noItemsText = 'No job applications yet';
+
+        if(!!vm.visibleJob && !_.find(vm.jobs, {'_id':vm.visibleJob})) {
+            debugger;
+            vm.visibleJob = vm.visibleTab = null;
+            $state.transitionTo('applications.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
+        }
 
         if(vm.applications && vm.applications.length) {
             var first = vm.applications[0];
@@ -78,7 +84,7 @@
 
     }
 
-    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location'];
+    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams'];
 
     angular.module('applications')
         .controller('JobApplicationListController', JobApplicationListController)

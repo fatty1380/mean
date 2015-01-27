@@ -84,7 +84,7 @@
             }).
 
             state('applications.list', {
-                url: '/list/:jobId?/:tabname?',
+                url: '?jobId&tabname',
                 templateUrl: 'modules/applications/views/list-applications.client.view.html',
                 resolve: {
                     applications: resolveApplications

@@ -97,7 +97,7 @@
             }).
 
             state('jobs.list', {
-                url: '',
+                url: '?jobId&tabname',
                 templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
                 controller: 'JobsListController',
                 controllerAs: 'vm',
