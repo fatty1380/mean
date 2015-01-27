@@ -372,7 +372,6 @@ img.user-profile-picture {
   max-height : 200px;
   min-height : 200px;
   max-width  : 300px;
-
 }
 
 .profile-floater {
@@ -1271,15 +1270,46 @@ os-bg-check-summary > .pricing {
       font-size    : 30px;
     }
   }
-  .job-list .post .content .post-title {
-    font-size : 24px;
-    margin-bottom: 10px;
-  }
-  .job-list .post .content .meta ul {
-    border-top     : none;
-    border-bottom  : 1px solid @divider;
-    padding-bottom : 15px;
-    padding-top    : 5px;
+  .job-list .post {
+
+    .content {
+
+      &.lead-content {
+        padding-left: 140px;
+      }
+
+      .list-picture {
+        display    : inline-block;
+        width      : 130px;
+        text-align : center;
+        position   : absolute;
+        left       : 0;
+        top        : 5px;
+        overflow: hidden;
+      }
+
+      .list-date {
+        background-color: white;
+        padding-left: 10px;
+        display    : inline-block;
+        width      : auto;
+        text-align : right;
+        position   : absolute;
+        right       : 15px;
+        top        : 30px;
+      }
+
+      .post-title {
+        font-size     : 20px;
+        margin-bottom : 8px;
+      }
+      .meta ul {
+        border-top     : none;
+        border-bottom  : 1px solid @divider;
+        padding-bottom : 15px;
+        padding-top    : 5px;
+      }
+    }
   }
   .blog-category-list.job-list {
     .post {
@@ -1301,6 +1331,7 @@ os-bg-check-summary > .pricing {
       .border-radius(4px);
       .box-shadow(0 4px 1px rgba(0, 0, 0, .05));
 
+      overflow: hidden; // prevent images from overflowing
     }
 
     .post-thumb {
@@ -1336,12 +1367,12 @@ os-bg-check-summary > .pricing {
       color          : @text-color-secondary;
 
       &.lead-content {
-        padding-bottom: 0px;
+        padding-bottom : 0px;
       }
 
       &.body {
-        padding-top: 0px;
-        padding-left: 30px;
+        padding-top  : 0px;
+        padding-left : 30px;
       }
 
       .post-title {
@@ -1554,43 +1585,40 @@ div, .btn, a, .btn-cta {
 
 .applicant {
   .panel.letter {
-    padding: 8px 12px;
-    min-height: 56px;
+    padding    : 8px 12px;
+    min-height : 56px;
   }
 
   dd {
-    padding-bottom: 8px;
-    min-height: 30px;
+    padding-bottom : 8px;
+    min-height     : 30px;
   }
 
   .report-badges {
 
     &.not-visible .report-badge {
       .badge-info .badge-info-inner i.fa {
-        display: none;
+        display : none;
       }
       i.fa-certificate.fa {
-        color: @light-grey!important;
-        color: fade(@text-color-secondary, 15%)!important;
+        color : @light-grey !important;
+        color : fade(@text-color-secondary, 15%) !important;
       }
 
       &.available i.fa-certificate.fa {
-        color: @darker-grey!important;
-        color: fade(@text-color-secondary, 30%)!important;
+        color : @darker-grey !important;
+        color : fade(@text-color-secondary, 30%) !important;
       }
     }
 
-
     .fa.fa-check, .fa.fa-times, .fa.fa-question {
-      display: none;
+      display : none;
     }
-
-
 
     .report-badge {
       &.available .fa.fa-certificate {
-        color : @outset-blue;
-        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        color       : @outset-blue;
+        text-shadow : 1px 1px 2px rgba(255, 255, 255, 0.8);
       }
 
       .title {
@@ -1601,7 +1629,7 @@ div, .btn, a, .btn-cta {
 
       &.available {
         .fa.fa-check, .fa.fa-times, .fa.fa-question {
-          display: inherit;
+          display : inherit;
         }
       }
 

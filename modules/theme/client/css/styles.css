@@ -4641,10 +4641,35 @@ tos ol > li {
   margin-right: 10px;
   font-size: 30px;
 }
+.application-list .job-list .post .content.lead-content,
+.outset-list .job-list .post .content.lead-content {
+  padding-left: 140px;
+}
+.application-list .job-list .post .content .list-picture,
+.outset-list .job-list .post .content .list-picture {
+  display: inline-block;
+  width: 130px;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 5px;
+  overflow: hidden;
+}
+.application-list .job-list .post .content .list-date,
+.outset-list .job-list .post .content .list-date {
+  background-color: white;
+  padding-left: 10px;
+  display: inline-block;
+  width: auto;
+  text-align: right;
+  position: absolute;
+  right: 15px;
+  top: 30px;
+}
 .application-list .job-list .post .content .post-title,
 .outset-list .job-list .post .content .post-title {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 8px;
 }
 .application-list .job-list .post .content .meta ul,
 .outset-list .job-list .post .content .meta ul {
@@ -4679,6 +4704,7 @@ tos ol > li {
   -webkit-box-shadow: 0 4px 1px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0 4px 1px rgba(0, 0, 0, 0.05);
   box-shadow: 0 4px 1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
 }
 .application-list .post .post-thumb,
 .outset-list .post .post-thumb {

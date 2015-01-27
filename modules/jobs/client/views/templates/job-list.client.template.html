@@ -1,4 +1,6 @@
 <section name="os-job-list.directive" class="outset-list">
+
+    <!-- SEARCH HEADER --->
     <div class="panel panel-default search-section" data-ng-if="!!vm.showSearch && !!vm.jobs.length">
         <form class="panel-body form-inline">
             <label class="form-label" for="job-search">Search: </label>
@@ -43,21 +45,25 @@
         </form>
     </div>
 
+    <!--LIST ITEM REPEATER-->
     <div class="row">
         <div class="job-list blog-category-list">
-
-            <div class="row" ng-if="vm.debug">
-                <pre>{{vm.user}}</pre>
-            </div>
-            <!--data-ng-repeat="job in (vm.jobs | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | limitTo: vm.limitTo)"-->
 
             <article class="post col-sm-12"
                      data-ng-repeat="job in (vm.jobs | filter: vm.filter | withinPastDays: 'posted': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse  | limitTo: vm.limitTo)"
                      ng-if="vm.jobs"
                      ng-show="vm.visibleJob === job._id || !vm.visibleJob">
+
+                <!--Begin Job Item Content-->
                 <div class="post-inner">
                     <div class="content lead-content">
-                        <div class="date-label">
+                        <div class="list-picture" ng-if="job.company.profileImageURL">
+                            <img ng-src="{{job.company.profileImageURL}}" class="img-responsive"/>
+                        </div>
+                        <div class="list-date">
+                            {{job.posted | amDateFormat : 'L LT'}}
+                        </div>
+                        <div class="date-label" ng-if="!job.company.profileImageURL">
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
                             <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
