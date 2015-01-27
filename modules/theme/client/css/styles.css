@@ -4536,7 +4536,7 @@ tos ol,
 tos ol > li {
   list-style-type: none !important;
 }
-.license .endorsement {
+.endorsement.label {
   margin: 0 4px;
 }
 .faq .panel .panel-heading {

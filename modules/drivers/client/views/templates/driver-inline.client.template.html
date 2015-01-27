@@ -42,7 +42,8 @@
                     <p>
                         <i class="fa fa-credit-card"></i> &nbsp;{{license.state}}<span ng-if="license.type"> {{license.type}}</span> Driver License
                         <span ng-if="license.rating">: Class {{license.rating}}</span>
-                        <span ng-repeat="endorsement in license.endorsements | filter: endorsementFilter" class="label label-success">{{endorsementDisplay(endorsement)}}&nbsp;</span>
+
+                        <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
                     </p>
 
                 </div>

@@ -52,8 +52,10 @@
                     ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>
                 Driver License
                 <span class="pull-right">
-                <span ng-repeat="(name, val) in license.endorsements"
-                      class="endorsement label label-success">{{name}}&nbsp;</span></span>
+                    <span class="strong">Endorsements: </span>
+
+                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
+                </span>
             </p>
 
         </div>

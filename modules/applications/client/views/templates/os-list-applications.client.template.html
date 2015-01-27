@@ -14,8 +14,7 @@
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
                             <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
-                        <h3 class="post-title">{{job.name}}
-                        </h3>
+                        <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>
 
 
                         <!--meta-->
@@ -78,8 +77,8 @@
                                                     license.rating.toUpperCase(): 'Standard License'}}
                                                 </dd>
                                                 <dt>Endorsements</dt>
-                                                <dd><span ng-repeat="(name, val) in license.endorsements"
-                                                          class="endorsement label label-success mgn-right">{{name}}&nbsp;</span></span>
+                                                <dd>
+                                                    <oset-list-endorsements model="license.endorsements"></oset-list-endorsements>
                                                 </dd>
                                                 <dt>Interests</dt>
                                                 <dd><span
@@ -148,7 +147,7 @@
                         <img ng-src="{{application.company.profileImageURL}}"
                              class="col-xs-hidden col-sm-2 img-responsive medium">
 
-                        <h3 class="post-title col-sm-10">{{job.name}}</h3>
+                        <h3 class="post-title col-sm-10" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>
 
                         <table class="table">
                             <tbody>

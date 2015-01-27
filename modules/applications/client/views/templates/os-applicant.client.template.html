@@ -20,10 +20,11 @@
                         {{vm.license.type}}
                     </span>
                     Driver License
-                    <span class="pad-left">
-                        <span ng-repeat="(name, val) in vm.license.endorsements"
-                              class="endorsement label label-success mgn-left">{{name}}&nbsp;</span></span>
                 </p>
+            </dd>
+            <dt>Endorsements</dt>
+            <dd>
+                <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
             </dd>
             <dt>Reports</dt>
             <dd><em class="text-muted">No reports on file</em></dd>
