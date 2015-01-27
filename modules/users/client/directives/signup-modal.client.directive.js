@@ -77,7 +77,18 @@
             if(!vm.credentials.terms) {
                 vm.error = 'Please agree to the terms and conditions before signing up';
                 event.preventDefault();
-                return;
+                return false;
+            }
+
+            if(vm.credentials.password !== vm.credentials.confirmPassword) {
+                $log.debug('passwords do not match, yo!');
+                vm.error = 'Passwords to not match. Please enter them again';
+                return false;
+            }
+
+            if(vm.signupForm.$invalid) {
+                vm.error = 'Please fill in all fields above';
+                return false;
             }
 
             $log.debug('assigning email to username');
@@ -108,12 +119,38 @@
         };
     }
 
+    /**
+     * Thanks to Ode to code for this one!
+     * @source http://odetocode.com/blogs/scott/archive/2014/10/13/confirm-password-validation-in-angularjs.aspx
+     * @returns {{require: string, scope: {otherModelValue: string}, link: Function}}
+     * @constructor
+     */
+    var CompareToDirective = function() {
+        return {
+            require: 'ngModel',
+            scope: {
+                otherModelValue: '=compareTo'
+            },
+            link: function(scope, element, attributes, ngModel) {
+
+                ngModel.$validators.compareTo = function(modelValue) {
+                    return modelValue === scope.otherModelValue;
+                };
+
+                scope.$watch('otherModelValue', function() {
+                    ngModel.$validate();
+                });
+            }
+        };
+    };
+
     SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
     SignupModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')
         .directive('signupModal', SignupModalDirective)
         .controller('SignupModalController', SignupModalController)
-        .controller('SignupController', SignupController);
+        .controller('SignupController', SignupController)
+        .directive('compareTo', CompareToDirective);
 
 })();

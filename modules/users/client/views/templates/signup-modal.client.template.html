@@ -69,7 +69,8 @@
     </div>
 
 
-    <form role="form" data-ng-submit="vm.signup($event)" class="signin form-horizontal" spellcheck="false" novalidate>
+    <form role="form" data-ng-submit="vm.signup($event)" name="vm.signupForm"
+          class="signin form-horizontal" spellcheck="false" novalidate>
 
         <div class="modal-body" ng-show="vm.credentials.signupType">
             <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">
@@ -82,7 +83,8 @@
                 <div class="col-sm-10">
                     <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'owner'"
                            type="text" id="companyName" name="companyName" class="form-control"
-                           data-ng-model="vm.credentials.companyName" placeholder="Name of your Business">
+                           data-ng-model="vm.credentials.companyName" placeholder="Name of your Business"
+                            ng-required="true">
                 </div>
             </div>
 
@@ -91,7 +93,7 @@
 
                 <div class="col-sm-10">
                     <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'driver'"
-                           type="text" required id="firstName" name="firstName" class="form-control"
+                           type="text" ng-required="true" id="firstName" name="firstName" class="form-control"
                            data-ng-model="vm.credentials.firstName" placeholder="First Name">
                 </div>
             </div>
@@ -101,7 +103,8 @@
 
                 <div class="col-sm-10">
                     <input type="text" id="lastName" name="lastName" class="form-control"
-                           data-ng-model="vm.credentials.lastName" placeholder="Last Name">
+                           data-ng-model="vm.credentials.lastName" placeholder="Last Name"
+                           ng-required="true">
                 </div>
             </div>
             <div class="form-group">
@@ -109,7 +112,7 @@
 
                 <div class="col-sm-10">
                     <input type="text" id="email" name="email" class="form-control" data-ng-model="vm.credentials.email"
-                           placeholder="Email">
+                           placeholder="Email" ng-required="true">
                 </div>
             </div>
             <div class="form-group">
@@ -117,10 +120,12 @@
 
                 <div class="col-sm-10">
                     <input type="password" id="password" name="password" class="form-control"
-                           data-ng-model="vm.credentials.password" placeholder="Password">
+                           data-ng-model="vm.credentials.password" placeholder="Password"
+                            ng-required="true">
                     <br/>
                     <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-                           data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password">
+                           data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"
+                            ng-required="true" compare-to="vm.credentials.password">
                 </div>
             </div>
 
