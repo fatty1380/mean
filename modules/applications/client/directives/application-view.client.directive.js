@@ -15,6 +15,12 @@
                 vm.applicant = vm.application.user;
                 vm.driver = vm.applicant.driver;
                 vm.license = vm.driver && vm.driver.licenses[0];
+
+                vm.isConnected = vm.application.connection && vm.application.connection.isValid;
+
+                vm.experienceText = (vm.driver.experience && vm.driver.experience.length
+                    ? 'The applicant\'s experience will be available once connected'
+                    : 'You can discuss past job experience once you have connected');
             },
             controllerAs: 'vm',
             bindToController: true

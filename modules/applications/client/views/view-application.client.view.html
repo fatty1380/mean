@@ -4,6 +4,8 @@
 
     <div class="application panel panel-default">
         <div class="panel-body">
+
+            <!--- DRIVER VIEW - Shows Company Information ---->
             <div class="row" ng-if="vm.user.type==='driver'">
                 <h4 class="strong col-xs-12">Employer: {{vm.application.company.name}}
                     <small class="pull-right">Applied on {{vm.application.created | date:'mediumDate'}}</small>
@@ -20,10 +22,12 @@
             </div>
 
 
-            <div class="row" ng-if="vm.user.type==='owner'">
-                <oset-applicant class="col-sm-10 col-sm-offset-1" application="vm.application"></oset-applicant>
+            <!--- OWNER VIEW - Shows Applicant Information ---->
+            <div ng-if="vm.user.type==='owner'">
+                <oset-applicant application="vm.application"></oset-applicant>
             </div>
 
+            <!--- Show Connection Information VIEW ---->
             <div class="row item"
                  ng-hide="vm.connecting || vm.application.connection || vm.application.connection.isValid">
                 <p class="text-center col-sm-10 col-sm-offset-1" ng-bind-html="vm.text.noconnection"></p>

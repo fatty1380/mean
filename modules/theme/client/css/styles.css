@@ -4990,3 +4990,63 @@ a > .fa,
 *[href] {
   cursor: pointer;
 }
+.applicant .panel.letter {
+  padding: 8px 12px;
+  min-height: 56px;
+}
+.applicant dd {
+  padding-bottom: 8px;
+  min-height: 30px;
+}
+.applicant .report-badges.not-visible .report-badge .badge-info .badge-info-inner i.fa {
+  display: none;
+}
+.applicant .report-badges.not-visible .report-badge i.fa-certificate.fa {
+  color: #cccccc !important;
+  color: rgba(102, 102, 102, 0.15) !important;
+}
+.applicant .report-badges.not-visible .report-badge.available i.fa-certificate.fa {
+  color: #666666 !important;
+  color: rgba(102, 102, 102, 0.3) !important;
+}
+.applicant .report-badges .fa.fa-check,
+.applicant .report-badges .fa.fa-times,
+.applicant .report-badges .fa.fa-question {
+  display: none;
+}
+.applicant .report-badges .report-badge.available .fa.fa-certificate {
+  color: #0e2d4c;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+.applicant .report-badges .report-badge .title {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+.applicant .report-badges .report-badge.available .fa.fa-check,
+.applicant .report-badges .report-badge.available .fa.fa-times,
+.applicant .report-badges .report-badge.available .fa.fa-question {
+  display: inherit;
+}
+.applicant .report-badges .report-badge .fa.fa-check,
+.applicant .report-badges .report-badge .fa.fa-times,
+.applicant .report-badges .report-badge .fa.fa-question {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+.applicant .report-badges .report-badge .fa.fa-check.fa-check,
+.applicant .report-badges .report-badge .fa.fa-times.fa-check,
+.applicant .report-badges .report-badge .fa.fa-question.fa-check {
+  color: #006400 !important;
+}
+.applicant .report-badges .report-badge .fa.fa-check.fa-times,
+.applicant .report-badges .report-badge .fa.fa-times.fa-times,
+.applicant .report-badges .report-badge .fa.fa-question.fa-times {
+  color: #8b0000 !important;
+}
+.applicant .report-badges .report-badge .fa.fa-check.fa-question,
+.applicant .report-badges .report-badge .fa.fa-times.fa-question,
+.applicant .report-badges .report-badge .fa.fa-question.fa-question {
+  color: #666666;
+}

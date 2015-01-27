@@ -10,6 +10,7 @@
         vm.user = auth.user;
         vm.room = vm.application._id;
         vm.text = {};
+        vm.activeConnection = false;
 
         vm.rawMessages = JSON.stringify(application.messages, undefined, 2);
 
@@ -24,6 +25,7 @@
 
         var activate = function () {
             if (vm.application.connection && vm.application.connection.isValid) {
+                vm.activeConnection = true;
                 $log.debug('creating socket for connection');
                 vm.initSocket();
             }

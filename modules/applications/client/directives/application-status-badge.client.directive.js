@@ -34,9 +34,9 @@
                         vm.labelClass = 'label-danger';
                         vm.labelText = vm.model.status;
                     }
-                    else {
+                    else if(vm.model.status === 'read') {
                         vm.labelClass = 'label-default';
-                        vm.labelText = vm.model.status;
+                        vm.labelText = 'reviewed';
                     }
 
                 }
