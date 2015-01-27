@@ -72,6 +72,15 @@
                 </button>
             </div>
 
+            <div>
+                <div class="panel-body" ng-show="dm.job.categories.length || dm.canEdit">
+                    <oset-categories model="dm.job.categories" mode="view">
+                         <span ng-if="dm.showEdit" class="text-center">You can help users to find your job by adding specific categories in
+                             <a ui-sref="jobs.edit({jobId: dm.job._id})"> your driver profile</a></span>
+                    </oset-categories>
+                </div>
+            </div>
+
             <div ng-show="dm.showSection( 'description') ">
                 <div class="panel-heading" ng-show="dm.showSection('all')"><span class="h4">Description</span></div>
                 <div class="panel-body ">

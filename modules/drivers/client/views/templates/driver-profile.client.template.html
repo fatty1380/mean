@@ -26,19 +26,11 @@
         <h4>Interests</h4>
     </div>
     <div class="panel-body text-center">
-        <label ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
-               class="btn btn-cta-secondary btn-md no-border"
-               data-ng-class="{'active':interest.value}">
-            <i class="fa pull-left"></i>
-
-            <div class="col-xs-12">{{interest.key}}</div>
-        </label>
-
-        <p ng-if="!visibleInterests.length">
-            <span ng-if="vm.canEdit">You can specify what kind of jobs you are interested in finding by <a
-                    ui-sref="drivers.edit({driverId: vm.driver._id})">editing your driver profile</a>!</span>
+        <oset-categories model="vm.driver.interests" mode="view">
+             <span ng-if="vm.canEdit">You can specify what kind of jobs you are interested in finding by <a
+                     ui-sref="drivers.edit({driverId: vm.driver._id})">editing your driver profile</a>!</span>
             <span ng-if="!vm.canEdit">{{vm.driver.displayName}} has not yet entered any job type preferences or interests.</span></span>
-        </p>
+        </oset-categories>
 
     </div>
 

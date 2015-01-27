@@ -24,35 +24,8 @@
 
                 <div class="container-fluid well">
                     <div class="row text-center">
-                        <pre ng-if="vm.debug">driver.interests: {{vm.driver.interests}}</pre>
-
-                        <!-- List of available Interests -->
-                        <label ng-repeat="interest in vm.driver.interests"
-                               class="btn btn-cta-secondary btn-md no-border oset-toggles"
-                               ng-click="interest.value = !interest.value"
-                               data-ng-class="{'active':interest.value}">
-                            <i class="fa pull-left"></i>
-
-                            <div class="col-xs-12">{{interest.key}}</div>
-                        </label>
-
-                        <!-- Input for "other" -->
-                        <label class="btn btn-cta-secondary oset-input btn-md oset-toggles"
-                               data-ng-class="{'active':vm.newInterest != null}">
-
-                            <div ng-click="vm.toggleInterest()">{{ vm.newInterest != null ? 'cancel' : 'other ...'}}
-                            </div>
-                            <input ng-show="vm.newInterest != null" type="text" style="display: inline;"
-                                   ng-model="vm.newInterest">
-
-                            <div style="display: inline;" ng-show="vm.newInterest !== null" ng-click="vm.addInterest()">
-                                add&nbsp;<i class="fa fa-plus"></i>
-                            </div>
-
-                        </label>
-
+                        <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
                         <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
-
                     </div>
                 </div>
 

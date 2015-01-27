@@ -4644,6 +4644,7 @@ tos ol > li {
 .application-list .job-list .post .content .post-title,
 .outset-list .job-list .post .content .post-title {
   font-size: 24px;
+  margin-bottom: 10px;
 }
 .application-list .job-list .post .content .meta ul,
 .outset-list .job-list .post .content .meta ul {

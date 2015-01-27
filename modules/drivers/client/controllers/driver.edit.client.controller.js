@@ -20,58 +20,6 @@
         vm.action = $state.current.name.replace('drivers.', '');
         vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
 
-        // Driver Interests ---------------------------------------------------------
-
-        vm.newInterest = null;
-
-        vm.driverInterests = vm.driver.interests;
-
-        vm.interestOptions = (AppConfig.get('interests') || {
-            driver: [
-                {key: 'Courier', value: false},
-                {key: 'Local CDL', value: false},
-                {key: 'Long Haul CDL', value: false},
-                {key: 'Taxi/Limo', value: false},
-                {key: 'Ridesharing (Uber/Lyft)', value: false},
-                {key: 'Non-Emergency Medical', value: false}
-            ]
-        }).driver;
-
-        _.each(vm.interestOptions, function (option) {
-
-            if (_.find(vm.driverInterests, {key: option.key})) {
-                console.log('driver already contains %s', option);
-            }
-            else {
-                console.log('pushing interest option %s', option);
-                vm.driverInterests.push(option);
-            }
-
-        });
-
-        vm.toggleInterest = function (interest) {
-            if (vm.newInterest === null) {
-                vm.newInterest = '';
-            } else {
-                vm.newInterest = null;
-            }
-        };
-
-        vm.addInterest = function () {
-            if (!!vm.newInterest) {
-                var existing = _.find(vm.driver.interests, {key: vm.newInterest});
-
-                if (existing) {
-                    existing.value = true;
-                } else {
-                    vm.driver.interests.push({key: vm.newInterest, value: true});
-                }
-            }
-            vm.newInterest = null;
-        };
-
-        // Driver Interests -- END ----------------------------------------------------
-
         function activate() {
 
             if ($state.is('drivers.create')) {

@@ -1,0 +1,35 @@
+(function(){
+    'use strict';
+
+    function CategoriesDirectiveController() {
+        var vm = this;
+
+        if (!!vm.model) {
+
+
+
+        }
+    }
+    
+    function CategoryDirective() {
+        var ddo;
+
+        ddo = {
+            templateUrl: 'modules/core/views/templates/oset-categories.client.template.html',
+            restrict: 'E',
+            scope: {
+                categories: '=model',
+                mode: '='
+            },
+            controller: 'CategoriesDirectiveController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
+    angular.module('applications')
+        .controller('CategoriesDirectiveController', CategoriesDirectiveController)
+        .directive('oset-categories', CategoryDirective);
+})();

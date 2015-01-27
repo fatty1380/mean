@@ -81,6 +81,14 @@ var JobSchema = new Schema({
         ref: 'Application'
     }],
 
+    categories: {
+        type: [{
+            key: String,
+            value: Boolean
+        }],
+        default: []
+    },
+
     postStatus: {
         type: String,
         default: 'draft',

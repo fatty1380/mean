@@ -62,8 +62,7 @@
                             <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
                         <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>
-
-                        <pre ng-if="vm.debug">Job: {{job}}</pre>
+                        <p><oset-categories model="job.categories" mode="view" lbl-class="btn-xs"></oset-categories></p>
                         <!--meta-->
                         <div class="row">
                             <div class="pull-right">
