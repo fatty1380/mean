@@ -98,7 +98,7 @@
                 url: '/reject',
                 resolve: {
                     application: ['$stateParams', 'Applications', function ($stateParams, Applications) {
-
+                        debugger;
                     }]
                 }
             }).

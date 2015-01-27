@@ -223,6 +223,7 @@ exports.queryByCompanyID = function (req, res, next) {
 };
 
 exports.populateApplications = function (req, res, next) {
+    console.log('populating applications');
     req.populate = [{property: 'applications', fields: ''}];
 
     next();
