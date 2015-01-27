@@ -158,9 +158,7 @@
         vm.saveForm = function (event) {
             vm.disabled=true;
 
-            $document.scrollTopAnimated(0, 300).then(function() {
-                $log.debug('Scrolled to top!');
-            });
+            $document.scrollTopAnimated(0, 300);
 
             if (vm.reportForm.$invalid) {
                 vm.error = 'Please correct all errors above';

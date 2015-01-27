@@ -72,6 +72,9 @@
     <form role="form" data-ng-submit="vm.signup($event)" class="signin form-horizontal" spellcheck="false" novalidate>
 
         <div class="modal-body" ng-show="vm.credentials.signupType">
+            <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">
+                <em><span>{{vm.extraText || 'Before continuing, please create an account'}}</span> or <a ng-click="$dismiss('login')" login-modal redirect="vm.srefRedirect">Log in with an existing account</a></span> </em>
+            </p>
 
             <div class="form-group" ng-show="vm.credentials.signupType === 'owner'">
                 <label for="companyName" class="col-sm-2 control-label">Business Name</label>

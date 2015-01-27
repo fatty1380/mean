@@ -9,7 +9,9 @@
             scope: {
                 signin: '&',
                 title: '@?',
-                signupType: '@?'
+                signupType: '@?',
+                srefText: '@?',
+                job: '=?'
             },
             controller: 'SignupModalController',
             controllerAs: 'vm',
@@ -17,10 +19,18 @@
         };
     }
 
-    function SignupModalController($modal, $log) {
+    function SignupModalController($modal, $log, $attrs) {
         var vm = this;
 
         vm.isOpen = false;
+
+        if(angular.isDefined($attrs.job)) {
+            vm.redirect = {
+                state : 'jobs.view',
+                params: { jobId : vm.job.id },
+                text: vm.srefText
+            };
+        }
 
         vm.showSignup = function() {
             var modalInstance = $modal.open({
@@ -28,9 +38,11 @@
                 controller: 'SignupController',
                 size: 'lg',
                 resolve: {
-                    signupType: function() { return vm.signupType; }
+                    signupType: function() { return vm.signupType; },
+                    srefRedirect: function() { return vm.redirect; }
                 },
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                bindToController: true
             });
 
             modalInstance.result.then(function(result) {
@@ -47,16 +59,17 @@
         };
     }
 
-    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, $scope, $document) {
-        var vm = $scope.vm = this;
+    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, srefRedirect, $document) {
+        var vm = this;
         vm.auth = Authentication;
         vm.credentials = { signupType: signupType, terms: '' };
+        vm.srefRedirect = srefRedirect;
 
-        vm.hello = 'HELLO';
+        vm.extraText = vm.srefRedirect && vm.srefRedirect.text  || null;
 
         vm.selectType = function(type, $event) {
             vm.credentials.signupType = type;
-            //$document.scrollTopAnimated(0,30);
+            $document.scrollTopAnimated(0, 300);
         };
 
         vm.signup = function(event) {
@@ -66,7 +79,6 @@
                 event.preventDefault();
                 return;
             }
-
 
             $log.debug('assigning email to username');
             vm.credentials.username = vm.credentials.email;
@@ -81,7 +93,14 @@
 
                     $modalInstance.close(response.type);
 
-                    $state.go('home');
+                    if(vm.srefRedirect) {
+                        $state.go(vm.srefRedirect.state, vm.srefRedirect.params, {reload: true});
+                    } else if (!$state.is('intro')) {
+                        $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
+                        $state.go($state.current, {}, {reload: true});
+                    } else {
+                        $state.go('home');
+                    }
                 }).error(function(response) {
                     console.error(response.message);
                     vm.error = response.message;
@@ -89,8 +108,8 @@
         };
     }
 
-    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', '$scope', '$document'];
-    SignupModalController.$inject = ['$modal', '$log'];
+    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
+    SignupModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')
         .directive('signupModal', SignupModalDirective)
