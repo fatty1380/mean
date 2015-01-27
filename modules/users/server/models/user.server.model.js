@@ -154,6 +154,14 @@ UserSchema.pre('save', function(next) {
 });
 
 UserSchema.pre('save', function(next) {
+    if(/[A-Z]/.test(this.username)) {
+        this.username = this.username.toLowerCase();
+        this.email = this.email.toLowerCase();
+    }
+    next();
+});
+
+UserSchema.pre('save', function(next) {
     this.modified = Date.now();
     next();
 });
@@ -188,17 +196,20 @@ UserSchema.methods.cleanse = function() {
  */
 UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 	var _this = this;
-	var possibleUsername = username + (suffix || '');
+	var possibleUsername = (username + (suffix || '')).toLowerCase();
+
+    var userNameRegex = new RegExp('^' + possibleUsername.toLowerCase() + '$', 'i');
 
 	_this.findOne({
-		username: possibleUsername
+		username: { $regex: userNameRegex }
 	}, function(err, user) {
 		if (!err) {
 			if (!user) {
 				callback(possibleUsername);
-			} else {
+			} else if(possibleUsername.indexOf('@') === -1) {
 				return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
 			}
+            callback(null);
 		} else {
 			callback(null);
 		}

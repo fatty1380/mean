@@ -84,7 +84,7 @@
                     <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'owner'"
                            type="text" id="companyName" name="companyName" class="form-control"
                            data-ng-model="vm.credentials.companyName" placeholder="Name of your Business"
-                            ng-required="true">
+                            ng-required="!!vm.credentials.signupType && vm.credentials.signupType === 'owner'">
                 </div>
             </div>
 
