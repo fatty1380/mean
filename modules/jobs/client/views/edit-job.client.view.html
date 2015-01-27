@@ -1,11 +1,18 @@
 <section>
     <!-- edit-job.client.view.html -->
     <section class="container-fluid">
-        <os-page-header title="{{ vm.pageTitle || 'Edit Job'}}">
-            <span ng-show="!!company">For {{company.name}}</span>
+        <os-page-header title="{{ vm.pageTitle || 'Edit Job'}}" sub-title="{{!!vm.company ? vm.company.name : ''}}">
+            <span><span ng-if="!!vm.job._id" class="text-muted">
+                <em>
+                    <strong>Posted:</strong> {{vm.job.posted || vm.job.created}}
+                    <span ng-if="vm.job.created !== vm.job.modified">,
+                        <strong>Last Modified:</strong> {{vm.job.modified}}
+                    </span>
+                </em>
+            </span></span>
         </os-page-header>
         <div class="col-md-12">
-            <form class="form-horizontal" data-ng-submit="vm.submit()" novalidate>
+            <form class="" data-ng-submit="vm.submit()">
                 <fieldset>
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -57,19 +64,44 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <span class="h4"><label class="control-label" for="payMin">Pay</label></span>
+                            <span class="h4"><label class="control-label" for="pay">Pay</label></span>
                         </div>
-                        <div class="panel-body">
-                            <div class="controls form-horizontal">
-                                <input type="text" data-ng-model="vm.job.payRate.min" id="payMin" class="form-control"
-                                       placeholder="$min" required>&nbsp;-&nbsp;
-                                <input type="text" data-ng-model="vm.job.payRate.max" id="payMax" class="form-control"
-                                       placeholder="$max" required>
+                        <div class="panel-body form-inline" id="pay">
+                            <div class="form-group mgn-right">
+                                <label for="payMin">Minimum Pay : </label>
+
+                                <div class="input-group">
+                                    <div class="input-group-addon">$</div>
+                                    <input type="text" class="form-control"
+                                           name="payMin" id="payMin"
+                                           data-ng-model="vm.job.payRate.min">
+                                </div>
+                            </div>
+                            <div class="form-group mgn-right">
+                                <label for="payMax">Maximum Pay : </label>
+
+                                <div class="input-group">
+                                    <div class="input-group-addon">$</div>
+                                    <input type="text" class="form-control"
+                                           id="payMax" placeholder="Amount"
+                                           data-ng-model="vm.job.payRate.max">
+                                    <div class="input-group-addon">.00</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="payBy">Paid per : </label>
+                                <select id="payBy" class="form-control"
+                                        ng-model="vm.job.payRate.period">
+                                    <option value="hour">Hour</option>
+                                    <option value="week">Week</option>
+                                    <option value="month">Month</option>
+                                    <option value="year">Year</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
+                    <div class="panel panel-default hidden">
                         <div class="panel-heading">
                             <span class="h4"><label class="control-label" for="name">Post Status</label></span>
                         </div>
@@ -80,7 +112,7 @@
 
                     <div class="pull-right">
                         <input type="button" class="btn btn-link" value="cancel" ng-click="vm.cancel()">
-                        <input type="button" class="btn btn-default" value="Save as draft" ng-click="vm.saveDraft()">
+                        <input type="button" class="btn btn-default" value="Save as draft" ng-if="!vm.job._id" ng-click="vm.saveDraft()">
                         <input type="submit" class="btn btn-oset-success" ng-class="{disabled:!vm.job}" value="Save">
                     </div>
                     <div data-ng-show="vm.error" class="text-danger text-center">

@@ -53,11 +53,15 @@ var JobSchema = new Schema({
     payRate: {
         min: {
             type: Number,
-            default: 0
+            default: null
         },
         max: {
             type: Number,
-            default: 0
+            default: null
+        },
+        period: {
+            type: String,
+            default: null
         }
     },
 
@@ -98,12 +102,28 @@ var JobSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, {toJSON: {virtuals: true}});
 
 
 JobSchema.pre('save', function (next) {
     this.modified = Date.now();
     next();
+});
+
+JobSchema.virtual('payString').get(function () {
+    var retval = '';
+
+    if (!!this.payRate.min) {
+        retval = '$' + this.payRate.min;
+    }
+    if (!!this.payRate.max) {
+        retval += (!!retval ? ' to $' : '$') + this.payRate.max;
+    }
+    if (!!retval && !!this.payRate.period) {
+        retval += ' per ' + this.payRate.period;
+    }
+
+    return retval;
 });
 
 mongoose.model('Job', JobSchema);

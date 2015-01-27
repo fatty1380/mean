@@ -47,32 +47,15 @@
                     <span class="h4">Info</span>
                 </div>
                 <div class="panel-body ">
-                    <div class="row" ng-if="vm.job.positionType">
-                            <span class="fa-stack fa-lg pull-left ">
-                                <i class="fa fa-circle fa-stack-2x "></i>
-                                <i class="fa fa-clock-o fa-stack-1x fa-inverse "></i>
-                            </span>
-                        <span>{{ vm.job.positionType }}</span>
-                        <br>
-                    </div>
+                        <span ng-if="vm.job.positionType">
+                            <strong>Type: </strong><span>{{ vm.job.positionType }}</span>
+                        </span>
 
-                    <div class="row" ng-if="vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">
-                            <span class="fa-stack fa-lg pull-left ">
-                                <i class="fa fa-circle fa-stack-2x "></i>
-                                <i class="fa fa-usd fa-stack-1x fa-inverse "></i>
-                            </span>
-                            <span>
-                                ${{ vm.job.payRate.min }} to ${{ vm.job.payRate.max }} per Hour</span>
-                        <br>
-                    </div>
+                        <span ng-if="!!vm.job.payString || vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">
+                            <strong>Pay: </strong><span ng-bind="vm.job.payString"> ${{ vm.job.payRate.min }} to ${{ vm.job.payRate.max }}</span>
+                        </span>
 
-                    <div class="row" ng-if="vm.job.endorsements">
-                            <span class="fa-stack fa-lg pull-left ">
-                                <i class="fa fa-circle fa-stack-2x "></i>
-                                <i class="fa fa-credit-card fa-stack-1x fa-inverse "></i>
-                            </span>
-                        <span>{{ vm.job.endorsements }}</span>
-                    </div>
+                    </dl>
                 </div>
             </div>
 
