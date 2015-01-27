@@ -7,7 +7,8 @@
             templateUrl: 'modules/applications/views/templates/os-applicant.client.template.html',
             restrict: 'E',
             scope: {
-                application: '='
+                application: '=',
+                scrollToMessageFn: '&?'
             },
             controller: function ctrl() {
                 var vm = this;
@@ -21,6 +22,8 @@
                 vm.experienceText = (vm.driver.experience && vm.driver.experience.length
                     ? 'The applicant\'s experience will be available once connected'
                     : 'You can discuss past job experience once you have connected');
+
+
             },
             controllerAs: 'vm',
             bindToController: true

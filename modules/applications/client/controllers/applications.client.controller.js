@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ApplicationMainController(application, auth, $state, $log, $scope, Socket, Applications) {
+    function ApplicationMainController(application, auth, $state, $log, $scope, Socket, Applications, $location, $anchorScroll) {
         var vm = this;
         vm.application = application;
         vm.messageMode = 'multiline';
@@ -11,6 +11,11 @@
         vm.room = vm.application._id;
         vm.text = {};
         vm.activeConnection = false;
+
+        vm.status = {
+            me: null,
+            them: null
+        };
 
         vm.rawMessages = JSON.stringify(application.messages, undefined, 2);
 
@@ -51,6 +56,17 @@
             }
         };
 
+        vm.scrollToMessages = function() {
+            // set the location.hash to the id of
+            // the element you wish to scroll to.
+            $location.hash('messaging');
+
+            // call $anchorScroll()
+            $anchorScroll();
+
+            vm.msgFocus=true;
+        };
+
         /** Connection Methods ------------------------------------------- */
 
         vm.createConnection = function () {
@@ -80,11 +96,6 @@
         /** Chat Methods ------------------------------------------------ */
         vm.postMessage = function () {
             vm.sending = true;
-            vm.application.messages.push({
-                text: vm.message,
-                status: 'sent',
-                sender: auth.user._id
-            });
 
             if (!!Socket) {
                 var message = {
@@ -101,6 +112,12 @@
                 vm.sending = false;
 
             } else {
+                vm.application.messages.push({
+                    text: vm.message,
+                    status: 'sent',
+                    sender: auth.user
+                });
+
                 application.$update(function () {
                     vm.message = '';
                     vm.sending = false;
@@ -121,7 +138,22 @@
                 // Add an event listener to the 'chatMessage' event
                 Socket.on('chatMessage', function (message) {
                     $log.debug('[AppCtrl] Incoming message: %o', message);
-                    vm.application.messages.push(message);
+
+                    if (message.type === 'status') {
+                        if (message.sender.id === vm.user.id) {
+                            $log.debug('I connected');
+                            vm.status.me = true;
+                        }
+                        else {
+                            if (message.text.toLowerCase() === 'is now connected') {
+                                vm.status.them = true;
+                            } else {
+                                debugger;
+                            }
+                        }
+                    } else {
+                        vm.application.messages.push(message);
+                    }
                 });
 
                 $log.debug('[AppCtrl] socket exists. Adding `$destroy` handler');
@@ -137,7 +169,7 @@
         activate();
     }
 
-    ApplicationMainController.$inject = ['application', 'Authentication', '$state', '$log', '$scope', 'Socket', 'Applications'];
+    ApplicationMainController.$inject = ['application', 'Authentication', '$state', '$log', '$scope', 'Socket', 'Applications', '$location', '$anchorScroll'];
 
     angular.module('applications')
         .controller('ApplicationMainController', ApplicationMainController);
