@@ -19,7 +19,7 @@
         vm.driver = vm.applicant.driver;
         vm.license = !!vm.driver && vm.driver.licenses[0];
 
-        vm.isConnected = !!vm.application.connection && vm.application.connection.isValid;
+        vm.isConnected = !!vm.application.isConnected && !!vm.application.connection && vm.application.connection.isValid;
 
         vm.experienceText = (vm.driver.experience && vm.driver.experience.length
             ? 'The applicant\'s experience will be available once connected'

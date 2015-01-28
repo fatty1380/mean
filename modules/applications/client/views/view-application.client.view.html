@@ -62,7 +62,7 @@
                     able to view any reports they have ordered and message directly with them.</p>
             </div>
 
-            <div class="row" ng-show="vm.application.connection">
+            <div class="row" ng-show="vm.application.connection && vm.application.connection.isValid">
                 <div class="col-sm-12">
                     <h4>Messages <small class="pull-right">
                         <em>
@@ -106,7 +106,6 @@
                                     <span class="timestamp smaller">{{message.sender.displayName}} {{message.text}} : {{message.created | date: 'short' }}</span>
                                 </p>
                             </div>
-
                         </div>
 
                     </div>

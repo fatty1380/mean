@@ -191,7 +191,8 @@
                 showPost: '=?',
                 limitTo: '=?',
                 config: '=?',
-                showSearch: '=?'
+                showSearch: '=?',
+                btnClass: '@?'
             },
             controller: 'JobListController',
             controllerAs: 'vm',
