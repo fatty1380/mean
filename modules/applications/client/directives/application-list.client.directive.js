@@ -23,7 +23,7 @@
         return ddo;
     }
 
-    function JobApplicationListController(Applications, Authentication, $log, $state, params) {
+    function JobApplicationListController(Applications, Authentication, $log, $state, params, $location) {
         var vm = this;
 
         vm.visibleId = params.itemId;
@@ -91,13 +91,14 @@
             }
 
             $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
+            $location.search({'itemId':vm.visibleId, 'tabName':vm.visibleTab});
         };
 
         activate();
 
     }
 
-    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams'];
+    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location'];
 
     angular.module('applications')
         .controller('JobApplicationListController', JobApplicationListController)

@@ -97,16 +97,17 @@
             }).
 
             state('jobs.list', {
+                parent: 'jobs',
                 url: '?itemId&tabName',
+                reloadOnSearch : false,
                 templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
-                controller: 'JobsListController',
-                controllerAs: 'vm',
-                bindToController: true,
                 resolve: {
                     jobs: listAllResolve,
                     company: companyResolve
                 },
-                parent: 'jobs'
+                controller: 'JobsListController',
+                controllerAs: 'vm',
+                bindToController: true
             }).
 
             state('jobs.mine', {

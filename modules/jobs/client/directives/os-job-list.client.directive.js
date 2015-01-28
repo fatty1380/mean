@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function JobListController(Jobs, $log, $state, config, auth, params) {
+    function JobListController(Jobs, $log, $state, $location, config, auth, params) {
         var vm = this;
 
         vm.visibleId = params.itemId;
@@ -172,6 +172,7 @@
             }
 
             $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
+            $location.search({'itemId':vm.visibleId, 'tabName':vm.visibleTab});
         };
 
         activate();
@@ -198,7 +199,7 @@
         };
     }
 
-    JobListController.$inject = ['Jobs', '$log', '$state', 'AppConfig', 'Authentication', '$stateParams'];
+    JobListController.$inject = ['Jobs', '$log', '$state', '$location', 'AppConfig', 'Authentication', '$stateParams'];
 
     angular.module('jobs')
         .controller('JobListController', JobListController)

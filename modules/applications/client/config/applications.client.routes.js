@@ -85,6 +85,7 @@
 
             state('applications.list', {
                 url: '?itemId&tabName',
+                reloadOnSearch : false,
                 templateUrl: 'modules/applications/views/list-applications.client.view.html',
                 resolve: {
                     applications: resolveApplications
