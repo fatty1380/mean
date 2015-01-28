@@ -89,6 +89,11 @@ var JobSchema = new Schema({
         default: []
     },
 
+    externalApplicationLink: {
+        type: String,
+        default: null
+    },
+
     postStatus: {
         type: String,
         default: 'draft',
