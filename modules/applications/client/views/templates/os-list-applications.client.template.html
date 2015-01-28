@@ -45,7 +45,7 @@
 
                     <div class="content body">
                         <div class="row tab-body" ng-show="vm.visibleId === job._id">
-                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'applicants'">
+                            <div class="post-entry col-xs-12" ng-show="vm.visibleTab === 'applicants'">
                                 <table class="table" ng-if="job.applications && job.applications.length">
                                     <thead>
                                     <tr>
@@ -92,12 +92,17 @@
                                             </dl>
                                         </td>
                                         <td>
-                                            <a class="read-more strong align-right"
+                                            <a class="read-more strong align-right mgn-bottom pull-right"
                                                ui-sref="applications.view({applicationId: application._id, action: 'read'})">
                                                 Review<i class="fa fa-external-link fa-lg mgn-left"></i>
                                             </a>
                                             <br>
-                                            <a class="read-more align-right hidden"
+                                            <a class="read-more strong align-right mgn-bottom pull-right"
+                                               ui-sref="applications.view({applicationId: application._id, action: 'read'})">
+                                                Messages<i class="fa fa-comments-o fa-lg mgn-left"></i>
+                                            </a>
+                                            <br>
+                                            <a class="read-more align-right hidden mgn-bottom pull-right"
                                                ng-click="vm.setApplicationStatus(job.applications[$index], 'rejected', $event, this)">
                                                 Reject<i class="fa fa-close fa-lg mgn-left"></i>
                                             </a>
@@ -159,7 +164,7 @@
 
                                 <dl class="dl-horizontal">
                                     <dt>Applied On</dt>
-                                    <dd>{{application.created | date: datelong}}</dd>
+                                    <dd>{{application.created | amDateFormat : 'LL LT'}}</dd>
                                     <dt>Status</dt>
                                     <dd>
                                         <os-application-status-badge
@@ -201,7 +206,7 @@
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-show="application.isConnected || !!application.messages.length"
                                         ui-sref="applications.view({applicationId: application._id})">
-                                    <i class="fa fa-external-link fa-lg mgn-right"></i>Messaging
+                                    <i class="fa fa-comments-o fa-lg mgn-right"></i>Messaging
                                 </button>
                             </div>
                         </div>
