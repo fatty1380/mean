@@ -32,10 +32,10 @@
         return ddo;
     }
 
-    function ViewApplicationDirective() {
+    function ApplicationSummaryDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/applications/views/templates/os-view-application.client.template.html',
+            templateUrl: 'modules/applications/views/templates/application-summary.client.template.html',
             restrict: 'E',
             scope: {
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
@@ -48,7 +48,7 @@
                 vm.displayMode = vm.displayMode || 'normal';
 
                 if (vm.application) {
-                    $log.debug('[ViewApplicationDirective] Displaying as %s: %o', vm.displayMode, vm.application);
+                    $log.debug('[ApplicationSummaryDirective] Displaying as %s: %o', vm.displayMode, vm.application);
                 } else if (vm.job && vm.user) {
                     Applications.ForDriver.get({jobId: vm.job._id, userId: vm.user._id})
                         .$promise.then(function (success) {
@@ -73,7 +73,7 @@
     }
 
     angular.module('applications')
-        .directive('osViewApplication', ViewApplicationDirective)
+        .directive('osetApplicationSummary', ApplicationSummaryDirective)
         .directive('osetApplicant', ViewApplicantDirective);
 
 })();
