@@ -1,6 +1,32 @@
 (function () {
     'use strict';
 
+    function ViewApplicantController(auth) {
+        var vm = this;
+
+        vm.user = auth.user;
+        vm.applicant = vm.application.user;
+        vm.driver = vm.applicant.driver;
+        vm.license = !!vm.driver && vm.driver.licenses[0];
+
+        vm.isConnected = !!vm.application.connection && vm.application.connection.isValid;
+
+        vm.experienceText = (vm.driver.experience && vm.driver.experience.length
+            ? 'The applicant\'s experience will be available once connected'
+            : 'You can discuss past job experience once you have connected');
+
+        vm.text = {
+            pre : {
+                about : 'the applicant\'s full <strong>about me</strong> section will be available once you are connected',
+                messaging: {
+                    owner: 'once you have connected, you will be able to converse with the Applicant to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right employee.',
+                    driver: 'once you have connected, you will be able to converse with the Employer to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right job.'
+                }
+            }
+        };
+
+    }
+
     function ViewApplicantDirective() {
         var ddo;
         ddo = {
@@ -10,21 +36,7 @@
                 application: '=',
                 scrollToMessageFn: '&?'
             },
-            controller: function ctrl() {
-                var vm = this;
-
-                vm.applicant = vm.application.user;
-                vm.driver = vm.applicant.driver;
-                vm.license = vm.driver && vm.driver.licenses[0];
-
-                vm.isConnected = vm.application.connection && vm.application.connection.isValid;
-
-                vm.experienceText = (vm.driver.experience && vm.driver.experience.length
-                    ? 'The applicant\'s experience will be available once connected'
-                    : 'You can discuss past job experience once you have connected');
-
-
-            },
+            controller: 'ViewApplicantController',
             controllerAs: 'vm',
             bindToController: true
         };
@@ -72,7 +84,10 @@
         return ddo;
     }
 
+    ViewApplicantController.$inject = ['Authentication'];
+
     angular.module('applications')
+        .controller('ViewApplicantController', ViewApplicantController)
         .directive('osetApplicationSummary', ApplicationSummaryDirective)
         .directive('osetApplicant', ViewApplicantDirective);
 

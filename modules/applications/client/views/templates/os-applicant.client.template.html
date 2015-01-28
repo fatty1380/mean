@@ -1,4 +1,4 @@
-<div class="applicant">
+<div class="applicant" name="os-applicant.client-template">
     <div class="h4 stronger">{{vm.applicant.displayName}}
         <small class="pull-right">Applied {{vm.application.created | date: 'short'}}</small>
     </div>
@@ -24,39 +24,70 @@
                     <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>
                 </dd>
                 <dd ng-hide="vm.isConnected">
-                    <em class="text-muted" ng-bind-html="vm.text.pre.about">
-                        the applicant's full 'about me' section will be available once you are connected
-                    </em>
+                    <em class="text-muted" ng-bind-html="vm.text.pre.about"> </em>
                 </dd>
 
                 <dt>Messages:</dt>
                 <dd ng-show="vm.isConnected">
-                    <p ng-show="vm.application.messages && vm.application.messages.length">{{vm.application.messages.length}} Total Messages<a href="#messaging" class="pull-right" ng-click="vm.scrollToMessageFn()">send a new message</a></p>
-                    <p class="panel panel-info" ng-hide="vm.application.messages && vm.application.messages.length">Now that you are connected, use the messaging functionality to communicate with the {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}. You can ask and answer questions, and coordinate a telephone or in-person interview.<br/><a href="#messaging" class="center-block btn btn-primary" ng-click="vm.scrollToMessageFn()">Click Here to Begin</a></p>
+                    <p ng-show="vm.application.messages && vm.application.messages.length">
+                        {{vm.application.messages.length}} Total Messages
+                        <a href="#messaging" class="pull-right" ng-click="vm.scrollToMessageFn()">
+                            send a new message
+                        </a>
+                    </p>
+
+                    <p class="panel panel-info letter"
+                       ng-hide="vm.application.messages && vm.application.messages.length">
+                        Now that you are connected, use the messaging functionality to communicate with the
+                        {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}.
+                        You can ask and answer questions, and coordinate a telephone or in-person interview.<br/>
+                        <a href="#messaging" class="center-block btn btn-primary"
+                           ng-click="vm.scrollToMessageFn()">
+                            Click Here to Begin
+                        </a>
+                    </p>
                 </dd>
-                <dd ng-hide="vm.isConnected">
-                    <em class="text-muted" ng-bind-html="vm.text.pre.messaging">
-                    once you have connected, you will be able to converse with the {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}} to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right {{vm.user.type === 'driver' ? 'Employer' : 'Employee'}}.</em>
+                <dd > <!-- ng-hide="vm.isConnected">-->
+                    <p>
+                        <em class="text-muted" ng-if="vm.user.type === 'owner'"
+                            ng-bind-html="vm.text.pre.messaging.owner"></em>
+                        <em class="text-muted" ng-if="vm.user.type === 'driver'"
+                            ng-bind-html="vm.text.pre.messaging.driver"></em>
+                    </p>
                 </dd>
 
 
                 <dt>License:</dt>
                 <dd>
-                    <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}
+                    <p>
+                        <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}
                     <span ng-show="vm.license.type">
                         <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>
                         {{vm.license.type}}
                     </span>
-                    Driver License
+                        Driver License
+                    </p>
                 </dd>
 
                 <dt>Endorsements</dt>
                 <dd>
-                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
+                    <p>
+                        <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
+                    </p>
                 </dd>
 
                 <dt>Reports</dt>
                 <dd class="report-badges" ng-class="{'not-visible':!vm.isConnected}">
+
+                <span class="fa-stack fa-3x report-badge" tooltip="Motor Vehicle Report">
+                    <i class="fa fa-file fa-stack-2x"></i>
+                    <span class="badge-info">
+                        <span class="badge-info-inner fa fa-stack-1x">
+                            <i class="fa fa-check fa-1x"></i>
+                            <span class="title">Resume</span>
+                        </span>
+                    </span>
+                </span>
 
                 <span class="fa-stack fa-3x report-badge" tooltip="Motor Vehicle Report">
                     <i class="fa fa-certificate fa-stack-2x"></i>

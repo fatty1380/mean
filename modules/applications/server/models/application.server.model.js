@@ -136,4 +136,16 @@ ApplicationSchema.pre('save', function (next) {
     next();
 });
 
+ApplicationSchema.pre('save', function (next) {
+
+    if(/draft|submitted|read/.test(this.status))
+    {
+        if(!!this.connection) {
+            this.status = 'connected';
+        }
+    }
+
+    next();
+});
+
 mongoose.model('Application', ApplicationSchema);

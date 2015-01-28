@@ -24,8 +24,10 @@ var executeQuery = function (req, res) {
     Application.find(query)
         .sort(sort)
         .populate('user', 'displayName profileImageURL')
-        .populate('job', 'name driverStatus postStatus')
+        .populate('job') // TODO: Optimize Later
         .populate('company', 'name profileImageURL')
+        .populate('connection')
+        .populate('messages') // TODO: Optimize Later
         .exec(function (err, applications) {
             if (err) {
                 return res.status(400).send({
@@ -177,6 +179,7 @@ exports.queryByJobID = function (req, res) {
 
 exports.queryByCompanyID = function (req, res) {
     var companyId = req.company && req.company._id || req.params.companyId;
+    console.log('[ApplicationsController] queryByCompanyID(%s)', companyId);
 
     if (!companyId) {
         console.log('[ApplicationsCtrl.queryByCompanyID]', 'Cannot search without a companyId');
@@ -199,17 +202,22 @@ exports.loadMine = function (req, res) {
 };
 
 exports.queryByUserID = function (req, res) {
+
     if (req.user.type === 'driver') {
+        console.log('[ApplicationsController] queryByUserID(%s)', req.params.userId);
         req.query = {
             user: req.params.userId
         };
     }
     else if (req.user.type === 'owner') {
+        console.log('[ApplicationsController] queryByUserID(company.owner:%s)', req.userId);
         req.query = {
             'company.owner': req.userId
         };
     }
 
+    debugger;
+    console.log('[ApplicationsController] queryByUserID: Overriding query to use request params only');
     req.query = {
         user: req.params.userId
     };
@@ -218,6 +226,9 @@ exports.queryByUserID = function (req, res) {
 };
 
 exports.getByJobId = function (req, res, next) {
+
+    console.log('[ApplicationsController] getByJobId(%s)', req.params.jobId);
+
     var query = {
         job: req.params.jobId,
         user: req.params.userId
@@ -239,6 +250,8 @@ exports.getByJobId = function (req, res, next) {
  */
 exports.applicationByID = function (req, res, next, id) {
 
+    console.log('[ApplicationsController] applicationById(%s)', id);
+
     Application.findById(id)
         .populate({path: 'user', model: 'User'})
         .populate('job')
@@ -257,7 +270,7 @@ exports.applicationByID = function (req, res, next, id) {
 
                 application.status = 'read';
                 application.save(function(err, newapp) {
-                    if(err) { console.log('ERROR Saving applicatino with new status'); }
+                    if(err) { console.log('ERROR Saving application with new status'); }
                     else { console.log('Saved application status to %s', newapp.status); }
                 });
             }
@@ -366,6 +379,7 @@ exports.createConnection = function(req, res) {
             } else {
                 if(!req.application.connection) {
                     req.application.connection = connection;
+                    req.application.status = 'connected';
 
                     req.application.save(function(err, newApp) {
                         if(err) {

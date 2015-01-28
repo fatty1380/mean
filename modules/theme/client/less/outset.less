@@ -1284,7 +1284,7 @@ os-bg-check-summary > .pricing {
         text-align : center;
         position   : absolute;
         left       : 0;
-        top        : 5px;
+        top        : 20px;
         overflow: hidden;
       }
 
@@ -1600,12 +1600,12 @@ div, .btn, a, .btn-cta {
       .badge-info .badge-info-inner i.fa {
         display : none;
       }
-      i.fa-certificate.fa {
+      i.fa-certificate.fa, i.fa.fa-file{
         color : @light-grey !important;
         color : fade(@text-color-secondary, 15%) !important;
       }
 
-      &.available i.fa-certificate.fa {
+      &.available i.fa-certificate.fa, &.available i.fa.fa-file {
         color : @darker-grey !important;
         color : fade(@text-color-secondary, 30%) !important;
       }
@@ -1616,7 +1616,7 @@ div, .btn, a, .btn-cta {
     }
 
     .report-badge {
-      &.available .fa.fa-certificate {
+      &.available .fa.fa-certificate, &.available .fa.fa-file {
         color       : @outset-blue;
         text-shadow : 1px 1px 2px rgba(255, 255, 255, 0.8);
       }

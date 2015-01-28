@@ -19,14 +19,16 @@
                         {{vm.application.job.description}}
                     </p>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12" ng-if="vm.isConnected" ng-init="otherMsgs = (vm.application.messages | filter : {'sender' : ('!'+vm.user._id)})">
                     <p ng-show="vm.application.messages && vm.application.messages.length">
                         {{vm.application.messages.length}} Total Messages<a href="#messaging" class="pull-right btn btn-link">send a new message</a>
                     </p>
-                    <p class="panel panel-info" ng-hide="vm.application.messages && vm.application.messages.length">
+                    <p class="panel panel-info letter" ng-hide="vm.application.messages && vm.application.messages.length">
                         Now that you are connected, use the messaging functionality to communicate with the {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}.
-                        You can ask and answer questions, and coordinate a telephone or in-person interview.<br/>
-                        <a href="#messaging" class="center-block btn btn-primary">Click Here to Begin</a>
+                        You can ask and answer questions, and coordinate a telephone or in-person interview.
+                    </p>
+                    <p class="text-center">
+                        <a href="#messaging" class="btn btn-primary">Click Here to Begin</a>
                     </p>
                 </div>
             </div>
@@ -38,9 +40,9 @@
             </div>
 
             <!--- Show Connection Information VIEW ---->
-            <div class="row item"
+            <div class="row"
                  ng-hide="vm.connecting || vm.application.connection || vm.application.connection.isValid">
-                <p class="text-center col-sm-10 col-sm-offset-1" ng-bind-html="vm.text.noconnection"></p>
+                <p class="panel panel-info letter text-center col-sm-10 col-sm-offset-1" ng-bind-html="vm.text.noconnection"></p>
 
                 <div class="col-xs-12 text-right col-sm-10 col-sm-offset-1" ng-show="vm.user.type === 'owner'">
                     <button type="button" class="btn btn-cta btn-cta-primary hidden"><i class="fa fa-trash"></i>Reject
@@ -51,16 +53,16 @@
                 </div>
             </div>
 
-            <div class="row item" ng-show="vm.connecting">
+            <div class="row" ng-show="vm.connecting">
                 <h3 class="text-center"><i class="fa fa-spinner fa-spin"></i>&nbsp;Connecting...</h3>
             </div>
 
-            <div class="row item" ng-show="vm.newlyConnected">
-                <p class="text-center">You are now connected to {{vm.application.user.displayName}}. You will now be
+            <div class="row" ng-show="vm.newlyConnected">
+                <p class="panel panel-info letter text-center">You are now connected to {{vm.application.user.displayName}}. You will now be
                     able to view any reports they have ordered and message directly with them.</p>
             </div>
 
-            <div class="row item" ng-show="vm.application.connection">
+            <div class="row" ng-show="vm.application.connection">
                 <div class="col-sm-12">
                     <h4>Messages <small class="pull-right">
                         <em>
