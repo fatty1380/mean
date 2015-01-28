@@ -3404,6 +3404,9 @@ input[type="button"] {
 .pad-top {
   padding-top: 15px !important;
 }
+.pad {
+  padding: 20px 10px!important;
+}
 /** Margin Overrides **/
 .no-margin {
   margin-top: 0 !important;
@@ -4537,7 +4540,7 @@ tos ol > li {
   list-style-type: none !important;
 }
 .endorsement.label {
-  margin: 0 4px;
+  margin: 0 6px 0 0;
 }
 .faq .panel .panel-heading {
   padding: 15px 30px;
@@ -4681,6 +4684,10 @@ tos ol > li {
 .application-list .blog-category-list.job-list .post,
 .outset-list .blog-category-list.job-list .post {
   margin-bottom: 20px;
+}
+.application-list table,
+.outset-list table {
+  margin-bottom: 0;
 }
 .application-list .post,
 .outset-list .post {
@@ -5017,6 +5024,12 @@ a > .fa,
 *[href] {
   cursor: pointer;
 }
+dl.mini-table dt {
+  padding-top: 2px;
+}
+dl.mini-table dt dd p {
+  margin-bottom: 0px;
+}
 .applicant .panel.letter {
   padding: 8px 12px;
   min-height: 56px;
@@ -5024,6 +5037,13 @@ a > .fa,
 .applicant dd {
   padding-bottom: 8px;
   min-height: 30px;
+}
+.applicant dl.mini-table dd {
+  padding-bottom: 6px;
+  min-height: 16px;
+}
+.applicant dl.mini-table dd p {
+  padding-bottom: 0;
 }
 .applicant .report-badges.not-visible .report-badge .badge-info .badge-info-inner i.fa {
   display: none;
@@ -5079,4 +5099,8 @@ a > .fa,
 .applicant .report-badges .report-badge .fa.fa-times.fa-question,
 .applicant .report-badges .report-badge .fa.fa-question.fa-question {
   color: #666666;
+}
+form.applicant-form textarea.form-control {
+  min-height: 250px;
+  resize: vertical;
 }

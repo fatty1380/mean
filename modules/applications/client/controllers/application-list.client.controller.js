@@ -42,9 +42,9 @@
             vm.jobs = vm.applications;
 
             if(!!vm.jobs) {
-                var applicationCount = _.reduce(vm.jobs, function(sum, job) {
-                    return sum + (!!job.applications) && job.applications.length;
-                });
+                var applicationCount = _.reduce(vm.jobs, function(sum, job, other1, other2) {
+                    return sum + (!!job.applications ? job.applications.length : 0);
+                }, 0);
 
                 if (vm.jobs.length > 0) {
                     vm.subtitle = vm.jobs.length + ' Active Job' + (vm.jobs.length > 1 ? 's' : '');

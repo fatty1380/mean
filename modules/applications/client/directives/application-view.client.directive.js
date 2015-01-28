@@ -1,6 +1,16 @@
 (function () {
     'use strict';
 
+    var text = {
+        pre: {
+            about: 'the applicant\'s full <strong>about me</strong> section will be available once you are connected',
+            messaging: {
+                owner: 'once you have connected, you will be able to converse with the Applicant to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right employee.',
+                driver: 'once you have connected, you will be able to converse with the Employer to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right job.'
+            }
+        }
+    };
+
     function ViewApplicantController(auth) {
         var vm = this;
 
@@ -15,15 +25,7 @@
             ? 'The applicant\'s experience will be available once connected'
             : 'You can discuss past job experience once you have connected');
 
-        vm.text = {
-            pre : {
-                about : 'the applicant\'s full <strong>about me</strong> section will be available once you are connected',
-                messaging: {
-                    owner: 'once you have connected, you will be able to converse with the Applicant to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right employee.',
-                    driver: 'once you have connected, you will be able to converse with the Employer to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right job.'
-                }
-            }
-        };
+        vm.text = text;
 
     }
 
@@ -48,19 +50,32 @@
         var ddo;
         ddo = {
             templateUrl: 'modules/applications/views/templates/application-summary.client.template.html',
-            restrict: 'E',
+            restrict: 'EA',
             scope: {
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
-                application: '=?model',
+                model: '=',
                 job: '=?',
-                user: '=?'
+                user: '=?',
+                index: '=?'
             },
             controller: function (Applications, $log) {
                 var vm = this;
                 vm.displayMode = vm.displayMode || 'normal';
+                vm.text = text;
+
+                vm.application = vm.model;
 
                 if (vm.application) {
                     $log.debug('[ApplicationSummaryDirective] Displaying as %s: %o', vm.displayMode, vm.application);
+
+                    if (vm.displayMode === 'table') {
+                        vm.user = vm.application.user;
+                        vm.driver = vm.user.driver;
+                        vm.license = vm.driver.licenses[0];
+
+                        vm.messagingText = vm.application.isConnected ? 'click here for messaging' : 'available once connected';
+                    }
+
                 } else if (vm.job && vm.user) {
                     Applications.ForDriver.get({jobId: vm.job._id, userId: vm.user._id})
                         .$promise.then(function (success) {

@@ -4,8 +4,8 @@
     function JobListController(Jobs, $log, $state, config, auth, params) {
         var vm = this;
 
-        vm.visibleJob = params.jobId;
-        vm.visibleTab = params.tabname;
+        vm.visibleId = params.itemId;
+        vm.visibleTab = params.tabName;
 
         vm.config = vm.config || config.getModuleConfig(auth.user.type, 'jobs')
             .then(function (success) {
@@ -56,9 +56,9 @@
                 vm.jobs = [];
             }
 
-            if(!!vm.visibleJob && !_.find(vm.jobs, {'_id':vm.visibleJob})) {
-                vm.visibleJob = vm.visibleTab = null;
-                $state.transitionTo('jobs.list', {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
+            if(!!vm.visibleId && !_.find(vm.jobs, {'_id':vm.visibleId})) {
+                vm.visibleId = vm.visibleTab = null;
+                $state.transitionTo('jobs.list', {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
             }
         }
 
@@ -158,11 +158,20 @@
             return reg.test(job.searchText);
         };
 
-        vm.showTab = function (jobId, tabname) {
-            vm.visibleJob = jobId;
-            vm.visibleTab = tabname;
+        vm.showTab = function (jobId, tabName, count) {
+            if(tabName === 'applicants' && !!count) {
+                // REDIRECT to applicant list for this
+                return $state.go('applications.list', {itemId: jobId, tabName: tabName});
+            }
 
-            $state.transitionTo($state.current, {'jobId':vm.visibleJob, 'tabname':vm.visibleTab});
+            if(!!vm.visibleId && vm.visibleTab === tabName) {
+                vm.visibleId = vm.visibleTab = null;
+            } else {
+                vm.visibleId = jobId;
+                vm.visibleTab = tabName;
+            }
+
+            $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
         };
 
         activate();

@@ -77,16 +77,14 @@
                                     <i class="fa fa-close fa-lg mgn-right"></i>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong"
-                                        ng-click="vm.showTab(job._id, 'applicants')"
+                                        ng-click="vm.showTab(job._id, 'applicants', job.applications.length)"
                                         ng-show="job.company._id === (vm.companyId || vm.user.company.id)"
-                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'applicants'}"
-                                        href="#{{job._id}}#applicants">
+                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'applicants'}">
                                     <i class="fa fa-users fa-lg mgn-right"></i>{{job.applications.length}} Applicants
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(job._id, 'details')"
-                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'details'}"
-                                        href="#{{job._id}}#details">
+                                        ng-class="{'active': vm.visibleJob === job._id && vm.visibleTab === 'details'}">
                                     <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
@@ -105,65 +103,31 @@
                     <div class="content body">
                         <div class="row  tab-body" ng-show="vm.visibleJob === job._id">
                             <div class="post-entry col-xs-12" ng-show="vm.visibleTab === 'applicants'">
-                                <table class="table" ng-if="job.applications && job.applications.length">
-                                    <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Applicant</th>
-                                        <th class="hidden-sm"></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr data-ng-repeat="application in job.applications"
-                                        ng-init="user = application.user; driver = user.driver; license = driver.licenses[0]"
-                                        ui-sref="applications.view({'applicationId': application._id})"
-                                        ng-class="{'disabled': application.disabled}">
-                                        <td>{{$index+1}}</td>
-                                        <td><img ng-src="{{user.profileImageURL}}"
-                                                 class="profile-image medium center-block">
-                                        </td>
-                                        <td>
-                                            <span class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>
-                                            <br>
-                                            <os-application-status-badge
-                                                    model="application"></os-application-status-badge>
-                                        </td>
-                                        <td>
-                                            <dl class="dl-horizontal">
-                                                <dt>License</dt>
-                                                <dd>{{license.type.toLowerCase()==='commercial' ? 'CDL Class ' +
-                                                    license.rating.toUpperCase(): 'Standard License'}}
-                                                </dd>
-                                                <dt>Endorsements</dt>
-                                                <dd><span ng-repeat="(name, val) in license.endorsements"
-                                                          class="endorsement label label-success mgn-right">{{name}}&nbsp;</span></span>
-                                                </dd>
-                                                <dt>Interests</dt>
-                                                <dd><span
-                                                        ng-repeat="interest in visibleInterests = (driver.interests | filter: {value: true})"
-                                                        class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
-                                                </dd>
-                                                <dt>Intro</dt>
-                                                <dd ng-bind-html="application.introduction | limitTo : 75"></dd>
-                                            </dl>
-                                        </td>
-                                        <td>
-                                            <a class="read-more strong align-right"
-                                               ui-sref="applications.view({applicationId: application._id, action: 'read'})">
-                                                Review<i class="fa fa-external-link fa-lg mgn-left"></i>
-                                            </a>
-                                            <br>
-                                            <a class="read-more align-right hidden"
-                                               ng-click="vm.setApplicationStatus(job.applications[$index], 'rejected', $event, this)">
-                                                Reject<i class="fa fa-close fa-lg mgn-left"></i>
-                                            </a>
-
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="text-center" ng-if="job.applications && job.applications.length">
+                                    <button type="button" class="btn btn-cta-secondary">
+                                        applicant details available here... <i class="fa fa-external-link"></i>
+                                    </button>
+                                </div>
+                                <!--Disabled until applicant data can be fully populated-->
+                                <!--<table class="table" ng-if="false && job.applications && job.applications.length">-->
+                                    <!--<thead>-->
+                                    <!--<tr>-->
+                                        <!--<th></th>-->
+                                        <!--<th>Applicant</th>-->
+                                        <!--<th class="hidden-sm"></th>-->
+                                        <!--<th></th>-->
+                                        <!--<th></th>-->
+                                    <!--</tr>-->
+                                    <!--</thead>-->
+                                    <!--<tbody>-->
+                                    <!--<tr data-ng-repeat="application in job.applications"-->
+                                        <!--ui-sref="applications.view({'applicationId': application._id})"-->
+                                        <!--ng-class="{'disabled': application.disabled}"-->
+                                        <!--oset-application-summary model="application" display-mode="table">-->
+                                    <!--</tr>-->
+                                    <!---->
+                                    <!--</tbody>-->
+                                <!--</table>-->
 
                                 <div class="list-group" ng-if="!(job.applications && job.applications.length)"
                                      ng-show="vm.visibleJob === job._id">

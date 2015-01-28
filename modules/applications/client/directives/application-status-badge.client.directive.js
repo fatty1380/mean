@@ -40,6 +40,10 @@
                     }
 
                 }
+                else {
+                    vm.labelText = 'view now';
+                    vm.labelClass = 'label-default';
+                }
             },
             controllerAs: 'vm',
             bindToController: true

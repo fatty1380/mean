@@ -83,8 +83,13 @@
         };
 
         vm.showTab = function (itemId, tabName) {
-            vm.visibleId = itemId;
-            vm.visibleTab = tabName;
+            if(!!vm.visibleId && vm.visibleTab === tabName) {
+                vm.visibleId = vm.visibleTab = null;
+            } else {
+                vm.visibleId = itemId;
+                vm.visibleTab = tabName;
+            }
+
             $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
         };
 

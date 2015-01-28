@@ -18,9 +18,15 @@ Q            = require('q');
 
 exports.executeQuery = function (req, res, next) {
 
+    console.log('[JobCtrl] ExecuteQuery');
+
     var query = req.query || {};
     var sort = req.sort || '';
-    var populate = [{property: 'user', fields: 'displayName'}, {property: 'company', fields: null}];
+    var populate = [
+        {property: 'user', fields: 'displayName'},
+        {property: 'company', fields: null}
+    ];
+
     if (req.populate) {
         req.populate = _.union(populate, req.populate);
     }
@@ -44,6 +50,7 @@ exports.executeQuery = function (req, res, next) {
 
             var options = [
                 {path: 'applications.user', model: 'User'},
+                {path: 'applications.messages'}
             ];
 
             Job.populate(jobs, options, function (err, populated) {
@@ -244,7 +251,7 @@ exports.jobByID = function (req, res, next, id) {
                 return next(err);
             }
 
-            if(!!req.user && !!req.user.driver) {
+            if (!!req.user && !!req.user.driver) {
                 debugger;
             }
 

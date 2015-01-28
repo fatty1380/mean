@@ -2,7 +2,7 @@
 
     <!--This view is used primarily for the display of simple inline template views.-->
     <div ng-show="vm.application">
-        <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="row">
+        <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="panel panel-default pad">
             <dl class="dl-horizontal">
                 <dt>Status:</dt>
                 <dd>
@@ -14,13 +14,13 @@
             <div class="text-center" data-ng-if="vm.displayMode === 'mine'">
                 <button type="button" class="btn-link read-more strong mgn-left"
                         ui-sref="applications.view({applicationId: vm.application._id})">
-                    <i class="fa fa-external-link fa-lg mgn-left"></i>Review
+                    Review<i class="fa fa-external-link fa-lg mgn-left"></i>
                 </button>
             </div>
         </div>
 
         <section data-ng-if="vm.displayMode === 'table'" class="applicant mini-table">
-            <td>{{$index+1}}</td>
+            <td>{{vm.index}}</td>
             <td>
                 <img ng-src="{{vm.user.profileImageURL}}"
                      class="profile-image medium center-block">

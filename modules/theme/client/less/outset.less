@@ -1141,7 +1141,7 @@ os-bg-check-summary > .pricing {
 }
 
 .endorsement.label {
-  margin : 0 4px;
+  margin : 0 6px 0 0;
 }
 
 .faq {
@@ -1275,7 +1275,7 @@ os-bg-check-summary > .pricing {
     .content {
 
       &.lead-content {
-        padding-left: 140px;
+        padding-left : 140px;
       }
 
       .list-picture {
@@ -1285,18 +1285,18 @@ os-bg-check-summary > .pricing {
         position   : absolute;
         left       : 0;
         top        : 20px;
-        overflow: hidden;
+        overflow   : hidden;
       }
 
       .list-date {
-        background-color: white;
-        padding-left: 10px;
-        display    : inline-block;
-        width      : auto;
-        text-align : right;
-        position   : absolute;
-        right       : 15px;
-        top        : 30px;
+        background-color : white;
+        padding-left     : 10px;
+        display          : inline-block;
+        width            : auto;
+        text-align       : right;
+        position         : absolute;
+        right            : 15px;
+        top              : 30px;
       }
 
       .post-title {
@@ -1317,6 +1317,10 @@ os-bg-check-summary > .pricing {
     }
   }
 
+  table {
+    margin-bottom: 0;
+  }
+
 }
 
 .application-list, .outset-list {
@@ -1330,8 +1334,7 @@ os-bg-check-summary > .pricing {
       border     : 1px solid @divider;
       .border-radius(4px);
       .box-shadow(0 4px 1px rgba(0, 0, 0, .05));
-
-      overflow: hidden; // prevent images from overflowing
+      overflow   : hidden; // prevent images from overflowing
     }
 
     .post-thumb {
@@ -1583,6 +1586,15 @@ div, .btn, a, .btn-cta {
   cursor : pointer;
 }
 
+dl.mini-table {
+  dt {
+    padding-top : 2px;
+    dd p {
+      margin-bottom : 0px;
+    }
+  }
+}
+
 .applicant {
   .panel.letter {
     padding    : 8px 12px;
@@ -1594,13 +1606,22 @@ div, .btn, a, .btn-cta {
     min-height     : 30px;
   }
 
+  dl.mini-table dd {
+    padding-bottom : 6px;
+    min-height     : 16px;
+
+    p {
+      padding-bottom : 0;
+    }
+  }
+
   .report-badges {
 
     &.not-visible .report-badge {
       .badge-info .badge-info-inner i.fa {
         display : none;
       }
-      i.fa-certificate.fa, i.fa.fa-file{
+      i.fa-certificate.fa, i.fa.fa-file {
         color : @light-grey !important;
         color : fade(@text-color-secondary, 15%) !important;
       }
@@ -1649,5 +1670,13 @@ div, .btn, a, .btn-cta {
         }
       }
     }
+  }
+}
+
+//Job Application Modal
+form.applicant-form {
+  textarea.form-control {
+    min-height : 250px;
+    resize     : vertical;
   }
 }

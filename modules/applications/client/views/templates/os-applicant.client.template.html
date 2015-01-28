@@ -40,14 +40,15 @@
                        ng-hide="vm.application.messages && vm.application.messages.length">
                         Now that you are connected, use the messaging functionality to communicate with the
                         {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}.
-                        You can ask and answer questions, and coordinate a telephone or in-person interview.<br/>
-                        <a href="#messaging" class="center-block btn btn-primary"
+                        You can ask and answer questions, and coordinate a telephone or in-person interview.</p>
+                    <p class="text-center">
+                        <a href="#messaging" class="btn btn-primary"
                            ng-click="vm.scrollToMessageFn()">
                             Click Here to Begin
                         </a>
                     </p>
                 </dd>
-                <dd > <!-- ng-hide="vm.isConnected">-->
+                <dd ng-hide="vm.isConnected">
                     <p>
                         <em class="text-muted" ng-if="vm.user.type === 'owner'"
                             ng-bind-html="vm.text.pre.messaging.owner"></em>
@@ -55,7 +56,6 @@
                             ng-bind-html="vm.text.pre.messaging.driver"></em>
                     </p>
                 </dd>
-
 
                 <dt>License:</dt>
                 <dd>
@@ -139,13 +139,14 @@
                 </dd>
 
                 <dt>Interests</dt>
-                <dd>
+                <dd><p>
                     <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
                           class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
 
                     <span ng-show="!visibleInterests.length">
                         <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>
                     </span>
+                    </p>
                 </dd>
 
                 <dt>Experience</dt>

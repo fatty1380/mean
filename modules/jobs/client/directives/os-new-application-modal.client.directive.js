@@ -76,7 +76,8 @@
             intro: 'Write a short message explaining why you\'re a good fit for the position.',
             errors: {
                 noJob: 'You must select a job to apply to first, or you can save as a draft',
-                noMessage: 'Please enter a message before submitting your application'
+                noMessage: 'Please enter a message to the employer before submitting your application',
+                terms: 'You must accept the terms before submitting your application'
             },
             title: 'New job application',
             disclaimer: 'Sample Disclaimer Text goes here ... Outset reserves the right to modify these Terms from time to time at our sole discretion and without any notice. Changes to our Terms become effective on the date they are posted and your continued use of Outset after any changes to Terms will signify your agreement to be bound by them.'
@@ -121,12 +122,14 @@
                 return false;
             }
 
+            if (termsRequired && !vm.application.termsAccepted) {
+                vm.error = vm.placeholders.errors.terms;
+                return false;
+            }
+
             if (vm.applicantForm.$invalid) {
                 if (!vm.application.message) {
                     vm.error = vm.placeholders.errors.noMessage;
-                }
-                else if (termsRequired && !vm.application.termsAccepted) {
-                    vm.error = 'You must accept the terms before submitting your application';
                 }
                 else {
                     vm.error = 'Please correct the errors above in order to submit your application';
