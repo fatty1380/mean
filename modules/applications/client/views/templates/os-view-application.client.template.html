@@ -1,4 +1,7 @@
-<section>
+<section name='os-view-application'>
+
+    <!--This view is used primarily for the display of simple inline template views.-->
+
     <section ng-show="vm.application">
         <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="row">
             <dl class="dl-horizontal">
@@ -56,10 +59,15 @@
             </div>
         </div>
     </section>
+
+    <!-- Show this if there is no application present -->
+    <!------------------------------------------------->
+    <!-- For drivers, link to the new application creation -->
+    <!-- For owners, tell them sorry :(                    -->
     <section ng-show="!vm.application">
         <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->
-        <div data-ng-if="!!vm.job && vm.user.type === 'driver'">
-            <button class="btn btn-cta-primary btn-lg btn-block bigger" os-new-application-modal job='vm.job'>
+        <div data-ng-if="!!vm.job && vm.user.type === 'driver'" os-new-application-modal>
+            <button class="btn btn-cta-primary btn-lg btn-block bigger" job='vm.job'>
                 apply now!
             </button>
         </div>
