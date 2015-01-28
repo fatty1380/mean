@@ -132,7 +132,7 @@
             }
         }
 
-        vm.predicate = 'posted';
+        vm.predicate = '';
         vm.reverse = true;
 
         vm.toggleSort = function(field, reverse) {
@@ -143,6 +143,20 @@
                 vm.predicate = field;
                 vm.reverse = !!reverse;
             }
+        };
+
+        vm.random = function(item){
+
+            if(!!vm.predicate) {
+                return 1;
+            }
+
+            if(item.rand) {
+                return item.rand;
+            }
+
+            item.rand = 0.5 + Math.random();
+            return item.rand;
         };
 
         vm.searchTermFilter = function (job) {
