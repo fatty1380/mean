@@ -1,12 +1,6 @@
 <section class="container-fluid">
     <form class="signin form-horizontal" ng-show="vm.initialized">
         <fieldset>
-            <div class="form-group text-center" ng-hide="vm.uploader.queue.length">
-                <div data-ng-hide="!!vm.model" class="text-center img-thumbnail user-profile-picture">
-                    <i class="fa fa-document fa-4x center-block"></i>
-                </div>
-            </div>
-
             <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">
                 <span class="btn {{vm.uploadBtnClass || 'btn-oset-secondary'}} btn-file">
                     {{vm.uploadBtnText || 'Select File ...'}}
