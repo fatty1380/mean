@@ -5,7 +5,7 @@ console.log('env.production: BTREE: %s', process.env.BRAINTREE_MERCHANT_ID);
 
 module.exports = {
     db: {
-        uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'ec2-54-148-79-252.us-west-2.compute.amazonaws.com') + '/outset',
+        uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'ec2-54-148-79-252.us-west-2.compute.amazonaws.com') + (process.env.MONGO_DB_NAME || '/outset'),
         options: {
             user: '',
             pass: ''
