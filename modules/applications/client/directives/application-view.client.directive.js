@@ -11,7 +11,7 @@
         }
     };
 
-    function ViewApplicantController(auth) {
+    function ViewApplicantController(auth, $window, $log, Drivers) {
         var vm = this;
 
         vm.user = auth.user;
@@ -26,6 +26,36 @@
             : 'You can discuss past job experience once you have connected');
 
         vm.text = text;
+        vm.resume = vm.resume || {};
+
+        vm.openResumeFile = function () {
+            debugger;
+
+            if(!vm.isConnected) {
+                return false;
+            }
+
+            if (moment().isBefore(moment(vm.driver.resume.expires))) {
+                $window.open(vm.driver.resume.url, '_blank');
+            }
+            else {
+                vm.resume.loading = true;
+
+                Drivers.getResumeLink(vm.driver._id).then(
+                    function (success) {
+                        vm.resume.loading = false;
+                        $log.debug('Got new resume link! %o', success);
+
+                        vm.driver.resume = success;
+                        $window.open(vm.driver.resume.url, '_blank');
+                    },
+                    function (err) {
+                        vm.resume.loading = false;
+                        $log.error('Error trying to load resume link', err);
+                        vm.resume.error = 'Sorry, we were unable to load your resume at this time';
+                    });
+            }
+        };
 
     }
 
@@ -99,7 +129,7 @@
         return ddo;
     }
 
-    ViewApplicantController.$inject = ['Authentication'];
+    ViewApplicantController.$inject = ['Authentication',  '$window', '$log', 'Drivers'];
 
     angular.module('applications')
         .controller('ViewApplicantController', ViewApplicantController)

@@ -79,7 +79,9 @@
                 <dt>Reports</dt>
                 <dd class="report-badges" ng-class="{'not-visible':!vm.isConnected}">
 
-                <span class="fa-stack fa-3x report-badge" tooltip="Resumé">
+                <span class="fa-stack fa-3x report-badge" tooltip="Resumé"
+                        ng-class="{'available': !!vm.driver.resume}"
+                        ng-click="vm.isConnected && vm.openResumeFile()">
                     <i class="fa fa-file fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -93,7 +95,7 @@
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
-                            <i class="fa fa-check fa-1x"></i>
+                            <i class="fa fa-check fa-1x hidden"></i>
                             <span class="title">MVR</span>
                         </span>
                     </span>
@@ -103,7 +105,7 @@
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
-                        <i class="fa fa-times fa-1x"></i>
+                        <i class="fa fa-times fa-1x hidden"></i>
                         <span class="title">BG</span>
                     </span>
                     </span>
@@ -113,7 +115,7 @@
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
-                        <i class="fa fa-question fa-1x"></i>
+                        <i class="fa fa-question fa-1x hidden"></i>
                         <span class="title">N-CRIM</span>
                     </span>
                     </span>
@@ -123,7 +125,7 @@
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
-                        <i class="fa fa-question fa-1x"></i>
+                        <i class="fa fa-question fa-1x hidden"></i>
                         <span class="title">C-CRIM</span>
                     </span>
                     </span>
