@@ -1,11 +1,11 @@
 'use strict';
 
-var _        = require('lodash'),
-    fs           = require('fs'),
-    path         = require('path'),
-    config       = require(path.resolve('./config/config')),
-    Q            = require('q'),
-    s3 = require('s3');
+var _      = require('lodash'),
+    fs     = require('fs'),
+    path   = require('path'),
+    config = require(path.resolve('./config/config')),
+    Q      = require('q'),
+    s3     = require('s3');
 
 var client, publicURL;
 
@@ -15,8 +15,55 @@ if (!!config.services.s3 && config.services.s3.enabled) {
     client = s3.createClient(options);
 }
 
-exports.saveFileToCloud = saveFile;
+//exports.saveFileToCloud = saveFile;
+exports.saveFileToCloud = directUpload;
 exports.uploadToS3 = doS3FileUpload;
+
+function directUpload(files, folder) {
+    var deferred = Q.defer();
+
+
+    folder = folder || config.services.s3.folder;
+
+    if(folder.substring(folder.length-1) === '/') {
+        folder = folder.substring(0,folder.length-1);
+    }
+
+    console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', files.file.name, folder);
+    var params = {
+            Bucket: config.services.s3.s3Options.bucket,
+            Key: folder + '/' + files.file.name,
+            ACL: 'public-read',
+            Body: files.file.buffer
+    };
+
+    console.log('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
+
+    var uploader = client.s3.putObject(params);
+
+    uploader.
+        on('success', function(response) {
+            console.log('[s3.directUpload] done uploading, got data! %d', response.data);
+
+            var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
+
+            console.log('[s3.directUpload] Got public URL: %s', publicURL);
+
+            var strippedURL = publicURL.replace('http://', '//');
+            console.log('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
+
+            deferred.resolve(strippedURL);
+        }).
+        on('error', function(response) {
+            console.error('[s3.directUpload] unable to upload:', response.error && response.error.stack);
+
+            deferred.reject(response.error);
+        }).
+        send();
+
+    return deferred.promise;
+}
+
 
 function saveFile(files, folder) {
 
@@ -28,6 +75,11 @@ function saveFile(files, folder) {
                 deferred.reject(uploadError);
             } else {
                 folder = folder || config.services.s3.folder;
+
+                if(folder.substring(folder.length-1,1) === '/') {
+                    console.log('chopping off extra slash from folder name: `%s`', folder);
+                    folder = folder.substring(0,folder.length-1);
+                }
 
                 doS3FileUpload(files.file.name, folder)
                     .then(function (url) {
