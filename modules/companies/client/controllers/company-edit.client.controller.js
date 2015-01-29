@@ -2,6 +2,14 @@
     'use strict';
 
     function CompanyEditController($state, $log, auth, Companies, company) {
+
+        if(!auth.user) {
+            return $state.go('intro');
+        }
+        else if (!(auth.user.company && auth.user.company._id === company._id)) {
+            return $state.go('home');
+        }
+
         var vm = this;
 
         vm.company = company;

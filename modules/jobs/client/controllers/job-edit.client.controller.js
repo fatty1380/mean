@@ -4,6 +4,13 @@
     // Jobs controller
     function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company) {
 
+        if(!Authentication.user) {
+            return $state.go('intro');
+        }
+        else if (!(Authentication.user.company && Authentication.user.company._id === (!!job && job.company._id))) {
+            return $state.go('home');
+        }
+
         var vm = this;
 
         vm.authentication = Authentication;

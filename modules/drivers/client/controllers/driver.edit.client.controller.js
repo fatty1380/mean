@@ -5,6 +5,10 @@
     function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig) {
         var vm = this;
 
+        if(!Authentication.user) {
+            return $state.go('intro');
+        }
+
         vm.debug = AppConfig.get('debug');
 
         // Functions:

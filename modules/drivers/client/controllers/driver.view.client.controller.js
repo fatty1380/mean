@@ -5,6 +5,10 @@
     function DriverViewController($state, $log, $stateParams, $window, Authentication, Drivers, Profiles, driver) {
         var vm = this;
 
+        if(!Authentication.user) {
+            return $state.go('intro');
+        }
+
         vm.text = {
             bulletPoints: [
                 'You will be applying to jobs with your Driver Profile.',
