@@ -32,6 +32,7 @@
 
                 vm.showHeader = !!vm.subTitle || !!vm.editSref || vm.btnShow && (!!vm.btnText && !!vm.btnSref);
 
+                debugger;
                 vm.editPicFn = function () {
                     if (!!angular.isDefined($attrs.pictureEditFn)) {
                         $log.debug('calling pictureEditFn');
