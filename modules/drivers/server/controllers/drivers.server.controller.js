@@ -9,6 +9,9 @@ License      = mongoose.model('License'),
 Schedule     = mongoose.model('Schedule'),
 constants    = require('../../../../modules/core/server/models/outset.constants'),
 errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
+moment       = require('moment'),
+path         = require('path'),
+fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
 _            = require('lodash');
 
 /**
@@ -171,6 +174,108 @@ exports.update = function (req, res) {
             res.json(driver);
         }
     });
+};
+
+/**
+ * Update profile picture
+ */
+exports.uploadResume = function (req, res) {
+    console.log('[DriverCtrl.uploadResume] Start');
+    var user = req.user;
+    var driver = req.driver;
+
+    if (!user) {
+        return res.status(400).send({
+            message: 'User is not signed in'
+        });
+    }
+
+    if (!driver) {
+        return res.status(400).send({
+            message: 'No Available Driver Profile'
+        });
+    }
+
+    fileUploader.saveFileToCloud(req.files, 'secure-content', true).then(
+        function (response) {
+            console.log('successfully uploaded user resume to %j', response);
+
+            driver.resume = {
+                url: response.url,
+                expires: moment().add(15, 'm'),
+                bucket: response.bucket,
+                key: response.key
+            };
+
+            driver.save(function (saveError) {
+                if (saveError) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(saveError)
+                    });
+                }
+
+                console.log('[DriverCtrl.uploadResume] Success! %j', driver);
+
+                res.json(driver.resume);
+
+            });
+
+        }, function (error) {
+            console.log('Failed to save Resume: %j', error);
+            return res.status(400).send({
+                message: 'Unable to save Driver Resume. Please try again later'
+            });
+        }
+    );
+};
+
+exports.refreshResume = function(req, res) {
+    console.log('[DriverCtrl.refreshResume] Start');
+    var user = req.user;
+    var driver = req.driver;
+
+    if (!user) {
+        return res.status(400).send({
+            message: 'User is not signed in'
+        });
+    }
+
+    if (!driver) {
+        return res.status(400).send({
+            message: 'No Available Driver Profile'
+        });
+    }
+
+    if(!(driver.resume && driver.resume.bucket && driver.resume.key)) {
+        return res.status(400).send({
+            message: 'Driver does not have a resume on file'
+        });
+    }
+
+    fileUploader.getSecureReadURL(driver.resume.bucket, driver.resume.key).then(
+        function (success) {
+            driver.resume.url = success;
+            driver.resume.expires = moment().add(15, 'm');
+
+            console.log('[s3.directUpload] Post secure upload, resolving with : %j', driver.resume);
+
+            res.json(driver.resume);
+
+            driver.save(function (err) {
+                if (err) {
+                    console.log('unable to save driver\'s updated resume url', err);
+                } else {
+                    console.log('Saved driver\'s updated resume URL');
+                }
+            });
+        }, function (err) {
+            console.log('[s3.directUpload] Post secure upload failed: %j', err);
+
+            return res.status(400).send({
+                message: 'Unable to retrieve fresh URL for resume'
+            });
+        });
+
 };
 
 /**

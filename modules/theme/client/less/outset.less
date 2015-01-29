@@ -1318,7 +1318,7 @@ os-bg-check-summary > .pricing {
   }
 
   table {
-    margin-bottom: 0;
+    margin-bottom : 0;
   }
 
 }
@@ -1615,59 +1615,64 @@ dl.mini-table {
     }
   }
 
-  .report-badges {
+}
 
-    &.not-visible .report-badge {
+.report-badges {
+
+  &.not-available, &.not-visible {
+
+    &.not-visble .report-badge {
       .badge-info .badge-info-inner i.fa {
         display : none;
       }
-      i.fa-certificate.fa, i.fa.fa-file {
-        color : @light-grey !important;
-        color : fade(@text-color-secondary, 15%) !important;
-      }
-
-      &.available i.fa-certificate.fa, &.available i.fa.fa-file {
-        color : @darker-grey !important;
-        color : fade(@text-color-secondary, 30%) !important;
-      }
     }
 
-    .fa.fa-check, .fa.fa-times, .fa.fa-question {
-      display : none;
+    i.fa-certificate.fa, i.fa.fa-file {
+      color : @light-grey !important;
+      color : fade(@text-color-secondary, 15%) !important;
     }
 
-    .report-badge {
-      &.available .fa.fa-certificate, &.available .fa.fa-file {
-        color       : @outset-blue;
-        text-shadow : 1px 1px 2px rgba(255, 255, 255, 0.8);
-      }
+    &.available i.fa-certificate.fa, &.available i.fa.fa-file {
+      color : @darker-grey !important;
+      color : fade(@text-color-secondary, 30%) !important;
+    }
+  }
 
-      .title {
-        font-size   : 16px;
-        font-weight : bold;
-        color       : white;
-      }
+//  .fa.fa-check, .fa.fa-times, .fa.fa-question {
+//    display : none;
+//  }
 
-      &.available {
-        .fa.fa-check, .fa.fa-times, .fa.fa-question {
-          display : inherit;
-        }
-      }
+  .report-badge {
+    &.available .fa.fa-certificate, &.available .fa.fa-file {
+      color       : @outset-blue;
+      text-shadow : 1px 1px 2px rgba(255, 255, 255, 0.8);
+    }
 
+    .title {
+      font-size   : 16px;
+      font-weight : bold;
+      color       : white;
+    }
+
+    &.available {
       .fa.fa-check, .fa.fa-times, .fa.fa-question {
-        position : absolute;
-        right    : 5px;
-        top      : 5px;
+        display : inherit;
+      }
+    }
 
-        &.fa-check {
-          color : #006400 !important;
-        }
-        &.fa-times {
-          color : #8b0000 !important;
-        }
-        &.fa-question {
-          color : @text-color-secondary;
-        }
+    .fa.fa-1x {
+      position : absolute;
+      right    : 5px;
+      top      : 5px;
+
+      &.fa-check {
+        color : #006400 !important;
+      }
+      &.fa-times {
+        color : #8b0000 !important;
+      }
+      &.fa-question {
+        color : @text-color-secondary;
       }
     }
   }

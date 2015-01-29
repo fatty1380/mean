@@ -63,6 +63,13 @@ var DriverSchema = new Schema({
         default: []
     },
 
+    resume: {
+        url: String,
+        expires: Date,
+       bucket: String,
+        key: String
+    },
+
     isActive: {
         type: Boolean,
         default: true

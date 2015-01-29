@@ -5045,59 +5045,51 @@ dl.mini-table dt dd p {
 .applicant dl.mini-table dd p {
   padding-bottom: 0;
 }
-.applicant .report-badges.not-visible .report-badge .badge-info .badge-info-inner i.fa {
+.report-badges.not-available.not-visble .report-badge .badge-info .badge-info-inner i.fa,
+.report-badges.not-visible.not-visble .report-badge .badge-info .badge-info-inner i.fa {
   display: none;
 }
-.applicant .report-badges.not-visible .report-badge i.fa-certificate.fa,
-.applicant .report-badges.not-visible .report-badge i.fa.fa-file {
+.report-badges.not-available i.fa-certificate.fa,
+.report-badges.not-visible i.fa-certificate.fa,
+.report-badges.not-available i.fa.fa-file,
+.report-badges.not-visible i.fa.fa-file {
   color: #cccccc !important;
   color: rgba(102, 102, 102, 0.15) !important;
 }
-.applicant .report-badges.not-visible .report-badge.available i.fa-certificate.fa,
-.applicant .report-badges.not-visible .report-badge.available i.fa.fa-file {
+.report-badges.not-available.available i.fa-certificate.fa,
+.report-badges.not-visible.available i.fa-certificate.fa,
+.report-badges.not-available.available i.fa.fa-file,
+.report-badges.not-visible.available i.fa.fa-file {
   color: #666666 !important;
   color: rgba(102, 102, 102, 0.3) !important;
 }
-.applicant .report-badges .fa.fa-check,
-.applicant .report-badges .fa.fa-times,
-.applicant .report-badges .fa.fa-question {
-  display: none;
-}
-.applicant .report-badges .report-badge.available .fa.fa-certificate,
-.applicant .report-badges .report-badge.available .fa.fa-file {
+.report-badges .report-badge.available .fa.fa-certificate,
+.report-badges .report-badge.available .fa.fa-file {
   color: #0e2d4c;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
 }
-.applicant .report-badges .report-badge .title {
+.report-badges .report-badge .title {
   font-size: 16px;
   font-weight: bold;
   color: white;
 }
-.applicant .report-badges .report-badge.available .fa.fa-check,
-.applicant .report-badges .report-badge.available .fa.fa-times,
-.applicant .report-badges .report-badge.available .fa.fa-question {
+.report-badges .report-badge.available .fa.fa-check,
+.report-badges .report-badge.available .fa.fa-times,
+.report-badges .report-badge.available .fa.fa-question {
   display: inherit;
 }
-.applicant .report-badges .report-badge .fa.fa-check,
-.applicant .report-badges .report-badge .fa.fa-times,
-.applicant .report-badges .report-badge .fa.fa-question {
+.report-badges .report-badge .fa.fa-1x {
   position: absolute;
   right: 5px;
   top: 5px;
 }
-.applicant .report-badges .report-badge .fa.fa-check.fa-check,
-.applicant .report-badges .report-badge .fa.fa-times.fa-check,
-.applicant .report-badges .report-badge .fa.fa-question.fa-check {
+.report-badges .report-badge .fa.fa-1x.fa-check {
   color: #006400 !important;
 }
-.applicant .report-badges .report-badge .fa.fa-check.fa-times,
-.applicant .report-badges .report-badge .fa.fa-times.fa-times,
-.applicant .report-badges .report-badge .fa.fa-question.fa-times {
+.report-badges .report-badge .fa.fa-1x.fa-times {
   color: #8b0000 !important;
 }
-.applicant .report-badges .report-badge .fa.fa-check.fa-question,
-.applicant .report-badges .report-badge .fa.fa-times.fa-question,
-.applicant .report-badges .report-badge .fa.fa-question.fa-question {
+.report-badges .report-badge .fa.fa-1x.fa-question {
   color: #666666;
 }
 form.applicant-form textarea.form-control {

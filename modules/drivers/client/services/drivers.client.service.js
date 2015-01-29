@@ -13,7 +13,14 @@
             }),
             ByUser: $resource('api/users/:userId/driver', {
                 userId: '@_userId'
-            })
+            }),
+            getResumeLink: function(driverId) {
+                var rsrc = $resource('api/drivers/:driverId/resume', {
+                    driverId: '@driverId'
+                });
+
+                return rsrc.get({driverId: driverId}).$promise;
+            }
         };
     }
 
