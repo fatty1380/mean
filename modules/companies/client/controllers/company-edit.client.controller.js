@@ -3,7 +3,6 @@
 
     function CompanyEditController($state, $log, auth, Companies, company) {
 
-        debugger
         if(!auth.user) {
             return $state.go('intro');
         }
