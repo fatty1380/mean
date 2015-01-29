@@ -13,18 +13,17 @@
     <form class="form-horizontal applicant-form" name="vm.applicantForm" data-ng-submit="vm.createApplication()" novalidate>
         <div class="modal-body">
             <fieldset>
-                <label class="control-label" for="name">{{vm.placeholders.messageHeading}}
-                    <small ng-bind="vm.placeholders.messageSubHeading"></small>
-                </label>
+                <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading"></span>
+                <p class="text-muted text-center" ng-bind-html="vm.placeholders.messageSubHeading"></p>
 
                 <div class="controls">
                     <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"
                               placeholder="{{vm.placeholders.intro}}" required></textarea>
                 </div>
                 <div class="checkbox">
-                    <label>
+                    <label class="small">
                         <input type="checkbox" data-ng-model="vm.application.termsAccepted" data-ng-required="true" name="disclaimer"/>
-                        <strong>Disclaimer: </strong><span data-ng-bind="vm.placeholders.disclaimer"></span>
+                        <small data-ng-bind-html="vm.placeholders.disclaimer"></small>
                     </label>
                 </div>
             </fieldset>

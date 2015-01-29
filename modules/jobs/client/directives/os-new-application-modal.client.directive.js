@@ -71,16 +71,16 @@
         vm.job = job;
         vm.application = {};
         vm.placeholders = {
-            messageHeading: 'Introduction',
-            messageSubHeading: 'This will serve as your introduction to the employer',
+            title: 'Cover Letter for Job Application',
+            messageHeading: '',
+            messageSubHeading: 'This will serve as your introduction to the employer. Your application will  also consist of your completed profile, your resume and any reports you have ordered through Outset.',
             intro: 'Write a short message explaining why you\'re a good fit for the position.',
             errors: {
                 noJob: 'You must select a job to apply to first, or you can save as a draft',
                 noMessage: 'Please enter a message to the employer before submitting your application',
                 terms: 'You must accept the terms before submitting your application'
             },
-            title: 'New job application',
-            disclaimer: 'Sample Disclaimer Text goes here ... Outset reserves the right to modify these Terms from time to time at our sole discretion and without any notice. Changes to our Terms become effective on the date they are posted and your continued use of Outset after any changes to Terms will signify your agreement to be bound by them.'
+            disclaimer: '<strong>Terms:</strong> By Applying for this job you consent to this employer reviewing your personal information, including: Your Profile, Resume, Background Check, Motor Vehicle Report & Drug Test, (If items are present in your profile). Outset is not responsible for the hiring decision of this employer, any and all hiring actions, including rejection of applicant, are the responsibility of the employer and the applicant.'
         };
 
         // Implementation _______________________________________________________________
