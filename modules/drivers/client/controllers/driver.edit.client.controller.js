@@ -14,12 +14,12 @@
         vm.action = $state.current.name.replace('drivers.', '');
         vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
 
-        if (typeof vm.user.driver === 'string' && vm.user.driver !==vm.driver._id) {
-            return $state.go('home');
-        }
-        else if (typeof vm.user.driver === 'object' && vm.user.driver._id ===vm.driver._id) {
-            return $state.go('home');
-        }
+        //if (typeof vm.user.driver === 'string' && vm.user.driver !==vm.driver._id) {
+        //    return $state.go('home');
+        //}
+        //else if (typeof vm.user.driver === 'object' && vm.user.driver._id ===vm.driver._id) {
+        //    return $state.go('home');
+        //}
 
         vm.debug = AppConfig.get('debug');
 
