@@ -7,14 +7,23 @@
         if(!Authentication.user) {
             return $state.go('intro');
         }
-        else if (!(Authentication.user.company && Authentication.user.company._id === (!!job && job.company._id))) {
-            return $state.go('home');
-        }
 
         var vm = this;
 
         vm.authentication = Authentication;
         vm.user = Authentication.user;
+
+        // Bound Objects
+        vm.job = job;
+        vm.company = company || job && typeof job.company === 'object' && job.company || undefined;
+
+
+        if (typeof vm.user.company === 'string' && vm.user.company !== vm.company._id) {
+            return $state.go('home');
+        }
+        else if (typeof vm.user.company === 'object' &&  vm.user.company._id === vm.company._id) {
+            return $state.go('home');
+        }
 
         // Bindable Functions:
         vm.cancel = cancel;
