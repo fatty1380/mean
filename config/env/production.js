@@ -72,7 +72,7 @@ module.exports = {
             CSEKey: process.env.BRAINTREE_CSE_KEY || 'MIIBCgKCAQEAqg9Cl9ZeRFqEEfjOHUrNQmz4b4W4hSPoVy55yG5BMaOVI2K+tpWyERW3QSNZ85hr4OTq8j3ywWdXEKpkjChQP01zsrfM6Iz+wsiLUgUVbjJAx2hCTUMvAJkYGgUVXD6ViO0NG0mMGMWtcL7sz1F0hY3GnRX9TbBAYh4Rvd/uRZwlHCpHWLHmVhwzglbMxQYi9U3XRlKqRv/GVaupveuNQ4zCX32QBrv2FiBp3ICkpgfABAU7kSRV/91g+jDlSa2phJsYVbUJ3A/JcE8Uw2QJlhmd0HwmSeGTAW5VNDO+0lxrnIwE+KyWDX26U9/PhXLMlYaPvQzsxt1BoYK+YmduQwIDAQAB'
         },
         google: {
-            analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
+            analyticsTrackingID: process.env.DISABLE_GA ? null : process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
         },
         s3: {
             enabled: true,

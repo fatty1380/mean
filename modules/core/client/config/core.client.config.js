@@ -86,13 +86,25 @@
         });
     }
 
+    function GoogleAnalyticsRouter($rootScope, $location, $window) {
+        $rootScope.$on('$stateChangeSuccess', function (event) {
+            if (!$window.ga) {
+                return;
+            }
+
+            $window.ga('send', 'pageview', {page: $location.path()});
+        });
+    }
+
     scrollTopChange.$inject = ['$rootScope', '$document', '$log'];
     reroute.$inject = ['$rootScope', '$state', 'Authentication', '$log'];
+    GoogleAnalyticsRouter.$inject = ['$rootScope', '$location', '$window'];
 
     // Setting up route
     angular
         .module('core')
         .run(reroute)
-        .run(scrollTopChange);
+        .run(scrollTopChange)
+        .run(GoogleAnalyticsRouter);
 })();
 
