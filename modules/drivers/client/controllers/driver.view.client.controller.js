@@ -2,8 +2,12 @@
     'use strict';
 
     // Drivers controller
-    function DriverViewController($state, $log, $stateParams, Authentication, Profiles, driver) {
+    function DriverViewController($state, $log, $stateParams, $window, Authentication, Drivers, Profiles, driver) {
         var vm = this;
+
+        if(!Authentication.user) {
+            return $state.go('intro');
+        }
 
         vm.text = {
             bulletPoints: [
@@ -27,8 +31,10 @@
 
         function activate() {
             if (!!vm.driver) {
+                // TODO - fix this shit logic
                 vm.user = vm.driver.user;
                 vm.canEdit = vm.user._id === Authentication.user._id;
+
             } else if ($stateParams.userId) {
                 vm.user = Profiles.get({
                     userId: $stateParams.userId
@@ -64,9 +70,44 @@
             return item.key;
         }
 
+        // Change Picture Success method:
+        vm.successFunction = function (fileItem, response, status, headers) {
+            // Populate user object
+            debugger;
+
+            vm.driver.resume = response;
+        };
+
+        vm.resume = vm.resume || {};
+
+        vm.openResumeFile = function () {
+            debugger;
+
+            if (moment().isBefore(moment(vm.driver.resume.expires))) {
+                $window.open(vm.driver.resume.url, '_blank');
+            }
+            else {
+                vm.resume.loading = true;
+
+                Drivers.getResumeLink(vm.driver._id).then(
+                    function (success) {
+                        vm.resume.loading = false;
+                        $log.debug('Got new resume link! %o', success);
+
+                        vm.driver.resume = success;
+                        $window.open(vm.driver.resume.url, '_blank');
+                    },
+                    function (err) {
+                        vm.resume.loading = false;
+                        $log.error('Error trying to load resume link', err);
+                        vm.resume.error = 'Sorry, we were unable to load your resume at this time';
+                    });
+            }
+        };
+
     }
 
-    DriverViewController.$inject = ['$state', '$log', '$stateParams', 'Authentication', 'Profiles', 'driver'];
+    DriverViewController.$inject = ['$state', '$log', '$stateParams', '$window', 'Authentication', 'Drivers', 'Profiles', 'driver'];
 
     angular.module('drivers').controller('DriverViewController', DriverViewController);
 })();

@@ -4,10 +4,26 @@
     // Jobs controller
     function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company) {
 
+        if(!Authentication.user) {
+            return $state.go('intro');
+        }
+
         var vm = this;
 
         vm.authentication = Authentication;
         vm.user = Authentication.user;
+
+        // Bound Objects
+        vm.job = job;
+        vm.company = company || job && typeof job.company === 'object' && job.company || undefined;
+
+
+        if (typeof vm.user.company === 'string' && vm.user.company !== vm.company._id) {
+            return $state.go('home');
+        }
+        else if (typeof vm.user.company === 'object' &&  vm.user.company._id === vm.company._id) {
+            return $state.go('home');
+        }
 
         // Bindable Functions:
         vm.cancel = cancel;

@@ -5,6 +5,22 @@
     function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig) {
         var vm = this;
 
+        if (!Authentication.user) {
+            return $state.go('intro');
+        }
+
+        // Variables:
+        vm.user = Authentication.user;
+        vm.action = $state.current.name.replace('drivers.', '');
+        vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
+
+        //if (typeof vm.user.driver === 'string' && vm.user.driver !==vm.driver._id) {
+        //    return $state.go('home');
+        //}
+        //else if (typeof vm.user.driver === 'object' && vm.user.driver._id ===vm.driver._id) {
+        //    return $state.go('home');
+        //}
+
         vm.debug = AppConfig.get('debug');
 
         // Functions:
@@ -14,11 +30,6 @@
         vm.cancel = cancel;
         vm.dropExperience = dropExperience;
         vm.addExperience = addExperience;
-
-        // Variables:
-        vm.user = Authentication.user;
-        vm.action = $state.current.name.replace('drivers.', '');
-        vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
 
         function activate() {
 

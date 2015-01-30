@@ -23,54 +23,163 @@
                             <div class="pull-right">
                                 <button type="button" class="btn-tab btn-link read-more strong"
                                         ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
-                                    <i class="fa fa-close fa-lg mgn-right"></i>
+                                    <i class="fa fa-close fa-lg"></i><span class="hidden-xs mgn-left">&nbsp;</span>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong"
                                         ng-click="vm.showTab(job._id, 'applicants', job.applications.length)"
                                         ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}">
-                                    <i class="fa fa-users fa-lg mgn-right"></i>{{job.applications.length}} Applicants
+                                    <i class="fa fa-users fa-lg"></i><span class="hidden-xs mgn-left">{{job.applications.length}} Applicant{{job.applications.length === 1 ? '' : 's'}}</span>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(job._id, 'details')"
                                         ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}">
-                                    <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
+                                    <i class="fa fa-lg fa-file-text"></i><span class="hidden-xs mgn-left">View Description</span>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ui-sref="jobs.edit({jobId: job._id})">
-                                    <i class="fa fa-edit fa-lg mgn-right"></i>Edit
+                                    <i class="fa fa-edit fa-lg"></i><span class="hidden-xs mgn-left">Edit</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="content body">
-                        <div class="row tab-body" ng-show="vm.visibleId === job._id">
-                            <div class="post-entry col-xs-12" ng-show="vm.visibleTab === 'applicants'">
-                                <table class="table" ng-if="job.applications && job.applications.length">
-                                    <thead>
-                                    <tr>
-                                        <th colspan="3">Applicant</th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr data-ng-repeat="application in job.applications"
-                                        ui-sref="applications.view({'applicationId': application._id})"
-                                        ng-class="{'disabled': application.disabled}" index="($index + 1)"
-                                        oset-application-summary model="application" display-mode="table">
-                                    </tr>
-                                    </tbody>
-                                </table>
+                        <div class="tab-body">
+                            <div class="post-entry" ng-show="vm.visibleTab === 'applicants'">
+                                <div class="row" ng-show="vm.visibleId === job._id"
+                                     data-ng-repeat="application in job.applications"
+                                     data-ng-init="user = application.user; driver = user.driver;license = driver.licenses[0];"
+                                     ui-sref="applications.view({'applicationId': application._id})"
+                                     ng-class="{'disabled': application.disabled}">
 
-                                <div class="list-group" ng-if="!(job.applications && job.applications.length)"
-                                     ng-show="vm.visibleId === job._id">
-                                    <div class="list-group-item text-center">
-                                        <h4>No one has applied to this job yet. Would you like to <a
-                                                ui-sref="jobs.edit({'jobId':job._id})">edit
-                                            your post?</a></h4>
+                                    <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">
+                                        <img ng-src="{{user.profileImageURL}}"
+                                             class="img-responsive">
                                     </div>
 
+                                    <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">
+                                        <p>
+                                            <span
+                                            class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>
+                                            <br class="hidden-lg hidden-md">
+                                            <os-application-status-badge
+                                                    model="application"></os-application-status-badge>
+                                        </p>
+                                        <p>
+
+                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">
+                                            License
+                                        </div>
+                                        <div class="col-md-9 col-lg-10 col-xs-12">
+                                            <p style="margin-bottom: 2px;">
+                                                <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}
+                                            <span ng-show="license.type">
+                                                <span ng-if="license.rating"> Class {{license.rating | uppercase }}</span>
+                                                {{license.type}}
+                                            </span>
+                                                Driver License
+                                            </p>
+                                        </div>
+
+
+                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">
+                                            Endorsements
+                                        </div>
+                                        <div class="col-md-9 col-lg-10 col-xs-12">
+                                            <p style="margin-bottom: 2px;">
+                                                <oset-list-endorsements
+                                                        model="license.endorsements"></oset-list-endorsements>
+                                            </p>
+                                        </div>
+
+
+                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">
+                                            Interests
+                                        </div>
+                                        <div class="col-md-9 col-lg-10 col-xs-12">
+                                            <p style="margin-bottom: 2px;">
+                                        <span ng-repeat="interest in visibleInterests = (driver.interests | filter: {value: true})"
+                                              class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>
+
+                                        <span ng-show="!visibleInterests.length">
+                                            <span ng-show="!vm.canEdit">none entered</span>
+                                        </span>
+                                            </p>
+                                        </div>
+
+
+                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">
+                                            Messages
+                                        </div>
+                                        <div class="col-md-9 col-lg-10 col-xs-12">
+                                            <span ng-show="!!application.isConnected"
+                                                  ng-init="otherMsgs = (application.messages | filter : {'sender' : ('!'+user._id)})">
+                                                <p style="margin-bottom: 2px;"
+                                                   ng-show="application.messages && application.messages.length">
+                                                    {{otherMsgs.length ? otherMsgs.length : 'no'}} received messages
+                                                    <a class="pull-right"
+                                                       ui-sref="applications.view({applicationId: application._id, target: 'message'})">
+                                                        send a new message
+                                                    </a>
+                                                </p>
+
+                                                <p style="margin-bottom: 2px;"
+                                                   ng-hide="application.messages && application.messages.length">
+                                                    discuss the job and schedule an interview
+                                                    <a class="pull-right"
+                                                       ui-sref="applications.view({applicationId: application._id, target: 'message'})">
+                                                        send a new message
+                                                    </a>
+                                                </p>
+                                            </span>
+                                            <span ng-hide="!!application.isConnected">
+                                                <p style="margin-bottom: 2px;">
+                                                    <em class="text-muted" ng-if="user.type === 'owner'">
+                                                        once connected, you will be able to exchange messages with
+                                                        the applicant
+                                                    </em>
+                                                    <em class="text-muted" ng-if="user.type === 'driver'">
+                                                        once connected, you will be able to exchange messages with
+                                                        the employer
+                                                    </em>
+                                                </p>
+                                            </span>
+                                        </div>
+
+                                        </p>
+                                    </div>
+                                    <br class="hidden-lg"/>
+
+                                    <div class="col-lg-2 col-md-3 col-xs-12 text-right">
+                                        <a class="read-more strong"
+                                           style="white-space: nowrap"
+                                           ui-sref="applications.view({applicationId: application._id, action: 'read'})">
+                                            Review&nbsp<i class="fa fa-external-link fa-lg mgn-left"></i>
+                                        </a>
+                                        <br class="visible-lg mgn-vert"/>
+                                        <a class="read-more strong"
+                                           style="white-space: nowrap"
+                                           tooltip="vm.messagingText" tooltip-popup-delay="1000"
+                                           ui-sref="applications.view({applicationId: application._id, action: 'message'})">
+                                            Messages&nbsp;<i class="fa fa-comments-o fa-lg mgn-left"></i>
+                                        </a>
+                                        <!--TODO: Change the "Reject" into a state rather than a callback-->
+                                        <!--<br>-->
+                                        <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->
+                                        <!--ng-click="vm.setApplicationStatus(job.applications[$index], 'rejected', $event, this)">-->
+                                        <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->
+                                        <!--</a>-->
+                                    </div>
+
+
+                                    <div class="list-group" ng-if="!(job.applications && job.applications.length)"
+                                         ng-show="vm.visibleId === job._id">
+                                        <div class="list-group-item text-center">
+                                            <h4>No one has applied to this job yet. Would you like to <a
+                                                    ui-sref="jobs.edit({'jobId':job._id})">edit
+                                                your post?</a></h4>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -102,7 +211,8 @@
                 <!--ng-show="vm.visibleId === application._id || !vm.visibleId">-->
                 <div class="post-inner">
                     <div class="content lead-content">
-                        <img ng-src="{{application.company.profileImageURL}}" ng-if="!!application.company.profileImageURL"
+                        <img ng-src="{{application.company.profileImageURL}}"
+                             ng-if="!!application.company.profileImageURL"
                              class="col-xs-hidden col-sm-2 img-responsive medium">
 
                         <div ng-class="{'col-sm-10':!!application.company.profileImageURL, 'col-sm-12':!application.company.profileImageURL}">

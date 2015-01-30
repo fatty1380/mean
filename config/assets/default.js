@@ -19,7 +19,7 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.js',
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'public/lib/angular-file-upload/angular-file-upload.js',
-                'public/lib/autofill-event/src/autofill-event.js',
+                'public/lib/autofill-event/src/autofill-event.js', /// Needed?
                 'public/lib/textAngular/dist/textAngular-rangy.min.js',
                 'public/lib/textAngular/src/textAngular-sanitize.js',
                 'public/lib/textAngular/src/textAngularSetup.js',

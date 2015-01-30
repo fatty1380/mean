@@ -7,7 +7,7 @@ module.exports = {
         useLocalhost: true
     },
     db: {
-        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset',
+        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
         options: {
             user: '',
             pass: ''  
@@ -78,7 +78,7 @@ module.exports = {
                 accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
                 secretAccessKey: process.env.S3_SECRET_KEY || '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'
             },
-            folder: 'profiles/'
+            folder: 'profiles-dev/'
         },
         fs: {
             writePath: '/tmp/'

@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(app) {
+module.exports = function (app) {
     var users = require('../../../../modules/users/server/controllers/users.server.controller');
     var drivers = require('../controllers/drivers.server.controller');
 
@@ -21,6 +21,11 @@ module.exports = function(app) {
         .get(drivers.read)
         .put(users.requiresLogin, drivers.hasAuthorization, drivers.update)
         .delete(users.requiresLogin, drivers.hasAuthorization, drivers.delete);
+
+
+    app.route('/api/drivers/:driverId/resume')
+        .post(users.requiresLogin, drivers.hasAuthorization, drivers.uploadResume)
+        .get(users.requiresLogin, drivers.refreshResume);
 
     // Finish by binding the Driver middleware
     app.param('driverId', drivers.driverByID);

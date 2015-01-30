@@ -64,10 +64,35 @@
         return ddo;
     }
 
+    function FileUploadDirective() {
+        var ddo = {
+            restrict: 'E',
+            templateUrl: '/modules/users/views/settings/file-upload.client.template.html',
+            scope: {
+                model: '=',
+                title: '@',
+                mode: '@?',
+                apiUrl: '@?',
+                successCallback: '&?',
+                failCallback: '&?',
+                allowBlank: '=?',
+                modelId: '=',
+                uploadBtnClass: '@?',
+                uploadBtnText: '@?'
+            },
+            controller: 'ChangeProfilePictureController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
     angular.module('users') // TODO: Move to UTILS?
         .directive('osPhotoModal', PhotoModalDirective)
         .controller('PhotoModalController', PhotoModalController)
-        .directive('osPictureUploader', PictureUploadDirective);
+        .directive('osPictureUploader', PictureUploadDirective)
+        .directive('osetFileUpload', FileUploadDirective);
         //.controller('PictureUploadController', PictureUploadController);
 
 })();

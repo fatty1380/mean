@@ -62,19 +62,12 @@ var DriverSchema = new Schema({
         }],
         default: []
     },
-
-
-    jobStatuses: {
-        type: [{
-            jobId: String,
-            status: {
-                type: String,
-                enum: ['viewed', 'saved', 'applied', 'hidden'],
-                default: null
-            },
-            time: Date
-        }],
-        default: []
+    
+    resume: {
+        url: String,
+        expires: Date,
+       bucket: String,
+        key: String
     },
 
     isActive: {
