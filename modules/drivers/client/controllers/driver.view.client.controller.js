@@ -14,8 +14,7 @@
                 'You will be applying to jobs with your Driver Profile.',
                 'Applicants who have reports in their Driver Profile are <strong>8-12x more likely to be interviewed!</strong>',
                 'More information in your Profile = better jobs: Include your reports (Background Check etc.), experience and endorsements.',
-                'Show you’re reliable: Get reports like Background Checks, MVR’s & Drug Tests to be hosted in your Profile.',
-                'Jobs will be available on Outset in 1 week, Get your Profile Ready!'
+                'Show you’re reliable: Get reports like Background Checks, MVR’s & Drug Tests to be hosted in your Profile.'
             ]
         };
 
