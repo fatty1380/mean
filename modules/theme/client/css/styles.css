@@ -3392,6 +3392,14 @@ input[type="button"] {
 .no-pad-right {
   padding-right: 0 !important;
 }
+.pad-vert {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+.pad-sides {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
 .pad-left {
   padding-left: 15px !important;
 }
@@ -4070,186 +4078,45 @@ img.user-profile-picture {
 i.fa.fa-stack-1x.text-primary {
   top: -4px;
 }
-header.header {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-header.header.navbar-landing {
-  background-color: rgba(255, 255, 255, 0.9);
-}
-header.header.navbar-landing.navbar-fixed-top {
-  background-color: rgba(255, 255, 255, 0.95);
-}
-header.header h1.logo a {
-  color: #0e2d4c;
-  background-color: transparent !important;
-}
-header.header h1.logo a .logo-title {
-  background-image: url('/modules/core/img/brand/logo-dblue.png');
-}
-header.header .header-profile-image {
-  opacity: 0.8;
-  height: 28px;
-  width: 28px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-header.header .open .header-profile-image,
-header.header a:hover .header-profile-image {
-  opacity: 1;
-}
-header.header .user-header-dropdown-toggle {
-  padding-top: 11px !important;
-  padding-bottom: 11px !important;
-}
 .header {
-  -webkit-transition: background-color 0.4s ease-in-out;
-  -moz-transition: background-color 0.4s ease-in-out;
-  -ms-transition: background-color 0.4s ease-in-out;
-  -o-transition: background-color 0.4s ease-in-out;
+  /* Extra small devices (phones, less than 768px) */
 }
-.header a {
-  -webkit-transition: background-color 0.4s ease-in-out;
-  -moz-transition: background-color 0.4s ease-in-out;
-  -ms-transition: background-color 0.4s ease-in-out;
-  -o-transition: background-color 0.4s ease-in-out;
-  -webkit-transition: background-image 0.4s ease-in-out;
-  -moz-transition: background-image 0.4s ease-in-out;
-  -ms-transition: background-image 0.4s ease-in-out;
-  -o-transition: background-image 0.4s ease-in-out;
+.header .navbar-brand img {
+  position: absolute;
+  top: 8px;
 }
-.header.navbar-fixed-top .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary,
-.header .main-nav .nav .nav-item.nav-item-cta a.btn-cta-secondary:hover {
-  color: #ffffff !important;
+.header .navbar .navbar-right {
+  position: absolute;
+  float: right;
+  right: 5px;
 }
-.header.navbar-fixed-top h1.logo,
-.header h1.logo {
-  font-family: "Roboto Slab", arial, sans-serif;
-  margin-top: 0;
-  margin-bottom: 0;
-  font-weight: bold;
-  font-size: 15px;
-  float: left;
+.header .navbar li a {
+  color: #ec6952;
+  padding-top: 25px;
+  padding-bottom: 8px;
 }
-.header.navbar-fixed-top h1.logo a,
-.header h1.logo a {
-  padding-top: 15px;
-  padding-right: 30px;
-  padding-bottom: 15px;
-  padding-left: 30px;
-  display: inline-block;
-  text-align: center;
-  line-height: 1.4;
-  -webkit-border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-  -webkit-border-top-left-radius: 0;
-  -moz-border-radius-topright: 0;
-  -moz-border-radius-bottomright: 4px;
-  -moz-border-radius-bottomleft: 4px;
-  -moz-border-radius-topleft: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 0;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  position: relative;
-  font-size: 20px;
+.header .navbar li a.btn.btn-cta-secondary {
+  margin-top: 18px;
+  padding-top: 5px!important;
+  padding-top: 3px!important;
 }
-.header.navbar-fixed-top h1.logo a:hover,
-.header h1.logo a:hover {
-  text-decoration: none;
+.header .navbar-collapse.collapse .navbar-nav {
+  vertical-align: bottom;
 }
-.header.navbar-fixed-top h1.logo a .logo-title,
-.header h1.logo a .logo-title {
-  min-width: 108px;
-  min-height: 36px;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.header.navbar-landing .nav li.nav-item:hover {
-  color: white;
-}
-.header .nav li.nav-item {
-  cursor: pointer;
-  cursor: hand;
-}
-/** Responsive Override **/
-@media (min-width: 992px) {
-  .header.navbar-fixed-top h1.logo a {
-    padding-top: 15px;
-    padding-right: 30px;
-    padding-bottom: 15px;
-    padding-left: 30px;
-    -webkit-border-top-right-radius: 0;
-    -webkit-border-bottom-right-radius: 4px;
-    -webkit-border-bottom-left-radius: 4px;
-    -webkit-border-top-left-radius: 0;
-    -moz-border-radius-topright: 0;
-    -moz-border-radius-bottomright: 4px;
-    -moz-border-radius-bottomleft: 4px;
-    -moz-border-radius-topleft: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 0;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-  }
-}
-/* Small devices (tablets, 768px and up) */
-@media (min-width: 768px) {
-  .main-nav.navbar-right {
-    float: right !important;
-  }
-}
-/* Extra small devices (phones, less than 768px) */
 @media (max-width: 767px) {
-  header.header,
-  header.header.navbar-fixed-top,
-  header.header.navbar-fixed-top.navbar-landing {
+  .header,
+  .header .navbar-fixed-top,
+  .header .navbar-fixed-top.navbar-landing {
     height: 40px;
   }
-  header.header h1.logo a,
-  header.header.navbar-fixed-top h1.logo a,
-  header.header.navbar-fixed-top.navbar-landing h1.logo a {
-    padding-top: 2px;
-    padding-right: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    -webkit-border-top-right-radius: 0;
-    -webkit-border-bottom-right-radius: 0;
-    -webkit-border-bottom-left-radius: 0;
-    -webkit-border-top-left-radius: 0;
-    -moz-border-radius-topright: 0;
-    -moz-border-radius-bottomright: 0;
-    -moz-border-radius-bottomleft: 0;
-    -moz-border-radius-topleft: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    background-color: transparent;
-  }
-  header.header h1.logo a .logo-title,
-  header.header.navbar-fixed-top h1.logo a .logo-title,
-  header.header.navbar-fixed-top.navbar-landing h1.logo a .logo-title {
-    background-image: url('/modules/core/img/brand/logo-dblue.png');
-    background-size: 50%;
-  }
-  header.header .main-nav,
-  header.header.navbar-fixed-top .main-nav,
-  header.header.navbar-fixed-top.navbar-landing .main-nav {
+  .header .main-nav,
+  .header .navbar-fixed-top .main-nav,
+  .header .navbar-fixed-top.navbar-landing .main-nav {
     margin-top: 0;
   }
-  header.header .main-nav .navbar-toggle,
-  header.header.navbar-fixed-top .main-nav .navbar-toggle,
-  header.header.navbar-fixed-top.navbar-landing .main-nav .navbar-toggle {
+  .header .main-nav .navbar-toggle,
+  .header .navbar-fixed-top .main-nav .navbar-toggle,
+  .header .navbar-fixed-top.navbar-landing .main-nav .navbar-toggle {
     top: 3px;
   }
 }

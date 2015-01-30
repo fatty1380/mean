@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function HomeController($scope, $location, $state, $anchorScroll, $modal, $log, Authentication) {
+    function HomeController($scope, $location, $timeout, $anchorScroll, $document, $log, Authentication) {
         // This provides Authentication context.
         $scope.authentication = Authentication;
 
@@ -34,9 +34,18 @@
             // call $anchorScroll()
             $anchorScroll();
         };
+
+        if($location.hash()) {
+           var element = angular.element(document.getElementById($location.hash()));
+
+            $timeout(function() {
+                $document.scrollToElementAnimated(element);
+            }, 100);
+
+        }
     }
 
-    HomeController.$inject = ['$scope', '$location', '$state', '$anchorScroll', '$modal', '$log', 'Authentication'];
+    HomeController.$inject = ['$scope', '$location', '$timeout', '$anchorScroll', '$document', '$log', 'Authentication'];
 
     angular
         .module('core')

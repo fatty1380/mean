@@ -8,7 +8,7 @@
             title: '<i class="fa fa-home fa-lg"/>',
             state: 'companies.home',
             userTypes: ['owner'],
-            position: 100
+            position: 1
         });
 
         Menus.addMenuItem('adminbar', {

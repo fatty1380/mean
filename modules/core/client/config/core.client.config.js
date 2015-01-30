@@ -80,9 +80,11 @@
         });
     }
 
-    function scrollTopChange($rootScope, $document, $log) {
+    function scrollTopChange($rootScope, $document, $location) {
         $rootScope.$on('$stateChangeSuccess', function () {
-            $document.scrollTo(-50, 0);
+            if(!$location.hash()) {
+                $document.scrollTo(-50, 0);
+            }
         });
     }
 
@@ -96,7 +98,7 @@
         });
     }
 
-    scrollTopChange.$inject = ['$rootScope', '$document', '$log'];
+    scrollTopChange.$inject = ['$rootScope', '$document', '$location'];
     reroute.$inject = ['$rootScope', '$state', 'Authentication', '$log'];
     GoogleAnalyticsRouter.$inject = ['$rootScope', '$location', '$window'];
 

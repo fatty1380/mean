@@ -36,7 +36,7 @@
 
             state('superbase', {
                 abstract:true,
-                template: '<div ui-view class="superbase" autoscroll="true"></div>',
+                template: '<div ui-view class="superbase"></div>',
                 params: {
                     'delay' : {
                         value: '0',

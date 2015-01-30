@@ -7,7 +7,7 @@
         Menus.addMenuItem('topbar', {
             title: '<i class="fa fa-home fa-lg"/>',
             state: 'drivers.home',
-            position: 100,
+            position: 1,
             userTypes: ['driver']
         });
 
