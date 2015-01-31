@@ -30,7 +30,7 @@
 
         function activate() {
             if (!!vm.driver) {
-                // TODO - fix this shit logic
+                // TODO - fix this logic
                 vm.user = vm.driver.user;
                 vm.canEdit = vm.user._id === Authentication.user._id;
 

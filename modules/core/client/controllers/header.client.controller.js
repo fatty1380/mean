@@ -14,7 +14,7 @@
             $scope.menu = Menus.getMenu('topbar');
             //$scope.navbarClass = 'navbar-default';
         }
-        $scope.stateLink = 'intro()#top';
+        $scope.stateLink = '';
 
         // Toggle the menu items
         $scope.isCollapsed = false;
