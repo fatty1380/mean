@@ -31,6 +31,8 @@ exports.executeQuery = function (req, res, next) {
         req.populate = _.union(populate, req.populate);
     }
 
+    query.isDeleted = req.params && !!req.params.includeDeleted;
+
     var base = Job.find(query)
         .populate('user', 'displayName')
         .populate('company')
