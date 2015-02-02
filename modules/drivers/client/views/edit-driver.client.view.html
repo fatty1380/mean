@@ -49,15 +49,17 @@
                     </small>
                 </h3>
 
+                <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
+
                 <div class="container-fluid well">
                     <div class="row profile-row">
                         <div class="col-sm-12">
                             <div class="form-group "
                                  ng-show="vm.driver.experience && !!vm.driver.experience.length">
                                 <div data-ng-repeat="exp in vm.driver.experience" name="experience">
-                                    <os-driver-experience model="exp" edit-enable="true" edit-mode="false"
+                                    <oset-experience-item model="exp" edit-enable="true" edit-mode="false"
                                                           add-fn="vm.addExperience" is-last="$last"
-                                                          drop-fn="vm.dropExperience"></os-driver-experience>
+                                                          drop-fn="vm.dropExperience"></oset-experience-item>
                                     <hr>
                                 </div>
                             </div>

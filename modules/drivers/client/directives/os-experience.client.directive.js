@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    function ExperienceDirectiveController(AppConfig) {
+    function ExperienceItemController(AppConfig) {
 
         var vm = this;
 
@@ -17,12 +17,12 @@
 
         vm.revertValue = angular.copy(vm.model);
 
-        vm.edit = function() {
+        vm.edit = function () {
             vm.revertValue = angular.copy(vm.model);
             vm.isEditing = true;
         };
 
-        vm.cancel = function() {
+        vm.cancel = function () {
             debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
@@ -39,8 +39,8 @@
         };
 
 
-        vm.save = function(action) {
-            if(vm.experienceForm.$pristine && vm.model.isFresh) {
+        vm.save = function (action) {
+            if (vm.experienceForm.$pristine && vm.model.isFresh) {
                 if (vm.dropFn) {
                     vm.dropFn(vm.model);
                 } else {
@@ -51,7 +51,7 @@
                 return true;
             }
 
-            if(vm.experienceForm.$valid) {
+            if (vm.experienceForm.$valid) {
                 vm.model.isFresh = false;
                 if (action === 'add') {
                     var addMore = vm.push();
@@ -67,10 +67,10 @@
         };
 
 
-        vm.getDateRange = function(time) {
-            var s,e;
+        vm.getDateRange = function (time) {
+            var s, e;
 
-            if(time.start && (s = moment(time.start))) {
+            if (time.start && (s = moment(time.start))) {
                 if (time.end && (e = moment(time.end))) {
                     return s.format('MMMM, YYYY') + ' - ' + e.format('MMMM, YYYY');
                 }
@@ -94,15 +94,69 @@
                 dropFn: '&?',
                 isLast: '=?'
             },
-            controller: ExperienceDirectiveController,
+            controller: 'ExperienceItemController',
             controllerAs: 'vm',
             bindToController: true
         };
     }
 
-    ExperienceDirectiveController.$inject = ['AppConfig'];
+    ExperienceItemController.$inject = ['AppConfig'];
 
-    angular.module('drivers').directive('osDriverExperience', ExperienceDirective);
+    function ExperienceListController() {
+        var vm = this;
+
+        vm.drop = drop;
+        vm.add = add;
+
+
+        function drop(exp) {
+            exp = exp || vm.exp;
+
+            if (exp) {
+                for (var i in vm.models) {
+                    if (vm.models[i] === exp) {
+                        vm.models.splice(i, 1);
+                    }
+                }
+            }
+        }
+
+        function add() {
+
+            vm.models.push({
+                text: '',
+                time: {
+                    start: {},
+                    end: {}
+                },
+                location: '',
+                isFresh: true
+            });
+        }
+    }
+
+    function ExperienceListDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: 'modules/drivers/views/templates/experience-list.client.template.html',
+            restrict: 'E',
+            scope: {
+                models: '=list',
+                canEdit: '=?'
+            },
+            controller: 'ExperienceListController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
+    angular.module('drivers')
+        .controller('ExperienceItemController', ExperienceItemController)
+        .directive('osetExperienceItem', ExperienceDirective)
+        .controller('ExperienceListController', ExperienceListController)
+        .directive('osetExperienceList', ExperienceListDirective);
 
 
 })();

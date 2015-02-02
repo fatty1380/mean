@@ -1,0 +1,26 @@
+
+<div class="container-fluid">
+    <div class="row profile-row">
+        <div class="col-sm-12">
+            <div class="form-group "
+                 ng-show="vm.models && !!vm.models.length">
+                <div data-ng-repeat="exp in vm.models">
+                    <oset-experience-item model="exp" edit-enable="true" edit-mode="false"
+                                          add-fn="vm.add()" is-last="$last"
+                                          drop-fn="vm.drop()">
+                    </oset-experience-item>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row profile-row">
+        <div class="col-sm-12 text-center">
+            <button type="button" class="btn btn-oset-primary" ng-click="vm.add()"
+                    ng-hide="vm.models && vm.models.length > 0">
+                <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Experience
+            </button>
+        </div>
+    </div>
+</div>

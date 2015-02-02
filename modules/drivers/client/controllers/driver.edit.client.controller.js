@@ -28,8 +28,6 @@
         vm.update = update;
         vm.create = create;
         vm.cancel = cancel;
-        vm.dropExperience = dropExperience;
-        vm.addExperience = addExperience;
 
         function activate() {
 
@@ -116,34 +114,6 @@
                 }
             }, function (errorResponse) {
                 vm.error = errorResponse.data.message;
-            });
-        }
-
-        // TODO: Move to "Experience" controller
-
-
-        function dropExperience(exp) {
-            exp = exp || vm.exp;
-
-            if (exp) {
-                for (var i in vm.driver.experience) {
-                    if (vm.driver.experience[i] === exp) {
-                        vm.driver.experience.splice(i, 1);
-                    }
-                }
-            }
-        }
-
-        function addExperience() {
-
-            vm.driver.experience.push({
-                text: '',
-                time: {
-                    start: {},
-                    end: {}
-                },
-                location: '',
-                isFresh: true
             });
         }
 
