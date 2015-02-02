@@ -1,25 +1,25 @@
 (function() {
     'use strict';
 
-    function SignupModalDirective() {
+    function SignupApplyModalDirective() {
         return {
             transclude: true,
-            templateUrl: 'modules/users/views/templates/signup-modal.client.template.html',
+            templateUrl: 'modules/users/views/templates/signup-apply.client.template.html',
             restrict: 'EA',
             scope: {
-                signin: '&',
+                signin: '&?',
                 title: '@?',
                 signupType: '@?',
                 srefText: '@?',
                 job: '=?'
             },
-            controller: 'SignupModalController',
+            controller: 'SignupApplyModalController',
             controllerAs: 'vm',
             bindToController: true
         };
     }
 
-    function SignupModalController($modal, $log, $attrs) {
+    function SignupApplyModalController($modal, $log, $attrs) {
         var vm = this;
 
         vm.isOpen = false;
@@ -32,10 +32,10 @@
             };
         }
 
-        vm.showSignup = function() {
+        vm.show = function() {
             var modalInstance = $modal.open({
-                templateUrl: 'signupModal.html',
-                controller: 'SignupController',
+                templateUrl: 'signupApplyModal.html',
+                controller: 'SignupApplyController',
                 size: 'lg',
                 resolve: {
                     signupType: function() { return vm.signupType; },
@@ -59,17 +59,37 @@
         };
     }
 
-    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, srefRedirect, $document) {
+    function SignupApplyController($http, $state, $modalInstance, $log, Authentication, signupType, srefRedirect, $document) {
         var vm = this;
+
         vm.auth = Authentication;
-        vm.credentials = { signupType: signupType, terms: '' };
         vm.srefRedirect = srefRedirect;
-
         vm.extraText = vm.srefRedirect && vm.srefRedirect.text  || null;
+        vm.currentStep = 0;
 
-        vm.selectType = function(type, $event) {
-            vm.credentials.signupType = type;
-            $document.scrollTopAnimated(0, 300);
+
+        vm.credentials = { signupType: signupType, terms: '' };
+        vm.driver = {experience: [], licenses: [{}], interests: []};
+        vm.application = {};
+
+        vm.nextStep = function(event) {
+            var stepForm = vm['subForm' + vm.currentStep];
+            if( stepForm.$invalid) {
+                _.map(stepForm.$error, function(errorType) {
+                    _.map(errorType, function(item) {
+                        item.$setDirty(true);
+                    });
+                });
+                vm.error = 'please correct the errors above';
+                return;
+            }
+
+            vm.error = null;
+            vm.currentStep++;
+        };
+
+        vm.prevStep = function() {
+            vm.currentStep--;
         };
 
         vm.signup = function(event) {
@@ -125,12 +145,12 @@
         };
     }
 
-    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
-    SignupModalController.$inject = ['$modal', '$log', '$attrs'];
+    SignupApplyController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
+    SignupApplyModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')
-        .directive('signupModal', SignupModalDirective)
-        .controller('SignupModalController', SignupModalController)
-        .controller('SignupController', SignupController);
+        .directive('osetSignupApplyModal', SignupApplyModalDirective)
+        .controller('SignupApplyModalController', SignupApplyModalController)
+        .controller('SignupApplyController', SignupApplyController);
 
 })();
