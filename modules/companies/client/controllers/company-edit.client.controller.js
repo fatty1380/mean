@@ -9,7 +9,7 @@
         else if (typeof auth.user.company === 'string' && auth.user.company !== company._id) {
             return $state.go('home');
         }
-        else if (typeof auth.user.company === 'object' &&  auth.user.company._id === company._id) {
+        else if (!!auth.user.company && typeof auth.user.company === 'object' &&  auth.user.company._id === company._id) {
             return $state.go('home');
         }
 
