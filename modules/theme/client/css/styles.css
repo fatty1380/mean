@@ -4519,6 +4519,10 @@ tos ol > li {
 .outset-list .job-list .post .content.lead-content {
   padding-left: 140px;
 }
+.application-list .job-list .post .content.lead-content h3.post-title,
+.outset-list .job-list .post .content.lead-content h3.post-title {
+  margin-right: 160px;
+}
 .application-list .job-list .post .content .list-picture,
 .outset-list .job-list .post .content .list-picture {
   display: inline-block;
