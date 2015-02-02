@@ -20,20 +20,26 @@
 
                     <p class="info">Lets get started with your email address:</p>
 
-                    <div class="form-group">
+                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 
                         <label for="email" class="control-label">Email</label>
 
-                        <div class="">
-                            <input type="email" id="email" name="email" class="form-control"
-                                   data-ng-model="vm.credentials.email"
-                                   placeholder="Email" ng-required="true">
+                        <input modal-focus="true" type="email" id="email" name="email"
+                               class="form-control" debounce
+                               data-ng-model="vm.credentials.email"
+                               placeholder="Email" ng-required="true">
 
-                        <span ng-show="vm.subForm0.email.$error.required"
-                              class="help-inline">Required</span>
-                        </div>
+                        <span class="form-control-feedback"
+                              ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">
+                            <i class="fa fa-check"></i>
+                        </span>
+                        <span class="form-control-feedback"
+                              ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">
+                            <i class="fa fa-times" tootltip="Please enter an email address"></i>
+                        </span>
 
                     </div>
+                    <p class="info col-xs-12">This is my email: {{vm.credentials.email}}</p>
                 </div>
 
             </section>
@@ -41,22 +47,39 @@
             <section class="row" id="step_1_basics"
                      ng-form="vm.subForm1" ng-show="true || vm.currentStep === 1">
                 <div class="col-sm-12">
+                    <p class="info">Please enter some basic identifying information about yourself</p>
                     <!--Enter your name-->
-                    <div class="form-group">
-                        <label class="control-label">Your Name</label>
+                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                        <label class="control-label col-xs-12">Your Name</label>
 
-                        <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'driver'"
-                               type="text" ng-required="true" id="firstName" name="firstName" class="form-control"
-                               data-ng-model="vm.credentials.firstName" placeholder="First Name">
-
-                        <input type="text" id="lastName" name="lastName" class="form-control"
-                               data-ng-model="vm.credentials.lastName" placeholder="Last Name"
-                               ng-required="true">
-
+                        <div class="col-xs-6">
+                            <input type="text" id="firstName" name="firstName"
+                                   class="form-control" debounce ng-required="true"
+                                   data-ng-model="vm.credentials.firstName" placeholder="First Name">
+                        </div>
+                        <div class="col-xs-6">
+                            <input type="text" id="lastName" name="lastName"
+                                   class="form-control" debounce ng-required="true"
+                                   data-ng-model="vm.credentials.lastName" placeholder="Last Name">
+                        </div>
                     </div>
 
-                    <p class="verify">Your name will appear as {{vm.credentials.firstName}}
-                        {{vm.credentials.lastName}}</p>
+                    <p class="verify col-xs-12 text-center">
+                        Your name will appear as <strong>{{vm.credentials.firstName || '_________'}}
+                        {{vm.credentials.lastName || '_________'}}</strong>
+                    </p>
+                    </div>
+                <div class="col-xs-12">
+                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                        <label class="control-label col-xs-12">Your Zip Code</label>
+
+                        <div class="col-xs-6">
+                            <input type="text" id="firstName" name="firstName"
+                                   class="form-control" debounce ng-required="true"
+                                   data-ng-model="vm.credentials.firstName" placeholder="First Name">
+                        </div>a
+                    </div>
+                </div>
 
                     <!--What are you interested in -->
                     <div class="form-group">
@@ -84,9 +107,9 @@
                 <div class="col-sm-12">
                     <!--Cover Letter-->
                     <div class="form-group">
-                        <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading"></span>
+                        <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading || 'Cover Letter'"></span>
 
-                        <p class="text-muted text-center" ng-bind-html="vm.placeholders.messageSubHeading"></p>
+                        <p class="text-muted text-center" ng-bind-html="vm.placeholders.messageSubHeading || 'Please introduce yourself to the employer in a brief letter'"></p>
 
                         <div class="controls">
                     <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"
