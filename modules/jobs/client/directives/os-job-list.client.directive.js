@@ -1,75 +1,199 @@
 (function () {
     'use strict';
 
-    function JobListController(Jobs, $log, $state, auth) {
-        var dm = this;
+    function JobListController(Jobs, $log, $state, $location, config, auth, params) {
+        var vm = this;
 
-        // TODO : LAUNCH DISABLE FUNCTIONALITY
-        dm.isEnabled = false;
+        vm.visibleId = params.itemId;
+        vm.visibleTab = params.tabName;
 
-        dm.limitTo = dm.limitTo || 10;
-        dm.filter = {'company': undefined};
+        vm.config = vm.config || config.getModuleConfig(auth.user.type, 'jobs')
+            .then(function (success) {
+                vm.config = success;
+            });
 
-        dm.myJobsOnly = false;
+        config.getAsync('debug').then(function (success) {
+            vm.debug = !!success;
+        });
 
-        if (!dm.companyId && !dm.driverId && !dm.srcJobs) {
-            $log.warn('[%s] should Specify a company or driver, or set srcJobs pre-load', 'JobListController');
+        vm.showSearch = vm.showSearch === undefined ? true : !!vm.showSearch;
+        vm.limitTo = vm.limitTo || 100;
+        vm.filter = {};
 
-            if ($state.includes('jobs')) {
-                $log.error('[%s] Routing back to user\'s home page', 'JobListController');
-                $state.go('home');
+        vm.user = auth.user;
+        vm.myJobsOnly = false;
+
+        function activate() {
+
+            if (!vm.companyId && !vm.driverId && !vm.srcJobs) {
+                $log.warn('[%s] should Specify a company or driver, or set srcJobs pre-load', 'JobListController');
+
+                if ($state.includes('jobs')) {
+                    $log.error('[%s] Routing back to user\'s home page', 'JobListController');
+                    $state.go('home');
+                }
+            }
+
+            if (!!vm.companyId && !!vm.driverId) {
+                $log.warn('[%s] Both company and driver specified, defaulting to company', 'JobListController');
+            }
+
+            if (!!vm.srcJobs && vm.srcJobs.length >= 0) {
+                vm.jobs = vm.srcJobs;
+            }
+            else if (!!vm.companyId) {
+                vm.filter.company = {'_id': vm.companyId};
+                vm.myJobsOnly = true;
+
+                vm.jobs = Jobs.ByCompany.query({
+                    companyId: vm.companyId
+                });
+            } else if (!!vm.driverId) {
+                vm.jobs = Jobs.ByUser.query({
+                    userId: vm.driverId
+                });
+            } else {
+                vm.jobs = [];
+            }
+
+            if(!!vm.visibleId && !_.find(vm.jobs, {'_id':vm.visibleId})) {
+                vm.visibleId = vm.visibleTab = null;
+                $state.transitionTo('jobs.list', {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
             }
         }
 
-        if (!!dm.companyId && !!dm.driverId) {
-            $log.warn('[%s] Both company and driver specified, defaulting to company', 'JobListController');
-        }
-
-        if (!!dm.srcJobs && dm.srcJobs.length >= 0) {
-            dm.jobs = dm.srcJobs;
-        }
-        else if (!!dm.companyId) {
-            dm.jobs = Jobs.ByCompany.query({
-                companyId: dm.companyId
-            });
-        } else if (!!dm.driverId) {
-            dm.jobs = Jobs.ByUser.query({
-                userId: dm.driverId
-            });
-        } else {
-            dm.jobs = [];
-        }
-
-        dm.showMore = function () {
-            dm.limitTo += 10;
+        vm.showMore = function () {
+            vm.limitTo += 100;
         };
 
-        dm.toggleFilterMine = function () {
-            if ((dm.myJobsOnly = !dm.myJobsOnly)) {
-                dm.filter.company = { owner: auth.user._id };
+        vm.toggleFilterMine = function () {
+            // Toggling into the filtered state
+            if (!vm.filters.mine) {
+                vm.filter.company = {'_id': vm.companyId};
             }
             else {
-                dm.filter.company = undefined;
+                if (vm.filter.hasOwnProperty('company')) {
+                    delete vm.filter['company'];
+                }
+            }
+            vm.filters.clear = !(vm.filters.today || vm.filters.week || vm.filters.unseen || !vm.filters.mine);
+        };
+
+        var filterProto = {
+            numDays: 0,
+            day: false,
+            week: false,
+            unseen: false,
+            mine: false,
+            clear: true
+        };
+
+        vm.filters = _.clone(filterProto);
+
+        vm.toggleFilter = function(filter) {
+            var predicate = '';
+            switch(filter) {
+                case 'today':
+                    if(vm.filters.numDays === 1) {
+                        vm.filters.numDays = 0;
+                    } else {
+                        vm.filters.week = false;
+                        vm.filters.numDays = 1;
+                        vm.filters.clear = false;
+                    }
+                    break;
+                case 'week':
+                    if(vm.filters.numDays === 7) {
+                        vm.filters.numDays = 0;
+                    } else {
+                        vm.filters.day = false;
+                        vm.filters.numDays = 7;
+                        vm.filters.clear = false;
+                    }
+                    break;
+                case 'unseen':
+                    break;
+                case 'clear':
+                    vm.filters = _.clone(filterProto);
+                    return;
             }
         };
 
-        dm.searchTermFilter = function(job) {
-            if(!dm.searchTerms) {
+        function filterToggle(name, predicate) {
+
+            var val = vm.filters[name];
+
+            if(!!val) {
+                vm.filter[name] = predicate;
+            } else {
+                if (vm.filter.hasOwnProperty(name)) {
+                    delete vm.filter[name];
+                }
+            }
+        }
+
+        vm.predicate = '';
+        vm.reverse = true;
+
+        vm.toggleSort = function(field, reverse) {
+
+            if(field === vm.predicate) {
+                vm.reverse = !vm.reverse;
+            } else {
+                vm.predicate = field;
+                vm.reverse = !!reverse;
+            }
+        };
+
+        vm.random = function(item){
+
+            if(!!vm.predicate) {
+                return 1;
+            }
+
+            if(item.rand) {
+                return item.rand;
+            }
+
+            item.rand = 0.5 + Math.random();
+            return item.rand;
+        };
+
+        vm.searchTermFilter = function (job) {
+            if (!vm.searchTerms) {
                 return true;
             }
 
-            var terms = dm.searchTerms.split(' ');
-            var reg = new RegExp('(?=' + terms.join(')(?=') + ')');
+            var terms = vm.searchTerms.split(' ');
+            var reg = new RegExp('(?=' + terms.join(')(?=') + ')','i');
 
             job.searchText = job.searchText || [job.name, job.description, job.requirements].join(' ');
 
             return reg.test(job.searchText);
         };
+
+        vm.showTab = function (jobId, tabName, count) {
+            if(tabName === 'applicants' && !!count) {
+                // REDIRECT to applicant list for this
+                return $state.go('applications.list', {itemId: jobId, tabName: tabName});
+            }
+
+            if(!!vm.visibleId && vm.visibleTab === tabName) {
+                vm.visibleId = vm.visibleTab = null;
+            } else {
+                vm.visibleId = jobId;
+                vm.visibleTab = tabName;
+            }
+
+            $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
+            $location.search({'itemId':vm.visibleId, 'tabName':vm.visibleTab});
+        };
+
+        activate();
     }
 
     function JobListDirective() {
         return {
-
             templateUrl: 'modules/jobs/views/templates/job-list.client.template.html',
             restrict: 'E',
             replace: false,
@@ -79,17 +203,33 @@
                 driverId: '@?',
                 srcJobs: '=?',
                 showPost: '=?',
-                limitTo: '=?'
+                limitTo: '=?',
+                config: '=?',
+                showSearch: '=?',
+                btnClass: '@?'
             },
-            controller: JobListController,
-            controllerAs: 'dm',
+            controller: 'JobListController',
+            controllerAs: 'vm',
             bindToController: true
         };
     }
 
-    JobListController.$inject = ['Jobs', '$log', '$state', 'Authentication'];
+    JobListController.$inject = ['Jobs', '$log', '$state', '$location', 'AppConfig', 'Authentication', '$stateParams'];
 
     angular.module('jobs')
+        .controller('JobListController', JobListController)
         .directive('osJobList', JobListDirective);
+
+    angular.module('core').filter('withinPastDays', function(){
+        return function(items, field, days){
+            if(!days) { return items.filter(function(){return true;}); }
+
+            var timeStart = moment().subtract(days, 'days');
+            console.log('filtering back %s days to %s', days, timeStart.format('L'));
+            return items.filter(function(item){
+                return (moment(item[field]).isAfter(timeStart));
+            });
+        };
+    });
 
 })();

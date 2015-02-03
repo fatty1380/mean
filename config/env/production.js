@@ -5,7 +5,7 @@ console.log('env.production: BTREE: %s', process.env.BRAINTREE_MERCHANT_ID);
 
 module.exports = {
     db: {
-        uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'ec2-54-148-79-252.us-west-2.compute.amazonaws.com') + '/outset',
+        uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'ec2-54-148-79-252.us-west-2.compute.amazonaws.com') + (process.env.MONGO_DB_NAME || '/outset'),
         options: {
             user: '',
             pass: ''
@@ -16,10 +16,44 @@ module.exports = {
         keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
     },
     https: {
-        enabled: true,
+        enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
         port: 443,
-        privateKeyPath: '',
-        publicKeyPath: ''
+        privateKeyPath: process.env.PRIVATE_KEY_PATH || './config/sslcerts/key.pem',
+        publicKeyPath: process.env.PUBLIC_KEY_PATH || './config/sslcerts/cert.pem',
+        passphrase: null
+    },
+    modules: {
+        driver: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company: {
+                view: true
+            }
+        },
+        owner: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company : {
+                create : true,
+                edit: true
+            }
+        }
     },
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
@@ -38,7 +72,7 @@ module.exports = {
             CSEKey: process.env.BRAINTREE_CSE_KEY || 'MIIBCgKCAQEAqg9Cl9ZeRFqEEfjOHUrNQmz4b4W4hSPoVy55yG5BMaOVI2K+tpWyERW3QSNZ85hr4OTq8j3ywWdXEKpkjChQP01zsrfM6Iz+wsiLUgUVbjJAx2hCTUMvAJkYGgUVXD6ViO0NG0mMGMWtcL7sz1F0hY3GnRX9TbBAYh4Rvd/uRZwlHCpHWLHmVhwzglbMxQYi9U3XRlKqRv/GVaupveuNQ4zCX32QBrv2FiBp3ICkpgfABAU7kSRV/91g+jDlSa2phJsYVbUJ3A/JcE8Uw2QJlhmd0HwmSeGTAW5VNDO+0lxrnIwE+KyWDX26U9/PhXLMlYaPvQzsxt1BoYK+YmduQwIDAQAB'
         },
         google: {
-            analyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
+            analyticsTrackingID: process.env.DISABLE_GA ? null : process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'UA-52626400-1'
         },
         s3: {
             enabled: true,
@@ -47,10 +81,13 @@ module.exports = {
                 accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
                 secretAccessKey: process.env.S3_SECRET_KEY || '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'
             },
-            folder: 'profiles/'
+            folder: 'profiles'
         },
         fs: {
             writePath: '/tmp/'
+        },
+        hipchat: {
+            apiToken: '7ed389522a6b4b664521eb6e683056'
         }
     },
     reports: {},

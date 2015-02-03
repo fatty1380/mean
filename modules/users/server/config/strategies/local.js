@@ -14,8 +14,11 @@ module.exports = function() {
 			passwordField: 'password'
 		},
 		function(username, password, done) {
+
+            var regexSearch = new RegExp('^' + escapeRegExp(username.toLowerCase()) + '$', 'i');
+
 			User.findOne({
-				username: username
+                username: { $regex: regexSearch }
 			}, function(err, user) {
 				if (err) {
 					return done(err);
@@ -38,3 +41,7 @@ module.exports = function() {
 		}
 	));
 };
+
+function escapeRegExp(string){
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}

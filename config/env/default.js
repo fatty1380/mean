@@ -6,7 +6,7 @@ module.exports = {
         runtimeMode: process.env.NODE_ENV
     },
     db: {
-        uri: 'mongodb://localhost/outset-dev',
+        uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/outset-dev',
         options: {
             user: '',
             pass: ''
@@ -17,6 +17,38 @@ module.exports = {
         port: 0,
         privateKeyPath: '',
         publicKeyPath: ''
+    },
+    modules: {
+        driver: {
+            jobs : {
+                list: false,
+                view: false,
+                create: false
+            },
+            applications : {
+                list: false,
+                view: false,
+                create: false
+            },
+            company : {
+                view: false
+            }
+        },
+        owner: {
+            jobs : {
+                list: false,
+                view: false,
+                create: false
+            },
+            applications : {
+                list: false,
+                view: false,
+                create: false
+            },
+            company : {
+                create : false
+            }
+        }
     },
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
@@ -51,6 +83,9 @@ module.exports = {
         },
         fs: {
             writePath: './modules/users/client/img/profile/uploads/'
+        },
+        hipchat: {
+            apiToken: ''
         }
     },
     port: process.env.PORT || 3000,

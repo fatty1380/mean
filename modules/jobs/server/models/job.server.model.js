@@ -4,20 +4,26 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Address = mongoose.model('Address'),
-    Company = mongoose.model('Company'),
-    Schema = mongoose.Schema;
+Address      = mongoose.model('Address'),
+Company      = mongoose.model('Company'),
+Schema       = mongoose.Schema;
 
 /**
  * Job Schema
  */
 var JobSchema = new Schema({
 
+    /**
+     * The User who posted the job
+     */
     user: {
         type: Schema.ObjectId,
         ref: 'User'
     },
 
+    /**
+     * The company who is hiring for the job
+     */
     company: {
         type: Schema.ObjectId,
         ref: 'Company'
@@ -36,23 +42,26 @@ var JobSchema = new Schema({
         trim: true
     },
 
-    requirements: [{
+    requirements: {
         type: String,
         trim: true,
-        default: '',
-        match: [/("<\/?[biu]>"|[^<>]){1,110}/, 'Please keep requirements under 100 characters']
-    }],
+        default: ''
+    },
 
     location: ['Address'],
 
     payRate: {
         min: {
             type: Number,
-            default: 0
+            default: null
         },
         max: {
             type: Number,
-            default: 0
+            default: null
+        },
+        period: {
+            type: String,
+            default: null
         }
     },
 
@@ -66,6 +75,24 @@ var JobSchema = new Schema({
             default: Date.now
         }
     }],
+
+    applications: [{
+        type: Schema.ObjectId,
+        ref: 'Application'
+    }],
+
+    categories: {
+        type: [{
+            key: String,
+            value: Boolean
+        }],
+        default: []
+    },
+
+    externalApplicationLink: {
+        type: String,
+        default: null
+    },
 
     postStatus: {
         type: String,
@@ -88,11 +115,28 @@ var JobSchema = new Schema({
         type: Date,
         default: Date.now
     }
+}, {toJSON: {virtuals: true}});
+
+
+JobSchema.pre('save', function (next) {
+    this.modified = Date.now();
+    next();
 });
 
-JobSchema.pre('save', function(next) {
-    this.modified = Date.now;
-    next();
+JobSchema.virtual('payString').get(function () {
+    var retval = '';
+
+    if (!!this.payRate.min) {
+        retval = '$' + this.payRate.min;
+    }
+    if (!!this.payRate.max) {
+        retval += (!!retval ? ' to $' : '$') + this.payRate.max;
+    }
+    if (!!retval && !!this.payRate.period) {
+        retval += ' per ' + this.payRate.period;
+    }
+
+    return retval;
 });
 
 mongoose.model('Job', JobSchema);

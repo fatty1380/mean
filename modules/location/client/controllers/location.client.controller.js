@@ -6,8 +6,25 @@
 
         vm.search = 'United States';
         vm.range = null;
-        vm.showCircle = true;
-        vm.radiusMod = 1;
+        vm.precision = vm.precision || 'approximate';
+
+        switch(vm.precision) {
+            case 'approximate':
+                vm.circle = true;
+                vm.marker = false;
+                vm.radMod = 1.25;
+                break;
+            case 'exact':
+                vm.marker = true;
+                vm.circle = false;
+                vm.radMod = 1;
+                break;
+            default:
+                vm.circle = true;
+                vm.marker = false;
+                vm.radMod = 1;
+
+        }
 
         if (!vm.address && !!vm.addresses && !!vm.addresses.length) {
             vm.address = vm.addresses[0];
@@ -15,29 +32,34 @@
 
         function getSearchString() {
             var str = '';
-            vm.showCircle = true;
-            vm.radiusMod = 1;
+            vm.showCircle = vm.circle;
+            vm.showMarker = vm.marker;
+            vm.radiusMod = vm.radMod;
 
             //str = !!vm.address.streetAddresses ? vm.address.streetAddresses.join(' ').trim() : '';
             str += vm.address && !!vm.address.city ? (!!str ? ', ' : '') + vm.address.city : '';
             str += vm.address && !!vm.address.state ? (!!str ? ', ' : '') + vm.address.state : '';
 
             if (!str.trim()) {
+                console.log('Mapping to string: %s', str.trim());
                 if (vm.address && vm.address.zipCode) {
                     str = vm.address.zipCode;
-                    vm.radiusMod = 3;
+                    vm.radiusMod = vm.radMod * 1.5;
                 }
                 else if (!!vm.zipCode) {
                     str = vm.zipCode;
-                    vm.radiusMod = 3;
+                    vm.radiusMod = vm.radMod * 2;
+                    vm.showCircle = true;
+                    vm.showMarker = false;
                 }
                 else {
                     str = 'United States';
                     vm.showCircle = false;
+                    vm.showMarker = false;
                 }
 
             } else {
-                vm.radiusMod = 1;
+                vm.radiusMod = vm.radMod;
             }
 
             $log.debug('new search : %s', str);
@@ -95,6 +117,13 @@
                     radius: r
                 });
             }
+
+            if(vm.showMarker) {
+                vm.mapMarker = new google.maps.Marker({
+                    position: center,
+                    map: vm.map
+                });
+            }
         };
 
 
@@ -124,6 +153,10 @@
 
                     if (vm.range) {
                         vm.range.setMap(null);
+                    }
+
+                    if(!!vm.mapMarker) {
+                        vm.mapMarker.setMap(null);
                     }
 
                     vm.geoCode();

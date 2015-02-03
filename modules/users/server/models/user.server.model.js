@@ -106,6 +106,22 @@ var UserSchema = new Schema({
     },
 
     /**
+     * Driver & Company Links
+     */
+    driver: {
+        type: Schema.ObjectId,
+        ref: 'Driver',
+        default: null
+    },
+
+    company: {
+        type: Schema.ObjectId,
+        ref: 'Company',
+        default: null
+    },
+
+
+    /**
      * Addresses holds one or more Address Objects, nested
      * locally within the User model
      */
@@ -117,16 +133,12 @@ var UserSchema = new Schema({
         type: String,
         trim: true
     }
-});
+}, {'toJSON': { virtuals: true }});
 
 UserSchema.post('init', function(next) {
     if (!this.displayName) {
         this.displayName = this.firstName + ' ' + this.lastName;
   	}
-
-	this.isAdmin = _.contains(this.roles, 'admin');
-	this.isDriver = this.type === 'driver';
-	this.isOwner = this.type === 'owner';
 });
 
 /**
@@ -139,6 +151,14 @@ UserSchema.pre('save', function(next) {
 	}
 
 	next();
+});
+
+UserSchema.pre('save', function(next) {
+    if(/[A-Z]/.test(this.username)) {
+        this.username = this.username.toLowerCase();
+        this.email = this.email.toLowerCase();
+    }
+    next();
 });
 
 UserSchema.pre('save', function(next) {
@@ -164,26 +184,53 @@ UserSchema.methods.authenticate = function(password) {
 	return this.password === this.hashPassword(password);
 };
 
+UserSchema.methods.cleanse = function() {
+    console.log('[UserSchema] Cleansing sensitive Data');
+
+    this.password = undefined;
+    this.salt = undefined;
+};
+
 /**
  * Find possible not used username
  */
 UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
 	var _this = this;
-	var possibleUsername = username + (suffix || '');
+	var possibleUsername = (username + (suffix || '')).toLowerCase();
+
+    var userNameRegex = new RegExp('^' + possibleUsername.toLowerCase() + '$', 'i');
 
 	_this.findOne({
-		username: possibleUsername
+		username: { $regex: userNameRegex }
 	}, function(err, user) {
 		if (!err) {
 			if (!user) {
 				callback(possibleUsername);
-			} else {
+			} else if(possibleUsername.indexOf('@') === -1) {
 				return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
 			}
+            callback(null);
 		} else {
 			callback(null);
 		}
 	});
 };
+
+UserSchema.virtual('isAdmin')
+    .get(function() {
+        return !!this.roles && this.roles.indexOf('admin') !== -1;
+    });
+
+
+UserSchema.virtual('isDriver')
+    .get(function() {
+        return this.type === 'driver';
+    });
+
+
+UserSchema.virtual('isOwner')
+    .get(function() {
+        return this.type === 'owner';
+    });
 
 mongoose.model('User', UserSchema);

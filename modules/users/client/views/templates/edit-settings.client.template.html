@@ -62,7 +62,7 @@
             <div class="text-right form-group">
                 <button type="button" value="cancel" class="btn btn-large btn-link" ng-click="vm.cancel()">cancel
                 </button>
-                <button type="submit" value="update" class="btn btn-large btn-primary">Save Profile</button>
+                <button type="submit" value="update" class="btn btn-large btn-oset-primary">Save Profile</button>
             </div>
             <div data-ng-show="vm.error" class="text-center text-danger">
                 <strong data-ng-bind="vm.error"></strong>
@@ -73,7 +73,7 @@
     </fieldset>
 
     <div class="pull-right">
-        <input type="submit" class="btn btn-success" data-ng-class="{'disabled': vm.userForm.$pristine}" value="Save Changes">
+        <input type="submit" class="btn btn-oset-success" data-ng-class="{'disabled': vm.userForm.$pristine}" value="Save Changes">
     </div>
     <div data-ng-show="vm.error" class="text-center text-danger">
         <strong data-ng-bind="vm.error"></strong>

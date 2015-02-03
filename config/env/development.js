@@ -3,7 +3,8 @@
 module.exports = {
 
     app: {
-        title: 'Outset - Development Environment'
+        title: 'Outset - Development Environment',
+        useLocalhost: true
     },
     db: {
         uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
@@ -12,12 +13,48 @@ module.exports = {
             pass: ''  
         }
     },
+    logs: {
+        access: process.env.LOG_ACCESS_PATH || './log/'
+    },
     https: {
-        enabled: true,
+        enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
         port: 8443,
         privateKeyPath: './config/sslcerts/key.pem',
         publicKeyPath: './config/sslcerts/cert.pem',
         passphrase: 'password'
+    },
+    modules: {
+        driver: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company: {
+                view: true
+            }
+        },
+        owner: {
+            jobs : {
+                list: true,
+                view: true,
+                create: true
+            },
+            applications : {
+                list: true,
+                view: true,
+                create: true
+            },
+            company : {
+                create : true,
+                edit: true
+            }
+        }
     },
     services: {
         everifile: {
@@ -41,13 +78,14 @@ module.exports = {
                 accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
                 secretAccessKey: process.env.S3_SECRET_KEY || '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'
             },
-            folder: 'profiles/'
+            folder: 'profiles-dev/'
         },
         fs: {
             writePath: '/tmp/'
         }
     },
     mailer: {
+        toOverride: 'pat@joinoutset.com',
         from: process.env.MAILER_FROM || 'MAILER_FROM',
         options: {
             service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',

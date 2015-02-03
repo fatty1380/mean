@@ -2,7 +2,11 @@
     <form class="signin form-horizontal" ng-show="vm.initialized">
         <fieldset>
             <div class="form-group text-center" ng-hide="vm.uploader.queue.length">
-                <img data-ng-src="{{vm.imageURL}}" alt="{{vm.title}}" class="img-thumbnail user-profile-picture">
+                <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"
+                     alt="{{vm.title}}" class="img-thumbnail user-profile-picture">
+
+                <div data-ng-hide="!!vm.imageURL" class="text-center img-thumbnail user-profile-picture">
+                    <i class="fa fa-question fa-4x center-block"></i></div>
             </div>
 
             <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">
@@ -14,15 +18,19 @@
             <div class="form-group tvm.newImage text-center" ng-show="vm.uploader.queue.length">
                 <h4>Preview:</h4>
 
-                <div><img ng-src="{{(vm.useCropped || vm.isCropping) ? vm.croppedImage : vm.newImage}}"
-                          class="img-thumbnail user-profile-picture"/></div>
+                <div><img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"
+                          class="img-thumbnail user-profile-picture"/>
+                    <img ng-src="{{vm.newImage}}" ng-hide="vm.useCropped || vm.isCropping"
+                         class="img-thumbnail user-profile-picture"/>
+
+                </div>
 
                 <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">
                     <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>
-                    <button class="btn btn-primary" data-ng-click="vm.isCropping=true;">{{ vm.useCropped ? 'Adjust' :
+                    <button class="btn btn-oset-primary" data-ng-click="vm.startCrop()">{{ vm.useCropped ? 'Adjust' :
                         'Crop'}} Image
                     </button>
-                    <button class="btn btn-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>
+                    <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>
                 </div>
             </div>
 
@@ -37,7 +45,7 @@
 
                 <div class="cropArea center-block" class="img-thumbnail user-profile-picture"
                      style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">
-                    <img-crop image="vm.newImage" result-image="vm.croppedImage"></img-crop>
+                    <img-crop image="vm.newImage" area-type="{{vm.shape}}" result-image="vm.croppedImage"></img-crop>
                 </div>
             </div>
 

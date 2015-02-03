@@ -43,9 +43,21 @@
                             return auth.user;
                         }]
                     },
-                    controller: ['user', function(user) {
+                    controller: ['Authentication', 'user', function(auth, user) {
                         var vm = this;
                         vm.user = user;
+
+                        // Change Picture Success method:
+                        vm.successFunction = function (fileItem, response, status, headers) {
+                            // Populate user object
+                            debugger;
+                            vm.user = response;
+                            vm.imageURL = vm.user.profileImageURL;
+
+                            auth.user.profileImageURL = response.profileImageURL;
+
+                            vm.showPhotoEdit = false;
+                        };
                     }],
                     controllerAs: 'vm',
                     bindToController: true

@@ -3,7 +3,7 @@
 
 //Drivers service used to communicate Drivers REST endpoints
     function ConfigFactory($resource, $log, $q) {
-        var months, faqs;
+        var months, faqs, modules;
         return {
             getStates: function () {
                 var rsrc = $resource('api/config/states');
@@ -53,6 +53,23 @@
                     return null;
                 });
             },
+            getAsync: function (config) {
+                var rsrc = $resource('api/config/' + config);
+
+                return rsrc.get().$promise.then(
+                    function (success) {
+                        if (success.hasOwnProperty(config)) {
+                            return $q.when(success[config]);
+                        } else {
+                            return $q.when(success);
+                        }
+                    },
+                    function (err) {
+                        $log.log('[AppCfg] "%s" is not an available', config, err);
+                        return $q.when(null);
+                    }
+                );
+            },
             getReports: function () {
                 var rsrc = $resource('api/config/reports');
                 return rsrc.get();
@@ -68,9 +85,42 @@
                         d.resolve(faqs);
                     }, function (err) {
                         $log.debug('got faq error: %o', err);
+                        d.resolve([]);
                     });
                 } else {
                     d.resolve(faqs);
+                }
+
+                return d.promise;
+            },
+            getModuleConfig: function(userType, moduleName) {
+                var d = $q.defer();
+                if (!modules) {
+                    var rsrc = $resource('api/config/modules');
+
+                    rsrc.get().$promise.then(function (resp) {
+                        d.resolve(paramFilter(resp, userType, moduleName));
+                    }, function (err) {
+                        $log.debug('got config error: %o', err);
+                        d.resolve({});
+                    });
+                } else {
+                    return paramFilter(modules, userType, moduleName);
+                }
+
+                function paramFilter(configs, userType, moduleName) {
+
+                    var retVal = configs;
+
+                    if(userType) {
+                        retVal = retVal[userType];
+                    }
+
+                    if(moduleName) {
+                        retVal = retVal[moduleName];
+                    }
+
+                    return retVal;
                 }
 
                 return d.promise;

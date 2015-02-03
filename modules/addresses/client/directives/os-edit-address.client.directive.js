@@ -21,7 +21,7 @@
         vm.canRemove = !!this.canRemove && this.canRemove() || function() { return true; };
 
         vm.types = ['main', 'home', 'business', 'billing'];
-        vm.type = {
+        vm.ddlStatus = {
             isopen: false
         };
 
@@ -37,14 +37,14 @@
         vm.setType = function(newType, $event) {
             $log.log('type set to: ', newType);
             vm.address.type = newType;
-            vm.type.isopen = false;
+            vm.toggleDropdown($event);
         };
 
         vm.toggleDropdown = function($event) {
-            $log.log('toggling dropdown from %o to %o via event %o', vm.type.isopen, !vm.type.isopen, $event);
+            $log.log('toggling dropdown from %o to %o via event %o', vm.ddlStatus.isopen, !vm.ddlStatus.isopen, $event);
             $event.preventDefault();
             $event.stopPropagation();
-            vm.type.isopen = !vm.type.isopen;
+            vm.ddlStatus.isopen = !vm.ddlStatus.isopen;
         };
 
         vm.toggled = function(open) {

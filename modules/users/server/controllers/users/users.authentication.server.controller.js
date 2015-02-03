@@ -10,12 +10,15 @@ mongoose     = require('mongoose'),
 passport     = require('passport'),
 User         = mongoose.model('User'),
 Driver       = mongoose.model('Driver'),
-emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller'));
+Company      = mongoose.model('Company'),
+emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+Q            = require('q');
 
 
 // DRY Simple Login Function
 var login = function (req, res, user) {
     console.log('[Auth.Ctrl] login()');
+
     req.login(user, function (err) {
         if (err) {
             res.status(400).send(err);
@@ -33,14 +36,13 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    console.log('[Auth.Ctrl] signup() ', req.body);
+    console.log('[Auth.Ctrl] signup.%s(%s)', req.body.type, req.body.username);
 
     // Init Variables
     var user = new User(req.body);
     var message = null;
 
     var userType = req.body.type;
-
     // Add missing user fields
     user.provider = 'local';
     user.displayName = user.firstName + ' ' + user.lastName;
@@ -52,33 +54,72 @@ exports.signup = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-
-            // Remove sensitive data before login
-            user.password = undefined;
-            user.salt = undefined;
+            // Clean Username and Password from the object...
+            user.cleanse();
 
             if (userType === 'driver') {
                 debugger;
                 console.log('[SIGNUP] - Creating new Driver for user');
 
-                var driver = new Driver();
-                driver.user = user;
-                driver.save(function (err) {
+                var driver = new Driver({'user': user});
+
+                driver.save(function (err, newDriver) {
                     if (err) {
-                        console.log('[SIGNUP] - err creating new driver', err);
+                        console.error('[SIGNUP] - err creating new driver', err);
                     }
 
-                    login(req, res, user);
+                    if(!!newDriver) {
+                        updateAndLogin(user.id, {driver: newDriver._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
+                    }
+                    else {
+                        login(req, res, user);
+                    }
+
                 });
 
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', user);
 
             }
+            else if (userType === 'owner') {
+                debugger;
+                console.log('[SIGNUP] - Creating new Company for user');
+
+                var company = new Company({'owner': user, 'name': req.body.companyName});
+
+                company.save(function (err, newCompany) {
+                    if (err) {
+                        console.error('[SIGNUP] - err creating new Company', err);
+                    }
+
+                    if(!!newCompany) {
+                        updateAndLogin(user.id, {company: newCompany._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
+                    }
+                    else {
+                        login(req, res, user);
+                    }
+                });
+
+                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user);
+            }
             else {
+                console.log('[SIGNPU] - Creating new User of type `%s` ... what to do?', userType);
+
                 login(req, res, user);
             }
         }
     });
+
+
 };
 
 /**
@@ -92,25 +133,86 @@ exports.signin = function (req, res, next) {
             console.error(info, err);
             res.status(400).send(info);
         } else {
-            // Remove sensitive data before login
-            user.password = undefined;
-            user.salt = undefined;
 
-            user.isAdmin = user.roles.indexOf('admin') !== -1;
+            user.cleanse();
+            debugger; // TODO: Dude, seriously, defer this shit
 
-            console.log('[Auth.Ctrl] signin() user=)', user);
+            if (user.isDriver && !user.driver) {
 
-            req.login(user, function (err) {
-                if (err) {
-                    res.status(400).send(err);
-                } else {
-                    console.log('Logged In User is a %s', user.type);
-                    res.json(user);
-                }
-            });
+                Driver.findOne({
+                    user: user
+                }).exec(function (err, driver) {
+                    if (err) {
+                        console.log('Error finding driver for user %s', user.id);
+                    }
+
+                    if (!!driver) {
+                        console.log('Found Driver %s for user %s', driver.id, user.id);
+
+                        updateAndLogin(user.id, {driver: driver._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
+                    } else {
+                        login(req, res, user);
+                    }
+                });
+            }
+            else if (user.isOwner && !user.company) {
+
+                Company.findOne({
+                    owner: user
+                }).exec(function (err, company) {
+                    if (err) {
+                        console.log('Error finding company for user %s', user.id);
+                    }
+
+                    if (!!company) {
+                        console.log('Found Company %s for user %s', company.id, user.id);
+
+                        updateAndLogin(user.id, {company: company._id}).then(
+                            function (newUser) {
+                                login(req, res, newUser);
+                            }, function (err) {
+                                login(req, res, user);
+                            });
+                    }
+                    else {
+                        login(req, res, user);
+                    }
+                });
+            }
+            else {
+                login(req, res, user);
+            }
+
         }
     })(req, res, next);
 };
+
+function updateAndLogin(id, update) {
+
+    var deferred = Q.defer();
+
+    var query = {'_id': id};
+    var options = {new: false};
+
+    update.modified = Date.now();
+
+    User.findOneAndUpdate(query, update, options, function (err, updatedUser) {
+        if (err) {
+            console.log('got an error');
+        }
+
+        updatedUser.cleanse();
+
+        deferred.resolve(updatedUser);
+    });
+
+    return deferred.promise;
+}
 
 /**
  * Signout

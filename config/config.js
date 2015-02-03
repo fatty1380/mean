@@ -142,7 +142,8 @@ var initGlobalConfig = function () {
     var defaultAssets = require(path.join(process.cwd(), 'config/assets/default'));
 
     // Get the current assets
-    var environmentAssets = require(path.join(process.cwd(), 'config/assets/', process.env.NODE_ENV)) || {};
+    var assetsEnvironment = !!process.env.IS_AWS && process.env.NODE_ENV === 'development' ? 'dev-aws' : process.env.NODE_ENV;
+    var environmentAssets = require(path.join(process.cwd(), 'config/assets/', assetsEnvironment)) || {};
 
     // Merge assets
     var assets = _.extend(defaultAssets, environmentAssets);

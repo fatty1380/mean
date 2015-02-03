@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ProfilePictureController($timeout, $window, FileUploader, $log) {
+    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs) {
         var vm = this;
 
         vm.uploader = null;
@@ -15,18 +15,34 @@
 
         vm.saveCrop = saveCrop;
 
+        vm.shape = vm.shape || 'circle';
+
         vm.uploadProfilePicture = uploadProfilePicture;
         vm.cancelUpload = cancelUpload;
 
+        var pictureFilter = {
+            name: 'imageFilter',
+            fn: function (item, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        };
+
+        var resumeFilter = {
+            name: 'resumeFilter',
+            fn: function (item, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                return '|pdf|docx|doc|rtf|'.indexOf(type) !== -1;
+            }
+        };
+
         function activate() {
-            if (!vm.model) {
+            if (!vm.allowBlank && !vm.model) {
                 $log.error('[PictureUploader] Must specify a model');
                 vm.initialized = false;
 
                 return;
             }
-
-            vm.imageURL = vm.model.profileImageURL;
 
             if (!vm.mode && !vm.apiUrl) {
                 vm.initialized = false;
@@ -34,13 +50,25 @@
                 return;
             }
 
+            var filter;
+
             if (!!vm.mode) {
                 switch (vm.mode.toLowerCase()) {
                     case 'user':
+
+                        vm.imageURL = vm.model.profileImageURL;
                         vm.uploadUrl = 'api/users/picture';
+                        filter = pictureFilter;
                         break;
                     case 'company':
+
+                        vm.imageURL = vm.model.profileImageURL;
                         vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
+                        filter = pictureFilter;
+                        break;
+                    case 'resume':
+                        vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
+                        filter = resumeFilter;
                         break;
                     default:
                         $log.warn('[PictureUploader] Unknown Mode: %s. Defaulting to user', vm.mode);
@@ -56,13 +84,8 @@
             });
 
             // Set file uploader image filter
-            vm.uploader.filters.push({
-                name: 'imageFilter',
-                fn: function (item, options) {
-                    var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-                    return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-                }
-            });
+            $log.debug('initailzing uploader with filter: ', filter.name);
+            vm.uploader.filters.push(filter);
 
             /**
              * Upload Blob (cropped image) instead of file.
@@ -71,8 +94,12 @@
              *   https://github.com/nervgh/angular-file-upload/issues/208
              */
             vm.uploader.onBeforeUploadItem = function (item) {
-
-                var blob = dataURItoBlob(vm.useCropped ? vm.croppedImage : vm.newImage);
+                var blob;
+                if (vm.hasOwnProperty('imageURL')) {
+                    blob = dataURItoBlob(vm.useCropped ? vm.croppedImage : vm.newImage);
+                } else {
+                    blob = dataURItoBlob(vm.newFile);
+                }
                 item._file = blob;
             };
 
@@ -83,10 +110,17 @@
                     fileReader.readAsDataURL(fileItem._file);
                     vm.success = vm.error = null;
 
+                    vm.fileName = fileItem.file.name;
+
                     fileReader.onload = function (fileReaderEvent) {
                         $timeout(function () {
                             //vm.imageURL = fileReaderEvent.target.result;
-                            vm.newImage = fileReaderEvent.target.result;
+                            debugger;
+                            if (vm.hasOwnProperty('imageURL')) {
+                                vm.newImage = fileReaderEvent.target.result;
+                            } else {
+                                vm.newFile = fileReaderEvent.target.result;
+                            }
                         }, 0);
                     };
                 }
@@ -95,24 +129,28 @@
             // Called after the user has successfully uploaded a new picture
             // vm.uploader.onSuccessItem = !!vm.successCallback() ? vm.successCallback() :
             vm.uploader.onSuccessItem = function (fileItem, response, status, headers) {
-                // Show success message
-                vm.success = true;
 
-                // Populate user object
+                // Populate model object
                 vm.model = response;
 
-                if (!!vm.successCallback()) {
+                if (angular.isDefined($attrs.successCallback)) {
                     vm.successCallback()(fileItem, response, status, headers);
                 }
 
                 // Clear upload buttons
                 vm.cancelUpload();
+                // Show success message
+                vm.success = true;
             };
 
             // Called after the user has failed to uploaded a new picture
             vm.uploader.onErrorItem = function (fileItem, response, status, headers) {
                 // Clear upload buttons
                 vm.cancelUpload();
+
+                if (angular.isDefined($attrs.failCallback)) {
+                    vm.failCallback()(fileItem, response, status, headers);
+                }
 
                 // Show error message
                 vm.error = response.message;
@@ -125,6 +163,11 @@
         activate();
 
         // Method Implementations _________________________________________________________________
+
+
+        vm.startCrop = function () {
+            vm.isCropping = true;
+        };
 
         function saveCrop() {
             vm.useCropped = true;
@@ -163,15 +206,17 @@
             vm.uploader.clearQueue();
 
             vm.imageURL = vm.model.profileImageURL;
+            vm.success = vm.error = null;
 
-            vm.newImage = vm.croppedImage = null;
-            vm.isCropping = vm.useCropped = false;
+            delete vm.newImage;
+            delete vm.croppedImage;
+            delete vm.newFile;
         }
 
 
     }
 
-    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log'];
+    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs'];
 
 
     angular.module('users')

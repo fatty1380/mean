@@ -2,9 +2,9 @@
     <os-page-header
             title="Driver Profile"></os-page-header>
 
-    <div class="driver create well">
-        <form name="vm.driverForm" class="form-horizontal" ng-submit="vm.submit()" novalidate>
-            <fieldset>
+    <div class="driver create panel panel-default">
+        <form name="vm.driverForm" class="form-horizontal" novalidate>
+            <fieldset class="container-fluid">
                 <!-- Biography -->
                 <h3>About Me
                     <small>Include an introduction to yourself here to help employers know who you are</small>
@@ -13,10 +13,21 @@
                     <div ng-if="vm.driverForm.description.$pristine && vm.driverForm.description.$invalid"
                          class="text-danger">Please add some information about yourself
                     </div>
-                    <textarea class="form-control" rows="10" name="description" ng-model="vm.driver.about"
-                              ng-required="true"></textarea>
+                    <os-html-edit model="vm.driver.about" os-required="true"></os-html-edit>
                 </div>
 
+                <h3>Interests
+                    <small>Tell us about what kind of jobs you are interested in. Select from the list or add your
+                        own.
+                    </small>
+                </h3>
+
+                <div class="container-fluid well">
+                    <div class="row text-center">
+                        <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
+                        <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
+                    </div>
+                </div>
 
                 <!-- Driver's License Information -->
                 <h3>Driver License
@@ -55,7 +66,7 @@
 
                     <div class="row profile-row">
                         <div class="col-sm-12 text-center">
-                            <button type="button" class="btn btn-primary" ng-click="vm.addExperience()"
+                            <button type="button" class="btn btn-oset-primary" ng-click="vm.addExperience()"
                                     ng-hide="vm.driver.experience && vm.driver.experience.length > 0">
                                 <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Experience
                             </button>
@@ -121,7 +132,7 @@
 
                 <div class="pull-right">
                     <input type="button" class="btn btn-link" value="cancel" ng-click="vm.cancel()">
-                    <input type="submit" class="btn btn-success" value="Save">
+                    <input type="button" class="btn btn-oset-success" value="Save" ng-click="vm.submit()">
                 </div>
                 <div data-ng-show="vm.error" class="text-danger text-center">
                     <strong data-ng-bind="vm.error"></strong>

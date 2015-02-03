@@ -12,53 +12,10 @@
                 job: '=?',
                 company: '=?',
                 user: '=?',
-                applications: '=?'
+                applications: '=?',
+                config: '=?'
             },
-            controller: function (Applications, Authentication, $log) {
-                var vm = this;
-
-                vm.isEnabled = false;
-
-                vm.displayMode = vm.displayMode || 'normal';
-                vm.company = vm.company || vm.job && vm.job.company;
-                vm.user = vm.user || Authentication.user;
-                vm.noItemsText = 'No job applications yet';
-
-                vm.findAll = function () {
-                    $log.debug('[AppController.find] Searching for applications');
-
-                    var jobId = vm.job && vm.job._id;
-
-                    var promise;
-
-                    if (jobId) {
-                        $log.debug('[AppController.find] Looking for applications on jobID %o', jobId);
-
-                        promise = Applications.ByJob.query({
-                            jobId: jobId
-                        }).$promise;
-                    } else if (vm.user.type === 'driver') {
-                        promise = Applications.ByUser.query({
-                            userId: vm.user._id
-                        }).$promise;
-                    } else if (vm.user.type === 'owner' && vm.company) {
-                        promise = Applications.ByCompany.query({
-                            companyId: vm.company._id
-                        }).$promise;
-                    }
-
-                    promise.then(function (applications) {
-                        $log.debug('[AppController.find] Found %d applications', applications.length);
-                        vm.applications = applications;
-                    }, function (error) {
-                        $log.error('[AppController.find] Error finding applications %o', error);
-                    });
-                };
-
-                if (!vm.applications) {
-                    vm.findAll();
-                }
-            },
+            controller: 'JobApplicationListController',
             controllerAs: 'vm',
             bindToController: true
         };
@@ -66,7 +23,85 @@
         return ddo;
     }
 
+    function JobApplicationListController(Applications, Authentication, $log, $state, params, $location) {
+        var vm = this;
+
+        vm.visibleId = params.itemId;
+        vm.visibleTab = params.tabName;
+
+        vm.ApplicationFactory = Applications;
+        vm.displayMode = vm.displayMode || 'normal';
+        vm.company = vm.company || vm.job && vm.job.company;
+        vm.user = vm.user || Authentication.user;
+        vm.config = vm.config || {};
+
+        vm.noItemsText = 'No job applications yet';
+
+        function activate() {
+
+            if (vm.applications && vm.applications.length) {
+                var first = vm.applications[0];
+
+                if (first.hasOwnProperty('job')) {
+                    $log.debug('Looking at a list of applications');
+                } else if (first.hasOwnProperty('applications')) {
+                    $log.debug('Looking at a list of jobs :)');
+
+                    vm.jobs = vm.applications;
+                }
+            }
+
+            if (!!vm.visibleId) {
+                if (!!vm.jobs && !_.find(vm.jobs, {'_id': vm.visibleId})) {
+                    vm.visibleId = vm.visibleTab = null;
+                    $state.transitionTo('applications.list', {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+                }
+                else if (!vm.jobs && !_.find(vm.applications, {'_id': vm.visibleId})) {
+                    vm.visibleId = vm.visibleTab = null;
+                    $state.transitionTo('applications.list', {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+                }
+            }
+        }
+
+        vm.setApplicationStatus = function(application, status, $event, state) {
+            $event.stopPropagation();
+
+            var app = vm.ApplicationFactory.setStatus(application._id, status);
+
+            app.then(function(success) {
+                $log.debug('[setApplicationStatus] %s', success);
+                application = success;
+            }, function(reject) {
+                debugger;
+                $log.warn('[setApplicationStatus] %s', reject);
+            });
+
+            state.application.status = status;
+            state.application.isNew = state.application.isConnected = false;
+            state.application.isRejected = true;
+            state.application.disabled = true;
+        };
+
+        vm.showTab = function (itemId, tabName) {
+            if(!!vm.visibleId && vm.visibleTab === tabName) {
+                vm.visibleId = vm.visibleTab = null;
+            } else {
+                vm.visibleId = itemId;
+                vm.visibleTab = tabName;
+            }
+
+            $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
+            $location.search({'itemId':vm.visibleId, 'tabName':vm.visibleTab});
+        };
+
+        activate();
+
+    }
+
+    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location'];
+
     angular.module('applications')
+        .controller('JobApplicationListController', JobApplicationListController)
         .directive('osListApplications', ListApplicationsDirective);
 
 })();

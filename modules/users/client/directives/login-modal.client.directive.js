@@ -1,49 +1,112 @@
-(function() {
+(function () {
     'use strict';
 
-    function SigninModalDirective() {
+    function LoginModalDirective() {
         return {
             transclude: true,
             templateUrl: 'modules/users/views/templates/login-modal.client.template.html',
             restrict: 'EA',
             scope: {
                 signin: '&',
-                title: '@?'
+                title: '@?',
+                srefText: '@?',
+                job: '=?',
+                redirect: '=?'
             },
-            controller: 'LoginModalController'
+            controller: 'LoginModalController',
+            controllerAs: 'vm',
+            bindToController: true
         };
     }
 
-    function SigninModalController($scope, $modal, $log) {
+    function LoginModalController($scope, $modal, $log, $attrs) {
+        var vm = this;
 
-        $scope.isOpen = false;
+        vm.isOpen = false;
 
-        $scope.showLogin = function() {
+        if (angular.isDefined($attrs.redirect)) {
+            $log.debug('using existing redirect: %o', vm.redirect);
+            vm.redirect = vm.redirect;
+        }
+        else if (angular.isDefined($attrs.job)) {
+            vm.redirect = {
+                state: 'jobs.view',
+                params: {jobId: vm.job.id},
+                text: vm.srefText
+            };
+        }
+
+        vm.showLogin = function () {
             var modalInstance = $modal.open({
                 templateUrl: 'loginModal.html',
-                controller: 'AuthenticationController'
+                controller: 'LoginController',
+                resolve: {
+                    srefRedirect: function () {
+                        return vm.redirect;
+                    }
+                },
+                controllerAs: 'vm',
+                bindToController : true
             });
 
-            modalInstance.result.then(function(result) {
+            modalInstance.result.then(function (result) {
                 $log.info('Modal result %o', result);
-                $scope.isOpen = false;
-            }, function(result) {
+                vm.isOpen = false;
+            }, function (result) {
                 $log.info('Modal dismissed at: ' + new Date());
-                $scope.isOpen = false;
+                vm.isOpen = false;
             });
 
-            modalInstance.opened.then(function(args) {
-                $scope.isOpen = true;
+            modalInstance.opened.then(function (args) {
+                vm.isOpen = true;
             });
 
         };
     }
 
+    function LoginController($http, $state, $modalInstance, $log, Authentication, srefRedirect) {
+        var vm = this;
+        vm.auth = Authentication;
+        vm.srefRedirect = srefRedirect;
 
-    SigninModalController.$inject = ['$scope', '$modal', '$log'];
+        vm.credentials = {};
+
+        vm.signin = function () {
+
+            var credentials = vm.credentials || this.credentials;
+
+            $http.post('/api/auth/signin', credentials)
+                .success(function (response) {
+                    // If successful we assign the response to the global user model
+                    vm.auth.user = response;
+
+                    $log.debug('Successfully logged in');
+
+                    $modalInstance.close('success');
+
+                    if (vm.srefRedirect) {
+                        $state.go(vm.srefRedirect.state, vm.srefRedirect.params, {reload: true});
+                    } else if (!$state.is('intro')) {
+                        $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
+                        $state.go($state.current, {}, {reload: true});
+                    } else {
+                        $state.go('home');
+                    }
+                }).error(function (response) {
+                    console.error(response.message);
+                    vm.error = response.message;
+                });
+        };
+    }
+
+    LoginController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect'];
+
+
+    LoginModalController.$inject = ['$scope', '$modal', '$log', '$attrs'];
 
     angular.module('users')
-        .directive('loginModal', SigninModalDirective)
-        .controller('LoginModalController', SigninModalController);
+        .directive('loginModal', LoginModalDirective)
+        .controller('LoginController', LoginController)
+        .controller('LoginModalController', LoginModalController);
 
 })();

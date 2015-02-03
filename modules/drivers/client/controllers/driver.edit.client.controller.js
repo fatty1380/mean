@@ -2,8 +2,26 @@
     'use strict';
 
     // Drivers controller
-    function DriverEditController($state, $log, Drivers, Authentication, driver) {
+    function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig) {
         var vm = this;
+
+        if (!Authentication.user) {
+            return $state.go('intro');
+        }
+
+        // Variables:
+        vm.user = Authentication.user;
+        vm.action = $state.current.name.replace('drivers.', '');
+        vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
+
+        //if (typeof vm.user.driver === 'string' && vm.user.driver !==vm.driver._id) {
+        //    return $state.go('home');
+        //}
+        //else if (typeof vm.user.driver === 'object' && vm.user.driver._id ===vm.driver._id) {
+        //    return $state.go('home');
+        //}
+
+        vm.debug = AppConfig.get('debug');
 
         // Functions:
         vm.submit = submit;
@@ -13,20 +31,10 @@
         vm.dropExperience = dropExperience;
         vm.addExperience = addExperience;
 
-        // Variables:
-        vm.user = Authentication.user;
-        vm.action = $state.current.name.replace('drivers.', '');
-        vm.driver = driver || {
-            experience: [],
-            licenses: [{}]
-        };
-
-
-
         function activate() {
 
             if ($state.is('drivers.create')) {
-                if (!!vm.driver._id) {
+                if (!!vm.driver && !!vm.driver._id) {
                     $state.go('drivers.edit', {driverId: vm.driver._id});
                 }
 
@@ -35,11 +43,11 @@
         }
 
         function submit() {
-
+            debugger;
             if (vm.driverForm['vm.experienceForm'] && vm.driverForm['vm.experienceForm'].$pristine) {
-                debugger;
-                console.log ('Experience untouched ...');
-                if(vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
+
+                console.log('Experience untouched ...');
+                if (vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
                     console.log('nuked experience');
                     vm.driver.experience = [];
                 }
@@ -65,7 +73,7 @@
         function create() {
             debugger;
 
-            if(_.isEmpty(vm.driver.licenses[0])) {
+            if (_.isEmpty(vm.driver.licenses[0])) {
                 $log.debug('No license information entered, ignoring ...');
                 vm.driver.licenses = null;
             } else if (vm.driverForm['vm.licenseForm'].$invalid) {
@@ -85,7 +93,7 @@
                     driverId: response._id
                 });
             }, function (errorResponse) {
-                vm.error = errorResponse.data.message;
+                vm.error = !errorResponse.data || errorResponse.status === 0 ? 'Error saving your profile. Please try again later.' : errorResponse.data.message;
             });
         }
 
@@ -95,11 +103,6 @@
 
         // Update existing Driver
         function update() {
-            debugger;
-            if(vm.driverForm.$pristine) {
-                $state.go('drivers.home');
-            }
-
             var driver = vm.driver;
 
             driver.$update(function (response) {
@@ -148,7 +151,8 @@
 
     }
 
-    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver'];
+    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig'];
 
     angular.module('drivers').controller('DriverEditController', DriverEditController);
-})();
+})
+();

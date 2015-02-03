@@ -6,13 +6,13 @@
 
         Menus.addMenuItem('topbar', {
             title: 'Applicants',
-            state: 'applications.mine',
+            state: 'applications.list',
             userTypes: ['owner'],
             position: 20
         });
         Menus.addMenuItem('topbar', {
             title: 'My Applications',
-            state: 'applications.mine',
+            state: 'applications.list',
             userTypes: ['driver'],
             position: 20
         });
@@ -34,7 +34,7 @@
         });
         Menus.addSubMenuItem('adminbar', 'applications', {
             title: 'My Applications',
-            state: 'applications.mine'
+            state: 'applications.list'
         });
     }
 

@@ -13,7 +13,8 @@
                 addresses: '=?',
                 center: '@?',
                 style: '@?',
-                zipCode: '=?'
+                zipCode: '=?',
+                precision: '=?'
             },
             controller: 'LocationController',
             controllerAs: 'vm',

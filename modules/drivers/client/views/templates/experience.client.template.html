@@ -91,11 +91,11 @@
                         cancel
                     </button>
 
-                    <button type="button" class="btn btn-primary" ng-click="vm.save('save')">
+                    <button type="button" class="btn btn-oset-primary" ng-click="vm.save('save')">
                         <i class="fa fa-check-circle" style="padding-right: 10px;"></i>Save
                     </button>
 
-                    <button type="button" class="btn btn-primary" ng-click="vm.save('add')" ng-if="!!vm.addFn">
+                    <button type="button" class="btn btn-oset-primary" ng-click="vm.save('add')" ng-if="!!vm.addFn">
                         <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Another
                     </button>
                 </div>
@@ -116,7 +116,7 @@
                     <div data-ng-bind="vm.getDateRange(vm.model.time)"></div>
                 </small>
                 <small ng-if="vm.editEnable" class="pull-right">
-                    <button type="button" class="btn btn-primary" ng-click="vm.edit()"><i class="fa fa-pencil"></i> edit
+                    <button type="button" class="btn btn-oset-primary" ng-click="vm.edit()"><i class="fa fa-pencil"></i> edit
                     </button>
                 </small>
             </h4>
@@ -124,7 +124,7 @@
         </div>
     </section>
     <div class="pull-right" data-ng-show="vm.isLast && !vm.isEditing">
-        <button type="button" class="btn btn-primary" ng-click="vm.push()" ng-if="!!vm.push">
+        <button type="button" class="btn btn-oset-primary" ng-click="vm.push()" ng-if="!!vm.push">
             <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Another
         </button>
     </div>

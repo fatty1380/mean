@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function PageHeaderDirective() {
@@ -8,26 +8,38 @@
             scope: {
                 title: '@',
                 subTitle: '@?',
-                editSref: '@?',
                 showEdit: '=?',
                 btnShow: '=?',
                 btnText: '@?',
                 btnSref: '@?',
+                editSref: '@?',
                 level: '@?',
-                pictureUrl: '=?'
+                pictureUrl: '=?',
+                editPicSref: '@?',
+                pictureEditFn: '&?'
             },
             transclude: true,
             restrict: 'E',
-            controller: ['$transclude', function (transclude) {
-                var dm = this;
+            controller: ['$transclude', '$log', '$state', '$attrs', function (transclude, $log, $state, $attrs) {
+                var vm = this;
 
-                dm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
-                dm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
+                vm.btnShow = typeof this.btnShow === 'undefined' ? true : this.btnShow;
+                vm.showEdit = typeof this.showEdit === 'undefined' ? false : this.showEdit;
+                vm.showPicEdit = (!!angular.isDefined($attrs.pictureEditFn) || !!angular.isDefined($attrs.editPicSref)) && vm.showEdit;
 
-                dm.hover = false;
-                dm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
+                vm.hover = false;
+                vm.includeTransclude = !!transclude().contents() && transclude().contents().length > 0;
+
+                vm.showHeader = !!vm.subTitle || !!vm.editSref || vm.btnShow && (!!vm.btnText && !!vm.btnSref);
+
+                vm.editPicFn = function () {
+                    if (!!angular.isDefined($attrs.pictureEditFn)) {
+                        $log.debug('calling pictureEditFn');
+                        return vm.pictureEditFn();
+                    }
+                };
             }],
-            controllerAs: 'dm',
+            controllerAs: 'vm',
             bindToController: true
         };
 

@@ -16,6 +16,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
+
     <!-- Semantic META -->
     <meta name="keywords" content="{{keywords}}">
     <meta name="description" content="{{description}}">
@@ -88,7 +89,7 @@
     })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', '{{googleAnalyticsTrackingID}}', 'auto');
-    ga('send', 'pageview');
+    /*ga('send', 'pageview');*/ /* DISABLE In Favor of $rootScope.$stateChangeSuccess*/
     </script>
 
     <!-- Google Code for Remarketing Tag -->

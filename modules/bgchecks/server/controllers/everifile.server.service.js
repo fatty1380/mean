@@ -61,7 +61,6 @@ var server = {
     password: 'Test#123'
 };
 
-debugger;
 server = _.extend(server, config.services.everifile);
 
 var Cookie = {

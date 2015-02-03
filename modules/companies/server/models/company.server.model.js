@@ -36,10 +36,14 @@ var CompanySchema = new Schema({
 
     locations: ['Address'],
 
+    subscription: {
+        type: ['Subscription'],
+        default: null
+    },
+
     about: {
         type: String,
-        default: '',
-        required: 'Please provide some information about your business'
+        default: ''
     },
 
     phone: {
@@ -73,7 +77,7 @@ var CompanySchema = new Schema({
 });
 
 CompanySchema.pre('save', function(next){
-  this.modified = Date.now;
+  this.modified = Date.now();
   next();
 });
 

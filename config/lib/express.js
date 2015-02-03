@@ -44,15 +44,17 @@ module.exports.initLocalVariables = function (app) {
         next();
     });
 
-    //if (process.env.NODE_ENV === 'production') {
-    //    app.use(function (req, res, next) {
-    //        if (req.headers['x-forwarded-proto'] !== 'https') {
-    //            console.log('[EXPRESS.ROUTER] x-forward-proto');
-    //            return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    //        }
-    //        return next();
-    //    });
-    //}
+    console.log('EXPRESS ROUTER: config: %j', config.https)
+
+    if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
+        app.use(function (req, res, next) {
+            if ((config.https.enabled) && (!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'] !== 'https') {
+                console.log('[EXPRESS.ROUTER] HTTPS Redirect %s', req.get('Host'));
+                return res.redirect(['https://', req.get('Host'), req.url].join(''));
+            }
+            return next();
+        });
+    }
 
 };
 
@@ -77,28 +79,36 @@ module.exports.initMiddleware = function (app) {
     // Initialize favicon middleware
     app.use(favicon('./modules/core/client/img/brand/favicon.ico'));
 
+    var accessLogStream, streamType;
+
     // Environment dependent middleware
     if (process.env.NODE_ENV === 'development') {
-        // Enable logger (morgan)
-        app.use(morgan('dev'));
-
         // Disable views cache
         app.set('view cache', false);
+
+        streamType = 'dev'
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
 
+        streamType = 'combined';
+    }
+
+    if (!!config.logs.access) {
         var exist = fs.existsSync(config.logs.access);
         var perm = fs.statSync(config.logs.access, 2);
-        if (exist && perm)
-        {
+        if (exist && perm) {
             // Enable logger (morgan) write to access.log file.
-            var accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
+            accessLogStream = fs.createWriteStream(config.logs.access + 'express_access.log', {
                 flags: 'a'
             });
             app.use(morgan('combined', {
                 stream: accessLogStream
             }));
         }
+    }
+    else {
+        // Enable logger (morgan)
+        app.use(morgan(streamType));
     }
 
     // Request body parsing middleware should be above methodOverride
@@ -240,19 +250,20 @@ module.exports.configureSocketIO = function (app, db) {
 module.exports.initHttps = function (app) {
     if (config.https.enabled && !!config.https.port) {
         // Log SSL usage
-        console.log('Initializing HTTPS Server Protocol');
+        console.log('Initializing HTTPS Server Protocol: %j', config.https);
 
         var options = {};
 
-        if (!!config.https.privateKeyPath) {
+        if (!!config.https.privateKeyPath && fs.existsSync(config.https.privateKeyPath)) {
+            console.log('using private key at path: %s', config.https.privateKeyPath);
             options.key = fs.readFileSync(config.https.privateKeyPath, 'utf8');
-            ;
         }
-        if (!!config.https.publicKeyPath) {
+        if (!!config.https.publicKeyPath && fs.existsSync(config.https.publicKeyPath)) {
+            console.log('using public key at path: %s', config.https.publicKeyPath);
             options.cert = fs.readFileSync(config.https.publicKeyPath, 'utf8');
-            ;
         }
         if (!!config.https.passphrase) {
+            console.log('... with key passphrase');
             options.passphrase = config.https.passphrase;
         }
 

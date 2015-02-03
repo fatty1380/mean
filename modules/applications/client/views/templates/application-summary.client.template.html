@@ -1,0 +1,175 @@
+<section name='oset-application-summary'>
+
+    <!--This view is used primarily for the display of simple inline template views.-->
+    <div ng-show="vm.application">
+        <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="panel panel-default pad">
+            <dl class="dl-horizontal">
+                <dt>Status:</dt>
+                <dd>
+                    <os-application-status-badge model="vm.application"></os-application-status-badge>
+                </dd>
+                <dt>Applied On:</dt>
+                <dd>{{vm.application.created | date:'short'}}</dd>
+            </dl>
+            <div class="text-center" data-ng-if="vm.displayMode === 'mine'">
+                <button type="button" class="btn-link read-more strong mgn-left"
+                        ui-sref="applications.view({applicationId: vm.application._id})">
+                    Review<i class="fa fa-external-link fa-lg mgn-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <section data-ng-if="vm.displayMode === 'table'" class="applicant mini-table">
+            <td>{{vm.index}}</td>
+            <td>
+                <img ng-src="{{vm.user.profileImageURL}}"
+                     class="profile-image medium center-block">
+            </td>
+            <td>
+                <span class="stronger">{{vm.user.firstName}}&nbsp;{{vm.user.lastName.substring(0,1)}}</span>
+                <br>
+                <os-application-status-badge model="vm.application"></os-application-status-badge>
+            </td>
+            <td>
+                <dl class="dl-horizontal mini-table">
+                    <dt>License</dt>
+                    <dd>
+                        <p style="margin-bottom: 2px;">
+                            <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}
+                            <span ng-show="vm.license.type">
+                                <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>
+                                {{vm.license.type}}
+                            </span>
+                            Driver License
+                        </p>
+                    </dd>
+                    <dt>Endorsements</dt>
+                    <dd>
+                        <p style="margin-bottom: 2px;">
+                            <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
+                        </p>
+                    </dd>
+                    <dt>Interests</dt>
+                    <dd>
+                        <p style="margin-bottom: 2px;">
+                        <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
+                              class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>
+
+                        <span ng-show="!visibleInterests.length">
+                            <span ng-show="!vm.canEdit">none entered</span>
+                        </span>
+                        </p>
+                    </dd>
+                    <dt>Messages:</dt>
+                    <dd ng-show="!!vm.application.isConnected"
+                        ng-init="otherMsgs = (vm.application.messages | filter : {'sender' : ('!'+vm.user._id)})">
+                        <p style="margin-bottom: 2px;" ng-show="vm.application.messages && vm.application.messages.length">
+                            {{otherMsgs.length ? otherMsgs.length : 'no'}} received messages
+                            <a class="pull-right"
+                               ui-sref="applications.view({applicationId: vm.application._id, target: 'message'})">
+                                send a new message
+                            </a>
+                        </p>
+
+                        <p style="margin-bottom: 2px;" ng-hide="vm.application.messages && vm.application.messages.length">
+                            discuss the job and schedule an interview
+                            <a class="pull-right"
+                               ui-sref="applications.view({applicationId: vm.application._id, target: 'message'})">
+                                send a new message
+                            </a>
+                        </p>
+                    </dd>
+                    <dd ng-hide="!!vm.application.isConnected">
+                        <p style="margin-bottom: 2px;">
+                            <em class="text-muted" ng-if="vm.user.type === 'owner'">
+                                once connected, you will be able to exchange messages with the applicant
+                            </em>
+                            <em class="text-muted" ng-if="vm.user.type === 'driver'">
+                                once connected, you will be able to exchange messages with the employer
+                            </em>
+                        </p>
+                    </dd>
+                </dl>
+            </td>
+            <td style="white-space: nowrap">
+                <a class="read-more strong align-right mgn-bottom pull-right"
+                   ui-sref="applications.view({applicationId: vm.application._id, action: 'read'})">
+                    Review
+                    <i class="fa fa-external-link fa-lg mgn-left"></i>
+                </a>
+                <br>
+                <a class="read-more strong align-right mgn-bottom pull-right"
+                   tooltip="vm.messagingText" tooltip-popup-delay="1000"
+                   ui-sref="applications.view({applicationId: vm.application._id, action: 'message'})">
+                    Messages
+                    <i class="fa fa-comments-o fa-lg mgn-left"></i>
+                </a>
+                <!--TODO: Change the "Reject" into a state rather than a callback-->
+                <!--<br>-->
+                <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->
+                <!--ng-click="vm.setApplicationStatus(job.applications[$index], 'rejected', $event, this)">-->
+                <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->
+                <!--</a>-->
+            </td>
+
+        </section>
+
+        <div data-ng-if="vm.displayMode === 'inline'" class="row">
+            <dl class="dl-horizontal">
+                <dt>Applicant:</dt>
+                <dd>{{vm.application.user.displayName}}</dd>
+                <dt>Job:</dt>
+                <dd>{{vm.application.job.name || 'UNKNOWN'}}
+                    <span class="label label-info">{{vm.application.status}}</span>
+                </dd>
+                <dt>Applied On:</dt>
+                <dd>{{vm.application.created | date:'short'}}</dd>
+            </dl>
+        </div>
+
+        <div data-ng-if="!vm.displayMode || vm.displayMode === 'normal'" class="row">
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+                    <dt>Job:</dt>
+                    <dd>{{vm.application.job.name || 'UNKNOWN'}}
+                        <span class="label label-info">{{vm.application.status}}</span>
+                    </dd>
+                    <dt>Applicant:</dt>
+                    <dd>{{vm.application.user.displayName}}</dd>
+                    <dt>Applied On:</dt>
+                    <dd>{{vm.application.created | date:'short'}}</dd>
+                </dl>
+            </div>
+            <div class="col-md-8">
+                <dl class="dl-horizontal"
+                    ng-repeat="message in vm.application.messages | orderBy:'-created' | limitTo: 1">
+                    <dt>Last Message:</dt>
+                    <dd>{{message.text | limitTo : 100}}</dd>
+                    <dt>Sent:</dt>
+                    <dd>{{message.created | date: 'short'}}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show this if there is no application present -->
+    <!------------------------------------------------->
+    <!-- For drivers, link to the new application creation -->
+    <!-- For owners, tell them sorry :(                    -->
+    <section ng-show="!vm.application">
+        <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->
+        <div data-ng-if="!!vm.job && vm.user.type === 'driver' && !vm.job.externalApplicationLink" os-new-application-modal job='vm.job'>
+            <button class="btn btn-cta-primary btn-lg btn-block bigger">
+                apply now!
+            </button>
+        </div>
+        <div data-ng-if="!!vm.job && vm.user.type === 'driver' && !!vm.job.externalApplicationLink" job='vm.job'>
+            <a class="btn btn-cta-primary btn-lg btn-block bigger" data-ng-href="{{vm.job.externalApplicationLink}}" target="_blank">
+                apply now! <i class="fa fa-external-link mgn-left"></i>
+            </a>
+        </div>
+        <div data-ng-if="!!vm.job && vm.user.type === 'owner'">
+            Sorry, no applicants yet. Please check back later.
+        </div>
+    </section>
+</section>

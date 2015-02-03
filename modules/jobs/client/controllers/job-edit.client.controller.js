@@ -4,10 +4,26 @@
     // Jobs controller
     function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company) {
 
+        if(!Authentication.user) {
+            return $state.go('intro');
+        }
+
         var vm = this;
 
         vm.authentication = Authentication;
         vm.user = Authentication.user;
+
+        // Bound Objects
+        vm.job = job;
+        vm.company = company || job && typeof job.company === 'object' && job.company || undefined;
+
+
+        if (typeof vm.user.company === 'string' && vm.user.company !== vm.company._id) {
+            return $state.go('home');
+        }
+        else if (typeof vm.user.company === 'object' &&  vm.user.company._id === vm.company._id) {
+            return $state.go('home');
+        }
 
         // Bindable Functions:
         vm.cancel = cancel;
@@ -26,7 +42,6 @@
         var defaultAddress = {type: 'main', streetAddresses: [], zipOnly: true};
         vm.types = ['main', 'home', 'business', 'billing', 'other'];
         vm.pageTitle = 'Edit Job';
-        vm.requirements = '<ul><li></li></ul>';
 
         activate();
 
@@ -44,6 +59,7 @@
                         min: null,
                         max: null
                     },
+                    requirements: '<ul><li></li></ul>',
                     location: [defaultAddress],
                     postStatus: 'draft',
                     companyId: !!vm.company && vm.company._id || $stateParams.companyId
@@ -57,12 +73,7 @@
                 if (vm.job.location.length === 0) {
                     vm.job.location.push(defaultAddress);
                 }
-
-                vm.requirements = '<ul><li>' + (vm.job.requirements || []).join('</li><li>') + '</li></ul>';
             }
-
-
-
         }
 
         // Method Implementations
@@ -74,13 +85,14 @@
         var reg = /<li>(.*?)<\/li>/ig;
 
         function submit() {
+            vm.disabled = true;
 
-            vm.job.requirements = [];
-            var result, i=0;
-            while(!!(result = reg.exec(vm.requirements)) && i<100) {
-                $log.debug('Matched requirement #%d: \'%o\'', ++i, result[1]);
-                vm.job.requirements.push(result[1]);
+            if(vm.jobForm.$invalid) {
+                vm.error = 'Please correct all errors above';
+                vm.disabled = false;
+                return false;
             }
+            vm.error = vm.success = null;
 
             if ($state.is('jobs.create')) {
                 return vm.create();
@@ -89,6 +101,7 @@
                 return vm.update();
             }
 
+            vm.disabled=false;
             $log.warn('Unknown Form Mode: "%s"', vm.mode);
             vm.error = 'Unknown Form Mode';
         }
@@ -120,6 +133,7 @@
                     vm.error = 'Unable to save changes at this time';
                     $log.error('[JobEditCtrl] Error Saving New Job: %o', job, errorResponse);
                 }
+                vm.disabled=false;
             });
 
             // Clear form fields
@@ -143,6 +157,7 @@
                     vm.error = 'Unable to save changes at this time';
                     $log.error('[JobEditCtrl] Error Saving New Job: %o', job, errorResponse);
                 }
+                vm.disabled=false;
             });
         }
     }

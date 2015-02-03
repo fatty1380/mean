@@ -7,7 +7,7 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
     var applicationModuleVendorDependencies =
             ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap',
                 'ui.utils', 'angularFileUpload', 'textAngular', 'ngMap',
-                'pdf', 'ngImgCrop'];
+                'pdf', 'ngImgCrop', 'duScroll', 'angularMoment'];
 
     // Add a new vertical module
     var registerModule = function (moduleName, dependencies) {

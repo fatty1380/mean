@@ -1,9 +1,5 @@
 
 
-.content > section > *:last-child {
-    padding-bottom: 100px;
-}
-
 .undecorated-link:hover {
     text-decoration: none;
 }
@@ -49,12 +45,6 @@ os-debug-info > div.collapsed > div {
 
 /* Profile & Dashboard Styles */
 
-/* Map Container */
-.angular-google-map-container {
-    min-height: 300px;
-    width: 100%;
-    border: 1px solid #AAA;
-}
 
 /* Can I haz animation? */
 .animate-enter,

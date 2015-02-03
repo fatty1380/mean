@@ -13,13 +13,25 @@
     <div class="panel-heading" ng-show="vm.driver.experience.length > 0">
         <h4>Experience:</h4>
     </div>
-
     <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
         <strong>{{exp.title}}</strong><label class="pull-right" data-ng-bind="vm.getDateRange(exp.time)"></label>
+
         <p>{{exp.description | limitTo : 1000}}</p>
         <hr ng-hide="$last"/>
 
         <p ng-hide="!!vm.driver.experience.length">None Added</p>
+    </div>
+
+    <div class="panel-heading" ng-show="vm.driver.interests.length > 0">
+        <h4>Interests</h4>
+    </div>
+    <div class="panel-body text-center">
+        <oset-categories model="vm.driver.interests" mode="view">
+             <span ng-if="vm.canEdit">You can specify what kind of jobs you are interested in finding by <a
+                     ui-sref="drivers.edit({driverId: vm.driver._id})">editing your driver profile</a>!</span>
+            <span ng-if="!vm.canEdit">{{vm.driver.displayName}} has not yet entered any job type preferences or interests.</span></span>
+        </oset-categories>
+
     </div>
 
     <div class="panel-heading">License</div>
@@ -32,8 +44,10 @@
                     ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>
                 Driver License
                 <span class="pull-right">
-                <span ng-repeat="(name, val) in license.endorsements"
-                      class="endorsement label label-success">{{name}}&nbsp;</span></span>
+                    <span class="strong">Endorsements: </span>
+
+                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
+                </span>
             </p>
 
         </div>

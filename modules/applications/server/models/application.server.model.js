@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+Schema       = mongoose.Schema;
 
 /**
  * (Job) Application Schema
@@ -51,17 +51,15 @@ var ApplicationSchema = new Schema({
      * submitted    The applicaiton has been sent to the employer
      * read         The application has been seen/read by the employer
      * connected    The employer has chosen to make a connection to talk further
-     * delisted     The job post will no longer appear in search, and new applications will not be accepted.
      * hired        The employer has chosen to hire the applicant for this job
      * deleted      The applicant has decided to delete their application
      * rejected     The employer has chosen not to persue the applicant for employment
      */
     status: {
         type: String,
-        enum: ['draft', 'submitted', 'read', 'connected', 'delisted', 'hired', 'deleted', 'rejected'],
+        enum: ['draft', 'submitted', 'read', 'connected', 'hired', 'deleted', 'rejected'],
         default: 'draft'
     },
-
 
 
     /**
@@ -69,6 +67,11 @@ var ApplicationSchema = new Schema({
      * -------
      * This represents the communications between the applicant and company
      */
+    introduction: {
+        type: String,
+        required: true
+    },
+
     messages: [{
         type: Schema.ObjectId,
         ref: 'Message'
@@ -86,31 +89,63 @@ var ApplicationSchema = new Schema({
     modified: {
         type: Date,
         default: Date.now
-    },
-
-    /* Virtual Members - BEGIN */
-    isDraft: {
-        type: Boolean
-    },
-    isReviewed: {
-        type: Boolean
-    },
-    isDeleted: {
-        type: Boolean
-    },
-    isConnected: {
-        type: Boolean
-    },
-    isRejected: {
-        type: Boolean
     }
 
     /* Virtual Members - END */
+}, {'toJSON': { virtuals: true }});
+
+
+ApplicationSchema.virtual('isDraft')
+    .get(function() {
+        return this.status === 'draft';
+    });
+
+ApplicationSchema.virtual('isNew')
+    .get(function() {
+        return this.status === 'submitted';
+    });
+
+ApplicationSchema.virtual('isReviewed')
+    .get(function() {
+        return this.status === 'read';
+    });
+
+ApplicationSchema.virtual('isConnected')
+    .get(function() {
+        return this.status === 'connected';
+    });
+
+ApplicationSchema.virtual('isRejected')
+    .get(function() {
+        return this.status === 'rejected';
+    });
+
+ApplicationSchema.virtual('isDeleted')
+    .get(function() {
+        return this.status === 'deleted';
+    });
+
+ApplicationSchema.virtual('isHired')
+.get(function() {
+        return this.status === 'hired';
+    });
+
+
+ApplicationSchema.pre('save', function (next) {
+    this.modified = Date.now();
+    next();
 });
 
-ApplicationSchema.pre('save', function(next){
-  this.modified = Date.now;
-  next();
+ApplicationSchema.pre('save', function (next) {
+
+    if(/draft|submitted|read/.test(this.status))
+    {
+        if(!!this.connection) {
+            this.status = 'connected';
+        }
+    }
+
+    next();
 });
 
 mongoose.model('Application', ApplicationSchema);

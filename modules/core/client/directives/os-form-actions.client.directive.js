@@ -33,7 +33,7 @@
                 vm.showCancel = !!vm.cancelFn();
                 vm.cancelText = vm.cancelText || 'cancel';
 
-                vm.submitClass = vm.submitClass || 'btn-success';
+                vm.submitClass = vm.submitClass || 'btn-oset-success';
                 vm.submitText = vm.submitText || 'Save';
                 if(typeof vm.disableSubmit === 'undefined') {
                     vm.disableSubmit = false;

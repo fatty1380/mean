@@ -1,45 +1,51 @@
-<span ng-click="showLogin()" ng-transclude>Signin</span>
+<span ng-click="vm.showLogin()" ng-transclude>Signin</span>
 <!-- <a data-ui-sref="authentication.signin" target="_self">Sign In</a> -->
 
 <script type="text/ng-template" id="loginModal.html">
 
-    <div class="modal-header bg-primary" ng-init="isOpen = true;">
+    <div class="modal-header bg-primary" ng-init="vm.isOpen = true;">
         <span class="modal-title h3 text-center">Login to your account</span>
-        <div class="pull-right">
-            <button type="button" class="close modal-title" ng-click="$dismiss('cancel')"><span aria-hidden="true">&times;<span class="sr-only">Close</span></span></button>
-        </div>
+
+        <span class="pull-right">
+            <button type="button" class="close modal-title"
+                    ng-click="$dismiss('cancel:'+vm.credentials.username)"><span aria-hidden="true">
+                <i class="fa fa-close fa-lg"></i>
+                <span class="sr-only">Close</span></span>
+            </button>
+        </span>
     </div>
 
-    <form role="form" data-ng-submit="signin()" class="signin form-horizontal" spellcheck="false" novalidate>
+    <form role="form" data-ng-submit="vm.signin()" class="signin form-horizontal" spellcheck="false" novalidate>
         <div class="modal-body">
 
             <div class="form-group">
                 <label ng-init="$element.focus()" for="username" class="col-sm-2 control-label">Email</label>
+
                 <div class="col-sm-10">
-                    <input modal-focus="isOpen" type="text" id="username" name="username" class="form-control" data-ng-model="credentials.username" placeholder="email address used for sign up">
+                    <input modal-focus="vm.isOpen" type="text" id="username" name="username" class="form-control"
+                           data-ng-model="vm.credentials.username" placeholder="email address used for sign up">
                 </div>
             </div>
-
-
 
             <div class="form-group">
                 <label for="password" class="col-sm-2 control-label">Password</label>
+
                 <div class="col-sm-10">
-                    <input type="password" id="password" name="password" class="form-control" data-ng-model="credentials.password" placeholder="your password">
+                    <input type="password" id="password" name="password" class="form-control"
+                           data-ng-model="vm.credentials.password" placeholder="your password">
                 </div>
             </div>
-
         </div>
 
         <div class="modal-footer">
             <div class="text-center form-group">
-                <button type="submit" class="btn btn-primary">Sign in</button>
+                <button type="submit" class="btn btn-oset-primary">Sign in</button>
             </div>
-            <div class="forgot-password text-center" ng-show="error">
+            <div class="forgot-password text-center mgn-vert" ng-show="vm.error">
                 <a ui-sref="password.forgot" data-ng-click="$dismiss('forgot')">Forgot your password?</a>
             </div>
-            <div data-ng-show="error" class="text-center text-danger">
-                <strong data-ng-bind="error"></strong>
+            <div data-ng-show="vm.error" class="text-center text-danger mgn-top">
+                <strong data-ng-bind="vm.error"></strong>
             </div>
         </div>
 

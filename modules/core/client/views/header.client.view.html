@@ -1,59 +1,133 @@
 <header class="header" data-ng-controller="HeaderController"
-        data-ng-class="{'navbar-fixed-top' : scroll > 0, 'navbar-landing' : !authentication.user }">
-    <div class="container-fluid {{navbarClass}}">
-        <h1 class="logo">
-            <a href="index.html" ui-sref="{{stateLink}}"><div class="logo-title"></div></a>
-        </h1>
-        <!--//logo-->
-        <nav class="main-nav" role="navigation">
+        data-ng-class="{'navbar-landing' : $state.is('intro') }">
+
+    <div class="navbar navbar-default mega-menu navbar-static" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <ul class="navbar-toggle" data-ng-hide="authentication.user">
+                    <li style="display:inline-block;" class="mgn-right">
+                        <a ui-sref="jobs.list">Jobs</a>
+                    </li>
                     <li style="display:inline-block;">
                         <a login-modal>Log In</a></li>
-                    <li style="display:inline-block;">
+                    <li style="display:inline-block;" class="hidden-xs">
                         <a signup-modal>Sign Up</a>
                     </li>
                 </ul>
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse"
-                        data-ng-click="toggleCollapsibleMenu()" data-ng-show="authentication.user">
+                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                        data-ng-click="toggleCollapsibleMenu()" data-ng-show="authentication.user"
+                        data-target=".navbar-responsive-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <!--//nav-toggle-->
+                <a class="navbar-brand" href="index.html#top">
+                    <img id="logo-header" src="modules/core/img/brand/logo-dblue.png" alt="Outset">
+                </a>
             </div>
-            <!--//navbar-header-->
-            <div id="navbar-collapse" class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
-                <ul class="nav navbar-nav" data-ng-if="menu.shouldRender(authentication.user);">
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-responsive-collapse">
+                <!-- COLLAPSED MODE : Non-Authenticated User Menus-->
+                <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
+                    <li class="nav-item stronger pad-right">
+                        <a login-modal>Log In</a></li>
+                    <li class="nav-item nav-item-cta last" signup-modal>
+                        <a class="btn btn-cta-secondary">Sign Up</a>
+                    </li>
+                </ul>
+
+                <!--COLLAPSED MODE : -->
+                <ul class="nav navbar-nav navbar-right" data-ng-if="menu.shouldRender(authentication.user);">
+                    <li class="" tooltip="change your user preferences and settings here"
+                        tooltip-placement="bottom" tooltip-popup-delay="500">
+                        <a ui-sref="settings.profile">
+                            <i class="fa fa-cog fa-lg"></i>
+                            <!--<img data-ng-src="{{authentication.user.profileImageURL}}"-->
+                            <!--alt="{{authentication.user.displayName}}"-->
+                            <!--class="header-profile-image"/>-->
+                            <!--<span data-ng-bind="authentication.user.displayName"></span></b>-->
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/api/auth/signout" target="_self" tooltip="click here to logout"
+                           tooltip-placement="bottom" tooltip-popup-delay="1000">
+                            <small>signout</small>
+                        </a>
+                    </li>
+                    <!--<li class="dropdown">-->
+                    <!--<a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown">-->
+                    <!--<img data-ng-src="{{authentication.user.profileImageURL}}"-->
+                    <!--alt="{{authentication.user.displayName}}"-->
+                    <!--class="header-profile-image"/>-->
+                    <!--<span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>-->
+                    <!--</a>-->
+                    <!--<ul class="dropdown-menu">-->
+                    <!--<li data-ui-sref-active="active">-->
+                    <!--<a data-ui-sref="settings.profile">Edit Profile</a>-->
+                    <!--</li>-->
+                    <!--<li data-ui-sref-active="active">-->
+                    <!--<a data-ui-sref="settings.picture">Change Profile Picture</a>-->
+                    <!--</li>-->
+                    <!--<li data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">-->
+                    <!--<a data-ui-sref="settings.password">Change Password</a>-->
+                    <!--</li>-->
+                    <!--<li data-ui-sref-active="active" ng-if="social.isEnabled">-->
+                    <!--<a data-ui-sref="settings.accounts">Manage Social Accounts</a>-->
+                    <!--</li>-->
+                    <!--<li class="divider"></li>-->
+                    <!--<li>-->
+                    <!--<a href="/api/auth/signout" target="_self">Signout</a>-->
+                    <!--</li>-->
+                    <!--</ul>-->
+                    <!--</li>-->
+                </ul>
+                <!--END : Authenticated User Menus-->
+
+
+                <!--Center Nav-->
+
+                <!--NON-AUTHENTICATED : Center Nav bar -->
+                <ul class="nav navbar-nav navbar-center" data-ng-if="!authentication.user">
+                    <li class="nav-item pad-sides" du-smooth-scroll du-scrollspy="whyOutset">
+                        <a href="/#whyOutset">About Us</a>
+                    </li>
+                    <li class="nav-item pad-sides" du-smooth-scroll du-scrollspy="forDrivers">
+                        <a href="/#forDrivers">Drivers</a>
+                    </li>
+                    <li class="nav-item pad-sides" du-smooth-scroll du-scrollspy="forOwners">
+                        <a href="/#forOwners">Employers</a>
+                    </li>
+                    <li class="nav-item pad-sides" data-ng-class="{active: $state.includes('jobs')}">
+                        <a ui-sref="jobs.list">Jobs</a>
+                    </li>
+                </ul>
+
+                <!--AUTHENTICATED USER : Center Nav Bar-->
+                <ul class="nav navbar-nav navbar-center" data-ng-if="menu.shouldRender(authentication.user);">
                     <li data-ng-repeat="item in menu.items | orderBy: 'position'"
                         data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.type"
                         data-ng-class="{active: $state.includes(item.state)}" class="{{item.class}}"
                         dropdown="item.type === 'dropdown'">
                         <a ng-switch-when="dropdown" class="dropdown-toggle">
-                            <span data-ng-bind="item.title"></span>
+                            <span data-ng-bind-html="item.title"></span>
                             <b class="caret"></b>
                         </a>
                         <ul ng-switch-when="dropdown" class="dropdown-menu">
                             <li data-ng-repeat="subitem in item.items | orderBy: 'position'"
                                 data-ng-if="subitem.shouldRender(authentication.user);" data-ui-sref-active="active">
-                                <a data-ui-sref="{{subitem.state}}" data-ng-bind="subitem.title"></a>
+                                <a data-ui-sref="{{subitem.state}}" data-ng-bind-html="subitem.title"></a>
                             </li>
                         </ul>
-                        <a ng-switch-default data-ui-sref="{{item.state}}" data-ng-bind="item.title"></a>
+                        <a ng-switch-default data-ui-sref="{{item.state}}" data-ng-bind-html="item.title"></a>
                     </li>
                 </ul>
+
                 <!-- navbar-right : used for logged in user's settings -->
-                <ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
-                    <li class="">
-                        <a ui-sref="settings.profile">
-                            <img data-ng-src="{{authentication.user.profileImageURL}}"
-                                 alt="{{authentication.user.displayName}}"
-                                 class="header-profile-image"/>
-                            <span data-ng-bind="authentication.user.displayName"></span></b>
-                        </a>
-                    </li>
-                    <li><a href="/api/auth/signout" target="_self"><small>signout</small></a></li>
+                <ul class="nav navbar-nav pull-right" data-ng-show="authentication.user">
+
                     <li class="dropdown" ng-if="false">
                         <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown">
                             <img data-ng-src="{{authentication.user.profileImageURL}}"
@@ -83,20 +157,8 @@
                 </ul>
             </div>
 
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-                    <li class="nav-item">
-                        <a login-modal>Log In</a></li>
-                    <li class="nav-item nav-item-cta last" signup-modal>
-                        <a class="btn btn-cta btn-cta-secondary">Sign Up</a>
-                    </li>
-                </ul>
-                <!--//nav-->
-            </div>
-            <!--//navabr-collapse-->
-
-        </nav>
-        <!--//main-nav-->
+        </div>
+        <!--/navbar-collapse-->
     </div>
-    <!--//container-->
+    </div>
 </header>

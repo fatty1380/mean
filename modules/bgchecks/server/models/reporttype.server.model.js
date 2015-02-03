@@ -91,7 +91,7 @@ var ReportTypeSchema = new Schema({
 });
 
 ReportTypeSchema.pre('save', function (next) {
-    this.modified = Date.now;
+    this.modified = Date.now();
     next();
 });
 

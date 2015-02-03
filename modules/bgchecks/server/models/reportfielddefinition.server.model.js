@@ -55,7 +55,7 @@ var ReportFieldDefinitionSchema = new Schema({
 });
 
 ReportFieldDefinitionSchema.pre('save', function (next) {
-    this.modified = Date.now;
+    this.modified = Date.now();
     next();
 });
 
