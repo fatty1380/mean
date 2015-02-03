@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function ExperienceDirectiveController(AppConfig) {
@@ -17,12 +17,13 @@
 
         vm.revertValue = angular.copy(vm.model);
 
-        vm.edit = function() {
+        vm.edit = function () {
             vm.revertValue = angular.copy(vm.model);
             vm.isEditing = true;
         };
 
-        vm.cancel = function() {
+        vm.cancel = function () {
+            vm.error = null;
             debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
@@ -39,8 +40,14 @@
         };
 
 
-        vm.save = function(action) {
-            if(vm.experienceForm.$pristine && vm.model.isFresh) {
+        vm.save = function (action) {
+            vm.error = null;
+            debugger;
+
+            vm.experienceForm.$setSubmitted(true);
+
+            if (vm.experienceForm.$pristine && vm.model.isFresh) {
+                debugger;
                 if (vm.dropFn) {
                     vm.dropFn(vm.model);
                 } else {
@@ -51,27 +58,33 @@
                 return true;
             }
 
-            if(vm.experienceForm.$valid) {
-                vm.model.isFresh = false;
-                if (action === 'add') {
-                    var addMore = vm.push();
+            if (vm.experienceForm.$invalid) {
+
+                if (vm.experienceForm.$error.required) {
+                    vm.error = 'Please fill in all required fields before saving';
                 }
-            } else {
-                debugger;
-                event.stopPropigation();
-                vm.error = 'Please correct the errors above before saving this experience';
+                else {
+                    vm.error = 'Please correct the errors on the page before saving';
+                }
+
                 return false;
             }
 
+            vm.model.isFresh = false;
+            if (action === 'add') {
+                var addMore = vm.push();
+            }
+
+            debugger; // check date objects
             vm.isEditing = false;
         };
 
 
-        vm.getDateRange = function(time) {
-            var s,e;
+        vm.getDateRange = function (startDate, endDate) {
+            var s, e;
 
-            if(time.start && (s = moment(time.start))) {
-                if (time.end && (e = moment(time.end))) {
+            if (startDate && (s = moment(startDate))) {
+                if (endDate && (e = moment(endDate))) {
                     return s.format('MMMM, YYYY') + ' - ' + e.format('MMMM, YYYY');
                 }
                 return s.format('MMMM, YYYY') + ' - present';

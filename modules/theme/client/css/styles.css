@@ -3406,7 +3406,8 @@ input[type="button"] {
 .pad-right {
   padding-right: 15px !important;
 }
-.pad-bottom {
+.pad-bottom,
+.pad-btm {
   padding-bottom: 15px !important;
 }
 .pad-top {
@@ -3428,7 +3429,8 @@ input[type="button"] {
 .mgn-right {
   margin-right: 15px !important;
 }
-.mgn-bottom {
+.mgn-bottom,
+.mgn-btm {
   margin-bottom: 15px !important;
 }
 .mgn-top {

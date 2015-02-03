@@ -14,7 +14,8 @@
         <h4>Experience:</h4>
     </div>
     <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
-        <strong>{{exp.title}}</strong><label class="pull-right" data-ng-bind="vm.getDateRange(exp.time)"></label>
+
+        <p><strong>{{exp.title}}</strong><br>{{exp.location}}<span class="text-muted pull-right" ng-bind="vm.getDateRangeString(exp.startDate, exp.endDate)"></span></p>
 
         <p>{{exp.description | limitTo : 1000}}</p>
         <hr ng-hide="$last"/>
