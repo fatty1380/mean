@@ -151,16 +151,29 @@
                     </p>
                 </dd>
 
-                <dt>Experience</dt>
+                <dt ng-init="vm.expCt=4">
+                    Experience
+                    <br ng-show="vm.isConnected"/>
+                    <span ng-show="vm.isConnected && vm.driver.experience.length"
+                          ng-switch="!vm.expCt && !!vm.driver.experience.length">
+                        <button type="button" class="btn btn-oset-link"
+                                ng-click="vm.expCt = 0;" ng-switch-when="false">
+                            hide
+                        </button>
+                        <button type="button" class="btn btn-oset-link"
+                                ng-click="vm.expCt = 4;" ng-switch-when="true">
+                            show
+                        </button>
+                    </span>
+                </dt>
                 <dd ng-show="vm.isConnected">
-                    <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
-                        <strong>{{exp.title}}</strong><label class="pull-right"
-                                                             data-ng-bind="vm.getDateRange(exp.time)"></label>
+                    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">
+                        <oset-experience-list ng-switch-when="true"
+                                              list="vm.driver.experience" view-only="true" max-ct="vm.expCt">
 
-                        <p>{{exp.description | limitTo : 1000}}</p>
-                        <hr ng-hide="$last"/>
+                        </oset-experience-list>
 
-                        <p ng-hide="!!vm.driver.experience.length">None Added</p>
+                        <p class="text-center" ng-switch-default>None Added</p>
                     </div>
                 </dd>
                 <dd ng-hide="vm.isConnected"><em class="text-muted" ng-bind-html="vm.experienceText">

@@ -15,7 +15,7 @@
     </div>
     <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">
         <oset-experience-list ng-switch-when="true"
-                list="vm.driver.experience" view-only="true" max-ct="5">
+                              list="vm.driver.experience" view-only="true" max-ct="5">
 
         </oset-experience-list>
 
@@ -34,19 +34,23 @@
 
     </div>
 
-    <div class="panel-heading">License</div>
+    <div class="panel-heading">
+        <h4>
+            License
+        </h4>
+    </div>
     <div class="panel-body">
 
-        <div ng-repeat="license in vm.driver.licenses" class="license">
-
+        <div ng-repeat="license in vm.driver.licenses" class="license"
+             ng-init="filtered = (vm.filterEndorsements(license))">
             <p>
                 <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}<span
                     ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>
                 Driver License
-                <span class="pull-right">
-                    <span class="strong">Endorsements: </span>
+                <span class="pull-right" ng-if="!!filtered.length">
+                    <small class="strong">Endorsements:</small>
 
-                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
+                    <oset-list-endorsements model="license.endorsements"></oset-list-endorsements>
                 </span>
             </p>
 

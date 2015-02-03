@@ -24,7 +24,6 @@
 
         vm.cancel = function () {
             vm.error = null;
-            debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
                 if (vm.drop) {
@@ -42,11 +41,10 @@
 
         vm.save = function (action) {
             vm.error = null;
-            debugger;
 
             vm.experienceForm.$setSubmitted(true);
 
-            if (vm.experienceForm.$pristine && vm.model.isFresh) {
+            if (action !== 'add' && vm.experienceForm.$pristine && vm.model.isFresh) {
 
                 vm.cancel();
                 vm.experienceForm.$setValidity('model', true);
@@ -71,7 +69,6 @@
                 vm.push();
             }
 
-            debugger; // check date objects
             vm.isEditing = false;
         };
 
@@ -113,7 +110,6 @@
     ExperienceItemController.$inject = ['AppConfig', '$attrs'];
 
     function ExperienceListController() {
-        debugger;
         var vm = this;
 
         vm.viewOnly = vm.viewOnly || false;
@@ -124,7 +120,7 @@
         vm.add = add;
 
         function drop(exp) {
-            var index = _.remove(vm.driver.experience, exp);
+            var index = _.remove(vm.models, exp);
 
             if(!!index) {
                 $log.debug('Successfully removed experience');
@@ -132,7 +128,7 @@
         }
 
         function add() {
-            vm.driver.experience.push({
+            vm.models.push({
                 text: '',
                 startDate: null,
                 endDate: null,
