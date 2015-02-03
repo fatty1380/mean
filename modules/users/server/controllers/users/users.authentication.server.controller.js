@@ -196,15 +196,15 @@ function updateAndLogin(id, update) {
     var deferred = Q.defer();
 
     var query = {'_id': id};
-    var options = {new: false};
+    var options = {new: true};
 
     update.modified = Date.now();
 
     User.findOneAndUpdate(query, update, options, function (err, updatedUser) {
         if (err) {
-            console.log('got an error');
+            console.log('got an error: %j', err);
+            return deferred.reject('Unable to save user\'s sub-profile due to ' + err.message);
         }
-
         updatedUser.cleanse();
 
         deferred.resolve(updatedUser);
