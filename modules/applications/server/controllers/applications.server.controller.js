@@ -9,7 +9,7 @@ Application  = mongoose.model('Application'),
 Message      = mongoose.model('Message'),
 User         = mongoose.model('User'),
 Job          = mongoose.model('Job'),
-Connection = mongoose.model('Connection'),
+Connection   = mongoose.model('Connection'),
 _            = require('lodash');
 
 /**
@@ -263,15 +263,24 @@ exports.applicationByID = function (req, res, next, id) {
                 return next(err);
             }
 
+            if (!application) {
+                console.log('[ApplicationById] No Application Found');
+                return res.status(404).send({message: 'No application found for ID'});
+            }
+
             req.application = application;
 
-            if(req.application.isNew && req.user.isOwner) {
+            if (!!req.application && req.application.isNew && req.user.isOwner) {
                 debugger;
 
                 application.status = 'read';
-                application.save(function(err, newapp) {
-                    if(err) { console.log('ERROR Saving application with new status'); }
-                    else { console.log('Saved application status to %s', newapp.status); }
+                application.save(function (err, newapp) {
+                    if (err) {
+                        console.log('ERROR Saving application with new status');
+                    }
+                    else {
+                        console.log('Saved application status to %s', newapp.status);
+                    }
                 });
             }
 
@@ -349,17 +358,17 @@ exports.persistMessage = function (applicationId, message) {
 };
 
 /** CONNECTIONS ------------------------------------------------------ */
-exports.createConnection = function(req, res) {
+exports.createConnection = function (req, res) {
     // do error checking;
 
-    if(req.application) {
+    if (req.application) {
         var connection, cnxn = {
             company: req.application.company,
             user: req.application.user,
             status: 'full'
         };
 
-        if(req.application.connection) {
+        if (req.application.connection) {
             console.log('[CreateConnection] Updating existing connection');
             connection = _.extend(req.application.connection, cnxn);
         }
@@ -377,12 +386,12 @@ exports.createConnection = function(req, res) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                if(!req.application.connection) {
+                if (!req.application.connection) {
                     req.application.connection = connection;
                     req.application.status = 'connected';
 
-                    req.application.save(function(err, newApp) {
-                        if(err) {
+                    req.application.save(function (err, newApp) {
+                        if (err) {
                             console.error('[CreateConnection] error saving connection to application', err);
                         }
                         console.log('[CreateConnection] Did %sSave Connection to application', !!newApp.connection ? '' : 'NOT ');
