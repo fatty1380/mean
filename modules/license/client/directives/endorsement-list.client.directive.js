@@ -1,11 +1,13 @@
 (function () {
     'use strict';
 
-    var template = '<span ng-repeat="(name, val) in vm.endorsements" ' +
+    var template = '<span><span ng-repeat="(name, val) in vm.endorsements" ' +
         'ng-init="description = vm.getEndorsementName(name)" ' +
+        'ng-if="val"' +
         'class="endorsement label label-success" ' +
         'tooltip-popup-delay="750" ' +
-        'tooltip="{{description}}">{{name}}&nbsp;</span>';
+        'tooltip="{{description}}">{{name}}&nbsp;</span>' +
+        '<span ng-if="vm.filteredEndorsements.length===0">None</span></span>';
 
     function EndorsementDisplayDirective() {
         var ddo;
@@ -18,6 +20,10 @@
             },
             controller: function () {
                 var vm = this;
+
+                vm.filteredEndorsements = _.compact(_.keys(vm.endorsements).map(function (item) {
+                    return (vm.endorsements[item]) ? item : null;
+                }));
 
                 vm.endorsementBase = [
                     {key: 'HME', description: 'Hazardous Materials', value: false},
