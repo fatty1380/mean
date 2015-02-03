@@ -90,10 +90,10 @@ exports.signin = function (req, res, next) {
 function completeUserHydration(req, res, user) {
 
     user.cleanse();
-    debugger; // TODO: Dude, seriously, defer this shit
+
+    var deferred = Q.defer();
 
     if (user.isDriver && !user.driver) {
-
         console.log('[Auth] - Creating new Driver for user `%s`', user.id);
 
         Driver.findOne({
@@ -104,12 +104,10 @@ function completeUserHydration(req, res, user) {
                 return login(req, res, user);
             }
 
-            var deferred = Q.defer();
-
             if (!!driver) {
                 console.log('[LOGIN] Found Driver %s for user %s', driver.id, user.id);
 
-                deferred.resolve(driver);
+                deferred.resolve({driver: driver._id});
             } else {
                 console.log('[SIGNUP] - Creating new Driver for user');
                 var driver = new Driver({'user': user});
@@ -121,7 +119,7 @@ function completeUserHydration(req, res, user) {
                     }
 
                     if(!!driver) {
-                        deferred.resolve(driver);
+                        deferred.resolve({driver: driver._id});
                     }
                     else {
                         deferred.reject('Unknown problem in creating new company');
@@ -129,27 +127,9 @@ function completeUserHydration(req, res, user) {
 
                 });
             }
-
-
-            deferred.promise.then(function(success) {
-                var driver = success;
-
-                updateAndLogin(user.id, {driver: driver._id}).then(
-                    function (newUser) {
-                        login(req, res, newUser);
-                    }, function (err) {
-                        login(req, res, user);
-                    });
-            }, function(err) {
-                console.log('Unable to resolve new Driver due to `%s`', err);
-                login(req,res,user);
-            });
         });
-
-
     }
     else if (user.isOwner && !user.company) {
-
         console.log('[Auth] - Creating new Company for user `%s`', user.id);
 
         Company.findOne({
@@ -160,12 +140,10 @@ function completeUserHydration(req, res, user) {
                 return login(req, res, user);
             }
 
-            var deferred = Q.defer();
-
             if (!!company) {
                 console.log('[LOGIN] Found Company %s for user %s', company.id, user.id);
 
-                deferred.resolve(company);
+                deferred.resolve({company: company._id});
             }
             else {
                 console.log('[SIGNUP] - Creating new Company for user');
@@ -179,32 +157,33 @@ function completeUserHydration(req, res, user) {
                     }
 
                     if(!!company) {
-                        deferred.resolve(company);
+                        deferred.resolve({company: company._id});
                     }
                     else {
                         deferred.reject('Unknown Problem in creating new company');
                     }
                 });
             }
-
-            deferred.promise.then(function(success) {
-                var company = success;
-
-                updateAndLogin(user.id, {company: company._id}).then(
-                    function (newUser) {
-                        login(req, res, newUser);
-                    }, function (err) {
-                        login(req, res, user);
-                    });
-            }, function(err) {
-                console.log('Unable to resolve new Company due to `%s`', err);
-                login(req,res,user);
-            })
         });
     }
     else {
-        login(req, res, user);
+        return login(req, res, user);
     }
+
+    deferred.promise.then(function(success) {
+        var updateObj = success;
+        console.log('[Auth.Hydrate] Updating with obj: %j', updateObj)
+
+        updateAndLogin(user.id, updateObj).then(
+            function (newUser) {
+                login(req, res, newUser);
+            }, function (err) {
+                login(req, res, user);
+            });
+    }, function(err) {
+        console.log('Unable to resolve new %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
+        login(req,res,user);
+    });
 }
 
 
