@@ -4409,6 +4409,10 @@ tos ol > li {
 .outset-list .job-list .post .content.lead-content {
   padding-left: 140px;
 }
+.application-list .job-list .post .content.lead-content h3.post-title,
+.outset-list .job-list .post .content.lead-content h3.post-title {
+  margin-right: 160px;
+}
 .application-list .job-list .post .content .list-picture,
 .outset-list .job-list .post .content .list-picture {
   display: inline-block;
@@ -4607,6 +4611,29 @@ a.btn-oset-primary:hover,
   background: #0a2036;
   border: 2px solid #0a2036;
   color: #fff;
+}
+a.btn-oset-link,
+.btn-oset-link {
+  color: #0e2d4c;
+  background: none!important;
+  border: none-important;
+}
+a.btn-oset-link:hover,
+.btn-oset-link:hover {
+  color: #061321;
+}
+a.btn-oset-link:active,
+.btn-oset-link:active {
+  box-shadow: none;
+  text-shadow: 0 0 1em #226db8;
+}
+a.btn-oset-link.btn-oset-danger,
+.btn-oset-link.btn-oset-danger {
+  color: #a94442;
+}
+a.btn-oset-link.btn-oset-danger:hover,
+.btn-oset-link.btn-oset-danger:hover {
+  color: #843534;
 }
 a.btn-oset-secondary,
 .btn-oset-secondary {
@@ -4861,6 +4888,45 @@ form.applicant-form textarea.form-control {
   min-height: 250px;
   resize: vertical;
 }
+.experience.view {
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 15px;
+}
+.experience.view.last {
+  margin-bottom: 0;
+}
+.experience.view > * {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.experience.view strong,
+.experience.view .pnl-controls {
+  line-height: 36px;
+}
+.experience.view .top-header,
+.experience.view .sub-header {
+  background-color: #f2f2f2;
+}
+.experience.view .top-header,
+.experience.view .pnl-controls {
+  margin-bottom: 0;
+}
+.experience.view .sub-header {
+  border-bottom: 1px solid #cccccc;
+}
+.experience.view .pnl-controls {
+  background-color: #fafafa;
+}
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
   padding-right: 0;
@@ -4936,7 +5002,8 @@ form.applicant-form textarea.form-control {
 .pad-right {
   padding-right: 15px !important;
 }
-.pad-bottom {
+.pad-bottom,
+.pad-btm {
   padding-bottom: 15px !important;
 }
 .pad-top {
@@ -4958,7 +5025,8 @@ form.applicant-form textarea.form-control {
 .mgn-right {
   margin-right: 15px !important;
 }
-.mgn-bottom {
+.mgn-bottom,
+.mgn-btm {
   margin-bottom: 15px !important;
 }
 .mgn-top {

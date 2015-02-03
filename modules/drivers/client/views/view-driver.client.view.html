@@ -8,6 +8,8 @@
     </os-page-header>
 
     <div class="row ">
+
+        <!-- Main Column and content -->
         <div class="col-md-8">
             <div>
                 <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
@@ -46,6 +48,7 @@
             </div>
         </div>
 
+        <!-- Right-hand sidebar and content -->
         <div class="gutter right col-md-4">
 
             <os-bg-check-summary user="vm.user"></os-bg-check-summary>

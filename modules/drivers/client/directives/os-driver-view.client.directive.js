@@ -4,6 +4,7 @@
     var OsDriverViewController = function(Authentication) {
         var vm = this;
         vm.Authentication = Authentication;
+        vm.maxExpCt = 5;
 
         vm.canEdit = function(user) {
             user = user || vm.driver.user;
@@ -12,19 +13,12 @@
             return vm.Authentication.user._id === user._id;
         };
 
-        vm.getExperienceString = function(experience) {
-            var retval = '<strong>' + experience.title + '</strong>';
-
-            retval += ' ' + vm.getDateRange(experience.time);
-
-            return retval;
-        };
-
-        vm.getDateRange = function(time) {
+        vm.getDateRangeString = function(startDate, endDate) {
             var s,e;
 
-            if(time.start && (s = moment(time.start))) {
-                if (time.end && (e = moment(time.end))) {
+
+            if(startDate && (s = moment(startDate))) {
+                if (endDate && (e = moment(endDate))) {
                     return s.format('MMMM, YYYY') + ' - ' + e.format('MMMM, YYYY');
                 }
                 return s.format('MMMM, YYYY') + ' - present';

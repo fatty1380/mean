@@ -1,19 +1,19 @@
 (function () {
     'use strict';
 
-    function ExperienceItemController(AppConfig) {
+    function ExperienceItemController(AppConfig, $attrs) {
 
         var vm = this;
 
-        vm.push = vm.addFn && vm.addFn();
-        vm.drop = vm.dropFn && vm.dropFn();
+        vm.push = angular.isDefined($attrs.addFn) ? vm.addFn() : null;
+        vm.drop = angular.isDefined($attrs.dropFn) ? vm.dropFn() : null;
 
         vm.months = vm.months || AppConfig.getMonths();
 
         console.log('Got %d Months', vm.months.length);
 
         vm.isEditing = !!vm.editMode || !!vm.model.isFresh;
-        vm.editEnable = typeof vm.editEnable === undefined ? true : !!vm.editEnable;
+        vm.canEdit = typeof vm.canEdit === undefined ? !vm.viewOnly : !!vm.canEdit;
 
         vm.revertValue = angular.copy(vm.model);
 
@@ -23,11 +23,12 @@
         };
 
         vm.cancel = function () {
+            vm.error = null;
             debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
-                if (vm.dropFn) {
-                    vm.dropFn(vm.model);
+                if (vm.drop) {
+                    vm.drop(vm.model);
                 } else {
                     vm.model = null;
                 }
@@ -40,38 +41,46 @@
 
 
         vm.save = function (action) {
+            vm.error = null;
+            debugger;
+
+            vm.experienceForm.$setSubmitted(true);
+
             if (vm.experienceForm.$pristine && vm.model.isFresh) {
-                if (vm.dropFn) {
-                    vm.dropFn(vm.model);
-                } else {
-                    vm.model = null;
-                }
+
+                vm.cancel();
                 vm.experienceForm.$setValidity('model', true);
                 vm.experienceForm.$setSubmitted();
                 return true;
             }
 
-            if (vm.experienceForm.$valid) {
-                vm.model.isFresh = false;
-                if (action === 'add') {
-                    var addMore = vm.push();
+            if (vm.experienceForm.$invalid) {
+
+                if (vm.experienceForm.$error.required) {
+                    vm.error = 'Please fill in all required fields before saving';
                 }
-            } else {
-                debugger;
-                event.stopPropigation();
-                vm.error = 'Please correct the errors above before saving this experience';
+                else {
+                    vm.error = 'Please correct the errors on the page before saving';
+                }
+
                 return false;
             }
 
+            vm.model.isFresh = false;
+            if (action === 'add') {
+                vm.push();
+            }
+
+            debugger; // check date objects
             vm.isEditing = false;
         };
 
 
-        vm.getDateRange = function (time) {
+        vm.getDateRangeString = function (startDate, endDate) {
             var s, e;
 
-            if (time.start && (s = moment(time.start))) {
-                if (time.end && (e = moment(time.end))) {
+            if (startDate && (s = moment(startDate))) {
+                if (endDate && (e = moment(endDate))) {
                     return s.format('MMMM, YYYY') + ' - ' + e.format('MMMM, YYYY');
                 }
                 return s.format('MMMM, YYYY') + ' - present';
@@ -89,10 +98,11 @@
             scope: {
                 model: '=',
                 editMode: '=?',
-                editEnable: '=?',
+                canEdit: '=?',
                 addFn: '&?',
                 dropFn: '&?',
-                isLast: '=?'
+                isLast: '=?',
+                viewOnly: '=?'
             },
             controller: 'ExperienceItemController',
             controllerAs: 'vm',
@@ -100,38 +110,37 @@
         };
     }
 
-    ExperienceItemController.$inject = ['AppConfig'];
+    ExperienceItemController.$inject = ['AppConfig', '$attrs'];
 
     function ExperienceListController() {
+        debugger;
         var vm = this;
+
+        vm.viewOnly = vm.viewOnly || false;
+        vm.canEdit = typeof vm.canEdit === undefined ? !vm.viewOnly : !!vm.canEdit;
+        vm.maxCt = vm.maxCt || 50;
 
         vm.drop = drop;
         vm.add = add;
 
-
         function drop(exp) {
-            exp = exp || vm.exp;
+            var index = _.remove(vm.driver.experience, exp);
 
-            if (exp) {
-                for (var i in vm.models) {
-                    if (vm.models[i] === exp) {
-                        vm.models.splice(i, 1);
-                    }
-                }
+            if(!!index) {
+                $log.debug('Successfully removed experience');
             }
         }
 
         function add() {
-
-            vm.models.push({
+            vm.driver.experience.push({
                 text: '',
-                time: {
-                    start: {},
-                    end: {}
-                },
+                startDate: null,
+                endDate: null,
                 location: '',
                 isFresh: true
             });
+
+            vm.maxCt++;
         }
     }
 
@@ -142,7 +151,9 @@
             restrict: 'E',
             scope: {
                 models: '=list',
-                canEdit: '=?'
+                canEdit: '=?',
+                viewOnly: '=?',
+                maxCt: '=?'
             },
             controller: 'ExperienceListController',
             controllerAs: 'vm',

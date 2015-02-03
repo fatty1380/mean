@@ -13,13 +13,13 @@
     <div class="panel-heading" ng-show="vm.driver.experience.length > 0">
         <h4>Experience:</h4>
     </div>
-    <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
-        <strong>{{exp.title}}</strong><label class="pull-right" data-ng-bind="vm.getDateRange(exp.time)"></label>
+    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">
+        <oset-experience-list ng-switch-when="true"
+                list="vm.driver.experience" view-only="true" max-ct="5">
 
-        <p>{{exp.description | limitTo : 1000}}</p>
-        <hr ng-hide="$last"/>
+        </oset-experience-list>
 
-        <p ng-hide="!!vm.driver.experience.length">None Added</p>
+        <p class="text-center" ng-switch-default>None Added</p>
     </div>
 
     <div class="panel-heading" ng-show="vm.driver.interests.length > 0">

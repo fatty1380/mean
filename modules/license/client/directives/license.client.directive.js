@@ -25,10 +25,6 @@
         vm.debug = appConfig.get('debug');
 
         vm.dateFormat = 'MM/DD/YYYY';
-
-        vm.submit = function (form) {
-            debugger;
-        };
     }
 
     function EditLicenseDirective() {
