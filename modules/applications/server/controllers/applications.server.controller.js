@@ -53,7 +53,7 @@ exports.create = function (req, res) {
 
     application.user = req.user;
     application.job = req.job;
-    application.company = req.job.company;
+    application.company = (!!req.job) ? req.job.company : null;
 
     console.log('[ApplicationController.create] Creating new application: %j', application);
 
@@ -67,10 +67,10 @@ exports.create = function (req, res) {
             req.job.applications.push(application);
             req.job.save(function (err) {
                 if (err) {
-                    console.log('error saving job application to job');
+                    console.log('[ApplicationController.create] error saving job application to job');
                 }
                 else {
-                    console.log('saved job application to job');
+                    console.log('[ApplicationController.create] saved job application to job');
                 }
             });
 
