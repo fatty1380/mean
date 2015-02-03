@@ -13,11 +13,14 @@
     <div class="panel-heading" ng-show="vm.driver.experience.length > 0">
         <h4>Experience:</h4>
     </div>
-    <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
-        <strong>{{exp.title}}</strong><label class="pull-right" data-ng-bind="vm.getDateRange(exp.time)"></label>
+    <div class="panel-body">
+        <os-driver-experience ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end | limitTo: vm.maxExpCt"
+                              model="exp" view-only="true" is-last="$last">
+        </os-driver-experience>
 
-        <p>{{exp.description | limitTo : 1000}}</p>
-        <hr ng-hide="$last"/>
+        <p class="text-center" ng-if="vm.driver.experience.length > vm.maxExpCt">
+            <button type="button" class="btn btn-oset-link" ng-click="vm.maxExpCt+=5;">view more ...</button>
+        </p>
 
         <p ng-hide="!!vm.driver.experience.length">None Added</p>
     </div>

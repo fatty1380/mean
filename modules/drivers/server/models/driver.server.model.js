@@ -4,8 +4,29 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    _ = require('lodash');
+Schema       = mongoose.Schema,
+moment       = require('moment'),
+_            = require('lodash');
+
+var experienceSchema = new Schema({
+    title: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    startDate: {      // YYYY-MM-DD
+        type: String,
+        default: null
+    },
+    endDate: {        // YYYY-MM-DD
+        type: String,
+        default: null
+    },
+    location: {
+        type: String
+    }
+}, {_id: false})
 
 /**
  * Driver Schema
@@ -40,21 +61,8 @@ var DriverSchema = new Schema({
         default: ''
     },
 
-    experience: [{
-        title: {
-            type: String
-        },
-        description: {
-            type: String
-        },
-        time: {
-            start: { type: Date, default: null },
-            end: { type: Date, default: null }
-        },
-        location: {
-            type: String
-        }
-    }],
+    experience: [experienceSchema],
+
     interests: {
         type: [{
             key: String,
@@ -62,11 +70,11 @@ var DriverSchema = new Schema({
         }],
         default: []
     },
-    
+
     resume: {
         url: String,
         expires: Date,
-       bucket: String,
+        bucket: String,
         key: String
     },
 
@@ -90,11 +98,62 @@ var DriverSchema = new Schema({
     }
 });
 
-DriverSchema.pre('save', function(next) {
-    debugger;
+DriverSchema.pre('save', function (next) {
     this.modified = Date.now();
 
     next();
+});
+
+DriverSchema.post('init', function (doc) {
+    doc.experience = _.sortBy(doc.experience, function (exp) {
+        if (!exp.endDate) {
+            return 0;
+        }
+
+        return moment().diff(moment(exp.endDate), 'days');
+    });
+});
+
+experienceSchema.pre('save', function (next) {
+    if(!!this._doc.time) {
+        debugger;
+        delete this._doc.time;
+    }
+
+    if (!!this.startDate) {
+        this.startDate = moment(this.startDate).format('YYYY-MM-DD');
+    }
+
+    if (!!this.endDate) {
+        this.endDate = moment(this.endDate).format('YYYY-MM-DD');
+    }
+
+    next();
+});
+
+experienceSchema.post('init', function(doc) {
+    var dt;
+    if(!!(dt = doc._doc.time)) {
+        if(!!dt.start) {
+            doc.startDate = moment(dt.start).format('YYYY-MM-DD');
+        }
+
+        if(!!dt.end) {
+            doc.endDate = moment(dt.end).format('YYYY-MM-DD');
+        }
+
+        delete doc._doc.time;
+    }
+})
+
+experienceSchema.post("init", function (doc) {
+    if (!!doc.startDate) {
+        doc.startDate = moment(doc.startDate, 'YYYY-MM-DD');
+    }
+
+    if (!!doc.endDate) {
+        doc.endDate = moment(doc.endDate, 'YYYY-MM-DD');
+    }
 });
 
 mongoose.model('Driver', DriverSchema);

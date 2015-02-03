@@ -2,7 +2,7 @@
     'use strict';
 
     // Drivers controller
-    function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig) {
+    function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig, $document) {
         var vm = this;
 
         if (!Authentication.user) {
@@ -43,8 +43,19 @@
         }
 
         function submit() {
-            debugger;
-            if (vm.driverForm['vm.experienceForm'] && vm.driverForm['vm.experienceForm'].$pristine) {
+            vm.driverForm.$setSubmitted(true);
+
+            vm.licenseForm = vm.driverForm['vm.licenseForm'];
+            if (!!vm.licenseForm) {
+                vm.licenseForm.$setSubmitted(true);
+            }
+
+            vm.experienceForm = vm.driverForm['vm.experienceForm'];
+            if(!!vm.experienceForm) {
+                vm.experienceForm.$setSubmitted(true);
+            }
+
+            if (vm.experienceForm && vm.experienceForm.$pristine) {
 
                 console.log('Experience untouched ...');
                 if (vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
@@ -54,9 +65,16 @@
                 vm.driverForm.$setValidity('vm.experienceForm', true);
 
             }
+
             if (vm.driverForm.$invalid) {
-                debugger;
-                vm.error = 'Please correct the errors above';
+                if (vm.driverForm.$error.required) {
+                    vm.error = 'Please fill in all required fields before saving';
+                    $document.scrollTopAnimated(0, 300);
+                }
+                else {
+                    vm.error = 'Please correct the errors on the page before saving';
+                }
+
                 return false;
             }
 
@@ -72,14 +90,6 @@
         // Create new Driver
         function create() {
             debugger;
-
-            if (_.isEmpty(vm.driver.licenses[0])) {
-                $log.debug('No license information entered, ignoring ...');
-                vm.driver.licenses = null;
-            } else if (vm.driverForm['vm.licenseForm'].$invalid) {
-                vm.error = vm.driverForm['vm.licenseForm'].$error;
-                return;
-            }
 
             vm.driver.experience = _.compact(vm.driver.experience);
 
@@ -123,14 +133,11 @@
 
 
         function dropExperience(exp) {
-            exp = exp || vm.exp;
 
-            if (exp) {
-                for (var i in vm.driver.experience) {
-                    if (vm.driver.experience[i] === exp) {
-                        vm.driver.experience.splice(i, 1);
-                    }
-                }
+            var index = _.remove(vm.driver.experience, exp);
+
+            if(!!index) {
+                $log.debug('Successfully removed experience');
             }
         }
 
@@ -138,10 +145,8 @@
 
             vm.driver.experience.push({
                 text: '',
-                time: {
-                    start: {},
-                    end: {}
-                },
+                startDate: null,
+                endDate: null,
                 location: '',
                 isFresh: true
             });
@@ -151,7 +156,7 @@
 
     }
 
-    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig'];
+    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig', '$document'];
 
     angular.module('drivers').controller('DriverEditController', DriverEditController);
 })

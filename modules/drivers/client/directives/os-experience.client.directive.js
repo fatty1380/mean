@@ -1,33 +1,34 @@
-(function() {
+(function () {
     'use strict';
 
-    function ExperienceDirectiveController(AppConfig) {
+    function ExperienceDirectiveController(AppConfig, $attrs) {
 
         var vm = this;
 
-        vm.push = vm.addFn && vm.addFn();
-        vm.drop = vm.dropFn && vm.dropFn();
+        vm.push = angular.isDefined($attrs.addFn) ? vm.addFn() : null;
+        vm.drop = angular.isDefined($attrs.dropFn) ? vm.dropFn() : null;
 
         vm.months = vm.months || AppConfig.getMonths();
 
         console.log('Got %d Months', vm.months.length);
 
         vm.isEditing = !!vm.editMode || !!vm.model.isFresh;
-        vm.editEnable = typeof vm.editEnable === undefined ? true : !!vm.editEnable;
+        vm.editEnable = typeof vm.editEnable === undefined ? !vm.viewOnly : !!vm.editEnable;
 
         vm.revertValue = angular.copy(vm.model);
 
-        vm.edit = function() {
+        vm.edit = function () {
             vm.revertValue = angular.copy(vm.model);
             vm.isEditing = true;
         };
 
-        vm.cancel = function() {
+        vm.cancel = function () {
+            vm.error = null;
             debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
-                if (vm.dropFn) {
-                    vm.dropFn(vm.model);
+                if (vm.drop) {
+                    vm.drop(vm.model);
                 } else {
                     vm.model = null;
                 }
@@ -39,39 +40,47 @@
         };
 
 
-        vm.save = function(action) {
-            if(vm.experienceForm.$pristine && vm.model.isFresh) {
-                if (vm.dropFn) {
-                    vm.dropFn(vm.model);
-                } else {
-                    vm.model = null;
-                }
+        vm.save = function (action) {
+            vm.error = null;
+            debugger;
+
+            vm.experienceForm.$setSubmitted(true);
+
+            if (vm.experienceForm.$pristine && vm.model.isFresh) {
+
+                vm.cancel();
                 vm.experienceForm.$setValidity('model', true);
                 vm.experienceForm.$setSubmitted();
                 return true;
             }
 
-            if(vm.experienceForm.$valid) {
-                vm.model.isFresh = false;
-                if (action === 'add') {
-                    var addMore = vm.push();
+            if (vm.experienceForm.$invalid) {
+
+                if (vm.experienceForm.$error.required) {
+                    vm.error = 'Please fill in all required fields before saving';
                 }
-            } else {
-                debugger;
-                event.stopPropigation();
-                vm.error = 'Please correct the errors above before saving this experience';
+                else {
+                    vm.error = 'Please correct the errors on the page before saving';
+                }
+
                 return false;
             }
 
+            vm.model.isFresh = false;
+            if (action === 'add') {
+                vm.push();
+            }
+
+            debugger; // check date objects
             vm.isEditing = false;
         };
 
 
-        vm.getDateRange = function(time) {
-            var s,e;
+        vm.getDateRangeString = function (startDate, endDate) {
+            var s, e;
 
-            if(time.start && (s = moment(time.start))) {
-                if (time.end && (e = moment(time.end))) {
+            if (startDate && (s = moment(startDate))) {
+                if (endDate && (e = moment(endDate))) {
                     return s.format('MMMM, YYYY') + ' - ' + e.format('MMMM, YYYY');
                 }
                 return s.format('MMMM, YYYY') + ' - present';
@@ -92,7 +101,8 @@
                 editEnable: '=?',
                 addFn: '&?',
                 dropFn: '&?',
-                isLast: '=?'
+                isLast: '=?',
+                viewOnly: '=?'
             },
             controller: ExperienceDirectiveController,
             controllerAs: 'vm',
@@ -100,7 +110,7 @@
         };
     }
 
-    ExperienceDirectiveController.$inject = ['AppConfig'];
+    ExperienceDirectiveController.$inject = ['AppConfig', '$attrs'];
 
     angular.module('drivers').directive('osDriverExperience', ExperienceDirective);
 

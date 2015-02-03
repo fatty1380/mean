@@ -17,7 +17,7 @@
             <div class="col-sm-4">
                 <label>Experience:</label>
                 <div ng-repeat="exp in vm.driver.experience">
-                    {{exp.title || 'Job'}} - {{exp.time.start | date: 'shortDate'}} to {{exp.time.end | date: 'shortDate'}}
+                    {{exp.title || 'Job'}} - {{exp.startDate | date: 'shortDate'}} to {{exp.endDate | date: 'shortDate'}}
                     <span ng-hide="$last">,&nbsp;</span>
                     <p ng-hide="vm.driver.experience && vm.driver.experience.length > 0">None Added</p>
                 </div>

@@ -1433,6 +1433,26 @@ a.btn-oset-primary, .btn-oset-primary {
   }
 }
 
+a.btn-oset-link, .btn-oset-link {
+  color: @outset-blue;
+  background: none!important;
+  border: none-important;
+  &:hover {
+    color : darken(@outset-blue, 10%);
+  }
+  &:active {
+    box-shadow: none;
+    text-shadow: 0 0 1em lighten(@outset-blue, 25%);
+  }
+
+  &.btn-oset-danger {
+    color: @state-danger-text;
+    &:hover {
+      color : darken(@state-danger-text, 10%);
+    }
+  }
+}
+
 a.btn-oset-secondary, .btn-oset-secondary {
   background : none;
   border     : 2px solid @outset-blue;
@@ -1687,5 +1707,42 @@ form.applicant-form {
   textarea.form-control {
     min-height : 250px;
     resize     : vertical;
+  }
+}
+
+
+.experience {
+  &.view {
+    border: 1px solid @divider;
+    .border-radius(4px);
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 15px;
+
+    &.last{
+      margin-bottom: 0;
+    }
+
+    >* {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    strong, .pnl-controls {
+      line-height: 36px;
+    }
+    .top-header, .sub-header {
+      background-color: lighten(@divider, 15%);
+    }
+    .top-header, .pnl-controls {
+      margin-bottom: 0;
+    }
+    .sub-header {
+      border-bottom: 1px solid @divider;
+    }
+    .pnl-controls {
+      background-color: lighten(@divider, 18%);
+    }
+
   }
 }

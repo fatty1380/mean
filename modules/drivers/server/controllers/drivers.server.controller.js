@@ -4,14 +4,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+path         = require('path'),
 Driver       = mongoose.model('Driver'),
 License      = mongoose.model('License'),
 Schedule     = mongoose.model('Schedule'),
-constants    = require('../../../../modules/core/server/models/outset.constants'),
-errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
-moment       = require('moment'),
-path         = require('path'),
+constants    = require(path.resolve('./modules/core/server/models/outset.constants')),
+errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
+moment       = require('moment'),
 _            = require('lodash');
 
 /**
@@ -163,10 +163,14 @@ exports.update = function (req, res) {
 
     driver = _.extend(driver, req.body);
 
+    debugger;
+
     driver.save(function (err) {
         if (err) {
+            console.log('[Driver.Update] Unable to update driver due to error: %j', err);
             return res.send(400, {
-                message: getErrorMessage(err)
+                message: 'Unable to save changes at this time. Please try again later',
+                error: err.stack
             });
         } else {
             console.log('Driver Saved: interests: %j\nlicenses[0].endorsements: %j\n\n\n\n\n\n\n', driver.interests, driver.licenses[0].endorsements);

@@ -243,19 +243,23 @@ exports.populateApplications = function (req, res, next) {
  */
 exports.jobByID = function (req, res, next, id) {
 
-    console.log('Loading job by id %s', id);
+    console.log('[JobById] Loading job by id %s', id);
 
     Job.findById(id)
         .populate('user', 'displayName')
         .populate('company')
         .exec(function (err, job) {
             if (err) {
+                console.log('[JobById] Error: %j', err);
                 return next(err);
             }
 
             if (!!req.user && !!req.user.driver) {
+                console.log('[JobById] Both User and Driver are defined in the request!');
                 debugger;
             }
+
+            console.log('[JobById] Returning job %s', !!job && job._id);
 
             req.job = job;
             next();

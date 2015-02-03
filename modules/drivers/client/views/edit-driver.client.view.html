@@ -5,15 +5,31 @@
     <div class="driver create panel panel-default">
         <form name="vm.driverForm" class="form-horizontal" novalidate>
             <fieldset class="container-fluid">
+
+                <div class="row">
+                    <div data-ng-show="vm.error" class="panel panel-danger mgn-vert col-md-8 col-md-offset-2">
+                        <div class="text-danger text-center mgn-vert">
+                            <strong data-ng-bind="vm.error"></strong>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Biography -->
-                <h3>About Me
+                <h3 class="clearfix">About Me
                     <small>Include an introduction to yourself here to help employers know who you are</small>
                 </h3>
                 <div class="container-fluid well">
-                    <div ng-if="vm.driverForm.description.$pristine && vm.driverForm.description.$invalid"
-                         class="text-danger">Please add some information about yourself
+
+                    <div class="row" ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">
+                        <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
+                            <div class="text-danger text-center mgn-vert">
+                                Please add some information about yourself here.
+                            </div>
+                        </div>
                     </div>
+
                     <os-html-edit model="vm.driver.about" os-required="true"></os-html-edit>
+                    <input type="hidden" ng-model="vm.driver.about" name="description" ng-required="true"/>
                 </div>
 
                 <h3>Interests
@@ -37,9 +53,8 @@
                     </small>
                 </h3>
 
-
                 <div class="well">
-                    <os-edit-license model="vm.driver.licenses[0]"></os-edit-license>
+                    <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"></os-edit-license>
                 </div>
 
                 <!-- Driver's Experience Breakdown -->
@@ -49,7 +64,7 @@
                     </small>
                 </h3>
 
-                <div class="container-fluid well">
+                <div class="container-fluid panel">
                     <div class="row profile-row">
                         <div class="col-sm-12">
                             <div class="form-group "
@@ -57,8 +72,7 @@
                                 <div data-ng-repeat="exp in vm.driver.experience" name="experience">
                                     <os-driver-experience model="exp" edit-enable="true" edit-mode="false"
                                                           add-fn="vm.addExperience" is-last="$last"
-                                                          drop-fn="vm.dropExperience"></os-driver-experience>
-                                    <hr>
+                                                          drop-fn="vm.dropExperience" form-name="experienceForm"></os-driver-experience>
                                 </div>
                             </div>
                         </div>

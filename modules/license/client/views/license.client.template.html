@@ -1,10 +1,19 @@
-<ng-form name="vm.licenseForm">
+<ng-form name="vm.licenseForm" ng-init="vm.activate()">
     <div class="container-fluid license-details">
+
+        <div class="row" ng-show="vm.licenseForm.$invalid && (vm.licenseForm.$submitted || vm.licenseForm.description.$dirty)">
+            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
+                <div class="text-danger text-center mgn-vert">
+                    Please fill in required fields and correct errors
+                </div>
+            </div>
+        </div>
+
         <div class="row profile-row">
             <div class="col-sm-6">
 
                 <div class="form-group">
-                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.type.$invalid}">License Type</label>
+                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.type.$invalid && vm.licenseForm.$submitted}">License Type</label>
 
                     <div class="controls col-sm-10 col-md-6">
                         <div class="btn-group">
@@ -30,7 +39,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.state.$invalid}">State
+                    <label class="col-sm-12 col-md-6 control-label" ng-class="{'text-danger':vm.licenseForm.state.$invalid && vm.licenseForm.$submitted}">State
                     </label>
 
                     <div class="controls col-sm-10 col-md-6" syle>
