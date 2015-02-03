@@ -55,20 +55,26 @@
             if (!!vm.mode) {
                 switch (vm.mode.toLowerCase()) {
                     case 'user':
-
                         vm.imageURL = vm.model.profileImageURL;
                         vm.uploadUrl = 'api/users/picture';
                         filter = pictureFilter;
                         break;
-                    case 'company':
 
+                    case 'company':
                         vm.imageURL = vm.model.profileImageURL;
                         vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
                         filter = pictureFilter;
                         break;
+
                     case 'resume':
                         vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
                         filter = resumeFilter;
+                        break;
+
+                    case 'raw':
+                        vm.uploadUrl = null;
+                        debugger; // TODO: Determine how to upload w/out user
+                        filter = pictureFilter;
                         break;
                     default:
                         $log.warn('[PictureUploader] Unknown Mode: %s. Defaulting to user', vm.mode);
