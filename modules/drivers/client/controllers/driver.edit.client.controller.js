@@ -133,15 +133,11 @@
 
 
         function dropExperience(exp) {
-            exp = exp || vm.exp;
-            debugger;
 
-            if (exp) {
-                for (var i in vm.driver.experience) {
-                    if (vm.driver.experience[i] === exp) {
-                        vm.driver.experience.splice(i, 1);
-                    }
-                }
+            var index = _.remove(vm.driver.experience, exp);
+
+            if(!!index) {
+                $log.debug('Successfully removed experience');
             }
         }
 

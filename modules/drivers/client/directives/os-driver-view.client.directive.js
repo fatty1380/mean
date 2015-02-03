@@ -4,6 +4,7 @@
     var OsDriverViewController = function(Authentication) {
         var vm = this;
         vm.Authentication = Authentication;
+        vm.maxExpCt = 5;
 
         vm.canEdit = function(user) {
             user = user || vm.driver.user;

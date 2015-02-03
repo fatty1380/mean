@@ -105,8 +105,6 @@ DriverSchema.pre('save', function (next) {
 });
 
 DriverSchema.post('init', function (doc) {
-    debugger;
-
     doc.experience = _.sortBy(doc.experience, function (exp) {
         if (!exp.endDate) {
             return 0;
@@ -114,10 +112,14 @@ DriverSchema.post('init', function (doc) {
 
         return moment().diff(moment(exp.endDate), 'days');
     });
-    debugger;
 });
 
 experienceSchema.pre('save', function (next) {
+    if(!!this._doc.time) {
+        debugger;
+        delete this._doc.time;
+    }
+
     if (!!this.startDate) {
         this.startDate = moment(this.startDate).format('YYYY-MM-DD');
     }
@@ -129,9 +131,22 @@ experienceSchema.pre('save', function (next) {
     next();
 });
 
-experienceSchema.post("init", function (doc) {
-    console.log("post init");
+experienceSchema.post('init', function(doc) {
+    var dt;
+    if(!!(dt = doc._doc.time)) {
+        if(!!dt.start) {
+            doc.startDate = moment(dt.start).format('YYYY-MM-DD');
+        }
 
+        if(!!dt.end) {
+            doc.endDate = moment(dt.end).format('YYYY-MM-DD');
+        }
+
+        delete doc._doc.time;
+    }
+})
+
+experienceSchema.post("init", function (doc) {
     if (!!doc.startDate) {
         doc.startDate = moment(doc.startDate, 'YYYY-MM-DD');
     }

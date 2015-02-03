@@ -1,19 +1,19 @@
 (function () {
     'use strict';
 
-    function ExperienceDirectiveController(AppConfig) {
+    function ExperienceDirectiveController(AppConfig, $attrs) {
 
         var vm = this;
 
-        vm.push = vm.addFn && vm.addFn();
-        vm.drop = vm.dropFn && vm.dropFn();
+        vm.push = angular.isDefined($attrs.addFn) ? vm.addFn() : null;
+        vm.drop = angular.isDefined($attrs.dropFn) ? vm.dropFn() : null;
 
         vm.months = vm.months || AppConfig.getMonths();
 
         console.log('Got %d Months', vm.months.length);
 
         vm.isEditing = !!vm.editMode || !!vm.model.isFresh;
-        vm.editEnable = typeof vm.editEnable === undefined ? true : !!vm.editEnable;
+        vm.editEnable = typeof vm.editEnable === undefined ? !vm.viewOnly : !!vm.editEnable;
 
         vm.revertValue = angular.copy(vm.model);
 
@@ -27,8 +27,8 @@
             debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
-                if (vm.dropFn) {
-                    vm.dropFn(vm.model);
+                if (vm.drop) {
+                    vm.drop(vm.model);
                 } else {
                     vm.model = null;
                 }
@@ -47,12 +47,8 @@
             vm.experienceForm.$setSubmitted(true);
 
             if (vm.experienceForm.$pristine && vm.model.isFresh) {
-                debugger;
-                if (vm.dropFn) {
-                    vm.dropFn(vm.model);
-                } else {
-                    vm.model = null;
-                }
+
+                vm.cancel();
                 vm.experienceForm.$setValidity('model', true);
                 vm.experienceForm.$setSubmitted();
                 return true;
@@ -72,7 +68,7 @@
 
             vm.model.isFresh = false;
             if (action === 'add') {
-                var addMore = vm.push();
+                vm.push();
             }
 
             debugger; // check date objects
@@ -80,7 +76,7 @@
         };
 
 
-        vm.getDateRange = function (startDate, endDate) {
+        vm.getDateRangeString = function (startDate, endDate) {
             var s, e;
 
             if (startDate && (s = moment(startDate))) {
@@ -105,7 +101,8 @@
                 editEnable: '=?',
                 addFn: '&?',
                 dropFn: '&?',
-                isLast: '=?'
+                isLast: '=?',
+                viewOnly: '=?'
             },
             controller: ExperienceDirectiveController,
             controllerAs: 'vm',
@@ -113,7 +110,7 @@
         };
     }
 
-    ExperienceDirectiveController.$inject = ['AppConfig'];
+    ExperienceDirectiveController.$inject = ['AppConfig', '$attrs'];
 
     angular.module('drivers').directive('osDriverExperience', ExperienceDirective);
 
