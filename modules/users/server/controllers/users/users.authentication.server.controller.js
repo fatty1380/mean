@@ -86,7 +86,6 @@ exports.signup = function (req, res) {
 
             }
             else if (userType === 'owner') {
-                debugger;
                 console.log('[SIGNUP] - Creating new Company for user');
 
                 var company = new Company({'owner': user, 'name': req.body.companyName});
