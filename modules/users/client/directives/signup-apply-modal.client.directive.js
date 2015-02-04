@@ -79,7 +79,7 @@
 
 
         vm.credentials = {signupType: signupType, terms: ''};
-        vm.driver = {experience: [], licenses: [{}], interests: []};
+        vm.driver = {experience: [{}], licenses: [{}], interests: []};
         vm.application = {};
 
         vm.nextStep = function (event) {

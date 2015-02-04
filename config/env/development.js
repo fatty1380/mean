@@ -7,7 +7,8 @@ module.exports = {
         useLocalhost: true
     },
     db: {
-        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        //uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        uri: 'mongodb://localhost/outset-aws',
         options: {
             user: '',
             pass: ''  
@@ -72,7 +73,7 @@ module.exports = {
         google: {
         },
         s3: {
-            enabled: true,
+            enabled: false,
             s3Options: {
                 bucket: 'outset-public-resources',
                 accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',

@@ -4,7 +4,7 @@
 
             <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"
                                   model="exp" is-last="$last" ng-switch-when="true"
-                                  view-only="vm.viewOnly" can-edit="vm.canEdit" edit-mode="false"
+                                  view-only="vm.viewOnly" can-edit="vm.canEdit" edit-mode="exp.isFresh && vm.isEditing"
                                   add-fn="vm.add" drop-fn="vm.drop" is-last="$last">
             </oset-experience-item>
 
