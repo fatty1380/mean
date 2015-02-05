@@ -147,8 +147,8 @@
 
         vm.random = function(item){
 
-            if(!!vm.predicate) {
-                return 1;
+            if(!!vm.predicate || vm.filters.mine || !vm.filters.clear) {
+                return item.postingDate;
             }
 
             if(item.rand) {
