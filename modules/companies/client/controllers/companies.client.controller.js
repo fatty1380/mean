@@ -12,7 +12,7 @@
 
         vm.canEdit = false;
         vm.titleText = 'Company Profile';
-        vm.imageURL = vm.user.profileImageURL;
+        vm.imageURL = 'modules/companies/img/profile/default.png';
 
         console.log('[CompaniesCtrl] Init w/ Company: %o', vm.company);
 
@@ -29,7 +29,7 @@
                 }
             }
 
-            vm.imageURL = vm.company.profileImageURL || vm.user.profileImageURL;
+            vm.imageURL = vm.company.profileImageURL || vm.imageURL;
         }
         else if ($state.is('companies.home')) {
             vm.canEdit = !!vm.config.edit;
@@ -41,7 +41,7 @@
         vm.successFunction = function (fileItem, response, status, headers) {
             // Populate user object
             vm.company = response;
-            vm.imageURL = vm.company.profileImageURL;
+            vm.imageURL = vm.company.profileImageURL || vm.imageURL;
 
             vm.showPhotoEdit = false;
             vm.hideModal();
