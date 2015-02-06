@@ -69,7 +69,7 @@ module.exports = function (io, socket) {
     // Emit the status event when a socket client is disconnected
     socket.on('disconnect', function () {
         debugger;
-        console.log('[DISCONNECT] Where is this coming from: %j', socket);
+        console.log('[DISCONNECT] Where is this coming from: %j', socket.id);
 
         //io.sockets.in('lobby').emit('chatMessage', {
         //    type: 'status',
@@ -119,8 +119,6 @@ module.exports = function (io, socket) {
             username: socket.request.user.username,
             sender: socket.request.user
         });
-
-        socket.room = room;
     });
 
     socket.on('leave-room', function(room) {
@@ -145,8 +143,6 @@ module.exports = function (io, socket) {
                 });
             });
             socket.leave(room);
-
-            socket.room = null;
         }
     })
 
