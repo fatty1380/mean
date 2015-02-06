@@ -3512,6 +3512,9 @@ a.btn-ghost .text,
   border-top: solid 2px #5da830;
   background-color: #f5f5f5;
 }
+.application .row .chat-entry .row {
+  padding: 0;
+}
 .application .row .chat-entry .btn {
   margin: auto;
   vertical-align: 50%;
@@ -3522,8 +3525,8 @@ a.btn-ghost .text,
   text-align: left;
 }
 .application .row .chat-section {
-  min-height: 400px;
-  max-height: 800px;
+  min-height: 200px;
+  max-height: 400px;
   height: 40%;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -3544,16 +3547,30 @@ a.btn-ghost .text,
 .application .row .chat-section .chat-box.me {
   text-align: right;
 }
+.application .row .chat-section .chat-box.me img,
+.application .row .chat-section .chat-box.me blockquote {
+  float: right;
+  margin-left: 20px;
+}
 .application .row .chat-section .chat-box.me blockquote {
   border-right: 2px solid #ec6952;
-  float: right;
+}
+.application .row .chat-section .chat-box.me .left-gutter * {
+  display: none;
 }
 .application .row .chat-section .chat-box.other {
   text-align: left;
 }
+.application .row .chat-section .chat-box.other img,
+.application .row .chat-section .chat-box.other blockquote {
+  float: left;
+  margin-right: 20px;
+}
 .application .row .chat-section .chat-box.other blockquote {
   border-left: 2px solid #ec6952;
-  float: left;
+}
+.application .row .chat-section .chat-box.other .right-gutter * {
+  display: none;
 }
 .application .row .chat-section .chat-box blockquote {
   border: 1px solid #e6e6e6;

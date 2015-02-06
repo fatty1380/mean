@@ -95,6 +95,11 @@
 
         /** Chat Methods ------------------------------------------------ */
         vm.postMessage = function () {
+
+            if(!vm.message) {
+                return false;
+            }
+
             vm.sending = true;
 
             if (!!Socket) {

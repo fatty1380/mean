@@ -1,6 +1,24 @@
 (function () {
     'use strict';
 
+    function ScrollBottomDirective() {
+        return {
+            scope: {
+                scrollBottom: "="
+            },
+            link: function (scope, element) {
+                scope.$watchCollection('scrollBottom', function (newValue) {
+                    if (newValue)
+                    {
+                        element.scrollTopAnimated(element.height());
+                    }
+                });
+            }
+        }
+    }
+
+
+
     //function ScrollDirective($window) {
     //    return {
     //        scope: {
@@ -39,7 +57,9 @@
 
     autofillsync.$inject = ['$timeout'];
 
-    angular.module('core').directive('autofillsync', autofillsync);
+    angular.module('core')
+        .directive('scrollBottom', ScrollBottomDirective)
+        .directive('autofillsync', autofillsync);
 
 
 })();

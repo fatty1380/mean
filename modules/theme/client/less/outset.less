@@ -172,7 +172,9 @@ a.btn-ghost, .btn-ghost {
       border           : solid 1px @divider;
       border-top       : solid 2px @ribbon;
       background-color : @smoky-white;
-
+      .row {
+        padding : 0;
+      }
       .btn {
         margin         : auto;
         vertical-align : 50%;
@@ -183,8 +185,8 @@ a.btn-ghost, .btn-ghost {
       }
     }
     .chat-section {
-      min-height : 400px;
-      max-height : 800px;
+      min-height : 200px;
+      max-height : 400px;
       height     : 40%;
       overflow-y : scroll;
       overflow-x : hidden;
@@ -206,17 +208,33 @@ a.btn-ghost, .btn-ghost {
         &.me {
           text-align : right;
 
+          img, blockquote {
+            float       : right;
+            margin-left : 20px;
+          }
+
           blockquote {
             border-right : 2px solid @color;
-            float        : right;
+          }
+
+          .left-gutter * {
+            display : none;
           }
         }
         &.other {
           text-align : left;
 
+          img, blockquote {
+            float        : left;
+            margin-right : 20px;
+          }
+
           blockquote {
             border-left : 2px solid @color;
-            float       : left;
+          }
+
+          .right-gutter * {
+            display : none;
           }
         }
 
