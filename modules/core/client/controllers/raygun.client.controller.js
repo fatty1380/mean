@@ -1,31 +1,21 @@
-(function() {
+(function () {
     function RaygunProvider($provide) {
-        $provide.decorator("$exceptionHandler", ['$delegate', function($delegate) {
-            return function (exception, cause) {
-                Raygun.send(exception);
-                $delegate(exception, cause);
-            }
-        }])
-
-
-        function RaygunHandler($delegate, $log) {
-            return function (exception, cause) {
-                $log.debug('Sending to Raygun');
-                Raygun.send(exception);
-                $delegate(exception, cause);
-            }
-        };
-
-        RaygunHandler.$inject = ['$delegate', '$log'];
-
-        $provide.decorator("$exceptionHandler", RaygunHandler);
+        $provide.decorator("$exceptionHandler",
+            ['$delegate', '$log',
+                function ($delegate, $log) {
+                    return function (exception, cause) {
+                        debugger;
+                        $log.debug('Sending exception to Raygun');
+                        Raygun.send(exception);
+                        $delegate(exception, cause);
+                    }
+                }])
     }
 
     RaygunProvider.$inject = ['$provide'];
 
     angular.module('core')
         .config(RaygunProvider);
-
 
 
 })();
