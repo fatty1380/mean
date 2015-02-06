@@ -25,7 +25,7 @@
                     'You always have total control over who sees your information'
                 ],
                 wrap: '<p class="align-center">So put your best foot forward, and apply to jobs now</p>',
-                btnSref: 'jobs',
+                btnSref: 'jobs.list',
                 btnText: 'view jobs'
             };
 
