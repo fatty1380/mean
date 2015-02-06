@@ -99,7 +99,7 @@
             }).
 
             state('home', {
-                url: '/h'
+                url: '/'
             });
     }
 

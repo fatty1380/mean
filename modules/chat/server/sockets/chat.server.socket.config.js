@@ -85,7 +85,7 @@ module.exports = function (io, socket) {
 
         console.log('[SOCKET.join-room] Join Room has been called for `%s`', room);
 
-        if (socket.room === room || socket.rooms.contains(room)) {
+        if (socket.room === room || socket.rooms && socket.rooms.indexOf(room)!==-1) {
             console.log('[SOCKET.join-room] Aborting - already in this room');
             return;
         }
@@ -125,7 +125,7 @@ module.exports = function (io, socket) {
 
         console.log('[SOCKET.leave-room] Leave Room has been called for `%s`', room);
 
-        if(!socket.rooms.contains(room)) {
+        if(socket.rooms.indexOf(room) === -1) {
             console.log('[SOCKET.leave-room] Socket is not joined to this room `%j`', socket.rooms);
             return;
         }
