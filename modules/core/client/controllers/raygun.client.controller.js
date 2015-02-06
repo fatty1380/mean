@@ -1,6 +1,15 @@
 (function () {
     function RaygunProvider($provide) {
-        $provide.decorator("$exceptionHandler",
+        $provide.decorator('$exceptionHandler',
+            ['$delegate', function ($delegate) {
+                return function (exception, cause) {
+                    debugger;
+                    Raygun.send(exception);
+                    $delegate(exception, cause);
+                }
+            }]);
+
+        $provide.decorator('$exceptionHandler',
             ['$delegate', '$log',
                 function ($delegate, $log) {
                     return function (exception, cause) {
@@ -9,7 +18,9 @@
                         Raygun.send(exception);
                         $delegate(exception, cause);
                     }
-                }])
+                }]);
+
+        console.log('completed initialization of Raygun Provider(s)')
     }
 
     RaygunProvider.$inject = ['$provide'];
