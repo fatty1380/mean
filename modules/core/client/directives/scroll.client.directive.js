@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ScrollBottomDirective() {
+    function ScrollBottomDirective($timeout) {
         return {
             scope: {
                 scrollBottom: "="
@@ -10,7 +10,13 @@
                 scope.$watchCollection('scrollBottom', function (newValue) {
                     if (newValue)
                     {
-                        element.scrollTopAnimated(element.height());
+                        var height = newValue.length * element.children().height();
+                        $timeout(function() {
+                            height = height || newValue.length * element.children().height();
+                            console.log('Scrolling to height: ' + height);
+                            element.scrollTopAnimated(height);
+                        }, 100);
+
                     }
                 });
             }
@@ -18,6 +24,7 @@
     }
 
 
+    ScrollBottomDirective.$inject = ['$timeout']
 
     //function ScrollDirective($window) {
     //    return {
