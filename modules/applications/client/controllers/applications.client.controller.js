@@ -56,7 +56,7 @@
             }
         };
 
-        vm.scrollToMessages = function() {
+        vm.scrollToMessages = function () {
             // set the location.hash to the id of
             // the element you wish to scroll to.
             $location.hash('messaging');
@@ -64,7 +64,7 @@
             // call $anchorScroll()
             $anchorScroll();
 
-            vm.msgFocus=true;
+            vm.msgFocus = true;
         };
 
         /** Connection Methods ------------------------------------------- */
@@ -100,7 +100,8 @@
             if (!!Socket) {
                 var message = {
                     scope: 'applications',
-                    text: vm.message
+                    text: vm.message,
+                    room: vm.room
                 };
 
                 $log.debug('[AppCtrl.PostMessage] Emitting Message');
@@ -147,8 +148,11 @@
                         else {
                             if (message.text.toLowerCase() === 'is now connected') {
                                 vm.status.them = true;
-                            } else {
-                                debugger;
+                            } else if (message.text.toLowerCase() === 'disconnected') {
+                                vm.status.them = false;
+                            }
+                            else {
+                                Raygun.send(new Error('Unknown message received' + message))
                             }
                         }
                     } else {
@@ -159,7 +163,10 @@
                 $log.debug('[AppCtrl] socket exists. Adding `$destroy` handler');
                 // Remove the event listener when the controller instance is destroyed
                 $scope.$on('$destroy', function () {
-                    Socket.removeListener('chatMessage').leave(vm.room);
+                    $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
+                    Socket.emit('leave-room', vm.room);
+                    debugger;
+                    Socket.removeListener('chatMessage');
                 });
             } else {
                 $log.warn('Socket is undefined in this context');

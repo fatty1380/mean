@@ -3,7 +3,6 @@
         $provide.decorator('$exceptionHandler',
             ['$delegate', function ($delegate) {
                 return function (exception, cause) {
-                    debugger;
                     Raygun.send(exception);
                     $delegate(exception, cause);
                 }
@@ -13,7 +12,6 @@
             ['$delegate', '$log',
                 function ($delegate, $log) {
                     return function (exception, cause) {
-                        debugger;
                         $log.debug('Sending exception to Raygun');
                         Raygun.send(exception);
                         $delegate(exception, cause);

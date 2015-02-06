@@ -339,7 +339,7 @@ exports.persistMessage = function (applicationId, message) {
             Application.findOneAndUpdate(
                 {_id: applicationId},
                 {$push: {messages: msg}},
-                {safe: true, upsert: true},
+                {safe: true, upsert: false},
                 function (err, model) {
                     console.log('saved');
                     debugger;
