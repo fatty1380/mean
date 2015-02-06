@@ -49,7 +49,7 @@ module.exports = function(server, db) {
 
     // Add an event listener to the 'connection' event
     io.on('connection', function(socket) {
-        console.log('[socket.io.js] Connection Opened');
+        console.log('[socket.io.js] Connection Event for socket: %j', socket);
 
         config.files.server.sockets.forEach(function(socketConfiguration) {
             require(path.resolve(socketConfiguration))(io, socket);

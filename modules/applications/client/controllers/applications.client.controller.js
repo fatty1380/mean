@@ -77,8 +77,11 @@
             }
 
             Applications.createConnection(vm.application).then(function (newConnection) {
-                debugger;
+
                 $log.debug('Created new connection! %o', newConnection);
+
+                return $state.go($state.current, $state.params, {reload: true})
+
                 vm.application.connection = newConnection;
                 vm.newlyConnected = true;
                 vm.initSocket();
@@ -86,8 +89,6 @@
             }, function (err) {
                 $log.debug('New connection failed: %o', err);
                 return err;
-            }).then(function () {
-                debugger;
                 vm.connecting = false;
             });
         };
@@ -133,12 +134,14 @@
 
         vm.initSocket = function () {
 
+            debugger;
             if (!!Socket) {
                 $log.debug('[AppCtrl] socket exists. Adding `connect` handler');
-                Socket.on('connect', function () {
-                    $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
-                    Socket.emit('join-room', vm.room);
-                });
+
+
+                $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
+                Socket.emit('join-room', vm.room);
+
 
                 $log.debug('[AppCtrl] socket exists. Adding `chatMessage` handler');
                 // Add an event listener to the 'chatMessage' event
