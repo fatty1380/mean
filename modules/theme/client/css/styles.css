@@ -3488,40 +3488,40 @@ a.btn-ghost .text,
   margin-bottom: 30px;
   font-size: 18px;
 }
-.application .item {
+.application .row {
   padding: 90px 0;
   border-bottom: 1px solid #cccccc;
 }
-.application .item.last-item {
+.application .row.last-item {
   border-bottom: none;
 }
-.application .item .title {
+.application .row .title {
   font-size: 26px;
   color: #4a6781;
   margin-top: 0;
   margin-bottom: 15px;
 }
-.application .item .desc {
+.application .row .desc {
   margin-bottom: 60px;
 }
-.application .item .desc .fa {
+.application .row .desc .fa {
   margin-right: 5px;
 }
-.application .item .chat-entry {
+.application .row .chat-entry {
   border: solid 1px #cccccc;
   border-top: solid 2px #5da830;
   background-color: #f5f5f5;
 }
-.application .item .chat-entry .btn {
+.application .row .chat-entry .btn {
   margin: auto;
   vertical-align: 50%;
   display: block;
 }
-.application .item .chat-entry input,
-.application .item .chat-entry textarea {
+.application .row .chat-entry input,
+.application .row .chat-entry textarea {
   text-align: left;
 }
-.application .item .chat-section {
+.application .row .chat-section {
   min-height: 400px;
   max-height: 800px;
   height: 40%;
@@ -3530,37 +3530,52 @@ a.btn-ghost .text,
   border: solid 1px #cccccc;
   border-top: solid 2px #5da830;
 }
-.application .item .chat-section .chat-box.chat-text-space p {
+.application .row .chat-section .chat-box.chat-text-space p {
   margin-bottom: 10px;
 }
-.application .item .chat-section .chat-box {
+.application .row .chat-section .chat-box {
   padding: 5px;
   background-color: #FFF;
   margin-bottom: 0px;
   color: #666666;
   position: relative;
+  border-bottom: none;
 }
-.application .item .chat-section .chat-box.me {
+.application .row .chat-section .chat-box.me {
   text-align: right;
 }
-.application .item .chat-section .chat-box.other {
+.application .row .chat-section .chat-box.me blockquote {
+  border-right: 2px solid #ec6952;
+  float: right;
+}
+.application .row .chat-section .chat-box.other {
   text-align: left;
 }
-.application .item .chat-section .chat-box h2 {
+.application .row .chat-section .chat-box.other blockquote {
+  border-left: 2px solid #ec6952;
+  float: left;
+}
+.application .row .chat-section .chat-box blockquote {
+  border: 1px solid #e6e6e6;
+}
+.application .row .chat-section .chat-box blockquote p {
+  padding: 10px 20px;
+}
+.application .row .chat-section .chat-box h2 {
   font-size: 14px;
   line-height: 18px;
 }
-.application .item .chat-section .chat-box h2 small {
+.application .row .chat-section .chat-box h2 small {
   color: #cccccc;
   font-size-adjust: -3;
 }
-.application .item .chat-section .chat-box p {
+.application .row .chat-section .chat-box p {
   margin-bottom: 0;
 }
-.application .item .chat-section .chat-box .chat-profile {
+.application .row .chat-section .chat-box .chat-profile {
   position: absolute;
 }
-.application .item .chat-section .chat-box .chat-content {
+.application .row .chat-section .chat-box .chat-content {
   margin-left: 90px;
   background: #f5f5f5;
   -webkit-border-radius: 4px;
@@ -3574,7 +3589,7 @@ a.btn-ghost .text,
   font-size: 14px;
   padding: 15px;
 }
-.application .item .chat-section .chat-box .chat-content:before {
+.application .row .chat-section .chat-box .chat-content:before {
   content: "";
   display: block;
   width: 0;
@@ -3582,43 +3597,43 @@ a.btn-ghost .text,
   position: absolute;
   top: 25px;
 }
-.application .item .chat-section .chat-box.other .chat-profile {
+.application .row .chat-section .chat-box.other .chat-profile {
   left: 20px;
 }
-.application .item .chat-section .chat-box.other .chat-content {
+.application .row .chat-section .chat-box.other .chat-content {
   border-left: 4px solid #e8e8e8;
   margin-left: 90px;
   margin-right: 120px;
 }
-.application .item .chat-section .chat-box.other .chat-content:before {
+.application .row .chat-section .chat-box.other .chat-content:before {
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
   border-right: 10px solid #e8e8e8;
   left: 100px;
 }
-.application .item .chat-section .chat-box.other .timestamp,
-.application .item .chat-section .chat-box.other blockquote {
+.application .row .chat-section .chat-box.other .timestamp,
+.application .row .chat-section .chat-box.other blockquote {
   text-align: left;
 }
-.application .item .chat-section .chat-box.me .chat-profile {
+.application .row .chat-section .chat-box.me .chat-profile {
   right: 20px;
 }
-.application .item .chat-section .chat-box.me .chat-content {
+.application .row .chat-section .chat-box.me .chat-content {
   border-right: 4px solid #e8e8e8;
   margin-left: 120px;
   margin-right: 90px;
 }
-.application .item .chat-section .chat-box.me .chat-content:before {
+.application .row .chat-section .chat-box.me .chat-content:before {
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
   border-left: 10px solid #e8e8e8;
   right: 100px;
 }
-.application .item .chat-section .chat-box.me .timestamp,
-.application .item .chat-section .chat-box.me blockquote {
+.application .row .chat-section .chat-box.me .timestamp,
+.application .row .chat-section .chat-box.me blockquote {
   text-align: right;
 }
-.application .item .chat-section .chat-box blockquote {
+.application .row .chat-section .chat-box blockquote {
   border-left: none;
   font-style: italic;
   color: #666666;
@@ -3626,15 +3641,15 @@ a.btn-ghost .text,
   padding: 0;
   margin-bottom: 10px;
 }
-.application .item .chat-section .chat-box .timestamp {
+.application .row .chat-section .chat-box .timestamp {
   color: #999999;
   font-size: 13px;
   margin-bottom: 0;
 }
-.application .item .chat-section .chat-box .timestamp a {
+.application .row .chat-section .chat-box .timestamp a {
   color: #999999;
 }
-.application .item .chat-section .chat-box .timestamp a:hover {
+.application .row .chat-section .chat-box .timestamp a:hover {
   color: #808080;
 }
 /* ======= Standardized Header BG Page : based on "story" ======= */
@@ -3991,8 +4006,8 @@ i.fa.fa-stack-1x.text-primary {
 }
 .header .navbar li a.btn.btn-cta-secondary {
   margin-top: 18px;
-  padding-top: 5px!important;
-  padding-top: 3px!important;
+  padding-top: 5px !important;
+  padding-top: 3px !important;
 }
 .header .navbar-collapse.collapse .navbar-nav {
   vertical-align: bottom;
@@ -4615,7 +4630,7 @@ a.btn-oset-primary:hover,
 a.btn-oset-link,
 .btn-oset-link {
   color: #0e2d4c;
-  background: none!important;
+  background: none !important;
   border: none-important;
 }
 a.btn-oset-link:hover,

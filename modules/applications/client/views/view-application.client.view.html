@@ -85,7 +85,7 @@
                              ng-class="{'me': message.username === vm.user.username, 'other': message.username !== vm.user.username }">
 
                             <span ng-if="message.type !== 'status'">
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 text-center">
                                     <img class="profile-image medium" ng-show="message.username !== vm.user.username"
                                          ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
                                 </div>
@@ -95,7 +95,7 @@
                                     <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
                                 </div>
 
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 text-center">
                                     <img class="profile-image medium" ng-show="message.username === vm.user.username"
                                          ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
                                 </div>
