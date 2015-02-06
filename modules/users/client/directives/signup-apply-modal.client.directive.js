@@ -69,20 +69,21 @@
         vm.show();
     }
 
-    function SignupApplyController($http, $state, $modalInstance, $log, Authentication, signupType, srefRedirect, $document) {
+    function SignupApplyController($http, $state, $modalInstance, $log, Authentication, signupType, srefRedirect, $document, Drivers) {
         var vm = this;
 
         vm.auth = Authentication;
         vm.srefRedirect = srefRedirect;
         vm.extraText = vm.srefRedirect && vm.srefRedirect.text || null;
-        vm.currentStep = 0;
+        vm.currentStep = 1;
 
 
+        vm.user = {profileImageURL: ''}
         vm.credentials = {signupType: signupType, terms: ''};
-        vm.driver = {experience: [{}], licenses: [{}], interests: []};
+        vm.driver = {resume: {}, experience: [{}], licenses: [{}], interests: []};
         vm.application = {};
 
-        vm.nextStep = function (event) {
+        vm.validateForm = function() {
             var stepForm = vm['subForm' + vm.currentStep];
             if (stepForm.$invalid) {
                 _.map(stepForm.$error, function (errorType) {
@@ -91,33 +92,44 @@
                     });
                 });
                 vm.error = 'please correct the errors above';
-                return;
+                vm.loading = false;
+                return false;
             }
 
             vm.error = null;
-            vm.currentStep++;
+            return true;
+        }
+
+        vm.nextStep = function () {
+            if(vm.validateForm()) {
+                vm.currentStep++;
+            }
         };
 
         vm.prevStep = function () {
             vm.currentStep--;
         };
 
-        vm.signup = function (event) {
+        vm.createUser = function (event) {
+            vm.loading = true;
 
             if (!vm.credentials.terms) {
                 vm.error = 'Please agree to the terms and conditions before signing up';
                 event.preventDefault();
+                vm.loading = false;
                 return false;
             }
 
             if (vm.credentials.password !== vm.credentials.confirmPassword) {
                 $log.debug('passwords do not match, yo!');
                 vm.error = 'Passwords to not match. Please enter them again';
+                vm.loading = false;
                 return false;
             }
 
-            if (vm.signupForm.$invalid) {
+            if(!vm.validateForm()) {
                 vm.error = 'Please fill in all fields above';
+                vm.loading = false;
                 return false;
             }
 
@@ -128,34 +140,84 @@
             $http.post('/api/auth/signup', vm.credentials)
                 .success(function (response) {
                     // If successful we assign the response to the global user model
-                    vm.auth.user = response;
+                    vm.user = vm.auth.user = response;
+
+                    debugger;
+
+                    if(typeof vm.auth.user.driver === 'string') {
+                        vm.driver._id = vm.auth.user.driver;
+
+
+
+                    } else {
+                        vm.driver = _.extend(vm.driver, vm.auth.user.driver);
+
+                    }
 
                     $log.debug('Successfully created %o USER Profile', response.type);
 
-                    $modalInstance.close(response.type);
-
-                    if ($state.is('jobs.view') && response.type === 'driver') {
-                        $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
-                        $state.go('drivers.home', {newUser: true}, {reload: true});
-                    } else if (vm.srefRedirect) {
-                        $state.go(vm.srefRedirect.state, vm.srefRedirect.params, {reload: true});
-                    } else if (!$state.is('jobs.view') && response.type === 'driver') {
-                        $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
-                        $state.go('drivers.home', {newUser: true}, {reload: true});
-                    } else if (!$state.is('intro')) {
-                        $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
-                        $state.go($state.current, {newUser: true}, {reload: true});
-                    } else {
-                        $state.go('home');
-                    }
+                    vm.loading = false;
+                    vm.currentStep++;
                 }).error(function (response) {
                     console.error(response.message);
+                    vm.loading = false;
                     vm.error = response.message;
                 });
         };
+
+        vm.saveDriverDetails = function() {
+            vm.loading = true;
+
+            if(!vm.validateForm()) {
+                vm.error = 'Please fill in all fields above';
+                vm.loading = false;
+                return false;
+            }
+
+            var rsrc = Drivers.ById.get({
+                driverId: vm.driver._id
+            }).$promise.then(function(success) {
+                    $log.debug('Loaded full Driver Profile from server: %o', success);
+                    vm.driver = _.defaults(vm.driver, success);
+
+                    // {resume: {}, experience: [{}], licenses: [{}], interests: []}
+                    success.resume = vm.driver.resume;
+                    success.experience = vm.driver.experience;
+                    success.licenses = vm.driver.licenses;
+                    success.interests = vm.driver.interests;
+
+                    success.$update(function (response) {
+                        debugger;
+                        vm.user.driver = vm.driver = response;
+
+                        $log.debug('Successfully updated DRIVER with details');
+
+                        vm.loading = false;
+                        vm.currentStep++;
+
+                    }, function (errorResponse) {
+                        vm.error = errorResponse.data.message;
+                        vm.loading = false;
+                    });
+                });
+        }
+
+        vm.userPicUploaded = function (fileItem, response, status, headers) {
+            // Populate user object
+            debugger;
+            vm.user = response;
+            vm.imageURL = vm.user.profileImageURL;
+
+            Authentication.user.profileImageURL = response.profileImageURL;
+        };
+
+        vm.about = {
+            zip: 'Your zip code will be used to help improve your experience on the site',
+            password: 'A password will be required in order to see the status of your application and communicate with the employer.'
+        }
     }
 
-    SignupApplyController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
+    SignupApplyController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document', 'Drivers'];
     SignupApplyModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')

@@ -211,7 +211,9 @@
         function cancelUpload() {
             vm.uploader.clearQueue();
 
-            vm.imageURL = vm.model.profileImageURL;
+            if(!!vm.model) {
+                vm.imageURL = vm.model.profileImageURL;
+            }
             vm.success = vm.error = null;
 
             delete vm.newImage;
