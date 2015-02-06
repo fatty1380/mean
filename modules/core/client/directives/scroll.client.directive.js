@@ -8,7 +8,7 @@
             },
             link: function (scope, element) {
                 scope.$watchCollection('scrollBottom', function (newValue) {
-                    if (newValue)
+                    if (newValue && !!element.children() && !!element.children().length)
                     {
                         var height = newValue.length * element.children().height();
                         $timeout(function() {
