@@ -266,7 +266,7 @@ exports.jobByID = function (req, res, next, id) {
 
             if (!!req.user && !!req.user.driver) {
                 console.log('[JobById] Both User and Driver are defined in the request!');
-                debugger;
+
             }
 
             console.log('[JobById] Returning job %s', !!job && job._id);

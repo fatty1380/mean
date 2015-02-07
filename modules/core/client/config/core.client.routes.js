@@ -99,7 +99,20 @@
             }).
 
             state('home', {
-                url: '/'
+                url: '/',
+                controller: ['$state', 'Authentication', function($state, auth) {
+                    if(!auth.user) {
+                        $state.go('intro');
+                    }
+                    else if(auth.user.isDriver) {
+                        $state.go('drivers.home');
+                    }
+                    else if(auth.user.isOwner) {
+                        $state.go('companies.home');
+                    } else {
+                        $state.go('intro');
+                    }
+                }]
             });
     }
 

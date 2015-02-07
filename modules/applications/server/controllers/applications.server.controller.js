@@ -4,12 +4,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
+path           = require('path'),
 Application  = mongoose.model('Application'),
 Message      = mongoose.model('Message'),
 User         = mongoose.model('User'),
 Job          = mongoose.model('Job'),
 Connection   = mongoose.model('Connection'),
+errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
 _            = require('lodash');
 
 /**
@@ -63,7 +65,6 @@ exports.create = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            debugger;
             req.job.applications.push(application);
             req.job.save(function (err) {
                 if (err) {
@@ -72,6 +73,26 @@ exports.create = function (req, res) {
                 else {
                     console.log('[ApplicationController.create] saved job application to job');
                 }
+
+
+                debugger;
+
+                var options = [
+                    {
+                        name: 'APPLICANT',
+                        content: req.user.firstName + ' ' + req.user.lastName.substring(0,1).toUpperCase()
+                    },
+                    {
+                        name: 'COVER_LTR',
+                        content: application.introduction
+                    },
+                    {
+                        name: 'LINK_URL',
+                        content: 'https://joinoutset.com/applications/'+application.id
+                    }
+                ]
+
+                emailer.sendTemplateBySlug('outset-new-applicant', req.job.user, options);
             });
 
             res.json(application);
