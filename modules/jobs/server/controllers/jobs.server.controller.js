@@ -256,7 +256,7 @@ exports.jobByID = function (req, res, next, id) {
     console.log('[JobById] Loading job by id %s', id);
 
     Job.findById(id)
-        .populate('user', 'displayName')
+        .populate('user', 'displayName email')
         .populate('company')
         .exec(function (err, job) {
             if (err) {
