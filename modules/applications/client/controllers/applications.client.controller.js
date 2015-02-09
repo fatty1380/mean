@@ -3,12 +3,16 @@
 
     function ApplicationMainController(application, auth, $state, $log, $scope, Socket, Applications, $location, $anchorScroll) {
         var vm = this;
+
+        if(!application) {
+            debugger;
+        }
+
         vm.application = application;
         vm.messageMode = 'multiline';
         vm.isopen = false;
         vm.myId = auth.user._id;
         vm.user = auth.user;
-        vm.room = vm.application._id;
         vm.text = {};
         vm.activeConnection = false;
 
@@ -97,7 +101,7 @@
         /** Chat Methods ------------------------------------------------ */
         vm.postMessage = function () {
 
-            if(!vm.message) {
+            if(!vm.message || !vm.room) {
                 return false;
             }
 
@@ -134,10 +138,10 @@
 
         vm.initSocket = function () {
 
-            debugger;
             if (!!Socket) {
                 $log.debug('[AppCtrl] socket exists. Adding `connect` handler');
 
+                vm.room = vm.application._id;
 
                 $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
                 Socket.emit('join-room', vm.room);
