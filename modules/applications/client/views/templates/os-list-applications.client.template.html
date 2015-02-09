@@ -5,9 +5,10 @@
 
             <!-- Iterate over the list of jobs ... For Owners -->
 
-            <article class="post col-sm-12"
+            <article class="post col-sm-12 applicant"
                      ng-switch-when="owner" ng-repeat="job in vm.jobs"
-                     ng-show="vm.visibleId === job._id || !vm.visibleId">
+                     ng-show="vm.visibleId === job._id || !vm.visibleId"
+                    ng-init="job.newMessages=0;">
 
                 <!--INNER OWNER CONTENT-->
                 <div class="post-inner">
@@ -29,6 +30,8 @@
                                         ng-click="vm.showTab(job._id, 'applicants', job.applications.length)"
                                         ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}">
                                     <i class="fa fa-users fa-lg"></i><span class="hidden-xs mgn-left">{{job.applications.length}} Applicant{{job.applications.length === 1 ? '' : 's'}}</span>
+                                    <i class="fa fa-comments-o fa-lg mgn-left"></i>
+                                    <span class="badge" ng-show="!!job.newMessages" tooltip="{{job.newMessages}} new message{{job.newMessages>1?'s':''}}">{{job.newMessages}}</span>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(job._id, 'details')"
@@ -46,9 +49,9 @@
                     <div class="content body">
                         <div class="tab-body">
                             <div class="post-entry" ng-show="vm.visibleTab === 'applicants'">
-                                <div class="row" ng-show="vm.visibleId === job._id"
+                                <div class="row applicant_item" ng-show="vm.visibleId === job._id"
                                      data-ng-repeat="application in job.applications"
-                                     data-ng-init="user = application.user; driver = user.driver;license = driver.licenses[0];"
+                                     data-ng-init="user = application.user; driver = user.driver;license = driver.licenses[0]; vm.checkMessages(application, job)"
                                      ui-sref="applications.view({'applicationId': application._id})"
                                      ng-class="{'disabled': application.disabled}">
 
@@ -60,7 +63,7 @@
                                     <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">
                                         <p>
                                             <span
-                                            class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>
+                                                    class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>
                                             <br class="hidden-lg hidden-md">
                                             <os-application-status-badge
                                                     model="application"></os-application-status-badge>
@@ -108,27 +111,17 @@
                                         </div>
 
 
-                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">
+                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right"
+                                             ng-hide="!!application.messages && !!application.messages.length">
                                             Messages
                                         </div>
-                                        <div class="col-md-9 col-lg-10 col-xs-12">
-                                            <span ng-show="!!application.isConnected"
-                                                  ng-init="otherMsgs = (application.messages | filter : {'sender' : ('!'+user._id)})">
-                                                <p style="margin-bottom: 2px;"
-                                                   ng-show="application.messages && application.messages.length">
-                                                    {{otherMsgs.length ? otherMsgs.length : 'no'}} received messages
-                                                    <a class="pull-right"
-                                                       ui-sref="applications.view({applicationId: application._id, target: 'message'})">
-                                                        send a new message
-                                                    </a>
-                                                </p>
-
-                                                <p style="margin-bottom: 2px;"
-                                                   ng-hide="application.messages && application.messages.length">
+                                        <div class="col-md-9 col-lg-10 col-xs-12"
+                                             ng-hide="!!application.messages && !!application.messages.length">
+                                            <span ng-show="!!application.isConnected">
+                                                <p style="margin-bottom: 2px;">
                                                     discuss the job and schedule an interview
-                                                    <a class="pull-right"
-                                                       ui-sref="applications.view({applicationId: application._id, target: 'message'})">
-                                                        send a new message
+                                                    <a ui-sref="applications.view({applicationId: application._id, target: 'message'})">
+                                                        send by sending a message
                                                     </a>
                                                 </p>
                                             </span>
@@ -159,9 +152,9 @@
                                         <br class="visible-lg mgn-vert"/>
                                         <a class="read-more strong"
                                            style="white-space: nowrap"
-                                           tooltip="vm.messagingText" tooltip-popup-delay="1000"
+                                           tooltip="{{application.messagingText || vm.messagingText}}" tooltip-popup-delay="1000"
                                            ui-sref="applications.view({applicationId: application._id, action: 'message'})">
-                                            Messages&nbsp;<i class="fa fa-comments-o fa-lg mgn-left"></i>
+                                            {{application.newMessages ? application.newMessages + ' New ' : ''}}Message{{application.newMessages === 1 ? '': 's'}}&nbsp;<i class="fa fa-comments-o fa-lg mgn-left"></i>
                                         </a>
                                         <!--TODO: Change the "Reject" into a state rather than a callback-->
                                         <!--<br>-->
@@ -170,15 +163,15 @@
                                         <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->
                                         <!--</a>-->
                                     </div>
+                                </div>
 
 
-                                    <div class="list-group" ng-if="!(job.applications && job.applications.length)"
-                                         ng-show="vm.visibleId === job._id">
-                                        <div class="list-group-item text-center">
-                                            <h4>No one has applied to this job yet. Would you like to <a
-                                                    ui-sref="jobs.edit({'jobId':job._id})">edit
-                                                your post?</a></h4>
-                                        </div>
+                                <div class="list-group" ng-if="!(job.applications && job.applications.length)"
+                                     ng-show="vm.visibleId === job._id">
+                                    <div class="list-group-item text-center">
+                                        <h4>No one has applied to this job yet. Would you like to <a
+                                                ui-sref="jobs.edit({'jobId':job._id})">edit
+                                            your post?</a></h4>
                                     </div>
                                 </div>
                             </div>

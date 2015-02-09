@@ -1342,6 +1342,14 @@ os-bg-check-summary > .pricing {
         padding-bottom : 15px;
         padding-top    : 5px;
       }
+
+      .post-entry {
+        > div.row {
+          padding-bottom: 10px;
+          margin-bottom: 20px;
+          border-bottom: 1px solid @divider;
+        }
+      }
     }
   }
   .blog-category-list.job-list {
@@ -1619,6 +1627,12 @@ div, .btn, a, .btn-cta {
 
   &[disabled] {
     opacity : 0.0;
+  }
+
+  span.badge {
+    color: @color;
+    background-color: #FFF;
+    border: thin solid @color;
   }
 }
 

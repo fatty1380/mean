@@ -35,6 +35,7 @@
         vm.user = vm.user || Authentication.user;
         vm.config = vm.config || {};
 
+        vm.newMessages = 0;
         vm.noItemsText = 'No job applications yet';
 
         function activate() {
@@ -80,6 +81,33 @@
             state.application.isNew = state.application.isConnected = false;
             state.application.isRejected = true;
             state.application.disabled = true;
+        };
+
+        vm.checkMessages = function(application, job) {
+            var applicationId = application._id;
+            var userId = vm.user._id;
+
+            vm.ApplicationFactory.getMessages(applicationId, userId).then(function(success) {
+                if(vm.visibleId === applicationId) {
+                    debugger;
+                }
+                application.messages = success.data;
+                application.lastMessage = success.latest;
+                application.messageCt = success.theirs.length;
+                application.newMessages = success.newMessages || 0;
+
+                if(application.newMessages > 0) {
+                    application.messagingText = application.newMessages + ' new message' + (application.newMessages === 1?'':'s') + ' awaiting your reply';
+                } else {
+                    application.messagingText = application.messages.length + ' total messages';
+                }
+
+                job.newMessages += application.newMessages;
+                vm.newMessages += application.newMessages;
+
+            }, function(err) {
+                debugger;
+            });
         };
 
         vm.showTab = function (itemId, tabName) {

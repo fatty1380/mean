@@ -4478,6 +4478,12 @@ tos ol > li {
   padding-bottom: 15px;
   padding-top: 5px;
 }
+.application-list .job-list .post .content .post-entry > div.row,
+.outset-list .job-list .post .content .post-entry > div.row {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #cccccc;
+}
 .application-list .blog-category-list.job-list .post,
 .outset-list .blog-category-list.job-list .post {
   margin-bottom: 20px;
@@ -4830,6 +4836,11 @@ a > .fa,
 }
 .btn-tab[disabled] {
   opacity: 0.0;
+}
+.btn-tab span.badge {
+  color: #ec6952;
+  background-color: #FFF;
+  border: thin solid #ec6952;
 }
 .tab-body {
   border-top: 2px solid #ec6952;

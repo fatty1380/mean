@@ -336,6 +336,46 @@ exports.hasAuthorization = function (req, res, next) {
     next();
 };
 
+/** ---- MESSAGES ------------------------------------------ */
+
+exports.getMessages = function(req, res, next) {
+    var application = req.application;
+
+    if(!application) {
+        return res.status(404).send({message: 'No application found for ID'});
+    }
+
+    var response = {data: application.messages, theirs: [], latest: {} };
+
+    if(application && !application.connection) {
+        response.message = 'No valid connection';
+        return res.status(402).send(response);
+    }
+
+    var myLast = _.findLast(application.messages, function(msg) {
+        return req.user.equals(msg.sender);
+    });
+
+    var newCt = 0;
+
+    response.theirs = _.filter(application.messages, function(msg) {
+        if(!myLast || myLast.created < msg.created) {
+            msg.isNew = true;
+            newCt ++;
+        }
+        return !req.user.equals(msg.sender);
+    });
+
+    response.newMessages = newCt;
+
+
+    response.latest = _.max(application.messages, function(msg) {
+        return msg.created;
+    });
+
+    res.json(response);
+};
+
 exports.persistMessage = function (applicationId, message) {
     debugger;
     var msg = new Message({
@@ -393,7 +433,7 @@ exports.persistMessage = function (applicationId, message) {
                                 name: 'LINK_URL',
                                 content: 'https://joinoutset.com/applications/' + populated.id
                             }
-                        ]
+                        ];
 
                         emailer.sendTemplateBySlug('outset-new-messages', recipient, options);
                     });
@@ -463,7 +503,7 @@ exports.createConnection = function (req, res) {
                             name: 'LINK_URL',
                             content: 'https://joinoutset.com/applications/' + req.application.id
                         }
-                    ]
+                    ];
 
                     emailer.sendTemplateBySlug('outset-new-connection-copy-01', req.application.user, options);
                 }
@@ -475,4 +515,4 @@ exports.createConnection = function (req, res) {
     else {
         res.status(404).send({message: 'no application found'});
     }
-}
+};
