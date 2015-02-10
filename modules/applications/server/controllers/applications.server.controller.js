@@ -124,24 +124,33 @@ exports.update = function (req, res) {
     application = _.extend(application, req.body);
 
     application.save(function (err) {
-        if (err) {
-            console.log('[APPLICATION.Update] %j', err);
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            var opts = [{
-                path: 'sender',
-                select: 'displayName',
-                model: 'User'
-            }];
-
-            Application.populate(application.messages, opts,
-                function (err, messages) {
-                    res.json(application);
+            if (err) {
+                console.log('[APPLICATION.Update] %j', err);
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
                 });
-        }
-    });
+            } else {
+                var options = [
+                    //{path: 'user', model: 'User'},
+                    {path: 'job', model: 'Job'},
+                    {path: 'company', model: 'Company', select: 'name owner agents profileImageURL'},
+                    //{path: 'messages'},
+                    {path: 'connection'},
+                    {path: 'messages.sender', model: 'User'},
+                    {path: 'user.driver', model: 'Driver'},
+                    {path: 'connection.isValid'}
+                ];
+
+                Application.populate(application, options, function (err, populated) {
+                    if (err) {
+                        console.log('error retrieving application, returning non-populated version', err);
+                        return res.json(application);
+                    }
+
+                    res.json(populated);
+                });
+            }
+        });
 };
 
 /**
@@ -291,21 +300,6 @@ exports.applicationByID = function (req, res, next, id) {
 
             req.application = application;
 
-            if (!!req.application && req.application.isNew && req.user.isOwner) {
-                debugger;
-
-                application.status = 'read';
-                application.save(function (err, newapp) {
-                    if (err) {
-                        console.log('ERROR Saving application with new status');
-                    }
-                    else {
-                        console.log('Saved application status to %s', newapp.status);
-                    }
-                });
-            }
-
-
             var options = [
                 {path: 'messages.sender', model: 'User'},
                 {path: 'user.driver', model: 'Driver'},
@@ -338,30 +332,30 @@ exports.hasAuthorization = function (req, res, next) {
 
 /** ---- MESSAGES ------------------------------------------ */
 
-exports.getMessages = function(req, res, next) {
+exports.getMessages = function (req, res, next) {
     var application = req.application;
 
-    if(!application) {
+    if (!application) {
         return res.status(404).send({message: 'No application found for ID'});
     }
 
-    var response = {data: application.messages, theirs: [], latest: {} };
+    var response = {data: application.messages, theirs: [], latest: {}};
 
-    if(application && !application.connection) {
+    if (application && !application.connection) {
         response.message = 'No valid connection';
         return res.status(402).send(response);
     }
 
-    var myLast = _.findLast(application.messages, function(msg) {
+    var myLast = _.findLast(application.messages, function (msg) {
         return req.user.equals(msg.sender);
     });
 
     var newCt = 0;
 
-    response.theirs = _.filter(application.messages, function(msg) {
-        if(!myLast || myLast.created < msg.created) {
+    response.theirs = _.filter(application.messages, function (msg) {
+        if (!myLast || myLast.created < msg.created) {
             msg.isNew = true;
-            newCt ++;
+            newCt++;
         }
         return !req.user.equals(msg.sender);
     });
@@ -369,7 +363,7 @@ exports.getMessages = function(req, res, next) {
     response.newMessages = newCt;
 
 
-    response.latest = _.max(application.messages, function(msg) {
+    response.latest = _.max(application.messages, function (msg) {
         return msg.created;
     });
 
@@ -419,7 +413,7 @@ exports.persistMessage = function (applicationId, message) {
                     Application.populate(model, options, function (err, populated) {
                         if (err) {
                             console.log('error retrieving application, returning non-populated version', err);
-                           return false;
+                            return false;
                         }
                         debugger;
                         var recipient = msg.sender.equals(populated.user.id) ? populated.company.owner : populated.user;

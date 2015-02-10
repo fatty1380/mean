@@ -8,7 +8,7 @@
             <article class="post col-sm-12 applicant"
                      ng-switch-when="owner" ng-repeat="job in vm.jobs"
                      ng-show="vm.visibleId === job._id || !vm.visibleId"
-                    ng-init="job.newMessages=0;">
+                     ng-init="job.newMessages=0;">
 
                 <!--INNER OWNER CONTENT-->
                 <div class="post-inner">
@@ -31,7 +31,8 @@
                                         ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}">
                                     <i class="fa fa-users fa-lg"></i><span class="hidden-xs mgn-left">{{job.applications.length}} Applicant{{job.applications.length === 1 ? '' : 's'}}</span>
                                     <i class="fa fa-comments-o fa-lg mgn-left"></i>
-                                    <span class="badge" ng-show="!!job.newMessages" tooltip="{{job.newMessages}} new message{{job.newMessages>1?'s':''}}">{{job.newMessages}}</span>
+                                    <span class="badge" ng-show="!!job.newMessages"
+                                          tooltip="{{job.newMessages}} new message{{job.newMessages>1?'s':''}}">{{job.newMessages}}</span>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-click="vm.showTab(job._id, 'details')"
@@ -121,7 +122,7 @@
                                                 <p style="margin-bottom: 2px;">
                                                     discuss the job and schedule an interview
                                                     <a ui-sref="applications.view({applicationId: application._id, target: 'message'})">
-                                                        send by sending a message
+                                                         by sending a message
                                                     </a>
                                                 </p>
                                             </span>
@@ -152,9 +153,12 @@
                                         <br class="visible-lg mgn-vert"/>
                                         <a class="read-more strong"
                                            style="white-space: nowrap"
-                                           tooltip="{{application.messagingText || vm.messagingText}}" tooltip-popup-delay="1000"
+                                           tooltip="{{application.messagingText || vm.messagingText}}"
+                                           tooltip-popup-delay="1000"
                                            ui-sref="applications.view({applicationId: application._id, action: 'message'})">
-                                            {{application.newMessages ? application.newMessages + ' New ' : ''}}Message{{application.newMessages === 1 ? '': 's'}}&nbsp;<i class="fa fa-comments-o fa-lg mgn-left"></i>
+                                            {{application.newMessages ? application.newMessages + ' New ' :
+                                            ''}}Message{{application.newMessages === 1 ? '': 's'}}&nbsp;<i
+                                                class="fa fa-comments-o fa-lg mgn-left"></i>
                                         </a>
                                         <!--TODO: Change the "Reject" into a state rather than a callback-->
                                         <!--<br>-->
@@ -199,8 +203,9 @@
             <!-- Iterate over the list of applications ... For Drivers -->
 
             <article class="post job-post col-sm-12 applicant"
-                     ng-switch-when="driver" ng-repeat="application in vm.applications"
-                     ng-init="job = application.job">
+                     ng-switch-when="driver"
+                     ng-repeat="application in vm.applications"
+                     ng-init="job = application.job;  vm.checkMessages(application, job)">
                 <!--ng-show="vm.visibleId === application._id || !vm.visibleId">-->
                 <div class="post-inner">
                     <div class="content lead-content">
@@ -224,13 +229,24 @@
                                         <os-application-status-badge
                                                 model="application"></os-application-status-badge>
                                     </dd>
-                                    <dt>Messages:</dt>
-                                    <dd ng-init="otherMsgs = (application.messages | filter : {'sender' : ('!'+vm.user._id)})">
-                                        <span ng-if="application.connection.isValid">{{otherMsgs.length ? otherMsgs.length
-                                            : 'no'}} messages.</span>
 
-                                        <span ng-if="!application.connection || !application.connection.isValid"><em
-                                                class="text-muted">chat available <br>once connected</em></span>
+                                    <dt ng-hide="!!application.messages && !!application.messages.length">
+                                        Messages
+                                    </dt>
+                                    <dd ng-hide="!!application.messages && !!application.messages.length">
+                                            <span ng-show="!!application.isConnected">
+                                                <p style="margin-bottom: 2px;">
+                                                    discuss the job and schedule an interview
+                                                    <a ui-sref="applications.view({applicationId: application._id, target: 'message'})">
+                                                        by sending a message
+                                                    </a>
+                                                </p>
+                                            </span>
+                                            <span ng-hide="!!application.isConnected">
+                                                <p style="margin-bottom: 2px;">
+                                                    <em class="text-muted">chat available once connected</em></span>
+                                                </p>
+                                            </span>
                                     </dd>
                                 </dl>
 
@@ -258,8 +274,12 @@
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                                         ng-show="application.isConnected || !!application.messages.length"
+                                        tooltip="{{application.messagingText || vm.messagingText}}"
+                                        tooltip-popup-delay="1000"
                                         ui-sref="applications.view({applicationId: application._id})">
-                                    <i class="fa fa-comments-o fa-lg mgn-right"></i>Messaging
+                                    {{application.newMessages ? application.newMessages + ' New ' :
+                                    ''}}Message{{application.newMessages === 1 ? '': 's'}}&nbsp;<i
+                                        class="fa fa-comments-o fa-lg mgn-left"></i>
                                 </button>
                             </div>
                         </div>

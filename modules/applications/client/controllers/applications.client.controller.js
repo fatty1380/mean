@@ -7,7 +7,7 @@
         if(!application) {
             debugger;
         }
-
+        vm.ApplicationFactory = Applications;
         vm.application = application;
         vm.messageMode = 'multiline';
         vm.isopen = false;
@@ -42,9 +42,28 @@
                 $log.debug('No connection, or invalid connection - not creating socket.');
             }
 
-            vm.text.noconnection = (vm.user.type === 'driver')
+            if(vm.user.isOwner && vm.application.isNew) {
+                vm.setApplicationStatus('read');
+            }
+
+            vm.text.noconnection = (vm.user.isDriver)
                 ? 'The employer has not yet connected with you. Once they have, they will have access to your full profile and will be able to chat with you right here.'
                 : 'In order to view reports and chat with this applicant, you must first <em>Connect</em> with them using the button below. This will count against your monthly allotment of connections.';
+        };
+
+        vm.setApplicationStatus = function(status) {
+
+            var app = vm.ApplicationFactory.setStatus(vm.application._id, status);
+
+            debugger; /// TODO: Double Check promise
+
+            app.then(function(success) {
+                $log.debug('[setApplicationStatus] %s', success);
+                application = success;
+            }, function(reject) {
+                debugger;
+                $log.warn('[setApplicationStatus] %s', reject);
+            });
         };
 
         /** Private Methods --------------------------------------------- */

@@ -58,8 +58,7 @@ function sendGenericTemplateEmail(templateName, user, options) {
         ]
     };
 
-    if(!!options && !!options.length) {
-        debugger;
+    if (!!options && !!options.length) {
         mailOptions.global_merge_vars = _.union(mailOptions.global_merge_vars, options);
     }
 

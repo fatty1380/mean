@@ -4913,6 +4913,11 @@ dl.mini-table dt dd p {
 .report-badges .report-badge.available .fa.fa-question {
   display: inherit;
 }
+.report-badges .report-badge .fa.fa-check,
+.report-badges .report-badge .fa.fa-times,
+.report-badges .report-badge .fa.fa-question {
+  display: none;
+}
 .report-badges .report-badge .fa.fa-1x {
   position: absolute;
   right: 5px;
