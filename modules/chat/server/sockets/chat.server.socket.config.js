@@ -11,14 +11,14 @@ module.exports = function (io, socket) {
     console.log('[SOCKET] Initializing Connection for `%s`', socket.request.user.displayName);
 
     // Emit the status event when a new socket client is connected
-    io.sockets.in('lobby').emit('chatMessage', {
-        type: 'status',
-        text: 'Is now connected',
-        created: Date.now(),
-        profileImageURL: socket.request.user.profileImageURL,
-        username: socket.request.user.username,
-        sender: socket.request.user
-    });
+    //io.sockets.in('lobby').emit('chatMessage', {
+    //    type: 'status',
+    //    text: 'Is now connected',
+    //    created: Date.now(),
+    //    profileImageURL: socket.request.user.profileImageURL,
+    //    username: socket.request.user.username,
+    //    sender: socket.request.user
+    //});
 
     // Send a chat messages to all connected sockets when a message is received 
     socket.on('chatMessage', function (message) {
@@ -59,6 +59,7 @@ module.exports = function (io, socket) {
         }
         else {
             debugger;
+            console.error('[SOCKET.%s] NO Room Specified - aborting send: %o', message.type, message);
             return false;
             console.log('[SOCKET.%s] No Room Specified - directing to `lobby`: %s', message.type, message.username);
             io.sockets.in('lobby').emit('chatMessage', message);
@@ -67,15 +68,16 @@ module.exports = function (io, socket) {
 
     // Emit the status event when a socket client is disconnected
     socket.on('disconnect', function () {
-        console.log('[DISCONNECT] socket room? %s', socket.room);
+        debugger;
+        console.log('[DISCONNECT] Where is this coming from: %j', socket.id);
 
-        io.sockets.in('lobby').emit('chatMessage', {
-            type: 'status',
-            text: 'disconnected',
-            created: Date.now(),
-            username: socket.request.user.username,
-            sender: socket.request.user
-        });
+        //io.sockets.in('lobby').emit('chatMessage', {
+        //    type: 'status',
+        //    text: 'disconnected',
+        //    created: Date.now(),
+        //    username: socket.request.user.username,
+        //    sender: socket.request.user
+        //});
     });
 
     /*** ------------- NEW STUFF - Aiming towards different "rooms" --------------------------***/
@@ -117,8 +119,6 @@ module.exports = function (io, socket) {
             username: socket.request.user.username,
             sender: socket.request.user
         });
-
-        socket.room = room;
     });
 
     socket.on('leave-room', function(room) {
@@ -143,8 +143,6 @@ module.exports = function (io, socket) {
                 });
             });
             socket.leave(room);
-
-            socket.room = null;
         }
     })
 

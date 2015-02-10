@@ -99,7 +99,23 @@
             }).
 
             state('home', {
-                url: '/'
+                url: '/h',
+                controller: ['$state', 'Authentication', '$timeout', function($state, auth, $timeout) {
+                    debugger;
+                    $timeout(function() {
+                        if (!auth.user) {
+                            $state.go('intro');
+                        }
+                        else if (auth.user.isDriver) {
+                            $state.go('drivers.home');
+                        }
+                        else if (auth.user.isOwner) {
+                            $state.go('companies.home');
+                        } else {
+                            $state.go('intro');
+                        }
+                    }, 1000);
+                }]
             });
     }
 

@@ -4,12 +4,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
+path         = require('path'),
 Application  = mongoose.model('Application'),
 Message      = mongoose.model('Message'),
 User         = mongoose.model('User'),
 Job          = mongoose.model('Job'),
 Connection   = mongoose.model('Connection'),
+errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
 _            = require('lodash');
 
 /**
@@ -63,7 +65,6 @@ exports.create = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            debugger;
             req.job.applications.push(application);
             req.job.save(function (err) {
                 if (err) {
@@ -72,6 +73,26 @@ exports.create = function (req, res) {
                 else {
                     console.log('[ApplicationController.create] saved job application to job');
                 }
+
+
+                debugger;
+
+                var options = [
+                    {
+                        name: 'APPLICANT',
+                        content: req.user.firstName + ' ' + req.user.lastName.substring(0, 1).toUpperCase()
+                    },
+                    {
+                        name: 'COVER_LTR',
+                        content: application.introduction
+                    },
+                    {
+                        name: 'LINK_URL',
+                        content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
+                    }
+                ]
+
+                emailer.sendTemplateBySlug('outset-new-applicant', req.job.user, options);
             });
 
             res.json(application);
@@ -315,6 +336,46 @@ exports.hasAuthorization = function (req, res, next) {
     next();
 };
 
+/** ---- MESSAGES ------------------------------------------ */
+
+exports.getMessages = function(req, res, next) {
+    var application = req.application;
+
+    if(!application) {
+        return res.status(404).send({message: 'No application found for ID'});
+    }
+
+    var response = {data: application.messages, theirs: [], latest: {} };
+
+    if(application && !application.connection) {
+        response.message = 'No valid connection';
+        return res.status(402).send(response);
+    }
+
+    var myLast = _.findLast(application.messages, function(msg) {
+        return req.user.equals(msg.sender);
+    });
+
+    var newCt = 0;
+
+    response.theirs = _.filter(application.messages, function(msg) {
+        if(!myLast || myLast.created < msg.created) {
+            msg.isNew = true;
+            newCt ++;
+        }
+        return !req.user.equals(msg.sender);
+    });
+
+    response.newMessages = newCt;
+
+
+    response.latest = _.max(application.messages, function(msg) {
+        return msg.created;
+    });
+
+    res.json(response);
+};
+
 exports.persistMessage = function (applicationId, message) {
     debugger;
     var msg = new Message({
@@ -326,31 +387,61 @@ exports.persistMessage = function (applicationId, message) {
     console.log('Saving new message object to DB: %j', msg);
 
     msg.save(function (err, newMessage) {
-        console.log('saved');
-        debugger;
         if (err) {
             console.log('CRAP - Couldn\'t save message, %j', err);
             debugger;
         }
         else {
             console.log('SAVED message object to DB: %j', newMessage);
-            debugger;
 
             Application.findOneAndUpdate(
                 {_id: applicationId},
                 {$push: {messages: msg}},
-                {safe: true, upsert: false},
+                {safe: true, upsert: false})
+                .populate('user')
+                .populate('company')
+                .populate('job')
+                .exec(
                 function (err, model) {
-                    console.log('saved');
-                    debugger;
                     if (err) {
                         console.log('Couldn\'t save application with message, %j', err);
                     }
 
                     console.log('saved application: ' + model);
 
+
+                    debugger; // CHECK FOR JOB NAME
+
+                    var options = [
+                        {path: 'company.owner', model: 'User'}
+                    ];
+
+                    Application.populate(model, options, function (err, populated) {
+                        if (err) {
+                            console.log('error retrieving application, returning non-populated version', err);
+                           return false;
+                        }
+                        debugger;
+                        var recipient = msg.sender.equals(populated.user.id) ? populated.company.owner : populated.user;
+
+                        var options = [
+                            {
+                                name: 'JOB_TITLE',
+                                content: populated.job.name
+                            },
+                            {
+                                name: 'LINK_URL',
+                                content: 'https://joinoutset.com/applications/' + populated.id
+                            }
+                        ];
+
+                        emailer.sendTemplateBySlug('outset-new-messages', recipient, options);
+                    });
+
                 }
             );
+
+
         }
     });
 
@@ -396,6 +487,25 @@ exports.createConnection = function (req, res) {
                         }
                         console.log('[CreateConnection] Did %sSave Connection to application', !!newApp.connection ? '' : 'NOT ');
                     });
+
+                    debugger; // CHECK FOR JOB NAME
+
+                    var options = [
+                        {
+                            name: 'COMPANY_NAME',
+                            content: req.application.company.name
+                        },
+                        {
+                            name: 'JOB_TITLE',
+                            content: req.application.job.name
+                        },
+                        {
+                            name: 'LINK_URL',
+                            content: 'https://joinoutset.com/applications/' + req.application.id
+                        }
+                    ];
+
+                    emailer.sendTemplateBySlug('outset-new-connection-copy-01', req.application.user, options);
                 }
 
                 res.json(connection);
@@ -405,4 +515,4 @@ exports.createConnection = function (req, res) {
     else {
         res.status(404).send({message: 'no application found'});
     }
-}
+};

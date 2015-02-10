@@ -17,6 +17,9 @@ module.exports = function(app) {
     app.route('/api/applications/:applicationId/connect')
         .post(applications.createConnection);
 
+    app.route('/api/applications/:applicationId/messages')
+        .get(applications.getMessages);
+
     app.route('/api/jobs/:jobId/applications')
         .get(applications.queryByJobID) // ,
         .post(users.requiresLogin, applications.create);
