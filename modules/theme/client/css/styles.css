@@ -4876,32 +4876,30 @@ dl.mini-table dt dd p {
 .applicant dl.mini-table dd p {
   padding-bottom: 0;
 }
-.report-badges.not-visible .report-badge .badge-info .badge-info-inner i.fa.fa-1x {
-  display: none;
+.report-badges {
+  color: rgba(102, 102, 102, 0.2) !important;
 }
 .report-badges.not-available .available,
-.report-badges.not-visible .available {
-  cursor: default;
+.report-badges.not-visible .available,
+.report-badges.not-available .available *,
+.report-badges.not-visible .available * {
+  cursor: not-allowed !important;
 }
-.report-badges.not-available i.fa-certificate.fa,
-.report-badges.not-visible i.fa-certificate.fa,
-.report-badges.not-available i.fa.fa-file,
-.report-badges.not-visible i.fa.fa-file {
-  color: #cccccc !important;
-  color: rgba(102, 102, 102, 0.15) !important;
-}
-.report-badges.not-available .available i.fa-certificate.fa,
-.report-badges.not-visible .available i.fa-certificate.fa,
-.report-badges.not-available .available i.fa.fa-file,
-.report-badges.not-visible .available i.fa.fa-file {
-  color: #666666 !important;
-  color: rgba(102, 102, 102, 0.5) !important;
+.report-badges.not-available.available .fa.fa-certificate,
+.report-badges.not-visible.available .fa.fa-certificate,
+.report-badges.not-available.available .fa.fa-file,
+.report-badges.not-visible.available .fa.fa-file {
+  color: #0e2d4c;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
 }
 .report-badges .report-badge.available .fa.fa-certificate,
 .report-badges .report-badge.available .fa.fa-file {
   color: #0e2d4c;
   text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
-  cursor: pointer;
+}
+.report-badges .report-badge,
+.report-badges .report-badge * {
+  cursor: pointer !important;
 }
 .report-badges .report-badge .title {
   font-size: 16px;
