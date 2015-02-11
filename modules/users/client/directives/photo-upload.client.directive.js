@@ -7,7 +7,7 @@
         return {
             transclude: true,
             replace: true,
-            templateUrl: 'modules/users/views/settings/picture-modal.client.template.html',
+            templateUrl: '/modules/users/views/settings/picture-modal.client.template.html',
             restrict: 'EA',
             scope: {
                 title: '@?'

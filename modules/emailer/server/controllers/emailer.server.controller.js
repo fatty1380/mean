@@ -39,7 +39,7 @@ function getMessage(options) {
 
 var recipientOverrideAddress = config.mailer.toOverride;
 
-function sendGenericTemplateEmail(templateName, user) {
+function sendGenericTemplateEmail(templateName, user, options) {
 
     console.log('Sending email template: %s', templateName);
 
@@ -53,10 +53,14 @@ function sendGenericTemplateEmail(templateName, user) {
         global_merge_vars: [
             {
                 name: 'USERNAME',
-                content: user.firstName
+                content: user.firstName || user.displayName
             }
         ]
     };
+
+    if (!!options && !!options.length) {
+        mailOptions.global_merge_vars = _.union(mailOptions.global_merge_vars, options);
+    }
 
     console.log('With options: %j', mailOptions);
 

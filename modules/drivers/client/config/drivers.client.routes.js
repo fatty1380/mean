@@ -62,7 +62,7 @@
 
         state('drivers.list', {
             url: '',
-            templateUrl: 'modules/drivers/views/list-drivers.client.view.html',
+            templateUrl: '/modules/drivers/views/list-drivers.client.view.html',
             parent: 'drivers',
             resolve: {
                 drivers: driverListResolve
@@ -74,7 +74,7 @@
 
         state('drivers.create', {
             url: '/create',
-            templateUrl: 'modules/drivers/views/edit-driver.client.view.html',
+            templateUrl: '/modules/drivers/views/edit-driver.client.view.html',
             parent: 'drivers',
             resolve: {
                 driver: userResolve
@@ -86,7 +86,7 @@
 
         state('drivers.home', {
             url: '/home',
-            templateUrl: 'modules/drivers/views/view-driver.client.view.html',
+            templateUrl: '/modules/drivers/views/view-driver.client.view.html',
             parent: 'drivers',
             controller: 'DriverViewController',
             controllerAs: 'vm',
@@ -99,7 +99,7 @@
 
         state('drivers.view', {
             url: '/{driverId:[0-9a-fA-F]{24}}',
-            templateUrl: 'modules/drivers/views/view-driver.client.view.html',
+            templateUrl: '/modules/drivers/views/view-driver.client.view.html',
             parent: 'drivers',
             resolve: {
                 driver: driverResolve
@@ -111,7 +111,7 @@
 
         state('drivers.edit', {
             url: '/{driverId:[0-9a-fA-F]{24}}/edit',
-            templateUrl: 'modules/drivers/views/edit-driver.client.view.html',
+            templateUrl: '/modules/drivers/views/edit-driver.client.view.html',
             parent: 'drivers',
             resolve: {
                 driver: driverResolve

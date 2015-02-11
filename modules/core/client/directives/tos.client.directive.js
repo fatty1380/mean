@@ -4,7 +4,7 @@
     function TOSModalDirective() {
         return {
             transclude: true,
-            templateUrl: 'modules/core/views/tos.client.directive.html',
+            templateUrl: '/modules/core/views/tos.client.directive.html',
             restrict: 'EA',
             scope: {
                 title: '@?',

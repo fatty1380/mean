@@ -76,7 +76,7 @@
         var ddo;
 
         ddo = {
-            templateUrl: 'modules/core/views/templates/oset-categories.client.template.html',
+            templateUrl: '/modules/core/views/templates/oset-categories.client.template.html',
             restrict: 'E',
             transclude: true,
             scope: {

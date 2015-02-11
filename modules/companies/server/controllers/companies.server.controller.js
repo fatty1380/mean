@@ -46,12 +46,12 @@ exports.create = function (req, res) {
     var company = new Company(req.body);
     var ownerId = req.body.ownerId || req.user._id;
 
-    console.log('Creating company for owner: [%s]: %j', ownerId, company);
+    console.log('Creating company for owner: [%s]: %s', ownerId, company._id);
 
     company.owner = mongoose.Types.ObjectId(ownerId);
     company.agents = [];
 
-    console.log('now saving company w owner [%s], %j', company.owner, company);
+    console.log('now saving company w owner [%s], %s', company.owner, company._id);
 
 
     company.save(function (err) {
@@ -62,7 +62,7 @@ exports.create = function (req, res) {
                 error: err
             });
         } else {
-            console.log('Successfully saved company: %j', company);
+            console.log('Successfully saved company: %s', company._id);
             res.json(company);
         }
     });
@@ -72,7 +72,7 @@ exports.create = function (req, res) {
  * Show the current Company
  */
 exports.read = function (req, res) {
-    console.log('[CompaniesCtrl.read] Returning company %j', req.company);
+    console.log('[CompaniesCtrl.read] Returning company %s', req.company._id);
 
     if (!req.company) {
         return res.status(404).send({
@@ -230,7 +230,7 @@ exports.companyByUserID = function (req, res, next) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                console.log('[Company.findOne] setting req.company = %j', company);
+                console.log('[Company.findOne] setting req.company = %s', company._id);
                 req.company = company;
                 //res.json(company);
 

@@ -29,7 +29,7 @@
                 editSref: '@?',
                 showEdit: '=?'
             },
-            templateUrl: 'modules/jobs/views/templates/job.client.template.html',
+            templateUrl: '/modules/jobs/views/templates/job.client.template.html',
             restrict: 'E',
             replace: true,
             controller: JobItemController,

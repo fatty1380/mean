@@ -11,7 +11,7 @@
                         cancelFn: '&',
                         updateFn: '&'
                     },
-                    templateUrl: 'modules/users/views/templates/edit-settings.client.template.html',
+                    templateUrl: '/modules/users/views/templates/edit-settings.client.template.html',
                     restrict: 'E',
                     replace: true,
                     controller: 'EditProfileController',

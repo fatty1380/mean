@@ -4,7 +4,7 @@
     function PageHeaderDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/core/views/templates/os-page-header.client.template.html',
+            templateUrl: '/modules/core/views/templates/os-page-header.client.template.html',
             scope: {
                 title: '@',
                 subTitle: '@?',

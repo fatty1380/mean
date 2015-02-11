@@ -14,6 +14,13 @@
             ByUser: $resource('api/users/:userId/driver', {
                 userId: '@_userId'
             }),
+            getByUser: function(userId) {
+                var rsrc = $resource('api/users/:userId/driver', {
+                    userId: '@_userId'
+                });
+
+                return rsrc.get({userId: userId}).$promise;
+            },
             getResumeLink: function(driverId) {
                 var rsrc = $resource('api/drivers/:driverId/resume', {
                     driverId: '@driverId'

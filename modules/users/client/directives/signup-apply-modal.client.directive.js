@@ -5,7 +5,7 @@
         var ddo;
         ddo = {
             transclude: true,
-            templateUrl: 'modules/users/views/templates/signup-apply.client.template.html',
+            templateUrl: '/modules/users/views/templates/signup-apply.client.template.html',
             restrict: 'EA',
             scope: {
                 signin: '&?',
@@ -30,7 +30,7 @@
         if (angular.isDefined($attrs.job)) {
             vm.redirect = {
                 state: 'jobs.view',
-                params: {jobId: vm.job.id},
+                params: {jobId: vm.job && vm.job.id},
                 text: vm.srefText
             };
         }

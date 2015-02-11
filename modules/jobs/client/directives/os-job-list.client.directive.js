@@ -147,8 +147,8 @@
 
         vm.random = function(item){
 
-            if(!!vm.predicate) {
-                return 1;
+            if(!!vm.predicate || vm.filters.mine || !vm.filters.clear) {
+                return item.postingDate;
             }
 
             if(item.rand) {
@@ -194,7 +194,7 @@
 
     function JobListDirective() {
         return {
-            templateUrl: 'modules/jobs/views/templates/job-list.client.template.html',
+            templateUrl: '/modules/jobs/views/templates/job-list.client.template.html',
             restrict: 'E',
             replace: false,
             scope: {

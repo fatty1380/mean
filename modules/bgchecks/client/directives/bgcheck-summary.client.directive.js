@@ -56,7 +56,7 @@
     function BgCheckSummaryDirective() {
 
         var ddo = {
-            templateUrl: 'modules/bgchecks/views/bgcheck-summary.client.template.html',
+            templateUrl: '/modules/bgchecks/views/bgcheck-summary.client.template.html',
             restrict: 'E',
             scope: {
                 user: '=?',

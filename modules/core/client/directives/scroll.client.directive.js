@@ -1,6 +1,31 @@
 (function () {
     'use strict';
 
+    function ScrollBottomDirective($timeout) {
+        return {
+            scope: {
+                scrollBottom: "="
+            },
+            link: function (scope, element) {
+                scope.$watchCollection('scrollBottom', function (newValue) {
+                    if (newValue && !!element.children() && !!element.children().length)
+                    {
+                        var height = newValue.length * element.children().height();
+                        $timeout(function() {
+                            height = height || newValue.length * element.children().height();
+                            console.log('Scrolling to height: ' + height);
+                            element.scrollTopAnimated(height);
+                        }, 100);
+
+                    }
+                });
+            }
+        }
+    }
+
+
+    ScrollBottomDirective.$inject = ['$timeout']
+
     //function ScrollDirective($window) {
     //    return {
     //        scope: {
@@ -39,7 +64,9 @@
 
     autofillsync.$inject = ['$timeout'];
 
-    angular.module('core').directive('autofillsync', autofillsync);
+    angular.module('core')
+        .directive('scrollBottom', ScrollBottomDirective)
+        .directive('autofillsync', autofillsync);
 
 
 })();

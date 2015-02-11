@@ -3,12 +3,16 @@
 
     function ApplicationMainController(application, auth, $state, $log, $scope, Socket, Applications, $location, $anchorScroll) {
         var vm = this;
+
+        if(!application) {
+            debugger;
+        }
+        vm.ApplicationFactory = Applications;
         vm.application = application;
         vm.messageMode = 'multiline';
         vm.isopen = false;
         vm.myId = auth.user._id;
         vm.user = auth.user;
-        vm.room = vm.application._id;
         vm.text = {};
         vm.activeConnection = false;
 
@@ -38,9 +42,28 @@
                 $log.debug('No connection, or invalid connection - not creating socket.');
             }
 
-            vm.text.noconnection = (vm.user.type === 'driver')
+            if(vm.user.isOwner && vm.application.isNew) {
+                vm.setApplicationStatus('read');
+            }
+
+            vm.text.noconnection = (vm.user.isDriver)
                 ? 'The employer has not yet connected with you. Once they have, they will have access to your full profile and will be able to chat with you right here.'
                 : 'In order to view reports and chat with this applicant, you must first <em>Connect</em> with them using the button below. This will count against your monthly allotment of connections.';
+        };
+
+        vm.setApplicationStatus = function(status) {
+
+            var app = vm.ApplicationFactory.setStatus(vm.application._id, status);
+
+            debugger; /// TODO: Double Check promise
+
+            app.then(function(success) {
+                $log.debug('[setApplicationStatus] %s', success);
+                application = success;
+            }, function(reject) {
+                debugger;
+                $log.warn('[setApplicationStatus] %s', reject);
+            });
         };
 
         /** Private Methods --------------------------------------------- */
@@ -56,7 +79,7 @@
             }
         };
 
-        vm.scrollToMessages = function() {
+        vm.scrollToMessages = function () {
             // set the location.hash to the id of
             // the element you wish to scroll to.
             $location.hash('messaging');
@@ -64,7 +87,7 @@
             // call $anchorScroll()
             $anchorScroll();
 
-            vm.msgFocus=true;
+            vm.msgFocus = true;
         };
 
         /** Connection Methods ------------------------------------------- */
@@ -77,8 +100,11 @@
             }
 
             Applications.createConnection(vm.application).then(function (newConnection) {
-                debugger;
+
                 $log.debug('Created new connection! %o', newConnection);
+
+                return $state.go($state.current, $state.params, {reload: true})
+
                 vm.application.connection = newConnection;
                 vm.newlyConnected = true;
                 vm.initSocket();
@@ -86,8 +112,6 @@
             }, function (err) {
                 $log.debug('New connection failed: %o', err);
                 return err;
-            }).then(function () {
-                debugger;
                 vm.connecting = false;
             });
         };
@@ -95,12 +119,18 @@
 
         /** Chat Methods ------------------------------------------------ */
         vm.postMessage = function () {
+
+            if(!vm.message || !vm.room) {
+                return false;
+            }
+
             vm.sending = true;
 
             if (!!Socket) {
                 var message = {
                     scope: 'applications',
-                    text: vm.message
+                    text: vm.message,
+                    room: vm.room
                 };
 
                 $log.debug('[AppCtrl.PostMessage] Emitting Message');
@@ -129,10 +159,12 @@
 
             if (!!Socket) {
                 $log.debug('[AppCtrl] socket exists. Adding `connect` handler');
-                Socket.on('connect', function () {
-                    $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
-                    Socket.emit('join-room', vm.room);
-                });
+
+                vm.room = vm.application._id;
+
+                $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
+                Socket.emit('join-room', vm.room);
+
 
                 $log.debug('[AppCtrl] socket exists. Adding `chatMessage` handler');
                 // Add an event listener to the 'chatMessage' event
@@ -147,8 +179,11 @@
                         else {
                             if (message.text.toLowerCase() === 'is now connected') {
                                 vm.status.them = true;
-                            } else {
-                                debugger;
+                            } else if (message.text.toLowerCase() === 'disconnected') {
+                                vm.status.them = false;
+                            }
+                            else {
+                                Raygun.send(new Error('Unknown message received' + message))
                             }
                         }
                     } else {
@@ -159,7 +194,10 @@
                 $log.debug('[AppCtrl] socket exists. Adding `$destroy` handler');
                 // Remove the event listener when the controller instance is destroyed
                 $scope.$on('$destroy', function () {
-                    Socket.removeListener('chatMessage').leave(vm.room);
+                    $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
+                    Socket.emit('leave-room', vm.room);
+                    debugger;
+                    Socket.removeListener('chatMessage');
                 });
             } else {
                 $log.warn('Socket is undefined in this context');

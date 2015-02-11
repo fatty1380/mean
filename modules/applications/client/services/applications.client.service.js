@@ -39,7 +39,7 @@
                 }
             }),
             setStatus: function(id, status) {
-                var AppRsrc = $resource('api/applications/:id', {
+                var rsrc = $resource('api/applications/:id', {
                         id: '@_id'
                     }, {
                     update: {
@@ -47,7 +47,7 @@
                     }
                 });
 
-                return new AppRsrc({_id: id, 'status': status}).$update();
+                return new rsrc({_id: id, 'status': status}).$update();
             },
             getApplication: function (query) {
 
@@ -102,7 +102,19 @@
             ForDriver: $resource('api/jobs/:jobId/applications/:userId', {
                 jobId: '@jobId',
                 userId: '@userId'
-            })
+            }),
+            getMessages: function(applicationId, userId) {
+                var rsrc = $resource('api/applications/:applicationId/messages', {
+                    companyId: '@companyId'
+                }, {
+                    query: {
+                        method: 'GET',
+                        isArray: false
+                    }
+                });
+
+                return rsrc.query({applicationId: applicationId, userId: userId}).$promise;
+            }
         };
 
         return _this._data;

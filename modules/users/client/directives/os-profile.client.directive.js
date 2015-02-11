@@ -26,7 +26,7 @@
                         editable: '=?',
                         editFn: '&?'
                     },
-                    templateUrl: 'modules/users/views/templates/user-profile.client.template.html',
+                    templateUrl: '/modules/users/views/templates/user-profile.client.template.html',
                     restrict: 'E',
                     replace: true,
                     controller: 'OsProfileController',
@@ -47,7 +47,7 @@
                 scope: {
                     profile: '='
                 },
-                templateUrl: 'modules/users/views/templates/user-badge.client.template.html',
+                templateUrl: '/modules/users/views/templates/user-badge.client.template.html',
                 restrict: 'E',
                 replace: true
             };

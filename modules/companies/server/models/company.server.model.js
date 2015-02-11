@@ -62,7 +62,7 @@ var CompanySchema = new Schema({
 
     profileImageURL: {
         type: String,
-        default: ''
+        default: 'modules/companies/img/profile/default.png'
     },
 
     created: {

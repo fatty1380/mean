@@ -13,7 +13,7 @@
             leader: {
                 lead1: {
                     header: 'Transportation Focused',
-                    text: 'The hiring website designed specifically for the Transporation Industry. Driver and Employer information is consolidated all in one place.'
+                    text: 'The hiring website designed specifically for the Transportation Industry. Driver and Employer information is consolidated all in one place.'
                 },
                 lead2: {
                     header: 'A Place for Drivers',

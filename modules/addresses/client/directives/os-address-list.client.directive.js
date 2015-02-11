@@ -3,7 +3,7 @@
 
     function AddressListDirective() {
         return {
-            templateUrl: 'modules/addresses/views/address-list.client.template.html'          ,
+            templateUrl: '/modules/addresses/views/address-list.client.template.html'          ,
             restrict: 'E',
             scope: {
                 addresses: '=?models',
@@ -22,7 +22,7 @@
 
     function AddressListEditDirective() {
         return {
-            templateUrl: 'modules/addresses/views/address-list-edit.client.template.html'          ,
+            templateUrl: '/modules/addresses/views/address-list-edit.client.template.html'          ,
             restrict: 'E',
             scope: {
                 addresses: '=?models',

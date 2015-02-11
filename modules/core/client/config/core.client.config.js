@@ -1,8 +1,9 @@
 (function () {
     'use strict';
 
-    function reroute($rootScope, $state, Auth, $log) {
+    function registerRootScopeEventListeners($rootScope, $state, Auth, $log,$document, $location, $window) {
 
+        /** SECTION: State Change Listeners */
         var isRedirectInProgress = false;
         var redirectString;
 
@@ -78,17 +79,20 @@
                 $log.warn('Unknown next step');
             }
         });
-    }
 
-    function scrollTopChange($rootScope, $document, $location) {
+        /** Scroll Top Change
+         * This will scroll the window to the top of the frame, assuming no hash is specified
+         */
         $rootScope.$on('$stateChangeSuccess', function () {
             if(!$location.hash()) {
                 $document.scrollTo(-50, 0);
             }
         });
-    }
 
-    function GoogleAnalyticsRouter($rootScope, $location, $window) {
+        /** GoogleAnalytics Router Engine
+         * This reports 'Proper' analytics on page views, state changes and the like
+         * by linking to stateChangeSuccess, rather than page reload.
+         */
         $rootScope.$on('$stateChangeSuccess', function (event) {
             if (!$window.ga) {
                 return;
@@ -98,15 +102,11 @@
         });
     }
 
-    scrollTopChange.$inject = ['$rootScope', '$document', '$location'];
-    reroute.$inject = ['$rootScope', '$state', 'Authentication', '$log'];
-    GoogleAnalyticsRouter.$inject = ['$rootScope', '$location', '$window'];
+    registerRootScopeEventListeners.$inject = ['$rootScope', '$state', 'Authentication', '$log', '$document', '$location', '$window'];
 
     // Setting up route
     angular
         .module('core')
-        .run(reroute)
-        .run(scrollTopChange)
-        .run(GoogleAnalyticsRouter);
+        .run(registerRootScopeEventListeners);
 })();
 

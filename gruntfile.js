@@ -107,6 +107,22 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+        html2js: {
+            options: {
+                quoteChar: '\'',
+                singleModule: true,
+                useStrict: true,
+                module: 'oset-templates',
+                indentString: ' ',
+                rename: function(moduleName) {
+                    return '/' + moduleName.replace('/client', '').replace('../','');
+                }
+            },
+            main: {
+                src: ['modules/**/*.template.html'],
+                dest: 'modules/tmp/client/templates.js'
+            }
+        },
 		csslint: {
 			options: {
 				csslintrc: '.csslintrc'
@@ -207,6 +223,9 @@ module.exports = function (grunt) {
 	// Making grunt default to force in order not to break the project.
 	grunt.option('force', true);
 
+    // Register html2js to place html into the templateCache
+    grunt.loadNpmTasks('grunt-html2js');
+
 	// Connect to the MongoDB instance and load the models
 	grunt.task.registerTask('mongoose', 'Task that connects to the MongoDB instance and loads the application models.', function() {
 		// Get the callback
@@ -222,7 +241,7 @@ module.exports = function (grunt) {
 	});
 
 	// Lint CSS and JavaScript files.
-	grunt.registerTask('lint', ['sass', 'less', 'jshint', 'csslint']);
+	grunt.registerTask('lint', ['sass', 'less', 'jshint', 'csslint', 'html2js']);
 
 	// Lint project files and minify them into two production files.
 	grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
