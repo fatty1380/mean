@@ -105,7 +105,7 @@
                 parent: 'jobs',
                 url: '?itemId&tabName',
                 reloadOnSearch : false,
-                templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
+                templateUrl: '/modules/jobs/views/list-jobs.client.view.html',
                 resolve: {
                     jobs: listAllResolve,
                     company: companyResolve
@@ -117,7 +117,7 @@
 
             state('jobs.mine', {
                 url: '/me',
-                templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
+                templateUrl: '/modules/jobs/views/list-jobs.client.view.html',
                 controller: 'JobsListController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -130,7 +130,7 @@
 
             state('jobs.create', {
                 url: '/create/:companyId',
-                templateUrl: 'modules/jobs/views/edit-job.client.view.html',
+                templateUrl: '/modules/jobs/views/edit-job.client.view.html',
                 controller: 'JobEditController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -142,7 +142,7 @@
 
             state('jobs.view', {
                 url: '/:jobId',
-                templateUrl: 'modules/jobs/views/view-job.client.view.html',
+                templateUrl: '/modules/jobs/views/view-job.client.view.html',
                 controller: 'JobViewController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -154,7 +154,7 @@
 
             state('jobs.edit', {
                 url: '/:jobId/edit',
-                templateUrl: 'modules/jobs/views/edit-job.client.view.html',
+                templateUrl: '/modules/jobs/views/edit-job.client.view.html',
                 controller: 'JobEditController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -166,7 +166,7 @@
 
             state('jobs.apply', {
                 url: '/:jobId/apply',
-                //templateUrl: 'modules/jobs/views/list-my-jobs.client.view.html',
+                //templateUrl: '/modules/jobs/views/list-my-jobs.client.view.html',
                 parent: 'jobs'
             });
     }

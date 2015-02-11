@@ -115,7 +115,7 @@ module.exports = function (grunt) {
                 module: 'oset-templates',
                 indentString: ' ',
                 rename: function(moduleName) {
-                    return moduleName.replace('/client', '').replace('../','');
+                    return '/' + moduleName.replace('/client', '').replace('../','');
                 }
             },
             main: {

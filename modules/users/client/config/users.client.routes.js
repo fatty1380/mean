@@ -12,13 +12,13 @@
                 state('settings', {
                     abstract: true,
                     url: '/settings',
-                    templateUrl: 'modules/users/views/settings/settings.client.view.html',
+                    templateUrl: '/modules/users/views/settings/settings.client.view.html',
                     parent: 'fixed-opaque'
                 }).
 
                 state('settings.profile', {
                     url: '/profile',
-                    templateUrl: 'modules/users/views/settings/edit-profile.client.view.html'
+                    templateUrl: '/modules/users/views/settings/edit-profile.client.view.html'
                 }).
 
             /**
@@ -27,17 +27,17 @@
              */
                 state('settings.password', {
                     url: '/password',
-                    templateUrl: 'modules/users/views/settings/change-password.client.view.html'
+                    templateUrl: '/modules/users/views/settings/change-password.client.view.html'
                 }).
 
                 state('settings.accounts', {
                     url: '/accounts',
-                    templateUrl: 'modules/users/views/settings/manage-social-accounts.client.view.html'
+                    templateUrl: '/modules/users/views/settings/manage-social-accounts.client.view.html'
                 }).
 
                 state('settings.picture', {
                     url: '/picture',
-                    templateUrl: 'modules/users/views/settings/change-profile-picture.client.view.html',
+                    templateUrl: '/modules/users/views/settings/change-profile-picture.client.view.html',
                     resolve: {
                         user : ['Authentication', function(auth) {
                             return auth.user;
@@ -80,7 +80,7 @@
              */
                 state('users.list', {
                     url: '',
-                    templateUrl: 'modules/users/views/list-users.client.view.html',
+                    templateUrl: '/modules/users/views/list-users.client.view.html',
                     parent: 'users'
                 }).
 
@@ -90,7 +90,7 @@
              */
                 state('users.view', {
                     url: '/:userId',
-                    templateUrl: 'modules/users/views/settings/profile.client.view.html',
+                    templateUrl: '/modules/users/views/settings/profile.client.view.html',
                     controller: 'ProfileController',
                     parent: 'users'
                 }).
@@ -102,7 +102,7 @@
              */
                 state('authentication', {
                     url: '/authentication',
-                    templateUrl: 'modules/users/views/authentication/authentication.client.view.html'
+                    templateUrl: '/modules/users/views/authentication/authentication.client.view.html'
                 }).
 
             /** === Password States ======================================================
@@ -122,7 +122,7 @@
              */
                 state('password.forgot', {
                     url: '/forgot',
-                    templateUrl: 'modules/users/views/password/forgot-password.client.view.html'
+                    templateUrl: '/modules/users/views/password/forgot-password.client.view.html'
                 }).
 
                 state('password.reset', {
@@ -137,7 +137,7 @@
              */
                 state('password.reset.invalid', {
                     url: '/invalid',
-                    templateUrl: 'modules/users/views/password/reset-password-invalid.client.view.html'
+                    templateUrl: '/modules/users/views/password/reset-password-invalid.client.view.html'
                 }).
 
             /**
@@ -146,7 +146,7 @@
              */
                 state('password.reset.success', {
                     url: '/success',
-                    templateUrl: 'modules/users/views/password/reset-password-success.client.view.html'
+                    templateUrl: '/modules/users/views/password/reset-password-success.client.view.html'
                 }).
 
             /**
@@ -155,7 +155,7 @@
              */
                 state('password.reset.form', {
                     url: '/:token',
-                    templateUrl: 'modules/users/views/password/reset-password.client.view.html'
+                    templateUrl: '/modules/users/views/password/reset-password.client.view.html'
                 });
         }
     ]);

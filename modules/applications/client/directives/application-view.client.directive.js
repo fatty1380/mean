@@ -78,7 +78,7 @@
     function ViewApplicantDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/applications/views/templates/os-applicant.client.template.html',
+            templateUrl: '/modules/applications/views/templates/os-applicant.client.template.html',
             restrict: 'E',
             scope: {
                 application: '=',
@@ -95,7 +95,7 @@
     function ApplicationSummaryDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/applications/views/templates/application-summary.client.template.html',
+            templateUrl: '/modules/applications/views/templates/application-summary.client.template.html',
             restrict: 'EA',
             scope: {
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'

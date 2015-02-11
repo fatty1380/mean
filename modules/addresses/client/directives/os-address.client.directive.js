@@ -3,7 +3,7 @@
 
     function AddressItemDirective() {
         return {
-            templateUrl: 'modules/addresses/views/address.client.template.html',
+            templateUrl: '/modules/addresses/views/address.client.template.html',
             restrict: 'E',
             scope: {
                 address: '=model',

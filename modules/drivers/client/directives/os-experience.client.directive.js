@@ -89,7 +89,7 @@
     function ExperienceDirective() {
         return {
             priority: 0,
-            templateUrl: 'modules/drivers/views/templates/experience.client.template.html',
+            templateUrl: '/modules/drivers/views/templates/experience.client.template.html',
             replace: false,
             restrict: 'E',
             scope: {
@@ -143,7 +143,7 @@
     function ExperienceListDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/drivers/views/templates/experience-list.client.template.html',
+            templateUrl: '/modules/drivers/views/templates/experience-list.client.template.html',
             restrict: 'E',
             scope: {
                 models: '=list',

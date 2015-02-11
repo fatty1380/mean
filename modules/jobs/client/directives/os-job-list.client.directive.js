@@ -194,7 +194,7 @@
 
     function JobListDirective() {
         return {
-            templateUrl: 'modules/jobs/views/templates/job-list.client.template.html',
+            templateUrl: '/modules/jobs/views/templates/job-list.client.template.html',
             restrict: 'E',
             replace: false,
             scope: {

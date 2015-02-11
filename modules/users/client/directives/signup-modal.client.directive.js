@@ -4,7 +4,7 @@
     function SignupModalDirective() {
         return {
             transclude: true,
-            templateUrl: 'modules/users/views/templates/signup-modal.client.template.html',
+            templateUrl: '/modules/users/views/templates/signup-modal.client.template.html',
             restrict: 'EA',
             scope: {
                 signin: '&',

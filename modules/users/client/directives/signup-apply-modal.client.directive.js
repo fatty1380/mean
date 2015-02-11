@@ -5,7 +5,7 @@
         var ddo;
         ddo = {
             transclude: true,
-            templateUrl: 'modules/users/views/templates/signup-apply.client.template.html',
+            templateUrl: '/modules/users/views/templates/signup-apply.client.template.html',
             restrict: 'EA',
             scope: {
                 signin: '&?',

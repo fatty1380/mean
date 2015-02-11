@@ -62,7 +62,7 @@
 
             state('companies.list', {
                 url: '/list',
-                templateUrl: 'modules/companies/views/list-companies.client.view.html',
+                templateUrl: '/modules/companies/views/list-companies.client.view.html',
                 parent: 'companies',
                 controller: 'CompaniesController',
                 controllerAs: 'vm',
@@ -76,7 +76,7 @@
 
             state('companies.home', {
                 url: '/home',
-                templateUrl: 'modules/companies/views/view-company.client.view.html',
+                templateUrl: '/modules/companies/views/view-company.client.view.html',
                 parent: 'companies',
                 controller: 'CompaniesController',
                 controllerAs: 'vm',
@@ -88,7 +88,7 @@
 
             state('companies.view', {
                 url: '/{companyId:[0-9a-fA-F]{24}}',
-                templateUrl: 'modules/companies/views/view-company.client.view.html',
+                templateUrl: '/modules/companies/views/view-company.client.view.html',
                 parent: 'companies',
                 controller: 'CompaniesController',
                 controllerAs: 'vm',
@@ -100,7 +100,7 @@
 
             state('companies.create', {
                 url: '/create',
-                templateUrl: 'modules/companies/views/edit-company.client.view.html',
+                templateUrl: '/modules/companies/views/edit-company.client.view.html',
                 parent: 'companies',
                 controller: 'CompanyEditController',
                 controllerAs: 'vm',
@@ -114,7 +114,7 @@
 
             state('companies.edit', {
                 url: '/{companyId:[0-9a-fA-F]{24}}/edit',
-                templateUrl: 'modules/companies/views/edit-company.client.view.html',
+                templateUrl: '/modules/companies/views/edit-company.client.view.html',
                 parent: 'companies',
                 controller: 'CompanyEditController',
                 controllerAs: 'vm',
@@ -127,7 +127,7 @@
 
             state('subscriptionsReview', {
                 url: '/subscriptions',
-                templateUrl: 'modules/companies/views/review-subscriptions.client.view.html',
+                templateUrl: '/modules/companies/views/review-subscriptions.client.view.html',
                 parent: 'headline-bg',
                 controller: 'SubscriptionListController',
                 controllerAs: 'vm',

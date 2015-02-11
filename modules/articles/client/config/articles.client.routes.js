@@ -8,23 +8,23 @@ angular.module('articles').config(['$stateProvider',
 		state('articles', {
 			abstract: true,
 			url: '/articles',
-			templateUrl: 'modules/core/views/fixed-opaque.client.view.html'
+			templateUrl: '/modules/core/views/fixed-opaque.client.view.html'
 		}).
 		state('articles.list', {
 			url: '',
-			templateUrl: 'modules/articles/views/list-articles.client.view.html'
+			templateUrl: '/modules/articles/views/list-articles.client.view.html'
 		}).
 		state('articles.create', {
 			url: '/create',
-			templateUrl: 'modules/articles/views/create-article.client.view.html'
+			templateUrl: '/modules/articles/views/create-article.client.view.html'
 		}).
 		state('articles.view', {
 			url: '/:articleId',
-			templateUrl: 'modules/articles/views/view-article.client.view.html'
+			templateUrl: '/modules/articles/views/view-article.client.view.html'
 		}).
 		state('articles.edit', {
 			url: '/:articleId/edit',
-			templateUrl: 'modules/articles/views/edit-article.client.view.html'
+			templateUrl: '/modules/articles/views/edit-article.client.view.html'
 		});
 	}
 ]);

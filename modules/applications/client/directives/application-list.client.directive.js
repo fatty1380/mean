@@ -5,7 +5,7 @@
         var ddo;
 
         ddo = {
-            templateUrl: 'modules/applications/views/templates/os-list-applications.client.template.html',
+            templateUrl: '/modules/applications/views/templates/os-list-applications.client.template.html',
             restrict: 'E',
             scope: {
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'

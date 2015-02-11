@@ -4,7 +4,7 @@
     function LoginModalDirective() {
         return {
             transclude: true,
-            templateUrl: 'modules/users/views/templates/login-modal.client.template.html',
+            templateUrl: '/modules/users/views/templates/login-modal.client.template.html',
             restrict: 'EA',
             scope: {
                 signin: '&',

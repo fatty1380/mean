@@ -59,43 +59,43 @@
 
             state('privacy', {
                 url: '/privacy',
-                templateUrl: 'modules/core/views/templates/privacy.template.html',
+                templateUrl: '/modules/core/views/templates/privacy.template.html',
                 parent: 'fixed-opaque'
             }).
 
             state('full-clear', {
                 abstract: true,
-                templateUrl: 'modules/core/views/full-clear.client.view.html'
+                templateUrl: '/modules/core/views/full-clear.client.view.html'
             }).
 
             state('full-opaque', {
                 abstract: true,
-                templateUrl: 'modules/core/views/full-opaque.client.view.html'
+                templateUrl: '/modules/core/views/full-opaque.client.view.html'
             }).
 
             state('fixed-clear', {
                 abstract: true,
-                templateUrl: 'modules/core/views/fixed-clear.client.view.html',
+                templateUrl: '/modules/core/views/fixed-clear.client.view.html',
                 parent: 'full-clear'
             }).
 
             state('fixed-opaque', {
                 abstract: true,
-                templateUrl: 'modules/core/views/fixed-opaque.client.view.html',
+                templateUrl: '/modules/core/views/fixed-opaque.client.view.html',
                 parent: 'full-clear'
             }).
 
             state('headline-bg', {
                 abstract: true,
-                templateUrl: 'modules/core/views/headline-bg.client.view.html',
+                templateUrl: '/modules/core/views/headline-bg.client.view.html',
                 parent: 'full-clear'
             }).
 
             state('intro', {
                 url: '/',
-                templateUrl: 'modules/core/views/intro.client.view.html',
+                templateUrl: '/modules/core/views/intro.client.view.html',
                 parent: 'superbase'
-                //templateUrl: 'modules/landing/views/landing.client.view.html'
+                //templateUrl: '/modules/landing/views/landing.client.view.html'
             }).
 
             state('home', {

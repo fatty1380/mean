@@ -30,7 +30,7 @@
     function EditLicenseDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/license/views/license.client.template.html',
+            templateUrl: '/modules/license/views/license.client.template.html',
             restrict: 'E',
             scope: {
                 license: '=?model',

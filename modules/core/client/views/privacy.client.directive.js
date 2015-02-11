@@ -4,7 +4,7 @@
 //    function PrivacyModalDirective() {
 //        return {
 //            transclude: true,
-//            templateUrl: 'modules/core/views/privacy.client.directive.html',
+//            templateUrl: '/modules/core/views/privacy.client.directive.html',
 //            restrict: 'EA',
 //            scope: {
 //                title: '@?',

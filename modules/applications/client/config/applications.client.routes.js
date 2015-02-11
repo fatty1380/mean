@@ -86,7 +86,7 @@
             state('applications.list', {
                 url: '?itemId&tabName',
                 reloadOnSearch : false,
-                templateUrl: 'modules/applications/views/list-applications.client.view.html',
+                templateUrl: '/modules/applications/views/list-applications.client.view.html',
                 resolve: {
                     applications: resolveApplications
                 },
@@ -106,12 +106,12 @@
 
             state('applications.create', {
                 url: '/create',
-                templateUrl: 'modules/applications/views/create-application.client.view.html'
+                templateUrl: '/modules/applications/views/create-application.client.view.html'
             }).
 
             state('applications.view', {
                 url: '/:applicationId',
-                templateUrl: 'modules/applications/views/view-application.client.view.html',
+                templateUrl: '/modules/applications/views/view-application.client.view.html',
                 resolve: {
                     application: ['$stateParams', 'Applications', function ($stateParams, Applications) {
 
@@ -130,7 +130,7 @@
 
             state('applications.edit', {
                 url: '/:applicationId/edit',
-                templateUrl: 'modules/applications/views/edit-application.client.view.html'
+                templateUrl: '/modules/applications/views/edit-application.client.view.html'
             });
     }
 
