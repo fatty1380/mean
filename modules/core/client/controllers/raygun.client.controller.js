@@ -14,8 +14,6 @@
 
     function RaygunProvider($provide) {
         $provide.decorator('$exceptionHandler', RaygunDelegate);
-        debugger;
-
         console.log('completed initialization of Raygun Provider(s)');
     }
 

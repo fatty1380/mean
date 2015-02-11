@@ -5,7 +5,7 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
     // Init module configuration options
     var applicationModuleName = 'outset';
     var applicationModuleVendorDependencies =
-            ['ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap',
+            ['oset-templates', 'ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap',
                 'ui.utils', 'angularFileUpload', 'textAngular', 'ngMap',
                 'pdf', 'ngImgCrop', 'duScroll', 'angularMoment'];
 
