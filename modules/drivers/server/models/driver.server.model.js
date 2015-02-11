@@ -125,7 +125,7 @@ DriverSchema.pre('save', function (next) {
         }
 
         return exp;
-    })
+    });
 
     next();
 });
