@@ -58,7 +58,7 @@
         };
     }
 
-    function ApplicationCreateController($scope, $modalInstance, $state, $log, Applications, job) {
+    function ApplicationCreateController($scope, $modalInstance, $state, $log, Applications, job, auth) {
 
         var vm = this;
         $scope.vm = vm;
@@ -69,11 +69,11 @@
 
         // Bindable Variables ___________________________________________________________
         vm.job = job;
-        vm.application = {};
+        vm.application = {message: auth.user.driver && auth.user.driver.about};
         vm.placeholders = {
             title: 'Cover Letter for Job Application',
             messageHeading: '',
-            messageSubHeading: 'This will serve as your introduction to the employer. Your application will  also consist of your completed profile, your resume and any reports you have ordered through Outset.',
+            messageSubHeading: 'This will serve as your introduction to the employer. Your application will also consist of your completed profile, your resume and any reports you have ordered through Outset.',
             intro: 'Write a short message explaining why you\'re a good fit for the position.',
             errors: {
                 noJob: 'You must select a job to apply to first, or you can save as a draft',
@@ -159,7 +159,7 @@
     }
 
     NewApplicationModalController.$inject = ['$modal', '$log'];
-    ApplicationCreateController.$inject = ['$scope', '$modalInstance', '$state', '$log', 'Applications', 'job'];
+    ApplicationCreateController.$inject = ['$scope', '$modalInstance', '$state', '$log', 'Applications', 'job', 'Authentication'];
 
     angular
         .module('jobs')

@@ -931,7 +931,6 @@ form {
 
         &.active, &:hover, &:active {
           background : transparent !important;
-          cursor     : pointer;
         }
       }
     }
@@ -1703,6 +1702,34 @@ dl.mini-table {
 .report-badges {
   color : fade(@text-color-secondary, 20%) !important;
 
+  &.uploader {
+    .fa.fa-1x {
+      position: inherit!important;
+
+      &.fa-question {
+        color: fade(@text-color-secondary, 5%);
+      }
+    }
+
+    .report-badge {
+      .fa.fa-check, .fa.fa-file-o {
+        display : none !important;
+      }
+      .fa.fa-question, .fa.fa-file {
+        display : inherit !important;
+      }
+
+      &.available {
+        .fa.fa-check, .fa.fa-file-o {
+          display : inherit !important;
+        }
+        .fa.fa-question, .fa.fa-file {
+          display : none !important;
+        }
+      }
+    }
+  }
+
   &.not-available, &.not-visible {
     .available, .available * {
       cursor : not-allowed !important;
@@ -1807,6 +1834,7 @@ form.applicant-form {
 .modal-form {
   .modal-body {
     p.info {
+      margin-top: 15px;
       text-align: center;
       color: @text-muted
     }

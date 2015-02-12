@@ -78,7 +78,9 @@
                 allowBlank: '=?',
                 modelId: '=',
                 uploadBtnClass: '@?',
-                uploadBtnText: '@?'
+                uploadBtnText: '@?',
+                autoUpload: '=?',
+                hideIcon: '=?'
             },
             controller: 'ChangeProfilePictureController',
             controllerAs: 'vm',

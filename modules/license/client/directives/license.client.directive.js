@@ -21,6 +21,35 @@
             $log.debug('[EditLicense] Displaying License for editing: %o', vm.license);
         }
 
+        vm.mode = vm.mode || 'standard';
+
+        if (vm.mode === 'minimal') {
+            vm.view = {
+                cols: 1,
+                horizontal: true,
+                types: true,
+                classes: true,
+                hideClasses: false,
+                state: false,
+                expires: false,
+                dob: false,
+                endorsements: false
+            };
+        } else {
+            // 'Standard' View
+            vm.view = {
+                cols: 2,
+                horizontal: false,
+                types: true,
+                classes: true,
+                hideClasses: false,
+                state: true,
+                expires: true,
+                dob: true,
+                endorsements: true
+            };
+        }
+
         vm.states = appConfig.getStates();
         vm.debug = appConfig.get('debug');
 
@@ -34,7 +63,8 @@
             restrict: 'E',
             scope: {
                 license: '=?model',
-                user: '=?'
+                user: '=?',
+                mode: '@?'
             },
             controller: 'EditLicenseController',
             controllerAs: 'vm',

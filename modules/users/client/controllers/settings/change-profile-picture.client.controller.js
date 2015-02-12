@@ -4,6 +4,8 @@
     function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs) {
         var vm = this;
 
+        vm.autoUpload = !!vm.autoUpload;
+
         vm.uploader = null;
         vm.uploadUrl = 'api/users/picture';
 
@@ -126,6 +128,9 @@
                                 vm.newImage = fileReaderEvent.target.result;
                             } else {
                                 vm.newFile = fileReaderEvent.target.result;
+                            }
+                            if(vm.autoUpload) {
+                                vm.uploadProfilePicture();
                             }
                         }, 0);
                     };

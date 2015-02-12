@@ -13,7 +13,7 @@
 
         <div class="row mgn-vert"
              ng-class="{'has-error':(vm.experienceForm.title.$invalid || vm.experienceForm['hidden_title'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.title.$touched)}">
-            <label class="col-sm-2 control-label">Title</label>
+            <label class="col-sm-2 control-label">Job Title</label>
 
             <div class="controls col-sm-9 controls">
                 <input type="text" name="title" data-ng-model="vm.model.title" class="form-control"
@@ -36,7 +36,7 @@
         <div class="row mgn-vert">
             <label class="col-sm-2 control-label"
                    ng-class="{'has-error':(vm.experienceForm.time_start.$invalid || vm.experienceForm['hidden_time_start'].$invalid) && vm.experienceForm.$submitted}">
-                Time
+                Time Period
             </label>
 
             <div class="col-sm-9 form-inline">
