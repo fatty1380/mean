@@ -23,6 +23,12 @@
                 </button>
             </div>
 
+            <div class="mgn-bottom" data-ng-if="!vm.user" oset-signup-apply-modal signup-type="driver" job='vm.job'>
+                <button class="btn btn-cta-primary btn-lg btn-block bigger">
+                    signup & apply
+                </button>
+            </div>
+
             <div class="company-image panel panel-default"
                  data-ng-if="vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id">
                 <img ng-src="{{vm.job.company.profileImageURL}}" class="img-responsive"/>

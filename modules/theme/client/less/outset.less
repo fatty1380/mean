@@ -636,6 +636,13 @@ img.user-profile-picture {
     //      width: 100%;
     //      height: 25%;
     //    }
+
+    .why {
+      .item
+      {
+        padding: 30px 10px
+  }
+    }
   }
 
   .intro-break {
@@ -924,7 +931,6 @@ form {
 
         &.active, &:hover, &:active {
           background : transparent !important;
-          cursor     : default;
         }
       }
     }
@@ -945,7 +951,7 @@ form {
 
   label.no-border {
     &, :hover, :active {
-      border : none !important;
+      //border : none !important;
     }
     margin : 4px 8px;
   }
@@ -957,13 +963,21 @@ form {
 
     &:active, &:hover {
       .box-shadow(inset 0 3px 5px rgba(0, 0, 0, .125));
+      cursor     : pointer;
     }
+
+    &>*:hover {
+      cursor: pointer;
+    }
+
+    padding-top: 4px;
 
     i.fa {
       padding-top : 3px;
       color       : inherit !important;
     }
     i.fa::before {
+      padding-top: 3px;
       content  : "\F10C"; // fa-circle-o
       position : absolute;
     }
@@ -981,6 +995,7 @@ form {
     }
 
     &.oset-input {
+      padding: 6px;
       * {
         display : inline;
         .transition (all 0.3s ease-in-out)
@@ -1024,7 +1039,7 @@ form {
 
 label.no-border {
   &, :hover, :active {
-    border : none !important;
+    //border : none !important;
     cursor : auto;
   }
   margin : 4px 4px;
@@ -1687,6 +1702,34 @@ dl.mini-table {
 .report-badges {
   color : fade(@text-color-secondary, 20%) !important;
 
+  &.uploader {
+    .fa.fa-1x {
+      position: inherit!important;
+
+      &.fa-question {
+        color: fade(@text-color-secondary, 5%);
+      }
+    }
+
+    .report-badge {
+      .fa.fa-check, .fa.fa-file-o {
+        display : none !important;
+      }
+      .fa.fa-question, .fa.fa-file {
+        display : inherit !important;
+      }
+
+      &.available {
+        .fa.fa-check, .fa.fa-file-o {
+          display : inherit !important;
+        }
+        .fa.fa-question, .fa.fa-file {
+          display : none !important;
+        }
+      }
+    }
+  }
+
   &.not-available, &.not-visible {
     .available, .available * {
       cursor : not-allowed !important;
@@ -1764,7 +1807,7 @@ form.applicant-form {
       margin-bottom : 0;
     }
 
-    > * {
+    >p {
       padding-left  : 15px;
       padding-right : 15px;
     }
@@ -1785,5 +1828,20 @@ form.applicant-form {
       background-color : lighten(@divider, 18%);
     }
 
+  }
+}
+
+.modal-form {
+  .modal-body {
+    p.info {
+      margin-top: 15px;
+      text-align: center;
+      color: @text-muted
+    }
+  }
+
+  textarea.form-control.tall {
+    min-height : 200px;
+    resize     : vertical;
   }
 }

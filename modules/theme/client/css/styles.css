@@ -3949,6 +3949,9 @@ img.user-profile-picture {
 .landing-page .sections-wrapper .section .three-cols .col-md-4 > p {
   padding: 0 15px;
 }
+.landing-page .sections-wrapper .section .why .item {
+  padding: 30px 10px;
+}
 .landing-page .intro-break {
   position: relative;
   overflow: hidden;
@@ -4129,7 +4132,6 @@ form .form-group .disabled .btn:hover,
 form .form-group.disabled .btn:active,
 form .form-group .disabled .btn:active {
   background: transparent !important;
-  cursor: default;
 }
 form .form-group label.disabled {
   color: #777777;
@@ -4141,10 +4143,8 @@ form .form-group label.optional {
 form label.no-border {
   margin: 4px 8px;
 }
-form label.no-border,
-form label.no-border :hover,
-form label.no-border :active {
-  border: none !important;
+form label.btn-cta-secondary.oset-toggles {
+  padding-top: 4px;
 }
 form label.btn-cta-secondary.oset-toggles.active {
   -webkit-box-shadow: none;
@@ -4156,12 +4156,17 @@ form label.btn-cta-secondary.oset-toggles:hover {
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  cursor: pointer;
+}
+form label.btn-cta-secondary.oset-toggles > *:hover {
+  cursor: pointer;
 }
 form label.btn-cta-secondary.oset-toggles i.fa {
   padding-top: 3px;
   color: inherit !important;
 }
 form label.btn-cta-secondary.oset-toggles i.fa::before {
+  padding-top: 3px;
   content: "\F10C";
   position: absolute;
 }
@@ -4173,6 +4178,9 @@ form label.btn-cta-secondary.oset-toggles.active i.fa::before {
 }
 form label.btn-cta-secondary.oset-toggles.active:hover i.fa::before {
   content: "\F00C";
+}
+form label.btn-cta-secondary.oset-toggles.oset-input {
+  padding: 6px;
 }
 form label.btn-cta-secondary.oset-toggles.oset-input * {
   display: inline;
@@ -4209,7 +4217,6 @@ label.no-border {
 label.no-border,
 label.no-border :hover,
 label.no-border :active {
-  border: none !important;
   cursor: auto;
 }
 label.btn-cta-secondary.active {
@@ -4879,6 +4886,28 @@ dl.mini-table dt dd p {
 .report-badges {
   color: rgba(102, 102, 102, 0.2) !important;
 }
+.report-badges.uploader .fa.fa-1x {
+  position: inherit!important;
+}
+.report-badges.uploader .fa.fa-1x.fa-question {
+  color: rgba(102, 102, 102, 0.05);
+}
+.report-badges.uploader .report-badge .fa.fa-check,
+.report-badges.uploader .report-badge .fa.fa-file-o {
+  display: none !important;
+}
+.report-badges.uploader .report-badge .fa.fa-question,
+.report-badges.uploader .report-badge .fa.fa-file {
+  display: inherit !important;
+}
+.report-badges.uploader .report-badge.available .fa.fa-check,
+.report-badges.uploader .report-badge.available .fa.fa-file-o {
+  display: inherit !important;
+}
+.report-badges.uploader .report-badge.available .fa.fa-question,
+.report-badges.uploader .report-badge.available .fa.fa-file {
+  display: none !important;
+}
 .report-badges.not-available .available,
 .report-badges.not-visible .available,
 .report-badges.not-available .available *,
@@ -4951,7 +4980,7 @@ form.applicant-form textarea.form-control {
 .experience.view.last {
   margin-bottom: 0;
 }
-.experience.view > * {
+.experience.view > p {
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -4972,6 +5001,15 @@ form.applicant-form textarea.form-control {
 }
 .experience.view .pnl-controls {
   background-color: #fafafa;
+}
+.modal-form .modal-body p.info {
+  margin-top: 15px;
+  text-align: center;
+  color: #777777;
+}
+.modal-form textarea.form-control.tall {
+  min-height: 200px;
+  resize: vertical;
 }
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {

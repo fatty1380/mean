@@ -2944,7 +2944,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '            <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"\n' +
   '                                  model="exp" is-last="$last" ng-switch-when="true"\n' +
-  '                                  view-only="vm.viewOnly" can-edit="vm.canEdit" edit-mode="false"\n' +
+  '                                  view-only="vm.viewOnly" can-edit="vm.canEdit" edit-mode="exp.isFresh && vm.isEditing"\n' +
   '                                  add-fn="vm.add" drop-fn="vm.drop" is-last="$last">\n' +
   '            </oset-experience-item>\n' +
   '\n' +
@@ -2965,7 +2965,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience.client.template.html',
   '<section class="experience">\n' +
   '\n' +
-  '    <ng-form name="vm.experienceForm" ng-init="vm.activate()" class="edit" ng-show="vm.isEditing" ng-if="!vm.viewOnly">\n' +
+  '    <ng-form name="vm.experienceForm" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
+  '             ng-if="!vm.viewOnly">\n' +
   '\n' +
   '        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">\n' +
   '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
@@ -2975,75 +2976,65 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="row"\n' +
+  '        <div class="row mgn-vert"\n' +
   '             ng-class="{\'has-error\':(vm.experienceForm.title.$invalid || vm.experienceForm[\'hidden_title\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.title.$touched)}">\n' +
-  '            <label class="col-sm-2 control-label">Title\n' +
-  '                <br/>\n' +
-  '                <small>Your title at this position</small>\n' +
-  '            </label>\n' +
+  '            <label class="col-sm-2 control-label">Job Title</label>\n' +
   '\n' +
   '            <div class="controls col-sm-9 controls">\n' +
   '                <input type="text" name="title" data-ng-model="vm.model.title" class="form-control"\n' +
-  '                       placeholder="Short Title"\n' +
+  '                       placeholder="your title at this position"\n' +
   '                       ng-required="true"/>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="row"\n' +
+  '        <div class="row mgn-vert"\n' +
   '             ng-class="{\'has-error\':(vm.experienceForm.description.$invalid || vm.experienceForm[\'hidden_description\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.description.$touched)}">\n' +
-  '            <label class="col-sm-2 control-label">About\n' +
-  '                <br/>\n' +
-  '                <small>Describe your experience</small>\n' +
-  '            </label>\n' +
+  '            <label class="col-sm-2 control-label">About</label>\n' +
   '\n' +
   '            <div class="controls col-sm-9 controls">\n' +
   '                <textarea name="description" class="form-control" data-ng-model="vm.model.description"\n' +
-  '                          rows="3" ng-required="true"></textarea>\n' +
+  '                          rows="3" ng-required="true" placeholder="describe your experience"></textarea>\n' +
   '                <!--<os-html-edit model="vm.model.description"></os-html-edit>-->\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="form-inline">\n' +
+  '        <div class="row mgn-vert">\n' +
   '            <label class="col-sm-2 control-label"\n' +
   '                   ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && vm.experienceForm.$submitted}">\n' +
-  '                Time\n' +
+  '                Time Period\n' +
   '            </label>\n' +
   '\n' +
-  '            <div class="col-sm-9 controls">\n' +
-  '                <div class="row">\n' +
-  '                    <div class="col-sm-5 input-group"\n' +
-  '                         ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">\n' +
-  '                        <div class="input-group-addon">{{ \'start\' | titlecase }}</div>\n' +
-  '                        <date-input class="form-control" model="vm.model.startDate" os-name="time_start"\n' +
-  '                                    dformat="MM/DD/YYYY"></date-input>\n' +
+  '            <div class="col-sm-9 form-inline">\n' +
+  '                <div class="col-sm-5 input-group"\n' +
+  '                     ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">\n' +
+  '                    <div class="input-group-addon">{{ \'start\' | titlecase }}</div>\n' +
+  '                    <date-input class="form-control" model="vm.model.startDate" os-name="time_start"\n' +
+  '                                dformat="MM/DD/YYYY"></date-input>\n' +
   '\n' +
-  '                        <input type="hidden" ng-model="vm.model.startDate" ng-required="vm.isRequired"\n' +
-  '                               name="hidden_time_start">\n' +
-  '                    </div>\n' +
+  '                    <input type="hidden" ng-model="vm.model.startDate" ng-required="vm.isRequired"\n' +
+  '                           name="hidden_time_start">\n' +
+  '                </div>\n' +
   '\n' +
-  '                    <div class="col-sm-5 input-group"\n' +
-  '                         ng-class="{\'has-error\':(vm.experienceForm.time_end.$invalid || vm.experienceForm[\'hidden_time_end\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">\n' +
-  '                        <div class="input-group-addon">{{ \'end\' | titlecase }}</div>\n' +
+  '                <div class="col-sm-5 input-group"\n' +
+  '                     ng-class="{\'has-error\':(vm.experienceForm.time_end.$invalid || vm.experienceForm[\'hidden_time_end\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">\n' +
+  '                    <div class="input-group-addon">{{ \'end\' | titlecase }}</div>\n' +
   '\n' +
-  '                        <date-input class="form-control" model="vm.model.endDate" os-name="time_end"></date-input>\n' +
-  '                        <input type="hidden" ng-model="vm.model.endDate" ng-required="vm.isRequired"\n' +
-  '                               name="hidden_time_end">\n' +
+  '                    <date-input class="form-control" model="vm.model.endDate" os-name="time_end"></date-input>\n' +
+  '                    <input type="hidden" ng-model="vm.model.endDate" ng-required="vm.isRequired"\n' +
+  '                           name="hidden_time_end">\n' +
   '\n' +
-  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
-  '\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="row"\n' +
+  '        <div class="row mgn-vert"\n' +
   '             ng-class="{\'has-error\':(vm.experienceForm.location.$invalid || vm.experienceForm[\'hidden_location\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.location.$touched)}">\n' +
-  '            <label class="col-sm-2 control-label">\n' +
-  '                <small>Where was this job?</small>\n' +
-  '            </label>\n' +
+  '            <label class="col-sm-2 control-label">Location</label>\n' +
   '\n' +
   '            <div class="col-md-9 controls">\n' +
-  '                <input type="text" data-ng-model="vm.model.location" class="form-control" placeholder="Where"\n' +
-  '                       required name="location"/>\n' +
+  '                <input type="text" data-ng-model="vm.model.location" class="form-control"\n' +
+  '                       placeholder="where was this job?"\n' +
+  '                       ng-required="true" name="location"/>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
@@ -3469,7 +3460,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/license/views/license.client.template.html',
   '<ng-form name="vm.licenseForm" ng-init="vm.activate()">\n' +
-  '    <div class="container-fluid license-details">\n' +
+  '    <div class="container-fluid license-details" ng-class="{\'form-horizontal\':vm.view.horizontal}">\n' +
   '\n' +
   '        <div class="row" ng-show="vm.licenseForm.$invalid && (vm.licenseForm.$submitted || vm.licenseForm.description.$dirty)">\n' +
   '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
@@ -3480,12 +3471,16 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row profile-row">\n' +
-  '            <div class="col-sm-6">\n' +
+  '            <div ng-class="{\'col-sm-6\':vm.view.cols === 2, \'col-sm-12\': vm.view.cols === 1}">\n' +
   '\n' +
-  '                <div class="form-group">\n' +
-  '                    <label class="col-sm-12 col-md-6 control-label" ng-class="{\'text-danger\':vm.licenseForm.type.$invalid && vm.licenseForm.$submitted}">License Type</label>\n' +
+  '                <div class="form-group" ng-if="!!vm.view.types" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                    <label class="control-label"\n' +
+  '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal, \'text-danger\':vm.licenseForm.type.$invalid && vm.licenseForm.$submitted}">\n' +
+  '                        License Type\n' +
+  '                    </label>\n' +
   '\n' +
-  '                    <div class="controls col-sm-10 col-md-6">\n' +
+  '                    <div class="controls"\n' +
+  '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
   '                        <div class="btn-group">\n' +
   '                            <label ng-repeat="licenseType in vm.licenseTypes" class="btn btn-cta-secondary btn-sm"\n' +
   '                                   ng-model="vm.license.type" ng-required="true" name="type"\n' +
@@ -3494,12 +3489,16 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-class="{\'disabled\':vm.license.type != \'Commercial\'}">\n' +
-  '                    <label class="control-label col-sm-6">\n' +
+  '                <div class="form-group" ng-if="!!vm.view.classes"\n' +
+  '                     ng-hide="vm.view.hideClasses && vm.license.type != \'Commercial\'"\n' +
+  '                     ng-class="{\'col-sm-6\':vm.view.horizontal, \'disabled\':vm.license.type != \'Commercial\'}">\n' +
+  '                    <label class="control-label"\n' +
+  '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal}">\n' +
   '                        Class Rating\n' +
   '                    </label>\n' +
   '\n' +
-  '                    <div class="controls col-sm-10 col-md-6 ">\n' +
+  '                    <div class="controls"\n' +
+  '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
   '                        <div class="btn-group">\n' +
   '                            <label ng-repeat="val in vm.ratings" class="btn btn-cta-secondary btn-sm"\n' +
   '                                   ng-model="vm.license.rating" name="classRating"\n' +
@@ -3508,41 +3507,51 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group">\n' +
-  '                    <label class="col-sm-12 col-md-6 control-label" ng-class="{\'text-danger\':vm.licenseForm.state.$invalid && vm.licenseForm.$submitted}">State\n' +
+  '                <div class="form-group" ng-if="!!vm.view.state" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                    <label class="control-label"\n' +
+  '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal,\'text-danger\':vm.licenseForm.state.$invalid && vm.licenseForm.$submitted}">\n' +
+  '                        State\n' +
   '                    </label>\n' +
   '\n' +
-  '                    <div class="controls col-sm-10 col-md-6" syle>\n' +
+  '                    <div class="controls"\n' +
+  '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
   '                        <input type="text" ng-model="vm.license.state" autocomplete="off"\n' +
   '                               typeahead="state as state.name for state in vm.states | filter:$viewValue | limitTo:8"\n' +
   '                               name="state" ng-required="true" class="form-control">\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group">\n' +
-  '                    <label class="col-sm-12 col-md-6 control-label" ng-class="{\'text-danger\':vm.licenseForm.expires.$invalid}">Expiration Date </label>\n' +
+  '                <div class="form-group" ng-if="!!vm.view.expires" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                    <label class="control-label"\n' +
+  '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal, \'text-danger\':vm.licenseForm.expires.$invalid}">\n' +
+  '                        Expiration Date\n' +
+  '                    </label>\n' +
   '\n' +
-  '                    <div class="controls col-sm-10 col-md-6">\n' +
+  '                    <div class="controls"\n' +
+  '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
   '                        <date-input model="vm.license.expires" class="form-control" name="expires" placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group">\n' +
-  '                    <label class="col-sm-12 col-md-6 control-label" ng-class="{\'text-danger\':vm.licenseForm.dob.$invalid}">Date of Birth\n' +
+  '                <div class="form-group" ng-if="!!vm.view.dob" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                    <label class="control-label"\n' +
+  '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal, \'text-danger\':vm.licenseForm.dob.$invalid}">\n' +
+  '                        Date of Birth\n' +
   '                        <br/>\n' +
   '                        <small>Your birthdate</small>\n' +
   '                    </label>\n' +
   '\n' +
-  '                    <div class="controls col-sm-10 col-md-6">\n' +
+  '                    <div class="controls"\n' +
+  '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
   '                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob" placeholder="{{vm.dateFormat}}"></date-input>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <div class="col-sm-6">\n' +
+  '            <div ng-class="{\'col-sm-6\':vm.view.cols === 2, \'col-sm-12\': vm.view.cols === 1}">\n' +
   '\n' +
   '\n' +
-  '                <div class="form-group">\n' +
+  '                <div class="form-group" ng-if="!!vm.view.endorsements">\n' +
   '                    <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>\n' +
   '                        <small>any endorsements on your license?</small>\n' +
   '                    </label>\n' +
@@ -3573,16 +3582,31 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<section class="container-fluid">\n' +
   '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '        <fieldset>\n' +
-  '            <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">\n' +
-  '                <span class="btn {{vm.uploadBtnClass || \'btn-oset-secondary\'}} btn-file">\n' +
+  '\n' +
+  '            <div class="text-center form-group">\n' +
+  '                <span data-ng-hide="!!vm.fileName">{{vm.title}}</span>\n' +
+  '                <span data-ng-show="vm.fileName"><strong>File: </strong>{{vm.fileName}}</span>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="text-center form-group">\n' +
+  '\n' +
+  '                <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">\n' +
+  '                    <span class="fa-stack fa-3x report-badge"\n' +
+  '                            ng-class="{\'available\': !!vm.fileName}">\n' +
+  '                        <i class="fa fa-file-o fa-stack-2x"></i>\n' +
+  '                        <i class="fa fa-check fa-1x"></i>\n' +
+  '                        <i class="fa fa-file fa-stack-2x"></i>\n' +
+  '                        <i class="fa fa-question fa-1x"></i>\n' +
+  '                    </span>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <span class="btn {{vm.uploadBtnClass || \'btn-oset-secondary\'}} btn-file"\n' +
+  '                      data-ng-hide="vm.uploader.queue.length && !vm.autoUpload">\n' +
   '                    {{vm.uploadBtnText || \'Select File ...\'}}\n' +
   '                    <input type="file" nv-file-select uploader="vm.uploader">\n' +
   '                </span>\n' +
   '            </div>\n' +
-  '            <div class="text-center form-group" data-ng-show="vm.fileName">\n' +
-  '                <strong>File: </strong>{{vm.fileName}}\n' +
-  '            </div>\n' +
-  '            <div class="text-center form-group" data-ng-show="vm.uploader.queue.length">\n' +
+  '            <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">\n' +
   '                <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>\n' +
   '                <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>\n' +
   '            </div>\n' +
@@ -3634,17 +3658,23 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<section class="container-fluid">\n' +
   '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '        <fieldset>\n' +
-  '            <div class="form-group text-center" ng-hide="vm.uploader.queue.length">\n' +
-  '                <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"\n' +
-  '                     alt="{{vm.title}}" class="img-thumbnail user-profile-picture">\n' +
   '\n' +
-  '                <div data-ng-hide="!!vm.imageURL" class="text-center img-thumbnail user-profile-picture">\n' +
-  '                    <i class="fa fa-question fa-4x center-block"></i></div>\n' +
+  '            <div class="form-group text-center mgn-vert" ng-hide="vm.uploader.queue.length">\n' +
+  '                <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"\n' +
+  '                     alt="{{vm.title}}" class="img-thumbnail user-profile-picture ng-hide">\n' +
+  '\n' +
+  '                <div data-ng-hide="!!vm.imageURL" class="report-badges uploader mgn-vert">\n' +
+  '                    <span class="fa-stack fa-3x report-badge">\n' +
+  '                        <i class="fa fa-user fa-stack-2x"></i>\n' +
+  '                        <i class="fa fa-question fa-1x"></i>\n' +
+  '                    </span>\n' +
+  '                </div>\n' +
   '            </div>\n' +
   '\n' +
   '            <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">\n' +
-  '                <span class="btn btn-default btn-file">\n' +
-  '                    Select Image <input type="file" nv-file-select uploader="vm.uploader">\n' +
+  '                <span class="btn {{vm.uploadBtnClass || \'btn-oset-secondary\'}} btn-file">\n' +
+  '                    {{vm.uploadBtnText || \'Select Image ...\'}}\n' +
+  '                    <input type="file" nv-file-select uploader="vm.uploader">\n' +
   '                </span>\n' +
   '            </div>\n' +
   '\n' +
@@ -3901,52 +3931,80 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->\n' +
   '\n' +
   '<script type="text/ng-template" id="signupApplyModal.html">\n' +
-  '    <div class="modal-header bg-primary">\n' +
+  '    <div class="modal-header bg-primary" ng-show="!!vm.currentStep">\n' +
   '        <span class="modal-title h3 text-center">\n' +
   '            New Job Application\n' +
   '            </span>\n' +
   '    </div>\n' +
   '\n' +
-  '    <form id="vm.newUserApplicationForm">\n' +
-  '        <div class="modal-body">\n' +
+  '    <form id="vm.newUserApplicationForm" class="modal-form">\n' +
+  '        <div class="modal-body" ng-class="{\'bg-primary\': vm.currentStep === 0}">\n' +
   '\n' +
-  '            <section class="row" id="step_0_welcome"\n' +
-  '                     ng-form="vm.subForm0" ng-show="true || vm.currentStep === 0">\n' +
+  '            <section class="signup-type row" id="step_0_signupType"\n' +
+  '                     ng-form="vm.subForm0" ng-show="vm.currentStep === 0">\n' +
+  '                <div class="row text-center">\n' +
+  '                    <h2 class="lead-question">I want to ...</h2>\n' +
+  '                </div>\n' +
+  '                <div class="row text-center">\n' +
+  '                    <div class="col-sm-6" ng-click="vm.selectUserType(\'driver\')">\n' +
+  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
+  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
+  '                                <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>\n' +
+  '                            </div>\n' +
+  '                            <br class="hidden-xs"/>\n' +
+  '\n' +
+  '                            <div class="heading h3">Drive</div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                    <br class="visible-xs"/>\n' +
+  '\n' +
+  '                    <div class="col-sm-6" ng-click="vm.selectUserType(\'owner\')">\n' +
+  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
+  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
+  '                                <img src="modules/users/img/owner-group.png"\n' +
+  '                                     class="img-responsive center-block text-center"/>\n' +
+  '                            </div>\n' +
+  '                            <br class="hidden-xs"/>\n' +
+  '\n' +
+  '                            <div class="heading h3">Hire</div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '                <input type="hidden" ng-required="true" ng-model="vm.credentials.signupType"/>\n' +
+  '            </section>\n' +
+  '\n' +
+  '            <section class="row" id="step_1_welcome"\n' +
+  '                     ng-form="vm.subForm1" ng-show="vm.currentStep === 1">\n' +
   '\n' +
   '                <div class="col-sm-12">\n' +
-  '                    <p class="info">In the next few screens, you will fill out the information necessary for\n' +
-  '                        applying to this job. Once complete you will be able to </p>\n' +
   '\n' +
-  '                    <p class="info">Lets get started with your email address:</p>\n' +
+  '                    <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic\n' +
+  '                        information</p>\n' +
   '\n' +
   '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
   '\n' +
-  '                        <label for="email" class="control-label">Email</label>\n' +
+  '                        <label for="email" class="control-label col-xs-12">Email</label>\n' +
   '\n' +
-  '                        <input modal-focus="true" type="email" id="email" name="email"\n' +
-  '                               class="form-control" debounce\n' +
-  '                               data-ng-model="vm.credentials.email"\n' +
-  '                               placeholder="Email" ng-required="true">\n' +
+  '                        <div class="col-xs-12">\n' +
+  '                            <input modal-focus="true" type="email" id="email" name="email"\n' +
+  '                                   class="form-control" debounce\n' +
+  '                                   data-ng-model="vm.credentials.email"\n' +
+  '                                   placeholder="Email" ng-required="true">\n' +
   '\n' +
-  '                        <span class="form-control-feedback"\n' +
-  '                              ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">\n' +
-  '                            <i class="fa fa-check"></i>\n' +
-  '                        </span>\n' +
-  '                        <span class="form-control-feedback"\n' +
-  '                              ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">\n' +
-  '                            <i class="fa fa-times" tootltip="Please enter an email address"></i>\n' +
-  '                        </span>\n' +
+  '                            <span class="form-control-feedback"\n' +
+  '                                  ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">\n' +
+  '                                <i class="fa fa-check text-success"></i>\n' +
+  '                            </span>\n' +
+  '                            <span class="form-control-feedback"\n' +
+  '                                  ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">\n' +
+  '                                <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>\n' +
+  '                            </span>\n' +
+  '                        </div>\n' +
   '\n' +
   '                    </div>\n' +
-  '                    <p class="info col-xs-12">This is my email: {{vm.credentials.email}}</p>\n' +
   '                </div>\n' +
   '\n' +
-  '            </section>\n' +
-  '\n' +
-  '            <section class="row" id="step_1_basics"\n' +
-  '                     ng-form="vm.subForm1" ng-show="true || vm.currentStep === 1">\n' +
-  '                <div class="col-sm-12">\n' +
-  '                    <p class="info">Please enter some basic identifying information about yourself</p>\n' +
+  '                <div class="col-xs-12">\n' +
   '                    <!--Enter your name-->\n' +
   '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
   '                        <label class="control-label col-xs-12">Your Name</label>\n' +
@@ -3970,148 +4028,184 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </div>\n' +
   '                <div class="col-xs-12">\n' +
   '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '                        <label class="control-label col-xs-12">Your Zip Code</label>\n' +
+  '                        <label class="control-label col-xs-12">Your Zip Code\n' +
+  '                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.zip}}"></i>\n' +
+  '                        </label>\n' +
   '\n' +
-  '                        <div class="col-xs-6">\n' +
-  '                            <input type="text" id="firstName" name="firstName"\n' +
+  '                        <div class="col-xs-12">\n' +
+  '                            <input type="text" id="zipCode" name="zipCode"\n' +
   '                                   class="form-control" debounce ng-required="true"\n' +
-  '                                   data-ng-model="vm.credentials.firstName" placeholder="First Name">\n' +
+  '                                   data-ng-model="vm.credentials.addresses[0].zipCode" placeholder="Zip Code">\n' +
   '                        </div>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <!--What are you interested in -->\n' +
-  '                <div class="form-group">\n' +
-  '                    <label class="control-label">Your Interests</label>\n' +
+  '                <div class="col-sm-12">\n' +
+  '                    <p class="info">\n' +
+  '                    </p>\n' +
   '\n' +
-  '                    <div class="col-sm-12 text-center">\n' +
-  '                        <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
-  '                        <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
+  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '                        <label class="control-label col-xs-12">Password\n' +
+  '                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.password}}"></i>\n' +
+  '                        </label>\n' +
+  '\n' +
+  '                        <div class="col-xs-12">\n' +
+  '                            <input type="password" id="password" name="password" class="form-control mgn-vert"\n' +
+  '                                   data-ng-model="vm.credentials.password" placeholder="Password"\n' +
+  '                                   ng-required="true">\n' +
+  '\n' +
+  '                            <input type="password" id="confirmPassword" name="confirmPassword"\n' +
+  '                                   class="form-control mgn-vert"\n' +
+  '                                   data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"\n' +
+  '                                   ng-required="true" compare-to="vm.credentials.password">\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '                    <div class="col-sm-10 col-sm-offset-1">\n' +
+  '                        <p class="text-center">Do you agree to all conditions in the Outset <span\n' +
+  '                                tos>Terms of Service</span>\n' +
+  '                            <i class="fa"\n' +
+  '                               ng-class="{\'fa-question\' : !vm.credentials.terms, \'fa-check-circle text-success fa-2x\': vm.credentials.terms==\'yes\', \'fa-times-circle-o text-danger\' : vm.credentials.terms==\'no\'}"></i>\n' +
+  '                            <button ng-hide="vm.credentials.terms === \'yes\'" type="button"\n' +
+  '                                    ng-click="vm.credentials.terms=\'yes\'" class="btn btn-oset-success btn-sm mgn-left">\n' +
+  '                                Yes, I Agree\n' +
+  '                            </button>\n' +
+  '                        </p>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <!--What is your address?-->\n' +
-  '                <div class="form-group">\n' +
-  '                    <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">\n' +
-  '                        <os-edit-address model="vm.credentials.location[0]" id="location"></os-edit-address>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '        </div>\n' +
+  '            </section>\n' +
   '\n' +
-  '        </section>\n' +
+  '            <section class="row" id="step_2_background"\n' +
+  '                     ng-form="vm.subForm2" ng-show="vm.currentStep === 2">\n' +
   '\n' +
-  '        <section class="row" id="step_2_info"\n' +
-  '                 ng-form="vm.subForm2" ng-show="true || vm.currentStep === 2">\n' +
   '\n' +
-  '            <div class="col-sm-12">\n' +
-  '                <!--Cover Letter-->\n' +
-  '                <div class="form-group">\n' +
-  '                    <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading || \'Cover Letter\'"></span>\n' +
+  '                <div class="col-xs-12">\n' +
+  '                    <!--What type of license do you have? -->\n' +
+  '                    <div class="form-group">\n' +
+  '                        <p class="info col-sm-10 col-sm-offset-1">\n' +
+  '                            What type of driver license do you have?\n' +
+  '                        </p>\n' +
   '\n' +
-  '                    <p class="text-muted text-center"\n' +
-  '                       ng-bind-html="vm.placeholders.messageSubHeading || \'Please introduce yourself to the employer in a brief letter\'"></p>\n' +
-  '\n' +
-  '                    <div class="controls">\n' +
-  '                    <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"\n' +
-  '                              placeholder="{{vm.placeholders.intro}}" required></textarea>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <!--Past Experience-->\n' +
-  '                <div class="form-group">\n' +
-  '                    <h3>Experience\n' +
-  '                        <small>Add information about past Experience to help employers know more about you and your\n' +
-  '                            background\n' +
-  '                        </small>\n' +
-  '                    </h3>\n' +
-  '\n' +
-  '                    <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '        </section>\n' +
-  '\n' +
-  '        <section class="row" id="step_3_docs"\n' +
-  '                 ng-form="vm.subForm3" ng-show="true || vm.currentStep === 3">\n' +
-  '\n' +
-  '            <div class="col-sm-12">\n' +
-  '\n' +
-  '                <!--Please upload a picture-->\n' +
-  '                <!--<os-picture-uploader model="vm.credentials.picture" mode="raw"></os-picture-uploader>-->\n' +
-  '                <h4 class="text-center">TODO: Picture Upload</h4>\n' +
-  '                <!--Do you have a resume to attach-->\n' +
-  '                <!--<oset-file-upload model="vm.credentials.resume" mode="resume"></oset-file-upload>-->\n' +
-  '                <h4 class="text-center">TODO: Picture Upload</h4>\n' +
-  '\n' +
-  '                <p class="info">After you have completed your application, you will have a chance to order Motor\n' +
-  '                    Vehicle\n' +
-  '                    Reports, Background Checks and more. This will help employers see how professional and\n' +
-  '                    employable\n' +
-  '                    you are, and move you more quickly through the job application process.</p>\n' +
-  '\n' +
-  '            </div>\n' +
-  '\n' +
-  '        </section>\n' +
-  '\n' +
-  '        <section class="row" id="step_4_password"\n' +
-  '                 ng-form="vm.subForm4" ng-show="true || vm.currentStep === 4">\n' +
-  '\n' +
-  '            <div class="col-sm-12">\n' +
-  '                <p class="info">In order to see the status uf your application and communicate with the employer,\n' +
-  '                    please\n' +
-  '                    enter a password before continuing.</p>\n' +
-  '\n' +
-  '                <div class="form-group">\n' +
-  '                    <label for="password" class="col-sm-2 control-label">Password</label>\n' +
-  '\n' +
-  '                    <div class="col-sm-10">\n' +
-  '                        <input type="password" id="password" name="password" class="form-control"\n' +
-  '                               data-ng-model="vm.credentials.password" placeholder="Password"\n' +
-  '                               ng-required="true">\n' +
-  '                        <br/>\n' +
-  '                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"\n' +
-  '                               data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"\n' +
-  '                               ng-required="true" compare-to="vm.credentials.password">\n' +
+  '                        <div class="col-sm-12 text-center">\n' +
+  '                            <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"\n' +
+  '                                             mode="minimal"></os-edit-license>\n' +
+  '                        </div>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
+  '                <div class="col-xs-12">\n' +
+  '                    <!--What are you interested in -->\n' +
+  '                    <div class="form-group">\n' +
+  '                        <p class="info col-sm-10 col-sm-offset-1">\n' +
+  '                            What types of jobs are you interested in?\n' +
+  '                        </p>\n' +
   '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <p class="text-left">Do you agree to all conditions in the Outset <span\n' +
-  '                            tos>Terms of Service</span>\n' +
-  '                        <i class="fa"\n' +
-  '                           ng-class="{\'fa-question\' : !vm.credentials.terms, \'fa-check-circle text-success fa-2x\': vm.credentials.terms==\'yes\', \'fa-times-circle-o text-danger\' : vm.credentials.terms==\'no\'}"></i>\n' +
-  '                        <button ng-hide="vm.credentials.terms === \'yes\'" type="button"\n' +
-  '                                ng-click="vm.credentials.terms=\'yes\'" class="btn btn-oset-success btn-sm mgn-left">\n' +
-  '                            Yes,\n' +
-  '                            I Agree!\n' +
+  '                        <div class="col-sm-12 text-center">\n' +
+  '                            <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
+  '                            <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="col-sm-12">\n' +
+  '\n' +
+  '                    <h4 class="col-sm-12">Work Experience</h4>\n' +
+  '                    <p class="info col-sm-12">\n' +
+  '                        Add information about past Experience to help employers know more about you and your\n' +
+  '                        background.\n' +
+  '                        <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"\n' +
+  '                                ng-click="vm.driver.experience = [];"\n' +
+  '                                event-focus="click" event-focus-id="introText">\n' +
+  '                            skip\n' +
   '                        </button>\n' +
   '                    </p>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
   '\n' +
-  '        </section>\n' +
+  '                    <!--What are you interested in -->\n' +
+  '                    <div class="form-group">\n' +
+  '                        <div class="col-sm-12">\n' +
+  '                            <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="col-sm-12">\n' +
+  '                    <!--Cover Letter-->\n' +
+  '\n' +
+  '                    <h4 class="col-sm-12">Cover Letter</h4>\n' +
+  '                    <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
+  '                       ng-bind-html="vm.about.messageSubHeading"></p>\n' +
+  '\n' +
+  '                    <div class="form-group">\n' +
+  '                        <div class="col-sm-12">\n' +
+  '                            <textarea type="text" data-ng-model="vm.driver.about" id="introText"\n' +
+  '                                      class="form-control tall"\n' +
+  '                                      placeholder="Please introduce yourself to the employer here"\n' +
+  '                                      ng-required="true"></textarea>\n' +
+  '                        </div>\n' +
+  '\n' +
+  '                    </div>\n' +
+  '\n' +
+  '                </div>\n' +
+  '\n' +
+  '            </section>\n' +
+  '\n' +
+  '            <section class="row" id="step_3_docs"\n' +
+  '                     ng-form="vm.subForm3" ng-show="vm.currentStep === 3">\n' +
+  '\n' +
+  '                <div class="col-sm-12">\n' +
+  '\n' +
+  '                    <div class="col-sm-6">\n' +
+  '                        <div class="text-center control-label">Profile Picture</div>\n' +
+  '                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"\n' +
+  '                                             title="Profile Picture"></os-picture-uploader>\n' +
+  '                    </div>\n' +
+  '                    <div class="col-sm-6">\n' +
+  '                        <oset-file-upload model="vm.driver.resume" mode="resume" model-id="vm.driver._id"\n' +
+  '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="col-sm-12">\n' +
+  '                    <div class="checkbox">\n' +
+  '                        <label class="small">\n' +
+  '                            <input type="checkbox" data-ng-model="vm.application.termsAccepted" data-ng-required="true"\n' +
+  '                                   name="disclaimer"/>\n' +
+  '                            <small data-ng-bind-html="vm.about.disclaimer"></small>\n' +
+  '                        </label>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '            </section>\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="modal-footer">\n' +
+  '        <div class="modal-footer" ng-show="!!vm.currentStep || !!vm.error">\n' +
   '            <div class="pull-left">\n' +
   '                <button type="button" class="btn btn-oset-secondary"\n' +
   '                        ng-click="vm.prevStep()"\n' +
-  '                        ng-hide="vm.currentStep === 0">\n' +
+  '                        ng-hide="vm.currentStep === 0"\n' +
+  '                        ng-class="{\'disabled\': vm.currentStep === 2}">\n' +
   '                    <i class="fa fa-arrow-circle-left"></i>&nbsp;Back\n' +
   '                </button>\n' +
   '            </div>\n' +
   '            <div class="pull-right">\n' +
   '                <button type="button" class="btn btn-oset-primary"\n' +
-  '                        ng-click="vm.nextStep()"\n' +
-  '                        ng-show="true || vm.currentStep < 4">\n' +
+  '                        ng-click="vm.createUser()"\n' +
+  '                        ng-show="vm.currentStep === 1"\n' +
+  '                        ng-class="{\'disabled\':vm.loading, \'disabled\':vm.credentials.terms != \'yes\'}">\n' +
   '                    Next&nbsp;<i class="fa fa-arrow-circle-right"></i>\n' +
   '                </button>\n' +
   '                <button type="button" class="btn btn-oset-primary"\n' +
-  '                        ng-click="vm.signup()"\n' +
-  '                        ng-show="true || vm.currentStep === 4"\n' +
-  '                        ng-class="{\'disabled\':vm.credentials.terms != \'yes\'}">\n' +
+  '                        ng-click="vm.saveDriverDetails()"\n' +
+  '                        ng-show="vm.currentStep === 2"\n' +
+  '                        ng-class="{\'disabled\':vm.loading}">\n' +
+  '                    Next&nbsp;<i class="fa fa-arrow-circle-right"></i>\n' +
+  '                </button>\n' +
+  '                <button type="button" class="btn btn-oset-primary"\n' +
+  '                        ng-click="vm.createApplication()"\n' +
+  '                        ng-show="vm.currentStep === 3"\n' +
+  '                        ng-class="{\'disabled\':vm.loading}">\n' +
   '                    Submit Application&nbsp;<i class="fa fa-check-circle"></i>\n' +
   '                </button>\n' +
   '            </div>\n' +

@@ -4,6 +4,8 @@
     function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs) {
         var vm = this;
 
+        vm.autoUpload = !!vm.autoUpload;
+
         vm.uploader = null;
         vm.uploadUrl = 'api/users/picture';
 
@@ -127,6 +129,9 @@
                             } else {
                                 vm.newFile = fileReaderEvent.target.result;
                             }
+                            if(vm.autoUpload) {
+                                vm.uploadProfilePicture();
+                            }
                         }, 0);
                     };
                 }
@@ -222,7 +227,9 @@
         function cancelUpload() {
             vm.uploader.clearQueue();
 
-            vm.imageURL = vm.model.profileImageURL;
+            if(!!vm.model) {
+                vm.imageURL = vm.model.profileImageURL;
+            }
             vm.success = vm.error = null;
 
             delete vm.newImage;

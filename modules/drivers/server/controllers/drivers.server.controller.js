@@ -111,6 +111,10 @@ exports.create = function (req, res) {
     driver.user = req.user;
     driver.licenses = req.body.licenses;
 
+    if(driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
+        driver.licenses[0].rating = null;
+    }
+
     // Schedule is disabled
     if (false) {
         if (_.isUndefined(driver.schedule)) {
@@ -161,13 +165,11 @@ exports.update = function (req, res) {
     console.log('[Driver.Controller] update()');
     var driver = req.driver;
 
-    console.log('[Driver.Update] Experience from Body: %j', req.body.experience);
-
     driver = _.extend(driver, req.body);
 
-    console.log('[Driver.Update] Experience post Merge: %j', driver.experience);
-
-    debugger;
+    if(driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
+        driver.licenses[0].rating = null;
+    }
 
     driver.save(function (err) {
         if (err) {
@@ -177,8 +179,7 @@ exports.update = function (req, res) {
                 error: err.stack
             });
         } else {
-            console.log('Driver Saved: interests: %j\nlicenses[0].endorsements: %j\n\n\n\n\n\n\n', driver.interests, driver.licenses[0].endorsements);
-
+            console.log('Driver Saved %s', driver._id);
             res.json(driver);
         }
     });

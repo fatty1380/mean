@@ -2,52 +2,80 @@
 <!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->
 
 <script type="text/ng-template" id="signupApplyModal.html">
-    <div class="modal-header bg-primary">
+    <div class="modal-header bg-primary" ng-show="!!vm.currentStep">
         <span class="modal-title h3 text-center">
             New Job Application
             </span>
     </div>
 
-    <form id="vm.newUserApplicationForm">
-        <div class="modal-body">
+    <form id="vm.newUserApplicationForm" class="modal-form">
+        <div class="modal-body" ng-class="{'bg-primary': vm.currentStep === 0}">
 
-            <section class="row" id="step_0_welcome"
-                     ng-form="vm.subForm0" ng-show="true || vm.currentStep === 0">
+            <section class="signup-type row" id="step_0_signupType"
+                     ng-form="vm.subForm0" ng-show="vm.currentStep === 0">
+                <div class="row text-center">
+                    <h2 class="lead-question">I want to ...</h2>
+                </div>
+                <div class="row text-center">
+                    <div class="col-sm-6" ng-click="vm.selectUserType('driver')">
+                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
+                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">
+                                <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>
+                            </div>
+                            <br class="hidden-xs"/>
+
+                            <div class="heading h3">Drive</div>
+                        </div>
+                    </div>
+                    <br class="visible-xs"/>
+
+                    <div class="col-sm-6" ng-click="vm.selectUserType('owner')">
+                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
+                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">
+                                <img src="modules/users/img/owner-group.png"
+                                     class="img-responsive center-block text-center"/>
+                            </div>
+                            <br class="hidden-xs"/>
+
+                            <div class="heading h3">Hire</div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" ng-required="true" ng-model="vm.credentials.signupType"/>
+            </section>
+
+            <section class="row" id="step_1_welcome"
+                     ng-form="vm.subForm1" ng-show="vm.currentStep === 1">
 
                 <div class="col-sm-12">
-                    <p class="info">In the next few screens, you will fill out the information necessary for
-                        applying to this job. Once complete you will be able to </p>
 
-                    <p class="info">Lets get started with your email address:</p>
+                    <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic
+                        information</p>
 
                     <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 
-                        <label for="email" class="control-label">Email</label>
+                        <label for="email" class="control-label col-xs-12">Email</label>
 
-                        <input modal-focus="true" type="email" id="email" name="email"
-                               class="form-control" debounce
-                               data-ng-model="vm.credentials.email"
-                               placeholder="Email" ng-required="true">
+                        <div class="col-xs-12">
+                            <input modal-focus="true" type="email" id="email" name="email"
+                                   class="form-control" debounce
+                                   data-ng-model="vm.credentials.email"
+                                   placeholder="Email" ng-required="true">
 
-                        <span class="form-control-feedback"
-                              ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">
-                            <i class="fa fa-check"></i>
-                        </span>
-                        <span class="form-control-feedback"
-                              ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">
-                            <i class="fa fa-times" tootltip="Please enter an email address"></i>
-                        </span>
+                            <span class="form-control-feedback"
+                                  ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">
+                                <i class="fa fa-check text-success"></i>
+                            </span>
+                            <span class="form-control-feedback"
+                                  ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">
+                                <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>
+                            </span>
+                        </div>
 
                     </div>
-                    <p class="info col-xs-12">This is my email: {{vm.credentials.email}}</p>
                 </div>
 
-            </section>
-
-            <section class="row" id="step_1_basics"
-                     ng-form="vm.subForm1" ng-show="true || vm.currentStep === 1">
-                <div class="col-sm-12">
-                    <p class="info">Please enter some basic identifying information about yourself</p>
+                <div class="col-xs-12">
                     <!--Enter your name-->
                     <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
                         <label class="control-label col-xs-12">Your Name</label>
@@ -71,148 +99,184 @@
                 </div>
                 <div class="col-xs-12">
                     <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                        <label class="control-label col-xs-12">Your Zip Code</label>
+                        <label class="control-label col-xs-12">Your Zip Code
+                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.zip}}"></i>
+                        </label>
 
-                        <div class="col-xs-6">
-                            <input type="text" id="firstName" name="firstName"
+                        <div class="col-xs-12">
+                            <input type="text" id="zipCode" name="zipCode"
                                    class="form-control" debounce ng-required="true"
-                                   data-ng-model="vm.credentials.firstName" placeholder="First Name">
+                                   data-ng-model="vm.credentials.addresses[0].zipCode" placeholder="Zip Code">
                         </div>
                     </div>
                 </div>
 
-                <!--What are you interested in -->
-                <div class="form-group">
-                    <label class="control-label">Your Interests</label>
+                <div class="col-sm-12">
+                    <p class="info">
+                    </p>
 
-                    <div class="col-sm-12 text-center">
-                        <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
-                        <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
+                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                        <label class="control-label col-xs-12">Password
+                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.password}}"></i>
+                        </label>
+
+                        <div class="col-xs-12">
+                            <input type="password" id="password" name="password" class="form-control mgn-vert"
+                                   data-ng-model="vm.credentials.password" placeholder="Password"
+                                   ng-required="true">
+
+                            <input type="password" id="confirmPassword" name="confirmPassword"
+                                   class="form-control mgn-vert"
+                                   data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"
+                                   ng-required="true" compare-to="vm.credentials.password">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <p class="text-center">Do you agree to all conditions in the Outset <span
+                                tos>Terms of Service</span>
+                            <i class="fa"
+                               ng-class="{'fa-question' : !vm.credentials.terms, 'fa-check-circle text-success fa-2x': vm.credentials.terms=='yes', 'fa-times-circle-o text-danger' : vm.credentials.terms=='no'}"></i>
+                            <button ng-hide="vm.credentials.terms === 'yes'" type="button"
+                                    ng-click="vm.credentials.terms='yes'" class="btn btn-oset-success btn-sm mgn-left">
+                                Yes, I Agree
+                            </button>
+                        </p>
                     </div>
                 </div>
 
-                <!--What is your address?-->
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6">
-                        <os-edit-address model="vm.credentials.location[0]" id="location"></os-edit-address>
-                    </div>
-                </div>
-        </div>
+            </section>
 
-        </section>
+            <section class="row" id="step_2_background"
+                     ng-form="vm.subForm2" ng-show="vm.currentStep === 2">
 
-        <section class="row" id="step_2_info"
-                 ng-form="vm.subForm2" ng-show="true || vm.currentStep === 2">
 
-            <div class="col-sm-12">
-                <!--Cover Letter-->
-                <div class="form-group">
-                    <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading || 'Cover Letter'"></span>
+                <div class="col-xs-12">
+                    <!--What type of license do you have? -->
+                    <div class="form-group">
+                        <p class="info col-sm-10 col-sm-offset-1">
+                            What type of driver license do you have?
+                        </p>
 
-                    <p class="text-muted text-center"
-                       ng-bind-html="vm.placeholders.messageSubHeading || 'Please introduce yourself to the employer in a brief letter'"></p>
-
-                    <div class="controls">
-                    <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"
-                              placeholder="{{vm.placeholders.intro}}" required></textarea>
-                    </div>
-
-                </div>
-
-                <!--Past Experience-->
-                <div class="form-group">
-                    <h3>Experience
-                        <small>Add information about past Experience to help employers know more about you and your
-                            background
-                        </small>
-                    </h3>
-
-                    <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
-                </div>
-            </div>
-
-        </section>
-
-        <section class="row" id="step_3_docs"
-                 ng-form="vm.subForm3" ng-show="true || vm.currentStep === 3">
-
-            <div class="col-sm-12">
-
-                <!--Please upload a picture-->
-                <!--<os-picture-uploader model="vm.credentials.picture" mode="raw"></os-picture-uploader>-->
-                <h4 class="text-center">TODO: Picture Upload</h4>
-                <!--Do you have a resume to attach-->
-                <!--<oset-file-upload model="vm.credentials.resume" mode="resume"></oset-file-upload>-->
-                <h4 class="text-center">TODO: Picture Upload</h4>
-
-                <p class="info">After you have completed your application, you will have a chance to order Motor
-                    Vehicle
-                    Reports, Background Checks and more. This will help employers see how professional and
-                    employable
-                    you are, and move you more quickly through the job application process.</p>
-
-            </div>
-
-        </section>
-
-        <section class="row" id="step_4_password"
-                 ng-form="vm.subForm4" ng-show="true || vm.currentStep === 4">
-
-            <div class="col-sm-12">
-                <p class="info">In order to see the status uf your application and communicate with the employer,
-                    please
-                    enter a password before continuing.</p>
-
-                <div class="form-group">
-                    <label for="password" class="col-sm-2 control-label">Password</label>
-
-                    <div class="col-sm-10">
-                        <input type="password" id="password" name="password" class="form-control"
-                               data-ng-model="vm.credentials.password" placeholder="Password"
-                               ng-required="true">
-                        <br/>
-                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-                               data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"
-                               ng-required="true" compare-to="vm.credentials.password">
+                        <div class="col-sm-12 text-center">
+                            <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"
+                                             mode="minimal"></os-edit-license>
+                        </div>
                     </div>
                 </div>
 
+                <div class="col-xs-12">
+                    <!--What are you interested in -->
+                    <div class="form-group">
+                        <p class="info col-sm-10 col-sm-offset-1">
+                            What types of jobs are you interested in?
+                        </p>
 
-                <div class="col-sm-10">
-                    <p class="text-left">Do you agree to all conditions in the Outset <span
-                            tos>Terms of Service</span>
-                        <i class="fa"
-                           ng-class="{'fa-question' : !vm.credentials.terms, 'fa-check-circle text-success fa-2x': vm.credentials.terms=='yes', 'fa-times-circle-o text-danger' : vm.credentials.terms=='no'}"></i>
-                        <button ng-hide="vm.credentials.terms === 'yes'" type="button"
-                                ng-click="vm.credentials.terms='yes'" class="btn btn-oset-success btn-sm mgn-left">
-                            Yes,
-                            I Agree!
+                        <div class="col-sm-12 text-center">
+                            <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
+                            <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+
+                    <h4 class="col-sm-12">Work Experience</h4>
+                    <p class="info col-sm-12">
+                        Add information about past Experience to help employers know more about you and your
+                        background.
+                        <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"
+                                ng-click="vm.driver.experience = [];"
+                                event-focus="click" event-focus-id="introText">
+                            skip
                         </button>
                     </p>
-                </div>
-            </div>
 
-        </section>
+                    <!--What are you interested in -->
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-12">
+                    <!--Cover Letter-->
+
+                    <h4 class="col-sm-12">Cover Letter</h4>
+                    <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"
+                       ng-bind-html="vm.about.messageSubHeading"></p>
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <textarea type="text" data-ng-model="vm.driver.about" id="introText"
+                                      class="form-control tall"
+                                      placeholder="Please introduce yourself to the employer here"
+                                      ng-required="true"></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="row" id="step_3_docs"
+                     ng-form="vm.subForm3" ng-show="vm.currentStep === 3">
+
+                <div class="col-sm-12">
+
+                    <div class="col-sm-6">
+                        <div class="text-center control-label">Profile Picture</div>
+                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"
+                                             title="Profile Picture"></os-picture-uploader>
+                    </div>
+                    <div class="col-sm-6">
+                        <oset-file-upload model="vm.driver.resume" mode="resume" model-id="vm.driver._id"
+                                          title="Resume Upload" auto-upload="true"></oset-file-upload>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="checkbox">
+                        <label class="small">
+                            <input type="checkbox" data-ng-model="vm.application.termsAccepted" data-ng-required="true"
+                                   name="disclaimer"/>
+                            <small data-ng-bind-html="vm.about.disclaimer"></small>
+                        </label>
+                    </div>
+                </div>
+
+            </section>
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer" ng-show="!!vm.currentStep || !!vm.error">
             <div class="pull-left">
                 <button type="button" class="btn btn-oset-secondary"
                         ng-click="vm.prevStep()"
-                        ng-hide="vm.currentStep === 0">
+                        ng-hide="vm.currentStep === 0"
+                        ng-class="{'disabled': vm.currentStep === 2}">
                     <i class="fa fa-arrow-circle-left"></i>&nbsp;Back
                 </button>
             </div>
             <div class="pull-right">
                 <button type="button" class="btn btn-oset-primary"
-                        ng-click="vm.nextStep()"
-                        ng-show="true || vm.currentStep < 4">
+                        ng-click="vm.createUser()"
+                        ng-show="vm.currentStep === 1"
+                        ng-class="{'disabled':vm.loading, 'disabled':vm.credentials.terms != 'yes'}">
                     Next&nbsp;<i class="fa fa-arrow-circle-right"></i>
                 </button>
                 <button type="button" class="btn btn-oset-primary"
-                        ng-click="vm.signup()"
-                        ng-show="true || vm.currentStep === 4"
-                        ng-class="{'disabled':vm.credentials.terms != 'yes'}">
+                        ng-click="vm.saveDriverDetails()"
+                        ng-show="vm.currentStep === 2"
+                        ng-class="{'disabled':vm.loading}">
+                    Next&nbsp;<i class="fa fa-arrow-circle-right"></i>
+                </button>
+                <button type="button" class="btn btn-oset-primary"
+                        ng-click="vm.createApplication()"
+                        ng-show="vm.currentStep === 3"
+                        ng-class="{'disabled':vm.loading}">
                     Submit Application&nbsp;<i class="fa fa-check-circle"></i>
                 </button>
             </div>
