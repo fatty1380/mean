@@ -90,7 +90,7 @@ exports.create = function (req, res) {
                         name: 'LINK_URL',
                         content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
                     }
-                ]
+                ];
 
                 emailer.sendTemplateBySlug('outset-new-applicant', req.job.user, options);
             });
