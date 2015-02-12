@@ -70,9 +70,9 @@
         vm.extraText = vm.job && vm.job.text || null;
         vm.currentStep = !!signupType ? 1 : 0;
 
-        vm.user = {profileImageURL: ''};
+        vm.user = vm.auth.user || {profileImageURL: ''};
         vm.credentials = {signupType: signupType, terms: '', addresses: [{}]};
-        vm.driver = {resume: {}, experience: [{}], licenses: [{}], interests: []};
+        vm.driver = vm.user.driver || {resume: {}, experience: [{}], licenses: [{}], interests: []};
         vm.application = {};
 
         vm.validateForm = function () {
@@ -262,7 +262,7 @@
             return true;
         };
 
-        vm.userPicUploaded = function (fileItem, response, status, headers) {
+        vm.userPicUploaded = function (fileItem, response) {
             // Populate user object
             debugger;
             vm.user = response;
@@ -270,6 +270,13 @@
 
             Authentication.user.profileImageURL = response.profileImageURL;
         };
+
+        vm.userResumeUploaded = function(fileItem, response) {
+            debugger;
+
+            // TODO: Save driver?
+
+        }
 
         // Create new Application
         vm.createApplication = function () {

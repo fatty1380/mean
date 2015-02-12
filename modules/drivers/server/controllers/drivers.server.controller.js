@@ -64,7 +64,7 @@ var executeFind = function (req, res, next, driverFind) {
 
 
             } else {
-                console.log('[Driver.executeFind] found driver: ', driver);
+                console.log('[Driver.executeFind] found driver: %s', driver.id);
             }
 
             if (!!next) {
@@ -327,7 +327,6 @@ exports.driverByUserID = function (req, res, next) {
             user: userId
         }));
     }
-    next();
 };
 
 exports.me = function (req, res, next) {
@@ -345,9 +344,6 @@ exports.driverByID = function (req, res, next, id) {
     if ((/^[a-f\d]{24}$/i).test(id)) {
         return executeFind(req, res, next, Driver.findById(id));
     }
-
-    next();
-
 };
 
 /**

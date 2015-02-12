@@ -233,7 +233,9 @@
                                              title="Profile Picture"></os-picture-uploader>
                     </div>
                     <div class="col-sm-6">
-                        <oset-file-upload model="vm.driver.resume" mode="resume" model-id="vm.driver._id"
+                        <oset-file-upload mode="resume"
+                                          model="vm.driver.resume" model-id="vm.driver._id"
+                                          success-callback="vm.userResumeUploaded"
                                           title="Resume Upload" auto-upload="true"></oset-file-upload>
                     </div>
                 </div>
@@ -256,7 +258,8 @@
                 <button type="button" class="btn btn-oset-secondary"
                         ng-click="vm.prevStep()"
                         ng-hide="vm.currentStep === 0"
-                        ng-class="{'disabled': vm.currentStep === 2}">
+                        ng-class="{'disabled': vm.currentStep === 2}"
+                        tabindex="-1">
                     <i class="fa fa-arrow-circle-left"></i>&nbsp;Back
                 </button>
             </div>

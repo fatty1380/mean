@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs) {
+    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs, $scope) {
         var vm = this;
 
         vm.autoUpload = !!vm.autoUpload;
@@ -52,48 +52,7 @@
                 return;
             }
 
-            var filter;
-
-            if (!!vm.mode) {
-                switch (vm.mode.toLowerCase()) {
-                    case 'user':
-                        vm.imageURL = vm.model.profileImageURL;
-                        vm.uploadUrl = 'api/users/picture';
-                        filter = pictureFilter;
-                        break;
-
-                    case 'company':
-                        vm.imageURL = vm.model.profileImageURL;
-                        vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
-                        filter = pictureFilter;
-                        break;
-
-                    case 'resume':
-                        vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
-                        filter = resumeFilter;
-                        break;
-
-                    case 'raw':
-                        vm.uploadUrl = null;
-                        debugger; // TODO: Determine how to upload w/out user
-                        filter = pictureFilter;
-                        break;
-                    default:
-                        $log.warn('[PictureUploader] Unknown Mode: %s. Defaulting to user', vm.mode);
-                }
-            }
-            else if (!!vm.apiUrl) {
-                $log.debug('[PictureUploader] Mode not specified, using URL: %s', vm.apiUrl);
-                vm.uploadUrl = vm.apiUrl;
-            }
-
-            vm.uploader = new FileUploader({
-                url: vm.uploadUrl
-            });
-
-            // Set file uploader image filter
-            $log.debug('initailzing uploader with filter: ', filter.name);
-            vm.uploader.filters.push(filter);
+            vm.initializeUploader();
 
             /**
              * Upload Blob (cropped image) instead of file.
@@ -167,9 +126,89 @@
                 vm.error = response.message;
             };
 
+            $scope.$watch(function() {
+                if(vm.mode.toLowerCase()==='resume') {
+                    return vm.modelId;
+                }
+                return vm.model;
+            }, function(newVal, oldVal) {
+                vm.updateUploadUrl();
+            });
+
             vm.initialized = true;
             $log.debug('[PictureUploader] Successfuly initialized Picture Uploader');
         }
+
+        vm.updateUploadUrl = function() {
+            if(!vm.uploader) {
+                return false;
+            }
+
+            switch (vm.mode.toLowerCase()) {
+                case 'user':
+                    vm.uploadUrl = 'api/users/picture';
+                    break;
+
+                case 'company':
+                    vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
+                    break;
+
+                case 'resume':
+                    vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
+                    break;
+                default: return false;
+            }
+
+            if(vm.uploader.url !== vm.uploadUrl) {
+                debugger;
+                vm.uploader.url = vm.uploadUrl;
+            }
+        };
+
+        vm.initializeUploader = function() {
+            var filter;
+
+            if (!!vm.mode) {
+                switch (vm.mode.toLowerCase()) {
+                    case 'user':
+                        vm.imageURL = vm.model.profileImageURL;
+                        vm.uploadUrl = 'api/users/picture';
+                        filter = pictureFilter;
+                        break;
+
+                    case 'company':
+                        vm.imageURL = vm.model.profileImageURL;
+                        vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
+                        filter = pictureFilter;
+                        break;
+
+                    case 'resume':
+                        vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
+                        filter = resumeFilter;
+                        break;
+
+                    case 'raw':
+                        vm.uploadUrl = null;
+                        debugger; // TODO: Determine how to upload w/out user
+                        filter = pictureFilter;
+                        break;
+                    default:
+                        $log.warn('[PictureUploader] Unknown Mode: %s. Defaulting to user', vm.mode);
+                }
+            }
+            else if (!!vm.apiUrl) {
+                $log.debug('[PictureUploader] Mode not specified, using URL: %s', vm.apiUrl);
+                vm.uploadUrl = vm.apiUrl;
+            }
+
+            vm.uploader = new FileUploader({
+                url: vm.uploadUrl
+            });
+
+            // Set file uploader image filter
+            $log.debug('initailzing uploader with filter: ', filter.name);
+            vm.uploader.filters.push(filter);
+        };
 
         activate();
 
@@ -193,22 +232,24 @@
          * @return {Blob}
          */
         var dataURItoBlob = function (dataURI, alt) {
+            var mimeString='n/a';
+            var e = 0;
+
             try {
-                var i = 0;
                 var binary = atob(dataURI.split(',')[1]);
-                var mimeString = dataURI.split(',')[0];
-                i++;
-                var mimeString = mimeString.split(':')[1];
-                i++;
-                var mimeString = mimeString.split(';')[0];
-                i++;
+                mimeString = dataURI.split(',')[0];
+                e++;
+                mimeString = mimeString.split(':')[1];
+                e++;
+                mimeString = mimeString.split(';')[0];
+                e++;
                 var array = [];
                 for (var i = 0; i < binary.length; i++) {
                     array.push(binary.charCodeAt(i));
                 }
                 return new Blob([new Uint8Array(array)], {type: mimeString});
             } catch(err) {
-                err.message = 'badDataURI['+i+']: ' + mimeString;
+                err.message = 'badDataURI['+e+']: ' + mimeString;
                 Raygun.send(err);
             }
         };
@@ -240,7 +281,7 @@
 
     }
 
-    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs'];
+    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs', '$scope'];
 
 
     angular.module('users')

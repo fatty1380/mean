@@ -4162,7 +4162,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                             title="Profile Picture"></os-picture-uploader>\n' +
   '                    </div>\n' +
   '                    <div class="col-sm-6">\n' +
-  '                        <oset-file-upload model="vm.driver.resume" mode="resume" model-id="vm.driver._id"\n' +
+  '                        <oset-file-upload mode="resume"\n' +
+  '                                          model="vm.driver.resume" model-id="vm.driver._id"\n' +
+  '                                          success-callback="vm.userResumeUploaded"\n' +
   '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '                    </div>\n' +
   '                </div>\n' +
@@ -4185,7 +4187,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <button type="button" class="btn btn-oset-secondary"\n' +
   '                        ng-click="vm.prevStep()"\n' +
   '                        ng-hide="vm.currentStep === 0"\n' +
-  '                        ng-class="{\'disabled\': vm.currentStep === 2}">\n' +
+  '                        ng-class="{\'disabled\': vm.currentStep === 2}"\n' +
+  '                        tabindex="-1">\n' +
   '                    <i class="fa fa-arrow-circle-left"></i>&nbsp;Back\n' +
   '                </button>\n' +
   '            </div>\n' +
@@ -4385,22 +4388,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '\n' +
   '</script>\n' +
-  '');
- $templateCache.put('/modules/users/views/templates/signup-type.client.template.html',
-  '<section class="signup-type">\n' +
-  '    <div class="row">\n' +
-  '        <a class="col-sm-4 col-sm-offset-1 undecorated-link" ng-href="/signup/driver">\n' +
-  '            <img src="modules/users/img/steering-wheel.png" class="image" />\n' +
-  '            <br/>\n' +
-  '            <span class="heading h3">I am a Driver</span>\n' +
-  '        </a>\n' +
-  '        <a class="col-sm-4 col-sm-offset-2 undecorated-link" ng-href="/signup/owner">\n' +
-  '            <img src="modules/users/img/owner-group.png" class="image" />\n' +
-  '            <br/>\n' +
-  '            <span class="heading h3">I am an Employer</span>\n' +
-  '        </a>\n' +
-  '    </div>\n' +
-  '</section>\n' +
   '');
  $templateCache.put('/modules/users/views/templates/user-badge.client.template.html',
   '<section>\n' +
