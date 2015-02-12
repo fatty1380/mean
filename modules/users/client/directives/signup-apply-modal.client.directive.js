@@ -60,9 +60,6 @@
                 vm.isOpen = true;
             });
         };
-
-        // TODO: Remove Auto-show
-        vm.show();
     }
 
     function SignupApplyController($http, $state, $modalInstance, $log, Authentication, signupType, job, $document, Drivers, ApplicationFactory) {
@@ -72,8 +69,6 @@
         vm.job = job;
         vm.extraText = vm.job && vm.job.text || null;
         vm.currentStep = !!signupType ? 1 : 0;
-
-        vm.currentStep = 2;
 
         vm.user = {profileImageURL: ''};
         vm.credentials = {signupType: signupType, terms: '', addresses: [{}]};
