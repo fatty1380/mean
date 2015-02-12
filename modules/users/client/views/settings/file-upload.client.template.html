@@ -2,9 +2,8 @@
     <form class="signin form-horizontal" ng-show="vm.initialized">
         <fieldset>
 
-            <div class="text-center form-group">
-                <span data-ng-hide="!!vm.fileName">{{vm.title}}</span>
-                <span data-ng-show="vm.fileName"><strong>File: </strong>{{vm.fileName}}</span>
+            <div class="text-center form-group" ng-if="!!vm.title">
+                <span>{{vm.title}}</span>
             </div>
 
             <div class="text-center form-group">
@@ -25,11 +24,16 @@
                     <input type="file" nv-file-select uploader="vm.uploader">
                 </span>
             </div>
+
             <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">
                 <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>
                 <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>
             </div>
 
+            <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">
+                {{vm.fileName}}
+            </div>
+            
             <div data-ng-show="vm.success" class="text-center text-success">
                 <strong>{{!!vm.fileName ? vm.fileName + ' uploaded successfully!' : 'Success!'}}</strong>
             </div>
