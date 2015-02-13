@@ -3614,7 +3614,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">\n' +
   '                {{vm.fileName}}\n' +
   '            </div>\n' +
-  '\n' +
+  '            \n' +
   '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
   '                <strong>{{!!vm.fileName ? vm.fileName + \' uploaded successfully!\' : \'Success!\'}}</strong>\n' +
   '            </div>\n' +
@@ -4210,7 +4210,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="pull-left">\n' +
   '                <button type="button" class="btn btn-oset-secondary"\n' +
   '                        ng-click="vm.prevStep()"\n' +
-  '                        ng-hide="vm.currentStep === 0"\n' +
+  '                        ng-hide="vm.currentStep === 0 || vm.currentStep === 1"\n' +
   '                        ng-class="{\'disabled\': vm.currentStep === 2}"\n' +
   '                        tabindex="-1">\n' +
   '                    <i class="fa fa-arrow-circle-left"></i>&nbsp;Back\n' +

@@ -260,7 +260,7 @@
             <div class="pull-left">
                 <button type="button" class="btn btn-oset-secondary"
                         ng-click="vm.prevStep()"
-                        ng-hide="vm.currentStep === 0"
+                        ng-hide="vm.currentStep === 0 || vm.currentStep === 1"
                         ng-class="{'disabled': vm.currentStep === 2}"
                         tabindex="-1">
                     <i class="fa fa-arrow-circle-left"></i>&nbsp;Back
