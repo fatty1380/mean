@@ -5011,6 +5011,9 @@ form.applicant-form textarea.form-control {
   min-height: 200px;
   resize: vertical;
 }
+a {
+  cursor: pointer!important;
+}
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
   padding-right: 0;

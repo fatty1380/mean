@@ -271,13 +271,6 @@
             Authentication.user.profileImageURL = response.profileImageURL;
         };
 
-        vm.userResumeUploaded = function(fileItem, response) {
-            debugger;
-
-            // TODO: Save driver?
-
-        }
-
         // Create new Application
         vm.createApplication = function () {
 
@@ -319,6 +312,11 @@
                 return false;
             }
 
+            if (vm.picIsEditing) {
+                vm.error = vm.about.errors.picEdit;
+                return false;
+            }
+
             if (!vm.validateForm()) {
                 if (!vm.application.message) {
                     vm.error = vm.about.errors.noMessage;
@@ -341,7 +339,8 @@
             errors: {
                 noJob: 'You must select a job to apply to first, or you can save as a draft',
                 noMessage: 'Please enter a message to the employer before submitting your application',
-                terms: 'You must accept the terms before submitting your application'
+                terms: 'You must accept the terms before submitting your application',
+                picEdit: 'Please complete editing your picture before continuing'
             }
         };
     }

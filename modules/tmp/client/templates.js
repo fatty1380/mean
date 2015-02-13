@@ -3614,7 +3614,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">\n' +
   '                {{vm.fileName}}\n' +
   '            </div>\n' +
-  '            \n' +
+  '\n' +
   '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
   '                <strong>{{!!vm.fileName ? vm.fileName + \' uploaded successfully!\' : \'Success!\'}}</strong>\n' +
   '            </div>\n' +
@@ -3663,7 +3663,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '        <fieldset>\n' +
   '\n' +
-  '            <div class="form-group text-center mgn-vert" ng-hide="vm.uploader.queue.length">\n' +
+  '            <!--Section 1: Base State - Nothing Uploaded, nothing active -->\n' +
+  '            <div class="form-group text-center mgn-vert" ng-hide="vm.newImage || vm.uploader.queue.length">\n' +
   '                <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"\n' +
   '                     alt="{{vm.title}}" class="img-thumbnail user-profile-picture ng-hide">\n' +
   '\n' +
@@ -3673,49 +3674,65 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        <i class="fa fa-question fa-1x"></i>\n' +
   '                    </span>\n' +
   '                </div>\n' +
+  '\n' +
+  '                <div class="text-center form-group mgn-top" data-ng-hide="vm.uploader.queue.length">\n' +
+  '                    <span ng-show="false && !!vm.imageURL" class="btn {{vm.uploadBtnClass || \'btn-oset-link\'}} btn-file"\n' +
+  '                          ng-click="vm.startCrop()">\n' +
+  '                        <!--Adjust Image Disabled due to imageURL != Image Object-->\n' +
+  '                    </span>\n' +
+  '                    <span class="btn {{vm.uploadBtnClass || \'btn-oset-secondary\'}} btn-file">\n' +
+  '                        {{vm.uploadBtnText || \'Select Image ...\'}}\n' +
+  '                        <input type="file" nv-file-select uploader="vm.uploader">\n' +
+  '                    </span>\n' +
+  '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">\n' +
-  '                <span class="btn {{vm.uploadBtnClass || \'btn-oset-secondary\'}} btn-file">\n' +
-  '                    {{vm.uploadBtnText || \'Select Image ...\'}}\n' +
-  '                    <input type="file" nv-file-select uploader="vm.uploader">\n' +
-  '                </span>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="form-group tvm.newImage text-center" ng-show="vm.uploader.queue.length">\n' +
+  '            <!--Section 2: Upload in Progress-->\n' +
+  '            <div class="form-group tvm.newImage text-center mgn-vert"\n' +
+  '                 ng-show="(vm.newImage || vm.uploader.queue.length) && ( vm.autoCrop && !vm.isCropping || !vm.autoCrop )">\n' +
   '                <h4>Preview:</h4>\n' +
   '\n' +
-  '                <div><img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"\n' +
-  '                          class="img-thumbnail user-profile-picture"/>\n' +
+  '                <div>\n' +
+  '                    <img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"\n' +
+  '                         class="img-thumbnail user-profile-picture"/>\n' +
   '                    <img ng-src="{{vm.newImage}}" ng-hide="vm.useCropped || vm.isCropping"\n' +
   '                         class="img-thumbnail user-profile-picture"/>\n' +
   '\n' +
   '                </div>\n' +
   '\n' +
   '                <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>\n' +
-  '                    <button class="btn btn-oset-primary" data-ng-click="vm.startCrop()">{{ vm.useCropped ? \'Adjust\' :\n' +
-  '                        \'Crop\'}} Image\n' +
+  '                    <button class="btn btn-link" data-ng-click="vm.cancelUpload();">cancel</button>\n' +
+  '                    <button class="btn btn-oset-primary" data-ng-click="vm.startCrop()">\n' +
+  '                        {{ vm.useCropped ? \'Adjust\' : \'Crop\'}} Image\n' +
   '                    </button>\n' +
   '                    <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <div class="form-group tvm.newImage" ng-show="vm.isCropping">\n' +
-  '                <hr>\n' +
+  '            <!--Section 3: Cropping in Progress-->\n' +
+  '            <div class="form-group tvm.newImage mgn-vert" ng-show="vm.isCropping">\n' +
   '                <h4>Use the circle to select the best part of the image</h4>\n' +
   '\n' +
-  '                <div class="text-center form-group" data-ng-show="vm.isCropping">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.isCropping = false">Cancel</button>\n' +
+  '                <div class="text-center form-group" data-ng-hide="vm.autoCrop">\n' +
+  '                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
   '                    <button class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="cropArea center-block" class="img-thumbnail user-profile-picture"\n' +
-  '                     style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">\n' +
-  '                    <img-crop image="vm.newImage" area-type="{{vm.shape}}" result-image="vm.croppedImage"></img-crop>\n' +
+  '                <div class="form-group-text-center-mgn-vert">\n' +
+  '                    <div class="cropArea center-block" class="img-thumbnail user-profile-picture"\n' +
+  '                         style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">\n' +
+  '                        <img-crop image="vm.newImage" area-type="{{vm.shape}}"\n' +
+  '                                  result-image="vm.croppedImage"></img-crop>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="text-center form-group" data-ng-show="vm.autoCrop">\n' +
+  '                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
+  '                    <button class="btn btn-oset-primary" data-ng-click="vm.saveCrop();">Save</button>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
+  '            <!--Section 4: Status Text for success or error-->\n' +
   '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
   '                <strong>Profile Picture Changed Successfully</strong>\n' +
   '            </div>\n' +
@@ -3983,7 +4000,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <div class="col-sm-12">\n' +
   '\n' +
   '                    <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic\n' +
-  '                        information</p>\n' +
+  '                        information\n' +
+  '                        <br/>\n' +
+  '                        <em class="text-muted">... or <a ng-click="$dismiss(\'login\')" login-modal>apply with an existing user</a> </em>\n' +
+  '                    </p>\n' +
   '\n' +
   '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
   '\n' +
@@ -4163,12 +4183,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <div class="col-sm-6">\n' +
   '                        <div class="text-center control-label">Profile Picture</div>\n' +
   '                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"\n' +
-  '                                             title="Profile Picture"></os-picture-uploader>\n' +
+  '                                             auto-crop="true"\n' +
+  '                                             title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
   '                    </div>\n' +
   '                    <div class="col-sm-6">\n' +
   '                        <oset-file-upload mode="resume"\n' +
   '                                          model="vm.driver.resume" model-id="vm.driver._id"\n' +
-  '                                          success-callback="vm.userResumeUploaded"\n' +
   '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '                    </div>\n' +
   '                </div>\n' +

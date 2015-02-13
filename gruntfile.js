@@ -40,7 +40,7 @@ module.exports = function (grunt) {
 				files: defaultAssets.client.views,
                 tasks: ['html2js'],
 				options: {
-					livereload: true
+					livereload: false // Allow the JS task to run it
 				}
 			},
 			clientJS: {

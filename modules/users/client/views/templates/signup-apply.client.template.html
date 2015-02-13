@@ -50,7 +50,10 @@
                 <div class="col-sm-12">
 
                     <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic
-                        information</p>
+                        information
+                        <br/>
+                        <em class="text-muted">... or <a ng-click="$dismiss('login')" login-modal>apply with an existing user</a> </em>
+                    </p>
 
                     <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 
@@ -230,12 +233,12 @@
                     <div class="col-sm-6">
                         <div class="text-center control-label">Profile Picture</div>
                         <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"
-                                             title="Profile Picture"></os-picture-uploader>
+                                             auto-crop="true"
+                                             title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>
                     </div>
                     <div class="col-sm-6">
                         <oset-file-upload mode="resume"
                                           model="vm.driver.resume" model-id="vm.driver._id"
-                                          success-callback="vm.userResumeUploaded"
                                           title="Resume Upload" auto-upload="true"></oset-file-upload>
                     </div>
                 </div>

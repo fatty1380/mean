@@ -12,7 +12,8 @@
                 shape: '@?',
                 apiUrl: '@?',
                 successCallback: '&?',
-                failCallback: '&?'
+                failCallback: '&?',
+                isEditing: '=?'
             },
             controller: 'ChangeProfilePictureController',
             controllerAs: 'vm',

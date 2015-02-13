@@ -31,60 +31,66 @@ function directUpload(files, folder, isSecure) {
             folder = folder.substring(0, folder.length - 1);
         }
 
-        console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', files.file.name, folder);
-        var params = {
-            Bucket: config.services.s3.s3Options.bucket,
-            Key: folder + '/' + files.file.name,
-            ACL: 'public-read',
-            Body: files.file.buffer
-        };
+        if(files.file) {
 
-        console.log('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
+            console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', files.file && files.file.name, folder);
+            var params = {
+                Bucket: config.services.s3.s3Options.bucket,
+                Key: folder + '/' + files.file.name,
+                ACL: 'public-read',
+                Body: files.file.buffer
+            };
 
-        var uploader = client.s3.putObject(params);
+            console.log('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
 
-        uploader.
-            on('success', function (response) {
-                console.log('[s3.directUpload] done uploading, got data! %j', response.data);
+            var uploader = client.s3.putObject(params);
 
-                var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
-                console.log('[s3.directUpload] Got public URL: %s', publicURL);
+            uploader.
+                on('success', function (response) {
+                    console.log('[s3.directUpload] done uploading, got data! %j', response.data);
 
-                var strippedURL = publicURL.replace('http://', '//');
-                console.log('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
+                    var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
+                    console.log('[s3.directUpload] Got public URL: %s', publicURL);
 
-                if (isSecure) {
-                    response = {
-                        key: params.Key,
-                        bucket: params.Bucket,
-                        url: strippedURL
-                    };
+                    var strippedURL = publicURL.replace('http://', '//');
+                    console.log('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
 
-                    return getSecureReadURL(response.bucket, response.key).then(
-                        function (success) {
-                            response.url = success;
+                    if (isSecure) {
+                        response = {
+                            key: params.Key,
+                            bucket: params.Bucket,
+                            url: strippedURL
+                        };
 
-                            console.log('[s3.directUpload] Post secure upload, resolving with : %j', response);
+                        return getSecureReadURL(response.bucket, response.key).then(
+                            function (success) {
+                                response.url = success;
 
-                            deferred.resolve(response);
-                        }, function (err) {
-                            console.log('[s3.directUpload] Post secure upload failed: %j', err);
-                            console.log('[s3.directUpload] Resolving with public URL?');
+                                console.log('[s3.directUpload] Post secure upload, resolving with : %j', response);
 
-                            deferred.resolve(response);
-                        });
-                }
-                else {
+                                deferred.resolve(response);
+                            }, function (err) {
+                                console.log('[s3.directUpload] Post secure upload failed: %j', err);
+                                console.log('[s3.directUpload] Resolving with public URL?');
 
-                    deferred.resolve(strippedURL);
-                }
-            }).
-            on('error', function (response) {
-                console.error('[s3.directUpload] unable to upload:', response.error && response.error.stack);
+                                deferred.resolve(response);
+                            });
+                    }
+                    else {
 
-                deferred.reject(response.error);
-            }).
-            send();
+                        deferred.resolve(strippedURL);
+                    }
+                }).
+                on('error', function (response) {
+                    console.error('[s3.directUpload] unable to upload:', response.error && response.error.stack);
+
+                    deferred.reject(response.error);
+                }).
+                send();
+        } else {
+            debugger;
+            deferred.reject('No file present in request');
+        }
     }
     else {
         console.log('[getFileURL] No S3 Configured - Saving locally');

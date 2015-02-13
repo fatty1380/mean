@@ -4,21 +4,26 @@
     function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs, $scope) {
         var vm = this;
 
-        vm.autoUpload = !!vm.autoUpload;
+        vm.initializeVariables = function() {
+            vm.autoUpload = !!vm.autoUpload;
+            vm.autoCrop = !!vm.autoCrop;
+            vm.isEditing = false;
 
-        vm.uploader = null;
-        vm.uploadUrl = 'api/users/picture';
+            vm.uploader = null;
+            vm.uploadUrl = 'api/users/picture';
 
-        vm.newImage = null;
-        vm.croppedImage = null;
+            vm.newImage = null;
+            vm.croppedImage = null;
 
-        vm.isCropping = false;
-        vm.useCropped = false;
+            vm.isCropping = false;
+            vm.useCropped = false;
 
-        vm.saveCrop = saveCrop;
+            vm.saveCrop = saveCrop;
 
-        vm.shape = vm.shape || 'circle';
+            vm.shape = vm.shape || 'circle';
+        };
 
+        vm.initializeVariables();
         vm.uploadProfilePicture = uploadProfilePicture;
         vm.cancelUpload = cancelUpload;
 
@@ -56,7 +61,7 @@
 
             /**
              * Upload Blob (cropped image) instead of file.
-             * @see
+             * @see the following links:
              *   https://developer.mozilla.org/en-US/docs/Web/API/FormData
              *   https://github.com/nervgh/angular-file-upload/issues/208
              */
@@ -77,6 +82,8 @@
                     fileReader.readAsDataURL(fileItem._file);
                     vm.success = vm.error = null;
 
+                    vm.isEditing = true;
+
                     vm.fileName = fileItem.file.name;
 
                     fileReader.onload = function (fileReaderEvent) {
@@ -91,6 +98,11 @@
                             if(vm.autoUpload) {
                                 vm.uploadProfilePicture();
                             }
+
+                            if(vm.autoCrop) {
+                                vm.isCropping = true;
+                            }
+
                         }, 0);
                     };
                 }
@@ -111,6 +123,10 @@
                 vm.cancelUpload();
                 // Show success message
                 vm.success = true;
+
+                //$timeout(function () {
+                //    vm.reactivateUploader();
+                //}, 0);
             };
 
             // Called after the user has failed to uploaded a new picture
@@ -210,18 +226,42 @@
             vm.uploader.filters.push(filter);
         };
 
+        vm.reactivateUploader = function() {
+            $timeout(function () {
+                vm.uploader.destroy();
+                vm.initializeVariables();
+                activate();
+            }, 0);
+        };
+
         activate();
 
         // Method Implementations _________________________________________________________________
 
 
         vm.startCrop = function () {
+            if(!vm.uploader || !vm.uploader.queue.length){
+                vm.newImage = vm.imageURL;
+            }
             vm.isCropping = true;
+        };
+
+        vm.cancelCrop = function() {
+            vm.isCropping = false;
+
+            if(vm.autoCrop) {
+                vm.uploadProfilePicture();
+            }
         };
 
         function saveCrop() {
             vm.useCropped = true;
-            vm.isCropping = false;
+
+            if(vm.autoCrop) {
+                vm.uploadProfilePicture();
+            } else {
+                vm.isCropping = false;
+            }
         }
 
         /**
@@ -237,6 +277,7 @@
 
             try {
                 var binary = atob(dataURI.split(',')[1]);
+                e++;
                 mimeString = dataURI.split(',')[0];
                 e++;
                 mimeString = mimeString.split(':')[1];
@@ -249,6 +290,7 @@
                 }
                 return new Blob([new Uint8Array(array)], {type: mimeString});
             } catch(err) {
+                debugger;
                 err.message = 'badDataURI['+e+']: ' + mimeString;
                 Raygun.send(err);
             }
@@ -272,6 +314,8 @@
                 vm.imageURL = vm.model.profileImageURL;
             }
             vm.success = vm.error = null;
+            vm.isCropping = false;
+            vm.isEditing = false;
 
             delete vm.newImage;
             delete vm.croppedImage;

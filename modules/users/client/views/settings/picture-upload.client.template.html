@@ -2,7 +2,8 @@
     <form class="signin form-horizontal" ng-show="vm.initialized">
         <fieldset>
 
-            <div class="form-group text-center mgn-vert" ng-hide="vm.uploader.queue.length">
+            <!--Section 1: Base State - Nothing Uploaded, nothing active -->
+            <div class="form-group text-center mgn-vert" ng-hide="vm.newImage || vm.uploader.queue.length">
                 <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"
                      alt="{{vm.title}}" class="img-thumbnail user-profile-picture ng-hide">
 
@@ -12,49 +13,65 @@
                         <i class="fa fa-question fa-1x"></i>
                     </span>
                 </div>
+
+                <div class="text-center form-group mgn-top" data-ng-hide="vm.uploader.queue.length">
+                    <span ng-show="false && !!vm.imageURL" class="btn {{vm.uploadBtnClass || 'btn-oset-link'}} btn-file"
+                          ng-click="vm.startCrop()">
+                        <!--Adjust Image Disabled due to imageURL != Image Object-->
+                    </span>
+                    <span class="btn {{vm.uploadBtnClass || 'btn-oset-secondary'}} btn-file">
+                        {{vm.uploadBtnText || 'Select Image ...'}}
+                        <input type="file" nv-file-select uploader="vm.uploader">
+                    </span>
+                </div>
             </div>
 
-            <div class="text-center form-group" data-ng-hide="vm.uploader.queue.length">
-                <span class="btn {{vm.uploadBtnClass || 'btn-oset-secondary'}} btn-file">
-                    {{vm.uploadBtnText || 'Select Image ...'}}
-                    <input type="file" nv-file-select uploader="vm.uploader">
-                </span>
-            </div>
-
-            <div class="form-group tvm.newImage text-center" ng-show="vm.uploader.queue.length">
+            <!--Section 2: Upload in Progress-->
+            <div class="form-group tvm.newImage text-center mgn-vert"
+                 ng-show="(vm.newImage || vm.uploader.queue.length) && ( vm.autoCrop && !vm.isCropping || !vm.autoCrop )">
                 <h4>Preview:</h4>
 
-                <div><img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"
-                          class="img-thumbnail user-profile-picture"/>
+                <div>
+                    <img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"
+                         class="img-thumbnail user-profile-picture"/>
                     <img ng-src="{{vm.newImage}}" ng-hide="vm.useCropped || vm.isCropping"
                          class="img-thumbnail user-profile-picture"/>
 
                 </div>
 
                 <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">
-                    <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>
-                    <button class="btn btn-oset-primary" data-ng-click="vm.startCrop()">{{ vm.useCropped ? 'Adjust' :
-                        'Crop'}} Image
+                    <button class="btn btn-link" data-ng-click="vm.cancelUpload();">cancel</button>
+                    <button class="btn btn-oset-primary" data-ng-click="vm.startCrop()">
+                        {{ vm.useCropped ? 'Adjust' : 'Crop'}} Image
                     </button>
                     <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>
                 </div>
             </div>
 
-            <div class="form-group tvm.newImage" ng-show="vm.isCropping">
-                <hr>
+            <!--Section 3: Cropping in Progress-->
+            <div class="form-group tvm.newImage mgn-vert" ng-show="vm.isCropping">
                 <h4>Use the circle to select the best part of the image</h4>
 
-                <div class="text-center form-group" data-ng-show="vm.isCropping">
-                    <button class="btn btn-link" data-ng-click="vm.isCropping = false">Cancel</button>
+                <div class="text-center form-group" data-ng-hide="vm.autoCrop">
+                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>
                     <button class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>
                 </div>
 
-                <div class="cropArea center-block" class="img-thumbnail user-profile-picture"
-                     style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">
-                    <img-crop image="vm.newImage" area-type="{{vm.shape}}" result-image="vm.croppedImage"></img-crop>
+                <div class="form-group-text-center-mgn-vert">
+                    <div class="cropArea center-block" class="img-thumbnail user-profile-picture"
+                         style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">
+                        <img-crop image="vm.newImage" area-type="{{vm.shape}}"
+                                  result-image="vm.croppedImage"></img-crop>
+                    </div>
+                </div>
+
+                <div class="text-center form-group" data-ng-show="vm.autoCrop">
+                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>
+                    <button class="btn btn-oset-primary" data-ng-click="vm.saveCrop();">Save</button>
                 </div>
             </div>
 
+            <!--Section 4: Status Text for success or error-->
             <div data-ng-show="vm.success" class="text-center text-success">
                 <strong>Profile Picture Changed Successfully</strong>
             </div>
