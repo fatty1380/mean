@@ -3583,9 +3583,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '        <fieldset>\n' +
   '\n' +
-  '            <div class="text-center form-group">\n' +
-  '                <span data-ng-hide="!!vm.fileName">{{vm.title}}</span>\n' +
-  '                <span data-ng-show="vm.fileName"><strong>File: </strong>{{vm.fileName}}</span>\n' +
+  '            <div class="text-center form-group" ng-if="!!vm.title">\n' +
+  '                <span>{{vm.title}}</span>\n' +
   '            </div>\n' +
   '\n' +
   '            <div class="text-center form-group">\n' +
@@ -3606,11 +3605,16 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <input type="file" nv-file-select uploader="vm.uploader">\n' +
   '                </span>\n' +
   '            </div>\n' +
+  '\n' +
   '            <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">\n' +
   '                <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>\n' +
   '                <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>\n' +
   '            </div>\n' +
   '\n' +
+  '            <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">\n' +
+  '                {{vm.fileName}}\n' +
+  '            </div>\n' +
+  '            \n' +
   '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
   '                <strong>{{!!vm.fileName ? vm.fileName + \' uploaded successfully!\' : \'Success!\'}}</strong>\n' +
   '            </div>\n' +
