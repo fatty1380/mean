@@ -117,24 +117,34 @@ var getErrorMessage = function (err) {
  * Create a Job
  */
 exports.create = function (req, res) {
+    if(req.body && req.body.companyId === '54d262e3182c6f303013462d') {
+        console.error('[Job.Create] START with reqBody: %j', req.body);
+        console.log('[Job.Create] START with reqBody: %j', req.body);
+    }
 
     var job = new Job(req.body);
 
+    console.log('[Job.Create] Company %s is posting job with headline `%s`', req.body.companyId, job.name);
+
     // Set properties
     job.user = req.user;
+    console.log('[Job.Create] with user `%s`', job.user && job.user._id ? job.user._id : job.user);
     job.company = mongoose.Types.ObjectId(req.body.companyId);
+    console.log('[Job.Create] new job with company `%s`', job.company);
     job.postStatus = 'posted';
+    console.log('[Job.Create] new job with status `%s`', job.postStatus);
     job.posted = Date.now();
 
     console.log('[Job.Create] Creating new job: %j', job);
 
     job.save(function (err) {
         if (err) {
-            console.log('[Job.Create] Error Creating new job: %j', err);
+            console.error('[Job.Create] Error Creating new job: %j\n\t%j', err, job);
             return res.send(400, {
-                message: getErrorMessage(err)
+                message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later '+ (err.message ? '('+err.message+')': '')
             });
         } else {
+            console.log('[Job.Create] Creating new job with ID `%s`', job._id);
             res.json(job);
         }
     });
@@ -246,7 +256,7 @@ exports.jobByID = function (req, res, next, id) {
     console.log('[JobById] Loading job by id %s', id);
 
     Job.findById(id)
-        .populate('user', 'displayName')
+        .populate('user', 'displayName email')
         .populate('company')
         .exec(function (err, job) {
             if (err) {
@@ -256,7 +266,7 @@ exports.jobByID = function (req, res, next, id) {
 
             if (!!req.user && !!req.user.driver) {
                 console.log('[JobById] Both User and Driver are defined in the request!');
-                debugger;
+
             }
 
             console.log('[JobById] Returning job %s', !!job && job._id);

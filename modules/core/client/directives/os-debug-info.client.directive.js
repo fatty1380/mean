@@ -60,7 +60,7 @@
                     scope: {
                         pageName: '@?'
                     },
-                    templateUrl: 'modules/core/views/templates/os-debug-info.client.template.html',
+                    templateUrl: '/modules/core/views/templates/os-debug-info.client.template.html',
                     restrict: 'E',
                     replace: false,
                     controller: 'OsDebugInfoController'

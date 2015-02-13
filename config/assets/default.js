@@ -33,7 +33,8 @@ module.exports = {
                 'public/lib/angular-moment/angular-moment.js',
                 'https://js.braintreegateway.com/v2/braintree.js',
                 'public/lib/ngImgCrop/compile/unminified/ng-img-crop.js',
-                'public/lib/angular-scroll/angular-scroll.js'
+                'public/lib/angular-scroll/angular-scroll.js',
+                '//cdn.raygun.io/raygun4js/raygun.min.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },

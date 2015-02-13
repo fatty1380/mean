@@ -54,67 +54,16 @@ exports.signup = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            // Clean Username and Password from the object...
-            user.cleanse();
+            completeUserHydration(req, res, user);
 
-            if (userType === 'driver') {
-                debugger;
-                console.log('[SIGNUP] - Creating new Driver for user');
-
-                var driver = new Driver({'user': user});
-
-                driver.save(function (err, newDriver) {
-                    if (err) {
-                        console.error('[SIGNUP] - err creating new driver', err);
-                    }
-
-                    if(!!newDriver) {
-                        updateAndLogin(user.id, {driver: newDriver._id}).then(
-                            function (newUser) {
-                                login(req, res, newUser);
-                            }, function (err) {
-                                login(req, res, user);
-                            });
-                    }
-                    else {
-                        login(req, res, user);
-                    }
-
-                });
-
+            if (user.isDriver) {
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', user);
-
             }
-            else if (userType === 'owner') {
-                debugger;
-                console.log('[SIGNUP] - Creating new Company for user');
-
-                var company = new Company({'owner': user, 'name': req.body.companyName});
-
-                company.save(function (err, newCompany) {
-                    if (err) {
-                        console.error('[SIGNUP] - err creating new Company', err);
-                    }
-
-                    if(!!newCompany) {
-                        updateAndLogin(user.id, {company: newCompany._id}).then(
-                            function (newUser) {
-                                login(req, res, newUser);
-                            }, function (err) {
-                                login(req, res, user);
-                            });
-                    }
-                    else {
-                        login(req, res, user);
-                    }
-                });
-
+            else if (user.isOwner) {
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user);
             }
             else {
                 console.log('[SIGNPU] - Creating new User of type `%s` ... what to do?', userType);
-
-                login(req, res, user);
             }
         }
     });
@@ -133,79 +82,125 @@ exports.signin = function (req, res, next) {
             console.error(info, err);
             res.status(400).send(info);
         } else {
-
-            user.cleanse();
-            debugger; // TODO: Dude, seriously, defer this shit
-
-            if (user.isDriver && !user.driver) {
-
-                Driver.findOne({
-                    user: user
-                }).exec(function (err, driver) {
-                    if (err) {
-                        console.log('Error finding driver for user %s', user.id);
-                    }
-
-                    if (!!driver) {
-                        console.log('Found Driver %s for user %s', driver.id, user.id);
-
-                        updateAndLogin(user.id, {driver: driver._id}).then(
-                            function (newUser) {
-                                login(req, res, newUser);
-                            }, function (err) {
-                                login(req, res, user);
-                            });
-                    } else {
-                        login(req, res, user);
-                    }
-                });
-            }
-            else if (user.isOwner && !user.company) {
-
-                Company.findOne({
-                    owner: user
-                }).exec(function (err, company) {
-                    if (err) {
-                        console.log('Error finding company for user %s', user.id);
-                    }
-
-                    if (!!company) {
-                        console.log('Found Company %s for user %s', company.id, user.id);
-
-                        updateAndLogin(user.id, {company: company._id}).then(
-                            function (newUser) {
-                                login(req, res, newUser);
-                            }, function (err) {
-                                login(req, res, user);
-                            });
-                    }
-                    else {
-                        login(req, res, user);
-                    }
-                });
-            }
-            else {
-                login(req, res, user);
-            }
-
+            completeUserHydration(req, res, user);
         }
     })(req, res, next);
 };
+
+function completeUserHydration(req, res, user) {
+
+    user.cleanse();
+
+    var deferred = Q.defer();
+
+    if (user.isDriver && !user.driver) {
+        console.log('[Auth] - Creating new Driver for user `%s`', user.id);
+
+        Driver.findOne({
+            user: user
+        }).exec(function (err, driver) {
+            if (err) {
+                console.log('Error finding driver for user %s', user.id);
+                return login(req, res, user);
+            }
+
+            if (!!driver) {
+                console.log('[LOGIN] Found Driver %s for user %s', driver.id, user.id);
+
+                deferred.resolve({driver: driver._id});
+            } else {
+                console.log('[SIGNUP] - Creating new Driver for user');
+                var driver = new Driver({'user': user});
+
+                driver.save(function (err) {
+                    if (err) {
+                        console.error('[SIGNUP] - err creating new driver', err);
+                        return deferred.reject('Unable to create new driver: ' + err);
+                    }
+
+                    if(!!driver) {
+                        deferred.resolve({driver: driver._id});
+                    }
+                    else {
+                        deferred.reject('Unknown problem in creating new company');
+                    }
+
+                });
+            }
+        });
+    }
+    else if (user.isOwner && !user.company) {
+        console.log('[Auth] - Creating new Company for user `%s`', user.id);
+
+        Company.findOne({
+            owner: user
+        }).exec(function (err, company) {
+            if (err) {
+                console.log('Error finding company for user %s', user.id);
+                return login(req, res, user);
+            }
+
+            if (!!company) {
+                console.log('[LOGIN] Found Company %s for user %s', company.id, user.id);
+
+                deferred.resolve({company: company._id});
+            }
+            else {
+                console.log('[SIGNUP] - Creating new Company for user');
+
+                var company = new Company({'owner': user, 'name': req.body.companyName});
+
+                company.save(function (err) {
+                    if (err) {
+                        console.error('[SIGNUP] - err creating new Company', err);
+                        return deferred.reject('Unable to create new company: ' + err);
+                    }
+
+                    if(!!company) {
+                        deferred.resolve({company: company._id});
+                    }
+                    else {
+                        deferred.reject('Unknown Problem in creating new company');
+                    }
+                });
+            }
+        });
+    }
+    else {
+        return login(req, res, user);
+    }
+
+    deferred.promise.then(function(success) {
+        var updateObj = success;
+        console.log('[Auth.Hydrate] Updating with obj: %j', updateObj)
+
+        updateAndLogin(user.id, updateObj).then(
+            function (newUser) {
+                login(req, res, newUser);
+            }, function (err) {
+                login(req, res, user);
+            });
+    }, function(err) {
+        console.log('Unable to resolve new %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
+        login(req,res,user);
+    });
+}
+
 
 function updateAndLogin(id, update) {
 
     var deferred = Q.defer();
 
     var query = {'_id': id};
-    var options = {new: false};
+    var options = {new: true};
 
     update.modified = Date.now();
 
     User.findOneAndUpdate(query, update, options, function (err, updatedUser) {
         if (err) {
-            console.log('got an error');
+            console.log('got an error: %j', err);
+            return deferred.reject('Unable to save user\'s sub-profile due to ' + err.message);
         }
-
         updatedUser.cleanse();
 
         deferred.resolve(updatedUser);

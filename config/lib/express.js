@@ -248,7 +248,7 @@ module.exports.configureSocketIO = function (app, db) {
 };
 
 module.exports.initHttps = function (app) {
-    if (config.https.enabled && !!config.https.port) {
+    if (!!config.https.enabled && !!config.https.port) {
         // Log SSL usage
         console.log('Initializing HTTPS Server Protocol: %j', config.https);
 

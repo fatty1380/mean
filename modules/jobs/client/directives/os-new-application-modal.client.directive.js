@@ -10,7 +10,7 @@
         var ddo;
         ddo = {
             transclude: true,
-            templateUrl: 'modules/jobs/views/templates/os-new-application-modal.client.template.html',
+            templateUrl: '/modules/jobs/views/templates/os-new-application-modal.client.template.html',
             restrict: 'EA',
             scope: {
                 job: '=',

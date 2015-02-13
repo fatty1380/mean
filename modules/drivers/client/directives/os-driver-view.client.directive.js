@@ -25,6 +25,10 @@
             }
             return null;
         };
+
+        vm.filterEndorsements = function(license) {
+            return _.compact(_.keys(license.endorsements).map(function(item) { return (license.endorsements[item]) ? item : null; })) || [];
+        }
     };
 
     function OsDriverView() {

@@ -55,20 +55,26 @@
             if (!!vm.mode) {
                 switch (vm.mode.toLowerCase()) {
                     case 'user':
-
                         vm.imageURL = vm.model.profileImageURL;
                         vm.uploadUrl = 'api/users/picture';
                         filter = pictureFilter;
                         break;
-                    case 'company':
 
+                    case 'company':
                         vm.imageURL = vm.model.profileImageURL;
                         vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
                         filter = pictureFilter;
                         break;
+
                     case 'resume':
                         vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
                         filter = resumeFilter;
+                        break;
+
+                    case 'raw':
+                        vm.uploadUrl = null;
+                        debugger; // TODO: Determine how to upload w/out user
+                        filter = pictureFilter;
                         break;
                     default:
                         $log.warn('[PictureUploader] Unknown Mode: %s. Defaulting to user', vm.mode);
@@ -96,7 +102,7 @@
             vm.uploader.onBeforeUploadItem = function (item) {
                 var blob;
                 if (vm.hasOwnProperty('imageURL')) {
-                    blob = dataURItoBlob(vm.useCropped ? vm.croppedImage : vm.newImage);
+                    blob = dataURItoBlob(vm.useCropped ? vm.croppedImage : vm.newImage, vm.useCropped ? vm.newImage : null);
                 } else {
                     blob = dataURItoBlob(vm.newFile);
                 }
@@ -181,14 +187,25 @@
          * @param  {String} dataURI
          * @return {Blob}
          */
-        var dataURItoBlob = function (dataURI) {
-            var binary = atob(dataURI.split(',')[1]);
-            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            var array = [];
-            for (var i = 0; i < binary.length; i++) {
-                array.push(binary.charCodeAt(i));
+        var dataURItoBlob = function (dataURI, alt) {
+            try {
+                var i = 0;
+                var binary = atob(dataURI.split(',')[1]);
+                var mimeString = dataURI.split(',')[0];
+                i++;
+                var mimeString = mimeString.split(':')[1];
+                i++;
+                var mimeString = mimeString.split(';')[0];
+                i++;
+                var array = [];
+                for (var i = 0; i < binary.length; i++) {
+                    array.push(binary.charCodeAt(i));
+                }
+                return new Blob([new Uint8Array(array)], {type: mimeString});
+            } catch(err) {
+                err.message = 'badDataURI['+i+']: ' + mimeString;
+                Raygun.send(err);
             }
-            return new Blob([new Uint8Array(array)], {type: mimeString});
         };
 
         // Change user profile picture

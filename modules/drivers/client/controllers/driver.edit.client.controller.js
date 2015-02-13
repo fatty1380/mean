@@ -28,8 +28,6 @@
         vm.update = update;
         vm.create = create;
         vm.cancel = cancel;
-        vm.dropExperience = dropExperience;
-        vm.addExperience = addExperience;
 
         function activate() {
 
@@ -37,8 +35,6 @@
                 if (!!vm.driver && !!vm.driver._id) {
                     $state.go('drivers.edit', {driverId: vm.driver._id});
                 }
-
-                //addExperience();
             }
         }
 
@@ -126,29 +122,6 @@
                 }
             }, function (errorResponse) {
                 vm.error = errorResponse.data.message;
-            });
-        }
-
-        // TODO: Move to "Experience" controller
-
-
-        function dropExperience(exp) {
-
-            var index = _.remove(vm.driver.experience, exp);
-
-            if(!!index) {
-                $log.debug('Successfully removed experience');
-            }
-        }
-
-        function addExperience() {
-
-            vm.driver.experience.push({
-                text: '',
-                startDate: null,
-                endDate: null,
-                location: '',
-                isFresh: true
             });
         }
 

@@ -3,7 +3,7 @@
 
     function EditAddressDirective() {
         return {
-            templateUrl: 'modules/addresses/views/edit-address.client.template.html',
+            templateUrl: '/modules/addresses/views/edit-address.client.template.html',
             restrict: 'E',
             scope: {
                 address: '=model',

@@ -4,7 +4,7 @@
     function SignupModalDirective() {
         return {
             transclude: true,
-            templateUrl: 'modules/users/views/templates/signup-modal.client.template.html',
+            templateUrl: '/modules/users/views/templates/signup-modal.client.template.html',
             restrict: 'EA',
             scope: {
                 signin: '&',
@@ -27,7 +27,7 @@
         if(angular.isDefined($attrs.job)) {
             vm.redirect = {
                 state : 'jobs.view',
-                params: { jobId : vm.job.id },
+                params: { jobId : vm.job && vm.job.id },
                 text: vm.srefText
             };
         }
@@ -125,38 +125,12 @@
         };
     }
 
-    /**
-     * Thanks to Ode to code for this one!
-     * @source http://odetocode.com/blogs/scott/archive/2014/10/13/confirm-password-validation-in-angularjs.aspx
-     * @returns {{require: string, scope: {otherModelValue: string}, link: Function}}
-     * @constructor
-     */
-    var CompareToDirective = function() {
-        return {
-            require: 'ngModel',
-            scope: {
-                otherModelValue: '=compareTo'
-            },
-            link: function(scope, element, attributes, ngModel) {
-
-                ngModel.$validators.compareTo = function(modelValue) {
-                    return modelValue === scope.otherModelValue;
-                };
-
-                scope.$watch('otherModelValue', function() {
-                    ngModel.$validate();
-                });
-            }
-        };
-    };
-
     SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
     SignupModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')
         .directive('signupModal', SignupModalDirective)
         .controller('SignupModalController', SignupModalController)
-        .controller('SignupController', SignupController)
-        .directive('compareTo', CompareToDirective);
+        .controller('SignupController', SignupController);
 
 })();

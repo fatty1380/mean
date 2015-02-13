@@ -29,7 +29,7 @@
     function CompanyDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/companies/views/templates/view-company.client.template.html',
+            templateUrl: '/modules/companies/views/templates/view-company.client.template.html',
             scope: {
                 company: '=',
                 inline: '=',

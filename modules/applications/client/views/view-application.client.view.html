@@ -19,14 +19,21 @@
                         {{vm.application.job.description}}
                     </p>
                 </div>
-                <div class="col-sm-12" ng-if="vm.isConnected" ng-init="otherMsgs = (vm.application.messages | filter : {'sender' : ('!'+vm.user._id)})">
+                <div class="col-sm-12" ng-if="vm.isConnected"
+                     ng-init="otherMsgs = (vm.application.messages | filter : {'sender' : ('!'+vm.user._id)})">
                     <p ng-show="vm.application.messages && vm.application.messages.length">
-                        {{vm.application.messages.length}} Total Messages<a href="#messaging" class="pull-right btn btn-link">send a new message</a>
+                        {{vm.application.messages.length}} Total Messages<a href="#messaging"
+                                                                            class="pull-right btn btn-link">send a new
+                        message</a>
                     </p>
-                    <p class="panel panel-info letter" ng-hide="vm.application.messages && vm.application.messages.length">
-                        Now that you are connected, use the messaging functionality to communicate with the {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}.
+
+                    <p class="panel panel-info letter"
+                       ng-hide="vm.application.messages && vm.application.messages.length">
+                        Now that you are connected, use the messaging functionality to communicate with the
+                        {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}.
                         You can ask and answer questions, and coordinate a telephone or in-person interview.
                     </p>
+
                     <p class="text-center">
                         <a href="#messaging" class="btn btn-primary">Click Here to Begin</a>
                     </p>
@@ -36,13 +43,15 @@
 
             <!--- OWNER VIEW - Shows Applicant Information ---->
             <div ng-if="vm.user.type==='owner'">
-                <oset-applicant application="vm.application" scroll-to-message-fn="vm.scrollToMessages()"></oset-applicant>
+                <oset-applicant application="vm.application"
+                                scroll-to-message-fn="vm.scrollToMessages()"></oset-applicant>
             </div>
 
             <!--- Show Connection Information VIEW ---->
             <div class="row"
                  ng-hide="vm.connecting || vm.application.connection || vm.application.connection.isValid">
-                <p class="panel panel-info letter text-center col-sm-10 col-sm-offset-1" ng-bind-html="vm.text.noconnection"></p>
+                <p class="panel panel-info letter text-center col-sm-10 col-sm-offset-1"
+                   ng-bind-html="vm.text.noconnection"></p>
 
                 <div class="col-xs-12 text-right col-sm-10 col-sm-offset-1" ng-show="vm.user.type === 'owner'">
                     <button type="button" class="btn btn-cta btn-cta-primary hidden"><i class="fa fa-trash"></i>Reject
@@ -58,54 +67,51 @@
             </div>
 
             <div class="row" ng-show="vm.newlyConnected">
-                <p class="panel panel-info letter text-center">You are now connected to {{vm.application.user.displayName}}. You will now be
+                <p class="panel panel-info letter text-center">You are now connected to
+                    {{vm.application.user.displayName}}. You will now be
                     able to view any reports they have ordered and message directly with them.</p>
             </div>
 
             <div class="row" ng-show="vm.application.connection && vm.application.connection.isValid">
                 <div class="col-sm-12">
-                    <h4>Messages <small class="pull-right">
-                        <em>
-                            <strong>Connection Status</strong>
-                            Me:
-                            <div class="label"
-                                 ng-class="{'label-success': vm.status.me, 'label-warning':vm.status.me === false, 'label-default': vm.status.me === null}">
-                                &nbsp;</div>
-                            Them:
-                            <div class="label"
-                                 ng-class="{'label-success': vm.status.them, 'label-warning':vm.status.them === false, 'label-default': vm.status.them === null}">
-                                &nbsp;</div>
-                        </em>
-                    </small></h4>
+                    <h4>Messages
+                        <small class="pull-right">
+                            <em>
+                                <strong>Connection Status</strong>
+                                Me:
+                                <div class="label"
+                                     ng-class="{'label-success': vm.status.me, 'label-warning':vm.status.me === false, 'label-default': vm.status.me === null}">
+                                    &nbsp;</div>
+                                Them:
+                                <div class="label"
+                                     ng-class="{'label-success': vm.status.them, 'label-warning':vm.status.them === false, 'label-default': vm.status.them === null}">
+                                    &nbsp;</div>
+                            </em>
+                        </small>
+                    </h4>
 
 
-                    <div class="chat-section" ng-show="vm.application.messages && vm.application.messages.length">
+                    <div class="chat-section"
+                         scroll-bottom="vm.application.messages">
                         <div class="row chat-box" ng-repeat="message in vm.application.messages"
                              ng-init="message.username = message.username || message.sender.username"
                              ng-class="{'me': message.username === vm.user.username, 'other': message.username !== vm.user.username }">
 
-                            <span ng-if="message.type !== 'status'">
-                                <div class="col-sm-2">
-                                    <img class="profile-image medium" ng-show="message.username !== vm.user.username"
-                                         ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
-                                </div>
-
-                                <div class="col-sm-8" ng-if="message.type === 'message' || message.type === undefined">
-                                    <blockquote><p>{{message.text}}</p></blockquote>
+                            <span ng-if="message.type !== 'status'" ng-class="{'last':!!$last}">
+                                <div class="col-sm-2 text-right left-gutter">
                                     <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
                                 </div>
 
-                                <div class="col-sm-2">
-                                    <img class="profile-image medium" ng-show="message.username === vm.user.username"
+                                <div class="col-sm-8" ng-if="message.type === 'message' || message.type === undefined">
+                                    <img class="profile-image medium"
                                          ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
+                                    <blockquote><p>{{message.text}}</p></blockquote>
+                                </div>
+
+                                <div class="col-sm-2 text-left right-gutter">
+                                    <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
                                 </div>
                             </span>
-
-                            <div class="col-sm-8 col-sm-offset-2 text-center" ng-if="message.type === 'status'">
-                                <p>
-                                    <span class="timestamp smaller">{{message.sender.displayName}} {{message.text}} : {{message.created | date: 'short' }}</span>
-                                </p>
-                            </div>
                         </div>
 
                     </div>

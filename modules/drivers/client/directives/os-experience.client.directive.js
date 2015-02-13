@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ExperienceDirectiveController(AppConfig, $attrs) {
+    function ExperienceItemController(AppConfig, $attrs) {
 
         var vm = this;
 
@@ -13,7 +13,7 @@
         console.log('Got %d Months', vm.months.length);
 
         vm.isEditing = !!vm.editMode || !!vm.model.isFresh;
-        vm.editEnable = typeof vm.editEnable === undefined ? !vm.viewOnly : !!vm.editEnable;
+        vm.canEdit = typeof vm.canEdit === undefined ? !vm.viewOnly : !!vm.canEdit;
 
         vm.revertValue = angular.copy(vm.model);
 
@@ -24,7 +24,6 @@
 
         vm.cancel = function () {
             vm.error = null;
-            debugger;
             if (vm.model.isFresh) {
                 // This is a brand-new experience object
                 if (vm.drop) {
@@ -42,11 +41,10 @@
 
         vm.save = function (action) {
             vm.error = null;
-            debugger;
 
             vm.experienceForm.$setSubmitted(true);
 
-            if (vm.experienceForm.$pristine && vm.model.isFresh) {
+            if (action !== 'add' && vm.experienceForm.$pristine && vm.model.isFresh) {
 
                 vm.cancel();
                 vm.experienceForm.$setValidity('model', true);
@@ -71,7 +69,6 @@
                 vm.push();
             }
 
-            debugger; // check date objects
             vm.isEditing = false;
         };
 
@@ -92,27 +89,81 @@
     function ExperienceDirective() {
         return {
             priority: 0,
-            templateUrl: 'modules/drivers/views/templates/experience.client.template.html',
+            templateUrl: '/modules/drivers/views/templates/experience.client.template.html',
             replace: false,
             restrict: 'E',
             scope: {
                 model: '=',
                 editMode: '=?',
-                editEnable: '=?',
+                canEdit: '=?',
                 addFn: '&?',
                 dropFn: '&?',
                 isLast: '=?',
                 viewOnly: '=?'
             },
-            controller: ExperienceDirectiveController,
+            controller: 'ExperienceItemController',
             controllerAs: 'vm',
             bindToController: true
         };
     }
 
-    ExperienceDirectiveController.$inject = ['AppConfig', '$attrs'];
+    ExperienceItemController.$inject = ['AppConfig', '$attrs'];
 
-    angular.module('drivers').directive('osDriverExperience', ExperienceDirective);
+    function ExperienceListController() {
+        var vm = this;
+
+        vm.viewOnly = vm.viewOnly || false;
+        vm.canEdit = typeof vm.canEdit === undefined ? !vm.viewOnly : !!vm.canEdit;
+        vm.maxCt = vm.maxCt || 50;
+
+        vm.drop = drop;
+        vm.add = add;
+
+        function drop(exp) {
+            var index = _.remove(vm.models, exp);
+
+            if(!!index) {
+                $log.debug('Successfully removed experience');
+            }
+        }
+
+        function add() {
+            vm.models.push({
+                text: '',
+                startDate: null,
+                endDate: null,
+                location: '',
+                isFresh: true
+            });
+
+            vm.maxCt++;
+        }
+    }
+
+    function ExperienceListDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: '/modules/drivers/views/templates/experience-list.client.template.html',
+            restrict: 'E',
+            scope: {
+                models: '=list',
+                canEdit: '=?',
+                viewOnly: '=?',
+                maxCt: '=?'
+            },
+            controller: 'ExperienceListController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
+    angular.module('drivers')
+        .controller('ExperienceItemController', ExperienceItemController)
+        .directive('osetExperienceItem', ExperienceDirective)
+        .controller('ExperienceListController', ExperienceListController)
+        .directive('osetExperienceList', ExperienceListDirective);
 
 
 })();

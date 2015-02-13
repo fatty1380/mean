@@ -161,7 +161,11 @@ exports.update = function (req, res) {
     console.log('[Driver.Controller] update()');
     var driver = req.driver;
 
+    console.log('[Driver.Update] Experience from Body: %j', req.body.experience);
+
     driver = _.extend(driver, req.body);
+
+    console.log('[Driver.Update] Experience post Merge: %j', driver.experience);
 
     debugger;
 

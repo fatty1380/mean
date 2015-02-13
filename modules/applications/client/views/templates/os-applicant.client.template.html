@@ -40,8 +40,8 @@
                        ng-hide="vm.application.messages && vm.application.messages.length">
                         Now that you are connected, use the messaging functionality to communicate with the
                         {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}.
-                        You can ask and answer questions, and coordinate a telephone or in-person interview.</p>
-                    <p class="text-center">
+                        You can ask and answer questions, and coordinate a telephone or in-person interview.
+                        <br/>
                         <a href="#messaging" class="btn btn-primary"
                            ng-click="vm.scrollToMessageFn()">
                             Click Here to Begin
@@ -79,7 +79,8 @@
                 <dt>Reports</dt>
                 <dd class="report-badges" ng-class="{'not-visible':!vm.isConnected}">
 
-                <span class="fa-stack fa-3x report-badge" tooltip="Resume"
+                <span class="fa-stack fa-3x report-badge mgn-right"
+                      tooltip="Resume{{vm.isConnected ? (!!vm.driver.resume ? ' - click to download': ' - not available') : ''}}"
                         ng-class="{'available': !!vm.driver.resume}"
                         ng-click="vm.isConnected && vm.openResumeFile()">
                     <i class="fa fa-file fa-stack-2x"></i>
@@ -91,7 +92,8 @@
                     </span>
                 </span>
 
-                <span class="fa-stack fa-3x report-badge" tooltip="Motor Vehicle Report">
+                <span class="fa-stack fa-3x report-badge mgn-right"
+                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports['mvr']  ? ' - click to download': ' - not available') : ''}}">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -101,7 +103,8 @@
                     </span>
                 </span>
 
-                <span class="fa-stack fa-3x report-badge" tooltip="Background Check">
+                <span class="fa-stack fa-3x report-badge mgn-right"
+                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports['bgcheck']  ? ' - click to download': ' - not available') : ''}}">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -111,7 +114,8 @@
                     </span>
                 </span>
 
-                <span class="fa-stack fa-3x report-badge" tooltip="National Criminal">
+                <span class="fa-stack fa-3x report-badge mgn-right"
+                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports['ncrim']  ? ' - click to download': ' - not available') : ''}}">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -121,7 +125,8 @@
                     </span>
                 </span>
 
-                <span class="fa-stack fa-3x report-badge" tooltip="County Criminal">
+                <span class="fa-stack fa-3x report-badge mgn-right"
+                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports['ccrim'] ? ' - click to download': ' - not available') : ''}}">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -135,8 +140,15 @@
                 </dd>
                 <dd ng-hide="vm.isConnected">
                     <em class="text-muted">
-                        <span ng-hide="vm.driver.reports.length">No reports on file</span>
-                        <span ng-show="vm.driver.reports.length"> available once connected</span>
+                        <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>
+                        <span ng-show="vm.driver.reports.length || !!vm.driver.resume">You will be able to download reports once connected</span>
+                    </em>
+                </dd>
+                <dd ng-show="vm.isConnected">
+                    <em class="text-muted">
+                        <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>
+                        <span ng-show="vm.driver.reports.length || !!vm.driver.resume">Click on available reports to view or download</span>
+
                     </em>
                 </dd>
 
@@ -151,16 +163,29 @@
                     </p>
                 </dd>
 
-                <dt>Experience</dt>
+                <dt ng-init="vm.expCt=4">
+                    Experience
+                    <br ng-show="vm.isConnected"/>
+                    <span ng-show="vm.isConnected && vm.driver.experience.length"
+                          ng-switch="!vm.expCt && !!vm.driver.experience.length">
+                        <button type="button" class="btn btn-oset-link"
+                                ng-click="vm.expCt = 0;" ng-switch-when="false">
+                            hide
+                        </button>
+                        <button type="button" class="btn btn-oset-link"
+                                ng-click="vm.expCt = 4;" ng-switch-when="true">
+                            show
+                        </button>
+                    </span>
+                </dt>
                 <dd ng-show="vm.isConnected">
-                    <div class="panel-body" ng-repeat="exp in vm.driver.experience | orderBy : exp.time.end">
-                        <strong>{{exp.title}}</strong><label class="pull-right"
-                                                             data-ng-bind="vm.getDateRange(exp.time)"></label>
+                    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">
+                        <oset-experience-list ng-switch-when="true"
+                                              list="vm.driver.experience" view-only="true" max-ct="vm.expCt">
 
-                        <p>{{exp.description | limitTo : 1000}}</p>
-                        <hr ng-hide="$last"/>
+                        </oset-experience-list>
 
-                        <p ng-hide="!!vm.driver.experience.length">None Added</p>
+                        <p class="text-center" ng-switch-default>None Added</p>
                     </div>
                 </dd>
                 <dd ng-hide="vm.isConnected"><em class="text-muted" ng-bind-html="vm.experienceText">

@@ -16,7 +16,7 @@ module.exports = {
         keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
     },
     https: {
-        enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
+        enabled: process.env.ENABLE_HTTPS !== undefined ? (process.env.ENABLE_HTTPS === 'true') : true,
         port: 443,
         privateKeyPath: process.env.PRIVATE_KEY_PATH || './config/sslcerts/key.pem',
         publicKeyPath: process.env.PUBLIC_KEY_PATH || './config/sslcerts/cert.pem',

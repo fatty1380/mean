@@ -1,4 +1,5 @@
 <section class="experience">
+
     <ng-form name="vm.experienceForm" ng-init="vm.activate()" class="edit" ng-show="vm.isEditing" ng-if="!vm.viewOnly">
 
         <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">
@@ -100,10 +101,10 @@
                 </div>
             </div>
         </div>
-        </div>
     </ng-form>
 
-    <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete" ng-class="{'last':vm.isLast}">
+    <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"
+             ng-class="{'last':vm.isLast && !vm.canEdit}">
         <p class="top-header">
             <strong>
                 {{vm.model.title}}
@@ -122,7 +123,7 @@
 
         <p class="pnl-body">{{vm.model.description}}</p>
 
-        <p class="pnl-controls" ng-if="vm.editEnable">
+        <p class="pnl-controls" ng-if="vm.canEdit">
             &nbsp;
             <span class="pull-right">
                 <span class="text-danger" ng-switch-when="true">
@@ -151,7 +152,7 @@
         </p>
 
     </section>
-    <div class="pull-right" data-ng-show="vm.isLast && !vm.isEditing">
+    <div class="pull-right" data-ng-show="vm.isLast && !vm.isEditing && vm.canEdit">
         <button type="button" class="btn btn-oset-primary" ng-click="vm.push()" ng-if="!!vm.push">
             <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> add
         </button>

@@ -150,7 +150,7 @@ a.btn-ghost, .btn-ghost {
     margin-bottom : 30px;
     font-size     : 18px;
   }
-  .item {
+  .row {
     padding       : 90px 0;
     border-bottom : 1px solid @divider;
     &.last-item {
@@ -172,7 +172,9 @@ a.btn-ghost, .btn-ghost {
       border           : solid 1px @divider;
       border-top       : solid 2px @ribbon;
       background-color : @smoky-white;
-
+      .row {
+        padding : 0;
+      }
       .btn {
         margin         : auto;
         vertical-align : 50%;
@@ -183,8 +185,8 @@ a.btn-ghost, .btn-ghost {
       }
     }
     .chat-section {
-      min-height : 400px;
-      max-height : 800px;
+      min-height : 200px;
+      max-height : 400px;
       height     : 40%;
       overflow-y : scroll;
       overflow-x : hidden;
@@ -201,12 +203,47 @@ a.btn-ghost, .btn-ghost {
         margin-bottom    : 0px;
         color            : @darker-grey;
         position         : relative;
+        border-bottom    : none;
 
         &.me {
           text-align : right;
+
+          img, blockquote {
+            float       : right;
+            margin-left : 20px;
+          }
+
+          blockquote {
+            border-right : 2px solid @color;
+          }
+
+          .left-gutter * {
+            display : none;
+          }
         }
         &.other {
           text-align : left;
+
+          img, blockquote {
+            float        : left;
+            margin-right : 20px;
+          }
+
+          blockquote {
+            border-left : 2px solid @color;
+          }
+
+          .right-gutter * {
+            display : none;
+          }
+        }
+
+        blockquote {
+          border : 1px solid lighten(@divider, 10%);
+
+          p {
+            padding : 10px 20px;
+          }
         }
 
         h2 {
@@ -581,10 +618,6 @@ img.user-profile-picture {
         top      : -40px;
       }
     }
-
-    .darken {
-      background-color : @subtle-white !important;
-    }
     .three-cols {
       h2 {
         text-align : center;
@@ -689,20 +722,20 @@ i.fa.fa-stack-1x.text-primary {
     }
 
     li a {
-      color: @color;
-      padding-top: 25px;
-      padding-bottom: 8px;
+      color          : @color;
+      padding-top    : 25px;
+      padding-bottom : 8px;
 
       &.btn.btn-cta-secondary {
-        margin-top: 18px;
-        padding-top: 5px!important;
-        padding-top: 3px!important;
+        margin-top  : 18px;
+        padding-top : 5px !important;
+        padding-top : 3px !important;
       }
     }
   }
 
   .navbar-collapse.collapse .navbar-nav {
-    vertical-align: bottom;
+    vertical-align : bottom;
   }
 
   /* Extra small devices (phones, less than 768px) */
@@ -1274,7 +1307,7 @@ os-bg-check-summary > .pricing {
         padding-left : 140px;
 
         h3.post-title {
-          margin-right: 160px;
+          margin-right : 160px;
         }
       }
 
@@ -1308,6 +1341,14 @@ os-bg-check-summary > .pricing {
         border-bottom  : 1px solid @divider;
         padding-bottom : 15px;
         padding-top    : 5px;
+      }
+
+      .post-entry {
+        > div.row {
+          padding-bottom : 10px;
+          margin-bottom  : 20px;
+          border-bottom  : 1px solid @divider;
+        }
       }
     }
   }
@@ -1434,19 +1475,19 @@ a.btn-oset-primary, .btn-oset-primary {
 }
 
 a.btn-oset-link, .btn-oset-link {
-  color: @outset-blue;
-  background: none!important;
-  border: none-important;
+  color      : @outset-blue;
+  background : none !important;
+  border     : none-important;
   &:hover {
     color : darken(@outset-blue, 10%);
   }
   &:active {
-    box-shadow: none;
-    text-shadow: 0 0 1em lighten(@outset-blue, 25%);
+    box-shadow  : none;
+    text-shadow : 0 0 1em lighten(@outset-blue, 25%);
   }
 
   &.btn-oset-danger {
-    color: @state-danger-text;
+    color : @state-danger-text;
     &:hover {
       color : darken(@state-danger-text, 10%);
     }
@@ -1587,6 +1628,12 @@ div, .btn, a, .btn-cta {
   &[disabled] {
     opacity : 0.0;
   }
+
+  span.badge {
+    color            : @color;
+    background-color : #FFF;
+    border           : thin solid @color;
+  }
 }
 
 .tab-body {
@@ -1638,38 +1685,27 @@ dl.mini-table {
 }
 
 .report-badges {
-
-  &.not-visible .report-badge {
-    .badge-info .badge-info-inner i.fa.fa-1x {
-      display : none;
-    }
-  }
+  color : fade(@text-color-secondary, 20%) !important;
 
   &.not-available, &.not-visible {
-    .available {
-      cursor : default;
+    .available, .available * {
+      cursor : not-allowed !important;
     }
 
-    i.fa-certificate.fa, i.fa.fa-file {
-      color : @light-grey !important;
-      color : fade(@text-color-secondary, 15%) !important;
-    }
-
-    .available i.fa-certificate.fa, .available i.fa.fa-file {
-      color : @darker-grey !important;
-      color : fade(@text-color-secondary, 50%) !important;
+    &.available .fa.fa-certificate, &.available .fa.fa-file {
+      color       : @outset-blue;
+      text-shadow : 1px 1px 2px rgba(255, 255, 255, 0.8);
     }
   }
-
-  //  .fa.fa-check, .fa.fa-times, .fa.fa-question {
-  //    display : none;
-  //  }
 
   .report-badge {
     &.available .fa.fa-certificate, &.available .fa.fa-file {
       color       : @outset-blue;
       text-shadow : 1px 1px 2px rgba(255, 255, 255, 0.8);
-      cursor      : pointer;
+    }
+
+    &, & * {
+      cursor : pointer !important;
     }
 
     .title {
@@ -1681,6 +1717,12 @@ dl.mini-table {
     &.available {
       .fa.fa-check, .fa.fa-times, .fa.fa-question {
         display : inherit;
+      }
+    }
+
+    & {
+      .fa.fa-check, .fa.fa-times, .fa.fa-question {
+        display : none;
       }
     }
 
@@ -1710,38 +1752,37 @@ form.applicant-form {
   }
 }
 
-
 .experience {
   &.view {
-    border: 1px solid @divider;
+    border        : 1px solid @divider;
     .border-radius(4px);
-    padding-left: 0;
-    padding-right: 0;
-    margin-bottom: 15px;
+    padding-left  : 0;
+    padding-right : 0;
+    margin-bottom : 15px;
 
-    &.last{
-      margin-bottom: 0;
+    &.last {
+      margin-bottom : 0;
     }
 
-    >* {
-      padding-left: 15px;
-      padding-right: 15px;
+    > * {
+      padding-left  : 15px;
+      padding-right : 15px;
     }
 
     strong, .pnl-controls {
-      line-height: 36px;
+      line-height : 36px;
     }
     .top-header, .sub-header {
-      background-color: lighten(@divider, 15%);
+      background-color : lighten(@divider, 15%);
     }
     .top-header, .pnl-controls {
-      margin-bottom: 0;
+      margin-bottom : 0;
     }
     .sub-header {
-      border-bottom: 1px solid @divider;
+      border-bottom : 1px solid @divider;
     }
     .pnl-controls {
-      background-color: lighten(@divider, 18%);
+      background-color : lighten(@divider, 18%);
     }
 
   }

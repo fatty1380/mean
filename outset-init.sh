@@ -103,11 +103,7 @@ else
 fi
 
 # Check for and install Bower (if necessary)
-<<<<<<< HEAD
-if command -v bower > /dev/null; then 
-=======
 if command -v bower > /dev/null; then
->>>>>>> develop
 	echo "Bower is installed globally";
 else
 	echo "Installing 'Bower' from latest";

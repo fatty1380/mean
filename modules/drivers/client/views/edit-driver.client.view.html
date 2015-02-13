@@ -16,11 +16,15 @@
 
                 <!-- Biography -->
                 <h3 class="clearfix">About Me
-                    <small>Include an introduction to yourself here to help employers know who you are</small>
+                    <br/>
+                    <small>
+                        Include an introduction to yourself here to help employers know who you are
+                    </small>
                 </h3>
                 <div class="container-fluid well">
 
-                    <div class="row" ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">
+                    <div class="row"
+                         ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">
                         <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
                             <div class="text-danger text-center mgn-vert">
                                 Please add some information about yourself here.
@@ -33,8 +37,9 @@
                 </div>
 
                 <h3>Interests
-                    <small>Tell us about what kind of jobs you are interested in. Select from the list or add your
-                        own.
+                    <br/>
+                    <small>
+                        Tell us about what kind of jobs you are interested in. Select from the list or add your own.
                     </small>
                 </h3>
 
@@ -48,8 +53,8 @@
                 <!-- Driver's License Information -->
                 <h3>Driver License
                     <br/>
-                    <small>This information will improve the visibility of your profile and will not be shared
-                        without your permission
+                    <small>
+                        The basic information about your license will be made available when you apply for a job.
                     </small>
                 </h3>
 
@@ -59,33 +64,14 @@
 
                 <!-- Driver's Experience Breakdown -->
                 <h3>Experience
-                    <small>Add information about past Experience to help employers know more about you and your
-                        background
+                    <br/>
+                    <small>
+                        Add information about past work experience to help employers know more about you and your background
                     </small>
                 </h3>
 
-                <div class="container-fluid panel">
-                    <div class="row profile-row">
-                        <div class="col-sm-12">
-                            <div class="form-group "
-                                 ng-show="vm.driver.experience && !!vm.driver.experience.length">
-                                <div data-ng-repeat="exp in vm.driver.experience" name="experience">
-                                    <os-driver-experience model="exp" edit-enable="true" edit-mode="false"
-                                                          add-fn="vm.addExperience" is-last="$last"
-                                                          drop-fn="vm.dropExperience" form-name="experienceForm"></os-driver-experience>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row profile-row">
-                        <div class="col-sm-12 text-center">
-                            <button type="button" class="btn btn-oset-primary" ng-click="vm.addExperience()"
-                                    ng-hide="vm.driver.experience && vm.driver.experience.length > 0">
-                                <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Experience
-                            </button>
-                        </div>
-                    </div>
+                <div class="panel">
+                    <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
                 </div>
 
                 <div ng-if="vm.enableSchedule">

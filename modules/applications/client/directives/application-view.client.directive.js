@@ -21,7 +21,19 @@
 
         vm.isConnected = !!vm.application.isConnected && !!vm.application.connection && vm.application.connection.isValid;
 
-        vm.experienceText = (vm.driver.experience && vm.driver.experience.length
+        if (!vm.driver) {
+            debugger;
+            Drivers.getByUser(vm.applicant._id).then(
+                function (success) {
+                    vm.applicant.driver = vm.driver = success;
+                },
+                function (err) {
+                    $log.error('Unable to find driver for applicant: %s', vm.applicant._id);
+                }
+            )
+        }
+
+        vm.experienceText = (!!vm.driver && !!vm.driver.experience && vm.driver.experience.length
             ? 'The applicant\'s experience will be available once connected'
             : 'You can discuss past job experience once you have connected');
 
@@ -31,7 +43,11 @@
         vm.openResumeFile = function () {
             debugger;
 
-            if(!vm.isConnected) {
+            if (!vm.isConnected) {
+                return false;
+            }
+
+            if (!vm.driver || !vm.driver.resume) {
                 return false;
             }
 
@@ -62,7 +78,7 @@
     function ViewApplicantDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/applications/views/templates/os-applicant.client.template.html',
+            templateUrl: '/modules/applications/views/templates/os-applicant.client.template.html',
             restrict: 'E',
             scope: {
                 application: '=',
@@ -79,7 +95,7 @@
     function ApplicationSummaryDirective() {
         var ddo;
         ddo = {
-            templateUrl: 'modules/applications/views/templates/application-summary.client.template.html',
+            templateUrl: '/modules/applications/views/templates/application-summary.client.template.html',
             restrict: 'EA',
             scope: {
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
@@ -129,7 +145,7 @@
         return ddo;
     }
 
-    ViewApplicantController.$inject = ['Authentication',  '$window', '$log', 'Drivers'];
+    ViewApplicantController.$inject = ['Authentication', '$window', '$log', 'Drivers'];
 
     angular.module('applications')
         .controller('ViewApplicantController', ViewApplicantController)

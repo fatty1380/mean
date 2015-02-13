@@ -1,20 +1,11 @@
 (function () {
     'use strict';
 
-    function handle404s(err, $q) {
-        // recover here if err is 404
-        if (err.status === 404) {
-            return null;
-        } //returning recovery
-        // otherwise return a $q.reject
-        return $q.reject(err);
-    }
-
     function moduleConfigResolve(AppConfig, auth) {
         return AppConfig.getModuleConfig(auth.user.type, 'jobs');
     }
 
-    function companyResolve(rsrc, params, auth) {
+    function companyResolve(rsrc, params, auth, $q) {
         var promise;
 
         if (!!params.companyId) {
@@ -41,7 +32,14 @@
             return null;
         }
 
-        return promise.catch(handle404s);
+        return promise.catch(function (err) {
+            // recover here if err is 404
+            if (err.status === 404) {
+                return null;
+            } //returning recovery
+            // otherwise return a $q.reject
+            return $q.reject(err);
+        });
     }
 
     function jobResolve(rsrc, params) {
@@ -50,10 +48,10 @@
 
         return !!val ? rsrc.ById.get({
             jobId: val
-        }).$promise.catch(handle404s) : null;
+        }).$promise : null;
     }
 
-    function listUserResolve(rsrc, params, auth) {
+    function listUserResolve(rsrc, params, auth, $q) {
         var promise;
 
         if (auth.user && auth.user.type === 'owner') {
@@ -69,7 +67,14 @@
             return [];
         }
 
-        return promise.catch(handle404s);
+        return promise.catch(function (err) {
+            // recover here if err is 404
+            if (err.status === 404) {
+                return null;
+            } //returning recovery
+            // otherwise return a $q.reject
+            return $q.reject(err);
+        });
     }
 
     function listAllResolve(rsrc) {
@@ -100,7 +105,7 @@
                 parent: 'jobs',
                 url: '?itemId&tabName',
                 reloadOnSearch : false,
-                templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
+                templateUrl: '/modules/jobs/views/list-jobs.client.view.html',
                 resolve: {
                     jobs: listAllResolve,
                     company: companyResolve
@@ -112,7 +117,7 @@
 
             state('jobs.mine', {
                 url: '/me',
-                templateUrl: 'modules/jobs/views/list-jobs.client.view.html',
+                templateUrl: '/modules/jobs/views/list-jobs.client.view.html',
                 controller: 'JobsListController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -125,7 +130,7 @@
 
             state('jobs.create', {
                 url: '/create/:companyId',
-                templateUrl: 'modules/jobs/views/edit-job.client.view.html',
+                templateUrl: '/modules/jobs/views/edit-job.client.view.html',
                 controller: 'JobEditController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -137,7 +142,7 @@
 
             state('jobs.view', {
                 url: '/:jobId',
-                templateUrl: 'modules/jobs/views/view-job.client.view.html',
+                templateUrl: '/modules/jobs/views/view-job.client.view.html',
                 controller: 'JobViewController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -149,7 +154,7 @@
 
             state('jobs.edit', {
                 url: '/:jobId/edit',
-                templateUrl: 'modules/jobs/views/edit-job.client.view.html',
+                templateUrl: '/modules/jobs/views/edit-job.client.view.html',
                 controller: 'JobEditController',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -161,16 +166,16 @@
 
             state('jobs.apply', {
                 url: '/:jobId/apply',
-                //templateUrl: 'modules/jobs/views/list-my-jobs.client.view.html',
+                //templateUrl: '/modules/jobs/views/list-my-jobs.client.view.html',
                 parent: 'jobs'
             });
     }
 
 
     // Dependency Injection
-    companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
+    companyResolve.$inject = ['Companies', '$stateParams', 'Authentication', '$q'];
     jobResolve.$inject = ['Jobs', '$stateParams'];
-    listUserResolve.$inject = ['Jobs', '$stateParams', 'Authentication'];
+    listUserResolve.$inject = ['Jobs', '$stateParams', 'Authentication', '$q'];
     listAllResolve.$inject = ['Jobs'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
     config.$inject = ['$stateProvider'];

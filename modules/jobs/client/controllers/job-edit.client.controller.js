@@ -35,10 +35,6 @@
         vm.enableEdit = false;
         vm.showPreview = false;
 
-        // Bound Objects
-        vm.job = job;
-        vm.company = company || job && typeof job.company === 'object' && job.company || undefined;
-
         var defaultAddress = {type: 'main', streetAddresses: [], zipOnly: true};
         vm.types = ['main', 'home', 'business', 'billing', 'other'];
         vm.pageTitle = 'Edit Job';

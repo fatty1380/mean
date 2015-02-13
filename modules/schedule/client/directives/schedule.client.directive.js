@@ -3,7 +3,7 @@
 
     function ScheduleViewDirective() {
         return {
-            templateUrl: 'modules/schedule/views/view-schedule.client.view.html',
+            templateUrl: '/modules/schedule/views/view-schedule.client.view.html',
             restrict: 'E',
             scope: {
                 model: '=',
