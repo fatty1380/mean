@@ -10,6 +10,8 @@ var _              = require('lodash'),
     mandrill       = require('mandrill-api/mandrill'),
     mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: Move to CONFIG
 
+var recipientOverrideAddress = config.mailer.toOverride;
+
 function getMessage(options) {
 
     var message = {
@@ -36,8 +38,6 @@ function getMessage(options) {
 
     return _.extend(message, options);
 }
-
-var recipientOverrideAddress = config.mailer.toOverride;
 
 function sendGenericTemplateEmail(templateName, user, options) {
 
