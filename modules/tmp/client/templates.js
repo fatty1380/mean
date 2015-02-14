@@ -1053,6 +1053,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <label ng-repeat="category in vm.categories"\n' +
   '           class="btn btn-cta-secondary btn-md no-border oset-toggles {{vm.lblClass}}"\n' +
   '           ng-click="vm.toggle(category)"\n' +
+  '           ng-dblclick="vm.toggle(category, true)"\n' +
   '           data-ng-class="{\'active\':category.value}">\n' +
   '        <i class="fa pull-left"></i>\n' +
   '\n' +

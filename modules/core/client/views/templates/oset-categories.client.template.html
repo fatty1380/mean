@@ -11,6 +11,7 @@
     <label ng-repeat="category in vm.categories"
            class="btn btn-cta-secondary btn-md no-border oset-toggles {{vm.lblClass}}"
            ng-click="vm.toggle(category)"
+           ng-dblclick="vm.toggle(category, true)"
            data-ng-class="{'active':category.value}">
         <i class="fa pull-left"></i>
 

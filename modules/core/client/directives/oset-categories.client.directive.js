@@ -52,8 +52,14 @@
             }
         }
 
-        vm.toggle = function(category) {
-            category.value = !category.value;
+        vm.toggle = function(category, solo) {
+            if(!!solo) {
+                _.map(vm.categories, function(cat) {
+                    cat.value = cat.key === category.key;
+                });
+            } else {
+                category.value = !category.value;
+            }
 
             if (_.find(vm.categories, {value: true})) {
                 $log.debug('at least one cat selected');
