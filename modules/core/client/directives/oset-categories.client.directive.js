@@ -34,7 +34,7 @@
         if (!!vm.categories) {
             $log.debug('Initalizing CategoriesDirective in %s mode with %d categories', vm.mode, vm.categories.length);
 
-            if (vm.mode === 'edit') {
+            if (vm.mode === 'edit' || vm.mode === 'select') {
                 $log.debug('Confirming all defaults present in edit control');
                 _.each(defaults[vm.dataType], function (option) {
 
@@ -47,8 +47,36 @@
                     }
 
                 });
+
+                vm.summary = _.pluck(_.where(vm.categories, 'value'), 'key');
             }
         }
+
+        vm.toggle = function(category) {
+            category.value = !category.value;
+
+            if (_.find(vm.categories, {value: true})) {
+                $log.debug('at least one cat selected');
+                vm.showAll = false;
+            }
+            else {
+                vm.showAll = true;
+            }
+            vm.summary = _.pluck(_.where(vm.categories, 'value'), 'key');
+        };
+
+        vm.allClicked = function() {
+            if(vm.showAll) {
+                return false;
+            }
+
+            _.map(vm.categories, function(cat) {
+                cat.value = false;
+            });
+
+            vm.showAll = !vm.showAll;
+            vm.summary = [];
+        };
 
         vm.toggleCategory = function (interest) {
             if (vm.newCategory === null) {
@@ -56,6 +84,7 @@
             } else {
                 vm.newCategory = null;
             }
+            vm.summary = _.pluck(_.where(vm.categories, 'value'), 'key');
         };
 
         vm.addCategory = function () {
@@ -69,6 +98,7 @@
                 }
             }
             vm.newCategory = null;
+            vm.summary = _.pluck(_.where(vm.categories, 'value'), 'key');
         };
     }
 
@@ -81,9 +111,11 @@
             transclude: true,
             scope: {
                 categories: '=model',
+                summary: '=?',
                 mode: '@?',
                 dataType: '@?',
-                lblClass: '@?'
+                lblClass: '@?',
+                showAll: '=?'
             },
             controller: 'CategoriesDirectiveController',
             controllerAs: 'vm',

@@ -159,6 +159,22 @@
             return item.rand;
         };
 
+        vm.showAllTypes = true;
+
+        vm.jobCatFilter = function(job) {
+            if(vm.showAllTypes) {
+                return true;
+            }
+
+            // From the Selector: vm.jobCats
+            // from the Job: job.cats
+            if(!job.cats && !!job.categories) {
+                job.cats=_.pluck(_.where(job.categories, 'value'), 'key') || [];
+            }
+
+            return !!_.intersection(vm.jobCats, job.cats).length;
+        };
+
         vm.searchTermFilter = function (job) {
             if (!vm.searchTerms) {
                 return true;

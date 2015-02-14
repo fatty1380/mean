@@ -1,11 +1,16 @@
 <section class="category-directive">
-    <section ng-if="vm.mode === 'edit'">
+    <section ng-if="vm.mode === 'edit' || vm.mode === 'select'">
     <pre ng-if="vm.debug">Categories Model: {{vm.categories}}</pre>
+
+        <label class="bgn btn-cta-secondary btn-md no-border oset-toggles {{vm.lblClass}}"
+               ng-click="vm.allClicked()"
+               ng-if="vm.mode==='select'"
+               data-ng-class="{'active': vm.showAll}">All</label>
 
     <!-- List of available Categories -->
     <label ng-repeat="category in vm.categories"
            class="btn btn-cta-secondary btn-md no-border oset-toggles {{vm.lblClass}}"
-           ng-click="category.value = !category.value"
+           ng-click="vm.toggle(category)"
            data-ng-class="{'active':category.value}">
         <i class="fa pull-left"></i>
 
@@ -14,6 +19,7 @@
 
     <!-- Input for "other" -->
     <label class="btn btn-cta-secondary oset-input btn-md oset-toggles {{vm.lblClass}}"
+           data-ng-if="vm.mode==='edit'"
            data-ng-class="{'active':vm.newCategory != null}">
 
         <div ng-click="vm.toggleCategory()">{{ vm.newCategory != null ? 'cancel' : 'other ...'}}

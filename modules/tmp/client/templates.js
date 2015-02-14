@@ -1041,13 +1041,18 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/core/views/templates/oset-categories.client.template.html',
   '<section class="category-directive">\n' +
-  '    <section ng-if="vm.mode === \'edit\'">\n' +
+  '    <section ng-if="vm.mode === \'edit\' || vm.mode === \'select\'">\n' +
   '    <pre ng-if="vm.debug">Categories Model: {{vm.categories}}</pre>\n' +
+  '\n' +
+  '        <label class="bgn btn-cta-secondary btn-md no-border oset-toggles {{vm.lblClass}}"\n' +
+  '               ng-click="vm.allClicked()"\n' +
+  '               ng-if="vm.mode===\'select\'"\n' +
+  '               data-ng-class="{\'active\': vm.showAll}">All</label>\n' +
   '\n' +
   '    <!-- List of available Categories -->\n' +
   '    <label ng-repeat="category in vm.categories"\n' +
   '           class="btn btn-cta-secondary btn-md no-border oset-toggles {{vm.lblClass}}"\n' +
-  '           ng-click="category.value = !category.value"\n' +
+  '           ng-click="vm.toggle(category)"\n' +
   '           data-ng-class="{\'active\':category.value}">\n' +
   '        <i class="fa pull-left"></i>\n' +
   '\n' +
@@ -1056,6 +1061,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    <!-- Input for "other" -->\n' +
   '    <label class="btn btn-cta-secondary oset-input btn-md oset-toggles {{vm.lblClass}}"\n' +
+  '           data-ng-if="vm.mode===\'edit\'"\n' +
   '           data-ng-class="{\'active\':vm.newCategory != null}">\n' +
   '\n' +
   '        <div ng-click="vm.toggleCategory()">{{ vm.newCategory != null ? \'cancel\' : \'other ...\'}}\n' +
@@ -3121,7 +3127,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <!-- SEARCH HEADER --->\n' +
   '    <div class="panel panel-default search-section" data-ng-if="!!vm.showSearch && !!vm.jobs.length">\n' +
   '        <form class="panel-body form-inline">\n' +
-  '            <label class="form-label" for="job-search">Search: </label>\n' +
+  '            <div class="col-sm-12 text-center mgn-btm">\n' +
+  '                <oset-categories model="vm.jobTypes" summary="vm.jobCats" show-all="vm.showAllTypes" lbl-class="btn-sm no-mgn" mode="select"></oset-categories>\n' +
+  '            </div>\n' +
   '\n' +
   '            <div class="form-group search">\n' +
   '                <input id="job-search" ng-model="vm.searchTerms" type="search"\n' +
@@ -3131,6 +3139,25 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '\n' +
   '            <div class="form-group pull-right">\n' +
+  '\n' +
+  '                <div class="btn-group" role="group" aria-label="...">\n' +
+  '                    <button type="button" class="btn btn-link no-pad-right" ng-show="!!vm.predicate"\n' +
+  '                            ng-click="vm.toggleSort(null,true)">\n' +
+  '                        <i class="fa fa-times"></i>\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn btn-link" ng-click="vm.toggleSort(\'posted\',true)">\n' +
+  '                        <span ng-hide="!!vm.predicate">Sort by </span>\n' +
+  '                        Posting Date\n' +
+  '                        <i class="fa"\n' +
+  '                           ng-show="!!vm.predicate"\n' +
+  '                           ng-class="{\'fa-sort-amount-desc\':vm.reverse, \'fa-sort-amount-asc\':!vm.reverse}"></i>\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
+  '                        ng-click="vm.toggleFilter(\'clear\')"\n' +
+  '                        ng-disabled="vm.filters.clear"\n' +
+  '                        name="clear"><i class="fa fa-times"></i></button>\n' +
   '\n' +
   '                <div class="btn-group">\n' +
   '                    <label class="btn btn-cta-secondary btn-sm"\n' +
@@ -3149,24 +3176,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                           ng-model="vm.filters.week" name="newest">New This Week</label>\n' +
   '                </div>\n' +
   '\n' +
-  '                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
-  '                        ng-click="vm.toggleFilter(\'clear\')"\n' +
-  '                        ng-disabled="vm.filters.clear"\n' +
-  '                        name="clear"><i class="fa fa-times"></i></button>\n' +
-  '\n' +
-  '                <div class="btn-group" role="group" aria-label="...">\n' +
-  '                    <button type="button" class="btn btn-link no-pad-right" ng-show="!!vm.predicate"\n' +
-  '                            ng-click="vm.toggleSort(null,true)">\n' +
-  '                        <i class="fa fa-times"></i>\n' +
-  '                    </button>\n' +
-  '                    <button type="button" class="btn btn-link" ng-click="vm.toggleSort(\'posted\',true)">\n' +
-  '                        <span ng-hide="!!vm.predicate">Sort by </span>\n' +
-  '                        Posting Date\n' +
-  '                        <i class="fa"\n' +
-  '                           ng-show="!!vm.predicate"\n' +
-  '                           ng-class="{\'fa-sort-amount-desc\':vm.reverse, \'fa-sort-amount-asc\':!vm.reverse}"></i>\n' +
-  '                    </button>\n' +
-  '                </div>\n' +
   '            </div>\n' +
   '        </form>\n' +
   '    </div>\n' +
@@ -3176,8 +3185,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="job-list blog-category-list">\n' +
   '\n' +
   '            <article class="post col-sm-12"\n' +
-  '                     data-ng-repeat="job in (vm.jobs | filter: vm.filter | withinPastDays: \'posted\': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | orderBy: vm.random  | limitTo: vm.limitTo)"\n' +
+  '                     data-ng-repeat="job in (vm.jobs | filter: vm.jobCatFilter | filter: vm.filter | withinPastDays: \'posted\': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | orderBy: vm.random  | limitTo: vm.limitTo)"\n' +
   '                     ng-if="vm.jobs"\n' +
+  '                     ng-init="job.cats=_.pluck(_.where(job.categories, \'value\'), \'key\')"\n' +
   '                     ng-show="vm.visibleId === job._id || !vm.visibleId">\n' +
   '\n' +
   '                <!--Begin Job Item Content-->\n' +
