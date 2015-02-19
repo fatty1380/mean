@@ -76,13 +76,15 @@ exports.create = function (req, res) {
  * Show the current Company
  */
 exports.read = function (req, res) {
-    console.log('[CompaniesCtrl.read] Returning company %s', req.company._id);
 
     if (!req.company) {
+        console.log('[CompaniesCtrl.read] No Company available in request');
         return res.status(404).send({
             message: 'No company found'
         });
     }
+
+    console.log('[CompaniesCtrl.read] Returning company %s', req.company._id);
 
     res.json(req.company);
 };
@@ -234,7 +236,7 @@ exports.companyByUserID = function (req, res, next) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
-            } else {
+            } else if(!!company) {
                 console.log('[Company.findOne] setting req.company = %s', company._id);
                 req.company = company;
                 //res.json(company);
@@ -242,6 +244,9 @@ exports.companyByUserID = function (req, res, next) {
                 debugger;
 
                 return next();
+            } else {
+                console.error('[Company.findOne] No company available for user');
+                next();
             }
         });
 };
