@@ -343,7 +343,7 @@ exports.getMessages = function (req, res, next) {
 
     if (application && !application.connection) {
         response.message = 'No valid connection';
-        return res.status(402).send(response);
+        return res.status(404).send(response);
     }
 
     var myLast = _.findLast(application.messages, function (msg) {

@@ -103,7 +103,7 @@
 
                 $log.debug('Created new connection! %o', newConnection);
 
-                return $state.go($state.current, $state.params, {reload: true})
+                return $state.go($state.current, $state.params, {reload: true});
 
                 vm.application.connection = newConnection;
                 vm.newlyConnected = true;

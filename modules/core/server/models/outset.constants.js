@@ -1238,7 +1238,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_MVR',
         fields: module.exports.fields.OUTSET_MVR,
         skus: ['MVRDOM'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     good: {
         title: 'Basic',
@@ -1248,7 +1249,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_BASE',
         fields: module.exports.fields.OUTSET_BASE,
         skus: ['NBDS', 'MVRDOM'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     better: {
         title: 'Premium',
@@ -1258,7 +1260,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_PREMIUM',
         fields: module.exports.fields.OUTSET_PREMIUM,
         skus: ['PKG_PREMIMUM', 'MVRDOM'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     best: {
         title: 'Enterprise',
@@ -1268,7 +1271,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_ENTERPRISE',
         fields: module.exports.fields.OUTSET_ENTERPRISE,
         skus: ['PKG_PREMIMUM', 'MVRDOM', 'ES_ECUPIT'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     drugs: {
         title: 'Drug Test',
@@ -1278,9 +1282,47 @@ module.exports.reportPackages = {
         sku: 'OUTSET_DRUGS',
         fields: module.exports.fields.OUTSET_DRUGS,
         skus: ['ES_ECUPIT'],
-        enabled: false
+        enabled: false,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     fieldSkus: ['MVRDOM', 'NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER', 'ES_ECUPIT']
+};
+
+module.exports.subscriptionPackages = {
+    base: {
+        name: 'Basic',
+        description: 'Get full access to Outset and start hiring today!',
+        features: [
+            {text: 'One active job post', classes: 'text-success strong', icon: 'fa fa-plus'},
+            {text: 'Chat, Review and Manage Applicants', classes: '', icon: 'fa fa-check'},
+            {text: 'Unlimited access to Applicants', classes: '', icon: 'fa fa-check'}
+        ],
+        price: '5',
+        promos: [''],
+        planId: 'basic',
+        jobCt: 1,
+        recurring: true,
+        monthly: true,
+        enabled: true,
+        logo: false
+    },
+    enterprise: {
+        name: 'Unlimited',
+        description: 'For a limited time, get unlimited access to Outset for a low introductory price',
+        features: [
+            {text: 'Unlimited active job posts', classes: 'text-success strong', icon: 'fa fa-plus'},
+            {text: 'Chat, Review and Manage Applicants', classes: '', icon: 'fa fa-plus'},
+            {text: 'Unlimited access to Applicants', classes: '', icon: 'fa fa-plus'}
+        ],
+        price: '40',
+        promos: [''],
+        planId: 'unlim',
+        jobCt: -1,
+        recurring: true,
+        monthly: true,
+        enabled: true,
+        logo: false
+    }
 };
 
 module.exports.individualFields = {

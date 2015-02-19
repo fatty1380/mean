@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function SubscriptionListController(subscriptions, $stateParams, AppConfig) {
+    function SubscriptionListController(subscriptions, $state, $stateParams, AppConfig) {
         var vm = this;
 
         vm.skus = $stateParams.sku;
@@ -17,67 +17,28 @@
         });
 
         vm.text = {
-            lead: 'Start with a 1 week trial subscriptions&hellip;',
-            sub: '&hellip;then upgrade to one of our packages'
-        };
-
-        vm.packages = {
-            base: {
-                title: 'Trial Subscription',
-                sub: '<ul><li>Two Weeks to try Outset</li><li>Unlimited Access</li></ul>',
-                duration: 'two weeks',
-                name: '',
-                price: '5',
-                promo: '1',
-                sku: 'SUB_INTRO',
-                enabled: true
-            },
-            good: {
-                title: 'Good',
-                name: 'Good',
-                price: '10',
-                sku: 'SUB-GOOD',
-                enabled: true,
-                duration: 'per month'
-            },
-            better: {
-                title: 'Better',
-                name: 'Premium',
-                price: '40',
-                sku: 'SUB-BETTER',
-                enabled: true,
-                duration: 'per month'
-            },
-            best: {
-                title: 'Best',
-                name: 'Enterprise',
-                price: '80',
-                sku: 'SUB-BEST',
-                enabled: true,
-                duration: 'per month'
-            },
-            enterprise: {
-                title: 'Enterprise',
-                sub: 'Do you have a larger fleet that you\'re trying to keep running?<br/>Contact us and we will tailor a plan to fit your needs',
-                price: 'contact us...',
-                sku: 'SUB-ENTERPRISE',
-                enabled: true
-            }
+            lead: 'Get started with a basic package ...',
+            sub: '&hellip;or take advantage of our introductory pricing to post unlimited jobs'
         };
 
         AppConfig.getAsync('subscriptions').then(function (subs) {
-            console.log('got subscirptino information: %o', subs);
-
-            if (!!subs.length) {
-                vm.packages = subs;
-            }
+            console.log('got subscription information: %o', subs);
         }, function (errs) {
             console.log('err :( %o', errs);
         });
+
+        vm.orderSubscription = function(planId) {
+            if(!!planId) {
+                $state.go('subscriptionPayment', {'planId': planId, promo: vm.promoCode});
+            }
+            else {
+                vm.error = 'Please select a valid subscription option';
+            }
+        };
     }
 
 
-    SubscriptionListController.$inject = ['subscriptions', '$stateParams', 'AppConfig'];
+    SubscriptionListController.$inject = ['subscriptions', '$state', '$stateParams', 'AppConfig'];
 
     angular.module('companies').controller('SubscriptionListController', SubscriptionListController);
 
