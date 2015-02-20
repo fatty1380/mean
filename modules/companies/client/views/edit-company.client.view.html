@@ -1,7 +1,7 @@
 <section class="container-fluid">
 
     <os-page-header title="Edit Company Profile">
-        <span>Joined on <span class="strong">{{::(vm.company.created || vm.company.owner.created) | date:'mediumDate'}}</span></span>.
+        <span>Joined on <span class="strong">{{::vm.company && (vm.company.created || vm.company.owner.created) || vm.user.created | date:'mediumDate'}}</span></span>.
         <span ng-if="!!vm.company.modified && vm.company.modifed != vm.company.created">Last Modified: <span class="strong">{{::vm.company.modified | date:'mediumDate'}}</span></span>
     </os-page-header>
 
@@ -34,8 +34,6 @@
                                             <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editing, 'fa-edit':!vm.editing}"></i><span ng-if="!vm.editing">&nbsp;edit</span>
                                         </button></span>
                                     </div>
-
-
                                 </div>
                             </div>
 
