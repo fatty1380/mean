@@ -3,7 +3,7 @@
 
     function RaygunDelegate($delegate, $log) {
         return function (exception, cause) {
-            if (!/localhost/i.test(exception.sourceURL)) {
+            if (!/localhost/i.test(exception.sourceURL) && !/localhost/i.test(exception.fileName)) {
                 debugger;
                 Raygun.send(exception);
                 $log.debug('sent exception to Raygun');

@@ -5,8 +5,8 @@
         <div ng-class="{'input-group' : !!vm.address.type}">
 
             <span class="dropdown input-group-btn" dropdown is-open="vm.ddlStatus.isopen" on-toggle="vm.toggled(open)">
-                <button type="button" class="btn dropdown-toggle" dropdown-toggle
-                        ng-class="{'btn-default btn-block':!vm.address.type, 'btn-link':(!!vm.address.type)}" >
+                <button type="button" class="btn btn-oset-link dropdown-toggle" dropdown-toggle
+                        ng-class="{'btn-block':!vm.address.type}" >
                     <b><span ng-show="!vm.address.type">select address type<span class="caret"></span></span>
                     <span ng-show="!!vm.address.type">address type:</span></b>
                 </button>

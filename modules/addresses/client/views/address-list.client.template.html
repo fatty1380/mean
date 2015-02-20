@@ -9,9 +9,10 @@
     </div>
 
     <div ng-show="vm.canAdd">
-        <button type="button" class="btn btn-default btn-block" value="add" ng-click="vm.addAddress()">
+        <button type="button" class="btn btn-oset-link center-block" value="add" ng-click="vm.addAddress()">
             <i class="fa fa-plus"></i>
             <span ng-if="!vm.addresses.length">add address details ...</span>
+            <span ng-if="!!vm.addresses.length">add another address</span>
         </button>
 
     </div>
