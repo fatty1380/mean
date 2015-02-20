@@ -11,9 +11,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '\n' +
   '    <div ng-show="vm.canAdd">\n' +
-  '        <button type="button" class="btn btn-default btn-block" value="add" ng-click="vm.addAddress()">\n' +
+  '        <button type="button" class="btn btn-oset-link center-block" value="add" ng-click="vm.addAddress()">\n' +
   '            <i class="fa fa-plus"></i>\n' +
   '            <span ng-if="!vm.addresses.length">add address details ...</span>\n' +
+  '            <span ng-if="!!vm.addresses.length">add another address</span>\n' +
   '        </button>\n' +
   '    </div>\n' +
   '\n' +
@@ -34,9 +35,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '\n' +
   '    <div ng-show="vm.canAdd">\n' +
-  '        <button type="button" class="btn btn-default btn-block" value="add" ng-click="vm.addAddress()">\n' +
+  '        <button type="button" class="btn btn-oset-link center-block" value="add" ng-click="vm.addAddress()">\n' +
   '            <i class="fa fa-plus"></i>\n' +
   '            <span ng-if="!vm.addresses.length">add address details ...</span>\n' +
+  '            <span ng-if="!!vm.addresses.length">add another address</span>\n' +
   '        </button>\n' +
   '\n' +
   '    </div>\n' +
@@ -108,8 +110,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div ng-class="{\'input-group\' : !!vm.address.type}">\n' +
   '\n' +
   '            <span class="dropdown input-group-btn" dropdown is-open="vm.ddlStatus.isopen" on-toggle="vm.toggled(open)">\n' +
-  '                <button type="button" class="btn dropdown-toggle" dropdown-toggle\n' +
-  '                        ng-class="{\'btn-default btn-block\':!vm.address.type, \'btn-link\':(!!vm.address.type)}" >\n' +
+  '                <button type="button" class="btn btn-oset-link dropdown-toggle" dropdown-toggle\n' +
+  '                        ng-class="{\'btn-block\':!vm.address.type}" >\n' +
   '                    <b><span ng-show="!vm.address.type">select address type<span class="caret"></span></span>\n' +
   '                    <span ng-show="!!vm.address.type">address type:</span></b>\n' +
   '                </button>\n' +
