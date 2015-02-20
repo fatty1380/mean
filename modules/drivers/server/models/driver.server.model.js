@@ -90,6 +90,14 @@ var DriverSchema = new Schema({
         key: String
     },
 
+    reportsData: [{
+        sku: String,
+        url: String,
+        expires: Date,
+        bucket: String,
+        key: String
+    }],
+
     isActive: {
         type: Boolean,
         default: true
@@ -108,7 +116,19 @@ var DriverSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, {toJSON: {virtuals: true}});
+
+DriverSchema.virtual('reports')
+    .get(function () {
+        var rpts = {};
+        _.forEach(this.reportsData, function(report) {
+            rpts[report.sku] = report;
+        });
+
+        console.log('[Driver.reports] reports[%d] %j', rpts.length, rpts);
+
+        return rpts;
+    });
 
 DriverSchema.pre('save', function (next) {
     console.log('[DS.PRE] %s is about to be Saved', this._id);
@@ -155,7 +175,7 @@ function translateTimes(doc) {
     var dt;
     if (!!(dt = doc._doc.time)) {
         if (!!dt.start) {
-            if(!doc.startDate) {
+            if (!doc.startDate) {
                 doc.startDate = moment(dt.start).format('YYYY-MM-DD');
             }
 
@@ -163,7 +183,7 @@ function translateTimes(doc) {
         }
 
         if (!!dt.end) {
-            if(!doc.endDate) {
+            if (!doc.endDate) {
                 doc.endDate = moment(dt.end).format('YYYY-MM-DD');
             }
 

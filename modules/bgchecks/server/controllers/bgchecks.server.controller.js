@@ -90,60 +90,6 @@ function availableReportTypes(req, res, next) {
         });
 }
 
-/**
- * Create a Bgcheck
- */
-function create(req, res) {
-    var bgcheck = new Bgcheck(req.body);
-    bgcheck.user = req.user;
-
-    bgcheck.save(function (err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(bgcheck);
-        }
-    });
-}
-
-/**
- * Update a Bgcheck
- */
-function update(req, res) {
-    var bgcheck = req.bgcheck;
-
-    bgcheck = _.extend(bgcheck, req.body);
-
-    bgcheck.save(function (err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(bgcheck);
-        }
-    });
-}
-
-/**
- * Delete an Bgcheck
- */
-exports.delete = function (req, res) {
-    var bgcheck = req.bgcheck;
-
-    bgcheck.remove(function (err) {
-        if (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            res.jsonp(bgcheck);
-        }
-    });
-};
-
 /** Router Middleware ------------------------------------------ **/
 
 function reportBySKU(req, res, next, id) {
@@ -598,15 +544,15 @@ function CreateNewReport(req, res, next) {
         user: req.user,
         remoteApplicantId: req.applicant.remoteId,
         localReportSku: req.reportType.sku,
-        status: 'PAID',
-        paymentInfo: req.paymentResult
+        remoteReportSkus: req.reportType.skus,
+        paymentInfo: { success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id }
     });
 
-    console.log('[PostNonce] Greating bg check record: %j', bgcheck);
+    console.log('[PostNonce] Creating bg check record: %j', bgcheck);
 
     bgcheck.save(function (err) {
         if (err) {
-            console.log('[PostNonce] Uable to save due to error: %j', err);
+            console.log('[PostNonce] Unable to save due to error: %j', err);
             return res.status(400).send({
                 message: err.message
             });
@@ -642,13 +588,9 @@ function CreateNewReport(req, res, next) {
         everifile.GetSession().then(
             function (session) {
 
-                var reportPackage = _.find(constants.reportPackages, {sku: bgcheck.localReportSku});
+                console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, req.reportType.skus);
 
-                console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, reportPackage.skus);
-
-                var remoteSkus = reportPackage.skus;
-
-                var deferrals = _.map(remoteSkus, function (remoteSku) {
+                var deferrals = _.map(req.reportType.skus, function (remoteSku) {
 
                     var defer = Q.defer();
 
@@ -768,7 +710,6 @@ function GetReportData(req, res, next) {
         function (session) {
             everifile.RunReport(session, remoteId).then(
                 function (bgReport) {
-
                 }
             );
         },
@@ -778,13 +719,23 @@ function GetReportData(req, res, next) {
         });
 }
 function LoadPDFData(req, res, next) {
-    var remoteId = req.applicantId;
+    var remoteId = req.applicantId || 48418;
 
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, remoteId).then(
+            everifile.GetSummaryReportPDF(session, remoteId).then(
                 function (bgReport) {
 
+                    res.type(bgReport.contentType);
+                    res.header('Content-Disposition', bgReport.headers['content-disposition']);
+                    res.header('transfer-encoding', bgReport.headers['transfer-encoding']);
+                    res.write(bgReport.response.raw_body);
+                    res.end();
+
+                    //res.type(bgReport.contentType);
+                    //res.header('Content-Disposition', bgReport.headers['content-disposition']);
+                    //res.header('transfer-encoding', bgReport.headers['transfer-encoding']);
+                    //res.send(bgReport.content);
                 }
             );
         },

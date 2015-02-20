@@ -3,22 +3,14 @@
         <small class="pull-right">Applied {{vm.application.created | date: 'short'}}</small>
     </div>
     <hr/>
-
-    <div class="col-sm-2">
-        <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive">
-    </div>
-
-    <div class="col-sm-10">
-        <dl>
-            <dt>Cover Letter:</dt>
-            <dd>
-                <p class="panel panel-default letter" data-ng-bind-html="vm.application.introduction"></p>
-            </dd>
-        </dl>
-    </div>
     <div class="row">
         <div class="col-sm-12">
             <dl class="dl-horizontal">
+                <dt> <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive center-block"></dt>
+                <dd>
+                    <span class="strong">Cover Letter:</span>
+                    <p class="panel panel-default letter" data-ng-bind-html="vm.application.introduction"></p>
+                </dd>
                 <dt>About:</dt>
                 <dd ng-show="vm.isConnected">
                     <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>
@@ -76,6 +68,8 @@
                     </p>
                 </dd>
 
+                <dt>raw</dt>
+                <dd><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>
                 <dt>Reports</dt>
                 <dd class="report-badges" ng-class="{'not-visible':!vm.isConnected}">
 
@@ -93,7 +87,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports['mvr']  ? ' - click to download': ' - not available') : ''}}">
+                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports['mvr']  ? ' - click to download': ' - not available') : ''}}"
+                      ng-class="{'available': !!vm.driver.reports['mvr']}"
+                      ng-click="vm.isConnected && vm.openReport('mvr')">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -104,7 +100,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports['bgcheck']  ? ' - click to download': ' - not available') : ''}}">
+                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports['bgcheck']  ? ' - click to download': ' - not available') : ''}}"
+                      ng-class="{'available': !!vm.driver.reports['bgcheck']}"
+                      ng-click="vm.isConnected && vm.openReport('bgcheck')">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -115,7 +113,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports['ncrim']  ? ' - click to download': ' - not available') : ''}}">
+                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports['ncrim']  ? ' - click to download': ' - not available') : ''}}"
+                      ng-class="{'available': !!vm.driver.reports['ncrim']}"
+                      ng-click="vm.isConnected && vm.openReport('ncrim')">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -126,7 +126,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports['ccrim'] ? ' - click to download': ' - not available') : ''}}">
+                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports['ccrim'] ? ' - click to download': ' - not available') : ''}}"
+                      ng-class="{'available': !!vm.driver.reports['ccrim']}"
+                      ng-click="vm.isConnected && vm.openReport('ccrim')">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">

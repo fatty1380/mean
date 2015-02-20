@@ -335,22 +335,14 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <small class="pull-right">Applied {{vm.application.created | date: \'short\'}}</small>\n' +
   '    </div>\n' +
   '    <hr/>\n' +
-  '\n' +
-  '    <div class="col-sm-2">\n' +
-  '        <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive">\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <div class="col-sm-10">\n' +
-  '        <dl>\n' +
-  '            <dt>Cover Letter:</dt>\n' +
-  '            <dd>\n' +
-  '                <p class="panel panel-default letter" data-ng-bind-html="vm.application.introduction"></p>\n' +
-  '            </dd>\n' +
-  '        </dl>\n' +
-  '    </div>\n' +
   '    <div class="row">\n' +
   '        <div class="col-sm-12">\n' +
   '            <dl class="dl-horizontal">\n' +
+  '                <dt> <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive center-block"></dt>\n' +
+  '                <dd>\n' +
+  '                    <span class="strong">Cover Letter:</span>\n' +
+  '                    <p class="panel panel-default letter" data-ng-bind-html="vm.application.introduction"></p>\n' +
+  '                </dd>\n' +
   '                <dt>About:</dt>\n' +
   '                <dd ng-show="vm.isConnected">\n' +
   '                    <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>\n' +
@@ -408,6 +400,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </p>\n' +
   '                </dd>\n' +
   '\n' +
+  '                <dt>raw</dt>\n' +
+  '                <dd><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>\n' +
   '                <dt>Reports</dt>\n' +
   '                <dd class="report-badges" ng-class="{\'not-visible\':!vm.isConnected}">\n' +
   '\n' +
@@ -425,7 +419,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports[\'mvr\']  ? \' - click to download\': \' - not available\') : \'\'}}">\n' +
+  '                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports[\'mvr\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      ng-class="{\'available\': !!vm.driver.reports[\'mvr\']}"\n' +
+  '                      ng-click="vm.isConnected && vm.openReport(\'mvr\')">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -436,7 +432,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports[\'bgcheck\']  ? \' - click to download\': \' - not available\') : \'\'}}">\n' +
+  '                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports[\'bgcheck\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      ng-class="{\'available\': !!vm.driver.reports[\'bgcheck\']}"\n' +
+  '                      ng-click="vm.isConnected && vm.openReport(\'bgcheck\')">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -447,7 +445,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ncrim\']  ? \' - click to download\': \' - not available\') : \'\'}}">\n' +
+  '                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ncrim\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      ng-class="{\'available\': !!vm.driver.reports[\'ncrim\']}"\n' +
+  '                      ng-click="vm.isConnected && vm.openReport(\'ncrim\')">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -458,7 +458,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ccrim\'] ? \' - click to download\': \' - not available\') : \'\'}}">\n' +
+  '                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ccrim\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      ng-class="{\'available\': !!vm.driver.reports[\'ccrim\']}"\n' +
+  '                      ng-click="vm.isConnected && vm.openReport(\'ccrim\')">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +

@@ -60,6 +60,9 @@ module.exports = function (app) {
     app.route('/api/override')
         .get(bgchecks.rerunReport);
 
+    app.route('/api/reports/pdf')
+        .get(bgchecks.report.loadPDF);
+
     /**
      *  * path: /api/reports/applicants
      * operations:
