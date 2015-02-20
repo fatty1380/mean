@@ -537,113 +537,73 @@ function ReadReportApplicant(req, res) {
 
 /** SECTION : Report Manipulation ------------------------------------------------------ **/
 function CreateNewReport(req, res, next) {
+    var bgcheck = req.bgcheck;
 
-    var deferred = Q.defer();
+    console.log('[CreateNewReport] START for bgcheck %j', bgcheck);
 
-    var bgcheck = new Bgcheck({
-        user: req.user,
-        remoteApplicantId: req.applicant.remoteId,
-        localReportSku: req.reportType.sku,
-        remoteReportSkus: req.reportType.skus,
-        paymentInfo: { success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id }
-    });
+    everifile.GetSession().then(
+        function (session) {
 
-    console.log('[PostNonce] Creating bg check record: %j', bgcheck);
+            var reportPackage = _.find(constants.reportPackages, {sku: bgcheck.localReportSku});
 
-    bgcheck.save(function (err) {
-        if (err) {
-            console.log('[PostNonce] Unable to save due to error: %j', err);
-            return res.status(400).send({
-                message: err.message
+            console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, reportPackage.skus);
+
+            var remoteSkus = reportPackage.skus;
+
+            var deferrals = _.map(remoteSkus, function (remoteSku) {
+
+                var defer = Q.defer();
+
+                var remoteApplicant = bgcheck.remoteApplicantId;
+
+                everifile.RunReport(session, remoteSku, remoteApplicant).then(
+                    function (remoteReportStatus) {
+                        console.log('[CreateNewReport] Created remote report: %j', remoteReportStatus);
+
+                        var status = {
+                            remoteId: remoteReportStatus.remoteId,
+                            sku: remoteReportStatus.reportSku,
+                            value: remoteReportStatus.status.toUpperCase(),
+                            requiredData: remoteReportStatus.requiredData,
+                            completed: remoteReportStatus.completed,
+                            timestamp: remoteReportStatus.timestamp
+                        };
+
+                        defer.resolve(status);
+                    }
+                );
+
+                return defer.promise;
             });
-        }
 
-        req.bgcheck = bgcheck;
+            Q.allSettled(deferrals).then(function (statusUpdates) {
+                console.log('Finished Report requests!');
 
-        // bgcheck was saved successfully
-        // update teh applicant's record
-        var applicant = req.applicant;
-        applicant.reports.push(bgcheck);
+                statusUpdates.map(function(statusUpdate) {
+                    bgcheck.statuses.push(statusUpdate.value);
+                });
 
-        console.log('[PostNonce] pushing bg check to applicant reports', req.applicant.reports);
+                bgcheck.statuses = bgcheck.statuses.concat(statusUpdates);
 
-        applicant.save(function (err) {
-            if (err) {
-                console.error('Crap, unable to save applicant %j', applicant, err);
-            }
+                bgcheck.save(function (err) {
+                    if (err) {
+                        console.log(errorHandler.getErrorMessage(err));
+                        res.status(500).send({message: errorHandler.getErrorMessage(err)});
+                        return;
+                    }
 
-            req.applicant = applicant;
-            deferred.resolve();
+                    res.json(bgcheck);
+                });
+                // TODO, more!
+            });
+
+
+        },
+        function (error) {
+            console.log('[CreateNewReport] failed due to error: %j', error);
+            next(error);
         });
 
-
-    });
-
-    deferred.then(function () {
-
-        var bgcheck = req.bgcheck;
-
-        console.log('[CreateNewReport] START for bgcheck %j', bgcheck);
-
-        everifile.GetSession().then(
-            function (session) {
-
-                console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, req.reportType.skus);
-
-                var deferrals = _.map(req.reportType.skus, function (remoteSku) {
-
-                    var defer = Q.defer();
-
-                    var remoteApplicant = bgcheck.remoteApplicantId;
-
-                    everifile.RunReport(session, remoteSku, remoteApplicant).then(
-                        function (remoteReportStatus) {
-                            console.log('[CreateNewReport] Created remote report: %j', remoteReportStatus);
-
-                            var status = {
-                                remoteId: remoteReportStatus.remoteId,
-                                sku: remoteReportStatus.reportSku,
-                                value: remoteReportStatus.status.toUpperCase(),
-                                requiredData: remoteReportStatus.requiredData,
-                                completed: remoteReportStatus.completed,
-                                timestamp: remoteReportStatus.timestamp
-                            };
-
-                            defer.resolve(status);
-                        }
-                    );
-
-                    return defer.promise;
-                });
-
-                Q.allSettled(deferrals).then(function (statusUpdates) {
-                    console.log('Finished Report requests!');
-
-                    statusUpdates.map(function (statusUpdate) {
-                        bgcheck.statuses.push(statusUpdate.value);
-                    });
-
-                    bgcheck.statuses = bgcheck.statuses.concat(statusUpdates);
-
-                    bgcheck.save(function (err) {
-                        if (err) {
-                            console.log(errorHandler.getErrorMessage(err));
-                            res.status(500).send({message: errorHandler.getErrorMessage(err)});
-                            return;
-                        }
-
-                        res.json(bgcheck);
-                    });
-                    // TODO, more!
-                });
-
-
-            },
-            function (error) {
-                console.log('[CreateNewReport] failed due to error: %j', error);
-                next(error);
-            });
-    });
 }
 
 module.exports.rerunReport = function ReRunReport(req, res, next) {
@@ -719,7 +679,7 @@ function GetReportData(req, res, next) {
         });
 }
 function LoadPDFData(req, res, next) {
-    var remoteId = req.applicantId || 48418;
+    var remoteId = req.applicantId;
 
     everifile.GetSession().then(
         function (session) {

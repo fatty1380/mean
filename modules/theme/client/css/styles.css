@@ -5023,9 +5023,6 @@ a {
 .darken {
   background-color: #f6f6f6 !important;
 }
-.shadow {
-  background-color: rgba(51, 51, 51, 0.7);
-}
 /* Font Size/Weight Overrides */
 .strong {
   font-weight: bold !important;

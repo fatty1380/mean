@@ -1,38 +1,26 @@
 'use strict';
 
-module.exports = function (app) {
-    var path = require('path'),
-        users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
-        braintree = require(path.resolve('./modules/payments/server/controllers/braintree.server.controller')),
-        companies = require(path.resolve('./modules/companies/server/controllers/companies.server.controller'));
+module.exports = function(app) {
+    var users = require('../../../../modules/users/server/controllers/users.server.controller');
+    var companies = require('../controllers/companies.server.controller');
 
     // Companies Routes
     app.route('/api/companies')
         .get(companies.list)
         .post(users.requiresLogin, companies.create);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})')
+    app.route('/api/companies/:companyId')
         .get(companies.read)
         .put(users.requiresLogin, companies.hasAuthorization, companies.update)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})/drivers')
+    app.route('/api/companies/:companyId/drivers')
         .get(companies.listDrivers);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})/picture')
+    app.route('/api/companies/:companyId/picture')
         .post(companies.changeProfilePicture);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})/subscription')
-        .get(companies.getSubscription)
-        .post(companies.createSubscription, braintree.findOrCreateCustomer, braintree.postSubscription, companies.saveSubscription);
-
-    app.route('/api/companies/subscriptions')
-        .get(braintree.getPlanDetails);
-
-    app.route('/api/companies/subscriptions/:planId')
-        .get(braintree.getPlanDetails);
-
-    app.route('/api/users/:userId([0-9a-fA-F]{24})/companies')
+    app.route('/api/users/:userId/companies')
         //.get(companies.companiesByUserID);
         .get(companies.companyByUserID, companies.read);
 

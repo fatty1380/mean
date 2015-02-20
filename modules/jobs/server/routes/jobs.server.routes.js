@@ -7,7 +7,7 @@ module.exports = function(app) {
     // Jobs Routes
     app.route('/api/jobs')
         .get(jobs.queryAll, jobs.executeQuery, jobs.list)
-        .post(users.requiresLogin, jobs.validateSubscription, jobs.create);
+        .post(users.requiresLogin, jobs.create);
 
     app.route('/api/jobs/:jobId')
         .get(jobs.read)

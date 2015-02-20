@@ -4,14 +4,11 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+errorHandler = require('../../../../modules/core/server/controllers/errors.server.controller'),
 fs           = require('fs'),
-Q           = require('q'),
 path         = require('path'),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
-constants    = require(path.resolve('./modules/core/server/models/outset.constants')),
 Company      = mongoose.model('Company'),
-Subscription = mongoose.model('Subscription'),
 _            = require('lodash');
 
 /**
@@ -28,7 +25,6 @@ var executeQuery = function (req, res) {
     Company.find(query)
         .sort(sort)
         .populate('owner', 'displayName')
-        .populate('subscription')
         .exec(function (err, companies) {
             if (err) {
                 return res.status(400).send({
@@ -142,12 +138,12 @@ exports.changeProfilePicture = function (req, res) {
     }
 
     fileUploader.saveFileToCloud(req.files, 'companies').then(
-        function (successURL) {
+        function(successURL) {
             console.log('successfully uploaded company profile picture to %s', successURL);
 
             company.profileImageURL = successURL;
 
-            company.save(function (saveError) {
+            company.save(function(saveError) {
                 if (saveError) {
                     return res.status(400).send({
                         message: errorHandler.getErrorMessage(saveError)
@@ -160,7 +156,7 @@ exports.changeProfilePicture = function (req, res) {
 
             });
 
-        }, function (error) {
+        }, function(error) {
             return res.status(400).send({
                 message: 'Unable to save Company Profile Picture. Please try again later'
             });
@@ -230,7 +226,6 @@ exports.companyByUserID = function (req, res, next) {
 
     Company.findOne(req.query)
         .populate('owner', 'displayName')
-        .populate('subscription')
         .exec(function (err, company) {
             if (err) {
                 return res.status(400).send({
@@ -240,8 +235,6 @@ exports.companyByUserID = function (req, res, next) {
                 console.log('[Company.findOne] setting req.company = %s', company._id);
                 req.company = company;
                 //res.json(company);
-
-                debugger;
 
                 return next();
             } else {
@@ -255,24 +248,19 @@ exports.companyByUserID = function (req, res, next) {
  * Company middleware
  */
 exports.companyByID = function (req, res, next, id) {
-    if (/([0-9a-f]{24})$/i.test(id)) {
-        console.log('Querying for company with id %s', id);
+    console.log('Querying for company with id %s', id);
 
-        Company
-            .findById(id)
-            .populate('owner', 'displayName')
-            .populate('subscription')
-            .exec(function (err, company) {
-                if (err) {
-                    return next(err);
-                }
+    Company
+        .findById(id)
+        .populate('owner', 'displayName')
+        .exec(function (err, company) {
+            if (err) {
+                return next(err);
+            }
 
-                req.company = company;
-                next();
-            });
-    } else {
-        next();
-    }
+            req.company = company;
+            next();
+        });
 };
 
 /**
@@ -287,114 +275,3 @@ exports.hasAuthorization = function (req, res, next) {
     }
     next();
 };
-
-
-/**
- * Subscription Logic
- */
-exports.getSubscription = function (req, res) {
-    if (!req.company) {
-        var msg = 'No Company found for id `' + req.companyId + '`';
-        console.log(msg);
-        return res.status(404).send(msg);
-    }
-
-    var subscription = req.company.subscription;
-
-    if (!!subscription && subscription instanceof mongoose.Types.ObjectId) {
-        Subscription.findById(subscription.id)
-            .exec(function (err, subscription) {
-                if (err) {
-                    var msg = errorHandler.getErrorMessage(err);
-                    console.error('Failed to load subscription due to `%s`', msg, err);
-                    return res.status(401).send({message: msg});
-                }
-
-                return res.json(subscription);
-            });
-    } else {
-        return res.json(subscription);
-    }
-};
-
-exports.createSubscription = function (req, res, next) {
-
-    if (!req.company) {
-        var msg = 'No Company found for id `' + req.companyId + '`';
-        console.log(msg);
-        return res.status(400).send(msg);
-    }
-
-    /**
-     * Query Parameters - Possible
-     * ---------------------------
-     * planId: The Braintree planId specified in the order
-     * promoCode: The Braintree promo-code
-     * nonce: The Braintree payment nonce used to transfer payment info securely
-     * price: The price shown on the client, for verification
-     * companyId: The company ordering the subscription
-     */
-
-    req.planId = req.query.planId;
-    req.promoCode = req.query.promoCode;
-    req.price = req.query.price;
-
-
-    console.log('[CreateSubscription] Looking up subscription for planId: %s', req.planId);
-    req.subscriptionType = _.find(constants.subscriptionPackages, {'planId': req.planId});
-
-    next();
-};
-
-exports.saveSubscription = function (req, res) {
-    if (!!req.paymentResult && req.paymentResult.success) {
-
-        var subscription = req.paymentResult.subscription;
-
-        var sub = new Subscription({
-            name: req.planDetails.name,
-            sku: req.planDetails.id,
-            used: 0,
-            available: req.subscriptionType.jobCt,
-            renews: new Date(subscription.billingPeriodEndDate),
-            status: subscription.status.toLowerCase(),
-            remoteSubscriptionId: subscription.id,
-            company: req.company
-        });
-
-        console.log('[CompanySubscription] Creating new subscription for company `%s`: %j', req.company.id, sub);
-
-        sub.save(function(err) {
-            if (err) {
-                console.log('error saving subscription information: ', err)
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err),
-                    error: err
-                });
-            }
-
-            console.log('[Subscription] Successfully saved subscription!');
-
-            req.company.subscription = sub;
-
-            req.company.save(function (err) {
-                if (err) {
-                    console.log('error saving subscription information: ', err)
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err),
-                        error: err
-                    });
-                } else {
-                    console.log('[CompanySubscription] Successfully created subscription!');
-                    res.json(sub);
-                }
-            });
-        });
-    } else {
-        res.status(400).send({
-            message: 'Unable to create subscription on server',
-            serverData: req.paymentResult
-        });
-    }
-};
-

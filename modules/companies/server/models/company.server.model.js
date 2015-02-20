@@ -37,8 +37,7 @@ var CompanySchema = new Schema({
     locations: ['Address'],
 
     subscription: {
-        type: Schema.ObjectId,
-        ref: 'Subscription',
+        type: ['Subscription'],
         default: null
     },
 

@@ -35,10 +35,6 @@ exports.getConfig = function (req, res, next, varName) {
             console.log('[CONFIG] returning module configs: %j', config.modules);
             req.configVal = config.modules;
             return next();
-        case 'subscriptions' :
-            console.log('[CONFIG] returning company subscriptions: %j', constants.subscriptionPackages);
-            req.configVal = constants.subscriptionPackages;
-            return next();
         default:
             req.configVal = {varName: null};
             next();
