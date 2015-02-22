@@ -12,9 +12,6 @@ angular.module(ApplicationConfiguration.applicationModuleName)
     ])
     .config(function ($logProvider) {
         $logProvider.debugEnabled(true);
-    })
-    .config(function ($sceDelegateProvider) {
-        //$sceDelegateProvider.resourceUrlWhitelist(['.*']);
     });
 
 //Then define the init function for starting up the application
