@@ -1290,7 +1290,7 @@ module.exports.reportPackages = {
 
 module.exports.subscriptionPackages = {
     base: {
-        name: 'Basic',
+        name: 'Local',
         description: 'Get full access to Outset and start hiring today!',
         features: [
             {text: 'One active job post', classes: 'text-success strong', icon: 'fa fa-plus'},

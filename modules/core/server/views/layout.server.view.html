@@ -50,6 +50,7 @@
 </head>
 
 <body class="ng-cloak" scroll-position="scroll">
+    <div class="outer-container">
     <ng-include src="'/modules/core/views/header.client.view.html'" class="navbar navbar-fixed-top"></ng-include>
 
     <section class="content">
@@ -57,8 +58,9 @@
         {% block content %}{% endblock %}
     </section>
 
-    <footer data-ng-include="'/modules/core/views/footer.client.view.html'" class="navbar navbar-fixed-bottom"></footer>
+    <footer data-ng-include="'/modules/core/views/footer.client.view.html'" class="navbar navbar-bottom"></footer>
 
+    </div>
     <!--Embedding The User Object-->
     <script type="text/javascript">
     var user = {{ user | json | safe }};

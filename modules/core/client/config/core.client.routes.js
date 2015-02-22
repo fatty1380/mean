@@ -93,18 +93,37 @@
 
             state('intro', {
                 url: '/',
+                controller: ['$state', '$timeout', function($state, $timeout) {
+                    debugger;
+                    $timeout(function() {
+                        $state.go('intro.owner');
+                    }, 0);
+                }]
+            }).
+
+            state('intro.driver', {
+                url: '/d',
                 templateUrl: '/modules/core/views/intro.client.view.html',
-                parent: 'superbase'
-                //templateUrl: '/modules/landing/views/landing.client.view.html'
+                parent: 'superbase',
+                controller: 'HomeController',
+                controllerAs: 'vm'
+            }).
+
+            state('intro.owner', {
+                url: '/o',
+                templateUrl: '/modules/core/views/intro.client.view.html',
+                parent: 'superbase',
+                controller: 'HomeController',
+                controllerAs: 'vm'
             }).
 
             state('home', {
-                url: '/h',
+                url: '/home',
                 controller: ['$state', 'Authentication', '$timeout', function($state, auth, $timeout) {
                     debugger;
                     $timeout(function() {
                         if (!auth.user) {
-                            $state.go('intro');
+                            $state.go('intro.owner');
                         }
                         else if (auth.user.isDriver) {
                             $state.go('drivers.home');

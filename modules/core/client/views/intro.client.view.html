@@ -1,172 +1,242 @@
-<section data-ng-controller="HomeController" class="home landing-page">
+<section class="home landing-page">
 
+    <section class="promo section bg-slider-wrapper" id="top">
 
-    <div class="bg-slider-wrapper">
-        <div class="black_mask container-fluid"></div>
-    </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8">
 
-    <section class="promo section" id="top">
-        <div class="container-fluid text-center">
-            <div class="brand-lead ">
-                <img src="/modules/core/img/brand/title_white.png"/>
+                    <h2 class="title" ng-bind-html="vm.text.header.lead"></h2>
+
+                    <div class="job-banner mgn-left mgn-top">
+                        <ul class="h3">
+                            <li ng-repeat="bullet in vm.text.header.bullets" ng-bind-html="bullet"></li>
+                        </ul>
+
+                        <p class="text-center mgn-top no-margin">
+                            <signup-modal signup-type="{{vm.signupType}}" class="mgn-sides">
+                                <btn class="btn btn-cta btn-cta-primary">{{vm.text.header.signup}}</btn>
+                            </signup-modal>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                </div>
             </div>
-            <h2 class="title">Transportation Hiring</h2>
-
-            <p class="intro stronger">The best way to find and fill transportation jobs</p>
-
-            <p>
-                <signup-modal signup-type="owner" class="mgn-sides">
-                    <btn class="btn btn-cta btn-cta-primary"> Post a Job</btn>
-                </signup-modal>
-                <signup-modal signup-type="driver" class="mgn-sides">
-                    <btn class="btn btn-cta btn-cta-primary">Find a Job</btn>
-                </signup-modal>
-            </p>
         </div>
         <!--//container-->
     </section>
 
     <div class="sections-wrapper darken">
 
-        <!-- ******Leader Section ****** -->
-        <div id="subhero" class="section subhero container">
-            <div class="darken">
-                <div class="panel">
-                    <div class="row three-cols hidden-xs hidden-sm">
-                        <div class="col-md-4">
-                            <p class="text-center">
-                        <span class="fa-stack fa-4x">
-                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
-                          <i class="fa fa-crosshairs fa-stack-1x text-primary"></i>
-                        </span>
-                            </p>
-                        </div>
-                        <div class="col-md-4">
-                            <p class="text-center">
-                        <span class="fa-stack fa-4x">
-                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
-                          <i class="fa fa-car fa-stack-1x text-primary"></i>
-                        </span>
-                            </p>
-                        </div>
-                        <div class="col-md-4">
-                            <p class="text-center">
-                        <span class="fa-stack fa-4x">
-                          <i class="fa fa-square-o fa-stack-2x text-muted"></i>
-                          <i class="fa fa-users fa-stack-1x text-primary"></i>
-                        </span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row three-cols">
-                        <div class="col-md-4">
-                            <h2 class="section-heading">{{text.leader.lead1.header}}</h2>
-
-                            <p class="lead">
-                                <span class="lead" ng-bind-html="text.leader.lead1.text"></span>
-                            </p>
-
-                        </div>
-                        <div class="col-md-4">
-                            <h2 class="section-heading">{{text.leader.lead2.header}}</h2>
-
-                            <p class="lead" ng-bind-html="text.leader.lead2.text"></p>
-                        </div>
-                        <div class="col-md-4">
-                            <h2 class="section-heading">{{text.leader.lead3.header}}</h2>
-
-                            <p class="lead" ng-bind-html="text.leader.lead3.text"></p>
-                        </div>
-                    </div>
+        <section class="container subhero panel">
+            <div class="row">
+                <div class="col-sm-7">
+                    <fluidvids video="{{vm.videoURL}}" width="853" height="480"></fluidvids>
+                </div>
+                <div class="col-sm-5 pad-top">
+                    <h2 class="mgn-top text-center">{{vm.text.subhero.title}}</h2>
+                    <ul class="h3">
+                        <li ng-repeat="leadBullet in vm.text.subhero.bullets" ng-bind-html="leadBullet"></li>
+                    </ul>
                 </div>
             </div>
+        </section>
+    </div>
 
+    <div class="image-break west-map">
+        <div class="black_mask">&nbsp;</div>
+        <div class="sections-wrapper transparent">
+            <div class="section container transparent">
+                <tabset justified="true">
+                    <tab>
+                        <tab-heading>
+                            <h3>
+                                <i class="fa fa-user fa-2x mgn-right text-oset"></i>
+                                {{vm.text.section1.header}}
+                            </h3>
+                        </tab-heading>
+
+                        <div class="panel row">
+                            <!--//item-->
+
+                            <div class="col-md-5 col-sm-12 col-xs-12">
+
+                                <div class="desc">
+                                    <h3 ng-bind-html="vm.text.section1.sub"></h3>
+
+                                    <p class="h4">
+                                    <ul>
+                                        <li ng-repeat="item in vm.text.section1.bullets" ng-bind-html="item"></li>
+                                    </ul>
+                                    </p>
+                                </div>
+                            </div>
+                            <!--//content-->
+                            <div class="col-md-7 col-sm-12 col-xs-12 text-center">
+                                <img class="img-responsive" ng-src="{{vm.text.section1.image}}" alt="">
+
+                                <!--//control-->
+                            </div>
+                        </div>
+                    </tab>
+                    <tab>
+                        <tab-heading>
+                            <h3>
+                                <i class="fa fa-files-o fa-2x mgn-right text-oset"></i>
+                                {{vm.text.section2.header}}
+                            </h3>
+                        </tab-heading>
+
+                        <div class="panel row">
+                            <!--//item-->
+
+                            <div class="col-md-7 col-sm-12 col-xs-12 text-center">
+                                <img class="img-responsive" ng-src="{{vm.text.section2.image}}" alt="">
+
+                                <!--//control-->
+                            </div>
+
+                            <div class="col-md-5 col-sm-12 col-xs-12">
+
+                                <div class="desc">
+                                    <h3 ng-bind-html="vm.text.section2.sub"></h3>
+
+                                    <p class="h4">
+                                    <ul>
+                                        <li ng-repeat="item in vm.text.section2.bullets" ng-bind-html="item"></li>
+                                    </ul>
+                                    </p>
+                                </div>
+                            </div>
+                            <!--//content-->
+                        </div>
+                    </tab>
+                    <tab ng-if="!!vm.text.section3">
+                        <tab-heading>
+                            <h3>
+                                <i class="fa fa-car fa-2x mgn-right text-oset"></i>
+                                {{vm.text.section3.header}}
+                            </h3>
+                        </tab-heading>
+
+                        <div class="panel row">
+                            <!--//item-->
+                            <div class="col-md-5 col-sm-12 col-xs-12">
+
+                                <div class="desc">
+                                    <h3 ng-bind-html="vm.text.section3.sub"></h3>
+
+                                    <p class="h4">
+                                    <ul>
+                                        <li ng-repeat="item in vm.text.section3.bullets" ng-bind-html="item"></li>
+                                    </ul>
+                                    </p>
+                                </div>
+                            </div>
+                            <!--//content-->
+                            <div class="col-md-7 col-sm-12 col-xs-12 text-center">
+                                <img class="img-responsive" ng-src="{{vm.text.section3.image}}" alt="">
+
+                                <!--//control-->
+                            </div>
+                        </div>
+                    </tab>
+                    <tab ng-if="!!vm.text.pricing">
+                        <tab-heading>
+                            <h3>
+                                <i class="fa fa-dollar fa-2x mgn-right text-oset"></i>
+                                {{vm.text.pricing.header}}
+                            </h3>
+                        </tab-heading>
+                        <div class="panel text-center feature-list">
+
+                            <h3 class="title">{{vm.text.pricing.sub}}</h3>
+
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <div class="row">
+                                        <div class="col-md-3" ng-repeat="package in vm.text.pricing.packages"
+                                             ng-class="{'col-md-offset-3': !!$first}">
+                                            <h3 class="title">{{package.title}}</h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3" ng-repeat="package in vm.text.pricing.packages"
+                                             ng-class="{'col-md-offset-3': !!$first}">
+                                            <p class="price-figure">
+                                    <span class="price-figure-inner">
+                                        <span class="currency">$</span><span
+                                            class="number">{{package.price}}</span><br>
+                                    <span class="unit"> per month</span></span>
+                                            </p>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row features" ng-repeat="feature in vm.text.pricing.features">
+                                        <div class="col-md-3 li title text-right">
+                                            {{feature}}
+                                        </div>
+                                        <div class="col-md-3 li">
+                                <span ng-if="$last && !!vm.text.pricing.packages[0].features[$index]">
+                                    <span class="strong">{{vm.text.pricing.packages[0].features[$index]}}</span>
+                                    <span class="unit text-muted"> per month</span></span>
+                                            <span ng-if="$last && !vm.text.pricing.packages[0].features[$index]">&nbsp;</span></span>
+                                            <i class="fa" ng-if="!$last"
+                                               ng-class="{'fa-check text-success': vm.text.pricing.packages[0].features[$index], 'fa-dash':!vm.text.pricing.packages[0].features[$index]}"></i>
+                                        </div>
+                                        <div class="col-md-3 li">
+                                <span ng-if="$last && !!vm.text.pricing.packages[1].features[$index]">
+                                    <span class="strong">{{vm.text.pricing.packages[1].features[$index]}}</span>
+                                    <span class="unit text-muted"> per month</span></span>
+                                            <span ng-if="$last && !vm.text.pricing.packages[1].features[$index]">&nbsp;</span></span>
+                                            <i class="fa" ng-if="!$last"
+                                               ng-class="{'fa-check text-success': vm.text.pricing.packages[1].features[$index], 'fa-dash':!vm.text.pricing.packages[1].features[$index]}"></i>
+                                        </div>
+                                        <div class="col-md-3 li">
+                                <span ng-if="$last && !!vm.text.pricing.packages[2].features[$index]">
+                                    <span class="strong">{{vm.text.pricing.packages[2].features[$index]}}</span>
+                                    <span class="unit text-muted"> per month</span></span>
+                                            <span ng-if="$last && !vm.text.pricing.packages[2].features[$index]">&nbsp;</span></span>
+                                            <i class="fa" ng-if="!$last"
+                                               ng-class="{'fa-check text-success': vm.text.pricing.packages[2].features[$index], 'fa-dash':!vm.text.pricing.packages[2].features[$index]}"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
         </div>
+    </div>
 
-        <!-- ******Why Section****** -->
-        <section id="why" class="section why container" id="whyOutset">
-            <div class="panel">
-                <h2 class="title text-center">How Can Outset Help You?</h2>
+    <div class="sections-wrapper">
+        <section class="steps section">
+            <div class="container">
+                <h2 class="title text-center">3 Simple Steps to get you started with Outset</h2>
 
-                <div class="row item">
-                    <div class="col-md-4 col-sm-12 col-xs-12">
-                        <h3 class="title" ng-bind-html="text.section1.header"></h3>
+                <div class="row">
+                    <div class="step text-center col-md-4 col-sm-4 col-xs-12" ng-repeat="item in vm.text.conclusion">
+                        <h3 class="title"><span class="number">{{$index+1}}</span><br><span
+                                class="text">{{item.title}}</span></h3>
 
-                        <div class="desc">
-                            <h4 ng-bind-html="text.section1.sub"></h4>
-
-                            <p ng-bind-html="text.section1.text"></p>
-                        </div>
+                        <p data-ng-bind-html="item.description"></p>
                     </div>
-                    <!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0"
-                            fit-vids>
-                        <iframe class="image-responsive video-container" width="853" height="480"
-                                src="//www.youtube.com/embed/Qzx1qTYLkrY?controls=0&amp;showinfo=0" frameborder="0"
-                                allowfullscreen></iframe>
-                    </figure>
                 </div>
-                <!--//item-->
+                <!--//row-->
 
-                <div class="row item" id="forDrivers">
-                    <div class="col-md-4 col-sm-12 col-xs-12 col-md-push-8 col-sm-push-0 col-xs-push-0">
-                        <h3 class="title" ng-bind-html="text.section2.header"></h3>
-
-                        <div class="desc">
-                            <h4 ng-bind-html="text.section2.sub"></h4>
-
-                            <p ng-bind-html="text.section2.text"></p>
-
-                            <p class="text-center">
-                                <signup-modal signup-type="driver" class="mgn-sides">
-                                    <btn class="btn btn-cta btn-cta-primary">
-                                        Create your <br class="visible-xs">Driver Profile!
-                                    </btn>
-                                </signup-modal>
-                            </p>
-                        </div>
-                    </div>
-                    <!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-pull-4 col-sm-pull-0 col-xs-pull-0">
-                        <img class="img-responsive" src="/modules/core/img/landing-driver.png" alt="">
-
-                        <!--//control-->
-                    </figure>
-                </div>
-                <!--//item-->
-
-                <div class="row item last-item" id="forOwners">
-                    <div class="col-md-4 col-sm-12 col-xs-12">
-                        <h3 class="title" ng-bind-html="text.section3.header"></h3>
-
-                        <div class="desc">
-                            <h4 ng-bind-html="text.section3.sub"></h4>
-
-                            <p ng-bind-html="text.section3.text"></p>
-
-                            <p class="text-center">
-
-                                <signup-modal signup-type="owner" class="mgn-sides">
-                                    <btn class="btn btn-cta btn-cta-primary">
-                                        Post your <br class="visible-xs">First Job!
-                                    </btn>
-                                </signup-modal>
-                            </p>
-
-                        </div>
-                    </div>
-                    <!--//content-->
-                    <figure class="figure col-md-7 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
-                        <img class="img-responsive" src="/modules/core/img/landing-employer.png" alt="">
-                    </figure>
-                </div>
-                <!--//item-->
             </div>
             <!--//container-->
         </section>
-        <!--//why-->
+    </div>
 
-        <!-- ******CTA Section****** -->
+    <div class="sections-wrapper">
+
         <section id="cta-section" class="section cta-section text-center home-cta-section">
             <div class="container">
                 <h2 class="title text-center">Ready to try Outset for yourself?</h2>
@@ -181,7 +251,6 @@
             </div>
             <!--//container-->
         </section>
-        <!--//cta-section-->
 
     </div>
 

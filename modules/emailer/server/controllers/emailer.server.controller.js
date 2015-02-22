@@ -34,6 +34,8 @@ function getMessage(options) {
         }
 
         console.log('Override set for %d recipients', i);
+
+        return false;
     }
 
     return _.extend(message, options);
@@ -63,6 +65,9 @@ function sendGenericTemplateEmail(templateName, user, options) {
     }
 
     console.log('With options: %j', mailOptions);
+
+    debugger;
+     return false;
 
     var e = sendTemplate(templateName, mailOptions);
 
