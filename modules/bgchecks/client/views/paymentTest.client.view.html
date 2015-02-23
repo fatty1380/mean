@@ -50,6 +50,16 @@
                     </form>
                 </div>
 
+                <div class="container-fluid row" ng-show="vm.error">
+
+                    <div class="col-xs-12 col-md-offset-2 col-md-8 text-danger text-center">
+                        <h4>Sorry, an error occurred processing the transaction.</h4>
+
+                        <p>{{vm.error}}</p>
+                        <hr>
+                    </div>
+                </div>
+
 
                 <div class="container-fluid row" ng-show="vm.success">
 

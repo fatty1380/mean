@@ -3,8 +3,9 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-Schema       = mongoose.Schema;
+var _    = require('lodash'),
+mongoose = require('mongoose'),
+Schema   = mongoose.Schema;
 
 /**
  * BackgroundReport Schema
@@ -70,7 +71,7 @@ var BackgroundReportSchema = new Schema({
 
     /**
      * In Progress: "active"
-     *      Submitted, Invoked, Responded, Validated, Queued
+     *      Paid, Submitted, Invoked, Responded, Validated, Queued
      * Error States: "error"
      *      Errored, Suspended, Failed, Need Info, Rejected
      * Complete: "complete"
@@ -79,7 +80,7 @@ var BackgroundReportSchema = new Schema({
 
     status: {
         type: String,
-        enum: ['SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED'],
+        enum: ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED'],
         default: null
     },
 
@@ -89,7 +90,6 @@ var BackgroundReportSchema = new Schema({
     },
 
     data: {
-
         xml: String,
         raw: Schema.Types.Mixed
     },
@@ -120,20 +120,74 @@ BackgroundReportSchema.pre('save', function (next) {
     next();
 });
 
+BackgroundReportSchema.pre('save', function (next) {
+    this.updateStatus();
+    next();
+});
+
 BackgroundReportSchema.virtual('isActive')
-    .get(function() {
-        return ['SUBMITTED', 'INVOKED', 'RESPONDED', 'VALIDATED','QUEUED'].indexOf(this.status) !== -1;
+    .get(function () {
+        return ['PAID', 'SUBMITTED', 'INVOKED', 'RESPONDED', 'VALIDATED', 'QUEUED'].indexOf(this.status) !== -1;
     });
 
 BackgroundReportSchema.virtual('isErrored')
-    .get(function() {
+    .get(function () {
         //Errored, Suspended, Failed, Need Info, Rejected
-        return ['ERRORED', 'SUSPENDED', 'FAILED', 'NEED_INFO','REJECTED'].indexOf(this.status) !== -1;
+        return ['ERRORED', 'SUSPENDED', 'FAILED', 'NEED_INFO', 'REJECTED'].indexOf(this.status) !== -1;
     });
 
 BackgroundReportSchema.virtual('isSuccess')
-    .get(function() {
+    .get(function () {
         return 'COMPLETED' === this.status;
     });
+
+BackgroundReportSchema.virtual('isPaid')
+    .get(function () {
+        return this.paymentInfo && this.paymentInfo.success;
+    });
+
+BackgroundReportSchema.virtual('latestStatuses')
+    .get(function () {
+
+        var statuses = this.statuses;
+        var skus = this.remoteReportSkus && this.remoteReportSkus.split(',');
+        var retval = {};
+
+        var latest = _.each(skus, function(sku) {
+            var stati = _.findLast(statuses, {sku: sku});
+
+            console.log('[BGSchema.latestStatuses] %s --> %s', sku, stati && stati.value);
+            retval[sku] = stati || null;
+        });
+
+        return retval;
+    });
+
+
+var statusOrder = ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'VALIDATED', 'QUEUED', 'SUSPENDED', 'REJECTED', 'FAILED', 'NEED_INFO'];
+
+BackgroundReportSchema.methods.updateStatus = function () {
+    var status = this.status;
+    var index = statusOrder.indexOf(status);
+    var allComplete = true;
+
+    _.each(this.latestStatuses, function(stat) {
+        if(allComplete && (!stat || stat.value !== 'COMPLETED')) {
+            allComplete = false;
+        }
+
+        var i = statusOrder.indexOf(stat);
+        if(i > index) {
+            index = i;
+            status = stat.value;
+        }
+    });
+
+    if(allComplete) {
+        this.status = 'COMPLETED';
+    } else {
+        this.status = status;
+    }
+};
 
 mongoose.model('BackgroundReport', BackgroundReportSchema);
