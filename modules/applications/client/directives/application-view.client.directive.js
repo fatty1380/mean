@@ -30,47 +30,77 @@
                 function (err) {
                     $log.error('Unable to find driver for applicant: %s', vm.applicant._id);
                 }
-            )
+            );
         }
 
-        vm.experienceText = (!!vm.driver && !!vm.driver.experience && vm.driver.experience.length
-            ? 'The applicant\'s experience will be available once connected'
-            : 'You can discuss past job experience once you have connected');
+        vm.experienceText = (
+            !!vm.driver && !!vm.driver.experience && vm.driver.experience.length
+                ? 'The applicant\'s experience will be available once connected'
+                : 'You can discuss past job experience once you have connected'
+        );
 
         vm.text = text;
         vm.resume = vm.resume || {};
 
-        vm.openResumeFile = function () {
+        var validateAccess = function (file) {
             debugger;
 
             if (!vm.isConnected) {
+                vm.error = 'Sorry, but you are not connected to this applicant';
                 return false;
             }
 
-            if (!vm.driver || !vm.driver.resume) {
+            if (!vm.driver) {
+                vm.error = 'Sorry, but the applicant\'s profile is not currently available';
                 return false;
             }
 
-            if (moment().isBefore(moment(vm.driver.resume.expires))) {
-                $window.open(vm.driver.resume.url, '_blank');
+            if (!file) {
+                vm.error = 'Sorry, but that report is not available';
+                return false;
             }
-            else {
-                vm.resume.loading = true;
 
-                Drivers.getResumeLink(vm.driver._id).then(
-                    function (success) {
-                        vm.resume.loading = false;
-                        $log.debug('Got new resume link! %o', success);
+            return true;
+        };
 
-                        vm.driver.resume = success;
-                        $window.open(vm.driver.resume.url, '_blank');
-                    },
-                    function (err) {
-                        vm.resume.loading = false;
-                        $log.error('Error trying to load resume link', err);
-                        vm.resume.error = 'Sorry, we were unable to load your resume at this time';
-                    });
+        var handleFileAccess = function (file) {
+            vm.resume.loading = true;
+
+            if (validateAccess(file)) {
+                if (moment().isBefore(moment(file.expires))) {
+                    vm.resume.loading = false;
+                    $window.open(file.url, '_blank');
+                }
+                else {
+
+                    Drivers.getResumeLink(vm.driver._id).then(
+                        function (success) {
+                            vm.resume.loading = false;
+                            $log.debug('Got new resume link! %o', success);
+
+                            file = success;
+                            $window.open(file.url, '_blank');
+                        },
+                        function (err) {
+                            vm.resume.loading = false;
+                            $log.error('Error trying to load resume link', err);
+                            vm.resume.error = 'Sorry, we were unable to load your resume at this time';
+                        });
+                }
+            } else {
+                vm.resume.loading = false;
+                return false;
             }
+        };
+
+        vm.openResumeFile = function () {
+            $log.debug('Opening Resume File');
+            handleFileAccess(vm.driver && vm.driver.resume);
+        };
+
+        vm.openReport = function (reportName) {
+            $log.debug('Opening Report type %s', reportName);
+            handleFileAccess(vm.driver && vm.driver.reports[reportName]);
         };
 
     }

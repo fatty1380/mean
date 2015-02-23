@@ -118,16 +118,18 @@ var DriverSchema = new Schema({
     }
 }, {toJSON: {virtuals: true}});
 
+DriverSchema.methods.updateReportURL = function(sku, url) {
+    var i = _.findIndex(this.reportsData, {sku: sku});
+
+    if(i !== -1) {
+        this.reportsData[i].url = url;
+        this.reportsData[i].expires = moment().add(15, 'm');
+    }
+};
+
 DriverSchema.virtual('reports')
     .get(function () {
-        var rpts = {};
-        _.forEach(this.reportsData, function(report) {
-            rpts[report.sku] = report;
-        });
-
-        console.log('[Driver.reports] reports[%d] %j', rpts.length, rpts);
-
-        return rpts;
+        return _.indexBy(this.reportsData, 'sku');
     });
 
 DriverSchema.pre('save', function (next) {

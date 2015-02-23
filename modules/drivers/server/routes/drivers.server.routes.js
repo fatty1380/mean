@@ -27,6 +27,9 @@ module.exports = function (app) {
         .post(users.requiresLogin, drivers.hasAuthorization, drivers.uploadResume)
         .get(users.requiresLogin, drivers.refreshResume);
 
+    app.route('/api/drivers/:driverId/report/:reportSku')
+        .get(users.requiresLogin, drivers.refreshReport);
+
     // Finish by binding the Driver middleware
     app.param('driverId', drivers.driverByID);
 };
