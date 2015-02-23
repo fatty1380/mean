@@ -241,8 +241,6 @@ exports.companyByUserID = function (req, res, next) {
                 req.company = company;
                 //res.json(company);
 
-                debugger;
-
                 return next();
             } else {
                 console.error('[Company.findOne] No company available for user');

@@ -642,6 +642,11 @@ img.user-profile-picture {
   }
 
   .nav-tabs {
+
+    & * {
+      .transition (all 0.3s ease-in-out);
+    }
+
     li > a {
       background-color : transparent !important;
       box-shadow       : none !important;
@@ -657,15 +662,31 @@ img.user-profile-picture {
         color : @text-color;
       }
 
-      &.active {
+      &.active, &.active:hover {
         h3 {
           color : @color;
         }
         background-color : white;
+
+        &, & * {
+          cursor : default !important;
+        }
+      }
+
+      &:hover {
+        h3 {
+          color : @color;
+        }
+        background-color : fade(white, 85%);
       }
     }
   }
   .tab-content {
+
+    &, & * {
+      .animation (slidein, 300ms, 0, ease-in);
+    }
+
     background-color : white;
     padding          : 2em;
     border-left      : 1px solid @divider;

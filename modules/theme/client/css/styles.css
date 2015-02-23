@@ -3953,6 +3953,12 @@ img.user-profile-picture {
 .landing-page .sections-wrapper .carousel {
   height: 400px;
 }
+.landing-page .nav-tabs * {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+}
 .landing-page .nav-tabs li > a {
   background-color: transparent !important;
   box-shadow: none !important;
@@ -3966,10 +3972,24 @@ img.user-profile-picture {
 .landing-page .nav-tabs li h3 {
   color: #333333;
 }
-.landing-page .nav-tabs li.active {
+.landing-page .nav-tabs li.active,
+.landing-page .nav-tabs li.active:hover {
   background-color: white;
 }
-.landing-page .nav-tabs li.active h3 {
+.landing-page .nav-tabs li.active h3,
+.landing-page .nav-tabs li.active:hover h3 {
+  color: #ec6952;
+}
+.landing-page .nav-tabs li.active,
+.landing-page .nav-tabs li.active:hover,
+.landing-page .nav-tabs li.active *,
+.landing-page .nav-tabs li.active:hover * {
+  cursor: default !important;
+}
+.landing-page .nav-tabs li:hover {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+.landing-page .nav-tabs li:hover h3 {
   color: #ec6952;
 }
 .landing-page .tab-content {
@@ -3978,6 +3998,12 @@ img.user-profile-picture {
   border-left: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
+}
+.landing-page .tab-content,
+.landing-page .tab-content * {
+  -webkit-animation: slidein 300ms 0 ease-in;
+  -moz-animation: slidein 300ms 0 ease-in;
+  -ms-animation: slidein 300ms 0 ease-in;
 }
 .landing-page .tab-content h3 {
   text-align: center;

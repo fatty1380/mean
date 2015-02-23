@@ -21,5 +21,4 @@
 
     angular.module('bgchecks').controller('BgCheckUserController', BgCheckUserController);
 
-
 })();
