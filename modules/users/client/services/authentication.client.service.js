@@ -1,9 +1,9 @@
 (function () {
-    'use strict';
+'use strict';
 
 // Authentication service for user variables
 
-    function AuthenticationService() {
+    function AuthenticationService($window) {
         var _this = this;
 
         function isLoggedIn() {
@@ -16,13 +16,15 @@
         }
 
         _this._data = {
-            user: window.user,
+            user: $window.user,
             isLoggedIn: isLoggedIn,
             isAdmin: isAdmin
-        };
+		};
 
-        return _this._data;
-    }
+		return _this._data;
+	}
+
+	AuthenticationService.$inject = ['$window'];
 
     angular
         .module('users')
