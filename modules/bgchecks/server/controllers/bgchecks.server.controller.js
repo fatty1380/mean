@@ -545,7 +545,8 @@ function CreateNewReport(req, res, next) {
         remoteApplicantId: req.applicant.remoteId,
         localReportSku: req.reportType.sku,
         remoteReportSkus: req.reportType.skus,
-        paymentInfo: { success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id }
+        paymentInfo: {success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id},
+        status: 'PAID'
     });
 
     console.log('[PostNonce] Creating bg check record: %j', bgcheck);
@@ -579,7 +580,7 @@ function CreateNewReport(req, res, next) {
 
     });
 
-    deferred.then(function () {
+    deferred.promise.then(function () {
 
         var bgcheck = req.bgcheck;
 
@@ -644,6 +645,7 @@ function CreateNewReport(req, res, next) {
                 next(error);
             });
     });
+
 }
 
 module.exports.rerunReport = function ReRunReport(req, res, next) {
@@ -687,6 +689,7 @@ function CheckApplicantReportStatus(req, res, next) {
             next(error);
         });
 }
+
 function CheckReportStatus(req, res, next) {
     var remoteId = req.reportId;
 
@@ -703,6 +706,7 @@ function CheckReportStatus(req, res, next) {
             next(error);
         });
 }
+
 function GetReportData(req, res, next) {
     var remoteId = req.reportId;
 
@@ -718,8 +722,9 @@ function GetReportData(req, res, next) {
             next(error);
         });
 }
+
 function LoadPDFData(req, res, next) {
-    var remoteId = req.applicantId || 48418;
+    var remoteId = req.applicantId;
 
     everifile.GetSession().then(
         function (session) {

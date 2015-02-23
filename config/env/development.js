@@ -7,11 +7,11 @@ module.exports = {
         useLocalhost: true
     },
     db: {
-        //uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
-        uri: 'mongodb://localhost/outset-aws',
+        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        //uri: 'mongodb://localhost/outset-aws',
         options: {
             user: '',
-            pass: ''  
+            pass: ''
         }
     },
     logs: {

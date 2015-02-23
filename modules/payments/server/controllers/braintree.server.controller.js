@@ -85,10 +85,16 @@ exports.getToken = function (req, res) {
 };
 
 exports.findOrCreateCustomer = function (req, res, next) {
-    exports.findCustomer(req, res, next, true);
+    findTheCustomer(req, res, next, true);
 };
 
-exports.findCustomer = function (req, res, next, createIfNull) {
+exports.findCustomer = function (req, res, next) {
+    findTheCustomer(req, res, next, false);
+};
+
+
+
+var findTheCustomer = function (req, res, next, createIfNull) {
     initGateway();
 
     var customerId = req.user.id;
@@ -193,16 +199,14 @@ var initializeTransaction = function (req, res) {
 
         req.saleInformation = {
             amount: req.body.price,
-            paymentMethodNonce: nonce,
             options: {
-                storeInVaultOnSuccess: true,
                 submitForSettlement: true
             }
         };
 
         if (req.braintreeCustomer) {
             console.log('[initializeTransaction] Existing customer, no need to send date, it\'s in the nonce!');
-            //req.saleInformation.customer = {customerId: req.braintreeCustomer.id};
+            req.saleInformation.customerId = req.braintreeCustomer.id;
         }
         else {
             console.log('[initializeTransaction] Creating new customer');
@@ -213,6 +217,9 @@ var initializeTransaction = function (req, res) {
                 phone: req.user.phone,
                 email: req.user.email
             };
+
+            req.saleInformation.paymentMethodNonce = nonce;
+            req.saleInformation.options.storeInVaultOnSuccess = true;
         }
 
         console.log('[initializeTransaction] Ordering %s and processing payment with options: %j', req.reportType, req.saleInformation);
@@ -246,6 +253,8 @@ var runSingleTransaction = function (req, res, next) {
             next();
         }
         else {
+            console.log('[runSingleTransaction] Failed payment - returning error');
+
             res.status(500).send({
                 message: result.message
             });
