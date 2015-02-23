@@ -1157,7 +1157,7 @@ os-bg-check-summary > .pricing {
 }
 
 /***** PRICING *******/
-.pricing {
+.pricing, .pnl-oset {
   &.section.section-on-bg {
     padding-top : 0;
   }
@@ -1243,6 +1243,18 @@ os-bg-check-summary > .pricing {
       }
     }
   }
+}
+
+.panel-oset {
+  .box-shadow(0 4px 1px rgba(0, 0, 0, 0.05));
+  margin-bottom: 30px;
+  background-color: #FFF;
+  .border-radius(4px);
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  position: relative;
+  border: 1px solid #cccccc;
 }
 
 .profile-image {

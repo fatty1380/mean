@@ -93,8 +93,9 @@
 
             state('intro', {
                 url: '/',
+                template: '<div ui-view></div>',
+                parent: 'superbase',
                 controller: ['$state', '$timeout', function($state, $timeout) {
-                    debugger;
                     $timeout(function() {
                         $state.go('intro.owner');
                     }, 0);
@@ -104,7 +105,7 @@
             state('intro.driver', {
                 url: '/d',
                 templateUrl: '/modules/core/views/intro.client.view.html',
-                parent: 'superbase',
+                parent: 'intro',
                 controller: 'HomeController',
                 controllerAs: 'vm'
             }).
@@ -112,7 +113,7 @@
             state('intro.owner', {
                 url: '/o',
                 templateUrl: '/modules/core/views/intro.client.view.html',
-                parent: 'superbase',
+                parent: 'intro',
                 controller: 'HomeController',
                 controllerAs: 'vm'
             }).
