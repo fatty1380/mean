@@ -3839,7 +3839,7 @@ img.user-profile-picture {
   width: 100%;
   background: #f6f6f6 url('/modules/core/img/home-country-road.png') no-repeat fixed;
   background-position-x: center;
-  background-position-y: top;
+  background-position-y: 75%;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -3894,6 +3894,7 @@ img.user-profile-picture {
   font-size: 13px;
   line-height: 1.6;
   /* ======= Steps ======= */
+  /* Intro Sections - EG: Examples; */
 }
 .landing-page li {
   padding: 10px;
@@ -3904,6 +3905,19 @@ img.user-profile-picture {
   max-height: 1400px;
   margin-bottom: 0;
   padding: 4em 0;
+  z-index: 10;
+}
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .landing-page .promo {
+    min-height: 800px;
+    max-height: 2400px;
+  }
+}
+.landing-page .promo .title {
+  margin-top: 20px;
+}
+.landing-page .promo .btn-cta {
+  font-size: 18px;
 }
 .landing-page .promo h2.title {
   font-size: 40px;
@@ -3953,6 +3967,11 @@ img.user-profile-picture {
 }
 .landing-page .sections-wrapper .carousel {
   height: 400px;
+}
+.landing-page .sections-wrapper .section {
+  background-color: #FFF;
+  padding: 25px 0;
+  min-height: 25%;
 }
 .landing-page .nav-tabs * {
   -webkit-transition: all 0.3s ease-in-out;
@@ -4107,90 +4126,6 @@ img.user-profile-picture {
   margin: 0 auto;
   margin-top: 60px;
   font-size: 20px;
-}
-.landing-page {
-  /* Intro Sections - EG: Examples; */
-}
-.landing-page .promo {
-  position: relative;
-  color: #fff;
-  height: 70%;
-  z-index: 10;
-}
-.landing-page .promo .brand-lead {
-  text-align: left;
-  position: relative;
-}
-@media (min-width: 767px) {
-  .landing-page .promo .brand-lead {
-    top: 1.2em;
-  }
-}
-@media (min-width: 992px) {
-  .landing-page .promo .brand-lead {
-    top: 1.4em;
-  }
-}
-@media (max-width: 767px) {
-  .landing-page .promo .brand-lead {
-    top: 0em;
-  }
-}
-.landing-page .promo .brand-lead img {
-  width: 50%;
-  max-width: 700px;
-}
-.landing-page .promo .title {
-  margin-top: 20px;
-}
-.landing-page .promo.section .intro {
-  color: #f6f6f6;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-}
-.landing-page .promo .btn-cta {
-  font-size: 18px;
-}
-.landing-page .promo .btn-link {
-  color: #fff;
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 12px;
-  -webkit-opacity: 0.7;
-  -moz-opacity: 0.7;
-  opacity: 0.7;
-  text-decoration: none;
-}
-.landing-page .promo .btn-link:hover {
-  -webkit-opacity: 1;
-  -moz-opacity: 1;
-  opacity: 1;
-  text-decoration: none;
-}
-.landing-page .promo .btn-link:focus {
-  outline: none;
-}
-.landing-page .promo .btn-link .fa {
-  margin-right: 5px;
-  font-size: 18px;
-  position: relative;
-  top: 2px;
-}
-.landing-page .sections-wrapper .section {
-  background-color: #FFF;
-  padding: 25px 0;
-  min-height: 25%;
-}
-.landing-page .sections-wrapper .section .three-cols h2 {
-  text-align: center;
-}
-.landing-page .sections-wrapper .section .three-cols .lead {
-  text-align: justify;
-}
-.landing-page .sections-wrapper .section .three-cols .col-md-4 > p {
-  padding: 0 15px;
-}
-.landing-page .sections-wrapper .section .why .item {
-  padding: 30px 10px;
 }
 .landing-page .leader {
   text-align: center;

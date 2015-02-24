@@ -524,7 +524,7 @@ img.user-profile-picture {
   width                 : 100%;
   background            : @subtle-white url('/modules/core/img/home-country-road.png') no-repeat fixed;
   background-position-x : center;
-  background-position-y : top;
+  background-position-y : 75%;
   .background-size(cover);
 }
 
@@ -592,6 +592,21 @@ img.user-profile-picture {
     max-height    : 1400px;
     margin-bottom : 0;
     padding       : 4em 0;
+    z-index       : 10;
+
+    @media (-webkit-min-device-pixel-ratio : 2),
+    (min-resolution : 192dpi) {
+      min-height : 800px;
+      max-height : 2400px;
+    }
+
+    .title {
+      margin-top : 20px;
+    }
+
+    .btn-cta {
+      font-size : 18px;
+    }
 
     h2.title {
       font-size      : 40px;
@@ -638,6 +653,12 @@ img.user-profile-picture {
 
     .carousel {
       height : 400px;
+    }
+
+    .section {
+      background-color : #FFF;
+      padding          : 25px 0;
+      min-height       : 25%;
     }
   }
 
@@ -751,8 +772,6 @@ img.user-profile-picture {
   //    background : @outset-blue;
   //    border     : 5px solid lighten(@outset-blue, 10%);
   //  }
-
-
   /* ======= Steps ======= */
   .steps {
     background     : @smoky-white;
@@ -805,99 +824,6 @@ img.user-profile-picture {
 
   }
 
-}
-
-.landing-page {
-
-  .promo {
-    position : relative;
-    color    : #fff;
-    height   : 70%;
-    z-index  : 10;
-
-    .brand-lead {
-      text-align : left;
-      position   : relative;
-
-      @media (min-width : 767px) {
-        top : 1.2em;
-      }
-
-      @media (min-width : 992px) {
-        top : 1.4em;
-      }
-
-      @media (max-width : 767px) {
-        top : 0em;
-      }
-
-      img {
-        width     : 50%;
-        max-width : 700px;
-      }
-    }
-
-    .title {
-      margin-top : 20px;
-    }
-
-    &.section .intro {
-      color       : @subtle-white;
-      text-shadow : 0 1px 1px rgba(0, 0, 0, 0.5);
-    }
-
-    .btn-cta {
-      font-size : 18px;
-    }
-
-    .btn-link {
-      color           : #fff;
-      font-weight     : bold;
-      text-transform  : uppercase;
-      font-size       : 12px;
-      .opacity(0.7);
-      text-decoration : none;
-      //text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-      &:hover {
-        .opacity(1);
-        text-decoration : none;
-      }
-      &:focus {
-        outline : none;
-      }
-      .fa {
-        margin-right : 5px;
-        font-size    : 18px;
-        position     : relative;
-        top          : 2px;
-      }
-    }
-  }
-
-  .sections-wrapper .section {
-    background-color : #FFF;
-    padding          : 25px 0;
-    min-height       : 25%;
-
-    .three-cols {
-      h2 {
-        text-align : center;
-      }
-      .lead {
-        text-align : justify;
-      }
-      .col-md-4 > p {
-        padding : 0 15px;
-      }
-    }
-
-    .why {
-      .item {
-        padding : 30px 10px
-      }
-    }
-  }
-
   .leader {
     text-align : center;
     position   : relative;
@@ -937,6 +863,7 @@ img.user-profile-picture {
     background : @outset-blue none !important;
     padding    : 50px 0 75px 0 !important;
   }
+
 }
 
 // Restrict hoizontal scrolling in mobile devices
@@ -1301,14 +1228,14 @@ os-bg-check-summary > .pricing {
 
 .panel-oset {
   .box-shadow(0 4px 1px rgba(0, 0, 0, 0.05));
-  margin-bottom: 30px;
-  background-color: #FFF;
+  margin-bottom           : 30px;
+  background-color        : #FFF;
   .border-radius(4px);
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  position: relative;
-  border: 1px solid #cccccc;
+  -moz-background-clip    : padding;
+  -webkit-background-clip : padding-box;
+  background-clip         : padding-box;
+  position                : relative;
+  border                  : 1px solid #cccccc;
 }
 
 .profile-image {
