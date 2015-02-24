@@ -115,6 +115,15 @@
         vm.viewOnly = vm.viewOnly || false;
         vm.canEdit = typeof vm.canEdit === undefined ? !vm.viewOnly : !!vm.canEdit;
         vm.maxCt = vm.maxCt || 50;
+        vm.isEditing = false;
+
+        if(vm.canEdit && !!vm.models.length) {
+            var lastModel = vm.models[vm.models.length-1];
+            if(lastModel.isFresh || _.isEmpty(lastModel)) {
+                lastModel.isFresh = true;
+                vm.isEditing = true;
+            }
+        }
 
         vm.drop = drop;
         vm.add = add;

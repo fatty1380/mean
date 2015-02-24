@@ -3,8 +3,9 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-Schema       = mongoose.Schema;
+var _    = require('lodash'),
+mongoose = require('mongoose'),
+Schema   = mongoose.Schema;
 
 /**
  * BackgroundReport Schema
@@ -52,6 +53,7 @@ var BackgroundReportSchema = new Schema({
      * Completed - data vendor indicated that the report is finished
      * Rejected - data for applicant info did not pass validation against report field schema (i.e. missing required fields)
      */
+
     /**
      * This contains an array of the results of each ReportCheckStatus API Call
      */
@@ -59,7 +61,7 @@ var BackgroundReportSchema = new Schema({
         sku: String,
         value: {
             type: String,
-            enum: ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
+            enum: ['SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
         },
         requiredData: [{
             type: String
@@ -67,11 +69,27 @@ var BackgroundReportSchema = new Schema({
         completed: Boolean
     }],
 
+    /**
+     * In Progress: "active"
+     *      Paid, Submitted, Invoked, Responded, Validated, Queued
+     * Error States: "error"
+     *      Errored, Suspended, Failed, Need Info, Rejected
+     * Complete: "complete"
+     *      Completed
+     */
 
+    status: {
+        type: String,
+        enum: ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED'],
+        default: null
+    },
+
+    isComplete: {
+        type: Boolean,
+        default: false
+    },
 
     data: {
-        isComplete: Boolean,
-
         xml: String,
         raw: Schema.Types.Mixed
     },
@@ -79,11 +97,6 @@ var BackgroundReportSchema = new Schema({
     paymentInfo: {
         type: Schema.Types.Mixed,
         default: null
-    },
-
-    nextUpdateCheck: {
-        type: Date,
-        required: false
     },
 
     created: {
@@ -100,11 +113,81 @@ var BackgroundReportSchema = new Schema({
         type: Date,
         default: null
     }
-});
+}, {toJSON: {virtuals: true}});
 
 BackgroundReportSchema.pre('save', function (next) {
     this.modified = Date.now();
     next();
 });
+
+BackgroundReportSchema.pre('save', function (next) {
+    this.updateStatus();
+    next();
+});
+
+BackgroundReportSchema.virtual('isActive')
+    .get(function () {
+        return ['PAID', 'SUBMITTED', 'INVOKED', 'RESPONDED', 'VALIDATED', 'QUEUED'].indexOf(this.status) !== -1;
+    });
+
+BackgroundReportSchema.virtual('isErrored')
+    .get(function () {
+        //Errored, Suspended, Failed, Need Info, Rejected
+        return ['ERRORED', 'SUSPENDED', 'FAILED', 'NEED_INFO', 'REJECTED'].indexOf(this.status) !== -1;
+    });
+
+BackgroundReportSchema.virtual('isSuccess')
+    .get(function () {
+        return 'COMPLETED' === this.status;
+    });
+
+BackgroundReportSchema.virtual('isPaid')
+    .get(function () {
+        return this.paymentInfo && this.paymentInfo.success;
+    });
+
+BackgroundReportSchema.virtual('latestStatuses')
+    .get(function () {
+
+        var statuses = this.statuses;
+        var skus = this.remoteReportSkus && this.remoteReportSkus.split(',');
+        var retval = {};
+
+        var latest = _.each(skus, function(sku) {
+            var stati = _.findLast(statuses, {sku: sku});
+
+            console.log('[BGSchema.latestStatuses] %s --> %s', sku, stati && stati.value);
+            retval[sku] = stati || null;
+        });
+
+        return retval;
+    });
+
+
+var statusOrder = ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'VALIDATED', 'QUEUED', 'SUSPENDED', 'REJECTED', 'FAILED', 'NEED_INFO'];
+
+BackgroundReportSchema.methods.updateStatus = function () {
+    var status = this.status;
+    var index = statusOrder.indexOf(status);
+    var allComplete = true;
+
+    _.each(this.latestStatuses, function(stat) {
+        if(allComplete && (!stat || stat.value !== 'COMPLETED')) {
+            allComplete = false;
+        }
+
+        var i = statusOrder.indexOf(stat);
+        if(i > index) {
+            index = i;
+            status = stat.value;
+        }
+    });
+
+    if(allComplete) {
+        this.status = 'COMPLETED';
+    } else {
+        this.status = status;
+    }
+};
 
 mongoose.model('BackgroundReport', BackgroundReportSchema);

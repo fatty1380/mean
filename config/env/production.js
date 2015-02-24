@@ -92,6 +92,7 @@ module.exports = {
     },
     reports: {},
     mailer: {
+        toOverride: process.env.MAILER_OVERRIDE || false,
         from: process.env.MAILER_FROM || 'MAILER_FROM',
         options: {
             service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',

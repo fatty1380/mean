@@ -1,22 +1,29 @@
 (function () {
     'use strict';
 
-    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs) {
+    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs, $scope) {
         var vm = this;
 
-        vm.uploader = null;
-        vm.uploadUrl = 'api/users/picture';
+        vm.initializeVariables = function() {
+            vm.autoUpload = !!vm.autoUpload;
+            vm.autoCrop = !!vm.autoCrop;
+            vm.isEditing = false;
 
-        vm.newImage = null;
-        vm.croppedImage = null;
+            vm.uploader = null;
+            vm.uploadUrl = 'api/users/picture';
 
-        vm.isCropping = false;
-        vm.useCropped = false;
+            vm.newImage = null;
+            vm.croppedImage = null;
 
-        vm.saveCrop = saveCrop;
+            vm.isCropping = false;
+            vm.useCropped = false;
 
-        vm.shape = vm.shape || 'circle';
+            vm.saveCrop = saveCrop;
 
+            vm.shape = vm.shape || 'circle';
+        };
+
+        vm.initializeVariables();
         vm.uploadProfilePicture = uploadProfilePicture;
         vm.cancelUpload = cancelUpload;
 
@@ -50,6 +57,131 @@
                 return;
             }
 
+            vm.initializeUploader();
+
+            /**
+             * Upload Blob (cropped image) instead of file.
+             * @see the following links:
+             *   https://developer.mozilla.org/en-US/docs/Web/API/FormData
+             *   https://github.com/nervgh/angular-file-upload/issues/208
+             */
+            vm.uploader.onBeforeUploadItem = function (item) {
+                var blob;
+                if (vm.hasOwnProperty('imageURL')) {
+                    blob = dataURItoBlob(vm.useCropped ? vm.croppedImage : vm.newImage, vm.useCropped ? vm.newImage : null);
+                } else {
+                    blob = dataURItoBlob(vm.newFile);
+                }
+                item._file = blob;
+            };
+
+            // Called after the user selected a new picture file
+            vm.uploader.onAfterAddingFile = function (fileItem) {
+                if ($window.FileReader) {
+                    var fileReader = new FileReader();
+                    fileReader.readAsDataURL(fileItem._file);
+                    vm.success = vm.error = null;
+
+                    vm.isEditing = true;
+
+                    vm.fileName = fileItem.file.name;
+
+                    fileReader.onload = function (fileReaderEvent) {
+                        $timeout(function () {
+                            //vm.imageURL = fileReaderEvent.target.result;
+                            debugger;
+                            if (vm.hasOwnProperty('imageURL')) {
+                                vm.newImage = fileReaderEvent.target.result;
+                            } else {
+                                vm.newFile = fileReaderEvent.target.result;
+                            }
+                            if(vm.autoUpload) {
+                                vm.uploadProfilePicture();
+                            }
+
+                            if(vm.autoCrop) {
+                                vm.isCropping = true;
+                            }
+
+                        }, 0);
+                    };
+                }
+            };
+
+            // Called after the user has successfully uploaded a new picture
+            // vm.uploader.onSuccessItem = !!vm.successCallback() ? vm.successCallback() :
+            vm.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+
+                // Populate model object
+                vm.model = response;
+
+                if (angular.isDefined($attrs.successCallback)) {
+                    vm.successCallback()(fileItem, response, status, headers);
+                }
+
+                // Clear upload buttons
+                vm.cancelUpload();
+                // Show success message
+                vm.success = true;
+
+                //$timeout(function () {
+                //    vm.reactivateUploader();
+                //}, 0);
+            };
+
+            // Called after the user has failed to uploaded a new picture
+            vm.uploader.onErrorItem = function (fileItem, response, status, headers) {
+                // Clear upload buttons
+                vm.cancelUpload();
+
+                if (angular.isDefined($attrs.failCallback)) {
+                    vm.failCallback()(fileItem, response, status, headers);
+                }
+
+                // Show error message
+                vm.error = response.message;
+            };
+
+            $scope.$watch(function() {
+                if(vm.mode.toLowerCase()==='resume') {
+                    return vm.modelId;
+                }
+                return vm.model;
+            }, function(newVal, oldVal) {
+                vm.updateUploadUrl();
+            });
+
+            vm.initialized = true;
+            $log.debug('[PictureUploader] Successfuly initialized Picture Uploader');
+        }
+
+        vm.updateUploadUrl = function() {
+            if(!vm.uploader) {
+                return false;
+            }
+
+            switch (vm.mode.toLowerCase()) {
+                case 'user':
+                    vm.uploadUrl = 'api/users/picture';
+                    break;
+
+                case 'company':
+                    vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
+                    break;
+
+                case 'resume':
+                    vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
+                    break;
+                default: return false;
+            }
+
+            if(vm.uploader.url !== vm.uploadUrl) {
+                debugger;
+                vm.uploader.url = vm.uploadUrl;
+            }
+        };
+
+        vm.initializeUploader = function() {
             var filter;
 
             if (!!vm.mode) {
@@ -92,79 +224,15 @@
             // Set file uploader image filter
             $log.debug('initailzing uploader with filter: ', filter.name);
             vm.uploader.filters.push(filter);
+        };
 
-            /**
-             * Upload Blob (cropped image) instead of file.
-             * @see
-             *   https://developer.mozilla.org/en-US/docs/Web/API/FormData
-             *   https://github.com/nervgh/angular-file-upload/issues/208
-             */
-            vm.uploader.onBeforeUploadItem = function (item) {
-                var blob;
-                if (vm.hasOwnProperty('imageURL')) {
-                    blob = dataURItoBlob(vm.useCropped ? vm.croppedImage : vm.newImage, vm.useCropped ? vm.newImage : null);
-                } else {
-                    blob = dataURItoBlob(vm.newFile);
-                }
-                item._file = blob;
-            };
-
-            // Called after the user selected a new picture file
-            vm.uploader.onAfterAddingFile = function (fileItem) {
-                if ($window.FileReader) {
-                    var fileReader = new FileReader();
-                    fileReader.readAsDataURL(fileItem._file);
-                    vm.success = vm.error = null;
-
-                    vm.fileName = fileItem.file.name;
-
-                    fileReader.onload = function (fileReaderEvent) {
-                        $timeout(function () {
-                            //vm.imageURL = fileReaderEvent.target.result;
-                            debugger;
-                            if (vm.hasOwnProperty('imageURL')) {
-                                vm.newImage = fileReaderEvent.target.result;
-                            } else {
-                                vm.newFile = fileReaderEvent.target.result;
-                            }
-                        }, 0);
-                    };
-                }
-            };
-
-            // Called after the user has successfully uploaded a new picture
-            // vm.uploader.onSuccessItem = !!vm.successCallback() ? vm.successCallback() :
-            vm.uploader.onSuccessItem = function (fileItem, response, status, headers) {
-
-                // Populate model object
-                vm.model = response;
-
-                if (angular.isDefined($attrs.successCallback)) {
-                    vm.successCallback()(fileItem, response, status, headers);
-                }
-
-                // Clear upload buttons
-                vm.cancelUpload();
-                // Show success message
-                vm.success = true;
-            };
-
-            // Called after the user has failed to uploaded a new picture
-            vm.uploader.onErrorItem = function (fileItem, response, status, headers) {
-                // Clear upload buttons
-                vm.cancelUpload();
-
-                if (angular.isDefined($attrs.failCallback)) {
-                    vm.failCallback()(fileItem, response, status, headers);
-                }
-
-                // Show error message
-                vm.error = response.message;
-            };
-
-            vm.initialized = true;
-            $log.debug('[PictureUploader] Successfuly initialized Picture Uploader');
-        }
+        vm.reactivateUploader = function() {
+            $timeout(function () {
+                vm.uploader.destroy();
+                vm.initializeVariables();
+                activate();
+            }, 0);
+        };
 
         activate();
 
@@ -172,12 +240,28 @@
 
 
         vm.startCrop = function () {
+            if(!vm.uploader || !vm.uploader.queue.length){
+                vm.newImage = vm.imageURL;
+            }
             vm.isCropping = true;
+        };
+
+        vm.cancelCrop = function() {
+            vm.isCropping = false;
+
+            if(vm.autoCrop) {
+                vm.uploadProfilePicture();
+            }
         };
 
         function saveCrop() {
             vm.useCropped = true;
-            vm.isCropping = false;
+
+            if(vm.autoCrop) {
+                vm.uploadProfilePicture();
+            } else {
+                vm.isCropping = false;
+            }
         }
 
         /**
@@ -188,22 +272,26 @@
          * @return {Blob}
          */
         var dataURItoBlob = function (dataURI, alt) {
+            var mimeString='n/a';
+            var e = 0;
+
             try {
-                var i = 0;
                 var binary = atob(dataURI.split(',')[1]);
-                var mimeString = dataURI.split(',')[0];
-                i++;
-                var mimeString = mimeString.split(':')[1];
-                i++;
-                var mimeString = mimeString.split(';')[0];
-                i++;
+                e++;
+                mimeString = dataURI.split(',')[0];
+                e++;
+                mimeString = mimeString.split(':')[1];
+                e++;
+                mimeString = mimeString.split(';')[0];
+                e++;
                 var array = [];
                 for (var i = 0; i < binary.length; i++) {
                     array.push(binary.charCodeAt(i));
                 }
                 return new Blob([new Uint8Array(array)], {type: mimeString});
             } catch(err) {
-                err.message = 'badDataURI['+i+']: ' + mimeString;
+                debugger;
+                err.message = 'badDataURI['+e+']: ' + mimeString;
                 Raygun.send(err);
             }
         };
@@ -222,8 +310,12 @@
         function cancelUpload() {
             vm.uploader.clearQueue();
 
-            vm.imageURL = vm.model.profileImageURL;
+            if(!!vm.model) {
+                vm.imageURL = vm.model.profileImageURL;
+            }
             vm.success = vm.error = null;
+            vm.isCropping = false;
+            vm.isEditing = false;
 
             delete vm.newImage;
             delete vm.croppedImage;
@@ -233,7 +325,7 @@
 
     }
 
-    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs'];
+    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs', '$scope'];
 
 
     angular.module('users')

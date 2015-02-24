@@ -24,66 +24,78 @@ function directUpload(files, folder, isSecure) {
     var deferred = Q.defer();
 
 
-    folder = folder || config.services.s3.folder;
+    if (!!client) {
+        folder = folder || config.services.s3.folder;
 
-    if (folder.substring(folder.length - 1) === '/') {
-        folder = folder.substring(0, folder.length - 1);
+        if (folder.substring(folder.length - 1) === '/') {
+            folder = folder.substring(0, folder.length - 1);
+        }
+
+        if(files.file) {
+
+            console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', files.file && files.file.name, folder);
+            var params = {
+                Bucket: config.services.s3.s3Options.bucket,
+                Key: folder + '/' + files.file.name,
+                ACL: 'public-read',
+                Body: files.file.buffer
+            };
+
+            console.log('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
+
+            var uploader = client.s3.putObject(params);
+
+            uploader.
+                on('success', function (response) {
+                    console.log('[s3.directUpload] done uploading, got data! %j', response.data);
+
+                    var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
+                    console.log('[s3.directUpload] Got public URL: %s', publicURL);
+
+                    var strippedURL = publicURL.replace('http://', '//');
+                    console.log('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
+
+                    if (isSecure) {
+                        response = {
+                            key: params.Key,
+                            bucket: params.Bucket,
+                            url: strippedURL
+                        };
+
+                        return getSecureReadURL(response.bucket, response.key).then(
+                            function (success) {
+                                response.url = success;
+
+                                console.log('[s3.directUpload] Post secure upload, resolving with : %j', response);
+
+                                deferred.resolve(response);
+                            }, function (err) {
+                                console.log('[s3.directUpload] Post secure upload failed: %j', err);
+                                console.log('[s3.directUpload] Resolving with public URL?');
+
+                                deferred.resolve(response);
+                            });
+                    }
+                    else {
+
+                        deferred.resolve(strippedURL);
+                    }
+                }).
+                on('error', function (response) {
+                    console.error('[s3.directUpload] unable to upload:', response.error && response.error.stack);
+
+                    deferred.reject(response.error);
+                }).
+                send();
+        } else {
+            debugger;
+            deferred.reject('No file present in request');
+        }
     }
-
-    console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', files.file.name, folder);
-    var params = {
-        Bucket: config.services.s3.s3Options.bucket,
-        Key: folder + '/' + files.file.name,
-        ACL: 'public-read',
-        Body: files.file.buffer
-    };
-
-    console.log('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
-
-    var uploader = client.s3.putObject(params);
-
-    uploader.
-        on('success', function (response) {
-            console.log('[s3.directUpload] done uploading, got data! %j', response.data);
-
-            var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
-            console.log('[s3.directUpload] Got public URL: %s', publicURL);
-
-            var strippedURL = publicURL.replace('http://', '//');
-            console.log('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
-
-            if (isSecure) {
-                response = {
-                    key: params.Key,
-                    bucket: params.Bucket,
-                    url: strippedURL
-                };
-
-                return getSecureReadURL(response.bucket, response.key).then(
-                    function (success) {
-                        response.url = success;
-
-                        console.log('[s3.directUpload] Post secure upload, resolving with : %j', response);
-
-                        deferred.resolve(response);
-                    }, function (err) {
-                        console.log('[s3.directUpload] Post secure upload failed: %j', err);
-                        console.log('[s3.directUpload] Resolving with public URL?');
-
-                        deferred.resolve(response);
-                    });
-            }
-            else {
-
-                deferred.resolve(strippedURL);
-            }
-        }).
-        on('error', function (response) {
-            console.error('[s3.directUpload] unable to upload:', response.error && response.error.stack);
-
-            deferred.reject(response.error);
-        }).
-        send();
+    else {
+        console.log('[getFileURL] No S3 Configured - Saving locally');
+        return saveLocally(files, folder);
+    }
 
     return deferred.promise;
 }
@@ -179,6 +191,34 @@ function saveFile(files, folder) {
                         return deferred.resolve(url);
 
                     });
+            }
+        }
+    );
+
+    return deferred.promise;
+}
+
+
+function saveLocally(files, folder) {
+
+    var deferred = Q.defer();
+
+    fs.writeFile(config.services.fs.writePath + files.file.name, files.file.buffer,
+        function (uploadError) {
+            if (uploadError) {
+                deferred.reject(uploadError);
+            } else {
+                folder = folder || config.services.s3.folder;
+
+                if (folder.substring(folder.length - 1, 1) === '/') {
+                    console.log('chopping off extra slash from folder name: `%s`', folder);
+                    folder = folder.substring(0, folder.length - 1);
+                }
+
+                var url = config.services.fs.writePath + files.file.name;
+                console.log('[SaveLocally.S3] resolving with URL', url);
+
+                return deferred.resolve(url);
             }
         }
     );

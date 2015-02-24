@@ -44,13 +44,12 @@
             payment.$save(function (response) {
                 vm.setSuccess(response);
             }, function (errorResponse) {
-                debugger;
                 vm.processing = false;
 
                 if (!errorResponse.status) {
-                    vm.error = 'Sorry, but an unexpected error has occured. Please try again later';
+                    vm.error = 'Please try again later';
                 } else {
-                    vm.error = errorResponse.data && errorResponse.data.message || 'Sorry, an error occured. Please try again later';
+                    vm.error = errorResponse.data && errorResponse.data.message || 'Please try again later (' + errorResponse.status + ')';
                 }
             });
         };

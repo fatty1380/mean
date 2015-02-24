@@ -56,66 +56,60 @@
             <div class="panel" ng-if="vm.driver.user._id === vm.auth.user._id">
                 <div class="panel-heading text-center">
                     <h3 class="no-mgn" ng-hide="vm.driver.resume">Add your Resume</h3>
+
                     <h3 class="no-mgn" ng-show="vm.driver.resume">Your Resume</h3>
                 </div>
                 <div class="panel-body no-pad-top" ng-hide="!!vm.driver.resume">
                     <p class="text-center">
-
-                        <div class="report-badges not-available pull-right">
-                        <span class="fa-stack fa-3x report-badge" tooltip="Resume">
-                            <i class="fa fa-file fa-stack-2x"></i>
-                            <span class="badge-info">
-                                <span class="badge-info-inner fa fa-stack-1x">
-                                    <i class="fa fa-question fa-1x"></i>
-                                    <span class="title">Resume</span>
-                                </span>
+                        <div class="report-badges uploader pull-right text-center">
+                            <span class="fa-stack fa-3x report-badge" tooltip="Resume">
+                                <i class="fa fa-file fa-stack-2x"></i>
+                                <i class="fa fa-question fa-1x"></i>
                             </span>
-                        </span>
                         </div>
                         In addition to your profile, uploading a resume will help employers see why you are the best fit
                         for the job.
                     </p>
 
 
-                    <oset-file-upload mode="resume" model="vm.driver.resume" model-id="vm.driver._id"
+                    <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
+                                      model="vm.driver.resume" model-id="vm.driver._id"
                                       allow-blank="true"></oset-file-upload>
                 </div>
                 <div class="panel-body no-pad-top" ng-show="!!vm.driver.resume">
                     <p class="text-center">
 
-                    <div class="report-badges pull-right">
-                    <span class="fa-stack fa-3x report-badge available" tooltip="Resume">
-                        <i class="fa fa-file fa-stack-2x"></i>
-                        <span class="badge-info">
-                            <span class="badge-info-inner fa fa-stack-1x">
+                        <div class="report-badges uploader pull-right text-center">
+                            <span class="fa-stack fa-3x report-badge available" tooltip="Resume">
+                                <i class="fa fa-file-o fa-stack-2x"></i>
                                 <i class="fa fa-check fa-1x"></i>
-                                <span class="title">Resume</span>
                             </span>
-                        </span>
-                    </span>
-                    </div>
-                    Thanks for uploading your resume! It will be included with your job applications,
-                    and only available to employers after connecting with you.<br>
-
-                    <div class="btn-group btn-group-justified" role="group" ng-hide="vm.resume.loading || vm.resume.error">
-                        <div class="btn-group" role="group">
-
-                            <oset-file-upload mode="resume" model="vm.driver.resume" model-id="vm.driver._id"
-                                              upload-btn-class="btn-link" upload-btn-text="update"
-                                              allow-blank="true"></oset-file-upload>
                         </div>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-link" ng-click="vm.openResumeFile()">
-                                view <i class="fa fa-external-link mgn-left"></i>
-                            </button>
+                        Thanks for uploading your resume! It will be included with your job applications,
+                        and only available to employers after connecting with you.<br>
+
+                        <div class="btn-group btn-group-justified" role="group"
+                             ng-hide="vm.resume.loading || vm.resume.error">
+                            <div class="btn-group" role="group">
+
+                                <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
+                                                  model="vm.driver.resume" model-id="vm.driver._id"
+                                                  upload-btn-class="btn-link" upload-btn-text="update"
+                                                  allow-blank="true"></oset-file-upload>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-link" ng-click="vm.openResumeFile()">
+                                    view <i class="fa fa-external-link mgn-left"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="text-center" ng-show="vm.resume.loading">
-                        <i class="fa fa-spinner fa-spin"></i> loading
-                    </div>
-                    <div class="text-center text-danger stronger" ng-show="vm.resume.error">
-                       <i class="fa fa-close fa-lg mgn-right" ng-click="vm.resume.error = null"></i> {{vm.resume.error || 'sorry, we were unable to load your resume at this time'}}
-                    </div>
+                        <div class="text-center" ng-show="vm.resume.loading">
+                            <i class="fa fa-spinner fa-spin"></i> loading
+                        </div>
+                        <div class="text-center text-danger stronger" ng-show="vm.resume.error">
+                            <i class="fa fa-close fa-lg mgn-right" ng-click="vm.resume.error = null"></i> {{vm.resume.error
+                            || 'sorry, we were unable to load your resume at this time'}}
+                        </div>
                     </p>
 
 

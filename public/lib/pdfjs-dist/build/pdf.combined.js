@@ -22,8 +22,8 @@ if (typeof PDFJS === 'undefined') {
   (typeof window !== 'undefined' ? window : this).PDFJS = {};
 }
 
-PDFJS.version = '1.0.1135';
-PDFJS.build = 'ccf05c7';
+PDFJS.version = '1.0.1147';
+PDFJS.build = '6bb0a48';
 
 (function pdfjsWrapper() {
   // Use strict in our context only - users might not want it
@@ -22619,6 +22619,10 @@ var ToUnicodeMap = (function ToUnicodeMapClosure() {
       }
     },
 
+    has: function(i) {
+      return this._map[i] !== undefined;
+    },
+
     get: function(i) {
       return this._map[i];
     },
@@ -22646,6 +22650,10 @@ var IdentityToUnicodeMap = (function IdentityToUnicodeMapClosure() {
       for (var i = this.firstChar, ii = this.lastChar; i <= ii; i++) {
         callback(i, i);
       }
+    },
+
+    has: function (i) {
+      return this.firstChar <= i && i <= this.lastChar;
     },
 
     get: function (i) {
@@ -23080,7 +23088,6 @@ var Font = (function FontClosure() {
     var isSymbolic = !!(properties.flags & FontFlags.Symbolic);
     var isIdentityUnicode =
       properties.toUnicode instanceof IdentityToUnicodeMap;
-    var isCidFontType2 = (properties.type === 'CIDFontType2');
     var newMap = Object.create(null);
     var toFontChar = [];
     var usedFontCharCodes = [];
@@ -23091,17 +23098,11 @@ var Font = (function FontClosure() {
       var fontCharCode = originalCharCode;
       // First try to map the value to a unicode position if a non identity map
       // was created.
-      if (!isIdentityUnicode) {
-        if (toUnicode.get(originalCharCode) !== undefined) {
-          var unicode = toUnicode.get(fontCharCode);
-          // TODO: Try to map ligatures to the correct spot.
-          if (unicode.length === 1) {
-            fontCharCode = unicode.charCodeAt(0);
-          }
-        } else if (isCidFontType2) {
-          // For CIDFontType2, move characters not present in toUnicode
-          // to the private use area (fixes bug 1028735 and issue 4881).
-          fontCharCode = nextAvailableFontCharCode;
+      if (!isIdentityUnicode && toUnicode.has(originalCharCode)) {
+        var unicode = toUnicode.get(fontCharCode);
+        // TODO: Try to map ligatures to the correct spot.
+        if (unicode.length === 1) {
+          fontCharCode = unicode.charCodeAt(0);
         }
       }
       // Try to move control characters, special characters and already mapped
@@ -23591,13 +23592,19 @@ var Font = (function FontClosure() {
           var offset = font.getInt32() >>> 0;
           var useTable = false;
 
-          if (platformId === 1 && encodingId === 0) {
+          if (platformId === 0 && encodingId === 0) {
             useTable = true;
             // Continue the loop since there still may be a higher priority
             // table.
-          } else if (!isSymbolicFont && platformId === 3 && encodingId === 1) {
+          } else if (platformId === 1 && encodingId === 0) {
             useTable = true;
-            canBreak = true;
+            // Continue the loop since there still may be a higher priority
+            // table.
+          } else if (platformId === 3 && encodingId === 1) {
+            useTable = true;
+            if (!isSymbolicFont) {
+              canBreak = true;
+            }
           } else if (isSymbolicFont && platformId === 3 && encodingId === 0) {
             useTable = true;
             canBreak = true;
@@ -23942,6 +23949,7 @@ var Font = (function FontClosure() {
         var newGlyfData = new Uint8Array(oldGlyfDataLength);
         var startOffset = itemDecode(locaData, 0);
         var writeOffset = 0;
+        var missingGlyphData = {};
         itemEncode(locaData, 0, writeOffset);
         var i, j;
         for (i = 0, j = itemSize; i < numGlyphs; i++, j += itemSize) {
@@ -23957,6 +23965,10 @@ var Font = (function FontClosure() {
             itemEncode(locaData, j, writeOffset);
             startOffset = endOffset;
             continue;
+          }
+
+          if (startOffset === endOffset) {
+            missingGlyphData[i] = true;
           }
 
           var newLength = sanitizeGlyph(oldGlyfData, startOffset, endOffset,
@@ -23975,7 +23987,7 @@ var Font = (function FontClosure() {
             itemEncode(locaData, j, simpleGlyph.length);
           }
           glyf.data = simpleGlyph;
-          return;
+          return missingGlyphData;
         }
 
         if (dupFirstEntry) {
@@ -23992,6 +24004,7 @@ var Font = (function FontClosure() {
         } else {
           glyf.data = newGlyfData.subarray(0, writeOffset);
         }
+        return missingGlyphData;
       }
 
       function readPostScriptTable(post, properties, maxpNumGlyphs) {
@@ -24451,11 +24464,13 @@ var Font = (function FontClosure() {
 
       sanitizeHead(tables.head, numGlyphs, isTrueType ? tables.loca.length : 0);
 
+      var missingGlyphs = {};
       if (isTrueType) {
         var isGlyphLocationsLong = int16(tables.head.data[50],
                                          tables.head.data[51]);
-        sanitizeGlyphLocations(tables.loca, tables.glyf, numGlyphs,
-                               isGlyphLocationsLong, hintsValid, dupFirstEntry);
+        missingGlyphs = sanitizeGlyphLocations(tables.loca, tables.glyf,
+                                               numGlyphs, isGlyphLocationsLong,
+                                               hintsValid, dupFirstEntry);
       }
 
       if (!tables.hhea) {
@@ -24477,19 +24492,33 @@ var Font = (function FontClosure() {
         }
       }
 
-      var charCodeToGlyphId = [], charCode;
+      var charCodeToGlyphId = [], charCode, toUnicode = properties.toUnicode;
+
+      function hasGlyph(glyphId, charCode) {
+        if (!missingGlyphs[glyphId]) {
+          return true;
+        }
+        if (charCode >= 0 && toUnicode.has(charCode)) {
+          return true;
+        }
+        return false;
+      }
+
       if (properties.type === 'CIDFontType2') {
         var cidToGidMap = properties.cidToGidMap || [];
-        var cidToGidMapLength = cidToGidMap.length;
+        var isCidToGidMapEmpty = cidToGidMap.length === 0;
+
         properties.cMap.forEach(function(charCode, cid) {
           assert(cid <= 0xffff, 'Max size of CID is 65,535');
           var glyphId = -1;
-          if (cidToGidMapLength === 0) {
+          if (isCidToGidMapEmpty) {
             glyphId = charCode;
           } else if (cidToGidMap[cid] !== undefined) {
             glyphId = cidToGidMap[cid];
           }
-          if (glyphId >= 0 && glyphId < numGlyphs) {
+
+          if (glyphId >= 0 && glyphId < numGlyphs &&
+              hasGlyph(glyphId, charCode)) {
             charCodeToGlyphId[charCode] = glyphId;
           }
         });
@@ -24549,7 +24578,8 @@ var Font = (function FontClosure() {
 
             var found = false;
             for (i = 0; i < cmapMappingsLength; ++i) {
-              if (cmapMappings[i].charCode === unicodeOrCharCode) {
+              if (cmapMappings[i].charCode === unicodeOrCharCode &&
+                  hasGlyph(cmapMappings[i].glyphId, unicodeOrCharCode)) {
                 charCodeToGlyphId[charCode] = cmapMappings[i].glyphId;
                 found = true;
                 break;
@@ -24559,10 +24589,16 @@ var Font = (function FontClosure() {
               // Try to map using the post table. There are currently no known
               // pdfs that this fixes.
               var glyphId = properties.glyphNames.indexOf(glyphName);
-              if (glyphId > 0) {
+              if (glyphId > 0 && hasGlyph(glyphId, -1)) {
                 charCodeToGlyphId[charCode] = glyphId;
               }
             }
+          }
+        } else if (cmapPlatformId === 0 && cmapEncodingId === 0) {
+          // Default Unicode semantics, use the charcodes as is.
+          for (i = 0; i < cmapMappingsLength; ++i) {
+            charCodeToGlyphId[cmapMappings[i].charCode] =
+              cmapMappings[i].glyphId;
           }
         } else {
           // For (3, 0) cmap tables:
@@ -39591,6 +39627,10 @@ var CCITTFaxStream = (function CCITTFaxStreamClosure() {
 
       var gotEOL = false;
 
+      if (this.byteAlign) {
+        this.inputBits &= ~7;
+      }
+
       if (!this.eoblock && this.row === this.rows - 1) {
         this.eof = true;
       } else {
@@ -39612,10 +39652,6 @@ var CCITTFaxStream = (function CCITTFaxStreamClosure() {
         } else if (code1 === EOF) {
           this.eof = true;
         }
-      }
-
-      if (this.byteAlign && !gotEOL) {
-        this.inputBits &= ~7;
       }
 
       if (!this.eof && this.encoding > 0) {

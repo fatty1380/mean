@@ -3,17 +3,19 @@
 /**
  * Module dependencies.
  */
-var mongoose    = require('mongoose'),
-Bgcheck         = mongoose.model('BackgroundReport'),
-ReportType      = mongoose.model('ReportType'),
-ReportApplicant = mongoose.model('ReportApplicant'),
-unirest         = require('unirest'),
-Q               = require('q'),
-moment          = require('moment'),
-path            = require('path'),
-config          = require(path.resolve('./config/config')),
-constants          = require(path.resolve('./modules/core/server/models/outset.constants')),
-_               = require('lodash');
+var
+_                  = require('lodash'),
+mongoose           = require('mongoose'),
+Bgcheck            = mongoose.model('BackgroundReport'),
+ReportType         = mongoose.model('ReportType'),
+ReportApplicant    = mongoose.model('ReportApplicant'),
+unirest            = require('unirest'),
+Q                  = require('q'),
+moment             = require('moment'),
+contentDisposition = require('content-disposition'),
+path               = require('path'),
+config             = require(path.resolve('./config/config')),
+constants          = require(path.resolve('./modules/core/server/models/outset.constants'));
 
 
 /** eVERIFILE Service
@@ -354,7 +356,7 @@ function GetApplicant(cookie, id, noSanitize) {
         .jar(cookie.jar)
         .end(function (response) {
             if (response.error) {
-                console.error('[%d] Error at endpoint GET `%s`\n\t\tBody: %j',  response.error.status, endpoint, response.body)
+                console.error('[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body)
                 return deferred.reject(response.body.reason);
             }
 
@@ -370,7 +372,7 @@ function GetApplicant(cookie, id, noSanitize) {
 
 
 function UpsertApplicant(cookie, applicantData) {
-    console.log('[UpsertApplicant] %s an applicant', !!applicantData.applicantId?'Updating':'Creating');
+    console.log('[UpsertApplicant] %s an applicant', !!applicantData.applicantId ? 'Updating' : 'Creating');
 
     var deferred = Q.defer();
     debugger;
@@ -391,7 +393,7 @@ function UpsertApplicant(cookie, applicantData) {
     console.log('%s %s : %j', method, endpoint, requestBody);
 
     debugger; // check applicant data. Should we be using applicant.toObject()? merging with the report field def?
-                // Ensure that response Body contains Gov ID
+    // Ensure that response Body contains Gov ID
 
 
     unirest(method, endpoint)
@@ -431,7 +433,7 @@ function UpsertApplicant(cookie, applicantData) {
 function SearchForApplicant(cookie, applicant) {
     console.log('[SearchForApplicant] Searching for existing applicant from info');
 
-    if(!applicant.governmentId) {
+    if (!applicant.governmentId) {
         console.error('Will not search for applicant without govId');
         return Q.reject('Will Not search for applicant without govId');
     }
@@ -459,11 +461,11 @@ function SearchForApplicant(cookie, applicant) {
                 console.log('[SearchForApplicant] Full Error Response: \n\n%j\n\n', response);
 
                 deferred.reject(response.body.reason + '[' + JSON.stringify(response.error) + ']');
-            } else if(response.body.applicants && response.body.applicants.length === 1) {
+            } else if (response.body.applicants && response.body.applicants.length === 1) {
                 console.log('[SearchForApplicant] Found a single match!');
 
                 deferred.resolve(response.body.applicants[0]);
-            } else if(response.body.applicants) {
+            } else if (response.body.applicants) {
                 console.error('[SearchForApplicant] Found a $d matches - cannot decide on one', response.body.applicants.length);
                 deferred.reject('[SearchForApplicant] could not decide on a single result from %d matches', response.body.applicants.length)
             } else {
@@ -501,7 +503,7 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
             }
 
             if (response.status === 204) {
-                console.error('Bastards didn\'t give us any info! - 204:no Content');
+                console.error('Bastards didn\'t give us any info! - 204:NO CONTENT');
 
                 return deferred.resolve(reportResponseData);
             }
@@ -585,21 +587,33 @@ function GetReportStatusByApplicant(cookie, applicantId) {
 
     return deferred.promise;
 }
-function GetSummaryReportPDF(cookie, bgReport) {
+function GetSummaryReportPDF(cookie, remoteApplicantId) {
     console.log('[GetSummaryReportPDF] ');
 
     var deferred = Q.defer();
 
-    unirest.get(server.baseUrl + '/rest/reportSummary/find/' + bgReport.remoteApplicantId + '/report/pdf')
+    unirest.get(server.baseUrl + '/rest/reportSummary/find/' + remoteApplicantId)
         .jar(cookie.jar)
         .end(function (response) {
-            debugger;
-
             if (response.error) {
-                return deferred.reject(response.body.reason);
+                return deferred.reject(response.body.reason || response.error.message);
             }
 
-            deferred.resolve(response.body);
+            console.log('[GetSummaryReportPDF] Response headers: %j', response.headers);
+
+            var disposition = contentDisposition.parse(response.headers['content-disposition']);
+
+            var retval = {
+                headers: response.headers,
+                contentType: response.headers['content-type'],
+                date: response.headers.date,
+                filename: disposition.parameters.filename,
+                type: disposition.type,
+                content: response.raw_body,
+                response: response
+            };
+
+            deferred.resolve(retval);
         });
 
     return deferred.promise;

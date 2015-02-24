@@ -18,9 +18,10 @@
                 var vm = this;
                 var toolbar = vm.toolbar || [['bold', 'italics', 'underline'], ['ul','ol'], ['justifyLeft', 'justifyCenter']];
 
-                vm.required = _.isUndefined(vm.osRequired) ? false : !!vm.osRequired;
-
-                vm.toolbar = toolbar;
+                if(!_.isUndefined(vm.osRequired) && !!vm.osRequired) {
+                    debugger;
+                    vm.required = !!vm.osRequired;
+                }
             }
         };
     }

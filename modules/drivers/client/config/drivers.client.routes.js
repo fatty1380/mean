@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function handle404s(err, $q) {
+    function handle404s(err) {
         // recover here if err is 404
         if (err.status === 404) {
             console.warn('No Driver found ... resolving as null', err);
@@ -10,7 +10,7 @@
 
         console.error('Hard Error when retrieiving Driver', err);
         // otherwise return a $q.reject
-        return $q.reject(err);
+        throw err;
     }
 
     function driverResolve(rsrc, params) {

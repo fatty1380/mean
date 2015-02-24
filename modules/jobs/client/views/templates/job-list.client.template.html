@@ -3,7 +3,9 @@
     <!-- SEARCH HEADER --->
     <div class="panel panel-default search-section" data-ng-if="!!vm.showSearch && !!vm.jobs.length">
         <form class="panel-body form-inline">
-            <label class="form-label" for="job-search">Search: </label>
+            <div class="col-sm-12 text-center mgn-btm">
+                <oset-categories model="vm.jobTypes" summary="vm.jobCats" show-all="vm.showAllTypes" lbl-class="btn-sm no-mgn" mode="select"></oset-categories>
+            </div>
 
             <div class="form-group search">
                 <input id="job-search" ng-model="vm.searchTerms" type="search"
@@ -13,6 +15,25 @@
             </div>
 
             <div class="form-group pull-right">
+
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-link no-pad-right" ng-show="!!vm.predicate"
+                            ng-click="vm.toggleSort(null,true)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <button type="button" class="btn btn-link" ng-click="vm.toggleSort('posted',true)">
+                        <span ng-hide="!!vm.predicate">Sort by </span>
+                        Posting Date
+                        <i class="fa"
+                           ng-show="!!vm.predicate"
+                           ng-class="{'fa-sort-amount-desc':vm.reverse, 'fa-sort-amount-asc':!vm.reverse}"></i>
+                    </button>
+                </div>
+
+                <button type="button" class="btn-tab btn-link read-more btn-sm"
+                        ng-click="vm.toggleFilter('clear')"
+                        ng-disabled="vm.filters.clear"
+                        name="clear"><i class="fa fa-times"></i></button>
 
                 <div class="btn-group">
                     <label class="btn btn-cta-secondary btn-sm"
@@ -31,24 +52,6 @@
                            ng-model="vm.filters.week" name="newest">New This Week</label>
                 </div>
 
-                <button type="button" class="btn-tab btn-link read-more btn-sm"
-                        ng-click="vm.toggleFilter('clear')"
-                        ng-disabled="vm.filters.clear"
-                        name="clear"><i class="fa fa-times"></i></button>
-
-                <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-link no-pad-right" ng-show="!!vm.predicate"
-                            ng-click="vm.toggleSort(null,true)">
-                        <i class="fa fa-times"></i>
-                    </button>
-                    <button type="button" class="btn btn-link" ng-click="vm.toggleSort('posted',true)">
-                        <span ng-hide="!!vm.predicate">Sort by </span>
-                        Posting Date
-                        <i class="fa"
-                           ng-show="!!vm.predicate"
-                           ng-class="{'fa-sort-amount-desc':vm.reverse, 'fa-sort-amount-asc':!vm.reverse}"></i>
-                    </button>
-                </div>
             </div>
         </form>
     </div>
@@ -58,8 +61,9 @@
         <div class="job-list blog-category-list">
 
             <article class="post col-sm-12"
-                     data-ng-repeat="job in (vm.jobs | filter: vm.filter | withinPastDays: 'posted': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | orderBy: vm.random  | limitTo: vm.limitTo)"
+                     data-ng-repeat="job in (vm.jobs | filter: vm.jobCatFilter | filter: vm.filter | withinPastDays: 'posted': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | orderBy: vm.random  | limitTo: vm.limitTo)"
                      ng-if="vm.jobs"
+                     ng-init="job.cats=_.pluck(_.where(job.categories, 'value'), 'key')"
                      ng-show="vm.visibleId === job._id || !vm.visibleId">
 
                 <!--Begin Job Item Content-->

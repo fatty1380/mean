@@ -6,16 +6,17 @@
         if(!auth.user) {
             return $state.go('intro');
         }
-        else if (typeof auth.user.company === 'string' && auth.user.company !== company._id) {
+        else if (!!company && typeof auth.user.company === 'string' && auth.user.company !== company._id) {
             return $state.go('home');
         }
-        else if (!!auth.user.company && typeof auth.user.company === 'object' &&  auth.user.company._id === company._id) {
+        else if (!!company && !!auth.user.company && typeof auth.user.company === 'object' &&  auth.user.company._id === company._id) {
             return $state.go('home');
         }
 
         var vm = this;
 
         vm.company = company;
+        vm.user = auth.user;
         vm.submit = submit;
         vm.cancel = cancel;
         vm.submitClass = '';

@@ -90,9 +90,6 @@
         }
 
         function addAddress() {
-            // Prevent vm from bubbling up;
-            event.preventDefault();
-
             pushStub();
         }
 

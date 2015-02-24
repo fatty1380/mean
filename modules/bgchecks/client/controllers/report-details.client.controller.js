@@ -156,7 +156,7 @@
          * Or sets the form into "verify" state
          * */
         vm.saveForm = function (event) {
-            vm.disabled=true;
+            vm.disabled = true;
 
             $document.scrollTopAnimated(0, 300);
 
@@ -168,7 +168,7 @@
 
             vm.error = vm.success = null;
 
-            vm.disabled = vm.creating =  false;
+            vm.disabled = vm.creating = false;
             vm.verify = true;
 
         };
@@ -181,7 +181,7 @@
 
             var applicantRsrc = new Applicants.FromForm(vm.model, auth.user._id);
 
-            $log.debug('Creating new applicantRsrc with data: %o', applicantRsrc);
+            $log.debug('Creating new applicant Rsrc with data: %o', applicantRsrc);
 
             applicantRsrc.$save(function (response) {
 
@@ -222,11 +222,40 @@
             vm.success = vm.error = null;
         };
 
-        vm.showSpinner = function() {
+        vm.showSpinner = function () {
             vm.spinnerModal = $modal.open({
                 templateUrl: 'spinnerModal.html',
-                backdrop: 'static'
+                backdrop: 'static',
+                controller: ['$timeout', function ($timeout) {
+                    var vm = this;
+                    vm.textStatuses = [
+                        {text: 'Connecting to eVerifile', timeout: 1750},
+                        {text: 'Validating Security', timeout: 1250},
+                        {text: 'Confirming Identity', timeout: 2000},
+                        {text: 'Storing Information', timeout: 10000},
+                        {text: 'Finalizing Report Data', timeout: 1000}
+                    ];
 
+                    vm.uploadStatusText = vm.textStatuses[0].text;
+
+                    vm.updateStatus = function (i) {
+                        $timeout(function () {
+                            i++;
+                            if (i < vm.textStatuses.length) {
+                                vm.uploadStatusText = vm.textStatuses[i].text;
+
+                                vm.updateStatus(i);
+                            }
+
+                        }, vm.textStatuses[i].timeout);
+                    };
+
+                    vm.updateStatus(0);
+
+
+                }],
+                controllerAs: 'vm',
+                bindToController: true
             });
         };
 

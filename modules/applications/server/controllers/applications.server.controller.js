@@ -90,7 +90,7 @@ exports.create = function (req, res) {
                         name: 'LINK_URL',
                         content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
                     }
-                ]
+                ];
 
                 emailer.sendTemplateBySlug('outset-new-applicant', req.job.user, options);
             });
@@ -343,7 +343,7 @@ exports.getMessages = function (req, res, next) {
 
     if (application && !application.connection) {
         response.message = 'No valid connection';
-        return res.status(402).send(response);
+        return res.status(404).send(response);
     }
 
     var myLast = _.findLast(application.messages, function (msg) {
