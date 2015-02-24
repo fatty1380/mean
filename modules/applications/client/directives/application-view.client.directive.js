@@ -43,8 +43,6 @@
         vm.resume = vm.resume || {};
 
         var validateAccess = function (file) {
-            debugger;
-
             if (!vm.isConnected) {
                 vm.error = 'Sorry, but you are not connected to this applicant';
                 return false;
@@ -72,8 +70,7 @@
                     $window.open(file.url, '_blank');
                 }
                 else {
-
-                    Drivers.getResumeLink(vm.driver._id).then(
+                    Drivers.getDownloadLink(vm.driver._id, file.sku).then(
                         function (success) {
                             vm.resume.loading = false;
                             $log.debug('Got new resume link! %o', success);

@@ -402,8 +402,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </p>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt>raw</dt>\n' +
-  '                <dd><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>\n' +
+  '                <dt ng-if="vm.debug">raw</dt>\n' +
+  '                <dd ng-if="vm.debug"><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>\n' +
+  '\n' +
   '                <dt>Reports</dt>\n' +
   '                <dd class="report-badges" ng-class="{\'not-visible\':!vm.isConnected}">\n' +
   '\n' +

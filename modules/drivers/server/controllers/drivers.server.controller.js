@@ -317,13 +317,14 @@ exports.refreshReport = function (req, res) {
     fileUploader.getSecureReadURL(report.bucket, report.key).then(
         function (success) {
 
+            report.url = success;
             console.log('[DriverCtrl.refreshReport] Post secure upload, resolving with : %j', report);
 
             res.json(report);
 
             driver.updateReportURL(sku, report.url);
 
-            driver.save(function (err) {
+            driver.save(function (err, updated) {
                 if (err) {
                     console.log('[DriverCtrl.refreshReport] unable to save driver\'s updated report url', err);
                 } else {

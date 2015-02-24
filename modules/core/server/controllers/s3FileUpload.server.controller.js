@@ -154,7 +154,7 @@ function getSecureReadURL(bucket, key) {
 
         console.log('[s3.directRead] Got signed url: `%s`', url);
 
-        var strippedURL = url.replace('http://', '//');
+        var strippedURL = url.replace('http://', '//').replace('https://', '//');
         console.log('[s3.directRead] Post stripping, resolving with : %s', strippedURL);
 
         deferred.resolve(strippedURL);

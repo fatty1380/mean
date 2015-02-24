@@ -27,6 +27,28 @@
                 });
 
                 return rsrc.get({driverId: driverId}).$promise;
+            },
+            getReportLink: function(driverId, sku) {
+                var rsrc = $resource('api/drivers/:driverId/report/:reportSku', {
+                    driverId: '@driverId',
+                    reportSku: '@sku'
+                });
+
+                return rsrc.get({driverId: driverId, sku: sku}).$promise;
+            },
+            getDownloadLink: function(driverId, sku) {
+
+                var endpoint = 'api/drivers/:driverId/';
+                var args = { driverId: '@driverId'};
+
+                if(!!sku && sku !== 'resume') {
+                    args.sku = '@sku';
+                    endpoint += 'report/:sku';
+                } else {
+                    endpoint += 'resume';
+                }
+
+                return $resource(endpoint, args).get({driverId: driverId, sku: sku}).$promise;
             }
         };
     }

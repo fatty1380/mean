@@ -68,8 +68,9 @@
                     </p>
                 </dd>
 
-                <dt>raw</dt>
-                <dd><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>
+                <dt ng-if="vm.debug">raw</dt>
+                <dd ng-if="vm.debug"><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>
+
                 <dt>Reports</dt>
                 <dd class="report-badges" ng-class="{'not-visible':!vm.isConnected}">
 

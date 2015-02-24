@@ -124,6 +124,7 @@ DriverSchema.methods.updateReportURL = function(sku, url) {
     if(i !== -1) {
         this.reportsData[i].url = url;
         this.reportsData[i].expires = moment().add(15, 'm');
+        console.log('[DS.updateReportURL] updated reportsData[%d] to %j', i, this.reportsData[i]);
     }
 };
 
@@ -141,7 +142,7 @@ DriverSchema.pre('save', function (next) {
 
 DriverSchema.pre('save', function (next) {
 
-    var something = _.map(this.experience, function (exp) {
+    _.map(this.experience, function (exp) {
         if (!!exp._doc.time) {
             exp._doc.time = undefined;
         }
