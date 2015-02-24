@@ -43,26 +43,31 @@
                     Post a New Job!
                 </a>
 
-                <div class="panel panel-default" ng-if="false">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <span class="h4">Subscription Information</span>
                     </div>
-                    <div class="panel-body" ng-if="vm.company.subscriptions && vm.company.subscriptions.length">
-                        <dl>
-                            <dt>Subscription</dt>
-                            <dd>{{vm.company.subscriptions[0].name}}</dd>
-                            <dt>Renews</dt>
-                            <dd>{{vm.company.subscriptions[0].renews | amDateFormat : 'L'}}</dd>
-                            <dt>Status</dt>
-                            <dd>Used {{vm.company.subscriptions[0].used}} of {{vm.company.subscriptions[0].available}} Jobs</dd>
-                        </dl>
+                    <div class="panel-body" ng-if="!!vm.company.subscription" ng-init="sub = vm.company.subscription; sub.remaining = sub.available - sub.used;">
+                        <p class="info text-center">You are subscribed to the {{sub.name}} package.</p>
+                        <p>
+                            <span class="strong mgn-right">Renews:</span>
+                            <span>{{sub.renews | amDateFormat : 'L'}}</span><br>
+                            <span class="strong mgn-right">Status:</span>
+                            <span ng-show="sub.remaining > 0 && sub.available != -1">
+                                {{sub.remaining}} Remaining Post{{sub.remaining === 1 ? '' : 's'}} this Month
+                            </span>
+                            <span ng-show="sub.available == -1">
+                                Unlimited Posts Included in Plan
+                            </span>
+                            <span ng-show="sub.remaining <= 0 && sub.available != -1">
+                                No Remaining Posts this Month<br>
+                                <button type="button" class="btn btn-oset-link center-block" ui-sref="subscriptionsReview">Review Subscription Options...</button>
+                            </span>
+                        </p>
 
                     </div>
-                    <div class="panel-body" ng-if="!vm.company.subscriptions.length">
+                    <div class="panel-body" ng-if="!vm.company.subscription">
                         <p>Before you post your first job, you will need to sign up for a subscription.</p>
-
-                        <button type="button" class="btn btn-oset-primary center-block" ui-sref="subscriptionsReview">Review Subscription Options...</button>
-
                     </div>
                 </div>
 

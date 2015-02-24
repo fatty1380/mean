@@ -8,8 +8,10 @@ _            = require('lodash'), path = require('path'),
 Job          = mongoose.model('Job'),
 Address      = mongoose.model('Address'),
 Application  = mongoose.model('Application'),
+Company  = mongoose.model('Company'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 companies    = require(path.resolve('./modules/companies/server/controllers/companies.server.controller')),
+moment = require('moment'),
 Q            = require('q');
 
 /**
@@ -117,22 +119,16 @@ var getErrorMessage = function (err) {
  * Create a Job
  */
 exports.create = function (req, res) {
-    if(req.body && req.body.companyId === '54d262e3182c6f303013462d') {
-        console.error('[Job.Create] START with reqBody: %j', req.body);
-        console.log('[Job.Create] START with reqBody: %j', req.body);
-    }
+    req.companyId = req.company ? req.company.id : req.companyId || req.body.companyId;
 
     var job = new Job(req.body);
 
-    console.log('[Job.Create] Company %s is posting job with headline `%s`', req.body.companyId, job.name);
+    console.log('[Job.Create] Company %s is posting job with headline `%s`', req.companyId, job.name);
 
     // Set properties
     job.user = req.user;
-    console.log('[Job.Create] with user `%s`', job.user && job.user._id ? job.user._id : job.user);
-    job.company = mongoose.Types.ObjectId(req.body.companyId);
-    console.log('[Job.Create] new job with company `%s`', job.company);
+    job.company = req.company || mongoose.Types.ObjectId(req.companyId);
     job.postStatus = 'posted';
-    console.log('[Job.Create] new job with status `%s`', job.postStatus);
     job.posted = Date.now();
 
     console.log('[Job.Create] Creating new job: %j', job);
@@ -144,12 +140,40 @@ exports.create = function (req, res) {
                 message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later '+ (err.message ? '('+err.message+')': '')
             });
         } else {
-            console.log('[Job.Create] Creating new job with ID `%s`', job._id);
+            console.log('[Job.Create] Created new job with ID `%s`', job._id);
             res.json(job);
+
+            incrementJobsCount(req);
         }
     });
 
 
+};
+
+var incrementJobsCount = function(req) {
+    if(!req.company) {
+        console.error('No Company defined in request');
+        return false;
+    }
+
+    var sub = req.company.subscription;
+
+    if(!sub) {
+        console.error('No Subscription for company `%s`', req.company.id);
+        return false;
+    }
+
+    var renewal = moment(sub.renews);
+    if(renewal < moment) {
+        sub.renews = renewal.add(30, 'days');
+        sub.used = 1;
+    } else {
+        sub.used++;
+    }
+
+    sub.save(function(err) {
+        console.log('updated company subscription to %j', sub);
+    });
 };
 
 /**
@@ -284,4 +308,28 @@ exports.hasAuthorization = function (req, res, next) {
         return res.send(403, 'User is not authorized');
     }
     next();
+};
+
+exports.validateSubscription = function (req, res, next) {
+
+    req.companyId = req.body.companyId;
+
+    Company.findById(req.companyId)
+    .populate('subscription')
+    .exec(function(err, company) {
+            if(err || !company) {
+                console.log('[Jobs.ValidateSubscription] Unable to find Company');
+                return res.status(404).send({message: 'Unable to find company', error: err});
+            }
+
+            if(!company.subscription.isValid) {
+                console.log('[Jobs.ValidateSubscription] Subscription invalid: %s', company.subscription.statusMessage);
+                return res.status(403).send({message: company.subscription.statusMessage});
+            }
+
+            req.company = company;
+
+            next();
+        });
+
 };

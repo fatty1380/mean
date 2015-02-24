@@ -545,7 +545,7 @@ function CreateNewReport(req, res, next) {
         remoteApplicantId: req.applicant.remoteId,
         localReportSku: req.reportType.sku,
         remoteReportSkus: req.reportType.skus,
-        paymentInfo: {success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id},
+        paymentInfo: { success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id },
         status: 'PAID'
     });
 
@@ -580,7 +580,7 @@ function CreateNewReport(req, res, next) {
 
     });
 
-    deferred.promise.then(function () {
+    deferred.then(function () {
 
         var bgcheck = req.bgcheck;
 
@@ -645,7 +645,6 @@ function CreateNewReport(req, res, next) {
                 next(error);
             });
     });
-
 }
 
 module.exports.rerunReport = function ReRunReport(req, res, next) {

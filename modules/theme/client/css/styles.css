@@ -4676,7 +4676,7 @@ tos ol > li {
   display: block;
   padding-top: 5px;
   font-size: 18px;
-  font-family: ' open sans ', arial, sans-serif;
+  font-family: 'open sans', arial, sans-serif;
   font-weight: 500;
   color: #253340;
 }
@@ -4713,7 +4713,7 @@ tos ol > li {
   display: block;
   padding-top: 5px;
   font-size: 18px;
-  font-family: ' open sans ', arial, sans-serif;
+  font-family: 'open sans', arial, sans-serif;
   font-weight: 500;
   color: #253340;
 }
@@ -5178,7 +5178,7 @@ dl.mini-table dt dd p {
   color: rgba(102, 102, 102, 0.2) !important;
 }
 .report-badges.uploader .fa.fa-1x {
-  position: inherit !important;
+  position: inherit!important;
 }
 .report-badges.uploader .fa.fa-1x.fa-question {
   color: rgba(102, 102, 102, 0.05);
@@ -5303,7 +5303,7 @@ form.applicant-form textarea.form-control {
   resize: vertical;
 }
 a {
-  cursor: pointer !important;
+  cursor: pointer!important;
 }
 /** Fluid Vids */
 .fluidvids {
@@ -5326,9 +5326,6 @@ a {
 /* Color Related Overrides */
 .darken {
   background-color: #f6f6f6 !important;
-}
-.transparent {
-  background-color: transparent!important;
 }
 .shadow {
   background-color: rgba(51, 51, 51, 0.7);
