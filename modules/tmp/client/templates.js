@@ -552,7 +552,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                            <span class="month">{{(job.posted || job.created)  | amDateFormat : \'MMM\' | uppercase}}</span>\n' +
   '                            <span class="date-number">{{job.posted | amDateFormat : \'D\'}}</span>\n' +
   '                        </div>\n' +
-  '                        <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>\n' +
+  '                        <h3 class="post-title" ng-click="vm.showTab(job._id, \'applicants\', job.applications.length)">\n' +
+  '                            {{job.name}}</h3>\n' +
   '\n' +
   '                        <!--meta-->\n' +
   '                        <div class="row">\n' +
@@ -657,7 +658,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                                <p style="margin-bottom: 2px;">\n' +
   '                                                    discuss the job and schedule an interview\n' +
   '                                                    <a ui-sref="applications.view({applicationId: application._id, target: \'message\'})">\n' +
-  '                                                         by sending a message\n' +
+  '                                                        by sending a message\n' +
   '                                                    </a>\n' +
   '                                                </p>\n' +
   '                                            </span>\n' +
@@ -716,12 +717,22 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                            </div>\n' +
   '\n' +
   '                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === \'details\'">\n' +
-  '                                <h4>Description</h4>\n' +
+  '\n' +
+  '                                <h4>Description\n' +
+  '                                </h4>\n' +
   '\n' +
   '                                <p ng-bind-html="job.description"></p>\n' +
   '                                <h4>Requirements</h4>\n' +
   '\n' +
   '                                <p ng-bind-html="job.requirements"></p>\n' +
+  '                                <hr/>\n' +
+  '\n' +
+  '                                <button type="button" class="btn-tab btn-link read-more center-block"\n' +
+  '                                        ui-sref="jobs.view({jobId: job._id})">\n' +
+  '                                    view full job post\n' +
+  '                                    <i class="fa fa-external-link fa-lg"></i><span class="hidden-xs mgn-left">\n' +
+  '                                </span>\n' +
+  '                                </button>\n' +
   '                            </div>\n' +
   '                        </div>\n' +
   '                        <a class="read-more strong pull-right" ng-click="vm.visibleId = null"\n' +
@@ -780,8 +791,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                            <span ng-hide="!!application.isConnected">\n' +
   '                                                <p style="margin-bottom: 2px;">\n' +
   '                                                    <em class="text-muted">chat available once connected</em></span>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
+  '                                        </p>\n' +
+  '                                        </span>\n' +
   '                                    </dd>\n' +
   '                                </dl>\n' +
   '\n' +
