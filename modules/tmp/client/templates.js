@@ -460,14 +460,14 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ccrim\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                      ng-class="{\'available\': !!vm.driver.reports[\'ccrim\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'ccrim\')">\n' +
+  '                      tooltip="Drug Screen{{vm.isConnected ? (!!vm.driver.reports[\'drugs\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      ng-class="{\'available\': !!vm.driver.reports[\'drugs\']}"\n' +
+  '                      ng-click="vm.isConnected && vm.openReport(\'drugs\')">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
   '                        <i class="fa fa-question fa-1x hidden"></i>\n' +
-  '                        <span class="title">C-CRIM</span>\n' +
+  '                        <span class="title">DRUG</span>\n' +
   '                    </span>\n' +
   '                    </span>\n' +
   '                </span>\n' +

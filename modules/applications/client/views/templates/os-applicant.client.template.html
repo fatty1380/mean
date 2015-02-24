@@ -126,14 +126,14 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports['ccrim'] ? ' - click to download': ' - not available') : ''}}"
-                      ng-class="{'available': !!vm.driver.reports['ccrim']}"
-                      ng-click="vm.isConnected && vm.openReport('ccrim')">
+                      tooltip="Drug Screen{{vm.isConnected ? (!!vm.driver.reports['drugs'] ? ' - click to download': ' - not available') : ''}}"
+                      ng-class="{'available': !!vm.driver.reports['drugs']}"
+                      ng-click="vm.isConnected && vm.openReport('drugs')">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
                         <i class="fa fa-question fa-1x hidden"></i>
-                        <span class="title">C-CRIM</span>
+                        <span class="title">DRUG</span>
                     </span>
                     </span>
                 </span>

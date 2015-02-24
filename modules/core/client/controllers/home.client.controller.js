@@ -60,15 +60,15 @@
                 conclusion: [
                     {
                         title: 'Sign up',
-                        description: 'Create your driver profile, upload your resume, and choose from the available report packages and take your job search squarely in your hand.'
+                        description: 'Create your Driver Portfolio, upload your Resume, and order Background Reports to let employers know they can hire you immediately.'
                     },
                     {
-                        title: 'Search',
-                        description: 'With your digital portfolio showing off your employability, search for and find the job you\'ve been looking for.'
+                        title: 'Get Hired',
+                        description: 'With your Driver Portfolio and Reports complete, use them over and over to search for and apply to jobs with one click.'
                     },
                     {
                         title: 'Drive',
-                        description: 'By showing employers who you are up front, they are able to move quicker in the hiring process, and you\'ll be in the driver\'s seat sooner than ever before.'
+                        description: 'By giving employers more information upfront, you not only standout, but they are able to hire you faster, so you\'ll be in the driver\'s seat in no time.'
                     }
                 ]
 
@@ -118,7 +118,7 @@
                 pricing: {
                     header: 'Pricing',
                     sub: 'Choose from one of the following packages:',
-                    features: ['Job Posts', 'Applicant Redirect', 'Applicant Tracking', 'Downloadable Reports', 'Require Reports', 'Multiple Logins', 'Customized Background Checks'],
+                    features: ['Job Posts', 'Applicant Redirect', 'Applicant Tracking', 'Downloadable Reports', 'Require Reports', 'Multiple Log-ins', 'Customized Background Checks'],
                     packages: [
                         {
                             price: 60,
@@ -139,16 +139,16 @@
                 },
                 conclusion: [
                     {
-                        title: 'Sign up + Post',
-                        description: 'Fill out information about your company, and post jobs for any openings that you have. Use links to route applicants from your site to Outset'
-                    },
-                    {
-                        title: 'Communicate',
-                        description: 'As people apply to your job, you will be able to connect and chat, view their resumes and background reports and quickly decide who to bring in for an interview.'
+                        title: 'Simplify your Process',
+                        description: 'Sign up and post a job. Then link other job postings you have to Outset, in order to manage all of your applicants in one place.'
                     },
                     {
                         title: 'Hire',
-                        description: 'By managing your hiring funnel within Outset, you will be able to fill your empty seats and routes quicker, taking the stress out of the hiring process.'
+                        description: 'As people apply to your job, you will be able to message them, view their Resumes and Background Checks, and quickly decide who you want to interview.'
+                    },
+                    {
+                        title: 'Save Time & Money',
+                        description: 'By managing your hiring funnel within Outset, you\'ll fill your empty vehicles faster, taking the stress out of the hiring process.'
                     }
                 ]
 
