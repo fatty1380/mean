@@ -24,8 +24,6 @@ module.exports = {
                 'public/lib/textAngular/dist/textAngular.min.js',
                 'public/lib/ngmap/build/scripts/ng-map.min.js',
                 'public/lib/lodash/dist/lodash.min.js',
-                'public/lib/pdfjs-dist/build/pdf.combined.js',
-                'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
                 'public/lib/moment/min/moment-with-locales.min.js',
                 'public/lib/angular-moment/angular-moment.min.js',
