@@ -56,8 +56,22 @@
             <div class="panel panel-oset">
                 <div class="panel-heading text-center">
                     <h3 class="no-mgn">Reports</h3>
+                    <hr/>
                 </div>
-                <pre ng-if="!!vm.debug">{{vm.driver.reports | prettyPrint }}</pre>
+                    <div class="panel-body list-group">
+                        <a class="list-group-item"
+                             ng-click="vm.openResumeFile('resume')"
+                             ng-class="{'disabled': !vm.driver.resume, 'active': vm.activeReport==='resume'}">
+                            Resume
+                            <i class="fa fa-check text-success pull-right"></i>
+                        </a>
+                        <a class="list-group-item" ng-repeat="report in vm.driver.reportsData"
+                             ng-click="vm.openReport(report.sku)"
+                             ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
+                            {{report.sku}}
+                            <i class="fa fa-check text-success pull-right"></i>
+                        </a>
+                </div>
             </div>
 
             <div class="panel panel-oset" ng-if="vm.driver.user._id === vm.auth.user._id">
