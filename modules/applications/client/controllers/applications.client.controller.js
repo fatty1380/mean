@@ -61,7 +61,6 @@
                 $log.debug('[setApplicationStatus] %s', success);
                 application = success;
             }, function(reject) {
-                debugger;
                 $log.warn('[setApplicationStatus] %s', reject);
             });
         };
@@ -194,9 +193,8 @@
                 $log.debug('[AppCtrl] socket exists. Adding `$destroy` handler');
                 // Remove the event listener when the controller instance is destroyed
                 $scope.$on('$destroy', function () {
-                    $log.info('[AppCtrl] Connecting to chat room: %s', vm.room);
+                    $log.info('[AppCtrl] Disconnecting from chat room: %s', vm.room);
                     Socket.emit('leave-room', vm.room);
-                    debugger;
                     Socket.removeListener('chatMessage');
                 });
             } else {

@@ -57,7 +57,7 @@
                 <div class="panel-heading text-center">
                     <h3 class="no-mgn">Reports</h3>
                 </div>
-                <pre>{{vm.driver.reports | prettyPrint }}</pre>
+                <pre ng-if="!!vm.debug">{{vm.driver.reports | prettyPrint }}</pre>
             </div>
 
             <div class="panel panel-oset" ng-if="vm.driver.user._id === vm.auth.user._id">

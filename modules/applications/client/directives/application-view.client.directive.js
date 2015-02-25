@@ -11,7 +11,7 @@
         }
     };
 
-    function ViewApplicantController(auth, $window, $log, Drivers) {
+    function ViewApplicantController(auth, $window, $log, $state, Drivers, DocAccess) {
         var vm = this;
 
         vm.user = auth.user;
@@ -65,25 +65,7 @@
             vm.resume.loading = true;
 
             if (validateAccess(file)) {
-                if (moment().isBefore(moment(file.expires))) {
-                    vm.resume.loading = false;
-                    $window.open(file.url, '_blank');
-                }
-                else {
-                    Drivers.getDownloadLink(vm.driver._id, file.sku).then(
-                        function (success) {
-                            vm.resume.loading = false;
-                            $log.debug('Got new resume link! %o', success);
-
-                            file = success;
-                            $window.open(file.url, '_blank');
-                        },
-                        function (err) {
-                            vm.resume.loading = false;
-                            $log.error('Error trying to load resume link', err);
-                            vm.resume.error = 'Sorry, we were unable to load your resume at this time';
-                        });
-                }
+                $state.go('drivers.documents', {driverId: vm.driver._id, documentId: file.sku || 'resume'});
             } else {
                 vm.resume.loading = false;
                 return false;
@@ -172,7 +154,7 @@
         return ddo;
     }
 
-    ViewApplicantController.$inject = ['Authentication', '$window', '$log', 'Drivers'];
+    ViewApplicantController.$inject = ['Authentication', '$window', '$log', '$state', 'Drivers', 'DocAccess'];
 
     angular.module('applications')
         .controller('ViewApplicantController', ViewApplicantController)

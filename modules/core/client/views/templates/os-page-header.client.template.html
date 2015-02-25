@@ -10,6 +10,10 @@
      ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">
 
     <div ng-class="{'col-sm-8':!!vm.pictureUrl}">
+        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"
+                ng-click="vm.backBtnFn()">
+            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || 'Back'}}
+        </button>
         <span class="h3" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>
         <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">
             <a class="btn btn-link" ui-sref="{{vm.editSref}}">edit
