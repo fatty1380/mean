@@ -19,7 +19,7 @@
         vm.user = auth.user;
 
         vm.resume = vm.driver.resume;
-        vm.reports = vm.driver.reports;
+        vm.reports = vm.driver.reports || {};
         vm.activeReport = $stateParams.documentId;
 
         if(vm.driver && vm.driver.user) {
