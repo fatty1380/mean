@@ -119,6 +119,18 @@
             controller: 'DriverEditController',
             controllerAs: 'vm',
             bindToController: true
+        }).
+
+        state('drivers.documents', {
+            url: '/{driverId:[0-9a-fA-F]{24}}/reports/:documentId',
+            templateUrl: '/modules/drivers/views/document-viewer.client.view.html',
+            parent: 'drivers',
+            resolve: {
+                driver: driverResolve
+            },
+            controller: 'DocumentViewController',
+            controllerAs: 'vm',
+            bindToController: true
         });
     }
 

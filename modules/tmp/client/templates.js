@@ -1028,6 +1028,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
   '\n' +
   '    <div ng-class="{\'col-sm-8\':!!vm.pictureUrl}">\n' +
+  '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
+  '                ng-click="vm.backBtnFn()">\n' +
+  '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
+  '        </button>\n' +
   '        <span class="h3" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>\n' +
   '        <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">\n' +
   '            <a class="btn btn-link" ui-sref="{{vm.editSref}}">edit\n' +
