@@ -18,10 +18,10 @@
         vm.company = company || job && typeof job.company === 'object' && job.company || undefined;
 
 
-        if (typeof vm.user.company === 'string' && vm.user.company !== vm.company._id) {
+        if (typeof vm.user.company === 'string' && vm.user.company !== (vm.company && vm.company._id)) {
             return $state.go('home');
         }
-        else if (typeof vm.user.company === 'object' &&  vm.user.company._id === vm.company._id) {
+        else if (typeof vm.user.company === 'object' &&  vm.user.company._id === (vm.company && vm.company._id)) {
             return $state.go('home');
         }
 
@@ -78,13 +78,15 @@
             $state.go('jobs.view', {jobId: vm.job._id});
         }
 
-        var reg = /<li>(.*?)<\/li>/ig;
-
         function submit() {
             vm.disabled = true;
 
             if(vm.jobForm.$invalid) {
-                vm.error = 'Please correct all errors above';
+                if(vm.jobForm.$error.required) {
+                    vm.error = 'Please fill in all required fields above';
+                } else {
+                    vm.error = 'Please correct all errors above';
+                }
                 vm.disabled = false;
                 return false;
             }

@@ -13,12 +13,15 @@
     <form class="form-horizontal applicant-form" name="vm.applicantForm" data-ng-submit="vm.createApplication()" novalidate>
         <div class="modal-body">
             <fieldset>
-                <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading"></span>
+                <span class="h4" for="message" ng-bind-html="vm.placeholders.messageHeading"></span>
                 <p class="text-muted text-center" ng-bind-html="vm.placeholders.messageSubHeading"></p>
 
                 <div class="controls">
-                    <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"
-                              placeholder="{{vm.placeholders.intro}}" required></textarea>
+                    <div class="text-center text-muted" ng-show="!vm.application.message">
+                        Please introduce yourself to the employer here
+                    </div>
+                    <textarea os-html-edit minimal type="text" data-ng-model="vm.application.message" name="message"
+                              id="message" class="editor-md" placeholder="{{vm.placeholders.intro}}" ng-required="true"></textarea>
                 </div>
                 <div class="checkbox">
                     <label class="small">
