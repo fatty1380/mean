@@ -126,8 +126,8 @@
                                           data-ng-model="vm.message" class="form-control"
                                           placeholder="new message..." modal-focus="vm.msgFocus"></textarea>
 
-                                <os-html-edit ng-show="vm.messageMode === 'html'"
-                                              model="vm.message"></os-html-edit>
+                                <textarea os-html-edit minimal class="editor-min" ng-show="vm.messageMode === 'html'"
+                                              data-ng-model="vm.message"></textarea>
                             </div>
                             <div class="col-sm-3 col-xs-4 center-block text-center">
                                 <!--<div class="btn-group" dropdown>-->

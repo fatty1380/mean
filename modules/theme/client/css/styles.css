@@ -4251,10 +4251,26 @@ footer.navbar .btn-cta,
 footer.navbar a.btn-cta {
   padding: 9px 10px;
 }
-os-html-edit ta-editor {
-  min-height: 96px !important;
+.has-error .mce-tinymce {
+  border-color: #a94442;
 }
-os-html-edit button[disabled] {
+.mce-edit-area.editor-lg iframe {
+  min-height: 400px;
+}
+.mce-edit-area.editor-md iframe {
+  min-height: 300px;
+}
+.mce-edit-area.editor-sm iframe,
+.mce-edit-area iframe {
+  min-height: 200px;
+}
+.mce-edit-area.editor-xs iframe {
+  min-height: 100px;
+}
+.mce-edit-area.editor-min iframe {
+  min-height: 50px;
+}
+.mce-edit-area button[disabled] {
   display: none !important;
 }
 .well os-page-header .h1,
@@ -5391,4 +5407,7 @@ pdf > object {
 .mgn-sides {
   margin-left: 15px !important;
   margin-right: 15px !important;
+}
+.pointer {
+  cursor: pointer;
 }

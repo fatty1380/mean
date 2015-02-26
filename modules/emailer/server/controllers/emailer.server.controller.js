@@ -34,14 +34,17 @@ function getMessage(options) {
         }
 
         console.log('Override set for %d recipients', i);
-
-        return false;
     }
 
     return _.extend(message, options);
 }
 
 function sendGenericTemplateEmail(templateName, user, options) {
+
+    if(!user) {
+        console.error('[emailer.sendGenericTemplateEmail] No user specified - returning');
+        return false;
+    }
 
     console.log('Sending email template: %s', templateName);
 
@@ -65,9 +68,6 @@ function sendGenericTemplateEmail(templateName, user, options) {
     }
 
     console.log('With options: %j', mailOptions);
-
-    debugger;
-     return false;
 
     var e = sendTemplate(templateName, mailOptions);
 

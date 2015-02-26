@@ -211,10 +211,17 @@
                     <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"
                        ng-bind-html="vm.about.messageSubHeading"></p>
 
-                    <div class="form-group">
+                    <div class="form-group"
+                         ng-class="{'has-error': vm.subForm2.introText.$error && (vm.subForm2.$submitted || vm.subForm2.introText.$touched)}">
                         <div class="col-sm-12">
-                            <textarea type="text" data-ng-model="vm.driver.about" id="introText"
-                                      class="form-control tall"
+                            <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">
+                                Please introduce yourself to the employer here
+                            </div>
+                            <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">
+                                {{vm.introTextError}}
+                            </div>
+                            <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"
+                                      name="introText" id="introText" class="editor-md"
                                       placeholder="Please introduce yourself to the employer here"
                                       ng-required="true"></textarea>
                         </div>
