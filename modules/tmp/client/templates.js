@@ -965,9 +965,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div ng-if="!inline">\n' +
   '        <div class="panel panel-default" ng-if="!!vm.company && vm.company.about">\n' +
   '            <div class="panel-heading">\n' +
-  '                <span class="h4">About Us<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"\n' +
-  '                                                                   ui-sref="companies.create({\'companyId\': vm.company._id})">edit company profile\n' +
-  '                <i class="fa fa-pencil-square-o"></i></a>\n' +
+  '                <span class="h4">\n' +
+  '                    About Us\n' +
+  '                    <a data-ng-if="vm.canEdit"\n' +
+  '                                            class="btn btn-link pull-right"\n' +
+  '                                            ui-sref="companies.create({\'companyId\': vm.company._id})">\n' +
+  '                        edit company profile\n' +
+  '                    <i class="fa fa-pencil-square-o"></i></a>\n' +
   '                </span>\n' +
   '            </div>\n' +
   '            <div class="panel-body">\n' +
@@ -979,9 +983,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="panel-body">\n' +
   '                <p class="text-muted">Hi {{::vm.user.firstName}},<br/>{{::vm.createText}}</p><br/>\n' +
   '\n' +
-  '                <p class="text-right" ng-if="!vm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png" alt="The Outset Team"/></p>\n' +
+  '                <p class="text-right" ng-if="!vm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png"\n' +
+  '                                                                     alt="The Outset Team"/></p>\n' +
+  '\n' +
   '                <div class="text-center" ng-if="vm.createEnabled">\n' +
-  '                    <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!</button>\n' +
+  '                    <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!\n' +
+  '                    </button>\n' +
   '                </div>\n' +
   '\n' +
   '            </div>\n' +
@@ -3021,7 +3028,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="controls col-sm-9 controls">\n' +
   '                <textarea name="description" class="form-control" data-ng-model="vm.model.description"\n' +
   '                          rows="3" ng-required="true" placeholder="describe your experience"></textarea>\n' +
-  '                <!--<os-html-edit model="vm.model.description"></os-html-edit>-->\n' +
+  '                <!--<textarea os-html-edit model="vm.model.description"></textarea>-->\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
@@ -3461,12 +3468,15 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <form class="form-horizontal applicant-form" name="vm.applicantForm" data-ng-submit="vm.createApplication()" novalidate>\n' +
   '        <div class="modal-body">\n' +
   '            <fieldset>\n' +
-  '                <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading"></span>\n' +
+  '                <span class="h4" for="message" ng-bind-html="vm.placeholders.messageHeading"></span>\n' +
   '                <p class="text-muted text-center" ng-bind-html="vm.placeholders.messageSubHeading"></p>\n' +
   '\n' +
   '                <div class="controls">\n' +
-  '                    <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"\n' +
-  '                              placeholder="{{vm.placeholders.intro}}" required></textarea>\n' +
+  '                    <div class="text-center text-muted" ng-show="!vm.application.message">\n' +
+  '                        Please introduce yourself to the employer here\n' +
+  '                    </div>\n' +
+  '                    <textarea os-html-edit minimal type="text" data-ng-model="vm.application.message" name="message"\n' +
+  '                              id="message" class="editor-md" placeholder="{{vm.placeholders.intro}}" ng-required="true"></textarea>\n' +
   '                </div>\n' +
   '                <div class="checkbox">\n' +
   '                    <label class="small">\n' +
@@ -4192,10 +4202,17 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
   '                       ng-bind-html="vm.about.messageSubHeading"></p>\n' +
   '\n' +
-  '                    <div class="form-group">\n' +
+  '                    <div class="form-group"\n' +
+  '                         ng-class="{\'has-error\': vm.subForm2.introText.$error && (vm.subForm2.$submitted || vm.subForm2.introText.$touched)}">\n' +
   '                        <div class="col-sm-12">\n' +
-  '                            <textarea type="text" data-ng-model="vm.driver.about" id="introText"\n' +
-  '                                      class="form-control tall"\n' +
+  '                            <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
+  '                                Please introduce yourself to the employer here\n' +
+  '                            </div>\n' +
+  '                            <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
+  '                                {{vm.introTextError}}\n' +
+  '                            </div>\n' +
+  '                            <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"\n' +
+  '                                      name="introText" id="introText" class="editor-md"\n' +
   '                                      placeholder="Please introduce yourself to the employer here"\n' +
   '                                      ng-required="true"></textarea>\n' +
   '                        </div>\n' +

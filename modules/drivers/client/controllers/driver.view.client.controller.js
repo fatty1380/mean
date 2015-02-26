@@ -2,7 +2,7 @@
     'use strict';
 
     // Drivers controller
-    function DriverViewController($state, $log, $stateParams, $window, Authentication, Drivers, Profiles, AppConfig, driver) {
+    function DriverViewController($state, $log, $stateParams, Authentication, Drivers, Profiles, AppConfig, driver) {
         var vm = this;
 
         if(!Authentication.user) {
@@ -113,7 +113,7 @@
 
     }
 
-    DriverViewController.$inject = ['$state', '$log', '$stateParams', '$window', 'Authentication', 'Drivers', 'Profiles', 'AppConfig', 'driver'];
+    DriverViewController.$inject = ['$state', '$log', '$stateParams', 'Authentication', 'Drivers', 'Profiles', 'AppConfig', 'driver'];
 
     angular.module('drivers').controller('DriverViewController', DriverViewController);
 })();

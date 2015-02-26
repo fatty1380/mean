@@ -958,10 +958,32 @@ footer.navbar {
 
 }
 
-os-html-edit {
-  ta-editor {
-    min-height : 96px !important;
+.has-error .mce-tinymce {
+  border-color: @state-danger-text
+}
+
+.mce-edit-area {
+
+  &.editor-lg iframe {
+    min-height: 400px;
   }
+
+  &.editor-md iframe {
+    min-height: 300px;
+  }
+
+  &.editor-sm iframe, & iframe {
+    min-height: 200px;
+  }
+
+  &.editor-xs iframe {
+    min-height: 100px;
+  }
+
+  &.editor-min iframe {
+    min-height: 50px;
+  }
+
   button[disabled] {
     display : none !important;
   }
