@@ -3099,11 +3099,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <strong>\n' +
   '                {{vm.model.title}}\n' +
   '            </strong>\n' +
+  '            <small class="pull-right">\n' +
+  '                {{vm.model.location}}\n' +
+  '            </small>\n' +
   '        </p>\n' +
   '\n' +
-  '        <p class="sub-header">\n' +
+  '        <p class="sub-header" ng-class="{\'no-mgn-btm\': !vm.canEdit && !vm.model.expanded}">\n' +
   '            <small>\n' +
-  '                {{vm.model.location}}\n' +
+  '                <span ng-show="!vm.canEdit"\n' +
+  '                      ng-click="vm.model.expanded = !vm.model.expanded"\n' +
+  '                      class="pull-left pointer text-oset">\n' +
+  '                    <i class="fa" ng-class="{\'fa-caret-right\': !vm.model.expanded, \'fa-caret-down\': !!vm.model.expanded}"></i>\n' +
+  '                    {{ !!vm.model.expanded ? \'hide\' : \'show details...\'}}\n' +
+  '                </span>\n' +
+  '                &nbsp;\n' +
   '                <span class="text-muted pull-right"\n' +
   '                      ng-bind="vm.getDateRangeString(vm.model.startDate, vm.model.endDate)">\n' +
   '\n' +
@@ -3111,7 +3120,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </small>\n' +
   '        </p>\n' +
   '\n' +
-  '        <p class="pnl-body">{{vm.model.description}}</p>\n' +
+  '        <p class="pnl-body" ng-show="vm.model.expanded || vm.canEdit">{{vm.model.description}}</p>\n' +
   '\n' +
   '        <p class="pnl-controls" ng-if="vm.canEdit">\n' +
   '            &nbsp;\n' +

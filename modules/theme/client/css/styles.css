@@ -5236,6 +5236,9 @@ form.applicant-form textarea.form-control {
   padding-left: 15px;
   padding-right: 15px;
 }
+.experience.view .top-header > * {
+  line-height: 36px;
+}
 .experience.view strong,
 .experience.view .pnl-controls {
   line-height: 36px;
@@ -5385,6 +5388,28 @@ pdf > object {
   margin-top: 0 !important;
   margin-left: 0 !important;
   margin-bottom: 0 !important;
+  margin-right: 0 !important;
+}
+.no-mgn-sides,
+.no-margin-sides {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.no-mgn-top,
+.no-margin-top {
+  margin-top: 0 !important;
+}
+.no-mgn-bottom,
+.no-mgn-btm,
+.no-margin-bottom {
+  margin-bottom: 0 !important;
+}
+.no-mgn-left,
+.no-margin-left {
+  margin-left: 0 !important;
+}
+.no-mgn-right,
+.no-margin-right {
   margin-right: 0 !important;
 }
 .mgn-left {
