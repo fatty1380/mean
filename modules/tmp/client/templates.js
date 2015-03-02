@@ -896,6 +896,91 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/chat/views/chat-console.client.template.html',
+  '<div class="row chat-window" ng-show="vm.activeConnection">\n' +
+  '    <div class="col-sm-12">\n' +
+  '        <h4>Messages\n' +
+  '            <small class="pull-right">\n' +
+  '                <em>\n' +
+  '                    <strong>Connection Status</strong>\n' +
+  '                    Me:\n' +
+  '                    <div class="label label-{{vm.status.me ? \'success\' : vm.status.me === null ? \'default\' : \'warning\'}}">\n' +
+  '                        &nbsp;</div>\n' +
+  '                    Them:\n' +
+  '                    <div class="label label-{{vm.status.them ? \'success\' : vm.status.them === null ? \'default\' : \'warning\'}}">\n' +
+  '                        &nbsp;</div>\n' +
+  '                </em>\n' +
+  '            </small>\n' +
+  '        </h4>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="chat-section"\n' +
+  '             scroll-bottom="vm.messages">\n' +
+  '            <div ng-repeat="message in vm.messages | filter : {type: \'!status\'}"\n' +
+  '                 ng-init="message.username = message.username || message.sender.username"\n' +
+  '                 ng-class="{\'last\':!!$last,\'first\':!!$first}" class="{{vm.getSenderClass(message.username)}}">\n' +
+  '\n' +
+  '                <div class="separator row">\n' +
+  '                    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2"></div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="row chat-box">\n' +
+  '                    <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">\n' +
+  '                        <img class="profile-image medium"\n' +
+  '                             ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">\n' +
+  '\n' +
+  '\n' +
+  '                        <div class="chat-details">\n' +
+  '                            <div class="row">\n' +
+  '                                <div class="col-sm-12">\n' +
+  '                                    <blockquote><p ng-bind-html="message.text"></p></blockquote>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                            <div class="row ts">\n' +
+  '                                <div class="col-sm-12">\n' +
+  '                                    <span class="timestamp smaller">{{message.created | date: \'short\' }}</span>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '        </div>\n' +
+  '        <div class="chat-entry" id="messaging">\n' +
+  '            <div class="row mgn-vert">\n' +
+  '                <div class="col-md-8 col-md-offset-2">\n' +
+  '                    <input type="text" ng-show="vm.messageMode === \'text\'"\n' +
+  '                           data-ng-model="vm.message" class="form-control "\n' +
+  '                           placeholder="new message ..."/>\n' +
+  '\n' +
+  '                    <textarea type="text" ng-show="vm.messageMode === \'multiline\'" rows="3"\n' +
+  '                              data-ng-model="vm.message" class="form-control"\n' +
+  '                              placeholder="new message..." modal-focus="vm.msgFocus"></textarea>\n' +
+  '\n' +
+  '                    <div ng-show="vm.messageMode === \'html\'">\n' +
+  '                        <textarea os-html-edit minimal class="editor-min" data-ng-model="vm.message"></textarea>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="row mgn-vert no-mgn-sides">\n' +
+  '                <div class="col-xs-12 col-sm-8 col-md-6 col-md-offset-2">\n' +
+  '                    <span data-ng-show="vm.error" class="text-danger text-center">\n' +
+  '                        <strong data-ng-bind="vm.error"></strong>\n' +
+  '                    </span>\n' +
+  '                </div>\n' +
+  '                <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-2">\n' +
+  '                    <!--<div class="btn-group" dropdown>-->\n' +
+  '                    <button type="button" class="btn btn-oset-primary btn-block" value="send"\n' +
+  '                            ng-click="vm.postMessage();"\n' +
+  '                            ng-class="{\'disabled\':(vm.sending || !vm.message)}">Send\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '</div>\n' +
+  '');
  $templateCache.put('/modules/companies/views/templates/company-list.client.template.html',
   '<section ng-init="findByUser(profile)" data-ng-controller="CompaniesController">\n' +
   '    <h1>TODO: Determine if needed</h1>\n' +
