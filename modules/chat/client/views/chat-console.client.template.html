@@ -1,0 +1,75 @@
+<div class="row" ng-show="vm.activeConnection">
+    <div class="col-sm-12">
+        <h4>Messages
+            <small class="pull-right">
+                <em>
+                    <strong>Connection Status</strong>
+                    Me:
+                    <div class="label label-{{vm.status.me ? 'success' : vm.status.me === null ? 'default' : 'warning'}}">
+                        &nbsp;</div>
+                    Them:
+                    <div class="label label-{{vm.status.them ? 'success' : vm.status.them === null ? 'default' : 'warning'}}">
+                        &nbsp;</div>
+                </em>
+            </small>
+        </h4>
+
+
+        <div class="chat-section"
+             scroll-bottom="vm.messages">
+            <div ng-repeat="message in vm.messages"
+                 ng-init="message.username = message.username || message.sender.username"
+                 class="row chat-box {{vm.getSenderClass(message.username)}}">
+
+                <span ng-if="message.type !== 'status'" ng-class="{'last':!!$last}">
+                    <div class="col-sm-2 text-right left-gutter">
+                        <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
+                    </div>
+
+                    <div class="col-sm-8" ng-if="message.type === 'message' || message.type === undefined">
+                        <img class="profile-image medium"
+                             ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
+                        <blockquote><p ng-bind-html="message.text"></p></blockquote>
+                    </div>
+
+                    <div class="col-sm-2 text-left right-gutter">
+                        <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
+                    </div>
+                </span>
+            </div>
+
+        </div>
+        <div class="chat-entry" id="messaging">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <input type="text" ng-show="vm.messageMode === 'text'"
+                           data-ng-model="vm.message" class="form-control "
+                           placeholder="new message ..."/>
+
+                    <textarea type="text" ng-show="vm.messageMode === 'multiline'" rows="3"
+                              data-ng-model="vm.message" class="form-control"
+                              placeholder="new message..." modal-focus="vm.msgFocus"></textarea>
+
+                    <div ng-show="vm.messageMode === 'html'">
+                        <textarea os-html-edit minimal class="editor-min" data-ng-model="vm.message"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-2 text-center pad-vert">
+
+                    <span data-ng-show="vm.error" class="text-danger">
+                        <strong data-ng-bind="vm.error"></strong>
+                    </span>
+                </div>
+                <div class="col-md-2">
+                    <!--<div class="btn-group" dropdown>-->
+                    <button type="button" class="btn btn-oset-primary btn-block" value="send"
+                            ng-click="vm.postMessage();"
+                            ng-class="{'disabled':(vm.sending || !vm.message)}">Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
