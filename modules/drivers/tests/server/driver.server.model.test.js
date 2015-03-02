@@ -7,7 +7,8 @@ var should = require('should'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Driver = mongoose.model('Driver'),
-    constants = require('../../config/env/constants');
+    path = require('path'),
+    constants = require(path.resolve('./modules/core/server/models/outset.constants'));
 
 /**
  * Globals
