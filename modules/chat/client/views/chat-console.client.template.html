@@ -1,4 +1,4 @@
-<div class="row" ng-show="vm.activeConnection">
+<div class="row chat-window" ng-show="vm.activeConnection">
     <div class="col-sm-12">
         <h4>Messages
             <small class="pull-right">
@@ -17,30 +17,39 @@
 
         <div class="chat-section"
              scroll-bottom="vm.messages">
-            <div ng-repeat="message in vm.messages"
+            <div ng-repeat="message in vm.messages | filter : {type: '!status'}"
                  ng-init="message.username = message.username || message.sender.username"
-                 class="row chat-box {{vm.getSenderClass(message.username)}}">
+                 ng-class="{'last':!!$last,'first':!!$first}" class="{{vm.getSenderClass(message.username)}}">
 
-                <span ng-if="message.type !== 'status'" ng-class="{'last':!!$last}">
-                    <div class="col-sm-2 text-right left-gutter">
-                        <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
-                    </div>
+                <div class="separator row">
+                    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2"></div>
+                </div>
 
-                    <div class="col-sm-8" ng-if="message.type === 'message' || message.type === undefined">
+                <div class="row chat-box">
+                    <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
                         <img class="profile-image medium"
                              ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
-                        <blockquote><p ng-bind-html="message.text"></p></blockquote>
-                    </div>
 
-                    <div class="col-sm-2 text-left right-gutter">
-                        <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
+
+                        <div class="chat-details">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <blockquote><p ng-bind-html="message.text"></p></blockquote>
+                                </div>
+                            </div>
+                            <div class="row ts">
+                                <div class="col-sm-12">
+                                    <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </span>
+                </div>
             </div>
 
         </div>
         <div class="chat-entry" id="messaging">
-            <div class="row">
+            <div class="row mgn-vert">
                 <div class="col-md-8 col-md-offset-2">
                     <input type="text" ng-show="vm.messageMode === 'text'"
                            data-ng-model="vm.message" class="form-control "
@@ -55,14 +64,13 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 col-md-offset-2 text-center pad-vert">
-
-                    <span data-ng-show="vm.error" class="text-danger">
+            <div class="row mgn-vert no-mgn-sides">
+                <div class="col-xs-12 col-sm-8 col-md-6 col-md-offset-2">
+                    <span data-ng-show="vm.error" class="text-danger text-center">
                         <strong data-ng-bind="vm.error"></strong>
                     </span>
                 </div>
-                <div class="col-md-2">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-2">
                     <!--<div class="btn-group" dropdown>-->
                     <button type="button" class="btn btn-oset-primary btn-block" value="send"
                             ng-click="vm.postMessage();"

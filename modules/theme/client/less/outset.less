@@ -1,7 +1,8 @@
 @import "mixins.less";
 @import "theme-default.less";
 @import "/public/lib/bootstrap/less/variables.less";
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+@import "/public/lib/bootstrap/less/mixins.less";
+@import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700,900);
 @import url(http://fonts.googleapis.com/css?family=Lato:400,300,200);
 
@@ -177,175 +178,243 @@ a.btn-ghost, .btn-ghost {
         margin-right : 5px;
       }
     }
-    .chat-entry {
-      border           : solid 1px @divider;
-      border-top       : solid 2px @ribbon;
-      background-color : @smoky-white;
-      .row {
-        padding : 0;
-      }
-      .btn {
-        margin         : auto;
-        vertical-align : 50%;
-        display        : block;
-      }
-      input, textarea {
-        text-align : left;
+  }
+}
+
+/** Chat Section & Diretive **/
+
+oset-chat-console > .chat-window {
+
+  .row {
+    border-bottom : none;
+
+    &.separator {
+      height : 1px;
+
+      > div {
+        margin-top       : 0;
+        margin-bottom    : 0;
+        background-color : lighten(@divider, 10%);
+        #gradient > .radial(lighten(@divider, 10%), #FFF);
+        .reset-filter();
       }
     }
-    .chat-section {
-      min-height : 200px;
-      max-height : 400px;
-      height     : 40%;
-      overflow-y : scroll;
-      overflow-x : hidden;
-      border     : solid 1px @divider;
-      border-top : solid 2px @ribbon;
+  }
 
-      .chat-box.chat-text-space p {
-        margin-bottom : 10px;
+  div.me + div.me,
+  div.other + div.other {
+    > .row.separator {
+      display : none;
+    }
+
+    .row img {
+      opacity : 0;
+    }
+  }
+
+  .last, .first {
+    .row.separator {
+      display : none;
+    }
+  }
+
+  .chat-entry {
+    border           : solid 1px @divider;
+    border-top       : solid 2px @ribbon;
+    background-color : @smoky-white;
+    .row {
+      padding : 0;
+    }
+    .btn {
+      margin         : auto;
+      vertical-align : 50%;
+      display        : block;
+    }
+    input, textarea {
+      text-align : left;
+    }
+  }
+  .chat-section {
+    min-height : 200px;
+    max-height : 400px;
+    height     : 40%;
+    overflow-y : scroll;
+    overflow-x : hidden;
+    border     : solid 1px @divider;
+    border-top : solid 2px @ribbon;
+
+    .chat-box.chat-text-space p {
+      margin-bottom : 10px;
+    }
+
+    .me > .chat-box {
+      .chat-details {
+        float : right;
+      }
+      text-align : right;
+
+      img, blockquote {
+        float : right;
       }
 
-      .chat-box {
-        padding          : 5px;
-        background-color : #FFF;
-        margin-bottom    : 0px;
-        color            : @darker-grey;
-        position         : relative;
-        border-bottom    : none;
+      blockquote {
+        border-right : 2px solid @color;
+        border-left  : 1px solid lighten(@divider, 10%);
+      }
 
-        &.me {
-          text-align : right;
+      .left-gutter * {
+        display : none;
+      }
+    }
+    .other > .chat-box {
+      .chat-details {
+        float : left;
+      }
 
-          img, blockquote {
-            float       : right;
-            margin-left : 20px;
-          }
+      text-align : left;
 
-          blockquote {
-            border-right : 2px solid @color;
-          }
+      img, blockquote {
+        float : left;
+      }
 
-          .left-gutter * {
-            display : none;
+      blockquote {
+        border-left : 2px solid @color;
+        border-left : 1px solid lighten(@divider, 10%);
+      }
+
+      .right-gutter * {
+        display : none;
+      }
+    }
+
+    .chat-box .chat-details {
+      margin : 0 20px;
+
+      .row {
+        padding-top    : 0;
+        padding-bottom : 0;
+      }
+    }
+
+    .me > .row.ts {
+      text-align : right;
+    }
+    .other > .row.ts {
+      text-align : left;
+    }
+    .row.ts {
+      padding : 0;
+    }
+
+    .chat-box {
+      padding          : 5px;
+      background-color : #FFF;
+      margin           : 0 20px;
+      color            : @darker-grey;
+      position         : relative;
+      border-bottom    : none;
+
+      blockquote {
+        border : 1px solid lighten(@divider, 10%);
+        margin-bottom: 0;
+
+        p { // hack to allow the migration from plain-text to rich/html-text in messages
+          padding :  2px 4px;
+
+          > p {
+            padding :4px 8px;
           }
         }
-        &.other {
-          text-align : left;
+      }
 
-          img, blockquote {
-            float        : left;
-            margin-right : 20px;
-          }
+      h2 {
+        font-size   : 14px;
+        line-height : 18px;
 
-          blockquote {
-            border-left : 2px solid @color;
-          }
-
-          .right-gutter * {
-            display : none;
-          }
+        small {
+          color            : @light-grey;
+          font-size-adjust : -3;
         }
+      }
 
-        blockquote {
-          border : 1px solid lighten(@divider, 10%);
-
-          p {
-            padding : 10px 20px;
-          }
-        }
-
-        h2 {
-          font-size   : 14px;
-          line-height : 18px;
-
-          small {
-            color            : @light-grey;
-            font-size-adjust : -3;
-          }
-        }
-
-        p {
-          margin-bottom : 0;
-        }
-        .chat-profile {
+      p {
+        margin-bottom : 0;
+      }
+      .chat-profile {
+        position : absolute;
+      }
+      .chat-content {
+        margin-left : 90px;
+        background  : @smoky-white;
+        .border-radius(4px);
+        font-size   : 14px;
+        padding     : 15px;
+        &:before {
+          content  : "";
+          display  : block;
+          width    : 0;
+          height   : 0;
           position : absolute;
+          top      : 25px;
+        }
+      }
+      &.other {
+        .chat-profile {
+          left : 20px;
         }
         .chat-content {
-          margin-left : 90px;
-          background  : @smoky-white;
-          .border-radius(4px);
-          font-size   : 14px;
-          padding     : 15px;
+          border-left  : 4px solid darken(@smoky-white, 5%);
+          margin-left  : 90px;
+          margin-right : 120px;
           &:before {
-            content  : "";
-            display  : block;
-            width    : 0;
-            height   : 0;
-            position : absolute;
-            top      : 25px;
+            border-top    : 10px solid transparent;
+            border-bottom : 10px solid transparent;
+            border-right  : 10px solid darken(@smoky-white, 5%);
+            left          : 100px;
           }
         }
-        &.other {
-          .chat-profile {
-            left : 20px;
-          }
-          .chat-content {
-            border-left  : 4px solid darken(@smoky-white, 5%);
-            margin-left  : 90px;
-            margin-right : 120px;
-            &:before {
-              border-top    : 10px solid transparent;
-              border-bottom : 10px solid transparent;
-              border-right  : 10px solid darken(@smoky-white, 5%);
-              left          : 100px;
-            }
-          }
-          .timestamp, blockquote {
-            text-align : left;
+        .timestamp, blockquote {
+          text-align : left;
+        }
+      }
+      &.me {
+        .chat-profile {
+          right : 20px;
+        }
+        .chat-content {
+          border-right : 4px solid darken(@smoky-white, 5%);
+          margin-left  : 120px;
+          margin-right : 90px;
+          &:before {
+            border-top    : 10px solid transparent;
+            border-bottom : 10px solid transparent;
+            border-left   : 10px solid darken(@smoky-white, 5%);
+            right         : 100px;
           }
         }
-        &.me {
-          .chat-profile {
-            right : 20px;
-          }
-          .chat-content {
-            border-right : 4px solid darken(@smoky-white, 5%);
-            margin-left  : 120px;
-            margin-right : 90px;
-            &:before {
-              border-top    : 10px solid transparent;
-              border-bottom : 10px solid transparent;
-              border-left   : 10px solid darken(@smoky-white, 5%);
-              right         : 100px;
-            }
-          }
-          .timestamp, blockquote {
-            text-align : right;
-          }
+        .timestamp, blockquote {
+          text-align : right;
         }
-        blockquote {
-          border-left   : none;
-          font-style    : italic;
-          color         : @text-color-secondary;
-          font-size     : 16px;
-          padding       : 0;
-          margin-bottom : 10px;
-        }
-        .timestamp {
-          color         : @grey;
-          font-size     : 13px;
-          margin-bottom : 0;
-          a {
-            color : @grey;
-            &:hover {
-              color : darken(@grey, 10%);
-            }
+      }
+      blockquote {
+        border-left : none;
+        font-style  : italic;
+        color       : @text-color-secondary;
+        font-size   : 16px;
+        padding     : 0;
+      }
+      .timestamp {
+        color         : @grey;
+        font-size     : 13px;
+        margin-bottom : 0;
+        a {
+          color : @grey;
+          &:hover {
+            color : darken(@grey, 10%);
           }
         }
       }
     }
-
   }
 }
 
@@ -959,29 +1028,29 @@ footer.navbar {
 }
 
 .has-error .mce-tinymce {
-  border-color: @state-danger-text
+  border-color : @state-danger-text
 }
 
 .mce-edit-area {
 
   &.editor-lg iframe {
-    min-height: 400px;
+    min-height : 400px;
   }
 
   &.editor-md iframe {
-    min-height: 300px;
+    min-height : 300px;
   }
 
   &.editor-sm iframe, & iframe {
-    min-height: 200px;
+    min-height : 200px;
   }
 
   &.editor-xs iframe {
-    min-height: 100px;
+    min-height : 100px;
   }
 
   &.editor-min iframe {
-    min-height: 50px;
+    min-height : 50px;
   }
 
   button[disabled] {
@@ -1933,8 +2002,8 @@ form.applicant-form {
     }
 
     .top-header {
-      >* {
-        line-height: 36px;
+      > * {
+        line-height : 36px;
       }
     }
     strong, .pnl-controls {
@@ -1992,16 +2061,16 @@ a {
 }
 
 .pdf-container {
-  padding: 20px;
-  border-style: solid;
-  border-width: 0 1px 1px 1px;
-  border-color: @divider;
+  padding      : 20px;
+  border-style : solid;
+  border-width : 0 1px 1px 1px;
+  border-color : @divider;
 }
 
 pdf {
 
   > object {
-    min-height: 800px;
-    width   : 100%;
+    min-height : 800px;
+    width      : 100%;
   }
 }

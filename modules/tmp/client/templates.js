@@ -897,7 +897,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/chat/views/chat-console.client.template.html',
-  '<div class="row" ng-show="vm.activeConnection">\n' +
+  '<div class="row chat-window" ng-show="vm.activeConnection">\n' +
   '    <div class="col-sm-12">\n' +
   '        <h4>Messages\n' +
   '            <small class="pull-right">\n' +
@@ -916,30 +916,39 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <div class="chat-section"\n' +
   '             scroll-bottom="vm.messages">\n' +
-  '            <div ng-repeat="message in vm.messages"\n' +
+  '            <div ng-repeat="message in vm.messages | filter : {type: \'!status\'}"\n' +
   '                 ng-init="message.username = message.username || message.sender.username"\n' +
-  '                 class="row chat-box {{vm.getSenderClass(message.username)}}">\n' +
+  '                 ng-class="{\'last\':!!$last,\'first\':!!$first}" class="{{vm.getSenderClass(message.username)}}">\n' +
   '\n' +
-  '                <span ng-if="message.type !== \'status\'" ng-class="{\'last\':!!$last}">\n' +
-  '                    <div class="col-sm-2 text-right left-gutter">\n' +
-  '                        <span class="timestamp smaller">{{message.created | date: \'short\' }}</span>\n' +
-  '                    </div>\n' +
+  '                <div class="separator row">\n' +
+  '                    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2"></div>\n' +
+  '                </div>\n' +
   '\n' +
-  '                    <div class="col-sm-8" ng-if="message.type === \'message\' || message.type === undefined">\n' +
+  '                <div class="row chat-box">\n' +
+  '                    <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">\n' +
   '                        <img class="profile-image medium"\n' +
   '                             ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">\n' +
-  '                        <blockquote><p ng-bind-html="message.text"></p></blockquote>\n' +
-  '                    </div>\n' +
   '\n' +
-  '                    <div class="col-sm-2 text-left right-gutter">\n' +
-  '                        <span class="timestamp smaller">{{message.created | date: \'short\' }}</span>\n' +
+  '\n' +
+  '                        <div class="chat-details">\n' +
+  '                            <div class="row">\n' +
+  '                                <div class="col-sm-12">\n' +
+  '                                    <blockquote><p ng-bind-html="message.text"></p></blockquote>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                            <div class="row ts">\n' +
+  '                                <div class="col-sm-12">\n' +
+  '                                    <span class="timestamp smaller">{{message.created | date: \'short\' }}</span>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                        </div>\n' +
   '                    </div>\n' +
-  '                </span>\n' +
+  '                </div>\n' +
   '            </div>\n' +
   '\n' +
   '        </div>\n' +
   '        <div class="chat-entry" id="messaging">\n' +
-  '            <div class="row">\n' +
+  '            <div class="row mgn-vert">\n' +
   '                <div class="col-md-8 col-md-offset-2">\n' +
   '                    <input type="text" ng-show="vm.messageMode === \'text\'"\n' +
   '                           data-ng-model="vm.message" class="form-control "\n' +
@@ -954,14 +963,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
-  '            <div class="row">\n' +
-  '                <div class="col-md-6 col-md-offset-2 text-center pad-vert">\n' +
-  '\n' +
-  '                    <span data-ng-show="vm.error" class="text-danger">\n' +
+  '            <div class="row mgn-vert no-mgn-sides">\n' +
+  '                <div class="col-xs-12 col-sm-8 col-md-6 col-md-offset-2">\n' +
+  '                    <span data-ng-show="vm.error" class="text-danger text-center">\n' +
   '                        <strong data-ng-bind="vm.error"></strong>\n' +
   '                    </span>\n' +
   '                </div>\n' +
-  '                <div class="col-md-2">\n' +
+  '                <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-2">\n' +
   '                    <!--<div class="btn-group" dropdown>-->\n' +
   '                    <button type="button" class="btn btn-oset-primary btn-block" value="send"\n' +
   '                            ng-click="vm.postMessage();"\n' +
