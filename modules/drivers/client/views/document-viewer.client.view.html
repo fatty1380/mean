@@ -1,0 +1,37 @@
+<section>
+    <os-page-header title="Documents"
+                    sub-title="{{vm.text.title}}"
+            back-btn-text="{{!!vm.goBack ? 'back' : ''}}"
+            back-btn-fn="vm.goBack()">
+    </os-page-header>
+
+    <div class="content-container container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs">
+                            <li role="presentation"
+                                ng-click="vm.viewFile('resume')"
+                                ng-class="{'disabled': !vm.driver.resume, 'active': vm.activeReport==='resume'}">
+                                <a>Resume</a>
+                            </li>
+                            <li role="presentation" ng-repeat="report in vm.driver.reportsData"
+                                ng-click="vm.viewFile(report.sku)"
+                                ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
+                                <a>{{report.sku}}</a>
+                            </li>
+                        </ul>
+
+                        <div class="col-sm-12 center-block pdf-container">
+                            <pdf ng-hide="vm.error" pdf-src="{{vm.documentUrl}}"></pdf>
+                            <h4 class="text-danger strong">{{vm.error}}</h4>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid row" ng-hide="vm.success" class="payment-form"
+                         ng-class="{'disabled':vm.processing}">
+
+
+                    </div>
+                </div>
+            </div>
+</section>

@@ -6,8 +6,8 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
     var applicationModuleName = 'outset';
     var applicationModuleVendorDependencies =
             ['oset-templates', 'ngResource', 'ngAnimate', 'ui.router', 'ui.bootstrap',
-                'ui.utils', 'angularFileUpload', 'textAngular', 'ngMap',
-                'pdf', 'ngImgCrop', 'duScroll', 'angularMoment'];
+                'ui.utils', 'angularFileUpload', 'ngMap', 'ngSanitize',
+                'ngImgCrop', 'duScroll', 'angularMoment'];
 
     // Add a new vertical module
     var registerModule = function (moduleName, dependencies) {

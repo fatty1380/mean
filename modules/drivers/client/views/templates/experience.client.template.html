@@ -29,7 +29,7 @@
             <div class="controls col-sm-9 controls">
                 <textarea name="description" class="form-control" data-ng-model="vm.model.description"
                           rows="3" ng-required="true" placeholder="describe your experience"></textarea>
-                <!--<os-html-edit model="vm.model.description"></os-html-edit>-->
+                <!--<textarea os-html-edit model="vm.model.description"></textarea>-->
             </div>
         </div>
 
@@ -100,11 +100,20 @@
             <strong>
                 {{vm.model.title}}
             </strong>
+            <small class="pull-right">
+                {{vm.model.location}}
+            </small>
         </p>
 
-        <p class="sub-header">
+        <p class="sub-header" ng-class="{'no-mgn-btm': !vm.canEdit && !vm.model.expanded}">
             <small>
-                {{vm.model.location}}
+                <span ng-show="!vm.canEdit"
+                      ng-click="vm.model.expanded = !vm.model.expanded"
+                      class="pull-left pointer text-oset">
+                    <i class="fa" ng-class="{'fa-caret-right': !vm.model.expanded, 'fa-caret-down': !!vm.model.expanded}"></i>
+                    {{ !!vm.model.expanded ? 'hide' : 'show details...'}}
+                </span>
+                &nbsp;
                 <span class="text-muted pull-right"
                       ng-bind="vm.getDateRangeString(vm.model.startDate, vm.model.endDate)">
 
@@ -112,7 +121,7 @@
             </small>
         </p>
 
-        <p class="pnl-body">{{vm.model.description}}</p>
+        <p class="pnl-body" ng-show="vm.model.expanded || vm.canEdit">{{vm.model.description}}</p>
 
         <p class="pnl-controls" ng-if="vm.canEdit">
             &nbsp;
