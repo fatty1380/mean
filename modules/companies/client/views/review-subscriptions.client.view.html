@@ -1,72 +1,68 @@
-<section class="section section-on-bg no-pad-bottom">
+<div class="section section-on-bg no-pad">
     <div class="container">
-
         <div class="price-lead">
-            <div class="row" ng-if="vm.subscription">
-                <h3 class="title text-center" ng-bind-html="vm.text.lead"></h3>
+            <div class="row" ng-if="!!vm.subscription.isValid">
 
-                <div class="item horizontal price-1 col-xs-12 text-center">
-                    <div class="item-inner">
-                        <div class="row item-content">
-                            <div class="col-sm-12">
-                                <h2>{{vm.subscription.name}}</h2>
-                            </div>
-                            <pre>{{vm.subscription}}</pre>
+
+                <div class="item horizontal price-1 col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                    <div class="item-inner panel panel-default">
+                        <div class="panel-heading">
+                            <h2 class="text-center">{{vm.text.lead}}: {{vm.subscription.name}}</h2>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="col-sm-8 col-sm-offset-2">
+                                <li ng-repeat="name in vm.features"
+                                    ng-init="feature = vm.subscription.features[name]"
+                                    ng-show="!!feature.value">
+                                    {{name}}: <span ng-if="!!feature.text" ng-bind="feature.text"></span>
+                                    <i class="fa fa-check text-success" ng-if="!feature.text && !!feature.value"></i>
+                                </li>
+                            </ul>
+
+                            <p class="h3 col-sm-8 col-sm-offset-2 text-center">
+                                {{vm.subscription.statusMessage}}
+                            </p>
+
+                            <p class="col-sm-8 col-sm-offset-2 text-center">
+                                <em>Your subscription will renew on <strong>{{vm.subscription.renews | amDateFormat :
+                                    'L' }}</strong></em>
+                            </p>
                         </div>
                     </div>
                 </div>
-                <!--//item-->
-                <div class="clearfix"></div>
-
-                <h3 class="title secondary text-center" data-ng-bind-html="vm.text.sub"></h3>
             </div>
+            <!--//item-->
+            <div class="clearfix"></div>
 
-            <div class="row" ng-if="!vm.subscription">
-                <h3 class="title text-center" ng-bind-html="vm.text.lead"></h3>
-
-
-                <div class="item horizontal price-1 col-lg-4 col-md-6 col-sm-8 col-lg-offset-4 col-md-offset-3 col-sm-offset-2 col-xs-12 text-center"
-                     ng-click="vm.orderSubscription(vm.subscriptions.packages[0].planId)">
-                    <div class="item-inner">
-                        <div class="row item-content">
-                            <div class="col-md-3 col-xs-4">
-                                <span class="fa-stack fa-3x">
-                                    <i class="fa fa-certificate fa-stack-2x text-primary"></i>
-                                    <span class="price-figure">
-                                        <span class="price-figure-inner fa fa-stack-1x"
-                                              ng-class="{'price-promo': !!vm.subscriptions.packages[0].promo}">
-                                            <span class="currency">$</span>
-                                            <span class="number">{{vm.subscriptions.packages[0].promo || vm.subscriptions.packages[0].price || 5}}</span>
-                                        </span>
-                                    </span>
-                                </span>
-                            </div>
-                            <div class="col-md-9 col-xs-8">
-                                <h3 class="lead"><span ng-bind-html="vm.subscriptions.packages[0].name">Trial</span><br>
-                                    <span class="small" ng-bind-html="vm.subscriptions.packages[0].description">Get Started Today!</span>
-                                </h3>
-                            </div>
-                        </div>
-                        <!--//item-content-->
-                    </div>
-                    <!--//item-->
-                    <div class="clearfix"></div>
-
-                    <h3 class="title secondary text-center" data-ng-bind-html="vm.text.sub"></h3>
-                </div>
-
-            </div>
+            <h2 class="title secondary text-center">&nbsp;</h2>
         </div>
 
+        <div class="row" ng-if="false && !vm.subscription.isValid">
+            <div class="item horizontal price-1 col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                <div class="item-inner panel panel-default">
+
+                    <div class="panel-body text-center">
+                        <h3 ng-bind-html="vm.text.lead"></h3>
+
+                        <h4 ng-bind-html="vm.text.sub"></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
         <div class="panel panel-default">
             <div class="row">
-                <oset-subscription-info user="vm.user" companyid="vm.companyId"></oset-subscription-info>
+                <oset-subscription-info user="vm.user" companyid="vm.companyId"
+                                        subscription="vm.subscription"></oset-subscription-info>
             </div>
         </div>
-
     </div>
+
     <!--//container-->
-</section>
+</div>
 
 <section class="container-fluid opaque-bg">
     <section class="faq section has-bg-color">

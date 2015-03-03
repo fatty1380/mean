@@ -270,19 +270,19 @@ module.exports.faqs = [
         keywords: ['term', 'term']
     },
     {
-        category: 'subsciptions and billing',
+        category: 'subscriptions',
         question: 'How is my subscription billed?',
         answer: 'Your subscription period is 30 days long.  You will be billed on the 1st day for the next subscription period.  Billing starts on the day that you purchase your subscription.',
         keywords: ['term', 'term']
     },
     {
-        category: 'subsciptions and billing',
+        category: 'subscriptions',
         question: 'How do I change my subscription plan?',
         answer: 'You can change your plan by clicking the [Change] link next to your current plan in your [Profile] Section.  Your bill will be pro-rated to reflect the change in your subscription plan.',
         keywords: ['term', 'term']
     },
     {
-        category: 'subsciptions and billing',
+        category: 'subscriptions',
         question: 'How do I change my credit card on file?',
         answer: 'To change your billing information, click the Settings Icon (shaped like a gear) in the upper right hand corner of the screen of every page.  You can also click the [Edit Account Settings] button near your name on your profile page.',
         keywords: ['term', 'term']

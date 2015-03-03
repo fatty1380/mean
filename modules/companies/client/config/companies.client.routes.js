@@ -59,7 +59,7 @@
 
         return config.getAsync('subscriptions').then(
             function(success) {
-                var details = _.find(success, {'planId': planId});
+                var details = _.find(success.packages, {'planId': planId});
 
                 if(!details) {
                     throw new Error('Subscription Information not found');

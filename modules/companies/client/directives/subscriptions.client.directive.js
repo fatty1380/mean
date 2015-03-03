@@ -8,7 +8,8 @@
             scope: {
                 text: '=?',
                 user: '=?',
-                companyId: '=?'
+                companyId: '=?',
+                subscription: '=?'
             },
             controller: 'SubscriptionInfoController',
             controllerAs: 'vm',
@@ -38,8 +39,11 @@
             }
         );
 
-        debugger;
         vm.text = _.defaults(vm.text || {}, defaults);
+
+        if(vm.subscription && vm.subscription.isValid) {
+            vm.text.sub = 'Would you like to upgrade your subscription?';
+        }
 
 
         vm.orderSubscription = function (planId) {

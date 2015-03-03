@@ -241,8 +241,6 @@ exports.companyByUserID = function (req, res, next) {
                 req.company = company;
                 //res.json(company);
 
-                debugger;
-
                 return next();
             } else {
                 console.error('[Company.findOne] No company available for user');
@@ -341,7 +339,7 @@ exports.createSubscription = function (req, res, next) {
 
 
     console.log('[CreateSubscription] Looking up subscription for planId: %s', req.planId);
-    req.subscriptionType = _.find(constants.subscriptionPackages, {'planId': req.planId});
+    req.subscriptionType = _.find(constants.subscriptionPackages.packages, {'planId': req.planId});
 
     next();
 };

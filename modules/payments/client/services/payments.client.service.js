@@ -41,8 +41,7 @@
                     }
                 })
             ,
-            Plans: function() {
-                return $resource('/api/companies/subscriptions/:planId',{
+            Plans: $resource('/api/companies/subscriptions/:planId',{
                     planId: '@planId',
                     promoCode: '@promoCode'
                 }, {
@@ -54,8 +53,7 @@
                         method: 'GET',
                         isArray: false
                     }
-                });
-            }
+                })
         };
 
         return _this.data;

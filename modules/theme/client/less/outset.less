@@ -2087,26 +2087,43 @@ pdf {
     }
 
     .row.name {
-      border-bottom: none;
+      border-bottom : none;
     }
 
     div.package {
       .transition(all 0.5s ease-in-out);
       background-color : transparent;
-      border: 1px solid transparent;
+      border           : 1px solid transparent;
 
       &.active {
-        background-color : lighten(@outset-blue, 80%);
-        border-left-color: lighten(@outset-blue, 60%);
-        border-right-color: lighten(@outset-blue, 60%);
+        background-color   : lighten(@outset-blue, 80%);
+        border-left-color  : lighten(@outset-blue, 60%);
+        border-right-color : lighten(@outset-blue, 60%);
 
         &.firstRow {
           .border-radiuses(4px, 0, 0, 4px);
-          border-top-color: lighten(@outset-blue, 60%);
+          border-top-color : lighten(@outset-blue, 60%);
         }
         &.lastRow {
           .border-radiuses(0, 4px, 4px, 0);
-          border-bottom-color: lighten(@outset-blue, 60%);
+          border-bottom-color : lighten(@outset-blue, 60%);
+        }
+      }
+
+      &.current {
+        background-color  : @alert-success-bg;
+        border-left-color : @alert-success-border;
+        &.firstRow {
+          .border-radiuses(4px, 0, 0, 4px);
+          border-top-color : @alert-success-border;
+        }
+        &.lastRow {
+          .border-radiuses(0, 4px, 4px, 0);
+          border-bottom-color : @alert-success-border;
+        }
+
+        button {
+          display: none;
         }
       }
     }
@@ -2129,7 +2146,7 @@ pdf {
         }
 
         &.lastRow {
-          margin-bottom: 10px
+          margin-bottom : 10px
         }
       }
 

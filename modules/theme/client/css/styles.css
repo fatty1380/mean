@@ -5505,6 +5505,49 @@ pdf > object {
   background-clip: padding-box;
   border-bottom-color: #9fc6ed;
 }
+.subscription-client-template .subscription-info div.package.current {
+  background-color: #dff0d8;
+  border-left-color: #d6e9c6;
+}
+.subscription-client-template .subscription-info div.package.current.firstRow {
+  -webkit-border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border-top-color: #d6e9c6;
+}
+.subscription-client-template .subscription-info div.package.current.lastRow {
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border-bottom-color: #d6e9c6;
+}
+.subscription-client-template .subscription-info div.package.current button {
+  display: none;
+}
 .subscription-client-template .subscription-info .features .li {
   border-bottom: 1px solid #d1d1d1;
   padding: 10px;

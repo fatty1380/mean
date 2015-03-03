@@ -1,22 +1,31 @@
-<section class="subscription-client-template">
-    <h3 class="title">{{vm.text.sub}}</h3>
+<section class="subscription-client-template col-sm-12">
+    <div class="row">
+        <h3 class="title text-center mgn-top">{{vm.text.sub}}</h3>
+    </div>
 
     <div class="row subscription-info">
         <div class="col-md-10 col-md-offset-1">
             <div class="row name">
                 <div class="package col-md-3 firstRow"
                      ng-repeat="package in vm.packages | orderBy : 'index'"
-                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active}"
+                     ng-init="package.current = vm.subscription.isValid && package.planId === vm.subscription.planId"
+                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active, 'current': package.current}"
                      ng-mouseenter="package.active = true;"
                      ng-mouseleave="package.active = false;">
-                    <h3>{{package.name}}</h3>
+                    <h3>
+                        {{package.name}}
+                        <i class="mgn-left fa fa-star"
+                           ng-show="package.planId === vm.subscription.planId"
+                           tooltip="This is your current subscription level"
+                           tooltip-popup-delay="700"></i>
+                    </h3>
                 </div>
             </div>
 
             <div class="row">
                 <div class="package col-md-3"
                      ng-repeat="package in vm.packages"
-                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active}">
+                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active, 'current': package.current}">
                     <p class="price-figure">
                         <span class="price-figure-inner">
                             <span class="currency">$</span><span
@@ -28,7 +37,7 @@
             </div>
 
             <div class="row features" ng-repeat="feature in vm.features"
-                    ng-init="lastFeature = $last">
+                 ng-init="lastFeature = $last">
                 <div class="package col-md-3 li text-right">
                     {{feature}}
                 </div>
@@ -36,10 +45,11 @@
                 <div ng-repeat="package in vm.packages | orderBy : 'index'"
                      ng-init="pkgValue = package.features[feature];"
                      class="package col-md-3 li {{pkgValue.classes}}"
-                     ng-class="{'active': package.active, 'lastRow': !vm.user}"
-                        ng-mouseenter="package.active = true;"
-                        ng-mouseleave="package.active = false;"
-                        ng-attr-tooltip="{{pkgValue.tooltip}}">
+                     ng-class="{'active': package.active, 'lastRow': !vm.user, 'current': package.current}"
+                     ng-mouseenter="package.active = true;"
+                     ng-mouseleave="package.active = false;"
+                     ng-attr-tooltip="{{pkgValue.tooltip}}"
+                     tooltip-popup-delay="700">
 
                     <span ng-if="lastFeature && !!pkgValue.text">
                         <span class="strong">{{pkgValue.text}}</span>
@@ -61,7 +71,7 @@
             <div class="row mgn-bottom" ng-if="!!vm.user">
                 <div class="package col-md-3 lastRow text-center pad-vert"
                      ng-repeat="package in vm.packages | orderBy : 'index'"
-                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active}"
+                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active, 'current': package.current}"
                      ng-mouseenter="package.active = true;"
                      ng-mouseleave="package.active = false;">
                     <button type="button" class="btn btn-oset-secondary"

@@ -14,22 +14,28 @@
             sub: '&hellip;or take a look at our fully featured packages to take care of your entire hiring process'
         };
 
-        debugger;
         vm.subscription = subscription;
+        vm.packages = vm.subscriptions.packages;
 
-        if(vm.subscription) {
-            vm.text.lead = 'Current Subscription Information';
-            if(!!vm.subscription.isValid) {
+        if (vm.subscription && vm.subscription.isValid) {
+            vm.text.lead = 'Current Subscription Level';
+            if (!!vm.subscription.isValid) {
                 vm.text.sub = 'Would you like to upgrade your subscription?';
             }
             else {
                 vm.text.sub = 'Renew your current subscription or change plans below';
             }
+
+
+            vm.subscription = _.extend(vm.subscription, _.find(vm.packages, {'planId': vm.subscription.planId}));
+
+            var features = vm.subscription['features'];
+            vm.features = _.keys(features);
         } else {
             debugger;
         }
 
-        AppConfig.getFaqs({category: 'subscriptions'}).then(function (vals) {
+        AppConfig.getFaqs({category: ['employer', 'subscriptions']}).then(function (vals) {
 
             console.log('[FAQ] promise resolved with %d vals', vals.length);
 
@@ -37,7 +43,7 @@
             return vals;
         });
 
-        AppConfig.getAsync('subscriptions').then(function (subs) {
+        AppConfig.getAsync('employer').then(function (subs) {
             console.log('got subscription information: %o', subs);
         }, function (errs) {
             console.log('err :( %o', errs);

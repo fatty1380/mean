@@ -27,7 +27,7 @@
 
         vm.initSubscriptions = function() {
 
-            Payments.Plans().getOne({planId: report.planId}).$promise.then(
+            Payments.Plans.getOne({planId: report.planId}).$promise.then(
                 function(success) {
                     vm.serverPlan = success;
                 },
@@ -35,6 +35,11 @@
                     $log.error('No Plan found on server for planId `%s`', report.planId);
                 }
             );
+            debugger;
+            if (!!vm.report && vm.report.features) {
+
+                vm.features = _.keys(vm.report.features);
+            }
         };
 
         if(!!vm.company) {
@@ -42,10 +47,13 @@
         }
 
         vm.applyPromo = function() {
+            vm.promoCode = vm.promoCode.toUpperCase();
+
             $log.debug('looking for promo code `' + vm.promoCode + '`');
 
             if(vm.serverPlan && vm.serverPlan.discounts) {
                 vm.promoItem = _.find(vm.serverPlan.discounts, {'id': vm.promoCode});
+                debugger;
 
                 if(!!vm.promoItem) {
                     vm.promoError = null;

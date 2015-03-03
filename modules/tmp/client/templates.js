@@ -1020,25 +1020,34 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/companies/views/templates/subscriptions.client.template.html',
-  '<section class="subscription-client-template">\n' +
-  '    <h3 class="title">{{vm.text.sub}}</h3>\n' +
+  '<section class="subscription-client-template col-sm-12">\n' +
+  '    <div class="row">\n' +
+  '        <h3 class="title text-center mgn-top">{{vm.text.sub}}</h3>\n' +
+  '    </div>\n' +
   '\n' +
   '    <div class="row subscription-info">\n' +
   '        <div class="col-md-10 col-md-offset-1">\n' +
   '            <div class="row name">\n' +
   '                <div class="package col-md-3 firstRow"\n' +
   '                     ng-repeat="package in vm.packages | orderBy : \'index\'"\n' +
-  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active}"\n' +
+  '                     ng-init="package.current = vm.subscription.isValid && package.planId === vm.subscription.planId"\n' +
+  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active, \'current\': package.current}"\n' +
   '                     ng-mouseenter="package.active = true;"\n' +
   '                     ng-mouseleave="package.active = false;">\n' +
-  '                    <h3>{{package.name}}</h3>\n' +
+  '                    <h3>\n' +
+  '                        {{package.name}}\n' +
+  '                        <i class="mgn-left fa fa-star"\n' +
+  '                           ng-show="package.planId === vm.subscription.planId"\n' +
+  '                           tooltip="This is your current subscription level"\n' +
+  '                           tooltip-popup-delay="700"></i>\n' +
+  '                    </h3>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
   '            <div class="row">\n' +
   '                <div class="package col-md-3"\n' +
   '                     ng-repeat="package in vm.packages"\n' +
-  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active}">\n' +
+  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active, \'current\': package.current}">\n' +
   '                    <p class="price-figure">\n' +
   '                        <span class="price-figure-inner">\n' +
   '                            <span class="currency">$</span><span\n' +
@@ -1050,7 +1059,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '\n' +
   '            <div class="row features" ng-repeat="feature in vm.features"\n' +
-  '                    ng-init="lastFeature = $last">\n' +
+  '                 ng-init="lastFeature = $last">\n' +
   '                <div class="package col-md-3 li text-right">\n' +
   '                    {{feature}}\n' +
   '                </div>\n' +
@@ -1058,10 +1067,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <div ng-repeat="package in vm.packages | orderBy : \'index\'"\n' +
   '                     ng-init="pkgValue = package.features[feature];"\n' +
   '                     class="package col-md-3 li {{pkgValue.classes}}"\n' +
-  '                     ng-class="{\'active\': package.active, \'lastRow\': !vm.user}"\n' +
-  '                        ng-mouseenter="package.active = true;"\n' +
-  '                        ng-mouseleave="package.active = false;"\n' +
-  '                        ng-attr-tooltip="{{pkgValue.tooltip}}">\n' +
+  '                     ng-class="{\'active\': package.active, \'lastRow\': !vm.user, \'current\': package.current}"\n' +
+  '                     ng-mouseenter="package.active = true;"\n' +
+  '                     ng-mouseleave="package.active = false;"\n' +
+  '                     ng-attr-tooltip="{{pkgValue.tooltip}}"\n' +
+  '                     tooltip-popup-delay="700">\n' +
   '\n' +
   '                    <span ng-if="lastFeature && !!pkgValue.text">\n' +
   '                        <span class="strong">{{pkgValue.text}}</span>\n' +
@@ -1083,7 +1093,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="row mgn-bottom" ng-if="!!vm.user">\n' +
   '                <div class="package col-md-3 lastRow text-center pad-vert"\n' +
   '                     ng-repeat="package in vm.packages | orderBy : \'index\'"\n' +
-  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active}"\n' +
+  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active, \'current\': package.current}"\n' +
   '                     ng-mouseenter="package.active = true;"\n' +
   '                     ng-mouseleave="package.active = false;">\n' +
   '                    <button type="button" class="btn btn-oset-secondary"\n' +

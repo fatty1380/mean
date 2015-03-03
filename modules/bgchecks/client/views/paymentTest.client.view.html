@@ -2,7 +2,7 @@
     <h3 class="title container text-center">Enter Payment Information</h3>
 
     <div class="content-container container text-center">
-        <div class="content-container-inner">
+        <div class="content-container-inner panel panel-default">
             <div class="about">
                 <div class="container-fluid row">
 
@@ -19,6 +19,17 @@
                             <div class="col-sm-10">
                                 <span ng-if="!vm.logo" class="strong">{{::(vm.report.title || vm.report.name)}} </span>
                                 <span ng-class="{'text-muted': !vm.logo}">{{::vm.report.description}}</span>
+
+                                <ul ng-if="vm.features" class="text-muted">
+                                    <li ng-repeat="name in vm.features"
+                                        ng-init="feature = vm.report.features[name]"
+                                        ng-show="!!feature.value">
+                                        <em>
+                                            {{name}}
+                                            <span ng-if="!!feature.text" class="strong">: {{feature.text}}</span>
+                                        </em>
+                                    </li>
+                                </ul>
                             </div>
                             <div class="col-sm-2 text-right">
                                 {{::vm.getPriceString(vm.price)}}
