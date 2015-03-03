@@ -29,8 +29,7 @@
                     }
                 });
             },
-            Subscription: function() {
-                return $resource('/api/companies/:companyId/subscription', {
+            Subscription:  $resource('/api/companies/:companyId/subscription', {
                     planId: '@planId',
                     promoCode: '@promoCode',
                     nonce: '@nonce',
@@ -40,8 +39,8 @@
                     $save: {
                         method: 'POST'
                     }
-                });
-            },
+                })
+            ,
             Plans: function() {
                 return $resource('/api/companies/subscriptions/:planId',{
                     planId: '@planId',

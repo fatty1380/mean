@@ -89,7 +89,7 @@
                     opts.price = vm.subtotal;
                 }
 
-                payment = new (Payments.Subscription())(opts);
+                payment = new (Payments.Subscription)(opts);
 
             }
             else {
