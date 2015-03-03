@@ -1,0 +1,75 @@
+<section class="subscription-client-template">
+    <h3 class="title">{{vm.text.sub}}</h3>
+
+    <div class="row subscription-info">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="row name">
+                <div class="package col-md-3 firstRow"
+                     ng-repeat="package in vm.packages | orderBy : 'index'"
+                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active}"
+                     ng-mouseenter="package.active = true;"
+                     ng-mouseleave="package.active = false;">
+                    <h3>{{package.name}}</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="package col-md-3"
+                     ng-repeat="package in vm.packages"
+                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active}">
+                    <p class="price-figure">
+                        <span class="price-figure-inner">
+                            <span class="currency">$</span><span
+                                class="number">{{package.price}}</span><br>
+                        <span class="unit"> per month</span></span>
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="row features" ng-repeat="feature in vm.features"
+                    ng-init="lastFeature = $last">
+                <div class="package col-md-3 li text-right">
+                    {{feature}}
+                </div>
+
+                <div ng-repeat="package in vm.packages | orderBy : 'index'"
+                     ng-init="pkgValue = package.features[feature];"
+                     class="package col-md-3 li {{pkgValue.classes}}"
+                     ng-class="{'active': package.active, 'lastRow': !vm.user}"
+                        ng-mouseenter="package.active = true;"
+                        ng-mouseleave="package.active = false;"
+                        ng-attr-tooltip="{{pkgValue.tooltip}}">
+
+                    <span ng-if="lastFeature && !!pkgValue.text">
+                        <span class="strong">{{pkgValue.text}}</span>
+                        <span ng-if="!!pkgValue.value" class="unit text-muted"> per month</span>
+                    </span>
+
+                    <span ng-if="lastFeature && !pkgValue.value">&nbsp;</span>
+
+                    <span ng-if="!lastFeature && !!pkgValue.text">
+                        {{pkgValue.text}}
+                    </span>
+
+                    <i class="fa {{pkgValue.icon}}" ng-if="!lastFeature && !pkgValue.text">
+                    </i>
+                </div>
+
+            </div>
+
+            <div class="row mgn-bottom" ng-if="!!vm.user">
+                <div class="package col-md-3 lastRow text-center pad-vert"
+                     ng-repeat="package in vm.packages | orderBy : 'index'"
+                     ng-class="{'col-md-offset-3': !!$first, 'active': package.active}"
+                     ng-mouseenter="package.active = true;"
+                     ng-mouseleave="package.active = false;">
+                    <button type="button" class="btn btn-oset-secondary"
+                            ng-click="vm.orderSubscription(package.planId)">
+                        Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

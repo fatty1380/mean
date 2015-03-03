@@ -1289,40 +1289,76 @@ module.exports.reportPackages = {
 };
 
 module.exports.subscriptionPackages = {
-    base: {
-        name: 'Local',
-        description: 'Get full access to Outset and start hiring today!',
-        features: [
-            {text: 'One active job post', classes: 'text-success strong', icon: 'fa fa-plus'},
-            {text: 'Chat, Review and Manage Applicants', classes: '', icon: 'fa fa-check'},
-            {text: 'Unlimited access to Applicants', classes: '', icon: 'fa fa-check'}
-        ],
-        price: '5',
-        promos: [''],
-        planId: 'basic',
-        jobCt: 1,
-        recurring: true,
-        monthly: true,
-        enabled: true,
-        logo: false
-    },
-    enterprise: {
-        name: 'Unlimited',
-        description: 'For a limited time, get unlimited access to Outset for a low introductory price',
-        features: [
-            {text: 'Unlimited active job posts', classes: 'text-success strong', icon: 'fa fa-plus'},
-            {text: 'Chat, Review and Manage Applicants', classes: '', icon: 'fa fa-plus'},
-            {text: 'Unlimited access to Applicants', classes: '', icon: 'fa fa-plus'}
-        ],
-        price: '40',
-        promos: [''],
-        planId: 'unlim',
-        jobCt: -1,
-        recurring: true,
-        monthly: true,
-        enabled: true,
-        logo: false
-    }
+    features: ['Job Posts', 'Applicant Redirect', 'Applicant Tracking', 'Downloadable Reports', 'Require Reports', 'Multiple Log-ins', 'Customized Background Checks'],
+    packages: [
+        {
+            index: 0,
+            name: 'Local',
+            description: '',
+            features: {
+                //{text: 'One active job post', classes: 'text-success strong', icon: 'fa fa-plus'},
+                //{text: 'Chat, Review and Manage Applicants', classes: '', icon: 'fa fa-check'},
+                'Job Posts': {value: true, text: '2', classes: '', icon: ''},
+                'Applicant Redirect': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Applicant Tracking': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Downloadable Reports': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Require Reports': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Multiple Log-ins': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Customized Background Checks': {value: false, text: 'N/A', classes: 'text-muted', icon: ''}
+            },
+            price: '60',
+            promos: [''],
+            planId: 'local',
+            jobCt: 2,
+            recurring: true,
+            monthly: true,
+            enabled: true,
+            logo: false
+        },
+        {
+            index: 1,
+            name: 'Regional',
+            description: '',
+            features: {
+                'Job Posts': {value: true, text: '5', classes: '', icon: ''},
+                'Applicant Redirect': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Applicant Tracking': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Downloadable Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Require Reports': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Multiple Log-ins': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Customized Background Checks': {value: true, text: '+ $65', classes: '', icon: '', tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'}
+},
+            price: '95',
+            promos: [''],
+            planId: 'regional',
+            jobCt: 5,
+            recurring: true,
+            monthly: true,
+            enabled: true,
+            logo: false
+        },
+        {
+            name: 'Fleet',
+            description: '',
+            features: {
+                'Job Posts': {value: true, text: '15', classes: '', icon: ''},
+                'Applicant Redirect': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Applicant Tracking': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Downloadable Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Require Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Multiple Log-ins': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Customized Background Checks': {value: true, text: '+ $65', classes: '', icon: '', tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'}
+            },
+            price: '145',
+            promos: [''],
+            planId: 'fleet',
+            jobCt: 15,
+            recurring: true,
+            monthly: true,
+            enabled: true,
+            logo: false
+        }
+    ]
 };
 
 module.exports.individualFields = {

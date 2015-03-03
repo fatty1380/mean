@@ -91,7 +91,6 @@
                         'Designed to save you money.',
                         'Customize solutions to your company\'s needs.',
                         'Let technology take the headache out of hiring.'
-
                     ]
                 },
                 section1: {
@@ -117,25 +116,7 @@
                 },
                 pricing: {
                     header: 'Pricing',
-                    sub: 'Choose from one of the following packages:',
-                    features: ['Job Posts', 'Applicant Redirect', 'Applicant Tracking', 'Downloadable Reports', 'Require Reports', 'Multiple Log-ins', 'Customized Background Checks'],
-                    packages: [
-                        {
-                            price: 60,
-                            title: 'Local',
-                            features: [2, true, true, false, false, false, false]
-                        },
-                        {
-                            price: 95,
-                            title: 'Regional',
-                            features: [5, true, true, true, false, false, '+ $65']
-                        },
-                        {
-                            price: 145,
-                            title: 'Fleet',
-                            features: [15, true, true, true, true, true, '+ $65']
-                        }
-                    ]
+                    sub: 'Choose from one of the following packages:'
                 },
                 conclusion: [
                     {

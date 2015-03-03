@@ -806,29 +806,6 @@ img.user-profile-picture {
     }
   }
 
-  .price-figure {
-    .border-radius(50%);
-    margin : 0 auto;
-
-    .number {
-      font-size   : 42px;
-      font-weight : bold;
-    }
-    .unit {
-      font-weight : 400;
-      color       : lighten(@grey, 10%);
-    }
-    .currency {
-      top         : -12px;
-      right       : 2px;
-      position    : relative;
-      font-family : arial, sans-serif;
-      color       : @text-color-secondary;
-      font-size   : 18px;
-    }
-
-  }
-
   .features {
     .li {
       border-bottom : 1px solid lighten(@divider, 2%);
@@ -2072,5 +2049,90 @@ pdf {
   > object {
     min-height : 800px;
     width      : 100%;
+  }
+}
+
+.subscription-client-template {
+  .subscription-info {
+    font-family : 'Open Sans', sans-serif;
+    color       : #333;
+    font-size   : 13px;
+    line-height : 1.6;
+
+    .row {
+      text-align : center;
+    }
+
+    .price-figure {
+      .border-radius(50%);
+      margin : 0 auto;
+
+      .number {
+        font-size   : 42px;
+        font-weight : bold;
+      }
+      .unit {
+        font-weight : 400;
+        color       : lighten(@grey, 10%);
+      }
+      .currency {
+        top         : -12px;
+        right       : 2px;
+        position    : relative;
+        font-family : arial, sans-serif;
+        color       : @text-color-secondary;
+        font-size   : 18px;
+      }
+
+    }
+
+    .row.name {
+      border-bottom: none;
+    }
+
+    div.package {
+      .transition(all 0.5s ease-in-out);
+      background-color : transparent;
+      border: 1px solid transparent;
+
+      &.active {
+        background-color : lighten(@outset-blue, 80%);
+        border-left-color: lighten(@outset-blue, 60%);
+        border-right-color: lighten(@outset-blue, 60%);
+
+        &.firstRow {
+          .border-radiuses(4px, 0, 0, 4px);
+          border-top-color: lighten(@outset-blue, 60%);
+        }
+        &.lastRow {
+          .border-radiuses(0, 4px, 4px, 0);
+          border-bottom-color: lighten(@outset-blue, 60%);
+        }
+      }
+    }
+
+    .features {
+
+      .li {
+        border-bottom : 1px solid lighten(@divider, 2%);
+        padding       : 10px;
+
+        .fa {
+          margin-right : 5px;
+        }
+
+        &.disabled {
+          color : @grey;
+          .fa {
+            color : @grey;
+          }
+        }
+
+        &.lastRow {
+          margin-bottom: 10px
+        }
+      }
+
+    }
   }
 }

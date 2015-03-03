@@ -42,7 +42,12 @@
             });
     }
 
+    function resolveSubscription(Payments, params, auth) {
 
+        var companyId = params.companyId || auth.user && auth.user.company && (auth.user.company._id || auth.user.company);
+
+        return Payments.Subscription.get({companyId: companyId}).$promise;
+    }
 
     function resolveSubscriptions(config) {
         return config.getAsync('subscriptions');
@@ -151,7 +156,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    subscriptions: resolveSubscriptions
+                    subscriptions: resolveSubscriptions,
+                    subscription: resolveSubscription
                 }
             }).
             state('subscriptionPayment', {
@@ -176,6 +182,7 @@
     companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
     resolveSubscriptions.$inject=['AppConfig'];
+    resolveSubscription.$inject=['Payments', '$stateParams', 'Authentication'];
     resolveSubscriptionDetails.$inject=['AppConfig', '$stateParams', '$log'];
 
     config.$inject = ['$stateProvider'];
