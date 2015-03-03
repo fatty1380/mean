@@ -72,7 +72,7 @@ SubscriptionSchema.virtual('statusMessage')
                 return 'Posted ' + this.used + ' jobs on an Unlimited package';
             }
             else {
-                return 'Posted ' + this.used + ' of ' + this.available + ' jobs this month';
+                return 'Posted ' + this.used + ' of ' + this.available + ' jobs';
             }
         }
         else {

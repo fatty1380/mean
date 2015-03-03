@@ -1067,7 +1067,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <div ng-repeat="package in vm.packages | orderBy : \'index\'"\n' +
   '                     ng-init="pkgValue = package.features[feature];"\n' +
   '                     class="package col-md-3 li {{pkgValue.classes}}"\n' +
-  '                     ng-class="{\'active\': package.active, \'lastRow\': !vm.user, \'current\': package.current}"\n' +
+  '                     ng-class="{\'active\': package.active, \'lastRow\': !vm.user && lastFeature, \'current\': package.current}"\n' +
   '                     ng-mouseenter="package.active = true;"\n' +
   '                     ng-mouseleave="package.active = false;"\n' +
   '                     ng-attr-tooltip="{{pkgValue.tooltip}}"\n' +

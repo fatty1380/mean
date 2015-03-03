@@ -45,7 +45,7 @@
                 <div ng-repeat="package in vm.packages | orderBy : 'index'"
                      ng-init="pkgValue = package.features[feature];"
                      class="package col-md-3 li {{pkgValue.classes}}"
-                     ng-class="{'active': package.active, 'lastRow': !vm.user, 'current': package.current}"
+                     ng-class="{'active': package.active, 'lastRow': !vm.user && lastFeature, 'current': package.current}"
                      ng-mouseenter="package.active = true;"
                      ng-mouseleave="package.active = false;"
                      ng-attr-tooltip="{{pkgValue.tooltip}}"
