@@ -162,7 +162,8 @@
                         return mytoken.$promise;
 
                     }],
-                    applicant: resolveApplicantForUser
+                    applicant: resolveApplicantForUser,
+                    company: function() {return null;}
                 },
                 controller: 'PaymentController',
                 controllerAs: 'vm',

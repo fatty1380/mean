@@ -273,11 +273,11 @@ var getLatestPlanDetails = function () {
             if (err) {
                 deferred.reject(err);
             }
-
-            console.log('[Braintree.getLatestPlanDetails] Got result plans: %j', result);
-
             plansLastUpdated = moment();
             subscriptionPlans = result.plans;
+
+            console.log('[Braintree.getLatestPlanDetails] Got response containing %d plans', (result.plans || []).length);
+
 
             deferred.resolve(subscriptionPlans);
         });
@@ -334,11 +334,23 @@ exports.getPlanDetails = function (req, res, next) {
 
                 if (!_.isEmpty(req.query) && !!req.query.promoCode) {
                     plan.discounts = _.filter(plan.discounts, function (disc) {
-                        debugger;
-                        return _.contains(req.query.promoCode, disc.id);
+                        if(_.contains(req.query.promoCode, disc.id)) {
+                            debugger;
+                            disc.amount = plan.price;
+                            return true;
+                        }
+                        return false;
                     });
                 }
 
+                //_.map(plan.discounts, function(discount) {
+                //    if(discount.id.toUpperCase() === 'INTROMONTH') {
+                //        console.log('[Briantree.getSubscriptionDetails] Setting Intro-Month discount `%s` to $%s', discount.id, plan.price);
+                //        discount.amount = plan.price;
+                //    }
+                //});
+
+                console.log('[Braintree.getSubscriptionDetails] Returning plan: %o', plan);
                 return res.json(plan);
 
             },
@@ -375,13 +387,13 @@ exports.postSubscription = function (req, res, next) {
         function (currentPlans) {
             req.planDetails = _.find(currentPlans, {'id': req.planId});
 
-            var price = req.query.price;
+            var price = parseFloat(req.query.price);
 
             if (!price) {
                 console.error('[postSubscription] Invalid Price : %s', price);
             }
 
-            var calcPrice = req.planDetails.price;
+            var calcPrice = parseFloat(req.planDetails.price);
             console.log('[Braintree.postSubscription] Got base price `%s`', calcPrice);
 
             if(!!req.promoCode) {
@@ -394,7 +406,7 @@ exports.postSubscription = function (req, res, next) {
             }
 
             if (price !== calcPrice) {
-                console.error('[postSubscription] mismatched Price : %s', price);
+                console.error('[postSubscription] mismatched Price : %d v %d', price, calcPrice);
                 return res.status(500).send({
                     message: 'No Pricing information found'
                 });
@@ -464,12 +476,24 @@ var initializeSubscription = function (req, res) {
 
     if (!!req.promoCode) {
         console.log('[Braintree.InitSubscription] Applying promo code: %s', req.promoCode);
-        req.subscriptionInformation.discounts = {
-            add: {inheritedFromId: req.promoCode}
-        };
+
+        //if(req.promoCode.toUpperCase() === 'INTROMONTH') {
+        //    console.log('[Braintree.InitSubscription] Configuring 1 month trial period');
+        //    req.subscriptionInformation.trialPeriod = true;
+        //    req.subscriptionInformation.trialDuration = 1;
+        //    req.subscriptionInformation.trialDurationUnit = 'month';
+        //}
+        //else {
+            console.log('[Braintree.InitSubscription] Applying promo code to request: %s', req.promoCode);
+            req.subscriptionInformation.discounts = {
+                add: [{inheritedFromId: req.promoCode}]
+            };
+        //}
     }
 
-    console.log('[Braintree.InitSubscription] Ordering %s and processing payment with options: %j', req.reportType, req.saleInformation);
+    debugger;
+
+    console.log('[Braintree.InitSubscription] Ordering %s and processing payment with options: %j', req.subscriptionInformation.planId, req.subscriptionInformation);
 
     return true;
 };

@@ -144,64 +144,8 @@
                                 {{vm.text.pricing.header}}
                             </h3>
                         </tab-heading>
-                        <div class="panel text-center feature-list">
-
-                            <h3 class="title">{{vm.text.pricing.sub}}</h3>
-
-                            <div class="row">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <div class="row">
-                                        <div class="col-md-3" ng-repeat="package in vm.text.pricing.packages"
-                                             ng-class="{'col-md-offset-3': !!$first}">
-                                            <h3 class="title">{{package.title}}</h3>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-3" ng-repeat="package in vm.text.pricing.packages"
-                                             ng-class="{'col-md-offset-3': !!$first}">
-                                            <p class="price-figure">
-                                    <span class="price-figure-inner">
-                                        <span class="currency">$</span><span
-                                            class="number">{{package.price}}</span><br>
-                                    <span class="unit"> per month</span></span>
-                                            </p>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="row features" ng-repeat="feature in vm.text.pricing.features">
-                                        <div class="col-md-3 li title text-right">
-                                            {{feature}}
-                                        </div>
-                                        <div class="col-md-3 li">
-                                <span ng-if="$last && !!vm.text.pricing.packages[0].features[$index]">
-                                    <span class="strong">{{vm.text.pricing.packages[0].features[$index]}}</span>
-                                    <span class="unit text-muted"> per month</span></span>
-                                            <span ng-if="$last && !vm.text.pricing.packages[0].features[$index]">&nbsp;</span></span>
-                                            <i class="fa" ng-if="!$last"
-                                               ng-class="{'fa-check text-success': vm.text.pricing.packages[0].features[$index], 'fa-dash':!vm.text.pricing.packages[0].features[$index]}"></i>
-                                        </div>
-                                        <div class="col-md-3 li">
-                                <span ng-if="$last && !!vm.text.pricing.packages[1].features[$index]">
-                                    <span class="strong">{{vm.text.pricing.packages[1].features[$index]}}</span>
-                                    <span class="unit text-muted"> per month</span></span>
-                                            <span ng-if="$last && !vm.text.pricing.packages[1].features[$index]">&nbsp;</span></span>
-                                            <i class="fa" ng-if="!$last"
-                                               ng-class="{'fa-check text-success': vm.text.pricing.packages[1].features[$index], 'fa-dash':!vm.text.pricing.packages[1].features[$index]}"></i>
-                                        </div>
-                                        <div class="col-md-3 li">
-                                <span ng-if="$last && !!vm.text.pricing.packages[2].features[$index]">
-                                    <span class="strong">{{vm.text.pricing.packages[2].features[$index]}}</span>
-                                    <span class="unit text-muted"> per month</span></span>
-                                            <span ng-if="$last && !vm.text.pricing.packages[2].features[$index]">&nbsp;</span></span>
-                                            <i class="fa" ng-if="!$last"
-                                               ng-class="{'fa-check text-success': vm.text.pricing.packages[2].features[$index], 'fa-dash':!vm.text.pricing.packages[2].features[$index]}"></i>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="panel">
+                            <oset-subscription-info text="vm.text.pricing"></oset-subscription-info>
                         </div>
                     </tab>
                 </tabset>

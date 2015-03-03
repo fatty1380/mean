@@ -4179,33 +4179,6 @@ img.user-profile-picture {
 .landing-page .three-cols div.panel {
   padding: 10px;
 }
-.landing-page .price-figure {
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  margin: 0 auto;
-}
-.landing-page .price-figure .number {
-  font-size: 42px;
-  font-weight: bold;
-}
-.landing-page .price-figure .unit {
-  font-weight: 400;
-  color: #b3b3b3;
-}
-.landing-page .price-figure .currency {
-  top: -12px;
-  right: 2px;
-  position: relative;
-  font-family: arial, sans-serif;
-  color: #666666;
-  font-size: 18px;
-}
 .landing-page .features .li {
   border-bottom: 1px solid #d1d1d1;
   padding: 10px;
@@ -5442,6 +5415,154 @@ a {
 pdf > object {
   min-height: 800px;
   width: 100%;
+}
+.subscription-client-template .subscription-info {
+  font-family: 'Open Sans', sans-serif;
+  color: #333;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.subscription-client-template .subscription-info .row {
+  text-align: center;
+}
+.subscription-client-template .subscription-info .price-figure {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  margin: 0 auto;
+}
+.subscription-client-template .subscription-info .price-figure .number {
+  font-size: 42px;
+  font-weight: bold;
+}
+.subscription-client-template .subscription-info .price-figure .unit {
+  font-weight: 400;
+  color: #b3b3b3;
+}
+.subscription-client-template .subscription-info .price-figure .currency {
+  top: -12px;
+  right: 2px;
+  position: relative;
+  font-family: arial, sans-serif;
+  color: #666666;
+  font-size: 18px;
+}
+.subscription-client-template .subscription-info .row.name {
+  border-bottom: none;
+}
+.subscription-client-template .subscription-info div.package {
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+.subscription-client-template .subscription-info div.package.active {
+  background-color: #f5f9fd;
+  border-left-color: #9fc6ed;
+  border-right-color: #9fc6ed;
+}
+.subscription-client-template .subscription-info div.package.active.firstRow {
+  -webkit-border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border-top-color: #9fc6ed;
+}
+.subscription-client-template .subscription-info div.package.active.lastRow {
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border-bottom-color: #9fc6ed;
+}
+.subscription-client-template .subscription-info div.package.current {
+  background-color: #dff0d8;
+  border-left-color: #d6e9c6;
+}
+.subscription-client-template .subscription-info div.package.current.firstRow {
+  -webkit-border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 4px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border-top-color: #d6e9c6;
+}
+.subscription-client-template .subscription-info div.package.current.lastRow {
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border-bottom-color: #d6e9c6;
+}
+.subscription-client-template .subscription-info div.package.current button {
+  display: none;
+}
+.subscription-client-template .subscription-info .features .li {
+  border-bottom: 1px solid #d1d1d1;
+  padding: 10px;
+}
+.subscription-client-template .subscription-info .features .li .fa {
+  margin-right: 5px;
+}
+.subscription-client-template .subscription-info .features .li.disabled {
+  color: #999999;
+}
+.subscription-client-template .subscription-info .features .li.disabled .fa {
+  color: #999999;
+}
+.subscription-client-template .subscription-info .features .li.lastRow {
+  margin-bottom: 10px;
 }
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {

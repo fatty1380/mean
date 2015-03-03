@@ -2,7 +2,7 @@
     'use strict';
 
     // Jobs controller
-    function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company) {
+    function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company, $modal) {
 
         if(!Authentication.user) {
             return $state.go('intro');
@@ -48,6 +48,51 @@
                 if (!vm.company) {
                     $log.error('[JobEditCtrl] Company must be defined when posting a new job, returning home');
                     $state.go('home');
+                }
+
+                if (!vm.company.subscription) {
+                    vm.invalidSubscription = 'Sorry, but you will need to purchase a subscription before posting jobs';
+                } else if (!vm.company.subscription.isValid) {
+                    vm.invalidSubscription = vm.company.subscription.statusMessage;
+                }
+
+                if (!vm.company.subscription || !vm.company.subscription.isValid) {
+                    var modalInstance = $modal.open({
+                        templateUrl: 'invalidSubscription.html',
+                        controller: ['$state', '$modalInstance', 'statusMessage',
+                            function ($state, $modalInstance, statusMessage) {
+                                var vm = this;
+
+                                vm.statusMessage = statusMessage;
+
+                                vm.gotoPlans = function () {
+                                    $state.go('subscriptionsReview');
+                                    $modalInstance.close('subscriptions');
+                                };
+
+                                vm.cancel = function () {
+                                    $state.go('home');
+                                    $modalInstance.close('home');
+                                };
+                            }],
+                        backdrop: true,
+                        backdropClass: 'shadow',
+                        controllerAs: 'vm',
+                        size: 'lg',
+                        keyboard: false,
+                        resolve: {
+                            statusMessage: function () {
+                                return vm.invalidSubscription;
+                            }
+                        }
+                    });
+
+                    modalInstance.result.then(function (message) {
+                        $log.info('Modal accepted with message: %s', message);
+                    }, function () {
+                        $log.info('Modal dismissed at: ' + new Date());
+                        $state.go('home');
+                    });
                 }
 
                 vm.job = {
@@ -161,7 +206,7 @@
     }
 
 
-    JobEditController.$inject = ['$stateParams', '$state', '$log', 'Authentication', 'Jobs', 'job', 'company'];
+    JobEditController.$inject = ['$stateParams', '$state', '$log', 'Authentication', 'Jobs', 'job', 'company', '$modal'];
 
     angular.module('jobs')
         .controller('JobEditController', JobEditController);
