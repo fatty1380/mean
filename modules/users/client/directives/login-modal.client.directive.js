@@ -93,7 +93,7 @@
                         $state.go('home');
                     }
 
-                    Raygun.setUser(vm.user._id, false, vm.user.email, vm.user.displayName);
+                    Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
                 }).error(function (response) {
                     console.error(response.message);
                     vm.error = response.message;
