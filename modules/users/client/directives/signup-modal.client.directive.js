@@ -118,6 +118,8 @@
                     } else {
                         $state.go('home');
                     }
+
+                    Raygun.setUser(vm.user._id, false, vm.user.email, vm.user.displayName);
                 }).error(function(response) {
                     console.error(response.message);
                     vm.error = response.message;

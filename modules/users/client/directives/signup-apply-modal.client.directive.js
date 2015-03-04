@@ -158,6 +158,8 @@
 
                     vm.loading = false;
                     vm.currentStep++;
+
+                    Raygun.setUser(vm.user._id, false, vm.user.email, vm.user.displayName);
                 }).error(function (response) {
                     console.error(response.message);
                     vm.loading = false;

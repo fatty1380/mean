@@ -33,6 +33,9 @@
                 },
                 function(error) {
                     $log.error('No Plan found on server for planId `%s`', report.planId);
+                    vm.error = 'Sorry, the plan you are trying to order is not currently available';
+
+                    Raygun.send(new Error('Unknown PlanId: ' + report.planId));
                 }
             );
             debugger;
