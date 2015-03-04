@@ -91,14 +91,11 @@
 
                 <!--NON-AUTHENTICATED : Center Nav bar -->
                 <ul class="nav navbar-nav navbar-center" data-ng-if="!authentication.user">
-                    <li class="nav-item pad-sides" du-smooth-scroll du-scrollspy="whyOutset">
-                        <a href="/#whyOutset">About Us</a>
+                    <li class="nav-item pad-sides" ng-class="{'active': $state.is('intro.driver')}">
+                        <a ui-sref="intro.driver">Drivers</a>
                     </li>
-                    <li class="nav-item pad-sides" du-smooth-scroll du-scrollspy="forDrivers">
-                        <a href="/#forDrivers">Drivers</a>
-                    </li>
-                    <li class="nav-item pad-sides" du-smooth-scroll du-scrollspy="forOwners">
-                        <a href="/#forOwners">Employers</a>
+                    <li class="nav-item pad-sides" ng-class="{'active': $state.is('intro.owner')}">
+                        <a ui-sref="intro.owner">Employers</a>
                     </li>
                     <li class="nav-item pad-sides" data-ng-class="{active: $state.includes('jobs')}">
                         <a ui-sref="jobs.list">Jobs</a>
@@ -150,7 +147,7 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="/api/auth/signout" target="_self">Signout</a>
+                                <a href="/api/auth/signout" target="_self">signout</a>
                             </li>
                         </ul>
                     </li>

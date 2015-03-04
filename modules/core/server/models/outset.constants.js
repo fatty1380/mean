@@ -270,19 +270,19 @@ module.exports.faqs = [
         keywords: ['term', 'term']
     },
     {
-        category: 'subsciptions and billing',
+        category: 'subscriptions',
         question: 'How is my subscription billed?',
         answer: 'Your subscription period is 30 days long.  You will be billed on the 1st day for the next subscription period.  Billing starts on the day that you purchase your subscription.',
         keywords: ['term', 'term']
     },
     {
-        category: 'subsciptions and billing',
+        category: 'subscriptions',
         question: 'How do I change my subscription plan?',
         answer: 'You can change your plan by clicking the [Change] link next to your current plan in your [Profile] Section.  Your bill will be pro-rated to reflect the change in your subscription plan.',
         keywords: ['term', 'term']
     },
     {
-        category: 'subsciptions and billing',
+        category: 'subscriptions',
         question: 'How do I change my credit card on file?',
         answer: 'To change your billing information, click the Settings Icon (shaped like a gear) in the upper right hand corner of the screen of every page.  You can also click the [Edit Account Settings] button near your name on your profile page.',
         keywords: ['term', 'term']
@@ -1238,7 +1238,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_MVR',
         fields: module.exports.fields.OUTSET_MVR,
         skus: ['MVRDOM'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     good: {
         title: 'Basic',
@@ -1248,7 +1249,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_BASE',
         fields: module.exports.fields.OUTSET_BASE,
         skus: ['NBDS', 'MVRDOM'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     better: {
         title: 'Premium',
@@ -1258,7 +1260,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_PREMIUM',
         fields: module.exports.fields.OUTSET_PREMIUM,
         skus: ['PKG_PREMIMUM', 'MVRDOM'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     best: {
         title: 'Enterprise',
@@ -1268,7 +1271,8 @@ module.exports.reportPackages = {
         sku: 'OUTSET_ENTERPRISE',
         fields: module.exports.fields.OUTSET_ENTERPRISE,
         skus: ['PKG_PREMIMUM', 'MVRDOM', 'ES_ECUPIT'],
-        enabled: true
+        enabled: true,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     drugs: {
         title: 'Drug Test',
@@ -1278,9 +1282,83 @@ module.exports.reportPackages = {
         sku: 'OUTSET_DRUGS',
         fields: module.exports.fields.OUTSET_DRUGS,
         skus: ['ES_ECUPIT'],
-        enabled: false
+        enabled: false,
+        logo: './modules/bgchecks/img/everifile_logo.png'
     },
     fieldSkus: ['MVRDOM', 'NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER', 'ES_ECUPIT']
+};
+
+module.exports.subscriptionPackages = {
+    features: ['Job Posts', 'Applicant Redirect', 'Applicant Tracking', 'Downloadable Reports', 'Require Reports', 'Multiple Log-ins', 'Customized Background Checks'],
+    packages: [
+        {
+            index: 0,
+            name: 'Local',
+            description: '',
+            features: {
+                //{text: 'One active job post', classes: 'text-success strong', icon: 'fa fa-plus'},
+                //{text: 'Chat, Review and Manage Applicants', classes: '', icon: 'fa fa-check'},
+                'Job Posts': {value: true, text: '2', classes: '', icon: ''},
+                'Applicant Redirect': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Applicant Tracking': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Downloadable Reports': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Require Reports': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Multiple Log-ins': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Customized Background Checks': {value: false, text: 'N/A', classes: 'text-muted', icon: ''}
+            },
+            price: '60',
+            promos: [''],
+            planId: 'local',
+            jobCt: 2,
+            recurring: true,
+            monthly: true,
+            enabled: true,
+            logo: false
+        },
+        {
+            index: 1,
+            name: 'Regional',
+            description: '',
+            features: {
+                'Job Posts': {value: true, text: '5', classes: '', icon: ''},
+                'Applicant Redirect': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Applicant Tracking': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Downloadable Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Require Reports': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Multiple Log-ins': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
+                'Customized Background Checks': {value: true, text: '+ $65', classes: '', icon: '', tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'}
+},
+            price: '95',
+            promos: [''],
+            planId: 'regional',
+            jobCt: 5,
+            recurring: true,
+            monthly: true,
+            enabled: true,
+            logo: false
+        },
+        {
+            name: 'Fleet',
+            description: '',
+            features: {
+                'Job Posts': {value: true, text: '15', classes: '', icon: ''},
+                'Applicant Redirect': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Applicant Tracking': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Downloadable Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Require Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Multiple Log-ins': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
+                'Customized Background Checks': {value: true, text: '+ $65', classes: '', icon: '', tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'}
+            },
+            price: '145',
+            promos: [''],
+            planId: 'fleet',
+            jobCt: 15,
+            recurring: true,
+            monthly: true,
+            enabled: true,
+            logo: false
+        }
+    ]
 };
 
 module.exports.individualFields = {

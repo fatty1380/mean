@@ -35,7 +35,7 @@ var DriverSchema = new Schema({
 
     licenses: ['License'],
 
-    schedule: ['Schedule'],
+    //schedule: ['Schedule'],
 
     about: {
         type: String,
@@ -118,16 +118,19 @@ var DriverSchema = new Schema({
     }
 }, {toJSON: {virtuals: true}});
 
+DriverSchema.methods.updateReportURL = function(sku, url) {
+    var i = _.findIndex(this.reportsData, {sku: sku});
+
+    if(i !== -1) {
+        this.reportsData[i].url = url;
+        this.reportsData[i].expires = moment().add(15, 'm');
+        console.log('[DS.updateReportURL] updated reportsData[%d] to %j', i, this.reportsData[i]);
+    }
+};
+
 DriverSchema.virtual('reports')
     .get(function () {
-        var rpts = {};
-        _.forEach(this.reportsData, function(report) {
-            rpts[report.sku] = report;
-        });
-
-        console.log('[Driver.reports] reports[%d] %j', rpts.length, rpts);
-
-        return rpts;
+        return _.indexBy(this.reportsData, 'sku');
     });
 
 DriverSchema.pre('save', function (next) {
@@ -139,7 +142,7 @@ DriverSchema.pre('save', function (next) {
 
 DriverSchema.pre('save', function (next) {
 
-    var something = _.map(this.experience, function (exp) {
+    _.map(this.experience, function (exp) {
         if (!!exp._doc.time) {
             exp._doc.time = undefined;
         }

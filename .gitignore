@@ -3,8 +3,8 @@
 .sass-cache/
 npm-debug.log
 node_modules/
-public/lib
-app/tests/coverage/
+public/lib/
+public/dist/
 .bower-*/
 .idea/
 uploads
@@ -21,6 +21,7 @@ Outset-Logo_*.png
 scratchpad.*
 public
 log
+app/tests/coverage/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

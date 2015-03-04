@@ -41,6 +41,11 @@ function getMessage(options) {
 
 function sendGenericTemplateEmail(templateName, user, options) {
 
+    if(!user) {
+        console.error('[emailer.sendGenericTemplateEmail] No user specified - returning');
+        return false;
+    }
+
     console.log('Sending email template: %s', templateName);
 
     var mailOptions = {

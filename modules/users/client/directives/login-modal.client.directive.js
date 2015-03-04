@@ -86,12 +86,14 @@
 
                     if (vm.srefRedirect) {
                         $state.go(vm.srefRedirect.state, vm.srefRedirect.params, {reload: true});
-                    } else if (!$state.is('intro')) {
+                    } else if (!$state.includes('intro')) {
                         $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
                         $state.go($state.current, {}, {reload: true});
                     } else {
                         $state.go('home');
                     }
+
+                    Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
                 }).error(function (response) {
                     console.error(response.message);
                     vm.error = response.message;

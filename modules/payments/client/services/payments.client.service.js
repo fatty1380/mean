@@ -22,14 +22,38 @@
                     sku: '@sku',
                     nonce: '@nonce',
                     price: '@price',
-                    applicantId: '@applicantId',
-                    payment_nonce_id: 'payment_nonce_id'
+                    applicantId: '@applicantId'
                 }, {
                     $save: {
                         method: 'POST'
                     }
                 });
-            }
+            },
+            Subscription:  $resource('/api/companies/:companyId/subscription', {
+                    planId: '@planId',
+                    promoCode: '@promoCode',
+                    nonce: '@nonce',
+                    price: '@price',
+                    companyId: '@companyId'
+                }, {
+                    $save: {
+                        method: 'POST'
+                    }
+                })
+            ,
+            Plans: $resource('/api/companies/subscriptions/:planId',{
+                    planId: '@planId',
+                    promoCode: '@promoCode'
+                }, {
+                    $get: {
+                        method: 'GET',
+                        isArray: true
+                    },
+                    getOne: {
+                        method: 'GET',
+                        isArray: false
+                    }
+                })
         };
 
         return _this.data;

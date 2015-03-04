@@ -80,7 +80,15 @@
                     var rsrc = $resource('api/config/faqs');
                     rsrc.query().$promise.then(function (resp) {
                         $log.debug('faq response: %o', resp);
-                        faqs = _.filter(resp, myfilter || {});
+                        var filter =  myfilter || {};
+                        if(!!filter.category && !!filter.category.length) {
+                            faqs = _.filter(resp, function(item) {
+                                return _.contains(filter.category, item['category']);
+                            });
+                        }
+                        else {
+                            faqs = resp;
+                        }
 
                         d.resolve(faqs);
                     }, function (err) {

@@ -49,7 +49,7 @@
 
             <!--- Show Connection Information VIEW ---->
             <div class="row"
-                 ng-hide="vm.connecting || vm.application.connection || vm.application.connection.isValid">
+                 ng-hide="vm.connecting || vm.activeConnection">
                 <p class="panel panel-info letter text-center col-sm-10 col-sm-offset-1"
                    ng-bind-html="vm.text.noconnection"></p>
 
@@ -72,75 +72,10 @@
                     able to view any reports they have ordered and message directly with them.</p>
             </div>
 
-            <div class="row" ng-show="vm.application.connection && vm.application.connection.isValid">
+            <div class="row">
                 <div class="col-sm-12">
-                    <h4>Messages
-                        <small class="pull-right">
-                            <em>
-                                <strong>Connection Status</strong>
-                                Me:
-                                <div class="label"
-                                     ng-class="{'label-success': vm.status.me, 'label-warning':vm.status.me === false, 'label-default': vm.status.me === null}">
-                                    &nbsp;</div>
-                                Them:
-                                <div class="label"
-                                     ng-class="{'label-success': vm.status.them, 'label-warning':vm.status.them === false, 'label-default': vm.status.them === null}">
-                                    &nbsp;</div>
-                            </em>
-                        </small>
-                    </h4>
-
-
-                    <div class="chat-section"
-                         scroll-bottom="vm.application.messages">
-                        <div class="row chat-box" ng-repeat="message in vm.application.messages"
-                             ng-init="message.username = message.username || message.sender.username"
-                             ng-class="{'me': message.username === vm.user.username, 'other': message.username !== vm.user.username }">
-
-                            <span ng-if="message.type !== 'status'" ng-class="{'last':!!$last}">
-                                <div class="col-sm-2 text-right left-gutter">
-                                    <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
-                                </div>
-
-                                <div class="col-sm-8" ng-if="message.type === 'message' || message.type === undefined">
-                                    <img class="profile-image medium"
-                                         ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
-                                    <blockquote><p>{{message.text}}</p></blockquote>
-                                </div>
-
-                                <div class="col-sm-2 text-left right-gutter">
-                                    <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
-                                </div>
-                            </span>
-                        </div>
-
-                    </div>
-                    <div class="chat-entry" id="messaging">
-                        <div class="row">
-                            <div class="col-sm-9 col-xs-8">
-                                <input type="text" ng-show="vm.messageMode === 'text'"
-                                       data-ng-model="vm.message" class="form-control "
-                                       placeholder="new message ..."/>
-
-                                <textarea type="text" ng-show="vm.messageMode === 'multiline'" rows="3"
-                                          data-ng-model="vm.message" class="form-control"
-                                          placeholder="new message..." modal-focus="vm.msgFocus"></textarea>
-
-                                <os-html-edit ng-show="vm.messageMode === 'html'"
-                                              model="vm.message"></os-html-edit>
-                            </div>
-                            <div class="col-sm-3 col-xs-4 center-block text-center">
-                                <!--<div class="btn-group" dropdown>-->
-                                <button type="button" class="btn btn-oset-primary btn-block" value="send"
-                                        ng-click="vm.postMessage();"
-                                        ng-class="{'disabled':(vm.sending || !vm.message)}">Send
-                                </button>
-                            </div>
-                            <div data-ng-show="vm.error" class="text-danger">
-                                <strong data-ng-bind="vm.error"></strong>
-                            </div>
-                        </div>
-                    </div>
+                    <oset-chat-console connection="vm.application.connection" messages="vm.application.messages"
+                                       room="vm.application._id"></oset-chat-console>
                 </div>
             </div>
         </div>

@@ -14,17 +14,14 @@
         <div class="col-md-12">
             <form class="" name="vm.jobForm" data-ng-submit="vm.submit()" novalidate>
                 <fieldset>
-                    <div class="panel panel-default">
+                    <div class="panel panel-default"
+                         ng-class="{'has-error': vm.jobForm.headline.$invalid && (vm.jobForm.$submitted || vm.jobForm.headline.$touched)}">
                         <div class="panel-heading">
                             <span class="h4"><label class="control-label" for="name">Headline</label></span>
                         </div>
                         <div class="panel-body">
                             <input type="text" data-ng-model="vm.job.name" id="name" class="form-control"
                                    placeholder="Job Headline" name="headline" required>
-                            <small class="error"
-                                   ng-show="vm.jobForm.headline.$invalid">
-                                <i class="fa fa-times text-danger"></i>
-                            </small>
                         </div>
                     </div>
 
@@ -37,25 +34,33 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default">
+                    <div class="panel panel-default"
+                         ng-class="{'has-error': (vm.jobForm.description.$invalid || !vm.job.description) && (vm.jobForm.$submitted || vm.jobForm.description.$touched)}">
                         <div class="panel-heading">
                             <span class="h4"><label class="control-label" for="description">Description</label></span>
                         </div>
                         <div class="panel-body">
-                            <os-html-edit id="description" model="vm.job.description"></os-html-edit>
+                            <textarea os-html-edit name="description" id="description" class="editor-lg" data-ng-model="vm.job.description" ng-required="true"></textarea>
                         </div>
 
-                        <div class="panel-heading" data-ng-click="vm.showPreview = !vm.showPreview">Preview</div>
-                        <div class="panel-body" data-ng-show="vm.showPreview" ng-bind-html="vm.job.description"></div>
+                        <div class="panel-heading pointer" data-ng-click="vm.showPreview = !vm.showPreview">
+                            <i class="fa mgn-right" ng-class="{'fa-caret-down': vm.showPreview, 'fa-caret-right': !vm.showPreview}"></i>
+                            Preview
+                        </div>
+                        <div class="panel-body" data-ng-show="vm.showPreview && vm.job.description" ng-bind-html="vm.job.description"></div>
+                        <div class="panel-body text-center text-muted" data-ng-show="vm.showPreview && !vm.job.description">
+                            Please enter a description above ...
+                        </div>
                     </div>
 
 
-                    <div class="panel panel-default">
+                    <div class="panel panel-default"
+                         ng-class="{'has-error': vm.jobForm.requirements.$invalid && (vm.jobForm.$submitted || vm.jobForm.requirements.$touched)}">
                         <div class="panel-heading">
                             <span class="h4"><label class="control-label" for="requirements">Requirements</label></span>
                         </div>
                         <div class="panel-body">
-                            <os-html-edit id="requirements" model="vm.job.requirements"></os-html-edit>
+                            <textarea os-html-edit name="requirements" id="requirements" class="editor-md" data-ng-model="vm.job.requirements"></textarea>
                         </div>
                     </div>
 
@@ -146,4 +151,19 @@
             </form>
         </div>
     </section>
+
+    <script type="text/ng-template" id="invalidSubscription.html">
+        <div class="modal-header bg-primary">
+            <h3 class="modal-title">Subscriptions</h3>
+        </div>
+        <div class="modal-body">
+            <h4>Sorry ...</h4>
+            <p class="text-center">{{vm.statusMessage}}</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-oset-link" ng-click="vm.cancel()">cancel</button>
+            <button class="btn btn-oset-primary" ng-click="vm.gotoPlans()">View Plans</button>
+        </div>
+    </script>
+
 </section>

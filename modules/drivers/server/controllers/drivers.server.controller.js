@@ -111,7 +111,7 @@ exports.create = function (req, res) {
     driver.user = req.user;
     driver.licenses = req.body.licenses;
 
-    if(driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
+    if (driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
         driver.licenses[0].rating = null;
     }
 
@@ -167,7 +167,7 @@ exports.update = function (req, res) {
 
     driver = _.extend(driver, req.body);
 
-    if(driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
+    if (driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
         driver.licenses[0].rating = null;
     }
 
@@ -238,13 +238,13 @@ exports.uploadResume = function (req, res) {
     );
 };
 
-exports.refreshResume = function(req, res) {
+exports.refreshResume = function (req, res) {
     console.log('[DriverCtrl.refreshResume] Start');
     var user = req.user;
     var driver = req.driver;
 
     if (!user) {
-        return res.status(400).send({
+        return res.status(401).send({
             message: 'User is not signed in'
         });
     }
@@ -255,8 +255,8 @@ exports.refreshResume = function(req, res) {
         });
     }
 
-    if(!(driver.resume && driver.resume.bucket && driver.resume.key)) {
-        return res.status(400).send({
+    if (!(driver.resume && driver.resume.bucket && driver.resume.key)) {
+        return res.status(404).send({
             message: 'Driver does not have a resume on file'
         });
     }
@@ -266,25 +266,78 @@ exports.refreshResume = function(req, res) {
             driver.resume.url = success;
             driver.resume.expires = moment().add(15, 'm');
 
-            console.log('[s3.directUpload] Post secure upload, resolving with : %j', driver.resume);
+            console.log('[DriverCtrl.refreshResume] Post secure upload, resolving with : %j', driver.resume);
 
             res.json(driver.resume);
 
             driver.save(function (err) {
                 if (err) {
-                    console.log('unable to save driver\'s updated resume url', err);
+                    console.log('[DriverCtrl.refreshResume] unable to save driver\'s updated resume url', err);
                 } else {
-                    console.log('Saved driver\'s updated resume URL');
+                    console.log('[DriverCtrl.refreshResume] Saved driver\'s updated resume URL');
                 }
             });
         }, function (err) {
-            console.log('[s3.directUpload] Post secure upload failed: %j', err);
+            console.log('[DriverCtrl.refreshResume] Post secure upload failed: %j', err);
 
             return res.status(400).send({
                 message: 'Unable to retrieve fresh URL for resume'
             });
         });
 
+};
+
+exports.refreshReport = function (req, res) {
+
+    console.log('[DriverCtrl.refreshReport] Start');
+    var user = req.user;
+    var driver = req.driver;
+    var sku = req.params.reportSku || !!driver.reportsData && driver.reportsData.length && driver.reportsData[0].sku;
+
+    if (!user) {
+        return res.status(401).send({
+            message: 'User is not signed in'
+        });
+    }
+
+    if (!driver) {
+        return res.status(400).send({
+            message: 'No Available Driver Profile'
+        });
+    }
+
+    if (!sku || !(driver.reports[sku] && driver.reports[sku].bucket && driver.reports[sku].key)) {
+        return res.status(404).send({
+            message: 'Driver does not have a ' + sku + ' report on file'
+        });
+    }
+
+    var report = driver.reports[sku];
+
+    fileUploader.getSecureReadURL(report.bucket, report.key).then(
+        function (success) {
+
+            report.url = success;
+            console.log('[DriverCtrl.refreshReport] Post secure upload, resolving with : %j', report);
+
+            res.json(report);
+
+            driver.updateReportURL(sku, report.url);
+
+            driver.save(function (err, updated) {
+                if (err) {
+                    console.log('[DriverCtrl.refreshReport] unable to save driver\'s updated report url', err);
+                } else {
+                    console.log('[DriverCtrl.refreshReport] Saved driver\'s updated report URL');
+                }
+            });
+        }, function (err) {
+            console.log('[DriverCtrl.refreshReport] Post secure upload failed: %j', err);
+
+            return res.status(400).send({
+                message: 'Unable to retrieve fresh URL for resume'
+            });
+        });
 };
 
 /**

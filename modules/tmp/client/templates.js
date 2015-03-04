@@ -402,8 +402,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </p>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt>raw</dt>\n' +
-  '                <dd><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>\n' +
+  '                <dt ng-if="vm.debug">raw</dt>\n' +
+  '                <dd ng-if="vm.debug"><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>\n' +
+  '\n' +
   '                <dt>Reports</dt>\n' +
   '                <dd class="report-badges" ng-class="{\'not-visible\':!vm.isConnected}">\n' +
   '\n' +
@@ -460,14 +461,14 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="County Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ccrim\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                      ng-class="{\'available\': !!vm.driver.reports[\'ccrim\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'ccrim\')">\n' +
+  '                      tooltip="Drug Screen{{vm.isConnected ? (!!vm.driver.reports[\'drugs\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      ng-class="{\'available\': !!vm.driver.reports[\'drugs\']}"\n' +
+  '                      ng-click="vm.isConnected && vm.openReport(\'drugs\')">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
   '                        <i class="fa fa-question fa-1x hidden"></i>\n' +
-  '                        <span class="title">C-CRIM</span>\n' +
+  '                        <span class="title">DRUG</span>\n' +
   '                    </span>\n' +
   '                    </span>\n' +
   '                </span>\n' +
@@ -552,7 +553,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                            <span class="month">{{(job.posted || job.created)  | amDateFormat : \'MMM\' | uppercase}}</span>\n' +
   '                            <span class="date-number">{{job.posted | amDateFormat : \'D\'}}</span>\n' +
   '                        </div>\n' +
-  '                        <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>\n' +
+  '                        <h3 class="post-title" ng-click="vm.showTab(job._id, \'applicants\', job.applications.length)">\n' +
+  '                            {{job.name}}</h3>\n' +
   '\n' +
   '                        <!--meta-->\n' +
   '                        <div class="row">\n' +
@@ -657,7 +659,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                                <p style="margin-bottom: 2px;">\n' +
   '                                                    discuss the job and schedule an interview\n' +
   '                                                    <a ui-sref="applications.view({applicationId: application._id, target: \'message\'})">\n' +
-  '                                                         by sending a message\n' +
+  '                                                        by sending a message\n' +
   '                                                    </a>\n' +
   '                                                </p>\n' +
   '                                            </span>\n' +
@@ -716,12 +718,22 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                            </div>\n' +
   '\n' +
   '                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === \'details\'">\n' +
-  '                                <h4>Description</h4>\n' +
+  '\n' +
+  '                                <h4>Description\n' +
+  '                                </h4>\n' +
   '\n' +
   '                                <p ng-bind-html="job.description"></p>\n' +
   '                                <h4>Requirements</h4>\n' +
   '\n' +
   '                                <p ng-bind-html="job.requirements"></p>\n' +
+  '                                <hr/>\n' +
+  '\n' +
+  '                                <button type="button" class="btn-tab btn-link read-more center-block"\n' +
+  '                                        ui-sref="jobs.view({jobId: job._id})">\n' +
+  '                                    view full job post\n' +
+  '                                    <i class="fa fa-external-link fa-lg"></i><span class="hidden-xs mgn-left">\n' +
+  '                                </span>\n' +
+  '                                </button>\n' +
   '                            </div>\n' +
   '                        </div>\n' +
   '                        <a class="read-more strong pull-right" ng-click="vm.visibleId = null"\n' +
@@ -780,8 +792,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                            <span ng-hide="!!application.isConnected">\n' +
   '                                                <p style="margin-bottom: 2px;">\n' +
   '                                                    <em class="text-muted">chat available once connected</em></span>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
+  '                                        </p>\n' +
+  '                                        </span>\n' +
   '                                    </dd>\n' +
   '                                </dl>\n' +
   '\n' +
@@ -884,6 +896,91 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/chat/views/chat-console.client.template.html',
+  '<div class="row chat-window" ng-show="vm.activeConnection">\n' +
+  '    <div class="col-sm-12">\n' +
+  '        <h4>Messages\n' +
+  '            <small class="pull-right">\n' +
+  '                <em>\n' +
+  '                    <strong>Connection Status</strong>\n' +
+  '                    Me:\n' +
+  '                    <div class="label label-{{vm.status.me ? \'success\' : vm.status.me === null ? \'default\' : \'warning\'}}">\n' +
+  '                        &nbsp;</div>\n' +
+  '                    Them:\n' +
+  '                    <div class="label label-{{vm.status.them ? \'success\' : vm.status.them === null ? \'default\' : \'warning\'}}">\n' +
+  '                        &nbsp;</div>\n' +
+  '                </em>\n' +
+  '            </small>\n' +
+  '        </h4>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="chat-section"\n' +
+  '             scroll-bottom="vm.messages">\n' +
+  '            <div ng-repeat="message in vm.messages | filter : {type: \'!status\'}"\n' +
+  '                 ng-init="message.username = message.username || message.sender.username"\n' +
+  '                 ng-class="{\'last\':!!$last,\'first\':!!$first}" class="{{vm.getSenderClass(message.username)}}">\n' +
+  '\n' +
+  '                <div class="separator row">\n' +
+  '                    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2"></div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="row chat-box">\n' +
+  '                    <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">\n' +
+  '                        <img class="profile-image medium"\n' +
+  '                             ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">\n' +
+  '\n' +
+  '\n' +
+  '                        <div class="chat-details">\n' +
+  '                            <div class="row">\n' +
+  '                                <div class="col-sm-12">\n' +
+  '                                    <blockquote><p ng-bind-html="message.text"></p></blockquote>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                            <div class="row ts">\n' +
+  '                                <div class="col-sm-12">\n' +
+  '                                    <span class="timestamp smaller">{{message.created | date: \'short\' }}</span>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '        </div>\n' +
+  '        <div class="chat-entry" id="messaging">\n' +
+  '            <div class="row mgn-vert">\n' +
+  '                <div class="col-md-8 col-md-offset-2">\n' +
+  '                    <input type="text" ng-show="vm.messageMode === \'text\'"\n' +
+  '                           data-ng-model="vm.message" class="form-control "\n' +
+  '                           placeholder="new message ..."/>\n' +
+  '\n' +
+  '                    <textarea type="text" ng-show="vm.messageMode === \'multiline\'" rows="3"\n' +
+  '                              data-ng-model="vm.message" class="form-control"\n' +
+  '                              placeholder="new message..." modal-focus="vm.msgFocus"></textarea>\n' +
+  '\n' +
+  '                    <div ng-show="vm.messageMode === \'html\'">\n' +
+  '                        <textarea os-html-edit minimal class="editor-min" data-ng-model="vm.message"></textarea>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="row mgn-vert no-mgn-sides">\n' +
+  '                <div class="col-xs-12 col-sm-8 col-md-6 col-md-offset-2">\n' +
+  '                    <span data-ng-show="vm.error" class="text-danger text-center">\n' +
+  '                        <strong data-ng-bind="vm.error"></strong>\n' +
+  '                    </span>\n' +
+  '                </div>\n' +
+  '                <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-2">\n' +
+  '                    <!--<div class="btn-group" dropdown>-->\n' +
+  '                    <button type="button" class="btn btn-oset-primary btn-block" value="send"\n' +
+  '                            ng-click="vm.postMessage();"\n' +
+  '                            ng-class="{\'disabled\':(vm.sending || !vm.message)}">Send\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '</div>\n' +
+  '');
  $templateCache.put('/modules/companies/views/templates/company-list.client.template.html',
   '<section ng-init="findByUser(profile)" data-ng-controller="CompaniesController">\n' +
   '    <h1>TODO: Determine if needed</h1>\n' +
@@ -922,6 +1019,93 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </span>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/companies/views/templates/subscriptions.client.template.html',
+  '<section class="subscription-client-template col-sm-12">\n' +
+  '    <div class="row">\n' +
+  '        <h3 class="title text-center mgn-top">{{vm.text.sub}}</h3>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row subscription-info">\n' +
+  '        <div class="col-md-10 col-md-offset-1">\n' +
+  '            <div class="row name">\n' +
+  '                <div class="package col-md-3 firstRow"\n' +
+  '                     ng-repeat="package in vm.packages | orderBy : \'index\'"\n' +
+  '                     ng-init="package.current = vm.subscription.isValid && package.planId === vm.subscription.planId"\n' +
+  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active, \'current\': package.current}"\n' +
+  '                     ng-mouseenter="package.active = true;"\n' +
+  '                     ng-mouseleave="package.active = false;">\n' +
+  '                    <h3>\n' +
+  '                        {{package.name}}\n' +
+  '                        <i class="mgn-left fa fa-star"\n' +
+  '                           ng-show="package.planId === vm.subscription.planId"\n' +
+  '                           tooltip="This is your current subscription level"\n' +
+  '                           tooltip-popup-delay="700"></i>\n' +
+  '                    </h3>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="row">\n' +
+  '                <div class="package col-md-3"\n' +
+  '                     ng-repeat="package in vm.packages"\n' +
+  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active, \'current\': package.current}">\n' +
+  '                    <p class="price-figure">\n' +
+  '                        <span class="price-figure-inner">\n' +
+  '                            <span class="currency">$</span><span\n' +
+  '                                class="number">{{package.price}}</span><br>\n' +
+  '                        <span class="unit"> per month</span></span>\n' +
+  '                    </p>\n' +
+  '\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="row features" ng-repeat="feature in vm.features"\n' +
+  '                 ng-init="lastFeature = $last">\n' +
+  '                <div class="package col-md-3 li text-right">\n' +
+  '                    {{feature}}\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div ng-repeat="package in vm.packages | orderBy : \'index\'"\n' +
+  '                     ng-init="pkgValue = package.features[feature];"\n' +
+  '                     class="package col-md-3 li {{pkgValue.classes}}"\n' +
+  '                     ng-class="{\'active\': package.active, \'lastRow\': !vm.user && lastFeature, \'current\': package.current}"\n' +
+  '                     ng-mouseenter="package.active = true;"\n' +
+  '                     ng-mouseleave="package.active = false;"\n' +
+  '                     ng-attr-tooltip="{{pkgValue.tooltip}}"\n' +
+  '                     tooltip-popup-delay="700">\n' +
+  '\n' +
+  '                    <span ng-if="lastFeature && !!pkgValue.text">\n' +
+  '                        <span class="strong">{{pkgValue.text}}</span>\n' +
+  '                        <span ng-if="!!pkgValue.value" class="unit text-muted"> per month</span>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <span ng-if="lastFeature && !pkgValue.value">&nbsp;</span>\n' +
+  '\n' +
+  '                    <span ng-if="!lastFeature && !!pkgValue.text">\n' +
+  '                        {{pkgValue.text}}\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <i class="fa {{pkgValue.icon}}" ng-if="!lastFeature && !pkgValue.text">\n' +
+  '                    </i>\n' +
+  '                </div>\n' +
+  '\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="row mgn-bottom" ng-if="!!vm.user">\n' +
+  '                <div class="package col-md-3 lastRow text-center pad-vert"\n' +
+  '                     ng-repeat="package in vm.packages | orderBy : \'index\'"\n' +
+  '                     ng-class="{\'col-md-offset-3\': !!$first, \'active\': package.active, \'current\': package.current}"\n' +
+  '                     ng-mouseenter="package.active = true;"\n' +
+  '                     ng-mouseleave="package.active = false;">\n' +
+  '                    <button type="button" class="btn btn-oset-secondary"\n' +
+  '                            ng-click="vm.orderSubscription(package.planId)">\n' +
+  '                        Order\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/companies/views/templates/view-company.client.template.html',
   '<section name="os-company.directive">\n' +
   '    <!-- os-company directive : view-company.client.template.html -->\n' +
@@ -953,9 +1137,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div ng-if="!inline">\n' +
   '        <div class="panel panel-default" ng-if="!!vm.company && vm.company.about">\n' +
   '            <div class="panel-heading">\n' +
-  '                <span class="h4">About Us<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"\n' +
-  '                                                                   ui-sref="companies.create({\'companyId\': vm.company._id})">edit company profile\n' +
-  '                <i class="fa fa-pencil-square-o"></i></a>\n' +
+  '                <span class="h4">\n' +
+  '                    About Us\n' +
+  '                    <a data-ng-if="vm.canEdit"\n' +
+  '                                            class="btn btn-link pull-right"\n' +
+  '                                            ui-sref="companies.create({\'companyId\': vm.company._id})">\n' +
+  '                        edit company profile\n' +
+  '                    <i class="fa fa-pencil-square-o"></i></a>\n' +
   '                </span>\n' +
   '            </div>\n' +
   '            <div class="panel-body">\n' +
@@ -967,9 +1155,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="panel-body">\n' +
   '                <p class="text-muted">Hi {{::vm.user.firstName}},<br/>{{::vm.createText}}</p><br/>\n' +
   '\n' +
-  '                <p class="text-right" ng-if="!vm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png" alt="The Outset Team"/></p>\n' +
+  '                <p class="text-right" ng-if="!vm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png"\n' +
+  '                                                                     alt="The Outset Team"/></p>\n' +
+  '\n' +
   '                <div class="text-center" ng-if="vm.createEnabled">\n' +
-  '                    <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!</button>\n' +
+  '                    <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!\n' +
+  '                    </button>\n' +
   '                </div>\n' +
   '\n' +
   '            </div>\n' +
@@ -1016,6 +1207,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
   '\n' +
   '    <div ng-class="{\'col-sm-8\':!!vm.pictureUrl}">\n' +
+  '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
+  '                ng-click="vm.backBtnFn()">\n' +
+  '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
+  '        </button>\n' +
   '        <span class="h3" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>\n' +
   '        <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">\n' +
   '            <a class="btn btn-link" ui-sref="{{vm.editSref}}">edit\n' +
@@ -3005,7 +3200,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="controls col-sm-9 controls">\n' +
   '                <textarea name="description" class="form-control" data-ng-model="vm.model.description"\n' +
   '                          rows="3" ng-required="true" placeholder="describe your experience"></textarea>\n' +
-  '                <!--<os-html-edit model="vm.model.description"></os-html-edit>-->\n' +
+  '                <!--<textarea os-html-edit model="vm.model.description"></textarea>-->\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
@@ -3076,11 +3271,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <strong>\n' +
   '                {{vm.model.title}}\n' +
   '            </strong>\n' +
+  '            <small class="pull-right">\n' +
+  '                {{vm.model.location}}\n' +
+  '            </small>\n' +
   '        </p>\n' +
   '\n' +
-  '        <p class="sub-header">\n' +
+  '        <p class="sub-header" ng-class="{\'no-mgn-btm\': !vm.canEdit && !vm.model.expanded}">\n' +
   '            <small>\n' +
-  '                {{vm.model.location}}\n' +
+  '                <span ng-show="!vm.canEdit"\n' +
+  '                      ng-click="vm.model.expanded = !vm.model.expanded"\n' +
+  '                      class="pull-left pointer text-oset">\n' +
+  '                    <i class="fa" ng-class="{\'fa-caret-right\': !vm.model.expanded, \'fa-caret-down\': !!vm.model.expanded}"></i>\n' +
+  '                    {{ !!vm.model.expanded ? \'hide\' : \'show details...\'}}\n' +
+  '                </span>\n' +
+  '                &nbsp;\n' +
   '                <span class="text-muted pull-right"\n' +
   '                      ng-bind="vm.getDateRangeString(vm.model.startDate, vm.model.endDate)">\n' +
   '\n' +
@@ -3088,7 +3292,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </small>\n' +
   '        </p>\n' +
   '\n' +
-  '        <p class="pnl-body">{{vm.model.description}}</p>\n' +
+  '        <p class="pnl-body" ng-show="vm.model.expanded || vm.canEdit">{{vm.model.description}}</p>\n' +
   '\n' +
   '        <p class="pnl-controls" ng-if="vm.canEdit">\n' +
   '            &nbsp;\n' +
@@ -3445,12 +3649,15 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <form class="form-horizontal applicant-form" name="vm.applicantForm" data-ng-submit="vm.createApplication()" novalidate>\n' +
   '        <div class="modal-body">\n' +
   '            <fieldset>\n' +
-  '                <span class="h4" for="name" ng-bind-html="vm.placeholders.messageHeading"></span>\n' +
+  '                <span class="h4" for="message" ng-bind-html="vm.placeholders.messageHeading"></span>\n' +
   '                <p class="text-muted text-center" ng-bind-html="vm.placeholders.messageSubHeading"></p>\n' +
   '\n' +
   '                <div class="controls">\n' +
-  '                    <textarea type="text" data-ng-model="vm.application.message" id="name" class="form-control"\n' +
-  '                              placeholder="{{vm.placeholders.intro}}" required></textarea>\n' +
+  '                    <div class="text-center text-muted" ng-show="!vm.application.message">\n' +
+  '                        Please introduce yourself to the employer here\n' +
+  '                    </div>\n' +
+  '                    <textarea os-html-edit minimal type="text" data-ng-model="vm.application.message" name="message"\n' +
+  '                              id="message" class="editor-md" placeholder="{{vm.placeholders.intro}}" ng-required="true"></textarea>\n' +
   '                </div>\n' +
   '                <div class="checkbox">\n' +
   '                    <label class="small">\n' +
@@ -4176,10 +4383,17 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
   '                       ng-bind-html="vm.about.messageSubHeading"></p>\n' +
   '\n' +
-  '                    <div class="form-group">\n' +
+  '                    <div class="form-group"\n' +
+  '                         ng-class="{\'has-error\': vm.subForm2.introText.$error && (vm.subForm2.$submitted || vm.subForm2.introText.$touched)}">\n' +
   '                        <div class="col-sm-12">\n' +
-  '                            <textarea type="text" data-ng-model="vm.driver.about" id="introText"\n' +
-  '                                      class="form-control tall"\n' +
+  '                            <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
+  '                                Please introduce yourself to the employer here\n' +
+  '                            </div>\n' +
+  '                            <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
+  '                                {{vm.introTextError}}\n' +
+  '                            </div>\n' +
+  '                            <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"\n' +
+  '                                      name="introText" id="introText" class="editor-md"\n' +
   '                                      placeholder="Please introduce yourself to the employer here"\n' +
   '                                      ng-required="true"></textarea>\n' +
   '                        </div>\n' +

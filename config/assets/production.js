@@ -19,20 +19,18 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.min.js',
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
                 'public/lib/angular-file-upload/angular-file-upload.min.js',
-                'public/lib/textAngular/dist/textAngular-rangy.min.js',
-                'public/lib/textAngular/dist/textAngular-sanitize.min.js',
-                'public/lib/textAngular/dist/textAngular.min.js',
                 'public/lib/ngmap/build/scripts/ng-map.min.js',
                 'public/lib/lodash/dist/lodash.min.js',
-                'public/lib/pdfjs-dist/build/pdf.combined.js',
-                'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
                 'public/lib/moment/min/moment-with-locales.min.js',
                 'public/lib/angular-moment/angular-moment.min.js',
                 'https://js.braintreegateway.com/v2/braintree.js',
                 'public/lib/ngImgCrop/compile/minified/ng-img-crop.js',
                 'https://cdnjs.cloudflare.com/ajax/libs/angular-scroll/0.6.4/angular-scroll.min.js',
-                'public/lib/raygun4js/dist/raygun.min.js'
+                'public/lib/raygun4js/dist/raygun.min.js',
+                '//tinymce.cachefly.net/4.1/tinymce.min.js',
+                'public/lib/angular-sanitize/angular-sanitize.min.js'
+
             ]
         },
         css: 'public/dist/application.min.css',

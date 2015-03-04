@@ -2,9 +2,9 @@
     'use strict';
 
 //Menu service used for managing  menus
-angular.module('core').service('Menus', [
+angular.module('core').service('Menus', ['$sce',
 
-    function () {
+    function ($sce) {
         // Define a set of default roles
         this.defaultRoles = ['*'];
         this.defaultUserTypes = ['*'];
@@ -142,6 +142,10 @@ angular.module('core').service('Menus', [
 
             // Push new menu item
             var newItem = angular.extend(menuItemDefault, options);
+
+            // Trust menu item as HTML
+            newItem.title = $sce.trustAsHtml(newItem.title);
+
             this.menus[menuId].items.push(newItem);
 
             // Add submenu items
@@ -181,6 +185,8 @@ angular.module('core').service('Menus', [
                     });
                     // Push new submenu item
                     var newSubMenuItem = angular.extend(menuSubItemDefault, options);
+                    newSubMenuItem.title = $sce.trustAsHtml(newSubMenuItem.title);
+
                     this.menus[menuId].items[itemIndex].items.push(newSubMenuItem);
                 }
             }

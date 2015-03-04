@@ -2,25 +2,90 @@
     <h3 class="title container text-center">Enter Payment Information</h3>
 
     <div class="content-container container text-center">
-        <div class="content-container-inner">
+        <div class="content-container-inner panel panel-default">
             <div class="about">
                 <div class="container-fluid row">
 
-                    <div class="col-sm-3">
+                    <div class="col-xs-12 text-center">
+                        <h4>Order Details</h4>
+                        <br/>
+                    </div>
+                    <div class="col-sm-3" ng-if="!!vm.logo">
                         <img class="img-responsive" src="./modules/bgchecks/img/everifile_logo.png">
                     </div>
-                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
-                        <h4>Order Details</h4>
-
+                    <div class="col-xs-12"
+                         ng-class="{'col-sm-7 col-sm-offset-1':!!vm.logo, 'col-sm-10 col-sm-offset-1': !vm.logo}">
                         <div class="row">
-                            <div class="col-sm-10">{{::vm.report.description}}</div>
-                            <div class="col-sm-2">{{::vm.getPriceString(vm.price)}}</div>
+                            <div class="col-sm-10">
+                                <span ng-if="!vm.logo" class="strong">{{::(vm.report.title || vm.report.name)}} </span>
+                                <span ng-class="{'text-muted': !vm.logo}">{{::vm.report.description}}</span>
+
+                                <ul ng-if="vm.features" class="text-muted">
+                                    <li ng-repeat="name in vm.features"
+                                        ng-init="feature = vm.report.features[name]"
+                                        ng-show="!!feature.value">
+                                        <em>
+                                            {{name}}
+                                            <span ng-if="!!feature.text" class="strong">: {{feature.text}}</span>
+                                        </em>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                {{::vm.getPriceString(vm.price)}}
+                                <small ng-if="vm.report.recurring && vm.report.monthly" class="text-muted">
+                                    <br/>per month
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12"
+                         ng-class="{'col-sm-7 col-sm-offset-1':!!vm.logo, 'col-sm-10 col-sm-offset-1': !vm.logo}"
+                         ng-show="!!vm.promoItem">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <span ng-if="!vm.logo" class="strong">{{::(vm.promoItem.name)}} </span>
+                                <span ng-class="{'text-muted': !vm.logo}">{{::vm.promoItem.description}}</span>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                - {{vm.promoItem.priceString}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12" ng-if="!!vm.serverPlan.enablePromoCodes" ng-show="!!vm.subtotalString || !!vm.report.promos"
+                         ng-class="{'col-sm-7 col-sm-offset-1':!!vm.logo, 'col-sm-10 col-sm-offset-1': !vm.logo}">
+                        <div class="row">
+                            <hr class="col-sm-12"/>
+                            <div class="col-sm-6 form-group form-inline">
+                                <div class="input-group" ng-show="!!vm.report.promos">
+                                    <input type="text" class="form-control" placeholder="Promo Code"
+                                           ng-model="vm.promoCode">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-oset-secondary form-control" type="button"
+                                                ng-class="{'disabled': !vm.promoCode || vm.promoCode === vm.promoItem.id}" ng-click="vm.applyPromo()">Apply
+                                        </button>
+                                    </span>
+                                </div>
+                                <span ng-show="vm.promoError"><br><span class="text-danger text-center">{{vm.promoError}}</span></span>
+                            </div>
+                            <div class="col-sm-4 text-right text-muted" ng-show="!!vm.subtotalString">
+                                subtotal:
+                            </div>
+                            <div class="col-sm-2 text-right" ng-show="!!vm.subtotalString">
+                                {{vm.subtotalString}}
+                            </div>
                         </div>
                     </div>
                 </div>
+
                 <hr>
+                <div class="row" ng-if="!!vm.report.promos">
+                    <div class="col-sm-10 col-sm-offset-1 text-right ">
 
-
+                    </div>
+                </div>
 
                 <div class="container-fluid row" ng-hide="vm.success" class="payment-form"
                      ng-class="{'disabled':vm.processing}">
@@ -33,9 +98,9 @@
                             <div id="dropin" class="dropin"></div>
 
                             <div class="row">
-                                <button type="submit" class="btn btn-cta btn-cta-primary center-block"
+                                <button type="submit" class="btn btn-cta btn-cta-primary center-block mgn-top"
                                         ng-class="{'disabled': vm.paymentAuthForm.$submitted || vm.processing}">
-                                    <i class="fa fa-lock"></i>&nbsp;Purchase Reports
+                                    <i class="fa fa-lock"></i>&nbsp;Place Order
                                 </button>
                             </div>
                             <div class="row text-center">
@@ -78,4 +143,5 @@
             </div>
         </div>
     </div>
+
 </section>

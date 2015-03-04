@@ -54,6 +54,17 @@
         });
 
         $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+            if(!!fromState && !!fromState.name) {
+                $state.gotoPrevious = function () {
+                    debugger;
+                    $state.go(fromState, fromParams);
+                };
+            } else {
+                $state.gotoPrevious = null;
+            }
+        });
+
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
             isRedirectInProgress = false;
 
             $log.info('[CoreConfig] $stateChangeSuccess completed: From state: %s "%s" %o To state: %s "%s" %o', fromState.name, fromState.url, fromState, toState.name, toState.url, toState, event);

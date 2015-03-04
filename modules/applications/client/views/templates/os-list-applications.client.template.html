@@ -17,7 +17,8 @@
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
                             <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
-                        <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>
+                        <h3 class="post-title" ng-click="vm.showTab(job._id, 'applicants', job.applications.length)">
+                            {{job.name}}</h3>
 
                         <!--meta-->
                         <div class="row">
@@ -122,7 +123,7 @@
                                                 <p style="margin-bottom: 2px;">
                                                     discuss the job and schedule an interview
                                                     <a ui-sref="applications.view({applicationId: application._id, target: 'message'})">
-                                                         by sending a message
+                                                        by sending a message
                                                     </a>
                                                 </p>
                                             </span>
@@ -181,12 +182,22 @@
                             </div>
 
                             <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'details'">
-                                <h4>Description</h4>
+
+                                <h4>Description
+                                </h4>
 
                                 <p ng-bind-html="job.description"></p>
                                 <h4>Requirements</h4>
 
                                 <p ng-bind-html="job.requirements"></p>
+                                <hr/>
+
+                                <button type="button" class="btn-tab btn-link read-more center-block"
+                                        ui-sref="jobs.view({jobId: job._id})">
+                                    view full job post
+                                    <i class="fa fa-external-link fa-lg"></i><span class="hidden-xs mgn-left">
+                                </span>
+                                </button>
                             </div>
                         </div>
                         <a class="read-more strong pull-right" ng-click="vm.visibleId = null"
@@ -245,8 +256,8 @@
                                             <span ng-hide="!!application.isConnected">
                                                 <p style="margin-bottom: 2px;">
                                                     <em class="text-muted">chat available once connected</em></span>
-                                                </p>
-                                            </span>
+                                        </p>
+                                        </span>
                                     </dd>
                                 </dl>
 

@@ -1,14 +1,41 @@
 (function () {
     'use strict';
 
-    function SubscriptionListController(subscriptions, $stateParams, AppConfig) {
+    function SubscriptionListController(auth, subscriptions, subscription, $state, $stateParams, AppConfig) {
         var vm = this;
 
         vm.skus = $stateParams.sku;
-
         vm.subscriptions = subscriptions;
+        vm.user = auth.user;
+        vm.companyId = auth.user.company && (auth.user.company._id || auth.user.company);
 
-        vm.faqs = AppConfig.getFaqs({category: 'subscriptions'}).then(function (vals) {
+        vm.text = {
+            lead: 'Get started with a basic package ...',
+            sub: '&hellip;or take a look at our fully featured packages to take care of your entire hiring process'
+        };
+
+        vm.subscription = subscription;
+        vm.packages = vm.subscriptions.packages;
+
+        if (vm.subscription && vm.subscription.isValid) {
+            vm.text.lead = 'Current Subscription Level';
+            if (!!vm.subscription.isValid) {
+                vm.text.sub = 'Would you like to upgrade your subscription?';
+            }
+            else {
+                vm.text.sub = 'Renew your current subscription or change plans below';
+            }
+
+
+            vm.subscription = _.extend(vm.subscription, _.find(vm.packages, {'planId': vm.subscription.planId}));
+
+            var features = vm.subscription['features'];
+            vm.features = _.keys(features);
+        } else {
+            debugger;
+        }
+
+        AppConfig.getFaqs({category: ['employer', 'subscriptions']}).then(function (vals) {
 
             console.log('[FAQ] promise resolved with %d vals', vals.length);
 
@@ -16,68 +43,15 @@
             return vals;
         });
 
-        vm.text = {
-            lead: 'Start with a 1 week trial subscriptions&hellip;',
-            sub: '&hellip;then upgrade to one of our packages'
-        };
-
-        vm.packages = {
-            base: {
-                title: 'Trial Subscription',
-                sub: '<ul><li>Two Weeks to try Outset</li><li>Unlimited Access</li></ul>',
-                duration: 'two weeks',
-                name: '',
-                price: '5',
-                promo: '1',
-                sku: 'SUB_INTRO',
-                enabled: true
-            },
-            good: {
-                title: 'Good',
-                name: 'Good',
-                price: '10',
-                sku: 'SUB-GOOD',
-                enabled: true,
-                duration: 'per month'
-            },
-            better: {
-                title: 'Better',
-                name: 'Premium',
-                price: '40',
-                sku: 'SUB-BETTER',
-                enabled: true,
-                duration: 'per month'
-            },
-            best: {
-                title: 'Best',
-                name: 'Enterprise',
-                price: '80',
-                sku: 'SUB-BEST',
-                enabled: true,
-                duration: 'per month'
-            },
-            enterprise: {
-                title: 'Enterprise',
-                sub: 'Do you have a larger fleet that you\'re trying to keep running?<br/>Contact us and we will tailor a plan to fit your needs',
-                price: 'contact us...',
-                sku: 'SUB-ENTERPRISE',
-                enabled: true
-            }
-        };
-
-        AppConfig.getAsync('subscriptions').then(function (subs) {
-            console.log('got subscirptino information: %o', subs);
-
-            if (!!subs.length) {
-                vm.packages = subs;
-            }
+        AppConfig.getAsync('employer').then(function (subs) {
+            console.log('got subscription information: %o', subs);
         }, function (errs) {
             console.log('err :( %o', errs);
         });
     }
 
 
-    SubscriptionListController.$inject = ['subscriptions', '$stateParams', 'AppConfig'];
+    SubscriptionListController.$inject = ['Authentication', 'subscriptions', 'subscription', '$state', '$stateParams', 'AppConfig'];
 
     angular.module('companies').controller('SubscriptionListController', SubscriptionListController);
 

@@ -42,11 +42,34 @@
             });
     }
 
+    function resolveSubscription(Payments, params, auth) {
+
+        var companyId = params.companyId || auth.user && auth.user.company && (auth.user.company._id || auth.user.company);
+
+        return Payments.Subscription.get({companyId: companyId}).$promise;
+    }
+
+    function resolveSubscriptions(config) {
+        return config.getAsync('subscriptions');
+    }
+
+    function resolveSubscriptionDetails(config, $stateParams, $log) {
+        var planId = $stateParams.planId;
 
 
-    function resolveSubscriptions() {
-        //return Reports.Types.list().$promise;
-        return {};
+        return config.getAsync('subscriptions').then(
+            function(success) {
+                var details = _.find(success.packages, {'planId': planId});
+
+                if(!details) {
+                    throw new Error('Subscription Information not found');
+                }
+                return details;
+            },
+            function(error) {
+                $log.error('Error retreiving available subscription types', error);
+            }
+        );
     }
 
     function config($stateProvider) {
@@ -133,14 +156,34 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    subscriptions: resolveSubscriptions
+                    subscriptions: resolveSubscriptions,
+                    subscription: resolveSubscription
                 }
+            }).
+            state('subscriptionPayment', {
+                url: '/subscriptions/:planId/pay?:promo',
+                templateUrl: '/modules/bgchecks/views/paymentTest.client.view.html',
+                parent: 'fixed-opaque',
+                resolve: {
+                    report: resolveSubscriptionDetails,
+                    token: ['Payments', function(payments) {
+                        return payments.getToken().$promise;
+                    }],
+                    company: companyResolve,
+                    applicant: function() {return null;}
+                },
+                controller: 'PaymentController',
+                controllerAs: 'vm',
+                bindToController: true
             });
     }
 
 // Dependency Injection
     companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
+    resolveSubscriptions.$inject=['AppConfig'];
+    resolveSubscription.$inject=['Payments', '$stateParams', 'Authentication'];
+    resolveSubscriptionDetails.$inject=['AppConfig', '$stateParams', '$log'];
 
     config.$inject = ['$stateProvider'];
 

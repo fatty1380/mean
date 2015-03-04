@@ -1,82 +1,105 @@
-    <section class="container-fluid">
+<section class="container-fluid">
 
-        <os-page-header title="{{vm.titleText}}"
-                        sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
-                        show-edit="!!vm.company && vm.canEdit"
-                        edit-sref="companies.edit({'companyId': '{{vm.company._id}}'})"
-                        picture-url="vm.imageURL" picture-edit-fn="vm.showModal()">
-            Member Since <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>
-        </os-page-header>
+    <os-page-header title="{{vm.titleText}}"
+                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
+                    show-edit="!!vm.company && vm.canEdit"
+                    edit-sref="companies.edit({'companyId': '{{vm.company._id}}'})"
+                    picture-url="vm.imageURL" picture-edit-fn="vm.showModal()">
+        Member Since <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>
+    </os-page-header>
 
-        <div class="row" ng-if="!!vm.company" ng-show="vm.showPhotoEdit">
-            <div class="col-md-6 col-md-offset-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+    <div class="row" ng-if="!!vm.company" ng-show="vm.showPhotoEdit">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <span class="h4">Change Profile Picture
                     <div class="pull-right">
                         <button type="button" class="close modal-title" ng-click="vm.hideModal()"><span
                                 aria-hidden="true">&times;<span class="sr-only">Close</span></span></button>
                     </div></span>
-                    </div>
-                    <div class="panel-body">
-                        <os-picture-uploader model="vm.company" title="{{vm.company.name}}" mode="company"
-                                             success-callback="vm.successFunction" shape="rectangle">
-                        </os-picture-uploader>
-                    </div>
+                </div>
+                <div class="panel-body">
+                    <os-picture-uploader model="vm.company" title="{{vm.company.name}}" mode="company"
+                                         success-callback="vm.successFunction" shape="rectangle">
+                    </os-picture-uploader>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-8" data-ng-class="{'col-md-offset-2': !vm.company}">
-                <os-company company="vm.company" config="vm.config"></os-company>
+    <div class="row">
+        <div class="col-md-8" data-ng-class="{'col-md-offset-2': !vm.company}">
+            <os-company company="vm.company" config="vm.config"></os-company>
 
-                <os-job-list ng-if="!!vm.company && vm.company.about" header="Open Jobs" company="vm.company" company-id="{{vm.company._id}}"
-                             show-post="vm.user._id === vm.company.owner._id" show-search="false" btn-class="btn-sm"></os-job-list>
-            </div>
-
-            <div class="gutter right col-md-4" ng-if="!!vm.company">
-
-                <a class="btn btn-cta-primary btn-lg btn-block bigger mgn-bottom"
-                        dta-ng-if="vm.canEdit"
-                        ui-sref="jobs.create({'companyId' : vm.company._id})">
-                    Post a New Job!
-                </a>
-
-                <div class="panel panel-default" ng-if="false">
-                    <div class="panel-heading">
-                        <span class="h4">Subscription Information</span>
-                    </div>
-                    <div class="panel-body" ng-if="vm.company.subscriptions && vm.company.subscriptions.length">
-                        <dl>
-                            <dt>Subscription</dt>
-                            <dd>{{vm.company.subscriptions[0].name}}</dd>
-                            <dt>Renews</dt>
-                            <dd>{{vm.company.subscriptions[0].renews | amDateFormat : 'L'}}</dd>
-                            <dt>Status</dt>
-                            <dd>Used {{vm.company.subscriptions[0].used}} of {{vm.company.subscriptions[0].available}} Jobs</dd>
-                        </dl>
-
-                    </div>
-                    <div class="panel-body" ng-if="!vm.company.subscriptions.length">
-                        <p>Before you post your first job, you will need to sign up for a subscription.</p>
-
-                        <button type="button" class="btn btn-oset-primary center-block" ui-sref="subscriptionsReview">Review Subscription Options...</button>
-
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <span class="h4">Where we are</span>
-                    </div>
-                    <div class="panel-body">
-                        <os-map-location zip-code='vm.company.zipCode' addresses="vm.company.locations"  precision="exact"></os-map-location>
-
-                        <os-address-list models="vm.company.locations" can-edit="false" full-width="true"></os-address-list>
-                    </div>
-                </div>
-
-            </div>
+            <os-job-list ng-if="!!vm.company && vm.company.about" header="Open Jobs" company="vm.company"
+                         company-id="{{vm.company._id}}"
+                         show-post="vm.user._id === vm.company.owner._id" show-search="false"
+                         btn-class="btn-sm"></os-job-list>
         </div>
-    </section>
+
+        <div class="gutter right col-md-4" ng-if="!!vm.company">
+
+            <a class="btn btn-cta-primary btn-lg btn-block bigger mgn-bottom"
+               dta-ng-if="vm.canEdit"
+               ui-sref="jobs.create({'companyId' : vm.company._id})">
+                Post a New Job!
+            </a>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="h4">Subscription Information</span>
+                </div>
+                <div class="panel-body" ng-if="!!vm.company.subscription"
+                     ng-init="sub = vm.company.subscription; sub.remaining = sub.available - sub.used;">
+                    <p class="info text-center">You are subscribed to the {{sub.name}} package.</p>
+
+                    <p>
+                        <span ng-show="sub.remaining > 0 && sub.available != -1">
+                            <p class="h3 text-center">
+                                {{sub.statusMessage}}<br/>
+                                <small>this month</small>
+                            </p>
+                        </span>
+                        <span ng-show="sub.available == -1">
+                            Unlimited Posts Included in Plan
+                        </span>
+                        <span ng-show="sub.remaining <= 0 && sub.available != -1">
+                            No Remaining Posts this Month<br>
+                            <button type="button" class="btn btn-oset-link center-block"
+                                    ui-sref="subscriptionsReview">Review Subscription Options...
+                            </button>
+                        </span>
+                    </p>
+
+                    <p class="text-center">
+                        <em>Your subscription will renew on <strong>{{sub.renews | amDateFormat : 'L' }}</strong></em>
+                    </p>
+
+                    <button type="button" class="btn btn-oset-link center-block" ui-sref="subscriptionsReview">
+                        Review Subscription Options...
+                    </button>
+
+                </div>
+                <div class="panel-body" ng-if="!vm.company.subscription">
+                    <p class="text-center">Before you post your first job, you will need to sign up for a subscription.</p>
+                    <button type="button" class="btn btn-oset-secondary center-block" ui-sref="subscriptionsReview">
+                        Review Subscription Options...
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="h4">Where we are</span>
+                </div>
+                <div class="panel-body">
+                    <os-map-location zip-code='vm.company.zipCode' addresses="vm.company.locations"
+                                     precision="exact"></os-map-location>
+
+                    <os-address-list models="vm.company.locations" can-edit="false" full-width="true"></os-address-list>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

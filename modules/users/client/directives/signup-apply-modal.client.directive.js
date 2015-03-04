@@ -80,7 +80,7 @@
             if (stepForm.$invalid) {
                 _.map(stepForm.$error, function (errorType) {
                     _.map(errorType, function (item) {
-                        item.$setDirty(true);
+                        if(!!item) item.$setDirty(true);
                     });
                 });
                 vm.error = 'please correct the errors above';
@@ -158,6 +158,8 @@
 
                     vm.loading = false;
                     vm.currentStep++;
+
+                    Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
                 }).error(function (response) {
                     console.error(response.message);
                     vm.loading = false;
@@ -245,6 +247,18 @@
                 }
                 vm.subForm2.$setValidity('vm.experienceForm', true);
 
+            }
+
+            var strippedString = vm.driver.about && vm.driver.about.replace(/(<([^>]+)>)/ig,'') || '';
+            if(strippedString.length <= 0) {
+                debugger;
+                vm.introTextError = 'Please add a message to the employer before continuing';
+                vm.subForm2.$setValidity('introText', false);
+                return false;
+            }
+            else {
+                vm.introTextError = null;
+                vm.subForm2.$setValidity('introText', true);
             }
 
             if (vm.subForm2.$invalid) {

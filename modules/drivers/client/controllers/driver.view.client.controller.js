@@ -2,7 +2,7 @@
     'use strict';
 
     // Drivers controller
-    function DriverViewController($state, $log, $stateParams, $window, Authentication, Drivers, Profiles, driver) {
+    function DriverViewController($state, $log, $stateParams, Authentication, Drivers, Profiles, AppConfig, driver) {
         var vm = this;
 
         if(!Authentication.user) {
@@ -23,6 +23,8 @@
         vm.user = null;
         vm.canEdit = false;
         vm.auth = Authentication;
+
+        vm.reports = AppConfig.getReports() || {};
 
         // Functions:
         vm.endorsementFilter = endorsementFilter;
@@ -79,34 +81,39 @@
 
         vm.resume = vm.resume || {};
 
+        var validateAccess = function (file) {
+            if (!file) {
+                vm.error = 'Sorry, but that report is not available';
+                return false;
+            }
+
+            return true;
+        };
+
+        var handleFileAccess = function (file) {
+            vm.resume.loading = true;
+
+            if (validateAccess(file)) {
+                $state.go('drivers.documents', {driverId: vm.driver._id, documentId: file.sku || 'resume'});
+            } else {
+                vm.resume.loading = false;
+                return false;
+            }
+        };
+
         vm.openResumeFile = function () {
-            debugger;
+            $log.debug('Opening Resume File');
+            handleFileAccess(vm.driver && vm.driver.resume);
+        };
 
-            if (moment().isBefore(moment(vm.driver.resume.expires))) {
-                $window.open(vm.driver.resume.url, '_blank');
-            }
-            else {
-                vm.resume.loading = true;
-
-                Drivers.getResumeLink(vm.driver._id).then(
-                    function (success) {
-                        vm.resume.loading = false;
-                        $log.debug('Got new resume link! %o', success);
-
-                        vm.driver.resume = success;
-                        $window.open(vm.driver.resume.url, '_blank');
-                    },
-                    function (err) {
-                        vm.resume.loading = false;
-                        $log.error('Error trying to load resume link', err);
-                        vm.resume.error = 'Sorry, we were unable to load your resume at this time';
-                    });
-            }
+        vm.openReport = function (reportName) {
+            $log.debug('Opening Report type %s', reportName);
+            handleFileAccess(vm.driver && vm.driver.reports[reportName]);
         };
 
     }
 
-    DriverViewController.$inject = ['$state', '$log', '$stateParams', '$window', 'Authentication', 'Drivers', 'Profiles', 'driver'];
+    DriverViewController.$inject = ['$state', '$log', '$stateParams', 'Authentication', 'Drivers', 'Profiles', 'AppConfig', 'driver'];
 
     angular.module('drivers').controller('DriverViewController', DriverViewController);
 })();

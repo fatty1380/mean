@@ -9,16 +9,20 @@ var _      = require('lodash'),
 
 var client, publicURL;
 
-if (!!config.services.s3 && config.services.s3.enabled) {
-    var options = config.services.s3.clientConfig;
-    options.s3Options = config.services.s3.s3Options;
-    client = s3.createClient(options);
-}
-
 //exports.saveFileToCloud = saveFile;
 exports.saveFileToCloud = directUpload;
 exports.uploadToS3 = doS3FileUpload;
 exports.getSecureReadURL = getSecureReadURL;
+
+    console.log('\n\n\n\n[s3FileUpload.initClient] ------------------------------------------------------- \n%j\n\n\n', config.services.s3);
+    if (!!config.services.s3 && config.services.s3.enabled) {
+        var options = config.services.s3;
+        options.s3Options = config.services.s3.s3Options;
+        client = s3.createClient(options);
+        console.log('[s3FileUpload.initClient] configured s3 client');
+    } else {
+        console.log('[s3FileUpload.initClient] s3 is not enabled: %j', config.services.s3);
+    }
 
 function directUpload(files, folder, isSecure) {
     var deferred = Q.defer();
@@ -150,7 +154,7 @@ function getSecureReadURL(bucket, key) {
 
         console.log('[s3.directRead] Got signed url: `%s`', url);
 
-        var strippedURL = url.replace('http://', '//');
+        var strippedURL = url.replace('http://', '//').replace('https://', '//');
         console.log('[s3.directRead] Post stripping, resolving with : %s', strippedURL);
 
         deferred.resolve(strippedURL);

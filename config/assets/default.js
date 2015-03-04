@@ -20,21 +20,17 @@ module.exports = {
                 'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'public/lib/angular-file-upload/angular-file-upload.js',
                 'public/lib/autofill-event/src/autofill-event.js', /// Needed?
-                'public/lib/textAngular/dist/textAngular-rangy.min.js',
-                'public/lib/textAngular/src/textAngular-sanitize.js',
-                'public/lib/textAngular/src/textAngularSetup.js',
-                'public/lib/textAngular/src/textAngular.js',
                 'public/lib/ngmap/build/scripts/ng-map.js',
                 'public/lib/lodash/dist/lodash.js',
-                'public/lib/pdfjs-dist/build/pdf.combined.js',
-                'public/lib/angular-pdf-viewer/dist/angular-pdf-viewer.min.js',
                 '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
                 'public/lib/moment/min/moment-with-locales.js',
                 'public/lib/angular-moment/angular-moment.js',
                 'https://js.braintreegateway.com/v2/braintree.js',
                 'public/lib/ngImgCrop/compile/unminified/ng-img-crop.js',
                 'public/lib/angular-scroll/angular-scroll.js',
-                '//cdn.raygun.io/raygun4js/raygun.min.js'
+                '//cdn.raygun.io/raygun4js/raygun.min.js',
+                'public/lib/tinymce/tinymce.js',
+                'public/lib/angular-sanitize/angular-sanitize.js'
             ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },
