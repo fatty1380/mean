@@ -323,6 +323,8 @@ exports.getPlanDetails = function (req, res, next) {
 
                 if (!!plan) {
                     console.log('[Braintree.getSubscriptionDetails] Found subscription details for planId %s', plan.id);
+
+                    plan.enablePromoCodes = !!config.services.braintree.promoCodes;
                 } else {
                     console.error('[Braintree.getSubscriptionDetails] Unable to find plan for ID %s', req.params.planId);
 
@@ -426,8 +428,13 @@ exports.postSubscription = function (req, res, next) {
 
 var initializeSubscription = function (req, res) {
 
+    /**
+     *  Don't include the customerID as the Subscription ID
+     *  ... this causes problems.
+     *                                       BUT!
+     *  TODO: Implement logic to prevent/handle mlutiple subscriptions and upgrades
+    */
     req.subscriptionInformation = {
-        id: req.braintreeCustomer.id,
         planId: req.planId
     };
 
@@ -477,21 +484,11 @@ var initializeSubscription = function (req, res) {
     if (!!req.promoCode) {
         console.log('[Braintree.InitSubscription] Applying promo code: %s', req.promoCode);
 
-        //if(req.promoCode.toUpperCase() === 'INTROMONTH') {
-        //    console.log('[Braintree.InitSubscription] Configuring 1 month trial period');
-        //    req.subscriptionInformation.trialPeriod = true;
-        //    req.subscriptionInformation.trialDuration = 1;
-        //    req.subscriptionInformation.trialDurationUnit = 'month';
-        //}
-        //else {
             console.log('[Braintree.InitSubscription] Applying promo code to request: %s', req.promoCode);
             req.subscriptionInformation.discounts = {
-                add: [{inheritedFromId: req.promoCode}]
+                add: [{inheritedFromId: req.promoCode, quantity: 1}]
             };
-        //}
     }
-
-    debugger;
 
     console.log('[Braintree.InitSubscription] Ordering %s and processing payment with options: %j', req.subscriptionInformation.planId, req.subscriptionInformation);
 
@@ -505,7 +502,7 @@ var runSubscriptionTransaction = function (req, res, next) {
 
     if (gateway) {
 
-        console.log('[runSubscriptionTransaction] Creating subscription with settings: %o', req.subscriptionInformation);
+        console.log('[runSubscriptionTransaction] Creating subscription with settings: %j', req.subscriptionInformation);
 
         gateway.subscription.create(
             req.subscriptionInformation,

@@ -54,7 +54,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-12" ng-show="!!vm.subtotalString || !!vm.report.promos"
+                    <div class="col-xs-12" ng-if="!!vm.serverPlan.enablePromoCodes" ng-show="!!vm.subtotalString || !!vm.report.promos"
                          ng-class="{'col-sm-7 col-sm-offset-1':!!vm.logo, 'col-sm-10 col-sm-offset-1': !vm.logo}">
                         <div class="row">
                             <hr class="col-sm-12"/>

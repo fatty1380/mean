@@ -170,9 +170,11 @@ function completeUserHydration(req, res, user) {
         return login(req, res, user);
     }
 
+    // The 'success' object is the result of the deferred resolutions above
+    // which have the relevant 'company' or 'driver' added to them for updating
     deferred.promise.then(function(success) {
         var updateObj = success;
-        console.log('[Auth.Hydrate] Updating with obj: %j', updateObj)
+        console.log('[Auth.Hydrate] Updating with obj: %j', updateObj);
 
         updateAndLogin(user.id, updateObj).then(
             function (newUser) {
@@ -192,7 +194,7 @@ function updateAndLogin(id, update) {
     var deferred = Q.defer();
 
     var query = {'_id': id};
-    var options = {new: true};
+    var options = {new: true}; // Return the updated object
 
     update.modified = Date.now();
 

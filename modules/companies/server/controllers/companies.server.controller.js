@@ -360,30 +360,30 @@ exports.saveSubscription = function (req, res) {
             company: req.company
         });
 
-        console.log('[CompanySubscription] Creating new subscription for company `%s`: %j', req.company.id, sub);
+        console.log('[CompanySubscription] Creating new subscription: %j', sub);
 
-        sub.save(function(err) {
+        sub.save(function(err, newSub) {
             if (err) {
-                console.log('error saving subscription information: ', err)
+                console.log('[CompanySubscription.sub] error saving subscription information: ', err);
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err),
                     error: err
                 });
             }
 
-            console.log('[Subscription] Successfully saved subscription!');
+            console.log('[Subscription] Successfully saved subscription with id `%s`!', newSub.id);
 
-            req.company.subscription = sub;
+            console.log('[CompanySubscription] Saving sub to company `%s`: %j', req.company.id, req.company);
 
-            req.company.save(function (err) {
+            Company.findOneAndUpdate({_id: req.company.id}, {'subscription': newSub._id}, {new: true}, function(err, updatedCo) {
                 if (err) {
-                    console.log('error saving subscription information: ', err)
+                    console.log('[CompanySubscription.co] error saving subscription information: ', err);
                     return res.status(400).send({
                         message: errorHandler.getErrorMessage(err),
                         error: err
                     });
                 } else {
-                    console.log('[CompanySubscription] Successfully created subscription!');
+                    console.log('[CompanySubscription.co] Successfully created subscription to company `%s`!', updatedCo.id);
                     res.json(sub);
                 }
             });

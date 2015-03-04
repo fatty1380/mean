@@ -65,10 +65,11 @@
 
                     vm.promoItem.priceString = vm.getPriceString(vm.promoItem.amount);
                     vm.subtotalString = vm.getPriceString(vm.subtotal);
-
                 }
                 else {
                     $log.debug('No Promo Item found');
+                    vm.subtotal = null;
+                    vm.promoItem = null;
                     vm.promoError = 'No promo code found matching ' + vm.promoCode;
                     vm.promoCode = null;
                 }
@@ -84,6 +85,7 @@
             }
 
             vm.processing = true;
+            vm.error = vm.success = null;
             var opts, payment;
 
             if(!!vm.company) {
