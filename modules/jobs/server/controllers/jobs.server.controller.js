@@ -238,7 +238,7 @@ exports.delete = function (req, res) {
 
 
 exports.queryAll = function (req, res, next) {
-    req.sort = '-created';
+    req.sort = '-posted';
 
     next();
 };

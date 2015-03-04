@@ -132,7 +132,7 @@
             }
         }
 
-        vm.predicate = '';
+        vm.predicate = 'posted';
         vm.reverse = true;
 
         vm.toggleSort = function(field, reverse) {
@@ -143,20 +143,6 @@
                 vm.predicate = field;
                 vm.reverse = !!reverse;
             }
-        };
-
-        vm.random = function(item){
-
-            if(!!vm.predicate || vm.filters.mine || !vm.filters.clear) {
-                return item.postingDate;
-            }
-
-            if(item.rand) {
-                return item.rand;
-            }
-
-            item.rand = 0.5 + Math.random();
-            return item.rand;
         };
 
         vm.showAllTypes = true;
