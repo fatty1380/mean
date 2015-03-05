@@ -1,0 +1,10 @@
+{
+  "extends": "../../../.jshintrc",
+  "globals": {
+    "ApplicationConfiguration": true,
+    "inject": true,
+    "by": true,
+    "browser": true,
+    "element": true
+  }
+}

@@ -79,22 +79,6 @@
 
   "globals": {
     "angular": false,
-    "$": false,
-    "io": true,
-    // https://github.com/johnpapa/angularjs-styleguide#style-y240
-    "ApplicationConfiguration": false
-    // May conflict with https://github.com/johnpapa/angularjs-styleguide#style-y240
-  },
-  "predef": [
-    // Extra globals.
-    "inject",
-    "by",
-    "browser",
-    "element",
-    "google",
-    "moment",
-    "braintree",
-    "angular",
-    "Raygun"
-  ]
+    "$": false
+  }
 }
