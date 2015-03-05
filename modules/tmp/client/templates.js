@@ -1109,7 +1109,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/companies/views/templates/view-company.client.template.html',
   '<section name="os-company.directive">\n' +
   '    <!-- os-company directive : view-company.client.template.html -->\n' +
-  '    <div ng-if="inline">\n' +
+  '    <div ng-show="!!vm.inline">\n' +
   '        <div class="row">\n' +
   '            <div class="col-md-8">\n' +
   '                <h4 class="list-group-item-heading">{{vm.company.name}}</h4>\n' +
@@ -1134,7 +1134,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '    </div>\n' +
   '\n' +
-  '    <div ng-if="!inline">\n' +
+  '    <div ng-hide="!!vm.inline">\n' +
   '        <div class="panel panel-default" ng-if="!!vm.company && vm.company.about">\n' +
   '            <div class="panel-heading">\n' +
   '                <span class="h4">\n' +
@@ -1163,6 +1163,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </button>\n' +
   '                </div>\n' +
   '\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.createEnabled">\n' +
+  '            <div class="panel-body">\n' +
+  '                <p class="text-muted text-center">\n' +
+  '                    Sorry, but {{vm.user.displayName}} has not completed their Company Profile.\n' +
+  '                </p>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +

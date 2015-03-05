@@ -14,7 +14,7 @@
 
     function ProfilesService($resource) {
         return $resource('api/profiles/:userId', {
-            userId: '@_userId'
+            userId: '@userId'
         }, {});
     }
 

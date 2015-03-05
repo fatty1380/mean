@@ -89,10 +89,17 @@
              * @description Allows a user to view another user's profile page.
              */
                 state('users.view', {
-                    url: '/:userId',
+                    parent: 'users',
+                    url: '/{userId:[0-9a-fA-F]{24}}',
                     templateUrl: '/modules/users/views/settings/profile.client.view.html',
                     controller: 'ProfileController',
-                    parent: 'users'
+                    controllerAs: 'vm',
+                    resolve: {
+                        user: ['Profiles', '$stateParams' , function(Profiles, $stateParams) {
+                            console.log('loading profile for userId: %s', $stateParams.userId);
+                            return Profiles.get({'userId':$stateParams.userId}).$promise;
+                        }]
+                    }
                 }).
 
 

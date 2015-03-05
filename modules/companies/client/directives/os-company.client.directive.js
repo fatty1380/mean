@@ -6,7 +6,7 @@
 
         vm.user = Authentication.user;
 
-        vm.createEnabled = vm.config.create;
+        vm.createEnabled = !!vm.config ? vm.config.create : true;
 
         if(vm.createEnabled) {
             vm.createText = 'Before posting any jobs, you will need to create your company profile. Click the button below to continue.';
