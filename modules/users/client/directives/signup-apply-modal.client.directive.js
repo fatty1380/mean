@@ -80,7 +80,9 @@
             if (stepForm.$invalid) {
                 _.map(stepForm.$error, function (errorType) {
                     _.map(errorType, function (item) {
-                        if(!!item) item.$setDirty(true);
+                        if(!!item) {
+                            item.$setDirty(true);
+                        }
                     });
                 });
                 vm.error = 'please correct the errors above';

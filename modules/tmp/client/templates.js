@@ -1727,7 +1727,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <p>We also share Personal Information with vendors who perform services on behalf of Outset,\n' +
   '                        including\n' +
   '                        without limitation vendors who provide email services, demographic information, or geo-location\n' +
-  '                        information, vendors who perform background checks (including MVR�s and other verification\n' +
+  '                        information, vendors who perform background checks (including MVRs and other verification\n' +
   '                        checks),\n' +
   '                        vendors who process credit card payments, vendors who run classified advertising businesses, and\n' +
   '                        vendors who send SMS messages to Registered Users\' mobile phone numbers, in each case to the\n' +
@@ -1802,7 +1802,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        and results of a Background Check (including the Motor Vehicle Records Report) that resulted in\n' +
   '                        Outset suspending or terminating your account will not be shared with other parties including\n' +
   '                        Site\n' +
-  '                        Visitor�s and Registered User�s unless you specifically request us to do so. If you have\n' +
+  '                        Visitors and Registered Users unless you specifically request us to do so. If you have\n' +
   '                        requested\n' +
   '                        a background check through Outset, a statement may be included in your profile to confirm that\n' +
   '                        you\n' +

@@ -4,7 +4,7 @@
     function ScrollBottomDirective($timeout) {
         return {
             scope: {
-                scrollBottom: "="
+                scrollBottom: '='
             },
             link: function (scope, element) {
                 scope.$watchCollection('scrollBottom', function (newValue) {
@@ -20,32 +20,11 @@
                     }
                 });
             }
-        }
+        };
     }
 
 
-    ScrollBottomDirective.$inject = ['$timeout']
-
-    //function ScrollDirective($window) {
-    //    return {
-    //        scope: {
-    //            scroll: '=scrollPosition'
-    //        },
-    //        link: function (scope, element, attrs) {
-    //            var windowEl = angular.element($window);
-    //            var handler = function () {
-    //                debugger;
-    //                scope.scroll = windowEl.scrollTop();
-    //            };
-    //            windowEl.on('scroll', scope.$apply.bind(scope, handler));
-    //            handler();
-    //        }
-    //    };
-    //}
-    //
-    //ScrollDirective.$inject = ['$window'];
-    //
-    //angular.module('core').directive('scrollPosition', ScrollDirective);
+    ScrollBottomDirective.$inject = ['$timeout'];
 
     function autofillsync($timeout) {
         return {

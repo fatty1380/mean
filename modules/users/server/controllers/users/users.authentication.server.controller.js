@@ -110,19 +110,19 @@ function completeUserHydration(req, res, user) {
                 deferred.resolve({driver: driver._id});
             } else {
                 console.log('[SIGNUP] - Creating new Driver for user');
-                var driver = new Driver({'user': user});
+                var newDriver = new Driver({'user': user});
 
-                driver.save(function (err) {
+                newDriver.save(function (err) {
                     if (err) {
                         console.error('[SIGNUP] - err creating new driver', err);
                         return deferred.reject('Unable to create new driver: ' + err);
                     }
 
-                    if(!!driver) {
-                        deferred.resolve({driver: driver._id});
+                    if(!!newDriver) {
+                        deferred.resolve({driver: newDriver._id});
                     }
                     else {
-                        deferred.reject('Unknown problem in creating new company');
+                        deferred.reject('Unknown problem in creating new Driver');
                     }
 
                 });
@@ -148,16 +148,16 @@ function completeUserHydration(req, res, user) {
             else {
                 console.log('[SIGNUP] - Creating new Company for user');
 
-                var company = new Company({'owner': user, 'name': req.body.companyName});
+                var newCompany = new Company({'owner': user, 'name': req.body.companyName});
 
-                company.save(function (err) {
+                newCompany.save(function (err) {
                     if (err) {
                         console.error('[SIGNUP] - err creating new Company', err);
                         return deferred.reject('Unable to create new company: ' + err);
                     }
 
-                    if(!!company) {
-                        deferred.resolve({company: company._id});
+                    if(!!newCompany) {
+                        deferred.resolve({company: newCompany._id});
                     }
                     else {
                         deferred.reject('Unknown Problem in creating new company');

@@ -109,7 +109,7 @@
 
     ExperienceItemController.$inject = ['AppConfig', '$attrs'];
 
-    function ExperienceListController() {
+    function ExperienceListController($log) {
         var vm = this;
 
         vm.viewOnly = vm.viewOnly || false;
@@ -148,6 +148,8 @@
             vm.maxCt++;
         }
     }
+
+    ExperienceListController.$inject = ['$log'];
 
     function ExperienceListDirective() {
         var ddo;

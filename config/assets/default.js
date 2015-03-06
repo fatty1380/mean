@@ -32,6 +32,11 @@ module.exports = {
                 'public/lib/tinymce/tinymce.js',
                 'public/lib/angular-sanitize/angular-sanitize.js'
             ],
+            font: [
+                '//fonts.googleapis.com/css?family=Open+Sans:300,400,700',
+                '//fonts.googleapis.com/css?family=Roboto:400,300,700,900',
+                '//fonts.googleapis.com/css?family=Lato:400,300,200'
+            ],
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },
         css: [

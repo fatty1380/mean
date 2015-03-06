@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint camelcase:false */
+/* TODO: Camelcase is deprectated - migrate to jscs */
+
 exports.sendMessage = sendMessage;
 exports.sendTemplate = sendTemplate;
 exports.sendTemplateBySlug = sendGenericTemplateEmail;

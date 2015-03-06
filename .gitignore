@@ -39,3 +39,4 @@ modules/theme/client/css/theme-default.css
 config/sslcerts
 convenience.css
 modules/**/.jshintrc
+modules/tmp

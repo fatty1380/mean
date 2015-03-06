@@ -27,9 +27,11 @@
         }
 
         vm.calculateButtons = function () {
-            vm.viewReport;
-            vm.reviewReport;
-            vm.completeReport;
+            /**
+             * vm.viewReport;
+             * vm.reviewReport;
+             * vm.completeReport;
+             */
 
             if (vm.reports && vm.reports.length) {
                 vm.complete = _.filter(vm.reports, {status: 'COMPLETED'});

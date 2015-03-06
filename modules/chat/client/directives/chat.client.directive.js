@@ -129,12 +129,12 @@
                                 vm.status.them = false;
                             }
                             else {
-                                Raygun.send(new Error('Unknown message received' + message))
+                                Raygun.send(new Error('Unknown message received' + message));
                             }
                         }
                     } else {
                         vm.messages.push(message);
-                        if(username === vm.username) {
+                        if(message.username === vm.username) {
                             vm.status.me = true;
                         } else {
                             vm.status.them = true;

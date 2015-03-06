@@ -39,7 +39,7 @@
                 }
             }),
             setStatus: function(id, status) {
-                var rsrc = $resource('api/applications/:id', {
+                var RSRC = $resource('api/applications/:id', {
                         id: '@_id'
                     }, {
                     update: {
@@ -47,7 +47,7 @@
                     }
                 });
 
-                return new rsrc({_id: id, 'status': status}).$update();
+                return new RSRC({_id: id, 'status': status}).$update();
             },
             getApplication: function (query) {
 
@@ -56,14 +56,14 @@
                     return null;
                 }
 
-                var rsrc = $resource('api/applications/:applicationId', {
+                var RSRC = $resource('api/applications/:applicationId', {
                     applicationId: '@applicationId'
                 });
 
-                return rsrc.get(query).$promise;
+                return RSRC.get(query).$promise;
             },
             listByUser: function (query) {
-                var rsrc = $resource('api/users/:userId/applications', {
+                var RSRC = $resource('api/users/:userId/applications', {
                     userId: '@userId'
                 }, {
                     query: {
@@ -72,10 +72,10 @@
                     }
                 });
 
-                return rsrc.query(query).$promise;
+                return RSRC.query(query).$promise;
             },
             listByCompany: function (query) {
-                var rsrc = $resource('api/companies/:companyId/applications', {
+                var RSRC = $resource('api/companies/:companyId/applications', {
                     companyId: '@companyId'
                 }, {
                     query: {
@@ -84,11 +84,11 @@
                     }
                 });
 
-                return rsrc.query(query).$promise;
+                return RSRC.query(query).$promise;
 
             },
             createConnection: function(application) {
-                var rsrc = $resource('/api/applications/:applicationId/connect', {
+                var RSRC = $resource('/api/applications/:applicationId/connect', {
                     applicationId: '@_id'
                 }, {
                     get: {
@@ -97,14 +97,14 @@
                     }
                 });
 
-                return rsrc.get(application).$promise;
+                return RSRC.get(application).$promise;
             },
             ForDriver: $resource('api/jobs/:jobId/applications/:userId', {
                 jobId: '@jobId',
                 userId: '@userId'
             }),
             getMessages: function(applicationId, userId) {
-                var rsrc = $resource('api/applications/:applicationId/messages', {
+                var RSRC = $resource('api/applications/:applicationId/messages', {
                     companyId: '@companyId'
                 }, {
                     query: {
@@ -113,7 +113,7 @@
                     }
                 });
 
-                return rsrc.query({applicationId: applicationId, userId: userId}).$promise;
+                return RSRC.query({applicationId: applicationId, userId: userId}).$promise;
             }
         };
 

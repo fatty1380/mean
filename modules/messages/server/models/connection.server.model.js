@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    moment = require('moment');
+    moment = require('moment'),
+    _ = require('lodash');
 
 
 /**

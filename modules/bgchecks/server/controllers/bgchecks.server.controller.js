@@ -652,7 +652,7 @@ module.exports.rerunReport = function ReRunReport(req, res, next) {
 
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, "MVRDOM", 44679).then(
+            everifile.RunReport(session, 'MVRDOM', 44679).then(
                 function (bgReport) {
                     console.log('[rerunReport] Created remote report: %j', bgReport);
 
@@ -733,7 +733,7 @@ function LoadPDFData(req, res, next) {
                     res.type(bgReport.contentType);
                     res.header('Content-Disposition', bgReport.headers['content-disposition']);
                     res.header('transfer-encoding', bgReport.headers['transfer-encoding']);
-                    res.write(bgReport.response.raw_body);
+                    res.write(bgReport.response.raw_body);// jshint ignore:line
                     res.end();
 
                     //res.type(bgReport.contentType);

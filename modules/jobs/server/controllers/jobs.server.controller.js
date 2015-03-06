@@ -115,6 +115,33 @@ var getErrorMessage = function (err) {
     return message;
 };
 
+
+var incrementJobsCount = function(req) {
+    if(!req.company) {
+        console.error('No Company defined in request');
+        return false;
+    }
+
+    var sub = req.company.subscription;
+
+    if(!sub) {
+        console.error('No Subscription for company `%s`', req.company.id);
+        return false;
+    }
+
+    var renewal = moment(sub.renews);
+    if(renewal < moment) {
+        sub.renews = renewal.add(30, 'days');
+        sub.used = 1;
+    } else {
+        sub.used++;
+    }
+
+    sub.save(function(err) {
+        console.log('updated company subscription to %j', sub);
+    });
+};
+
 /**
  * Create a Job
  */
@@ -148,32 +175,6 @@ exports.create = function (req, res) {
     });
 
 
-};
-
-var incrementJobsCount = function(req) {
-    if(!req.company) {
-        console.error('No Company defined in request');
-        return false;
-    }
-
-    var sub = req.company.subscription;
-
-    if(!sub) {
-        console.error('No Subscription for company `%s`', req.company.id);
-        return false;
-    }
-
-    var renewal = moment(sub.renews);
-    if(renewal < moment) {
-        sub.renews = renewal.add(30, 'days');
-        sub.used = 1;
-    } else {
-        sub.used++;
-    }
-
-    sub.save(function(err) {
-        console.log('updated company subscription to %j', sub);
-    });
 };
 
 /**

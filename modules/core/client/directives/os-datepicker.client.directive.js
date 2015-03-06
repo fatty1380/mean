@@ -40,7 +40,7 @@
         return '';
     }
 
-    function dpCtrl($element, $attrs, $scope, $log) {
+    function DatepickerController($element, $attrs, $scope, $log) {
         var vm = this;
 
         vm.format = vm.format || 'YYYY-MM-DD';
@@ -98,7 +98,7 @@
                 isRequired : '=?',
                 osName : '=?'
             },
-            controller: dpCtrl,
+            controller: DatepickerController,
             controllerAs: 'vm',
             bindToController: true
         };

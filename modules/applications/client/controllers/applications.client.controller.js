@@ -36,9 +36,9 @@
                 vm.setApplicationStatus('read');
             }
 
-            vm.text.noconnection = (vm.user.isDriver)
-                ? 'The employer has not yet connected with you. Once they have, they will have access to your full profile and will be able to chat with you right here.'
-                : 'In order to view reports and chat with this applicant, you must first <em>Connect</em> with them using the button below. This will count against your monthly allotment of connections.';
+            vm.text.noconnection = (vm.user.isDriver) ?
+                'The employer has not yet connected with you. Once they have, they will have access to your full profile and will be able to chat with you right here.' :
+                'In order to view reports and chat with this applicant, you must first <em>Connect</em> with them using the button below. This will count against your monthly allotment of connections.';
         };
 
         vm.setApplicationStatus = function(status) {

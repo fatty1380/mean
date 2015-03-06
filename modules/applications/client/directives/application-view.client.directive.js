@@ -34,9 +34,9 @@
         }
 
         vm.experienceText = (
-            !!vm.driver && !!vm.driver.experience && vm.driver.experience.length
-                ? 'The applicant\'s experience will be available once connected'
-                : 'You can discuss past job experience once you have connected'
+            !!vm.driver && !!vm.driver.experience && vm.driver.experience.length ?
+                'The applicant\'s experience will be available once connected' :
+                'You can discuss past job experience once you have connected'
         );
 
         vm.text = text;

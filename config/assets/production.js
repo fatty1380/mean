@@ -30,7 +30,6 @@ module.exports = {
                 'public/lib/raygun4js/dist/raygun.min.js',
                 '//tinymce.cachefly.net/4.1/tinymce.min.js',
                 'public/lib/angular-sanitize/angular-sanitize.min.js'
-
             ]
         },
         css: 'public/dist/application.min.css',
