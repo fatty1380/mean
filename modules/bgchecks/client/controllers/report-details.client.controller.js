@@ -3,8 +3,10 @@
 
 
     function completeApplicantModel(field) {
-        var model = this.model;
-        var source = this.applicant;
+        var vm = this; // jshint ignore:line
+
+        var model = vm.model;
+        var source = vm.applicant;
 
         if (!model.hasOwnProperty(field.name)) {
 
@@ -26,7 +28,8 @@
     }
 
     function translateFieldsToNg(field, index, _vm) { // jshint ignore:line
-        var model = this.subModel || this.model;
+        var vm = this; // jshint ignore:line
+        var model = vm.subModel || vm.model;
 
         switch (field.type) {
             case 'string':
@@ -78,17 +81,17 @@
                 break;
             case 'object':
                 if (field.dataFields) {
-                    this.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, this);
-                    this.subModel = null;
+                    vm.subModel = model[field.name];
+                    _.map(field.dataFields, translateFieldsToNg, vm);
+                    vm.subModel = null;
                 }
                 field.isObject = true;
                 break;
             case 'array':
                 if (field.dataFields) {
-                    this.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, this);
-                    this.subModel = null;
+                    vm.subModel = model[field.name];
+                    _.map(field.dataFields, translateFieldsToNg, vm);
+                    vm.subModel = null;
                 }
                 field.isArray = true;
                 field.values = field.values || [];
