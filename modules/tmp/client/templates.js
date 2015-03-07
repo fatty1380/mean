@@ -2992,6 +2992,88 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </span>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/drivers/views/templates/driver-info-form.client.template.html',
+  '<section>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--What type of license do you have? -->\n' +
+  '        <div class="form-group">\n' +
+  '            <p class="info col-sm-10 col-sm-offset-1">\n' +
+  '                What type of driver license do you have?\n' +
+  '            </p>\n' +
+  '\n' +
+  '            <div class="col-sm-12 text-center">\n' +
+  '                <os-edit-license model="vm.driver.licenses[0]"\n' +
+  '                                 form-name="licenseForm"\n' +
+  '                                 mode="minimal"></os-edit-license>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--What are you interested in -->\n' +
+  '        <div class="form-group">\n' +
+  '            <p class="info col-sm-10 col-sm-offset-1">\n' +
+  '                What types of jobs are you interested in?\n' +
+  '            </p>\n' +
+  '\n' +
+  '            <div class="col-sm-12 text-center">\n' +
+  '                <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
+  '                <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '\n' +
+  '        <h4 class="col-sm-12">Work Experience</h4>\n' +
+  '        <p class="info col-sm-12">\n' +
+  '            Add information about past Experience to help employers know more about you and your\n' +
+  '            background.\n' +
+  '            <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"\n' +
+  '                    ng-click="vm.driver.experience = [];"\n' +
+  '                    event-focus="click" event-focus-id="introText">\n' +
+  '                skip\n' +
+  '            </button>\n' +
+  '        </p>\n' +
+  '\n' +
+  '        <!--What are you interested in -->\n' +
+  '        <div class="form-group">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--Cover Letter-->\n' +
+  '\n' +
+  '        <h4 class="col-sm-12">Cover Letter</h4>\n' +
+  '        <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
+  '           ng-bind-html="vm.about.messageSubHeading"></p>\n' +
+  '\n' +
+  '        <div class="form-group"\n' +
+  '             ng-class="{\'has-error\': vm.form.introText.$error && (vm.form.$submitted || vm.form.introText.$touched)}">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
+  '                    Please introduce yourself to the employer here\n' +
+  '                </div>\n' +
+  '                <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
+  '                    {{vm.introTextError}}\n' +
+  '                </div>\n' +
+  '                    <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"\n' +
+  '                              name="introText" id="introText" class="editor-md"\n' +
+  '                              placeholder="Please introduce yourself to the employer here"\n' +
+  '                              ng-required="true"></textarea>\n' +
+  '            </div>\n' +
+  '\n' +
+  '        </div>\n' +
+  '\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/drivers/views/templates/driver-inline.client.template.html',
   '<section name="os-driver-inline.directive">\n' +
   '\n' +
@@ -4187,247 +4269,51 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </span>\n' +
   '    </div>\n' +
   '\n' +
-  '    <form id="vm.newUserApplicationForm" class="modal-form">\n' +
+  '    <form id="vm.newUserApplicationForm" class="oset-form">\n' +
   '        <div class="modal-body" ng-class="{\'bg-primary\': vm.currentStep === 0}">\n' +
   '\n' +
-  '            <section class="signup-type row" id="step_0_signupType"\n' +
-  '                     ng-form="vm.subForm0" ng-show="vm.currentStep === 0">\n' +
-  '                <div class="row text-center">\n' +
-  '                    <h2 class="lead-question">I want to ...</h2>\n' +
-  '                </div>\n' +
-  '                <div class="row text-center">\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectUserType(\'driver\')">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                                <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>\n' +
-  '                            </div>\n' +
-  '                            <br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Drive</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                    <br class="visible-xs"/>\n' +
-  '\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectUserType(\'owner\')">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                                <img src="modules/users/img/owner-group.png"\n' +
-  '                                     class="img-responsive center-block text-center"/>\n' +
-  '                            </div>\n' +
-  '                            <br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Hire</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '                <input type="hidden" ng-required="true" ng-model="vm.credentials.signupType"/>\n' +
+  '            <section class="row" ng-show="vm.currentStep===0">\n' +
+  '                <user-signup-type ng-form="vm.subForm0" model="vm.credentials.signupType" callback="vm.selectUserType()"></user-signup-type>\n' +
   '            </section>\n' +
   '\n' +
-  '            <section class="row" id="step_1_welcome"\n' +
-  '                     ng-form="vm.subForm1" ng-show="vm.currentStep === 1">\n' +
   '\n' +
-  '                <div class="col-sm-12">\n' +
+  '            <section class="row" ng-show="vm.currentStep===1">\n' +
+  '                <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic\n' +
+  '                    information\n' +
+  '                    <br/>\n' +
+  '                    <em class="text-muted">... or <a ng-click="$dismiss(\'login\')" login-modal>apply with an existing user</a> </em>\n' +
+  '                </p>\n' +
   '\n' +
-  '                    <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic\n' +
-  '                        information\n' +
-  '                        <br/>\n' +
-  '                        <em class="text-muted">... or <a ng-click="$dismiss(\'login\')" login-modal>apply with an existing user</a> </em>\n' +
-  '                    </p>\n' +
-  '\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '\n' +
-  '                        <label for="email" class="control-label col-xs-12">Email</label>\n' +
-  '\n' +
-  '                        <div class="col-xs-12">\n' +
-  '                            <input modal-focus="true" type="email" id="email" name="email"\n' +
-  '                                   class="form-control" debounce\n' +
-  '                                   data-ng-model="vm.credentials.email"\n' +
-  '                                   placeholder="Email" ng-required="true">\n' +
-  '\n' +
-  '                            <span class="form-control-feedback"\n' +
-  '                                  ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">\n' +
-  '                                <i class="fa fa-check text-success"></i>\n' +
-  '                            </span>\n' +
-  '                            <span class="form-control-feedback"\n' +
-  '                                  ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">\n' +
-  '                                <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>\n' +
-  '                            </span>\n' +
-  '                        </div>\n' +
-  '\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <!--Enter your name-->\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '                        <label class="control-label col-xs-12">Your Name</label>\n' +
-  '\n' +
-  '                        <div class="col-xs-6">\n' +
-  '                            <input type="text" id="firstName" name="firstName"\n' +
-  '                                   class="form-control" debounce ng-required="true"\n' +
-  '                                   data-ng-model="vm.credentials.firstName" placeholder="First Name">\n' +
-  '                        </div>\n' +
-  '                        <div class="col-xs-6">\n' +
-  '                            <input type="text" id="lastName" name="lastName"\n' +
-  '                                   class="form-control" debounce ng-required="true"\n' +
-  '                                   data-ng-model="vm.credentials.lastName" placeholder="Last Name">\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                    <p class="verify col-xs-12 text-center">\n' +
-  '                        Your name will appear as <strong>{{vm.credentials.firstName || \'_________\'}}\n' +
-  '                        {{vm.credentials.lastName || \'_________\'}}</strong>\n' +
-  '                    </p>\n' +
-  '                </div>\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '                        <label class="control-label col-xs-12">Your Zip Code\n' +
-  '                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.zip}}"></i>\n' +
-  '                        </label>\n' +
-  '\n' +
-  '                        <div class="col-xs-12">\n' +
-  '                            <input type="text" id="zipCode" name="zipCode"\n' +
-  '                                   class="form-control" debounce ng-required="true"\n' +
-  '                                   data-ng-model="vm.credentials.addresses[0].zipCode" placeholder="Zip Code">\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-sm-12">\n' +
-  '                    <p class="info">\n' +
-  '                    </p>\n' +
-  '\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '                        <label class="control-label col-xs-12">Password\n' +
-  '                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.password}}"></i>\n' +
-  '                        </label>\n' +
-  '\n' +
-  '                        <div class="col-xs-12">\n' +
-  '                            <input type="password" id="password" name="password" class="form-control mgn-vert"\n' +
-  '                                   data-ng-model="vm.credentials.password" placeholder="Password"\n' +
-  '                                   ng-required="true">\n' +
-  '\n' +
-  '                            <input type="password" id="confirmPassword" name="confirmPassword"\n' +
-  '                                   class="form-control mgn-vert"\n' +
-  '                                   data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"\n' +
-  '                                   ng-required="true" compare-to="vm.credentials.password">\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                    <div class="col-sm-10 col-sm-offset-1">\n' +
-  '                        <p class="text-center">Do you agree to all conditions in the Outset <span\n' +
-  '                                tos>Terms of Service</span>\n' +
-  '                            <i class="fa"\n' +
-  '                               ng-class="{\'fa-question\' : !vm.credentials.terms, \'fa-check-circle text-success fa-2x\': vm.credentials.terms==\'yes\', \'fa-times-circle-o text-danger\' : vm.credentials.terms==\'no\'}"></i>\n' +
-  '                            <button ng-hide="vm.credentials.terms === \'yes\'" type="button"\n' +
-  '                                    ng-click="vm.credentials.terms=\'yes\'" class="btn btn-oset-success btn-sm mgn-left">\n' +
-  '                                Yes, I Agree\n' +
-  '                            </button>\n' +
-  '                        </p>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
+  '                <user-signup-form ng-form="vm.subForm1" model="vm.credentials" text="vm.about"\n' +
+  '                                  methods="vm.subform1Methods">\n' +
+  '                </user-signup-form>\n' +
   '            </section>\n' +
   '\n' +
-  '            <section class="row" id="step_2_background"\n' +
-  '                     ng-form="vm.subForm2" ng-show="vm.currentStep === 2">\n' +
+  '            <section class="row" ng-show="vm.currentStep === 2">\n' +
   '\n' +
-  '\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <!--What type of license do you have? -->\n' +
-  '                    <div class="form-group">\n' +
-  '                        <p class="info col-sm-10 col-sm-offset-1">\n' +
-  '                            What type of driver license do you have?\n' +
-  '                        </p>\n' +
-  '\n' +
-  '                        <div class="col-sm-12 text-center">\n' +
-  '                            <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"\n' +
-  '                                             mode="minimal"></os-edit-license>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <!--What are you interested in -->\n' +
-  '                    <div class="form-group">\n' +
-  '                        <p class="info col-sm-10 col-sm-offset-1">\n' +
-  '                            What types of jobs are you interested in?\n' +
-  '                        </p>\n' +
-  '\n' +
-  '                        <div class="col-sm-12 text-center">\n' +
-  '                            <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
-  '                            <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-sm-12">\n' +
-  '\n' +
-  '                    <h4 class="col-sm-12">Work Experience</h4>\n' +
-  '                    <p class="info col-sm-12">\n' +
-  '                        Add information about past Experience to help employers know more about you and your\n' +
-  '                        background.\n' +
-  '                        <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"\n' +
-  '                                ng-click="vm.driver.experience = [];"\n' +
-  '                                event-focus="click" event-focus-id="introText">\n' +
-  '                            skip\n' +
-  '                        </button>\n' +
-  '                    </p>\n' +
-  '\n' +
-  '                    <!--What are you interested in -->\n' +
-  '                    <div class="form-group">\n' +
-  '                        <div class="col-sm-12">\n' +
-  '                            <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-sm-12">\n' +
-  '                    <!--Cover Letter-->\n' +
-  '\n' +
-  '                    <h4 class="col-sm-12">Cover Letter</h4>\n' +
-  '                    <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
-  '                       ng-bind-html="vm.about.messageSubHeading"></p>\n' +
-  '\n' +
-  '                    <div class="form-group"\n' +
-  '                         ng-class="{\'has-error\': vm.subForm2.introText.$error && (vm.subForm2.$submitted || vm.subForm2.introText.$touched)}">\n' +
-  '                        <div class="col-sm-12">\n' +
-  '                            <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
-  '                                Please introduce yourself to the employer here\n' +
-  '                            </div>\n' +
-  '                            <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
-  '                                {{vm.introTextError}}\n' +
-  '                            </div>\n' +
-  '                            <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"\n' +
-  '                                      name="introText" id="introText" class="editor-md"\n' +
-  '                                      placeholder="Please introduce yourself to the employer here"\n' +
-  '                                      ng-required="true"></textarea>\n' +
-  '                        </div>\n' +
-  '\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                </div>\n' +
+  '                <driver-info-form ng-form="vm.subForm2" model="vm.driver" text="vm.about"\n' +
+  '                                  class="col-sm-12" methods="vm.subform2Methods">\n' +
+  '                </driver-info-form>\n' +
   '\n' +
   '            </section>\n' +
   '\n' +
   '            <section class="row" id="step_3_docs"\n' +
   '                     ng-form="vm.subForm3" ng-show="vm.currentStep === 3">\n' +
   '\n' +
-  '                <div class="col-sm-12">\n' +
+  '                <!--<div class="col-sm-12">-->\n' +
   '\n' +
-  '                    <div class="col-sm-6">\n' +
-  '                        <div class="text-center control-label">Profile Picture</div>\n' +
-  '                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"\n' +
-  '                                             auto-crop="true"\n' +
-  '                                             title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
-  '                    </div>\n' +
-  '                    <div class="col-sm-6">\n' +
-  '                        <oset-file-upload mode="resume"\n' +
-  '                                          model="vm.driver.resume" model-id="vm.driver._id"\n' +
-  '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
+  '                    <!--<div class="col-sm-6">-->\n' +
+  '                        <!--<div class="text-center control-label">Profile Picture</div>-->\n' +
+  '                        <!--<os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"-->\n' +
+  '                                             <!--auto-crop="true"-->\n' +
+  '                                             <!--title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>-->\n' +
+  '                    <!--</div>-->\n' +
+  '                    <!--<div class="col-sm-6">-->\n' +
+  '                        <!--<oset-file-upload mode="resume"-->\n' +
+  '                                          <!--model="vm.driver.resume" model-id="vm.driver._id"-->\n' +
+  '                                          <!--title="Resume Upload" auto-upload="true"></oset-file-upload>-->\n' +
+  '                    <!--</div>-->\n' +
+  '                <!--</div>-->\n' +
   '\n' +
   '                <div class="col-sm-12">\n' +
   '                    <div class="checkbox">\n' +
@@ -4446,7 +4332,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="pull-left">\n' +
   '                <button type="button" class="btn btn-oset-secondary"\n' +
   '                        ng-click="vm.prevStep()"\n' +
-  '                        ng-hide="vm.currentStep === 0 || vm.currentStep === 1"\n' +
   '                        ng-class="{\'disabled\': vm.currentStep === 2}"\n' +
   '                        tabindex="-1">\n' +
   '                    <i class="fa fa-arrow-circle-left"></i>&nbsp;Back\n' +
@@ -4460,7 +4345,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    Next&nbsp;<i class="fa fa-arrow-circle-right"></i>\n' +
   '                </button>\n' +
   '                <button type="button" class="btn btn-oset-primary"\n' +
-  '                        ng-click="vm.saveDriverDetails()"\n' +
+  '                        ng-click="vm.createDriver()"\n' +
   '                        ng-show="vm.currentStep === 2"\n' +
   '                        ng-class="{\'disabled\':vm.loading}">\n' +
   '                    Next&nbsp;<i class="fa fa-arrow-circle-right"></i>\n' +
@@ -4482,6 +4367,129 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '</script>\n' +
   '');
+ $templateCache.put('/modules/users/views/templates/signup-form.client.template.html',
+  '<section>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '\n' +
+  '            <label for="email" class="control-label col-xs-12">Email</label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input modal-focus="true" type="email" id="email" name="email"\n' +
+  '                       class="form-control" debounce\n' +
+  '                       data-ng-model="vm.model.email"\n' +
+  '                       placeholder="Email" ng-required="true"\n' +
+  '                       autocorrect="off">\n' +
+  '\n' +
+  '                <span class="form-control-feedback"\n' +
+  '                      ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">\n' +
+  '                    <i class="fa fa-check text-success"></i>\n' +
+  '                </span>\n' +
+  '                <span class="form-control-feedback"\n' +
+  '                      ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">\n' +
+  '                    <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>\n' +
+  '                </span>\n' +
+  '            </div>\n' +
+  '\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"\n' +
+  '             ng-show="vm.model.signupType === \'owner\'">\n' +
+  '            <label for="companyName" class="control-label col-xs-12">Business Name</label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input type="text" id="companyName" name="companyName" class="form-control"\n' +
+  '                       data-ng-model="vm.model.companyName" placeholder="Name of your Business"\n' +
+  '                       ng-required="!!vm.model.signupType && vm.model.signupType === \'owner\'"\n' +
+  '                       autocapitalize="words">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--Enter your name-->\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '            <label class="control-label col-xs-12">Your Name</label>\n' +
+  '\n' +
+  '            <div class="col-xs-6">\n' +
+  '                <input type="text" id="firstName" name="firstName"\n' +
+  '                       class="form-control" debounce ng-required="true"\n' +
+  '                       data-ng-model="vm.model.firstName" placeholder="First Name"\n' +
+  '                       autocapitalize="words">\n' +
+  '            </div>\n' +
+  '            <div class="col-xs-6">\n' +
+  '                <input type="text" id="lastName" name="lastName"\n' +
+  '                       class="form-control" debounce ng-required="true"\n' +
+  '                       data-ng-model="vm.model.lastName" placeholder="Last Name"\n' +
+  '                       autocapitalize="words">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <p class="verify col-xs-12 text-center">\n' +
+  '            Your name will appear as <strong>{{vm.model.firstName || \'_________\'}}\n' +
+  '            {{vm.model.lastName || \'_________\'}}</strong>\n' +
+  '        </p>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '            <label class="control-label col-xs-12">Your Zip Code\n' +
+  '                <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.text.zip}}"></i>\n' +
+  '            </label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input type="text" id="zipCode" name="zipCode"\n' +
+  '                       class="form-control" debounce ng-required="true"\n' +
+  '                       data-ng-model="vm.model.addresses[0].zipCode" placeholder="Zip Code">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <p class="info">\n' +
+  '        </p>\n' +
+  '\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '            <label class="control-label col-xs-12">Password\n' +
+  '                <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.text.password}}"></i>\n' +
+  '            </label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input type="password" id="password" name="password"\n' +
+  '                       class="form-control mgn-vert"\n' +
+  '                       data-ng-model="vm.model.password"\n' +
+  '                       placeholder="Password"\n' +
+  '                       ng-required="true" ng-minlength="8">\n' +
+  '\n' +
+  '                <input type="password" id="confirmPassword" name="confirmPassword"\n' +
+  '                       class="form-control mgn-vert"\n' +
+  '                       data-ng-model="vm.model.confirmPassword"\n' +
+  '                       placeholder="Confirm Password"\n' +
+  '                       ng-required="true" ng-minlength="8"\n' +
+  '                       compare-to="vm.model.password">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="col-sm-10 col-sm-offset-1">\n' +
+  '            <p class="text-center">\n' +
+  '                Do you agree to all conditions in the Outset <span tos>Terms of Service</span>\n' +
+  '                <i class="fa" ng-class="{\'fa-question\' : !vm.model.terms}"></i>\n' +
+  '            </p>\n' +
+  '            <p class="text-center">\n' +
+  '                <button class="btn btn-oset-secondary" ng-click="vm.model.terms=true" ng-class="{\'disabled\':!!vm.model.terms}">\n' +
+  '                    Yes, I Agree\n' +
+  '                    <i class="fa" ng-class="{\'fa-check-circle text-success\': !!vm.model.terms}"></i>\n' +
+  '                </button>\n' +
+  '\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/users/views/templates/signup-modal.client.template.html',
   '<span ng-click="vm.showSignup()" ng-transclude>Signup</span>\n' +
   '<!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->\n' +
@@ -4490,33 +4498,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div class="modal-header bg-primary">\n' +
   '\n' +
   '        <div ng-hide="vm.credentials.signupType" class="container-fluid">\n' +
-  '            <section class="signup-type">\n' +
-  '                <div class="row text-center">\n' +
-  '                    <h2 class="lead-question">I want to ... {{vm.credentials.signupType}}</h2>\n' +
-  '                </div>\n' +
-  '                <div class="row text-center">\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectType(\'driver\', $event)">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                            <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>\n' +
-  '                            </div><br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Drive</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                    <br class="visible-xs"/>\n' +
-  '\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectType(\'owner\', $event)">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                            <img src="modules/users/img/owner-group.png" class="img-responsive center-block text-center"/>\n' +
-  '                            </div><br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Hire</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '            </section>\n' +
+  '            <user-signup-type model="vm.credentials.signupType"></user-signup-type>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
@@ -4555,90 +4537,28 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '\n' +
   '    <form role="form" data-ng-submit="vm.signup($event)" name="vm.signupForm"\n' +
-  '          class="signin form-horizontal" spellcheck="false" novalidate>\n' +
+  '          class="signin oset-form" spellcheck="false" novalidate>\n' +
   '\n' +
   '        <div class="modal-body" ng-show="vm.credentials.signupType">\n' +
+  '\n' +
   '            <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">\n' +
-  '                <em><span>{{vm.extraText || \'Before continuing, please create an account\'}}</span> or <a ng-click="$dismiss(\'login\')" login-modal redirect="vm.srefRedirect">Log in with an existing account</a></span> </em>\n' +
+  '                <em><span>{{vm.extraText || \'Before continuing, please create an account\'}}</span> or <a\n' +
+  '                        ng-click="$dismiss(\'login\')" login-modal redirect="vm.srefRedirect">Log in with an existing\n' +
+  '                    account</a></span> </em>\n' +
   '            </p>\n' +
   '\n' +
-  '            <div class="form-group" ng-show="vm.credentials.signupType === \'owner\'">\n' +
-  '                <label for="companyName" class="col-sm-2 control-label">Business Name</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === \'owner\'"\n' +
-  '                           type="text" id="companyName" name="companyName" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.companyName" placeholder="Name of your Business"\n' +
-  '                            ng-required="!!vm.credentials.signupType && vm.credentials.signupType === \'owner\'">\n' +
-  '                </div>\n' +
+  '            <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <user-signup-form model="vm.credentials" methods="vm.signupFormMethods">\n' +
+  '                </user-signup-form>\n' +
   '            </div>\n' +
-  '\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="firstName" class="col-sm-2 control-label">First Name</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === \'driver\'"\n' +
-  '                           type="text" ng-required="true" id="firstName" name="firstName" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.firstName" placeholder="First Name">\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="lastName" class="col-sm-2 control-label">Last Name</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input type="text" id="lastName" name="lastName" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.lastName" placeholder="Last Name"\n' +
-  '                           ng-required="true">\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="email" class="col-sm-2 control-label">Email</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input type="text" id="email" name="email" class="form-control" data-ng-model="vm.credentials.email"\n' +
-  '                           placeholder="Email" ng-required="true">\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="password" class="col-sm-2 control-label">Password</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input type="password" id="password" name="password" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.password" placeholder="Password"\n' +
-  '                            ng-required="true">\n' +
-  '                    <br/>\n' +
-  '                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"\n' +
-  '                            ng-required="true" compare-to="vm.credentials.password">\n' +
-  '                </div>\n' +
   '            </div>\n' +
   '\n' +
   '        </div>\n' +
   '\n' +
   '        <div class="modal-footer" ng-show="vm.credentials.signupType">\n' +
-  '            <div class="col-sm-2 ">\n' +
-  '                <label class="strong text-right" style="height:30px;">\n' +
-  '                    Terms\n' +
-  '                </label>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="col-sm-10">\n' +
-  '                <p class="text-left">Do you agree to all conditions in the Outset <span tos>Terms of Service</span>\n' +
-  '                    <i class="fa"\n' +
-  '                       ng-class="{\'fa-question\' : !vm.credentials.terms, \'fa-check-circle text-success fa-2x\': vm.credentials.terms==\'yes\', \'fa-times-circle-o text-danger\' : vm.credentials.terms==\'no\'}"></i>\n' +
-  '                    <button ng-hide="vm.credentials.terms === \'yes\'" type="button"\n' +
-  '                            ng-click="vm.credentials.terms=\'yes\'" class="btn btn-oset-success btn-sm mgn-left">Yes,\n' +
-  '                        I Agree!\n' +
-  '                    </button>\n' +
-  '                </p>\n' +
-  '            </div>\n' +
-  '\n' +
-  '        </div>\n' +
-  '\n' +
-  '        <div class="modal-footer" ng-show="vm.credentials.signupType">\n' +
-  '            <button type="submit" class="btn btn-oset-primary" ng-class="{\'disabled\':vm.credentials.terms != \'yes\'}">Sign\n' +
-  '                Up!\n' +
+  '            <button type="submit" class="btn btn-oset-primary" ng-class="{\'disabled\':vm.credentials.terms != \'yes\'}">\n' +
+  '                Sign Up!\n' +
   '            </button>\n' +
   '            <div data-ng-show="vm.error" class="text-center text-danger">\n' +
   '                <strong data-ng-bind="vm.error"></strong>\n' +
@@ -4648,6 +4568,39 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '\n' +
   '</script>\n' +
+  '');
+ $templateCache.put('/modules/users/views/templates/signup-type.client.template.html',
+  '<section class="signup-type">\n' +
+  '    <div class="row text-center">\n' +
+  '        <h2 class="lead-question">I want to ... </h2>\n' +
+  '    </div>\n' +
+  '    <div class="row text-center">\n' +
+  '        <div class="col-sm-6" ng-click="vm.selectType(\'driver\', $event)">\n' +
+  '            <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
+  '                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
+  '                    <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>\n' +
+  '                </div>\n' +
+  '                <br class="hidden-xs"/>\n' +
+  '\n' +
+  '                <div class="heading h3">Drive</div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '        <br class="visible-xs"/>\n' +
+  '\n' +
+  '        <div class="col-sm-6" ng-click="vm.selectType(\'owner\', $event)">\n' +
+  '            <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
+  '                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
+  '                    <img src="modules/users/img/owner-group.png"\n' +
+  '                         class="img-responsive center-block text-center"/>\n' +
+  '                </div>\n' +
+  '                <br class="hidden-xs"/>\n' +
+  '\n' +
+  '                <div class="heading h3">Hire</div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '    <input type="hidden" name="signupType" ng-required="true" ng-model="vm.model"/>\n' +
+  '</section>\n' +
   '');
  $templateCache.put('/modules/users/views/templates/user-badge.client.template.html',
   '<section>\n' +

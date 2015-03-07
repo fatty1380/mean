@@ -1,0 +1,31 @@
+<section class="signup-type">
+    <div class="row text-center">
+        <h2 class="lead-question">I want to ... </h2>
+    </div>
+    <div class="row text-center">
+        <div class="col-sm-6" ng-click="vm.selectType('driver', $event)">
+            <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">
+                    <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>
+                </div>
+                <br class="hidden-xs"/>
+
+                <div class="heading h3">Drive</div>
+            </div>
+        </div>
+        <br class="visible-xs"/>
+
+        <div class="col-sm-6" ng-click="vm.selectType('owner', $event)">
+            <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">
+                    <img src="modules/users/img/owner-group.png"
+                         class="img-responsive center-block text-center"/>
+                </div>
+                <br class="hidden-xs"/>
+
+                <div class="heading h3">Hire</div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="signupType" ng-required="true" ng-model="vm.model"/>
+</section>

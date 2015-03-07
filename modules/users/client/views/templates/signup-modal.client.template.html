@@ -5,33 +5,7 @@
     <div class="modal-header bg-primary">
 
         <div ng-hide="vm.credentials.signupType" class="container-fluid">
-            <section class="signup-type">
-                <div class="row text-center">
-                    <h2 class="lead-question">I want to ... {{vm.credentials.signupType}}</h2>
-                </div>
-                <div class="row text-center">
-                    <div class="col-sm-6" ng-click="vm.selectType('driver', $event)">
-                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
-                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">
-                            <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>
-                            </div><br class="hidden-xs"/>
-
-                            <div class="heading h3">Drive</div>
-                        </div>
-                    </div>
-                    <br class="visible-xs"/>
-
-                    <div class="col-sm-6" ng-click="vm.selectType('owner', $event)">
-                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">
-                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">
-                            <img src="modules/users/img/owner-group.png" class="img-responsive center-block text-center"/>
-                            </div><br class="hidden-xs"/>
-
-                            <div class="heading h3">Hire</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <user-signup-type model="vm.credentials.signupType"></user-signup-type>
         </div>
 
 
@@ -70,90 +44,28 @@
 
 
     <form role="form" data-ng-submit="vm.signup($event)" name="vm.signupForm"
-          class="signin form-horizontal" spellcheck="false" novalidate>
+          class="signin oset-form" spellcheck="false" novalidate>
 
         <div class="modal-body" ng-show="vm.credentials.signupType">
+
             <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">
-                <em><span>{{vm.extraText || 'Before continuing, please create an account'}}</span> or <a ng-click="$dismiss('login')" login-modal redirect="vm.srefRedirect">Log in with an existing account</a></span> </em>
+                <em><span>{{vm.extraText || 'Before continuing, please create an account'}}</span> or <a
+                        ng-click="$dismiss('login')" login-modal redirect="vm.srefRedirect">Log in with an existing
+                    account</a></span> </em>
             </p>
 
-            <div class="form-group" ng-show="vm.credentials.signupType === 'owner'">
-                <label for="companyName" class="col-sm-2 control-label">Business Name</label>
-
-                <div class="col-sm-10">
-                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'owner'"
-                           type="text" id="companyName" name="companyName" class="form-control"
-                           data-ng-model="vm.credentials.companyName" placeholder="Name of your Business"
-                            ng-required="!!vm.credentials.signupType && vm.credentials.signupType === 'owner'">
-                </div>
+            <div class="row">
+            <div class="col-sm-12">
+                <user-signup-form model="vm.credentials" methods="vm.signupFormMethods">
+                </user-signup-form>
             </div>
-
-            <div class="form-group">
-                <label for="firstName" class="col-sm-2 control-label">First Name</label>
-
-                <div class="col-sm-10">
-                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === 'driver'"
-                           type="text" ng-required="true" id="firstName" name="firstName" class="form-control"
-                           data-ng-model="vm.credentials.firstName" placeholder="First Name">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="lastName" class="col-sm-2 control-label">Last Name</label>
-
-                <div class="col-sm-10">
-                    <input type="text" id="lastName" name="lastName" class="form-control"
-                           data-ng-model="vm.credentials.lastName" placeholder="Last Name"
-                           ng-required="true">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="email" class="col-sm-2 control-label">Email</label>
-
-                <div class="col-sm-10">
-                    <input type="text" id="email" name="email" class="form-control" data-ng-model="vm.credentials.email"
-                           placeholder="Email" ng-required="true">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="password" class="col-sm-2 control-label">Password</label>
-
-                <div class="col-sm-10">
-                    <input type="password" id="password" name="password" class="form-control"
-                           data-ng-model="vm.credentials.password" placeholder="Password"
-                            ng-required="true">
-                    <br/>
-                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-                           data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"
-                            ng-required="true" compare-to="vm.credentials.password">
-                </div>
             </div>
 
         </div>
 
         <div class="modal-footer" ng-show="vm.credentials.signupType">
-            <div class="col-sm-2 ">
-                <label class="strong text-right" style="height:30px;">
-                    Terms
-                </label>
-            </div>
-
-            <div class="col-sm-10">
-                <p class="text-left">Do you agree to all conditions in the Outset <span tos>Terms of Service</span>
-                    <i class="fa"
-                       ng-class="{'fa-question' : !vm.credentials.terms, 'fa-check-circle text-success fa-2x': vm.credentials.terms=='yes', 'fa-times-circle-o text-danger' : vm.credentials.terms=='no'}"></i>
-                    <button ng-hide="vm.credentials.terms === 'yes'" type="button"
-                            ng-click="vm.credentials.terms='yes'" class="btn btn-oset-success btn-sm mgn-left">Yes,
-                        I Agree!
-                    </button>
-                </p>
-            </div>
-
-        </div>
-
-        <div class="modal-footer" ng-show="vm.credentials.signupType">
-            <button type="submit" class="btn btn-oset-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">Sign
-                Up!
+            <button type="submit" class="btn btn-oset-primary" ng-class="{'disabled':vm.credentials.terms != 'yes'}">
+                Sign Up!
             </button>
             <div data-ng-show="vm.error" class="text-center text-danger">
                 <strong data-ng-bind="vm.error"></strong>

@@ -67,62 +67,36 @@
 
         vm.extraText = vm.srefRedirect && vm.srefRedirect.text  || null;
 
-        vm.selectType = function(type, $event) {
-            vm.credentials.signupType = type;
-            $document.scrollTopAnimated(0, 300);
+        vm.handleRedirect = function(response) {
+            debugger; // check 'is driver'
+            if ($state.is('jobs.view') && response.isDriver) {
+                $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
+                $state.go('drivers.home', {newUser: true}, {reload: true});
+            } else if(vm.srefRedirect) {
+                $state.go(vm.srefRedirect.state, vm.srefRedirect.params, {reload: true});
+            } else if (!$state.includes('intro')) {
+                $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
+                $state.go($state.current, {newUser: true}, {reload: true});
+            } else {
+                $state.go('home');
+            }
         };
 
         vm.signup = function(event) {
 
-            if(!vm.credentials.terms) {
-                vm.error = 'Please agree to the terms and conditions before signing up';
-                event.preventDefault();
-                return false;
-            }
+            vm.loading = true;
 
-            if(vm.credentials.password !== vm.credentials.confirmPassword) {
-                $log.debug('passwords do not match, yo!');
-                vm.error = 'Passwords to not match. Please enter them again';
-                return false;
-            }
-
-            if(vm.signupForm.$invalid) {
-                vm.error = 'Please fill in all fields above';
-                return false;
-            }
-
-            $log.debug('assigning email to username');
-            vm.credentials.username = vm.credentials.email;
-            vm.credentials.type = vm.credentials.signupType;
-
-            $http.post('/api/auth/signup', vm.credentials)
-                .success(function(response) {
-                    // If successful we assign the response to the global user model
-                    vm.auth.user = response;
-
-                    $log.debug('Successfully created %o USER Profile', response.type);
-
-                    $modalInstance.close(response.type);
-
-                    if ($state.is('jobs.view') && response.type === 'driver') {
-                        $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
-                        $state.go('drivers.home', {newUser: true}, {reload: true});
-                    } else if(vm.srefRedirect) {
-                        $state.go(vm.srefRedirect.state, vm.srefRedirect.params, {reload: true});
-                    } else if (!$state.is('jobs.view') && response.type === 'driver') {
-                        $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
-                        $state.go('drivers.home', {newUser: true}, {reload: true});
-                    } else if (!$state.includes('intro')) {
-                        $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
-                        $state.go($state.current, {newUser: true}, {reload: true});
-                    } else {
-                        $state.go('home');
-                    }
-
-                    Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
-                }).error(function(response) {
-                    console.error(response.message);
-                    vm.error = response.message;
+            vm.signupFormMethods.validate()
+                .then(function(success) {
+                    $log.debug('[SignupApplyModal] validated: %s', success);
+                    return vm.signupFormMethods.submit();
+                })
+                .then(vm.handleRedirect)
+                .catch(function (error) {
+                    vm.error = error;
+                })
+                .finally(function () {
+                    vm.loading = false;
                 });
         };
     }
