@@ -896,7 +896,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
- $templateCache.put('/modules/bgchecks/views/templates/custom-form.client.template.html',
+ $templateCache.put('/modules/bgchecks/views/templates/form-input.client.template.html',
   '<section>\n' +
   '    <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"\n' +
   '           name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"\n' +
