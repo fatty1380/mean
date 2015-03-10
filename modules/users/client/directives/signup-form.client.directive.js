@@ -58,7 +58,7 @@
             scope: {
                 model: '=',
                 text: '=?',
-                methods: '='
+                methods: '=?'
             },
             link: function (scope, element, attrs, ctrls) {
                 scope.vm.form = ctrls[0];

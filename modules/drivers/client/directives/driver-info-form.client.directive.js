@@ -39,7 +39,7 @@
 
                                 $log.debug('Successfully updated DRIVER with details');
 
-                                deferred.resolve(updatedDriver);
+                                vm.driver = updatedDriver;
 
                             },
                             function (errorResponse) {

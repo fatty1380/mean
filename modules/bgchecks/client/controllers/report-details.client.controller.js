@@ -108,7 +108,7 @@
         return field;
     }
 
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document) {
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document, PolyField) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');

@@ -1,0 +1,22 @@
+<section class="form-data row">
+
+    <fieldset ng-class="{'text-muted': vm.disabled || vm.ispay}">
+        <div class="form-group" ng-repeat="field in vm.questions"
+             ng-class="{'has-error':(vm.form[field.name].$invalid || vm.form['hidden_'+field.name].$invalid) && (vm.form.$submitted || vm.form[field.name].$touched)}">
+            <!-- field = { description, length, name, required, type } -->
+            <label class="col-sm-3 control-label"
+                   data-ng-class="{'optional':!field.required}">
+                {{field.description | titlecase}} </label>
+
+            <input type="hidden" ng-model="vm.responses[field.name]" name="hidden_{{field.name}}"
+                   ng-required="field.required"
+                   ng-maxlength="field.ngMaxLength || field.length"/>
+
+            <div class="col-sm-9 col-md-8">
+                <form-input field="field" ng-hide="!!vm.verify" model="vm.responses"></form-input>
+                <form-input field="field" ng-show="!!vm.verify" model="vm.responses" mode="static"></form-input>
+            </div>
+        </div>
+    </fieldset>
+
+</section>

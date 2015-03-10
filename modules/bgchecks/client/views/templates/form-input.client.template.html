@@ -1,7 +1,12 @@
 <section>
     <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"
            name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"
-           maxlength="{{vm.field.ngMaxLength}}" ng-required="vm.field.required"/>
+           ng-maxlength="vm.field.ngMaxLength" ng-required="vm.field.required"/>
+
+    <textarea os-html-edit ng-if="!!vm.field.isTextArea" class="editor-sm"
+              name="{{vm.field.name}}" data-ng-model="vm.model[vm.field.name]"
+              ng-maxlength="vm.field.length" ng-required="vm.field.required">
+    </textarea>
 
     <date-input ng-if="vm.field.isDate" format="vm.field.format" model="vm.model[vm.field.name]"
                 class="form-control"></date-input>

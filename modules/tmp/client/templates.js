@@ -154,6 +154,30 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/applications/views/templates/application-questionnaire-form.client.template.html',
+  '<section class="form-data row">\n' +
+  '\n' +
+  '    <fieldset ng-class="{\'text-muted\': vm.disabled || vm.ispay}">\n' +
+  '        <div class="form-group" ng-repeat="field in vm.questions"\n' +
+  '             ng-class="{\'has-error\':(vm.form[field.name].$invalid || vm.form[\'hidden_\'+field.name].$invalid) && (vm.form.$submitted || vm.form[field.name].$touched)}">\n' +
+  '            <!-- field = { description, length, name, required, type } -->\n' +
+  '            <label class="col-sm-3 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!field.required}">\n' +
+  '                {{field.description | titlecase}} </label>\n' +
+  '\n' +
+  '            <input type="hidden" ng-model="vm.responses[field.name]" name="hidden_{{field.name}}"\n' +
+  '                   ng-required="field.required"\n' +
+  '                   ng-maxlength="field.ngMaxLength || field.length"/>\n' +
+  '\n' +
+  '            <div class="col-sm-9 col-md-8">\n' +
+  '                <form-input field="field" ng-hide="!!vm.verify" model="vm.responses"></form-input>\n' +
+  '                <form-input field="field" ng-show="!!vm.verify" model="vm.responses" mode="static"></form-input>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </fieldset>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/applications/views/templates/application-summary.client.template.html',
   '<section name=\'oset-application-summary\'>\n' +
   '\n' +
@@ -900,7 +924,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<section>\n' +
   '    <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"\n' +
   '           name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"\n' +
-  '           maxlength="{{vm.field.ngMaxLength}}" ng-required="vm.field.required"/>\n' +
+  '           ng-maxlength="vm.field.ngMaxLength" ng-required="vm.field.required"/>\n' +
+  '\n' +
+  '    <textarea os-html-edit ng-if="!!vm.field.isTextArea" class="editor-sm"\n' +
+  '              name="{{vm.field.name}}" data-ng-model="vm.model[vm.field.name]"\n' +
+  '              ng-maxlength="vm.field.length" ng-required="vm.field.required">\n' +
+  '    </textarea>\n' +
   '\n' +
   '    <date-input ng-if="vm.field.isDate" format="vm.field.format" model="vm.model[vm.field.name]"\n' +
   '                class="form-control"></date-input>\n' +
