@@ -8,7 +8,7 @@ module.exports = {
 			pass: ''
 		}
 	},
-	port: 3001,
+	port: 3333,
 	app: {
 		title: 'outset - Test Environment'
 	},

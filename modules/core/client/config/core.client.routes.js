@@ -103,7 +103,7 @@
             }).
 
             state('intro.driver', {
-                url: '/d',
+                url: 'd',
                 templateUrl: '/modules/core/views/intro.client.view.html',
                 parent: 'intro',
                 controller: 'HomeController',
@@ -111,7 +111,7 @@
             }).
 
             state('intro.owner', {
-                url: '/o',
+                url: 'o',
                 templateUrl: '/modules/core/views/intro.client.view.html',
                 parent: 'intro',
                 controller: 'HomeController',

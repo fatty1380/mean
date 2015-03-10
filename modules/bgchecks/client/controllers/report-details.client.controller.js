@@ -3,8 +3,10 @@
 
 
     function completeApplicantModel(field) {
-        var model = this.model;
-        var source = this.applicant;
+        var vm = this; // jshint ignore:line
+
+        var model = vm.model;
+        var source = vm.applicant;
 
         if (!model.hasOwnProperty(field.name)) {
 
@@ -25,7 +27,88 @@
         }
     }
 
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document, PolyField) {
+    function translateFieldsToNg(field, index, _vm) { // jshint ignore:line
+        var vm = this; // jshint ignore:line
+        var model = vm.subModel || vm.model;
+
+        switch (field.type) {
+            case 'string':
+                if (!!field.pickList) {
+                    field.isPickList = true;
+                    break;
+                }
+                field.ngType = 'text';
+                field.ngMaxLength = field.length;
+                break;
+            case 'datelong':
+                // TODO: Fix this code once format is known
+                var d = model[field.name];
+                var format = 'YYYYMMDD';
+
+                if (!!d && d.length > 8) {
+                    if (d.length <= 10 && (/[-\/]/).test(d)) {
+                        format = d.replace(/\d{4}/, 'YYYY').replace(/\d{2}/, 'MM').replace(/\d{2}/, 'DD');
+                    } else {
+
+                        var m;
+                        if (!!(m = moment(d)).toArray().splice(3).reduce(function (p, n) {
+                                return p + n;
+                            })) {
+                            console.error('Unsure How to Handle "date" string: %s', d);
+                            // Assume that we are in (EST:UTC-5)
+                            model[field.name] = moment.utc(d).subtract(5, 'hours');
+                        } else {
+                            console.error('Treating %s as date-only with default format', d);
+                            model[field.name] = m.format(format);
+                        }
+
+                    }
+                }
+                else if (!d) {
+                    model[field.name] = '';
+                }
+
+
+                field.isDate = true;
+                field.format = format;
+
+                break;
+            case 'state':
+                field.isState = true;
+                break;
+            case 'country':
+                field.isCountry = true;
+                break;
+            case 'object':
+                if (field.dataFields) {
+                    vm.subModel = model[field.name];
+                    _.map(field.dataFields, translateFieldsToNg, vm);
+                    vm.subModel = null;
+                }
+                field.isObject = true;
+                break;
+            case 'array':
+                if (field.dataFields) {
+                    vm.subModel = model[field.name];
+                    _.map(field.dataFields, translateFieldsToNg, vm);
+                    vm.subModel = null;
+                }
+                field.isArray = true;
+                field.values = field.values || [];
+                break;
+        }
+
+        var sensitive = /^governmentId|SSN$/i;
+
+        if (sensitive.test(field.name) || sensitive.test(field.description)) {
+            field.ngType = null;
+            field.ngSensitive = true;
+        }
+
+        return field;
+    }
+
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');

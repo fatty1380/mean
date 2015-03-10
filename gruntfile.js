@@ -73,6 +73,16 @@ module.exports = function (grunt) {
                     }
                 }
             },
+            express: {
+                options: {
+
+                },
+                test: {
+                    options: {
+                        script: 'server.js'
+                    }
+                }
+            },
             nodemon: {
                 dev: {
                     script: 'server.js',
@@ -264,6 +274,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-express-server');
 
 // Load external tasks:
     grunt.task.loadTasks('./grunt/');
@@ -301,6 +312,7 @@ module.exports = function (grunt) {
 
 // Run the project tests
     grunt.registerTask('test', ['env:test', 'mongoose', 'mochaTest', 'karma:unit']);
+    grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
 // Run the project in development mode
     grunt.registerTask('default', ['env:dev', 'lint', 'concurrent:default']);
