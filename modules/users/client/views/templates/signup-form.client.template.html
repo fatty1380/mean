@@ -6,22 +6,26 @@
             <label for="email" class="control-label col-xs-12">Email</label>
 
             <div class="col-xs-12">
-                <input modal-focus="true" type="email" id="email" name="email"
+                <input modal-focus="vm.focusEmail" type="email" id="email" name="email"
                        class="form-control" debounce
                        data-ng-model="vm.model.email"
                        placeholder="Email" ng-required="true"
                        autocorrect="off">
 
+                <div ng-show="vm.form.$submitted || vm.form.email.$touched" ng-messages="vm.form.email.$error">
+                    <div ng-message="required" class="panel panel-danger">Please enter your email</div>
+                    <div ng-message="email" class="panel panel-danger">Please enter a valid email address</div>
+                </div>
+
                 <span class="form-control-feedback"
-                      ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">
+                      ng-show="vm.form.email.$valid && vm.form.email.$touched">
                     <i class="fa fa-check text-success"></i>
                 </span>
                 <span class="form-control-feedback"
-                      ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">
+                      ng-show="vm.form.email.$touched && vm.form.email.$error.required">
                     <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>
                 </span>
             </div>
-
         </div>
     </div>
 
@@ -109,7 +113,8 @@
                 <i class="fa" ng-class="{'fa-question' : !vm.model.terms}"></i>
             </p>
             <p class="text-center">
-                <button class="btn btn-oset-secondary" ng-click="vm.model.terms=true" ng-class="{'disabled':!!vm.model.terms}">
+                <button type="button" class="btn btn-oset-secondary" ng-click="vm.model.terms=true"
+                        ng-class="{'disabled':!!vm.model.terms}">
                     Yes, I Agree
                     <i class="fa" ng-class="{'fa-check-circle text-success': !!vm.model.terms}"></i>
                 </button>

@@ -11,6 +11,8 @@
             password: 'Please enter a password of at least 8 characters. This will be used to ensure your secure access to the site'
         });
 
+        vm.focusEmail = true;
+
         vm.methods = {
             submit: function () {
                 return UserService.createUser(vm.model);

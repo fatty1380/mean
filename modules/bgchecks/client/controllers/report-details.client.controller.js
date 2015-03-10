@@ -25,87 +25,7 @@
         }
     }
 
-    function translateFieldsToNg(field, index, _vm) { // jshint ignore:line
-        var model = this.subModel || this.model;
-
-        switch (field.type) {
-            case 'string':
-                if (!!field.pickList) {
-                    field.isPickList = true;
-                    break;
-                }
-                field.ngType = 'text';
-                field.ngMaxLength = field.length;
-                break;
-            case 'datelong':
-                // TODO: Fix this code once format is known
-                var d = model[field.name];
-                var format = 'YYYYMMDD';
-
-                if (!!d && d.length > 8) {
-                    if (d.length <= 10 && (/[-\/]/).test(d)) {
-                        format = d.replace(/\d{4}/, 'YYYY').replace(/\d{2}/, 'MM').replace(/\d{2}/, 'DD');
-                    } else {
-
-                        var m;
-                        if (!!(m = moment(d)).toArray().splice(3).reduce(function (p, n) {
-                                return p + n;
-                            })) {
-                            console.error('Unsure How to Handle "date" string: %s', d);
-                            // Assume that we are in (EST:UTC-5)
-                            model[field.name] = moment.utc(d).subtract(5, 'hours');
-                        } else {
-                            console.error('Treating %s as date-only with default format', d);
-                            model[field.name] = m.format(format);
-                        }
-
-                    }
-                }
-                else if (!d) {
-                    model[field.name] = '';
-                }
-
-
-                field.isDate = true;
-                field.format = format;
-
-                break;
-            case 'state':
-                field.isState = true;
-                break;
-            case 'country':
-                field.isCountry = true;
-                break;
-            case 'object':
-                if (field.dataFields) {
-                    this.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, this);
-                    this.subModel = null;
-                }
-                field.isObject = true;
-                break;
-            case 'array':
-                if (field.dataFields) {
-                    this.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, this);
-                    this.subModel = null;
-                }
-                field.isArray = true;
-                field.values = field.values || [];
-                break;
-        }
-
-        var sensitive = /^governmentId|SSN$/i;
-
-        if (sensitive.test(field.name) || sensitive.test(field.description)) {
-            field.ngType = null;
-            field.ngSensitive = true;
-        }
-
-        return field;
-    }
-
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document) {
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document, PolyField) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');
@@ -123,6 +43,7 @@
         vm.introText = 'All reports are run by leading verification company, eEverifile. Outset will never store your Social Security , Driver License or Credit Card numbers.';
         vm.getStartedText = 'All required fields are <b>Marked in Bold</b>';
         vm.correctErrorsText = 'Please review any answers that are <span class="cta-outline">marked in red</span> below.';
+        vm.reviewText = 'Please review your information and click continue at the bottom of the page when ready.';
         vm.createText = 'Please review your information and click continue when ready. Please note, that this may take a moment to complete.';
         vm.payExplanation = 'Please click continue to enter your payment information';
 
@@ -139,7 +60,7 @@
             vm.price = vm.report.promo || vm.report.price;
 
             vm.report.fields.map(completeApplicantModel, vm);
-            _.map(vm.report.fields, translateFieldsToNg, vm);
+            _.map(vm.report.fields, PolyField.translateFields, vm);
 
 
             if (!vm.states) {
@@ -300,7 +221,7 @@
         .filter('prettyPrint', prettyPrint)
         .filter('isoDatePrint', isoDateFilter);
 
-    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document'];
+    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document', 'PolyFieldService'];
     angular.module('bgchecks')
         .controller('ReportDetailsController', ReportDetailsController);
 

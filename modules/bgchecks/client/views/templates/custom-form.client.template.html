@@ -1,0 +1,107 @@
+<section>
+    <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"
+           name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"
+           maxlength="{{vm.field.ngMaxLength}}" ng-required="vm.field.required"/>
+
+    <date-input ng-if="vm.field.isDate" format="vm.field.format" model="vm.model[vm.field.name]"
+                class="form-control"></date-input>
+    <!-- ng-required="vm.field.required" -->
+
+
+    <input ng-if="!!vm.field.ngSensitive" type="text" ng-model="vm.model[vm.field.name]"
+           name="{{vm.field.name}}" ng-required="vm.required"
+           ui-mask="999-99-9999" class="form-control"/>
+
+
+    <!-- States -->
+    <select ng-if="vm.field.isState" class="form-control"
+            ng-options="state.id as state.name for state in vm.field.options"
+            ng-model="vm.model[vm.field.name]" ng-required="vm.field.required" autocomplete="off">
+    </select>
+
+    <!-- Countries -->
+    <p class="form-control-static" ng-if="vm.field.isCountry"
+       ng-init="vm.model[vm.field.name] = 'united_states'">United States</p>
+
+    <select ng-if="vm.field.isPickList" class="form-control"
+            ng-options="item.value as item.description for item in vm.field.pickList"
+            ng-model="vm.model[vm.field.name]">
+    </select>
+
+    <div class="" ng-if="vm.field.isArray">
+        <div ng-repeat="(i,arrayItem) in vm.model[vm.field.name]">
+            <div ng-repeat="df1 in vm.field.dataFields" class="well">
+                <div class="col-xs-12" style="vertical-align: baseline;">
+                    <label class="pull-left">{{df1.description}} #{{i+1}}</label>
+                    <button type="button" class="btn btn-close pull-right"
+                            data-ng-click="vm.model[vm.field.name].splice($index, 1);">&times;</button>
+                    <div class="clearfix"></div>
+                </div>
+                <hr/>
+
+                <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"
+                     class="form-group"
+                     ng-class="{'has-error':vm.form[vm.field.name+'_'+i+'_'+df2.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+'_'+i+'_'+df2.name].$touched)}">
+                    <label class="col-md-4 control-label"
+                           data-ng-class="{'optional':!df2.required}">{{df2.description | titlecase}}</label>
+
+                    <div class="col-md-8">
+                        <input ng-if="!!df2.ngType || df2.type === 'string' || !df2.isDate"
+                               type="{{df2.ngType || text}}" class="form-control"
+                               name="{{vm.field.name}}_{{i}}_{{df2.name}}"
+                               ng-model="vm.model[vm.field.name][i][df2.name]"
+                               maxlength="{{df2.length}}" ng-required="df2.required"/>
+
+                        <date-input ng-if="df2.isDate" format="df2.format"
+                                    name="{{vm.field.name}}_{{i}}_{{df2.name}}"
+                                    model="vm.model[vm.field.name][i][df2.name]"
+                                    class="form-control"
+                                ></date-input>
+                        <!--ng-required="df2.required"-->
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <button type="button" data-ng-click="vm.model[vm.field.name].push({})">Add</button>
+    </div>
+
+    <div class="well" ng-if="vm.field.isObject">
+        <div ng-repeat="dataField in vm.field.dataFields" class="form-group"
+             ng-class="{'has-error':vm.form[vm.field.name+'_'+dataField.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+'_'+dataField.name].$touched)}">
+
+            <label class="col-sm-4 control-label"
+                   data-ng-class="{'optional':!dataField.required}">{{dataField.description
+                | titlecase}}</label>
+
+            <div class="col-sm-8">
+                <input ng-if="!dataField.isDate && !dataField.isState && !dataField.isCountry"
+                       type="{{dataField.ngType || text}}" class="form-control"
+                       name="{{vm.field.name}}_{{dataField.name}}"
+                       ng-model="vm.model[vm.field.name][dataField.name]"
+                       ng-maxlength="dataField.length" ng-required="dataField.required"/>
+
+                <date-input ng-if="dataField.isDate" format="dataField.format"
+                            model="vm.model[vm.field.name][dataField.name]"
+                            class="form-control"
+                            name="{vm.field.name}}_{{dataField.name}}"></date-input>
+
+                <!-- States -->
+                <select ng-if="dataField.isState" class="form-control"
+                        ng-options="state.id as state.name for state in dataField.options"
+                        ng-model="vm.model[vm.field.name][dataField.name]"
+                        ng-required="dataField.required" autocomplete="off">
+                </select>
+
+                <p class="form-control-static" ng-if="dataField.isCountry"
+                   ng-init="vm.model[vm.field.name][dataField.name] = 'united_states'">United
+                    States</p>
+            </div>
+        </div>
+    </div>
+
+    <!--  <option ng-repeat="option in vm.field.pickList" value="{{option.name}}">
+            {{option.description}}
+        </option> -->
+</section>

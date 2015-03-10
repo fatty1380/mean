@@ -25,43 +25,10 @@
             sub: '&hellip;and become 8-12x more likely to get the interview.'
         };
 
-        vm.packages = AppConfig.getReports() || {
-            base: {
-                title: 'Motor Vehicle Report',
-                price: '5',
-                promo: '1',
-                sku: 'MVRDOM',
-                skus: ['MVRDOM'],
-                enabled: true
-            },
-            good: {
-                title: 'Good',
-                price: '14.50',
-                sku: 'NBDS+MVRDOM',
-                skus: [{sku: 'NBDS'}, {sku: 'MVRDOM'}],
-                enabled: true
-            },
-            better: {
-                title: 'Premium',
-                price: '44.95',
-                sku: 'PKG_PREMIUM',
-                skus: [{sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
-                enabled: true
-            },
-            best: {
-                title: 'Enterprise',
-                price: '84.95',
-                sku: 'PKG_PREMIUM+ES_ECUPIT',
-                skus: [{sku: 'ES_ECUPIT'}, {sku: 'PKG_PREMIUM', subsku: ['SSNVAL', 'CRIMESC', 'FORM_EVER']}],
-                enabled: true
-            },
-            drugs: {
-                title: 'Drug Test',
-                price: '40',
-                sku: 'ES_ECUPIT',
-                enabled: false
-            }
-        };
+        AppConfig.getReports().$promise.then(function(reportResponse) {
+            debugger;
+            vm.packages = reportResponse;
+        });
     }
 
     function resolveApplicantForUser(Applicants, Authentication, $q) {
@@ -75,7 +42,7 @@
                     return null;
                 }
 
-                console.error('Hard error searching for applicant: %o', error);
+                console.error('Hard error %s searching for applicant: %o', error.status, error);
                 return $q.reject(error);
             }
         );
@@ -84,6 +51,7 @@
     function resolveReportDetails(Reports, $stateParams) {
         var sku = $stateParams.sku;
 
+        debugger;
         var getDetails = Reports.get(sku);
 
         return getDetails.$promise;

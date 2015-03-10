@@ -896,6 +896,178 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/bgchecks/views/templates/custom-form.client.template.html',
+  '<section>\n' +
+  '    <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"\n' +
+  '           name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"\n' +
+  '           maxlength="{{vm.field.ngMaxLength}}" ng-required="vm.field.required"/>\n' +
+  '\n' +
+  '    <date-input ng-if="vm.field.isDate" format="vm.field.format" model="vm.model[vm.field.name]"\n' +
+  '                class="form-control"></date-input>\n' +
+  '    <!-- ng-required="vm.field.required" -->\n' +
+  '\n' +
+  '\n' +
+  '    <input ng-if="!!vm.field.ngSensitive" type="text" ng-model="vm.model[vm.field.name]"\n' +
+  '           name="{{vm.field.name}}" ng-required="vm.required"\n' +
+  '           ui-mask="999-99-9999" class="form-control"/>\n' +
+  '\n' +
+  '\n' +
+  '    <!-- States -->\n' +
+  '    <select ng-if="vm.field.isState" class="form-control"\n' +
+  '            ng-options="state.id as state.name for state in vm.field.options"\n' +
+  '            ng-model="vm.model[vm.field.name]" ng-required="vm.field.required" autocomplete="off">\n' +
+  '    </select>\n' +
+  '\n' +
+  '    <!-- Countries -->\n' +
+  '    <p class="form-control-static" ng-if="vm.field.isCountry"\n' +
+  '       ng-init="vm.model[vm.field.name] = \'united_states\'">United States</p>\n' +
+  '\n' +
+  '    <select ng-if="vm.field.isPickList" class="form-control"\n' +
+  '            ng-options="item.value as item.description for item in vm.field.pickList"\n' +
+  '            ng-model="vm.model[vm.field.name]">\n' +
+  '    </select>\n' +
+  '\n' +
+  '    <div class="" ng-if="vm.field.isArray">\n' +
+  '        <div ng-repeat="(i,arrayItem) in vm.model[vm.field.name]">\n' +
+  '            <div ng-repeat="df1 in vm.field.dataFields" class="well">\n' +
+  '                <div class="col-xs-12" style="vertical-align: baseline;">\n' +
+  '                    <label class="pull-left">{{df1.description}} #{{i+1}}</label>\n' +
+  '                    <button type="button" class="btn btn-close pull-right"\n' +
+  '                            data-ng-click="vm.model[vm.field.name].splice($index, 1);">&times;</button>\n' +
+  '                    <div class="clearfix"></div>\n' +
+  '                </div>\n' +
+  '                <hr/>\n' +
+  '\n' +
+  '                <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"\n' +
+  '                     class="form-group"\n' +
+  '                     ng-class="{\'has-error\':vm.form[vm.field.name+\'_\'+i+\'_\'+df2.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+\'_\'+i+\'_\'+df2.name].$touched)}">\n' +
+  '                    <label class="col-md-4 control-label"\n' +
+  '                           data-ng-class="{\'optional\':!df2.required}">{{df2.description | titlecase}}</label>\n' +
+  '\n' +
+  '                    <div class="col-md-8">\n' +
+  '                        <input ng-if="!!df2.ngType || df2.type === \'string\' || !df2.isDate"\n' +
+  '                               type="{{df2.ngType || text}}" class="form-control"\n' +
+  '                               name="{{vm.field.name}}_{{i}}_{{df2.name}}"\n' +
+  '                               ng-model="vm.model[vm.field.name][i][df2.name]"\n' +
+  '                               maxlength="{{df2.length}}" ng-required="df2.required"/>\n' +
+  '\n' +
+  '                        <date-input ng-if="df2.isDate" format="df2.format"\n' +
+  '                                    name="{{vm.field.name}}_{{i}}_{{df2.name}}"\n' +
+  '                                    model="vm.model[vm.field.name][i][df2.name]"\n' +
+  '                                    class="form-control"\n' +
+  '                                ></date-input>\n' +
+  '                        <!--ng-required="df2.required"-->\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '\n' +
+  '        </div>\n' +
+  '        <button type="button" data-ng-click="vm.model[vm.field.name].push({})">Add</button>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="well" ng-if="vm.field.isObject">\n' +
+  '        <div ng-repeat="dataField in vm.field.dataFields" class="form-group"\n' +
+  '             ng-class="{\'has-error\':vm.form[vm.field.name+\'_\'+dataField.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+\'_\'+dataField.name].$touched)}">\n' +
+  '\n' +
+  '            <label class="col-sm-4 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!dataField.required}">{{dataField.description\n' +
+  '                | titlecase}}</label>\n' +
+  '\n' +
+  '            <div class="col-sm-8">\n' +
+  '                <input ng-if="!dataField.isDate && !dataField.isState && !dataField.isCountry"\n' +
+  '                       type="{{dataField.ngType || text}}" class="form-control"\n' +
+  '                       name="{{vm.field.name}}_{{dataField.name}}"\n' +
+  '                       ng-model="vm.model[vm.field.name][dataField.name]"\n' +
+  '                       ng-maxlength="dataField.length" ng-required="dataField.required"/>\n' +
+  '\n' +
+  '                <date-input ng-if="dataField.isDate" format="dataField.format"\n' +
+  '                            model="vm.model[vm.field.name][dataField.name]"\n' +
+  '                            class="form-control"\n' +
+  '                            name="{vm.field.name}}_{{dataField.name}}"></date-input>\n' +
+  '\n' +
+  '                <!-- States -->\n' +
+  '                <select ng-if="dataField.isState" class="form-control"\n' +
+  '                        ng-options="state.id as state.name for state in dataField.options"\n' +
+  '                        ng-model="vm.model[vm.field.name][dataField.name]"\n' +
+  '                        ng-required="dataField.required" autocomplete="off">\n' +
+  '                </select>\n' +
+  '\n' +
+  '                <p class="form-control-static" ng-if="dataField.isCountry"\n' +
+  '                   ng-init="vm.model[vm.field.name][dataField.name] = \'united_states\'">United\n' +
+  '                    States</p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!--  <option ng-repeat="option in vm.field.pickList" value="{{option.name}}">\n' +
+  '            {{option.description}}\n' +
+  '        </option> -->\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/bgchecks/views/templates/form-static.client.template.html',
+  '<section>\n' +
+  '    <p ng-if="!vm.field.isObject && !vm.field.isArray && !vm.field.isDate" type="{{vm.field.ngType}}"\n' +
+  '       class="form-control-static">\n' +
+  '        {{(vm.model[vm.field.name] | titlecase) || \'not specified\'}}\n' +
+  '    </p>\n' +
+  '\n' +
+  '    <p ng-if="vm.field.isDate"\n' +
+  '       class="form-control-static">\n' +
+  '        {{(vm.model[vm.field.name] | isoDatePrint) || \'--\'}}</p>\n' +
+  '\n' +
+  '    <div ng-if="vm.field.isArray">\n' +
+  '        <div ng-if="!vm.model[vm.field.name] || !vm.model[vm.field.name].length"><p\n' +
+  '                class="text-muted">none specified</p></div>\n' +
+  '        <div ng-repeat="(i,arrayItem) in vm.model[vm.field.name]">\n' +
+  '            <div ng-repeat="df1 in vm.field.dataFields" class="well">\n' +
+  '                <div class="col-xs-12" style="vertical-align: baseline;">\n' +
+  '                    <label class="pull-left">{{df1.description}} #{{i+1}}</label>\n' +
+  '                </div>\n' +
+  '                <hr/>\n' +
+  '\n' +
+  '                <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"\n' +
+  '                     class="form-group">\n' +
+  '                    <label class="col-sm-3 control-label">{{df2.description}}</label>\n' +
+  '\n' +
+  '                    <div class="col-sm-8"\n' +
+  '                         ng-class="{\'text-muted\': !vm.model[vm.field.name][i][df2.name]}">\n' +
+  '\n' +
+  '                        <p ng-if="!df2.isDate" class="form-control-static">\n' +
+  '                            {{(vm.model[vm.field.name][i][df2.name] | titlecase) || \'--\'}}</p>\n' +
+  '\n' +
+  '                        <p ng-if="df2.isDate" class="form-control-static">\n' +
+  '                            {{(vm.model[vm.field.name][i][df2.name] | isoDatePrint) || \'--\'}}\n' +
+  '                        </p>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '\n' +
+  '    <div class="well" ng-if="vm.field.isObject">\n' +
+  '        <div ng-repeat="dataField in vm.field.dataFields" class="form-group">\n' +
+  '            <label class="col-sm-3 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!dataField.required}">{{dataField.description}}</label>\n' +
+  '\n' +
+  '            <div class="col-sm-8"\n' +
+  '                 ng-class="{\'text-muted\': !vm.model[vm.field.name][dataField.name]}">\n' +
+  '                <p ng-if="!dataField.isDate" type="{{vm.field.ngType}}"\n' +
+  '                   class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |\n' +
+  '                    titlecase) || \'--\'}}</p>\n' +
+  '\n' +
+  '                <p ng-if="dataField.isDate" type="{{vm.field.ngType}}"\n' +
+  '                   class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |\n' +
+  '                    isoDatePrint) || \'--\'}}</p>\n' +
+  '                <pre ng-if="vm.debugMode">{{vm.model[vm.field.name][dataField.name]}}</pre>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/chat/views/chat-console.client.template.html',
   '<div class="row chat-window" ng-show="vm.activeConnection">\n' +
   '    <div class="col-sm-12">\n' +
@@ -4376,22 +4548,26 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <label for="email" class="control-label col-xs-12">Email</label>\n' +
   '\n' +
   '            <div class="col-xs-12">\n' +
-  '                <input modal-focus="true" type="email" id="email" name="email"\n' +
+  '                <input modal-focus="vm.focusEmail" type="email" id="email" name="email"\n' +
   '                       class="form-control" debounce\n' +
   '                       data-ng-model="vm.model.email"\n' +
   '                       placeholder="Email" ng-required="true"\n' +
   '                       autocorrect="off">\n' +
   '\n' +
+  '                <div ng-show="vm.form.$submitted || vm.form.email.$touched" ng-messages="vm.form.email.$error">\n' +
+  '                    <div ng-message="required" class="panel panel-danger">Please enter your email</div>\n' +
+  '                    <div ng-message="email" class="panel panel-danger">Please enter a valid email address</div>\n' +
+  '                </div>\n' +
+  '\n' +
   '                <span class="form-control-feedback"\n' +
-  '                      ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">\n' +
+  '                      ng-show="vm.form.email.$valid && vm.form.email.$touched">\n' +
   '                    <i class="fa fa-check text-success"></i>\n' +
   '                </span>\n' +
   '                <span class="form-control-feedback"\n' +
-  '                      ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">\n' +
+  '                      ng-show="vm.form.email.$touched && vm.form.email.$error.required">\n' +
   '                    <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>\n' +
   '                </span>\n' +
   '            </div>\n' +
-  '\n' +
   '        </div>\n' +
   '    </div>\n' +
   '\n' +
@@ -4479,7 +4655,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <i class="fa" ng-class="{\'fa-question\' : !vm.model.terms}"></i>\n' +
   '            </p>\n' +
   '            <p class="text-center">\n' +
-  '                <button class="btn btn-oset-secondary" ng-click="vm.model.terms=true" ng-class="{\'disabled\':!!vm.model.terms}">\n' +
+  '                <button type="button" class="btn btn-oset-secondary" ng-click="vm.model.terms=true"\n' +
+  '                        ng-class="{\'disabled\':!!vm.model.terms}">\n' +
   '                    Yes, I Agree\n' +
   '                    <i class="fa" ng-class="{\'fa-check-circle text-success\': !!vm.model.terms}"></i>\n' +
   '                </button>\n' +
@@ -4570,7 +4747,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</script>\n' +
   '');
  $templateCache.put('/modules/users/views/templates/signup-type.client.template.html',
-  '<section class="signup-type">\n' +
+  '<section class="signup-type bg-primary">\n' +
   '    <div class="row text-center">\n' +
   '        <h2 class="lead-question">I want to ... </h2>\n' +
   '    </div>\n' +
