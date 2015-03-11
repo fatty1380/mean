@@ -155,10 +155,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/templates/application-questionnaire-form.client.template.html',
-  '<section class="form-data row">\n' +
+  '<section class="form-data">\n' +
   '\n' +
   '    <fieldset ng-class="{\'text-muted\': vm.disabled || vm.ispay}">\n' +
-  '        <div class="form-group" ng-repeat="field in vm.questions"\n' +
+  '        <div class="form-group row" ng-repeat="field in vm.questions"\n' +
   '             ng-class="{\'has-error\':(vm.form[field.name].$invalid || vm.form[\'hidden_\'+field.name].$invalid) && (vm.form.$submitted || vm.form[field.name].$touched)}">\n' +
   '            <!-- field = { description, length, name, required, type } -->\n' +
   '            <label class="col-sm-3 control-label"\n' +
@@ -935,6 +935,17 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                class="form-control"></date-input>\n' +
   '    <!-- ng-required="vm.field.required" -->\n' +
   '\n' +
+  '    <input type="checkbox" ng-if="vm.field.isCheckbox"\n' +
+  '           ng-model="vm.model[vm.field.name]"\n' +
+  '           ng-required="vm.field.required"\n' +
+  '           name="{{vm.field.name}}"/>\n' +
+  '\n' +
+  '    <span ng-repeat="opt in vm.field.options">\n' +
+  '    <input type="radio" ng-if="vm.field.isRadio"\n' +
+  '           ng-model="vm.model[vm.field.name]"\n' +
+  '           name="{{vm.field.name}}"\n' +
+  '           ng-value="opt.value"/>{{opt.label}}\n' +
+  '    </span>\n' +
   '\n' +
   '    <input ng-if="!!vm.field.ngSensitive" type="text" ng-model="vm.model[vm.field.name]"\n' +
   '           name="{{vm.field.name}}" ng-required="vm.required"\n' +

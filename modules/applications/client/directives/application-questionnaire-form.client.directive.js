@@ -35,7 +35,6 @@
             restrict: 'E',
             require: ['^form'],
             scope: {
-                driver: '=model',
                 text: '=?',
                 methods: '=?',
                 questions: '=?',

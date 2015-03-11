@@ -34,6 +34,14 @@
                         field.isTextArea = true;
                         break;
 
+                    case 'radio':
+                        field.isRadio = true;
+                        break;
+
+                    case 'checkbox':
+                        field.isCheckbox = true;
+                        break;
+
                     case 'datelong':
                         // TODO: Fix this code once format is known
                         var format = 'YYYYMMDD';

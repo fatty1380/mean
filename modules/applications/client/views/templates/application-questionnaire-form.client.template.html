@@ -1,7 +1,7 @@
-<section class="form-data row">
+<section class="form-data">
 
     <fieldset ng-class="{'text-muted': vm.disabled || vm.ispay}">
-        <div class="form-group" ng-repeat="field in vm.questions"
+        <div class="form-group row" ng-repeat="field in vm.questions"
              ng-class="{'has-error':(vm.form[field.name].$invalid || vm.form['hidden_'+field.name].$invalid) && (vm.form.$submitted || vm.form[field.name].$touched)}">
             <!-- field = { description, length, name, required, type } -->
             <label class="col-sm-3 control-label"

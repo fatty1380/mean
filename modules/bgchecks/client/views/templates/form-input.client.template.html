@@ -12,6 +12,17 @@
                 class="form-control"></date-input>
     <!-- ng-required="vm.field.required" -->
 
+    <input type="checkbox" ng-if="vm.field.isCheckbox"
+           ng-model="vm.model[vm.field.name]"
+           ng-required="vm.field.required"
+           name="{{vm.field.name}}"/>
+
+    <span ng-repeat="opt in vm.field.options">
+    <input type="radio" ng-if="vm.field.isRadio"
+           ng-model="vm.model[vm.field.name]"
+           name="{{vm.field.name}}"
+           ng-value="opt.value"/>{{opt.label}}
+    </span>
 
     <input ng-if="!!vm.field.ngSensitive" type="text" ng-model="vm.model[vm.field.name]"
            name="{{vm.field.name}}" ng-required="vm.required"

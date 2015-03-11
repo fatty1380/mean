@@ -114,6 +114,64 @@
                 });
 
                 return RSRC.query({applicationId: applicationId, userId: userId}).$promise;
+            },
+            getQuestions: function() {
+                var qs = {
+                    'default': [
+                        {
+                            'description': 'Write a short sentence',
+                            'name': 'sentence',
+                            'length': '50',
+                            'type': 'string',
+                            'required': true
+                        },
+                        {
+                            'description': 'Cover Letter',
+                            'name': 'coverLetter',
+                            'length': '',
+                            'type': 'text',
+                            'required': true
+                        },
+                        {
+                            'description': 'Check this box',
+                            'name': 'checkbox',
+                            'length': '',
+                            'type': 'checkbox'
+                        },
+                        {
+                            'description': 'Require this box',
+                            'name': 'checkbox',
+                            'length': '',
+                            'type': 'checkbox',
+                            'required': true
+                        },
+                        {
+                            'description': 'Choose Radio Value',
+                            'name': 'radio',
+                            'length': '',
+                            'type': 'radio',
+                            'options': [{'label':'Absolutely Yes', 'value': true},{'label': 'Positively No', 'value':false},{ 'label': 'I Dunno', 'value': null}]
+                        },
+                        {
+                            'description': 'Can you see this?',
+                            'name': 'isVisible',
+                            'pickList': [
+                                {
+                                    'description': 'YES!',
+                                    'value': true
+                                },
+                                {
+                                    'description': 'no :(',
+                                    'value': false
+                                }
+                            ],
+                            'type': 'string',
+                            'required': false
+                        }
+                    ]
+                };
+
+                return qs.default;
             }
         };
 
