@@ -341,6 +341,30 @@ exports.refreshReport = function (req, res) {
 };
 
 /**
+ * Handle the profile forms (eg: DOT Questionnaire
+ */
+exports.getProfileFormAnswers = function(req, res) {
+    var list;
+    if(!!req.query.formId) {
+        console.log('Searching for profile form answers for `%s`', req.query.formId);
+        list = _.find(req.driver.profile, {listId: req.query.formId});
+    }
+    else {
+        list = req.driver.profile;
+    }
+
+    var indexed = _.indexBy(list, 'listId');
+
+    res.json(indexed);
+};
+exports.createProfileFormAnswers = function(req, res) {
+    // TODO: Save Profile form answers without saving the full driver
+};
+exports.updateProfileFormAnswers = function(req, res) {
+    // TODO: Save Updated Profile form answers without saving the full driver
+};
+
+/**
  * Delete an Driver
  */
 exports.delete = function (req, res) {

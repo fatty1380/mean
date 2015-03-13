@@ -5378,12 +5378,12 @@ form.applicant-form textarea.form-control {
 .experience.view .pnl-controls {
   background-color: #fafafa;
 }
-.modal-form .modal-body p.info {
+.oset-form p.info {
   margin-top: 15px;
   text-align: center;
   color: #777777;
 }
-.modal-form textarea.form-control.tall {
+.oset-form textarea.form-control.tall {
   min-height: 200px;
   resize: vertical;
 }

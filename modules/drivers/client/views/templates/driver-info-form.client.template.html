@@ -1,0 +1,80 @@
+<section>
+
+    <div class="row">
+        <!--What type of license do you have? -->
+        <div class="form-group">
+            <p class="info col-sm-10 col-sm-offset-1">
+                What type of driver license do you have?
+            </p>
+
+            <div class="col-sm-12 text-center">
+                <os-edit-license model="vm.driver.licenses[0]"
+                                 form-name="licenseForm"
+                                 mode="minimal"></os-edit-license>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!--What are you interested in -->
+        <div class="form-group">
+            <p class="info col-sm-10 col-sm-offset-1">
+                What types of jobs are you interested in?
+            </p>
+
+            <div class="col-sm-12 text-center">
+                <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
+                <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <h4 class="col-sm-12">Work Experience</h4>
+        <p class="info col-sm-12">
+            Add information about past Experience to help employers know more about you and your
+            background.
+            <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"
+                    ng-click="vm.driver.experience = [];"
+                    event-focus="click" event-focus-id="introText">
+                skip
+            </button>
+        </p>
+
+        <!--What are you interested in -->
+        <div class="form-group">
+            <div class="col-sm-12">
+                <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <!--Cover Letter-->
+
+        <h4 class="col-sm-12">Cover Letter</h4>
+        <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"
+           ng-bind-html="vm.about.messageSubHeading"></p>
+
+        <div class="form-group"
+             ng-class="{'has-error': vm.form.introText.$error && (vm.form.$submitted || vm.form.introText.$touched)}">
+            <div class="col-sm-12">
+                <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">
+                    Please introduce yourself to the employer here
+                </div>
+                <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">
+                    {{vm.introTextError}}
+                </div>
+                    <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"
+                              name="introText" id="introText" class="editor-md"
+                              placeholder="Please introduce yourself to the employer here"
+                              ng-required="true"></textarea>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

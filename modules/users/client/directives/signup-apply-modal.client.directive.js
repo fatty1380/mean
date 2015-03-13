@@ -68,19 +68,21 @@
         vm.auth = Authentication;
         vm.job = job;
         vm.extraText = vm.job && vm.job.text || null;
-        vm.currentStep = !!signupType ? 1 : 0;
+        vm.currentStep = 2; //!!signupType ? 1 : 0;
 
         vm.user = vm.auth.user || {profileImageURL: ''};
-        vm.credentials = {signupType: signupType, terms: '', addresses: [{}]};
-        vm.driver = vm.user.driver || {resume: {}, experience: [{}], licenses: [{}], interests: []};
+        vm.credentials = {signupType: signupType};
+        vm.driver = vm.user.driver || {};
         vm.application = {};
 
         vm.validateForm = function () {
             var stepForm = vm['subForm' + vm.currentStep];
             if (stepForm.$invalid) {
-                _.map(stepForm.$error, function (errorType) {
-                    _.map(errorType, function (item) {
-                        if(!!item) {
+                _.map(_.keys(stepForm.$error), function (errorType) {
+                    $log.debug('[SignupApply.validateForm] Form %d has error type: %s', vm.currentStep, errorType);
+                    _.map(stepForm.$error[errorType], function (item) {
+                        $log.debug('[SignupApply.validateForm] Item has error: %o', item);
+                        if (!!item) {
                             item.$setDirty(true);
                         }
                     });
@@ -105,8 +107,6 @@
         };
 
         vm.selectUserType = function (userType) {
-            vm.credentials.signupType = userType;
-
             if (!vm.validateForm()) {
                 vm.error = 'Please select what type of user best describes you';
                 vm.loading = false;
@@ -119,94 +119,31 @@
         };
 
         vm.createUser = function (event) {
+
             vm.loading = true;
 
-            if (!vm.credentials.terms) {
-                vm.error = 'Please agree to the terms and conditions before signing up';
-                event.preventDefault();
-                vm.loading = false;
-                return false;
-            }
+            var formMethods = vm['subform' + vm.currentStep + 'Methods'];
 
-            if (vm.credentials.password !== vm.credentials.confirmPassword) {
-                $log.debug('passwords do not match, yo!');
-                vm.error = 'Passwords to not match. Please enter them again';
-                vm.loading = false;
-                return false;
-            }
-
-            if (!vm.validateForm()) {
-                vm.error = 'Please fill in all fields above';
-                vm.loading = false;
-                return false;
-            }
-
-            $log.debug('assigning email to username');
-            vm.credentials.username = vm.credentials.email;
-            vm.credentials.type = vm.credentials.signupType;
-
-            $http.post('/api/auth/signup', vm.credentials)
-                .success(function (response) {
-                    // If successful we assign the response to the global user model
-                    vm.user = vm.auth.user = response;
-
-                    if (typeof vm.auth.user.driver === 'string') {
-                        vm.driver._id = vm.auth.user.driver;
-                    } else {
-                        vm.driver = _.extend(vm.driver, vm.auth.user.driver);
-                    }
-
-                    $log.debug('Successfully created %o USER Profile', response.type);
-
-                    vm.loading = false;
+            formMethods.validate()
+                .then(function(success) {
+                    $log.debug('[SignupApplyModal] validated: %s', success);
+                    return formMethods.submit();
+                })
+                .then(function (success) {
+                    vm.user = success;
                     vm.currentStep++;
-
-                    Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
-                }).error(function (response) {
-                    console.error(response.message);
+                })
+                .catch(function (error) {
+                    vm.error = error;
+                })
+                .finally(function () {
                     vm.loading = false;
-                    vm.error = response.message;
                 });
         };
 
-        vm.saveDriverDetails = function () {
+        vm.createDriver = function() {
 
-            debugger;
-            if(!vm.validateDriver()) {
-                return false;
-            }
-
-            Drivers.ById.get({
-                driverId: vm.driver._id
-            }).$promise.then(function (existingDriver) {
-                    $log.debug('Loaded full Driver Profile from server: %o', existingDriver);
-                    debugger;
-                    existingDriver.experience = vm.driver.experience;
-                    existingDriver.interests = vm.driver.interests;
-                    existingDriver.licenses = vm.driver.licenses;
-                    existingDriver.about = vm.driver.about;
-
-                    existingDriver.$update(function (updatedDriver) {
-                        debugger;
-                        vm.driver = vm.user.driver = updatedDriver;
-
-                        $log.debug('Successfully updated DRIVER with details');
-
-                        debugger;
-                        vm.application.message = vm.driver.about;
-
-                        vm.loading = false;
-                        vm.currentStep++;
-
-                    }, function (errorResponse) {
-                        vm.error = errorResponse.data.message;
-                        vm.loading = false;
-                    });
-                });
-        };
-
-        vm.validateDriver = function() {
-            if(!vm.driver._id) {
+            if (!vm.driver._id) {
                 vm.error = vm.error || 'please create a new user before continuing';
 
                 vm.currentStep = 1;
@@ -214,68 +151,27 @@
                 return false;
             }
 
-            var validity = vm.validateDriverSubForms();
+            vm.loading = true;
+            var formMethods = vm['subform' + vm.currentStep + 'Methods'];
 
-            if (!vm.validateForm()) {
-                vm.error = vm.error || 'Please fill in all fields above';
-                vm.loading = false;
-                validity = false;
-            }
+            formMethods.validate()
+                .then(function(success) {
+                    $log.debug('[SignupApplyModal] validated: %s', success);
+                    return formMethods.submit();
+                })
+                .then(function (success) {
+                    debugger;
+                    vm.driver = vm.user.driver = success;
 
-            return (vm.loading = validity);
-
-        };
-
-        vm.validateDriverSubForms = function() {
-
-            vm.subForm2.$setSubmitted(true);
-
-            vm.licenseForm = vm.subForm2['vm.licenseForm'];
-            if (!!vm.licenseForm) {
-                vm.licenseForm.$setSubmitted(true);
-            }
-
-            vm.experienceForm = vm.subForm2['vm.experienceForm'];
-            if(!!vm.experienceForm) {
-                vm.experienceForm.$setSubmitted(true);
-            }
-
-            if (vm.experienceForm && vm.experienceForm.$pristine) {
-
-                console.log('Experience untouched ...');
-                if (vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
-                    console.log('nuked experience');
-                    vm.driver.experience = [];
-                }
-                vm.subForm2.$setValidity('vm.experienceForm', true);
-
-            }
-
-            var strippedString = vm.driver.about && vm.driver.about.replace(/(<([^>]+)>)/ig,'') || '';
-            if(strippedString.length <= 0) {
-                debugger;
-                vm.introTextError = 'Please add a message to the employer before continuing';
-                vm.subForm2.$setValidity('introText', false);
-                return false;
-            }
-            else {
-                vm.introTextError = null;
-                vm.subForm2.$setValidity('introText', true);
-            }
-
-            if (vm.subForm2.$invalid) {
-                if (vm.subForm2.$error.required) {
-                    vm.error = 'Please fill in all required fields before saving';
-                    $document.scrollTopAnimated(0, 300);
-                }
-                else {
-                    vm.error = 'Please correct the errors on the page before saving';
-                }
-
-                return false;
-            }
-
-            return true;
+                    vm.application.message = vm.driver.about;
+                    vm.currentStep++;
+                })
+                .catch(function (error) {
+                    vm.error = error;
+                })
+                .finally(function () {
+                    vm.loading = false;
+                });
         };
 
         vm.userPicUploaded = function (fileItem, response) {

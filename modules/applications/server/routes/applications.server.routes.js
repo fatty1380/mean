@@ -27,6 +27,9 @@ module.exports = function(app) {
     app.route('/api/jobs/:jobId/applications/:userId')
         .get(applications.getByJobId, applications.read);
 
+    app.route('/api/jobs/:jobId/applications/questions')
+    .get(applications.getQuestions);
+
     app.route('/api/companies/:companyId/applications')
         .get(applications.queryByCompanyID);
 

@@ -98,6 +98,16 @@ var DriverSchema = new Schema({
         key: String
     }],
 
+    profile: [
+        {
+            listId: {
+               type: Schema.ObjectId
+            },
+            responses: [{ id: String, value: String}],
+            questions: [{ id: String, description: String, answer: String }]
+        }
+    ],
+
     isActive: {
         type: Boolean,
         default: true

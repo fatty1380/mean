@@ -347,6 +347,12 @@ exports.getMessages = function (req, res, next) {
     }
 
     var myLast = _.findLast(application.messages, function (msg) {
+        if(!msg || !msg.sender) {
+            return false;
+        }
+        if(!req.user) {
+            return false;
+        }
         return req.user.equals(msg.sender);
     });
 
@@ -357,6 +363,11 @@ exports.getMessages = function (req, res, next) {
             msg.isNew = true;
             newCt++;
         }
+
+        if(!msg.sender) {
+            return false;
+        }
+
         return !req.user.equals(msg.sender);
     });
 
@@ -509,4 +520,33 @@ exports.createConnection = function (req, res) {
     else {
         res.status(404).send({message: 'no application found'});
     }
+};
+
+/** Questionairre Intake Forms **/
+exports.getQuestions = function(req, res) {
+
+    var response = {
+        'default': questionList['default']
+    };
+
+    if(req.job && req.job.company.id) {
+        var questions = questionList[req.job.company.id];
+        if(!!questions) {
+            return (response.company = questions);
+        }
+    }
+
+    res.json(response);
+};
+
+var questionList = {
+    'default': [
+        {
+            'description': 'Cover Letter',
+            'name': '',
+            'length': '',
+            'type': 'text',
+            'required': true
+        }
+    ]
 };

@@ -30,6 +30,12 @@ module.exports = function (app) {
     app.route('/api/drivers/:driverId/report/:reportSku')
         .get(users.requiresLogin, drivers.refreshReport);
 
+    app.route('/api/drivers/:driverId/profileforms')
+    .get(users.requiresLogin, drivers.getProfileFormAnswers)
+    .post(users.requiresLogin, drivers.hasAuthorization, drivers.createProfileFormAnswers)
+    .put(users.requiresLogin, drivers.hasAuthorization, drivers.updateProfileFormAnswers);
+
+
     // Finish by binding the Driver middleware
     app.param('driverId', drivers.driverByID);
 };

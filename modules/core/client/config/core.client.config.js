@@ -73,7 +73,7 @@
         $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
             $log.error('State Change error from %s to %s', fromState.name, toState.name, error);
 
-            $log.warn('Error Status: %d in transition', error.status);
+            $log.warn('Error Status: %d in transition', error.status || error);
             if (error.status === 403) {
                 event.preventDefault();
                 $log.warn('User does not have access to %s', toState.name);

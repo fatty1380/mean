@@ -108,7 +108,7 @@
         return field;
     }
 
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document) {
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document, PolyField) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');
@@ -126,6 +126,7 @@
         vm.introText = 'All reports are run by leading verification company, eEverifile. Outset will never store your Social Security , Driver License or Credit Card numbers.';
         vm.getStartedText = 'All required fields are <b>Marked in Bold</b>';
         vm.correctErrorsText = 'Please review any answers that are <span class="cta-outline">marked in red</span> below.';
+        vm.reviewText = 'Please review your information and click continue at the bottom of the page when ready.';
         vm.createText = 'Please review your information and click continue when ready. Please note, that this may take a moment to complete.';
         vm.payExplanation = 'Please click continue to enter your payment information';
 
@@ -142,7 +143,7 @@
             vm.price = vm.report.promo || vm.report.price;
 
             vm.report.fields.map(completeApplicantModel, vm);
-            _.map(vm.report.fields, translateFieldsToNg, vm);
+            _.map(vm.report.fields, PolyField.translateFields, vm);
 
 
             if (!vm.states) {
@@ -303,7 +304,7 @@
         .filter('prettyPrint', prettyPrint)
         .filter('isoDatePrint', isoDateFilter);
 
-    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document'];
+    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document', 'PolyFieldService'];
     angular.module('bgchecks')
         .controller('ReportDetailsController', ReportDetailsController);
 

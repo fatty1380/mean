@@ -511,9 +511,12 @@ function GetRemoteApplicantData(req, res, next) {
                     req.remoteApplicant = remoteApplicant;
                     next();
                 }
-            );
-        }, function (error) {
-            console.log('[GetRemoteApplicantData] failed due to error: %j', error);
+            ).catch(function (error) {
+                    console.log('[GetRemoteApplicantData] failed due to error: %j', error);
+                    next(error);
+                });
+        }).catch(function (error) {
+            console.log('[GetRemoteApplicantData] Unable to get remote session: %j', error);
             next(error);
         });
 }
@@ -545,7 +548,7 @@ function CreateNewReport(req, res, next) {
         remoteApplicantId: req.applicant.remoteId,
         localReportSku: req.reportType.sku,
         remoteReportSkus: req.reportType.skus,
-        paymentInfo: { success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id },
+        paymentInfo: {success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id},
         status: 'PAID'
     });
 
