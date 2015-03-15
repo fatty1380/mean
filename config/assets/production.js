@@ -9,7 +9,8 @@ module.exports = {
                 '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css',
                 'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.min.css',
-                'public/lib/ngImgCrop/compile/minified/ng-img-crop.css'
+                'public/lib/ngImgCrop/compile/minified/ng-img-crop.css',
+                '//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.9/toaster.min.css'
             ],
             js: [
                 'public/lib/angular/angular.min.js',
@@ -30,7 +31,8 @@ module.exports = {
                 'https://cdnjs.cloudflare.com/ajax/libs/angular-scroll/0.6.4/angular-scroll.min.js',
                 'public/lib/raygun4js/dist/raygun.min.js',
                 '//tinymce.cachefly.net/4.1/tinymce.min.js',
-                'public/lib/angular-sanitize/angular-sanitize.min.js'
+                'public/lib/angular-sanitize/angular-sanitize.min.js',
+                '//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.9/toaster.min.js'
             ]
         },
         css: 'public/dist/application.min.css',

@@ -9,7 +9,8 @@ module.exports = {
                 'public/lib/components-font-awesome/css/font-awesome.css',
                 'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.css',
-                'public/lib/ngImgCrop/compile/unminified/ng-img-crop.css'
+                'public/lib/ngImgCrop/compile/unminified/ng-img-crop.css',
+                'public/lib/angularjs-toaster/toaster.css'
             ],
             js: [
                 'public/lib/angular/angular.js',
@@ -31,7 +32,8 @@ module.exports = {
                 'public/lib/angular-scroll/angular-scroll.js',
                 '//cdn.raygun.io/raygun4js/raygun.min.js',
                 'public/lib/tinymce/tinymce.js',
-                'public/lib/angular-sanitize/angular-sanitize.js'
+                'public/lib/angular-sanitize/angular-sanitize.js',
+                'public/lib/angularjs-toaster/toaster.js'
             ],
             font: [
                 '//fonts.googleapis.com/css?family=Open+Sans:300,400,700',

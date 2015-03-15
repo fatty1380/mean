@@ -132,6 +132,7 @@
             Reports.openReport(vm.application, vm.driver, file)
                 .catch(function (error) {
                     vm.error = error;
+                    toaster.pop('error', error);
 
                 });
         };
