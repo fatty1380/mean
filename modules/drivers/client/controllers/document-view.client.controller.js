@@ -20,7 +20,6 @@
 
         vm.resume = vm.driver.resume;
         vm.reports = vm.driver.reports || {};
-        vm.activeReport = $stateParams.documentId;
 
         if(vm.driver && vm.driver.user) {
             vm.profile = vm.driver.user;
@@ -35,7 +34,6 @@
 
             $log.debug('Opening File %o', fileName);
 
-            vm.activeReport = fileName;
             var file = vm.reports[fileName] || vm.resume;
 
             DocAccess.updateFileUrl(vm.driver._id, file).then(
@@ -49,8 +47,11 @@
                     else {
                         vm.resume = success;
                     }
+
+                    vm.activeReport = fileName;
                 },
                 function (error) {
+                    $log.warn('[DocViewCtrl.updateFileUrl] %s', error);
                     vm.error = error;
                 }
             );
@@ -58,8 +59,8 @@
 
         vm.goBack = $state.gotoPrevious;
 
-        if (vm.activeReport) {
-            vm.viewFile(vm.activeReport);
+        if ($stateParams.documentId) {
+            vm.viewFile($stateParams.documentId);
         }
 
     }

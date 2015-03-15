@@ -52,7 +52,7 @@
             getApplication: function (query) {
 
                 if(!query || !query.hasOwnProperty('applicationId')) {
-                    $log.warning('Cannot get application without application ID');
+                    $log.warn('Cannot get application without application ID');
                     return null;
                 }
 

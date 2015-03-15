@@ -14,27 +14,26 @@
             ByUser: $resource('api/users/:userId/driver', {
                 userId: '@_userId'
             }),
+            get: function(driverId) {
+                return $resource('api/drivers/:driverId', {
+                    driverId: '@driverId'
+                }).get({driverId: driverId}).$promise;
+            },
             getByUser: function(userId) {
-                var rsrc = $resource('api/users/:userId/driver', {
+                return $resource('api/users/:userId/driver', {
                     userId: '@_userId'
-                });
-
-                return rsrc.get({userId: userId}).$promise;
+                }).get({userId: userId}).$promise;
             },
             getResumeLink: function(driverId) {
-                var rsrc = $resource('api/drivers/:driverId/resume', {
+                return $resource('api/drivers/:driverId/resume', {
                     driverId: '@driverId'
-                });
-
-                return rsrc.get({driverId: driverId}).$promise;
+                }).get({driverId: driverId}).$promise;
             },
             getReportLink: function(driverId, sku) {
-                var rsrc = $resource('api/drivers/:driverId/report/:reportSku', {
+                return $resource('api/drivers/:driverId/report/:reportSku', {
                     driverId: '@driverId',
                     reportSku: '@sku'
-                });
-
-                return rsrc.get({driverId: driverId, sku: sku}).$promise;
+                }).get({driverId: driverId, sku: sku}).$promise;
             },
             getDownloadLink: function(driverId, sku) {
 

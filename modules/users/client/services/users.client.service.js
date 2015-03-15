@@ -46,14 +46,38 @@
     }
 
 
-    function ProfilesService($resource) {
-        return $resource('api/profiles/:userId', {
-            userId: '@userId'
-        }, {});
+    function ProfilesService($resource, $q) {
+
+        var _data = {
+            getProfile: function(userId) {
+                return $resource('api/profiles/:userId', {
+                    userId: '@userId'
+                }, {}).get({userId: userId}).$promise;
+            },
+            getUserForDriver : function(driver) {
+                var deferred = $q.defer;
+
+                if(_.isObject(driver.user) && !!driver.user._id) {
+                    deferred.resolve(driver);
+                } else {
+                    debugger;
+
+                    var RSRC = $resource('api/profiles/:userId',
+                        {userId: '@userId'});
+
+                    return RSRC.get({userId: driver.user }).$promise;
+                }
+
+                return deferred.promise;
+            }
+
+        };
+
+        return _data;
     }
 
 
-    UsersService.$inject = ['$resource'];
+    UsersService.$inject = ['$resource', '$q'];
     NewUserService.$inject = ['Authentication', '$resource', '$log', '$http', '$q'];
     ProfilesService.$inject = ['$resource'];
 

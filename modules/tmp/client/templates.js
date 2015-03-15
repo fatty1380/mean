@@ -154,6 +154,104 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/applications/views/templates/applicant-normal.client.template.html',
+  '<section name="os-driver-inline.directive" class="row">\n' +
+  '    <div class="col-sm-12">\n' +
+  '        <!-- Driver Inline Template Begin -->\n' +
+  '        <p>\n' +
+  '\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '            License\n' +
+  '        </div>\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
+  '            <p style="margin-bottom: 2px;">\n' +
+  '                <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
+  '                        <span ng-show="vm.license.type">\n' +
+  '                            <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
+  '                            {{vm.license.type}}\n' +
+  '                        </span>\n' +
+  '                Driver License\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '            Endorsements\n' +
+  '        </div>\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
+  '            <p style="margin-bottom: 2px;">\n' +
+  '                <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '            Documents\n' +
+  '        </div>\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
+  '            <p style="margin-bottom: 2px;">\n' +
+  '                <button type="button" ng-if="vm.driver.resume"\n' +
+  '                        ng-click="vm.showDocument(\'resume\', $event)"\n' +
+  '                      class="document label label-success"\n' +
+  '                      tooltip-popup-delay="750" tooltip="View Applicant\'s Resume">Resume&nbsp;</button>\n' +
+  '                <button type="button" ng-if="vm.driver.reportsData && vm.driver.reportsData.length"\n' +
+  '                      class="document label label-success"\n' +
+  '                      ng-click="vm.showDocument(\'resume\', $event)"\n' +
+  '                      tooltip-popup-delay="750" tooltip="View Applicant\'s Background Reports">BG Reports&nbsp;</button>\n' +
+  '\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '            Interests\n' +
+  '        </div>\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
+  '            <p style="margin-bottom: 2px;">\n' +
+  '                    <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
+  '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
+  '\n' +
+  '                    <span ng-show="!visibleInterests.length">\n' +
+  '                        <span ng-show="!vm.canEdit">none entered</span>\n' +
+  '                    </span>\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right"\n' +
+  '             ng-hide="!!vm.application.messages && !!vm.application.messages.length">\n' +
+  '            Messages\n' +
+  '        </div>\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12"\n' +
+  '             ng-hide="!!vm.application.messages && !!vm.application.messages.length">\n' +
+  '                <span ng-show="!!vm.application.isConnected">\n' +
+  '                    <p style="margin-bottom: 2px;">\n' +
+  '                        discuss the job and schedule an interview\n' +
+  '                        <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
+  '                            by sending a message\n' +
+  '                        </a>\n' +
+  '                    </p>\n' +
+  '                </span>\n' +
+  '                <span ng-hide="!!vm.application.isConnected">\n' +
+  '                    <p style="margin-bottom: 2px;">\n' +
+  '                        <em class="text-muted" ng-if="vm.profile.type === \'owner\'">\n' +
+  '                            once connected, you will be able to exchange messages with\n' +
+  '                            the applicant\n' +
+  '                        </em>\n' +
+  '                        <em class="text-muted" ng-if="vm.profile.type === \'driver\'">\n' +
+  '                            once connected, you will be able to exchange messages with\n' +
+  '                            the employer\n' +
+  '                        </em>\n' +
+  '                    </p>\n' +
+  '                </span>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        </p>\n' +
+  '    </div>\n' +
+  '\n' +
+  '\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/applications/views/templates/application-questionnaire-form.client.template.html',
   '<section class="form-data">\n' +
   '\n' +
@@ -613,120 +711,56 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                            <div class="post-entry" ng-show="vm.visibleTab === \'applicants\'">\n' +
   '                                <div class="row applicant_item" ng-show="vm.visibleId === job._id"\n' +
   '                                     data-ng-repeat="application in job.applications"\n' +
-  '                                     data-ng-init="user = application.user; driver = user.driver;license = driver.licenses[0]; vm.checkMessages(application, job)"\n' +
+  '                                     data-ng-init="profile = application.user; vm.checkMessages(application, job)"\n' +
   '                                     ui-sref="applications.view({\'applicationId\': application._id})"\n' +
   '                                     ng-class="{\'disabled\': application.disabled}">\n' +
   '\n' +
-  '                                    <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">\n' +
-  '                                        <img ng-src="{{user.profileImageURL}}"\n' +
-  '                                             class="img-responsive">\n' +
+  '                                    <div class="row">\n' +
+  '                                        <div class="col-sm-12">\n' +
+  '                                            <h4 class="stronger">\n' +
+  '                                                {{profile.firstName}}&nbsp;{{profile.lastName.substring(0,1)}}\n' +
+  '                                                <br class="hidden-lg hidden-md">\n' +
+  '                                                <span class="pull-right">\n' +
+  '                                                    <small>Connection Status:</small>\n' +
+  '                                                    <os-application-status-badge model="application" />\n' +
+  '                                                </span>\n' +
+  '                                            </h4>\n' +
+  '                                        </div>\n' +
   '                                    </div>\n' +
-  '\n' +
-  '                                    <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
-  '                                        <p>\n' +
-  '                                            <span\n' +
-  '                                                    class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>\n' +
-  '                                            <br class="hidden-lg hidden-md">\n' +
-  '                                            <os-application-status-badge\n' +
-  '                                                    model="application"></os-application-status-badge>\n' +
-  '                                        </p>\n' +
-  '                                        <p>\n' +
-  '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
-  '                                            License\n' +
-  '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '                                            <p style="margin-bottom: 2px;">\n' +
-  '                                                <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}\n' +
-  '                                            <span ng-show="license.type">\n' +
-  '                                                <span ng-if="license.rating"> Class {{license.rating | uppercase }}</span>\n' +
-  '                                                {{license.type}}\n' +
-  '                                            </span>\n' +
-  '                                                Driver License\n' +
-  '                                            </p>\n' +
+  '                                    <div class="row">\n' +
+  '                                        <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">\n' +
+  '                                            <img ng-src="{{profile.profileImageURL}}" class="img-responsive">\n' +
   '                                        </div>\n' +
   '\n' +
-  '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
-  '                                            Endorsements\n' +
-  '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '                                            <p style="margin-bottom: 2px;">\n' +
-  '                                                <oset-list-endorsements\n' +
-  '                                                        model="license.endorsements"></oset-list-endorsements>\n' +
-  '                                            </p>\n' +
+  '                                        <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
+  '                                            <oset-application-summary model="application"></oset-application-summary>\n' +
   '                                        </div>\n' +
   '\n' +
+  '                                        <br class="hidden-lg"/>\n' +
   '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
-  '                                            Interests\n' +
+  '                                        <div class="col-lg-2 col-md-3 col-xs-12 text-right">\n' +
+  '                                            <a class="read-more strong"\n' +
+  '                                               style="white-space: nowrap"\n' +
+  '                                               ui-sref="applications.view({applicationId: application._id, action: \'read\'})">\n' +
+  '                                                Review&nbsp<i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
+  '                                            </a>\n' +
+  '                                            <br class="visible-lg mgn-vert"/>\n' +
+  '                                            <a class="read-more strong"\n' +
+  '                                               style="white-space: nowrap"\n' +
+  '                                               tooltip="{{application.messagingText || vm.messagingText}}"\n' +
+  '                                               tooltip-popup-delay="1000"\n' +
+  '                                               ui-sref="applications.view({applicationId: vm.application._id, action: \'message\'})">\n' +
+  '                                                {{application.newMessages ? application.newMessages + \' New \' :\n' +
+  '                                                \'\'}}Message{{application.newMessages === 1 ? \'\': \'s\'}}&nbsp;<i\n' +
+  '                                                    class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
+  '                                            </a>\n' +
+  '                                            <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
+  '                                            <!--<br>-->\n' +
+  '                                            <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->\n' +
+  '                                            <!--ng-click="vm.setApplicationStatus(job.applications[$index], \'rejected\', $event, this)">-->\n' +
+  '                                            <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->\n' +
+  '                                            <!--</a>-->\n' +
   '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '                                            <p style="margin-bottom: 2px;">\n' +
-  '                                        <span ng-repeat="interest in visibleInterests = (driver.interests | filter: {value: true})"\n' +
-  '                                              class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
-  '\n' +
-  '                                        <span ng-show="!visibleInterests.length">\n' +
-  '                                            <span ng-show="!vm.canEdit">none entered</span>\n' +
-  '                                        </span>\n' +
-  '                                            </p>\n' +
-  '                                        </div>\n' +
-  '\n' +
-  '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right"\n' +
-  '                                             ng-hide="!!application.messages && !!application.messages.length">\n' +
-  '                                            Messages\n' +
-  '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12"\n' +
-  '                                             ng-hide="!!application.messages && !!application.messages.length">\n' +
-  '                                            <span ng-show="!!application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    discuss the job and schedule an interview\n' +
-  '                                                    <a ui-sref="applications.view({applicationId: application._id, target: \'message\'})">\n' +
-  '                                                        by sending a message\n' +
-  '                                                    </a>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
-  '                                            <span ng-hide="!!application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    <em class="text-muted" ng-if="user.type === \'owner\'">\n' +
-  '                                                        once connected, you will be able to exchange messages with\n' +
-  '                                                        the applicant\n' +
-  '                                                    </em>\n' +
-  '                                                    <em class="text-muted" ng-if="user.type === \'driver\'">\n' +
-  '                                                        once connected, you will be able to exchange messages with\n' +
-  '                                                        the employer\n' +
-  '                                                    </em>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
-  '                                        </div>\n' +
-  '\n' +
-  '                                        </p>\n' +
-  '                                    </div>\n' +
-  '                                    <br class="hidden-lg"/>\n' +
-  '\n' +
-  '                                    <div class="col-lg-2 col-md-3 col-xs-12 text-right">\n' +
-  '                                        <a class="read-more strong"\n' +
-  '                                           style="white-space: nowrap"\n' +
-  '                                           ui-sref="applications.view({applicationId: application._id, action: \'read\'})">\n' +
-  '                                            Review&nbsp<i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
-  '                                        </a>\n' +
-  '                                        <br class="visible-lg mgn-vert"/>\n' +
-  '                                        <a class="read-more strong"\n' +
-  '                                           style="white-space: nowrap"\n' +
-  '                                           tooltip="{{application.messagingText || vm.messagingText}}"\n' +
-  '                                           tooltip-popup-delay="1000"\n' +
-  '                                           ui-sref="applications.view({applicationId: application._id, action: \'message\'})">\n' +
-  '                                            {{application.newMessages ? application.newMessages + \' New \' :\n' +
-  '                                            \'\'}}Message{{application.newMessages === 1 ? \'\': \'s\'}}&nbsp;<i\n' +
-  '                                                class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
-  '                                        </a>\n' +
-  '                                        <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
-  '                                        <!--<br>-->\n' +
-  '                                        <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->\n' +
-  '                                        <!--ng-click="vm.setApplicationStatus(job.applications[$index], \'rejected\', $event, this)">-->\n' +
-  '                                        <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->\n' +
-  '                                        <!--</a>-->\n' +
   '                                    </div>\n' +
   '                                </div>\n' +
   '\n' +
@@ -3284,63 +3318,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    </div>\n' +
   '\n' +
-  '</section>\n' +
-  '');
- $templateCache.put('/modules/drivers/views/templates/driver-inline.client.template.html',
-  '<section name="os-driver-inline.directive">\n' +
-  '\n' +
-  '    <div class="col-md-2 text-center">\n' +
-  '        <img ng-src="{{vm.driver.user.profileImageURL}}" class="img-thumbnail user-profile-picture" />\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <!-- Driver Inline Template Begin -->\n' +
-  '\n' +
-  '    <div class="col-md-10">\n' +
-  '        <os-page-header title="{{vm.driver.user.displayName}}" level="h3">\n' +
-  '            Member Since <span data-ng-bind="vm.driver.user.created | date:\'mediumDate\'"></span>\n' +
-  '        </os-page-header>\n' +
-  '\n' +
-  '        <div class="row col-sm-12">\n' +
-  '            <div data-ng-bind-html="vm.driver.about"></div>\n' +
-  '\n' +
-  '            <div class="col-sm-4">\n' +
-  '                <label>Experience:</label>\n' +
-  '                <div ng-repeat="exp in vm.driver.experience">\n' +
-  '                    {{exp.title || \'Job\'}} - {{exp.startDate | date: \'shortDate\'}} to {{exp.endDate | date: \'shortDate\'}}\n' +
-  '                    <span ng-hide="$last">,&nbsp;</span>\n' +
-  '                    <p ng-hide="vm.driver.experience && vm.driver.experience.length > 0">None Added</p>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="col-sm-4">\n' +
-  '                <label>Location:</label>\n' +
-  '                <span class="text-danger">TODO: Directivize</span>\n' +
-  '                <ul><small>\n' +
-  '                <li ng-show="vm.driver.user.addresses.length > 0" ng-repeat="address in vm.driver.user.addresses">\n' +
-  '                    <strong>{{address.type}}</strong> {{address.city}}, {{address.state}} {{address.zipCode}}\n' +
-  '                    <br ng-hide="$last"/>\n' +
-  '                </li></small></ul>\n' +
-  '\n' +
-  '                <p ng-hide="vm.driver.user.addresses && vm.driver.user.addresses.length > 0">No Address on File</p>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="col-sm-4">\n' +
-  '                <label>Licenses</label>\n' +
-  '                <div ng-repeat="license in vm.driver.licenses">\n' +
-  '\n' +
-  '                    <p>\n' +
-  '                        <i class="fa fa-credit-card"></i> &nbsp;{{license.state}}<span ng-if="license.type"> {{license.type}}</span> Driver License\n' +
-  '                        <span ng-if="license.rating">: Class {{license.rating}}</span>\n' +
-  '\n' +
-  '                        <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
-  '                    </p>\n' +
-  '\n' +
-  '                </div>\n' +
-  '                <p ng-show="vm.driver.licenses.length === 0">No License on File</p>\n' +
-  '            </div>\n' +
-  '\n' +
-  '        </div>\n' +
-  '    </div>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/drivers/views/templates/driver-profile.client.template.html',

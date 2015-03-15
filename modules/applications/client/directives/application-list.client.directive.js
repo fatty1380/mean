@@ -91,9 +91,9 @@
                 if(vm.visibleId === applicationId) {
                     debugger;
                 }
-                application.messages = success.data;
-                application.lastMessage = success.latest;
-                application.messageCt = success.theirs.length;
+                application.messages = success.data || [];
+                application.lastMessage = success.latest || null;
+                application.messageCt = !!success.theirs ? success.theirs.length : 0;
                 application.newMessages = success.newMessages || 0;
 
                 if(application.newMessages > 0) {
