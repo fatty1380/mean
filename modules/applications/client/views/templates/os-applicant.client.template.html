@@ -51,14 +51,7 @@
 
                 <dt>License:</dt>
                 <dd>
-                    <p>
-                        <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}
-                    <span ng-show="vm.license.type">
-                        <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>
-                        {{vm.license.type}}
-                    </span>
-                        Driver License
-                    </p>
+                    <oset-license-inline model="vm.license" show-endorsements="false"></oset-license-inline>
                 </dd>
 
                 <dt>Endorsements</dt>

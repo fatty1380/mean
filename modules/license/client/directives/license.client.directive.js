@@ -74,10 +74,31 @@
         return ddo;
     }
 
+    function InlineLicenseDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: '/modules/license/views/license-inline.client.template.html',
+            restrict: 'E',
+            scope: {
+                license: '=model',
+                showEndorsements: '=?'
+            },
+            controller: function() {
+                var vm=this;
+                vm.showEndorsements = !!vm.showEndorsements;
+            },
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
     EditLicenseController.$inject = ['$scope', '$log', 'AppConfig'];
 
     angular.module('license')
         .controller('EditLicenseController', EditLicenseController)
+        .directive('osetLicenseInline', InlineLicenseDirective)
         .directive('osEditLicense', EditLicenseDirective);
 
 })
