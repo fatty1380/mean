@@ -158,30 +158,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<section name="os-driver-inline.directive" class="row">\n' +
   '    <div class="col-sm-12">\n' +
   '        <!-- Driver Inline Template Begin -->\n' +
-  '        <p>\n' +
-  '\n' +
   '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
   '            License\n' +
   '        </div>\n' +
   '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '            <p style="margin-bottom: 2px;">\n' +
-  '                <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
-  '                        <span ng-show="vm.license.type">\n' +
-  '                            <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
-  '                            {{vm.license.type}}\n' +
-  '                        </span>\n' +
-  '                Driver License\n' +
-  '            </p>\n' +
-  '        </div>\n' +
-  '\n' +
-  '\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
-  '            Endorsements\n' +
-  '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '            <p style="margin-bottom: 2px;">\n' +
-  '                <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
-  '            </p>\n' +
+  '            <oset-license-inline model="vm.license" show-endorsements="true"></oset-license-inline>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
@@ -190,15 +171,19 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
   '            <p style="margin-bottom: 2px;">\n' +
-  '                <button type="button" ng-if="vm.driver.resume"\n' +
-  '                        ng-click="vm.showDocument(\'resume\', $event)"\n' +
-  '                      class="document label label-success"\n' +
-  '                      tooltip-popup-delay="750" tooltip="View Applicant\'s Resume">Resume&nbsp;</button>\n' +
-  '                <button type="button" ng-if="vm.driver.reportsData && vm.driver.reportsData.length"\n' +
-  '                      class="document label label-success"\n' +
+  '                <label ng-if="vm.driver.resume"\n' +
+  '                       ng-click="vm.showDocument(\'resume\', $event)"\n' +
+  '                      class="document label {{vm.application.canViewDocs ? \'label-success pointer\' : \'label-default\'}}"\n' +
+  '                      tooltip-popup-delay="750" tooltip="View Applicant\'s Resume">Resume&nbsp;\n' +
+  '                    <i class="fa fa-external-link" ng-if="!!vm.application.canViewDocs"></i>\n' +
+  '                </label>\n' +
+  '                <label ng-if="vm.driver.reportsData && vm.driver.reportsData.length"\n' +
+  '                      class="document label {{vm.application.canViewDocs ? \'label-success pointer\' : \'label-default\'}}"\n' +
   '                      ng-click="vm.showDocument(\'resume\', $event)"\n' +
-  '                      tooltip-popup-delay="750" tooltip="View Applicant\'s Background Reports">BG Reports&nbsp;</button>\n' +
-  '\n' +
+  '                      tooltip-popup-delay="750" tooltip="View Applicant\'s Background Reports">BG Reports&nbsp;\n' +
+  '                    <i class="fa fa-external-link" ng-if="!!vm.application.canViewDocs"></i>\n' +
+  '                </label>\n' +
+  '                <span ng-if="!vm.driver.resume && !vm.driver.reportsData.length">&nbsp;</span>\n' +
   '            </p>\n' +
   '        </div>\n' +
   '\n' +
@@ -245,8 +230,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </p>\n' +
   '                </span>\n' +
   '        </div>\n' +
-  '\n' +
-  '        </p>\n' +
   '    </div>\n' +
   '\n' +
   '\n' +
@@ -298,102 +281,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
-  '        <section data-ng-if="vm.displayMode === \'table\'" class="applicant mini-table">\n' +
-  '            <td>{{vm.index}}</td>\n' +
-  '            <td>\n' +
-  '                <img ng-src="{{vm.user.profileImageURL}}"\n' +
-  '                     class="profile-image medium center-block">\n' +
-  '            </td>\n' +
-  '            <td>\n' +
-  '                <span class="stronger">{{vm.user.firstName}}&nbsp;{{vm.user.lastName.substring(0,1)}}</span>\n' +
-  '                <br>\n' +
-  '                <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
-  '            </td>\n' +
-  '            <td>\n' +
-  '                <dl class="dl-horizontal mini-table">\n' +
-  '                    <dt>License</dt>\n' +
-  '                    <dd>\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                            <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
-  '                            <span ng-show="vm.license.type">\n' +
-  '                                <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
-  '                                {{vm.license.type}}\n' +
-  '                            </span>\n' +
-  '                            Driver License\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dt>Endorsements</dt>\n' +
-  '                    <dd>\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                            <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dt>Interests</dt>\n' +
-  '                    <dd>\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                        <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
-  '                              class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
-  '\n' +
-  '                        <span ng-show="!visibleInterests.length">\n' +
-  '                            <span ng-show="!vm.canEdit">none entered</span>\n' +
-  '                        </span>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dt>Messages:</dt>\n' +
-  '                    <dd ng-show="!!vm.application.isConnected"\n' +
-  '                        ng-init="otherMsgs = (vm.application.messages | filter : {\'sender\' : (\'!\'+vm.user._id)})">\n' +
-  '                        <p style="margin-bottom: 2px;" ng-show="vm.application.messages && vm.application.messages.length">\n' +
-  '                            {{otherMsgs.length ? otherMsgs.length : \'no\'}} received messages\n' +
-  '                            <a class="pull-right"\n' +
-  '                               ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
-  '                                send a new message\n' +
-  '                            </a>\n' +
-  '                        </p>\n' +
-  '\n' +
-  '                        <p style="margin-bottom: 2px;" ng-hide="vm.application.messages && vm.application.messages.length">\n' +
-  '                            discuss the job and schedule an interview\n' +
-  '                            <a class="pull-right"\n' +
-  '                               ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
-  '                                send a new message\n' +
-  '                            </a>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dd ng-hide="!!vm.application.isConnected">\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                            <em class="text-muted" ng-if="vm.user.type === \'owner\'">\n' +
-  '                                once connected, you will be able to exchange messages with the applicant\n' +
-  '                            </em>\n' +
-  '                            <em class="text-muted" ng-if="vm.user.type === \'driver\'">\n' +
-  '                                once connected, you will be able to exchange messages with the employer\n' +
-  '                            </em>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                </dl>\n' +
-  '            </td>\n' +
-  '            <td style="white-space: nowrap">\n' +
-  '                <a class="read-more strong align-right mgn-bottom pull-right"\n' +
-  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'read\'})">\n' +
-  '                    Review\n' +
-  '                    <i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
-  '                </a>\n' +
-  '                <br>\n' +
-  '                <a class="read-more strong align-right mgn-bottom pull-right"\n' +
-  '                   tooltip="vm.messagingText" tooltip-popup-delay="1000"\n' +
-  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'message\'})">\n' +
-  '                    Messages\n' +
-  '                    <i class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
-  '                </a>\n' +
-  '                <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
-  '                <!--<br>-->\n' +
-  '                <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->\n' +
-  '                <!--ng-click="vm.setApplicationStatus(job.applications[$index], \'rejected\', $event, this)">-->\n' +
-  '                <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->\n' +
-  '                <!--</a>-->\n' +
-  '            </td>\n' +
-  '\n' +
-  '        </section>\n' +
-  '\n' +
-  '        <div data-ng-if="vm.displayMode === \'inline\'" class="row">\n' +
+  '        <div data-ng-if="vm.displayMode === \'compact\'" class="row">\n' +
   '            <dl class="dl-horizontal">\n' +
   '                <dt>Applicant:</dt>\n' +
   '                <dd>{{vm.application.user.displayName}}</dd>\n' +
@@ -455,28 +343,26 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/applications/views/templates/os-applicant.client.template.html',
   '<div class="applicant" name="os-applicant.client-template">\n' +
-  '    <div class="h4 stronger">{{vm.applicant.displayName}}\n' +
-  '        <small class="pull-right">Applied {{vm.application.created | date: \'short\'}}</small>\n' +
-  '    </div>\n' +
-  '    <hr/>\n' +
+  '\n' +
   '    <div class="row">\n' +
   '        <div class="col-sm-12">\n' +
   '            <dl class="dl-horizontal">\n' +
-  '                <dt> <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive center-block"></dt>\n' +
+  '                <dt><img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive center-block"></dt>\n' +
   '                <dd>\n' +
   '                    <span class="strong">Cover Letter:</span>\n' +
+  '\n' +
   '                    <p class="panel panel-default letter" data-ng-bind-html="vm.application.introduction"></p>\n' +
   '                </dd>\n' +
   '                <dt>About:</dt>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
+  '                <dd ng-show="vm.application.canViewDocs">\n' +
   '                    <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>\n' +
   '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected">\n' +
+  '                <dd ng-hide="vm.application.canViewDocs">\n' +
   '                    <em class="text-muted" ng-bind-html="vm.text.pre.about"> </em>\n' +
   '                </dd>\n' +
   '\n' +
   '                <dt>Messages:</dt>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
+  '                <dd ng-show="vm.application.canViewDocs">\n' +
   '                    <p ng-show="vm.application.messages && vm.application.messages.length">\n' +
   '                        {{vm.application.messages.length}} Total Messages\n' +
   '                        <a href="#messaging" class="pull-right" ng-click="vm.scrollToMessageFn()">\n' +
@@ -496,7 +382,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        </a>\n' +
   '                    </p>\n' +
   '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected">\n' +
+  '                <dd ng-hide="vm.application.canViewDocs">\n' +
   '                    <p>\n' +
   '                        <em class="text-muted" ng-if="vm.user.type === \'owner\'"\n' +
   '                            ng-bind-html="vm.text.pre.messaging.owner"></em>\n' +
@@ -507,33 +393,26 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '                <dt>License:</dt>\n' +
   '                <dd>\n' +
-  '                    <p>\n' +
-  '                        <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
-  '                    <span ng-show="vm.license.type">\n' +
-  '                        <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
-  '                        {{vm.license.type}}\n' +
-  '                    </span>\n' +
-  '                        Driver License\n' +
-  '                    </p>\n' +
+  '                    <oset-license-inline model="vm.license" show-endorsements="false"></oset-license-inline>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt>Endorsements</dt>\n' +
-  '                <dd>\n' +
-  '                    <p>\n' +
-  '                        <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
-  '                    </p>\n' +
+  '                <dt ng-if="!!vm.license.endorsements.length">Endorsements</dt>\n' +
+  '                <dd ng-if="!!vm.license.endorsements.length">\n' +
+  '                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
   '                </dd>\n' +
   '\n' +
   '                <dt ng-if="vm.debug">raw</dt>\n' +
-  '                <dd ng-if="vm.debug"><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>\n' +
+  '                <dd ng-if="vm.debug">\n' +
+  '                    <pre>{{vm.driver.reports | prettyPrint}}</pre>\n' +
+  '                </dd>\n' +
   '\n' +
-  '                <dt>Reports</dt>\n' +
-  '                <dd class="report-badges" ng-class="{\'not-visible\':!vm.isConnected}">\n' +
+  '                <dt>Documents:</dt>\n' +
+  '                <dd class="report-badges" ng-class="{\'not-visible\':!vm.canViewDocs}">\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Resume{{vm.isConnected ? (!!vm.driver.resume ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                        ng-class="{\'available\': !!vm.driver.resume}"\n' +
-  '                        ng-click="vm.isConnected && vm.openResumeFile()">\n' +
+  '                      tooltip="Resume{{vm.application.canViewDocs ? (!!vm.driver.resume ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      ng-class="{\'available\': !!vm.driver.resume}"\n' +
+  '                      ng-click="vm.application.canViewDocs && vm.showDocument(\'resume\', $event)">\n' +
   '                    <i class="fa fa-file fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -544,9 +423,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports[\'mvr\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      tooltip="Motor Vehicle Report{{vm.application.canViewDocs ? (!!vm.driver.reports[\'mvr\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
   '                      ng-class="{\'available\': !!vm.driver.reports[\'mvr\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'mvr\')">\n' +
+  '                      ng-click="vm.application.canViewDocs && vm.showDocument(\'mvr\', $event)">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -557,9 +436,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports[\'bgcheck\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      tooltip="Background Check{{vm.application.canViewDocs ? (!!vm.driver.reports[\'bgcheck\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
   '                      ng-class="{\'available\': !!vm.driver.reports[\'bgcheck\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'bgcheck\')">\n' +
+  '                      ng-click="vm.application.canViewDocs && vm.showDocument(\'bgcheck\', $event)">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -570,9 +449,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ncrim\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      tooltip="National Criminal{{vm.application.canViewDocs ? (!!vm.driver.reports[\'ncrim\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
   '                      ng-class="{\'available\': !!vm.driver.reports[\'ncrim\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'ncrim\')">\n' +
+  '                      ng-click="vm.application.canViewDocs && vm.showDocument(\'ncrim\', $event)">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -583,9 +462,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '\n' +
   '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Drug Screen{{vm.isConnected ? (!!vm.driver.reports[\'drugs\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '                      tooltip="Drug Screen{{vm.application.canViewDocs ? (!!vm.driver.reports[\'drugs\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
   '                      ng-class="{\'available\': !!vm.driver.reports[\'drugs\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'drugs\')">\n' +
+  '                      ng-click="vm.application.canViewDocs && vm.showDocument(\'drugs\', $event)">\n' +
   '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
   '                    <span class="badge-info">\n' +
   '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
@@ -597,13 +476,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '\n' +
   '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected">\n' +
+  '                <dd ng-hide="vm.application.canViewDocs">\n' +
   '                    <em class="text-muted">\n' +
   '                        <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>\n' +
   '                        <span ng-show="vm.driver.reports.length || !!vm.driver.resume">You will be able to download reports once connected</span>\n' +
   '                    </em>\n' +
   '                </dd>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
+  '                <dd ng-show="vm.application.canViewDocs">\n' +
   '                    <em class="text-muted">\n' +
   '                        <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>\n' +
   '                        <span ng-show="vm.driver.reports.length || !!vm.driver.resume">Click on available reports to view or download</span>\n' +
@@ -611,21 +490,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </em>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt>Interests</dt>\n' +
-  '                <dd><p>\n' +
+  '                <dt>Interests:</dt>\n' +
+  '                <dd>\n' +
   '                    <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
   '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>\n' +
   '\n' +
   '                    <span ng-show="!visibleInterests.length">\n' +
   '                        <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>\n' +
   '                    </span>\n' +
-  '                    </p>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt ng-init="vm.expCt=4">\n' +
-  '                    Experience\n' +
-  '                    <br ng-show="vm.isConnected"/>\n' +
-  '                    <span ng-show="vm.isConnected && vm.driver.experience.length"\n' +
+  '                <dt ng-init="vm.expCt=4" ng-class="{\'pad-top\':vm.application.canViewDocs}">\n' +
+  '                    Experience:\n' +
+  '                    <br ng-show="vm.application.canViewDocs"/>\n' +
+  '                    <span ng-show="vm.application.canViewDocs && vm.driver.experience.length"\n' +
   '                          ng-switch="!vm.expCt && !!vm.driver.experience.length">\n' +
   '                        <button type="button" class="btn btn-oset-link"\n' +
   '                                ng-click="vm.expCt = 0;" ng-switch-when="false">\n' +
@@ -637,18 +515,16 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        </button>\n' +
   '                    </span>\n' +
   '                </dt>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
-  '                    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">\n' +
-  '                        <oset-experience-list ng-switch-when="true"\n' +
-  '                                              list="vm.driver.experience" view-only="true" max-ct="vm.expCt">\n' +
-  '\n' +
+  '                <dd ng-show="vm.application.canViewDocs">\n' +
+  '                        <p class="text-center" ng-hide="!!vm.driver.experience.length">None Added</p>\n' +
+  '                        <oset-experience-list ng-show="!!vm.driver.experience.length" list="vm.driver.experience"\n' +
+  '                                              view-only="true" max-ct="vm.expCt">\n' +
   '                        </oset-experience-list>\n' +
-  '\n' +
-  '                        <p class="text-center" ng-switch-default>None Added</p>\n' +
-  '                    </div>\n' +
   '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected"><em class="text-muted" ng-bind-html="vm.experienceText">\n' +
-  '                    experience will be available once you have connected</em>\n' +
+  '                <dd ng-hide="vm.application.canViewDocs">\n' +
+  '                    <em class="text-muted"\n' +
+  '                        ng-bind-html="vm.experienceText || \'experience will be available once you have connected\'">\n' +
+  '                    </em>\n' +
   '                </dd>\n' +
   '            </dl>\n' +
   '        </div>\n' +
@@ -733,7 +609,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                        </div>\n' +
   '\n' +
   '                                        <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
-  '                                            <oset-application-summary model="application"></oset-application-summary>\n' +
+  '                                            <oset-application-summary model="application" display-mode="inline"></oset-application-summary>\n' +
   '                                        </div>\n' +
   '\n' +
   '                                        <br class="hidden-lg"/>\n' +
@@ -1143,10 +1019,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/chat/views/chat-console.client.template.html',
-  '<div class="row chat-window" ng-show="vm.activeConnection">\n' +
+  '<div class="row chat-window" ng-show="!!vm.connection">\n' +
   '    <div class="col-sm-12">\n' +
-  '        <h4>Messages\n' +
-  '            <small class="pull-right">\n' +
+  '        <h4>\n' +
+  '            Messages\n' +
+  '            <small class="pull-right" ng-show="!!vm.activeConnection">\n' +
   '                <em>\n' +
   '                    <strong>Connection Status</strong>\n' +
   '                    Me:\n' +
@@ -1160,8 +1037,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </h4>\n' +
   '\n' +
   '\n' +
-  '        <div class="chat-section"\n' +
-  '             scroll-bottom="vm.messages">\n' +
+  '        <div class="chat-section" scroll-bottom="vm.messages">\n' +
   '            <div ng-repeat="message in vm.messages | filter : {type: \'!status\'}"\n' +
   '                 ng-init="message.username = message.username || message.sender.username"\n' +
   '                 ng-class="{\'last\':!!$last,\'first\':!!$first}" class="{{vm.getSenderClass(message.username)}}">\n' +
@@ -1191,9 +1067,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
-  '\n' +
+  '            <div ng-show="!vm.messages || !vm.messages.length">\n' +
+  '                <div class="text-muted text-center">no messages</div>\n' +
+  '            </div>\n' +
   '        </div>\n' +
-  '        <div class="chat-entry" id="messaging">\n' +
+  '        <div class="chat-entry" id="messaging" ng-show="vm.activeConnection">\n' +
   '            <div class="row mgn-vert">\n' +
   '                <div class="col-md-8 col-md-offset-2">\n' +
   '                    <input type="text" ng-show="vm.messageMode === \'text\'"\n' +
@@ -3957,6 +3835,17 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '    </form>\n' +
   '</script>\n' +
+  '');
+ $templateCache.put('/modules/license/views/license-inline.client.template.html',
+  '<div>\n' +
+  '    <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
+  '        <span ng-show="vm.license.type">\n' +
+  '            <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
+  '            {{vm.license.type}}\n' +
+  '        </span>\n' +
+  '        Driver License\n' +
+  '    <oset-list-endorsements ng-if="!!vm.showEndorsements" model="vm.license.endorsements"></oset-list-endorsements>\n' +
+  '</div>\n' +
   '');
  $templateCache.put('/modules/license/views/license.client.template.html',
   '<ng-form name="vm.licenseForm" ng-init="vm.activate()">\n' +

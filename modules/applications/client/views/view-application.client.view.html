@@ -82,9 +82,10 @@
                     able to view any reports they have ordered and message directly with them.</p>
             </div>
 
-            <div class="row">
+            <div class="row" ng-show="!!vm.application.connection">
                 <div class="col-sm-12">
-                    <oset-chat-console connection="vm.application.connection" messages="vm.application.messages"
+                    <oset-chat-console connection="vm.application.connection"
+                                       messages="vm.application.messages"
                                        room="vm.application._id"></oset-chat-console>
                 </div>
             </div>
