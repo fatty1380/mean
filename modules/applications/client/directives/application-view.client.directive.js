@@ -14,7 +14,7 @@
     function ViewApplicantDirective() {
         var ddo;
         ddo = {
-            templateUrl: '/modules/applications/views/templates/os-applicant.client.template.html',
+            templateUrl: '/modules/applications/views/templates/applicant-details.client.template.html',
             restrict: 'E',
             scope: {
                 application: '=',
@@ -113,7 +113,7 @@
             templateUrl: function (elem, attrs) {
                 switch (attrs.displayMode || 'normal') {
                     case 'details':
-                        return '/modules/applications/views/templates/os-applicant.client.template.html';
+                        return '/modules/applications/views/templates/applicant-details.client.template.html';
                     case 'minimal':
                     case 'mine':
                     case 'table':

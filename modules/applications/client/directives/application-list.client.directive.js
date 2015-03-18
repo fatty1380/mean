@@ -64,6 +64,14 @@
             }
         }
 
+        vm.getApplicantDisplayName = function(application) {
+            if(!application.connection) {
+                return application.user.firstName + ' ' + application.user.lastName.substring(0,1);
+            }
+
+            return application.user.displayName;
+        }
+
         vm.setApplicationStatus = function(application, status, $event, state) {
             $event.stopPropagation();
 

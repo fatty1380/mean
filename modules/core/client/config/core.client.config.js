@@ -56,7 +56,6 @@
         $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
             if(!!fromState && !!fromState.name) {
                 $state.gotoPrevious = function () {
-                    debugger;
                     $state.go(fromState, fromParams);
                 };
             } else {

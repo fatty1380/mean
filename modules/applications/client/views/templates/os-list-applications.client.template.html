@@ -17,40 +17,68 @@
                             <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
                             <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
                         </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn-tab btn-link strong"
+                                    ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
+                                <i class="fa fa-close fa-lg"></i>
+                            </button>
+                        </div>
                         <h3 class="post-title" ng-click="vm.showTab(job._id, 'applicants', job.applications.length)">
-                            {{job.name}}</h3>
+                            {{job.name}}
 
-                        <!--meta-->
+                            <small>
+                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                                    ui-sref="jobs.edit({jobId: job._id})">
+                                    <span class="hidden-xs">Edit</span>
+                                <i class="fa fa-edit fa-lg"></i>
+                            </button>
+                                <button type="button" class="btn-tab btn-link read-more strong"
+                                        ui-sref="jobs.view({jobId: job._id})">
+                                    <span class="hidden-xs">View</span>
+                                    <i class="fa fa-external-link fa-lg"></i>
+                                </button>
+                            </small>
+                        </h3>
+
                         <div class="row">
                             <div class="pull-right">
-                                <button type="button" class="btn-tab btn-link read-more strong"
-                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
-                                    <i class="fa fa-close fa-lg"></i><span class="hidden-xs mgn-left">&nbsp;</span>
-                                </button>
                                 <button type="button" class="btn-tab btn-link read-more strong"
                                         ng-click="vm.showTab(job._id, 'applicants', job.applications.length)"
                                         ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}">
                                     <i class="fa fa-users fa-lg"></i><span class="hidden-xs mgn-left">{{job.applications.length}} Applicant{{job.applications.length === 1 ? '' : 's'}}</span>
-                                    <i class="fa fa-comments-o fa-lg mgn-left"></i>
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong"
+                                        ng-click="vm.showTab(job._id, 'messaging', job.applications.length)"
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'messaging'}">
+                                    <i class="fa fa-comments-o fa-lg"></i><span class="hidden-xs mgn-left">Messaging</span>
                                     <span class="badge" ng-show="!!job.newMessages"
                                           tooltip="{{job.newMessages}} new message{{job.newMessages>1?'s':''}}">{{job.newMessages}}</span>
                                 </button>
                                 <button type="button" class="btn-tab btn-link read-more strong mgn-left"
-                                        ng-click="vm.showTab(job._id, 'details')"
-                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}">
-                                    <i class="fa fa-lg fa-file-text"></i><span class="hidden-xs mgn-left">View Description</span>
-                                </button>
-                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"
-                                        ui-sref="jobs.edit({jobId: job._id})">
-                                    <i class="fa fa-edit fa-lg"></i><span class="hidden-xs mgn-left">Edit</span>
+                                        ng-click="vm.showTab(job._id, 'documents')"
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'documents'}">
+                                    <i class="fa fa-lg fa-file-text"></i><span class="hidden-xs mgn-left">Documents</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="content body">
-                        <div class="tab-body">
-                            <div class="post-entry" ng-show="vm.visibleTab === 'applicants'">
+                        <div class="tab-body row">
+                            <div class="post-entry col-sm-12" ng-show="!!vm.visibleTab">
+
+                                <div class="row list-controls">
+                                    <div class="col-sm-12 text-center" ng-show="vm.visibleTab === 'applicants'">
+                                        <h4>{{vm.visibleTab | titlecase}} Filter & Sort Controls</h4>
+                                    </div>
+                                    <div class="col-sm-12 text-center" ng-show="vm.visibleTab === 'messaging'">
+                                        <h4>{{vm.visibleTab | titlecase}} Filter & Sort Controls</h4>
+                                    </div>
+                                    <div class="col-sm-12 text-center" ng-show="vm.visibleTab === 'documents'">
+                                        <h4>{{vm.visibleTab | titlecase}} Filter & Sort Controls</h4>
+                                    </div>
+                                </div>
+
                                 <div class="row applicant_item" ng-show="vm.visibleId === job._id"
                                      data-ng-repeat="application in job.applications"
                                      data-ng-init="profile = application.user; vm.checkMessages(application, job)"
@@ -60,7 +88,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <h4 class="stronger">
-                                                {{profile.firstName}}&nbsp;{{profile.lastName.substring(0,1)}}
+                                                {{vm.getApplicantDisplayName(application)}}
                                                 <br class="hidden-lg hidden-md">
                                                 <span class="pull-right">
                                                     <small>Connection Status:</small>
@@ -69,6 +97,7 @@
                                             </h4>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">
                                             <img ng-src="{{profile.profileImageURL}}" class="img-responsive">
@@ -81,21 +110,32 @@
                                         <br class="hidden-lg"/>
 
                                         <div class="col-lg-2 col-md-3 col-xs-12 text-right">
-                                            <a class="read-more strong"
+                                            <a class="read-more strong pull-right"
                                                style="white-space: nowrap"
                                                ui-sref="applications.view({applicationId: application._id, action: 'read'})">
-                                                Review&nbsp<i class="fa fa-external-link fa-lg mgn-left"></i>
+                                                Full Profile
+                                                <i class="fa fa-external-link fa-lg mgn-left"></i>
                                             </a>
                                             <br class="visible-lg mgn-vert"/>
-                                            <a class="read-more strong"
+                                            <a class="read-more strong pull-right"
                                                style="white-space: nowrap"
                                                tooltip="{{application.messagingText || vm.messagingText}}"
                                                tooltip-popup-delay="1000"
-                                               ui-sref="applications.view({applicationId: vm.application._id, action: 'message'})">
-                                                {{application.newMessages ? application.newMessages + ' New ' :
-                                                ''}}Message{{application.newMessages === 1 ? '': 's'}}&nbsp;<i
-                                                    class="fa fa-comments-o fa-lg mgn-left"></i>
+                                               ui-sref="applications.view({applicationId: application._id, action: 'message'})">
+                                                {{application.newMessages ? application.newMessages + ' New ' : ''}}
+                                                Message{{application.newMessages === 1 ? '': 's'}}
+                                                <i class="fa fa-comments-o fa-lg mgn-left"></i>
                                             </a>
+                                            <br class="visible-lg mgn-vert pull-right"/>
+                                            <a class="read-more strong"
+                                               style="white-space: nowrap"
+                                               tooltip="{{application.documentText || vm.documentText}}"
+                                               tooltip-popup-delay="1000"
+                                                    ng-click="vm.showDocument(null, $event)">
+                                                Documents
+                                                <i class="fa fa-file-text fa-lg mgn-left"></i>
+                                            </a>
+                                            <br class="visible-lg mgn-vert"/>
                                             <!--TODO: Change the "Reject" into a state rather than a callback-->
                                             <!--<br>-->
                                             <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->
@@ -115,25 +155,6 @@
                                             your post?</a></h4>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'details'">
-
-                                <h4>Description
-                                </h4>
-
-                                <p ng-bind-html="job.description"></p>
-                                <h4>Requirements</h4>
-
-                                <p ng-bind-html="job.requirements"></p>
-                                <hr/>
-
-                                <button type="button" class="btn-tab btn-link read-more center-block"
-                                        ui-sref="jobs.view({jobId: job._id})">
-                                    view full job post
-                                    <i class="fa fa-external-link fa-lg"></i><span class="hidden-xs mgn-left">
-                                </span>
-                                </button>
                             </div>
                         </div>
                         <a class="read-more strong pull-right" ng-click="vm.visibleId = null"

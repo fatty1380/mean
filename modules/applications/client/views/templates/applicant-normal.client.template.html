@@ -46,17 +46,23 @@
         </div>
 
 
-        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right"
-             ng-hide="!!vm.application.messages && !!vm.application.messages.length">
+        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right" tooltip="{{vm.application|prettyPrint}}">
             Messages
         </div>
-        <div class="col-md-9 col-lg-10 col-xs-12"
-             ng-hide="!!vm.application.messages && !!vm.application.messages.length">
-                <span ng-show="!!vm.application.isConnected">
+        <div class="col-md-9 col-lg-10 col-xs-12">
+                <span ng-show="!!vm.application.connection && !vm.application.messageCt">
                     <p style="margin-bottom: 2px;">
                         discuss the job and schedule an interview
                         <a ui-sref="applications.view({applicationId: vm.application._id, target: 'message'})">
                             by sending a message
+                        </a>
+                    </p>
+                </span>
+                <span ng-show="!!vm.application.connection && !!vm.application.messageCt">
+                    <p style="margin-bottom: 2px;">
+                        {{vm.application.messagingText}}
+                        <a ui-sref="applications.view({applicationId: vm.application._id, target: 'message'})">
+                            ... view now
                         </a>
                     </p>
                 </span>
