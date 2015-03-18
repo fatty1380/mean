@@ -92,42 +92,52 @@ var ApplicationSchema = new Schema({
     }
 
     /* Virtual Members - END */
-}, {'toJSON': { virtuals: true }});
+}, {'toJSON': {virtuals: true}});
 
 
 ApplicationSchema.virtual('isDraft')
-    .get(function() {
+    .get(function () {
         return this.status === 'draft';
     });
 
 ApplicationSchema.virtual('isNew')
-    .get(function() {
+    .get(function () {
         return this.status === 'submitted';
     });
 
 ApplicationSchema.virtual('isReviewed')
-    .get(function() {
+    .get(function () {
         return this.status === 'read';
     });
 
 ApplicationSchema.virtual('isConnected')
-    .get(function() {
+    .get(function () {
         return this.status === 'connected';
     });
 
 ApplicationSchema.virtual('isRejected')
-    .get(function() {
+    .get(function () {
         return this.status === 'rejected';
     });
 
 ApplicationSchema.virtual('isDeleted')
-    .get(function() {
+    .get(function () {
         return this.status === 'deleted';
     });
 
 ApplicationSchema.virtual('isHired')
-.get(function() {
+    .get(function () {
         return this.status === 'hired';
+    });
+
+ApplicationSchema.virtual('canMessage')
+    .get(function () {
+        return this.isHired || this.isConnected;
+    });
+
+ApplicationSchema.virtual('canViewDocs')
+    .get(function () {
+        return this.isHired || this.isRejected || this.isConnected;
     });
 
 
@@ -138,9 +148,8 @@ ApplicationSchema.pre('save', function (next) {
 
 ApplicationSchema.pre('save', function (next) {
 
-    if(/draft|submitted|read/.test(this.status))
-    {
-        if(!!this.connection) {
+    if (/draft|submitted|read/.test(this.status)) {
+        if (!!this.connection) {
             this.status = 'connected';
         }
     }

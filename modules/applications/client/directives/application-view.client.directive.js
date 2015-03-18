@@ -11,58 +11,6 @@
         }
     };
 
-    function ViewApplicantController(auth, $window, $log, $state, Drivers, Reports) {
-        var vm = this;
-
-        vm.user = auth.user;
-        vm.applicant = vm.application.user;
-        vm.driver = vm.applicant.driver;
-        vm.license = !!vm.driver && vm.driver.licenses[0];
-
-        vm.isConnected = !!vm.application.isConnected && !!vm.application.connection && vm.application.connection.isValid;
-
-        if (!vm.driver) {
-            debugger;
-            Drivers.getByUser(vm.applicant._id).then(
-                function (success) {
-                    vm.applicant.driver = vm.driver = success;
-                },
-                function (err) {
-                    $log.error('Unable to find driver for applicant: %s', vm.applicant._id);
-                }
-            );
-        }
-
-        vm.experienceText = (
-            !!vm.driver && !!vm.driver.experience && vm.driver.experience.length ?
-                'The applicant\'s experience will be available once connected' :
-                'You can discuss past job experience once you have connected'
-        );
-
-        vm.text = text;
-        vm.resume = vm.resume || {};
-
-        var handleFileAccess = function (file) {
-
-            vm.resume.loading = true;
-
-            Reports.openReport(vm.application, vm.driver, file);
-
-            vm.resume.loading = false;
-        };
-
-        vm.openResumeFile = function () {
-            $log.debug('Opening Resume File');
-            handleFileAccess(vm.driver && vm.driver.resume);
-        };
-
-        vm.openReport = function (reportName) {
-            $log.debug('Opening Report type %s', reportName);
-            handleFileAccess(vm.driver && vm.driver.reports[reportName]);
-        };
-
-    }
-
     function ViewApplicantDirective() {
         var ddo;
         ddo = {
@@ -80,10 +28,11 @@
         return ddo;
     }
 
-    function ApplicationSummaryController(Applications, Drivers, Reports, $q, $log, toaster) {
+    function ApplicationSummaryController(auth, Applications, Drivers, Reports, $q, $log, toastr) {
         var vm = this;
         vm.text = text;
 
+        vm.user = auth.user;
 
         function initialize() {
             var deferred = $q.defer();
@@ -97,8 +46,8 @@
 
                 deferred.resolve(vm.application);
 
-            } else if (vm.job && vm.user) {
-                Applications.ForDriver.get({jobId: vm.job._id, userId: vm.user._id})
+            } else if (vm.job && vm.profile) {
+                Applications.ForDriver.get({jobId: vm.job._id, userId: vm.profile._id})
                     .$promise.then(function (success) {
                         vm.application = success;
 
@@ -119,9 +68,25 @@
         }
 
         vm.setLocalProperties = function (application) {
+
             vm.profile = application.user;
             vm.driver = vm.profile.driver || Drivers.getByUser(vm.profile._id);
             vm.license = !!vm.driver.licenses && vm.driver.licenses.length ? vm.driver.licenses[0] : null;
+
+            vm.experienceText = (
+                !!vm.driver && !!vm.driver.experience && vm.driver.experience.length ?
+                    'The applicant\'s experience will be available once connected' :
+                    'You can discuss past job experience once you have connected'
+            );
+
+            if (!vm.driver) {
+                debugger;
+                Drivers.getByUser(vm.applicant._id).then(
+                    function (success) {
+                        vm.profile.driver = vm.driver = success;
+                    }
+                );
+            }
         };
 
         vm.showDocument = function (doc, $event) {
@@ -144,13 +109,14 @@
         var ddo;
         ddo = {
             templateUrl: function (elem, attrs) {
-                switch (attrs.mode || 'normal') {
+                switch (attrs.displayMode || 'normal') {
+                    case 'details':
+                        return '/modules/applications/views/templates/os-applicant.client.template.html';
                     case 'minimal':
                     case 'mine':
-                    case 'inline':
                     case 'table':
                         return '/modules/applications/views/templates/application-summary.client.template.html';
-                    case 'normal':
+                    case 'inline':
                         return '/modules/applications/views/templates/applicant-normal.client.template.html';
                 }
             },
@@ -159,8 +125,10 @@
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
                 application: '=model',
                 job: '=?',
-                user: '=?',
-                index: '=?'
+                profile: '=?',
+                index: '=?',
+                text: '=?',
+                scrollToMessageFn: '&?'
             },
             controller: 'ApplicationSummaryController',
             controllerAs: 'vm',
@@ -170,13 +138,10 @@
         return ddo;
     }
 
-    ApplicationSummaryController.$inject = ['Applications', 'Drivers', 'Reports', '$q', '$log', 'toaster'];
-    ViewApplicantController.$inject = ['Authentication', '$window', '$log', '$state', 'Drivers', 'Reports'];
+    ApplicationSummaryController.$inject = ['Authentication', 'Applications', 'Drivers', 'Reports', '$q', '$log', 'toastr'];
 
     angular.module('applications')
-        .controller('ViewApplicantController', ViewApplicantController)
         .controller('ApplicationSummaryController', ApplicationSummaryController)
-        .directive('osetApplicationSummary', ApplicationSummaryDirective)
-        .directive('osetApplicant', ViewApplicantDirective);
+        .directive('osetApplicationSummary', ApplicationSummaryDirective);
 
 })();

@@ -23,7 +23,7 @@
         return ddo;
     }
 
-    function JobApplicationListController(Applications, Authentication, $log, $state, params, $location) {
+    function JobApplicationListController(Applications, Authentication, $log, $state, params, $location, $q) {
         var vm = this;
 
         vm.visibleId = params.itemId;
@@ -87,7 +87,16 @@
             var applicationId = application._id;
             var userId = vm.user._id;
 
-            vm.ApplicationFactory.getMessages(applicationId, userId).then(function(success) {
+            vm.ApplicationFactory.getMessages(applicationId, userId).catch(function(err) {
+                $log.debug('Caught error %o with status: %s', err, err.status);
+
+                if(err.status === 403 && !!application.connection) {
+                    return $q.when(err.data);
+                }
+                else {
+                    return $q.reject(err);
+                }
+            }).then(function(success) {
                 if(vm.visibleId === applicationId) {
                     debugger;
                 }
@@ -106,7 +115,7 @@
                 vm.newMessages += application.newMessages;
 
             }, function(err) {
-                debugger;
+                $log.warn('Error retrieving messages: %o (this needs to be handled)', err);
             });
         };
 
@@ -126,7 +135,7 @@
 
     }
 
-    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location'];
+    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location', '$q'];
 
     angular.module('applications')
         .controller('JobApplicationListController', JobApplicationListController)

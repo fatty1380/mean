@@ -124,33 +124,33 @@ exports.update = function (req, res) {
     application = _.extend(application, req.body);
 
     application.save(function (err) {
-            if (err) {
-                console.log('[APPLICATION.Update] %j', err);
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                var options = [
-                    //{path: 'user', model: 'User'},
-                    {path: 'job', model: 'Job'},
-                    {path: 'company', model: 'Company', select: 'name owner agents profileImageURL'},
-                    //{path: 'messages'},
-                    {path: 'connection'},
-                    {path: 'messages.sender', model: 'User'},
-                    {path: 'user.driver', model: 'Driver'},
-                    {path: 'connection.isValid'}
-                ];
+        if (err) {
+            console.log('[APPLICATION.Update] %j', err);
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        } else {
+            var options = [
+                //{path: 'user', model: 'User'},
+                {path: 'job', model: 'Job'},
+                {path: 'company', model: 'Company', select: 'name owner agents profileImageURL'},
+                //{path: 'messages'},
+                {path: 'connection'},
+                {path: 'messages.sender', model: 'User'},
+                {path: 'user.driver', model: 'Driver'},
+                {path: 'connection.isValid'}
+            ];
 
-                Application.populate(application, options, function (err, populated) {
-                    if (err) {
-                        console.log('error retrieving application, returning non-populated version', err);
-                        return res.json(application);
-                    }
+            Application.populate(application, options, function (err, populated) {
+                if (err) {
+                    console.log('error retrieving application, returning non-populated version', err);
+                    return res.json(application);
+                }
 
-                    res.json(populated);
-                });
-            }
-        });
+                res.json(populated);
+            });
+        }
+    });
 };
 
 /**
@@ -341,16 +341,11 @@ exports.getMessages = function (req, res, next) {
 
     var response = {data: application.messages, theirs: [], latest: {}};
 
-    if (application && !application.connection) {
-        response.message = 'No valid connection';
-        return res.status(404).send(response);
-    }
-
     var myLast = _.findLast(application.messages, function (msg) {
-        if(!msg || !msg.sender) {
+        if (!msg || !msg.sender) {
             return false;
         }
-        if(!req.user) {
+        if (!req.user) {
             return false;
         }
         return req.user.equals(msg.sender);
@@ -364,7 +359,7 @@ exports.getMessages = function (req, res, next) {
             newCt++;
         }
 
-        if(!msg.sender) {
+        if (!msg.sender) {
             return false;
         }
 
@@ -373,12 +368,17 @@ exports.getMessages = function (req, res, next) {
 
     response.newMessages = newCt;
 
-
     response.latest = _.max(application.messages, function (msg) {
         return msg.created;
     });
 
-    res.json(response);
+
+    if (application && (!application.connection || !application.isConnected)) {
+        response.message = 'No valid connection';
+        return res.status(403).send(response);
+    } else {
+        res.json(response);
+    }
 };
 
 exports.persistMessage = function (applicationId, message) {
@@ -523,15 +523,15 @@ exports.createConnection = function (req, res) {
 };
 
 /** Questionairre Intake Forms **/
-exports.getQuestions = function(req, res) {
+exports.getQuestions = function (req, res) {
 
     var response = {
         'default': questionList['default']
     };
 
-    if(req.job && req.job.company.id) {
+    if (req.job && req.job.company.id) {
         var questions = questionList[req.job.company.id];
-        if(!!questions) {
+        if (!!questions) {
             return (response.company = questions);
         }
     }

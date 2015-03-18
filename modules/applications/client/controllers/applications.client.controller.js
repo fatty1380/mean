@@ -24,6 +24,8 @@
             }, processError);
         };
 
+        vm.goBack = $state.gotoPrevious;
+
         var activate = function () {
             if (vm.application.connection && vm.application.connection.isValid) {
                 vm.activeConnection = true;

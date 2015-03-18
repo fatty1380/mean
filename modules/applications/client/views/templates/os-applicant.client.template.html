@@ -1,26 +1,24 @@
 <div class="applicant" name="os-applicant.client-template">
-    <div class="h4 stronger">{{vm.applicant.displayName}}
-        <small class="pull-right">Applied {{vm.application.created | date: 'short'}}</small>
-    </div>
-    <hr/>
+
     <div class="row">
         <div class="col-sm-12">
             <dl class="dl-horizontal">
-                <dt> <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive center-block"></dt>
+                <dt><img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive center-block"></dt>
                 <dd>
                     <span class="strong">Cover Letter:</span>
+
                     <p class="panel panel-default letter" data-ng-bind-html="vm.application.introduction"></p>
                 </dd>
                 <dt>About:</dt>
-                <dd ng-show="vm.isConnected">
+                <dd ng-show="vm.application.canViewDocs">
                     <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>
                 </dd>
-                <dd ng-hide="vm.isConnected">
+                <dd ng-hide="vm.application.canViewDocs">
                     <em class="text-muted" ng-bind-html="vm.text.pre.about"> </em>
                 </dd>
 
                 <dt>Messages:</dt>
-                <dd ng-show="vm.isConnected">
+                <dd ng-show="vm.application.canViewDocs">
                     <p ng-show="vm.application.messages && vm.application.messages.length">
                         {{vm.application.messages.length}} Total Messages
                         <a href="#messaging" class="pull-right" ng-click="vm.scrollToMessageFn()">
@@ -40,7 +38,7 @@
                         </a>
                     </p>
                 </dd>
-                <dd ng-hide="vm.isConnected">
+                <dd ng-hide="vm.application.canViewDocs">
                     <p>
                         <em class="text-muted" ng-if="vm.user.type === 'owner'"
                             ng-bind-html="vm.text.pre.messaging.owner"></em>
@@ -60,15 +58,17 @@
                 </dd>
 
                 <dt ng-if="vm.debug">raw</dt>
-                <dd ng-if="vm.debug"><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>
+                <dd ng-if="vm.debug">
+                    <pre>{{vm.driver.reports | prettyPrint}}</pre>
+                </dd>
 
-                <dt>Reports</dt>
-                <dd class="report-badges" ng-class="{'not-visible':!vm.isConnected}">
+                <dt>Documents:</dt>
+                <dd class="report-badges" ng-class="{'not-visible':!vm.canViewDocs}">
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="Resume{{vm.isConnected ? (!!vm.driver.resume ? ' - click to download': ' - not available') : ''}}"
-                        ng-class="{'available': !!vm.driver.resume}"
-                        ng-click="vm.isConnected && vm.openResumeFile()">
+                      tooltip="Resume{{vm.application.canViewDocs ? (!!vm.driver.resume ? ' - click to download': ' - not available') : ''}}"
+                      ng-class="{'available': !!vm.driver.resume}"
+                      ng-click="vm.application.canViewDocs && vm.showDocument('resume', $event)">
                     <i class="fa fa-file fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -79,9 +79,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports['mvr']  ? ' - click to download': ' - not available') : ''}}"
+                      tooltip="Motor Vehicle Report{{vm.application.canViewDocs ? (!!vm.driver.reports['mvr']  ? ' - click to download': ' - not available') : ''}}"
                       ng-class="{'available': !!vm.driver.reports['mvr']}"
-                      ng-click="vm.isConnected && vm.openReport('mvr')">
+                      ng-click="vm.application.canViewDocs && vm.showDocument('mvr', $event)">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -92,9 +92,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports['bgcheck']  ? ' - click to download': ' - not available') : ''}}"
+                      tooltip="Background Check{{vm.application.canViewDocs ? (!!vm.driver.reports['bgcheck']  ? ' - click to download': ' - not available') : ''}}"
                       ng-class="{'available': !!vm.driver.reports['bgcheck']}"
-                      ng-click="vm.isConnected && vm.openReport('bgcheck')">
+                      ng-click="vm.application.canViewDocs && vm.showDocument('bgcheck', $event)">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -105,9 +105,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports['ncrim']  ? ' - click to download': ' - not available') : ''}}"
+                      tooltip="National Criminal{{vm.application.canViewDocs ? (!!vm.driver.reports['ncrim']  ? ' - click to download': ' - not available') : ''}}"
                       ng-class="{'available': !!vm.driver.reports['ncrim']}"
-                      ng-click="vm.isConnected && vm.openReport('ncrim')">
+                      ng-click="vm.application.canViewDocs && vm.showDocument('ncrim', $event)">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -118,9 +118,9 @@
                 </span>
 
                 <span class="fa-stack fa-3x report-badge mgn-right"
-                      tooltip="Drug Screen{{vm.isConnected ? (!!vm.driver.reports['drugs'] ? ' - click to download': ' - not available') : ''}}"
+                      tooltip="Drug Screen{{vm.application.canViewDocs ? (!!vm.driver.reports['drugs'] ? ' - click to download': ' - not available') : ''}}"
                       ng-class="{'available': !!vm.driver.reports['drugs']}"
-                      ng-click="vm.isConnected && vm.openReport('drugs')">
+                      ng-click="vm.application.canViewDocs && vm.showDocument('drugs', $event)">
                     <i class="fa fa-certificate fa-stack-2x"></i>
                     <span class="badge-info">
                         <span class="badge-info-inner fa fa-stack-1x">
@@ -132,13 +132,13 @@
 
 
                 </dd>
-                <dd ng-hide="vm.isConnected">
+                <dd ng-hide="vm.application.canViewDocs">
                     <em class="text-muted">
                         <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>
                         <span ng-show="vm.driver.reports.length || !!vm.driver.resume">You will be able to download reports once connected</span>
                     </em>
                 </dd>
-                <dd ng-show="vm.isConnected">
+                <dd ng-show="vm.application.canViewDocs">
                     <em class="text-muted">
                         <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>
                         <span ng-show="vm.driver.reports.length || !!vm.driver.resume">Click on available reports to view or download</span>
@@ -146,21 +146,20 @@
                     </em>
                 </dd>
 
-                <dt>Interests</dt>
-                <dd><p>
+                <dt>Interests:</dt>
+                <dd>
                     <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
                           class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
 
                     <span ng-show="!visibleInterests.length">
                         <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>
                     </span>
-                    </p>
                 </dd>
 
-                <dt ng-init="vm.expCt=4">
-                    Experience
-                    <br ng-show="vm.isConnected"/>
-                    <span ng-show="vm.isConnected && vm.driver.experience.length"
+                <dt ng-init="vm.expCt=4" ng-class="{'pad-top':vm.application.canViewDocs}">
+                    Experience:
+                    <br ng-show="vm.application.canViewDocs"/>
+                    <span ng-show="vm.application.canViewDocs && vm.driver.experience.length"
                           ng-switch="!vm.expCt && !!vm.driver.experience.length">
                         <button type="button" class="btn btn-oset-link"
                                 ng-click="vm.expCt = 0;" ng-switch-when="false">
@@ -172,18 +171,16 @@
                         </button>
                     </span>
                 </dt>
-                <dd ng-show="vm.isConnected">
-                    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">
-                        <oset-experience-list ng-switch-when="true"
-                                              list="vm.driver.experience" view-only="true" max-ct="vm.expCt">
-
+                <dd ng-show="vm.application.canViewDocs">
+                        <p class="text-center" ng-hide="!!vm.driver.experience.length">None Added</p>
+                        <oset-experience-list ng-show="!!vm.driver.experience.length" list="vm.driver.experience"
+                                              view-only="true" max-ct="vm.expCt">
                         </oset-experience-list>
-
-                        <p class="text-center" ng-switch-default>None Added</p>
-                    </div>
                 </dd>
-                <dd ng-hide="vm.isConnected"><em class="text-muted" ng-bind-html="vm.experienceText">
-                    experience will be available once you have connected</em>
+                <dd ng-hide="vm.application.canViewDocs">
+                    <em class="text-muted"
+                        ng-bind-html="vm.experienceText || 'experience will be available once you have connected'">
+                    </em>
                 </dd>
             </dl>
         </div>

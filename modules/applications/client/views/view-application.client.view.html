@@ -1,8 +1,20 @@
 <section>
     <os-page-header title="{{vm.pageTitle || 'Job Application Details'}}"
-                    sub-title="{{vm.application.job.name}}"></os-page-header>
+                    sub-title="{{vm.application.job.name}}"
+                    back-btn-text="{{!!vm.goBack ? 'back' : ''}}"
+                    back-btn-fn="vm.goBack()">
+    </os-page-header>
 
     <div class="application panel panel-default">
+        <div class="panel-heading">
+            <span class="h3"><span ng-bind="vm.application.user.displayName"></span>
+                <span class="pull-right text-right smaller">
+                    <os-application-status-badge model="vm.application"></os-application-status-badge>
+                </span>
+            </span>
+                    <br>
+                    <small class="text-muted"><em>Applied {{vm.application.created | date: 'short'}}</em></small>
+        </div>
         <div class="panel-body">
 
             <!--- DRIVER VIEW - Shows Company Information ---->
@@ -22,9 +34,8 @@
                 <div class="col-sm-12" ng-if="vm.isConnected"
                      ng-init="otherMsgs = (vm.application.messages | filter : {'sender' : ('!'+vm.user._id)})">
                     <p ng-show="vm.application.messages && vm.application.messages.length">
-                        {{vm.application.messages.length}} Total Messages<a href="#messaging"
-                                                                            class="pull-right btn btn-link">send a new
-                        message</a>
+                        {{vm.application.messages.length}} Total Messages
+                        <a href="#messaging" class="pull-right btn btn-link">send a new message</a>
                     </p>
 
                     <p class="panel panel-info letter"
@@ -43,13 +54,12 @@
 
             <!--- OWNER VIEW - Shows Applicant Information ---->
             <div ng-if="vm.user.type==='owner'">
-                <oset-applicant application="vm.application"
-                                scroll-to-message-fn="vm.scrollToMessages()"></oset-applicant>
+                <oset-application-summary model="vm.application" display-mode="details"></oset-application-summary>
             </div>
 
             <!--- Show Connection Information VIEW ---->
             <div class="row"
-                 ng-hide="vm.connecting || vm.activeConnection">
+                 ng-hide="vm.connecting || !!vm.application.connection">
                 <p class="panel panel-info letter text-center col-sm-10 col-sm-offset-1"
                    ng-bind-html="vm.text.noconnection"></p>
 
