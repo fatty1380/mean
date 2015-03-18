@@ -97,7 +97,9 @@
             Reports.openReport(vm.application, vm.driver, file)
                 .catch(function (error) {
                     vm.error = error;
-                    toaster.pop('error', error);
+                    toastr.error(error, {
+                        extendedTimeOut: 5000
+                    });
 
                 });
         };

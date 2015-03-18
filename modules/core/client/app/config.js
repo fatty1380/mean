@@ -8,7 +8,7 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
             ['oset-templates',
                 'ngSanitize', 'ngAnimate', 'ngResource', 'ngMessages',
                 'ui.router', 'ui.bootstrap', 'ui.utils',
-                'angularFileUpload', 'ngMap', 'toaster',
+                'angularFileUpload', 'ngMap', 'toastr',
                 'ngImgCrop', 'duScroll', 'angularMoment'];
 
     // Add a new vertical module

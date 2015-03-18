@@ -10,7 +10,7 @@ module.exports = {
                 'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.css',
                 'public/lib/ngImgCrop/compile/unminified/ng-img-crop.css',
-                'public/lib/angularjs-toaster/toaster.css'
+                'public/lib/angular-toastr/dist/angular-toastr.css'
             ],
             js: [
                 'public/lib/angular/angular.js',
@@ -33,7 +33,7 @@ module.exports = {
                 '//cdn.raygun.io/raygun4js/raygun.min.js',
                 'public/lib/tinymce/tinymce.js',
                 'public/lib/angular-sanitize/angular-sanitize.js',
-                'public/lib/angularjs-toaster/toaster.js'
+                'public/lib/angular-toastr/dist/angular-toastr.tpls.js'
             ],
             font: [
                 '//fonts.googleapis.com/css?family=Open+Sans:300,400,700',
