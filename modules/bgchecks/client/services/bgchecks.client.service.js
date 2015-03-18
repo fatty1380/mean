@@ -52,11 +52,11 @@ var reportFactory = function ($resource, $q, $state, $log, DocAccess) {
         },
         openReport: function(application, driver, file) {
 
-            return DocAccess.hasAccess(driver._id, application).then(
+            return DocAccess.getDriver(driver._id, application).then(
                 function(driverResponse) {
                     if(!!driverResponse) {
                          $state.go('drivers.documents', {driverId: driver._id, documentId: file.sku || 'resume'});
-                        return $q.resolve('Routing to the document');
+                        return $q.when('Routing to the document');
                     }
 
                     return $q.reject('Unable to route to Driver\'s Documents');

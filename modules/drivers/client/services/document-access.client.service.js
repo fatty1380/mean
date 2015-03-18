@@ -9,30 +9,47 @@
                 $log.debug('[DocAccess.hasAccess] Looking up access for driver `%s`', driverId);
 
                 if (Auth.user.driver && (Auth.user.driver === driverId || Auth.user.driver._id === driverId)) {
-                    $log.debug('[DocAccess.hasAccess] Granting access to their own documents');
-                    return $q.when(Auth.user.driver);
+                    return true;
                 }
                 else {
-                    var deferred = $q.defer();
-                    var isConnected = !!application.isConnected && !!application.connection && application.connection.isValid;
-
-                    if (!isConnected) {
-                        deferred.reject('Sorry, but you are not connected to this applicant');
+                    if (!application || !application.canViewDocs) {
+                        return false;
                     }
 
-                    Drivers.get(driverId).then(
-                        function(driverProfile) {
-                            $log.debug('got driver');
+                    return true;
+                }
+            },
+            getDriver: function(driverId, application) {
+                $log.debug('[DocAccess.hasAccess] Looking up access for `%s` to driver `%s`', Auth.user._id, driverId);
 
-                            if(!!driverProfile && !_.isEmpty(driverProfile)) {
-                               return deferred.resolve(driverProfile);
-                            }
-
-                            deferred.reject('No Driver Profile found for driver id: ' + driverId);
+                if(this.hasAccess(driverId, application)) {
+                    if (Auth.user.driver && (Auth.user.driver === driverId || Auth.user.driver._id === driverId)) {
+                        $log.debug('[DocAccess.hasAccess] Granting access to their own documents');
+                        return $q.when(Auth.user.driver);
+                    }
+                    else {
+                        if (!application || !application.canViewDocs) {
+                            return $q.reject('Sorry, but you do not have access to this applicant\'s documents');
                         }
-                    );
 
-                    return deferred.promise;
+                        var deferred = $q.defer();
+                        Drivers.get(driverId).then(
+                            function(driverProfile) {
+                                $log.debug('got driver');
+
+                                if(!!driverProfile && !_.isEmpty(driverProfile)) {
+                                    return deferred.resolve(driverProfile);
+                                }
+
+                                return deferred.reject('No Driver Profile found for driver id: ' + driverId);
+                            }
+                        );
+
+                        return deferred.promise;
+                    }
+                }
+                else {
+                    return $q.reject('Sorry, but you do not have access to this driver\'s documents');
                 }
             },
             updateFileUrl: function (driverId, file) {
