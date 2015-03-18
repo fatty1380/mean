@@ -54,11 +54,9 @@
                     <oset-license-inline model="vm.license" show-endorsements="false"></oset-license-inline>
                 </dd>
 
-                <dt>Endorsements</dt>
-                <dd>
-                    <p>
-                        <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
-                    </p>
+                <dt ng-if="!!vm.license.endorsements.length">Endorsements</dt>
+                <dd ng-if="!!vm.license.endorsements.length">
+                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
                 </dd>
 
                 <dt ng-if="vm.debug">raw</dt>
