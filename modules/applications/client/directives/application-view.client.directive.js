@@ -89,21 +89,6 @@
             }
         };
 
-        vm.showDocument = function (doc, $event) {
-            $event.stopPropagation();
-
-            var file = doc === 'resume' ? vm.driver.resume : vm.driver.reports[doc];
-
-            Reports.openReport(vm.application, vm.driver, file)
-                .catch(function (error) {
-                    vm.error = error;
-                    toastr.error(error, {
-                        extendedTimeOut: 5000
-                    });
-
-                });
-        };
-
         initialize();
     }
 
@@ -122,7 +107,7 @@
                         return '/modules/applications/views/templates/applicant-normal.client.template.html';
                 }
             },
-            restrict: 'EA',
+            restrict: 'E',
             scope: {
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
                 application: '=model',
@@ -140,10 +125,188 @@
         return ddo;
     }
 
+    function ApplicationListItemController(auth, Applications, $log, $state, $location) {
+        var vm = this;
+
+        if (!vm.job && !vm.application) {
+            $log.error('[ApplicationListItemCtrl] Neither job nor applicaiton is defined... aborting initialization');
+            return false;
+        }
+
+        vm.Applications = Applications;
+
+        vm.job = vm.job || vm.application && vm.application.job;
+        vm.job.newMessages = 0;
+
+        if (!!vm.application) {
+            vm.checkMessages(vm.application, vm.job);
+        }
+
+        vm.showTab = function (itemId, tabName) {
+            if (!!vm.visibleId && vm.visibleTab === tabName) {
+                vm.visibleId = vm.visibleTab = null;
+            } else {
+                vm.visibleId = itemId;
+                vm.visibleTab = tabName;
+            }
+
+            $state.transitionTo($state.current, {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+            $location.search({'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+        };
+
+        vm.checkMessages = function (application, job) {
+            $log.warn('[0] Application %s has %d messages', application._id, application.newMessages || -1);
+            $log.warn('[0] Job %s has %d messages', job._id, job.newMessages || -1);
+
+            Applications.checkMessages(application, auth.user._id)
+                .then(function (application) {
+                    application = application;
+                    $log.warn('[1] Application %s has %d messages', application._id, application.newMessages || '0');
+                    job.newMessages += application.newMessages || 0;
+                    $log.warn('[1] Job %s has %d messages', job._id, job.newMessages || '0');
+                })
+                .catch(function (err) {
+                    if (!!application.connection) {
+                        $log.error('Failed to load messages for job %s due to error: %o', job._id, err);
+                    }
+                    else {
+                        $log.debug('No connection, no messages. Simple!', err);
+                    }
+                });
+        };
+
+        vm.filters = {
+                status: {'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false},
+                negStatus: {'rejected': false, 'expired': false}
+        };
+
+        vm.sorting = {
+            applicants: ['statusIndex','-created'],
+            messaging: ['!messages.length','-lastMessage.created'], //'-lastMessage.created',
+            documents: ['-!!user.driver.resume','-user.driver.resume.created','-user.driver.reports.length']
+        };
+
+        vm.defaultFiltering = {
+            applicants: {},
+            messaging: { 'status': {'connected': true}},
+            documents: { 'status': {'connected': true}}
+        };
+
+        vm.reverseSort = false;
+
+        vm.toggleFilter = function (category, key, isRadio) {
+
+            var filterKey = (key || 'all').toLowerCase();
+
+            if (filterKey === 'all') {
+                vm.filters[category] = {all: true};
+                return;
+            }
+
+            if (!vm.filters[category]) {
+                vm.filters[category][filterKey] = true;
+            }
+
+            //vm.filters[category][filterKey] = !vm.filters[category][filterKey];
+
+            if (isRadio) {
+                _.map(_.keys(vm.filters[category]), function (mapKey) {
+                    if (mapKey !== filterKey) {
+                        vm.filters[category][mapKey] = false;
+                    }
+                });
+            }
+
+            if (!!vm.filters[category].all) {
+                vm.filters[category].all = false;
+            } else if (isRadio) {
+                // The setting has not been updated, so setting all to the old
+                // value will handle the de-selection of the only selected item
+                vm.filters[category].all = vm.filters[category][filterKey];
+            }
+        };
+
+        vm.filterApplications = function (application) {
+
+            var keys = _.keys(vm.filters);
+            for (var i = 0; i < keys.length; i++) {
+                var status, tmp = vm.filters[keys[i]];
+
+                switch (keys[i]) {
+                    case 'negStatus':
+                    case 'status':
+                        if (!tmp || tmp['all']) {
+                            break;
+                        }
+                        if (!!tmp) {
+                            status = (application.statusCat || application.status).toLowerCase();
+                            if (_.isBoolean(tmp[status]) && !tmp[status]) {
+                                $log.debug('Ignoring application with status `%s`', status);
+                                return false;
+                            }
+                        }
+                        break;
+
+                }
+            }
+
+            return true;
+        };
+
+        vm.setApplicationStatus = function(application, status, $event) {
+            $event.stopPropagation();
+
+            var app = vm.ApplicationFactory.setStatus(application._id, status);
+
+            app.then(function(success) {
+                $log.debug('[setApplicationStatus] %s', success);
+                application = success;
+            }, function(reject) {
+                debugger;
+                $log.warn('[setApplicationStatus] %s', reject);
+            });
+
+            application.status = status;
+            application.isNew = application.isConnected = false;
+            application.isRejected = true;
+            application.disabled = true;
+        };
+    }
+
+    function ApplicationListItemDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: function (elem, attrs) {
+                switch (attrs.userType) {
+                    case 'driver':
+                        return '/modules/applications/views/templates/driver-list-item.client.template.html';
+                    case 'owner':
+                        return '/modules/applications/views/templates/owner-list-item.client.template.html';
+                }
+            },
+            restrict: 'E',
+            scope: {
+                userType: '@',
+                application: '=?',
+                job: '=?',
+                visibleId: '=',
+                visibleTab: '='
+            },
+            controller: 'ApplicationListItemController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
     ApplicationSummaryController.$inject = ['Authentication', 'Applications', 'Drivers', 'Reports', '$q', '$log', 'toastr'];
+    ApplicationListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
 
     angular.module('applications')
         .controller('ApplicationSummaryController', ApplicationSummaryController)
-        .directive('osetApplicationSummary', ApplicationSummaryDirective);
+        .controller('ApplicationListItemController', ApplicationListItemController)
+        .directive('osetApplicationSummary', ApplicationSummaryDirective)
+        .directive('osetApplicationListItem', ApplicationListItemDirective);
 
 })();

@@ -130,6 +130,38 @@ ApplicationSchema.virtual('isHired')
         return this.status === 'hired';
     });
 
+ApplicationSchema.virtual('statusCat')
+.get(function() {
+        switch(this.status) {
+        case 'draft':
+        case 'submitted': return 'new';
+        case 'read': return 'reviewed';
+        case 'connected':
+            if(this.connection && this.connection.isExpired) {
+                return 'expired';
+            }
+            return 'connected';
+        case 'rejected': return 'rejected';
+        case 'deleted': return 'deleted';
+        case 'hired': return 'hired';
+        }
+    });
+
+ApplicationSchema.virtual('statusIndex')
+    .get(function() {
+        switch(this.status) {
+            case 'draft': return 0;
+            case 'submitted': return 1;
+            case 'read': return 2;
+            case 'connected': return 3;
+            case 'rejected': return 4;
+            case 'deleted': return 5;
+            case 'hired': return 6;
+        }
+    });
+
+
+
 ApplicationSchema.virtual('canMessage')
     .get(function () {
         return this.isHired || this.isConnected;

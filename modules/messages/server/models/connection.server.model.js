@@ -67,6 +67,11 @@ ConnectionSchema.virtual('remainingDays')
         return -1;
     });
 
+ConnectionSchema.virtual('isExpired')
+.get(function() {
+        return moment(this.validTo).isBefore(moment());
+    });
+
 ConnectionSchema.pre('save', function(next) {
     debugger;
     if(!this.validTo && !!this.validForDays) {

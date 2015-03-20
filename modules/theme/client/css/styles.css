@@ -3498,7 +3498,7 @@ a.btn-cta-primary:hover,
 }
 a.btn.btn-cta-secondary,
 .btn.btn-cta-secondary {
-  background: none;
+  background: white;
   border: 2px solid #ec6952;
   color: #ec6952;
 }
@@ -5224,7 +5224,14 @@ a > .fa,
 }
 .tab-body {
   border-top: 2px solid #ec6952;
+}
+.tab-body .tab-body-item {
   padding-top: 10px;
+}
+.list-controls {
+  padding: 10px 0;
+  border-bottom: 2px solid #ec6952;
+  background-color: #fef8f7;
 }
 .bg-primary {
   background-color: #0e2d4c;
@@ -5584,16 +5591,16 @@ pdf > object {
   font-weight: bolder !important;
 }
 .bigger {
-  font-size: larger;
+  font-size: 125%;
 }
 .big {
-  font-size: large;
-}
-.smaller {
-  font-size: smaller !important;
+  font-size: 115%;
 }
 .small {
-  font-size: small !important;
+  font-size: 85% !important;
+}
+.smaller {
+  font-size: 70% !important;
 }
 /** Text Alignment Overrides **/
 .text-center-force {

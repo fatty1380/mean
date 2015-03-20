@@ -301,7 +301,7 @@ exports.applicationByID = function (req, res, next, id) {
             req.application = application;
 
             var options = [
-                {path: 'messages.sender', model: 'User'},
+                {path: 'messages.sender', model: 'User', select: 'displayName profileImageURL'},
                 {path: 'user.driver', model: 'Driver'},
                 {path: 'connection.isValid'}
             ];
@@ -338,6 +338,14 @@ exports.getMessages = function (req, res, next) {
     if (!application) {
         return res.status(404).send({message: 'No application found for ID'});
     }
+
+    console.log('starting cleansing user from messages');
+    _.map(application.messages, function(message) {
+        console.log('cleansing user from message');
+        message.sender.cleanse();
+    });
+
+    console.log('finished cleansing user from messages');
 
     var response = {data: application.messages, theirs: [], latest: {}};
 

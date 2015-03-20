@@ -47,7 +47,7 @@
             </div>
             <div class="col-md-8">
                 <dl class="dl-horizontal"
-                    ng-repeat="message in vm.application.messages | orderBy:'-created' | limitTo: 1">
+                    ng-repeat="message in vm.application.messages | limitTo: -1">
                     <dt>Last Message:</dt>
                     <dd>{{message.text | limitTo : 100}}</dd>
                     <dt>Sent:</dt>

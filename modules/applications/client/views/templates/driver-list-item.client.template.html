@@ -1,0 +1,106 @@
+<article class="post job-post col-sm-12 applicant">
+    <!--ng-show="vm.visibleId === vm.application._id || !vm.visibleId">-->
+    <div class="post-inner">
+        <div class="content lead-content">
+            <img ng-src="{{vm.application.company.profileImageURL}}"
+                 ng-if="!!vm.application.company.profileImageURL"
+                 class="col-xs-hidden col-sm-2 img-responsive medium">
+
+            <div ng-class="{'col-sm-10':!!vm.application.company.profileImageURL, 'col-sm-12':!vm.application.company.profileImageURL}">
+                <h3 class="post-title" ui-sref="jobs.view({jobId: vm.job._id})">{{vm.job.name}}</h3>
+
+                <div class="row"
+                     ng-init="user = vm.application.user; driver = user.driver; license = driver.licenses[0]"
+                     ui-sref="applications.view({'applicationId': vm.application._id})"
+                     ng-class="{'disabled': vm.application.disabled}">
+
+                    <dl class="dl-horizontal" style="margin-bottom: 0;">
+                        <dt>Applied On</dt>
+                        <dd>{{vm.application.created | amDateFormat : 'LL LT'}}</dd>
+                        <dt>Status</dt>
+                        <dd>
+                            <os-application-status-badge
+                                    model="application"></os-application-status-badge>
+                        </dd>
+
+                        <dt ng-hide="!!vm.application.messages && !!vm.application.messages.length">
+                            Messages
+                        </dt>
+                        <dd ng-hide="!!vm.application.messages && !!vm.application.messages.length">
+                                            <span ng-show="!!vm.application.isConnected">
+                                                <p style="margin-bottom: 2px;">
+                                                    discuss the job and schedule an interview
+                                                    <a ui-sref="applications.view({applicationId: vm.application._id, target: 'message'})">
+                                                        by sending a message
+                                                    </a>
+                                                </p>
+                                            </span>
+                                            <span ng-hide="!!vm.application.isConnected">
+                                                <p style="margin-bottom: 2px;">
+                                                    <em class="text-muted">chat available once connected</em></span>
+                            </p>
+                            </span>
+                        </dd>
+                    </dl>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="content body">
+            <!--meta-->
+            <div class="row">
+                <div class="pull-right">
+                    <button type="button" class="btn-tab btn-link read-more strong"
+                            ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
+                        <i class="fa fa-close fa-lg mgn-right"></i>
+                    </button>
+                    <button type="button" class="btn-tab btn-link read-more strong"
+                            ng-click="vm.showTab(vm.application._id, 'application')"
+                            ng-class="{'active': vm.visibleId === vm.job._id && vm.visibleTab === 'application'}">
+                        <i class="fa fa-lg fa-file-text mgn-right"></i> Your Application
+                    </button>
+                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                            ng-click="vm.showTab(vm.application._id, 'details')"
+                            ng-class="{'active': vm.visibleId === vm.job._id && vm.visibleTab === 'details'}">
+                        <i class="fa fa-lg fa-info mgn-right"></i> Job Description
+                    </button>
+                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                            ng-show="vm.application.isConnected || !!vm.application.messages.length"
+                            tooltip="{{vm.application.messagingText || vm.messagingText}}"
+                            tooltip-popup-delay="1000"
+                            ui-sref="applications.view({applicationId: vm.application._id})">
+                        {{vm.application.newMessages ? vm.application.newMessages + ' New ' :
+                        ''}}Message{{vm.application.newMessages === 1 ? '': 's'}}&nbsp;<i
+                            class="fa fa-comments-o fa-lg mgn-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content body">
+            <div class="row  tab-body" ng-show="vm.visibleId === vm.application._id">
+                <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'application'">
+                    <div class="post-entry col-sm-10 col-sm-offset-1">
+                        <dt>Intro</dt>
+                        <dd ng-bind-html="vm.application.introduction"></dd>
+                    </div>
+                </div>
+
+                <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'details'">
+                    <h4>Description</h4>
+
+                    <p ng-bind-html="vm.job.description"></p>
+                    <h4>Requirements</h4>
+
+                    <p ng-bind-html="vm.job.requirements"></p>
+                </div>
+            </div>
+            <a class="read-more strong pull-right" ng-click="vm.visibleId = null"
+               ng-class="{'hidden':!vm.visibleId}"> </a>
+        </div>
+
+        <!--//content-->
+    </div>
+    <!--//post-inner-->
+</article>

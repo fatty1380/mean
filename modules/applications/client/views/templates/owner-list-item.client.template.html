@@ -1,0 +1,219 @@
+<article class="post col-sm-12 applicant">
+
+    <!--INNER OWNER CONTENT-->
+    <div class="post-inner">
+        <div class="content lead-content">
+            <div class="date-label">
+                <span class="month">{{(vm.job.posted || vm.job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
+                <span class="date-number">{{vm.job.posted | amDateFormat : 'D'}}</span>
+            </div>
+            <div class="pull-right">
+                <button type="button" class="btn-tab btn-link strong"
+                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
+                    <i class="fa fa-close fa-lg"></i>
+                </button>
+            </div>
+            <h3 class="post-title" ng-click="vm.showTab(vm.job._id, 'applicants', vm.job.applications.length)">
+                {{vm.job.name}}
+
+                <small>
+                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                            ui-sref="jobs.edit({jobId: vm.job._id})">
+                        <span class="hidden-xs">Edit</span>
+                        <i class="fa fa-edit fa-lg"></i>
+                    </button>
+                    <button type="button" class="btn-tab btn-link read-more strong"
+                            ui-sref="jobs.view({jobId: vm.job._id})">
+                        <span class="hidden-xs">View</span>
+                        <i class="fa fa-external-link fa-lg"></i>
+                    </button>
+                </small>
+            </h3>
+
+            <div class="row">
+                <div class="pull-right">
+                    <button type="button" class="btn-tab btn-link read-more strong"
+                            ng-click="vm.showTab(vm.job._id, 'applicants', vm.job.applications.length)"
+                            ng-class="{'active': vm.visibleId === vm.job._id && vm.visibleTab === 'applicants'}">
+                        <i class="fa fa-users fa-lg"></i><span class="hidden-xs mgn-left">{{vm.job.applications.length}} Applicant{{vm.job.applications.length === 1 ? '' : 's'}}</span>
+                    </button>
+                    <button type="button" class="btn-tab btn-link read-more strong"
+                            ng-click="vm.showTab(vm.job._id, 'messaging', vm.job.applications.length)"
+                            ng-class="{'active': vm.visibleId === vm.job._id && vm.visibleTab === 'messaging'}">
+                        <i class="fa fa-comments-o fa-lg"></i><span
+                            class="hidden-xs mgn-left">Messaging</span>
+                                    <span class="badge" ng-show="!!vm.job.newMessages"
+                                          tooltip="{{vm.job.newMessages}} new message{{vm.job.newMessages>1?'s':''}}">{{vm.job.newMessages}}</span>
+                    </button>
+                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"
+                            ng-click="vm.showTab(vm.job._id, 'documents')"
+                            ng-class="{'active': vm.visibleId === vm.job._id && vm.visibleTab === 'documents'}">
+                        <i class="fa fa-lg fa-file-text"></i><span
+                            class="hidden-xs mgn-left">Documents</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="content body">
+            <div class="tab-body row">
+                <div class="post-entry col-sm-12" ng-show="!!vm.visibleTab">
+
+                    <div class="row list-controls" ng-show="vm.visibleTab === 'applicants'">
+                        <div class="col-sm-12 text-center">
+                            <span class="pull-left">
+                                <button type="button" class="btn-tab btn-link read-more btn-sm"
+                                        ng-click="vm.toggleFilter('status', 'all', true)"
+                                        ng-class="{'disabled':!!vm.filters.status.all}"
+                                        name="clear"><i class="fa fa-times"></i></button>
+
+                                <div class="btn-group">
+                                    <label class="btn btn-cta-secondary btn-sm"
+                                           ng-click="vm.toggleFilter('status', 'unreviewed', true)" btn-checkbox
+                                           ng-model="vm.filters.status.unreviewed" name="unreviewed">New</label>
+                                    <label class="btn btn-cta-secondary btn-sm"
+                                           ng-click="vm.toggleFilter('status', 'reviewed', true)" btn-checkbox
+                                           ng-model="vm.filters.status.reviewed" name="reviewed">Reviewed</label>
+                                    <label class="btn btn-cta-secondary btn-sm"
+                                           ng-click="vm.toggleFilter('status', 'connected', true)" btn-checkbox
+                                           ng-model="vm.filters.status.connected" name="connected">Connected</label>
+                                </div>
+                            </span>
+
+                            <span class="pull-right">
+                                <button type="button" class="btn-tab btn-link read-more btn-sm"
+                                        ng-click="vm.reverseSort = !vm.reverseSort"
+                                        name="sort">
+                                    Reverse Sort <i class="fa {{!vm.reverseSort ? 'fa-sort-amount-asc':'fa-sort-amount-desc'}}"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!--ui-sref="applications.view({'applicationId': application._id})"-->
+                    <div class="row tab-body-item applicant_item" ng-show="vm.visibleId === vm.job._id"
+                         data-ng-repeat="application in vm.job.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"
+                         data-ng-init="profile = application.user; vm.checkMessages(application, vm.job)"
+                         ng-class="{'disabled': application.disabled}">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h4 class="stronger">
+                                    {{vm.Applications.getMaskedDisplayName(application)}}
+                                    <br class="hidden-lg hidden-md">
+                                    <span class="pull-right">
+                                        <small>Status:</small>
+                                        <os-application-status-badge model="application"></os-application-status-badge>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">
+                                <img ng-src="{{profile.profileImageURL}}" class="img-responsive">
+                            </div>
+
+                            <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">
+                                <oset-application-summary model="application" ng-show="vm.visibleTab === 'applicants'"
+                                                          display-mode="inline"></oset-application-summary>
+
+                                <dl class="dl-horizontal" ng-show="vm.visibleTab === 'messaging'">
+                                    <span ng-repeat="message in application.messages | limitTo: -3">
+                                        <dt>{{message.sender.displayName}}</dt>
+                                        <dd>{{message.text}} <small class="smaller text-muted mgn-left">{{message.created | amDateFormat: 'L LT'}}</small></dd>
+                                    </span>
+
+                                    <span ng-if="!application.connection">
+                                        <h4 class="text-muted text-center">Please review this application to send messages</h4>
+                                    </span>
+
+                                    <span ng-if="!!application.connection && !(application.messages && application.messages.length)">
+                                        <h4 class="text-muted text-center">No Messages</h4>
+                                    </span>
+                                </dl>
+
+                                <div ng-show="vm.visibleTab === 'documents'">
+                                    <pre>{{application.user.driver.reports}}</pre>
+                                    <oset-document-list driver="application.user.driver" application="application" display-mode="full" doc-access="application.canViewDocs"></oset-document-list>
+                                </div>
+
+                            </div>
+
+                            <br class="hidden-lg"/>
+
+                            <div class="col-lg-2 col-md-3 col-xs-12 text-right">
+                                <a class="btn-tab btn-link strong pull-right"
+                                   style="white-space: nowrap"
+                                   ui-sref="applications.view({applicationId: application._id, action: 'read'})">
+                                    Full Profile
+                                    <i class="fa fa-external-link fa-lg mgn-left"></i>
+                                </a>
+                                <br class="visible-lg mgn-vert"/>
+                                <a class="btn-tab btn-link strong pull-right"
+                                   style="white-space: nowrap"
+                                   tooltip="{{application.messagingText || vm.messagingText}}"
+                                   tooltip-popup-delay="1000"
+                                   ui-sref="applications.view({applicationId: application._id, action: 'message'})">
+
+                                    <span class="badge" ng-show="!!application.newMessages">{{application.newMessages}}</span>
+                                    Messaging
+                                    <i class="fa fa-comments-o fa-lg mgn-left"></i>
+                                </a>
+                                <br class="visible-lg mgn-vert pull-right"/>
+                                <a class="btn-tab btn-link strong"
+                                   style="white-space: nowrap"
+                                   tooltip="{{application.documentText || vm.documentText}}"
+                                   tooltip-popup-delay="1000"
+                                   ui-sref="bgchecks">
+                                    Documents
+                                    <i class="fa fa-file-text fa-lg mgn-left"></i>
+                                </a>
+                                <br class="visible-lg mgn-vert"/>
+                                <!--TODO: Change the "Reject" into a state rather than a callback-->
+                                <a class="btn-tab btn-link strong"
+                                   style="white-space: nowrap"
+                                    ng-click="vm.setApplicationStatus(vm.job.applications[$index], 'rejected', $event)">
+                                    Reject
+                                    <i class="fa fa-close fa-lg mgn-left"></i>
+                                </a>
+                                <br class="visible-lg mgn-vert"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row list-controls">
+                        <div class="col-sm-12 text-center">
+                            <span>
+                                <button type="button" class="btn-tab btn-link read-more btn-sm"
+                                        ng-click="vm.toggleFilter('negStatus', 'expired')"
+                                        btn-checkbox ng-model="vm.filters.negStatus.expired"
+                                        name="expired">show expired applicants</button>
+                                <button type="button" class="btn-tab btn-link read-more btn-sm"
+                                        ng-show="vm.visibleTab === 'applicants'"
+                                        ng-click="vm.toggleFilter('negStatus', 'rejected')"
+                                        btn-checkbox ng-model="vm.filters.negStatus.rejected"
+                                        name="rejected">show rejected applicants</button>
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <div class="list-group" ng-if="!(vm.job.applications && vm.job.applications.length)"
+                         ng-show="vm.visibleId === vm.job._id">
+                        <div class="list-group-item text-center">
+                            <h4>No one has applied to this job yet. Would you like to <a
+                                    ui-sref="jobs.edit({'jobId':vm.job._id})">edit
+                                your post?</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="read-more strong pull-right" ng-click="vm.visibleId = null"
+               ng-class="{'hidden':!vm.visibleId}"> </a>
+        </div>
+
+    </div>
+
+    <!--//post-inner-->
+</article>

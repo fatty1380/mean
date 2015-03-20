@@ -1,0 +1,84 @@
+<section class="documentDD">
+    <dd class="report-badges" ng-class="{'not-visible':!vm.docAccess}">
+
+        <span class="fa-stack fa-3x report-badge mgn-right"
+              tooltip="Resume{{vm.docAccess ? (!!vm.driver.resume ? ' - click to download': ' - not available') : ''}}"
+              ng-class="{'available': !!vm.driver.resume}"
+              ng-click="vm.docAccess && vm.showDocument('resume', $event)">
+            <i class="fa fa-file fa-stack-2x"></i>
+            <span class="badge-info">
+                <span class="badge-info-inner fa fa-stack-1x">
+                    <i class="fa fa-check fa-1x"></i>
+                    <span class="title">Resume</span>
+                </span>
+            </span>
+        </span>
+
+        <span class="fa-stack fa-3x report-badge mgn-right"
+              tooltip="Motor Vehicle Report{{vm.docAccess ? (!!vm.driver.reports['mvr']  ? ' - click to download': ' - not available') : ''}}"
+              ng-class="{'available': !!vm.driver.reports['mvr']}"
+              ng-click="vm.docAccess && vm.showDocument('mvr', $event)">
+            <i class="fa fa-certificate fa-stack-2x"></i>
+            <span class="badge-info">
+                <span class="badge-info-inner fa fa-stack-1x">
+                    <i class="fa fa-check fa-1x hidden"></i>
+                    <span class="title">MVR</span>
+                </span>
+            </span>
+        </span>
+
+        <span class="fa-stack fa-3x report-badge mgn-right"
+              tooltip="Background Check{{vm.docAccess ? (!!vm.driver.reports['bgcheck']  ? ' - click to download': ' - not available') : ''}}"
+              ng-class="{'available': !!vm.driver.reports['bgcheck']}"
+              ng-click="vm.docAccess && vm.showDocument('bgcheck', $event)">
+            <i class="fa fa-certificate fa-stack-2x"></i>
+            <span class="badge-info">
+                <span class="badge-info-inner fa fa-stack-1x">
+                <i class="fa fa-times fa-1x hidden"></i>
+                <span class="title">BG</span>
+            </span>
+            </span>
+        </span>
+
+        <span class="fa-stack fa-3x report-badge mgn-right"
+              tooltip="National Criminal{{vm.docAccess ? (!!vm.driver.reports['ncrim']  ? ' - click to download': ' - not available') : ''}}"
+              ng-class="{'available': !!vm.driver.reports['ncrim']}"
+              ng-click="vm.docAccess && vm.showDocument('ncrim', $event)">
+            <i class="fa fa-certificate fa-stack-2x"></i>
+            <span class="badge-info">
+                <span class="badge-info-inner fa fa-stack-1x">
+                <i class="fa fa-question fa-1x hidden"></i>
+                <span class="title">N-CRIM</span>
+            </span>
+            </span>
+        </span>
+
+        <span class="fa-stack fa-3x report-badge mgn-right"
+              tooltip="Drug Screen{{vm.docAccess ? (!!vm.driver.reports['drugs'] ? ' - click to download': ' - not available') : ''}}"
+              ng-class="{'available': !!vm.driver.reports['drugs']}"
+              ng-click="vm.docAccess && vm.showDocument('drugs', $event)">
+            <i class="fa fa-certificate fa-stack-2x"></i>
+            <span class="badge-info">
+                <span class="badge-info-inner fa fa-stack-1x">
+                <i class="fa fa-question fa-1x hidden"></i>
+                <span class="title">DRUG</span>
+            </span>
+            </span>
+        </span>
+
+
+    </dd>
+    <dd ng-hide="vm.docAccess">
+        <em class="text-muted">
+            <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>
+            <span ng-show="vm.driver.reports.length || !!vm.driver.resume">You will be able to download reports once connected</span>
+        </em>
+    </dd>
+    <dd ng-show="vm.docAccess">
+        <em class="text-muted">
+            <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>
+            <span ng-show="vm.driver.reports.length || !!vm.driver.resume">Click on available reports to view or download</span>
+
+        </em>
+    </dd>
+</section>

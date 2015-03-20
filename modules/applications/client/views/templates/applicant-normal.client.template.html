@@ -13,20 +13,8 @@
             Documents
         </div>
         <div class="col-md-9 col-lg-10 col-xs-12">
-            <p style="margin-bottom: 2px;">
-                <label ng-if="vm.driver.resume"
-                       ng-click="vm.showDocument('resume', $event)"
-                      class="document label {{vm.application.canViewDocs ? 'label-success pointer' : 'label-default'}}"
-                      tooltip-popup-delay="750" tooltip="View Applicant's Resume">Resume&nbsp;
-                    <i class="fa fa-external-link" ng-if="!!vm.application.canViewDocs"></i>
-                </label>
-                <label ng-if="vm.driver.reportsData && vm.driver.reportsData.length"
-                      class="document label {{vm.application.canViewDocs ? 'label-success pointer' : 'label-default'}}"
-                      ng-click="vm.showDocument('resume', $event)"
-                      tooltip-popup-delay="750" tooltip="View Applicant's Background Reports">BG Reports&nbsp;
-                    <i class="fa fa-external-link" ng-if="!!vm.application.canViewDocs"></i>
-                </label>
-                <span ng-if="!vm.driver.resume && !vm.driver.reportsData.length">&nbsp;</span>
+            <p>
+                <oset-document-list driver="vm.driver" application="vm.application" doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>
             </p>
         </div>
 
@@ -46,7 +34,7 @@
         </div>
 
 
-        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right" tooltip="{{vm.application|prettyPrint}}">
+        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">
             Messages
         </div>
         <div class="col-md-9 col-lg-10 col-xs-12">

@@ -12,7 +12,7 @@
 }]);
      */
 
-    var ApplicationsService = function ($resource, $log) {
+    var ApplicationsService = function ($resource, $log, $q) {
 
         var _this = this;
 
@@ -38,10 +38,10 @@
                     method: 'POST'
                 }
             }),
-            setStatus: function(id, status) {
+            setStatus: function (id, status) {
                 var RSRC = $resource('api/applications/:id', {
-                        id: '@_id'
-                    }, {
+                    id: '@_id'
+                }, {
                     update: {
                         method: 'PUT'
                     }
@@ -51,7 +51,7 @@
             },
             getApplication: function (query) {
 
-                if(!query || !query.hasOwnProperty('applicationId')) {
+                if (!query || !query.hasOwnProperty('applicationId')) {
                     $log.warn('Cannot get application without application ID');
                     return null;
                 }
@@ -87,7 +87,7 @@
                 return RSRC.query(query).$promise;
 
             },
-            createConnection: function(application) {
+            createConnection: function (application) {
                 var RSRC = $resource('/api/applications/:applicationId/connect', {
                     applicationId: '@_id'
                 }, {
@@ -103,7 +103,7 @@
                 jobId: '@jobId',
                 userId: '@userId'
             }),
-            getMessages: function(applicationId, userId) {
+            getMessages: function (applicationId, userId) {
                 var RSRC = $resource('api/applications/:applicationId/messages', {
                     companyId: '@companyId'
                 }, {
@@ -115,7 +115,51 @@
 
                 return RSRC.query({applicationId: applicationId, userId: userId}).$promise;
             },
-            getQuestions: function() {
+            checkMessages: function (application, userId) {
+                var applicationId = application._id;
+
+                return _this._data.getMessages(applicationId, userId)
+                    .catch(function (err) {
+                        $log.debug('Caught error %o with status: %s', err, err.status);
+
+                        if (err.status === 403 && !!application.connection) {
+                            return $q.when(err.data);
+                        }
+                        else {
+                            return $q.reject(err);
+                        }
+                    }).then(function (success) {
+                        application.messages = success.data || [];
+                        application.lastMessage = success.latest || null;
+                        application.messageCt = !!success.theirs ? success.theirs.length : 0;
+                        application.newMessages = success.newMessages || 0;
+
+                        if (application.newMessages > 0) {
+                            application.messagingText = application.newMessages + ' new message' + (application.newMessages === 1 ? '' : 's') + ' awaiting your reply';
+                        } else {
+                            application.messagingText = application.messages.length + ' total messages';
+                        }
+
+                        return $q.when(application);
+                        //vm.newMessages += application.newMessages;
+
+                    }).catch(function (err) {
+                        application.messages = [];
+                        application.lastMessage = {created: 100000000000};
+                        application.messageCt = 0;
+                        application.newMessages = 0;
+                        $log.warn('Error retrieving messages: %o (this needs to be handled)', err);
+                        return $q.reject(err);
+                    });
+            },
+            getMaskedDisplayName: function (application) {
+                if (!application.connection) {
+                    return application.user.firstName + ' ' + application.user.lastName.substring(0, 1);
+                }
+
+                return application.user.displayName;
+            },
+            getQuestions: function () {
                 var qs = {
                     'default': [
                         {
@@ -150,7 +194,10 @@
                             'name': 'radio',
                             'length': '',
                             'type': 'radio',
-                            'options': [{'label':'Absolutely Yes', 'value': true},{'label': 'Positively No', 'value':false},{ 'label': 'I Dunno', 'value': null}]
+                            'options': [{'label': 'Absolutely Yes', 'value': true}, {
+                                'label': 'Positively No',
+                                'value': false
+                            }, {'label': 'I Dunno', 'value': null}]
                         },
                         {
                             'description': 'Can you see this?',
@@ -179,7 +226,7 @@
         return _this._data;
     };
 
-    ApplicationsService.$inject = ['$resource', '$log'];
+    ApplicationsService.$inject = ['$resource', '$log', '$q'];
 
     angular.module('applications').factory('Applications', ApplicationsService);
 

@@ -90,7 +90,7 @@ a.btn-cta-primary, .btn-cta-primary {
 }
 
 a.btn.btn-cta-secondary, .btn.btn-cta-secondary {
-  background : none;
+  background : white;
   border     : 2px solid @color;
   color      : @color;
   &:hover {
@@ -1816,7 +1816,16 @@ div, .btn, a, .btn-cta {
 
 .tab-body {
   border-top  : 2px solid @color;
-  padding-top : 10px;
+
+  .tab-body-item {
+    padding-top : 10px;
+  }
+}
+
+.list-controls {
+  padding: 10px 0;
+  border-bottom  : 2px solid @color;
+  background-color: lighten(@color, 36%);
 }
 
 .bg-primary {

@@ -67,6 +67,8 @@ var executeFind = function (req, res, next, driverFind) {
                 console.log('[Driver.executeFind] found driver: %s', driver.id);
             }
 
+            driver.user.cleanse();
+
             if (!!next) {
                 req.driver = driver;
                 next();
