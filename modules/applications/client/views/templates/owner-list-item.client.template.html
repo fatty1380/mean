@@ -91,7 +91,8 @@
                     </div>
 
                     <!--ui-sref="applications.view({'applicationId': application._id})"-->
-                    <div class="row tab-body-item applicant_item" ng-show="vm.visibleId === vm.job._id"
+                    <div class="row tab-body-item applicant_item"
+                         ng-show="vm.visibleId === vm.job._id"
                          data-ng-repeat="application in vm.job.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"
                          data-ng-init="profile = application.user; vm.checkMessages(application, vm.job)"
                          ng-class="{'disabled': application.disabled}">
