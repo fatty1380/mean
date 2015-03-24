@@ -222,16 +222,4 @@
         .controller('JobListController', JobListController)
         .directive('osJobList', JobListDirective);
 
-    angular.module('core').filter('withinPastDays', function(){
-        return function(items, field, days){
-            if(!days) { return items.filter(function(){return true;}); }
-
-            var timeStart = moment().subtract(days, 'days');
-            console.log('filtering back %s days to %s', days, timeStart.format('L'));
-            return items.filter(function(item){
-                return (moment(item[field]).isAfter(timeStart));
-            });
-        };
-    });
-
 })();

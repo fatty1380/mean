@@ -6,7 +6,7 @@
             <!-- field = { description, length, name, required, type } -->
             <label class="col-sm-3 control-label"
                    data-ng-class="{'optional':!field.required}">
-                {{field.description | titlecase}} </label>
+                {{field.description | titleCase}} </label>
 
             <input type="hidden" ng-model="vm.responses[field.name]" name="hidden_{{field.name}}"
                    ng-required="field.required"

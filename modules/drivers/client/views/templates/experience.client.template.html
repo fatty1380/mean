@@ -42,7 +42,7 @@
             <div class="col-sm-9 form-inline">
                 <div class="col-sm-5 input-group"
                      ng-class="{'has-error':(vm.experienceForm.time_start.$invalid || vm.experienceForm['hidden_time_start'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">
-                    <div class="input-group-addon">{{ 'start' | titlecase }}</div>
+                    <div class="input-group-addon">{{ 'start' | titleCase }}</div>
                     <date-input class="form-control" model="vm.model.startDate" os-name="time_start"
                                 dformat="MM/DD/YYYY"></date-input>
 
@@ -52,7 +52,7 @@
 
                 <div class="col-sm-5 input-group"
                      ng-class="{'has-error':(vm.experienceForm.time_end.$invalid || vm.experienceForm['hidden_time_end'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">
-                    <div class="input-group-addon">{{ 'end' | titlecase }}</div>
+                    <div class="input-group-addon">{{ 'end' | titleCase }}</div>
 
                     <date-input class="form-control" model="vm.model.endDate" os-name="time_end"></date-input>
                     <input type="hidden" ng-model="vm.model.endDate" ng-required="vm.isRequired"

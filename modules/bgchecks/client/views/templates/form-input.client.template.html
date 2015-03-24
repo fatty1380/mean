@@ -59,7 +59,7 @@
                      class="form-group"
                      ng-class="{'has-error':vm.form[vm.field.name+'_'+i+'_'+df2.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+'_'+i+'_'+df2.name].$touched)}">
                     <label class="col-md-4 control-label"
-                           data-ng-class="{'optional':!df2.required}">{{df2.description | titlecase}}</label>
+                           data-ng-class="{'optional':!df2.required}">{{df2.description | titleCase}}</label>
 
                     <div class="col-md-8">
                         <input ng-if="!!df2.ngType || df2.type === 'string' || !df2.isDate"
@@ -89,7 +89,7 @@
 
             <label class="col-sm-4 control-label"
                    data-ng-class="{'optional':!dataField.required}">{{dataField.description
-                | titlecase}}</label>
+                | titleCase}}</label>
 
             <div class="col-sm-8">
                 <input ng-if="!dataField.isDate && !dataField.isState && !dataField.isCountry"

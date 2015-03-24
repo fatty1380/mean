@@ -62,9 +62,6 @@
                     vm.promoError = null;
                     $log.debug('Found promo item %o', vm.promoItem);
                     vm.subtotal = parseFloat(vm.serverPlan.price) - parseFloat(vm.promoItem.amount);
-
-                    vm.promoItem.priceString = vm.getPriceString(vm.promoItem.amount);
-                    vm.subtotalString = vm.getPriceString(vm.subtotal);
                 }
                 else {
                     $log.debug('No Promo Item found');

@@ -1,7 +1,7 @@
 <section>
     <p ng-if="!vm.field.isObject && !vm.field.isArray && !vm.field.isDate" type="{{vm.field.ngType}}"
        class="form-control-static">
-        {{(vm.model[vm.field.name] | titlecase) || 'not specified'}}
+        {{(vm.model[vm.field.name] | titleCase) || 'not specified'}}
     </p>
 
     <p ng-if="vm.field.isDate"
@@ -26,7 +26,7 @@
                          ng-class="{'text-muted': !vm.model[vm.field.name][i][df2.name]}">
 
                         <p ng-if="!df2.isDate" class="form-control-static">
-                            {{(vm.model[vm.field.name][i][df2.name] | titlecase) || '--'}}</p>
+                            {{(vm.model[vm.field.name][i][df2.name] | titleCase) || '--'}}</p>
 
                         <p ng-if="df2.isDate" class="form-control-static">
                             {{(vm.model[vm.field.name][i][df2.name] | isoDatePrint) || '--'}}
@@ -49,7 +49,7 @@
                  ng-class="{'text-muted': !vm.model[vm.field.name][dataField.name]}">
                 <p ng-if="!dataField.isDate" type="{{vm.field.ngType}}"
                    class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |
-                    titlecase) || '--'}}</p>
+                    titleCase) || '--'}}</p>
 
                 <p ng-if="dataField.isDate" type="{{vm.field.ngType}}"
                    class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |

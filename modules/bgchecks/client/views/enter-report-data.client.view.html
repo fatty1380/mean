@@ -70,7 +70,7 @@
 
                                     <div class="row">
                                         <div class="col-sm-10">{{::vm.report.description}}</div>
-                                        <div class="col-sm-2">{{::vm.getPriceString(vm.price)}}</div>
+                                        <div class="col-sm-2">{{::vm.price | toDollarString}}</div>
                                     </div>
                                     <hr>
                                 </div>

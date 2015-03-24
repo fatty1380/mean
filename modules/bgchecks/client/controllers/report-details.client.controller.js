@@ -263,46 +263,8 @@
             });
         };
 
-
-        vm.getPriceString = function (price) {
-            var base = Number(price);
-            var next = base.toFixed(2);
-            return '$' + next;
-        };
-
         activate();
     }
-
-    function capFilter() {
-        return function (input, all) {
-            return (!!input) ? /^[A-Z]+$/.test(input) ? input :
-                input.replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) {
-                    return txt.charAt(0) + ' ' + txt.charAt(1);
-                })
-                    .replace(/([^\W_]+[^\s-]*) */g, function (txt) {
-                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                    })
-                : '';
-        };
-    }
-
-    function prettyPrint() {
-        return function (input) {
-            return (!!input) ? JSON.stringify(input, undefined, 2) : '';
-        };
-    }
-
-    function isoDateFilter() {
-        return function (input, parseFmt) {
-            var format = parseFmt || 'YYYYMMDD';
-            return (!!input) ? moment(input, format).format('L') : '';
-        };
-    }
-
-    angular.module('core')
-        .filter('titlecase', capFilter)
-        .filter('prettyPrint', prettyPrint)
-        .filter('isoDatePrint', isoDateFilter);
 
     ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document', 'PolyFieldService'];
     angular.module('bgchecks')
