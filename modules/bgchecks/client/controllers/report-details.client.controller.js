@@ -1,113 +1,6 @@
 (function () {
     'use strict';
 
-
-    function completeApplicantModel(field) {
-        var vm = this; // jshint ignore:line
-
-        var model = vm.model;
-        var source = vm.applicant;
-
-        if (!model.hasOwnProperty(field.name)) {
-
-            if (!!source && source.hasOwnProperty(field.name)) {
-                model[field.name] = source[field.name];
-            } else {
-                switch (field.type) {
-                    case 'array':
-                        model[field.name] = [];
-                        break;
-                    case 'object':
-                        model[field.name] = {};
-                        break;
-                    default:
-                        model[field.name] = '';
-                }
-            }
-        }
-    }
-
-    function translateFieldsToNg(field, index, _vm) { // jshint ignore:line
-        var vm = this; // jshint ignore:line
-        var model = vm.subModel || vm.model;
-
-        switch (field.type) {
-            case 'string':
-                if (!!field.pickList) {
-                    field.isPickList = true;
-                    break;
-                }
-                field.ngType = 'text';
-                field.ngMaxLength = field.length;
-                break;
-            case 'datelong':
-                // TODO: Fix this code once format is known
-                var d = model[field.name];
-                var format = 'YYYYMMDD';
-
-                if (!!d && d.length > 8) {
-                    if (d.length <= 10 && (/[-\/]/).test(d)) {
-                        format = d.replace(/\d{4}/, 'YYYY').replace(/\d{2}/, 'MM').replace(/\d{2}/, 'DD');
-                    } else {
-
-                        var m;
-                        if (!!(m = moment(d)).toArray().splice(3).reduce(function (p, n) {
-                                return p + n;
-                            })) {
-                            console.error('Unsure How to Handle "date" string: %s', d);
-                            // Assume that we are in (EST:UTC-5)
-                            model[field.name] = moment.utc(d).subtract(5, 'hours');
-                        } else {
-                            console.error('Treating %s as date-only with default format', d);
-                            model[field.name] = m.format(format);
-                        }
-
-                    }
-                }
-                else if (!d) {
-                    model[field.name] = '';
-                }
-
-
-                field.isDate = true;
-                field.format = format;
-
-                break;
-            case 'state':
-                field.isState = true;
-                break;
-            case 'country':
-                field.isCountry = true;
-                break;
-            case 'object':
-                if (field.dataFields) {
-                    vm.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, vm);
-                    vm.subModel = null;
-                }
-                field.isObject = true;
-                break;
-            case 'array':
-                if (field.dataFields) {
-                    vm.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, vm);
-                    vm.subModel = null;
-                }
-                field.isArray = true;
-                field.values = field.values || [];
-                break;
-        }
-
-        var sensitive = /^governmentId|SSN$/i;
-
-        if (sensitive.test(field.name) || sensitive.test(field.description)) {
-            field.ngType = null;
-            field.ngSensitive = true;
-        }
-
-        return field;
-    }
-
     function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document, PolyField) {
         var vm = this;
 
@@ -115,10 +8,8 @@
 
 
         vm.report = report;
-        vm.applicant = applicant;
+        vm.applicant = applicant || {};
         vm.config = appConfig;
-
-        vm.model = {};
 
         vm.verify = false;
         vm.pay = false;
@@ -135,23 +26,10 @@
         vm.countries = null;
 
         function activate() {
-            if (!!vm.applicant && !!vm.applicant.remoteId) {
-                console.log('adding remote applicant id [%d] to model', vm.applicant.remoteId);
-                vm.model.applicantId = vm.applicant.remoteId;
-            }
-
             vm.price = vm.report.promo || vm.report.price;
 
-            vm.report.fields.map(completeApplicantModel, vm);
-            _.map(vm.report.fields, PolyField.translateFields, vm);
-
-
-            if (!vm.states) {
-                vm.states = vm.config.getStates();
-            }
-            if (!vm.countries) {
-                vm.countries = vm.config.getCountries();
-            }
+            PolyField.completeModel(vm.report.fields, vm.applicant);
+            PolyField.translateFields(vm.report.fields, vm.applicant);
         }
 
         /**
@@ -183,7 +61,7 @@
 
             vm.showSpinner();
 
-            var applicantRsrc = new Applicants.FromForm(vm.model, auth.user._id);
+            var applicantRsrc = new Applicants.FromForm(vm.applicant, auth.user._id);
 
             $log.debug('Creating new applicant Rsrc with data: %o', applicantRsrc);
 
