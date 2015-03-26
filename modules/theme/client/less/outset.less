@@ -1001,6 +1001,12 @@ footer.navbar {
 
 }
 
+.has-error {
+  input.ng-invalid::before {
+    content: "\f05d";
+  }
+}
+
 .has-error .mce-tinymce {
   border-color : @state-danger-text
 }
@@ -2154,6 +2160,47 @@ pdf {
         }
       }
 
+    }
+  }
+}
+
+.workflow-item {
+  text-align: center;
+  display: inline-block;
+  width: 130px;
+
+  .step-badge {
+
+    .fa.badge-bg {
+      color: white!important;
+    }
+
+    .fa {
+      color: @outset-blue;
+    }
+
+    &.active {
+      span.step-index {
+        color: white;
+      }
+    }
+  }
+
+  .connector {
+    width: 100%;
+    position: relative;
+    top: 35px;
+    border-bottom: 10px solid @outset-blue;
+
+    &.first {
+      width: 50%;
+      right: 0;
+      margin-right: 0;
+      margin-left: auto;
+    }
+    &.last {
+      width: 50%;
+      left: 0;
     }
   }
 }

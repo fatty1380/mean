@@ -1,0 +1,63 @@
+<section class="workflow-stage-form">
+    <os-page-header title="NEW WORKFLOW PAGE"></os-page-header>
+
+    <div class="panel panel-default">
+        <div class="panel-heading primary-bg">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <div class="workflow-item" ng-repeat="step in vm.steps | filter: {active:true}">
+                        <div class="connector" ng-class="{'first': !!$first, 'last': !!$last}"></div>
+                        <span class="fa-stack fa-2x step-badge" ng-class="{'active': vm.currentStep === $index}">
+                            <i class="fa fa-stack-2x fa-circle badge-bg"></i>
+                            <i class="fa fa-stack-2x {{vm.currentStep === $index ? 'fa-circle' : 'fa-circle-o'}}"></i>
+                            <span class="fa fa-stack-1x step-index">{{($index+1)}}</span>
+                        </span><br>
+                        <span class="step-title">{{step.title}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <h3 class="text-center">{{vm.currentState()}}</h3>
+
+                <div class="col-sm-12">
+
+                    <div id="gateway-form" ng-submit="vm.submitForm()">
+                        <div id="form-views" ui-view>
+                            <h4 class="text-center">Look at me!!! I am HERE, but should not be THERE</h4>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-footer primary-bg">
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <button type="button" class="btn btn-oset-secondary" ng-click="vm.goBack()" value="back">back
+                    </button>
+                    <button type="button" class="btn btn-oset-secondary" ng-click="vm.goNext()" value="next">Next ...
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-sm-6 col-sm-offset-3">
+                    <h3>Models: {{vm.getKeys(vm.formData)}}</h3>
+                    <accordion>
+                        <accordion-group ng-repeat="key in vm.getKeys(vm.formData)"
+                                         heading="View Model [{{key}}]">
+                            <pre>{{vm.formData[key] | prettyPrint}}</pre>
+                        </accordion-group>
+                    </accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
