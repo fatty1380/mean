@@ -38,30 +38,12 @@
                         <form name="vm.reportForm"
                               class="form-horizontal" ng-class="{'readonly-validation':vm.verify}"
                               ng-submit="vm.saveForm($event)" novalidate>
-                            <fieldset ng-class="{'text-muted': vm.disabled || vm.ispay}">
-                                <div class="form-group" ng-repeat="field in vm.report.fields"
-                                     ng-class="{'has-error':(vm.reportForm[field.name].$invalid || vm.reportForm['hidden_'+field.name].$invalid) && (vm.reportForm.$submitted || vm.reportForm[field.name].$touched)}">
-                                    <!-- field = { description, length, name, required, type } -->
-                                    <label class="col-sm-3 control-label"
-                                           data-ng-class="{'optional':!field.required}">
-                                        {{field.description | titlecase}} </label>
 
-                                    <input type="hidden" ng-model="vm.model[field.name]" name="hidden_{{field.name}}"
-                                           ng-required="field.required"
-                                           ng-maxlength="field.ngMaxLength || field.length"/>
-
-                                    <div class="col-sm-9 col-md-8">
-                                        <form-input field="field" ng-hide="vm.verify" model="vm.model"></form-input>
-                                        <form-input field="field" ng-show="vm.verify" model="vm.model"
-                                                    mode="static"></form-input>
-                                    </div>
-                                </div>
-                            </fieldset>
+                            <oset-form-entry model="vm.applicant" report="vm.report" read-only="vm.verify"></oset-form-entry>
 
                             <hr class="mgn-vert"/>
 
                             <div class="container-fluid row" ng-show="vm.verify">
-
                                 <div class="col-sm-3">
                                     <img class="img-responsive" src="./modules/bgchecks/img/everifile_logo.png">
                                 </div>
@@ -70,7 +52,7 @@
 
                                     <div class="row">
                                         <div class="col-sm-10">{{::vm.report.description}}</div>
-                                        <div class="col-sm-2">{{::vm.price | toDollarString}}</div>
+                                        <div class="col-sm-2">{{vm.price | toDollarString}}</div>
                                     </div>
                                     <hr>
                                 </div>
@@ -78,6 +60,8 @@
                             </div>
 
                             <div class="about row">
+
+                                <!-- DigiCert Seal -->
                                 <div class="col-sm-3">
                                     <!-- Begin DigiCert site seal HTML and JavaScript -->
                                     <div id="DigiCertClickID_MNfovC8_" data-language="en_US">
@@ -97,6 +81,8 @@
                                     </script>
                                     <!-- End DigiCert site seal HTML and JavaScript -->
                                 </div>
+
+                                <!--Info Text and Controls for Initial State-->
                                 <div class="col-sm-9 press-kit text-center" ng-hide="vm.verify">
                                     <p>You will have a chance to review your information on the next page.</p>
                                     <button type="submit" class="btn btn-cta btn-cta-primary"
@@ -106,6 +92,8 @@
                                         <strong data-ng-bind="vm.error"></strong>
                                     </div>
                                 </div>
+
+                                <!--Info Text and Controls for "Verification" state-->
                                 <div class="col-sm-9 press-kit text-center" ng-show="vm.verify">
                                     <p ng-bind-html="vm.createText"></p>
                                     <button type="button" class="btn btn-cta" ng-class="{'disabled':!!vm.disabled}"
@@ -123,6 +111,7 @@
                                         <strong data-ng-bind="vm.error"></strong>
                                     </div>
                                 </div>
+
                             </div>
 
 

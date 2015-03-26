@@ -1,4 +1,6 @@
 <section>
+    <div class="ng-hide" field-name="{{vm.field.name}}" type="{{vm.field.type}}" req="{{vm.field.required}}"></div>
+
     <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"
            name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"
            ng-maxlength="vm.field.ngMaxLength" ng-required="vm.field.required"/>
@@ -9,7 +11,7 @@
     </textarea>
 
     <date-input ng-if="vm.field.isDate" format="vm.field.format" model="vm.model[vm.field.name]"
-                class="form-control"></date-input>
+                class="form-control" name="{{vm.field.name}}"></date-input>
     <!-- ng-required="vm.field.required" -->
 
     <input type="checkbox" ng-if="vm.field.isCheckbox"
@@ -30,7 +32,7 @@
 
 
     <!-- States -->
-    <select ng-if="vm.field.isState" class="form-control"
+    <select ng-if="vm.field.isState" class="form-control" name="{{vm.field.name}}"
             ng-options="state.id as state.name for state in vm.field.options"
             ng-model="vm.model[vm.field.name]" ng-required="vm.field.required" autocomplete="off">
     </select>
@@ -39,12 +41,12 @@
     <p class="form-control-static" ng-if="vm.field.isCountry"
        ng-init="vm.model[vm.field.name] = 'united_states'">United States</p>
 
-    <select ng-if="vm.field.isPickList" class="form-control"
+    <select ng-if="vm.field.isPickList" class="form-control" name="{{vm.field.name}}"
             ng-options="item.value as item.description for item in vm.field.pickList"
             ng-model="vm.model[vm.field.name]">
     </select>
 
-    <div class="" ng-if="vm.field.isArray">
+    <div class="" ng-if="vm.field.isArray" name="{{vm.field.name}}">
         <div ng-repeat="(i,arrayItem) in vm.model[vm.field.name]">
             <div ng-repeat="df1 in vm.field.dataFields" class="well">
                 <div class="col-xs-12" style="vertical-align: baseline;">
@@ -78,12 +80,11 @@
                 </div>
             </div>
 
-
         </div>
         <button type="button" data-ng-click="vm.model[vm.field.name].push({})">Add</button>
     </div>
 
-    <div class="well" ng-if="vm.field.isObject">
+    <div class="well" ng-if="vm.field.isObject" name="{{vm.field.name}}">
         <div ng-repeat="dataField in vm.field.dataFields" class="form-group"
              ng-class="{'has-error':vm.form[vm.field.name+'_'+dataField.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+'_'+dataField.name].$touched)}">
 

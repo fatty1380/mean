@@ -1,4 +1,4 @@
-<section>
+<section class=form-input-static-directive>
     <p ng-if="!vm.field.isObject && !vm.field.isArray && !vm.field.isDate" type="{{vm.field.ngType}}"
        class="form-control-static">
         {{(vm.model[vm.field.name] | titleCase) || 'not specified'}}
