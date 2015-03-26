@@ -98,6 +98,8 @@ var DriverSchema = new Schema({
         key: String
     }],
 
+    // TODO: Convert to 'documents'
+
     profile: [
         {
             listId: {

@@ -286,7 +286,7 @@
             },
             restrict: 'E',
             scope: {
-                userType: '@',
+                userType: '@', // user-type
                 application: '=?',
                 job: '=?',
                 visibleId: '=',
@@ -307,6 +307,6 @@
         .controller('ApplicationSummaryController', ApplicationSummaryController)
         .controller('ApplicationListItemController', ApplicationListItemController)
         .directive('osetApplicationSummary', ApplicationSummaryDirective)
-        .directive('osetApplicationListItem', ApplicationListItemDirective);
+        .directive('osetApplicationListItem', ApplicationListItemDirective); //<oset-application-list-item ...
 
 })();
