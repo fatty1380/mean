@@ -52,7 +52,7 @@ var ReportApplicantSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, {toJSON: {virtuals: true}});
 
 ReportApplicantSchema.pre('save', function (next) {
     this.modified = Date.now();
@@ -100,5 +100,13 @@ ReportApplicantSchema.methods.getHashedValue = function (govId) {
 ReportApplicantSchema.methods.validateId = function (govId) {
     return this.governmentId === this.getHashedValue(govId);
 };
+
+ReportApplicantSchema.virtual('applicantId')
+    .get(function () {
+        return this.remoteId;
+    })
+    .set(function (val) {
+        this.remoteId = val;
+    });
 
 mongoose.model('ReportApplicant', ReportApplicantSchema);

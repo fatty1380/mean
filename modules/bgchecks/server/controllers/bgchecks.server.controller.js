@@ -439,20 +439,22 @@ function GetAllRemoteApplicants(req, res, next) {
 }
 
 function GetReportApplicant(req, res, next) {
-    var query;
+    var query, id;
 
-    if (req.remoteApplicantId || req.query.remoteApplicantId) {
-        console.log('[GetReportApplicant] Searching based on req.remoteId');
-        query = {remoteId: req.remoteApplicantId || req.query.remoteApplicantId};
-    } else if (req.applicantId || req.query.applicantId) {
-        console.log('[GetReportApplicant] Searching based on req.applicantId');
-        query = {_id: req.applicantId || req.query.applicantId};
+    if (!!(id = req.remoteApplicantId || req.query.remoteApplicantId)) {
+        console.log('[GetReportApplicant] Searching based on remoteId');
+        query = {remoteId: id};
+    } else if (!!(id = req.applicantId || req.query.applicantId)) {
+        console.log('[GetReportApplicant] Searching based on applicantId');
+        query = {remoteId: id};
     } else if (req.userId) {
         console.log('[GetReportApplicant] Searching based on req.userId');
         query = {user: mongoose.Types.ObjectId(req.userId)};
     } else if (req.user) {
         console.log('[GetReportApplicant] Searching based on req.user');
         query = {user: req.user._id};
+    } else {
+        return res.status(401).send({message: 'Unauthorized Access'});
     }
 
     console.log('[GetReportApplicant] Searching for report applicant with query %j', query);
