@@ -4,7 +4,7 @@
     function SignupFormCtrl($log, $q, UserService) {
         var vm = this;
 
-        vm.model = _.defaults(vm.model, {terms: false, addresses: [{}]});
+        vm.model = _.defaults(vm.model || {}, {type: 'driver', terms: false, addresses: [{}]});
 
         vm.text = _.defaults(vm.text || {}, {
             zip: 'Your zip code will be used to help improve your experience on the site',
@@ -13,10 +13,9 @@
 
         vm.focusEmail = true;
 
-        vm.methods = {
+        vm.methods = _.defaults({
             submit: function () {
                 return UserService.createUser(vm.model);
-
             },
             validate: function () {
                 var deferred = $q.defer();
@@ -45,7 +44,7 @@
 
                 return deferred.promise;
             }
-        };
+        }, vm.methods);
     }
 
     SignupFormCtrl.$inject = ['$log', '$q', 'UserService'];

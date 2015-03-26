@@ -39,20 +39,20 @@
             <section class="row" id="step_3_docs"
                      ng-form="vm.subForm3" ng-show="vm.currentStep === 3">
 
-                <!--<div class="col-sm-12">-->
+                <div class="col-sm-12">
 
-                    <!--<div class="col-sm-6">-->
-                        <!--<div class="text-center control-label">Profile Picture</div>-->
-                        <!--<os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"-->
-                                             <!--auto-crop="true"-->
-                                             <!--title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>-->
-                    <!--</div>-->
-                    <!--<div class="col-sm-6">-->
-                        <!--<oset-file-upload mode="resume"-->
-                                          <!--model="vm.driver.resume" model-id="vm.driver._id"-->
-                                          <!--title="Resume Upload" auto-upload="true"></oset-file-upload>-->
-                    <!--</div>-->
-                <!--</div>-->
+                    <div class="col-sm-6">
+                        <div class="text-center control-label">Profile Picture</div>
+                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"
+                                             auto-crop="true"
+                                             title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>
+                    </div>
+                    <div class="col-sm-6">
+                        <oset-file-upload mode="resume"
+                                          model="vm.driver.resume" model-id="vm.driver._id"
+                                          title="Resume Upload" auto-upload="true"></oset-file-upload>
+                    </div>
+                </div>
 
                 <div class="col-sm-12">
                     <div class="checkbox">

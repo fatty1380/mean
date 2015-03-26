@@ -68,7 +68,7 @@
         vm.auth = Authentication;
         vm.job = job;
         vm.extraText = vm.job && vm.job.text || null;
-        vm.currentStep = 2; //!!signupType ? 1 : 0;
+        vm.currentStep = !!signupType ? 1 : 0;
 
         vm.user = vm.auth.user || {profileImageURL: ''};
         vm.credentials = {signupType: signupType};

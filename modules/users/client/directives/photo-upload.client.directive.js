@@ -13,6 +13,7 @@
                 apiUrl: '@?',
                 successCallback: '&?',
                 failCallback: '&?',
+                allowBlank: '=?',
                 isEditing: '=?'
             },
             controller: 'ChangeProfilePictureController',

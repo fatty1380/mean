@@ -44,6 +44,11 @@
         };
 
         function activate() {
+            if(vm.allowBlank && !vm.model) {
+                $log.debug('[ChangeProfilePictureCtrl] Initialized blank model');
+                vm.model = {};
+            }
+
             if (!vm.allowBlank && !vm.model) {
                 $log.error('[PictureUploader] Must specify a model');
                 vm.initialized = false;
@@ -113,10 +118,17 @@
             vm.uploader.onSuccessItem = function (fileItem, response, status, headers) {
 
                 // Populate model object
-                vm.model = response;
+                if(!!vm.modelPath) {
+                    vm.model[vm.modelPath] = response;
+                }
+                else {
+                    vm.model = response;
+                }
 
                 if (angular.isDefined($attrs.successCallback)) {
                     vm.successCallback()(fileItem, response, status, headers);
+                } else {
+                    debugger;
                 }
 
                 // Clear upload buttons
@@ -155,25 +167,56 @@
             $log.debug('[PictureUploader] Successfuly initialized Picture Uploader');
         }
 
+        vm.resetVariables = function() {
+
+            var filter;
+
+            switch (vm.mode.toLowerCase()) {
+                case 'user':
+                    vm.imageURL = vm.model.profileImageURL;
+                    vm.uploadUrl = 'api/users/picture';
+                    // vm.modelPath = 'profileImageURL';
+                    filter = pictureFilter;
+                    break;
+
+                case 'company':
+                    vm.imageURL = vm.model.profileImageURL;
+                    vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
+                    // vm.modelPath = 'profileImageURL';
+                    filter = pictureFilter;
+                    break;
+
+                case 'resume':
+                    vm.uploadUrl = 'api/drivers/' + (vm.modelId || vm.model._id) + '/resume';
+                    vm.modelPath = vm.modelPath || 'resume';
+                    filter = resumeFilter;
+                    break;
+
+                case 'documents':
+                    vm.uploadUrl = 'api/drivers/' + vm.modelId + '/documents';
+                    vm.modelPath = vm.modelPath || 'file';
+                    filter = resumeFilter;
+                    break;
+
+                case 'raw':
+                    vm.uploadUrl = null;
+                    debugger; // TODO: Determine how to upload w/out user
+                    filter = pictureFilter;
+                    break;
+
+                default:
+                    $log.warn('[FileUploader] Unknown Mode: %s. Defaulting to user', vm.mode);
+            }
+
+            return filter;
+        };
+
         vm.updateUploadUrl = function() {
             if(!vm.uploader) {
                 return false;
             }
 
-            switch (vm.mode.toLowerCase()) {
-                case 'user':
-                    vm.uploadUrl = 'api/users/picture';
-                    break;
-
-                case 'company':
-                    vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
-                    break;
-
-                case 'resume':
-                    vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
-                    break;
-                default: return false;
-            }
+            vm.resetVariables();
 
             if(vm.uploader.url !== vm.uploadUrl) {
                 debugger;
@@ -185,32 +228,7 @@
             var filter;
 
             if (!!vm.mode) {
-                switch (vm.mode.toLowerCase()) {
-                    case 'user':
-                        vm.imageURL = vm.model.profileImageURL;
-                        vm.uploadUrl = 'api/users/picture';
-                        filter = pictureFilter;
-                        break;
-
-                    case 'company':
-                        vm.imageURL = vm.model.profileImageURL;
-                        vm.uploadUrl = 'api/companies/' + vm.model._id + '/picture';
-                        filter = pictureFilter;
-                        break;
-
-                    case 'resume':
-                        vm.uploadUrl = 'api/drivers/' + vm.modelId + '/resume';
-                        filter = resumeFilter;
-                        break;
-
-                    case 'raw':
-                        vm.uploadUrl = null;
-                        debugger; // TODO: Determine how to upload w/out user
-                        filter = pictureFilter;
-                        break;
-                    default:
-                        $log.warn('[PictureUploader] Unknown Mode: %s. Defaulting to user', vm.mode);
-                }
+                filter = vm.resetVariables();
             }
             else if (!!vm.apiUrl) {
                 $log.debug('[PictureUploader] Mode not specified, using URL: %s', vm.apiUrl);
@@ -222,7 +240,7 @@
             });
 
             // Set file uploader image filter
-            $log.debug('initailzing uploader with filter: ', filter.name);
+            $log.debug('initailzing uploader with filter: ', !!filter && filter.name);
             vm.uploader.filters.push(filter);
         };
 
