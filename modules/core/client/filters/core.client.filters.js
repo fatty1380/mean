@@ -3,14 +3,17 @@
 
     function capFilter() {
         return function (input, all) {
-            return (!!input) ? /^[A-Z]+$/.test(input) ? input :
-                input.replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) {
-                    return txt.charAt(0) + ' ' + txt.charAt(1);
-                })
-                    .replace(/([^\W_]+[^\s-]*) */g, function (txt) {
-                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            if(_.isString(input)) {
+                return (!!input) ? /^[A-Z]+$/.test(input) ? input :
+                    input.replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) {
+                        return txt.charAt(0) + ' ' + txt.charAt(1);
                     })
-                : '';
+                        .replace(/([^\W_]+[^\s-]*) */g, function (txt) {
+                            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                        })
+                    : '';
+            }
+            return input;
         };
     }
 
