@@ -423,6 +423,10 @@ exports.driverByID = function (req, res, next, id) {
     if ((/^[a-f\d]{24}$/i).test(id)) {
         return executeFind(req, res, next, Driver.findById(id));
     }
+
+    return res.status(404).send({
+        message: 'Unable to find a profile associated with that user'
+    });
 };
 
 /**
@@ -430,7 +434,7 @@ exports.driverByID = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
     if (req.driver.user.id !== req.user.id) {
-        return res.send(403, 'User is not authorized');
+        return res.status(403).send({message: 'User is not authorized'});
     }
     next();
 };

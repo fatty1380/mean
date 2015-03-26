@@ -21,7 +21,7 @@
 
                 $log.debug('assigning email to username');
                 credentials.username = credentials.email;
-                credentials.type = credentials.signupType;
+                credentials.type = credentials.type || credentials.signupType;
 
                 $http.post('/api/auth/signup', credentials)
                     .success(function (response) {
