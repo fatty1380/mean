@@ -122,7 +122,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </ul>\n' +
   '            </span>\n' +
   '\n' +
-  '            <p class="form-control-static" ng-show="vm.address.type !== \'other\' && !!vm.address.type"><b>{{vm.address.type | titlecase }}</b></p>\n' +
+  '            <p class="form-control-static" ng-show="vm.address.type !== \'other\' && !!vm.address.type"><b>{{vm.address.type | titleCase }}</b></p>\n' +
   '            <input type="text" id="typeOther" name="typeOther" class="form-control" data-ng-model="vm.address.typeOther"\n' +
   '                   data-ng-show="vm.address.type === \'other\'" placeholder="Address Type"/>\n' +
   '            <!-- /btn-group -->\n' +
@@ -152,6 +152,68 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '               ng-model-options="{ updateOn: \'default blur\', debounce: { \'default\': 1000, \'blur\': 0 } }"\n' +
   '               placeholder="ZIP">\n' +
   '    </div>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/authorization.client.template.html',
+  '<section>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">\n' +
+  '            <h3>Signature</h3>\n' +
+  '            <div signature-pad signature="vm.formData.signature"></div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/complete.client.template.html',
+  '');
+ $templateCache.put('/modules/applications/views/form/documents.client.template.html',
+  '<section class="workflow-stage-form" ng-form="vm.subForm3">\n' +
+  '\n' +
+  '    <div class="col-sm-12">\n' +
+  '\n' +
+  '        <div class="col-sm-6">\n' +
+  '            <div class="text-center control-label">Profile Picture</div>\n' +
+  '            <os-picture-uploader model="vm.formData.user" mode="user"\n' +
+  '                                 auto-crop="true" allow-blank="true"\n' +
+  '                                 title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
+  '        </div>\n' +
+  '        <div class="col-sm-6">\n' +
+  '            <oset-file-upload mode="resume"  allow-blank="true" model-path="resume"\n' +
+  '                              model="vm.formData.driver"\n' +
+  '                              title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/driver-info.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '    <driver-info-form ng-form="vm.subForm2" model="vm.formData.driver" text="vm.about"\n' +
+  '                      class="col-sm-12" methods="vm.subformMethods">\n' +
+  '    </driver-info-form>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/payment.client.template.html',
+  '');
+ $templateCache.put('/modules/applications/views/form/report-fields.client.template.html',
+  '<section class="workflow-stage-form" ng-form="vm.reportForm">\n' +
+  '\n' +
+  '    <accordion>\n' +
+  '        <accordion-group ng-repeat="key in [\'report\', \'applicant\']"\n' +
+  '                         heading="Report-Fields View Model [{{key}}]">\n' +
+  '            <pre>{{vm.formData[key] | prettyPrint}}</pre>\n' +
+  '        </accordion-group>\n' +
+  '    </accordion>\n' +
+  '\n' +
+  '    <oset-custom-question-form class="form-horizontal" model="vm.formData.applicant" report="vm.formData.report" methods="vm.subformMethods"></oset-custom-question-form>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/reports.client.template.html',
+  '');
+ $templateCache.put('/modules/applications/views/form/user-info.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '    <user-signup-form ng-form="vm.subForm1" model="vm.formData.user" methods="vm.subformMethods"></user-signup-form>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/templates/applicant-details.client.template.html',
@@ -348,7 +410,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <!-- field = { description, length, name, required, type } -->\n' +
   '            <label class="col-sm-3 control-label"\n' +
   '                   data-ng-class="{\'optional\':!field.required}">\n' +
-  '                {{field.description | titlecase}} </label>\n' +
+  '                {{field.description | titleCase}} </label>\n' +
   '\n' +
   '            <input type="hidden" ng-model="vm.responses[field.name]" name="hidden_{{field.name}}"\n' +
   '                   ng-required="field.required"\n' +
@@ -683,7 +745,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '\n' +
   '                    <!--ui-sref="applications.view({\'applicationId\': application._id})"-->\n' +
-  '                    <div class="row tab-body-item applicant_item" ng-show="vm.visibleId === vm.job._id"\n' +
+  '                    <div class="row tab-body-item applicant_item"\n' +
+  '                         ng-show="vm.visibleId === vm.job._id"\n' +
   '                         data-ng-repeat="application in vm.job.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"\n' +
   '                         data-ng-init="profile = application.user; vm.checkMessages(application, vm.job)"\n' +
   '                         ng-class="{\'disabled\': application.disabled}">\n' +
@@ -843,6 +906,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/bgchecks/views/templates/custom-questionnaire.client.template.html',
+  '<oset-form-entry model="vm.model" report="vm.report" loading="vm.loading" read-only="vm.readOnly"></oset-form-entry>\n' +
+  '');
  $templateCache.put('/modules/bgchecks/views/templates/document-list-dd.client.template.html',
   '<section class="documentDD">\n' +
   '    <dd class="report-badges" ng-class="{\'not-visible\':!vm.docAccess}">\n' +
@@ -946,8 +1012,44 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <em class="small text-muted" ng-if="!vm.driver.resume && !vm.driver.reportsData.length">no documents on file</em>\n' +
   '</span>\n' +
   '');
+ $templateCache.put('/modules/bgchecks/views/templates/form-entry.client.template.html',
+  '<fieldset ng-class="{\'text-muted\': vm.disabled || vm.ispay}">\n' +
+  '\n' +
+  '        <accordion ng-if="vm.debug">\n' +
+  '            <accordion-group heading="View Model @ Form-Entry Directive Level">\n' +
+  '                <pre>{{vm.model | prettyPrint}}</pre>\n' +
+  '            </accordion-group>\n' +
+  '        </accordion>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="form-group" ng-repeat="field in vm.fields"\n' +
+  '             ng-class="{\'has-error\': (vm.form[field.name].$invalid || vm.form[\'hidden_\'+field.name].$invalid) && (vm.form.$submitted || vm.form[field.name].$touched)}">\n' +
+  '            <label class="col-sm-3 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!field.required}">\n' +
+  '                {{field.description | titleCase}} </label>\n' +
+  '\n' +
+  '            <input type="hidden" ng-model="vm.model[field.name]" name="hidden_{{field.name}}"\n' +
+  '                   ng-required="field.required"\n' +
+  '                   ng-maxlength="field.ngMaxLength || field.length"/>\n' +
+  '\n' +
+  '            <div class="col-sm-9 col-md-8">\n' +
+  '                <form-input field="field" ng-hide="vm.readOnly" model="vm.model"></form-input>\n' +
+  '                <form-input field="field" ng-show="vm.readOnly" model="vm.model" mode="static"></form-input>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div ng-if="vm.debug" class="visible-md visible-lg col-md-1">\n' +
+  '                <span class="{{!!vm.form[field.name].$invalid ? \'text-danger\' : \'text-muted\'}}"><i class="fa fa-check"></i></span>\n' +
+  '                <span class="{{!!vm.form[\'hidden_\' + field.name].$invalid ? \'text-danger\' : \'text-muted\'}}"><i class="fa fa-check-circle-o"></i></span>\n' +
+  '                <span class="{{!!vm.form[field.name].$touched ? \'text-success\' : \'text-muted\'}}"><i class="fa fa-hand-o-down"></i></span>\n' +
+  '                <span class="{{!!vm.form.$submitted ? \'text-success\' : \'text-muted\'}}"><i class="fa fa-forward"></i></span>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </fieldset>\n' +
+  '');
  $templateCache.put('/modules/bgchecks/views/templates/form-input.client.template.html',
   '<section>\n' +
+  '    <div class="ng-hide" field-name="{{vm.field.name}}" type="{{vm.field.type}}" req="{{vm.field.required}}"></div>\n' +
+  '\n' +
   '    <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"\n' +
   '           name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"\n' +
   '           ng-maxlength="vm.field.ngMaxLength" ng-required="vm.field.required"/>\n' +
@@ -958,7 +1060,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </textarea>\n' +
   '\n' +
   '    <date-input ng-if="vm.field.isDate" format="vm.field.format" model="vm.model[vm.field.name]"\n' +
-  '                class="form-control"></date-input>\n' +
+  '                class="form-control" name="{{vm.field.name}}"></date-input>\n' +
   '    <!-- ng-required="vm.field.required" -->\n' +
   '\n' +
   '    <input type="checkbox" ng-if="vm.field.isCheckbox"\n' +
@@ -979,7 +1081,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '\n' +
   '    <!-- States -->\n' +
-  '    <select ng-if="vm.field.isState" class="form-control"\n' +
+  '    <select ng-if="vm.field.isState" class="form-control" name="{{vm.field.name}}"\n' +
   '            ng-options="state.id as state.name for state in vm.field.options"\n' +
   '            ng-model="vm.model[vm.field.name]" ng-required="vm.field.required" autocomplete="off">\n' +
   '    </select>\n' +
@@ -988,12 +1090,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <p class="form-control-static" ng-if="vm.field.isCountry"\n' +
   '       ng-init="vm.model[vm.field.name] = \'united_states\'">United States</p>\n' +
   '\n' +
-  '    <select ng-if="vm.field.isPickList" class="form-control"\n' +
+  '    <select ng-if="vm.field.isPickList" class="form-control" name="{{vm.field.name}}"\n' +
   '            ng-options="item.value as item.description for item in vm.field.pickList"\n' +
   '            ng-model="vm.model[vm.field.name]">\n' +
   '    </select>\n' +
   '\n' +
-  '    <div class="" ng-if="vm.field.isArray">\n' +
+  '    <div class="" ng-if="vm.field.isArray" name="{{vm.field.name}}">\n' +
   '        <div ng-repeat="(i,arrayItem) in vm.model[vm.field.name]">\n' +
   '            <div ng-repeat="df1 in vm.field.dataFields" class="well">\n' +
   '                <div class="col-xs-12" style="vertical-align: baseline;">\n' +
@@ -1008,7 +1110,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                     class="form-group"\n' +
   '                     ng-class="{\'has-error\':vm.form[vm.field.name+\'_\'+i+\'_\'+df2.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+\'_\'+i+\'_\'+df2.name].$touched)}">\n' +
   '                    <label class="col-md-4 control-label"\n' +
-  '                           data-ng-class="{\'optional\':!df2.required}">{{df2.description | titlecase}}</label>\n' +
+  '                           data-ng-class="{\'optional\':!df2.required}">{{df2.description | titleCase}}</label>\n' +
   '\n' +
   '                    <div class="col-md-8">\n' +
   '                        <input ng-if="!!df2.ngType || df2.type === \'string\' || !df2.isDate"\n' +
@@ -1027,18 +1129,17 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '\n' +
   '        </div>\n' +
   '        <button type="button" data-ng-click="vm.model[vm.field.name].push({})">Add</button>\n' +
   '    </div>\n' +
   '\n' +
-  '    <div class="well" ng-if="vm.field.isObject">\n' +
+  '    <div class="well" ng-if="vm.field.isObject" name="{{vm.field.name}}">\n' +
   '        <div ng-repeat="dataField in vm.field.dataFields" class="form-group"\n' +
   '             ng-class="{\'has-error\':vm.form[vm.field.name+\'_\'+dataField.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+\'_\'+dataField.name].$touched)}">\n' +
   '\n' +
   '            <label class="col-sm-4 control-label"\n' +
   '                   data-ng-class="{\'optional\':!dataField.required}">{{dataField.description\n' +
-  '                | titlecase}}</label>\n' +
+  '                | titleCase}}</label>\n' +
   '\n' +
   '            <div class="col-sm-8">\n' +
   '                <input ng-if="!dataField.isDate && !dataField.isState && !dataField.isCountry"\n' +
@@ -1072,10 +1173,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/bgchecks/views/templates/form-static.client.template.html',
-  '<section>\n' +
+  '<section class=form-input-static-directive>\n' +
   '    <p ng-if="!vm.field.isObject && !vm.field.isArray && !vm.field.isDate" type="{{vm.field.ngType}}"\n' +
   '       class="form-control-static">\n' +
-  '        {{(vm.model[vm.field.name] | titlecase) || \'not specified\'}}\n' +
+  '        {{(vm.model[vm.field.name] | titleCase) || \'not specified\'}}\n' +
   '    </p>\n' +
   '\n' +
   '    <p ng-if="vm.field.isDate"\n' +
@@ -1100,7 +1201,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                         ng-class="{\'text-muted\': !vm.model[vm.field.name][i][df2.name]}">\n' +
   '\n' +
   '                        <p ng-if="!df2.isDate" class="form-control-static">\n' +
-  '                            {{(vm.model[vm.field.name][i][df2.name] | titlecase) || \'--\'}}</p>\n' +
+  '                            {{(vm.model[vm.field.name][i][df2.name] | titleCase) || \'--\'}}</p>\n' +
   '\n' +
   '                        <p ng-if="df2.isDate" class="form-control-static">\n' +
   '                            {{(vm.model[vm.field.name][i][df2.name] | isoDatePrint) || \'--\'}}\n' +
@@ -1123,7 +1224,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                 ng-class="{\'text-muted\': !vm.model[vm.field.name][dataField.name]}">\n' +
   '                <p ng-if="!dataField.isDate" type="{{vm.field.ngType}}"\n' +
   '                   class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |\n' +
-  '                    titlecase) || \'--\'}}</p>\n' +
+  '                    titleCase) || \'--\'}}</p>\n' +
   '\n' +
   '                <p ng-if="dataField.isDate" type="{{vm.field.ngType}}"\n' +
   '                   class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |\n' +
@@ -1417,8 +1518,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-datepicker.client.template.html',
-  '<input type="text" ng-model="vm.shadow" name="{{vm.osName}}" ng-required="vm.required"\n' +
-  '       ng-model-options="{ updateOn: \'blur\' }" ui-mask="{{vm.mask}}" placeholder="{{vm.displayFormat}}"/>\n' +
+  '<input type="text" ng-model="vm.shadow" ng-required="vm.required"\n' +
+  '       ng-model-options="{ updateOn: \'blur\' }"\n' +
+  '       ui-mask="{{vm.mask}}" placeholder="{{vm.displayFormat}}"/>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-debug-info.client.template.html',
   '<div ng-if="enabled" class="row alert alert-info" role="alert" ng-click="toggle()" ng-class="{collapsed: collapsed}">\n' +
@@ -3485,7 +3587,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="col-sm-9 form-inline">\n' +
   '                <div class="col-sm-5 input-group"\n' +
   '                     ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">\n' +
-  '                    <div class="input-group-addon">{{ \'start\' | titlecase }}</div>\n' +
+  '                    <div class="input-group-addon">{{ \'start\' | titleCase }}</div>\n' +
   '                    <date-input class="form-control" model="vm.model.startDate" os-name="time_start"\n' +
   '                                dformat="MM/DD/YYYY"></date-input>\n' +
   '\n' +
@@ -3495,7 +3597,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '                <div class="col-sm-5 input-group"\n' +
   '                     ng-class="{\'has-error\':(vm.experienceForm.time_end.$invalid || vm.experienceForm[\'hidden_time_end\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">\n' +
-  '                    <div class="input-group-addon">{{ \'end\' | titlecase }}</div>\n' +
+  '                    <div class="input-group-addon">{{ \'end\' | titleCase }}</div>\n' +
   '\n' +
   '                    <date-input class="form-control" model="vm.model.endDate" os-name="time_end"></date-input>\n' +
   '                    <input type="hidden" ng-model="vm.model.endDate" ng-required="vm.isRequired"\n' +
@@ -4084,52 +4186,51 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</ng-form>\n' +
   '');
  $templateCache.put('/modules/users/views/settings/file-upload.client.template.html',
-  '<section class="container-fluid">\n' +
-  '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
-  '        <fieldset>\n' +
+  '<section class="container-fluid" ng-form="vm.fileUploadForm">\n' +
+  '    <fieldset class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '\n' +
-  '            <div class="text-center form-group" ng-if="!!vm.title">\n' +
-  '                <span>{{vm.title}}</span>\n' +
-  '            </div>\n' +
+  '        <div class="text-center form-group" ng-if="!!vm.title">\n' +
+  '            <span>{{vm.title}}</span>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div class="text-center form-group">\n' +
+  '        <div class="text-center form-group">\n' +
   '\n' +
-  '                <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">\n' +
+  '            <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">\n' +
   '                    <span class="fa-stack fa-3x report-badge"\n' +
-  '                            ng-class="{\'available\': !!vm.fileName}">\n' +
+  '                          ng-class="{\'available\': !!vm.fileName}">\n' +
   '                        <i class="fa fa-file-o fa-stack-2x"></i>\n' +
   '                        <i class="fa fa-check fa-1x"></i>\n' +
   '                        <i class="fa fa-file fa-stack-2x"></i>\n' +
   '                        <i class="fa fa-question fa-1x"></i>\n' +
   '                    </span>\n' +
-  '                </div>\n' +
+  '            </div>\n' +
   '\n' +
   '                <span class="btn {{vm.uploadBtnClass || \'btn-oset-secondary\'}} btn-file"\n' +
   '                      data-ng-hide="vm.uploader.queue.length && !vm.autoUpload">\n' +
   '                    {{vm.uploadBtnText || \'Select File ...\'}}\n' +
   '                    <input type="file" nv-file-select uploader="vm.uploader">\n' +
   '                </span>\n' +
-  '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">\n' +
-  '                <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>\n' +
-  '                <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>\n' +
-  '            </div>\n' +
+  '        <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">\n' +
+  '            <button type="button" class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>\n' +
+  '            <button type="button" class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload\n' +
+  '            </button>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">\n' +
-  '                {{vm.fileName}}\n' +
-  '            </div>\n' +
-  '            \n' +
-  '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
-  '                <strong>{{!!vm.fileName ? vm.fileName + \' uploaded successfully!\' : \'Success!\'}}</strong>\n' +
-  '            </div>\n' +
-  '            <div data-ng-show="vm.error" class="text-center text-danger">\n' +
-  '                <strong data-ng-bind="vm.error"></strong>\n' +
-  '            </div>\n' +
+  '        <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">\n' +
+  '            {{vm.fileName}}\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div data-ng-show="vm.success" class="text-center text-success">\n' +
+  '            <strong>{{!!vm.fileName ? vm.fileName + \' uploaded successfully!\' : \'Success!\'}}</strong>\n' +
+  '        </div>\n' +
+  '        <div data-ng-show="vm.error" class="text-center text-danger">\n' +
+  '            <strong data-ng-bind="vm.error"></strong>\n' +
+  '        </div>\n' +
   '\n' +
   '\n' +
-  '        </fieldset>\n' +
-  '    </form>\n' +
+  '    </fieldset>\n' +
   '    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable to initialize\n' +
   '        the resume uploader. Please try again later.\n' +
   '    </div>\n' +
@@ -4164,23 +4265,22 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '');
  $templateCache.put('/modules/users/views/settings/picture-upload.client.template.html',
-  '<section class="container-fluid">\n' +
-  '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
-  '        <fieldset>\n' +
+  '<section class="container-fluid" ng-form="vm.profileUploadForm">\n' +
+  '    <fieldset class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '\n' +
-  '            <!--Section 1: Base State - Nothing Uploaded, nothing active -->\n' +
-  '            <div class="form-group text-center mgn-vert" ng-hide="vm.newImage || vm.uploader.queue.length">\n' +
-  '                <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"\n' +
-  '                     alt="{{vm.title}}" class="img-thumbnail user-profile-picture ng-hide">\n' +
+  '        <!--Section 1: Base State - Nothing Uploaded, nothing active -->\n' +
+  '        <div class="form-group text-center mgn-vert" ng-hide="vm.newImage || vm.uploader.queue.length">\n' +
+  '            <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"\n' +
+  '                 alt="{{vm.title}}" class="img-thumbnail user-profile-picture ng-hide">\n' +
   '\n' +
-  '                <div data-ng-hide="!!vm.imageURL" class="report-badges uploader mgn-vert">\n' +
+  '            <div data-ng-hide="!!vm.imageURL" class="report-badges uploader mgn-vert">\n' +
   '                    <span class="fa-stack fa-3x report-badge">\n' +
   '                        <i class="fa fa-user fa-stack-2x"></i>\n' +
   '                        <i class="fa fa-question fa-1x"></i>\n' +
   '                    </span>\n' +
-  '                </div>\n' +
+  '            </div>\n' +
   '\n' +
-  '                <div class="text-center form-group mgn-top" data-ng-hide="vm.uploader.queue.length">\n' +
+  '            <div class="text-center form-group mgn-top" data-ng-hide="vm.uploader.queue.length">\n' +
   '                    <span ng-show="false && !!vm.imageURL" class="btn {{vm.uploadBtnClass || \'btn-oset-link\'}} btn-file"\n' +
   '                          ng-click="vm.startCrop()">\n' +
   '                        <!--Adjust Image Disabled due to imageURL != Image Object-->\n' +
@@ -4189,64 +4289,63 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        {{vm.uploadBtnText || \'Select Image ...\'}}\n' +
   '                        <input type="file" nv-file-select uploader="vm.uploader">\n' +
   '                    </span>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <!--Section 2: Upload in Progress-->\n' +
+  '        <div class="form-group tvm.newImage text-center mgn-vert"\n' +
+  '             ng-show="(vm.newImage || vm.uploader.queue.length) && ( vm.autoCrop && !vm.isCropping || !vm.autoCrop )">\n' +
+  '            <h4>Preview:</h4>\n' +
+  '\n' +
+  '            <div>\n' +
+  '                <img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"\n' +
+  '                     class="img-thumbnail user-profile-picture"/>\n' +
+  '                <img ng-src="{{vm.newImage}}" ng-hide="vm.useCropped || vm.isCropping"\n' +
+  '                     class="img-thumbnail user-profile-picture"/>\n' +
+  '\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.cancelUpload();">cancel</button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" data-ng-click="vm.startCrop()">\n' +
+  '                    {{ vm.useCropped ? \'Adjust\' : \'Crop\'}} Image\n' +
+  '                </button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload\n' +
+  '                </button>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <!--Section 3: Cropping in Progress-->\n' +
+  '        <div class="form-group tvm.newImage mgn-vert" ng-show="vm.isCropping">\n' +
+  '            <h4>Use the circle to select the best part of the image</h4>\n' +
+  '\n' +
+  '            <div class="text-center form-group" data-ng-hide="vm.autoCrop">\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="form-group-text-center-mgn-vert">\n' +
+  '                <div class="cropArea center-block" class="img-thumbnail user-profile-picture"\n' +
+  '                     style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">\n' +
+  '                    <img-crop image="vm.newImage" area-type="{{vm.shape}}"\n' +
+  '                              result-image="vm.croppedImage"></img-crop>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <!--Section 2: Upload in Progress-->\n' +
-  '            <div class="form-group tvm.newImage text-center mgn-vert"\n' +
-  '                 ng-show="(vm.newImage || vm.uploader.queue.length) && ( vm.autoCrop && !vm.isCropping || !vm.autoCrop )">\n' +
-  '                <h4>Preview:</h4>\n' +
-  '\n' +
-  '                <div>\n' +
-  '                    <img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"\n' +
-  '                         class="img-thumbnail user-profile-picture"/>\n' +
-  '                    <img ng-src="{{vm.newImage}}" ng-hide="vm.useCropped || vm.isCropping"\n' +
-  '                         class="img-thumbnail user-profile-picture"/>\n' +
-  '\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.cancelUpload();">cancel</button>\n' +
-  '                    <button class="btn btn-oset-primary" data-ng-click="vm.startCrop()">\n' +
-  '                        {{ vm.useCropped ? \'Adjust\' : \'Crop\'}} Image\n' +
-  '                    </button>\n' +
-  '                    <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>\n' +
-  '                </div>\n' +
+  '            <div class="text-center form-group" data-ng-show="vm.autoCrop">\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" data-ng-click="vm.saveCrop();">Save</button>\n' +
   '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <!--Section 3: Cropping in Progress-->\n' +
-  '            <div class="form-group tvm.newImage mgn-vert" ng-show="vm.isCropping">\n' +
-  '                <h4>Use the circle to select the best part of the image</h4>\n' +
-  '\n' +
-  '                <div class="text-center form-group" data-ng-hide="vm.autoCrop">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="form-group-text-center-mgn-vert">\n' +
-  '                    <div class="cropArea center-block" class="img-thumbnail user-profile-picture"\n' +
-  '                         style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">\n' +
-  '                        <img-crop image="vm.newImage" area-type="{{vm.shape}}"\n' +
-  '                                  result-image="vm.croppedImage"></img-crop>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="text-center form-group" data-ng-show="vm.autoCrop">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
-  '                    <button class="btn btn-oset-primary" data-ng-click="vm.saveCrop();">Save</button>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <!--Section 4: Status Text for success or error-->\n' +
-  '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
-  '                <strong>Profile Picture Changed Successfully</strong>\n' +
-  '            </div>\n' +
-  '            <div data-ng-show="vm.error" class="text-center text-danger">\n' +
-  '                <strong data-ng-bind="vm.error"></strong>\n' +
-  '            </div>\n' +
-  '        </fieldset>\n' +
-  '        </fieldset>\n' +
-  '    </form>\n' +
+  '        <!--Section 4: Status Text for success or error-->\n' +
+  '        <div data-ng-show="vm.success" class="text-center text-success">\n' +
+  '            <strong>Profile Picture Changed Successfully</strong>\n' +
+  '        </div>\n' +
+  '        <div data-ng-show="vm.error" class="text-center text-danger">\n' +
+  '            <strong data-ng-bind="vm.error"></strong>\n' +
+  '        </div>\n' +
+  '    </fieldset>\n' +
   '    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable to initialize\n' +
   '        the image uploader. Please try again later.\n' +
   '    </div>\n' +
@@ -4494,20 +4593,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <section class="row" id="step_3_docs"\n' +
   '                     ng-form="vm.subForm3" ng-show="vm.currentStep === 3">\n' +
   '\n' +
-  '                <!--<div class="col-sm-12">-->\n' +
+  '                <div class="col-sm-12">\n' +
   '\n' +
-  '                    <!--<div class="col-sm-6">-->\n' +
-  '                        <!--<div class="text-center control-label">Profile Picture</div>-->\n' +
-  '                        <!--<os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"-->\n' +
-  '                                             <!--auto-crop="true"-->\n' +
-  '                                             <!--title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>-->\n' +
-  '                    <!--</div>-->\n' +
-  '                    <!--<div class="col-sm-6">-->\n' +
-  '                        <!--<oset-file-upload mode="resume"-->\n' +
-  '                                          <!--model="vm.driver.resume" model-id="vm.driver._id"-->\n' +
-  '                                          <!--title="Resume Upload" auto-upload="true"></oset-file-upload>-->\n' +
-  '                    <!--</div>-->\n' +
-  '                <!--</div>-->\n' +
+  '                    <div class="col-sm-6">\n' +
+  '                        <div class="text-center control-label">Profile Picture</div>\n' +
+  '                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"\n' +
+  '                                             auto-crop="true"\n' +
+  '                                             title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
+  '                    </div>\n' +
+  '                    <div class="col-sm-6">\n' +
+  '                        <oset-file-upload mode="resume"\n' +
+  '                                          model="vm.driver.resume" model-id="vm.driver._id"\n' +
+  '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
   '\n' +
   '                <div class="col-sm-12">\n' +
   '                    <div class="checkbox">\n' +
@@ -4721,7 +4820,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <span class="modal-title h4 text-center">\n' +
   '                <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i\n' +
   '                        class="fa fa-arrow-left fa-lg"></i></button>&nbsp;\n' +
-  '                {{vm.credentials.signupType | titlecase }} Sign Up\n' +
+  '                {{vm.credentials.signupType | titleCase }} Sign Up\n' +
   '            </span>\n' +
   '\n' +
   '            <span class="pull-right">\n' +

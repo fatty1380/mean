@@ -117,7 +117,7 @@
         vm.maxCt = vm.maxCt || 50;
         vm.isEditing = false;
 
-        if(vm.canEdit && !!vm.models.length) {
+        if(vm.canEdit && !!vm.models && !!vm.models.length) {
             var lastModel = vm.models[vm.models.length-1];
             if(lastModel.isFresh || _.isEmpty(lastModel)) {
                 lastModel.isFresh = true;

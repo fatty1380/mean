@@ -2,18 +2,17 @@
     'use strict';
 
     function DriverInfoFormCtrl($log, $q,$document, Drivers) {
-        debugger;
         var vm = this;
-
-        vm.driver = _.defaults(vm.driver || {}, {resume: {}, experience: [{}], licenses: [{}], interests: []});
 
         vm.text = _.defaults(vm.text || {}, {
             about: null
         });
 
-        vm.methods = {
+        vm.methods = _.defaults({
             init: function() {
-                vm.driver = _.defaults(vm.driver || {}, {resume: {}, experience: [{}], licenses: [{}], interests: []});
+                $q.when(vm.driver).then(function(driverResponse) {
+                    vm.driver = _.defaults(driverResponse || {}, {resume: {}, experience: [{}], licenses: [{}], interests: []});
+                });
             },
             submit: function () {
                 //return Drivers.createUser(vm.model);
@@ -21,7 +20,6 @@
                 var promise = Drivers.ById
                     .get({driverId: vm.driver._id}).$promise;
 
-                debugger;
                 promise.then(
                     function (existingDriver) {
                         $log.debug('Loaded full Driver Profile from server: %o', existingDriver);
@@ -77,7 +75,7 @@
                 return deferred.promise;
             }
 
-        };
+        }, vm.methods);
 
         vm.validateSubForms = function () {
 
@@ -130,6 +128,8 @@
 
             return true;
         };
+
+        vm.methods.init();
     }
 
     DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Drivers'];
@@ -145,7 +145,6 @@
                 methods: '='
             },
             link: function (scope, element, attrs, ctrls) {
-                debugger;
                 scope.vm.form = ctrls[0];
             },
             controller: 'DriverInfoFormController',

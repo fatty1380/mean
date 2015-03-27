@@ -207,6 +207,11 @@ function saveLocally(files, folder) {
 
     var deferred = Q.defer();
 
+    var tmp = _.cloneDeep(files.file);
+    tmp.buffer = '[Omitted]';
+
+    console.log('[FileUpload.saveLocally] Saving file: %s', JSON.stringify(tmp, null, 2));
+
     fs.writeFile(config.services.fs.writePath + files.file.name, files.file.buffer,
         function (uploadError) {
             if (uploadError) {

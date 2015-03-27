@@ -14,28 +14,6 @@
                     </div>
                 </div>
 
-                <!-- Biography -->
-                <h3 class="clearfix">About Me
-                    <br/>
-                    <small>
-                        Include an introduction to yourself here to help employers know who you are
-                    </small>
-                </h3>
-                <div class="container-fluid well">
-
-                    <div class="row"
-                         ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">
-                        <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
-                            <div class="text-danger text-center mgn-vert">
-                                Please add some information about yourself here.
-                            </div>
-                        </div>
-                    </div>
-
-                    <textarea os-html-edit data-ng-model="vm.driver.about" class="editor-lg" ng-required="true"></textarea>
-                    <!--<input type="hidden" ng-model="vm.driver.about" name="description" ng-required="true"/>-->
-                </div>
-
                 <h3>Interests
                     <br/>
                     <small>
@@ -72,6 +50,28 @@
 
                 <div class="panel">
                     <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
+                </div>
+
+                <!-- Biography -->
+                <h3 class="clearfix">About Me
+                    <br/>
+                    <small>
+                        Include an introduction to yourself here to help employers know who you are
+                    </small>
+                </h3>
+                <div class="container-fluid well">
+
+                    <div class="row"
+                         ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">
+                        <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
+                            <div class="text-danger text-center mgn-vert">
+                                Please add some information about yourself here.
+                            </div>
+                        </div>
+                    </div>
+
+                    <textarea os-html-edit data-ng-model="vm.driver.about" class="editor-lg" ng-required="true"></textarea>
+                    <!--<input type="hidden" ng-model="vm.driver.about" name="description" ng-required="true"/>-->
                 </div>
 
                 <div ng-if="vm.enableSchedule">
@@ -134,6 +134,7 @@
                 <div class="panel" ng-form="vm.defaultForm">
                     <application-questionnaire-form questions="vm.driver.profile.questions['default']" responses="vm.driver.profile.responses['default']" methods="vm.methods.default"></application-questionnaire-form>
                 </div>
+                </section>
 
 
                 <div class="pull-right">
@@ -143,7 +144,6 @@
                 <div data-ng-show="vm.error" class="text-danger text-center">
                     <strong data-ng-bind="vm.error"></strong>
                 </div>
-                </section>
             </fieldset>
         </form>
     </div>
