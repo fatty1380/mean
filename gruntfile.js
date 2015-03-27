@@ -266,6 +266,10 @@ module.exports = function (grunt) {
                         args: {} // Target-specific arguments
                     }
                 }
+            },
+            bunyan: {
+                strict: false,
+                level: 'trace'
             }
         }
     );
@@ -275,6 +279,8 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-express-server');
+
+    grunt.loadNpmTasks('grunt-bunyan');
 
 // Load external tasks:
     grunt.task.loadTasks('./grunt/');

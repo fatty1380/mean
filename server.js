@@ -7,6 +7,11 @@ var config = require('./config/config'),
 chalk      = require('chalk'),
 mongoose   = require('./config/lib/mongoose'),
 express    = require('./config/lib/express');
+var bunyan = require('bunyan');
+
+var log = bunyan.createLogger({
+    name:'outset'
+});
 
 // Initialize mongoose
 mongoose.connect(function (db) {
@@ -30,6 +35,7 @@ mongoose.connect(function (db) {
     }
 
     // Logging initialization
+    log.info("TEST");
     console.log('--');
     console.log(chalk.green(config.app.title + ' application started'));
     console.log(chalk.green('Environment:\t\t\t' + process.env.NODE_ENV));
