@@ -67,7 +67,7 @@ angular.module('ngSignaturePad').directive('signaturePad', [
         canvas = $element.find('canvas');
         scope = $scope;
         element = $element;
-        signaturePad = new SignaturePad(canvas[0]));
+        signaturePad = new SignaturePad(canvas[0]);
         setCanvasHeightAndWidth();
         if ($scope.signature && !$scope.signature.$isEmpty && $scope.signature.dataUrl) {
           signaturePad.fromDataURL($scope.signature.dataUrl);

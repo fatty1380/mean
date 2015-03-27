@@ -27,6 +27,7 @@
 		"module": true,
 		"inject": true,
 		"jQuery": true,
-		"require": true
+		"require": true,
+        "SignaturePad": true
 	}
 }
