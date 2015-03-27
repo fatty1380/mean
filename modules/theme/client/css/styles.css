@@ -4356,6 +4356,9 @@ footer.navbar .btn-cta,
 footer.navbar a.btn-cta {
   padding: 9px 10px;
 }
+.has-error input.ng-invalid::before {
+  content: "\f05d";
+}
 .has-error .mce-tinymce {
   border-color: #a94442;
 }
@@ -5567,6 +5570,36 @@ pdf > object {
 }
 .subscription-client-template .subscription-info .features .li.lastRow {
   margin-bottom: 10px;
+}
+.workflow-item {
+  text-align: center;
+  display: inline-block;
+  width: 130px;
+}
+.workflow-item .step-badge .fa.badge-bg {
+  color: white!important;
+}
+.workflow-item .step-badge .fa {
+  color: #0e2d4c;
+}
+.workflow-item .step-badge.active span.step-index {
+  color: white;
+}
+.workflow-item .connector {
+  width: 100%;
+  position: relative;
+  top: 35px;
+  border-bottom: 10px solid #0e2d4c;
+}
+.workflow-item .connector.first {
+  width: 50%;
+  right: 0;
+  margin-right: 0;
+  margin-left: auto;
+}
+.workflow-item .connector.last {
+  width: 50%;
+  left: 0;
 }
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {

@@ -1,19 +1,25 @@
 (function () {
     'use strict';
 
-    function ApplicationGatewayController($state, $log, $q, toastr) {
+    function ApplicationGatewayController(auth, Drivers, $state, $log, $q, toastr) {
         var vm = this;
 
 
         Object.defineProperty(vm, 'formData', {
             enumerable: true,
-            get: function() { return $state.current.data.formData; }
+            get: function () {
+                return $state.current.data.formData;
+            }
         });
 
         Object.defineProperty(vm, 'subformMethods', {
             enumerable: true,
-            get: function() { return $state.current.data.methods; },
-            set: function(val) { $state.current.data.methods = val; }
+            get: function () {
+                return $state.current.data.methods;
+            },
+            set: function (val) {
+                $state.current.data.methods = val;
+            }
         });
 
         /* Bindings to sub-forms */
@@ -36,13 +42,32 @@
         vm.resetSubformMethods();
 
         _.defaults(vm.formData, {
+            job: {},
+            company: {},
             user: {},
             driver: {},
             report: {},
-            applicant: {}
+            applicant: {},
+            signature: {}
         });
 
-        vm.getKeys = function(object) {
+        function initialize() {
+            $log.info('[GatewayCtrl] Initialziing');
+
+            vm.formData.user = auth.user || {};
+
+            if (_.isString(auth.user && auth.user.driver)) {
+                vm.formData.driver = Drivers.get(auth.user.driver)
+                    .catch(function (err) {
+                        $log.debug('[GatewayCtrl] Err getting driver for id `%s`: %s', auth.user.driver, err);
+                        return {};
+                    });
+            } else if (_.isObject(auth.user.driver)) {
+                vm.formData.driver = auth.user.driver;
+            }
+        }
+
+        vm.getKeys = function (object) {
             return _.keys(object);
         };
 
@@ -127,10 +152,10 @@
             alert('Master Form Submitted');
         };
 
-        // TODO: Migrate from existing flow ctrl (?)
+        initialize()
     }
 
-    ApplicationGatewayController.$inject = ['$state', '$log', '$q', 'toastr'];
+    ApplicationGatewayController.$inject = ['Authentication', 'Drivers', '$state', '$log', '$q', 'toastr'];
 
     angular.module('applications')
         .controller('ApplicationGatewayController', ApplicationGatewayController);

@@ -9,7 +9,8 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
                 'ngSanitize', 'ngAnimate', 'ngResource', 'ngMessages',
                 'ui.router', 'ui.bootstrap', 'ui.utils',
                 'angularFileUpload', 'ngMap', 'toastr',
-                'ngImgCrop', 'duScroll', 'angularMoment'];
+                'ngImgCrop', 'duScroll', 'angularMoment',
+                'ngSignaturePad'];
 
     // Add a new vertical module
     var registerModule = function (moduleName, dependencies) {

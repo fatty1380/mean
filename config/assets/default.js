@@ -10,7 +10,8 @@ module.exports = {
                 'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.css',
                 'public/lib/ngImgCrop/compile/unminified/ng-img-crop.css',
-                'public/lib/angular-toastr/dist/angular-toastr.css'
+                'public/lib/angular-toastr/dist/angular-toastr.css',
+                'public/lib/ngSignaturePad/ngSignaturePad.min.css'
             ],
             js: [
                 'public/lib/angular/angular.js',
@@ -33,7 +34,9 @@ module.exports = {
                 '//cdn.raygun.io/raygun4js/raygun.min.js',
                 'public/lib/tinymce/tinymce.js',
                 'public/lib/angular-sanitize/angular-sanitize.js',
-                'public/lib/angular-toastr/dist/angular-toastr.tpls.js'
+                'public/lib/angular-toastr/dist/angular-toastr.tpls.js',
+                'public/lib/ngSignaturePad/ngSignaturePad.js',
+                'public/lib/signature_pad/signature_pad.js'
             ],
             font: [
                 '//fonts.googleapis.com/css?family=Open+Sans:300,400,700',
