@@ -181,51 +181,52 @@
                     readonly: false
                 },
                 templateUrl: '/modules/applications/views/form/report-fields.client.template.html',
-                controller: function ($scope, $state, report, applicant) {
-                    var vm = this;
-                    var parent = $scope.$parent.vm;
-                    // todo: check report, applicant and vm.formData.applicant
-
-                    parent.formData.report = _.defaults(parent.formData.report, report);
-                    parent.formData.applicant = _.defaults(parent.formData.applicant, applicant);
-
-                    vm.formData = parent.formData;
-                    vm.subformMethods = parent.subformMethods;
-
-                    debugger;
-                },
+                //controller: function ($scope, $state, report, applicant) {
+                //    var vm = this;
+                //    var parent = $scope.$parent.vm;
+                //    // todo: check report, applicant and vm.formData.applicant
+                //
+                //    parent.formData.report = _.defaults(parent.formData.report, report);
+                //    parent.formData.applicant = _.defaults(parent.formData.applicant, applicant);
+                //
+                //    vm.formData = parent.formData;
+                //    vm.subformMethods = parent.subformMethods;
+                //
+                //    debugger;
+                //},
+                controller: '',
                 controllerAs: 'vm',
                 bindToController: true,
-                resolve: {
-                    report: function (Reports) {
-                        var sku = sku || 'OUTSET_MVR';
-
-                        return Reports.get(sku).$promise.then(
-                            function (reportDetails) {
-                                return reportDetails;
-                            })
-                            .catch(function (error) {
-                                console.error('Problem getting report `%s`: %s', sku, error);
-                                return {};
-                            });
-                    },
-                    applicant: function (Applicants, Authentication, $q) {
-                        var userId = Authentication.user._id;
-                        var getApplicant = Applicants.ByUser.get({userId: userId});
-
-                        return getApplicant.$promise.catch(
-                            function (error) {
-                                if (error.status === 404) {
-                                    console.log('No Existing Applicant for User');
-                                    return null;
-                                }
-
-                                console.error('Hard error %s searching for applicant: %o', error.status, error);
-                                return $q.reject(error);
-                            }
-                        );
-                    }
-                }
+                //resolve: {
+                //    report: function (Reports) {
+                //        var sku = sku || 'OUTSET_MVR';
+                //
+                //        return Reports.get(sku).then(
+                //            function (reportDetails) {
+                //                return reportDetails;
+                //            })
+                //            .catch(function (error) {
+                //                console.error('Problem getting report `%s`: %s', sku, error);
+                //                return {};
+                //            });
+                //    },
+                //    applicant: function (Applicants, Authentication, $q) {
+                //        var userId = Authentication.user._id;
+                //        var getApplicant = Applicants.ByUser.get({userId: userId});
+                //
+                //        return getApplicant.$promise.catch(
+                //            function (error) {
+                //                if (error.status === 404) {
+                //                    console.log('No Existing Applicant for User');
+                //                    return null;
+                //                }
+                //
+                //                console.error('Hard error %s searching for applicant: %o', error.status, error);
+                //                return $q.reject(error);
+                //            }
+                //        );
+                //    }
+                //}
             }).
 
             state('gateway.authorization', {

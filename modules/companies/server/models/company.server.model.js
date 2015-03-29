@@ -66,6 +66,22 @@ var CompanySchema = new Schema({
         default: 'modules/companies/img/profile/default.png'
     },
 
+    gateway: {
+        sku: {
+            type: String,
+            default: 'OUTSET_MVR'
+        },
+        required: {
+            type: Boolean,
+            default: true
+        },
+        payment: {
+            type: String,
+            enum: ['applicant', 'company', 'mixed', ''],
+            default: ''
+        }
+    },
+
     created: {
         type: Date,
         default: Date.now

@@ -4,7 +4,7 @@
     function SignupFormCtrl($log, $q, UserService) {
         var vm = this;
 
-        vm.model = _.defaults(vm.model || {}, {type: 'driver', terms: false, addresses: [{}]});
+        vm.user = _.defaults(vm.user || {}, {type: 'driver', terms: false, addresses: [{}]});
 
         vm.text = _.defaults(vm.text || {}, {
             zip: 'Your zip code will be used to help improve your experience on the site',
@@ -15,12 +15,15 @@
 
         vm.methods = _.defaults({
             submit: function () {
-                return UserService.createUser(vm.model);
+                return UserService.createUser(vm.user)
+                    .then(function(success) {
+
+                    });
             },
             validate: function () {
                 var deferred = $q.defer();
 
-                if (vm.model.password !== vm.model.confirmPassword) {
+                if (vm.user.password !== vm.user.confirmPassword) {
                     $log.debug('passwords do not match, yo!');
                     deferred.reject('Passwords to not match. Please enter them again');
                 }
@@ -36,7 +39,7 @@
                     });
                     deferred.reject('please correct the errors above');
                 }
-                else if (!vm.model.terms) {
+                else if (!vm.user.terms) {
                     deferred.reject('Please agree to the terms and conditions before signing up');
                 } else {
                     deferred.resolve('User Form is Valid');
@@ -55,7 +58,7 @@
             restrict: 'E',
             require: ['^form'],
             scope: {
-                model: '=',
+                user: '=model',
                 text: '=?',
                 methods: '=?'
             },

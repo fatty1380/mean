@@ -48,7 +48,7 @@ var reportFactory = function ($resource, $q, $state, $log, DocAccess) {
                 sku: '@sku'
             });
 
-            return retVal.get({sku: sku});
+            return retVal.get({sku: sku}).$promise;
         },
         openReport: function(application, driver, file) {
 
@@ -105,7 +105,14 @@ var applicantFactory = function ($resource) {
         ListAll: function (query) {
             var retVal = $resource('/api/reports/applicants');
 
-            return retVal.query().promise;
+            return retVal.query().$promise;
+        },
+        getByUser: function(userId) {
+            var rsrc = $resource('/api/users/:userId/driver/applicant', {
+                userId: '@userId'
+            });
+
+            return rsrc.get({'userId':userId}).$promise;
         },
         get: function (query) {
             var retVal = $resource('/api/reports/applicants/:applicantId', {

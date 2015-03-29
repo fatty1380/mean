@@ -1,4 +1,4 @@
-<section class="workflow-stage-form">
+<section class="workflow-stage-form container">
     <os-page-header title="NEW WORKFLOW PAGE"></os-page-header>
 
     <div class="panel panel-default">
@@ -50,7 +50,12 @@
 
                 <div class="col-sm-6 col-sm-offset-3">
                     <h3>Models: {{vm.getKeys(vm.formData)}}</h3>
-
+                    <accordion>
+                        <accordion-group ng-repeat="key in vm.getKeys(vm.formData)"
+                                         heading="{{key | titleCase }} Model [{{vm.formData[key].id}}]">
+                            <pre>{{vm.formData[key] | prettyPrint}}</pre>
+                        </accordion-group>
+                    </accordion>
                 </div>
             </div>
         </div>

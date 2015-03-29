@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ApplicationGatewayController(auth, Drivers, $state, $log, $q, toastr) {
+    function ApplicationGatewayController(auth, Drivers, Gateway, $state, $stateParams, $log, $q, $document, toastr) {
         var vm = this;
 
 
@@ -15,6 +15,10 @@
         Object.defineProperty(vm, 'subformMethods', {
             enumerable: true,
             get: function () {
+                if(!$state.current.data.methods) {
+                    $state.current.data.methods = defaultMethods;
+                }
+
                 return $state.current.data.methods;
             },
             set: function (val) {
@@ -23,52 +27,89 @@
         });
 
         /* Bindings to sub-forms */
-        vm.subformMethods = {};
+        var defaultMethods = {
+            init: function () {
+                return;
+            },
+            validate: function () {
+                debugger;
+                return $q.when(true);
+            },
+            submit: function () {
+                return $q.when(true);
+            }
+        };
+
         vm.resetSubformMethods = function () {
-            vm.subformMethods = {
-                init: function () {
-                    return;
-                },
-                validate: function () {
-                    debugger;
-                    return $q.when(true);
-                },
-                submit: function () {
-                    return $q.when(true);
-                }
-            };
+            vm.subformMethods = null;
             $log.debug('[AppGatewayCtrl] Reset Subform Methods');
         };
-        vm.resetSubformMethods();
 
-        _.defaults(vm.formData, {
-            job: {},
-            company: {},
-            user: {},
-            driver: {},
-            report: {},
-            applicant: {},
-            signature: {}
-        });
+        //_.defaults(vm.formData, {
+        //    job: {},
+        //    company: {},
+        //    user: {},
+        //    driver: {},
+        //    report: {},
+        //    applicant: {},
+        //    signature: {}
+        //});
 
         function initialize() {
             $log.info('[GatewayCtrl] Initialziing');
 
-            vm.formData.user = auth.user || {};
+            var jobId = $stateParams.jobId || '54bb2b53bfbaa900002c270b';
+            Gateway.initialize(jobId);
 
-            if (_.isString(auth.user && auth.user.driver)) {
-                vm.formData.driver = Drivers.get(auth.user.driver)
-                    .catch(function (err) {
-                        $log.debug('[GatewayCtrl] Err getting driver for id `%s`: %s', auth.user.driver, err);
-                        return {};
-                    });
-            } else if (_.isObject(auth.user.driver)) {
-                vm.formData.driver = auth.user.driver;
-            }
+            Gateway.user.then(function(user) {
+                vm.formData.user = user;
+            });
+
+            Gateway.driver.then(function(driver) {
+                vm.formData.driver = driver;
+            });
+
+            Gateway.company.then(function(company) {
+                vm.formData.company = company;
+            });
+
+            Gateway.job.then(function(job) {
+                vm.formData.job = job;
+            });
+
+            Gateway.report.then(function(report) {
+                vm.formData.report = report;
+            });
+
+            Gateway.applicant.then(function(applicant) {
+                vm.formData.applicant = applicant;
+            });
+
+            Gateway.signature.then(function(signature) {
+                vm.formData.signature = signature;
+            });
+
+
+            //
+            //vm.formData.user = auth.user || {};
+            //
+            //if (!!auth.user && _.isString(auth.user.driver)) {
+            //    vm.formData.driver = Drivers.get(auth.user.driver)
+            //        .catch(function (err) {
+            //            $log.debug('[GatewayCtrl] Err getting driver for id `%s`: %s', auth.user.driver, err);
+            //            return {};
+            //        });
+            //} else if (_.isObject(auth.user.driver)) {
+            //    vm.formData.driver = auth.user.driver;
+            //}
         }
 
         vm.getKeys = function (object) {
-            return _.keys(object);
+            var keys = _.keys(object);
+
+            return _.where(keys, function (k) {
+                return !_.isFunction(object[k]);
+            });
         };
 
         vm.getFunctionKeys = function () {
@@ -80,7 +121,7 @@
         /* Local 'state' variables */
         vm.steps = [
             {index: 0, active: true, state: 'gateway', title: 'Welcome'},
-            {index: 1, active: true, state: 'gateway.userInfo', title: 'User Info'},
+            {index: 1, active: true, state: 'gateway.userInfo', title: 'User Info', skip: function() { return !!vm.formData.user; }},
             {index: 2, active: true, state: 'gateway.driverInfo', title: 'Driver Info'},
             {index: 3, active: true, state: 'gateway.documents', title: 'Documents'},
             {index: 4, active: false, state: 'gateway.reports', title: 'Reports'},
@@ -99,8 +140,7 @@
             if (vm.currentStep > 0) {
 
                 vm.resetSubformMethods();
-                vm.currentStep--;
-                vm.routeToState();
+                vm.routeToState(-1);
             }
         };
 
@@ -122,8 +162,7 @@
                 ).then(
                     function (success) {
                         vm.resetSubformMethods();
-                        vm.currentStep++;
-                        vm.routeToState();
+                        vm.routeToState(1);
                     }
                 ).catch(
                     function (err) {
@@ -133,12 +172,25 @@
 
                         toastr.error(err, {extendedTimeOut: 5000});
                     }
+                ).finally(
+                    function() {
+                        $document.scrollTopAnimated(0, 300);
+                    }
                 );
             }
         };
 
-        vm.routeToState = function () {
+        vm.routeToState = function (inc) {
+            vm.currentStep += inc;
+
             var step = vm.activeSteps[vm.currentStep];
+
+            if(!!step.skip && step.skip()) {
+                $log.info('Skipping step #%d', vm.currentStep);
+                vm.currentStep += inc;
+                step = vm.activeSteps[vm.currentStep];
+            }
+
             $log.debug('[Gateway] Routing to %s', step.state);
             $state.go(step.state, step.params);
         };
@@ -152,10 +204,10 @@
             alert('Master Form Submitted');
         };
 
-        initialize()
+        initialize();
     }
 
-    ApplicationGatewayController.$inject = ['Authentication', 'Drivers', '$state', '$log', '$q', 'toastr'];
+    ApplicationGatewayController.$inject = ['Authentication', 'Drivers', 'Gateway', '$state', '$stateParams', '$log', '$q', '$document', 'toastr'];
 
     angular.module('applications')
         .controller('ApplicationGatewayController', ApplicationGatewayController);

@@ -52,9 +52,7 @@
         var sku = $stateParams.sku;
 
         debugger;
-        var getDetails = Reports.get(sku);
-
-        return getDetails.$promise;
+        return Reports.get(sku);
     }
 
     function resolveReports(Reports, $stateParams) {

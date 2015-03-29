@@ -49,7 +49,7 @@
     function ProfilesService($resource, $q) {
 
         var _data = {
-            getProfile: function(userId) {
+            get: function(userId) {
                 return $resource('api/profiles/:userId', {
                     userId: '@userId'
                 }, {}).get({userId: userId}).$promise;

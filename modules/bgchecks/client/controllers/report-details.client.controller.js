@@ -68,17 +68,14 @@
             applicantRsrc.$save(function (response) {
 
                 if (response.updated) {
-
-                    console.log('Successfully updated existing applicant: %j', response);
+                    $log.debug('Successfully updated existing applicant: %j', response);
                 }
                 else {
-                    console.log('SUCCESS! Created new Applicant: %o', response);
+                    $log.debug('SUCCESS! Created new Applicant: %o', response);
                 }
 
                 vm.success = 'Applicant data has been verified on the server!';
-
                 vm.error = null;
-
 
                 $state.go('reportpayments', {'sku': vm.report.sku});
 

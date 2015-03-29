@@ -16,6 +16,13 @@
             ByUser: $resource('api/users/:userId/companies', {
                 userId: '@_userId'
             }),
+            get: function(companyId) {
+                var rsrc = $resource('api/companies/:id', {
+                    id: '@id'
+                });
+
+                return rsrc.get({id: companyId}).$promise;
+            },
             getByUser: function(userId) {
                 var rsrc = $resource('api/users/:userId/companies', {
                     userId: '@_userId'

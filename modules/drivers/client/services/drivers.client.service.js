@@ -14,6 +14,7 @@
             ByUser: $resource('api/users/:userId/driver', {
                 userId: '@_userId'
             }),
+            default: {resume: {}, experience: [{}], licenses: [{}], interests: []},
             get: function(driverId) {
                 return $resource('api/drivers/:driverId', {
                     driverId: '@driverId'

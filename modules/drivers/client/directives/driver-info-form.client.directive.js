@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function DriverInfoFormCtrl($log, $q,$document, Drivers) {
+    function DriverInfoFormCtrl($log, $q,$document, Drivers, auth) {
         var vm = this;
 
         vm.text = _.defaults(vm.text || {}, {
@@ -10,8 +10,12 @@
 
         vm.methods = _.defaults({
             init: function() {
+                if(!vm.user || _.isEmpty(vm.user)) {
+                    vm.user = $q.when(auth.user);
+                }
+
                 $q.when(vm.driver).then(function(driverResponse) {
-                    vm.driver = _.defaults(driverResponse || {}, {resume: {}, experience: [{}], licenses: [{}], interests: []});
+                    vm.driver = _.defaults(driverResponse || {}, Drivers.default);
                 });
             },
             submit: function () {
@@ -57,7 +61,7 @@
                     _.map(_.keys(vm.form.$error), function (errorType) {
                         $log.warn('[SignupApply.validateForm] Form %d has error type: %s', vm.currentStep, errorType);
                         _.map(vm.form.$error[errorType], function (item) {
-                            $log.error('[SignupApply.validateForm] %s has error: %o', item.$name, item);
+                            $log.error('[SignupApply.validateForm] %s has error: %o', !!item ? item.$name : 'n/a', item);
                             if (!!item) {
                                 item.$setDirty(true);
                             }
@@ -132,7 +136,7 @@
         vm.methods.init();
     }
 
-    DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Drivers'];
+    DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Drivers', 'Authentication'];
 
     function DriverInfoFormDirective() {
         return {
@@ -140,6 +144,7 @@
             restrict: 'E',
             require: ['^form'],
             scope: {
+                user: '=?',
                 driver: '=model',
                 text: '=?',
                 methods: '='

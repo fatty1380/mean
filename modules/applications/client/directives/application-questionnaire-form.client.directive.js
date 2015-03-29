@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ApplicationQuestionFormCtrl($log, $q, Applications, PolyField) {
+    function ApplicationQuestionFormCtrl($log, $q, Gateway, Applications, PolyField) {
         var vm = this;
 
         vm.questions = Applications.getQuestions();
@@ -13,6 +13,7 @@
 
         vm.methods = {
             init: function () {
+                debugger;
                 _.map(vm.questions, function(question) {
                     PolyField.translateWithThis(vm.responses, question);
                 });
@@ -24,10 +25,13 @@
             }
         };
 
-        vm.methods.init();
+        vm.report = Gateway.report;
+        vm.applicant = Gateway.applicant;
+
+        $q.when(vm.report).then(vm.methods.init);
     }
 
-    ApplicationQuestionFormCtrl.$inject = ['$log', '$q', 'Applications', 'PolyFieldService'];
+    ApplicationQuestionFormCtrl.$inject = ['$log', '$q', 'Gateway', 'Applications', 'PolyFieldService'];
 
     function ApplicationQuestionFormDirective() {
         return {
