@@ -135,7 +135,7 @@
                                 </dl>
 
                                 <div ng-show="vm.visibleTab === 'documents'">
-                                    <pre>{{application.user.driver.reports}}</pre>
+                                    <pre ng-if="vm.debug">{{application.user.driver.reports}}</pre>
                                     <oset-document-list driver="application.user.driver" application="application" display-mode="full" doc-access="application.canViewDocs"></oset-document-list>
                                 </div>
 

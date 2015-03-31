@@ -838,7 +838,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                </dl>\n' +
   '\n' +
   '                                <div ng-show="vm.visibleTab === \'documents\'">\n' +
-  '                                    <pre>{{application.user.driver.reports}}</pre>\n' +
+  '                                    <pre ng-if="vm.debug">{{application.user.driver.reports}}</pre>\n' +
   '                                    <oset-document-list driver="application.user.driver" application="application" display-mode="full" doc-access="application.canViewDocs"></oset-document-list>\n' +
   '                                </div>\n' +
   '\n' +
