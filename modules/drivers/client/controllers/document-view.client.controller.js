@@ -21,11 +21,13 @@
         vm.resume = vm.driver.resume;
         vm.reports = vm.driver.reports || {};
 
-        if(vm.driver && vm.driver.user) {
+        if (vm.driver && vm.driver.user) {
             vm.profile = vm.driver.user;
 
-            if(vm.profile.displayName) {
+            if (vm.profile.displayName) {
                 vm.text.title = 'View documents for ' + vm.profile.displayName;
+
+                vm.fileUser = vm.profile.displayName.replace(' ', '');
             }
         }
 
@@ -36,9 +38,11 @@
 
             var file = vm.reports[fileName] || vm.resume;
 
-            DocAccess.updateFileUrl(vm.driver._id, file).then(
-                function (success) {
+            DocAccess.updateFileUrl(vm.driver._id, file)
+                .then(function (success) {
                     vm.documentUrl = success.url;
+                    vm.documentTitle = vm.fileUser + '_' + fileName + '.pdf';
+
                     $sce.trustAsResourceUrl(vm.documentUrl);
 
                     if (!!success.sku) {
@@ -49,8 +53,8 @@
                     }
 
                     vm.activeReport = fileName;
-                },
-                function (error) {
+                })
+                .catch(function (error) {
                     $log.warn('[DocViewCtrl.updateFileUrl] %s', error);
                     vm.error = error;
                 }
@@ -86,7 +90,6 @@
                         }
                     }
                 });
-
 
 
             },

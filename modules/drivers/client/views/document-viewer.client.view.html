@@ -15,13 +15,20 @@
                                 <a>Resume</a>
                             </li>
                             <li role="presentation" ng-repeat="report in vm.driver.reportsData"
-                                ng-click="vm.viewFile(report.sku)"
+                                ng-click="vm.viewFile(report.sku)" tooltip="{{report}}"
                                 ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
-                                <a>{{report.sku}}</a>
+                                <a>{{report.name || report.sku | titleCase }}</a>
                             </li>
                         </ul>
 
                         <div class="col-sm-12 center-block pdf-container">
+                            <div class="row mgn-btm">
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-cta-primary" target="_self" ng-href="{{vm.documentUrl}}" download="{{vm.documentTitle}}" type="application/pdf">
+                                        Download Report <i class="fa fa-download"></i>
+                                    </a>
+                                </div>
+                            </div>
                             <pdf ng-hide="vm.error" pdf-src="{{vm.documentUrl}}"></pdf>
                             <h4 class="text-danger strong">{{vm.error}}</h4>
                         </div>

@@ -92,6 +92,7 @@ var DriverSchema = new Schema({
 
     reportsData: [{
         sku: String,
+        name: String,
         url: String,
         expires: Date,
         bucket: String,
