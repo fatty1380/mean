@@ -1,6 +1,6 @@
 <section class="workflow-stage-form" ng-form="vm.reportForm">
 
-    <accordion>
+    <accordion ng-if="vm.debug">
         <accordion-group ng-repeat="key in ['report', 'applicant']"
                          heading="Report-Fields View Model [{{key}}]">
             <pre>{{vm.formData[key] | prettyPrint}}</pre>

@@ -14,25 +14,28 @@
             ByUser: $resource('api/users/:userId/driver', {
                 userId: '@_userId'
             }),
-            default: {resume: {}, experience: [{}], licenses: [{}], interests: []},
             get: function(driverId) {
                 return $resource('api/drivers/:driverId', {
-                    driverId: '@driverId'
+                    driverId: '@_id'
+                }, {
+                    update: {
+                        method: 'PUT'
+                    }
                 }).get({driverId: driverId}).$promise;
             },
             getByUser: function(userId) {
                 return $resource('api/users/:userId/driver', {
-                    userId: '@_userId'
+                    userId: '@_id'
                 }).get({userId: userId}).$promise;
             },
             getResumeLink: function(driverId) {
                 return $resource('api/drivers/:driverId/resume', {
-                    driverId: '@driverId'
+                    driverId: '@_id'
                 }).get({driverId: driverId}).$promise;
             },
             getReportLink: function(driverId, sku) {
                 return $resource('api/drivers/:driverId/report/:reportSku', {
-                    driverId: '@driverId',
+                    driverId: '@_id',
                     reportSku: '@sku'
                 }).get({driverId: driverId, sku: sku}).$promise;
             },
@@ -49,7 +52,8 @@
                 }
 
                 return $resource(endpoint, args).get({driverId: driverId, sku: sku}).$promise;
-            }
+            },
+            default: {resume: {}, experience: [{}], licenses: [{}], interests: []}
         };
     }
 

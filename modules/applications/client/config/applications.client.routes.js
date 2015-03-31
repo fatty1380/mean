@@ -134,12 +134,15 @@
             }).
 
             state('gateway', {
-                url: '/application',
+                url: '/application?jobId',
                 templateUrl: '/modules/applications/views/gateway-form.client.view.html',
                 controller: 'ApplicationGatewayController',
                 controllerAs: 'vm',
                 data: {
                     formData: {}
+                },
+                params: {
+                    jobId: ''
                 }
             }).
 
@@ -156,7 +159,12 @@
                 templateUrl: '/modules/applications/views/form/driver-info.client.template.html',
                 controller: '',
                 controllerAs: 'vm',
-                bindToController: true
+                bindToController: true,
+                resolve: {
+                    driver: ['Gateway', function(gw) {
+                        return gw.driver;
+                    }]
+                }
             }).
 
             state('gateway.documents', {

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function DriverInfoFormCtrl($log, $q,$document, Drivers, auth) {
+    function DriverInfoFormCtrl($log, $q, $document, Drivers, auth) {
         var vm = this;
 
         vm.text = _.defaults(vm.text || {}, {
@@ -9,46 +9,38 @@
         });
 
         vm.methods = _.defaults({
-            init: function() {
-                if(!vm.user || _.isEmpty(vm.user)) {
-                    vm.user = $q.when(auth.user);
-                }
-
-                $q.when(vm.driver).then(function(driverResponse) {
-                    vm.driver = _.defaults(driverResponse || {}, Drivers.default);
-                });
-            },
             submit: function () {
-                //return Drivers.createUser(vm.model);
+                var method;
 
-                var promise = Drivers.ById
-                    .get({driverId: vm.driver._id}).$promise;
+                if (_.isEmpty(vm.driver._id)) {
+                    vm.driver = new Drivers.ById(vm.driver);
+                    return vm.driver.$save()
+                        .then(function (updatedDriver) {
+                            $log.debug('Successfully created DRIVER with details');
 
-                promise.then(
-                    function (existingDriver) {
-                        $log.debug('Loaded full Driver Profile from server: %o', existingDriver);
-                        debugger;
-                        existingDriver.experience = vm.driver.experience;
-                        existingDriver.interests = vm.driver.interests;
-                        existingDriver.licenses = vm.driver.licenses;
-                        existingDriver.about = vm.driver.about;
+                            return (vm.gateway.driver = updatedDriver);
+                        })
+                        .catch(function (errorResponse) {
+                            vm.error = errorResponse.data && errorResponse.data.message || 'Unable to create driver';
+                            vm.loading = false;
 
-                        return existingDriver;
-                    }).then(
-                    function (driver) {
-                        driver.$update(
-                            function (updatedDriver) {
+                            return $q.reject(vm.error);
+                        });
+                }
+                else {
+                    return vm.driver.$update()
+                        .then(function (updatedDriver) {
+                            $log.debug('Successfully updated DRIVER with details');
 
-                                $log.debug('Successfully updated DRIVER with details');
+                            return (vm.gateway.driver = updatedDriver);
+                        })
+                        .catch(function (errorResponse) {
+                            vm.error = errorResponse.data && errorResponse.data.message || 'Unable to update driver';
+                            vm.loading = false;
 
-                                vm.driver = updatedDriver;
-
-                            },
-                            function (errorResponse) {
-                                vm.error = errorResponse.data.message;
-                                vm.loading = false;
-                            });
-                    });
+                            return $q.reject(vm.error);
+                        });
+                }
             },
             validate: function () {
                 var deferred = $q.defer();
@@ -138,25 +130,41 @@
 
     DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Drivers', 'Authentication'];
 
-    function DriverInfoFormDirective() {
+    function DriverInfoFormDirective(Drivers) {
         return {
             templateUrl: '/modules/drivers/views/templates/driver-info-form.client.template.html',
             restrict: 'E',
             require: ['^form'],
             scope: {
+                gateway: '=',
                 user: '=?',
-                driver: '=model',
+                driver: '=?model',
                 text: '=?',
                 methods: '='
             },
             link: function (scope, element, attrs, ctrls) {
                 scope.vm.form = ctrls[0];
+
+                if (!!scope.vm.gateway) {
+                    scope.vm.gateway.user.then(function (userResponse) {
+                        scope.vm.user = userResponse;
+                    });
+
+                    scope.vm.gateway.driver.then(function (driverResponse) {
+                        if(!_.isEmpty(scope.vm.driver)) {
+                            debugger;
+                        }
+                        scope.vm.driver = driverResponse;
+                    });
+                }
             },
             controller: 'DriverInfoFormController',
             controllerAs: 'vm',
             bindToController: true
         };
     }
+
+    DriverInfoFormDirective.$inject = ['Drivers'];
 
     angular.module('drivers')
         .controller('DriverInfoFormController', DriverInfoFormCtrl)

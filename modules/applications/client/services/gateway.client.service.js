@@ -4,6 +4,7 @@
     var GatewayService = function (Authentication, Profiles, Drivers, Jobs, Companies, Reports, Applicants, $state, $log, $q) {
 
         var _this = this;
+        var promises = {};
         var model = {};
 
         _this._data = {
@@ -16,6 +17,7 @@
                 _this._data.user = Authentication.user;
                 _this._data.job = job;
             },
+            models: model
         };
 
 
@@ -26,15 +28,19 @@
         Object.defineProperty(_this._data, 'user', {
             enumerable: true,
             get: function () {
-                return (model.user = model.user || $q.defer()).promise;
+                if(!promises.user) {
+                    $log.debug('[gw.user.get] Init User');
+                    _this._data.user = Authentication.user;
+                }
+                return (promises.user = promises.user || $q.defer()).promise;
             },
             set: function (val) {
-                model.user = model.user || $q.defer();
+                promises.user = promises.user || $q.defer();
                 return (!!val && _.isString(val) ? Profiles.get(val) : $q.when(val))
                     .then(function (userResponse) {
-                        model.user.resolve(userResponse);
+                        promises.user.resolve(userResponse);
 
-                        return userResponse;
+                        return (model.user = userResponse);
                     })
                     .then(function (user) {
                         _this._data.driver = _.isEmpty(user) ? null : user.driver;
@@ -45,14 +51,18 @@
         Object.defineProperty(_this._data, 'driver', {
             enumerable: true,
             get: function () {
-                return (model.driver = model.driver || $q.defer()).promise;
+                if(!promises.user) {
+                    $log.debug('[gw.driver.get] Init User');
+                    _this._data.user = Authentication.user;
+                }
+                return (promises.driver = promises.driver || $q.defer()).promise;
             },
             set: function (val) {
-                model.driver = model.driver || $q.defer();
+                promises.driver = promises.driver || $q.defer();
                 return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
-                    .then(function (driver) {
-                        model.driver.resolve(driver);
-                        return driver;
+                    .then(function (driverResponse) {
+                        promises.driver.resolve(driverResponse);
+                        model.driver = driverResponse;
                     }
                 );
             }
@@ -61,13 +71,14 @@
         Object.defineProperty(_this._data, 'job', {
             enumerable: true,
             get: function () {
-                return (model.job = model.job || $q.defer()).promise;
+                return (promises.job = promises.job || $q.defer()).promise;
             },
             set: function (val) {
-                model.job = model.job || $q.defer();
+                promises.job = promises.job || $q.defer();
                 return (!!val && _.isString(val) ? Jobs.get(val) : $q.when(val))
                     .then(function (jobResponse) {
-                        model.job.resolve(jobResponse);
+                        promises.job.resolve(jobResponse);
+                        model.job = jobResponse;
                         return jobResponse;
                     })
                     .then(function(job) {
@@ -79,13 +90,14 @@
         Object.defineProperty(_this._data, 'company', {
             enumerable: true,
             get: function () {
-                return (model.company = model.company || $q.defer()).promise;
+                return (promises.company = promises.company || $q.defer()).promise;
             },
             set: function (val) {
-                model.company = model.company || $q.defer();
+                promises.company = promises.company || $q.defer();
                 return (!!val && _.isString(val) ? Companies.get(val) : $q.when(val))
                     .then(function (companyResponse) {
-                        model.company.resolve(companyResponse);
+                        promises.company.resolve(companyResponse);
+                        model.company = companyResponse;
                         return companyResponse;
                     })
                     .then(function () {
@@ -96,14 +108,15 @@
 
         Object.defineProperty(_this._data, 'applicantGateway', {
             get: function () {
-                return (model.gateway = model.gateway || $q.defer()).promise;
+                return (promises.gateway = promises.gateway || $q.defer()).promise;
             },
             set: function (val) {
-                model.gateway = model.gateway || $q.defer();
+                promises.gateway = promises.gateway || $q.defer();
                 $q.when(val)
-                    .then(function (gateway) {
-                        model.gateway.resolve(gateway);
-                        return gateway;
+                    .then(function (gatewayResponse) {
+                        promises.gateway.resolve(gatewayResponse);
+                        model.gateway = gatewayResponse;
+                        return gatewayResponse;
                     })
                     .then(function (gateway) {
                         var newSku = gateway && gateway.sku || null;
@@ -116,28 +129,29 @@
         Object.defineProperty(_this._data, 'report', {
             enumerable: true,
             get: function () {
-                return (model.report = model.report || $q.defer()).promise;
+                return (promises.report = promises.report || $q.defer()).promise;
             },
             set: function (val) {
-                model.report = model.report || $q.defer();
-                if (model.sku !== val) {
+                promises.report = promises.report || $q.defer();
+                if (promises.sku !== val) {
                     return (!!val && _.isString(val) ? Reports.get(val) : $q.when(val))
                         .then(function (reportResponse) {
-                            model.report.resolve(reportResponse);
+                            promises.report.resolve(reportResponse);
+                            model.report = reportResponse;
                             return reportResponse;
                         })
                         .then(function (report) {
-                            model.sku = (report || {}).sku;
+                            promises.sku = (report || {}).sku;
                         });
                 }
             }
         });
 
         function loadApplicant() {
-            if (!model.applicant) {
+            if (!promises.applicant) {
                 $log.debug('[Gateway] Looking up Applicant');
 
-                model.applicant = $q.defer();
+                promises.applicant = $q.defer();
 
                 return _this._data.user
                     .then(function (user) {
@@ -145,11 +159,11 @@
                     })
                     .then(function (applicant) {
                         $log.debug('[Gateway] Resolving Applicant as %o', applicant);
-                        model.applicant.resolve(applicant);
+                        promises.applicant.resolve(applicant);
                     })
                     .catch(function(err) {
                         $log.debug('[Gateway] No existing applicant: %s', err);
-                        model.applicant.resolve({});
+                        promises.applicant.resolve({});
                     });
             }
             return $q.reject('Applicant already loading');
@@ -160,7 +174,7 @@
         Object.defineProperty(_this._data, 'applicant', {
             enumerable: true,
             get: function () {
-                if (!model.applicant) {
+                if (!promises.applicant) {
                     loadApplicant().then(
                         function (applicant) {
                             if (!!applicant) {
@@ -170,25 +184,25 @@
                     );
                 }
 
-                return (model.applicant = model.applicant || $q.defer()).promise;
+                return (promises.applicant = promises.applicant || $q.defer()).promise;
             },
             set: function (val) {
-                model.applicant = $q.when(val);
+                promises.applicant = $q.when(val);
             }
         });
 
-        Object.defineProperty(_this._data, 'signature', {
+        Object.defineProperty(_this._data, 'release', {
             enumerable: true,
             get: function() {
                 return _this._data.applicant
                     .then(function(applicant) {
-                        return applicant.signature;
+                        return applicant.release;
                     });
             },
             set: function(val) {
-                _this.data.applicant
+                _this._data.applicant
                 .then(function(applicant) {
-                        applicant.signature = val;
+                        applicant.release = val;
                     });
             }
         });

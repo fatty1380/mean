@@ -5574,7 +5574,7 @@ pdf > object {
 .workflow-item {
   text-align: center;
   display: inline-block;
-  width: 130px;
+  width: 10%;
 }
 .workflow-item .step-badge .fa.badge-bg {
   color: white!important;

@@ -4,10 +4,12 @@
     function ApplicationGatewayController(auth, Drivers, Gateway, $state, $stateParams, $log, $q, $document, toastr) {
         var vm = this;
 
-
         Object.defineProperty(vm, 'formData', {
             enumerable: true,
             get: function () {
+                if(_.isEmpty($state.current.data.formData)) {
+                    $state.current.data.formData = Gateway.models;
+                }
                 return $state.current.data.formData;
             }
         });
@@ -15,7 +17,7 @@
         Object.defineProperty(vm, 'subformMethods', {
             enumerable: true,
             get: function () {
-                if(!$state.current.data.methods) {
+                if (!$state.current.data.methods) {
                     $state.current.data.methods = defaultMethods;
                 }
 
@@ -29,13 +31,15 @@
         /* Bindings to sub-forms */
         var defaultMethods = {
             init: function () {
+                $log.debug('[GatewayCtrl] Root Init');
                 return;
             },
             validate: function () {
-                debugger;
+                $log.debug('[GatewayCtrl] Root Validate');
                 return $q.when(true);
             },
             submit: function () {
+                $log.debug('[GatewayCtrl] Root Submit');
                 return $q.when(true);
             }
         };
@@ -58,35 +62,49 @@
         function initialize() {
             $log.info('[GatewayCtrl] Initialziing');
 
+            vm.gw = Gateway;
+
             var jobId = $stateParams.jobId || '54bb2b53bfbaa900002c270b';
             Gateway.initialize(jobId);
 
-            Gateway.user.then(function(user) {
-                vm.formData.user = user;
+            //Gateway.user.then(function (user) {
+            //    vm.formData.user = user;
+            //    $log.info('[GatewayCtrl] Set FormData user: %o', user);
+            //});
+            //vm.formData.user = Gateway.user;
+
+            Gateway.driver.then(function (driver) {
+                //vm.formData.driver = driver;
+                $log.info('[GatewayCtrl] Set FormData driver: %o', driver);
             });
 
-            Gateway.driver.then(function(driver) {
-                vm.formData.driver = driver;
+            Gateway.company.then(function (company) {
+                //vm.formData.company = company;
+                $log.info('[GatewayCtrl] Set FormData company: %o', company);
             });
 
-            Gateway.company.then(function(company) {
-                vm.formData.company = company;
+            Gateway.job.then(function (job) {
+                //vm.formData.job = job;
+                $log.info('[GatewayCtrl] Set FormData job: %o', job);
             });
 
-            Gateway.job.then(function(job) {
-                vm.formData.job = job;
+            Gateway.report.then(function (report) {
+                //vm.formData.report = report;
+                $log.info('[GatewayCtrl] Set FormData report: %o', report);
             });
 
-            Gateway.report.then(function(report) {
-                vm.formData.report = report;
+            Gateway.applicant.then(function (applicant) {
+                //vm.formData.applicant = applicant;
+                $log.info('[GatewayCtrl] Set FormData applicant: %o', applicant);
             });
 
-            Gateway.applicant.then(function(applicant) {
-                vm.formData.applicant = applicant;
-            });
-
-            Gateway.signature.then(function(signature) {
-                vm.formData.signature = signature;
+            Gateway.release.then(function (release) {
+                if (_.isEmpty(release)) {
+                    Gateway.release = release = {signature: {}};
+                }
+                //vm.formData.release = release;
+                //vm.formData.signature = release.signature;
+                $log.info('[GatewayCtrl] Set FormData release: %o', release);
             });
 
 
@@ -120,8 +138,12 @@
 
         /* Local 'state' variables */
         vm.steps = [
-            {index: 0, active: true, state: 'gateway', title: 'Welcome'},
-            {index: 1, active: true, state: 'gateway.userInfo', title: 'User Info', skip: function() { return !!vm.formData.user; }},
+            {index: 0, active: true, state: 'gateway', title: '&nbsp;'},
+            {
+                index: 1, active: (function () {
+                return !auth.user;
+            })(), state: 'gateway.userInfo', title: 'User Info'
+            },
             {index: 2, active: true, state: 'gateway.driverInfo', title: 'Driver Info'},
             {index: 3, active: true, state: 'gateway.documents', title: 'Documents'},
             {index: 4, active: false, state: 'gateway.reports', title: 'Reports'},
@@ -129,7 +151,7 @@
             {index: 5, active: true, state: 'gateway.reportFields', title: 'Report Info', params: {readonly: true}},
             {index: 6, active: true, state: 'gateway.authorization', title: 'Authorization'},
             {index: 7, active: true, state: 'gateway.payment', title: 'Payment'},
-            {index: 8, active: true, state: 'gateway.complete', title: 'Finished'},
+            {index: 8, active: true, state: 'gateway.complete', title: '&nbsp;'},
         ];
 
         vm.activeSteps = _.where(vm.steps, {'active': true});
@@ -138,7 +160,6 @@
 
         vm.goBack = function () {
             if (vm.currentStep > 0) {
-
                 vm.resetSubformMethods();
                 vm.routeToState(-1);
             }
@@ -173,7 +194,7 @@
                         toastr.error(err, {extendedTimeOut: 5000});
                     }
                 ).finally(
-                    function() {
+                    function () {
                         $document.scrollTopAnimated(0, 300);
                     }
                 );
@@ -185,7 +206,7 @@
 
             var step = vm.activeSteps[vm.currentStep];
 
-            if(!!step.skip && step.skip()) {
+            if (!!step.skip && step.skip()) {
                 $log.info('Skipping step #%d', vm.currentStep);
                 vm.currentStep += inc;
                 step = vm.activeSteps[vm.currentStep];

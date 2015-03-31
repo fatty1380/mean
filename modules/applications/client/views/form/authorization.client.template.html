@@ -1,9 +1,57 @@
 <section>
 
     <div class="row">
+        <div class="col-sm-12 smaller"><div class="well">
+            <p>I understand that {{vm.company.name}} may utilize the services of eVerifile, an Outset certified provider
+                of pre-employment screening processes. If my application for employment is approved, The University of
+                Arizona may obtain additional information through subsequent investigations by the University-approved
+                vendor to update, renew or extend my employment. An investigative consumer report will be generated for
+                employment purposes only and in compliance with the Fair Credit Reporting Act, the Driver’s Protection
+                Act, and any applicable state statute(s).</p>
+
+            <p>I understand an investigation may include obtaining information regarding my character; work habits;
+                performance and experience; reasons for termination of past employment; academic credential records
+                including transcripts; criminal history records from any criminal justice agency in any or all federal,
+                state, city and county jurisdictions; state Department of Motor Vehicle/Drivers’ License records;
+                military records; financial/credit history; and requests for records and information from any
+                individual, company, firm corporation, present and/or past employers; and public agencies (including the
+                Social Security Administration and the Immigration & Naturalization Service) subject to state and
+                federal law.</p>
+
+            <p>I understand that I have the right to receive notice about the nature and scope of any investigative
+                consumer report requested within five days after The University of Arizona receives my request or five
+                days after the investigative consumer report is received by the University, whichever is later. I also
+                understand that before I am denied employment based, in whole or part, on information contained in the
+                investigative consumer report, I will be provided a copy of the report and a description in writing of
+                my rights under the Fair Credit Reporting Act. I understand if I am going to dispute the accuracy of
+                information in the report, I must notify The University of Arizona within five business days of my
+                receipt of my notification letter. If I notify The University of Arizona within five business days of my
+                intent to dispute, a final decision about my employment status will not be made until after I have had a
+                reasonable opportunity to address the information contained in the report.</p>
+
+            <p>By signing below, I hereby authorize, without reservation, any one contacted by The University of Arizona
+                and/or their vendor to furnish the information as stated above. I declare and affirm that fingerprints
+                submitted (if applicable) are my own and information on the fingerprint card is accurate and complete.
+                In order to verify my identity for purposes of the background investigation, I am voluntarily releasing
+                my date of birth and fully understand that age is not a consideration of employment. In addition, I
+                agree that a photocopy or telephonic facsimile of this authorization shall be valid as the original.</p>
+        </div></div>
+    </div>
+    <div class="row">
         <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-            <h3>Signature</h3>
-            <div signature-pad signature="vm.formData.signature"></div>
+            <div signature-pad signature="vm.formData.applicant.signature"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 form-inline">
+                <div class="form-group">
+                    <label for="exampleInputName2">Name</label>
+                    <p type="text" class="form-control-static" id="exampleInputName2" ng-bind="vm.user.displayName"></p>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail2">Date</label>
+                    <p type="email" class="form-control-static" id="exampleInputEmail2" ng-bind="Date() | amDateFormat : 'L'"></p>
+                </div>
         </div>
     </div>
 </section>

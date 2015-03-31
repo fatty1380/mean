@@ -5,14 +5,17 @@
         <div class="panel-heading primary-bg">
             <div class="row">
                 <div class="col-sm-12 text-center">
-                    <div class="workflow-item" ng-repeat="step in vm.steps | filter: {active:true}">
+                    <div class="workflow-item" ng-repeat="step in vm.activeSteps">
                         <div class="connector" ng-class="{'first': !!$first, 'last': !!$last}"></div>
                         <span class="fa-stack fa-2x step-badge" ng-class="{'active': vm.currentStep === $index}">
-                            <i class="fa fa-stack-2x fa-circle badge-bg"></i>
-                            <i class="fa fa-stack-2x {{vm.currentStep === $index ? 'fa-circle' : 'fa-circle-o'}}"></i>
-                            <span class="fa fa-stack-1x step-index">{{($index+1)}}</span>
+                            <i class="fa fa-stack-2x fa-circle badge-bg" ng-if="!($first || $last)"></i>
+                            <i class="fa fa-stack-2x {{vm.currentStep === $index ? 'fa-circle' : 'fa-circle-o'}}"
+                               ng-show="vm.currentStep === $index" ng-if="!($first || $last)"></i>
+                            <i class="fa fa-stack-lg fa-circle" ng-if="$first || $last"></i>
+                            <i class="fa fa-stack-2x fa-circle-o" ng-show="vm.currentStep === $index"></i>
+                            <span class="fa fa-stack-1x step-index">{{!!$index ? $index : ''}}</span>
                         </span><br>
-                        <span class="step-title">{{step.title}}</span>
+                        <span class="step-title hidden-xs hidden-sm" ng-bind-html="step.title"></span>
                     </div>
                 </div>
             </div>
@@ -20,13 +23,27 @@
 
         <div class="panel-body">
             <div class="row">
-                <h3 class="text-center">{{vm.currentState()}}</h3>
+                <h3 class="text-center">Job Application for {{vm.formData.company.name}}</h3>
 
                 <div class="col-sm-12">
 
                     <div id="gateway-form" ng-submit="vm.submitForm()">
                         <div id="form-views" ui-view>
-                            <h4 class="text-center">Look at me!!! I am HERE, but should not be THERE</h4>
+                            <section class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                                <h4 class="text-center">{{vm.formData.job.name}}</h4>
+
+                                <p>
+                                    {{vm.formData.company.name}} is pleased to see your interest in this job. As a part
+                                    of the
+                                    application process, we request that you fill out information about your past work
+                                    experience, your licensing information, and fill out a pre-employment screen.
+                                </p>
+
+                                <p class="text-center">
+                                    The process has {{vm.activeSteps.length - 2}} steps, and begins once you click
+                                    <em>next</em> below
+                                </p>
+                            </section>
                         </div>
                     </div>
 
@@ -36,24 +53,38 @@
 
         <div class="panel-footer primary-bg">
             <div class="row">
-                <div class="col-sm-12 text-right">
-                    <button type="button" class="btn btn-oset-secondary" ng-click="vm.goBack()" value="back">back
+                <div class="col-xs-3 col-md-2">
+                    <button type="button" class="btn btn-oset-secondary" ng-click="vm.goBack()" value="back">
+                        <i class="fa fa-arrow-left"></i>
+                        <span class="hidden-xs hidden-sm">back</span>
                     </button>
-                    <button type="button" class="btn btn-oset-secondary" ng-click="vm.goNext()" value="next">Next ...
+                </div>
+                <div class="col-xs-6 col-md-8 text-center">
+                    <div class="panel panel-info" ng-bind-html="vm.formData.info" ng-show="!!vm.formData.info"></div>
+                    <div class="panel panel-success" ng-bind-html="vm.formData.success"
+                         ng-show="!!vm.formData.success"></div>
+                    <div class="panel panel-danger" ng-bind-html="vm.formData.error"
+                         ng-show="!!vm.formData.error"></div>
+                    &nbsp;
+                </div>
+                <div class="col-xs-3 col-md-2 text-right">
+                    <button type="button" class="btn btn-oset-primary" ng-click="vm.goNext()" value="next">
+                        Next&nbsp;
+                        <i class="fa fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div class="panel-body">
+        <div class="panel-body" ng-if="vm.debug">
             <div class="row">
 
-                <div class="col-sm-6 col-sm-offset-3">
-                    <h3>Models: {{vm.getKeys(vm.formData)}}</h3>
+                <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                    <h3>Models: {{vm.getKeys(vm.gw.models)}}</h3>
                     <accordion>
-                        <accordion-group ng-repeat="key in vm.getKeys(vm.formData)"
-                                         heading="{{key | titleCase }} Model [{{vm.formData[key].id}}]">
-                            <pre>{{vm.formData[key] | prettyPrint}}</pre>
+                        <accordion-group ng-repeat="key in vm.getKeys(vm.gw.models)"
+                                         heading="{{key | titleCase }} Model [{{vm.gw.models[key].id}}]">
+                            <pre>{{vm.gw.models[key] | prettyPrint}}</pre>
                         </accordion-group>
                     </accordion>
                 </div>

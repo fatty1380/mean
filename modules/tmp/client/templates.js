@@ -158,9 +158,57 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<section>\n' +
   '\n' +
   '    <div class="row">\n' +
+  '        <div class="col-sm-12 smaller"><div class="well">\n' +
+  '            <p>I understand that {{vm.company.name}} may utilize the services of eVerifile, an Outset certified provider\n' +
+  '                of pre-employment screening processes. If my application for employment is approved, The University of\n' +
+  '                Arizona may obtain additional information through subsequent investigations by the University-approved\n' +
+  '                vendor to update, renew or extend my employment. An investigative consumer report will be generated for\n' +
+  '                employment purposes only and in compliance with the Fair Credit Reporting Act, the Driver’s Protection\n' +
+  '                Act, and any applicable state statute(s).</p>\n' +
+  '\n' +
+  '            <p>I understand an investigation may include obtaining information regarding my character; work habits;\n' +
+  '                performance and experience; reasons for termination of past employment; academic credential records\n' +
+  '                including transcripts; criminal history records from any criminal justice agency in any or all federal,\n' +
+  '                state, city and county jurisdictions; state Department of Motor Vehicle/Drivers’ License records;\n' +
+  '                military records; financial/credit history; and requests for records and information from any\n' +
+  '                individual, company, firm corporation, present and/or past employers; and public agencies (including the\n' +
+  '                Social Security Administration and the Immigration & Naturalization Service) subject to state and\n' +
+  '                federal law.</p>\n' +
+  '\n' +
+  '            <p>I understand that I have the right to receive notice about the nature and scope of any investigative\n' +
+  '                consumer report requested within five days after The University of Arizona receives my request or five\n' +
+  '                days after the investigative consumer report is received by the University, whichever is later. I also\n' +
+  '                understand that before I am denied employment based, in whole or part, on information contained in the\n' +
+  '                investigative consumer report, I will be provided a copy of the report and a description in writing of\n' +
+  '                my rights under the Fair Credit Reporting Act. I understand if I am going to dispute the accuracy of\n' +
+  '                information in the report, I must notify The University of Arizona within five business days of my\n' +
+  '                receipt of my notification letter. If I notify The University of Arizona within five business days of my\n' +
+  '                intent to dispute, a final decision about my employment status will not be made until after I have had a\n' +
+  '                reasonable opportunity to address the information contained in the report.</p>\n' +
+  '\n' +
+  '            <p>By signing below, I hereby authorize, without reservation, any one contacted by The University of Arizona\n' +
+  '                and/or their vendor to furnish the information as stated above. I declare and affirm that fingerprints\n' +
+  '                submitted (if applicable) are my own and information on the fingerprint card is accurate and complete.\n' +
+  '                In order to verify my identity for purposes of the background investigation, I am voluntarily releasing\n' +
+  '                my date of birth and fully understand that age is not a consideration of employment. In addition, I\n' +
+  '                agree that a photocopy or telephonic facsimile of this authorization shall be valid as the original.</p>\n' +
+  '        </div></div>\n' +
+  '    </div>\n' +
+  '    <div class="row">\n' +
   '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">\n' +
-  '            <h3>Signature</h3>\n' +
-  '            <div signature-pad signature="vm.formData.signature"></div>\n' +
+  '            <div signature-pad signature="vm.formData.applicant.signature"></div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '    <div class="row">\n' +
+  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 form-inline">\n' +
+  '                <div class="form-group">\n' +
+  '                    <label for="exampleInputName2">Name</label>\n' +
+  '                    <p type="text" class="form-control-static" id="exampleInputName2" ng-bind="vm.user.displayName"></p>\n' +
+  '                </div>\n' +
+  '                <div class="form-group">\n' +
+  '                    <label for="exampleInputEmail2">Date</label>\n' +
+  '                    <p type="email" class="form-control-static" id="exampleInputEmail2" ng-bind="Date() | amDateFormat : \'L\'"></p>\n' +
+  '                </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '</section>\n' +
@@ -189,8 +237,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/applications/views/form/driver-info.client.template.html',
   '<section class="workflow-stage-form">\n' +
-  '    <driver-info-form ng-form="vm.subForm2" model="vm.formData.driver" text="vm.about"\n' +
-  '                      class="col-sm-12" methods="vm.subformMethods">\n' +
+  '    <!--model="vm.gw.driver" user="vm.gw.user"-->\n' +
+  '    <driver-info-form ng-form="vm.driverInfoForm" gateway="vm.gw"\n' +
+  '                      text="vm.about" class="col-sm-12" methods="vm.subformMethods">\n' +
   '    </driver-info-form>\n' +
   '</section>\n' +
   '');
@@ -199,7 +248,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/applications/views/form/report-fields.client.template.html',
   '<section class="workflow-stage-form" ng-form="vm.reportForm">\n' +
   '\n' +
-  '    <accordion>\n' +
+  '    <accordion ng-if="vm.debug">\n' +
   '        <accordion-group ng-repeat="key in [\'report\', \'applicant\']"\n' +
   '                         heading="Report-Fields View Model [{{key}}]">\n' +
   '            <pre>{{vm.formData[key] | prettyPrint}}</pre>\n' +
@@ -4671,7 +4720,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="col-xs-12">\n' +
   '                <input modal-focus="vm.focusEmail" type="email" id="email" name="email"\n' +
   '                       class="form-control" debounce\n' +
-  '                       data-ng-model="vm.model.email"\n' +
+  '                       data-ng-model="vm.user.email"\n' +
   '                       placeholder="Email" ng-required="true"\n' +
   '                       autocorrect="off">\n' +
   '\n' +
@@ -4694,13 +4743,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    <div class="row">\n' +
   '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"\n' +
-  '             ng-show="vm.model.signupType === \'owner\'">\n' +
+  '             ng-show="vm.user.signupType === \'owner\'">\n' +
   '            <label for="companyName" class="control-label col-xs-12">Business Name</label>\n' +
   '\n' +
   '            <div class="col-xs-12">\n' +
   '                <input type="text" id="companyName" name="companyName" class="form-control"\n' +
-  '                       data-ng-model="vm.model.companyName" placeholder="Name of your Business"\n' +
-  '                       ng-required="!!vm.model.signupType && vm.model.signupType === \'owner\'"\n' +
+  '                       data-ng-model="vm.user.companyName" placeholder="Name of your Business"\n' +
+  '                       ng-required="!!vm.user.signupType && vm.user.signupType === \'owner\'"\n' +
   '                       autocapitalize="words">\n' +
   '            </div>\n' +
   '        </div>\n' +
@@ -4714,20 +4763,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="col-xs-6">\n' +
   '                <input type="text" id="firstName" name="firstName"\n' +
   '                       class="form-control" debounce ng-required="true"\n' +
-  '                       data-ng-model="vm.model.firstName" placeholder="First Name"\n' +
+  '                       data-ng-model="vm.user.firstName" placeholder="First Name"\n' +
   '                       autocapitalize="words">\n' +
   '            </div>\n' +
   '            <div class="col-xs-6">\n' +
   '                <input type="text" id="lastName" name="lastName"\n' +
   '                       class="form-control" debounce ng-required="true"\n' +
-  '                       data-ng-model="vm.model.lastName" placeholder="Last Name"\n' +
+  '                       data-ng-model="vm.user.lastName" placeholder="Last Name"\n' +
   '                       autocapitalize="words">\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
   '        <p class="verify col-xs-12 text-center">\n' +
-  '            Your name will appear as <strong>{{vm.model.firstName || \'_________\'}}\n' +
-  '            {{vm.model.lastName || \'_________\'}}</strong>\n' +
+  '            Your name will appear as <strong>{{vm.user.firstName || \'_________\'}}\n' +
+  '            {{vm.user.lastName || \'_________\'}}</strong>\n' +
   '        </p>\n' +
   '    </div>\n' +
   '\n' +
@@ -4740,7 +4789,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="col-xs-12">\n' +
   '                <input type="text" id="zipCode" name="zipCode"\n' +
   '                       class="form-control" debounce ng-required="true"\n' +
-  '                       data-ng-model="vm.model.addresses[0].zipCode" placeholder="Zip Code">\n' +
+  '                       data-ng-model="vm.user.addresses[0].zipCode" placeholder="Zip Code">\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -4757,29 +4806,29 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="col-xs-12">\n' +
   '                <input type="password" id="password" name="password"\n' +
   '                       class="form-control mgn-vert"\n' +
-  '                       data-ng-model="vm.model.password"\n' +
+  '                       data-ng-model="vm.user.password"\n' +
   '                       placeholder="Password"\n' +
   '                       ng-required="true" ng-minlength="8">\n' +
   '\n' +
   '                <input type="password" id="confirmPassword" name="confirmPassword"\n' +
   '                       class="form-control mgn-vert"\n' +
-  '                       data-ng-model="vm.model.confirmPassword"\n' +
+  '                       data-ng-model="vm.user.confirmPassword"\n' +
   '                       placeholder="Confirm Password"\n' +
   '                       ng-required="true" ng-minlength="8"\n' +
-  '                       compare-to="vm.model.password">\n' +
+  '                       compare-to="vm.user.password">\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
   '        <div class="col-sm-10 col-sm-offset-1">\n' +
   '            <p class="text-center">\n' +
   '                Do you agree to all conditions in the Outset <span tos>Terms of Service</span>\n' +
-  '                <i class="fa" ng-class="{\'fa-question\' : !vm.model.terms}"></i>\n' +
+  '                <i class="fa" ng-class="{\'fa-question\' : !vm.user.terms}"></i>\n' +
   '            </p>\n' +
   '            <p class="text-center">\n' +
-  '                <button type="button" class="btn btn-oset-secondary" ng-click="vm.model.terms=true"\n' +
-  '                        ng-class="{\'disabled\':!!vm.model.terms}">\n' +
+  '                <button type="button" class="btn btn-oset-secondary" ng-click="vm.user.terms=true"\n' +
+  '                        ng-class="{\'disabled\':!!vm.user.terms}">\n' +
   '                    Yes, I Agree\n' +
-  '                    <i class="fa" ng-class="{\'fa-check-circle text-success\': !!vm.model.terms}"></i>\n' +
+  '                    <i class="fa" ng-class="{\'fa-check-circle text-success\': !!vm.user.terms}"></i>\n' +
   '                </button>\n' +
   '\n' +
   '            </p>\n' +

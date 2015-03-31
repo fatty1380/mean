@@ -4,7 +4,7 @@
     var FormEntryController = function (PolyField, $q) {
         var vm = this;
 
-        vm.debug = true;
+        vm.debug = false;
         vm.fields = [];
 
         vm.initialize = function (report, model) {

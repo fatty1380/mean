@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function SignupFormCtrl($log, $q, UserService) {
+    function SignupFormCtrl($log, $q, UserService, Gateway) {
         var vm = this;
 
         vm.user = _.defaults(vm.user || {}, {type: 'driver', terms: false, addresses: [{}]});
@@ -17,7 +17,8 @@
             submit: function () {
                 return UserService.createUser(vm.user)
                     .then(function(success) {
-
+                        debugger;
+                        Gateway.user = success;
                     });
             },
             validate: function () {
@@ -50,7 +51,7 @@
         }, vm.methods);
     }
 
-    SignupFormCtrl.$inject = ['$log', '$q', 'UserService'];
+    SignupFormCtrl.$inject = ['$log', '$q', 'UserService', 'Gateway'];
 
     function SignupFormDirective() {
         return {
