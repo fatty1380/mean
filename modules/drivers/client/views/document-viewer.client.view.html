@@ -15,7 +15,7 @@
                                 <a>Resume</a>
                             </li>
                             <li role="presentation" ng-repeat="report in vm.driver.reportsData"
-                                ng-click="vm.viewFile(report.sku)" tooltip="{{report}}"
+                                ng-click="vm.viewFile(report.sku)"
                                 ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
                                 <a>{{report.name || report.sku | titleCase }}</a>
                             </li>
