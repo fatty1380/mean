@@ -143,6 +143,12 @@ function getSecureReadURL(bucket, key) {
         Bucket: bucket || config.services.s3.s3Options.bucket
     };
 
+    if(!client) {
+
+        console.log('[s3.directRead] S3 is not configured - cannot update secure read url');
+        deferred.reject('Unable to update file from cloud store');
+    }
+
     console.log('[s3.directRead] Attempting S3 Download for %j', params);
 
     var getter = client.s3.getSignedUrl('getObject', params, function (err, url) {
