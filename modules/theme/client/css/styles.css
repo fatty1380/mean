@@ -5346,6 +5346,15 @@ form.applicant-form textarea.form-control {
   min-height: 250px;
   resize: vertical;
 }
+.form-paper .form-control {
+  border-style: none;
+  border-radius: 0;
+  border-bottom: solid;
+  border-bottom-width: 1px;
+}
+.form-paper .form-group .form-control {
+  margin: 0;
+}
 .experience.view {
   border: 1px solid #cccccc;
   -webkit-border-radius: 4px;

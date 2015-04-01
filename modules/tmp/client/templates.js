@@ -155,65 +155,139 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/authorization.client.template.html',
-  '<section>\n' +
+  '<section ng-form="vm.authorization">\n' +
   '\n' +
   '    <div class="row">\n' +
-  '        <div class="col-sm-12 smaller"><div class="well">\n' +
-  '            <p>I understand that {{vm.company.name}} may utilize the services of eVerifile, an Outset certified provider\n' +
-  '                of pre-employment screening processes. If my application for employment is approved, The University of\n' +
-  '                Arizona may obtain additional information through subsequent investigations by the University-approved\n' +
-  '                vendor to update, renew or extend my employment. An investigative consumer report will be generated for\n' +
-  '                employment purposes only and in compliance with the Fair Credit Reporting Act, the Driver’s Protection\n' +
-  '                Act, and any applicable state statute(s).</p>\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 smaller">\n' +
+  '            <div class="well">\n' +
+  '                <p class="strong text-center"><u>DISCLOSURE AND AUTHORIZATION TO OBTAIN CONSUMER AND/OR INVESTIGATIVE\n' +
+  '                    CONSUMER REPORT</u></p>\n' +
   '\n' +
-  '            <p>I understand an investigation may include obtaining information regarding my character; work habits;\n' +
-  '                performance and experience; reasons for termination of past employment; academic credential records\n' +
-  '                including transcripts; criminal history records from any criminal justice agency in any or all federal,\n' +
-  '                state, city and county jurisdictions; state Department of Motor Vehicle/Drivers’ License records;\n' +
-  '                military records; financial/credit history; and requests for records and information from any\n' +
-  '                individual, company, firm corporation, present and/or past employers; and public agencies (including the\n' +
-  '                Social Security Administration and the Immigration & Naturalization Service) subject to state and\n' +
-  '                federal law.</p>\n' +
+  '                <p>I, the undersigned, hereby consent and authorize {{vm.company.name}}, its affiliated companies,\n' +
+  '                    and/or its agents (collectively, herein after referred to as “ Company”) to obtain information about\n' +
+  '                    me from a\n' +
+  '                    consumer reporting agency for purposes permitted under the Fair Credit Reporting Act 15 U.S.C.1681\n' +
+  '                    including employment purposes, a business transaction initiated by me, or upon my written\n' +
+  '                    instructions . I understand that this means that a “consumer report” and/or an “investigative\n' +
+  '                    consumer report” may be requested which may include information regarding my character, general\n' +
+  '                    reputation, personal characteristics and mode of living, whichever are applicable. The report may\n' +
+  '                    also contain information relating to my criminal history, credit history, motor vehicle records such\n' +
+  '                    as driving records, social security verification, verification of education or employment history or\n' +
+  '                    other background checks. This may involve personal interviews with sources such as neighbors,\n' +
+  '                    friends or associates. These reports may be obtained at any time after receipt of my authorization,\n' +
+  '                    and if I am hired or engaged to transact business with the Company, throughout my employment or\n' +
+  '                    relationship with the Company. I understand I have the right, upon written request made within a\n' +
+  '                    reasonable time after receipt of this notice, to request disclosure of the nature and scope of any\n' +
+  '                    investigative consumer report to e-Verifile, 900 Circle 75 Parkway, Suite 1550, Atlanta, GA 30339 –\n' +
+  '                    770-859-9899. For information about e-Verifile’s privacy practices see www.e-verifile.com. The scope\n' +
+  '                    of this notice and authorization is not limited to the present and, if hired or engaged to transact\n' +
+  '                    business with the Company, will continue and allow the Company to conduct future screenings for\n' +
+  '                    retention, promotion, reassignment access to the Company’s premises or for a continuing relationship\n' +
+  '                    with the Company, unless revoked by me in writing. The Company also reserves the right to share the\n' +
+  '                    information contained in the report(s) with any third-party companies for whom I will be placed to\n' +
+  '                    work or with whom I will have a relationship or will have access to the premises. My information\n' +
+  '                    will only be used and/or disclosed as permitted by law and as required for creation of any\n' +
+  '                    report(s).\n' +
+  '                </p>\n' +
   '\n' +
-  '            <p>I understand that I have the right to receive notice about the nature and scope of any investigative\n' +
-  '                consumer report requested within five days after The University of Arizona receives my request or five\n' +
-  '                days after the investigative consumer report is received by the University, whichever is later. I also\n' +
-  '                understand that before I am denied employment based, in whole or part, on information contained in the\n' +
-  '                investigative consumer report, I will be provided a copy of the report and a description in writing of\n' +
-  '                my rights under the Fair Credit Reporting Act. I understand if I am going to dispute the accuracy of\n' +
-  '                information in the report, I must notify The University of Arizona within five business days of my\n' +
-  '                receipt of my notification letter. If I notify The University of Arizona within five business days of my\n' +
-  '                intent to dispute, a final decision about my employment status will not be made until after I have had a\n' +
-  '                reasonable opportunity to address the information contained in the report.</p>\n' +
-  '\n' +
-  '            <p>By signing below, I hereby authorize, without reservation, any one contacted by The University of Arizona\n' +
-  '                and/or their vendor to furnish the information as stated above. I declare and affirm that fingerprints\n' +
-  '                submitted (if applicable) are my own and information on the fingerprint card is accurate and complete.\n' +
-  '                In order to verify my identity for purposes of the background investigation, I am voluntarily releasing\n' +
-  '                my date of birth and fully understand that age is not a consideration of employment. In addition, I\n' +
-  '                agree that a photocopy or telephonic facsimile of this authorization shall be valid as the original.</p>\n' +
-  '        </div></div>\n' +
-  '    </div>\n' +
-  '    <div class="row">\n' +
-  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">\n' +
-  '            <div signature-pad signature="vm.formData.applicant.signature"></div>\n' +
+  '                <p class="strong">I HEREBY CERTIFY THAT THIS FORM WAS COMPLETED BY ME, THAT THE INFORMATION PROVIDED IS\n' +
+  '                    TRUE AND CORRECT AS OF THE DATE HEREOF AND I AUTHORIZE E-VERIFILE TO OBTAIN A CONSUMER REPORT AND/OR\n' +
+  '                    INVESTIGATIVE CONSUMER REPORT ON ME, AS APPLICABLE. I acknowledge that the Company has provided with\n' +
+  '                    a copy of <a href="https://www.consumer.ftc.gov/articles/pdf-0096-fair-credit-reporting-act.pdf"\n' +
+  '                                 target="_blank">A Summary of Your Rights Under the Fair Credit Reporting Act</a>. </p>\n' +
+  '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
-  '    <div class="row">\n' +
-  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 form-inline">\n' +
+  '\n' +
+  '\n' +
+  '    <div class="row mgn-vert" ng-hide="!!vm.gw.models.release.signature.dataUrl">\n' +
+  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">\n' +
+  '            <h4 class="text-center">Please sign here:</h4>\n' +
+  '\n' +
+  '            <div signature-pad signature="vm.gw.models.release.signature"></div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '    <div class="row mgn-vert" ng-show="!!vm.gw.models.release.signature.dataUrl">\n' +
+  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 text-center">\n' +
+  '            <img ng-src="{{vm.gw.models.release.signature.dataUrl}}"><br>\n' +
+  '\n' +
+  '            <div ng-show="!!vm.gw.models.release.signature.timestamp" class="text-left">\n' +
+  '                <strong>Signed:</strong> {{vm.gw.models.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
+  '                <button type="button" ng-click="vm.gw.models.release.signature = {}" class="btn btn-oset-ghost pull-right">clear</button>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '\n' +
+  '    <div class="row mgn-vert">\n' +
+  '        <div class="col-sm-12 form-inline text-center">\n' +
+  '\n' +
+  '            <form class="form-inline form-paper">\n' +
   '                <div class="form-group">\n' +
-  '                    <label for="exampleInputName2">Name</label>\n' +
-  '                    <p type="text" class="form-control-static" id="exampleInputName2" ng-bind="vm.user.displayName"></p>\n' +
+  '                    <label for="authorizationName">Name:</label>\n' +
+  '                    <input type="text" class="form-control" id="firstName" ng-model="vm.gw.models.release.firstName"\n' +
+  '                           placeholder="First" ng-required="true">\n' +
+  '                    <input type="text" class="form-control" id="middleName" ng-model="vm.gw.models.release.middleName"\n' +
+  '                           placeholder="Middle" ng-required="true">\n' +
+  '                    <input type="text" class="form-control" id="lastName" ng-model="vm.gw.models.release.lastName"\n' +
+  '                           placeholder="Last" ng-required="true">\n' +
   '                </div>\n' +
   '                <div class="form-group">\n' +
-  '                    <label for="exampleInputEmail2">Date</label>\n' +
-  '                    <p type="email" class="form-control-static" id="exampleInputEmail2" ng-bind="Date() | amDateFormat : \'L\'"></p>\n' +
+  '                    <label for="dateOfBirth">Date of Birth:</label>\n' +
+  '                    <input type="date" class="form-control" id="dateOfBirth" ng-model="vm.gw.models.release.dob"\n' +
+  '                           placeholder="" ng-required="true">\n' +
   '                </div>\n' +
+  '            </form>\n' +
+  '\n' +
   '        </div>\n' +
   '    </div>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/complete.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '\n' +
+  '    <div class="row" ng-hide="!!vm.success">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <p class="text-center">\n' +
+  '                Your application is now ready to submit to {{vm.gw.models.company.name}}. Review the information below,\n' +
+  '                and click \'Submit\' below when ready submit your application.\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row" ng-hide="!!vm.success">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 well">\n' +
+  '            <p class="text-center">\n' +
+  '                By submitting this application, you agree to the\n' +
+  '                <tos>Outset terms and conditions</tos>\n' +
+  '                , as well as those governing the pre-employment check process.\n' +
+  '            </p>\n' +
+  '\n' +
+  '            <div class="checkbox text-center">\n' +
+  '                <label class="panel" style="padding: 10px 20px 10px 40px"\n' +
+  '                       ng-class="{\'panel-success\':!!vm.gw.models.application.termsAccepted, \'panel-danger\':!vm.gw.models.application.termsAccepted}">\n' +
+  '                    <input type="checkbox" data-ng-model="vm.gw.models.application.termsAccepted" data-ng-required="true"\n' +
+  '                           name="disclaimer"/> I Agree\n' +
+  '                </label>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '\n' +
+  '    <div class="row" ng-show="!!vm.success">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <h3 class="alert alert-success text-center" role="alert">\n' +
+  '                <b>Success!</b> {{vm.success}}\n' +
+  '            </h3>\n' +
+  '            <p class="text-center">\n' +
+  '                <button type="button" class="btn btn-oset-primary" ui-sref="applications.view">View Applications</button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Jobs</button>\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/documents.client.template.html',
   '<section class="workflow-stage-form" ng-form="vm.subForm3">\n' +
@@ -244,6 +318,18 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/payment.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '\n' +
+  '    <div class="row" ng-switch="vm.gw.models.gateway.payment">\n' +
+  '        <div ng-switch-when="company" class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <p class="text-center">\n' +
+  '                The cost of your background check and other reports will be covered by {{vm.gw.models.company.name}}.\n' +
+  '                Once the reports are complete, the results will be part of your profile and yours to keep.\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/report-fields.client.template.html',
   '<section class="workflow-stage-form" ng-form="vm.reportForm">\n' +
@@ -259,6 +345,34 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/reports.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <p class="text-center">\n' +
+  '                As a part of your application, {{vm.gw.models.company.name}} has requested that you fill in data\n' +
+  '                requried to run a pre-employment check. This data will only be used if {{vm.gw.models.company.name}}\n' +
+  '                decides to proceed with your application and interview process.\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <div class="panel panel-default">\n' +
+  '                <div class="panel-heading">\n' +
+  '                    <h4 class="text-center">Requested Report(s)</h4>\n' +
+  '                </div>\n' +
+  '                <div class="panel-body">\n' +
+  '                    <ul>\n' +
+  '                        <li>{{vm.gw.models.report.title}}</li>\n' +
+  '                    </ul>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/user-info.client.template.html',
   '<section class="workflow-stage-form">\n' +

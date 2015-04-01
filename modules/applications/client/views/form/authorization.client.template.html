@@ -1,57 +1,87 @@
-<section>
+<section ng-form="vm.authorization">
 
     <div class="row">
-        <div class="col-sm-12 smaller"><div class="well">
-            <p>I understand that {{vm.company.name}} may utilize the services of eVerifile, an Outset certified provider
-                of pre-employment screening processes. If my application for employment is approved, The University of
-                Arizona may obtain additional information through subsequent investigations by the University-approved
-                vendor to update, renew or extend my employment. An investigative consumer report will be generated for
-                employment purposes only and in compliance with the Fair Credit Reporting Act, the Driver’s Protection
-                Act, and any applicable state statute(s).</p>
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 smaller">
+            <div class="well">
+                <p class="strong text-center"><u>DISCLOSURE AND AUTHORIZATION TO OBTAIN CONSUMER AND/OR INVESTIGATIVE
+                    CONSUMER REPORT</u></p>
 
-            <p>I understand an investigation may include obtaining information regarding my character; work habits;
-                performance and experience; reasons for termination of past employment; academic credential records
-                including transcripts; criminal history records from any criminal justice agency in any or all federal,
-                state, city and county jurisdictions; state Department of Motor Vehicle/Drivers’ License records;
-                military records; financial/credit history; and requests for records and information from any
-                individual, company, firm corporation, present and/or past employers; and public agencies (including the
-                Social Security Administration and the Immigration & Naturalization Service) subject to state and
-                federal law.</p>
+                <p>I, the undersigned, hereby consent and authorize {{vm.company.name}}, its affiliated companies,
+                    and/or its agents (collectively, herein after referred to as “ Company”) to obtain information about
+                    me from a
+                    consumer reporting agency for purposes permitted under the Fair Credit Reporting Act 15 U.S.C.1681
+                    including employment purposes, a business transaction initiated by me, or upon my written
+                    instructions . I understand that this means that a “consumer report” and/or an “investigative
+                    consumer report” may be requested which may include information regarding my character, general
+                    reputation, personal characteristics and mode of living, whichever are applicable. The report may
+                    also contain information relating to my criminal history, credit history, motor vehicle records such
+                    as driving records, social security verification, verification of education or employment history or
+                    other background checks. This may involve personal interviews with sources such as neighbors,
+                    friends or associates. These reports may be obtained at any time after receipt of my authorization,
+                    and if I am hired or engaged to transact business with the Company, throughout my employment or
+                    relationship with the Company. I understand I have the right, upon written request made within a
+                    reasonable time after receipt of this notice, to request disclosure of the nature and scope of any
+                    investigative consumer report to e-Verifile, 900 Circle 75 Parkway, Suite 1550, Atlanta, GA 30339 –
+                    770-859-9899. For information about e-Verifile’s privacy practices see www.e-verifile.com. The scope
+                    of this notice and authorization is not limited to the present and, if hired or engaged to transact
+                    business with the Company, will continue and allow the Company to conduct future screenings for
+                    retention, promotion, reassignment access to the Company’s premises or for a continuing relationship
+                    with the Company, unless revoked by me in writing. The Company also reserves the right to share the
+                    information contained in the report(s) with any third-party companies for whom I will be placed to
+                    work or with whom I will have a relationship or will have access to the premises. My information
+                    will only be used and/or disclosed as permitted by law and as required for creation of any
+                    report(s).
+                </p>
 
-            <p>I understand that I have the right to receive notice about the nature and scope of any investigative
-                consumer report requested within five days after The University of Arizona receives my request or five
-                days after the investigative consumer report is received by the University, whichever is later. I also
-                understand that before I am denied employment based, in whole or part, on information contained in the
-                investigative consumer report, I will be provided a copy of the report and a description in writing of
-                my rights under the Fair Credit Reporting Act. I understand if I am going to dispute the accuracy of
-                information in the report, I must notify The University of Arizona within five business days of my
-                receipt of my notification letter. If I notify The University of Arizona within five business days of my
-                intent to dispute, a final decision about my employment status will not be made until after I have had a
-                reasonable opportunity to address the information contained in the report.</p>
-
-            <p>By signing below, I hereby authorize, without reservation, any one contacted by The University of Arizona
-                and/or their vendor to furnish the information as stated above. I declare and affirm that fingerprints
-                submitted (if applicable) are my own and information on the fingerprint card is accurate and complete.
-                In order to verify my identity for purposes of the background investigation, I am voluntarily releasing
-                my date of birth and fully understand that age is not a consideration of employment. In addition, I
-                agree that a photocopy or telephonic facsimile of this authorization shall be valid as the original.</p>
-        </div></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-            <div signature-pad signature="vm.formData.applicant.signature"></div>
+                <p class="strong">I HEREBY CERTIFY THAT THIS FORM WAS COMPLETED BY ME, THAT THE INFORMATION PROVIDED IS
+                    TRUE AND CORRECT AS OF THE DATE HEREOF AND I AUTHORIZE E-VERIFILE TO OBTAIN A CONSUMER REPORT AND/OR
+                    INVESTIGATIVE CONSUMER REPORT ON ME, AS APPLICABLE. I acknowledge that the Company has provided with
+                    a copy of <a href="https://www.consumer.ftc.gov/articles/pdf-0096-fair-credit-reporting-act.pdf"
+                                 target="_blank">A Summary of Your Rights Under the Fair Credit Reporting Act</a>. </p>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 form-inline">
+
+
+    <div class="row mgn-vert" ng-hide="!!vm.gw.models.release.signature.dataUrl">
+        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+            <h4 class="text-center">Please sign here:</h4>
+
+            <div signature-pad signature="vm.gw.models.release.signature"></div>
+        </div>
+    </div>
+    <div class="row mgn-vert" ng-show="!!vm.gw.models.release.signature.dataUrl">
+        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 text-center">
+            <img ng-src="{{vm.gw.models.release.signature.dataUrl}}"><br>
+
+            <div ng-show="!!vm.gw.models.release.signature.timestamp" class="text-left">
+                <strong>Signed:</strong> {{vm.gw.models.release.signature.timestamp | amDateFormat : "LL LT"}}
+                <button type="button" ng-click="vm.gw.models.release.signature = {}" class="btn btn-oset-ghost pull-right">clear</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row mgn-vert">
+        <div class="col-sm-12 form-inline text-center">
+
+            <form class="form-inline form-paper">
                 <div class="form-group">
-                    <label for="exampleInputName2">Name</label>
-                    <p type="text" class="form-control-static" id="exampleInputName2" ng-bind="vm.user.displayName"></p>
+                    <label for="authorizationName">Name:</label>
+                    <input type="text" class="form-control" id="firstName" ng-model="vm.gw.models.release.firstName"
+                           placeholder="First" ng-required="true">
+                    <input type="text" class="form-control" id="middleName" ng-model="vm.gw.models.release.middleName"
+                           placeholder="Middle" ng-required="true">
+                    <input type="text" class="form-control" id="lastName" ng-model="vm.gw.models.release.lastName"
+                           placeholder="Last" ng-required="true">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail2">Date</label>
-                    <p type="email" class="form-control-static" id="exampleInputEmail2" ng-bind="Date() | amDateFormat : 'L'"></p>
+                    <label for="dateOfBirth">Date of Birth:</label>
+                    <input type="date" class="form-control" id="dateOfBirth" ng-model="vm.gw.models.release.dob"
+                           placeholder="" ng-required="true">
                 </div>
+            </form>
+
         </div>
     </div>
 </section>

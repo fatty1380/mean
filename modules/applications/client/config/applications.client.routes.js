@@ -143,6 +143,11 @@
                 },
                 params: {
                     jobId: ''
+                },
+                resolve: {
+                    gateway: ['Gateway', 'Authentication', '$stateParams', function(Gateway, auth, Params) {
+                        Gateway.initialize(Params.jobId, auth.user);
+                    }]
                 }
             }).
 
@@ -161,8 +166,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    driver: ['Gateway', function(gw) {
-                        return gw.driver;
+                    driver: ['Gateway', function(Gateway) {
+                        return Gateway.driver;
                     }]
                 }
             }).
@@ -172,7 +177,12 @@
                 templateUrl: '/modules/applications/views/form/documents.client.template.html',
                 controller: '',
                 controllerAs: 'vm',
-                bindToController: true
+                bindToController: true,
+                resolve: {
+                    driver: ['Gateway', function(Gateway) {
+                        return Gateway.driver;
+                    }]
+                }
             }).
 
             state('gateway.reports', {
@@ -180,7 +190,15 @@
                 templateUrl: '/modules/applications/views/form/reports.client.template.html',
                 controller: '',
                 controllerAs: 'vm',
-                bindToController: true
+                bindToController: true,
+                resolve: {
+                    applicantGateway: ['Gateway', function(Gateway) {
+                        return Gateway.applicantGateway;
+                    }],
+                    report: ['Gateway', function(Gateway) {
+                        return Gateway.report;
+                    }]
+                }
             }).
 
             state('gateway.reportFields', {
@@ -189,52 +207,17 @@
                     readonly: false
                 },
                 templateUrl: '/modules/applications/views/form/report-fields.client.template.html',
-                //controller: function ($scope, $state, report, applicant) {
-                //    var vm = this;
-                //    var parent = $scope.$parent.vm;
-                //    // todo: check report, applicant and vm.formData.applicant
-                //
-                //    parent.formData.report = _.defaults(parent.formData.report, report);
-                //    parent.formData.applicant = _.defaults(parent.formData.applicant, applicant);
-                //
-                //    vm.formData = parent.formData;
-                //    vm.subformMethods = parent.subformMethods;
-                //
-                //    debugger;
-                //},
                 controller: '',
                 controllerAs: 'vm',
                 bindToController: true,
-                //resolve: {
-                //    report: function (Reports) {
-                //        var sku = sku || 'OUTSET_MVR';
-                //
-                //        return Reports.get(sku).then(
-                //            function (reportDetails) {
-                //                return reportDetails;
-                //            })
-                //            .catch(function (error) {
-                //                console.error('Problem getting report `%s`: %s', sku, error);
-                //                return {};
-                //            });
-                //    },
-                //    applicant: function (Applicants, Authentication, $q) {
-                //        var userId = Authentication.user._id;
-                //        var getApplicant = Applicants.ByUser.get({userId: userId});
-                //
-                //        return getApplicant.$promise.catch(
-                //            function (error) {
-                //                if (error.status === 404) {
-                //                    console.log('No Existing Applicant for User');
-                //                    return null;
-                //                }
-                //
-                //                console.error('Hard error %s searching for applicant: %o', error.status, error);
-                //                return $q.reject(error);
-                //            }
-                //        );
-                //    }
-                //}
+                resolve: {
+                    report: ['Gateway', function(Gateway) {
+                        return Gateway.report;
+                    }],
+                    applicant: ['Gateway', function(Gateway) {
+                        return Gateway.applicant;
+                    }]
+                }
             }).
 
             state('gateway.authorization', {
@@ -242,7 +225,15 @@
                 templateUrl: '/modules/applications/views/form/authorization.client.template.html',
                 controller: '',
                 controllerAs: 'vm',
-                bindToController: true
+                bindToController: true,
+                resolve: {
+                    user: ['Gateway', function(gw) {
+                        return gw.user;
+                    }],
+                    release: ['Gateway', function(gw) {
+                        return gw.release;
+                    }]
+                }
             }).
 
             state('gateway.payment', {
@@ -258,7 +249,12 @@
                 templateUrl: '/modules/applications/views/form/complete.client.template.html',
                 controller: '',
                 controllerAs: 'vm',
-                bindToController: true
+                bindToController: true,
+                resolve: {
+                    applicant: ['Gateway', function(Gateway) {
+                        return Gateway.applicant;
+                    }]
+                }
             });
 
 

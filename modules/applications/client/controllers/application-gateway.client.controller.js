@@ -1,13 +1,13 @@
 (function () {
     'use strict';
 
-    function ApplicationGatewayController(auth, Drivers, Gateway, $state, $stateParams, $log, $q, $document, toastr) {
+    function ApplicationGatewayController(auth, Applications, Gateway, $state, $stateParams, $log, $q, $document, toastr) {
         var vm = this;
 
         Object.defineProperty(vm, 'formData', {
             enumerable: true,
             get: function () {
-                if(_.isEmpty($state.current.data.formData)) {
+                if (_.isEmpty($state.current.data.formData)) {
                     $state.current.data.formData = Gateway.models;
                 }
                 return $state.current.data.formData;
@@ -60,12 +60,8 @@
         //});
 
         function initialize() {
-            $log.info('[GatewayCtrl] Initialziing');
 
             vm.gw = Gateway;
-
-            var jobId = $stateParams.jobId || '54bb2b53bfbaa900002c270b';
-            Gateway.initialize(jobId);
 
             //Gateway.user.then(function (user) {
             //    vm.formData.user = user;
@@ -112,7 +108,7 @@
             //vm.formData.user = auth.user || {};
             //
             //if (!!auth.user && _.isString(auth.user.driver)) {
-            //    vm.formData.driver = Drivers.get(auth.user.driver)
+            //    vm.formData.driver = Applications.get(auth.user.driver)
             //        .catch(function (err) {
             //            $log.debug('[GatewayCtrl] Err getting driver for id `%s`: %s', auth.user.driver, err);
             //            return {};
@@ -138,45 +134,46 @@
 
         /* Local 'state' variables */
         vm.steps = [
-            {index: 0, active: true, state: 'gateway', title: '&nbsp;'},
+            {active: true, state: 'gateway', title: '&nbsp;'},
             {
-                index: 1, active: (function () {
-                return !auth.user;
-            })(), state: 'gateway.userInfo', title: 'User Info'
+                active: (function () {
+                    return !auth.user;
+                })(), state: 'gateway.userInfo', title: 'User Info'
             },
-            {index: 2, active: true, state: 'gateway.driverInfo', title: 'Driver Info'},
-            {index: 3, active: true, state: 'gateway.documents', title: 'Documents'},
-            {index: 4, active: false, state: 'gateway.reports', title: 'Reports'},
-            {index: 5, active: true, state: 'gateway.reportFields', title: 'Report Info', params: {readonly: false}},
-            {index: 5, active: true, state: 'gateway.reportFields', title: 'Confirmation', params: {readonly: true}},
-            {index: 6, active: true, state: 'gateway.authorization', title: 'Authorization'},
-            {index: 7, active: true, state: 'gateway.payment', title: 'Payment'},
-            {index: 8, active: true, state: 'gateway.complete', title: '&nbsp;'},
+            {active: true, state: 'gateway.driverInfo', title: 'Driver Info'},
+            {active: true, state: 'gateway.documents', title: 'Documents'},
+            {active: true, state: 'gateway.reports', title: 'Reports'},
+            {active: true, state: 'gateway.reportFields', title: 'Report Entry', params: {readonly: false}},
+            {active: true, state: 'gateway.reportFields', title: 'Confirmation', params: {readonly: true}},
+            {active: true, state: 'gateway.authorization', title: 'Authorization'},
+            {active: true, state: 'gateway.payment', title: 'Payment'},
+            {active: true, state: 'gateway.complete', title: '&nbsp;', isLast: true},
         ];
 
         vm.activeSteps = _.where(vm.steps, {'active': true});
 
-        vm.currentStep = _.findIndex(vm.activeSteps, {'state': $state.current.name});
+        vm.currentIndex = _.findIndex(vm.activeSteps, {'state': $state.current.name});
+        vm.currentStep = _.find(vm.activeSteps, {'state': $state.current.name});
 
         vm.goBack = function () {
-            if (vm.currentStep > 0) {
+            if (vm.currentIndex > 0) {
                 vm.resetSubformMethods();
                 vm.routeToState(-1);
             }
         };
 
         vm.goNext = function () {
-            if (vm.currentStep < vm.activeSteps.length - 1) {
+            if (vm.currentIndex < vm.activeSteps.length - 1) {
 
                 vm.subformMethods.validate().then(
                     function (success) {
-                        $log.debug('successfully validated form for step #%d', vm.currentStep);
+                        $log.debug('successfully validated form for step %s', vm.currentStep.state);
 
                         return vm.subformMethods.submit();
                     }
                 ).then(
                     function (success) {
-                        $log.debug('successfully submitted form for step #%d', vm.currentStep);
+                        $log.debug('successfully submitted form for step #%d', vm.currentIndex);
 
                         return $q.when(success);
                     }
@@ -195,29 +192,68 @@
                     }
                 ).finally(
                     function () {
+                        vm.error = vm.success = null;
                         $document.scrollTopAnimated(0, 300);
                     }
                 );
             }
         };
 
-        vm.routeToState = function (inc) {
-            vm.currentStep += inc;
+        vm.submitApplication = function () {
+            if(!vm.gw.models.application.termsAccepted) {
+                toastr.error('You must accept the terms before submitting your application', {extendedTimeOut: 5000});
+                return;
+            }
+            if (vm.currentStep.isLast) {
+                var application = vm.gw.models.application;
 
-            var step = vm.activeSteps[vm.currentStep];
+                debugger;
+
+                application = _.extend(application, {
+                    status: 'submitted',
+                    agreement: vm.gw.models.application.termsAccepted,
+                    jobId: vm.gw.models.job._id,
+                    introduction: vm.gw.models.driver.about
+                });
+
+                // Redirect after save
+                application.$save
+                    .then(function (success) {
+                        $log.debug('Successfully created an application: %o', success);
+
+                        vm.success = 'Application Submission Successful!';
+                    })
+                    .catch(
+                    function (err) {
+                        $log.warn('Failed to create application', err);
+
+                        vm.error = err;
+
+                        toastr.error(err, {extendedTimeOut: 5000});
+                    }
+                ).finally(
+                    function () {
+                        $document.scrollTopAnimated(0, 300);
+                    }
+                );
+            } else {
+                return $state.go(vm.currentStep.state);
+            }
+        };
+
+        vm.routeToState = function (inc) {
+            vm.currentIndex += inc;
+
+            var step = vm.currentStep = vm.activeSteps[vm.currentIndex];
 
             if (!!step.skip && step.skip()) {
-                $log.info('Skipping step #%d', vm.currentStep);
-                vm.currentStep += inc;
-                step = vm.activeSteps[vm.currentStep];
+                $log.info('Skipping step #%d', vm.currentIndex);
+                vm.currentIndex += inc;
+                step = vm.currentStep = vm.activeSteps[vm.currentIndex];
             }
 
             $log.debug('[Gateway] Routing to %s', step.state);
             $state.go(step.state, step.params);
-        };
-
-        vm.currentState = function () {
-            return $state.current.name;
         };
 
 
@@ -228,7 +264,7 @@
         initialize();
     }
 
-    ApplicationGatewayController.$inject = ['Authentication', 'Drivers', 'Gateway', '$state', '$stateParams', '$log', '$q', '$document', 'toastr'];
+    ApplicationGatewayController.$inject = ['Authentication', 'Applications', 'Gateway', '$state', '$stateParams', '$log', '$q', '$document', 'toastr'];
 
     angular.module('applications')
         .controller('ApplicationGatewayController', ApplicationGatewayController);

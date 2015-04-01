@@ -1,15 +1,16 @@
 /*global SignaturePad: true*/
-angular.module("ngSignaturePad").directive('signaturePad', function ($window) {
+angular.module("ngSignaturePad")
+    .directive('signaturePad', function ($window) {
 	"use strict";
 
 	var signaturePad, canvas, scope, element, EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 
 	function calculateHeight($element) {
-		return parseInt($element.css("height"), 10) - 70;
+        return parseInt($element.css('height') || element[0].clientHeight, 10) - 70;
 	}
 
 	function calculateWidth($element) {
-		return parseInt($element.css("width"), 10) - 25;
+        return parseInt($element.css('width') || element[0].clientWidth, 10) - 25;
 	}
 
 	function setCanvasHeightAndWidth() {

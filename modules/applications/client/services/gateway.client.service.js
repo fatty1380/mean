@@ -8,14 +8,18 @@
         var model = {};
 
         _this._data = {
-            initialize: function (job) {
+            initialize: function (job, user) {
                 if (_this.initialized) {
                     $log.warn('Gateway Service is already initialized');
                     return false;
                 }
 
-                _this._data.user = Authentication.user;
+                if (!!user) {
+                    _this._data.user = user;
+                }
                 _this._data.job = job;
+
+                _this.initialized = true;
             },
             models: model
         };
@@ -28,7 +32,8 @@
         Object.defineProperty(_this._data, 'user', {
             enumerable: true,
             get: function () {
-                if(!promises.user) {
+                if (!promises.user && !!Authentication.user) {
+                    promises.user = $q.defer();
                     $log.debug('[gw.user.get] Init User');
                     _this._data.user = Authentication.user;
                 }
@@ -51,7 +56,7 @@
         Object.defineProperty(_this._data, 'driver', {
             enumerable: true,
             get: function () {
-                if(!promises.user) {
+                if (!promises.user && !!Authentication.user) {
                     $log.debug('[gw.driver.get] Init User');
                     _this._data.user = Authentication.user;
                 }
@@ -81,7 +86,7 @@
                         model.job = jobResponse;
                         return jobResponse;
                     })
-                    .then(function(job) {
+                    .then(function (job) {
                         _this._data.company = job.company;
                     });
             }
@@ -161,7 +166,7 @@
                         $log.debug('[Gateway] Resolving Applicant as %o', applicant);
                         promises.applicant.resolve(applicant);
                     })
-                    .catch(function(err) {
+                    .catch(function (err) {
                         $log.debug('[Gateway] No existing applicant: %s', err);
                         promises.applicant.resolve({});
                     });
@@ -191,17 +196,54 @@
             }
         });
 
+        Object.defineProperty(_this._data, 'application', {
+            enumerable: true,
+            get: function () {
+                if (!promises.application) {
+                    promises.application = $q.defer();
+                    $q.all({job: _this._data.job, user: _this._data.user})
+                        .then(function (result) {
+                            debugger;
+                            Jobs.getApplication(result.job._id, result.user._id).$promise
+                                .then(function (applicationResponse) {
+                                    $log.debug('[Gateway] Loaded Application');
+                                    model.application = applicationResponse;
+
+                                    promises.application.resolve(model.application);
+                                })
+                                .catch(function (err) {
+                                    $log.debug('[Gateway] Failed to load Application', err);
+                                    model.application = {
+                                        release: {}
+                                    };
+
+                                    _this._data.job.then(function (jobResponse) {
+                                        model.application.jobId = jobResponse._id;
+                                    });
+                                    _this._data.user.then(function (userResponse) {
+                                        model.application.userId = userResponse._id;
+                                    });
+
+                                    promises.application.resolve(model.application);
+                                });
+                        });
+                }
+
+                return promises.application.promise;
+            }
+        });
+
         Object.defineProperty(_this._data, 'release', {
             enumerable: true,
-            get: function() {
-                return _this._data.applicant
-                    .then(function(applicant) {
-                        return applicant.release;
+            get: function () {
+                return _this._data.application
+                    .then(function (application) {
+                        return application.release;
                     });
             },
-            set: function(val) {
+            set: function (val) {
                 _this._data.applicant
-                .then(function(applicant) {
+                    .then(function (applicant) {
                         applicant.release = val;
                     });
             }
@@ -240,7 +282,7 @@
         function loadGateway() {
 
             $q.all({co: _this._data.company, job: _this._data.job}).then(
-                function(values) {
+                function (values) {
                     var gw = values.job && values.job.gateway || values.co && values.co.gateway || null;
 
                     _this._data.applicantGateway = gw || {

@@ -7,13 +7,13 @@
                 <div class="col-sm-12 text-center">
                     <div class="workflow-item" ng-repeat="step in vm.activeSteps">
                         <div class="connector" ng-class="{'first': !!$first, 'last': !!$last}"></div>
-                        <span class="fa-stack fa-2x step-badge" ng-class="{'active': vm.currentStep === $index}">
+                        <span class="fa-stack fa-2x step-badge" ng-class="{'active': vm.currentIndex === $index}">
                             <i class="fa fa-stack-2x fa-circle badge-bg" ng-if="!($first || $last)"></i>
-                            <i class="fa fa-stack-2x {{vm.currentStep === $index ? 'fa-circle' : 'fa-circle-o'}}"
-                               ng-show="vm.currentStep === $index" ng-if="!($first || $last)"></i>
+                            <i class="fa fa-stack-2x {{vm.currentIndex === $index ? 'fa-circle' : 'fa-circle-o'}}"
+                               ng-show="vm.currentIndex === $index" ng-if="!($first || $last)"></i>
                             <i class="fa fa-stack-lg fa-circle" ng-if="$first || $last"></i>
-                            <i class="fa fa-stack-2x fa-circle-o" ng-show="vm.currentStep === $index"></i>
-                            <span class="fa fa-stack-1x step-index">{{!!$index ? $index : ''}}</span>
+                            <i class="fa fa-stack-2x fa-circle-o" ng-show="vm.currentIndex === $index"></i>
+                            <span class="fa fa-stack-1x step-index">{{!($first || $last) ? $index : ''}}</span>
                         </span><br>
                         <span class="step-title hidden-xs hidden-sm" ng-bind-html="step.title"></span>
                     </div>
@@ -67,9 +67,13 @@
                     &nbsp;
                 </div>
                 <div class="col-xs-3 col-md-2 text-right">
-                    <button type="button" class="btn btn-oset-primary" ng-click="vm.goNext()" value="next">
+                    <button type="button" ng-hide="vm.currentStep.isLast" class="btn btn-oset-primary" ng-click="vm.goNext()" value="next">
                         Next&nbsp;
                         <i class="fa fa-arrow-right"></i>
+                    </button>
+                    <button type="button" ng-show="vm.currentStep.isLast" class="btn btn-oset-primary" ng-click="vm.submitApplication()" value="next">
+                        Submit
+                        <i class="fa fa-send mgn-left"></i>
                     </button>
                 </div>
             </div>

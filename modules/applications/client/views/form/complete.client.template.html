@@ -1,0 +1,44 @@
+<section class="workflow-stage-form">
+
+    <div class="row" ng-hide="!!vm.success">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+            <p class="text-center">
+                Your application is now ready to submit to {{vm.gw.models.company.name}}. Review the information below,
+                and click 'Submit' below when ready submit your application.
+            </p>
+        </div>
+    </div>
+
+    <div class="row" ng-hide="!!vm.success">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 well">
+            <p class="text-center">
+                By submitting this application, you agree to the
+                <tos>Outset terms and conditions</tos>
+                , as well as those governing the pre-employment check process.
+            </p>
+
+            <div class="checkbox text-center">
+                <label class="panel" style="padding: 10px 20px 10px 40px"
+                       ng-class="{'panel-success':!!vm.gw.models.application.termsAccepted, 'panel-danger':!vm.gw.models.application.termsAccepted}">
+                    <input type="checkbox" data-ng-model="vm.gw.models.application.termsAccepted" data-ng-required="true"
+                           name="disclaimer"/> I Agree
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" ng-show="!!vm.success">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+            <h3 class="alert alert-success text-center" role="alert">
+                <b>Success!</b> {{vm.success}}
+            </h3>
+            <p class="text-center">
+                <button type="button" class="btn btn-oset-primary" ui-sref="applications.view">View Applications</button>
+                <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>
+                <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Jobs</button>
+            </p>
+        </div>
+    </div>
+
+</section>

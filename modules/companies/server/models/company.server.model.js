@@ -78,7 +78,7 @@ var CompanySchema = new Schema({
         payment: {
             type: String,
             enum: ['applicant', 'company', 'mixed', ''],
-            default: ''
+            default: 'company'
         }
     },
 
