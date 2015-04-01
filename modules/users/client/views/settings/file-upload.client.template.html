@@ -9,7 +9,7 @@
 
             <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">
                     <span class="fa-stack fa-3x report-badge"
-                          ng-class="{'available': !!vm.fileName}">
+                          ng-class="{'available': !!vm.fileName || !!vm.hasFile}">
                         <i class="fa fa-file-o fa-stack-2x"></i>
                         <i class="fa fa-check fa-1x"></i>
                         <i class="fa fa-file fa-stack-2x"></i>

@@ -2,7 +2,7 @@
     'use strict';
 
 //Jobs service used to communicate Jobs REST endpoints
-    function JobsService($resource) {
+    function JobsService($resource, $q) {
         return {
             ById: $resource('api/jobs/:jobId', {
                 jobId: '@_id'
@@ -37,6 +37,10 @@
                 return rsrc.query(query).$promise;
             },
             getApplication: function (jobId, userId) {
+                if(!jobId || !userId) {
+                    return $q.reject('Missing jobId or userId');
+                }
+
                 var RSRC = $resource('api/jobs/:jobId/applications/:userId', {
                         jobId: '@_id'
                     },
@@ -52,7 +56,7 @@
         };
     }
 
-    JobsService.$inject = ['$resource'];
+    JobsService.$inject = ['$resource', '$q'];
 
     angular
         .module('jobs')

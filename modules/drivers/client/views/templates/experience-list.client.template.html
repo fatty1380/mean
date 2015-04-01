@@ -1,6 +1,6 @@
 <section name="experience-list.client.template">
     <div class="row profile-row">
-        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)">
+        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)" ng-form="vm.experienceForm">
 
             <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"
                                   model="exp" is-last="$last" ng-switch-when="true"

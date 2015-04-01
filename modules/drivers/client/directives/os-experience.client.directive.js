@@ -84,6 +84,10 @@
             }
             return null;
         };
+
+        debugger;
+        //vm.form.save = vm.save;
+        //vm.form.cancel = vm.cancel;
     }
 
     function ExperienceDirective() {
@@ -100,6 +104,11 @@
                 dropFn: '&?',
                 isLast: '=?',
                 viewOnly: '=?'
+            },
+            require: ['^form'],
+            link: function(scope, element, attrs, ctrls) {
+                debugger;
+                scope.vm.form = ctrls[0];
             },
             controller: 'ExperienceItemController',
             controllerAs: 'vm',
@@ -161,6 +170,11 @@
                 canEdit: '=?',
                 viewOnly: '=?',
                 maxCt: '=?'
+            },
+            require: ['^form'],
+            link: function(scope, element, attrs, ctrls) {
+                debugger;
+                scope.vm.form = ctrls[0];
             },
             controller: 'ExperienceListController',
             controllerAs: 'vm',

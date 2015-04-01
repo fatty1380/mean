@@ -7,7 +7,7 @@
         if(!application) {
             debugger;
         }
-        vm.ApplicationFactory = Applications;
+        vm.Applications = Applications;
         vm.application = application;
         vm.user = auth.user;
         vm.text = {};
@@ -45,7 +45,7 @@
 
         vm.setApplicationStatus = function(status) {
 
-            var app = vm.ApplicationFactory.setStatus(vm.application._id, status);
+            var app = vm.Applications.setStatus(vm.application._id, status);
 
             debugger; /// TODO: Double Check promise
 

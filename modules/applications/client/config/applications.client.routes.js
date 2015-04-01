@@ -232,6 +232,9 @@
                     }],
                     release: ['Gateway', function(gw) {
                         return gw.release;
+                    }],
+                    company: ['Gateway', function(gw) {
+                        return gw.company;
                     }]
                 }
             }).

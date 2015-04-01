@@ -184,7 +184,7 @@
                     }
                 ).catch(
                     function (err) {
-                        $log.warn('Unable to continue to next step due to %j', err);
+                        $log.warn('Unable to continue to next step due to %o', err);
 
                         vm.error = err;
 
@@ -200,7 +200,7 @@
         };
 
         vm.submitApplication = function () {
-            if(!vm.gw.models.application.termsAccepted) {
+            if (!vm.gw.models.application.termsAccepted) {
                 toastr.error('You must accept the terms before submitting your application', {extendedTimeOut: 5000});
                 return;
             }
@@ -216,10 +216,24 @@
                     introduction: vm.gw.models.driver.about
                 });
 
+                var upsertMethod, params;
+
+                if (_.isEmpty(application._id)) {
+                    application = new Applications.ByJob(application);
+                    upsertMethod = application.$save;
+                    params = {jobId: application.jobId};
+                }
+                else {
+                    application = !!application.$update ? application : new Applications.ById(application);
+                    upsertMethod = application.$update;
+                }
+
                 // Redirect after save
-                application.$save
+                upsertMethod()
                     .then(function (success) {
                         $log.debug('Successfully created an application: %o', success);
+
+                        vm.gateway.application = success;
 
                         vm.success = 'Application Submission Successful!';
                     })

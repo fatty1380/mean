@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var GatewayService = function (Authentication, Profiles, Drivers, Jobs, Companies, Reports, Applicants, $state, $log, $q) {
+    var GatewayService = function (Authentication, Profiles, Drivers, Jobs, Companies, Reports, Applicants, Applications, $state, $log, $q) {
 
         var _this = this;
         var promises = {};
@@ -40,6 +40,7 @@
                 return (promises.user = promises.user || $q.defer()).promise;
             },
             set: function (val) {
+                $log.debug('[Gateway] Setting `User` to %o', val);
                 promises.user = promises.user || $q.defer();
                 return (!!val && _.isString(val) ? Profiles.get(val) : $q.when(val))
                     .then(function (userResponse) {
@@ -57,12 +58,15 @@
             enumerable: true,
             get: function () {
                 if (!promises.user && !!Authentication.user) {
+                    $log.debug('[Gateway] Initializing Load of Driver - Initializing User');
                     $log.debug('[gw.driver.get] Init User');
                     _this._data.user = Authentication.user;
                 }
                 return (promises.driver = promises.driver || $q.defer()).promise;
             },
             set: function (val) {
+                $log.debug('[Gateway] Setting `Driver` to %o', val);
+
                 promises.driver = promises.driver || $q.defer();
                 return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
                     .then(function (driverResponse) {
@@ -76,9 +80,14 @@
         Object.defineProperty(_this._data, 'job', {
             enumerable: true,
             get: function () {
+                if (!promises.job) {
+                    $log.debug('[Gateway] Initializing Load of Job');
+                }
                 return (promises.job = promises.job || $q.defer()).promise;
             },
             set: function (val) {
+                $log.debug('[Gateway] Setting `Job` to %o', val);
+
                 promises.job = promises.job || $q.defer();
                 return (!!val && _.isString(val) ? Jobs.get(val) : $q.when(val))
                     .then(function (jobResponse) {
@@ -95,9 +104,14 @@
         Object.defineProperty(_this._data, 'company', {
             enumerable: true,
             get: function () {
+                if (!promises.company) {
+                    $log.debug('[Gateway] Initializing Load of Company');
+                }
                 return (promises.company = promises.company || $q.defer()).promise;
             },
             set: function (val) {
+                $log.debug('[Gateway] Setting `Company` to %o', val);
+
                 promises.company = promises.company || $q.defer();
                 return (!!val && _.isString(val) ? Companies.get(val) : $q.when(val))
                     .then(function (companyResponse) {
@@ -113,9 +127,14 @@
 
         Object.defineProperty(_this._data, 'applicantGateway', {
             get: function () {
+                if (!promises.gateway) {
+                    $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
+                }
                 return (promises.gateway = promises.gateway || $q.defer()).promise;
             },
             set: function (val) {
+                $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
+
                 promises.gateway = promises.gateway || $q.defer();
                 $q.when(val)
                     .then(function (gatewayResponse) {
@@ -134,12 +153,21 @@
         Object.defineProperty(_this._data, 'report', {
             enumerable: true,
             get: function () {
+                if (!promises.report) {
+                    $log.debug('[Gateway] Initializing Load of Report Definition');
+                }
                 return (promises.report = promises.report || $q.defer()).promise;
             },
             set: function (val) {
+                $log.debug('[Gateway] Setting `Report Definition` to %o', val);
+
                 promises.report = promises.report || $q.defer();
                 if (promises.sku !== val) {
-                    return (!!val && _.isString(val) ? Reports.get(val) : $q.when(val))
+                    _this._data.user
+                        .then(function (userResponse) {
+                            $log.debug('[Gateway] User loaded, now retrieving Report Definition info');
+                            return (!!val && _.isString(val) ? Reports.get(val) : $q.when(val));
+                        })
                         .then(function (reportResponse) {
                             promises.report.resolve(reportResponse);
                             model.report = reportResponse;
@@ -148,13 +176,14 @@
                         .then(function (report) {
                             promises.sku = (report || {}).sku;
                         });
+
                 }
             }
         });
 
         function loadApplicant() {
             if (!promises.applicant) {
-                $log.debug('[Gateway] Looking up Applicant');
+                $log.debug('[Gateway] Initializing Load of Remote Applicant');
 
                 promises.applicant = $q.defer();
 
@@ -192,6 +221,8 @@
                 return (promises.applicant = promises.applicant || $q.defer()).promise;
             },
             set: function (val) {
+                $log.debug('[Gateway] Setting `Remote Applicant` to %o', val);
+
                 promises.applicant = $q.when(val);
             }
         });
@@ -200,10 +231,10 @@
             enumerable: true,
             get: function () {
                 if (!promises.application) {
+                    $log.debug('[Gateway] Initializing Load of Job Application');
                     promises.application = $q.defer();
                     $q.all({job: _this._data.job, user: _this._data.user})
                         .then(function (result) {
-                            debugger;
                             Jobs.getApplication(result.job._id, result.user._id).$promise
                                 .then(function (applicationResponse) {
                                     $log.debug('[Gateway] Loaded Application');
@@ -230,6 +261,29 @@
                 }
 
                 return promises.application.promise;
+            },
+            set: function(val) {
+                $log.debug('[Gateway] Setting `Application` to %o', val);
+
+                promises.report = promises.report || $q.defer();
+                if (promises.sku !== val) {
+                    if(_.isString(val)) {
+                        $log.debug('[Gateway] Setting new application by ID');
+                        promises.application.promise = Applications.ById(val).$promise;
+                    } else {
+                        promises.application.promse = $q.when(val);
+                    }
+
+                    promises.application.promise.then(function (reportResponse) {
+                            promises.report.resolve(reportResponse);
+                            model.report = reportResponse;
+                            return reportResponse;
+                        })
+                        .then(function (report) {
+                            promises.sku = (report || {}).sku;
+                        });
+
+                }
             }
         });
 
@@ -242,9 +296,12 @@
                     });
             },
             set: function (val) {
-                _this._data.applicant
-                    .then(function (applicant) {
-                        applicant.release = val;
+                $log.debug('[Gateway] Setting `Release` to %o', val);
+
+                _this._data.application
+                    .then(function (application) {
+                        debugger;
+                        application.release = val;
                     });
             }
         });
@@ -305,8 +362,9 @@
         return _this._data;
     };
 
-    GatewayService.$inject = ['Authentication', 'Profiles', 'Drivers', 'Jobs', 'Companies', 'Reports', 'Applicants', '$state', '$log', '$q'];
+    GatewayService.$inject = ['Authentication', 'Profiles', 'Drivers', 'Jobs', 'Companies', 'Reports', 'Applicants', 'Applications', '$state', '$log', '$q'];
 
     angular.module('applications')
         .service('Gateway', GatewayService);
-})();
+})
+();

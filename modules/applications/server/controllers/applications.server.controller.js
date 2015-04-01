@@ -38,9 +38,9 @@ var executeQuery = function (req, res) {
             }
 
             req.applications = applications || [];
-            console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %j', req.applications.length, query);
+            console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %j (%s)', req.applications.length, query, req.url);
 
-            console.log('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
+            //console.log('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
             res.json(req.applications);
         });
 };

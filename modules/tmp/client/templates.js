@@ -163,7 +163,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <p class="strong text-center"><u>DISCLOSURE AND AUTHORIZATION TO OBTAIN CONSUMER AND/OR INVESTIGATIVE\n' +
   '                    CONSUMER REPORT</u></p>\n' +
   '\n' +
-  '                <p>I, the undersigned, hereby consent and authorize {{vm.company.name}}, its affiliated companies,\n' +
+  '                <p>I, the undersigned, hereby consent and authorize <em class="strong">{{vm.gw.models.company.name}}</em>, its affiliated companies,\n' +
   '                    and/or its agents (collectively, herein after referred to as “ Company”) to obtain information about\n' +
   '                    me from a\n' +
   '                    consumer reporting agency for purposes permitted under the Fair Credit Reporting Act 15 U.S.C.1681\n' +
@@ -301,7 +301,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                 title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
   '        </div>\n' +
   '        <div class="col-sm-6">\n' +
-  '            <oset-file-upload mode="resume"  allow-blank="true" model-path="resume"\n' +
+  '            <oset-file-upload mode="resume" allow-blank="true" model-path="resume"\n' +
   '                              model="vm.formData.driver"\n' +
   '                              title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '        </div>\n' +
@@ -3685,7 +3685,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience-list.client.template.html',
   '<section name="experience-list.client.template">\n' +
   '    <div class="row profile-row">\n' +
-  '        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)">\n' +
+  '        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)" ng-form="vm.experienceForm">\n' +
   '\n' +
   '            <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"\n' +
   '                                  model="exp" is-last="$last" ng-switch-when="true"\n' +
@@ -3711,7 +3711,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience.client.template.html',
   '<section class="experience">\n' +
   '\n' +
-  '    <div ng-form="vm.experienceForm" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
+  '    <div ng-form="vm.experienceItem" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
   '         ng-if="!vm.viewOnly">\n' +
   '\n' +
   '        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">\n' +
@@ -4364,7 +4364,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '            <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">\n' +
   '                    <span class="fa-stack fa-3x report-badge"\n' +
-  '                          ng-class="{\'available\': !!vm.fileName}">\n' +
+  '                          ng-class="{\'available\': !!vm.fileName || !!vm.hasFile}">\n' +
   '                        <i class="fa fa-file-o fa-stack-2x"></i>\n' +
   '                        <i class="fa fa-check fa-1x"></i>\n' +
   '                        <i class="fa fa-file fa-stack-2x"></i>\n' +

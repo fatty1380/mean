@@ -387,7 +387,7 @@ exports.delete = function (req, res) {
  * List of *ALL* Drivers
  */
 exports.list = function (req, res) {
-    console.log('[Driver.Controller] list()');
+    console.log('[Driver.Controller] list(): ', req.url);
 
     req.sort = '-created';
 
@@ -433,6 +433,7 @@ exports.driverByID = function (req, res, next, id) {
  * Driver authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
+    console.log('[Drivers.Ctrl.hasAuthorization] Checking...');
     if (req.driver.user.id !== req.user.id) {
         return res.status(403).send({message: 'User is not authorized'});
     }

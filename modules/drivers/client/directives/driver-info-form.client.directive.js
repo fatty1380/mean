@@ -45,6 +45,8 @@
             validate: function () {
                 var deferred = $q.defer();
 
+                vm.form.$setSubmitted(true);
+
                 var isValid = vm.validateSubForms();
 
                 if (!!vm.form && vm.form.$invalid) {
@@ -59,13 +61,15 @@
                             }
                         });
                     });
-                    deferred.reject('Please correct the errors above');
+                    $log.warn('Ignoring Rejection: Please correct the errors above');
+                    deferred.resolve('Please correct the errors above');
                 }
 
                 if (!!isValid) {
                     deferred.resolve('User Form is Valid');
                 } else {
-                    deferred.reject('Please correct the errors above');
+                    $log.warn('Ignoring Rejection: Please correct the errors above');
+                    deferred.resolve('Please correct the errors above');
                 }
 
                 return deferred.promise;
@@ -75,15 +79,13 @@
 
         vm.validateSubForms = function () {
 
-            vm.form.$setSubmitted(true);
-
             vm.licenseForm = vm.form['vm.licenseForm'];
-            if (!!vm.licenseForm) {
+            if (!!vm.licenseForm && !vm.licenseForm.$submitted) {
                 vm.licenseForm.$setSubmitted(true);
             }
 
             vm.experienceForm = vm.form['vm.experienceForm'];
-            if (!!vm.experienceForm) {
+            if (!!vm.experienceForm && !vm.experienceForm.$submitted) {
                 vm.experienceForm.$setSubmitted(true);
             }
 
@@ -96,8 +98,9 @@
                     vm.driver.experience.pop();
                 }
                 debugger;
-                vm.experienceForm.$setValidity('vm.experienceForm', true);
-                vm.experienceForm.$rollbackViewValue();
+
+                //vm.experienceForm.$setValidity('vm.experienceForm', true);
+                //vm.experienceForm.$rollbackViewValue();
 
             }
 

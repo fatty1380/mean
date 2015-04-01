@@ -21,6 +21,12 @@
             vm.saveCrop = saveCrop;
 
             vm.shape = vm.shape || 'circle';
+
+            vm.hasFile = !!vm.modelPath ? !!(vm.model[vm.modelPath]) : !!vm.model;
+
+            if(!!vm.modelPath && vm.hasFile) {
+                vm.uploadBtnText = 'Select New File ...';
+            }
         };
 
         vm.initializeVariables();
