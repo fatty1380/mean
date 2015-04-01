@@ -825,7 +825,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                <dl class="dl-horizontal" ng-show="vm.visibleTab === \'messaging\'">\n' +
   '                                    <span ng-repeat="message in application.messages | limitTo: -3">\n' +
   '                                        <dt>{{message.sender.displayName}}</dt>\n' +
-  '                                        <dd>{{message.text}} <small class="smaller text-muted mgn-left">{{message.created | amDateFormat: \'L LT\'}}</small></dd>\n' +
+  '                                        <dd><span ng-bind-html="message.text"></span> <small class="smaller text-muted mgn-left">{{message.created | amDateFormat: \'L LT\'}}</small></dd>\n' +
   '                                    </span>\n' +
   '\n' +
   '                                    <span ng-if="!application.connection">\n' +

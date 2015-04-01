@@ -11,7 +11,7 @@ module.exports = {
                 'public/lib/animate.css/animate.min.css',
                 'public/lib/ngImgCrop/compile/minified/ng-img-crop.css',
                 'public/lib/angular-toastr/dist/angular-toastr.min.css',
-                'public/lib/ngSignaturePad/ngSignaturePad.min.css'
+                'public/lib/ngSignaturePad/ngSignaturePad.css'
             ],
             js: [
                 'public/lib/angular/angular.min.js',
@@ -34,7 +34,7 @@ module.exports = {
                 '//tinymce.cachefly.net/4.1/tinymce.min.js',
                 'public/lib/angular-sanitize/angular-sanitize.min.js',
                 'public/lib/angular-toastr/dist/angular-toastr.tpls.min.js',
-                'public/lib/ngSignaturePad/ngSignaturePad.min.js',
+                'public/lib/ngSignaturePad/ngSignaturePad.js',
                 'public/lib/signature_pad/signature_pad.min.js'
             ]
         },
