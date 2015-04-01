@@ -148,7 +148,7 @@
             {index: 3, active: true, state: 'gateway.documents', title: 'Documents'},
             {index: 4, active: false, state: 'gateway.reports', title: 'Reports'},
             {index: 5, active: true, state: 'gateway.reportFields', title: 'Report Info', params: {readonly: false}},
-            {index: 5, active: true, state: 'gateway.reportFields', title: 'Report Info', params: {readonly: true}},
+            {index: 5, active: true, state: 'gateway.reportFields', title: 'Confirmation', params: {readonly: true}},
             {index: 6, active: true, state: 'gateway.authorization', title: 'Authorization'},
             {index: 7, active: true, state: 'gateway.payment', title: 'Payment'},
             {index: 8, active: true, state: 'gateway.complete', title: '&nbsp;'},

@@ -92,9 +92,12 @@
                 console.log('Experience untouched ...');
                 if (vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
                     console.log('nuked experience');
-                    vm.driver.experience = [];
+                    debugger;
+                    vm.driver.experience.pop();
                 }
-                vm.form.$setValidity('vm.experienceForm', true);
+                debugger;
+                vm.experienceForm.$setValidity('vm.experienceForm', true);
+                vm.experienceForm.$rollbackViewValue();
 
             }
 
@@ -107,7 +110,10 @@
             }
             else {
                 vm.introTextError = null;
-                vm.form.$setValidity('introText', true);
+                if (!vm.form.introText.$valid) {
+                    debugger;
+                    vm.form.$setValidity('introText', true);
+                }
             }
 
             if (vm.form.$invalid) {
@@ -151,10 +157,10 @@
                     });
 
                     scope.vm.gateway.driver.then(function (driverResponse) {
-                        if(!_.isEmpty(scope.vm.driver)) {
+                        if (!_.isEmpty(scope.vm.driver)) {
                             debugger;
                         }
-                        scope.vm.driver = driverResponse;
+                        scope.vm.driver = _.merge(driverResponse, Drivers.default);
                     });
                 }
             },

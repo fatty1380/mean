@@ -1,12 +1,12 @@
 (function() {
     'use strict';
 
-    function PolyInputDirective($compile, PolyFieldSvc) {
+    function PolyInputDirective($compile, PolyField) {
         var linkFn = function(scope, element, attributes) {
 
             // create input element depending on the type
 
-            var field = PolyFieldSvc.translateWithThis(scope.storage, scope.polyData);
+            var field = PolyField.translateWithThis(scope.storage, scope.polyData);
             var template = document.createElement('input');
 
             if(!!field.ngType) {

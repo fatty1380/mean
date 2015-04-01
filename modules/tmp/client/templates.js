@@ -865,15 +865,17 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                    <i class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
   '                                </a>\n' +
   '                                <br class="visible-lg mgn-vert pull-right"/>\n' +
+  '\n' +
   '                                <a class="btn-tab btn-link strong"\n' +
   '                                   style="white-space: nowrap"\n' +
   '                                   tooltip="{{application.documentText || vm.documentText}}"\n' +
   '                                   tooltip-popup-delay="1000"\n' +
-  '                                   ui-sref="bgchecks">\n' +
+  '                                   ui-sref="drivers.documents({driverId: application.user.driver.id})">\n' +
   '                                    Documents\n' +
   '                                    <i class="fa fa-file-text fa-lg mgn-left"></i>\n' +
   '                                </a>\n' +
   '                                <br class="visible-lg mgn-vert"/>\n' +
+  '\n' +
   '                                <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
   '                                <a class="btn-tab btn-link strong"\n' +
   '                                   style="white-space: nowrap"\n' +
@@ -3445,7 +3447,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '           ng-bind-html="vm.about.messageSubHeading"></p>\n' +
   '\n' +
   '        <div class="form-group"\n' +
-  '             ng-class="{\'has-error\': vm.form.introText.$error && (vm.form.$submitted || vm.form.introText.$touched)}">\n' +
+  '             ng-class="{\'has-error\': vm.form.introText.$invalid && (vm.form.$submitted || vm.form.introText.$touched)}">\n' +
   '            <div class="col-sm-12">\n' +
   '                <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
   '                    Please introduce yourself to the employer here\n' +
@@ -3584,7 +3586,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '\n' +
   '            <p class="text-center" ng-if="vm.models.length > vm.maxCt">\n' +
-  '                <button type="button" class="btn btn-oset-link" ng-click="(vm.maxCt = vm.maxCt+5);">view more ...</button>\n' +
+  '                <button type="button" class="btn btn-oset-link" ng-click="(vm.maxCt = vm.maxCt+5);">view more ...\n' +
+  '                </button>\n' +
   '            </p>\n' +
   '\n' +
   '        </div>\n' +
@@ -3594,8 +3597,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience.client.template.html',
   '<section class="experience">\n' +
   '\n' +
-  '    <ng-form name="vm.experienceForm" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
-  '             ng-if="!vm.viewOnly">\n' +
+  '    <div ng-form="vm.experienceForm" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
+  '         ng-if="!vm.viewOnly">\n' +
   '\n' +
   '        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">\n' +
   '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
@@ -3686,7 +3689,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </div>\n' +
   '            </div>\n' +
   '        </div>\n' +
-  '    </ng-form>\n' +
+  '    </div>\n' +
   '\n' +
   '    <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"\n' +
   '             ng-class="{\'last\':vm.isLast && !vm.canEdit}">\n' +
@@ -3704,7 +3707,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <span ng-show="!vm.canEdit"\n' +
   '                      ng-click="vm.model.expanded = !vm.model.expanded"\n' +
   '                      class="pull-left pointer text-oset">\n' +
-  '                    <i class="fa" ng-class="{\'fa-caret-right\': !vm.model.expanded, \'fa-caret-down\': !!vm.model.expanded}"></i>\n' +
+  '                    <i class="fa"\n' +
+  '                       ng-class="{\'fa-caret-right\': !vm.model.expanded, \'fa-caret-down\': !!vm.model.expanded}"></i>\n' +
   '                    {{ !!vm.model.expanded ? \'hide\' : \'show details...\'}}\n' +
   '                </span>\n' +
   '                &nbsp;\n' +

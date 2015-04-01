@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var FormEntryController = function (PolyField, $q) {
+    function FormEntryController(PolyField, $q) {
         var vm = this;
 
         vm.debug = false;
@@ -31,7 +31,9 @@
         else {
             vm.initialize();
         }
-    };
+    }
+
+    FormEntryController.$inject = ['PolyFieldService', '$q'];
 
     var FormEntryDirective = function () {
         var ddo = {
@@ -59,8 +61,6 @@
 
         return ddo;
     };
-
-    FormEntryController.$inject = ['PolyFieldService', '$q'];
 
     angular.module('bgchecks')
         .controller('FormEntryController', FormEntryController)

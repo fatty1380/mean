@@ -1,7 +1,7 @@
 <section class="experience">
 
-    <ng-form name="vm.experienceForm" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"
-             ng-if="!vm.viewOnly">
+    <div ng-form="vm.experienceForm" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"
+         ng-if="!vm.viewOnly">
 
         <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">
             <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
@@ -92,7 +92,7 @@
                 </div>
             </div>
         </div>
-    </ng-form>
+    </div>
 
     <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"
              ng-class="{'last':vm.isLast && !vm.canEdit}">
@@ -110,7 +110,8 @@
                 <span ng-show="!vm.canEdit"
                       ng-click="vm.model.expanded = !vm.model.expanded"
                       class="pull-left pointer text-oset">
-                    <i class="fa" ng-class="{'fa-caret-right': !vm.model.expanded, 'fa-caret-down': !!vm.model.expanded}"></i>
+                    <i class="fa"
+                       ng-class="{'fa-caret-right': !vm.model.expanded, 'fa-caret-down': !!vm.model.expanded}"></i>
                     {{ !!vm.model.expanded ? 'hide' : 'show details...'}}
                 </span>
                 &nbsp;

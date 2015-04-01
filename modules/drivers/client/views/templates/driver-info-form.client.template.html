@@ -59,7 +59,7 @@
            ng-bind-html="vm.about.messageSubHeading"></p>
 
         <div class="form-group"
-             ng-class="{'has-error': vm.form.introText.$error && (vm.form.$submitted || vm.form.introText.$touched)}">
+             ng-class="{'has-error': vm.form.introText.$invalid && (vm.form.$submitted || vm.form.introText.$touched)}">
             <div class="col-sm-12">
                 <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">
                     Please introduce yourself to the employer here

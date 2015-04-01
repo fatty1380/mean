@@ -162,15 +162,17 @@
                                     <i class="fa fa-comments-o fa-lg mgn-left"></i>
                                 </a>
                                 <br class="visible-lg mgn-vert pull-right"/>
+
                                 <a class="btn-tab btn-link strong"
                                    style="white-space: nowrap"
                                    tooltip="{{application.documentText || vm.documentText}}"
                                    tooltip-popup-delay="1000"
-                                   ui-sref="bgchecks">
+                                   ui-sref="drivers.documents({driverId: application.user.driver.id})">
                                     Documents
                                     <i class="fa fa-file-text fa-lg mgn-left"></i>
                                 </a>
                                 <br class="visible-lg mgn-vert"/>
+
                                 <!--TODO: Change the "Reject" into a state rather than a callback-->
                                 <a class="btn-tab btn-link strong"
                                    style="white-space: nowrap"
