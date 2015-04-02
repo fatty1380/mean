@@ -42,19 +42,21 @@
         vm.save = function (action) {
             vm.error = null;
 
-            vm.experienceForm.$setSubmitted(true);
+            vm.experienceItem = vm.form['experienceItem_'+ vm.modelIndex];
 
-            if (action !== 'add' && vm.experienceForm.$pristine && vm.model.isFresh) {
+            vm.experienceItem.$setSubmitted(true);
+
+            if (action !== 'add' && vm.experienceItem.$pristine && vm.model.isFresh) {
 
                 vm.cancel();
-                vm.experienceForm.$setValidity('model', true);
-                vm.experienceForm.$setSubmitted();
+                vm.experienceItem.$setValidity('model', true);
+                vm.experienceItem.$setSubmitted();
                 return true;
             }
 
-            if (vm.experienceForm.$invalid) {
+            if (vm.experienceItem.$invalid) {
 
-                if (vm.experienceForm.$error.required) {
+                if (vm.experienceItem.$error.required) {
                     vm.error = 'Please fill in all required fields before saving';
                 }
                 else {
@@ -90,7 +92,7 @@
         //vm.form.cancel = vm.cancel;
     }
 
-    function ExperienceDirective() {
+    function ExperienceItemDirective() {
         return {
             priority: 0,
             templateUrl: '/modules/drivers/views/templates/experience.client.template.html',
@@ -103,12 +105,14 @@
                 addFn: '&?',
                 dropFn: '&?',
                 isLast: '=?',
+                modelIndex: '=?',
                 viewOnly: '=?'
             },
-            require: ['^form'],
+            require: ['^osetExperienceList', '^form'],
             link: function(scope, element, attrs, ctrls) {
                 debugger;
-                scope.vm.form = ctrls[0];
+                scope.vm.form = ctrls[1];
+                scope.vm.list = ctrls[0];
             },
             controller: 'ExperienceItemController',
             controllerAs: 'vm',
@@ -186,7 +190,7 @@
 
     angular.module('drivers')
         .controller('ExperienceItemController', ExperienceItemController)
-        .directive('osetExperienceItem', ExperienceDirective)
+        .directive('osetExperienceItem', ExperienceItemDirective)
         .controller('ExperienceListController', ExperienceListController)
         .directive('osetExperienceList', ExperienceListDirective);
 

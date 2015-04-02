@@ -8,6 +8,24 @@
             about: null
         });
 
+        vm.getSubforms = function (form) {
+            var FormController;
+
+            if (!!form.hasOwnProperty('$setSubmitted')) {
+                FormController = form.constructor;
+            }
+            else {
+                $log.debug('[Gateway.getSubforms] form is not a FormController');
+                return [];
+            }
+
+            return _.compact(_.map(form, function (value, key, collection) {
+                if (key.substring(0, 1) === '$') return;
+                if (value instanceof form.constructor) return value;
+            }));
+
+        };
+
         vm.methods = _.defaults({
             submit: function () {
                 var method;
@@ -61,15 +79,13 @@
                             }
                         });
                     });
-                    $log.warn('Ignoring Rejection: Please correct the errors above');
-                    deferred.resolve('Please correct the errors above');
+                    deferred.reject('Please correct the errors above');
                 }
 
                 if (!!isValid) {
                     deferred.resolve('User Form is Valid');
                 } else {
-                    $log.warn('Ignoring Rejection: Please correct the errors above');
-                    deferred.resolve('Please correct the errors above');
+                    deferred.reject('Please correct the errors above');
                 }
 
                 return deferred.promise;
@@ -79,17 +95,22 @@
 
         vm.validateSubForms = function () {
 
-            vm.licenseForm = vm.form['vm.licenseForm'];
-            if (!!vm.licenseForm && !vm.licenseForm.$submitted) {
-                vm.licenseForm.$setSubmitted(true);
-            }
+            _.each(vm.getSubforms(vm.form), function (subform) {
+                $log.debug('[ValidateSubforms.%s] Validating subform: %s', subform.$name, subform.$name);
 
-            vm.experienceForm = vm.form['vm.experienceForm'];
-            if (!!vm.experienceForm && !vm.experienceForm.$submitted) {
-                vm.experienceForm.$setSubmitted(true);
-            }
+                if (!subform.$submitted) {
+                    $log.debug('[ValidateSubforms.%s] Setting to Submitted', subform.$name);
+                    subform.$setSubmitted(true);
+                }
 
-            if (vm.experienceForm && vm.experienceForm.$pristine) {
+                var subs = vm.getSubforms(subform);
+
+                _.each(subs, function (doublesub) {
+                    debugger;
+                });
+            });
+
+            if (vm.form.experienceForm && vm.form.experienceForm.$pristine) {
 
                 console.log('Experience untouched ...');
                 if (vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
@@ -99,8 +120,8 @@
                 }
                 debugger;
 
-                //vm.experienceForm.$setValidity('vm.experienceForm', true);
-                //vm.experienceForm.$rollbackViewValue();
+                //vm.form.experienceForm.$setValidity('vm.form.experienceForm', true);
+                //vm.form.experienceForm.$rollbackViewValue();
 
             }
 

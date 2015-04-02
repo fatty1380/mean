@@ -3684,10 +3684,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/drivers/views/templates/experience-list.client.template.html',
   '<section name="experience-list.client.template">\n' +
-  '    <div class="row profile-row">\n' +
-  '        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)" ng-form="vm.experienceForm">\n' +
+  '    <div ng-form="experienceForm" class="row profile-row">\n' +
+  '        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)">\n' +
   '\n' +
   '            <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"\n' +
+  '                                  model-index="$index"\n' +
   '                                  model="exp" is-last="$last" ng-switch-when="true"\n' +
   '                                  view-only="vm.viewOnly" can-edit="vm.canEdit" edit-mode="exp.isFresh && vm.isEditing"\n' +
   '                                  add-fn="vm.add" drop-fn="vm.drop" is-last="$last">\n' +
@@ -3711,7 +3712,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience.client.template.html',
   '<section class="experience">\n' +
   '\n' +
-  '    <div ng-form="vm.experienceItem" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
+  '    <div ng-form="experienceItem_{{vm.modelIndex}}" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
   '         ng-if="!vm.viewOnly">\n' +
   '\n' +
   '        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">\n' +

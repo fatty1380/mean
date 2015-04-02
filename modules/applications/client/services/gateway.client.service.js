@@ -7,6 +7,8 @@
         var promises = {};
         var model = {};
 
+        var FormController = null;
+
         _this._data = {
             initialize: function (job, user) {
                 if (_this.initialized) {
@@ -262,29 +264,29 @@
 
                 return promises.application.promise;
             },
-            set: function(val) {
-                $log.debug('[Gateway] Setting `Application` to %o', val);
-
-                promises.report = promises.report || $q.defer();
-                if (promises.sku !== val) {
-                    if(_.isString(val)) {
-                        $log.debug('[Gateway] Setting new application by ID');
-                        promises.application.promise = Applications.ById(val).$promise;
-                    } else {
-                        promises.application.promse = $q.when(val);
-                    }
-
-                    promises.application.promise.then(function (reportResponse) {
-                            promises.report.resolve(reportResponse);
-                            model.report = reportResponse;
-                            return reportResponse;
-                        })
-                        .then(function (report) {
-                            promises.sku = (report || {}).sku;
-                        });
-
-                }
-            }
+            //set: function(val) {
+            //    $log.debug('[Gateway] Setting `Application` to %o', val);
+            //
+            //    promises.report = promises.report || $q.defer();
+            //    if (promises.sku !== val) {
+            //        if(_.isString(val)) {
+            //            $log.debug('[Gateway] Setting new application by ID');
+            //            promises.application.promise = Applications.ById(val).$promise;
+            //        } else {
+            //            promises.application.promse = $q.when(val);
+            //        }
+            //
+            //        promises.application.promise.then(function (reportResponse) {
+            //                promises.report.resolve(reportResponse);
+            //                model.report = reportResponse;
+            //                return reportResponse;
+            //            })
+            //            .then(function (report) {
+            //                promises.sku = (report || {}).sku;
+            //            });
+            //
+            //    }
+            //}
         });
 
         Object.defineProperty(_this._data, 'release', {
@@ -300,7 +302,6 @@
 
                 _this._data.application
                     .then(function (application) {
-                        debugger;
                         application.release = val;
                     });
             }

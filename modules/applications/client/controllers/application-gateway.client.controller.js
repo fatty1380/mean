@@ -45,7 +45,9 @@
         };
 
         vm.resetSubformMethods = function () {
-            vm.subformMethods = null;
+            vm.subformMethods.init = defaultMethods.init;
+            vm.subformMethods.validate = defaultMethods.validate;
+            vm.subformMethods.submit = defaultMethods.submit;
             $log.debug('[AppGatewayCtrl] Reset Subform Methods');
         };
 
@@ -164,6 +166,7 @@
 
         vm.goNext = function () {
             if (vm.currentIndex < vm.activeSteps.length - 1) {
+                debugger;
 
                 vm.subformMethods.validate().then(
                     function (success) {
@@ -213,7 +216,8 @@
                     status: 'submitted',
                     agreement: vm.gw.models.application.termsAccepted,
                     jobId: vm.gw.models.job._id,
-                    introduction: vm.gw.models.driver.about
+                    introduction: vm.gw.models.driver.about,
+                    release: vm.gw.models.application.release
                 });
 
                 var upsertMethod, params;
@@ -233,7 +237,8 @@
                     .then(function (success) {
                         $log.debug('Successfully created an application: %o', success);
 
-                        vm.gateway.application = success;
+                        //vm.gateway.application = success;
+                        _.extend(vm.gateway.application, success);
 
                         vm.success = 'Application Submission Successful!';
                     })
