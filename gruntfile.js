@@ -245,9 +245,16 @@ module.exports = function (grunt) {
                 }
             },
             mochaTest: {
-                src: testAssets.tests.server,
-                options: {
-                    reporter: 'spec'
+                default: {
+                    src: testAssets.tests.server,
+                    options: {
+                        reporter: 'spec'
+                    }
+                },
+                watch: {
+                    options: {
+                        reporter: 'min'
+                    }
                 }
             },
             karma: {
@@ -275,6 +282,8 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-express-server');
+
+    grunt.loadNpmTasks('grunt-notify');
 
 // Load external tasks:
     grunt.task.loadTasks('./grunt/');
@@ -312,6 +321,7 @@ module.exports = function (grunt) {
 
 // Run the project tests
     grunt.registerTask('test', ['env:test', 'mongoose', 'mochaTest', 'karma:unit']);
+    grunt.registerTask('test:server', ['env:test', 'mongoose', 'mochaTest']);
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
 // Run the project in development mode

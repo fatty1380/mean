@@ -19,7 +19,7 @@ module.exports = function(karmaConfig) {
 		// Test results reporter to use
 		// Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
 		//reporters: ['progress'],
-        reporters: ['progress'], //, 'coverage', 'osx'],
+        reporters: ['progress', 'osx'], //, 'coverage'],
 
 		// Web server port
 		port: 9876,
@@ -67,6 +67,13 @@ module.exports = function(karmaConfig) {
             'karma-coverage',
             'karma-osx-reporter'
         ],
+
+        client: {
+            captureConsole: true,
+            mocha: {
+                bail: true
+            }
+        }
         // End Coverage Setup
 	});
 };

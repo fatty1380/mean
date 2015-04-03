@@ -51,15 +51,6 @@ describe('Driver Model Unit Tests:', function() {
             });
         });
 
-        it('should have ' + scheduleCount + ' schedule slots after save', function(done) {
-            return driver.save(function(err) {
-                should.not.exist(err);
-                var count = driver.schedule.length;
-                count.should.be.exactly(scheduleCount);
-                done();
-            });
-        });
-
         it('should be able to show an error when try to save without user', function(done) {
             driver.user = null;
 
