@@ -269,7 +269,8 @@ module.exports = function (grunt) {
             },
             bunyan: {
                 strict: false,
-                level: 'trace'
+                level: 'trace',
+                output: 'short',
             }
         }
     );
@@ -321,7 +322,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
 // Run the project in development mode
-    grunt.registerTask('default', ['env:dev', 'lint', 'concurrent:default']);
+    grunt.registerTask('default', ['env:dev', 'bunyan', 'lint', 'concurrent:default']);
 
     grunt.registerTask('nowatch', ['env:dev', 'lint', 'concurrent:nowatch']);
 

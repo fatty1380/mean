@@ -64,8 +64,6 @@
     "socket.io": "~1.1.0"
   },
   "devDependencies": {
-    "swig": "^1.4.2",
-    "unirest": "^0.4.0",
     "grunt-concurrent": "~1.0.0",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-csslint": "^0.3.1",
@@ -77,6 +75,7 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-env": "~0.4.1",
     "grunt-express-server": "^0.4.19",
+    "grunt-html2js": "^0.3.0",
     "grunt-karma": "~0.9.0",
     "grunt-mocha-test": "~0.12.1",
     "grunt-ng-annotate": "~0.4.0",
@@ -85,16 +84,16 @@
     "grunt-protractor-runner": "1.1.4",
     "gulp": "~3.8.9",
     "gulp-concat": "~2.4.1",
-    "gulp-nodemon": "~1.0.4",
-    "gulp-livereload": "~2.1.1",
-    "gulp-jshint": "~1.8.6",
     "gulp-csslint": "~0.1.5",
     "gulp-cssmin": "~0.1.6",
+    "gulp-jshint": "~1.8.6",
     "gulp-karma": "~0.0.4",
     "gulp-less": "~1.3.6",
+    "gulp-livereload": "~2.1.1",
     "gulp-load-plugins": "~0.7.0",
     "gulp-mocha": "~1.1.1",
     "gulp-ng-annotate": "~0.3.3",
+    "gulp-nodemon": "~1.0.4",
     "gulp-protractor": "~0.0.11",
     "gulp-sass": "~1.3.3",
     "karma": "~0.12.0",
@@ -107,6 +106,8 @@
     "load-grunt-tasks": "^3.1.0",
     "run-sequence": "~1.0.1",
     "should": "~4.1.0",
-    "supertest": "~0.14.0"
+    "supertest": "~0.14.0",
+    "swig": "^1.4.2",
+    "unirest": "^0.4.0"
   }
 }
