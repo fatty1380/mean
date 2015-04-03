@@ -16,7 +16,7 @@ var address;
 /**
  * Unit tests
  */
-describe('Address Model Unit Tests:', function() {
+describe.skip('Address Model Unit Tests:', function() {
     beforeEach(function(done) {
 
         address = new Address({

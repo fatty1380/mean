@@ -2,8 +2,8 @@
 
 module.exports = {
 	tests: {
-		client: ['modules/*/tests/client/**/*.js'],
-		server: ['modules/*/tests/server/**/*.js'],
+		client: ['config/lib/karma-init.js', 'modules/*/tests/client/**/*.js'],
+		server: ['config/lib/mocha-init.js', 'modules/*/tests/server/**/*.js'],
 		e2e: ['modules/*/tests/e2e/**/*.js']
 	}
 };

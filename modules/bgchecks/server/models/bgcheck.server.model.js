@@ -80,8 +80,8 @@ var BackgroundReportSchema = new Schema({
 
     status: {
         type: String,
-        enum: ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED'],
-        default: null
+        enum: ['UNKNOWN', 'PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED'],
+        default: 'UNKNOWN'
     },
 
     isComplete: {
