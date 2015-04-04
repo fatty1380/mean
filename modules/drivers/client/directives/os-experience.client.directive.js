@@ -87,7 +87,6 @@
             return null;
         };
 
-        debugger;
         //vm.form.save = vm.save;
         //vm.form.cancel = vm.cancel;
     }
@@ -108,9 +107,8 @@
                 modelIndex: '=?',
                 viewOnly: '=?'
             },
-            require: ['^osetExperienceList', '^form'],
+            require: ['^osetExperienceList', '^?form'],
             link: function(scope, element, attrs, ctrls) {
-                debugger;
                 scope.vm.form = ctrls[1];
                 scope.vm.list = ctrls[0];
             },
@@ -175,9 +173,8 @@
                 viewOnly: '=?',
                 maxCt: '=?'
             },
-            require: ['^form'],
+            require: ['^?form'],
             link: function(scope, element, attrs, ctrls) {
-                debugger;
                 scope.vm.form = ctrls[0];
             },
             controller: 'ExperienceListController',

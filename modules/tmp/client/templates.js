@@ -312,7 +312,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/applications/views/form/driver-info.client.template.html',
   '<section class="workflow-stage-form">\n' +
   '    <!--model="vm.gw.driver" user="vm.gw.user"-->\n' +
-  '    <driver-info-form ng-form="vm.driverInfoForm" gateway="vm.gw"\n' +
+  '    <driver-info-form ng-form="vm.driverInfoForm" gateway="vm.gw" display-mode="min"\n' +
   '                      text="vm.about" class="col-sm-12" methods="vm.subformMethods">\n' +
   '    </driver-info-form>\n' +
   '</section>\n' +
@@ -3499,17 +3499,149 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </span>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/drivers/views/templates/driver-edit-form.client.template.html',
+  '<fieldset>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div data-ng-show="vm.error" class="panel panel-danger mgn-vert col-md-8 col-md-offset-2">\n' +
+  '            <div class="text-danger text-center mgn-vert">\n' +
+  '                <strong data-ng-bind="vm.error"></strong>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <h3>Interests\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            Tell us about what kind of jobs you are interested in. Select from the list or add your own.\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
+  '\n' +
+  '    <div class="well">\n' +
+  '        <div class="row text-center">\n' +
+  '            <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
+  '            <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!-- Driver\'s License Information -->\n' +
+  '    <h3>Driver License\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            The basic information about your license will be made available when you apply for a job.\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
+  '\n' +
+  '    <div class="well">\n' +
+  '        <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"></os-edit-license>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!-- Driver\'s Experience Breakdown -->\n' +
+  '    <h3>Experience\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            Add information about past work experience to help employers know more about you and your background\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
+  '\n' +
+  '    <div class="panel">\n' +
+  '        <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!-- Biography -->\n' +
+  '    <h3 class="clearfix">About Me\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            Include an introduction to yourself here to help employers know who you are\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
+  '    <div class="container-fluid well">\n' +
+  '\n' +
+  '        <div class="row"\n' +
+  '             ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">\n' +
+  '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
+  '                <div class="text-danger text-center mgn-vert">\n' +
+  '                    Please add some information about yourself here.\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <!--<textarea os-html-edit data-ng-model="vm.driver.about" class="editor-lg" ng-required="true"></textarea>-->\n' +
+  '\n' +
+  '                    <textarea os-html-edit type="text" data-ng-model="vm.driver.about"\n' +
+  '                              name="description" id="description" class="editor-md"\n' +
+  '                              placeholder="Please introduce yourself to the employer here"\n' +
+  '                              ng-required="true"></textarea>\n' +
+  '        <!--<input type="hidden" ng-model="vm.driver.about" name="description" ng-required="true"/>-->\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div ng-if="vm.enableSchedule">\n' +
+  '\n' +
+  '        <h3>Availability</h3>\n' +
+  '        <!-- Driver\'s Availability -->\n' +
+  '        <div class="container-fluid well">\n' +
+  '            <div class="row profile-row" ng-show="vm.driver.schedule && !!vm.driver.schedule.length">\n' +
+  '                <div class="col-md-12 availability_matrix" name="schedule">\n' +
+  '                    <div class="container-fluid well">\n' +
+  '                        <div class="col-md-12">\n' +
+  '                            <div class="row availability-header">\n' +
+  '                                <div class="col-md-5">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Time</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">M</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Tu</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">W</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Th</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">F</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Sa</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Su</h6>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                            <div ng-include="\'modules/users/views/templates/schedule.client.template.html\'"\n' +
+  '                                 ng-repeat=\'schedule in vm.driver.schedule\'></div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="row profile-row" ng-hide="vm.driver.schedule">\n' +
+  '                <div class="col-sm-8 col-sm-offset-2">\n' +
+  '                    <alert type="info text-center">\n' +
+  '                        <i class="fa fa-info-circle text-info fa-2x pull-left"\n' +
+  '                           style="padding-right: 10px;"></i>\n' +
+  '                        <span>You will be able to set your schedule after saving your primary information</span>\n' +
+  '                    </alert>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '    </div>\n' +
+  '</fieldset>\n' +
+  '');
  $templateCache.put('/modules/drivers/views/templates/driver-info-form.client.template.html',
-  '<section>\n' +
+  '<fieldset>\n' +
   '\n' +
   '    <div class="row">\n' +
   '        <!--What type of license do you have? -->\n' +
-  '        <div class="form-group">\n' +
-  '            <p class="info col-sm-10 col-sm-offset-1">\n' +
+  '        <div class="col-md-10 col-md-offset-1">\n' +
+  '            <p class="info">\n' +
   '                What type of driver license do you have?\n' +
   '            </p>\n' +
   '\n' +
-  '            <div class="col-sm-12 text-center">\n' +
+  '            <div class="panel panel-default pad-vert">\n' +
   '                <os-edit-license model="vm.driver.licenses[0]"\n' +
   '                                 form-name="licenseForm"\n' +
   '                                 mode="minimal"></os-edit-license>\n' +
@@ -3519,12 +3651,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    <div class="row">\n' +
   '        <!--What are you interested in -->\n' +
-  '        <div class="form-group">\n' +
-  '            <p class="info col-sm-10 col-sm-offset-1">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1">\n' +
+  '            <p class="info">\n' +
   '                What types of jobs are you interested in?\n' +
   '            </p>\n' +
   '\n' +
-  '            <div class="col-sm-12 text-center">\n' +
+  '            <div class="panel panel-default pad-vert text-center">\n' +
   '                <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
   '                <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
   '            </div>\n' +
@@ -3579,7 +3711,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    </div>\n' +
   '\n' +
-  '</section>\n' +
+  '</fieldset>\n' +
   '');
  $templateCache.put('/modules/drivers/views/templates/driver-profile.client.template.html',
   '<section name="os-driver.directive" class="panel panel-default">\n' +
@@ -3712,7 +3844,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience.client.template.html',
   '<section class="experience">\n' +
   '\n' +
-  '    <div ng-form="experienceItem_{{vm.modelIndex}}" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
+  '    <div ng-form="{{\'experienceItem\' +_vm.modelIndex}}" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
   '         ng-if="!vm.viewOnly">\n' +
   '\n' +
   '        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">\n' +
@@ -4235,9 +4367,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/license/views/license.client.template.html',
   '<ng-form name="vm.licenseForm" ng-init="vm.activate()">\n' +
-  '    <div class="container-fluid license-details" ng-class="{\'form-horizontal\':vm.view.horizontal}">\n' +
+  '    <div class="license-details form-horizontal">\n' +
   '\n' +
-  '        <div class="row" ng-show="vm.licenseForm.$invalid && (vm.licenseForm.$submitted || vm.licenseForm.description.$dirty)">\n' +
+  '        <div class="row"\n' +
+  '             ng-show="vm.licenseForm.$invalid && (vm.licenseForm.$submitted || vm.licenseForm.description.$dirty)">\n' +
   '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
   '                <div class="text-danger text-center mgn-vert">\n' +
   '                    Please fill in required fields and correct errors\n' +
@@ -4246,7 +4379,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row profile-row">\n' +
-  '            <div ng-class="{\'col-sm-6\':vm.view.cols === 2, \'col-sm-12\': vm.view.cols === 1}">\n' +
+  '            <div class="col-sm-{{12/(vm.view.cols||1)}}">\n' +
   '\n' +
   '                <div class="form-group" ng-if="!!vm.view.types" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
@@ -4264,9 +4397,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.classes"\n' +
+  '                <div class="form-group" ng-show="!!vm.view.classes"\n' +
   '                     ng-hide="vm.view.hideClasses && vm.license.type != \'Commercial\'"\n' +
-  '                     ng-class="{\'col-sm-6\':vm.view.horizontal, \'disabled\':vm.license.type != \'Commercial\'}">\n' +
+  '                     ng-class="{\'col-sm-6\':vm.view.horizontal, \'disabled\':vm.license.type !== \'Commercial\'}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal}">\n' +
   '                        Class Rating\n' +
@@ -4279,10 +4412,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                   ng-model="vm.license.rating" name="classRating"\n' +
   '                                   btn-radio="val">{{val}}</label>\n' +
   '                        </div>\n' +
+  '                        <button type="button" class="btn-tab btn-link read-more btn-sm" ng-click="vm.license.rating = null"\n' +
+  '                                ng-show="!!vm.license.rating"><i class="fa fa-times"></i></button>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.state" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.state" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal,\'text-danger\':vm.licenseForm.state.$invalid && vm.licenseForm.$submitted}">\n' +
   '                        State\n' +
@@ -4296,7 +4431,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.expires" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.expires" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal, \'text-danger\':vm.licenseForm.expires.$invalid}">\n' +
   '                        Expiration Date\n' +
@@ -4304,11 +4439,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '                    <div class="controls"\n' +
   '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
-  '                        <date-input model="vm.license.expires" class="form-control" name="expires" placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>\n' +
+  '                        <date-input model="vm.license.expires" class="form-control" name="expires"\n' +
+  '                                    placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.dob" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.dob" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal, \'text-danger\':vm.licenseForm.dob.$invalid}">\n' +
   '                        Date of Birth\n' +
@@ -4318,7 +4454,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '                    <div class="controls"\n' +
   '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
-  '                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob" placeholder="{{vm.dateFormat}}"></date-input>\n' +
+  '                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob"\n' +
+  '                                    placeholder="{{vm.dateFormat}}"></date-input>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
@@ -4326,7 +4463,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div ng-class="{\'col-sm-6\':vm.view.cols === 2, \'col-sm-12\': vm.view.cols === 1}">\n' +
   '\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.endorsements">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.endorsements">\n' +
   '                    <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>\n' +
   '                        <small>any endorsements on your license?</small>\n' +
   '                    </label>\n' +
@@ -4338,6 +4475,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                   ng-model="vm.license.endorsements[endorsement.key]"\n' +
   '                                   btn-checkbox data-ng-class="{\'active\':endorsement.value}">\n' +
   '                                <i class="fa pull-left"></i>\n' +
+  '\n' +
   '                                <div class="col-xs-4 text-left">{{endorsement.key}}</div>\n' +
   '                                <div class="col-xs-7 text-left">\n' +
   '                                    <small>{{endorsement.description}}\n' +
@@ -4348,6 +4486,16 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12 text-center">\n' +
+  '                <button class="btn btn-oset-link" type="button" ng-click="vm.toggleView()" ng-switch="vm.mode">\n' +
+  '                    <span ng-switch-when="minimal">show more...</span>\n' +
+  '                    <span ng-switch-when="standard">show less...</span>\n' +
+  '                </button>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +

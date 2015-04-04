@@ -155,14 +155,20 @@
             return true;
         };
 
-        vm.methods.init();
+        vm.methods.init && vm.methods.init();
     }
 
     DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Drivers', 'Authentication'];
 
     function DriverInfoFormDirective(Drivers) {
         return {
-            templateUrl: '/modules/drivers/views/templates/driver-info-form.client.template.html',
+            templateUrl: function(elem, attrs) {
+                switch(attrs.displayMode || 'full') {
+                    case 'min': return '/modules/drivers/views/templates/driver-info-form.client.template.html';
+                    default: return '/modules/drivers/views/templates/driver-edit-form.client.template.html';
+                }
+
+            } ,
             restrict: 'E',
             require: ['^form'],
             scope: {
@@ -170,7 +176,8 @@
                 user: '=?',
                 driver: '=?model',
                 text: '=?',
-                methods: '='
+                methods: '=',
+                displayMode: '=?'
             },
             link: function (scope, element, attrs, ctrls) {
                 scope.vm.form = ctrls[0];

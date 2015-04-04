@@ -1,0 +1,130 @@
+<fieldset>
+
+    <div class="row">
+        <div data-ng-show="vm.error" class="panel panel-danger mgn-vert col-md-8 col-md-offset-2">
+            <div class="text-danger text-center mgn-vert">
+                <strong data-ng-bind="vm.error"></strong>
+            </div>
+        </div>
+    </div>
+
+    <h3>Interests
+        <br/>
+        <small>
+            Tell us about what kind of jobs you are interested in. Select from the list or add your own.
+        </small>
+    </h3>
+
+    <div class="well">
+        <div class="row text-center">
+            <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
+            <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
+        </div>
+    </div>
+
+    <!-- Driver's License Information -->
+    <h3>Driver License
+        <br/>
+        <small>
+            The basic information about your license will be made available when you apply for a job.
+        </small>
+    </h3>
+
+    <div class="well">
+        <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"></os-edit-license>
+    </div>
+
+    <!-- Driver's Experience Breakdown -->
+    <h3>Experience
+        <br/>
+        <small>
+            Add information about past work experience to help employers know more about you and your background
+        </small>
+    </h3>
+
+    <div class="panel">
+        <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
+    </div>
+
+    <!-- Biography -->
+    <h3 class="clearfix">About Me
+        <br/>
+        <small>
+            Include an introduction to yourself here to help employers know who you are
+        </small>
+    </h3>
+    <div class="container-fluid well">
+
+        <div class="row"
+             ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">
+            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
+                <div class="text-danger text-center mgn-vert">
+                    Please add some information about yourself here.
+                </div>
+            </div>
+        </div>
+
+        <!--<textarea os-html-edit data-ng-model="vm.driver.about" class="editor-lg" ng-required="true"></textarea>-->
+
+                    <textarea os-html-edit type="text" data-ng-model="vm.driver.about"
+                              name="description" id="description" class="editor-md"
+                              placeholder="Please introduce yourself to the employer here"
+                              ng-required="true"></textarea>
+        <!--<input type="hidden" ng-model="vm.driver.about" name="description" ng-required="true"/>-->
+    </div>
+
+    <div ng-if="vm.enableSchedule">
+
+        <h3>Availability</h3>
+        <!-- Driver's Availability -->
+        <div class="container-fluid well">
+            <div class="row profile-row" ng-show="vm.driver.schedule && !!vm.driver.schedule.length">
+                <div class="col-md-12 availability_matrix" name="schedule">
+                    <div class="container-fluid well">
+                        <div class="col-md-12">
+                            <div class="row availability-header">
+                                <div class="col-md-5">
+                                    <h6 class="heading profile-label profile-label-1">Time</h6>
+                                </div>
+                                <div class="col-md-1">
+                                    <h6 class="heading profile-label profile-label-1">M</h6>
+                                </div>
+                                <div class="col-md-1">
+                                    <h6 class="heading profile-label profile-label-1">Tu</h6>
+                                </div>
+                                <div class="col-md-1">
+                                    <h6 class="heading profile-label profile-label-1">W</h6>
+                                </div>
+                                <div class="col-md-1">
+                                    <h6 class="heading profile-label profile-label-1">Th</h6>
+                                </div>
+                                <div class="col-md-1">
+                                    <h6 class="heading profile-label profile-label-1">F</h6>
+                                </div>
+                                <div class="col-md-1">
+                                    <h6 class="heading profile-label profile-label-1">Sa</h6>
+                                </div>
+                                <div class="col-md-1">
+                                    <h6 class="heading profile-label profile-label-1">Su</h6>
+                                </div>
+                            </div>
+                            <div ng-include="'modules/users/views/templates/schedule.client.template.html'"
+                                 ng-repeat='schedule in vm.driver.schedule'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row profile-row" ng-hide="vm.driver.schedule">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <alert type="info text-center">
+                        <i class="fa fa-info-circle text-info fa-2x pull-left"
+                           style="padding-right: 10px;"></i>
+                        <span>You will be able to set your schedule after saving your primary information</span>
+                    </alert>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</fieldset>

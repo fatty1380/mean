@@ -26,7 +26,7 @@
 
                 <div class="col-sm-12">
 
-                    <div id="gateway-form" ng-submit="vm.submitForm()">
+                    <form name="gateway-form">
                         <div id="form-views" ui-view>
                             <section class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
                                 <h4 class="text-center">{{vm.formData.job.name}}</h4>
@@ -44,7 +44,7 @@
                                 </p>
                             </section>
                         </div>
-                    </div>
+                    </form>
 
                 </div>
             </div>

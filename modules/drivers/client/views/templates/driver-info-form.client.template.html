@@ -1,13 +1,13 @@
-<section>
+<fieldset>
 
     <div class="row">
         <!--What type of license do you have? -->
-        <div class="form-group">
-            <p class="info col-sm-10 col-sm-offset-1">
+        <div class="col-md-10 col-md-offset-1">
+            <p class="info">
                 What type of driver license do you have?
             </p>
 
-            <div class="col-sm-12 text-center">
+            <div class="panel panel-default pad-vert">
                 <os-edit-license model="vm.driver.licenses[0]"
                                  form-name="licenseForm"
                                  mode="minimal"></os-edit-license>
@@ -17,12 +17,12 @@
 
     <div class="row">
         <!--What are you interested in -->
-        <div class="form-group">
-            <p class="info col-sm-10 col-sm-offset-1">
+        <div class="col-sm-10 col-sm-offset-1">
+            <p class="info">
                 What types of jobs are you interested in?
             </p>
 
-            <div class="col-sm-12 text-center">
+            <div class="panel panel-default pad-vert text-center">
                 <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
                 <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
             </div>
@@ -77,4 +77,4 @@
 
     </div>
 
-</section>
+</fieldset>
