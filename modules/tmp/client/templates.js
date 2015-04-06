@@ -449,9 +449,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <oset-document-list driver="vm.driver" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
   '\n' +
   '                <dt>Interests:</dt>\n' +
-  '                <dd>\n' +
-  '                    <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
-  '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>\n' +
+  '                <dd class="label-list">\n' +
+  '                    <div ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
+  '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</div></span>\n' +
   '\n' +
   '                    <span ng-show="!visibleInterests.length">\n' +
   '                        <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>\n' +
@@ -490,73 +490,65 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '');
  $templateCache.put('/modules/applications/views/templates/applicant-normal.client.template.html',
-  '<section name="os-driver-inline.directive" class="row">\n' +
+  '<section name="os-driver-inline.directive" class="row inline-item">\n' +
   '    <div class="col-sm-12">\n' +
   '        <!-- Driver Inline Template Begin -->\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
   '            License\n' +
   '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
   '            <oset-license-inline model="vm.license" show-endorsements="true"></oset-license-inline>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
   '            Documents\n' +
   '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '            <p>\n' +
-  '                <oset-document-list driver="vm.driver" application="vm.application" doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
-  '            </p>\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
+  '            <oset-document-list driver="vm.driver" application="vm.application"\n' +
+  '                                doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
   '            Interests\n' +
   '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '            <p style="margin-bottom: 2px;">\n' +
-  '                    <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
-  '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content label-list">\n' +
   '\n' +
-  '                    <span ng-show="!visibleInterests.length">\n' +
-  '                        <span ng-show="!vm.canEdit">none entered</span>\n' +
-  '                    </span>\n' +
-  '            </p>\n' +
+  '            <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
+  '                  class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
+  '\n' +
+  '            <span ng-show="!visibleInterests.length">\n' +
+  '                <span ng-show="!vm.canEdit">none entered</span>\n' +
+  '            </span>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
+  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
   '            Messages\n' +
   '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
+  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
   '                <span ng-show="!!vm.application.connection && !vm.application.messageCt">\n' +
-  '                    <p style="margin-bottom: 2px;">\n' +
   '                        discuss the job and schedule an interview\n' +
-  '                        <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
-  '                            by sending a message\n' +
-  '                        </a>\n' +
-  '                    </p>\n' +
+  '                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
+  '                        by sending a message\n' +
+  '                    </a>\n' +
   '                </span>\n' +
   '                <span ng-show="!!vm.application.connection && !!vm.application.messageCt">\n' +
-  '                    <p style="margin-bottom: 2px;">\n' +
   '                        {{vm.application.messagingText}}\n' +
-  '                        <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
-  '                            ... view now\n' +
-  '                        </a>\n' +
-  '                    </p>\n' +
+  '                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
+  '                        ... view now\n' +
+  '                    </a>\n' +
   '                </span>\n' +
   '                <span ng-hide="!!vm.application.isConnected">\n' +
-  '                    <p style="margin-bottom: 2px;">\n' +
   '                        <em class="text-muted" ng-if="vm.profile.type === \'owner\'">\n' +
   '                            once connected, you will be able to exchange messages with\n' +
   '                            the applicant\n' +
   '                        </em>\n' +
   '                        <em class="text-muted" ng-if="vm.profile.type === \'driver\'">\n' +
-  '                            once connected, you will be able to exchange messages with\n' +
-  '                            the employer\n' +
-  '                        </em>\n' +
-  '                    </p>\n' +
+  '                        once connected, you will be able to exchange messages with\n' +
+  '                        the employer\n' +
+  '                    </em>\n' +
   '                </span>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -693,25 +685,25 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        <dt>Status</dt>\n' +
   '                        <dd>\n' +
   '                            <os-application-status-badge\n' +
-  '                                    model="application"></os-application-status-badge>\n' +
+  '                                    model="vm.application"></os-application-status-badge>\n' +
   '                        </dd>\n' +
   '\n' +
   '                        <dt ng-hide="!!vm.application.messages && !!vm.application.messages.length">\n' +
   '                            Messages\n' +
   '                        </dt>\n' +
   '                        <dd ng-hide="!!vm.application.messages && !!vm.application.messages.length">\n' +
-  '                                            <span ng-show="!!vm.application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    discuss the job and schedule an interview\n' +
-  '                                                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
-  '                                                        by sending a message\n' +
-  '                                                    </a>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
-  '                                            <span ng-hide="!!vm.application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    <em class="text-muted">chat available once connected</em></span>\n' +
-  '                            </p>\n' +
+  '                            <span ng-show="!!vm.application.isConnected">\n' +
+  '                                <p style="margin-bottom: 2px;">\n' +
+  '                                    discuss the job and schedule an interview\n' +
+  '                                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
+  '                                        by sending a message\n' +
+  '                                    </a>\n' +
+  '                                </p>\n' +
+  '                            </span>\n' +
+  '                            <span ng-hide="!!vm.application.isConnected">\n' +
+  '                                <p style="margin-bottom: 2px;">\n' +
+  '                                    <em class="text-muted">chat available once connected</em></span>\n' +
+  '                                </p>\n' +
   '                            </span>\n' +
   '                        </dd>\n' +
   '                    </dl>\n' +
@@ -785,7 +777,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="job-list blog-category-list">\n' +
   '\n' +
   '            <!-- Iterate over the list of jobs ... For Owners -->\n' +
-  '            <oset-application-list-item user-type="owner"\n' +
+  '            <oset-application-job-list-item user-type="owner"\n' +
   '                                        ng-if="vm.user.type === \'owner\'"\n' +
   '                                        ng-repeat="job in vm.jobs"\n' +
   '                                        job="job"\n' +
@@ -794,7 +786,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                        visible-tab="vm.visibleTab"\n' +
   '                                        ng-show="vm.visibleId === job._id || !vm.visibleId">\n' +
   '                <!-- TODO: Move ng-show into the filter on teh repeater -->\n' +
-  '            </oset-application-list-item>\n' +
+  '            </oset-application-job-list-item>\n' +
   '\n' +
   '            <!-- Iterate over the list of applications ... For Drivers -->\n' +
   '            <oset-application-list-item user-type="driver"\n' +
@@ -803,8 +795,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                        application="application"\n' +
   '                                        class="post job-post col-sm-12 applicant"\n' +
   '                                        visible-id="vm.visibleId"\n' +
-  '                                        visible-tab="vm.visibleTab"\n' +
-  '                    popover="{{application | prettyPrint}}" popover-placement="bottom">\n' +
+  '                                        visible-tab="vm.visibleTab">\n' +
+  '\n' +
   '                <!-- TODO: Figure out disagreement between \'visibleId\', ng-show, and inline (nested) vs top level behavior -->\n' +
   '                <!-- TODO: Move ng-show into the filter on teh repeater -->\n' +
   '                <!-- TODO: Combine with the \'owner\' repeater above, if possible :) -->\n' +
@@ -814,7 +806,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
- $templateCache.put('/modules/applications/views/templates/owner-list-item.client.template.html',
+ $templateCache.put('/modules/applications/views/templates/owner-job-list-item.client.template.html',
   '<article class="post col-sm-12 applicant">\n' +
   '\n' +
   '    <!--INNER OWNER CONTENT-->\n' +
@@ -901,105 +893,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
   '                                        ng-click="vm.reverseSort = !vm.reverseSort"\n' +
   '                                        name="sort">\n' +
-  '                                    Reverse Sort <i class="fa {{!vm.reverseSort ? \'fa-sort-amount-asc\':\'fa-sort-amount-desc\'}}"></i>\n' +
+  '                                    Reverse Sort <i\n' +
+  '                                        class="fa {{!vm.reverseSort ? \'fa-sort-amount-asc\':\'fa-sort-amount-desc\'}}"></i>\n' +
   '                                </button>\n' +
   '                            </span>\n' +
   '                        </div>\n' +
   '                    </div>\n' +
   '\n' +
-  '                    <!--ui-sref="applications.view({\'applicationId\': application._id})"-->\n' +
-  '                    <div class="row tab-body-item applicant_item"\n' +
-  '                         ng-show="vm.visibleId === vm.job._id"\n' +
-  '                         data-ng-repeat="application in vm.job.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"\n' +
-  '                         data-ng-init="profile = application.user; vm.checkMessages(application, vm.job)"\n' +
-  '                         ng-class="{\'disabled\': application.disabled}">\n' +
-  '\n' +
-  '                        <div class="row">\n' +
-  '                            <div class="col-sm-12">\n' +
-  '                                <h4 class="stronger">\n' +
-  '                                    {{vm.Applications.getMaskedDisplayName(application)}}\n' +
-  '                                    <br class="hidden-lg hidden-md">\n' +
-  '                                    <span class="pull-right">\n' +
-  '                                        <small>Status:</small>\n' +
-  '                                        <os-application-status-badge model="application"></os-application-status-badge>\n' +
-  '                                    </span>\n' +
-  '                                </h4>\n' +
-  '                            </div>\n' +
-  '                        </div>\n' +
-  '\n' +
-  '                        <div class="row">\n' +
-  '                            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">\n' +
-  '                                <img ng-src="{{profile.profileImageURL}}" class="img-responsive">\n' +
-  '                            </div>\n' +
-  '\n' +
-  '                            <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
-  '                                <oset-application-summary model="application" ng-show="vm.visibleTab === \'applicants\'"\n' +
-  '                                                          display-mode="inline"></oset-application-summary>\n' +
-  '\n' +
-  '                                <dl class="dl-horizontal" ng-show="vm.visibleTab === \'messaging\'">\n' +
-  '                                    <span ng-repeat="message in application.messages | limitTo: -3">\n' +
-  '                                        <dt>{{message.sender.displayName}}</dt>\n' +
-  '                                        <dd><span ng-bind-html="message.text"></span> <small class="smaller text-muted mgn-left">{{message.created | amDateFormat: \'L LT\'}}</small></dd>\n' +
-  '                                    </span>\n' +
-  '\n' +
-  '                                    <span ng-if="!application.connection">\n' +
-  '                                        <h4 class="text-muted text-center">Please review this application to send messages</h4>\n' +
-  '                                    </span>\n' +
-  '\n' +
-  '                                    <span ng-if="!!application.connection && !(application.messages && application.messages.length)">\n' +
-  '                                        <h4 class="text-muted text-center">No Messages</h4>\n' +
-  '                                    </span>\n' +
-  '                                </dl>\n' +
-  '\n' +
-  '                                <div ng-show="vm.visibleTab === \'documents\'">\n' +
-  '                                    <pre ng-if="vm.debug">{{application.user.driver.reports}}</pre>\n' +
-  '                                    <oset-document-list driver="application.user.driver" application="application" display-mode="full" doc-access="application.canViewDocs"></oset-document-list>\n' +
-  '                                </div>\n' +
-  '\n' +
-  '                            </div>\n' +
-  '\n' +
-  '                            <br class="hidden-lg"/>\n' +
-  '\n' +
-  '                            <div class="col-lg-2 col-md-3 col-xs-12 text-right">\n' +
-  '                                <a class="btn-tab btn-link strong pull-right"\n' +
-  '                                   style="white-space: nowrap"\n' +
-  '                                   ui-sref="applications.view({applicationId: application._id, action: \'read\'})">\n' +
-  '                                    Full Profile\n' +
-  '                                    <i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
-  '                                </a>\n' +
-  '                                <br class="visible-lg mgn-vert"/>\n' +
-  '                                <a class="btn-tab btn-link strong pull-right"\n' +
-  '                                   style="white-space: nowrap"\n' +
-  '                                   tooltip="{{application.messagingText || vm.messagingText}}"\n' +
-  '                                   tooltip-popup-delay="1000"\n' +
-  '                                   ui-sref="applications.view({applicationId: application._id, action: \'message\'})">\n' +
-  '\n' +
-  '                                    <span class="badge" ng-show="!!application.newMessages">{{application.newMessages}}</span>\n' +
-  '                                    Messaging\n' +
-  '                                    <i class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
-  '                                </a>\n' +
-  '                                <br class="visible-lg mgn-vert pull-right"/>\n' +
-  '\n' +
-  '                                <a class="btn-tab btn-link strong"\n' +
-  '                                   style="white-space: nowrap"\n' +
-  '                                   tooltip="{{application.documentText || vm.documentText}}"\n' +
-  '                                   tooltip-popup-delay="1000"\n' +
-  '                                   ui-sref="drivers.documents({driverId: application.user.driver.id})">\n' +
-  '                                    Documents\n' +
-  '                                    <i class="fa fa-file-text fa-lg mgn-left"></i>\n' +
-  '                                </a>\n' +
-  '                                <br class="visible-lg mgn-vert"/>\n' +
-  '\n' +
-  '                                <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
-  '                                <a class="btn-tab btn-link strong"\n' +
-  '                                   style="white-space: nowrap"\n' +
-  '                                    ng-click="vm.setApplicationStatus(vm.job.applications[$index], \'rejected\', $event)">\n' +
-  '                                    Reject\n' +
-  '                                    <i class="fa fa-close fa-lg mgn-left"></i>\n' +
-  '                                </a>\n' +
-  '                                <br class="visible-lg mgn-vert"/>\n' +
-  '                            </div>\n' +
-  '                        </div>\n' +
+  '                    <div ng-repeat="application in vm.job.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"\n' +
+  '                         class="row tab-body-item applicant_item">\n' +
+  '                        <oset-application-list-item user-type="owner"\n' +
+  '                                                    application="application" job="vm.job"\n' +
+  '                                                    visible-id="vm.visibleId"\n' +
+  '                                                    visible-tab="vm.visibleTab">\n' +
+  '                        </oset-application-list-item>\n' +
   '                    </div>\n' +
   '\n' +
   '                    <div class="row list-controls">\n' +
@@ -1008,12 +915,14 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
   '                                        ng-click="vm.toggleFilter(\'negStatus\', \'expired\')"\n' +
   '                                        btn-checkbox ng-model="vm.filters.negStatus.expired"\n' +
-  '                                        name="expired">show expired applicants</button>\n' +
+  '                                        name="expired">show expired applicants\n' +
+  '                                </button>\n' +
   '                                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
   '                                        ng-show="vm.visibleTab === \'applicants\'"\n' +
   '                                        ng-click="vm.toggleFilter(\'negStatus\', \'rejected\')"\n' +
   '                                        btn-checkbox ng-model="vm.filters.negStatus.rejected"\n' +
-  '                                        name="rejected">show rejected applicants</button>\n' +
+  '                                        name="rejected">show rejected applicants\n' +
+  '                                </button>\n' +
   '                            </span>\n' +
   '                        </div>\n' +
   '                    </div>\n' +
@@ -1035,6 +944,111 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    </div>\n' +
   '\n' +
+  '    <!--//post-inner-->\n' +
+  '</article>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/templates/owner-list-item.client.template.html',
+  '<article class="post applicant">\n' +
+  '\n' +
+  '    <!--ui-sref="applications.view({\'applicationId\': vm.application._id})"-->\n' +
+  '    <div class="row tab-body-item applicant_item"\n' +
+  '         ng-show="vm.visibleId === vm.job._id"\n' +
+  '         ng-class="{\'disabled\': vm.application.disabled}">\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <h4 class="stronger">\n' +
+  '                    {{vm.Applications.getMaskedDisplayName(vm.application)}}\n' +
+  '                    <br class="hidden-lg hidden-md">\n' +
+  '                                    <span class="pull-right">\n' +
+  '                                        <small>Status:</small>\n' +
+  '                                        <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
+  '                                    </span>\n' +
+  '                </h4>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">\n' +
+  '                <img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive">\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
+  '                <oset-application-summary model="vm.application" ng-show="vm.visibleTab === \'applicants\'"\n' +
+  '                                          display-mode="inline"></oset-application-summary>\n' +
+  '\n' +
+  '                <dl class="dl-horizontal" ng-="vm.visibleTab === \'messaging\'">\n' +
+  '                    <span ng-repeat="message in vm.application.messages | limitTo: -3">\n' +
+  '                        <dt>{{message.sender.displayName}}</dt>\n' +
+  '                        <dd><span ng-bind-html="message.text"></span>\n' +
+  '                            <small class="smaller text-muted mgn-left">\n' +
+  '                                {{message.created | amDateFormat:\'L LT\'}}\n' +
+  '                            </small>\n' +
+  '                        </dd>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <span ng-if="!vm.application.connection">\n' +
+  '                        <h4 class="text-muted text-center">\n' +
+  '                            Please review this application to send messages\n' +
+  '                            </h4>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <span ng-if="!!vm.application.connection && !(vm.application.messages && vm.application.messages.length)">\n' +
+  '                        <h4 class="text-muted text-center">No Messages</h4>\n' +
+  '                    </span>\n' +
+  '                </dl>\n' +
+  '\n' +
+  '                <div ng-show="vm.visibleTab === \'documents\'">\n' +
+  '                    <pre ng-if="vm.debug">{{vm.application.user.driver.reports}}</pre>\n' +
+  '                    <oset-document-list driver="vm.application.user.driver" application="vm.application" display-mode="full"\n' +
+  '                                        doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
+  '                </div>\n' +
+  '\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <br class="hidden-lg"/>\n' +
+  '\n' +
+  '            <div class="col-lg-2 col-md-3 col-xs-12 text-right">\n' +
+  '                <a class="btn-tab btn-link strong pull-right"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'read\'})">\n' +
+  '                    Full Profile\n' +
+  '                    <i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert"/>\n' +
+  '                <a class="btn-tab btn-link strong pull-right"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   tooltip="{{vm.application.messagingText || vm.messagingText}}"\n' +
+  '                   tooltip-popup-delay="1000"\n' +
+  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'message\'})">\n' +
+  '\n' +
+  '                    <span class="badge" ng-show="!!vm.application.newMessages">{{vm.application.newMessages}}</span>\n' +
+  '                    Messaging\n' +
+  '                    <i class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert pull-right"/>\n' +
+  '\n' +
+  '                <a class="btn-tab btn-link strong"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   tooltip="{{vm.application.documentText || vm.documentText}}"\n' +
+  '                   tooltip-popup-delay="1000"\n' +
+  '                   ui-sref="drivers.documents({driverId: vm.application.user.driver.id})">\n' +
+  '                    Documents\n' +
+  '                    <i class="fa fa-file-text fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert"/>\n' +
+  '\n' +
+  '                <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
+  '                <a class="btn-tab btn-link strong"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   ng-click="vm.setApplicationStatus(vm.job.applications[$index], \'rejected\', $event)">\n' +
+  '                    Reject\n' +
+  '                    <i class="fa fa-close fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert"/>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
   '    <!--//post-inner-->\n' +
   '</article>\n' +
   '');

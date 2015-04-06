@@ -341,8 +341,10 @@ exports.getMessages = function (req, res, next) {
 
     console.log('starting cleansing user from messages');
     _.map(application.messages, function(message) {
-        console.log('cleansing user from message');
-        message.sender.cleanse();
+        if(!!message.sender) {
+            console.log('cleansing user from message');
+            message.sender.cleanse();
+        }
     });
 
     console.log('finished cleansing user from messages');

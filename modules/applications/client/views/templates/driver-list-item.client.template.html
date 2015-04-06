@@ -20,25 +20,25 @@
                         <dt>Status</dt>
                         <dd>
                             <os-application-status-badge
-                                    model="application"></os-application-status-badge>
+                                    model="vm.application"></os-application-status-badge>
                         </dd>
 
                         <dt ng-hide="!!vm.application.messages && !!vm.application.messages.length">
                             Messages
                         </dt>
                         <dd ng-hide="!!vm.application.messages && !!vm.application.messages.length">
-                                            <span ng-show="!!vm.application.isConnected">
-                                                <p style="margin-bottom: 2px;">
-                                                    discuss the job and schedule an interview
-                                                    <a ui-sref="applications.view({applicationId: vm.application._id, target: 'message'})">
-                                                        by sending a message
-                                                    </a>
-                                                </p>
-                                            </span>
-                                            <span ng-hide="!!vm.application.isConnected">
-                                                <p style="margin-bottom: 2px;">
-                                                    <em class="text-muted">chat available once connected</em></span>
-                            </p>
+                            <span ng-show="!!vm.application.isConnected">
+                                <p style="margin-bottom: 2px;">
+                                    discuss the job and schedule an interview
+                                    <a ui-sref="applications.view({applicationId: vm.application._id, target: 'message'})">
+                                        by sending a message
+                                    </a>
+                                </p>
+                            </span>
+                            <span ng-hide="!!vm.application.isConnected">
+                                <p style="margin-bottom: 2px;">
+                                    <em class="text-muted">chat available once connected</em></span>
+                                </p>
                             </span>
                         </dd>
                     </dl>

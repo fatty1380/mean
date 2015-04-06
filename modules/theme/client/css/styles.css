@@ -5610,6 +5610,17 @@ pdf > object {
   width: 50%;
   left: 0;
 }
+.label-list .label {
+  display: inline-block;
+}
+.inline-item .inline-label,
+.inline-item .inline-content {
+  margin-bottom: 2px;
+}
+.inline-item .inline-label {
+  font-weight: bold;
+  text-align: right;
+}
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
   padding-right: 0;
