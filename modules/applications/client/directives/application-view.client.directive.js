@@ -138,9 +138,11 @@
         vm.job = vm.job || vm.application && vm.application.job;
         vm.job.newMessages = 0;
 
-        if (!!vm.application) {
-            vm.checkMessages(vm.application, vm.job);
-        }
+        vm.initialize = function () {
+            if (!!vm.application) {
+                vm.checkMessages(vm.application, vm.job);
+            }
+        };
 
         vm.showTab = function (itemId, tabName) {
             if (!!vm.visibleId && vm.visibleTab === tabName) {
@@ -176,20 +178,20 @@
         };
 
         vm.filters = {
-                status: {'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false},
-                negStatus: {'rejected': false, 'expired': false}
+            status: {'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false},
+            negStatus: {'rejected': false, 'expired': false}
         };
 
         vm.sorting = {
-            applicants: ['statusIndex','-created'],
-            messaging: ['!messages.length','-lastMessage.created'], //'-lastMessage.created',
-            documents: ['-!!user.driver.resume','-user.driver.resume.created','-user.driver.reports.length']
+            applicants: ['statusIndex', '-created'],
+            messaging: ['!messages.length', '-lastMessage.created'], //'-lastMessage.created',
+            documents: ['-!!user.driver.resume', '-user.driver.resume.created', '-user.driver.reports.length']
         };
 
         vm.defaultFiltering = {
             applicants: {},
-            messaging: { 'status': {'connected': true}},
-            documents: { 'status': {'connected': true}}
+            messaging: {'status': {'connected': true}},
+            documents: {'status': {'connected': true}}
         };
 
         vm.reverseSort = false;
@@ -253,15 +255,15 @@
             return true;
         };
 
-        vm.setApplicationStatus = function(application, status, $event) {
+        vm.setApplicationStatus = function (application, status, $event) {
             $event.stopPropagation();
 
             var app = vm.ApplicationFactory.setStatus(application._id, status);
 
-            app.then(function(success) {
+            app.then(function (success) {
                 $log.debug('[setApplicationStatus] %s', success);
                 application = success;
-            }, function(reject) {
+            }, function (reject) {
                 debugger;
                 $log.warn('[setApplicationStatus] %s', reject);
             });
@@ -271,6 +273,8 @@
             application.isRejected = true;
             application.disabled = true;
         };
+
+        vm.initialize();
     }
 
     function ApplicationListItemDirective() {
