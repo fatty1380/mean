@@ -145,7 +145,9 @@ UserSchema.post('init', function(next) {
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function(next) {
-	if (!this.isModified('password')) return next();
+	if (!this.isModified('password')) {
+		return next();
+	}
 
 	if (this.password && this.password.length > 6) {
 		this.salt = crypto.randomBytes(16).toString('base64');
@@ -189,7 +191,6 @@ UserSchema.methods.hashPassword = function(password) {
  * Create instance method for authenticating user
  */
 UserSchema.methods.authenticate = function(password) {
-    return true;
 	return this.password === this.hashPassword(password);
 };
 
