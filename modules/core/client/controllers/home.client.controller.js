@@ -12,11 +12,11 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Control your career.<br>Get better transportation jobs.',
+                    lead: 'Handle your Reputation - Own your Documents.<br>.Manage your Driver Portfolio',
                     bullets: [
-                        'Pre-qualify for Jobs.',
-                        'Build your Online Driving Portfolio.',
-                        'Digital Documents: MVR, Resume, Background, Insurance.'
+                        'Pre-qualify for Jobs & Easily Apply.',
+                        'Build your Online Driving Portfolio and Make the First Impression you want with Companies & Shippers.',
+                        'Securely Share your: MVR, Resume, Background Check, Insurance etc. - From Anywhere.'
                     ],
                     signup: 'Get Started'
                 },
@@ -24,26 +24,26 @@
                     videoURL: '//www.youtube.com/embed/aj4vz1jMSR8',
                     title: 'Why Outset?',
                     bullets: [
-                        'Driver Focused.',
-                        'Digital Reports are yours to keep.',
-                        'Control who sees your information.'
+                        'Free - Driver Focused Tools.',
+                        'Make your Reputation yours - Use Outset as your Digital Business Card.',
+                        'Control who sees your information - Never Fax anything again.'
                     ]
                 },
                 section1: {
                     header: 'Portfolio',
                     sub: 'Your digital business card.',
-                    bullets: ['Easily share information with Employers.',
+                    bullets: ['Easily share information with Employers or Shippers.',
                         'Show you\'re on top of your Game.',
-                        'Grow it with your career.'],
+                        'Grow the Portfolio with your career.'],
                     image: '/modules/core/img/intro/driver.png'
                 },
                 section2: {
                     header: 'Reports',
                     sub: 'Your Pre-qualification tool',
                     bullets: [
-                        'Let Employers know you\'re ready to go tomorrow.',
-                        'Stand out from other applicants.',
-                        'Securely store and share:<ul><li>Motor Vehicle Reports</li><li>Background Checks</li><li>Drug Test Results</li><li>Proof of Insurance</li>'
+                        'Let Employers know you\'re ready to roll now.',
+                        'Stand out from other applicants and Owner Operators.',
+                        'Securely store and share your choice of:<ul><li>Motor Vehicle Reports</li><li>Background Checks</li><li>Drug Test Results</li><li>Proof of Insurance</li>'
                     ],
                     image: '/modules/core/img/intro/reports.png'
                 },
@@ -53,14 +53,14 @@
                     bullets: [
                         'Use your Portfolio to apply to jobs.',
                         'Securely share reports in your applications.',
-                        'Cut your hiring time.'
+                        'Never fax anything again.'
                     ],
                     image: '/modules/core/img/intro/jobs.png'
                 },
                 conclusion: [
                     {
                         title: 'Sign up',
-                        description: 'Create your Driver Portfolio, upload your Resume, and order Background Reports to let employers know they can hire you immediately.'
+                        description: 'Create your Driver Portfolio, upload your Resume, and order Background Reports to share with multiple employers.'
                     },
                     {
                         title: 'Get Hired',
@@ -68,19 +68,19 @@
                     },
                     {
                         title: 'Drive',
-                        description: 'By giving employers more information upfront, you not only standout, but they are able to hire you faster, so you\'ll be in the driver\'s seat in no time.'
+                        description: 'By giving employers more information upfront, you standout and get hired you faster - putting you in the driver\'s seat in no time.'
                     }
                 ]
 
             },
             owner: {
                 header: {
-                    lead: 'Increase your Hiring Efficiency.<br>Save Time and Money',
+                    lead: 'Automated Transportation Hiring.<br>Increase your Hiring and Operational Efficiency',
                     bullets: [
-                        'Increase certainty in your hiring funnel.',
-                        'Centralize applicant flow',
-                        'Cut costs on Background Checks.',
-                        'Digitize your Reporting process.'
+                        'Automate - Background Checks, DOT Employment Verification, Applications & more.',
+                        'Utilize powerful active driver management & logistic tools.',
+                        'Centralize & Manage your Applicant flow',
+                        'Schedule Recurrence Checks for active drivers to stay in compliance',
                     ],
                     signup: 'Get Started'
                 },
@@ -88,19 +88,19 @@
                     videoURL: '//www.youtube.com/embed/Qzx1qTYLkrY',
                     title: 'Why Outset?',
                     bullets: [
-                        'Designed to save you money.',
-                        'Customize solutions to your company\'s needs.',
-                        'Let technology take the headache out of hiring.'
+                        'Created for the Transportation Industry.',
+                        'Designed to save you money lost in the hiring process.',
+                        'Customized solutions for your company\'s needs.',
+                        'Let technology take the headache out of hiring and driver management.'
                     ]
                 },
                 section1: {
                     header: 'Reports',
-                    sub: 'Cut Background Check costs.',
+                    sub: 'Cut Background Check & Employment Verification Costs.',
                     bullets: [
                         'View & Download applicant reports immediately.',
-                        'Require applicants to run your custom reports.',
-                        'Fewer failed background checks',
-                        'Faster hiring.'
+                        'Get Applicants Authorization with an e-Signature.',
+                        'Cut your time to hire - free up resources for recruiting, not paperwork',
                     ],
                     image: '/modules/core/img/intro/employer.png'
                 },
@@ -108,9 +108,10 @@
                     header: 'Applicant Flow',
                     sub: '',
                     bullets: [
-                        'View & Message all of your Applicants in one place.',
-                        'Require external applicants to get reports.',
-                        'Free up your email inbox.'
+                        'Increase Operational Efficiency, centralize your process.',
+                        'View all Applicant reports and verifications in one place.',
+                        'Communicate with all applicants from within Outset.',
+                        'Backup your reporting compliance with e-storage of documents.'
                     ],
                     image: '/modules/core/img/intro/employer-reports.png'
                 },
@@ -121,15 +122,15 @@
                 conclusion: [
                     {
                         title: 'Simplify your Process',
-                        description: 'Sign up and post a job. Then link other job postings you have to Outset, in order to manage all of your applicants in one place.'
+                        description: 'Sign up - Then link job postings to Outset, and manage all of your applicants in one place.'
                     },
                     {
                         title: 'Hire',
-                        description: 'As people apply to your job, you will be able to message them, view their Resumes and Background Checks, and quickly decide who you want to interview.'
+                        description: 'Recieve all of your applicant reports and employment verification electronically, and stop wasting time on bad apples.'
                     },
                     {
                         title: 'Save Time & Money',
-                        description: 'By managing your hiring funnel within Outset, you\'ll fill your empty vehicles faster, taking the stress out of the hiring process.'
+                        description: 'By managing your hiring funnel within Outset, you\'ll fill your empty vehicles faster, freeing up time for more driver recruiting.'
                     }
                 ]
 
