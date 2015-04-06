@@ -222,7 +222,7 @@
 
             state('gateway.authorization', {
                 url: '/authorization',
-                templateUrl: '/modules/applications/views/form/authorization.client.template.html',
+                template: '<application-release-form model="vm.gw.models.release" methods="vm.subformMethods"></application-release-form>',
                 controller: '',
                 controllerAs: 'vm',
                 bindToController: true,
@@ -235,6 +235,9 @@
                     }],
                     company: ['Gateway', function(gw) {
                         return gw.company;
+                    }],
+                    gateway: ['Gateway', function(gw) {
+                        return gw.applicantGateway;
                     }]
                 }
             }).
