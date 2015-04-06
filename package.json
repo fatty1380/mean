@@ -80,6 +80,7 @@
     "grunt-nodemon": "~0.3.0",
     "grunt-notify": "^0.4.1",
     "grunt-protractor-runner": "1.1.4",
+    "grunt-shell-spawn": "^0.3.2",
     "gulp": "~3.8.9",
     "gulp-concat": "~2.4.1",
     "gulp-csslint": "~0.1.5",

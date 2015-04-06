@@ -108,6 +108,20 @@ module.exports = function (grunt) {
                     logConcurrentOutput: true
                 }
             },
+            shell: {
+                mongodb: {
+                    command: './mongo-check-and-start.sh',
+                    options: {
+                        async: true,
+                        stdout: false,
+                        stderr: true,
+                        failOnError: true,
+                        execOptions: {
+                            cwd: '.'
+                        }
+                    }
+                }
+            },
             copy: {
                 clientJSHintRC: {
                     files: [{
@@ -282,6 +296,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-express-server');
+    grunt.loadNpmTasks('grunt-shell-spawn');
 
     grunt.loadNpmTasks('grunt-notify');
 
@@ -325,7 +340,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
 // Run the project in development mode
-    grunt.registerTask('default', ['env:dev', 'lint', 'concurrent:default']);
+    grunt.registerTask('default', ['shell:mongodb', 'env:dev', 'lint', 'concurrent:default']);
 
     grunt.registerTask('nowatch', ['env:dev', 'lint', 'concurrent:nowatch']);
 
