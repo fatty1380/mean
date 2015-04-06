@@ -3791,43 +3791,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <os-view-schedule data-ng-if="false" model="vm.driver.schedule"></os-view-schedule>\n' +
   '</section>\n' +
   '');
- $templateCache.put('/modules/drivers/views/templates/driver.client.template.html',
-  '<section >\n' +
-  '    <h3 class="text-center text-danger">Controller Moved</h3>\n' +
-  '    <span class="col-md-12 opaque-bg">\n' +
-  '        <div data-ng-show="!!driver.$resolved || !!driver">\n' +
-  '            <div class="row">\n' +
-  '                <div class="col-md-8">\n' +
-  '                    <h4 class="list-group-item-heading">{{driver.user.displayName}}\n' +
-  '                    </h4>\n' +
-  '                </div>\n' +
-  '                <div class="col-md-4">\n' +
-  '                    <small class="list-group-item-text">\n' +
-  '                        <p class="text-right">Added on\n' +
-  '                            <span data-ng-bind="driver.created | date:\'shortDate\'"></span>\n' +
-  '                        </p>\n' +
-  '                    </small>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="row">\n' +
-  '                <div class="col-md-8 opaque-bg">\n' +
-  '                    {{driver.experience}}\n' +
-  '                </div>\n' +
-  '                <div class="col-md-4">\n' +
-  '                    <label>IsActive:\n' +
-  '                        <strong>{{driver.isActive}}</strong>\n' +
-  '                    </label>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '        </div>\n' +
-  '        <div class="alert alert-warning text-center" data-ng-hide="!!driver || !createEnabled">\n' +
-  '            Are you a driver? <a href="/drivers/create">create a profile!</a>?\n' +
-  '        </div>\n' +
-  '        <div>Create Enabled: {{createEnabled}}</div>\n' +
-  '    </span>\n' +
-  '</section>\n' +
-  '');
  $templateCache.put('/modules/drivers/views/templates/experience-list.client.template.html',
   '<section name="experience-list.client.template">\n' +
   '    <div ng-form="experienceForm" class="row profile-row">\n' +

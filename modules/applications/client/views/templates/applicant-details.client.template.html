@@ -67,9 +67,9 @@
                 <oset-document-list driver="vm.driver" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>
 
                 <dt>Interests:</dt>
-                <dd>
-                    <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
-                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>
+                <dd class="label-list">
+                    <div ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
+                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</div></span>
 
                     <span ng-show="!visibleInterests.length">
                         <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>
