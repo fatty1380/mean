@@ -23,7 +23,10 @@
 
                 _this.initialized = true;
             },
-            models: model
+            models: model,
+            getSync: function(val) {
+                return (promises[val] || {});
+            }
         };
 
 
@@ -72,8 +75,8 @@
                 promises.driver = promises.driver || $q.defer();
                 return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
                     .then(function (driverResponse) {
-                        promises.driver.resolve(driverResponse);
                         model.driver = driverResponse;
+                        promises.driver.resolve(driverResponse);
                     }
                 );
             }
@@ -93,8 +96,8 @@
                 promises.job = promises.job || $q.defer();
                 return (!!val && _.isString(val) ? Jobs.get(val) : $q.when(val))
                     .then(function (jobResponse) {
-                        promises.job.resolve(jobResponse);
                         model.job = jobResponse;
+                        promises.job.resolve(jobResponse);
                         return jobResponse;
                     })
                     .then(function (job) {
@@ -117,8 +120,8 @@
                 promises.company = promises.company || $q.defer();
                 return (!!val && _.isString(val) ? Companies.get(val) : $q.when(val))
                     .then(function (companyResponse) {
-                        promises.company.resolve(companyResponse);
                         model.company = companyResponse;
+                        promises.company.resolve(companyResponse);
                         return companyResponse;
                     })
                     .then(function () {
@@ -140,8 +143,9 @@
                 promises.gateway = promises.gateway || $q.defer();
                 $q.when(val)
                     .then(function (gatewayResponse) {
+                        $log.debug('[Gateway] Resolving applicantGateway with %o', gatewayResponse);
+                        model.applicantGateway = gatewayResponse;
                         promises.gateway.resolve(gatewayResponse);
-                        model.gateway = gatewayResponse;
                         return gatewayResponse;
                     })
                     .then(function (gateway) {
@@ -182,30 +186,6 @@
                 }
             }
         });
-
-        function loadApplicant() {
-            if (!promises.applicant) {
-                $log.debug('[Gateway] Initializing Load of Remote Applicant');
-
-                promises.applicant = $q.defer();
-
-                return _this._data.user
-                    .then(function (user) {
-                        return Applicants.getByUser(user.id);
-                    })
-                    .then(function (applicant) {
-                        $log.debug('[Gateway] Resolving Applicant as %o', applicant);
-                        promises.applicant.resolve(applicant);
-                    })
-                    .catch(function (err) {
-                        $log.debug('[Gateway] No existing applicant: %s', err);
-                        promises.applicant.resolve({});
-                    });
-            }
-            return $q.reject('Applicant already loading');
-        }
-
-        var loadingApplicant = false;
 
         Object.defineProperty(_this._data, 'applicant', {
             enumerable: true,
@@ -311,30 +291,26 @@
          *  Private Methods
          *************************************************************************/
 
-        function loadDriver(user) {
-            var driverFn, driver = !!user && user.driver;
+        function loadApplicant() {
+            if (!promises.applicant) {
+                $log.debug('[Gateway] Initializing Load of Remote Applicant');
 
-            if (!!driver && _.isString(driver)) {
-                $log.debug('[GatewaySvc] Loading driver `%s`', driver);
-                driverFn = Drivers.get(driver);
-            } else if (!!user.id) {
-                $log.debug('[GatewaySvc] Loading driver for user `%s`', user.id);
-                driverFn = Drivers.getByUser(user.id);
-            } else {
-                $log.debug('[GatewaySvc] No data available to load driver');
-                return;
+                promises.applicant = $q.defer();
+
+                return _this._data.user
+                    .then(function (user) {
+                        return Applicants.getByUser(user.id);
+                    })
+                    .then(function (applicant) {
+                        $log.debug('[Gateway] Resolving Applicant as %o', applicant);
+                        promises.applicant.resolve(applicant);
+                    })
+                    .catch(function (err) {
+                        $log.debug('[Gateway] No existing applicant: %s', err);
+                        promises.applicant.resolve({});
+                    });
             }
-
-            driverFn
-                .then(function (driverResponse) {
-                    $log.debug('[GatewayCtrl] Loaded Driver object');
-                    return (_this._data.driver = driverResponse);
-                })
-                .catch(function (err) {
-                    debugger;
-                    $log.debug('[GatewayCtrl] Err getting driver for id `%s`: %s', driver, err);
-                    return Drivers.default;
-                });
+            return $q.reject('Applicant already loading');
         }
 
         function loadGateway() {
