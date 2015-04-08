@@ -155,91 +155,63 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/authorization.client.template.html',
-  '<section ng-form="vm.authorization">\n' +
+  '<section ng-form="releaseAuthForm">\n' +
   '\n' +
   '    <div class="row">\n' +
   '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 smaller">\n' +
-  '            <div class="well">\n' +
-  '                <p class="strong text-center"><u>DISCLOSURE AND AUTHORIZATION TO OBTAIN CONSUMER AND/OR INVESTIGATIVE\n' +
-  '                    CONSUMER REPORT</u></p>\n' +
-  '\n' +
-  '                <p>I, the undersigned, hereby consent and authorize <em class="strong">{{vm.gw.models.company.name}}</em>, its affiliated companies,\n' +
-  '                    and/or its agents (collectively, herein after referred to as “ Company”) to obtain information about\n' +
-  '                    me from a\n' +
-  '                    consumer reporting agency for purposes permitted under the Fair Credit Reporting Act 15 U.S.C.1681\n' +
-  '                    including employment purposes, a business transaction initiated by me, or upon my written\n' +
-  '                    instructions . I understand that this means that a “consumer report” and/or an “investigative\n' +
-  '                    consumer report” may be requested which may include information regarding my character, general\n' +
-  '                    reputation, personal characteristics and mode of living, whichever are applicable. The report may\n' +
-  '                    also contain information relating to my criminal history, credit history, motor vehicle records such\n' +
-  '                    as driving records, social security verification, verification of education or employment history or\n' +
-  '                    other background checks. This may involve personal interviews with sources such as neighbors,\n' +
-  '                    friends or associates. These reports may be obtained at any time after receipt of my authorization,\n' +
-  '                    and if I am hired or engaged to transact business with the Company, throughout my employment or\n' +
-  '                    relationship with the Company. I understand I have the right, upon written request made within a\n' +
-  '                    reasonable time after receipt of this notice, to request disclosure of the nature and scope of any\n' +
-  '                    investigative consumer report to e-Verifile, 900 Circle 75 Parkway, Suite 1550, Atlanta, GA 30339 –\n' +
-  '                    770-859-9899. For information about e-Verifile’s privacy practices see www.e-verifile.com. The scope\n' +
-  '                    of this notice and authorization is not limited to the present and, if hired or engaged to transact\n' +
-  '                    business with the Company, will continue and allow the Company to conduct future screenings for\n' +
-  '                    retention, promotion, reassignment access to the Company’s premises or for a continuing relationship\n' +
-  '                    with the Company, unless revoked by me in writing. The Company also reserves the right to share the\n' +
-  '                    information contained in the report(s) with any third-party companies for whom I will be placed to\n' +
-  '                    work or with whom I will have a relationship or will have access to the premises. My information\n' +
-  '                    will only be used and/or disclosed as permitted by law and as required for creation of any\n' +
-  '                    report(s).\n' +
-  '                </p>\n' +
-  '\n' +
-  '                <p class="strong">I HEREBY CERTIFY THAT THIS FORM WAS COMPLETED BY ME, THAT THE INFORMATION PROVIDED IS\n' +
-  '                    TRUE AND CORRECT AS OF THE DATE HEREOF AND I AUTHORIZE E-VERIFILE TO OBTAIN A CONSUMER REPORT AND/OR\n' +
-  '                    INVESTIGATIVE CONSUMER REPORT ON ME, AS APPLICABLE. I acknowledge that the Company has provided with\n' +
-  '                    a copy of <a href="https://www.consumer.ftc.gov/articles/pdf-0096-fair-credit-reporting-act.pdf"\n' +
-  '                                 target="_blank">A Summary of Your Rights Under the Fair Credit Reporting Act</a>. </p>\n' +
+  '            <div class="well" ng-show="vm.releaseType === \'preEmployment\'">\n' +
+  '                <span ng-bind-html="vm.releaseTypes[vm.releaseType].text"></span>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '\n' +
   '\n' +
-  '    <div class="row mgn-vert" ng-hide="!!vm.gw.models.release.signature.dataUrl">\n' +
+  '    <div class="row mgn-vert" ng-hide="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">\n' +
   '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">\n' +
   '            <h4 class="text-center">Please sign here:</h4>\n' +
   '\n' +
-  '            <div signature-pad signature="vm.gw.models.release.signature"></div>\n' +
+  '            <div signature-pad id="signature" signature="vm.release.signature" close="vm.updateSignatureStatus()"\n' +
+  '                 methods="vm.signatureMethods"\n' +
+  '                 ng-class="{\'ng-submitted\':vm.releaseAuthForm.$submitted, \'ng-invalid\': (!vm.isSigValid || vm.releaseAuthForm.signature_input.$invalid)}"></div>\n' +
+  '            <input type="hidden" ng-model="vm.release.signature" name="signature_input" ng-required="true"/>\n' +
   '        </div>\n' +
   '    </div>\n' +
-  '    <div class="row mgn-vert" ng-show="!!vm.gw.models.release.signature.dataUrl">\n' +
-  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 text-center">\n' +
-  '            <img ng-src="{{vm.gw.models.release.signature.dataUrl}}"><br>\n' +
   '\n' +
-  '            <div ng-show="!!vm.gw.models.release.signature.timestamp" class="text-left">\n' +
-  '                <strong>Signed:</strong> {{vm.gw.models.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
-  '                <button type="button" ng-click="vm.gw.models.release.signature = {}" class="btn btn-oset-ghost pull-right">clear</button>\n' +
-  '            </div>\n' +
-  '        </div>\n' +
+  '    <div class="row mgn-vert" ng-show="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">\n' +
+  '            <section class="form-inline form-paper">\n' +
+  '                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group text-center">\n' +
+  '                    <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">\n' +
+  '                </div>\n' +
+  '                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">\n' +
+  '                    <p class="form-control-static pull-left"\n' +
+  '                            ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
+  '                    </p>\n' +
+  '\n' +
+  '                    <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">\n' +
+  '                        <i class="fa fa-times"></i>&nbsp;clear\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
+  '            </section>\n' +
   '    </div>\n' +
   '\n' +
   '\n' +
   '    <div class="row mgn-vert">\n' +
-  '        <div class="col-sm-12 form-inline text-center">\n' +
   '\n' +
-  '            <form class="form-inline form-paper">\n' +
-  '                <div class="form-group">\n' +
+  '            <section class="form-inline form-paper text-center">\n' +
+  '                <div class="col-sm-8 form-group">\n' +
   '                    <label for="authorizationName">Name:</label>\n' +
-  '                    <input type="text" class="form-control" id="firstName" ng-model="vm.gw.models.release.firstName"\n' +
+  '                    <input type="text" class="form-control" id="firstName" ng-model="vm.release.name.first"\n' +
   '                           placeholder="First" ng-required="true">\n' +
-  '                    <input type="text" class="form-control" id="middleName" ng-model="vm.gw.models.release.middleName"\n' +
+  '                    <input type="text" class="form-control" id="middleName" ng-model="vm.release.name.middle"\n' +
   '                           placeholder="Middle" ng-required="true">\n' +
-  '                    <input type="text" class="form-control" id="lastName" ng-model="vm.gw.models.release.lastName"\n' +
+  '                    <input type="text" class="form-control" id="lastName" ng-model="vm.release.name.last"\n' +
   '                           placeholder="Last" ng-required="true">\n' +
   '                </div>\n' +
-  '                <div class="form-group">\n' +
+  '                <div class="col-sm-4 form-group">\n' +
   '                    <label for="dateOfBirth">Date of Birth:</label>\n' +
-  '                    <input type="date" class="form-control" id="dateOfBirth" ng-model="vm.gw.models.release.dob"\n' +
-  '                           placeholder="" ng-required="true">\n' +
+  '                    <date-input model="vm.release.dob" is-required="true" name="dateOfBirth" class="form-control"></date-input>\n' +
   '                </div>\n' +
-  '            </form>\n' +
-  '\n' +
-  '        </div>\n' +
+  '            </section>\n' +
   '    </div>\n' +
   '</section>\n' +
   '');
@@ -582,9 +554,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/applications/views/templates/application-summary.client.template.html',
   '<section name=\'oset-application-summary\'>\n' +
+  '    <h2>Application</h2>\n' +
   '\n' +
   '    <!--This view is used primarily for the display of simple inline template views.-->\n' +
-  '    <div ng-show="vm.application">\n' +
+  '    <div ng-show="!!vm.application">\n' +
   '        <div data-ng-if="vm.displayMode === \'minimal\' || vm.displayMode === \'mine\'" class="panel panel-default pad">\n' +
   '            <dl class="dl-horizontal">\n' +
   '                <dt>Status:</dt>\n' +
@@ -797,8 +770,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                        visible-id="vm.visibleId"\n' +
   '                                        visible-tab="vm.visibleTab">\n' +
   '\n' +
-  '                <!-- TODO: Figure out disagreement between \'visibleId\', ng-show, and inline (nested) vs top level behavior -->\n' +
-  '                <!-- TODO: Move ng-show into the filter on teh repeater -->\n' +
+  '                <!-- TODO: Figure out disagreement between \'visibleId\', ng-show, and inline (nested) vs top level behavior -->er\n' +
   '                <!-- TODO: Combine with the \'owner\' repeater above, if possible :) -->\n' +
   '\n' +
   '            </oset-application-list-item>\n' +
