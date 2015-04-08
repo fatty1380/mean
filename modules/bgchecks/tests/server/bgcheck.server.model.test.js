@@ -16,7 +16,7 @@ var user, bgcheck;
 /**
  * Unit tests
  */
-describe('Bgcheck Model Unit Tests:', function () {
+describe.skip('Bgcheck Model Unit Tests:', function () {
     beforeEach(function (done) {
         user = new User({
             firstName: 'Full',
