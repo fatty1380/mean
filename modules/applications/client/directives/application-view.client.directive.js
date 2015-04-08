@@ -56,7 +56,7 @@
                         deferred.resolve(success);
                     }, function (failure) {
                         if (failure.status === 404) {
-                            return undefined;
+                            return null;
                         } else {
                             $log.error('Unable to lookup application based on job and user: %o', failure);
                             debugger;
@@ -69,7 +69,7 @@
 
         vm.setLocalProperties = function (application) {
 
-            vm.profile = application.user;
+            vm.profile = !!application && application.user || vm.profile;
             vm.driver = vm.profile.driver || Drivers.getByUser(vm.profile._id);
             vm.license = !!vm.driver.licenses && vm.driver.licenses.length ? vm.driver.licenses[0] : null;
 

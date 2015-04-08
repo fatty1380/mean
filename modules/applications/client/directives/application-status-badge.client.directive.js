@@ -17,7 +17,7 @@
 
                     vm.labelText = vm.model.statusCat;
 
-                    if (vm.model.isNew) {
+                    if (vm.model.isUnreviewed) {
                         vm.labelClass = 'label-primary';
                     } else if (vm.model.isConnected) {
                         if (vm.model.connection.isValid && vm.model.connection.remainingDays >= 5) {

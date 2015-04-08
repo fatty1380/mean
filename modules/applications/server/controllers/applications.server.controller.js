@@ -384,7 +384,7 @@ exports.getMessages = function (req, res, next) {
 
     response.theirs = _.filter(application.messages, function (msg) {
         if (!myLast || myLast.created < msg.created) {
-            msg.isNew = true;
+            msg.isFresh = true;
             newCt++;
         }
 
