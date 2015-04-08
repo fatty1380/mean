@@ -93,31 +93,35 @@ exports.create = function (req, res) {
                     console.log('[ApplicationController.create] saved job application to job');
                 }
 
-
-                debugger;
-
-                var options = [
-                    {
-                        name: 'APPLICANT',
-                        content: req.user.firstName + ' ' + req.user.lastName.substring(0, 1).toUpperCase()
-                    },
-                    {
-                        name: 'COVER_LTR',
-                        content: application.introduction
-                    },
-                    {
-                        name: 'LINK_URL',
-                        content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
-                    }
-                ];
-
-                emailer.sendTemplateBySlug('outset-new-applicant', req.job.user, options);
+                if(!application.isDraft) {
+                    console.log('[ApplicationController.create] Sending email for New Application %o', application);
+                    sendNewApplicantEmail(req.user, req.job, application);
+                }
             });
 
             res.json(application);
         }
     });
 };
+
+function sendNewApplicantEmail(user, job, application) {
+    var options = [
+        {
+            name: 'APPLICANT',
+            content: user.firstName + ' ' + user.lastName.substring(0, 1).toUpperCase()
+        },
+        {
+            name: 'COVER_LTR',
+            content: application.introduction
+        },
+        {
+            name: 'LINK_URL',
+            content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
+        }
+    ];
+
+    emailer.sendTemplateBySlug('outset-new-applicant', job.user, options);
+}
 
 /**
  * Show the current Application
@@ -136,11 +140,19 @@ exports.read = function (req, res) {
  * Update a Application
  */
 exports.update = function (req, res) {
+    console.log('[ApplicationsCtrl] Updating based on URL: %s', req.url);
     var application = req.application;
 
-    debugger;
+    var wasDraft = application.isDraft;
 
-    application = _.extend(application, req.body);
+    var data = _.merge(application.toJSON(), req.body);
+    _.extend(application, data);
+
+    if (!_.isEmpty(data.releases) && _.isString(application.releases)) {
+        application.releases = data.releases;
+    }
+
+    // Handle nested
 
     application.save(function (err) {
         if (err) {
@@ -164,6 +176,13 @@ exports.update = function (req, res) {
                 if (err) {
                     console.log('error retrieving application, returning non-populated version', err);
                     return res.json(application);
+                }
+
+
+
+                if(wasDraft && !application.isDraft) {
+                    console.log('[ApplicationController.update] Sending email for Newly Published Application %o', application);
+                    sendNewApplicantEmail(application.user, application.job, application);
                 }
 
                 res.json(populated);
@@ -276,7 +295,7 @@ exports.queryByUserID = function (req, res) {
 
 exports.getByJobId = function (req, res, next) {
 
-    console.log('[ApplicationsController] getByJobId(%s)', req.params.jobId);
+    console.log('[ApplicationsController] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
 
     var query = {
         job: req.params.jobId,
@@ -299,7 +318,7 @@ exports.getByJobId = function (req, res, next) {
  */
 exports.applicationByID = function (req, res, next, id) {
 
-    console.log('[ApplicationsController] applicationById(%s)', id);
+    console.log('[ApplicationsController] applicationById(%s) URL: %s', id, req.url);
 
     Application.findById(id)
         .populate({path: 'user', model: 'User'})
@@ -359,8 +378,8 @@ exports.getMessages = function (req, res, next) {
     }
 
     console.log('starting cleansing user from messages');
-    _.map(application.messages, function(message) {
-        if(!!message.sender) {
+    _.map(application.messages, function (message) {
+        if (!!message.sender) {
             console.log('cleansing user from message');
             message.sender.cleanse();
         }
