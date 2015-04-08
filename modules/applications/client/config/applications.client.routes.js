@@ -227,17 +227,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    user: ['Gateway', function(gw) {
-                        return gw.user;
-                    }],
-                    release: ['Gateway', function(gw) {
-                        return gw.release;
-                    }],
-                    company: ['Gateway', function(gw) {
-                        return gw.company;
-                    }],
-                    gateway: ['Gateway', function(gw) {
-                        return gw.applicantGateway;
+                    requirements: ['Gateway', '$q', function(gw, $q) {
+                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]);
                     }]
                 }
             }).

@@ -82,15 +82,7 @@ var ApplicationSchema = new Schema({
         ref: 'Connection'
     },
 
-    release: {
-        signature: String,
-        type: String,
-        created: {
-            type: Date,
-            default: Date.now
-        },
-        id: Schema.ObjectId
-    },
+    releases: ['Release'],
 
     created: {
         type: Date,

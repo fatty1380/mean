@@ -1,87 +1,59 @@
-<section ng-form="vm.authorization">
+<section ng-form="releaseAuthForm">
 
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 smaller">
-            <div class="well">
-                <p class="strong text-center"><u>DISCLOSURE AND AUTHORIZATION TO OBTAIN CONSUMER AND/OR INVESTIGATIVE
-                    CONSUMER REPORT</u></p>
-
-                <p>I, the undersigned, hereby consent and authorize <em class="strong">{{vm.companyName}}</em>, its affiliated companies,
-                    and/or its agents (collectively, herein after referred to as “ Company”) to obtain information about
-                    me from a
-                    consumer reporting agency for purposes permitted under the Fair Credit Reporting Act 15 U.S.C.1681
-                    including employment purposes, a business transaction initiated by me, or upon my written
-                    instructions . I understand that this means that a “consumer report” and/or an “investigative
-                    consumer report” may be requested which may include information regarding my character, general
-                    reputation, personal characteristics and mode of living, whichever are applicable. The report may
-                    also contain information relating to my criminal history, credit history, motor vehicle records such
-                    as driving records, social security verification, verification of education or employment history or
-                    other background checks. This may involve personal interviews with sources such as neighbors,
-                    friends or associates. These reports may be obtained at any time after receipt of my authorization,
-                    and if I am hired or engaged to transact business with the Company, throughout my employment or
-                    relationship with the Company. I understand I have the right, upon written request made within a
-                    reasonable time after receipt of this notice, to request disclosure of the nature and scope of any
-                    investigative consumer report to e-Verifile, 900 Circle 75 Parkway, Suite 1550, Atlanta, GA 30339 –
-                    770-859-9899. For information about e-Verifile’s privacy practices see www.e-verifile.com. The scope
-                    of this notice and authorization is not limited to the present and, if hired or engaged to transact
-                    business with the Company, will continue and allow the Company to conduct future screenings for
-                    retention, promotion, reassignment access to the Company’s premises or for a continuing relationship
-                    with the Company, unless revoked by me in writing. The Company also reserves the right to share the
-                    information contained in the report(s) with any third-party companies for whom I will be placed to
-                    work or with whom I will have a relationship or will have access to the premises. My information
-                    will only be used and/or disclosed as permitted by law and as required for creation of any
-                    report(s).
-                </p>
-
-                <p class="strong">I HEREBY CERTIFY THAT THIS FORM WAS COMPLETED BY ME, THAT THE INFORMATION PROVIDED IS
-                    TRUE AND CORRECT AS OF THE DATE HEREOF AND I AUTHORIZE E-VERIFILE TO OBTAIN A CONSUMER REPORT AND/OR
-                    INVESTIGATIVE CONSUMER REPORT ON ME, AS APPLICABLE. I acknowledge that the Company has provided with
-                    a copy of <a href="https://www.consumer.ftc.gov/articles/pdf-0096-fair-credit-reporting-act.pdf"
-                                 target="_blank">A Summary of Your Rights Under the Fair Credit Reporting Act</a>. </p>
+            <div class="well" ng-show="vm.releaseType === 'preEmployment'">
+                <span ng-bind-html="vm.releaseTypes[vm.releaseType].text"></span>
             </div>
         </div>
     </div>
 
 
-    <div class="row mgn-vert" ng-hide="!!vm.release.signature.dataUrl">
+    <div class="row mgn-vert" ng-hide="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">
         <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
             <h4 class="text-center">Please sign here:</h4>
 
-            <div signature-pad signature="vm.release.signature"></div>
+            <div signature-pad id="signature" signature="vm.release.signature" close="vm.updateSignatureStatus()"
+                 methods="vm.signatureMethods"
+                 ng-class="{'ng-submitted':vm.releaseAuthForm.$submitted, 'ng-invalid': (!vm.isSigValid || vm.releaseAuthForm.signature_input.$invalid)}"></div>
+            <input type="hidden" ng-model="vm.release.signature" name="signature_input" ng-required="true"/>
         </div>
     </div>
-    <div class="row mgn-vert" ng-show="!!vm.release.signature.dataUrl">
-        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 text-center">
-            <img ng-src="{{vm.release.signature.dataUrl}}"><br>
 
-            <div ng-show="!!vm.release.signature.timestamp" class="text-left">
-                <strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}
-                <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-ghost pull-right">clear</button>
-            </div>
-        </div>
+    <div class="row mgn-vert" ng-show="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">
+            <section class="form-inline form-paper">
+                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group text-center">
+                    <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">
+                </div>
+                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">
+                    <p class="form-control-static pull-left"
+                            ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}
+                    </p>
+
+                    <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">
+                        <i class="fa fa-times"></i>&nbsp;clear
+                    </button>
+                </div>
+            </section>
     </div>
 
 
     <div class="row mgn-vert">
-        <div class="col-sm-12 form-inline text-center">
 
-            <form class="form-inline form-paper">
-                <div class="form-group">
+            <section class="form-inline form-paper text-center">
+                <div class="col-sm-8 form-group">
                     <label for="authorizationName">Name:</label>
-                    <input type="text" class="form-control" id="firstName" ng-model="vm.release.firstName"
+                    <input type="text" class="form-control" id="firstName" ng-model="vm.release.name.first"
                            placeholder="First" ng-required="true">
-                    <input type="text" class="form-control" id="middleName" ng-model="vm.release.middleName"
+                    <input type="text" class="form-control" id="middleName" ng-model="vm.release.name.middle"
                            placeholder="Middle" ng-required="true">
-                    <input type="text" class="form-control" id="lastName" ng-model="vm.release.lastName"
+                    <input type="text" class="form-control" id="lastName" ng-model="vm.release.name.last"
                            placeholder="Last" ng-required="true">
                 </div>
-                <div class="form-group">
+                <div class="col-sm-4 form-group">
                     <label for="dateOfBirth">Date of Birth:</label>
-                    <input type="date" class="form-control" id="dateOfBirth" ng-model="vm.release.dob"
-                           placeholder="" ng-required="true">
+                    <date-input model="vm.release.dob" is-required="true" name="dateOfBirth" class="form-control"></date-input>
                 </div>
-            </form>
-
-        </div>
+            </section>
     </div>
 </section>

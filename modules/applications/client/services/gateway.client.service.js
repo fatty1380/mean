@@ -25,7 +25,7 @@
             },
             models: model,
             getSync: function(val) {
-                return (promises[val] || {});
+                return (promises[val] && promises[val].promise && promises[val].promise.value || {});
             }
         };
 
@@ -123,29 +123,29 @@
                         model.company = companyResponse;
                         promises.company.resolve(companyResponse);
                         return companyResponse;
-                    })
-                    .then(function () {
-                        loadGateway();
                     });
             }
         });
 
         Object.defineProperty(_this._data, 'applicantGateway', {
             get: function () {
-                if (!promises.gateway) {
+                if (!promises.applicantGateway) {
                     $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
+                    loadGateway().then(function(response) {
+                        $log.debug('[Gateway] Loaded gateway with value: %j', response);
+                    });
                 }
-                return (promises.gateway = promises.gateway || $q.defer()).promise;
+                return promises.applicantGateway.promise;
             },
             set: function (val) {
-                $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
+                $log.debug('[Gateway] Initializing Value of Applicant Gateway Settings');
 
-                promises.gateway = promises.gateway || $q.defer();
+                promises.applicantGateway = (promises.applicantGateway || $q.defer());
                 $q.when(val)
                     .then(function (gatewayResponse) {
                         $log.debug('[Gateway] Resolving applicantGateway with %o', gatewayResponse);
                         model.applicantGateway = gatewayResponse;
-                        promises.gateway.resolve(gatewayResponse);
+                        promises.applicantGateway.resolve(gatewayResponse);
                         return gatewayResponse;
                     })
                     .then(function (gateway) {
@@ -167,20 +167,20 @@
             set: function (val) {
                 $log.debug('[Gateway] Setting `Report Definition` to %o', val);
 
-                promises.report = promises.report || $q.defer();
-                if (promises.sku !== val) {
+                promises.report = $q.defer();
+                if (model.sku !== val) {
                     _this._data.user
                         .then(function (userResponse) {
                             $log.debug('[Gateway] User loaded, now retrieving Report Definition info');
                             return (!!val && _.isString(val) ? Reports.get(val) : $q.when(val));
                         })
                         .then(function (reportResponse) {
-                            promises.report.resolve(reportResponse);
                             model.report = reportResponse;
+                            promises.report.resolve(reportResponse);
                             return reportResponse;
                         })
                         .then(function (report) {
-                            promises.sku = (report || {}).sku;
+                            model.sku = (report || {}).sku;
                         });
 
                 }
@@ -214,10 +214,11 @@
             get: function () {
                 if (!promises.application) {
                     $log.debug('[Gateway] Initializing Load of Job Application');
+
                     promises.application = $q.defer();
                     $q.all({job: _this._data.job, user: _this._data.user})
-                        .then(function (result) {
-                            Jobs.getApplication(result.job._id, result.user._id).$promise
+                        .then(function (values) {
+                            Jobs.getApplication(values.job._id, values.user._id)
                                 .then(function (applicationResponse) {
                                     $log.debug('[Gateway] Loaded Application');
                                     model.application = applicationResponse;
@@ -227,7 +228,7 @@
                                 .catch(function (err) {
                                     $log.debug('[Gateway] Failed to load Application', err);
                                     model.application = {
-                                        release: {}
+                                        releases: []
                                     };
 
                                     _this._data.job.then(function (jobResponse) {
@@ -244,37 +245,26 @@
 
                 return promises.application.promise;
             },
-            //set: function(val) {
-            //    $log.debug('[Gateway] Setting `Application` to %o', val);
-            //
-            //    promises.report = promises.report || $q.defer();
-            //    if (promises.sku !== val) {
-            //        if(_.isString(val)) {
-            //            $log.debug('[Gateway] Setting new application by ID');
-            //            promises.application.promise = Applications.ById(val).$promise;
-            //        } else {
-            //            promises.application.promse = $q.when(val);
-            //        }
-            //
-            //        promises.application.promise.then(function (reportResponse) {
-            //                promises.report.resolve(reportResponse);
-            //                model.report = reportResponse;
-            //                return reportResponse;
-            //            })
-            //            .then(function (report) {
-            //                promises.sku = (report || {}).sku;
-            //            });
-            //
-            //    }
-            //}
+            set: function(val) {
+                $log.debug('[Gateway] Setting `Application` to %o', val);
+
+                promises.application = $q.defer();
+
+                (!!val && _.isString(val) ? Applications.ById(val) : $q.when(val))
+                    .then(function (applicationResponse) {
+                        model.application = applicationResponse;
+                        promises.application.resolve(applicationResponse);
+                        return applicationResponse;
+                    });
+            }
         });
 
-        Object.defineProperty(_this._data, 'release', {
+        Object.defineProperty(_this._data, 'releases', {
             enumerable: true,
             get: function () {
                 return _this._data.application
                     .then(function (application) {
-                        return application.release;
+                        return application.releases;
                     });
             },
             set: function (val) {
@@ -282,7 +272,7 @@
 
                 _this._data.application
                     .then(function (application) {
-                        application.release = val;
+                        application.releases = val;
                     });
             }
         });
@@ -314,24 +304,25 @@
         }
 
         function loadGateway() {
+            if(!promises.applicantGateway) {
 
-            $q.all({co: _this._data.company, job: _this._data.job}).then(
-                function (values) {
-                    var gw = values.job && values.job.gateway || values.co && values.co.gateway || null;
+                promises.applicantGateway = $q.defer();
 
-                    _this._data.applicantGateway = gw || {
-                        sku: 'OUTSET_MVR',
-                        required: true,
-                        payment: 'company'
-                    };
-                });
+                return $q.all({co: _this._data.company, job: _this._data.job}).then(
+                    function (values) {
+                        var gw = values.job && values.job.gateway || values.co && values.co.gateway || {
+                                sku: 'OUTSET_MVR',
+                                required: true,
+                                payment: 'company',
+                                releaseType: 'preEmployment'
+                            };
 
-            $log.warn('[Gateway] Setting default gateway');
-            _this._data.applicantGateway = {
-                sku: 'OUTSET_MVR',
-                required: true,
-                payment: 'company'
-            };
+                        _this._data.applicantGateway = gw;
+
+                        return gw;
+                    });
+            }
+            return $q.reject('Applicant already loading');
 
 
         }

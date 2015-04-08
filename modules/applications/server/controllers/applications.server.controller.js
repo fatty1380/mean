@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 path         = require('path'),
 Application  = mongoose.model('Application'),
+Release      = mongoose.model('Release'),
 Message      = mongoose.model('Message'),
 User         = mongoose.model('User'),
 Job          = mongoose.model('Job'),
@@ -49,22 +50,40 @@ var executeQuery = function (req, res) {
  * Create a Application
  */
 exports.create = function (req, res) {
+
+    console.log('[ApplicationCtrl.create] Creating from body: %s\n\tURL: %s', JSON.stringify(req.body, null, 2), req.url);
+
+    var releases = req.body.releases;
+    delete req.body.releases;
+
     var application = new Application(req.body);
 
-    console.log('[ApplicationController.create] req.job: %j, req.body.jobId: %j', req.job, req.body.jobId);
+    application.releases = _.map(releases, function(release) {
+        return new Release(release);
+    });
+
+
+    console.log('Saving application with releases: %j', application.releases);
+
+    console.log('[ApplicationController.create] req.job: %j, \n\treq.body.jobId: %j', req.job, req.body.jobId);
+    console.log('[ApplicationController.create] req.user: %j, \n\treq.body.userId: %j', req.user, req.body.userId);
 
     application.user = req.user;
     application.job = req.job;
     application.company = (!!req.job) ? req.job.company : null;
 
+    console.log('[ApplicationController.create] Creating new application w/ id?: %s', application._id || application.id);
     console.log('[ApplicationController.create] Creating new application: %j', application);
 
     application.save(function (err) {
         if (err) {
+            console.error('[ApplicationController.create] Error saving application: %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
+
+            console.log('[ApplicationController.create] Application `%s` created ... saving to job', application._id);
             req.job.applications.push(application);
             req.job.save(function (err) {
                 if (err) {

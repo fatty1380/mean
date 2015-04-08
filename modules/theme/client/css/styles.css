@@ -5346,10 +5346,17 @@ form.applicant-form textarea.form-control {
   min-height: 250px;
   resize: vertical;
 }
-.form-paper .form-control {
-  border-style: none;
+.ng-submitted .form-paper .form-control.ng-invalid {
+  border-color: #ebccd1;
+  border-bottom-style: solid;
+}
+.form-paper .form-control,
+.form-paper img {
+  border-top-style: none;
+  border-left-style: none;
+  border-right-style: none;
   border-radius: 0;
-  border-bottom: solid;
+  border-bottom-style: dotted;
   border-bottom-width: 1px;
 }
 .form-paper .form-group .form-control {

@@ -39,15 +39,9 @@
                 }
             }),
             setStatus: function (id, status) {
-                var RSRC = $resource('api/applications/:id', {
-                    id: '@_id'
-                }, {
-                    update: {
-                        method: 'PUT'
-                    }
-                });
+                debugger;
 
-                return new RSRC({_id: id, 'status': status}).$update();
+                return new _this._data.ById({_id: id, 'status': status}).$update();
             },
             getApplication: function (query) {
 

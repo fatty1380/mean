@@ -1973,11 +1973,22 @@ form.applicant-form {
   }
 }
 
+.ng-submitted {
+  .form-paper .form-control {
+    &.ng-invalid {
+      border-color: @state-danger-border;
+      border-bottom-style: solid;
+    }
+  }
+}
+
 .form-paper {
-  .form-control {
-    border-style: none;
+  .form-control, img {
+    border-top-style: none;
+    border-left-style: none;
+    border-right-style: none;
     border-radius: 0;
-    border-bottom: solid;
+    border-bottom-style: dotted;
     border-bottom-width: 1px;
   }
 
