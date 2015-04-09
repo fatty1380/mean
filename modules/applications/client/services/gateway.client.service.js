@@ -24,7 +24,7 @@
                 _this.initialized = true;
             },
             models: model,
-            getSync: function(val) {
+            getSync: function (val) {
                 return (promises[val] && promises[val].promise && promises[val].promise.value || {});
             }
         };
@@ -131,7 +131,7 @@
             get: function () {
                 if (!promises.applicantGateway) {
                     $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
-                    loadGateway().then(function(response) {
+                    loadGateway().then(function (response) {
                         $log.debug('[Gateway] Loaded gateway with value: %j', response);
                     });
                 }
@@ -245,7 +245,7 @@
 
                 return promises.application.promise;
             },
-            set: function(val) {
+            set: function (val) {
                 $log.debug('[Gateway] Setting `Application` to %o', val);
 
                 promises.application = $q.defer();
@@ -304,7 +304,7 @@
         }
 
         function loadGateway() {
-            if(!promises.applicantGateway) {
+            if (!promises.applicantGateway) {
 
                 promises.applicantGateway = $q.defer();
 
