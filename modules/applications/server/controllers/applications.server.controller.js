@@ -13,7 +13,7 @@ Job          = mongoose.model('Job'),
 Connection   = mongoose.model('Connection'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
-releaseDocs = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller')),
+releaseDocs  = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller')),
 _            = require('lodash');
 
 /**
@@ -59,7 +59,7 @@ exports.create = function (req, res) {
 
     var application = new Application(req.body);
 
-    application.releases = _.map(releases, function(release) {
+    application.releases = _.map(releases, function (release) {
         return new Release(release);
     });
 
@@ -94,7 +94,7 @@ exports.create = function (req, res) {
                     console.log('[ApplicationController.create] saved job application to job');
                 }
 
-                if(!application.isDraft) {
+                if (!application.isDraft) {
                     console.log('[ApplicationController.create] Sending email for New Application %o', application);
                     sendNewApplicantEmail(req.user, req.job, application);
                 }
@@ -179,7 +179,7 @@ exports.update = function (req, res) {
                     return res.json(application);
                 }
 
-                if(wasDraft && !application.isDraft) {
+                if (wasDraft && !application.isDraft) {
                     console.log('[ApplicationController.update] Sending email for Newly Published Application %o', application);
                     sendNewApplicantEmail(application.user, application.job, application);
                 }

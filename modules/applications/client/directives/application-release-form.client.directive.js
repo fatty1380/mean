@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ApplicationReleaseFormCtrl($log, $q, Gateway, Applications) {
+    function ApplicationReleaseFormCtrl($log, $q, $interpolate, Gateway, Applications) {
         var vm = this;
 
         vm.signatureMethods = {};
@@ -60,12 +60,16 @@
                         vm.application = values.app;
                         vm.releaseType = values.gw.releaseType;
 
+                        debugger;
+                        vm.releaseTypes[vm.releaseType].text = $interpolate(vm.releaseTypes[vm.releaseType].text)({vm:vm});
+
                         vm.releases = _.indexBy(_.where(values.rel, function (val) {
                             return !_.isEmpty(val.releaseType);
                         }), 'releaseType');
 
                         // Search for existing Releases of the same type, otherwise create a stub;
-                        vm.release = _.find(values.rel, {releaseType: vm.releaseType}) || {
+                        vm.existingRelease = _.find(values.rel, {releaseType: vm.releaseType});
+                        vm.release = vm.existingRelease || {
                             releaseType: vm.releaseType,
                             signature: {},
                             name: {},
@@ -77,6 +81,12 @@
             submit: function () {
                 var application = vm.application;
 
+                if(vm.release.equals(vm.existingRelease)) {
+                    debugger;
+                }
+
+                debugger;
+                vm.release.releaseText = vm.releaseTypes[vm.releaseType].text;
                 vm.releases[vm.releaseType] = vm.release;
 
                 application.releases = _.values(vm.releases);
@@ -149,7 +159,7 @@
         $q.when(vm.report).then(vm.methods.init);
     }
 
-    ApplicationReleaseFormCtrl.$inject = ['$log', '$q', 'Gateway', 'Applications'];
+    ApplicationReleaseFormCtrl.$inject = ['$log', '$q', '$interpolate', 'Gateway', 'Applications'];
 
     function ApplicationReleaseFormDirective() {
         return {

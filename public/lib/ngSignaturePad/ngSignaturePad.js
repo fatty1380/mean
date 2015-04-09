@@ -73,7 +73,10 @@ angular.module('ngSignaturePad').directive('signaturePad', [
                 vm.methods = vm.methods || {};
 
                 vm.methods.accept = function () {
-                    if (!signaturePad.isEmpty()) {
+                    if(!!vm.signature.timestamp && vm.signature.dataUrl !== EMPTY_IMAGE) {
+                        console.log('Signature already signed');
+                    }
+                    else if (!signaturePad.isEmpty()) {
                         vm.signature.dataUrl = signaturePad.toDataURL();
 
                         vm.signature.timestamp = moment();
@@ -85,7 +88,7 @@ angular.module('ngSignaturePad').directive('signaturePad', [
                 };
 
                 vm.methods.isEmpty = function() {
-                    return signaturePad.isEmpty();
+                    return signaturePad.isEmpty() && vm.signature.dataUrl === EMPTY_IMAGE;
                 }
 
                 vm.methods.clear = function () {
