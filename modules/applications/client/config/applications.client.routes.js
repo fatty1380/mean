@@ -146,7 +146,8 @@
                 },
                 resolve: {
                     gateway: ['Gateway', 'Authentication', '$stateParams', function(Gateway, auth, Params) {
-                        Gateway.initialize(Params.jobId, auth.user);
+                        debugger;
+                        return Gateway.initialize(Params.jobId, auth.user);
                     }]
                 }
             }).
@@ -228,7 +229,9 @@
                 bindToController: true,
                 resolve: {
                     requirements: ['Gateway', '$q', function(gw, $q) {
-                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]);
+                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function(result) {
+                            debugger;
+                        });
                     }]
                 }
             }).

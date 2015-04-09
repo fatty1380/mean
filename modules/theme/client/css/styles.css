@@ -5638,7 +5638,7 @@ pdf > object {
   background-color: #f6f6f6 !important;
 }
 .transparent {
-  background-color: transparent!important;
+  background-color: transparent !important;
 }
 .shadow {
   background-color: rgba(51, 51, 51, 0.7);
@@ -5717,7 +5717,7 @@ pdf > object {
   padding-top: 15px !important;
 }
 .pad {
-  padding: 20px 10px!important;
+  padding: 20px 10px !important;
 }
 /** Margin Overrides **/
 .no-margin {
@@ -5771,4 +5771,14 @@ pdf > object {
 }
 .pointer {
   cursor: pointer;
+}
+.vert-middleh1,
+.vert-middleh2,
+.vert-middleh3,
+.vert-middleh4 {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
 }
