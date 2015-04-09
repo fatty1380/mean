@@ -21,10 +21,8 @@
             $log.debug('[EditLicense] Displaying License for editing: %o', vm.license);
         }
 
-        vm.mode = vm.mode || 'standard';
-
-        if (vm.mode === 'minimal') {
-            vm.view = {
+        var views = {
+            minimal:  {
                 cols: 1,
                 horizontal: true,
                 types: true,
@@ -34,10 +32,8 @@
                 expires: false,
                 dob: false,
                 endorsements: false
-            };
-        } else {
-            // 'Standard' View
-            vm.view = {
+            },
+            standard:  {
                 cols: 2,
                 horizontal: false,
                 types: true,
@@ -47,13 +43,22 @@
                 expires: true,
                 dob: true,
                 endorsements: true
-            };
-        }
+            }
+        };
 
         vm.states = appConfig.getStates();
         vm.debug = appConfig.get('debug');
 
         vm.dateFormat = 'MM/DD/YYYY';
+
+        vm.setMode = function(mode) {
+            vm.view = views[mode||vm.mode];
+        };
+
+        vm.toggleView = function() {
+            vm.mode = (vm.mode === 'minimal' ? 'standard' : 'minimal');
+            vm.setMode(vm.mode);
+        };
     }
 
     function EditLicenseDirective() {
@@ -64,11 +69,15 @@
             scope: {
                 license: '=?model',
                 user: '=?',
-                mode: '@?'
+                defaultMode: '@?mode'
             },
             controller: 'EditLicenseController',
             controllerAs: 'vm',
-            bindToController: true
+            bindToController: true,
+            link:  function(scope, elem, attrs) {
+                    scope.vm.mode = scope.vm.defaultMode || 'standard';
+                scope.vm.setMode(scope.vm.mode);
+            }
         };
 
         return ddo;

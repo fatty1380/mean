@@ -35,7 +35,10 @@
         vm.cancel = cancel;
 
         vm.methods = {
-            'default': {}
+            submit: submit,
+            update: update,
+            create: create,
+            cancel: cancel
         };
 
         function activate() {

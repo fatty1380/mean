@@ -277,8 +277,9 @@ exports.populateApplications = function (req, res, next) {
  * Job middleware
  */
 exports.jobByID = function (req, res, next, id) {
+    console.log('[JobById] Current body: %s\n\tURL: %s', JSON.stringify(req.body, null, 2), req.url);
 
-    console.log('[JobById] Loading job by id %s', id);
+    console.log('[JobById] Loading job by id %s. URL: %s', id, req.url);
 
     Job.findById(id)
         .populate('user', 'displayName email')

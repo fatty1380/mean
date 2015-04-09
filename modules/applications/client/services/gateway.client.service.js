@@ -7,6 +7,8 @@
         var promises = {};
         var model = {};
 
+        var FormController = null;
+
         _this._data = {
             initialize: function (job, user) {
                 if (_this.initialized) {
@@ -21,7 +23,10 @@
 
                 _this.initialized = true;
             },
-            models: model
+            models: model,
+            getSync: function(val) {
+                return (promises[val] && promises[val].promise && promises[val].promise.value || {});
+            }
         };
 
 
@@ -70,8 +75,8 @@
                 promises.driver = promises.driver || $q.defer();
                 return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
                     .then(function (driverResponse) {
-                        promises.driver.resolve(driverResponse);
                         model.driver = driverResponse;
+                        promises.driver.resolve(driverResponse);
                     }
                 );
             }
@@ -91,8 +96,8 @@
                 promises.job = promises.job || $q.defer();
                 return (!!val && _.isString(val) ? Jobs.get(val) : $q.when(val))
                     .then(function (jobResponse) {
-                        promises.job.resolve(jobResponse);
                         model.job = jobResponse;
+                        promises.job.resolve(jobResponse);
                         return jobResponse;
                     })
                     .then(function (job) {
@@ -115,31 +120,32 @@
                 promises.company = promises.company || $q.defer();
                 return (!!val && _.isString(val) ? Companies.get(val) : $q.when(val))
                     .then(function (companyResponse) {
-                        promises.company.resolve(companyResponse);
                         model.company = companyResponse;
+                        promises.company.resolve(companyResponse);
                         return companyResponse;
-                    })
-                    .then(function () {
-                        loadGateway();
                     });
             }
         });
 
         Object.defineProperty(_this._data, 'applicantGateway', {
             get: function () {
-                if (!promises.gateway) {
+                if (!promises.applicantGateway) {
                     $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
+                    loadGateway().then(function(response) {
+                        $log.debug('[Gateway] Loaded gateway with value: %j', response);
+                    });
                 }
-                return (promises.gateway = promises.gateway || $q.defer()).promise;
+                return promises.applicantGateway.promise;
             },
             set: function (val) {
-                $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
+                $log.debug('[Gateway] Initializing Value of Applicant Gateway Settings');
 
-                promises.gateway = promises.gateway || $q.defer();
+                promises.applicantGateway = (promises.applicantGateway || $q.defer());
                 $q.when(val)
                     .then(function (gatewayResponse) {
-                        promises.gateway.resolve(gatewayResponse);
-                        model.gateway = gatewayResponse;
+                        $log.debug('[Gateway] Resolving applicantGateway with %o', gatewayResponse);
+                        model.applicantGateway = gatewayResponse;
+                        promises.applicantGateway.resolve(gatewayResponse);
                         return gatewayResponse;
                     })
                     .then(function (gateway) {
@@ -161,49 +167,25 @@
             set: function (val) {
                 $log.debug('[Gateway] Setting `Report Definition` to %o', val);
 
-                promises.report = promises.report || $q.defer();
-                if (promises.sku !== val) {
+                promises.report = $q.defer();
+                if (model.sku !== val) {
                     _this._data.user
                         .then(function (userResponse) {
                             $log.debug('[Gateway] User loaded, now retrieving Report Definition info');
                             return (!!val && _.isString(val) ? Reports.get(val) : $q.when(val));
                         })
                         .then(function (reportResponse) {
-                            promises.report.resolve(reportResponse);
                             model.report = reportResponse;
+                            promises.report.resolve(reportResponse);
                             return reportResponse;
                         })
                         .then(function (report) {
-                            promises.sku = (report || {}).sku;
+                            model.sku = (report || {}).sku;
                         });
 
                 }
             }
         });
-
-        function loadApplicant() {
-            if (!promises.applicant) {
-                $log.debug('[Gateway] Initializing Load of Remote Applicant');
-
-                promises.applicant = $q.defer();
-
-                return _this._data.user
-                    .then(function (user) {
-                        return Applicants.getByUser(user.id);
-                    })
-                    .then(function (applicant) {
-                        $log.debug('[Gateway] Resolving Applicant as %o', applicant);
-                        promises.applicant.resolve(applicant);
-                    })
-                    .catch(function (err) {
-                        $log.debug('[Gateway] No existing applicant: %s', err);
-                        promises.applicant.resolve({});
-                    });
-            }
-            return $q.reject('Applicant already loading');
-        }
-
-        var loadingApplicant = false;
 
         Object.defineProperty(_this._data, 'applicant', {
             enumerable: true,
@@ -232,10 +214,11 @@
             get: function () {
                 if (!promises.application) {
                     $log.debug('[Gateway] Initializing Load of Job Application');
+
                     promises.application = $q.defer();
                     $q.all({job: _this._data.job, user: _this._data.user})
-                        .then(function (result) {
-                            Jobs.getApplication(result.job._id, result.user._id).$promise
+                        .then(function (values) {
+                            Jobs.getApplication(values.job._id, values.user._id)
                                 .then(function (applicationResponse) {
                                     $log.debug('[Gateway] Loaded Application');
                                     model.application = applicationResponse;
@@ -245,7 +228,7 @@
                                 .catch(function (err) {
                                     $log.debug('[Gateway] Failed to load Application', err);
                                     model.application = {
-                                        release: {}
+                                        releases: []
                                     };
 
                                     _this._data.job.then(function (jobResponse) {
@@ -265,34 +248,23 @@
             set: function(val) {
                 $log.debug('[Gateway] Setting `Application` to %o', val);
 
-                promises.report = promises.report || $q.defer();
-                if (promises.sku !== val) {
-                    if(_.isString(val)) {
-                        $log.debug('[Gateway] Setting new application by ID');
-                        promises.application.promise = Applications.ById(val).$promise;
-                    } else {
-                        promises.application.promse = $q.when(val);
-                    }
+                promises.application = $q.defer();
 
-                    promises.application.promise.then(function (reportResponse) {
-                            promises.report.resolve(reportResponse);
-                            model.report = reportResponse;
-                            return reportResponse;
-                        })
-                        .then(function (report) {
-                            promises.sku = (report || {}).sku;
-                        });
-
-                }
+                (!!val && _.isString(val) ? Applications.ById(val) : $q.when(val))
+                    .then(function (applicationResponse) {
+                        model.application = applicationResponse;
+                        promises.application.resolve(applicationResponse);
+                        return applicationResponse;
+                    });
             }
         });
 
-        Object.defineProperty(_this._data, 'release', {
+        Object.defineProperty(_this._data, 'releases', {
             enumerable: true,
             get: function () {
                 return _this._data.application
                     .then(function (application) {
-                        return application.release;
+                        return application.releases;
                     });
             },
             set: function (val) {
@@ -300,8 +272,7 @@
 
                 _this._data.application
                     .then(function (application) {
-                        debugger;
-                        application.release = val;
+                        application.releases = val;
                     });
             }
         });
@@ -310,51 +281,48 @@
          *  Private Methods
          *************************************************************************/
 
-        function loadDriver(user) {
-            var driverFn, driver = !!user && user.driver;
+        function loadApplicant() {
+            if (!promises.applicant) {
+                $log.debug('[Gateway] Initializing Load of Remote Applicant');
 
-            if (!!driver && _.isString(driver)) {
-                $log.debug('[GatewaySvc] Loading driver `%s`', driver);
-                driverFn = Drivers.get(driver);
-            } else if (!!user.id) {
-                $log.debug('[GatewaySvc] Loading driver for user `%s`', user.id);
-                driverFn = Drivers.getByUser(user.id);
-            } else {
-                $log.debug('[GatewaySvc] No data available to load driver');
-                return;
+                promises.applicant = $q.defer();
+
+                return _this._data.user
+                    .then(function (user) {
+                        return Applicants.getByUser(user.id);
+                    })
+                    .then(function (applicant) {
+                        $log.debug('[Gateway] Resolving Applicant as %o', applicant);
+                        promises.applicant.resolve(applicant);
+                    })
+                    .catch(function (err) {
+                        $log.debug('[Gateway] No existing applicant: %s', err);
+                        promises.applicant.resolve({});
+                    });
             }
-
-            driverFn
-                .then(function (driverResponse) {
-                    $log.debug('[GatewayCtrl] Loaded Driver object');
-                    return (_this._data.driver = driverResponse);
-                })
-                .catch(function (err) {
-                    debugger;
-                    $log.debug('[GatewayCtrl] Err getting driver for id `%s`: %s', driver, err);
-                    return Drivers.default;
-                });
+            return $q.reject('Applicant already loading');
         }
 
         function loadGateway() {
+            if(!promises.applicantGateway) {
 
-            $q.all({co: _this._data.company, job: _this._data.job}).then(
-                function (values) {
-                    var gw = values.job && values.job.gateway || values.co && values.co.gateway || null;
+                promises.applicantGateway = $q.defer();
 
-                    _this._data.applicantGateway = gw || {
-                        sku: 'OUTSET_MVR',
-                        required: true,
-                        payment: 'company'
-                    };
-                });
+                return $q.all({co: _this._data.company, job: _this._data.job}).then(
+                    function (values) {
+                        var gw = values.job && values.job.gateway || values.co && values.co.gateway || {
+                                sku: 'OUTSET_MVR',
+                                required: true,
+                                payment: 'company',
+                                releaseType: 'preEmployment'
+                            };
 
-            $log.warn('[Gateway] Setting default gateway');
-            _this._data.applicantGateway = {
-                sku: 'OUTSET_MVR',
-                required: true,
-                payment: 'company'
-            };
+                        _this._data.applicantGateway = gw;
+
+                        return gw;
+                    });
+            }
+            return $q.reject('Applicant already loading');
 
 
         }

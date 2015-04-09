@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 path         = require('path'),
 Application  = mongoose.model('Application'),
+Release      = mongoose.model('Release'),
 Message      = mongoose.model('Message'),
 User         = mongoose.model('User'),
 Job          = mongoose.model('Job'),
@@ -49,22 +50,40 @@ var executeQuery = function (req, res) {
  * Create a Application
  */
 exports.create = function (req, res) {
+
+    console.log('[ApplicationCtrl.create] Creating from body: %s\n\tURL: %s', JSON.stringify(req.body, null, 2), req.url);
+
+    var releases = req.body.releases;
+    delete req.body.releases;
+
     var application = new Application(req.body);
 
-    console.log('[ApplicationController.create] req.job: %j, req.body.jobId: %j', req.job, req.body.jobId);
+    application.releases = _.map(releases, function(release) {
+        return new Release(release);
+    });
+
+
+    console.log('Saving application with releases: %j', application.releases);
+
+    console.log('[ApplicationController.create] req.job: %j, \n\treq.body.jobId: %j', req.job, req.body.jobId);
+    console.log('[ApplicationController.create] req.user: %j, \n\treq.body.userId: %j', req.user, req.body.userId);
 
     application.user = req.user;
     application.job = req.job;
     application.company = (!!req.job) ? req.job.company : null;
 
+    console.log('[ApplicationController.create] Creating new application w/ id?: %s', application._id || application.id);
     console.log('[ApplicationController.create] Creating new application: %j', application);
 
     application.save(function (err) {
         if (err) {
+            console.error('[ApplicationController.create] Error saving application: %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
+
+            console.log('[ApplicationController.create] Application `%s` created ... saving to job', application._id);
             req.job.applications.push(application);
             req.job.save(function (err) {
                 if (err) {
@@ -74,31 +93,35 @@ exports.create = function (req, res) {
                     console.log('[ApplicationController.create] saved job application to job');
                 }
 
-
-                debugger;
-
-                var options = [
-                    {
-                        name: 'APPLICANT',
-                        content: req.user.firstName + ' ' + req.user.lastName.substring(0, 1).toUpperCase()
-                    },
-                    {
-                        name: 'COVER_LTR',
-                        content: application.introduction
-                    },
-                    {
-                        name: 'LINK_URL',
-                        content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
-                    }
-                ];
-
-                emailer.sendTemplateBySlug('outset-new-applicant', req.job.user, options);
+                if(!application.isDraft) {
+                    console.log('[ApplicationController.create] Sending email for New Application %o', application);
+                    sendNewApplicantEmail(req.user, req.job, application);
+                }
             });
 
             res.json(application);
         }
     });
 };
+
+function sendNewApplicantEmail(user, job, application) {
+    var options = [
+        {
+            name: 'APPLICANT',
+            content: user.firstName + ' ' + user.lastName.substring(0, 1).toUpperCase()
+        },
+        {
+            name: 'COVER_LTR',
+            content: application.introduction
+        },
+        {
+            name: 'LINK_URL',
+            content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
+        }
+    ];
+
+    emailer.sendTemplateBySlug('outset-new-applicant', job.user, options);
+}
 
 /**
  * Show the current Application
@@ -117,11 +140,19 @@ exports.read = function (req, res) {
  * Update a Application
  */
 exports.update = function (req, res) {
+    console.log('[ApplicationsCtrl] Updating based on URL: %s', req.url);
     var application = req.application;
 
-    debugger;
+    var wasDraft = application.isDraft;
 
-    application = _.extend(application, req.body);
+    var data = _.merge(application.toJSON(), req.body);
+    _.extend(application, data);
+
+    if (!_.isEmpty(data.releases) && _.isString(application.releases)) {
+        application.releases = data.releases;
+    }
+
+    // Handle nested
 
     application.save(function (err) {
         if (err) {
@@ -145,6 +176,13 @@ exports.update = function (req, res) {
                 if (err) {
                     console.log('error retrieving application, returning non-populated version', err);
                     return res.json(application);
+                }
+
+
+
+                if(wasDraft && !application.isDraft) {
+                    console.log('[ApplicationController.update] Sending email for Newly Published Application %o', application);
+                    sendNewApplicantEmail(application.user, application.job, application);
                 }
 
                 res.json(populated);
@@ -257,7 +295,7 @@ exports.queryByUserID = function (req, res) {
 
 exports.getByJobId = function (req, res, next) {
 
-    console.log('[ApplicationsController] getByJobId(%s)', req.params.jobId);
+    console.log('[ApplicationsController] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
 
     var query = {
         job: req.params.jobId,
@@ -280,7 +318,7 @@ exports.getByJobId = function (req, res, next) {
  */
 exports.applicationByID = function (req, res, next, id) {
 
-    console.log('[ApplicationsController] applicationById(%s)', id);
+    console.log('[ApplicationsController] applicationById(%s) URL: %s', id, req.url);
 
     Application.findById(id)
         .populate({path: 'user', model: 'User'})
@@ -340,9 +378,11 @@ exports.getMessages = function (req, res, next) {
     }
 
     console.log('starting cleansing user from messages');
-    _.map(application.messages, function(message) {
-        console.log('cleansing user from message');
-        message.sender.cleanse();
+    _.map(application.messages, function (message) {
+        if (!!message.sender) {
+            console.log('cleansing user from message');
+            message.sender.cleanse();
+        }
     });
 
     console.log('finished cleansing user from messages');
@@ -363,7 +403,7 @@ exports.getMessages = function (req, res, next) {
 
     response.theirs = _.filter(application.messages, function (msg) {
         if (!myLast || myLast.created < msg.created) {
-            msg.isNew = true;
+            msg.isFresh = true;
             newCt++;
         }
 

@@ -30,7 +30,7 @@ module.exports = {
                 'https://js.braintreegateway.com/v2/braintree.js',
                 'public/lib/ngImgCrop/compile/minified/ng-img-crop.js',
                 'https://cdnjs.cloudflare.com/ajax/libs/angular-scroll/0.6.4/angular-scroll.min.js',
-                'public/lib/raygun4js/dist/raygun.min.js',
+                '//cdn.raygun.io/raygun4js/raygun.min.js',
                 '//tinymce.cachefly.net/4.1/tinymce.min.js',
                 'public/lib/angular-sanitize/angular-sanitize.min.js',
                 'public/lib/angular-toastr/dist/angular-toastr.tpls.min.js',

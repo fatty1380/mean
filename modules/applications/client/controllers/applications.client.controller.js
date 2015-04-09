@@ -34,7 +34,7 @@
                 $log.debug('No connection, or invalid connection - not creating socket.');
             }
 
-            if(vm.user.isOwner && vm.application.isNew) {
+            if(vm.user.isOwner && vm.application.isUnreviewed) {
                 vm.setApplicationStatus('read');
             }
 

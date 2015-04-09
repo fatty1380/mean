@@ -4,60 +4,73 @@
  * Module dependencies.
  */
 var should = require('should'),
-    mongoose = require('mongoose'),
-    User = mongoose.model('User'),
-    Job = mongoose.model('Job');
+mongoose   = require('mongoose'),
+_          = require('lodash'),
+Q          = require('Q'),
+User       = mongoose.model('User'),
+Job        = mongoose.model('Job'),
+Company    = mongoose.model('Company');
 
 /**
  * Globals
  */
-var user, job;
+var user, owner, company, job;
 
 /**
  * Unit tests
  */
-describe('Job Model Unit Tests:', function() {
-    beforeEach(function(done) {
-        user = new User({
+describe('Job Model Unit Tests:', function () {
+    beforeEach(function (done) {
+        var userPrimative = {
             firstName: 'Full',
             lastName: 'Name',
-            displayName: 'Full Name',
             email: 'test@test.com',
             username: 'username',
-            password: 'password'
+            password: 'password',
+            provider: 'local',
+            type: 'driver'
+        };
+
+        user = new User(userPrimative);
+        owner = new User(_.extend(_.clone(userPrimative, true), {firstName: 'Joe', lastName: 'Owner', type: 'owner'}));
+
+        company = new Company({
+            owner: owner,
+            name: 'My Company Name',
+            type: 'owner'
         });
 
-        user.save(function() {
-            job = new Job({
-                name: 'Job Name',
-                description: 'Job Description',
+        Q.all([user.save(), owner.save(), company.save()]).done(function (result) {
+                job = new Job({
+                    user: owner,
+                    company: company,
+                    name: 'Job Title Name',
+                    description: 'Describe Me'
+                });
 
-                user: user
-            });
-
-            done();
+                done();
         });
     });
 
-    describe('Method Save', function() {
-        it('should be able to save without problems', function(done) {
-            return job.save(function(err) {
+    describe('Method Save', function () {
+        it('should be able to save without problems', function (done) {
+            return job.save(function (err) {
                 should.not.exist(err);
                 done();
             });
         });
 
-        it('should be able to show an error when try to save without name', function(done) {
+        it('should be able to show an error when try to save without name', function (done) {
             job.name = '';
 
-            return job.save(function(err) {
+            return job.save(function (err) {
                 should.exist(err);
                 done();
             });
         });
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         Job.remove().exec();
         User.remove().exec();
 
