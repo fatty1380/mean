@@ -13,6 +13,7 @@ Job          = mongoose.model('Job'),
 Connection   = mongoose.model('Connection'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+releaseDocs = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller')),
 _            = require('lodash');
 
 /**
@@ -177,8 +178,6 @@ exports.update = function (req, res) {
                     console.log('error retrieving application, returning non-populated version', err);
                     return res.json(application);
                 }
-
-
 
                 if(wasDraft && !application.isDraft) {
                     console.log('[ApplicationController.update] Sending email for Newly Published Application %o', application);
