@@ -20,10 +20,11 @@ var findTheCustomer = function (req, res, next, createIfNull) {
 
     gateway.customer.find(customerId, function (err, customer) {
         if (err) {
-            console.log('[Braintree] Find Customer failed with error: %j', err);
+            console.log('[Braintree.findTheCustomer] failed with error: %j', err);
         }
 
         if (!customer && createIfNull) {
+            console.log('[Braintree.findTheCustomer] No customer - creating one', err);
             exports.createCustomer(req, res, next);
         }
         else {
@@ -225,20 +226,20 @@ var initializeSubscription = function (req, res) {
 
     var paymentToken;
 
-    if(!!req.braintreeCustomer.paymentMethods) {
+    if (!!req.braintreeCustomer.paymentMethods) {
         // TODO: Use the "Find PaymentMethods" api call to simplify this
         var defaultMethod = _.find(req.braintreeCustomer.paymentMethods, {'default': true});
 
         if (!!defaultMethod) {
             paymentToken = defaultMethod.token;
         }
-    } else if(!!req.braintreeCustomer.creditCards) {
+    } else if (!!req.braintreeCustomer.creditCards) {
         var defaultCC = _.find(req.braintreeCustomer.creditCards, {'default': true});
 
         if (!!defaultCC) {
             paymentToken = defaultCC.token;
         }
-    } else if(!!req.braintreeCustomer.paypalAccounts) {
+    } else if (!!req.braintreeCustomer.paypalAccounts) {
         var defaultPaypal = _.find(req.braintreeCustomer.paypalAccounts, {'default': true});
 
         if (!!defaultPaypal) {
@@ -425,7 +426,6 @@ exports.postApplicant = function (req, res, next) {
 };
 
 
-
 exports.getPlanDetails = function (req, res, next) {
 
     if (!!req.params.planId) {
@@ -448,7 +448,7 @@ exports.getPlanDetails = function (req, res, next) {
 
                 if (!_.isEmpty(req.query) && !!req.query.promoCode) {
                     plan.discounts = _.filter(plan.discounts, function (disc) {
-                        if(_.contains(req.query.promoCode, disc.id)) {
+                        if (_.contains(req.query.promoCode, disc.id)) {
                             debugger;
                             disc.amount = plan.price;
                             return true;
@@ -510,10 +510,10 @@ exports.postSubscription = function (req, res, next) {
             var calcPrice = parseFloat(req.planDetails.price);
             console.log('[Braintree.postSubscription] Got base price `%s`', calcPrice);
 
-            if(!!req.promoCode) {
+            if (!!req.promoCode) {
                 var discount = _.find(req.planDetails.discounts, {'id': req.promoCode});
 
-                if(!!discount) {
+                if (!!discount) {
                     calcPrice = calcPrice - discount.amount;
                     console.log('[Braintree.postSubscription] Calculated Subtotal `%s` based on discount `%s`', calcPrice, discount.amount);
                 }
@@ -530,7 +530,6 @@ exports.postSubscription = function (req, res, next) {
                 runSubscriptionTransaction(req, res, next);
             }
         });
-
 
 
 };
