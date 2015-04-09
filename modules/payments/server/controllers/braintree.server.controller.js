@@ -19,7 +19,7 @@ function initGateway() {
         return;
     }
 
-    console.log('[BraintreeInit] Start');
+    console.log('[Braintree.initGateway] Start');
 
     if (config.services.braintree &&
         (config.services.braintree.MerchantId && config.services.braintree.PublicKey && config.services.braintree.PrivateKey)) {
@@ -66,32 +66,26 @@ exports.getToken = function (req, res) {
 
         var generator = !!req.braintreeCustomer ? {customerId: req.braintreeCustomer.id} : {};
 
+        console.log('[Braintree.getToken] Initializing client token with generator: %j', generator);
+
         gateway.clientToken.generate(generator,
             function (err, response) {
                 if (err) {
-                    console.log('Error getting token: %j', err);
+                    console.log('[Braintree.getToken] Error getting token: %j', err);
                     return res.status(500).send(err);
                 }
 
-                console.log('got response %j', response);
+                console.log('[Braintree.getToken] got response %j', response);
 
                 res.json(response);
             });
     } else {
+        console.log('[Braintree.getToken] Gateway is unavailable - aborting');
         res.status(500).send({
             message: 'Unable to initialize Braintree Payment Gateway'
         });
     }
 };
-
-exports.findOrCreateCustomer = function (req, res, next) {
-    findTheCustomer(req, res, next, true);
-};
-
-exports.findCustomer = function (req, res, next) {
-    findTheCustomer(req, res, next, false);
-};
-
 
 
 var findTheCustomer = function (req, res, next, createIfNull) {
@@ -101,10 +95,11 @@ var findTheCustomer = function (req, res, next, createIfNull) {
 
     gateway.customer.find(customerId, function (err, customer) {
         if (err) {
-            console.log('[Braintree] Find Customer failed with error: %j', err);
+            console.log('[Braintree.findTheCustomer] failed with error: %j', err);
         }
 
         if (!customer && createIfNull) {
+            console.log('[Braintree.findTheCustomer] No customer - creating one', err);
             exports.createCustomer(req, res, next);
         }
         else {
@@ -113,6 +108,15 @@ var findTheCustomer = function (req, res, next, createIfNull) {
             next();
         }
     });
+};
+
+
+exports.findOrCreateCustomer = function (req, res, next) {
+    findTheCustomer(req, res, next, true);
+};
+
+exports.findCustomer = function (req, res, next) {
+    findTheCustomer(req, res, next, false);
 };
 
 exports.createCustomer = function (req, res, next) {
