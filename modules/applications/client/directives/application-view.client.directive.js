@@ -56,7 +56,7 @@
                         deferred.resolve(success);
                     }, function (failure) {
                         if (failure.status === 404) {
-                            return undefined;
+                            return null;
                         } else {
                             $log.error('Unable to lookup application based on job and user: %o', failure);
                             debugger;
@@ -69,7 +69,7 @@
 
         vm.setLocalProperties = function (application) {
 
-            vm.profile = application.user;
+            vm.profile = !!application && application.user || vm.profile;
             vm.driver = vm.profile.driver || Drivers.getByUser(vm.profile._id);
             vm.license = !!vm.driver.licenses && vm.driver.licenses.length ? vm.driver.licenses[0] : null;
 
@@ -129,18 +129,23 @@
         var vm = this;
 
         if (!vm.job && !vm.application) {
-            $log.error('[ApplicationListItemCtrl] Neither job nor applicaiton is defined... aborting initialization');
+            $log.error('[ApplicationListItemCtrl] Neither job nor application is defined... aborting initialization');
             return false;
         }
 
         vm.Applications = Applications;
 
-        vm.job = vm.job || vm.application && vm.application.job;
-        vm.job.newMessages = 0;
+        vm.initialize = function () {
+            if (!!vm.application) {
+                vm.profile = vm.application.user;
+                vm.job = vm.job || vm.application.job;
 
-        if (!!vm.application) {
-            vm.checkMessages(vm.application, vm.job);
-        }
+                if(_.isEmpty(vm.job.newMessages)) {
+                    vm.job.newMessages = 0;
+                }
+                vm.checkMessages(vm.application, vm.job);
+            }
+        };
 
         vm.showTab = function (itemId, tabName) {
             if (!!vm.visibleId && vm.visibleTab === tabName) {
@@ -154,20 +159,15 @@
             $location.search({'itemId': vm.visibleId, 'tabName': vm.visibleTab});
         };
 
-        vm.checkMessages = function (application, job) {
-            $log.warn('[0] Application %s has %d messages', application._id, application.newMessages || -1);
-            $log.warn('[0] Job %s has %d messages', job._id, job.newMessages || -1);
-
-            Applications.checkMessages(application, auth.user._id)
-                .then(function (application) {
-                    application = application;
-                    $log.warn('[1] Application %s has %d messages', application._id, application.newMessages || '0');
-                    job.newMessages += application.newMessages || 0;
-                    $log.warn('[1] Job %s has %d messages', job._id, job.newMessages || '0');
+        vm.checkMessages = function () {
+            Applications.checkMessages(vm.application, auth.user._id)
+                .then(function (applicationResponse) {
+                    vm.application = applicationResponse;
+                    vm.job.newMessages += vm.application.newMessages || 0;
                 })
                 .catch(function (err) {
-                    if (!!application.connection) {
-                        $log.error('Failed to load messages for job %s due to error: %o', job._id, err);
+                    if (!!vm.application.connection) {
+                        $log.error('Failed to load messages for job %s due to error: %o', vm.job._id, err);
                     }
                     else {
                         $log.debug('No connection, no messages. Simple!', err);
@@ -175,21 +175,93 @@
                 });
         };
 
+        vm.setApplicationStatus = function (application, status, $event) {
+            $event.stopPropagation();
+
+            var app = vm.ApplicationFactory.setStatus(application._id, status);
+
+            app.then(function (success) {
+                $log.debug('[setApplicationStatus] %s', success);
+                application = success;
+            }, function (reject) {
+                debugger;
+                $log.warn('[setApplicationStatus] %s', reject);
+            });
+
+            application.status = status;
+            application.isNew = application.isConnected = false;
+            application.isRejected = true;
+            application.disabled = true;
+        };
+
+        vm.initialize();
+    }
+
+    function ApplicationListItemDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: function (elem, attrs) {
+                switch (attrs.userType) {
+                    case 'driver':
+                        return '/modules/applications/views/templates/driver-list-item.client.template.html';
+                    case 'owner':
+                        return '/modules/applications/views/templates/owner-list-item.client.template.html';
+                }
+            },
+            restrict: 'E',
+            scope: {
+                userType: '@', // user-type
+                application: '=?',
+                job: '=?',
+                visibleId: '=',
+                visibleTab: '='
+            },
+            controller: 'ApplicationListItemController',
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+
+
+    function ApplicationJobListItemController(auth, Applications, $log, $state, $location) {
+        var vm = this;
+
+        if (!vm.job) {
+            $log.error('[ApplicationJobListItemCtrl] Job is not defined... aborting initialization');
+            return false;
+        }
+
+            vm.job.newMessages = 0;
+
+        vm.showTab = function (itemId, tabName) {
+            if (!!vm.visibleId && vm.visibleTab === tabName) {
+                vm.visibleId = vm.visibleTab = null;
+            } else {
+                vm.visibleId = itemId;
+                vm.visibleTab = tabName;
+            }
+
+            $state.transitionTo($state.current, {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+            $location.search({'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+        };
+
         vm.filters = {
-                status: {'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false},
-                negStatus: {'rejected': false, 'expired': false}
+            status: {'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false},
+            negStatus: {'rejected': false, 'expired': false}
         };
 
         vm.sorting = {
-            applicants: ['statusIndex','-created'],
-            messaging: ['!messages.length','-lastMessage.created'], //'-lastMessage.created',
-            documents: ['-!!user.driver.resume','-user.driver.resume.created','-user.driver.reports.length']
+            applicants: ['statusIndex', '-created'],
+            messaging: ['!messages.length', '-lastMessage.created'], //'-lastMessage.created',
+            documents: ['-!!user.driver.resume', '-user.driver.resume.created', '-user.driver.reports.length']
         };
 
         vm.defaultFiltering = {
             applicants: {},
-            messaging: { 'status': {'connected': true}},
-            documents: { 'status': {'connected': true}}
+            messaging: {'status': {'connected': true}},
+            documents: {'status': {'connected': true}}
         };
 
         vm.reverseSort = false;
@@ -253,15 +325,15 @@
             return true;
         };
 
-        vm.setApplicationStatus = function(application, status, $event) {
+        vm.setApplicationStatus = function (application, status, $event) {
             $event.stopPropagation();
 
             var app = vm.ApplicationFactory.setStatus(application._id, status);
 
-            app.then(function(success) {
+            app.then(function (success) {
                 $log.debug('[setApplicationStatus] %s', success);
                 application = success;
-            }, function(reject) {
+            }, function (reject) {
                 debugger;
                 $log.warn('[setApplicationStatus] %s', reject);
             });
@@ -273,16 +345,12 @@
         };
     }
 
-    function ApplicationListItemDirective() {
+    function ApplicationJobListItemDirective() {
         var ddo;
         ddo = {
             templateUrl: function (elem, attrs) {
-                switch (attrs.userType) {
-                    case 'driver':
-                        return '/modules/applications/views/templates/driver-list-item.client.template.html';
-                    case 'owner':
-                        return '/modules/applications/views/templates/owner-list-item.client.template.html';
-                }
+                        return '/modules/applications/views/templates/owner-job-list-item.client.template.html';
+
             },
             restrict: 'E',
             scope: {
@@ -292,7 +360,7 @@
                 visibleId: '=',
                 visibleTab: '='
             },
-            controller: 'ApplicationListItemController',
+            controller: 'ApplicationJobListItemController',
             controllerAs: 'vm',
             bindToController: true
         };
@@ -302,11 +370,14 @@
 
     ApplicationSummaryController.$inject = ['Authentication', 'Applications', 'Drivers', 'Reports', '$q', '$log', 'toastr'];
     ApplicationListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
+    ApplicationJobListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
 
     angular.module('applications')
         .controller('ApplicationSummaryController', ApplicationSummaryController)
         .controller('ApplicationListItemController', ApplicationListItemController)
+        .controller('ApplicationJobListItemController', ApplicationJobListItemController)
         .directive('osetApplicationSummary', ApplicationSummaryDirective)
+        .directive('osetApplicationJobListItem', ApplicationJobListItemDirective)
         .directive('osetApplicationListItem', ApplicationListItemDirective); //<oset-application-list-item ...
 
 })();

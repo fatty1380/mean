@@ -28,6 +28,12 @@ var CompanySchema = new Schema({
         trim: true
     },
 
+    legalEntityName: {
+        type: String,
+        default: null,
+        trim: true
+    },
+
     zipCode: {
         type: String,
         default: '',
@@ -79,6 +85,10 @@ var CompanySchema = new Schema({
             type: String,
             enum: ['applicant', 'company', 'mixed', ''],
             default: 'company'
+        },
+        releaseType: {
+            type: String,
+            default: 'preEmployment'
         }
     },
 

@@ -5346,10 +5346,17 @@ form.applicant-form textarea.form-control {
   min-height: 250px;
   resize: vertical;
 }
-.form-paper .form-control {
-  border-style: none;
+.ng-submitted .form-paper .form-control.ng-invalid {
+  border-color: #ebccd1;
+  border-bottom-style: solid;
+}
+.form-paper .form-control,
+.form-paper img {
+  border-top-style: none;
+  border-left-style: none;
+  border-right-style: none;
   border-radius: 0;
-  border-bottom: solid;
+  border-bottom-style: dotted;
   border-bottom-width: 1px;
 }
 .form-paper .form-group .form-control {
@@ -5609,6 +5616,17 @@ pdf > object {
 .workflow-item .connector.last {
   width: 50%;
   left: 0;
+}
+.label-list .label {
+  display: inline-block;
+}
+.inline-item .inline-label,
+.inline-item .inline-content {
+  margin-bottom: 2px;
+}
+.inline-item .inline-label {
+  font-weight: bold;
+  text-align: right;
 }
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {

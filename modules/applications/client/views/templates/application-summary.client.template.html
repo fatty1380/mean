@@ -1,7 +1,8 @@
 <section name='oset-application-summary'>
+    <h2>Application</h2>
 
     <!--This view is used primarily for the display of simple inline template views.-->
-    <div ng-show="vm.application">
+    <div ng-show="!!vm.application">
         <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="panel panel-default pad">
             <dl class="dl-horizontal">
                 <dt>Status:</dt>

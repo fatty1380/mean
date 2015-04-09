@@ -82,6 +82,17 @@ describe('User Model Unit Tests:', function () {
             });
         });
 
+        it('should be a driver by default', function (done) {
+            delete user.type;
+            return user.save(function (err) {
+                should.not.exist(err);
+
+                should(user).have.property('type', 'driver');
+
+                done();
+            });
+        });
+
         it('should use an email in place of username when username is not provided', function (done) {
             user.username = null;
             user.save(function (err) {
@@ -102,7 +113,7 @@ describe('User Model Unit Tests:', function () {
 
                 driver.save(function (err) {
                     should.not.exist(err);
-                    driver.user.equals(user._id).should.be.ok;
+                    driver.user.equals(user._id).should.be.true;
 
                     user.driver = driver;
 
@@ -110,7 +121,7 @@ describe('User Model Unit Tests:', function () {
                         should.not.exist(err);
                         should.exist(dbUser);
 
-                        user.driver.equals(driver._id).should.be.ok;
+                        user.driver.equals(driver._id).should.be.true;
 
                         done();
                     });

@@ -22,25 +22,28 @@ var app, agent, credentials, user, article, session;
 /**
  * Article routes tests
  */
-describe('Everifile CRUD tests', function () {
-
-    everifile.GetSession()
-        .then(function (sessionResponse) {
-            should.exist(sessionResponse.jar);
-
-            session = sessionResponse;
-
-            done();
-        })
-        .catch(function (err) {
-            console.error('Error Initializing tests ', err);
-            should.not.exist(err);
-        });
+describe.skip('Everifile CRUD tests', function (done) {
 
     beforeEach(function (done) {
-        it('Should have a session defined', function (done) {
-            should.exist(session);
-        })
+        everifile.GetSession()
+            .then(function (sessionResponse) {
+                should.exist(sessionResponse.jar);
+
+                session = sessionResponse;
+            })
+            .catch(function (err) {
+                console.error('Error Initializing tests ', err);
+                should.not.exist(err);
+            }).finally(function() {
+
+                it('Should have a session defined', function (done) {
+                    should.exist(session);
+
+                    done();
+                });
+            });
+
+
     });
 
     afterEach(function (done) {

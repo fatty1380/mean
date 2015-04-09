@@ -69,7 +69,7 @@ var ApplicationSchema = new Schema({
      */
     introduction: {
         type: String,
-        required: true
+        default: null
     },
 
     messages: [{
@@ -82,15 +82,7 @@ var ApplicationSchema = new Schema({
         ref: 'Connection'
     },
 
-    release: {
-        signature: String,
-        type: String,
-        created: {
-            type: Date,
-            default: Date.now
-        },
-        id: Schema.ObjectId
-    },
+    releases: ['Release'],
 
     created: {
         type: Date,
@@ -107,10 +99,10 @@ var ApplicationSchema = new Schema({
 
 ApplicationSchema.virtual('isDraft')
     .get(function () {
-        return this.status === 'draft';
+        return !this.status || this.status === 'draft';
     });
 
-ApplicationSchema.virtual('isNew')
+ApplicationSchema.virtual('isUnreviewed')
     .get(function () {
         return this.status === 'submitted';
     });
@@ -143,7 +135,6 @@ ApplicationSchema.virtual('isHired')
 ApplicationSchema.virtual('statusCat')
 .get(function() {
         switch(this.status) {
-        case 'draft':
         case 'submitted': return 'new';
         case 'read': return 'reviewed';
         case 'connected':
@@ -154,19 +145,20 @@ ApplicationSchema.virtual('statusCat')
         case 'rejected': return 'rejected';
         case 'deleted': return 'deleted';
         case 'hired': return 'hired';
+            default: return 'draft';
         }
     });
 
 ApplicationSchema.virtual('statusIndex')
     .get(function() {
         switch(this.status) {
-            case 'draft': return 0;
             case 'submitted': return 1;
             case 'read': return 2;
             case 'connected': return 3;
             case 'rejected': return 4;
             case 'deleted': return 5;
             case 'hired': return 6;
+            default: return 0;
         }
     });
 
@@ -196,6 +188,15 @@ ApplicationSchema.pre('save', function (next) {
         }
     }
 
+    next();
+});
+
+ApplicationSchema.pre('validate', function(next) {
+    console.log('[AS.preValidate] status currently: %s', this.status);
+    if(!this.introduction && !this.isDraft) {
+        console.log('[AS.preValidate] FAIL! status currently: %s', this.status);
+        return next('Active applications must have intro text');
+    }
     next();
 });
 

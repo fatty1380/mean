@@ -45,7 +45,9 @@
         };
 
         vm.resetSubformMethods = function () {
-            vm.subformMethods = null;
+            vm.subformMethods.init = defaultMethods.init;
+            vm.subformMethods.validate = defaultMethods.validate;
+            vm.subformMethods.submit = defaultMethods.submit;
             $log.debug('[AppGatewayCtrl] Reset Subform Methods');
         };
 
@@ -93,29 +95,6 @@
                 //vm.formData.applicant = applicant;
                 $log.info('[GatewayCtrl] Set FormData applicant: %o', applicant);
             });
-
-            Gateway.release.then(function (release) {
-                if (_.isEmpty(release)) {
-                    Gateway.release = release = {signature: {}};
-                }
-                //vm.formData.release = release;
-                //vm.formData.signature = release.signature;
-                $log.info('[GatewayCtrl] Set FormData release: %o', release);
-            });
-
-
-            //
-            //vm.formData.user = auth.user || {};
-            //
-            //if (!!auth.user && _.isString(auth.user.driver)) {
-            //    vm.formData.driver = Applications.get(auth.user.driver)
-            //        .catch(function (err) {
-            //            $log.debug('[GatewayCtrl] Err getting driver for id `%s`: %s', auth.user.driver, err);
-            //            return {};
-            //        });
-            //} else if (_.isObject(auth.user.driver)) {
-            //    vm.formData.driver = auth.user.driver;
-            //}
         }
 
         vm.getKeys = function (object) {
@@ -146,7 +125,7 @@
             {active: true, state: 'gateway.reportFields', title: 'Report Entry', params: {readonly: false}},
             {active: true, state: 'gateway.reportFields', title: 'Confirmation', params: {readonly: true}},
             {active: true, state: 'gateway.authorization', title: 'Authorization'},
-            {active: true, state: 'gateway.payment', title: 'Payment'},
+            //{active: true, state: 'gateway.payment', title: 'Payment'},
             {active: true, state: 'gateway.complete', title: '&nbsp;', isLast: true},
         ];
 
@@ -164,6 +143,7 @@
 
         vm.goNext = function () {
             if (vm.currentIndex < vm.activeSteps.length - 1) {
+                debugger;
 
                 vm.subformMethods.validate().then(
                     function (success) {
@@ -186,9 +166,9 @@
                     function (err) {
                         $log.warn('Unable to continue to next step due to %o', err);
 
-                        vm.error = err;
+                        vm.error = _.isString(err) && err || err && err.data && err.data.message || err && err.message || 'Unable to process the previous action.';
 
-                        toastr.error(err, {extendedTimeOut: 5000});
+                        toastr.error(vm.error || err, {extendedTimeOut: 5000});
                     }
                 ).finally(
                     function () {
@@ -205,55 +185,48 @@
                 return;
             }
             if (vm.currentStep.isLast) {
-                var application = vm.gw.models.application;
 
-                debugger;
+                vm.gw.application
+                    .then(function (application) {
 
-                application = _.extend(application, {
-                    status: 'submitted',
-                    agreement: vm.gw.models.application.termsAccepted,
-                    jobId: vm.gw.models.job._id,
-                    introduction: vm.gw.models.driver.about
-                });
+                        application = _.extend(application, {
+                            status: 'submitted',
+                            agreement: vm.gw.models.application.termsAccepted,
+                            jobId: vm.gw.models.job._id,
+                            introduction: vm.gw.models.driver.about
+                        });
 
-                var upsertMethod, params;
+                        var upsertMethod, params;
 
-                if (_.isEmpty(application._id)) {
-                    application = new Applications.ByJob(application);
-                    upsertMethod = application.$save;
-                    params = {jobId: application.jobId};
-                }
-                else {
-                    application = !!application.$update ? application : new Applications.ById(application);
-                    upsertMethod = application.$update;
-                }
+                        if (_.isEmpty(application._id)) {
+                            upsertMethod = (new Applications.ByJob(application)).$save;
+                            params = {jobId: application.jobId};
+                        }
+                        else {
+                            upsertMethod = (new Applications.ById(application)).$update;
+                            params = {id: application._id};
+                        }
 
-                // Redirect after save
-                upsertMethod()
-                    .then(function (success) {
-                        $log.debug('Successfully created an application: %o', success);
+                        // Redirect after save
+                        return upsertMethod(params)
+                            .then(function (success) {
+                                $log.debug('Successfully created an application: %o', success);
 
-                        vm.gateway.application = success;
+                                Gateway.application = success;
 
-                        vm.success = 'Application Submission Successful!';
+                                vm.success = 'Application Submission Successful!';
+                            });
                     })
                     .catch(function (err) {
                         $log.error('Failed to create application', err);
-                        $log.error('TEMPORARY WORKAROUND IN PLACE FOR DEMO');
 
-                        //vm.error = err;
+                        vm.error = err;
 
-                        //toastr.error(err, {extendedTimeOut: 5000});
-
-                        //vm.gateway.application = success;
-
-                        vm.success = 'Application Submission Successful!';
-                    }
-                ).finally(
-                    function () {
+                        toastr.error(err, {extendedTimeOut: 5000});
+                    })
+                    .finally(function () {
                         $document.scrollTopAnimated(0, 300);
-                    }
-                );
+                    });
             } else {
                 return $state.go(vm.currentStep.state);
             }

@@ -22,8 +22,8 @@ angular.module('ngSignaturePad').directive('signaturePad', [
         function setCanvasHeightAndWidth() {
             var height = calculateHeight(element), width = calculateWidth(element);
 
-            scope.signatureWidth = width;
-            scope.signatureHeight = height;
+            scope.vm.signatureWidth = width;
+            scope.vm.signatureHeight = height;
             canvas.attr("height", height);
             canvas.attr("width", width);
         }
@@ -49,55 +49,77 @@ angular.module('ngSignaturePad').directive('signaturePad', [
             restrict: 'A',
             replace: true,
             template: '<div class="signature-background">' +
-            '<div class="signature" ng-style="{height: signatureHeight, width: signatureWidth}" >' +
+            '<div class="signature" ng-style="{height: vm.signatureHeight, width: vm.signatureWidth}" >' +
             '<canvas></canvas>' +
             '</div>' +
             '<div class="action row pad-vert">' +
             '<div class="col-sm-12">' +
-            '<div ng-show="!!signature.timestamp"><strong>Signed:</strong> {{signature.timestamp | amDateFormat : "LL LT"}}</div>' +
-            '<button type="button" class="btn btn-oset-secondary mgn-right pull-right" ng-click="clear()">clear</button>' +
-            '<button type="button" class="btn btn-oset-primary mgn-right pull-right" ng-class="{\'disabled\':!!timestamp}" ng-click="accept()">Sign</button>' +
+            '<div ng-show="!!vm.signature.timestamp"><strong>Signed:</strong> {{vm.signature.timestamp | amDateFormat : "LL LT"}}</div>' +
+            '<button type="button" class="btn btn-oset-primary mgn-right pull-right" ng-class="{\'disabled\':!!timestamp}" ng-click="vm.methods.accept()">Sign</button>' +
+            '<button type="button" class="btn btn-oset-link mgn-right pull-right" ng-click="vm.methods.clear()">clear</button>' +
             '</div>' +
             '</div>' +
             '</div>',
             scope: {
                 signature: "=signature",
-                close: "&"
+                close: "&",
+                methods: "=?"
             },
-            controller: function ($scope) {
-                $scope.accept = function () {
-                    if (!signaturePad.isEmpty()) {
-                        $scope.signature.dataUrl = signaturePad.toDataURL();
-                        $scope.signature.$isEmpty = false;
+            controllerAs: 'vm',
+            bindToController: true,
+            controller: function () {
+                var vm = this;
 
-                        $scope.signature.timestamp = moment();
+                vm.methods = vm.methods || {};
+
+                vm.methods.accept = function () {
+                    if (!signaturePad.isEmpty()) {
+                        vm.signature.dataUrl = signaturePad.toDataURL();
+
+                        vm.signature.timestamp = moment();
                     } else {
-                        $scope.signature.dataUrl = EMPTY_IMAGE;
-                        $scope.signature.timestamp = null;
-                        $scope.signature.$isEmpty = true;
+                        vm.signature.dataUrl = EMPTY_IMAGE;
+                        vm.signature.timestamp = null;
                     }
-                    $scope.close();
+                    vm.methods.close();
                 };
 
-                $scope.clear = function () {
+                vm.methods.isEmpty = function() {
+                    return signaturePad.isEmpty();
+                }
+
+                vm.methods.clear = function () {
                     signaturePad.clear();
-                    $scope.signature.timestamp = null;
+                    vm.signature.timestamp = null;
                     //setCanvasHeightAndWidth();
                 };
+
+                vm.methods.close = vm.close;
             },
-            link: function ($scope, $element) {
+            link: function (isoscope, $element) {
                 canvas = $element.find("canvas");
-                scope = $scope;
+                scope = isoscope;
                 element = $element;
                 signaturePad = new SignaturePad(canvas[0]);
 
                 setCanvasHeightAndWidth();
 
-                $scope.signature = $scope.signature || {};
+                scope.vm.signature = scope.vm.signature || {};
 
-                if ($scope.signature && !$scope.signature.$isEmpty && $scope.signature.dataUrl) {
-                    signaturePad.fromDataURL($scope.signature.dataUrl);
+                if (scope.vm.signature && !scope.vm.signature.$isEmpty && scope.vm.signature.dataUrl) {
+                    debugger;
+                    signaturePad.fromDataURL(scope.vm.signature.dataUrl);
                 }
+
+                scope.$watch('vm.signature', function(newVal, oldVal, scope) {
+
+                    if(newVal.dataUrl !== oldVal.dataUrl) {
+                        debugger;
+                        if (scope.vm.signature && !scope.vm.signature.$isEmpty && scope.vm.signature.dataUrl) {
+                            signaturePad.fromDataURL(scope.vm.signature.dataUrl);
+                        }
+                    }
+                })
             }
         };
     }

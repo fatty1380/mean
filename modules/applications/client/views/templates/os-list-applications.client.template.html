@@ -4,7 +4,7 @@
         <div class="job-list blog-category-list">
 
             <!-- Iterate over the list of jobs ... For Owners -->
-            <oset-application-list-item user-type="owner"
+            <oset-application-job-list-item user-type="owner"
                                         ng-if="vm.user.type === 'owner'"
                                         ng-repeat="job in vm.jobs"
                                         job="job"
@@ -13,7 +13,7 @@
                                         visible-tab="vm.visibleTab"
                                         ng-show="vm.visibleId === job._id || !vm.visibleId">
                 <!-- TODO: Move ng-show into the filter on teh repeater -->
-            </oset-application-list-item>
+            </oset-application-job-list-item>
 
             <!-- Iterate over the list of applications ... For Drivers -->
             <oset-application-list-item user-type="driver"
@@ -22,10 +22,9 @@
                                         application="application"
                                         class="post job-post col-sm-12 applicant"
                                         visible-id="vm.visibleId"
-                                        visible-tab="vm.visibleTab"
-                    popover="{{application | prettyPrint}}" popover-placement="bottom">
-                <!-- TODO: Figure out disagreement between 'visibleId', ng-show, and inline (nested) vs top level behavior -->
-                <!-- TODO: Move ng-show into the filter on teh repeater -->
+                                        visible-tab="vm.visibleTab">
+
+                <!-- TODO: Figure out disagreement between 'visibleId', ng-show, and inline (nested) vs top level behavior -->er
                 <!-- TODO: Combine with the 'owner' repeater above, if possible :) -->
 
             </oset-application-list-item>

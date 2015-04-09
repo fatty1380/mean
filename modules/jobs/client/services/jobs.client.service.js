@@ -42,7 +42,8 @@
                 }
 
                 var RSRC = $resource('api/jobs/:jobId/applications/:userId', {
-                        jobId: '@_id'
+                        jobId: 'job._id',
+                        userId: 'user._id'
                     },
                     {
                         update: {
@@ -50,7 +51,7 @@
                         }
                     });
 
-                return RSRC.get({jobId: jobId, userId: userId});
+                return RSRC.get({jobId: jobId, userId: userId}).$promise;
             }
 
         };

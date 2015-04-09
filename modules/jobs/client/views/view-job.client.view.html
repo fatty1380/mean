@@ -7,14 +7,16 @@
     </os-page-header>
 
     <div class="row">
+        <!--Primary content column: Show the Job Details in Read-only mode-->
         <div class="col-md-8">
             <os-job job="vm.job" show-edit="vm.enableEdit"></os-job>
         </div>
 
+        <!--Right-Hand sidebar for secondary information and links-->
         <div class="col-md-4">
 
-            <div class="mgn-bottom" data-ng-if="vm.user.type==='driver'">
-                <oset-application-summary job="vm.job" user="vm.user" display-mode="mine"></oset-application-summary>
+            <div class="mgn-bottom" data-ng-if="vm.user.isDriver">
+                <oset-application-summary job="vm.job" profile="vm.user" display-mode="mine"></oset-application-summary>
             </div>
 
             <div class="mgn-bottom" data-ng-if="!vm.user" oset-signup-apply-modal signup-type="driver" job='vm.job'>
@@ -23,7 +25,8 @@
                 </button>
             </div>
 
-            <div class="mgn-bottom" data-ng-if="!vm.user || vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id" signup-type="driver" job='vm.job'>
+            <div class="mgn-bottom" signup-type="driver" job='vm.job'
+                 data-ng-if="!vm.user || vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id" >
                 <button class="btn btn-cta-primary btn-lg btn-block bigger" ui-sref="gateway({jobId:vm.job._id})">
                     gateway
                 </button>
@@ -44,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
+            <div class="panel panel-default" ng-if="!!vm.job.location[0]">
                 <div class="panel-heading">
                     <span class="h4">Location: {{ vm.job.location[0].zipCode }}</span>
                 </div>
@@ -59,18 +62,16 @@
                     <span class="h4">Info</span>
                 </div>
                 <div class="panel-body ">
-                        <span ng-if="vm.job.positionType">
-                            <strong>Type: </strong><span>{{ vm.job.positionType }}</span>
-                        </span>
+                    <span ng-if="vm.job.positionType">
+                        <strong>Type: </strong><span>{{ vm.job.positionType }}</span>
+                    </span>
 
-                        <span ng-if="!!vm.job.payString || vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">
-                            <strong>Pay: </strong>
-                                <span ng-show="!!vm.job.payRate.min">{{ vm.job.payRate.min | currency }}</span>
-                                <span ng-show="!!vm.job.payRate.max"><span ng-show="!!vm.job.payRate.min"> to </span>{{ vm.job.payRate.max | currency }}</span>
-                                <span ng-show="!!vm.job.payString && !!vm.job.payRate.period"> per {{vm.job.payRate.period}}</span>
-                        </span>
-
-                    </dl>
+                    <span ng-if="!!vm.job.payString || vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">
+                        <strong>Pay: </strong>
+                            <span ng-show="!!vm.job.payRate.min">{{ vm.job.payRate.min | currency }}</span>
+                            <span ng-show="!!vm.job.payRate.max"><span ng-show="!!vm.job.payRate.min"> to </span>{{ vm.job.payRate.max | currency }}</span>
+                            <span ng-show="!!vm.job.payString && !!vm.job.payRate.period"> per {{vm.job.payRate.period}}</span>
+                    </span>
                 </div>
             </div>
 

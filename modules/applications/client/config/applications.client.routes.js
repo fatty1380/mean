@@ -222,19 +222,13 @@
 
             state('gateway.authorization', {
                 url: '/authorization',
-                templateUrl: '/modules/applications/views/form/authorization.client.template.html',
+                template: '<application-release-form model="vm.gw.models.release" methods="vm.subformMethods"></application-release-form>',
                 controller: '',
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    user: ['Gateway', function(gw) {
-                        return gw.user;
-                    }],
-                    release: ['Gateway', function(gw) {
-                        return gw.release;
-                    }],
-                    company: ['Gateway', function(gw) {
-                        return gw.company;
+                    requirements: ['Gateway', '$q', function(gw, $q) {
+                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]);
                     }]
                 }
             }).
