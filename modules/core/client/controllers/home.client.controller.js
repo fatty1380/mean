@@ -12,10 +12,10 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Handle your Reputation - Own your Documents.<br>.Manage your Driver Portfolio',
+                    lead: 'Own your Reputation - Manage your Documents<br>Take Control with an Outset Driver Portfolio',
                     bullets: [
                         'Pre-qualify for Jobs & Easily Apply.',
-                        'Build your Online Driving Portfolio and Make the First Impression you want with Companies & Shippers.',
+                        'Create your Driver Portfolio and Make the First Impression you want with Companies.',
                         'Securely Share your: MVR, Resume, Background Check, Insurance etc. - From Anywhere.'
                     ],
                     signup: 'Get Started'
@@ -25,23 +25,23 @@
                     title: 'Why Outset?',
                     bullets: [
                         'Free - Driver Focused Tools.',
-                        'Make your Reputation yours - Use Outset as your Digital Business Card.',
-                        'Control who sees your information - Never Fax anything again.'
+                        'Own your Reputation - Use Outset as your Digital Business Card.',
+                        'Control who sees your information and never Fax anything again.'
                     ]
                 },
                 section1: {
                     header: 'Portfolio',
                     sub: 'Your digital business card.',
-                    bullets: ['Easily share information with Employers or Shippers.',
-                        'Show you\'re on top of your Game.',
-                        'Grow the Portfolio with your career.'],
+                    bullets: ['Easily share information with Employers and Shippers.',
+                        'Don’t let previous employers control your first impression.',
+                        'Grow your Driver Portfolio with your career.'],
                     image: '/modules/core/img/intro/driver.png'
                 },
                 section2: {
                     header: 'Reports',
                     sub: 'Your Pre-qualification tool',
                     bullets: [
-                        'Let Employers know you\'re ready to roll now.',
+                        'Let Employers know you’re ready to roll now.',
                         'Stand out from other applicants and Owner Operators.',
                         'Securely store and share your choice of:<ul><li>Motor Vehicle Reports</li><li>Background Checks</li><li>Drug Test Results</li><li>Proof of Insurance</li>'
                     ],
@@ -68,19 +68,19 @@
                     },
                     {
                         title: 'Drive',
-                        description: 'By giving employers more information upfront, you standout and get hired you faster - putting you in the driver\'s seat in no time.'
+                        description: 'By giving employers more information upfront, you standout and get hired you faster - putting you in the driver’s seat in no time.'
                     }
                 ]
 
             },
             owner: {
                 header: {
-                    lead: 'Automated Transportation Hiring.<br>Increase your Hiring and Operational Efficiency',
+                    lead: 'Automated Driver Hiring<br>Increase Operational and Hiring Efficiency',
                     bullets: [
                         'Automate - Background Checks, DOT Employment Verification, Applications & more.',
                         'Utilize powerful active driver management & logistic tools.',
-                        'Centralize & Manage your Applicant flow',
-                        'Schedule Recurrence Checks for active drivers to stay in compliance',
+                        'Centralize & Manage your Applicant flow.',
+                        'Schedule Recurring Checks for active drivers to stay in compliance.'
                     ],
                     signup: 'Get Started'
                 },
@@ -90,7 +90,7 @@
                     bullets: [
                         'Created for the Transportation Industry.',
                         'Designed to save you money lost in the hiring process.',
-                        'Customized solutions for your company\'s needs.',
+                        'Customized solutions for your company’s needs.',
                         'Let technology take the headache out of hiring and driver management.'
                     ]
                 },
@@ -108,7 +108,7 @@
                     header: 'Applicant Flow',
                     sub: '',
                     bullets: [
-                        'Increase Operational Efficiency, centralize your process.',
+                    	'Increase Operational Efficiency, centralize your process.',
                         'View all Applicant reports and verifications in one place.',
                         'Communicate with all applicants from within Outset.',
                         'Backup your reporting compliance with e-storage of documents.'
@@ -126,11 +126,11 @@
                     },
                     {
                         title: 'Hire',
-                        description: 'Recieve all of your applicant reports and employment verification electronically, and stop wasting time on bad apples.'
+                        description: 'Receive all of your applicant reports and employment verification electronically, and stop wasting time on bad apples.'
                     },
                     {
                         title: 'Save Time & Money',
-                        description: 'By managing your hiring funnel within Outset, you\'ll fill your empty vehicles faster, freeing up time for more driver recruiting.'
+                        description: 'By managing your hiring funnel within Outset, you’ll fill your empty vehicles faster, freeing up time for more driver recruiting.'
                     }
                 ]
 
