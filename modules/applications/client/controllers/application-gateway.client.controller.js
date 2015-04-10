@@ -51,50 +51,42 @@
             $log.debug('[AppGatewayCtrl] Reset Subform Methods');
         };
 
-        //_.defaults(vm.formData, {
-        //    job: {},
-        //    company: {},
-        //    user: {},
-        //    driver: {},
-        //    report: {},
-        //    applicant: {},
-        //    signature: {}
-        //});
-
         function initialize() {
 
             vm.gw = Gateway;
 
-            //Gateway.user.then(function (user) {
-            //    vm.formData.user = user;
-            //    $log.info('[GatewayCtrl] Set FormData user: %o', user);
+            //
+            //
+            ////Gateway.user.then(function (user) {
+            ////    vm.formData.user = user;
+            ////    $log.info('[GatewayCtrl] Set FormData user: %o', user);
+            ////});
+            ////vm.formData.user = Gateway.user;
+            //
+            //Gateway.driver.then(function (driver) {
+            //    //vm.formData.driver = driver;
+            //    $log.info('[GatewayCtrl] Set FormData driver: %o', driver);
             //});
-            //vm.formData.user = Gateway.user;
-
-            Gateway.driver.then(function (driver) {
-                //vm.formData.driver = driver;
-                $log.info('[GatewayCtrl] Set FormData driver: %o', driver);
-            });
-
-            Gateway.company.then(function (company) {
-                //vm.formData.company = company;
-                $log.info('[GatewayCtrl] Set FormData company: %o', company);
-            });
-
-            Gateway.job.then(function (job) {
-                //vm.formData.job = job;
-                $log.info('[GatewayCtrl] Set FormData job: %o', job);
-            });
-
-            Gateway.report.then(function (report) {
-                //vm.formData.report = report;
-                $log.info('[GatewayCtrl] Set FormData report: %o', report);
-            });
-
-            Gateway.applicant.then(function (applicant) {
-                //vm.formData.applicant = applicant;
-                $log.info('[GatewayCtrl] Set FormData applicant: %o', applicant);
-            });
+            //
+            //Gateway.company.then(function (company) {
+            //    //vm.formData.company = company;
+            //    $log.info('[GatewayCtrl] Set FormData company: %o', company);
+            //});
+            //
+            //Gateway.job.then(function (job) {
+            //    //vm.formData.job = job;
+            //    $log.info('[GatewayCtrl] Set FormData job: %o', job);
+            //});
+            //
+            //Gateway.report.then(function (report) {
+            //    //vm.formData.report = report;
+            //    $log.info('[GatewayCtrl] Set FormData report: %o', report);
+            //});
+            //
+            //Gateway.applicant.then(function (applicant) {
+            //    //vm.formData.applicant = applicant;
+            //    $log.info('[GatewayCtrl] Set FormData applicant: %o', applicant);
+            //});
         }
 
         vm.getKeys = function (object) {

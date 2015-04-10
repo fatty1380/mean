@@ -149,7 +149,7 @@ exports.create = function (req, res) {
  * Show the current Driver
  */
 exports.read = function (req, res) {
-    console.log('[Driver.read] Result: ', req.driver);
+    console.log('[Driver.read] Req.driver has value: %s', !!req.driver);
 
     if (!req.driver) {
         return res.status(404).send({

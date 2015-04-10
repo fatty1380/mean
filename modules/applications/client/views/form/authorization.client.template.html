@@ -21,20 +21,20 @@
     </div>
 
     <div class="row mgn-vert" ng-show="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">
-            <section class="form-inline form-paper">
-                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group text-center">
-                    <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">
-                </div>
-                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">
-                    <p class="form-control-static pull-left"
-                            ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}
-                    </p>
+        <section class="form-inline form-paper">
+            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group text-center">
+                <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">
+            </div>
+            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">
+                <p class="form-control-static pull-left"
+                        ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}
+                </p>
 
-                    <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">
-                        <i class="fa fa-times"></i>&nbsp;clear
-                    </button>
-                </div>
-            </section>
+                <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">
+                    <i class="fa fa-times"></i>&nbsp;clear
+                </button>
+            </div>
+        </section>
     </div>
 
 

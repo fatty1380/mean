@@ -7,13 +7,13 @@
         var promises = {};
         var model = {};
 
-        var FormController = null;
-
         _this._data = {
             initialize: function (job, user) {
                 if (_this.initialized) {
-                    $log.warn('Gateway Service is already initialized');
-                    return false;
+                    $log.warn('Gateway Service was previously initialized with job `%s`', model.job && model.job._id);
+                    debugger;
+                    model = {};
+                    promises = {};
                 }
 
                 if (!!user) {
@@ -21,12 +21,9 @@
                 }
                 _this._data.job = job;
 
-                _this.initialized = true;
+                return $q.when(_this.initialized = true);
             },
-            models: model,
-            getSync: function (val) {
-                return (promises[val] && promises[val].promise && promises[val].promise.value || {});
-            }
+            models: model
         };
 
 
@@ -94,7 +91,7 @@
                 $log.debug('[Gateway] Setting `Job` to %o', val);
 
                 promises.job = promises.job || $q.defer();
-                return (!!val && _.isString(val) ? Jobs.get(val) : $q.when(val))
+                (!!val && _.isString(val) ? Jobs.get(val) : $q.when(val))
                     .then(function (jobResponse) {
                         model.job = jobResponse;
                         promises.job.resolve(jobResponse);
@@ -110,15 +107,16 @@
             enumerable: true,
             get: function () {
                 if (!promises.company) {
+                    promises.company = $q.defer();
                     $log.debug('[Gateway] Initializing Load of Company');
                 }
-                return (promises.company = promises.company || $q.defer()).promise;
+                return promises.company.promise;
             },
             set: function (val) {
                 $log.debug('[Gateway] Setting `Company` to %o', val);
 
                 promises.company = promises.company || $q.defer();
-                return (!!val && _.isString(val) ? Companies.get(val) : $q.when(val))
+                (!!val && _.isString(val) ? Companies.get(val) : $q.when(val))
                     .then(function (companyResponse) {
                         model.company = companyResponse;
                         promises.company.resolve(companyResponse);

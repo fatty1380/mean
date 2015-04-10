@@ -178,20 +178,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '\n' +
   '    <div class="row mgn-vert" ng-show="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">\n' +
-  '            <section class="form-inline form-paper">\n' +
-  '                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group text-center">\n' +
-  '                    <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">\n' +
-  '                </div>\n' +
-  '                <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">\n' +
-  '                    <p class="form-control-static pull-left"\n' +
-  '                            ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
-  '                    </p>\n' +
+  '        <section class="form-inline form-paper">\n' +
+  '            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group text-center">\n' +
+  '                <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">\n' +
+  '            </div>\n' +
+  '            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">\n' +
+  '                <p class="form-control-static pull-left"\n' +
+  '                        ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
+  '                </p>\n' +
   '\n' +
-  '                    <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">\n' +
-  '                        <i class="fa fa-times"></i>&nbsp;clear\n' +
-  '                    </button>\n' +
-  '                </div>\n' +
-  '            </section>\n' +
+  '                <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">\n' +
+  '                    <i class="fa fa-times"></i>&nbsp;clear\n' +
+  '                </button>\n' +
+  '            </div>\n' +
+  '        </section>\n' +
   '    </div>\n' +
   '\n' +
   '\n' +
