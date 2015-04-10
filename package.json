@@ -61,7 +61,8 @@
     "q": "^1.1.2",
     "s3": "^4.3.1",
     "serve-favicon": "~2.1.6",
-    "socket.io": "~1.1.0"
+    "socket.io": "~1.1.0",
+    "sprintf-js": "^1.0.2"
   },
   "devDependencies": {
     "grunt-concurrent": "~1.0.0",

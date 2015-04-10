@@ -43,7 +43,7 @@ mongoose.connect(function (db) {
             log.info('HTTPs:\t\t\t\ton:%s', config.https.port, 'green');
         }
         else {
-            log.error(util.format('HTTPs:\t\t\t\terror:%s'), config.https.port);
+            log.error('HTTPs:\t\t\t\terror:%s', config.https.port);
         }
     }
     log.info('--', 'black');
