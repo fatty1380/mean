@@ -6,7 +6,8 @@
 var config = require('./config/config'),
 chalk      = require('chalk'),
 mongoose   = require('./config/lib/mongoose'),
-express    = require('./config/lib/express');
+express    = require('./config/lib/express'),
+log        = require('./config/lib/logger'),
 
 // Initialize mongoose
 mongoose.connect(function (db) {
@@ -30,18 +31,20 @@ mongoose.connect(function (db) {
     }
 
     // Logging initialization
-    console.log('--');
-    console.log(chalk.green(config.app.title + ' application started'));
-    console.log(chalk.green('Environment:\t\t\t' + process.env.NODE_ENV));
-    console.log(chalk.green('Port:\t\t\t\t' + config.port));
-    console.log(chalk.green('Database:\t\t\t' + config.db.uri));
+    log.info('--', 'black');
+    log.info(config.app.title + ' application started', 'green');
+    log.info('Environment:\t\t\t' + process.env.NODE_ENV, 'green');
+    log.info('Port:\t\t\t\t' + config.port, 'green');
+    log.info('Database:\t\t\t\t' + config.db.uri, 'green');
     if (config.https.enabled) {
         if(!!app.https) {
-            console.log(chalk.green('HTTPs:\t\t\t\ton:%s'), config.https.port);
+            log.info('HTTPs:\t\t\t\ton:%s', config.https.port, 'green');
         }
         else {
-            console.log(chalk.red('HTTPs:\t\t\t\terror:%s'), config.https.port);
+            log.error('HTTPs:\t\t\t\terror:%s', config.https.port);
         }
     }
-    console.log('--');
+    log.info('--', 'black');
+    
+
 });

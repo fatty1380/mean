@@ -260,11 +260,11 @@ module.exports = function (grunt) {
             },
             mochaTest: {
                 default: {
-                    src: testAssets.tests.server,
-                    options: {
-                        reporter: 'spec'
-                    }
-                },
+                src: testAssets.tests.server,
+                options: {
+                    reporter: 'spec'
+                }
+            },
                 watch: {
                     options: {
                         reporter: 'min'
@@ -287,6 +287,11 @@ module.exports = function (grunt) {
                         args: {} // Target-specific arguments
                     }
                 }
+            },
+            bunyan: {
+                strict: false,
+                level: 'trace',
+                output: 'short',
             }
         }
     );
@@ -299,6 +304,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell-spawn');
 
     grunt.loadNpmTasks('grunt-notify');
+
+    grunt.loadNpmTasks('grunt-bunyan');
 
 // Load external tasks:
     grunt.task.loadTasks('./grunt/');
@@ -340,7 +347,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
 // Run the project in development mode
-    grunt.registerTask('default', ['shell:mongodb', 'env:dev', 'lint', 'concurrent:default']);
+    grunt.registerTask('default', ['env:dev', 'bunyan', 'lint', 'concurrent:default']);
 
     grunt.registerTask('nowatch', ['env:dev', 'lint', 'concurrent:nowatch']);
 
