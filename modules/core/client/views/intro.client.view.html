@@ -4,9 +4,11 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-12">
 
-                    <h2 class="title" ng-bind-html="vm.text.header.lead"></h2>
+                    <h2 class="title" ng-bind-html="vm.text.header.lead" style="line-height: 130%;"></h2>
+                    </div>
+                <div class="col-sm-8">
 
                     <div class="job-banner mgn-left mgn-top">
                         <ul class="h3">
@@ -33,7 +35,7 @@
         <section class="container subhero panel">
             <div class="row">
                 <div class="col-sm-7">
-                    <fluidvids video="{{vm.videoURL}}" width="853" height="480"></fluidvids>
+                    <fluidvids class="mid-vert" video="{{vm.videoURL}}" width="853" height="480"></fluidvids>
                 </div>
                 <div class="col-sm-5 pad-top">
                     <h2 class="mgn-top text-center">{{vm.text.subhero.title}}</h2>
