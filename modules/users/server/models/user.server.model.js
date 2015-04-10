@@ -4,78 +4,82 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	crypto = require('crypto'),
-	_ = require('lodash');
+Schema       = mongoose.Schema,
+crypto       = require('crypto'),
+_            = require('lodash');
 
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function(property) {
-	return ((this.provider !== 'local' && !this.updated) || property.length);
+var validateLocalStrategyProperty = function (property) {
+    return ((this.provider !== 'local' && !this.updated) || property.length);
 };
 
 /**
  * A Validation function for local strategy password
  */
-var validateLocalStrategyPassword = function(password) {
-	return (this.provider !== 'local' || (password && password.length >= 8));
+var validateLocalStrategyPassword = function (password) {
+    return (this.provider !== 'local' || (password && password.length >= 8));
 };
 
 /**
  * User Schema
  */
 var UserSchema = new Schema({
-	firstName: {
-		type: String,
-		trim: true,
-		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your first name']
-	},
-	lastName: {
-		type: String,
-		trim: true,
-		default: '',
-		validate: [validateLocalStrategyProperty, 'Please fill in your last name']
-	},
-	username: {
-		type: String,
+    firstName: {
+        type: String,
+        trim: true,
+        default: '',
+        validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+    },
+    lastName: {
+        type: String,
+        trim: true,
+        default: '',
+        validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+    },
+    username: {
+        type: String,
         unique: 'Username already exists',
-		required: 'Please fill in a username',
-		trim: true
-	},
-	password: {
-		type: String,
-		default: '',
-		validate: [validateLocalStrategyPassword, 'Password must be at least 8 characters']
-	},
-	salt: {
-		type: String
-	},
-	profileImageURL: {
-		type: String,
-		default: 'modules/users/img/profile/default.png'
-	},
-	provider: {
-		type: String,
-		required: 'Provider is required'
-	},
-	providerData: {},
-	additionalProvidersData: {},
+        required: 'Please fill in a username',
+        trim: true
+    },
+    password: {
+        type: String,
+        default: '',
+        validate: [validateLocalStrategyPassword, 'Password must be at least 8 characters']
+    },
+    salt: {
+        type: String
+    },
+    oldPass: {
+        type: Boolean,
+        default: false
+    },
+    profileImageURL: {
+        type: String,
+        default: 'modules/users/img/profile/default.png'
+    },
+    provider: {
+        type: String,
+        required: 'Provider is required'
+    },
+    providerData: {},
+    additionalProvidersData: {},
     modified: {
-		type: Date
-	},
-	created: {
-		type: Date,
-		default: Date.now
-	},
+        type: Date
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    },
 
-	/* For reset password */
-	resetPasswordToken: {
-		type: String
-	},
-  	resetPasswordExpires: {
-  		type: Date
+    /* For reset password */
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
     },
 
     roles: {
@@ -102,7 +106,7 @@ var UserSchema = new Schema({
         trim: true,
         default: '',
         match: [/(\+?\d{1,2}\s?-?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/]
-		// TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
+        // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
 
     /**
@@ -133,45 +137,45 @@ var UserSchema = new Schema({
         type: String,
         trim: true
     }
-}, {'toJSON': { virtuals: true }});
+}, {'toJSON': {virtuals: true}});
 
-UserSchema.post('init', function(next) {
+UserSchema.post('init', function (next) {
     if (!this.displayName) {
         this.displayName = this.firstName + ' ' + this.lastName;
-  	}
+    }
 });
 
 /**
  * Hook a pre save method to hash the password
  */
-UserSchema.pre('save', function(next) {
-	if (!this.isModified('password')) {
-		return next();
-	}
+UserSchema.pre('save', function (next) {
+    if (!this.isModified('password')) {
+        return next();
+    }
 
-	if (this.password && this.password.length > 6) {
-		this.salt = crypto.randomBytes(16).toString('base64');
-		this.password = this.hashPassword(this.password);
-	}
+    if (this.password && this.password.length > 6) {
+        this.salt = crypto.randomBytes(16).toString('base64');
+        this.password = this.hashPassword(this.password);
+    }
 
-	next();
+    next();
 });
 
-UserSchema.pre('validate', function(next) {
-	this.username = this.username || this.email
+UserSchema.pre('validate', function (next) {
+    this.username = this.username || this.email;
 
-	next();
+    next();
 });
 
-UserSchema.pre('save', function(next) {
-    if(/[A-Z]/.test(this.username)) {
+UserSchema.pre('save', function (next) {
+    if (/[A-Z]/.test(this.username)) {
         this.username = this.username.toLowerCase();
         this.email = this.email.toLowerCase();
     }
     next();
 });
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
     this.modified = Date.now();
     next();
 });
@@ -179,22 +183,38 @@ UserSchema.pre('save', function(next) {
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = function(password) {
-	if (this.salt && password) {
-		return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64).toString('base64');
-	} else {
-		return password;
-	}
+UserSchema.methods.hashPassword = function (password) {
+    if (this.salt && password) {
+        return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64).toString('base64');
+    } else {
+        return password;
+    }
 };
+
+UserSchema.methods.oldHash = function (password) {
+    if (this.salt && password) {
+        return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
+    } else {
+        return password;
+    }
+};
+
 
 /**
  * Create instance method for authenticating user
  */
-UserSchema.methods.authenticate = function(password) {
-	return this.password === this.hashPassword(password);
+UserSchema.methods.authenticate = function (password) {
+    if (this.password === this.hashPassword(password)) {
+        return true;
+    }
+    if (this.password === this.oldHash(password)) {
+        this.oldPass = true;
+        return true;
+    }
+    return false;
 };
 
-UserSchema.methods.cleanse = function() {
+UserSchema.methods.cleanse = function () {
     console.log('[UserSchema] Cleansing sensitive Data');
 
     this.password = undefined;
@@ -204,42 +224,42 @@ UserSchema.methods.cleanse = function() {
 /**
  * Find possible not used username
  */
-UserSchema.statics.findUniqueUsername = function(username, suffix, callback) {
-	var _this = this;
-	var possibleUsername = (username + (suffix || '')).toLowerCase();
+UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
+    var _this = this;
+    var possibleUsername = (username + (suffix || '')).toLowerCase();
 
     var userNameRegex = new RegExp('^' + possibleUsername.toLowerCase() + '$', 'i');
 
-	_this.findOne({
-		username: { $regex: userNameRegex }
-	}, function(err, user) {
-		if (!err) {
-			if (!user) {
-				callback(possibleUsername);
-			} else if(possibleUsername.indexOf('@') === -1) {
-				return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
-			}
+    _this.findOne({
+        username: {$regex: userNameRegex}
+    }, function (err, user) {
+        if (!err) {
+            if (!user) {
+                callback(possibleUsername);
+            } else if (possibleUsername.indexOf('@') === -1) {
+                return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+            }
             callback(null);
-		} else {
-			callback(null);
-		}
-	});
+        } else {
+            callback(null);
+        }
+    });
 };
 
 UserSchema.virtual('isAdmin')
-    .get(function() {
+    .get(function () {
         return !!this.roles && this.roles.indexOf('admin') !== -1;
     });
 
 
 UserSchema.virtual('isDriver')
-    .get(function() {
+    .get(function () {
         return this.type === 'driver';
     });
 
 
 UserSchema.virtual('isOwner')
-    .get(function() {
+    .get(function () {
         return this.type === 'owner';
     });
 
