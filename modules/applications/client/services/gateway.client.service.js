@@ -131,6 +131,7 @@
                     $log.debug('[Gateway] Initializing Load of Applicant Gateway Settings');
                     loadGateway().then(function (response) {
                         $log.debug('[Gateway] Loaded gateway with value: %j', response);
+                        _this._data.applicantGateway = response;
                     });
                 }
                 return promises.applicantGateway.promise;
@@ -308,20 +309,12 @@
 
                 return $q.all({co: _this._data.company, job: _this._data.job}).then(
                     function (values) {
-                        var gw = values.job && values.job.gateway || values.co && values.co.gateway || {
-                                sku: 'OUTSET_MVR',
-                                required: true,
-                                payment: 'company',
-                                releaseType: 'preEmployment'
-                            };
-
-                        _this._data.applicantGateway = gw;
+                        var gw = values.job && values.job.gateway || values.co && values.co.gateway || {};
 
                         return gw;
                     });
             }
             return $q.reject('Applicant already loading');
-
 
         }
 

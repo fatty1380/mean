@@ -145,9 +145,14 @@
                     jobId: ''
                 },
                 resolve: {
-                    gateway: ['Gateway', 'Authentication', '$stateParams', function(Gateway, auth, Params) {
-                        debugger;
-                        return Gateway.initialize(Params.jobId, auth.user);
+                    gateway: ['Gateway', 'Authentication', '$stateParams', '$q', function(Gateway, auth, Params, $q) {
+                        return Gateway.initialize(Params.jobId, auth.user).then(function(result) {
+                            return $q.all([Gateway.company, Gateway.job])
+
+                        }).then(function(result) {
+                            debugger
+                        });
+
                     }]
                 }
             }).
