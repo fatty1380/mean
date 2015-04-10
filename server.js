@@ -7,7 +7,7 @@ var config = require('./config/config'),
 chalk      = require('chalk'),
 mongoose   = require('./config/lib/mongoose'),
 express    = require('./config/lib/express'),
-log        = require('./config/lib/logger'),
+log        = require('./config/lib/logger');
 
 // Initialize mongoose
 mongoose.connect(function (db) {
