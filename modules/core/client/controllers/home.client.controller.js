@@ -12,10 +12,10 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Own your Reputation - Manage your Documents.<br> Keep your Outset Driver Portfolio',
+                    lead: 'Own your Reputation - Manage your Documents<br>Take Control with an Outset Driver Portfolio',
                     bullets: [
                         'Pre-qualify for Jobs & Easily Apply.',
-                        'Create your Driving Portfolio and Make the First Impression you want with Companies.',
+                        'Create your Driver Portfolio and Make the First Impression you want with Companies.',
                         'Securely Share your: MVR, Resume, Background Check, Insurance etc. - From Anywhere.'
                     ],
                     signup: 'Get Started'
