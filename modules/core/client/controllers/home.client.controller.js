@@ -75,12 +75,12 @@
             },
             owner: {
                 header: {
-                    lead: 'Automated Driver Hiring.<br>Increase Operational and Hiring Efficiency',
+                    lead: 'Automated Driver Hiring<br>Increase Operational and Hiring Efficiency',
                     bullets: [
                         'Automate - Background Checks, DOT Employment Verification, Applications & more.',
                         'Utilize powerful active driver management & logistic tools.',
-                        'Centralize & Manage your Applicant flow',
-                        'Schedule Recurring Checks for active drivers to stay in compliance'
+                        'Centralize & Manage your Applicant flow.',
+                        'Schedule Recurring Checks for active drivers to stay in compliance.'
                     ],
                     signup: 'Get Started'
                 },
@@ -91,7 +91,7 @@
                         'Created for the Transportation Industry.',
                         'Designed to save you money lost in the hiring process.',
                         'Customized solutions for your company’s needs.',
-                        'Let technology take the headache out of hiring and driver managment.'
+                        'Let technology take the headache out of hiring and driver management.'
                     ]
                 },
                 section1: {
