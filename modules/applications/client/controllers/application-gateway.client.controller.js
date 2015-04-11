@@ -51,42 +51,28 @@
             $log.debug('[AppGatewayCtrl] Reset Subform Methods');
         };
 
+        vm.activeSteps = [];
+
         function initialize() {
+            debugger;
+
+            Gateway.applicantGateway.then(function(gw) {
+                vm.gatewayReportsEnabled = (!!gw && !!gw.sku);
+
+                var activeSteps = _.where(vm.steps, function(step) {
+                    return _.isFunction(step.active) ? !!step.active() : !!step.active;
+                });
+                $log.debug('%d total steps, %d active steps', vm.steps.length, activeSteps.length);
+
+                _.each(activeSteps, function(step) {
+                    vm.activeSteps.push(step);
+                });
+
+                vm.currentIndex = _.findIndex(vm.activeSteps, {'state': $state.current.name});
+                vm.currentStep = _.find(vm.activeSteps, {'state': $state.current.name});
+            });
 
             vm.gw = Gateway;
-
-            //
-            //
-            ////Gateway.user.then(function (user) {
-            ////    vm.formData.user = user;
-            ////    $log.info('[GatewayCtrl] Set FormData user: %o', user);
-            ////});
-            ////vm.formData.user = Gateway.user;
-            //
-            //Gateway.driver.then(function (driver) {
-            //    //vm.formData.driver = driver;
-            //    $log.info('[GatewayCtrl] Set FormData driver: %o', driver);
-            //});
-            //
-            //Gateway.company.then(function (company) {
-            //    //vm.formData.company = company;
-            //    $log.info('[GatewayCtrl] Set FormData company: %o', company);
-            //});
-            //
-            //Gateway.job.then(function (job) {
-            //    //vm.formData.job = job;
-            //    $log.info('[GatewayCtrl] Set FormData job: %o', job);
-            //});
-            //
-            //Gateway.report.then(function (report) {
-            //    //vm.formData.report = report;
-            //    $log.info('[GatewayCtrl] Set FormData report: %o', report);
-            //});
-            //
-            //Gateway.applicant.then(function (applicant) {
-            //    //vm.formData.applicant = applicant;
-            //    $log.info('[GatewayCtrl] Set FormData applicant: %o', applicant);
-            //});
         }
 
         vm.getKeys = function (object) {
@@ -113,18 +99,17 @@
             },
             {active: true, state: 'gateway.driverInfo', title: 'Driver Info'},
             {active: true, state: 'gateway.documents', title: 'Documents'},
-            {active: true, state: 'gateway.reports', title: 'Reports'},
-            {active: true, state: 'gateway.reportFields', title: 'Report Entry', params: {readonly: false}},
-            {active: true, state: 'gateway.reportFields', title: 'Confirmation', params: {readonly: true}},
+            {active: isGWEnabled, state: 'gateway.reports', title: 'Reports'},
+            {active: isGWEnabled, state: 'gateway.reportFields', title: 'Report Entry', params: {readonly: false}},
+            {active: isGWEnabled, state: 'gateway.reportFields', title: 'Confirmation', params: {readonly: true}},
             {active: true, state: 'gateway.authorization', title: 'Authorization'},
             //{active: true, state: 'gateway.payment', title: 'Payment'},
             {active: true, state: 'gateway.complete', title: '&nbsp;', isLast: true},
         ];
 
-        vm.activeSteps = _.where(vm.steps, {'active': true});
-
-        vm.currentIndex = _.findIndex(vm.activeSteps, {'state': $state.current.name});
-        vm.currentStep = _.find(vm.activeSteps, {'state': $state.current.name});
+        function isGWEnabled() {
+            return !!vm.gatewayReportsEnabled;
+        }
 
         vm.goBack = function () {
             if (vm.currentIndex > 0) {

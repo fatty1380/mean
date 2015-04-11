@@ -2,10 +2,10 @@
     <div class="row">
         <div class="col-md-3 col-lg-2">&nbsp</div>
         <div class="col-md-6 col-lg-8">
-            <h2 class="text-center mgn-vert vert-middle">{{vm.formData.company.name}} New Job Application</h2>
+            <h2 class="text-center mgn-vert vert-middle">{{vm.gw.models.company.name}} New Job Application</h2>
         </div>
         <div class="col-md-3 col-lg-2">
-            <img class="img-responsive" ng-src="{{vm.formData.company.profileImageURL}}" alt=""/>
+            <img class="img-responsive" ng-src="{{vm.gw.models.company.profileImageURL}}" alt=""/>
         </div>
     </div>
 
@@ -38,10 +38,10 @@
                     <form name="gateway-form">
                         <div id="form-views" ui-view>
                             <section class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-                                <h4 class="text-center">{{vm.formData.job.name}}</h4>
+                                <h4 class="text-center">{{vm.gw.models.job.name}}</h4>
 
                                 <p>
-                                    {{vm.formData.company.name}} is pleased to see your interest in this job. As a part
+                                    {{vm.gw.models.company.name}} is pleased to see your interest in this job. As a part
                                     of the
                                     application process, we request that you fill out information about your past work
                                     experience, your licensing information, and fill out a pre-employment screen.
@@ -62,7 +62,7 @@
         <div class="panel-footer primary-bg">
             <div class="row">
                 <div class="col-xs-3 col-md-2">
-                    <button type="button" class="btn btn-oset-secondary" ng-click="vm.goBack()" value="back">
+                    <button ng-show="vm.currentIndex > 0" type="button" class="btn btn-oset-secondary" ng-click="vm.goBack()" value="back">
                         <i class="fa fa-arrow-left"></i>
                         <span class="hidden-xs hidden-sm">back</span>
                     </button>

@@ -167,7 +167,7 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    driver: ['Gateway', function(Gateway) {
+                    driver: ['Gateway', function (Gateway) {
                         return Gateway.driver;
                     }]
                 }
@@ -180,7 +180,7 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    driver: ['Gateway', function(Gateway) {
+                    driver: ['Gateway', function (Gateway) {
                         return Gateway.driver;
                     }]
                 }
@@ -193,10 +193,12 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    applicantGateway: ['Gateway', function(Gateway) {
+                    applicantGateway: ['Gateway', function (Gateway) {
+                        debugger;
                         return Gateway.applicantGateway;
                     }],
-                    report: ['Gateway', function(Gateway) {
+                    report: ['Gateway', function (Gateway) {
+                        debugger;
                         return Gateway.report;
                     }]
                 }
@@ -212,10 +214,10 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    report: ['Gateway', function(Gateway) {
+                    report: ['Gateway', function (Gateway) {
                         return Gateway.report;
                     }],
-                    applicant: ['Gateway', function(Gateway) {
+                    applicant: ['Gateway', function (Gateway) {
                         return Gateway.applicant;
                     }]
                 }
@@ -228,8 +230,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    requirements: ['Gateway', '$q', function(gw, $q) {
-                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function(result) {
+                    requirements: ['Gateway', '$q', function (gw, $q) {
+                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function (result) {
                             debugger;
                         });
                     }]
@@ -251,7 +253,7 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    applicant: ['Gateway', function(Gateway) {
+                    applicant: ['Gateway', function (Gateway) {
                         return Gateway.applicant;
                     }]
                 }
