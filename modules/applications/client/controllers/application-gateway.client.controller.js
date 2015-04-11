@@ -58,6 +58,7 @@
 
             Gateway.applicantGateway.then(function(gw) {
                 vm.gatewayReportsEnabled = (!!gw && !!gw.sku);
+                vm.gatewayReleaseEnabled = (!!gw && !!gw.releaseType);
 
                 var activeSteps = _.where(vm.steps, function(step) {
                     return _.isFunction(step.active) ? !!step.active() : !!step.active;
@@ -102,13 +103,17 @@
             {active: isGWEnabled, state: 'gateway.reports', title: 'Reports'},
             {active: isGWEnabled, state: 'gateway.reportFields', title: 'Report Entry', params: {readonly: false}},
             {active: isGWEnabled, state: 'gateway.reportFields', title: 'Confirmation', params: {readonly: true}},
-            {active: true, state: 'gateway.authorization', title: 'Authorization'},
+            {active: isReleaseEnabled, state: 'gateway.authorization', title: 'Authorization'},
             //{active: true, state: 'gateway.payment', title: 'Payment'},
             {active: true, state: 'gateway.complete', title: '&nbsp;', isLast: true},
         ];
 
         function isGWEnabled() {
             return !!vm.gatewayReportsEnabled;
+        }
+
+        function isReleaseEnabled() {
+            return !!vm.gatewayReleaseEnabled;
         }
 
         vm.goBack = function () {

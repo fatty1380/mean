@@ -75,20 +75,20 @@ var CompanySchema = new Schema({
     gateway: {
         sku: {
             type: String,
-            default: 'OUTSET_MVR'
+            default: null // 'OUTSET_MVR'
         },
         required: {
             type: Boolean,
-            default: true
+            default: false
         },
         payment: {
             type: String,
             enum: ['applicant', 'company', 'mixed', ''],
-            default: 'company'
+            default: 'applicant' //'company'
         },
         releaseType: {
             type: String,
-            default: 'preEmployment'
+            default: null//'preEmployment'
         }
     },
 
