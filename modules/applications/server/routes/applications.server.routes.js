@@ -43,6 +43,8 @@ module.exports = function (app) {
 
     app.route('/api/releaseDocuments')
         .get(releaseDocs.runTest);
+    app.route('/api/releaseHtml')
+        .get(releaseDocs.runHTMLTest);
 
     // Finish by binding the Application middleware
     app.param('applicationId', applications.applicationByID);
