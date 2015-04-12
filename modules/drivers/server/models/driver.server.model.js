@@ -83,25 +83,36 @@ var DriverSchema = new Schema({
         default: []
     },
 
-    documentsArray: [{
-        sku: String,
-        name: String,
+    resume: {
+        type: {
+            url: String,
+            expires: Date,
+            bucket: String,
+            key: String
+        },
+        default: null
+    },
 
-        url: String,
-        expires: Date,
-        bucket: String,
-        key: String
-    }],
+    reportsData: {
+        type: [{
+            sku: String,
+            name: String,
 
-    // TODO: Convert to 'documents'
+            url: String,
+            expires: Date,
+            bucket: String,
+            key: String
+        }],
+        default: []
+    },
 
     profile: [
         {
             listId: {
-               type: Schema.ObjectId
+                type: Schema.ObjectId
             },
-            responses: [{ id: String, value: String}],
-            questions: [{ id: String, description: String, answer: String }]
+            responses: [{id: String, value: String}],
+            questions: [{id: String, description: String, answer: String}]
         }
     ],
 
@@ -125,55 +136,61 @@ var DriverSchema = new Schema({
     }
 }, {toJSON: {virtuals: true}});
 
-DriverSchema.methods.updateReportURL = function(sku, url) {
-    var i = _.findIndex(this.documentsArray, {sku: sku});
+DriverSchema.methods.updateReportURL = function (sku, url) {
+    var i = _.findIndex(this.reportsData, {sku: sku});
 
-    if(i !== -1) {
-        this.documentsArray[i].url = url;
-        this.documentsArray[i].expires = moment().add(15, 'm');
-        console.log('[DS.updateReportURL] updated documentsArray[%d] to %j', i, this.documentsArray[i]);
+    if (i !== -1) {
+        this.reportsData[i].url = url;
+        this.reportsData[i].expires = moment().add(15, 'm');
+        console.log('[DS.updateReportURL] updated reportsData[%d] to %j', i, this.reportsData[i]);
+
+        this.markModified('reportsData');
     }
 };
 
 DriverSchema.virtual('reports')
     .get(function () {
-        return _.indexBy(this.documentsArray, 'sku');
-    });
-
-DriverSchema.virtual('resume')
-    .get(function() {
-        return _.find(this.documentsArray, {sku: 'resume'});
-    })
-    .set(function(newResume) {
-        debugger;
-
-        var existing = _.find(this.documentsArray, {sku: 'resume'});
-
-        if(!!existing) {
-            _.extend(newResume, existing);
-        } else {
-            newResume.sku = 'resume';
-            newResume.name = 'Resume';
-            this.documentsArray.push(newResume);
-        }
+        return _.indexBy(this.reportsData, 'sku');
     });
 
 DriverSchema.pre('save', function (next) {
     console.log('[DS.PRE] %s is about to be Saved', this._id);
     this.modified = Date.now();
 
+    console.log('[DS.PRE] Saving doc: %s', JSON.stringify(this, null, 2));
+
     next();
 });
 
 DriverSchema.pre('save', function (next) {
+    if (this.isModified('experience')) {
 
-    _.map(this.experience, function (exp) {
-        if (!!exp._doc.time) {
-            exp._doc.time = undefined;
-        }
+        _.map(this.experience, function (exp) {
+            if (!!exp._doc.time) {
+                exp._doc.time = undefined;
+            }
 
-        return exp;
-    });
+            return exp;
+        });
+
+    }
+
+    if (!!this.resume) {
+        console.log('PRE Save Resume still here! aargh ===========================================P');
+        this.resume = undefined;
+        console.log('Driver.Save: RESUME Is Modified: %s =====================================', this.isModified('resume'));
+    }
+
+    if(!_.isEqual(this.reportsData, _.values(this.reports))) {
+        debugger;
+        console.log('Driver.Save: Reports & Array out of sync: %s =====================================', this.isModified());
+        this.reportsData = _.values(this.reports);
+        console.log('Driver.Save: Is Modified: %s =====================================', this.isModified());
+    }
+
+    console.log('Driver.Save: Is Modified: %s =====================================', this.isModified());
+    //this.markModified('reportsData');
+    console.log('Driver.Save: Is Modified: %s =====================================', this.isModified());
 
     next();
 });
@@ -181,21 +198,30 @@ DriverSchema.pre('save', function (next) {
 
 DriverSchema.pre('init', function (next, data) {
 
-    if(!!data.reportsData) {
-        console.log('Removing legacy reportsData array in migration');
-        data.documentsArray = data.reportsData;
-        delete data.reportsData;
-    }
-
-    if(!!data.resume) {
+    if (!!data.resume && !_.find(data.reportsData, {sku: 'resume'})) {
         console.log('Migrating Resume to Documents Array in migration');
         data.resume.sku = 'resume';
         data.resume.name = 'Resume';
-        data.documentsArray.push(data.resume);
-        delete data.resume;
+        data.reportsData.push(data.resume);
+        data.resume = undefined;
+    } else if (!!data.resume) {
+        debugger;
+        console.log('Resume already migrated ... eliminating it');
+        data.resume = undefined;
     }
 
+    data.modifedField = 'reportsData';
+
     next();
+});
+
+
+DriverSchema.post('init', function (doc) {
+    debugger;
+
+    if (!!doc.modifiedField) {
+        doc.setModified(doc.modifedField);
+    }
 });
 
 DriverSchema.post('init', function (doc) {

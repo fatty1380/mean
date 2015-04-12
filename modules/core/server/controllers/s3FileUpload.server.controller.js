@@ -35,15 +35,24 @@ function directUpload(files, folder, isSecure) {
             folder = folder.substring(0, folder.length - 1);
         }
 
-        if(files.file) {
+        var file = files.file;
 
-            console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', files.file && files.file.name, folder);
+        console.log('[s3.directUpload] Uploading file: %s', JSON.stringify(file, function(key, value) { return (key === 'buffer') ?  [] :  value; }, 2));
+
+        if(file) {
+            var fileName = _.contains(file.path, file.name) ? file.originalname : file && file.name || file.originalname;
+
+            console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', fileName, folder);
             var params = {
                 Bucket: config.services.s3.s3Options.bucket,
-                Key: folder + '/' + files.file.name,
+                Key: folder + '/' + fileName,
                 ACL: 'public-read',
-                Body: files.file.buffer
+                Body: file.buffer
             };
+
+            switch((file.extension || fileName.slice( -3 )).toLowerCase()) {
+                case 'pdf': params.ContentType = 'application/pdf'; break;
+            }
 
             console.log('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
 

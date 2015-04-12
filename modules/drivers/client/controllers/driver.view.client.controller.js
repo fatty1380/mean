@@ -76,10 +76,8 @@
             // Populate user object
             debugger;
 
-            vm.driver.resume = response;
+            vm.driver.reports.resume = response;
         };
-
-        vm.resume = vm.resume || {};
 
         var validateAccess = function (file) {
             if (!file) {
@@ -91,19 +89,19 @@
         };
 
         var handleFileAccess = function (file) {
-            vm.resume.loading = true;
+            vm.resumeLoading = true;
 
             if (validateAccess(file)) {
                 $state.go('drivers.documents', {driverId: vm.driver._id, documentId: file.sku || 'resume'});
             } else {
-                vm.resume.loading = false;
+                vm.resumeLoading = false;
                 return false;
             }
         };
 
         vm.openResumeFile = function () {
             $log.debug('Opening Resume File');
-            handleFileAccess(vm.driver && vm.driver.resume);
+            handleFileAccess(vm.driver && vm.driver.reports.resume);
         };
 
         vm.openReport = function (reportName) {

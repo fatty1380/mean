@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <ul class="nav nav-tabs">
-                    <li role="presentation" ng-repeat="report in vm.driver.documentsArray"
+                    <li role="presentation" ng-repeat="report in vm.driver.reportsData"
                         ng-click="vm.viewFile(report.sku)"
                         ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
                         <a>{{report.name || report.sku | titleCase }}</a>

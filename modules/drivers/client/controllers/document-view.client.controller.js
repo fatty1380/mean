@@ -18,7 +18,6 @@
         vm.auth = auth;
         vm.user = auth.user;
 
-        vm.resume = vm.driver.resume;
         vm.reports = vm.driver.reports || {};
 
         if (vm.driver && vm.driver.user) {
@@ -36,7 +35,7 @@
 
             $log.debug('Opening File %o', fileName);
 
-            var file = vm.reports[fileName] || vm.resume;
+            var file = vm.reports[fileName];
 
             DocAccess.updateFileUrl(vm.driver._id, file)
                 .then(function (success) {
@@ -45,12 +44,7 @@
 
                     $sce.trustAsResourceUrl(vm.documentUrl);
 
-                    if (!!success.sku) {
-                        vm.reports[success.sku] = success;
-                    }
-                    else {
-                        vm.resume = success;
-                    }
+                    vm.reports[success.sku] = success;
 
                     vm.activeReport = fileName;
                 })
