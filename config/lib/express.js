@@ -287,8 +287,6 @@ module.exports.initHttps = function (app) {
  * Initialize the Express application
  */
 module.exports.init = function (db) {
-    console.log('EXPRESS INIT:');
-    console.log(db);
     // Initialize express app
     var app = express();
 
