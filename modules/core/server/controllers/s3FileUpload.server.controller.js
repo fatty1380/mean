@@ -56,7 +56,7 @@ function directUpload(files, folder, isSecure) {
                     var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
                     console.log('[s3.directUpload] Got public URL: %s', publicURL);
 
-                    var strippedURL = publicURL.replace('http://', '//');
+                    var strippedURL = publicURL.replace('http://', 'https://');
                     console.log('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
 
                     if (isSecure) {
@@ -144,28 +144,28 @@ function getSecureReadURL(bucket, key) {
     };
 
     if(!client) {
-
         console.log('[s3.directRead] S3 is not configured - cannot update secure read url');
         deferred.reject('Unable to update file from cloud store');
+    } else {
+
+        console.log('[s3.directRead] Attempting S3 Download for %j', params);
+
+        client.s3.getSignedUrl('getObject', params, function (err, url) {
+            if (err) {
+                console.error('[s3.directRead] unable to download:', err && err.stack);
+
+                return deferred.reject(err);
+            }
+
+            console.log('[s3.directRead] Got signed url: `%s`', url);
+
+            var strippedURL = url.replace('http://', 'https://'); //.replace('https://', '//');
+            console.log('[s3.directRead] Post stripping, resolving with : %s', strippedURL);
+
+            deferred.resolve(strippedURL);
+
+        });
     }
-
-    console.log('[s3.directRead] Attempting S3 Download for %j', params);
-
-    var getter = client.s3.getSignedUrl('getObject', params, function (err, url) {
-        if (err) {
-            console.error('[s3.directRead] unable to download:', err && err.stack);
-
-            return deferred.reject(err);
-        }
-
-        console.log('[s3.directRead] Got signed url: `%s`', url);
-
-        var strippedURL = url.replace('http://', '//').replace('https://', '//');
-        console.log('[s3.directRead] Post stripping, resolving with : %s', strippedURL);
-
-        deferred.resolve(strippedURL);
-
-    });
 
     return deferred.promise;
 }
