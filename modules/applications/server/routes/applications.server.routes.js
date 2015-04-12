@@ -5,6 +5,7 @@ module.exports = function (app) {
         path = require('path'),
         users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
         applications = require(path.resolve('./modules/applications/server/controllers/applications.server.controller')),
+        drivers = require(path.resolve('./modules/drivers/server/controllers/drivers.server.controller')),
         releaseDocs = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller'));
 
     // Applications Routes
@@ -42,7 +43,7 @@ module.exports = function (app) {
         .get(applications.queryByUserID);
 
     app.route('/api/releaseDocuments')
-        .get(releaseDocs.runTest);
+        .get(drivers.driverByUserID, releaseDocs.runTest);
     app.route('/api/releaseHtml')
         .get(releaseDocs.runHTMLTest);
 
