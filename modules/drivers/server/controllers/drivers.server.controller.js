@@ -214,6 +214,10 @@ exports.uploadResume = function (req, res) {
         function (response) {
             console.log('successfully uploaded user resume to %j', response);
 
+            if(_.isEmpty(driver.reports[sku])) {
+                driver.reportsData.push({ sku: sku });
+            }
+
             _.extend(driver.reports[sku], response, {expires: moment().add(15, 'm')});
 
             driver.save(function (saveError) {
@@ -359,7 +363,7 @@ exports.list = function (req, res) {
 
 exports.driverByUserID = function (req, res, next) {
     console.log('[Driver.driverByUserId] start');
-    var userId = req.params.userId || req.query.userId;
+    var userId = req.params.userId || req.query.userId || req.user.id;
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
