@@ -20,11 +20,11 @@ module.exports = {
                 'public/lib/angular-messages/angular-messages.min.js',
                 'public/lib/angular-ui-router/release/angular-ui-router.min.js',
                 'public/lib/angular-ui-utils/ui-utils.min.js',
-                'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+                'public/lib/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js',
                 'public/lib/angular-file-upload/angular-file-upload.min.js',
                 'public/lib/ngmap/build/scripts/ng-map.min.js',
                 'public/lib/lodash/dist/lodash.min.js',
-                '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider
+                '//maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry', // TODO: use gmapApiProvider?
                 'public/lib/moment/min/moment-with-locales.min.js',
                 'public/lib/angular-moment/angular-moment.min.js',
                 'https://js.braintreegateway.com/v2/braintree.js',

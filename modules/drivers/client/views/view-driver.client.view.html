@@ -55,82 +55,77 @@
 
             <div class="panel panel-oset">
                 <div class="panel-heading text-center">
-                    <h3 class="no-mgn">Reports</h3>
+                    <h3 class="no-mgn">Documents</h3>
                     <hr/>
                 </div>
-                    <div class="panel-body list-group">
-                        <a class="list-group-item"
-                             ng-click="vm.openResumeFile('resume')"
-                             ng-class="{'disabled': !vm.driver.resume, 'active': vm.activeReport==='resume'}">
-                            Resume
-                            <i class="fa fa-check text-success pull-right"></i>
-                        </a>
-                        <a class="list-group-item" ng-repeat="report in vm.driver.reportsData"
-                             ng-click="vm.openReport(report.sku)"
-                             ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
-                            {{report.sku}}
-                            <i class="fa fa-check text-success pull-right"></i>
-                        </a>
+                <div class="panel-body list-group">
+                    <a class="list-group-item" ng-repeat="report in vm.driver.reportsData"
+                       ng-click="vm.openReport(report.sku)"
+                       ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
+                        {{report.name || report.sku | titleCase }}
+                        <i class="fa fa-check text-success pull-right"></i>
+                    </a>
                 </div>
             </div>
 
             <div class="panel panel-oset" ng-if="vm.driver.user._id === vm.auth.user._id">
                 <div class="panel-heading text-center">
-                    <h3 class="no-mgn" ng-hide="vm.driver.resume">Add your Resume</h3>
+                    <h3 class="no-mgn" ng-hide="vm.driver.reports['resume']">Add your Resume</h3>
 
-                    <h3 class="no-mgn" ng-show="vm.driver.resume">Your Resume</h3>
+                    <h3 class="no-mgn" ng-show="vm.driver.reports['resume']">Your Resume</h3>
                 </div>
-                <div class="panel-body no-pad-top" ng-hide="!!vm.driver.resume">
+                <div class="panel-body no-pad-top" ng-hide="!!vm.driver.reports['resume']">
                     <p class="text-center">
-                        <div class="report-badges uploader pull-right text-center">
+
+                    <div class="report-badges uploader pull-right text-center">
                             <span class="fa-stack fa-3x report-badge" tooltip="Resume">
                                 <i class="fa fa-file fa-stack-2x"></i>
                                 <i class="fa fa-question fa-1x"></i>
                             </span>
-                        </div>
-                        In addition to your profile, uploading a resume will help employers see why you are the best fit
-                        for the job.
+                    </div>
+                    In addition to your profile, uploading a resume will help employers see why you are the best fit
+                    for the job.
                     </p>
 
 
                     <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
-                                      model="vm.driver.resume" model-id="vm.driver._id"
+                                      model="vm.driver.reports['resume']" model-id="vm.driver._id"
                                       allow-blank="true"></oset-file-upload>
                 </div>
-                <div class="panel-body no-pad-top" ng-show="!!vm.driver.resume">
+                <div class="panel-body no-pad-top" ng-show="!!vm.driver.reports['resume']">
                     <p class="text-center">
 
-                        <div class="report-badges uploader pull-right text-center">
+                    <div class="report-badges uploader pull-right text-center">
                             <span class="fa-stack fa-3x report-badge available" tooltip="Resume">
                                 <i class="fa fa-file-o fa-stack-2x"></i>
                                 <i class="fa fa-check fa-1x"></i>
                             </span>
-                        </div>
-                        Thanks for uploading your resume! It will be included with your job applications,
-                        and only available to employers after connecting with you.<br>
+                    </div>
+                    Thanks for uploading your resume! It will be included with your job applications,
+                    and only available to employers after connecting with you.<br>
 
-                        <div class="btn-group btn-group-justified" role="group"
-                             ng-hide="vm.resume.loading || vm.resume.error">
-                            <div class="btn-group" role="group">
+                    <div class="btn-group btn-group-justified" role="group"
+                         ng-hide="vm.resumeLoading || vm.resumeError">
+                        <div class="btn-group" role="group">
 
-                                <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
-                                                  model="vm.driver.resume" model-id="vm.driver._id"
-                                                  upload-btn-class="btn-link" upload-btn-text="update"
-                                                  allow-blank="true"></oset-file-upload>
-                            </div>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-link" ng-click="vm.openResumeFile()">
-                                    view <i class="fa fa-external-link mgn-left"></i>
-                                </button>
-                            </div>
+                            <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
+                                              model="vm.driver.reports['resume']" model-id="vm.driver._id"
+                                              upload-btn-class="btn-link" upload-btn-text="update"
+                                              allow-blank="true"></oset-file-upload>
                         </div>
-                        <div class="text-center" ng-show="vm.resume.loading">
-                            <i class="fa fa-spinner fa-spin"></i> loading
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-link" ng-click="vm.openResumeFile()">
+                                view <i class="fa fa-external-link mgn-left"></i>
+                            </button>
                         </div>
-                        <div class="text-center text-danger stronger" ng-show="vm.resume.error">
-                            <i class="fa fa-close fa-lg mgn-right" ng-click="vm.resume.error = null"></i> {{vm.resume.error
-                            || 'sorry, we were unable to load your resume at this time'}}
-                        </div>
+                    </div>
+                    <div class="text-center" ng-show="vm.resumeLoading">
+                        <i class="fa fa-spinner fa-spin"></i> loading
+                    </div>
+                    <div class="text-center text-danger stronger" ng-show="vm.resumeError">
+                        <i class="fa fa-close fa-lg mgn-right" ng-click="vm.resumeError = null"></i> {{vm.resumeError
+                        || 'sorry, we were unable to load your resume at this time'}}
+                    </div>
                     </p>
 
 

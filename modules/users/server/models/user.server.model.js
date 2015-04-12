@@ -246,6 +246,11 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
     });
 };
 
+UserSchema.virtual('shortName')
+    .get(function() {
+        return this.firstName + this.lastName.substring(0,1);
+    });
+
 UserSchema.virtual('isAdmin')
     .get(function () {
         return !!this.roles && this.roles.indexOf('admin') !== -1;

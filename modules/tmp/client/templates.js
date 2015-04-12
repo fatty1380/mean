@@ -1154,13 +1154,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '           tooltip-popup-delay="750" tooltip="View Applicant\'s Resume">Resume&nbsp;\n' +
   '        <i class="fa fa-external-link" ng-if="!!vm.docAccess"></i>\n' +
   '    </label>\n' +
-  '    <label ng-if="vm.driver.reportsData && vm.driver.reportsData.length"\n' +
+  '    <label ng-if="vm.driver.documentsArray && vm.driver.documentsArray.length"\n' +
   '           class="document label {{vm.docAccess ? \'label-success pointer\' : \'label-default\'}}"\n' +
   '           ng-click="vm.showDocument(\'resume\', $event)"\n' +
   '           tooltip-popup-delay="750" tooltip="View Applicant\'s Background Reports">BG Reports&nbsp;\n' +
   '        <i class="fa fa-external-link" ng-if="!!vm.docAccess"></i>\n' +
   '    </label>\n' +
-  '    <em class="small text-muted" ng-if="!vm.driver.resume && !vm.driver.reportsData.length">no documents on file</em>\n' +
+  '    <em class="small text-muted" ng-if="!vm.driver.resume && !vm.driver.documentsArray.length">no documents on file</em>\n' +
   '</span>\n' +
   '');
  $templateCache.put('/modules/bgchecks/views/templates/form-entry.client.template.html',

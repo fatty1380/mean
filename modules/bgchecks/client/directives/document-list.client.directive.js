@@ -7,7 +7,7 @@
         vm.showDocument = function (doc, $event) {
             $event.stopPropagation();
 
-            var file = doc === 'resume' ? vm.driver.resume : vm.driver.reports[doc];
+            var file = vm.driver.reports[doc];
 
             Reports.openReport(vm.application, vm.driver, file)
                 .catch(function (error) {
