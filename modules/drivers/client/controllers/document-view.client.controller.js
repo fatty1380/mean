@@ -84,9 +84,12 @@
                         element.contents().remove();
 
                         if (!!url) {
-                            element.append('<object type="application/pdf" height="100%" width="100%" data="' + url + '"></object>');
+                            var tag = '<object data="reportURL" type="application/pdf" width="100%" height="100%"> ' +
+                                '<p class="text-center">It appears your Web browser is not configured to display PDF files. No worries, just <a href="reportURL">click here to download the PDF file.</a></p>' +
+                                '</object>';
+                            element.append(tag.replace(/reportURL/g, url));
                         } else {
-                            element.append('<h4>No PDF Available</h4>');
+                            element.append('<h4 class="text-center">Sorry ... document not available</h4>');
                         }
                     }
                 });

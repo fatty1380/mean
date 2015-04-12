@@ -83,16 +83,10 @@ var DriverSchema = new Schema({
         default: []
     },
 
-    resume: {
-        url: String,
-        expires: Date,
-        bucket: String,
-        key: String
-    },
-
-    reportsData: [{
+    documentsArray: [{
         sku: String,
         name: String,
+
         url: String,
         expires: Date,
         bucket: String,
@@ -132,18 +126,36 @@ var DriverSchema = new Schema({
 }, {toJSON: {virtuals: true}});
 
 DriverSchema.methods.updateReportURL = function(sku, url) {
-    var i = _.findIndex(this.reportsData, {sku: sku});
+    var i = _.findIndex(this.documentsArray, {sku: sku});
 
     if(i !== -1) {
-        this.reportsData[i].url = url;
-        this.reportsData[i].expires = moment().add(15, 'm');
-        console.log('[DS.updateReportURL] updated reportsData[%d] to %j', i, this.reportsData[i]);
+        this.documentsArray[i].url = url;
+        this.documentsArray[i].expires = moment().add(15, 'm');
+        console.log('[DS.updateReportURL] updated documentsArray[%d] to %j', i, this.documentsArray[i]);
     }
 };
 
 DriverSchema.virtual('reports')
     .get(function () {
-        return _.indexBy(this.reportsData, 'sku');
+        return _.indexBy(this.documentsArray, 'sku');
+    });
+
+DriverSchema.virtual('resume')
+    .get(function() {
+        return _.find(this.documentsArray, {sku: 'resume'});
+    })
+    .set(function(newResume) {
+        debugger;
+
+        var existing = _.find(this.documentsArray, {sku: 'resume'});
+
+        if(!!existing) {
+            _.extend(newResume, existing);
+        } else {
+            newResume.sku = 'resume';
+            newResume.name = 'Resume';
+            this.documentsArray.push(newResume);
+        }
     });
 
 DriverSchema.pre('save', function (next) {
@@ -166,6 +178,25 @@ DriverSchema.pre('save', function (next) {
     next();
 });
 
+
+DriverSchema.pre('init', function (next, data) {
+
+    if(!!data.reportsData) {
+        console.log('Removing legacy reportsData array in migration');
+        data.documentsArray = data.reportsData;
+        delete data.reportsData;
+    }
+
+    if(!!data.resume) {
+        console.log('Migrating Resume to Documents Array in migration');
+        data.resume.sku = 'resume';
+        data.resume.name = 'Resume';
+        data.documentsArray.push(data.resume);
+        delete data.resume;
+    }
+
+    next();
+});
 
 DriverSchema.post('init', function (doc) {
     doc.experience = _.map(doc.experience, function (exp) {

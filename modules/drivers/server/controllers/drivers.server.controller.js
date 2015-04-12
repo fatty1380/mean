@@ -294,7 +294,7 @@ exports.refreshReport = function (req, res) {
     console.log('[DriverCtrl.refreshReport] Start');
     var user = req.user;
     var driver = req.driver;
-    var sku = req.params.reportSku || !!driver.reportsData && driver.reportsData.length && driver.reportsData[0].sku;
+    var sku = req.params.reportSku || !!driver.documentsArray && driver.documentsArray.length && driver.documentsArray[0].sku;
 
     if (!user) {
         return res.status(401).send({
