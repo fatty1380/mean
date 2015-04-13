@@ -1,14 +1,17 @@
 (function () {
     'use strict';
 
-    function ApplicationGatewayController(auth, Applications, Gateway, $state, $stateParams, $log, $q, $document, toastr) {
+    function ApplicationGatewayController(auth, Applications, $state, resolutions, $log, $q, $document, toastr) {
         var vm = this;
+
+        vm.debug = true;
+        vm.gw = resolutions.gateway;
 
         Object.defineProperty(vm, 'formData', {
             enumerable: true,
             get: function () {
                 if (_.isEmpty($state.current.data.formData)) {
-                    $state.current.data.formData = Gateway.models;
+                    $state.current.data.formData = vm.gw.models;
                 }
                 return $state.current.data.formData;
             }
@@ -56,7 +59,15 @@
         function initialize() {
             debugger;
 
-            Gateway.applicantGateway.then(function(gw) {
+            if(vm.gw.models.job.id !== resolutions.job.id) {
+                $log.warn('GW Job !== Resolved Job');
+            }
+
+            if(vm.gw.models.company.id !== resolutions.company.id) {
+                $log.warn('GW Company !== Resolved Company');
+            }
+
+            vm.gw.applicantGateway.then(function(gw) {
                 vm.gatewayReportsEnabled = (!!gw && !!gw.sku);
                 vm.gatewayReleaseEnabled = (!!gw && !!gw.releaseType);
 
@@ -72,8 +83,6 @@
                 vm.currentIndex = _.findIndex(vm.activeSteps, {'state': $state.current.name});
                 vm.currentStep = _.find(vm.activeSteps, {'state': $state.current.name});
             });
-
-            vm.gw = Gateway;
         }
 
         vm.getKeys = function (object) {
@@ -194,7 +203,7 @@
                             .then(function (success) {
                                 $log.debug('Successfully created an application: %o', success);
 
-                                Gateway.application = success;
+                                vm.gw.application = success;
 
                                 vm.success = 'Application Submission Successful!';
                             });
@@ -237,7 +246,7 @@
         initialize();
     }
 
-    ApplicationGatewayController.$inject = ['Authentication', 'Applications', 'Gateway', '$state', '$stateParams', '$log', '$q', '$document', 'toastr'];
+    ApplicationGatewayController.$inject = ['Authentication', 'Applications', '$state', 'resolutions', '$log', '$q', '$document', 'toastr'];
 
     angular.module('applications')
         .controller('ApplicationGatewayController', ApplicationGatewayController);
