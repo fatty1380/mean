@@ -248,7 +248,7 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 
 UserSchema.virtual('shortName')
     .get(function() {
-        return this.firstName + this.lastName.substring(0,1);
+        return (!!this.firstName ? this.firstName : null) + (!!this.lastName ? this.lastName.substring(0,1) : null);
     });
 
 UserSchema.virtual('isAdmin')

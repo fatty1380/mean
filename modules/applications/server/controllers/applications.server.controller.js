@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+Q            = require('Q'),
 path         = require('path'),
 Application  = mongoose.model('Application'),
 Release      = mongoose.model('Release'),
@@ -59,50 +60,63 @@ exports.create = function (req, res) {
 
     var application = new Application(req.body);
 
-    application.releases = _.map(releases, function (release) {
-        return new Release(release);
+    var releaseDocs = _.map(releases, function (release) {
+        var newRelease = new Release(release);
+
+        return releaseDocs.generateDocument(newRelease, req.user)
+            .then(function (release) {
+                debugger;
+                _.extend(newRelease, release);
+            });
     });
 
 
-    console.log('Saving application with releases: %j', application.releases);
+    Q.allSettled(releaseDocs).then(
+        function (results) {
+            application.releases = results;
 
-    console.log('[ApplicationController.create] req.job: %j, \n\treq.body.jobId: %j', req.job, req.body.jobId);
-    console.log('[ApplicationController.create] req.user: %j, \n\treq.body.userId: %j', req.user, req.body.userId);
+            console.log('Saving application with releases: %j', application.releases);
 
-    application.user = req.user;
-    application.job = req.job;
-    application.company = (!!req.job) ? req.job.company : null;
+            console.log('[ApplicationController.create] req.job: %j, \n\treq.body.jobId: %j', req.job, req.body.jobId);
+            console.log('[ApplicationController.create] req.user: %j, \n\treq.body.userId: %j', req.user, req.body.userId);
 
-    console.log('[ApplicationController.create] Creating new application w/ id?: %s', application._id || application.id);
-    console.log('[ApplicationController.create] Creating new application: %j', application);
+            application.user = req.user;
+            application.job = req.job;
+            application.company = (!!req.job) ? req.job.company : null;
 
-    application.save(function (err) {
-        if (err) {
-            console.error('[ApplicationController.create] Error saving application: %j', err);
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
+            console.log('[ApplicationController.create] Creating new application w/ id?: %s', application._id || application.id);
+            console.log('[ApplicationController.create] Creating new application: %j', application);
 
-            console.log('[ApplicationController.create] Application `%s` created ... saving to job', application._id);
-            req.job.applications.push(application);
-            req.job.save(function (err) {
+            application.save(function (err) {
                 if (err) {
-                    console.log('[ApplicationController.create] error saving job application to job');
-                }
-                else {
-                    console.log('[ApplicationController.create] saved job application to job');
-                }
+                    console.error('[ApplicationController.create] Error saving application: %j', err);
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                } else {
 
-                if (!application.isDraft) {
-                    console.log('[ApplicationController.create] Sending email for New Application %o', application);
-                    sendNewApplicantEmail(req.user, req.job, application);
+                    console.log('[ApplicationController.create] Application `%s` created ... saving to job', application._id);
+                    req.job.applications.push(application);
+                    req.job.save(function (err) {
+                        if (err) {
+                            console.log('[ApplicationController.create] error saving job application to job');
+                        }
+                        else {
+                            console.log('[ApplicationController.create] saved job application to job');
+                        }
+
+                        if (!application.isDraft) {
+                            console.log('[ApplicationController.create] Sending email for New Application %o', application);
+                            sendNewApplicantEmail(req.user, req.job, application);
+                        }
+                    });
+
+                    res.json(application);
                 }
             });
 
-            res.json(application);
         }
-    });
+    );
 };
 
 function sendNewApplicantEmail(user, job, application) {
@@ -163,10 +177,8 @@ exports.update = function (req, res) {
             });
         } else {
             var options = [
-                //{path: 'user', model: 'User'},
                 {path: 'job', model: 'Job'},
                 {path: 'company', model: 'Company', select: 'name owner agents profileImageURL'},
-                //{path: 'messages'},
                 {path: 'connection'},
                 {path: 'messages.sender', model: 'User'},
                 {path: 'user.driver', model: 'Driver'},

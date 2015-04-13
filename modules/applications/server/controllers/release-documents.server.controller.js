@@ -9,6 +9,7 @@ path         = require('path'),
 pdf          = require('html-pdf'),
 fs           = require('fs'),
 swig         = require('swig'),
+Q            = require('Q'),
 Application  = mongoose.model('Application'),
 Release      = mongoose.model('Release'),
 _            = require('lodash'),
@@ -17,7 +18,8 @@ moment       = require('moment');
 
 var applicationExample, releaseExample, config;
 
-swig.setDefaults({autoescape:false, cache: false});
+swig.setDefaults({autoescape: false, cache: false});
+
 exports.generateDocuments = function (application, user) {
     var releases = application.releases;
 
@@ -27,8 +29,45 @@ exports.generateDocuments = function (application, user) {
     }
 
     var docs = _.each(releases, function (release) {
-        var doc = new PDF();
+        var doc = exports.generateDocument(release, user);
+        debugger;
+        return doc;
     });
+
+    debugger;
+
+    return Q.allSettled(docs).then(function (results) {
+        debugger;
+
+        return results;
+    });
+};
+
+exports.generateDocument = function (release, user) {
+    return exports.saveFileToCloud(release, user, user.driver)
+        .then(function (cloudDoc) {
+            console.log('[ReleaseDocsCtrl] successfully uploaded document to %j', cloudDoc);
+
+            debugger;
+
+            if (_.isEmpty(release.file)) {
+                release.file = {owner: user, sku: release.releaseType, isSecure: true};
+            }
+
+            _.extend(release.file, cloudDoc, {expires: moment().add(15, 'm').toDate()});
+
+            console.log('[ReleaseDocsCtrl] Saving Driver');
+            return release.save();
+        }).then(function (releaseResponse) {
+            console.log('[ReleaseDocsCtrl] successfully saved Release! %s', JSON.stringify(releaseResponse, null, 2));
+
+            return releaseResponse;
+
+        }).catch(function (error) {
+            console.log('[ReleaseDocsCtrl] Failed to complete Release Save: %s', JSON.stringify(error, null, 2));
+
+            return Q.reject(error);
+        });
 };
 
 exports.runHTMLTest = function (req, res, next) {
@@ -37,77 +76,119 @@ exports.runHTMLTest = function (req, res, next) {
     res.send(document);
 };
 
+exports.saveFileToCloud = function (release, user, driver) {
+
+    var deferred = Q.defer();
+
+    if(!!driver && !_.isString(driver)) {
+        deferred.resolve(driver);
+    } else {
+        user.populate('driver').exec().then(function (newUser) {
+            debugger;
+            user.driver = newUser.driver;
+            deferred.resolve(newUser.driver);
+        });
+    }
+
+    deferred.promise.then(
+        function (driver) {
+            var sku = release.releaseType;
+
+            return createPDF(release).then(
+                function (buffer) {
+
+                    var files = {
+                        file: {
+                            buffer: buffer,
+                            name: sku + '.' + user.shortName + '.pdf',
+                            extension: 'pdf'
+                        }
+                    };
+
+                    console.log('[ReleaseDocsCtrl] saving file to cloud!');
+
+                    return fileUploader.saveFileToCloud(files, 'secure-content', true);
+                });
+
+
+        });
+};
+
 
 exports.runTest = function (req, res, next) {
 
     var user = req.user;
-    var driver = req.driver || user.populate('driver').exec().then(function(bigD) { driver = bigD; return driver; });
+    var driver = req.driver || user.populate('driver').exec().then(function (bigD) {
+            driver = bigD;
+            return driver;
+        });
 
-    var pdfTemplate = fs.readFileSync(path.resolve('./modules/applications/server/views/pdfcore.server.view.html'));
+    var application = req.application || applicationExample;
+    var release = application.release || releaseExample;
 
-    console.log('PDF Template: ' + pdfTemplate);
+    var sku = release.releaseType;
 
-    var id = req.application && req.application._id || req.applicationId;
+    createPDF(release).then(
+        function (buffer) {
 
-    var document = getHTML(releaseExample);
+            var files = {
+                file: {
+                    buffer: buffer,
+                    name: sku + '.' + user.shortName + '.pdf',
+                    extension: 'pdf'
+                }
+            };
+
+            console.log('[ReleaseDocsCtrl] saving file to cloud!');
+
+            return fileUploader.saveFileToCloud(files, 'secure-content', true);
+        }).then(function (response) {
+            console.log('[ReleaseDocsCtrl] successfully uploaded document to %j', response);
+
+            debugger;
+
+            if (_.isEmpty(driver.reports[sku])) {
+                driver.reportsData.push({sku: sku});
+            }
+
+            _.extend(driver.reports[sku], response, {expires: moment().add(15, 'm').toDate()});
+
+            console.log('[ReleaseDocsCtrl] Saving Driver');
+            return driver.save();
+        }).then(function (driver) {
+            console.log('[ReleaseDocsCtrl] successfully saved Driver!');
+
+            return res.json(driver.reports[sku]);
+
+        }).catch(function (error) {
+            console.log('[ReleaseDocsCtrl] Failed to complete Release Save: %s', JSON.stringify(error, null, 2));
+
+            return res.status(400).send({
+                message: 'CRAP! ' + error.message
+            });
+        });
+};
+
+function createPDF(release) {
+    var document = getHTML(release);
+
+    var deferred = Q.defer();
 
     pdf.create(document, config).toBuffer(function (err, buffer) {
         if (err) {
             console.log('ERROR: ', err);
-            return res.json(err);
+            return deferred.reject(err);
         }
 
-        var sku = releaseExample.releaseType;
-
-        var files = { file: {
-            buffer: buffer,
-            name: sku + '.' + user.shortName + '.pdf',
-            extension: 'pdf'
-        }};
-
-        fileUploader.saveFileToCloud(files, 'secure-content', true).then(
-            function (response) {
-                console.log('successfully uploaded document to %j', response);
-
-                debugger;
-
-                if(_.isEmpty(driver.reports[sku])) {
-                    driver.reportsData.push({ sku: sku });
-                }
-
-                _.extend(driver.reports[sku], response, {expires: moment().add(15, 'm')});
-
-                driver.save(function (saveError) {
-                    if (saveError) {
-                        return res.status(400).send({
-                            message: 'CRAP! ' + saveError.message
-                        });
-                    }
-
-                    res.json(driver.reports[sku]);
-
-                });
-
-            }, function (error) {
-                console.log('Failed to save Resume: %j', error);
-
-
-                res.send(document);
-                //
-                //return res.status(400).send({
-                //    message: 'Unable to save Driver Resume. Please try again later'
-                //});
-            }
-        );
-
+        deferred.resolve(buffer);
     });
 
-
-};
+    return deferred.promise;
+}
 
 function getHTML(release) {
 
-    var doc = swig.renderFile('./modules/applications/server/views/pdfcore.server.view.html',{
+    var doc = swig.renderFile('./modules/applications/server/views/pdfcore.server.view.html', {
         body: release.releaseText,
         signatureURL: release.signature.dataUrl,
         sigDate: release.signature.timestamp,

@@ -4,7 +4,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-Schema       = mongoose.Schema;
+Schema       = mongoose.Schema,
+path = require('path'),
+    RemoteFile = require(path.resolve('./modules/applications/server/models/remote-file.server.model.js'));
 
 var ReleaseSchema = new Schema({
     signature: {
@@ -40,6 +42,11 @@ var ReleaseSchema = new Schema({
     releaseText: {
         type: String,
         required: true
+    },
+
+    file: {
+        type: RemoteFile,
+        default: null
     },
 
     created: {

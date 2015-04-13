@@ -121,7 +121,7 @@ var runSingleTransaction = function (req, res, next) {
 var getLatestPlanDetails = function () {
     var deferred = Q.defer();
 
-    if (!plansLastUpdated || plansLastUpdated.add('minutes', 15) < moment()) {
+    if (!plansLastUpdated || plansLastUpdated.add('minutes', 15).isBefore(moment())) {
         initGateway();
 
         gateway.plan.all(function (err, result) {

@@ -218,7 +218,7 @@ exports.uploadResume = function (req, res) {
                 driver.reportsData.push({ sku: sku });
             }
 
-            _.extend(driver.reports[sku], response, {expires: moment().add(15, 'm')});
+            _.extend(driver.reports[sku], response, {expires: moment().add(15, 'm').toDate()});
 
             driver.save(function (saveError) {
                 if (saveError) {

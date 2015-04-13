@@ -93,6 +93,7 @@ var DriverSchema = new Schema({
         default: null
     },
 
+    // TODO: Migrate to RemoteFile type
     reportsData: {
         type: [{
             sku: String,
@@ -141,7 +142,7 @@ DriverSchema.methods.updateReportURL = function (sku, url) {
 
     if (i !== -1) {
         this.reportsData[i].url = url;
-        this.reportsData[i].expires = moment().add(15, 'm');
+        this.reportsData[i].expires = moment().add(15, 'm').toDate();
         console.log('[DS.updateReportURL] updated reportsData[%d] to %j', i, this.reportsData[i]);
 
         this.markModified('reportsData');
