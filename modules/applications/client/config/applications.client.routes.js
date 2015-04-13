@@ -145,14 +145,16 @@
                     jobId: ''
                 },
                 resolve: {
-                    gateway: ['Gateway', 'Authentication', '$stateParams', '$q', function(Gateway, auth, Params, $q) {
-                        return Gateway.initialize(Params.jobId, auth.user).then(function(result) {
-                            return $q.all([Gateway.company, Gateway.job])
+                    resolutions: ['Gateway', 'Authentication', '$stateParams', '$q', '$log', function (Gateway, auth, Params, $q, $log) {
 
-                        }).then(function(result) {
-                            debugger
-                        });
-
+                        return new Gateway(Params.jobId)
+                            .then(function (gateway) {
+                                return $q.all({gateway: gateway, company: gateway.company, job: gateway.job});
+                            })
+                            .then(function (result) {
+                                $log.warn('Gateway Initialized with Job `%s` and Company `%s`', result.job.name, result.company.name);
+                                return result;
+                            });
                     }]
                 }
             }).
