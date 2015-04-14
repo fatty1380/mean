@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 smaller">
             <div class="well" ng-show="vm.releaseType === 'preEmployment'">
-                <span ng-bind-html="vm.releaseTypes[vm.releaseType].text"></span>
+                <span ng-bind-html="vm.releaseText"></span>
             </div>
         </div>
     </div>
@@ -26,8 +26,8 @@
                 <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">
             </div>
             <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">
-                <p class="form-control-static pull-left"
-                        ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}
+                <p class="form-control-static pull-left">
+                    <strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}
                 </p>
 
                 <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">

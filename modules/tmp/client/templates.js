@@ -160,7 +160,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div class="row">\n' +
   '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 smaller">\n' +
   '            <div class="well" ng-show="vm.releaseType === \'preEmployment\'">\n' +
-  '                <span ng-bind-html="vm.releaseTypes[vm.releaseType].text"></span>\n' +
+  '                <span ng-bind-html="vm.releaseText"></span>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -183,8 +183,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">\n' +
   '            </div>\n' +
   '            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">\n' +
-  '                <p class="form-control-static pull-left"\n' +
-  '                        ><strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
+  '                <p class="form-control-static pull-left">\n' +
+  '                    <strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
   '                </p>\n' +
   '\n' +
   '                <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">\n' +
@@ -313,7 +313,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </accordion-group>\n' +
   '    </accordion>\n' +
   '\n' +
-  '    <oset-custom-question-form class="form-horizontal" model="vm.formData.applicant" report="vm.formData.report" methods="vm.subformMethods"></oset-custom-question-form>\n' +
+  '    <oset-custom-question-form class="form-horizontal" gateway="vm.gw" model="vm.formData.applicant" report="vm.formData.report" methods="vm.subformMethods"></oset-custom-question-form>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/reports.client.template.html',
@@ -1065,8 +1065,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <dd class="report-badges" ng-class="{\'not-visible\':!vm.docAccess}">\n' +
   '\n' +
   '        <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '              tooltip="Resume{{vm.docAccess ? (!!vm.driver.resume ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '              ng-class="{\'available\': !!vm.driver.resume}"\n' +
+  '              tooltip="Resume{{vm.docAccess ? (!!vm.driver.reports[\'resume\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '              ng-class="{\'available\': !!vm.driver.reports[\'resume\']}"\n' +
   '              ng-click="vm.docAccess && vm.showDocument(\'resume\', $event)">\n' +
   '            <i class="fa fa-file fa-stack-2x"></i>\n' +
   '            <span class="badge-info">\n' +
@@ -1133,14 +1133,14 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </dd>\n' +
   '    <dd ng-hide="vm.docAccess">\n' +
   '        <em class="text-muted">\n' +
-  '            <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>\n' +
-  '            <span ng-show="vm.driver.reports.length || !!vm.driver.resume">You will be able to download reports once connected</span>\n' +
+  '            <span ng-hide="!!vm.driver.reportsData.length">No reports on file</span>\n' +
+  '            <span ng-show="!!vm.driver.reportsData.length">You will be able to download reports once connected</span>\n' +
   '        </em>\n' +
   '    </dd>\n' +
   '    <dd ng-show="vm.docAccess">\n' +
   '        <em class="text-muted">\n' +
-  '            <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>\n' +
-  '            <span ng-show="vm.driver.reports.length || !!vm.driver.resume">Click on available reports to view or download</span>\n' +
+  '            <span ng-hide="!!vm.driver.reportsData.length">No reports on file</span>\n' +
+  '            <span ng-show="!!vm.driver.reportsData.length">Click on available reports to view or download</span>\n' +
   '\n' +
   '        </em>\n' +
   '    </dd>\n' +
@@ -1148,19 +1148,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/bgchecks/views/templates/document-list-inline.client.template.html',
   '<span class="documentsInline">\n' +
-  '    <label ng-if="vm.driver.resume"\n' +
-  '           ng-click="vm.showDocument(\'resume\', $event)"\n' +
-  '           class="document label {{vm.docAccess ? \'label-success pointer\' : \'label-default\'}}"\n' +
-  '           tooltip-popup-delay="750" tooltip="View Applicant\'s Resume">Resume&nbsp;\n' +
-  '        <i class="fa fa-external-link" ng-if="!!vm.docAccess"></i>\n' +
-  '    </label>\n' +
-  '    <label ng-if="vm.driver.documentsArray && vm.driver.documentsArray.length"\n' +
+  '    <label ng-if="vm.driver.reportsData && vm.driver.reportsData.length"\n' +
   '           class="document label {{vm.docAccess ? \'label-success pointer\' : \'label-default\'}}"\n' +
   '           ng-click="vm.showDocument(\'resume\', $event)"\n' +
-  '           tooltip-popup-delay="750" tooltip="View Applicant\'s Background Reports">BG Reports&nbsp;\n' +
+  '           tooltip-popup-delay="750" tooltip="View Applicant\'s Documents">BG Reports&nbsp;\n' +
   '        <i class="fa fa-external-link" ng-if="!!vm.docAccess"></i>\n' +
   '    </label>\n' +
-  '    <em class="small text-muted" ng-if="!vm.driver.resume && !vm.driver.documentsArray.length">no documents on file</em>\n' +
+  '    <em class="small text-muted" ng-if="!vm.driver.reportsData.length">no documents on file</em>\n' +
   '</span>\n' +
   '');
  $templateCache.put('/modules/bgchecks/views/templates/form-entry.client.template.html',
@@ -4868,7 +4862,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                    <div class="col-sm-6">\n' +
   '                        <oset-file-upload mode="resume"\n' +
-  '                                          model="vm.driver.resume" model-id="vm.driver._id"\n' +
+  '                                          model="vm.driver.reports[\'resume\']" model-id="vm.driver._id"\n' +
   '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '                    </div>\n' +
   '                </div>\n' +

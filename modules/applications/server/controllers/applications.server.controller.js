@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+Q            = require('Q'),
 path         = require('path'),
 Application  = mongoose.model('Application'),
 Release      = mongoose.model('Release'),
@@ -14,6 +15,7 @@ Connection   = mongoose.model('Connection'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
 releaseDocs  = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller')),
+moment = require('moment'),
 _            = require('lodash');
 
 /**
@@ -59,50 +61,63 @@ exports.create = function (req, res) {
 
     var application = new Application(req.body);
 
-    application.releases = _.map(releases, function (release) {
-        return new Release(release);
+    var processedDocs = _.map(releases, function (release) {
+        var newRelease = new Release(release);
+
+        return releaseDocs.generateDocument(newRelease, req.user)
+            .then(function (release) {
+                debugger;
+                _.extend(newRelease, release);
+            });
     });
 
 
-    console.log('Saving application with releases: %j', application.releases);
+    Q.allSettled(processedDocs).then(
+        function (results) {
+            application.releases = results;
 
-    console.log('[ApplicationController.create] req.job: %j, \n\treq.body.jobId: %j', req.job, req.body.jobId);
-    console.log('[ApplicationController.create] req.user: %j, \n\treq.body.userId: %j', req.user, req.body.userId);
+            console.log('Saving application with releases: %j', application.releases);
 
-    application.user = req.user;
-    application.job = req.job;
-    application.company = (!!req.job) ? req.job.company : null;
+            console.log('[ApplicationController.create] req.job: %j, \n\treq.body.jobId: %j', req.job, req.body.jobId);
+            console.log('[ApplicationController.create] req.user: %j, \n\treq.body.userId: %j', req.user, req.body.userId);
 
-    console.log('[ApplicationController.create] Creating new application w/ id?: %s', application._id || application.id);
-    console.log('[ApplicationController.create] Creating new application: %j', application);
+            application.user = req.user;
+            application.job = req.job;
+            application.company = (!!req.job) ? req.job.company : null;
 
-    application.save(function (err) {
-        if (err) {
-            console.error('[ApplicationController.create] Error saving application: %j', err);
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
+            console.log('[ApplicationController.create] Creating new application w/ id?: %s', application._id || application.id);
+            console.log('[ApplicationController.create] Creating new application: %j', application);
 
-            console.log('[ApplicationController.create] Application `%s` created ... saving to job', application._id);
-            req.job.applications.push(application);
-            req.job.save(function (err) {
+            application.save(function (err) {
                 if (err) {
-                    console.log('[ApplicationController.create] error saving job application to job');
-                }
-                else {
-                    console.log('[ApplicationController.create] saved job application to job');
-                }
+                    console.error('[ApplicationController.create] Error saving application: %j', err);
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                } else {
 
-                if (!application.isDraft) {
-                    console.log('[ApplicationController.create] Sending email for New Application %o', application);
-                    sendNewApplicantEmail(req.user, req.job, application);
+                    console.log('[ApplicationController.create] Application `%s` created ... saving to job', application._id);
+                    req.job.applications.push(application);
+                    req.job.save(function (err) {
+                        if (err) {
+                            console.log('[ApplicationController.create] error saving job application to job');
+                        }
+                        else {
+                            console.log('[ApplicationController.create] saved job application to job');
+                        }
+
+                        if (!application.isDraft) {
+                            console.log('[ApplicationController.create] Sending email for New Application %o', application);
+                            sendNewApplicantEmail(req.user, req.job, application);
+                        }
+                    });
+
+                    res.json(application);
                 }
             });
 
-            res.json(application);
         }
-    });
+    );
 };
 
 function sendNewApplicantEmail(user, job, application) {
@@ -153,20 +168,46 @@ exports.update = function (req, res) {
         application.releases = data.releases;
     }
 
+
+    var processedDocs = _.map(application.releases, function (release) {
+        if(_.isEmpty(release.file) || moment(release.signature.timestamp).isAfter(release.modified)) {
+            var newRelease = new Release(release);
+            return releaseDocs.generateDocument(newRelease, req.user);
+        }
+
+        console.log('File has already been saved to cloud');
+        return Q.when(release);
+    });
+
     // Handle nested
 
-    application.save(function (err) {
-        if (err) {
-            console.log('[APPLICATION.Update] %j', err);
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
+    Q.allSettled(processedDocs).then(
+        function (releases) {
+            var fulfilledReleases = _.pluck(_.where(releases, {state: 'fulfilled'}), 'value');
+
+            _.each(fulfilledReleases, function(release) {
+                var existing = _.findIndex(application.releases, {releaseType: release.releaseType});
+
+                if(existing !== -1) {
+                    application.releases[0] = release;
+                } else {
+                    application.releases.push(release);
+                }
             });
-        } else {
+
+            return application;
+        }).then(function (application) {
+
+            if(application.isModified()) {
+                return application.save();
+            }
+
+            console.log('Application has not been modified.... resolving');
+            return Q.when(application);
+        }).then(function (success) {
             var options = [
-                //{path: 'user', model: 'User'},
                 {path: 'job', model: 'Job'},
                 {path: 'company', model: 'Company', select: 'name owner agents profileImageURL'},
-                //{path: 'messages'},
                 {path: 'connection'},
                 {path: 'messages.sender', model: 'User'},
                 {path: 'user.driver', model: 'Driver'},
@@ -186,9 +227,14 @@ exports.update = function (req, res) {
 
                 res.json(populated);
             });
-        }
-    });
+        }).catch(function (err) {
+            console.log('[APPLICATION.Update] %j', err);
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+        });
 };
+
 
 /**
  * Delete an Application
@@ -294,7 +340,8 @@ exports.queryByUserID = function (req, res) {
 
 exports.getByJobId = function (req, res, next) {
 
-    console.log('[ApplicationsController] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
+    console.log('[ApplicationsController.byJob] Request: %j %s', req.route.methods, req.url);
+    console.log('[ApplicationsController.byJob] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
 
     var query = {
         job: req.params.jobId,
@@ -306,6 +353,8 @@ exports.getByJobId = function (req, res, next) {
             if (err) {
                 return next(err);
             }
+
+            console.log('[ApplicationController.byJob] Got application!');
 
             req.application = application;
             next();
