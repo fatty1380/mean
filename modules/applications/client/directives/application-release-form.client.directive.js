@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ApplicationReleaseFormCtrl($log, $q, $interpolate, Gateway, Applications) {
+    function ApplicationReleaseFormCtrl($log, $q, $interpolate, Applications) {
         var vm = this;
 
         vm.signatureMethods = {};
@@ -49,13 +49,13 @@
 
         vm.methods = _.defaults({
             init: function () {
-                vm.companyName = Gateway.models.company.legalEntityName || Gateway.models.company.name;
+                vm.companyName = vm.gateway.models.company.legalEntityName || vm.gateway.models.company.name;
 
                 vm.releaseAuthForm.$addControl('signature');
 
                 vm.updateSignatureStatus();
 
-                return $q.all({gw: Gateway.applicantGateway, app: Gateway.application, rel: Gateway.releases}).then(
+                return $q.all({gw: vm.gateway.applicantGateway, app: vm.gateway.application, rel: vm.gateway.releases}).then(
                     function (values) {
                         vm.application = values.app;
                         vm.releaseType = values.gw.releaseType;
@@ -81,12 +81,12 @@
             submit: function () {
                 var application = vm.application;
 
-                if(vm.release.equals(vm.existingRelease)) {
-                    debugger;
+                if(_.isEqual(vm.release, vm.existingRelease)) {
+                    $log.debug('Existing release was unchanged ... submit complete');
+                    return $q.when(vm.application);
                 }
 
                 debugger;
-                vm.release.releaseText = vm.releaseTypes[vm.releaseType].text;
                 vm.releases[vm.releaseType] = vm.release;
 
                 application.releases = _.values(vm.releases);
@@ -94,13 +94,15 @@
                 if (_.isEmpty(application._id)) {
                     application = new Applications.ByJob(application);
 
-                    application.jobId = Gateway.models.job._id;
+                    application.jobId = vm.gateway.models.job._id;
 
                     return application.$save().then(function (success) {
                         debugger;
                         $log.debug('Created a new Application! %o', success);
 
-                        Gateway.application = success;
+                        vm.gateway.application = success;
+
+                        return success;
                     });
                 }
                 else {
@@ -109,7 +111,9 @@
                     return application.$update().then(function (success) {
                         $log.debug('Updated an existing Application! %o', success);
 
-                        Gateway.application = success;
+                        vm.gateway.application = success;
+
+                        return success;
                     });
                 }
 
@@ -159,7 +163,7 @@
         $q.when(vm.report).then(vm.methods.init);
     }
 
-    ApplicationReleaseFormCtrl.$inject = ['$log', '$q', '$interpolate', 'Gateway', 'Applications'];
+    ApplicationReleaseFormCtrl.$inject = ['$log', '$q', '$interpolate', 'Applications'];
 
     function ApplicationReleaseFormDirective() {
         return {
@@ -167,6 +171,7 @@
             restrict: 'E',
             require: ['^form'],
             scope: {
+                gateway: '=?',
                 text: '=?',
                 methods: '=?',
                 release: '=?model'

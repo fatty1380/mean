@@ -3,39 +3,33 @@
 
     var GatewayService = function (Authentication, Profiles, Drivers, Jobs, Companies, Reports, Applicants, Applications, $state, $log, $q) {
 
-        var Gateway;
+        var Gateway, gatewayInstance;
 
         Gateway = (function () {
-            function Gateway(jobId, user) {
-                this.promises = {};
-                this.models = {};
+            function Gateway() {
 
                 this.initialize = function (job, user) {
 
                     if (this.initialized) {
                         $log.warn('Gateway Service was previously initialized with job `%s`', this.models.job && this.models.job._id);
-                        this.reset();
                     }
+
+                    this.reset();
 
                     if (!!user) {
                         this.user = user;
                     }
                     this.job = job;
+                    this.initialized = true;
 
-                    return $q.when(this.initialized = true);
+                    return $q.when(this);
                 };
 
                 this.reset = function () {
-
                     this.initialized = false;
                     this.models = {};
                     this.promises = {};
-
-                    this.initialized = false;
                 };
-
-                var self = this;
-
 
                 /*************************************************************************
                  *  Object Properties
@@ -72,22 +66,21 @@
                     enumerable: true,
                     get: function () {
                         var _this = this;
-                        if (!_this.promises.user && !!Authentication.user) {
-                            $log.debug('[Gateway] Initializing Load of Driver - Initializing User');
-                            $log.debug('[gw.driver.get] Init User');
-                            _this.user = Authentication.user;
+                        if (!_this.promises.driver) {
+                            _this.promises.driver = $q.defer();
+                            $log.debug('[Gateway] Initializing Load of Driver');
                         }
                         return (_this.promises.driver = _this.promises.driver || $q.defer()).promise;
                     },
                     set: function (val) {
                         var _this = this;
-                        $log.debug('[Gateway] Setting `Driver` to %o', val);
 
                         _this.promises.driver = _this.promises.driver || $q.defer();
                         return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
-                            .then(function (driverResponse) {
-                                _this.models.driver = driverResponse;
-                                _this.promises.driver.resolve(driverResponse);
+                            .then(function (response) {
+                                $log.debug('[Gateway] Resolving `Driver` to %o', response);
+                                _this.models.driver = response;
+                                _this.promises.driver.resolve(response);
                             }
                         );
                     }
@@ -104,14 +97,14 @@
                     },
                     set: function (val) {
                         var _this = this;
-                        $log.debug('[Gateway] Setting `Job` to %o', val);
 
                         _this.promises.job = _this.promises.job || $q.defer();
                         (!!val && _.isString(val) ? Jobs.get(val) : $q.when(val))
-                            .then(function (jobResponse) {
-                                _this.models.job = jobResponse;
-                                _this.promises.job.resolve(jobResponse);
-                                return jobResponse;
+                            .then(function (response) {
+                                $log.debug('[Gateway] Resolving `job` to %o', response);
+                                _this.models.job = response;
+                                _this.promises.job.resolve(response);
+                                return response;
                             })
                             .then(function (job) {
                                 _this.company = job.company;
@@ -135,10 +128,11 @@
 
                         _this.promises.company = _this.promises.company || $q.defer();
                         (!!val && _.isString(val) ? Companies.get(val) : $q.when(val))
-                            .then(function (companyResponse) {
-                                _this.models.company = companyResponse;
-                                _this.promises.company.resolve(companyResponse);
-                                return companyResponse;
+                            .then(function (response) {
+                                $log.debug('[Gateway] Resolving `Company` to %o', response);
+                                _this.models.company = response;
+                                _this.promises.company.resolve(response);
+                                return response;
                             });
                     }
                 });
@@ -161,11 +155,11 @@
 
                         _this.promises.applicantGateway = (_this.promises.applicantGateway || $q.defer());
                         $q.when(val)
-                            .then(function (gatewayResponse) {
-                                $log.debug('[Gateway] Resolving applicantGateway with %o', gatewayResponse);
-                                _this.models.applicantGateway = gatewayResponse;
-                                _this.promises.applicantGateway.resolve(gatewayResponse);
-                                return gatewayResponse;
+                            .then(function (response) {
+                                $log.debug('[Gateway] Resolving applicantGateway with %o', response);
+                                _this.models.applicantGateway = response;
+                                _this.promises.applicantGateway.resolve(response);
+                                return response;
                             })
                             .then(function (gateway) {
                                 var newSku = gateway && gateway.sku || null;
@@ -188,7 +182,7 @@
                         var _this = this;
                         $log.debug('[Gateway] Setting `Report Definition` to %o', val);
 
-                        _this.promises.report = $q.defer();
+                        _this.promises.report = _this.promises.report || $q.defer();
                         if (_this.models.sku !== val) {
                             _this.user
                                 .then(function (userResponse) {
@@ -273,7 +267,7 @@
                         var _this = this;
                         $log.debug('[Gateway] Setting `Application` to %o', val);
 
-                        _this.promises.application = $q.defer();
+                        _this.promises.application = _this.promises.application || $q.defer();
 
                         (!!val && _.isString(val) ? Applications.ById(val) : $q.when(val))
                             .then(function (applicationResponse) {
@@ -303,12 +297,13 @@
                             });
                     }
                 });
-
-                return this.initialize(jobId, user)
-                    .then(function (initialized) {
-                        return self;
-                    });
             }
+
+            gatewayInstance = this;
+
+            Gateway.prototype.getInternalInstance = function() {
+                debugger;
+            };
 
             return Gateway;
         })();
@@ -319,16 +314,17 @@
 
         var loadApplicant = function (model) {
             if (!model.promises.applicant) {
-                $log.debug('[Gateway] Initializing Load of Remote Applicant');
+                $log.debug('[Gateway.loadApplicant] Initializing Load of Remote Applicant');
 
                 model.promises.applicant = $q.defer();
 
                 return model.user
                     .then(function (user) {
+                        $log.debug('[Gateway.loadApplicant] Got User');
                         return Applicants.getByUser(user.id);
                     })
                     .then(function (applicant) {
-                        $log.debug('[Gateway] Resolving Applicant as %o', applicant);
+                        $log.debug('[Gateway.loadApplicant] Resolving Applicant as %o', applicant);
                         model.promises.applicant.resolve(applicant);
                     })
                     .catch(function (err) {
@@ -341,18 +337,32 @@
 
         var loadGateway = function (model) {
             if (!model.promises.applicantGateway) {
+                $log.debug('[Gateway.loadGateway] Initializing Load of Applicant Gateway');
 
                 model.promises.applicantGateway = $q.defer();
 
                 return $q.all({co: model.company, job: model.job}).then(
                     function (values) {
+                        $log.debug('[Gateway.loadGateway] Got company & job');
                         var gw = values.job && values.job.gateway || values.co && values.co.gateway || {};
 
                         return gw;
                     });
             }
-            return $q.reject('Applicant already loading');
+            return $q.reject('Applicant Gateway already loading');
 
+        };
+
+        Object.defineProperty(Gateway, 'getInstance', {
+            enumerable: true,
+            get: function() {
+                debugger;
+                return gatewayInstance;
+            }
+        });
+
+        Gateway.prototype.getExternalInstance = function() {
+            debugger;
         };
 
 
