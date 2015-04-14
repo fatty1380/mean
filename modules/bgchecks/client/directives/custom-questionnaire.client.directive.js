@@ -28,14 +28,15 @@
         };
 
         vm.methods.init = function () {
+            debugger;
 
-            Gateway.user.then(function (user) {
+            vm.gateway.user.then(function (user) {
                 vm.user = user;
             });
-            Gateway.report.then(function (reportResponse) {
+            vm.gateway.report.then(function (reportResponse) {
                 vm.report = reportResponse;
             });
-            Gateway.applicant.then(function (applicantResponse) {
+            vm.gateway.applicant.then(function (applicantResponse) {
                 vm.applicant = applicantResponse;
 
                 if (!!vm.readOnly && _.isEmpty(vm.applicant)) {
@@ -47,7 +48,7 @@
             vm.reportLoad = $q.defer();
             vm.loading = vm.reportLoad.promise;
 
-            $q.all({report: Gateway.report, applicant: Gateway.applicant})
+            $q.all({report: vm.gateway.report, applicant: vm.gateway.applicant})
                 .then(function (result) {
                     debugger;
                     vm.reportLoad.resolve({report: result.report, applicant: result.applicant});
@@ -78,6 +79,9 @@
                     else {
                         $log.debug('SUCCESS! Created new Applicant: %o', response);
                     }
+
+                    debugger; // Is this the right thing to do?
+                    vm.gateway.models.applicant = response;
 
                     vm.success = 'Applicant data has been verified on the server!';
                     vm.error = null;
@@ -118,6 +122,7 @@
                 scope.vm.form = ctrls[0];
             },
             scope: {
+                gateway: '=?',
                 model: '=?',     // Model to save, eg: Applicant
                 report: '=?', // Source of questions, eg: Report Definition
                 methods: '=?'     // Methods for interacting with validation from the parent form

@@ -145,17 +145,21 @@
                     jobId: ''
                 },
                 resolve: {
-                    resolutions: ['Gateway', 'Authentication', '$stateParams', '$q', '$log', function (Gateway, auth, Params, $q, $log) {
+                    gateway: ['Gateway', '$stateParams', function (Gateway, Params) {
+                        return new Gateway().initialize(Params.jobId, Params.userId);
+                    }],
+                    resolutions: ['gateway', 'Authentication', '$stateParams', '$q', '$log', function (gateway, auth, Params, $q, $log) {
 
-                        return new Gateway(Params.jobId)
-                            .then(function (gateway) {
-                                return $q.all({gateway: gateway, company: gateway.company, job: gateway.job});
-                            })
+                        return $q.all({gateway: gateway, company: gateway.company, job: gateway.job})
                             .then(function (result) {
                                 $log.warn('Gateway Initialized with Job `%s` and Company `%s`', result.job.name, result.company.name);
                                 return result;
                             });
+                    }],
+                    user: ['gateway', function (gateway) {
+                        return gateway.user;
                     }]
+
                 }
             }).
 
@@ -174,8 +178,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    driver: ['Gateway', function (Gateway) {
-                        return Gateway.driver;
+                    driver: ['gateway', function (gateway) {
+                        return gateway.driver;
                     }]
                 }
             }).
@@ -187,8 +191,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    driver: ['Gateway', function (Gateway) {
-                        return Gateway.driver;
+                    driver: ['gateway', function (gateway) {
+                        return gateway.driver;
                     }]
                 }
             }).
@@ -200,13 +204,11 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    applicantGateway: ['Gateway', function (Gateway) {
-                        debugger;
-                        return Gateway.applicantGateway;
+                    applicantGateway: ['gateway', function (gateway) {
+                        return gateway.applicantGateway;
                     }],
-                    report: ['Gateway', function (Gateway) {
-                        debugger;
-                        return Gateway.report;
+                    report: ['gateway', function (gateway) {
+                        return gateway.report;
                     }]
                 }
             }).
@@ -221,25 +223,42 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    report: ['Gateway', function (Gateway) {
-                        return Gateway.report;
+                    gateway: ['gateway', function (gateway) {
+                        return gateway;
                     }],
-                    applicant: ['Gateway', function (Gateway) {
-                        return Gateway.applicant;
+                    report: ['gateway', function (gateway) {
+                        return gateway.report.then(function(success) {
+                            console.log('resolved REPORT');
+                            return success;
+                        });
+                    }],
+                    applicant: ['gateway', function (gateway) {
+                        return gateway.applicant.then(function(success) {
+                            console.log('resolved APPLICANT');
+                            return success;
+                        });
+                    }],
+                    applicantGateway: ['gateway', function (gateway) {
+                        debugger;
+                        return gateway.applicantGateway.then(function(success) {
+                            console.log('resolved APPLICANT GATEWAY');
+                            return success;
+                        });
                     }]
                 }
             }).
 
             state('gateway.authorization', {
                 url: '/authorization',
-                template: '<application-release-form model="vm.gw.models.release" methods="vm.subformMethods"></application-release-form>',
+                template: '<application-release-form gateway="vm.gw" model="vm.gw.models.release" methods="vm.subformMethods"></application-release-form>',
                 controller: '',
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    requirements: ['Gateway', '$q', function (gw, $q) {
+                    requirements: ['gateway', '$q', function (gateway, $q) {
+                        var gw = gateway;
                         return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function (result) {
-                            debugger;
+
                         });
                     }]
                 }
@@ -260,8 +279,9 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    applicant: ['Gateway', function (Gateway) {
-                        return Gateway.applicant;
+                    applicant: ['gateway', function (gateway) {
+                        debugger;
+                        return gateway.application;
                     }]
                 }
             });
