@@ -59,22 +59,22 @@
                     function (values) {
                         vm.application = values.app;
                         vm.releaseType = values.gw.releaseType;
-
-                        debugger;
-                        vm.releaseTypes[vm.releaseType].text = $interpolate(vm.releaseTypes[vm.releaseType].text)({vm:vm});
+                        vm.releaseText = $interpolate(vm.releaseTypes[vm.releaseType].text)({vm:vm});
 
                         vm.releases = _.indexBy(_.where(values.rel, function (val) {
-                            return !_.isEmpty(val.releaseType);
-                        }), 'releaseType');
+                            return !_.isEmpty(val && val.releaseType);
+                        }), 'releaseType') || {};
 
+                        var currentRelease = vm.releases[vm.releaseType];
                         // Search for existing Releases of the same type, otherwise create a stub;
-                        vm.existingRelease = _.find(values.rel, {releaseType: vm.releaseType});
-                        vm.release = vm.existingRelease || {
+                        vm.release = currentRelease || {
                             releaseType: vm.releaseType,
                             signature: {},
                             name: {},
-                            releaseText: vm.releaseTypes[vm.releaseType].text
+                            releaseText: vm.releaseText
                         };
+
+                        vm.existingRelease = _.cloneDeep(currentRelease);
                     }
                 );
             },
@@ -86,7 +86,6 @@
                     return $q.when(vm.application);
                 }
 
-                debugger;
                 vm.releases[vm.releaseType] = vm.release;
 
                 application.releases = _.values(vm.releases);
@@ -97,7 +96,6 @@
                     application.jobId = vm.gateway.models.job._id;
 
                     return application.$save().then(function (success) {
-                        debugger;
                         $log.debug('Created a new Application! %o', success);
 
                         vm.gateway.application = success;

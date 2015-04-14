@@ -50,6 +50,7 @@ var RemoteFileSchema = new Schema({
         type: Date,
         default: Date.now
     },
+
     modified: {
         type: Date,
         default: Date.now
@@ -59,6 +60,9 @@ var RemoteFileSchema = new Schema({
 }, {'toJSON': {virtuals: true}});
 
 RemoteFileSchema.pre('save', function (next) {
+    if(this.isNew()) {
+        this.created = Date.now();
+    }
     this.modified = Date.now();
     next();
 });

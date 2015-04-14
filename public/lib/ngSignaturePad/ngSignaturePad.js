@@ -117,7 +117,6 @@ angular.module('ngSignaturePad').directive('signaturePad', [
                 scope.$watch('vm.signature', function(newVal, oldVal, scope) {
 
                     if(newVal.dataUrl !== oldVal.dataUrl) {
-                        debugger;
                         if (scope.vm.signature && !scope.vm.signature.$isEmpty && scope.vm.signature.dataUrl) {
                             signaturePad.fromDataURL(scope.vm.signature.dataUrl);
                         }

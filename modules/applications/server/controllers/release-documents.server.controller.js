@@ -44,30 +44,32 @@ exports.generateDocuments = function (application, user) {
 };
 
 exports.generateDocument = function (release, user) {
-    return exports.saveFileToCloud(release, user, user.driver)
-        .then(function (cloudDoc) {
-            console.log('[ReleaseDocsCtrl] successfully uploaded document to %j', cloudDoc);
+    var savedDoc = exports.saveFileToCloud(release, user, user.driver).
+    then(function (cloudDoc) {
+        console.log('[ReleaseDocsCtrl] successfully uploaded document to %j', cloudDoc);
 
-            debugger;
+        debugger;
 
-            if (_.isEmpty(release.file)) {
-                release.file = {owner: user, sku: release.releaseType, isSecure: true};
-            }
+        if (_.isEmpty(release.file)) {
+            release.file = {owner: user, sku: release.releaseType, isSecure: true};
+        }
 
-            _.extend(release.file, cloudDoc, {expires: moment().add(15, 'm').toDate()});
+        _.extend(release.file, cloudDoc, {expires: moment().add(15, 'm').toDate()});
 
-            console.log('[ReleaseDocsCtrl] Saving Driver');
-            return release.save();
-        }).then(function (releaseResponse) {
-            console.log('[ReleaseDocsCtrl] successfully saved Release! %s', JSON.stringify(releaseResponse, null, 2));
+        console.log('[ReleaseDocsCtrl] Saving Driver');
+        return release.save();
+    }).then(function (releaseResponse) {
+        console.log('[ReleaseDocsCtrl] successfully saved Release! %s', JSON.stringify(releaseResponse, null, 2));
 
-            return releaseResponse;
+        return releaseResponse;
 
-        }).catch(function (error) {
-            console.log('[ReleaseDocsCtrl] Failed to complete Release Save: %s', JSON.stringify(error, null, 2));
+    }).catch(function (error) {
+        console.log('[ReleaseDocsCtrl] Failed to complete Release Save: %s', JSON.stringify(error, null, 2));
 
-            return Q.reject(error);
-        });
+        return Q.reject(error);
+    });
+
+    return savedDoc
 };
 
 exports.runHTMLTest = function (req, res, next) {
@@ -80,7 +82,7 @@ exports.saveFileToCloud = function (release, user, driver) {
 
     var deferred = Q.defer();
 
-    if(!!driver && !_.isString(driver)) {
+    if (!!driver && !_.isString(driver)) {
         deferred.resolve(driver);
     } else {
         user.populate('driver').exec().then(function (newUser) {
@@ -90,7 +92,7 @@ exports.saveFileToCloud = function (release, user, driver) {
         });
     }
 
-    deferred.promise.then(
+    return deferred.promise.then(
         function (driver) {
             var sku = release.releaseType;
 
