@@ -92,7 +92,7 @@
 			// Test expected GET request
 			scope.authentication.user = 'Fred';
             scope.credentials = {};
-            scope.signupType = 'driver';
+            scope.type = 'driver';
 
             $httpBackend.when('POST', '/api/auth/signup').respond(200, 'Fred');
 

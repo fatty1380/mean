@@ -4825,7 +4825,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="modal-body" ng-class="{\'bg-primary\': vm.currentStep === 0}">\n' +
   '\n' +
   '            <section class="row" ng-show="vm.currentStep===0">\n' +
-  '                <user-signup-type ng-form="vm.subForm0" model="vm.credentials.signupType" callback="vm.selectUserType()"></user-signup-type>\n' +
+  '                <user-signup-type ng-form="vm.subForm0" model="vm.credentials.type" callback="vm.selectUserType()"></user-signup-type>\n' +
   '            </section>\n' +
   '\n' +
   '\n' +
@@ -4953,13 +4953,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    <div class="row">\n' +
   '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"\n' +
-  '             ng-show="vm.user.signupType === \'owner\'">\n' +
+  '             ng-show="vm.user.type === \'owner\'">\n' +
   '            <label for="companyName" class="control-label col-xs-12">Business Name</label>\n' +
   '\n' +
   '            <div class="col-xs-12">\n' +
   '                <input type="text" id="companyName" name="companyName" class="form-control"\n' +
   '                       data-ng-model="vm.user.companyName" placeholder="Name of your Business"\n' +
-  '                       ng-required="!!vm.user.signupType && vm.user.signupType === \'owner\'"\n' +
+  '                       ng-required="!!vm.user.type && vm.user.type === \'owner\'"\n' +
   '                       autocapitalize="words">\n' +
   '            </div>\n' +
   '        </div>\n' +
@@ -5054,37 +5054,37 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<script type="text/ng-template" id="signupModal.html">\n' +
   '    <div class="modal-header bg-primary">\n' +
   '\n' +
-  '        <div ng-hide="vm.credentials.signupType" class="container-fluid">\n' +
-  '            <user-signup-type model="vm.credentials.signupType"></user-signup-type>\n' +
+  '        <div ng-hide="vm.credentials.type" class="container-fluid">\n' +
+  '            <user-signup-type model="vm.credentials.type"></user-signup-type>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="hidden-xs" ng-show="vm.credentials.signupType">\n' +
+  '        <div class="hidden-xs" ng-show="vm.credentials.type">\n' +
   '            <span class="modal-title h3 text-center">\n' +
-  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i\n' +
+  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i\n' +
   '                        class="fa fa-arrow-left fa-2x"></i></button>&nbsp;\n' +
-  '                Sign up as {{vm.credentials.signupType == \'owner\' ? \'an\' : \'a\'}} {{vm.credentials.signupType}}\n' +
+  '                Sign up as {{vm.credentials.type == \'owner\' ? \'an\' : \'a\'}} {{vm.credentials.type}}\n' +
   '            </span>\n' +
   '\n' +
   '            <div class="pull-right">\n' +
   '                <button type="button" class="close modal-title"\n' +
-  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.signupType)"><span aria-hidden="true">\n' +
+  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.type)"><span aria-hidden="true">\n' +
   '                    <i class="fa fa-close fa-2x"></i>\n' +
   '                    <span class="sr-only">Close</span></span>\n' +
   '                </button>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="visible-xs" ng-show="vm.credentials.signupType">\n' +
+  '        <div class="visible-xs" ng-show="vm.credentials.type">\n' +
   '            <span class="modal-title h4 text-center">\n' +
-  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i\n' +
+  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i\n' +
   '                        class="fa fa-arrow-left fa-lg"></i></button>&nbsp;\n' +
-  '                {{vm.credentials.signupType | titleCase }} Sign Up\n' +
+  '                {{vm.credentials.type | titleCase }} Sign Up\n' +
   '            </span>\n' +
   '\n' +
   '            <span class="pull-right">\n' +
   '                <button type="button" class="close modal-title"\n' +
-  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.signupType)"><span aria-hidden="true">\n' +
+  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.type)"><span aria-hidden="true">\n' +
   '                    <i class="fa fa-close fa-lg"></i>\n' +
   '                    <span class="sr-only">Close</span></span>\n' +
   '                </button>\n' +
@@ -5096,8 +5096,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <form role="form" data-ng-submit="vm.signup($event)" name="vm.signupForm"\n' +
   '          class="signin oset-form" spellcheck="false" novalidate>\n' +
   '\n' +
-  '        <div class="modal-body" ng-show="vm.credentials.signupType">\n' +
-  '\n' +
+  '        <div class="modal-body" ng-show="vm.credentials.type">\n' +
+  '            <pre>SMC {{vm.credentials | prettyPrint}}</pre>\n' +
   '            <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">\n' +
   '                <em><span>{{vm.extraText || \'Before continuing, please create an account\'}}</span> or <a\n' +
   '                        ng-click="$dismiss(\'login\')" login-modal redirect="vm.srefRedirect">Log in with an existing\n' +
@@ -5113,8 +5113,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="modal-footer" ng-show="vm.credentials.signupType">\n' +
-  '            <button type="submit" class="btn btn-oset-primary" ng-class="{\'disabled\':vm.credentials.terms != \'yes\'}">\n' +
+  '        <div class="modal-footer" ng-show="vm.credentials.type">\n' +
+  '            <button type="submit" class="btn btn-oset-primary" ng-class="{\'disabled\':!vm.credentials.terms}">\n' +
   '                Sign Up!\n' +
   '            </button>\n' +
   '            <div data-ng-show="vm.error" class="text-center text-danger">\n' +
@@ -5156,7 +5156,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
-  '    <input type="hidden" name="signupType" ng-required="true" ng-model="vm.model"/>\n' +
+  '    <input type="hidden" name="type" ng-required="true" ng-model="vm.model"/>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/users/views/templates/user-badge.client.template.html',

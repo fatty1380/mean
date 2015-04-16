@@ -1,5 +1,5 @@
 <section>
-
+  <pre> {{vm.user | prettyPrint}}</pre>
     <div class="row">
         <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 
@@ -31,13 +31,13 @@
 
     <div class="row">
         <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"
-             ng-show="vm.user.signupType === 'owner'">
+             ng-show="vm.user.type === 'owner'">
             <label for="companyName" class="control-label col-xs-12">Business Name</label>
 
             <div class="col-xs-12">
                 <input type="text" id="companyName" name="companyName" class="form-control"
                        data-ng-model="vm.user.companyName" placeholder="Name of your Business"
-                       ng-required="!!vm.user.signupType && vm.user.signupType === 'owner'"
+                       ng-required="!!vm.user.type && vm.user.type === 'owner'"
                        autocapitalize="words">
             </div>
         </div>

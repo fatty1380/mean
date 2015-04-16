@@ -10,7 +10,7 @@
             scope: {
                 signin: '&?',
                 title: '@?',
-                signupType: '@?',
+                type: '@?',
                 srefText: '@?',
                 job: '=?'
             },
@@ -28,7 +28,7 @@
         vm.isOpen = false;
 
         if (angular.isDefined($attrs.job)) {
-            vm.signupType = vm.signupType || 'driver';
+            vm.type = vm.type || 'driver';
         }
 
         vm.show = function () {
@@ -37,8 +37,8 @@
                 controller: 'SignupApplyController',
                 size: 'lg',
                 resolve: {
-                    signupType: function () {
-                        return vm.signupType;
+                    type: function () {
+                        return vm.type;
                     },
                     job: function () {
                         return vm.job;
@@ -62,16 +62,16 @@
         };
     }
 
-    function SignupApplyController($http, $state, $modalInstance, $log, Authentication, signupType, job, $document, Drivers, ApplicationFactory) {
+    function SignupApplyController($http, $state, $modalInstance, $log, Authentication, type, job, $document, Drivers, ApplicationFactory) {
         var vm = this;
 
         vm.auth = Authentication;
         vm.job = job;
         vm.extraText = vm.job && vm.job.text || null;
-        vm.currentStep = !!signupType ? 1 : 0;
+        vm.currentStep = !!type ? 1 : 0;
 
         vm.user = vm.auth.user || {profileImageURL: ''};
-        vm.credentials = {signupType: signupType};
+        vm.credentials = {type: type};
         vm.driver = vm.user.driver || {};
         vm.application = {};
 
@@ -257,7 +257,7 @@
         };
     }
 
-    SignupApplyController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'job', '$document', 'Drivers', 'Applications'];
+    SignupApplyController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'type', 'job', '$document', 'Drivers', 'Applications'];
     SignupApplyModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')

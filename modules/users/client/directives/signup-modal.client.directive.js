@@ -9,7 +9,7 @@
             scope: {
                 signin: '&',
                 title: '@?',
-                signupType: '@?',
+                type: '@?',
                 srefText: '@?',
                 job: '=?'
             },
@@ -38,7 +38,7 @@
                 controller: 'SignupController',
                 size: 'lg',
                 resolve: {
-                    signupType: function() { return vm.signupType; },
+                    type: function() { return vm.type; },
                     srefRedirect: function() { return vm.redirect; }
                 },
                 controllerAs: 'vm',
@@ -59,10 +59,10 @@
         };
     }
 
-    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, srefRedirect, $document) {
+    function SignupController($http, $state, $modalInstance, $log, Authentication, type, srefRedirect, $document) {
         var vm = this;
         vm.auth = Authentication;
-        vm.credentials = { signupType: signupType, terms: '' };
+        vm.credentials = { type: type, terms: '' };
         vm.srefRedirect = srefRedirect;
 
         vm.extraText = vm.srefRedirect && vm.srefRedirect.text  || null;
@@ -101,7 +101,7 @@
         };
     }
 
-    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
+    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'type', 'srefRedirect', '$document'];
     SignupModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')
