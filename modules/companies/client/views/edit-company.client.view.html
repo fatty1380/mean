@@ -31,7 +31,7 @@
                                         <p type="text" data-ng-show="!vm.editName && !vm.editing"
                                               class="h4 static-control" placeholder="Name" required>{{vm.company.name}}</p>
                                         <span class="input-group-btn" ng-if="!!vm.hasTitle"><button type="button" class="btn btn-link" ng-click="vm.editName = !vm.editName">
-                                            <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editing, 'fa-edit':!vm.editing}"></i><span ng-if="!vm.editing">&nbsp;edit</span>
+                                            <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editing || vm.editName, 'fa-edit':!vm.editing && !vm.editName}"></i><span ng-if="!vm.editing && !vm.editName">&nbsp;edit</span>
                                         </button></span>
                                     </div>
                                 </div>
