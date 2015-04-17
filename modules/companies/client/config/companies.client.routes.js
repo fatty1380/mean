@@ -87,12 +87,15 @@
                 url: '/list',
                 templateUrl: '/modules/companies/views/list-companies.client.view.html',
                 parent: 'companies',
-                controller: 'CompaniesController',
+                controller: ['companies', function(companies) {
+                    var vm = this;
+                    vm.companies = companies;
+                }],
                 controllerAs: 'vm',
                 resolve: {
-                    companies: function (rsrc) {
+                    companies: ['Companies', function (rsrc) {
                         return rsrc.ById.query().$promise;
-                    },
+                    }],
                     config: moduleConfigResolve
                 }
             }).

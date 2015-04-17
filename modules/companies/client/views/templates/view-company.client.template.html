@@ -7,7 +7,8 @@
             </div>
             <div class="col-md-4">
                 <small class="list-group-item-text">
-                    <p class="text-right">Added on<span data-ng-bind="vm.company.created | date:'shortDate'"></span></p>
+                    <p class="text-right">Added on <span data-ng-bind="vm.company.created | date:'shortDate'"></span>
+                    </p>
                 </small>
             </div>
         </div>
@@ -15,13 +16,15 @@
         <div class="row">
             <div class="col-md-8 opaque-bg">
                 <span class="nowrap"
-                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ vm.company.about | limitTo : 100 }}</span>
+                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;"
+                      ng-bind-html="vm.company.about | limitTo : 100"></span>
             </div>
-            <div class="col-md-4">
-                <label>Location:
-                    <strong>{{vm.company.zipCode}}</strong>
-                </label>
-            </div>
+            <dl class="col-md-4 dl-horizontal">
+                <dt>Location:</dt>
+                <dd>{{vm.company.zipCode || vm.company.addresses.length && vm.company.addresses[0] || 'n/a'}}&nbsp;</dd>
+                <dt>Owner:</dt>
+                <dd>{{vm.company.owner.displayName}}</dd>
+            </dl>
         </div>
     </div>
 
@@ -31,10 +34,10 @@
                 <span class="h4">
                     About Us
                     <a data-ng-if="vm.canEdit"
-                                            class="btn btn-link pull-right"
-                                            ui-sref="companies.create({'companyId': vm.company._id})">
+                       class="btn btn-link pull-right"
+                       ui-sref="companies.create({'companyId': vm.company._id})">
                         edit company profile
-                    <i class="fa fa-pencil-square-o"></i></a>
+                        <i class="fa fa-pencil-square-o"></i></a>
                 </span>
             </div>
             <div class="panel-body">
