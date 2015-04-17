@@ -68,7 +68,6 @@
         vm.extraText = vm.srefRedirect && vm.srefRedirect.text  || null;
 
         vm.handleRedirect = function(response) {
-            debugger; // check 'is driver'
             if ($state.is('jobs.view') && response.isDriver) {
                 $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
                 $state.go('drivers.home', {newUser: true}, {reload: true});
@@ -80,7 +79,9 @@
             } else {
                 $state.go('home');
             }
+            $modalInstance.close();
         };
+
 
         vm.signup = function(event) {
 

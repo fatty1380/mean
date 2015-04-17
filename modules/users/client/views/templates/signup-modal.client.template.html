@@ -47,7 +47,6 @@
           class="signin oset-form" spellcheck="false" novalidate>
 
         <div class="modal-body" ng-show="vm.credentials.type">
-            <pre>SMC {{vm.credentials | prettyPrint}}</pre>
             <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">
                 <em><span>{{vm.extraText || 'Before continuing, please create an account'}}</span> or <a
                         ng-click="$dismiss('login')" login-modal redirect="vm.srefRedirect">Log in with an existing
