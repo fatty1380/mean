@@ -38,6 +38,26 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-3 control-label" for="name">Legal Entity Name
+                                    <br/>
+                                    <small class="text-muted">the legal entity name of your business</small>
+                                </label>
+
+                                <div class="controls col-sm-8">
+                                    <div ng-class="{'input-group' : !!vm.hasTitle}">
+                                        <input type="text" data-ng-model="vm.company.legalEntityName"  data-ng-show="!!vm.editName || !!vm.editing"
+                                               id="name" class="form-control h5" placeholder="Name" required/>
+                                        <p type="text" data-ng-show="!vm.editName && !vm.editing"
+                                              class="h4 static-control" placeholder="Name" required>{{vm.company.legalEntityName}}</p>
+                                        <span class="input-group-btn" ng-if="!!vm.hasTitle"><button type="button" class="btn btn-link" ng-click="vm.editing = !vm.editing">
+                                            <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editing, 'fa-edit':!vm.editing}"></i><span ng-if="!vm.editing">&nbsp;edit</span>
+                                        </button></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label" for="about">About
                                     <br/>
                                     <small class="text-muted">a short introduction to your business</small>
