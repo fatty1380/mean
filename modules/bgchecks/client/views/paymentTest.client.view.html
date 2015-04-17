@@ -89,6 +89,7 @@
 
                 <div class="container-fluid row" ng-hide="vm.success" class="payment-form"
                      ng-class="{'disabled':vm.processing}">
+
                     <form id="paymentAuthForm" name="vm.paymentAuthForm" method="POST" action="/api/payments/create/">
                         <div class="well col-xs-12 col-md-offset-2 col-md-8">
                             <h4>Payment Information
@@ -113,6 +114,7 @@
 
                         </div>
                     </form>
+
                 </div>
 
                 <div class="container-fluid row" ng-show="vm.error">

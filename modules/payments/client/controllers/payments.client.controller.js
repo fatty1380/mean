@@ -129,12 +129,6 @@
             });
         };
 
-        vm.getPriceString = function (price) {
-            var base = Number(price);
-            var next = base.toFixed(2);
-            return '$' + next;
-        };
-
         vm.setSuccess = function (response) {
             debugger;
             console.log('Holy crap! Response: %o', response);
