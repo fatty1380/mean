@@ -21,6 +21,8 @@
         vm.cancel = cancel;
         vm.submitClass = '';
         vm.editName = false;
+        vm.editGW = false;
+
 
         function activate() {
             if ($state.is('companies.create')) {
