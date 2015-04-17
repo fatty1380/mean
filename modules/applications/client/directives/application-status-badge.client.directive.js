@@ -16,17 +16,18 @@
                 if (!!vm.model) {
 
                     vm.labelText = vm.model.statusCat;
+                    var cnxn = vm.model.connection;
 
                     if (vm.model.isUnreviewed) {
                         vm.labelClass = 'label-primary';
                     } else if (vm.model.isConnected) {
-                        if (vm.model.connection.isValid && vm.model.connection.remainingDays >= 5) {
+                        if (cnxn.isValid && (!cnxn.expires || cnxn.remainingDays >= 5)) {
                             vm.labelClass = 'label-success';
                         }
-                        else if (vm.model.connection.isValid && vm.model.connection.remainingDays < 5) {
+                        else if (cnxn.isValid && (cnxn.expires && cnxn.remainingDays < 5)) {
                             vm.labelClass = 'label-warning';
                             vm.labelText = 'expires-soon';
-                        } else if (!vm.model.connection.isValid) {
+                        } else if (!cnxn.isValid) {
                             vm.labelClass = 'label-danger';
                         }
                     } else if (vm.model.isRejected) {

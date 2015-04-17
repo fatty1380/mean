@@ -22,6 +22,11 @@ var ConnectionSchema = new Schema({
         ref: 'User'
     },
 
+    expires: {
+        type: Boolean,
+        default: false
+    },
+
     validFrom: {
         type: Date,
         default: Date.now
@@ -69,7 +74,7 @@ ConnectionSchema.virtual('remainingDays')
 
 ConnectionSchema.virtual('isExpired')
 .get(function() {
-        return moment(this.validTo).isBefore(moment());
+        return this.expires ? moment(this.validTo).isBefore(moment()) : false;
     });
 
 ConnectionSchema.pre('save', function(next) {
@@ -97,10 +102,10 @@ ConnectionSchema.pre('save', function(next) {
 function checkValidity(cnxn) {
     var now = moment();
 
-    if(!!cnxn.validTo) {
+    if(cnxn.expires && !!cnxn.validTo) {
         return now.isBefore(cnxn.validTo);
     }
-    if(!!cnxn.validFrom && !!cnxn.validForDays) {
+    if(cnxn.expires && !!cnxn.validFrom && !!cnxn.validForDays) {
         var validTo = moment(cnxn.validFrom).add(cnxn.validForDays, 'd');
         return now.isBefore(validTo);
     }
