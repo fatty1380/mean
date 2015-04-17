@@ -70,7 +70,7 @@
                 state('users', {
                     abstract: true,
                     url: '/users',
-                    template: '<div ui-view class="content-section"></div>',
+                    template: '<div ui-view class="content-section container"></div>',
                     parent: 'full-opaque'
                 }).
 
@@ -81,7 +81,18 @@
                 state('users.list', {
                     url: '',
                     templateUrl: '/modules/users/views/list-users.client.view.html',
-                    parent: 'users'
+                    parent: 'users',
+                    controller: ['users', function(users) {
+                        var vm = this;
+                        vm.users = users;
+                    }],
+                    controllerAs: 'vm',
+                    bindToController: true,
+                    resolve: {
+                        users: ['Profiles', function(Profiles) {
+                            return Profiles.query();
+                        }]
+                    }
                 }).
 
             /**

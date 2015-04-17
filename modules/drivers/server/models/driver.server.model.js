@@ -200,7 +200,8 @@ DriverSchema.pre('save', function (next) {
 DriverSchema.pre('init', function (next, data) {
 
     if (!!data.resume && !_.find(data.reportsData, {sku: 'resume'})) {
-        console.log('Migrating Resume to Documents Array in migration');
+        data.reportsData = data.reportsData || [];
+        console.log('Migrating Resume to Documents Array: %j in migration', data.reportsData);
         data.resume.sku = 'resume';
         data.resume.name = 'Resume';
         data.reportsData.push(data.resume);

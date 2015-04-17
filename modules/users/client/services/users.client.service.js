@@ -48,6 +48,9 @@
     function ProfilesService($resource, $q) {
 
         var _data = {
+            query: function(query) {
+                return $resource('api/profiles', {},{}).query(query).$promise;
+            },
             get: function(userId) {
                 return $resource('api/profiles/:userId', {
                     userId: '@userId'
