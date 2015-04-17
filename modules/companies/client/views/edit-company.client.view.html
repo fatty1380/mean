@@ -26,12 +26,12 @@
 
                                 <div class="controls col-sm-8">
                                     <div ng-class="{'input-group' : !!vm.hasTitle}">
-                                        <input type="text" data-ng-model="vm.company.name"  data-ng-show="!!vm.editName && !!vm.editing"
+                                        <input type="text" data-ng-model="vm.company.name"  data-ng-show="!!vm.editName || !!vm.editing"
                                                id="name" class="form-control h5" placeholder="Name" required/>
                                         <p type="text" data-ng-show="!vm.editName && !vm.editing"
                                               class="h4 static-control" placeholder="Name" required>{{vm.company.name}}</p>
-                                        <span class="input-group-btn" ng-if="!!vm.hasTitle"><button type="button" class="btn btn-link" ng-click="vm.editing = !vm.editing; vm.editName = !vm.editName">
-                                            <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editing && !!vm.editName, 'fa-edit':!vm.editing && !vm.editName}"></i><span ng-if="!vm.editing && !vm.editName">&nbsp;edit</span>
+                                        <span class="input-group-btn" ng-if="!!vm.hasTitle"><button type="button" class="btn btn-link" ng-click="vm.editName = !vm.editName">
+                                            <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editing, 'fa-edit':!vm.editing}"></i><span ng-if="!vm.editing">&nbsp;edit</span>
                                         </button></span>
                                     </div>
                                 </div>
@@ -54,17 +54,14 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <span class="h4"><label class="control-label" for="sku">Gateway Information</label></span>
-                            <button type="button" class="btn btn-link" ng-click="vm.editGW = !vm.editGW">
+                            <button type="button" class="btn btn-link pull-right" ng-click="vm.editGW = !vm.editGW">
                                 <i class="fa fa-lg" ng-class="{'fa-close':!!vm.editGW, 'fa-edit':!vm.editGW}"></i><span ng-if="!vm.editGW">&nbsp;edit</span>
                             </button>
                         </div>
                         <div class="panel-body">
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="sku">Gateway SKU
-                                    <br/>
-                                    <small class="text-muted">the unique identifier of your job application</small>
-                                </label>
+                                <label class="col-sm-3 control-label" for="sku">Gateway SKU</label>
 
                                 <div class="controls col-sm-8">
                                     <div ng-class="{'input-group' : !!vm.hasTitle}">
@@ -77,21 +74,18 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="required">Required
-                                    <br/>
-                                    <small class="text-muted">is this Gateway required?</small>
-                                </label>
+                                <label class="col-sm-3 control-label" for="required">Required</label>
 
                                 <div class="controls col-sm-8">
-                                    <input type="checkbox" data-ng-model="vm.company.gateway.required" id="required"> <label for="required">Yes</label>
+                                    <div class="btn-group">
+                                        <label class="btn btn-oset-secondary" ng-model="vm.company.gateway.required" btn-radio="true">Yes</label>
+                                        <label class="btn btn-oset-secondary" ng-model="vm.company.gateway.required" btn-radio="false">No</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="payment">Gateway Payment
-                                    <br/>
-                                    <small class="text-muted">the form of payment</small>
-                                </label>
+                                <label class="col-sm-3 control-label" for="payment">Gateway Payment</label>
 
                                 <div class="controls col-sm-8">
                                     <div ng-class="{'input-group' : !!vm.hasTitle}">
@@ -103,10 +97,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="name">Gateway Release Type
-                                    <br/>
-                                    <small class="text-muted">the release type of your job application</small>
-                                </label>
+                                <label class="col-sm-3 control-label" for="name">Gateway Release Type</label>
 
                                 <div class="controls col-sm-8">
                                     <div ng-class="{'input-group' : !!vm.hasTitle}">
