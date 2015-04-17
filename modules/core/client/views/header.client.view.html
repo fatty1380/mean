@@ -107,8 +107,8 @@
                     <li data-ng-repeat="item in menu.items | orderBy: 'position'"
                         data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.type"
                         data-ng-class="{active: $state.includes(item.state)}" class="{{item.class}}"
-                        dropdown="item.type === 'dropdown'">
-                        <a ng-switch-when="dropdown" class="dropdown-toggle">
+                        ng-attr-dropdown="item.type === 'dropdown'">
+                        <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
                             <span data-ng-bind-html="item.title"></span>
                             <b class="caret"></b>
                         </a>
