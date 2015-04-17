@@ -9,7 +9,7 @@
             scope: {
                 signin: '&',
                 title: '@?',
-                signupType: '@?',
+                type: '@?',
                 srefText: '@?',
                 job: '=?'
             },
@@ -38,7 +38,7 @@
                 controller: 'SignupController',
                 size: 'lg',
                 resolve: {
-                    signupType: function() { return vm.signupType; },
+                    type: function() { return vm.type; },
                     srefRedirect: function() { return vm.redirect; }
                 },
                 controllerAs: 'vm',
@@ -59,16 +59,15 @@
         };
     }
 
-    function SignupController($http, $state, $modalInstance, $log, Authentication, signupType, srefRedirect, $document) {
+    function SignupController($http, $state, $modalInstance, $log, Authentication, type, srefRedirect, $document) {
         var vm = this;
         vm.auth = Authentication;
-        vm.credentials = { signupType: signupType, terms: '' };
+        vm.credentials = { type: type, terms: '' };
         vm.srefRedirect = srefRedirect;
 
         vm.extraText = vm.srefRedirect && vm.srefRedirect.text  || null;
 
         vm.handleRedirect = function(response) {
-            debugger; // check 'is driver'
             if ($state.is('jobs.view') && response.isDriver) {
                 $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
                 $state.go('drivers.home', {newUser: true}, {reload: true});
@@ -80,7 +79,9 @@
             } else {
                 $state.go('home');
             }
+            $modalInstance.close();
         };
+
 
         vm.signup = function(event) {
 
@@ -101,7 +102,7 @@
         };
     }
 
-    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'signupType', 'srefRedirect', '$document'];
+    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'type', 'srefRedirect', '$document'];
     SignupModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')

@@ -7,7 +7,7 @@
         // This provides Authentication context.
         vm.authentication = Authentication;
 
-        vm.signupType = $state.is('intro.driver') ? 'driver' : 'owner';
+        vm.type = $state.is('intro.driver') ? 'driver' : 'owner';
 
         vm.textBase = {
             driver: {
@@ -138,7 +138,7 @@
             }
         };
 
-        vm.text = vm.textBase[vm.signupType];
+        vm.text = vm.textBase[vm.type];
 
         vm.videoURL = vm.text.subhero.videoURL; //= $sce.trustAsResourceUrl(vm.text.subhero.videoURL + '?controls=0&rel=0&showinfo=0&autohide=1&modestbranding=1');
 
