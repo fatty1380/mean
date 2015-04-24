@@ -34,6 +34,8 @@
                 }
             }
 
+            debugger;
+
             if (!!vm.companyId && !!vm.driverId) {
                 $log.warn('[%s] Both company and driver specified, defaulting to company', 'JobListController');
             }
@@ -45,12 +47,8 @@
                 vm.filter.company = {'_id': vm.companyId};
                 vm.myJobsOnly = true;
 
-                vm.jobs = Jobs.ByCompany.query({
-                    companyId: vm.companyId
-                });
-            } else if (!!vm.driverId) {
-                vm.jobs = Jobs.ByUser.query({
-                    userId: vm.driverId
+                vm.jobs = Jobs.ById.query({
+                    company: vm.companyId
                 });
             } else {
                 vm.jobs = [];
@@ -202,7 +200,6 @@
             scope: {
                 header: '@?',
                 companyId: '@?',
-                driverId: '@?',
                 srcJobs: '=?',
                 showPost: '=?',
                 limitTo: '=?',

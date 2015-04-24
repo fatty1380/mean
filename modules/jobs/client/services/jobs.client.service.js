@@ -3,55 +3,34 @@
 
 //Jobs service used to communicate Jobs REST endpoints
     function JobsService($resource, $q) {
+
+        var jobRsrc = $resource('api/jobs/:id', {
+            id: '@_id'
+        }, {
+            update: {
+                method: 'PUT'
+            }
+        });
+
         return {
-            ById: $resource('api/jobs/:jobId', {
-                jobId: '@_id'
-            }, {
-                update: {
-                    method: 'PUT'
-                }
-            }),
+
+            ById: jobRsrc,
             ByUser: $resource('api/users/:userId/jobs', {
                 userId: '@userId'
             }),
-            ByCompany: $resource('api/companies/:companyId/jobs', {
-                companyId: '@companyId'
-            }),
+            list: function(query) {
+                return jobRsrc.query(query).$promise;
+            },
             get: function (jobId) {
-                var rsrc = $resource('api/jobs/:id', {
-                    id: '@id'
-                });
-
-                return rsrc.get({id: jobId}).$promise;
+                return jobRsrc.get({id: jobId}).$promise;
             },
             listByCompany: function (query) {
+                // Maintain this method because it populates the applications
                 var rsrc = $resource('/api/companies/:companyId/jobs/applications', {
                     companyId: '@companyId'
-                }, {
-                    query: {
-                        method: 'GET',
-                        isArray: true
-                    }
-                });
+                }, {});
 
                 return rsrc.query(query).$promise;
-            },
-            getApplication: function (jobId, userId) {
-                if(!jobId || !userId) {
-                    return $q.reject('Missing jobId or userId');
-                }
-
-                var RSRC = $resource('api/jobs/:jobId/applications/:userId', {
-                        jobId: 'job._id',
-                        userId: 'user._id'
-                    },
-                    {
-                        update: {
-                            method: 'PUT'
-                        }
-                    });
-
-                return RSRC.get({jobId: jobId, userId: userId}).$promise;
             }
 
         };

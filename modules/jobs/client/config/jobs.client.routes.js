@@ -5,14 +5,13 @@
         return AppConfig.getModuleConfig(auth.user.type, 'jobs');
     }
 
-    function companyResolve(rsrc, params, auth, $q) {
+    function companyResolve(Companies, params, auth, $q) {
         var promise;
 
         if (!!params.companyId) {
-            var val = params.companyId;
-            console.log('Searching for company ID: %s', val);
+            console.log('Searching for company ID: %s', params.companyId);
 
-            promise = rsrc.ById.get({
+            promise = Companies.ById.get({
                 companyId: val
             }).$promise;
         } else if (!!params.jobId) {
@@ -20,12 +19,12 @@
             return null;
         } else if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
-            promise = rsrc.ByUser.get({
+            promise = Companies.ByUser.get({
                 userId: params.userId
             }).$promise;
         } else if (auth.user.type === 'owner') {
             console.log('Searching for company data for logged in user');
-            promise = rsrc.ByUser.get({
+            promise = Companies.ByUser.get({
                 userId: auth.user._id
             }).$promise;
         } else {
@@ -42,43 +41,46 @@
         });
     }
 
-    function jobResolve(rsrc, params) {
+    function jobResolve(Jobs, params) {
         var val = params.jobId;
         console.log('Searching for job ID: %s', val);
 
-        return !!val ? rsrc.ById.get({
+        return !!val ? Jobs.ById.get({
             jobId: val
         }).$promise : null;
     }
 
-    function listUserResolve(rsrc, params, auth, $q) {
-        var promise;
+    function listUserResolve(Jobs, params, auth, $q) {
+        var promise, p2;
+
+        debugger;
 
         if (auth.user && auth.user.type === 'owner') {
-            promise = rsrc.ByUser.query({
-                userId: auth.user._id,
-                companyId: params.companyId
+            promise = Jobs.ById.query({
+                user: auth.user._id,
+                company: params.companyId
             }).$promise;
         } else if (auth.user) {
-            promise = rsrc.ByUser.query({
+            promise = Jobs.ByUser.query({
                 userId: auth.user._id
             }).$promise;
         } else {
             return [];
         }
 
-        return promise.catch(function (err) {
+        return promise
+            .catch(function (err) {
             // recover here if err is 404
             if (err.status === 404) {
-                return null;
+                return [];
             } //returning recovery
             // otherwise return a $q.reject
             return $q.reject(err);
         });
     }
 
-    function listAllResolve(rsrc) {
-        return rsrc.ById.query().$promise;
+    function listAllResolve(Jobs) {
+        return Jobs.ById.query().$promise;
     }
 
     function config($stateProvider) {

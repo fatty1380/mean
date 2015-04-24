@@ -139,9 +139,6 @@
                 templateUrl: '/modules/applications/views/gateway-form.client.view.html',
                 controller: 'ApplicationGatewayController',
                 controllerAs: 'vm',
-                data: {
-                    formData: {}
-                },
                 params: {
                     jobId: ''
                 },

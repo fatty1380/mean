@@ -23,7 +23,7 @@ exports.executeQuery = function (req, res, next) {
     console.log('[JobCtrl] ExecuteQuery');
 
     var query = req.query || {};
-    var sort = req.sort || '';
+    var sort = req.sort || '-posted';
     var populate = [
         {property: 'user', fields: 'displayName'},
         {property: 'company', fields: null}
@@ -235,13 +235,6 @@ exports.delete = function (req, res) {
             res.json(job);
         }
     });
-};
-
-
-exports.queryAll = function (req, res, next) {
-    req.sort = '-posted';
-
-    next();
 };
 
 /** * List of a user's posted jobs

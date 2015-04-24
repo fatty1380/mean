@@ -88,7 +88,7 @@ var applicantFactory = function ($resource) {
                 isArray: false
             }
         }),
-        FromForm: function(formData, userId) {
+        FromForm: function(data, userId) {
             var Applicant = $resource('/api/users/:userId/driver/applicant', {
                 userId: '@userId',
                 reportSource: '@reportSource'
@@ -100,7 +100,7 @@ var applicantFactory = function ($resource) {
                 }
             });
 
-            return new Applicant({userId: userId, reportSource: formData});
+            return new Applicant({userId: userId, reportSource: data});
         },
         ListAll: function (query) {
             var retVal = $resource('/api/reports/applicants');

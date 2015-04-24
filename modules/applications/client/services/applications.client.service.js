@@ -33,9 +33,6 @@
             }, {
                 update: {
                     method: 'PUT'
-                },
-                save: {
-                    method: 'POST'
                 }
             }),
             setStatus: function (id, status) {

@@ -28,11 +28,6 @@ module.exports = function (app) {
         .get(applications.queryByJobID) // ,
         .post(users.requiresLogin, applications.create);
 
-    app.route('/api/jobs/:jobId/applications/:userId')
-        .get(applications.getByJobId, applications.read)
-        .post(users.requiresLogin, applications.hasAuthorization, applications.create)
-        .put(users.requiresLogin, applications.hasAuthorization, applications.update);
-
     app.route('/api/jobs/:jobId/applications/questions')
         .get(applications.getQuestions);
 
