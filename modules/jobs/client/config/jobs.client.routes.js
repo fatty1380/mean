@@ -46,7 +46,7 @@
         console.log('Searching for job ID: %s', val);
 
         return !!val ? Jobs.ById.get({
-            jobId: val
+            id: val
         }).$promise : null;
     }
 
