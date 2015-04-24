@@ -88,6 +88,12 @@ var log = {
     },
     fatal: function(message, color) {
         Log('fatal', arguments);
+    },
+
+    // TODO: Fix this temporary workaround - or decide that it's best
+    child: function(opts) {
+        return logger.child(opts);
     }
 }
+
 module.exports = log;
