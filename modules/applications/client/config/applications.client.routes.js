@@ -44,7 +44,8 @@
             companyId: auth.user.company
         };
 
-        return jobs.listByCompany(query).catch(function (err) {
+        return jobs.listByCompany(query)
+            .catch(function (err) {
             if (err.status === 404) {
                 return [];
             }
@@ -155,6 +156,9 @@
                                 $log.warn('Gateway Initialized with Job `%s` and Company `%s`', result.job.name, result.company.name);
                                 return result;
                             });
+                    }],
+                    application: ['gateway', '$q', '$timeout', function (gateway, $q, $timeout) {
+                        return $q.all([gateway.application, $timeout(function() { return $q.when(null); }, 1000)]);
                     }],
                     user: ['gateway', function (gateway) {
                         return gateway.user;
@@ -279,8 +283,7 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    applicant: ['gateway', function (gateway) {
-                        debugger;
+                    application: ['gateway', function (gateway) {
                         return gateway.application;
                     }]
                 }

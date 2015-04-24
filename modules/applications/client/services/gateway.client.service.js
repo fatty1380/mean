@@ -236,12 +236,20 @@
                             _this.promises.application = $q.defer();
                             $q.all({job: _this.job, user: _this.user})
                                 .then(function (values) {
-                                    Jobs.getApplication(values.job._id, values.user._id)
+                                    Applications.ById.query({job: values.job._id, user: values.user._id}).$promise
                                         .then(function (applicationResponse) {
                                             $log.debug('[Gateway] Loaded Application');
-                                            _this.models.application = applicationResponse;
+                                            _this.models.application = _.first(applicationResponse);
 
                                             _this.promises.application.resolve(_this.models.application);
+
+                                            return _this.driver;
+                                        })
+                                        .then(function (driver) {
+                                            debugger;
+                                            if (_.isEmpty(_this.models.application.introduction)) {
+                                                _this.models.application.introduction = driver.about;
+                                            }
                                         })
                                         .catch(function (err) {
                                             $log.debug('[Gateway] Failed to load Application', err);
@@ -301,10 +309,6 @@
 
             gatewayInstance = this;
 
-            Gateway.prototype.getInternalInstance = function() {
-                debugger;
-            };
-
             return Gateway;
         })();
 
@@ -355,16 +359,11 @@
 
         Object.defineProperty(Gateway, 'getInstance', {
             enumerable: true,
-            get: function() {
+            get: function () {
                 debugger;
                 return gatewayInstance;
             }
         });
-
-        Gateway.prototype.getExternalInstance = function() {
-            debugger;
-        };
-
 
         return Gateway;
     };

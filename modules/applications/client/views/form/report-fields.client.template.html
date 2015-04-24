@@ -1,11 +1,3 @@
 <section class="workflow-stage-form" ng-form="vm.reportForm">
-
-    <accordion ng-if="vm.debug">
-        <accordion-group ng-repeat="key in ['report', 'applicant']"
-                         heading="Report-Fields View Model [{{key}}]">
-            <pre>{{vm.formData[key] | prettyPrint}}</pre>
-        </accordion-group>
-    </accordion>
-
-    <oset-custom-question-form class="form-horizontal" gateway="vm.gw" model="vm.formData.applicant" report="vm.formData.report" methods="vm.subformMethods"></oset-custom-question-form>
+    <oset-custom-question-form class="form-horizontal" gateway="vm.gw" model="vm.gw.models.applicant" report="vm.gw.models.report" methods="vm.subformMethods"></oset-custom-question-form>
 </section>

@@ -4,18 +4,8 @@
     function ApplicationGatewayController(auth, Applications, $state, gateway, $log, $q, $document, toastr) {
         var vm = this;
 
-        vm.debug = true;
+        vm.debug = false;
         vm.gw = gateway;
-
-        Object.defineProperty(vm, 'formData', {
-            enumerable: true,
-            get: function () {
-                if (_.isEmpty($state.current.data.formData)) {
-                    $state.current.data.formData = vm.gw.models;
-                }
-                return $state.current.data.formData;
-            }
-        });
 
         Object.defineProperty(vm, 'subformMethods', {
             enumerable: true,
@@ -59,21 +49,35 @@
         function initialize() {
             debugger;
 
-            vm.gw.applicantGateway.then(function(gw) {
+            vm.gw.applicantGateway.then(function (gw) {
                 vm.gatewayReportsEnabled = (!!gw && !!gw.sku);
                 vm.gatewayReleaseEnabled = (!!gw && !!gw.releaseType);
+                vm.enableFinalCheckbox = false;
 
-                var activeSteps = _.where(vm.steps, function(step) {
+                var activeSteps = _.where(vm.steps, function (step) {
                     return _.isFunction(step.active) ? !!step.active() : !!step.active;
                 });
                 $log.debug('%d total steps, %d active steps', vm.steps.length, activeSteps.length);
 
-                _.each(activeSteps, function(step) {
+                _.each(activeSteps, function (step) {
                     vm.activeSteps.push(step);
                 });
 
                 vm.currentIndex = _.findIndex(vm.activeSteps, {'state': $state.current.name});
                 vm.currentStep = _.find(vm.activeSteps, {'state': $state.current.name});
+
+
+                debugger;
+                if(!_.isEmpty(vm.gw.models.application) && !vm.gw.models.application.isDraft) {
+                    debugger;
+                    $log.info('this job has already been applied to');
+                    toastr.info('You have already applied to this job', {extendedTimeOut: 5000});
+
+                    vm.currentIndex = _.findIndex(vm.activeSteps, {'state': 'gateway.complete'});
+                    vm.currentStep = _.find(vm.activeSteps, {'state': 'gateway.complete'});
+
+                    $state.go('gateway.complete');
+                }
             });
         }
 
@@ -125,45 +129,51 @@
         };
 
         vm.goNext = function () {
-            if (vm.currentIndex < vm.activeSteps.length - 1) {
-                debugger;
 
-                vm.subformMethods.validate().then(
-                    function (success) {
-                        $log.debug('successfully validated form for step %s', vm.currentStep.state);
+            vm.subformMethods.validate().then(
+                function (success) {
+                    $log.debug('successfully validated form for step %s', vm.currentStep.state);
 
-                        return vm.subformMethods.submit();
-                    }
-                ).then(
-                    function (success) {
-                        $log.debug('successfully submitted form for step #%d', vm.currentIndex);
+                    return vm.subformMethods.submit();
+                }
+            ).then(
+                function (success) {
+                    $log.debug('successfully submitted form for step #%d', vm.currentIndex);
 
-                        return $q.when(success);
-                    }
-                ).then(
-                    function (success) {
+                    return $q.when(success);
+                }
+            ).then(
+                function (success) {
+
+                    if (vm.currentIndex < vm.activeSteps.length - 1) {
                         vm.resetSubformMethods();
                         vm.routeToState(1);
-                    }
-                ).catch(
-                    function (err) {
-                        $log.warn('Unable to continue to next step due to %o', err);
-
-                        vm.error = _.isString(err) && err || err && err.data && err.data.message || err && err.message || 'Unable to process the previous action.';
-
-                        toastr.error(vm.error || err, {extendedTimeOut: 5000});
-                    }
-                ).finally(
-                    function () {
                         vm.error = vm.success = null;
-                        $document.scrollTopAnimated(0, 300);
+                    } else {
+                        vm.setComplete();
                     }
-                );
-            }
+                }
+            ).catch(
+                function (err) {
+                    $log.warn('Unable to continue to next step due to %o', err);
+
+                    vm.error = _.isString(err) && err || err && err.data && err.data.message || err && err.message || 'Unable to process the previous action.';
+
+                    toastr.error(vm.error || err, {extendedTimeOut: 5000});
+                }
+            ).finally(
+                function () {
+                    $document.scrollTopAnimated(0, 300);
+                }
+            );
+        };
+
+        vm.setComplete = function() {
+            toastr.info('Completed Application!');
         };
 
         vm.submitApplication = function () {
-            if (!vm.gw.models.application.termsAccepted) {
+            if (!!vm.enableFinalCheckbox && !vm.gw.models.application.termsAccepted) {
                 toastr.error('You must accept the terms before submitting your application', {extendedTimeOut: 5000});
                 return;
             }
@@ -174,28 +184,37 @@
 
                         application = _.extend(application, {
                             status: 'submitted',
-                            agreement: vm.gw.models.application.termsAccepted,
-                            jobId: vm.gw.models.job._id,
-                            introduction: vm.gw.models.driver.about
+                            agreement: vm.gw.models.application.agreement,
+                            jobId: vm.gw.models.job._id
                         });
 
-                        var upsertMethod, params;
+                        if(_.isEmpty(application.introduction) && !_.isEmpty(vm.gw.models.driver.about)) {
+                            application.introduction = vm.gw.models.driver.about;
+                        }
+
+                        var upsertMethod, upsertPromise, params;
 
                         if (_.isEmpty(application._id)) {
                             upsertMethod = (new Applications.ByJob(application)).$save;
                             params = {jobId: application.jobId};
+
+                            upsertPromise = upsertMethod(params);
                         }
-                        else {
+                        else if (_.isFunction(application.$update)) {
+                            upsertPromise = application.$update();
+                        } else {
                             upsertMethod = (new Applications.ById(application)).$update;
                             params = {id: application._id};
+
+                            upsertPromise = upsertMethod(params);
                         }
 
                         // Redirect after save
-                        return upsertMethod(params)
+                        return upsertPromise
                             .then(function (success) {
                                 $log.debug('Successfully created an application: %o', success);
 
-                                vm.gw.application = success;
+                                _.extend(vm.gw.models.application, success);
 
                                 vm.success = 'Application Submission Successful!';
                             });
