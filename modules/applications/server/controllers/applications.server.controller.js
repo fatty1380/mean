@@ -95,7 +95,8 @@ exports.create = function (req, res) {
             application.job = req.job;
             application.company = (!!req.job) ? req.job.company : null;
 
-            log.debug('create.docsSaved', 'Creating new application: %j', application);
+            log.info('create.docsSaved', 'Creating new application', {user: application.user.id, job: application.job.id});
+            log.trace('create.docsSaved', 'Creating new application', {application: application});
 
             application.save(function (err) {
                 if (err) {
@@ -104,9 +105,10 @@ exports.create = function (req, res) {
                         message: errorHandler.getErrorMessage(err)
                     });
                 } else {
+                    log.info('create.postSave', 'New Application save successfully!', {user: application.user.id, job: application.job.id});
+                    log.trace('create.postSave', 'New Application save successfully!', {application: application});
 
-                    log.info('create.postSave', 'New Application created ... saving to job', {applicationId: application._id});
-                    log.trace('create.postSave', 'New Application created ... saving to job', {application: application});
+                    log.trace('create.postSave', 'Saving application to the existing Job', {application: application.id, job: application.job.id});
 
                     req.job.applications.push(application);
                     req.job.save(function (err) {

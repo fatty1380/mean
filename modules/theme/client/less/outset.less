@@ -1003,7 +1003,7 @@ footer.navbar {
 
 .has-error {
   input.ng-invalid::before {
-    content: "\f05d";
+    content : "\f05d";
   }
 }
 
@@ -1821,7 +1821,7 @@ div, .btn, a, .btn-cta {
 }
 
 .tab-body {
-  border-top  : 2px solid @color;
+  border-top : 2px solid @color;
 
   .tab-body-item {
     padding-top : 10px;
@@ -1829,9 +1829,9 @@ div, .btn, a, .btn-cta {
 }
 
 .list-controls {
-  padding: 10px 0;
-  border-bottom  : 2px solid @color;
-  background-color: lighten(@color, 36%);
+  padding          : 10px 0;
+  border-bottom    : 2px solid @color;
+  background-color : lighten(@color, 36%);
 }
 
 .bg-primary {
@@ -1976,25 +1976,25 @@ form.applicant-form {
 .ng-submitted {
   .form-paper .form-control {
     &.ng-invalid {
-      border-color: @state-danger-border;
-      border-bottom-style: solid;
+      border-color        : @state-danger-border;
+      border-bottom-style : solid;
     }
   }
 }
 
 .form-paper {
   .form-control, img {
-    border-top-style: none;
-    border-left-style: none;
-    border-right-style: none;
-    border-radius: 0;
-    border-bottom-style: dotted;
-    border-bottom-width: 1px;
+    border-top-style    : none;
+    border-left-style   : none;
+    border-right-style  : none;
+    border-radius       : 0;
+    border-bottom-style : dotted;
+    border-bottom-width : 1px;
   }
 
   .form-group {
     .form-control {
-      margin: 0;
+      margin : 0;
     }
   }
 }
@@ -2074,10 +2074,10 @@ a {
 }
 
 .fluidvids.mid-vert iframe {
-  top: 50%;
-  transform: translateY(-50%);
-  -webkit-transform: translateY(-25%);
-  -ms-transform: translateY(-50%);
+  top               : 50%;
+  transform         : translateY(-50%);
+  -webkit-transform : translateY(-25%);
+  -ms-transform     : translateY(-50%);
 }
 
 .pdf-container {
@@ -2197,67 +2197,74 @@ pdf {
   }
 }
 
-.oset-heading.row {
-  padding-bottom: 10px;
-
-  div[class*=col-] {
-    border-bottom: 1px solid @divider;
-    margin-bottom : 10px;
+.oset-heading {
+  h3::after {
+    left        : 25%;
+    z-index     : 1;
+    width       : 50%;
+    height      : 2px;
+    content     : " ";
+    bottom      : -5px;
+    margin-left : -5px;
+    text-align  : center;
+    position    : absolute;
+    background  : @color;
   }
+  margin-bottom : 30px;
 }
 
 .workflow-item {
-  text-align: center;
-  display: inline-block;
-  width: 10%;
+  text-align : center;
+  display    : inline-block;
+  width      : 10%;
 
   .step-badge {
 
     .fa.badge-bg {
-      color: white!important;
+      color : white !important;
     }
 
     .fa {
-      color: @outset-blue;
+      color : @outset-blue;
     }
 
     &.active {
       span.step-index {
-        color: white;
+        color : white;
       }
     }
   }
 
   .connector {
-    width: 100%;
-    position: relative;
-    top: 35px;
-    border-bottom: 10px solid @outset-blue;
+    width         : 100%;
+    position      : relative;
+    top           : 35px;
+    border-bottom : 10px solid @outset-blue;
 
     &.first {
-      width: 50%;
-      right: 0;
-      margin-right: 0;
-      margin-left: auto;
+      width        : 50%;
+      right        : 0;
+      margin-right : 0;
+      margin-left  : auto;
     }
     &.last {
-      width: 50%;
-      left: 0;
+      width : 50%;
+      left  : 0;
     }
   }
 }
 
 .label-list .label {
-  display: inline-block;
+  display : inline-block;
 }
 
 .inline-item {
   .inline-label, .inline-content {
-    margin-bottom: 2px;
+    margin-bottom : 2px;
   }
   .inline-label {
-    font-weight: bold;
-    text-align: right;
+    font-weight : bold;
+    text-align  : right;
   }
 
   .inline-content {
