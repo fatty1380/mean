@@ -69,7 +69,7 @@ exports.generateDocument = function (release, user) {
         return Q.reject(error);
     });
 
-    return savedDoc
+    return savedDoc;
 };
 
 exports.runHTMLTest = function (req, res, next) {

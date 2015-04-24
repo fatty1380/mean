@@ -162,7 +162,7 @@
 
                         var timeout = $timeout(function() {
                             deferred.resolve('timeout');
-                        }, 500);
+                        }, 250);
 
                         gateway.application.then(function(app) {
                             debugger;
@@ -172,7 +172,7 @@
                             deferred.resolve(app);
                         });
 
-                        return deferred.promise
+                        return deferred.promise;
                     }],
                     user: ['gateway', function (gateway) {
                     }]
