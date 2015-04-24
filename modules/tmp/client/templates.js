@@ -218,46 +218,91 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/applications/views/form/complete.client.template.html',
   '<section class="workflow-stage-form">\n' +
   '\n' +
-  '    <div class="row" ng-hide="!!vm.success">\n' +
-  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
-  '            <p class="text-center">\n' +
-  '                Your application is now ready to submit to {{vm.gw.models.company.name}}. Review the information below,\n' +
-  '                and click \'Submit\' below when ready submit your application.\n' +
-  '            </p>\n' +
+  '    <section ng-if="vm.gw.models.application.isDraft" ng-hide="!!vm.success">\n' +
+  '        <div class="controls col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <div class="text-center text-muted" ng-show="!vm.gw.models.application.introduction">\n' +
+  '                Please introduce yourself to the employer here\n' +
+  '            </div>\n' +
+  '                    <textarea os-html-edit minimal type="text" data-ng-model="vm.gw.models.application.introduction"\n' +
+  '                              name="message" id="message" class="editor-md" ng-required="true"></textarea>\n' +
   '        </div>\n' +
-  '    </div>\n' +
   '\n' +
-  '    <div class="row" ng-hide="!!vm.success">\n' +
-  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 well">\n' +
-  '            <p class="text-center">\n' +
+  '        <div class="row" ng-hide="!!vm.success">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '                <p class="text-center">\n' +
+  '                    Your application is now ready to submit to {{vm.gw.models.company.name}}. Review the information\n' +
+  '                    below,\n' +
+  '                    and click \'Submit\' below when ready submit your application.\n' +
+  '                </p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row" ng-hide="!!vm.success">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 well text-center">\n' +
   '                By submitting this application, you agree to the\n' +
   '                <tos>Outset terms and conditions</tos>\n' +
   '                , as well as those governing the pre-employment check process.\n' +
-  '            </p>\n' +
   '\n' +
-  '            <div class="checkbox text-center">\n' +
-  '                <label class="panel" style="padding: 10px 20px 10px 40px"\n' +
-  '                       ng-class="{\'panel-success\':!!vm.gw.models.application.termsAccepted, \'panel-danger\':!vm.gw.models.application.termsAccepted}">\n' +
-  '                    <input type="checkbox" data-ng-model="vm.gw.models.application.termsAccepted" data-ng-required="true"\n' +
-  '                           name="disclaimer"/> I Agree\n' +
-  '                </label>\n' +
+  '                <div ng-if="vm.enableFinalCheckbox" class="checkbox text-center">\n' +
+  '                    <label class="panel" style="padding: 10px 20px 10px 40px"\n' +
+  '                           ng-class="{\'panel-success\':!!vm.gw.models.application.agreement, \'panel-danger\':!vm.gw.models.application.agreement}">\n' +
+  '                        <input type="checkbox" data-ng-model="vm.gw.models.application.agreement"\n' +
+  '                               data-ng-required="true"\n' +
+  '                               name="disclaimer"/> I Agree\n' +
+  '                    </label>\n' +
+  '                </div>\n' +
+  '\n' +
   '            </div>\n' +
   '        </div>\n' +
-  '    </div>\n' +
   '\n' +
   '\n' +
-  '    <div class="row" ng-show="!!vm.success">\n' +
-  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
-  '            <h3 class="alert alert-success text-center" role="alert">\n' +
-  '                <b>Success!</b> {{vm.success}}\n' +
-  '            </h3>\n' +
-  '            <p class="text-center">\n' +
-  '                <button type="button" class="btn btn-oset-primary" ui-sref="applications.view">View Applications</button>\n' +
-  '                <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>\n' +
-  '                <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Jobs</button>\n' +
-  '            </p>\n' +
+  '    </section>\n' +
+  '\n' +
+  '    <section ng-show="!!vm.success">\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '                <h3 class="text-center">\n' +
+  '                    <span class="label label-success">Success!</span>\n' +
+  '                </h3>\n' +
+  '\n' +
+  '                <p class="info mgn-top">\n' +
+  '                    Congratulations, you have applied to a position with {{vm.gw.models.company.name}}. You can now look at your\n' +
+  '                    active job applications, browse job listings, or return to your profile home.\n' +
+  '                </p>\n' +
+  '\n' +
+  '                <p class="text-center">\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="applications.view">View Applications\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Job Listings</button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>\n' +
+  '                </p>\n' +
+  '            </div>\n' +
   '        </div>\n' +
-  '    </div>\n' +
+  '    </section>\n' +
+  '\n' +
+  '    <section ng-show="!vm.success && !vm.gw.models.application.isDraft">\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '                <h3 class="text-center">\n' +
+  '                    Current Application Status: <os-application-status-badge model="vm.gw.models.application"></os-application-status-badge>\n' +
+  '                </h3>\n' +
+  '\n' +
+  '                <p class="info mgn-top">\n' +
+  '                    Congratulations, you have successfully submitted your application for a position with\n' +
+  '                    {{vm.gw.models.company.name}}. You can now look at your active job applications, browse\n' +
+  '                    job listings, or return to your profile home page.\n' +
+  '                </p>\n' +
+  '\n' +
+  '                <p class="text-center">\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="applications.list">Active Applications</button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Job Listings</button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>\n' +
+  '                </p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </section>\n' +
   '\n' +
   '</section>\n' +
   '');
@@ -268,13 +313,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <div class="col-sm-6">\n' +
   '            <div class="text-center control-label">Profile Picture</div>\n' +
-  '            <os-picture-uploader model="vm.formData.user" mode="user"\n' +
+  '            <os-picture-uploader model="vm.gw.models.user" mode="user"\n' +
   '                                 auto-crop="true" allow-blank="true"\n' +
   '                                 title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
   '        </div>\n' +
   '        <div class="col-sm-6">\n' +
   '            <oset-file-upload mode="resume" allow-blank="true" model-path="resume"\n' +
-  '                              model="vm.formData.driver"\n' +
+  '                              model="vm.gw.models.driver"\n' +
   '                              title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -305,15 +350,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/applications/views/form/report-fields.client.template.html',
   '<section class="workflow-stage-form" ng-form="vm.reportForm">\n' +
-  '\n' +
-  '    <accordion ng-if="vm.debug">\n' +
-  '        <accordion-group ng-repeat="key in [\'report\', \'applicant\']"\n' +
-  '                         heading="Report-Fields View Model [{{key}}]">\n' +
-  '            <pre>{{vm.formData[key] | prettyPrint}}</pre>\n' +
-  '        </accordion-group>\n' +
-  '    </accordion>\n' +
-  '\n' +
-  '    <oset-custom-question-form class="form-horizontal" gateway="vm.gw" model="vm.formData.applicant" report="vm.formData.report" methods="vm.subformMethods"></oset-custom-question-form>\n' +
+  '    <oset-custom-question-form class="form-horizontal" gateway="vm.gw" model="vm.gw.models.applicant" report="vm.gw.models.report" methods="vm.subformMethods"></oset-custom-question-form>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/form/reports.client.template.html',
@@ -348,7 +385,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/applications/views/form/user-info.client.template.html',
   '<section class="workflow-stage-form">\n' +
-  '    <user-signup-form ng-form="vm.subForm1" model="vm.formData.user" methods="vm.subformMethods"></user-signup-form>\n' +
+  '    <user-signup-form ng-form="vm.subForm1" model="vm.gw.models.user" methods="vm.subformMethods"></user-signup-form>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/templates/applicant-details.client.template.html',
@@ -932,10 +969,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <h4 class="stronger">\n' +
   '                    {{vm.Applications.getMaskedDisplayName(vm.application)}}\n' +
   '                    <br class="hidden-lg hidden-md">\n' +
-  '                                    <span class="pull-right">\n' +
-  '                                        <small>Status:</small>\n' +
-  '                                        <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
-  '                                    </span>\n' +
+  '                    <span class="pull-right">\n' +
+  '                        <small>Status:</small>\n' +
+  '                        <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
+  '                    </span>\n' +
   '                </h4>\n' +
   '            </div>\n' +
   '        </div>\n' +
@@ -1602,7 +1639,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '            <div class="col-md-4">\n' +
   '                <small class="list-group-item-text">\n' +
-  '                    <p class="text-right">Added on<span data-ng-bind="vm.company.created | date:\'shortDate\'"></span></p>\n' +
+  '                    <p class="text-right">Added on <span data-ng-bind="vm.company.created | date:\'shortDate\'"></span>\n' +
+  '                    </p>\n' +
   '                </small>\n' +
   '            </div>\n' +
   '        </div>\n' +
@@ -1610,13 +1648,15 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="row">\n' +
   '            <div class="col-md-8 opaque-bg">\n' +
   '                <span class="nowrap"\n' +
-  '                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ vm.company.about | limitTo : 100 }}</span>\n' +
+  '                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;"\n' +
+  '                      ng-bind-html="vm.company.about | limitTo : 100"></span>\n' +
   '            </div>\n' +
-  '            <div class="col-md-4">\n' +
-  '                <label>Location:\n' +
-  '                    <strong>{{vm.company.zipCode}}</strong>\n' +
-  '                </label>\n' +
-  '            </div>\n' +
+  '            <dl class="col-md-4 dl-horizontal">\n' +
+  '                <dt>Location:</dt>\n' +
+  '                <dd>{{vm.company.zipCode || vm.company.addresses.length && vm.company.addresses[0] || \'n/a\'}}&nbsp;</dd>\n' +
+  '                <dt>Owner:</dt>\n' +
+  '                <dd>{{vm.company.owner.displayName}}</dd>\n' +
+  '            </dl>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '\n' +
@@ -1626,10 +1666,10 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <span class="h4">\n' +
   '                    About Us\n' +
   '                    <a data-ng-if="vm.canEdit"\n' +
-  '                                            class="btn btn-link pull-right"\n' +
-  '                                            ui-sref="companies.create({\'companyId\': vm.company._id})">\n' +
+  '                       class="btn btn-link pull-right"\n' +
+  '                       ui-sref="companies.create({\'companyId\': vm.company._id})">\n' +
   '                        edit company profile\n' +
-  '                    <i class="fa fa-pencil-square-o"></i></a>\n' +
+  '                        <i class="fa fa-pencil-square-o"></i></a>\n' +
   '                </span>\n' +
   '            </div>\n' +
   '            <div class="panel-body">\n' +
@@ -4921,7 +4961,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/users/views/templates/signup-form.client.template.html',
   '<section>\n' +
-  '\n' +
   '    <div class="row">\n' +
   '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
   '\n' +
@@ -5097,7 +5136,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '          class="signin oset-form" spellcheck="false" novalidate>\n' +
   '\n' +
   '        <div class="modal-body" ng-show="vm.credentials.type">\n' +
-  '            <pre>SMC {{vm.credentials | prettyPrint}}</pre>\n' +
   '            <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">\n' +
   '                <em><span>{{vm.extraText || \'Before continuing, please create an account\'}}</span> or <a\n' +
   '                        ng-click="$dismiss(\'login\')" login-modal redirect="vm.srefRedirect">Log in with an existing\n' +
@@ -5106,8 +5144,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '            <div class="row">\n' +
   '            <div class="col-sm-12">\n' +
-  '                <user-signup-form model="vm.credentials" methods="vm.signupFormMethods">\n' +
-  '                </user-signup-form>\n' +
+  '                <user-signup-form model="vm.credentials" methods="vm.signupFormMethods"></user-signup-form>\n' +
   '            </div>\n' +
   '            </div>\n' +
   '\n' +
