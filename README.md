@@ -1,5 +1,3 @@
-![Logo_Transparent.png](https://bitbucket.org/repo/nGq9xa/images/2135453670-Logo_Transparent.png)
-
 # Outset!
 Outset is built on the "MEAN" stack, using the MEAN.JS project as a base.
 
@@ -62,3 +60,5 @@ $ grunt | bunyan -o short
 
 
 ## Happy Coding! and remember to Build Awesome every day! ##
+
+![Logo_Transparent.png](https://bitbucket.org/repo/nGq9xa/images/2135453670-Logo_Transparent.png)
