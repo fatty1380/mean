@@ -238,6 +238,10 @@
                                 .then(function (values) {
                                     Applications.ById.query({job: values.job._id, user: values.user._id}).$promise
                                         .then(function (applicationResponse) {
+                                            if(_.isEmpty(applicationResponse)) {
+                                                return $q.reject('No existing application');
+                                            }
+
                                             $log.debug('[Gateway] Loaded Application');
                                             _this.models.application = _.first(applicationResponse);
 
@@ -246,7 +250,6 @@
                                             return _this.driver;
                                         })
                                         .then(function (driver) {
-                                            debugger;
                                             if (_.isEmpty(_this.models.application.introduction)) {
                                                 _this.models.application.introduction = driver.about;
                                             }
@@ -254,8 +257,13 @@
                                         .catch(function (err) {
                                             $log.debug('[Gateway] Failed to load Application', err);
                                             _this.models.application = {
-                                                releases: []
+                                                releases: [],
+                                                isDraft: true
                                             };
+
+                                            _this.driver.then(function(driver) {
+                                                _this.models.application.introduction = driver.about;
+                                            });
 
                                             _this.job.then(function (jobResponse) {
                                                 _this.models.application.jobId = jobResponse._id;

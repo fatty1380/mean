@@ -47,7 +47,6 @@
         vm.activeSteps = [];
 
         function initialize() {
-            debugger;
 
             vm.gw.applicantGateway.then(function (gw) {
                 vm.gatewayReportsEnabled = (!!gw && !!gw.sku);
@@ -168,7 +167,7 @@
             );
         };
 
-        vm.setComplete = function() {
+        vm.setComplete = function () {
             toastr.info('Completed Application!');
         };
 
@@ -188,17 +187,13 @@
                             jobId: vm.gw.models.job._id
                         });
 
-                        if(_.isEmpty(application.introduction) && !_.isEmpty(vm.gw.models.driver.about)) {
-                            application.introduction = vm.gw.models.driver.about;
-                        }
-
                         var upsertMethod, upsertPromise, params;
 
                         if (_.isEmpty(application._id)) {
-                            upsertMethod = (new Applications.ByJob(application)).$save;
-                            params = {jobId: application.jobId};
+                            debugger;
+                            var app = new Applications.ByJob(application);
 
-                            upsertPromise = upsertMethod(params);
+                            upsertPromise = app.$save();
                         }
                         else if (_.isFunction(application.$update)) {
                             upsertPromise = application.$update();
