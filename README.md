@@ -61,4 +61,4 @@ $ grunt | bunyan -o short
 ```
 
 
-                             ## Happy Coding! and remember to Build Awesome every day! ##
+## Happy Coding! and remember to Build Awesome every day! ##
