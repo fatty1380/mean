@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-Q            = require('Q'),
+Q            = require('q'),
 path         = require('path'),
 Application  = mongoose.model('Application'),
 Release      = mongoose.model('Release'),
