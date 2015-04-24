@@ -13,6 +13,8 @@
             controller: function () {
                 var vm = this;
 
+                vm.labelClass = 'label-default';
+
                 if (!!vm.model) {
 
                     vm.labelText = vm.model.statusCat;
@@ -40,7 +42,6 @@
                 }
                 else {
                     vm.labelText = 'view now';
-                    vm.labelClass = 'label-default';
                 }
             },
             controllerAs: 'vm',
