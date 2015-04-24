@@ -18,7 +18,10 @@
 
                     if (!!user) {
                         this.user = user;
+                    } else {
+                        this.user = Authentication.user;
                     }
+                    
                     this.job = job;
                     this.initialized = true;
 

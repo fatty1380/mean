@@ -157,10 +157,24 @@
                             });
                     }],
                     application: ['gateway', '$q', '$timeout', function (gateway, $q, $timeout) {
-                        return $q.all([gateway.application, $timeout(function() { return $q.when(null); }, 1000)]);
+
+                        var deferred = $q.defer();
+
+                        var timeout = $timeout(function() {
+                            deferred.resolve('timeout');
+                        }, 500);
+
+                        gateway.application.then(function(app) {
+                            debugger;
+                            //timeout.cancel();
+                            $timeout.cancel(timeout);
+
+                            deferred.resolve(app);
+                        });
+
+                        return deferred.promise
                     }],
                     user: ['gateway', function (gateway) {
-                        return gateway.user;
                     }]
 
                 }
