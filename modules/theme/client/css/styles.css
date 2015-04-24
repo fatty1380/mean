@@ -3956,15 +3956,11 @@ img.user-profile-picture {
   background-size: cover;
 }
 .image-break.phx {
-  background: url('/modules/core/img/phx_skyline.png') no-repeat center center fixed;
-  background-size: 100%;
-}
-.image-break.map {
-  background: url('/modules/core/img/watercolor.png') no-repeat center center fixed;
+  background: url('/modules/core/img/intro/phx_bg.jpg') no-repeat center center fixed;
   background-size: 100%;
 }
 .image-break.west-map {
-  background: url('/modules/core/img/intro/western-map.png') no-repeat center center fixed;
+  background: url('/modules/core/img/intro/western-map.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -3978,7 +3974,7 @@ img.user-profile-picture {
 }
 .bg-slider-wrapper {
   width: 100%;
-  background: #f6f6f6 url('/modules/core/img/home-country-road.png') no-repeat fixed;
+  background: #f6f6f6 url('/modules/core/img/intro/home-country-road.jpg') no-repeat fixed;
   background-position-x: center;
   background-position-y: 75%;
   -webkit-background-size: cover;
