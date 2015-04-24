@@ -1,4 +1,4 @@
-![Outset-Logo_01.png](https://bitbucket.org/repo/nGq9xa/images/787263697-Outset-Logo_01.png)
+![Logo_Transparent.png](https://bitbucket.org/repo/nGq9xa/images/2135453670-Logo_Transparent.png)
 
 # Outset!
 Outset is built on the "MEAN" stack, using the MEAN.JS project as a base.
