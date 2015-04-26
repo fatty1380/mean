@@ -3,12 +3,13 @@
 /**
  * Module dependencies.
  */
-var should   = require('should'),
-    mongoose = require('mongoose'),
-    User     = mongoose.model('User'),
-    Driver   = mongoose.model('Driver'),
-    Company  = mongoose.model('Company'),
-    _        = require('lodash');
+var should = require('should'),
+mongoose   = require('mongoose'),
+User       = mongoose.model('User'),
+Driver     = mongoose.model('Driver'),
+Company    = mongoose.model('Company'),
+_          = require('lodash'),
+Q          = require('q');
 
 /**
  * Globals
@@ -113,7 +114,8 @@ describe('User Model Unit Tests:', function () {
 
                 driver.save(function (err) {
                     should.not.exist(err);
-                    driver.user.equals(user._id).should.be.true;
+
+                    driver.user.equals(user).should.be.true;
 
                     user.driver = driver;
 
@@ -121,7 +123,7 @@ describe('User Model Unit Tests:', function () {
                         should.not.exist(err);
                         should.exist(dbUser);
 
-                        user.driver.equals(driver._id).should.be.true;
+                        user.driver.equals(driver).should.be.true;
 
                         done();
                     });
@@ -135,7 +137,7 @@ describe('User Model Unit Tests:', function () {
 
                 company.save(function (err) {
                     should.not.exist(err);
-                    company.owner.equals(user._id).should.be.ok;
+                    company.owner.equals(user).should.be.true;
 
                     user.company = company;
 
@@ -143,7 +145,7 @@ describe('User Model Unit Tests:', function () {
                         should.not.exist(err);
                         should.exist(dbUser);
 
-                        user.company.equals(company._id).should.be.ok;
+                        user.company.equals(company).should.be.true;
 
                         done();
                     });
@@ -151,8 +153,64 @@ describe('User Model Unit Tests:', function () {
             });
         });
 
-        it('should allow both a driver and company profile to exist');
-        it('should be able to save an address to this user');
+        it('should allow both a driver and company profile to exist', function (done) {
+            var company, driver;
+
+            user.save()
+                .then(function (user) {
+                    company = new Company({owner: user, name: 'My Super Company, llc.'});
+                    driver = new Driver({user: user});
+
+                    return Q.all({company: company.save(), driver: driver.save()});
+                },done)
+                .then(function (result) {
+
+                    company.owner.equals(user).should.be.true;
+                    driver.user.equals(user).should.be.true;
+
+                    user.company = company;
+                    user.driver = driver;
+
+                    return user.save();
+
+                },done)
+                .then(function (user) {
+                    should.exist(user);
+
+                    user.company.equals(company).should.be.true;
+                    user.driver.equals(driver).should.be.true;
+                })
+                .then(done);
+        });
+
+        it('should be able to save an address to this user', function (done) {
+            var address = {
+                streetAddresses: ['123 Fake Street'],
+                city: 'Anywhere',
+                state: 'MN',
+                zipCode: '90210'
+            };
+
+            user.addresses.push(address);
+
+            user.save()
+                .then(function (user) {
+                    user.should.have.property('addresses').with.lengthOf(1);
+
+                    var newAddr = user.addresses[0];
+
+                    newAddr.should.have.property('streetAddresses').with.lengthOf(1);
+                    newAddr.should.have.property('city', address.city);
+                    newAddr.should.have.property('state', address.state);
+                    newAddr.should.have.property('zipCode', address.zipCode);
+                },
+                function (err) {
+                    should.not.exist(err);
+                })
+                .then(function () {
+                    done();
+                });
+        });
         it('should be able to save multiple addresses');
         it('should be able to mark a single address as the primary address');
     });
@@ -182,7 +240,7 @@ describe('User Model Unit Tests:', function () {
                     done();
                 });
             });
-        })
+        });
     });
 
     describe('Method remove', function () {
@@ -198,4 +256,5 @@ describe('User Model Unit Tests:', function () {
 
         done();
     });
-});
+})
+;
