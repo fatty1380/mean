@@ -67,8 +67,8 @@ describe.skip('Bgcheck Model Unit Tests:', function () {
                 should.not.exist(err);
 
                 done();
-            })
-        })
+            });
+        });
     });
 
     afterEach(function (done) {

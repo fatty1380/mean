@@ -20,8 +20,12 @@
             }
 
             return _.compact(_.map(form, function (value, key, collection) {
-                if (key.substring(0, 1) === '$') return;
-                if (value instanceof form.constructor) return value;
+                if (key.substring(0, 1) === '$') {
+                    return;
+                }
+                if (value instanceof form.constructor) {
+                    return value;
+                }
             }));
 
         };
@@ -155,7 +159,9 @@
             return true;
         };
 
-        vm.methods.init && vm.methods.init();
+        if(_.isFunction(vm.methods.init)) {
+            vm.methods.init();
+        }
     }
 
     DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Drivers', 'Authentication'];

@@ -6,5 +6,6 @@
     "by": true,
     "browser": true,
     "element": true
-  }
+  },
+  "expr": true
 }
