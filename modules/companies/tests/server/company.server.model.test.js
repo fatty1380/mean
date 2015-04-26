@@ -27,7 +27,7 @@ describe('Company Model Unit Tests:', function() {
 			password: 'password'
 		});
 
-		user.save(function() { 
+		user.save(function() {
 			company = new Company({
 				name: 'Company Name',
 				user: user
@@ -54,6 +54,27 @@ describe('Company Model Unit Tests:', function() {
 			});
 		});
 	});
+
+    describe('Gateway Functionality', function() {
+        it('should save a default gateway with the expected settings', function(done) {
+            return company.save(function(err) {
+                should.not.exist(err);
+
+                company.should.have.property('gateway');
+
+                console.log('COMPANY GATEWAY: %j', company.gateway);
+
+                (company.gateway === null).should.not.be.true;
+
+                company.gateway.should.have.property('sku');
+                company.gateway.should.have.property('required', false);
+                company.gateway.should.have.property('payment', 'applicant');
+                company.gateway.should.have.property('releaseType');
+
+                done();
+            });
+        });
+    });
 
 	afterEach(function(done) { 
 		Company.remove().exec();

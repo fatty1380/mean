@@ -73,24 +73,31 @@ var CompanySchema = new Schema({
     },
 
     gateway: {
-        sku: {
-            type: String,
-            default: null // 'OUTSET_MVR'
-        },
-        required: {
-            type: Boolean,
-            default: false
-        },
-        payment: {
-            type: String,
-            enum: ['applicant', 'company', 'mixed', ''],
-            default: 'applicant' //'company'
-        },
-        releaseType: {
-            type: String,
-            default: null//'preEmployment'
-        }
+        type: Schema.ObjectId,
+        ref: 'Gateway',
+        default: mongoose.model('Gateway')
+        //default: null
     },
+
+    //gateway: {
+    //    sku: {
+    //        type: String,
+    //        default: null // 'OUTSET_MVR'
+    //    },
+    //    required: {
+    //        type: Boolean,
+    //        default: false
+    //    },
+    //    payment: {
+    //        type: String,
+    //        enum: ['applicant', 'company', 'mixed', ''],
+    //        default: 'applicant' //'company'
+    //    },
+    //    releaseType: {
+    //        type: String,
+    //        default: null//'preEmployment'
+    //    }
+    //},
 
     created: {
         type: Date,
