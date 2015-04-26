@@ -4,6 +4,8 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+_            = require('lodash'),
+Q            = require('q'),
 Address      = mongoose.model('Address'),
 Company      = mongoose.model('Company'),
 Schema       = mongoose.Schema;
@@ -48,7 +50,7 @@ var JobSchema = new Schema({
         default: ''
     },
 
-    location: ['Address'],
+    location: [Address],
 
     payRate: {
         min: {
@@ -120,6 +122,18 @@ var JobSchema = new Schema({
 
 JobSchema.pre('save', function (next) {
     this.modified = Date.now();
+    next();
+});
+
+// This migrates non-AddressSchema documents into Addresses
+// TODO: Determine why we need to assign to _this._doc, not data
+JobSchema.pre('init', function (next, data) {
+    var _this = this;
+
+     _this._doc.location = _.map(data.location, function (location) {
+        return (location instanceof Address) ? location : new Address(location);
+    });
+
     next();
 });
 

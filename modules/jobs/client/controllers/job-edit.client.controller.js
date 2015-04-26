@@ -39,8 +39,6 @@
         vm.types = ['main', 'home', 'business', 'billing', 'other'];
         vm.pageTitle = 'Edit Job';
 
-        activate();
-
         function activate() {
             if ($state.is('jobs.create')) {
                 vm.pageTitle = 'Post new job';
@@ -57,42 +55,7 @@
                 }
 
                 if (!vm.company.subscription || !vm.company.subscription.isValid) {
-                    var modalInstance = $modal.open({
-                        templateUrl: 'invalidSubscription.html',
-                        controller: ['$state', '$modalInstance', 'statusMessage',
-                            function ($state, $modalInstance, statusMessage) {
-                                var vm = this;
-
-                                vm.statusMessage = statusMessage;
-
-                                vm.gotoPlans = function () {
-                                    $state.go('subscriptionsReview');
-                                    $modalInstance.close('subscriptions');
-                                };
-
-                                vm.cancel = function () {
-                                    $state.go('home');
-                                    $modalInstance.close('home');
-                                };
-                            }],
-                        backdrop: true,
-                        backdropClass: 'shadow',
-                        controllerAs: 'vm',
-                        size: 'lg',
-                        keyboard: false,
-                        resolve: {
-                            statusMessage: function () {
-                                return vm.invalidSubscription;
-                            }
-                        }
-                    });
-
-                    modalInstance.result.then(function (message) {
-                        $log.info('Modal accepted with message: %s', message);
-                    }, function () {
-                        $log.info('Modal dismissed at: ' + new Date());
-                        $state.go('home');
-                    });
+                    openSubscriptionModal();
                 }
 
                 vm.job = {
@@ -115,6 +78,45 @@
                     vm.job.location.push(defaultAddress);
                 }
             }
+        }
+
+        function openSubscriptionModal() {
+            var modalInstance = $modal.open({
+                templateUrl: 'invalidSubscription.html',
+                controller: ['$state', '$modalInstance', 'statusMessage',
+                    function ($state, $modalInstance, statusMessage) {
+                        var vm = this;
+
+                        vm.statusMessage = statusMessage;
+
+                        vm.gotoPlans = function () {
+                            $state.go('subscriptionsReview');
+                            $modalInstance.close('subscriptions');
+                        };
+
+                        vm.cancel = function () {
+                            $state.go('home');
+                            $modalInstance.close('home');
+                        };
+                    }],
+                backdrop: true,
+                backdropClass: 'shadow',
+                controllerAs: 'vm',
+                size: 'lg',
+                keyboard: false,
+                resolve: {
+                    statusMessage: function () {
+                        return vm.invalidSubscription;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (message) {
+                $log.info('Modal accepted with message: %s', message);
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+                $state.go('home');
+            });
         }
 
         // Method Implementations
@@ -203,6 +205,8 @@
                 vm.disabled=false;
             });
         }
+
+        activate();
     }
 
 

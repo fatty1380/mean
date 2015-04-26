@@ -291,12 +291,14 @@ exports.jobByID = function (req, res, next, id) {
         .populate('company')
         .exec(function (err, job) {
             if (err) {
-                log.error('JobById', 'Error: %j', err);
+                log.error('JobById', 'Error while loading job', {error: err});
                 return next(err);
             }
 
             if (!!req.user && !!req.user.driver) {
-                log.debug('JobById', 'Both User and Driver are defined in the request!', {user: req.user, driver: req.user.driver});
+                log.debug('JobById', 'Requesting User has Driver defined!', {user: req.user, driver: req.user.driver});
+            } else if (!!req.user && !!req.user.company) {
+                log.debug('JobById', 'Requesting User has Company defined!', {user: req.user, company: req.user.company});
             }
 
             log.debug('JobById', 'Returning job', {jobId: !!job && job._id});

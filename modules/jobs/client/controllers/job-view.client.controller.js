@@ -2,7 +2,7 @@
     'use strict';
 
     // Jobs controller
-    function JobViewController($stateParams, $state, $log, Authentication, job) {
+    function JobViewController($stateParams, $state, $log, Authentication, job, applications) {
 
         var vm = this;
 
@@ -12,6 +12,7 @@
         vm.enableEdit = false;
 
         vm.job = job;
+        vm.applications = applications;
         vm.company = job && typeof job.company === 'object' && job.company || undefined;
 
         activate();
@@ -58,7 +59,7 @@
     }
 
 
-    JobViewController.$inject = ['$stateParams', '$state', '$log', 'Authentication','job'];
+    JobViewController.$inject = ['$stateParams', '$state', '$log', 'Authentication','job', 'applications'];
 
     angular.module('jobs')
         .controller('JobViewController', JobViewController);

@@ -12,7 +12,7 @@
             console.log('Searching for company ID: %s', params.companyId);
 
             promise = Companies.ById.get({
-                companyId: val
+                companyId: params.companyId
             }).$promise;
         } else if (!!params.jobId) {
             console.log('Not resolving company - find it in the job');
@@ -49,6 +49,12 @@
             id: val
         }).$promise : null;
     }
+
+    function getApplications(job, Applications) {
+        return Applications.ById.query({job: job._id}).$promise;
+    }
+
+    getApplications.$inject = ['job', 'Applications'];
 
     function listUserResolve(Jobs, params, auth, $q) {
         var promise, p2;
@@ -149,7 +155,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    job: jobResolve
+                    job: jobResolve,
+                    applications: getApplications
                 },
                 parent: 'jobs'
             }).

@@ -21,7 +21,8 @@ var user, owner, company, job;
  */
 describe('Job Model Unit Tests:', function () {
     beforeEach(function (done) {
-        var userPrimative = {
+
+        user = new User({
             firstName: 'Full',
             lastName: 'Name',
             email: 'test@test.com',
@@ -29,18 +30,43 @@ describe('Job Model Unit Tests:', function () {
             password: 'password',
             provider: 'local',
             type: 'driver'
-        };
-
-        user = new User(userPrimative);
-        owner = new User(_.extend(_.clone(userPrimative, true), {firstName: 'Joe', lastName: 'Owner', type: 'owner'}));
-
-        company = new Company({
-            owner: owner,
-            name: 'My Company Name',
-            type: 'owner'
         });
 
-        Q.all([user.save(), owner.save(), company.save()]).done(function (result) {
+        user.save()
+            .then(function (user) {
+                console.log('Saved User');
+
+                owner = new User({
+                    firstName: 'Joe',
+                    lastName: 'Owner',
+                    email: 'test@test.com',
+                    username: 'ownername',
+                    password: 'password',
+                    provider: 'local',
+                    type: 'owner'
+                });
+
+                return owner.save();
+            })
+            .then(function (owner) {
+                console.log('saved Owner');
+
+                company = new Company({
+                    owner: owner,
+                    name: 'My Company Name',
+                    type: 'owner'
+                });
+
+                return company.save();
+            })
+            .then(function (company) {
+                console.log('saved company');
+
+                return;
+            })
+            .then(function () {
+                console.log('initing job');
+
                 job = new Job({
                     user: owner,
                     company: company,
@@ -49,7 +75,8 @@ describe('Job Model Unit Tests:', function () {
                 });
 
                 done();
-        });
+            })
+            .end();
     });
 
     describe('Method Save', function () {
@@ -73,6 +100,7 @@ describe('Job Model Unit Tests:', function () {
     afterEach(function (done) {
         Job.remove().exec();
         User.remove().exec();
+        Company.remove().exec();
 
         done();
     });

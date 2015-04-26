@@ -52,18 +52,24 @@
             <div class="panel-heading">
                 <div class="btn-group" role="group" aria-label="...">
                     <button type="button" ng-class="{active : dm.showSection('description', true)}"
-                            ng-click=" dm.setDisplay( 'description') " class="btn btn-link "><span class="h4">Description</span>
+                            ng-click=" dm.setDisplay( 'description') " class="btn btn-link "
+                            ng-show="!!dm.job.description">
+                        <span class="h4">Description</span>
                     </button>
                     <button type="button" ng-class="{active : dm.showSection('requirements', true)}"
-                            ng-click="dm.setDisplay( 'requirements') " class="btn btn-link "><span class="h4">Requirements</span>
+                            ng-click="dm.setDisplay( 'requirements') " class="btn btn-link "
+                            ng-class="{'disabled': !dm.job.requirements}">
+                        <span class="h4">Requirements</span>
                     </button>
                     <button type="button" ng-class="{active : dm.showSection('location', true)}"
-                            ng-click="dm.setDisplay( 'location') " class="btn btn-link "><span
-                            class="h4">Location</span>
+                            ng-click="dm.setDisplay( 'location') " class="btn btn-link "
+                            ng-class="{'disabled' : !dm.job.location[0] || dm.job.location[0].empty}">
+                        <span class="h4">Location</span>
                     </button>
                     <button type="button" ng-class="{active : dm.showSection('about', true)}"
-                            ng-click="dm.setDisplay( 'about') " class="btn btn-link "><span
-                            class="h4">About</span>
+                            ng-click="dm.setDisplay( 'about') " class="btn btn-link "
+                            ng-show="!!dm.job.company.about">
+                        <span class="h4">About</span>
                     </button>
                 </div>
 
@@ -89,7 +95,7 @@
                 </div>
             </div>
 
-            <div ng-show="dm.showSection( 'requirements') ">
+            <div ng-show="dm.showSection( 'requirements') && !!dm.job.requirements">
                 <div class="panel-heading" ng-show="dm.showSection('all')"><span class="h4">Requirements</span></div>
                 <div class="panel-body ">
                     <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>
@@ -97,12 +103,14 @@
                 </div>
             </div>
 
-            <div ng-show="dm.showSection( 'location') ">
+            <pre>{{dm.job.location}}</pre>
+
+            <div ng-show="dm.showSection('location')">
                 <div class="panel-heading" ng-show="dm.showSection('all')"><span class="h4">Location</span></div>
                 <div class="panel-body ">
-                    <os-address model="dm.job.location[0]" data-ng-show="dm.job.location[0]"
+                    <os-address model="dm.job.location[0]" data-ng-show="!dm.job.location[0].empty"
                                 enable-edit="false"></os-address>
-                    <div class="text-center" data-ng-hide="dm.job.location[0]">No Location Available</div>
+                    <div class="text-center" data-ng-hide="!dm.job.location[0].empty">No Location Available</div>
                     <hr/>
                 </div>
             </div>

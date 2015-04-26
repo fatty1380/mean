@@ -15,39 +15,55 @@
         <!--Right-Hand sidebar for secondary information and links-->
         <div class="col-md-4">
 
-            <div class="mgn-bottom" data-ng-if="vm.user.isDriver">
-                <oset-application-summary job="vm.job" profile="vm.user" display-mode="mine"></oset-application-summary>
+            <!--Company Profile Image-->
+            <div class="company-image mgn-bottom">
+                <img ng-src="{{vm.job.company.profileImageURL}}" class="img-responsive center-block"/>
             </div>
 
+            <!--Signup-Apply Modal Launch Button-->
             <div class="mgn-bottom" data-ng-if="!vm.user" oset-signup-apply-modal type="driver" job='vm.job'>
                 <button class="btn btn-cta-primary btn-lg btn-block bigger">
                     apply
                 </button>
             </div>
 
+            <!--Gateway Signup/Apply/Info Launch Button-->
             <div class="mgn-bottom" type="driver" job='vm.job'
-                 data-ng-if="!vm.user || vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id" >
+                 data-ng-if="!vm.user || vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id">
                 <button class="btn btn-cta-primary btn-lg btn-block bigger" ui-sref="gateway({jobId:vm.job._id})">
                     gateway
                 </button>
             </div>
 
-            <div class="company-image panel panel-default"
-                 data-ng-if="vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id">
-                <img ng-src="{{vm.job.company.profileImageURL}}" class="img-responsive"/>
+            <!--Application Summary for Driver-->
+            <div class="mgn-bottom" data-ng-if="vm.user.isDriver">
+                <oset-application-summary job="vm.job" profile="vm.user" display-mode="mine"></oset-application-summary>
             </div>
 
+            <!--Application List Summary info for Owner-->
             <div class="panel panel-default" data-ng-if="vm.user.type === 'owner' && vm.enableEdit">
                 <div class="panel-heading ">
                     <span class="h4">Applications</span>
                 </div>
                 <div class="panel-body">
-                    <os-list-applications job="vm.job" display-mode="table"></os-list-applications>
-                    <pre ng-if="vm.debug">{{vm.job.applications}}</pre>
+
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr ng-repeat="application in vm.applications">
+                            <td>{{application.user.displayName}}</td>
+                            <td class="text-right">
+                                <os-application-status-badge model="application"></os-application-status-badge>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <pre ng-if="true || vm.debug">{{vm.applications.length}}</pre>
                 </div>
             </div>
 
-            <div class="panel panel-default" ng-if="!!vm.job.location[0]">
+            <!--Map & Location Information - Only shown if location is available-->
+            <div class="panel panel-default" ng-if="!!vm.job.location[0] && !vm.job.location[0].empty">
                 <div class="panel-heading">
                     <span class="h4">Location: {{ vm.job.location[0].zipCode }}</span>
                 </div>
@@ -57,6 +73,7 @@
                 </div>
             </div>
 
+            <!--Summary and Additional Info-->
             <div class="panel panel-default ">
                 <div class="panel-heading ">
                     <span class="h4">Info</span>
@@ -78,5 +95,11 @@
 
         </div>
 
+    </div>
+
+    <div class="row">
+        <div class="panel panel-default col-md-10 col-md-offset-1">
+            <pre>{{vm.applications | prettyPrint}}</pre>
+        </div>
     </div>
 </section>
