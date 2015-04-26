@@ -1,6 +1,4 @@
 <section name='oset-application-summary'>
-    <h2>Application</h2>
-
     <!--This view is used primarily for the display of simple inline template views.-->
     <div ng-show="!!vm.application">
         <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="panel panel-default pad">
@@ -32,6 +30,15 @@
                 <dd>{{vm.application.created | date:'short'}}</dd>
             </dl>
         </div>
+
+        <tr data-ng-if="vm.displayMode === 'table'" class="row">
+
+                <td>{{vm.application.user.displayName}}</td>
+                <td>
+                    <os-application-status-badge model="vm.application"></os-application-status-badge>
+                </td>
+                <td>{{vm.application.created | date:'short'}}</td>
+        </tr>
 
         <div data-ng-if="!vm.displayMode || vm.displayMode === 'normal'" class="row">
             <div class="col-md-4">

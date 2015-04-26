@@ -634,6 +634,19 @@ exports.createConnection = function (req, res) {
 };
 
 /** Questionairre Intake Forms **/
+
+var questionList = {
+    'default': [
+        {
+            'description': 'Cover Letter',
+            'name': '',
+            'length': '',
+            'type': 'text',
+            'required': true
+        }
+    ]
+};
+
 exports.getQuestions = function (req, res) {
 
     var response = {
@@ -648,16 +661,4 @@ exports.getQuestions = function (req, res) {
     }
 
     res.json(response);
-};
-
-var questionList = {
-    'default': [
-        {
-            'description': 'Cover Letter',
-            'name': '',
-            'length': '',
-            'type': 'text',
-            'required': true
-        }
-    ]
 };

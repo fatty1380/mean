@@ -36,7 +36,8 @@ describe('Application Model Unit Tests:', function () {
         };
 
         user = new User(userPrimitive);
-        owner = new User(_.extend(_.clone(userPrimitive, true), {firstName: 'Joe', lastName: 'Owner', type: 'owner'}));
+
+        owner = new User(_.extend(_.clone(userPrimitive, true), {firstName: 'Joe', lastName: 'Owner', type: 'owner', username: 'ownername'}));
 
         job = new Job({
             user: owner,

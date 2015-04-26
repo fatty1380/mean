@@ -118,7 +118,10 @@
             },
             validate: function () {
                 vm.releaseAuthForm.$setSubmitted(true);
-                !!vm.signatureMethods.accept && vm.signatureMethods.accept();
+
+                if(_.isFunction(vm.signatureMethods.accept)) {
+                    vm.signatureMethods.accept();
+                }
 
                 vm.updateSignatureStatus();
 

@@ -37,11 +37,6 @@ module.exports = function (app) {
     app.route('/api/users/:userId/applications')
         .get(applications.queryByUserID);
 
-    app.route('/api/releaseDocuments')
-        .get(drivers.driverByUserID, releaseDocs.runTest);
-    app.route('/api/releaseHtml')
-        .get(releaseDocs.runHTMLTest);
-
     // Finish by binding the Application middleware
     app.param('applicationId', applications.applicationByID);
 };
