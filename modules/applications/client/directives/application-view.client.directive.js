@@ -49,9 +49,12 @@
             } else if (vm.job && vm.profile) {
                 Applications.ForDriver.get({jobId: vm.job._id, userId: vm.profile._id})
                     .$promise.then(function (success) {
-                        vm.application = success;
+                        $log.debug('Got application for driver: ', success);
 
-                        vm.lastMessage = vm.application.messages[0];
+                        vm.application = success;
+                        var messages = vm.application.messages;
+
+                        vm.lastMessage = !!messages && !!messages.length ? messages[0] : null;
 
                         deferred.resolve(success);
                     }, function (failure) {
@@ -110,12 +113,13 @@
             restrict: 'E',
             scope: {
                 displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
-                application: '=model',
+                application: '=?model',
                 job: '=?',
                 profile: '=?',
                 index: '=?',
                 text: '=?',
-                scrollToMessageFn: '&?'
+                scrollToMessageFn: '&?',
+                showNewBtn: '='
             },
             controller: 'ApplicationSummaryController',
             controllerAs: 'vm',

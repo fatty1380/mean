@@ -662,7 +662,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <!------------------------------------------------->\n' +
   '    <!-- For drivers, link to the new application creation -->\n' +
   '    <!-- For owners, tell them sorry :(                    -->\n' +
-  '    <section ng-show="!vm.application">\n' +
+  '    <section ng-show="!vm.application && !!vm.showNewBtn">\n' +
   '        <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->\n' +
   '        <div data-ng-if="!!vm.job && vm.user.type === \'driver\' && !vm.job.externalApplicationLink" os-new-application-modal job=\'vm.job\'>\n' +
   '            <button class="btn btn-cta-primary btn-lg btn-block bigger">\n' +
