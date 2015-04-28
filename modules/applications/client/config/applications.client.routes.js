@@ -140,6 +140,7 @@
                 controller: 'ApplicationGatewayController',
                 controllerAs: 'vm',
                 data: {
+                    hideHeader: true
                 },
                 params: {
                     jobId: ''

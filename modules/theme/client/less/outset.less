@@ -539,7 +539,7 @@ img.user-profile-picture {
   top        : 0;
   left       : 0;
   height     : 600px;
-  background : @outset-blue url('/modules/core/img/home-country-road.jpg') no-repeat 50% 75% !important;
+  background : @outset-blue url('/modules/core/img/intro/home-country-road.jpg') no-repeat 50% 75% !important;
   .background-size(cover);
   &.headline-sm {
     height : 210px;
@@ -561,6 +561,23 @@ img.user-profile-picture {
 
     os-page-header h2, h3 {
       margin-bottom : 20px;
+    }
+  }
+
+  &.headline-map-bg {
+    background: #0e2d4c url('/modules/core/img/intro/western-map.jpg') no-repeat 50% 50% !important;
+  }
+
+  &.headline-static {
+    position: fixed;
+    top: 0;
+
+    &.headline-xs {
+      height : 160px;
+    }
+
+    &.headline-sm {
+      height : 260px;
     }
   }
 }

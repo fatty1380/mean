@@ -3694,6 +3694,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div class="row">\n' +
   '\n' +
   '        <h4 class="col-sm-12">Work Experience</h4>\n' +
+  '\n' +
   '        <p class="info col-sm-12">\n' +
   '            Add information about past Experience to help employers know more about you and your\n' +
   '            background.\n' +
@@ -3717,22 +3718,24 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <!--Cover Letter-->\n' +
   '\n' +
   '        <h4 class="col-sm-12">Cover Letter</h4>\n' +
+  '\n' +
   '        <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
   '           ng-bind-html="vm.about.messageSubHeading"></p>\n' +
   '\n' +
   '        <div class="form-group"\n' +
   '             ng-class="{\'has-error\': vm.form.introText.$invalid && (vm.form.$submitted || vm.form.introText.$touched)}">\n' +
   '            <div class="col-sm-12">\n' +
-  '                <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
-  '                    Please introduce yourself to the employer here\n' +
+  '                <div class="info pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
+  '                    Please introduce yourself in a few sentences. This will serve as the template for your job\n' +
+  '                    application cover letter.\n' +
   '                </div>\n' +
   '                <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
   '                    {{vm.introTextError}}\n' +
   '                </div>\n' +
-  '                    <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"\n' +
-  '                              name="introText" id="introText" class="editor-md"\n' +
-  '                              placeholder="Please introduce yourself to the employer here"\n' +
-  '                              ng-required="true"></textarea>\n' +
+  '                <textarea os-html-edit type="text" data-ng-model="vm.driver.about"\n' +
+  '                          name="introText" id="introText" class="editor-md"\n' +
+  '                          placeholder="Please introduce yourself to the employer here"\n' +
+  '                          ng-required="true"></textarea>\n' +
   '            </div>\n' +
   '\n' +
   '        </div>\n' +

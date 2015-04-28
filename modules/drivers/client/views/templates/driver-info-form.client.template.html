@@ -32,6 +32,7 @@
     <div class="row">
 
         <h4 class="col-sm-12">Work Experience</h4>
+
         <p class="info col-sm-12">
             Add information about past Experience to help employers know more about you and your
             background.
@@ -55,22 +56,24 @@
         <!--Cover Letter-->
 
         <h4 class="col-sm-12">Cover Letter</h4>
+
         <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"
            ng-bind-html="vm.about.messageSubHeading"></p>
 
         <div class="form-group"
              ng-class="{'has-error': vm.form.introText.$invalid && (vm.form.$submitted || vm.form.introText.$touched)}">
             <div class="col-sm-12">
-                <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">
-                    Please introduce yourself to the employer here
+                <div class="info pad-btm" ng-show="!vm.driver.about && !vm.introTextError">
+                    Please introduce yourself in a few sentences. This will serve as the template for your job
+                    application cover letter.
                 </div>
                 <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">
                     {{vm.introTextError}}
                 </div>
-                    <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"
-                              name="introText" id="introText" class="editor-md"
-                              placeholder="Please introduce yourself to the employer here"
-                              ng-required="true"></textarea>
+                <textarea os-html-edit type="text" data-ng-model="vm.driver.about"
+                          name="introText" id="introText" class="editor-md"
+                          placeholder="Please introduce yourself to the employer here"
+                          ng-required="true"></textarea>
             </div>
 
         </div>
