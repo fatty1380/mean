@@ -5645,6 +5645,116 @@ pdf > object {
   font-weight: bold;
   text-align: right;
 }
+/** ------------------------------- **
+* profile pg? */
+/*Panel Title Box*/
+.profile .list-group i {
+  min-width: 20px;
+  margin-right: 5px;
+  text-align: center;
+}
+.profile .heading-sm-v2 {
+  font-size: 16px;
+}
+.profile .profile-body {
+  padding: 20px;
+  background: #f7f7f7;
+}
+.profile .panel-profile,
+.profile .panel-default {
+  border: none;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+.profile .panel-profile.no-bg,
+.profile .panel-default.no-bg {
+  background: inherit;
+}
+.profile .panel-heading {
+  color: #585f69;
+  background: #fff;
+  padding: 7px 15px;
+  border-bottom: solid 3px #f7f7f7;
+}
+.profile .panel-heading .overflow-h i.pull-right,
+.profile .panel-heading-v2 .overflow-h i.pull-right {
+  top: 7px;
+  position: relative;
+}
+.profile .panel-heading .overflow-h a i,
+.profile .panel-heading-v2 .overflow-h a i {
+  color: #777;
+}
+.profile .panel-heading .overflow-h a:hover i,
+.profile .panel-heading-v2 .overflow-h a:hover i {
+  color: #555;
+}
+.profile .panel-heading .overflow-h i.pull-right,
+.profile .panel-heading-v2 .overflow-h i.pull-right {
+  color: #777;
+}
+.profile .panel-heading .overflow-h i.pull-right:hover,
+.profile .panel-heading-v2 .overflow-h i.pull-right:hover {
+  color: #555;
+}
+.profile .panel-title {
+  font-size: 16px;
+}
+.profile .alert-blocks {
+  margin: 0 0 5px;
+  background: #f7f7f7;
+  padding: 10px 10px 13px;
+}
+.profile .alert-blocks:first-child {
+  margin-top: 15px;
+}
+.profile .alert-blocks.alert-blocks-pending {
+  background: #fffdcc;
+}
+.profile .alert-blocks.alert-blocks-success {
+  background: #e1febc;
+}
+.profile .alert-blocks.alert-blocks-pending {
+  background: #fffdcc;
+}
+.profile .alert-blocks.alert-blocks-error {
+  background: #fee0e0;
+}
+.profile .alert-blocks.alert-blocks-info {
+  background: #e0f3fe;
+}
+.profile .alert-blocks.alert-dismissable {
+  padding-right: 35px;
+}
+.profile .alert-blocks i {
+  float: left;
+  margin-right: 15px;
+}
+.profile .alert-blocks.small {
+  font-size: small;
+}
+.profile .alert-blocks.small:first-child {
+  margin-top: 5px;
+}
+.profile .alert-blocks.small img {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+}
+.profile .alert-blocks img {
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+}
+.profile .alert-blocks strong small {
+  color: #a3a3a3;
+  font-weight: 200;
+}
+.profile .alert-blocks p {
+  color: #999;
+  margin-bottom: 0;
+}
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
   padding-right: 0;

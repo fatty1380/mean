@@ -29,7 +29,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{\'col-sm-4\' : !vm.fullWidth}"\n' +
   '         ng-animate="\'animate\'">\n' +
   '        <div ng-class="{\'form-group\': !vm.fullWidth}">\n' +
-  '            <os-address data-ng-if="!vm.inlineEdit" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>\n' +
+  '            <os-address data-ng-if="!vm.inlineEdit" address-count="vm.addresses.length" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>\n' +
   '            <os-edit-address data-ng-if="vm.inlineEdit" model="vm.addresses[a]" can-remove="vm.canRemove" remove="vm.removeAddress"></os-edit-address>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -51,7 +51,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/addresses/views/address.client.template.html',
   '<!-- os-address : address.client.template.html -->\n' +
   '<div class="panel" ng-if="!!vm.address">\n' +
-  '     <div class="panel-heading">\n' +
+  '     <div class="panel-heading" ng-if="vm.addressCount > 1 || vm.canEdit">\n' +
   '        <span class="h4">{{vm.getAddressType()}}</span>\n' +
   '        <button data-ng-if="vm.canEdit" type="button" class="pull-right btn-link" value="edit"\n' +
   '                ng-click="vm.editAddress(this)">\n' +
@@ -67,7 +67,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div ng-repeat="(s,street) in vm.address.streetAddresses track by s">\n' +
   '                {{vm.address.streetAddresses[s]}}\n' +
   '            </div>\n' +
-  '            {{vm.address.city}}, {{vm.address.state}} {{vm.address.zipCode}}\n' +
+  '            {{!!vm.address.city ? vm.address.city + \', \': \'\'}}{{vm.address.state}} {{vm.address.zipCode}}\n' +
   '            <br/>\n' +
   '        </address>\n' +
   '    </div>\n' +
@@ -86,7 +86,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    <form role="form" data-ng-submit="signin()" class="signin form-horizontal" spellcheck="false" novalidate>\n' +
   '        <div class="modal-body">\n' +
-  '            Address: {{ vm.address }}, Text: {{ vm.text }}, debugger? {{ debugger; }}\n' +
   '            <os-edit-address model="vm.address" enable-edit="true"></os-edit-address>\n' +
   '        </div>\n' +
   '\n' +
@@ -501,28 +500,29 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/applications/views/templates/applicant-normal.client.template.html',
   '<section name="os-driver-inline.directive" class="row inline-item">\n' +
   '    <div class="col-sm-12">\n' +
-  '        <!-- Driver Inline Template Begin -->\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
-  '            License\n' +
-  '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
-  '            <oset-license-inline model="vm.license" show-endorsements="true"></oset-license-inline>\n' +
-  '        </div>\n' +
+  '        <div class="row">\n' +
+  '            <!-- Driver Inline Template Begin -->\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                License\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
+  '                <oset-license-inline model="vm.license" show-endorsements="true"></oset-license-inline>\n' +
+  '            </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
-  '            Documents\n' +
-  '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
-  '            <oset-document-list driver="vm.driver" application="vm.application"\n' +
-  '                                doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
-  '        </div>\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                Documents\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
+  '                <oset-document-list driver="vm.driver" application="vm.application"\n' +
+  '                                    doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
+  '            </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
-  '            Interests\n' +
-  '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content label-list">\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                Interests\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content label-list">\n' +
   '\n' +
   '            <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
   '                  class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
@@ -530,13 +530,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <span ng-show="!visibleInterests.length">\n' +
   '                <span ng-show="!vm.canEdit">none entered</span>\n' +
   '            </span>\n' +
-  '        </div>\n' +
+  '            </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
-  '            Messages\n' +
-  '        </div>\n' +
-  '        <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                Messages\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
   '                <span ng-show="!!vm.application.connection && !vm.application.messageCt">\n' +
   '                        discuss the job and schedule an interview\n' +
   '                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
@@ -555,10 +555,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                            the applicant\n' +
   '                        </em>\n' +
   '                        <em class="text-muted" ng-if="vm.profile.type === \'driver\'">\n' +
-  '                        once connected, you will be able to exchange messages with\n' +
-  '                        the employer\n' +
-  '                    </em>\n' +
+  '                            once connected, you will be able to exchange messages with\n' +
+  '                            the employer\n' +
+  '                        </em>\n' +
   '                </span>\n' +
+  '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '\n' +
@@ -591,8 +592,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/applications/views/templates/application-summary.client.template.html',
   '<section name=\'oset-application-summary\'>\n' +
-  '    <h2>Application</h2>\n' +
-  '\n' +
   '    <!--This view is used primarily for the display of simple inline template views.-->\n' +
   '    <div ng-show="!!vm.application">\n' +
   '        <div data-ng-if="vm.displayMode === \'minimal\' || vm.displayMode === \'mine\'" class="panel panel-default pad">\n' +
@@ -624,6 +623,15 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
   '            </dl>\n' +
   '        </div>\n' +
+  '\n' +
+  '        <tr data-ng-if="vm.displayMode === \'table\'" class="row">\n' +
+  '\n' +
+  '                <td>{{vm.application.user.displayName}}</td>\n' +
+  '                <td>\n' +
+  '                    <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
+  '                </td>\n' +
+  '                <td>{{vm.application.created | date:\'short\'}}</td>\n' +
+  '        </tr>\n' +
   '\n' +
   '        <div data-ng-if="!vm.displayMode || vm.displayMode === \'normal\'" class="row">\n' +
   '            <div class="col-md-4">\n' +
@@ -4221,70 +4229,126 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </section>\n' +
   '\n' +
   '    <section ng-if="!dm.inline">\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div class="panel-heading" ng-if="dm.enableHeadingControls">\n' +
+  '                        <div class="btn-group" role="group" aria-label="...">\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'description\', true)}"\n' +
+  '                                    ng-click=" dm.setDisplay( \'description\') " class="btn btn-link "\n' +
+  '                                    ng-show="!!dm.job.description">\n' +
+  '                                <span class="h4">Description</span>\n' +
+  '                            </button>\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'requirements\', true)}"\n' +
+  '                                    ng-click="dm.setDisplay( \'requirements\') " class="btn btn-link "\n' +
+  '                                    ng-class="{\'disabled\': !dm.job.requirements}">\n' +
+  '                                <span class="h4">Requirements</span>\n' +
+  '                            </button>\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'location\', true)}"\n' +
+  '                                    ng-click="dm.setDisplay( \'location\') " class="btn btn-link "\n' +
+  '                                    ng-class="{\'disabled\' : !dm.job.location[0] || dm.job.location[0].empty}">\n' +
+  '                                <span class="h4">Location</span>\n' +
+  '                            </button>\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'about\', true)}"\n' +
+  '                                    ng-click="dm.setDisplay( \'about\') " class="btn btn-link "\n' +
+  '                                    ng-show="!!dm.job.company.about">\n' +
+  '                                <span class="h4">About</span>\n' +
+  '                            </button>\n' +
+  '                        </div>\n' +
   '\n' +
-  '        <div class="panel panel-default job-info">\n' +
-  '            <div class="panel-heading">\n' +
-  '                <div class="btn-group" role="group" aria-label="...">\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'description\', true)}"\n' +
-  '                            ng-click=" dm.setDisplay( \'description\') " class="btn btn-link "><span class="h4">Description</span>\n' +
-  '                    </button>\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'requirements\', true)}"\n' +
-  '                            ng-click="dm.setDisplay( \'requirements\') " class="btn btn-link "><span class="h4">Requirements</span>\n' +
-  '                    </button>\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'location\', true)}"\n' +
-  '                            ng-click="dm.setDisplay( \'location\') " class="btn btn-link "><span\n' +
-  '                            class="h4">Location</span>\n' +
-  '                    </button>\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'about\', true)}"\n' +
-  '                            ng-click="dm.setDisplay( \'about\') " class="btn btn-link "><span\n' +
-  '                            class="h4">About</span>\n' +
-  '                    </button>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <button type="button" ng-click="dm.setDisplay()" class="btn btn-link pull-right"><span\n' +
-  '                        class="h4">&times;</span>\n' +
-  '                </button>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div>\n' +
-  '                <div class="panel-body" ng-show="dm.job.categories.length || dm.canEdit">\n' +
-  '                    <oset-categories model="dm.job.categories" mode="view">\n' +
-  '                         <span ng-if="dm.showEdit" class="text-center">You can help users to find your job by adding specific categories in\n' +
-  '                             <a ui-sref="jobs.edit({jobId: dm.job._id})"> your driver profile</a></span>\n' +
-  '                    </oset-categories>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div ng-show="dm.showSection( \'description\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Description</span></div>\n' +
-  '                <div class="panel-body ">\n' +
-  '                    <div ng-bind-html="dm.job.description">No Description Listed</div>\n' +
-  '                    <hr/>\n' +
+  '                        <button type="button" ng-click="dm.setDisplay()" class="btn btn-link pull-right"><span\n' +
+  '                                class="h4">&times;</span>\n' +
+  '                        </button>\n' +
+  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div ng-show="dm.showSection( \'requirements\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Requirements</span></div>\n' +
-  '                <div class="panel-body ">\n' +
-  '                    <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>\n' +
-  '                    <hr/>\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div ng-show="dm.showSection( \'description\') ">\n' +
+  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Description</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="panel-body mgn-btm">\n' +
+  '                            <div ng-bind-html="dm.job.description">No Description Listed</div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div ng-show="dm.showSection( \'requirements\') && !!dm.job.requirements">\n' +
+  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Requirements</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="panel-body mgn-btm">\n' +
+  '                            <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '\n' +
+  '            <div class="col-sm-6">\n' +
+  '                <div class="panel panel-profile no-bg" ng-show="dm.showSection(\'location\')">\n' +
+  '                    <div class="panel-heading overflow-h" ng-show="dm.showSection(\'all\')">\n' +
+  '                        <h2 class="panel-title heading-sm pull-left"><i class="fa fa-map-marker"></i>Location</h2>\n' +
+  '                        <a href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '\n' +
+  '                    <div class="panel-body mgn-btm">\n' +
+  '                        <os-address model="dm.job.location[0]" data-ng-show="!dm.job.location[0].empty"\n' +
+  '                                    enable-edit="false"></os-address>\n' +
+  '                        <div class="text-center" data-ng-hide="!dm.job.location[0].empty">No Location Available\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <div ng-show="dm.showSection( \'location\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Location</span></div>\n' +
-  '                <div class="panel-body ">\n' +
-  '                    <os-address model="dm.job.location[0]" data-ng-show="dm.job.location[0]"\n' +
-  '                                enable-edit="false"></os-address>\n' +
-  '                    <div class="text-center" data-ng-hide="dm.job.location[0]">No Location Available</div>\n' +
-  '                    <hr/>\n' +
+  '            <div class="col-sm-6">\n' +
+  '                <div class="panel panel-profile no-bg" ng-show="dm.showSection(\'info\')">\n' +
+  '                    <div class="panel-heading overflow-h" ng-show="dm.showSection(\'all\')">\n' +
+  '                        <h2 class="panel-title heading-sm pull-left"><i class="fa fa-info-circle"></i>Summary</h2>\n' +
+  '                        <a href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '\n' +
+  '                    <div class="panel-body mgn-btm">\n' +
+  '\n' +
+  '                    <span ng-if="vm.job.positionType">\n' +
+  '                        <strong>Type: </strong><span>{{ vm.job.positionType }}</span>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <span ng-if="!!vm.job.payString || vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">\n' +
+  '                        <strong>Pay: </strong>\n' +
+  '                            <span ng-show="!!vm.job.payRate.min">{{ vm.job.payRate.min | currency }}</span>\n' +
+  '                            <span ng-show="!!vm.job.payRate.max"><span ng-show="!!vm.job.payRate.min"> to </span>{{ vm.job.payRate.max | currency }}</span>\n' +
+  '                            <span ng-show="!!vm.job.payString && !!vm.job.payRate.period"> per {{vm.job.payRate.period}}</span>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '\n' +
+  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div ng-show="dm.showSection( \'about\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">About the Company</span>\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div ng-show="dm.showSection( \'about\') ">\n' +
+  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')">\n' +
+  '                            <span class="h4">About {{dm.job.company.name || \'the Company\'}}</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="panel-body "><p data-ng-bind-html="dm.job.company.about">not available</p></div>\n' +
+  '                    </div>\n' +
   '                </div>\n' +
-  '                <div class="panel-body "><p data-ng-bind-html="dm.job.company.about">not available</p></div>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </section>\n' +
