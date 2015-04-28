@@ -10,7 +10,8 @@
                 isEditing: '=?', // boolean
                 canEdit: '=?',
                 canRemove: '&?',
-                remove: '&?'
+                remove: '&?',
+                addressCount: '='
             },
             controller: 'OsAddressItemController',
             controllerAs: 'vm',
