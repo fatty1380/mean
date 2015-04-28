@@ -82,8 +82,8 @@
                             return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
                                 .then(function (response) {
                                     $log.debug('[Gateway] Resolving `Driver` to %o', response);
-                                    _this.models.driver = response;
-                                    _this.promises.driver.resolve(response);
+                                    _this.models.driver = response || new Drivers.ById({user: _this.models.user});
+                                    _this.promises.driver.resolve(_this.models.driver);
                                 }
                             );
                         }
@@ -269,6 +269,7 @@
                                         };
 
                                         _this.driver.then(function (driver) {
+                                            debugger;
                                             _this.models.application.introduction = driver.about;
                                         });
 

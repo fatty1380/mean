@@ -77,7 +77,7 @@
 
                     $state.go('gateway.complete');
                 }
-                else if(!vm.currentStep) {
+                else if(!auth.isLoggedIn() || !vm.currentStep) {
                     vm.currentIndex = 0;
                     vm.currentStep = vm.activeSteps[0];
 
