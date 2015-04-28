@@ -65,8 +65,6 @@
                 vm.currentIndex = _.findIndex(vm.activeSteps, {'state': $state.current.name});
                 vm.currentStep = _.find(vm.activeSteps, {'state': $state.current.name});
 
-
-                debugger;
                 if(!_.isEmpty(vm.gw.models.application) && !vm.gw.models.application.isDraft) {
                     debugger;
                     $log.info('this job has already been applied to');
@@ -78,6 +76,12 @@
                     vm.currentStep = _.find(vm.activeSteps, {'state': 'gateway.complete'});
 
                     $state.go('gateway.complete');
+                }
+                else if(!vm.currentStep) {
+                    vm.currentIndex = 0;
+                    vm.currentStep = vm.activeSteps[0];
+
+                    $state.go(vm.currentStep.state);
                 }
             });
         }
