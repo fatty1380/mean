@@ -61,7 +61,7 @@
     }
 
 
-    JobViewController.$inject = ['$stateParams', '$scope', '$state', '$log', 'Authentication','job', 'applications'];
+    JobViewController.$inject = ['$stateParams', '$state', '$log', 'Authentication','job', 'applications'];
 
     angular.module('jobs')
         .controller('JobViewController', JobViewController);
