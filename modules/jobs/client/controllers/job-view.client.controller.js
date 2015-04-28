@@ -26,9 +26,6 @@
             else if (vm.user.isOwner) {
                 vm.enableEdit = vm.user._id === (vm.company && (vm.company.owner._id || vm.company.owner));
             }
-
-            $log.debug('[JobViewCtrl.activate] %s enableEdit: %o', vm.user.type, vm.enableEdit);
-
         }
 
         vm.delist = function (job) {
