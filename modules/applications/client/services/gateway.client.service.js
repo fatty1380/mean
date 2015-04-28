@@ -239,7 +239,6 @@
                                 _this.promises.application = $q.defer();
                                 $q.all({job: _this.job, user: _this.user})
                                     .then(function (values) {
-                                        debugger;
                                         return Applications.ById.query({
                                             job: values.job._id,
                                             user: values.user._id

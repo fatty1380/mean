@@ -165,8 +165,6 @@
                         }, 2000);
 
                         gateway.application.then(function(app) {
-                            debugger;
-                            //timeout.cancel();
                             $timeout.cancel(timeout);
 
                             deferred.resolve(app);

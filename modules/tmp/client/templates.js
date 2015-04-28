@@ -384,7 +384,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/applications/views/form/user-info.client.template.html',
   '<section class="workflow-stage-form">\n' +
-  '    <user-signup-form ng-form="vm.subForm1" model="vm.gw.models.user" methods="vm.subformMethods"></user-signup-form>\n' +
+  '    <user-signup-form ng-form="vm.subForm1" model="vm.gw.models.user" gateway="vm.gw" methods="vm.subformMethods"></user-signup-form>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/templates/applicant-details.client.template.html',
@@ -3835,10 +3835,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience.client.template.html',
   '<section class="experience">\n' +
   '\n' +
-  '    <div ng-form="{{\'experienceItem\' +_vm.modelIndex}}" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
+  '    <!--Form When Editing is Active-->\n' +
+  '\n' +
+  '    <div ng-form="{{\'experienceItem_\' +vm.modelIndex}}" ng-init="vm.activate()"\n' +
+  '         class="edit form-horizontal" ng-show="vm.isEditing"\n' +
   '         ng-if="!vm.viewOnly">\n' +
   '\n' +
-  '        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">\n' +
+  '        <div class="row" ng-show="vm.formItem.$invalid && (vm.formItem.$submitted || vm.formItem._submitted)">\n' +
   '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
   '                <div class="text-danger text-center mgn-vert">\n' +
   '                    {{vm.error || \'Please fill in required fields and correct errors\'}}\n' +
@@ -3847,7 +3850,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row mgn-vert"\n' +
-  '             ng-class="{\'has-error\':(vm.experienceForm.title.$invalid || vm.experienceForm[\'hidden_title\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.title.$touched)}">\n' +
+  '             ng-class="{\'has-error\':(vm.formItem.title.$invalid || vm.formItem[\'hidden_title\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.title.$touched)}">\n' +
   '            <label class="col-sm-2 control-label">Job Title</label>\n' +
   '\n' +
   '            <div class="controls col-sm-9 controls">\n' +
@@ -3858,7 +3861,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row mgn-vert"\n' +
-  '             ng-class="{\'has-error\':(vm.experienceForm.description.$invalid || vm.experienceForm[\'hidden_description\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.description.$touched)}">\n' +
+  '             ng-class="{\'has-error\':(vm.formItem.description.$invalid || vm.formItem[\'hidden_description\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.description.$touched)}">\n' +
   '            <label class="col-sm-2 control-label">About</label>\n' +
   '\n' +
   '            <div class="controls col-sm-9 controls">\n' +
@@ -3870,13 +3873,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <div class="row mgn-vert">\n' +
   '            <label class="col-sm-2 control-label"\n' +
-  '                   ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && vm.experienceForm.$submitted}">\n' +
+  '                   ng-class="{\'has-error\':(vm.formItem.time_start.$invalid || vm.formItem[\'hidden_time_start\'].$invalid) && vm.formItem.$submitted || vm.formItem._submitted}">\n' +
   '                Time Period\n' +
   '            </label>\n' +
   '\n' +
   '            <div class="col-sm-9 form-inline">\n' +
   '                <div class="col-sm-5 input-group"\n' +
-  '                     ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">\n' +
+  '                     ng-class="{\'has-error\':(vm.formItem.time_start.$invalid || vm.formItem[\'hidden_time_start\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.time_start.$touched)}">\n' +
   '                    <div class="input-group-addon">{{ \'start\' | titleCase }}</div>\n' +
   '                    <date-input class="form-control" model="vm.model.startDate" os-name="time_start"\n' +
   '                                dformat="MM/DD/YYYY"></date-input>\n' +
@@ -3886,7 +3889,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </div>\n' +
   '\n' +
   '                <div class="col-sm-5 input-group"\n' +
-  '                     ng-class="{\'has-error\':(vm.experienceForm.time_end.$invalid || vm.experienceForm[\'hidden_time_end\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">\n' +
+  '                     ng-class="{\'has-error\':(vm.formItem.time_end.$invalid || vm.formItem[\'hidden_time_end\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.time_end.$touched)}">\n' +
   '                    <div class="input-group-addon">{{ \'end\' | titleCase }}</div>\n' +
   '\n' +
   '                    <date-input class="form-control" model="vm.model.endDate" os-name="time_end"></date-input>\n' +
@@ -3898,7 +3901,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row mgn-vert"\n' +
-  '             ng-class="{\'has-error\':(vm.experienceForm.location.$invalid || vm.experienceForm[\'hidden_location\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.location.$touched)}">\n' +
+  '             ng-class="{\'has-error\':(vm.formItem.location.$invalid || vm.formItem[\'hidden_location\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.location.$touched)}">\n' +
   '            <label class="col-sm-2 control-label">Location</label>\n' +
   '\n' +
   '            <div class="col-md-9 controls">\n' +
@@ -3928,6 +3931,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
+  '\n' +
+  '    <!--Display when Item is not Editing-->\n' +
   '\n' +
   '    <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"\n' +
   '             ng-class="{\'last\':vm.isLast && !vm.canEdit}">\n' +
