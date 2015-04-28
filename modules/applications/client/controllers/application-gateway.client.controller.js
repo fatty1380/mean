@@ -72,6 +72,8 @@
                     $log.info('this job has already been applied to');
                     toastr.info('You have already applied to this job', {extendedTimeOut: 5000});
 
+                    vm.applicationComplete = true;
+
                     vm.currentIndex = _.findIndex(vm.activeSteps, {'state': 'gateway.complete'});
                     vm.currentStep = _.find(vm.activeSteps, {'state': 'gateway.complete'});
 
@@ -205,14 +207,16 @@
                         }
 
                         // Redirect after save
-                        return upsertPromise
-                            .then(function (success) {
-                                $log.debug('Successfully created an application: %o', success);
+                        return upsertPromise;
 
-                                _.extend(vm.gw.models.application, success);
+                    }) .then(function (success) {
+                        $log.debug('Successfully created an application: %o', success);
 
-                                vm.success = 'Application Submission Successful!';
-                            });
+                        _.extend(vm.gw.models.application, success);
+
+                        vm.success = 'Application Submission Successful!';
+
+                        vm.applicationComplete = true;
                     })
                     .catch(function (err) {
                         $log.error('Failed to create application', err);
