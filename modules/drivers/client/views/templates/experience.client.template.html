@@ -1,9 +1,12 @@
 <section class="experience">
 
-    <div ng-form="{{'experienceItem' +_vm.modelIndex}}" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"
+    <!--Form When Editing is Active-->
+
+    <div ng-form="{{'experienceItem_' +vm.modelIndex}}" ng-init="vm.activate()"
+         class="edit form-horizontal" ng-show="vm.isEditing"
          ng-if="!vm.viewOnly">
 
-        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">
+        <div class="row" ng-show="vm.formItem.$invalid && (vm.formItem.$submitted || vm.formItem._submitted)">
             <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
                 <div class="text-danger text-center mgn-vert">
                     {{vm.error || 'Please fill in required fields and correct errors'}}
@@ -12,7 +15,7 @@
         </div>
 
         <div class="row mgn-vert"
-             ng-class="{'has-error':(vm.experienceForm.title.$invalid || vm.experienceForm['hidden_title'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.title.$touched)}">
+             ng-class="{'has-error':(vm.formItem.title.$invalid || vm.formItem['hidden_title'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.title.$touched)}">
             <label class="col-sm-2 control-label">Job Title</label>
 
             <div class="controls col-sm-9 controls">
@@ -23,7 +26,7 @@
         </div>
 
         <div class="row mgn-vert"
-             ng-class="{'has-error':(vm.experienceForm.description.$invalid || vm.experienceForm['hidden_description'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.description.$touched)}">
+             ng-class="{'has-error':(vm.formItem.description.$invalid || vm.formItem['hidden_description'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.description.$touched)}">
             <label class="col-sm-2 control-label">About</label>
 
             <div class="controls col-sm-9 controls">
@@ -35,13 +38,13 @@
 
         <div class="row mgn-vert">
             <label class="col-sm-2 control-label"
-                   ng-class="{'has-error':(vm.experienceForm.time_start.$invalid || vm.experienceForm['hidden_time_start'].$invalid) && vm.experienceForm.$submitted}">
+                   ng-class="{'has-error':(vm.formItem.time_start.$invalid || vm.formItem['hidden_time_start'].$invalid) && vm.formItem.$submitted || vm.formItem._submitted}">
                 Time Period
             </label>
 
             <div class="col-sm-9 form-inline">
                 <div class="col-sm-5 input-group"
-                     ng-class="{'has-error':(vm.experienceForm.time_start.$invalid || vm.experienceForm['hidden_time_start'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">
+                     ng-class="{'has-error':(vm.formItem.time_start.$invalid || vm.formItem['hidden_time_start'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.time_start.$touched)}">
                     <div class="input-group-addon">{{ 'start' | titleCase }}</div>
                     <date-input class="form-control" model="vm.model.startDate" os-name="time_start"
                                 dformat="MM/DD/YYYY"></date-input>
@@ -51,7 +54,7 @@
                 </div>
 
                 <div class="col-sm-5 input-group"
-                     ng-class="{'has-error':(vm.experienceForm.time_end.$invalid || vm.experienceForm['hidden_time_end'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">
+                     ng-class="{'has-error':(vm.formItem.time_end.$invalid || vm.formItem['hidden_time_end'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.time_end.$touched)}">
                     <div class="input-group-addon">{{ 'end' | titleCase }}</div>
 
                     <date-input class="form-control" model="vm.model.endDate" os-name="time_end"></date-input>
@@ -63,7 +66,7 @@
         </div>
 
         <div class="row mgn-vert"
-             ng-class="{'has-error':(vm.experienceForm.location.$invalid || vm.experienceForm['hidden_location'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.location.$touched)}">
+             ng-class="{'has-error':(vm.formItem.location.$invalid || vm.formItem['hidden_location'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.location.$touched)}">
             <label class="col-sm-2 control-label">Location</label>
 
             <div class="col-md-9 controls">
@@ -93,6 +96,8 @@
             </div>
         </div>
     </div>
+
+    <!--Display when Item is not Editing-->
 
     <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"
              ng-class="{'last':vm.isLast && !vm.canEdit}">

@@ -17,6 +17,11 @@
 
         vm.revertValue = angular.copy(vm.model);
 
+        vm.activate = function() {
+            vm.formItem = vm.form['experienceItem_'+vm.modelIndex];
+            return !!vm.formItem;
+        };
+
         vm.edit = function () {
             vm.revertValue = angular.copy(vm.model);
             vm.isEditing = true;
@@ -42,21 +47,22 @@
         vm.save = function (action) {
             vm.error = null;
 
-            vm.experienceItem = vm.form['experienceItem_'+ vm.modelIndex];
+            vm.formItem = vm.formItem || vm.form['formItem_'+ vm.modelIndex];
 
-            vm.experienceItem.$setSubmitted(true);
+            //vm.formItem.$setSubmitted(true);
+            vm.formItem._submitted = true;
 
-            if (action !== 'add' && vm.experienceItem.$pristine && vm.model.isFresh) {
+            if (action !== 'add' && vm.formItem.$pristine && vm.model.isFresh) {
 
                 vm.cancel();
-                vm.experienceItem.$setValidity('model', true);
-                vm.experienceItem.$setSubmitted();
+                vm.formItem.$setValidity('model', true);
+                vm.formItem.$setSubmitted();
                 return true;
             }
 
-            if (vm.experienceItem.$invalid) {
+            if (vm.formItem.$invalid) {
 
-                if (vm.experienceItem.$error.required) {
+                if (vm.formItem.$error.required) {
                     vm.error = 'Please fill in all required fields before saving';
                 }
                 else {
