@@ -8,6 +8,7 @@
         toolbar: [
             'undo redo | styleselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent'
         ],
+        statusbar: false,
         fontsize_formats: '10px 12px 14px 18px'
     };
 
