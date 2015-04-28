@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-profile" data-ng-if="vm.user.type === 'owner' && vm.enableEdit">
+            <div class="panel panel-profile" data-ng-if="!!vm.user && vm.user.type === 'owner' && vm.enableEdit">
                 <div class="panel-heading overflow-h">
                     <span class="panel-title heading-sm">
                         <i class="fa fa-send mgn-right"></i> Applicants
