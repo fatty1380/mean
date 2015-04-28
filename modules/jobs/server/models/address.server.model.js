@@ -87,7 +87,6 @@ AddressSchema.virtual('searchString')
     });
 
 AddressSchema.pre('init', function (next, data) {
-    console.log('init =================================================================================================');
     log.trace('pre.init', {streetAddresses: data.streetAddresses});
 
     this._doc.streetAddresses = _.compact(data.streetAddresses);
@@ -96,7 +95,6 @@ AddressSchema.pre('init', function (next, data) {
 });
 
 AddressSchema.pre('validate', function (next) {
-    console.log('validate =================================================================================================');
     log.trace('pre.validate');
 
     this.state = _.isEmpty(this.state) ? null : this.state.toUpperCase();
@@ -104,11 +102,18 @@ AddressSchema.pre('validate', function (next) {
 });
 
 AddressSchema.pre('save', function (next) {
-    console.log('save =================================================================================================');
     log.trace('pre.save');
     this.streetAddresses = _.compact(this.streetAddresses);
     next();
 });
 
+AddressSchema.statics.map = function(source) {
+    var Address = this;
+
+    return _.map(source, function (location) {
+        log.trace('pre.validate', 'Mapping location', {Address: location, isAddress: (location instanceof Address)});
+        return (location instanceof Address) ? location : new Address(location);
+    });
+};
 
 mongoose.model('Address', AddressSchema);

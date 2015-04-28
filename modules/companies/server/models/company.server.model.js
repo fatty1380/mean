@@ -4,7 +4,16 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+_            = require('lodash'),
+path         = require('path'),
+addrFile     = require(path.resolve('./modules/jobs/server/models/address.server.model')),
+Address      = mongoose.model('Address'),
+Schema       = mongoose.Schema,
+Gateway =  mongoose.model('Gateway'),
+log          = require(path.resolve('./config/lib/logger')).child({
+    module: 'companies',
+    file: 'Company.Model'
+});
 
 /**
  * Company Schema
@@ -75,29 +84,8 @@ var CompanySchema = new Schema({
     gateway: {
         type: Schema.ObjectId,
         ref: 'Gateway',
-        default: mongoose.model('Gateway')
-        //default: null
+        default: null
     },
-
-    //gateway: {
-    //    sku: {
-    //        type: String,
-    //        default: null // 'OUTSET_MVR'
-    //    },
-    //    required: {
-    //        type: Boolean,
-    //        default: false
-    //    },
-    //    payment: {
-    //        type: String,
-    //        enum: ['applicant', 'company', 'mixed', ''],
-    //        default: 'applicant' //'company'
-    //    },
-    //    releaseType: {
-    //        type: String,
-    //        default: null//'preEmployment'
-    //    }
-    //},
 
     created: {
         type: Date,
@@ -110,9 +98,25 @@ var CompanySchema = new Schema({
     }
 });
 
-CompanySchema.pre('save', function(next){
-  this.modified = Date.now();
-  next();
+CompanySchema.pre('validate', function (next) {
+    debugger;
+
+    next();
+});
+
+CompanySchema.pre('save', function (next) {
+    this.modified = Date.now();
+    next();
+});
+
+CompanySchema.pre('validate', function (next) {
+    log.trace('pre.validate', 'START', {Addresses: this.locations});
+
+    this.locations = Address.map(this.locations);
+
+    log.trace('pre.validate', 'End Result location(s)', {Addresses: this.locations});
+
+    next();
 });
 
 mongoose.model('Company', CompanySchema);

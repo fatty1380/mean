@@ -5,21 +5,26 @@
  */
 var mongoose = require('mongoose'),
 fs           = require('fs'),
-Q           = require('q'),
+Q            = require('q'),
 path         = require('path'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
 constants    = require(path.resolve('./modules/core/server/models/outset.constants')),
 Company      = mongoose.model('Company'),
 Subscription = mongoose.model('Subscription'),
-_            = require('lodash');
+Gateway = mongoose.model('Gateway'),
+_            = require('lodash'),
+log          = require(path.resolve('./config/lib/logger')).child({
+    module: 'companies',
+    file: 'Company.Controller'
+});
 
 /**
  * "Instance" Methods
  */
 
 var executeQuery = function (req, res) {
-    console.log('[CompaniesCtrl.executeQuery] Start');
+    log.debug('[CompaniesCtrl.executeQuery] Start');
 
 
     var query = req.query || {};
@@ -37,7 +42,7 @@ var executeQuery = function (req, res) {
             }
 
             req.companies = companies || [];
-            console.log('[CompaniesCtrl.executeQuery] Found %d companies for query %j', req.companies.length, query);
+            log.debug('[CompaniesCtrl.executeQuery] Found %d companies for query %j', req.companies.length, query);
             res.json(req.companies);
         });
 };
@@ -50,23 +55,23 @@ exports.create = function (req, res) {
     var company = new Company(req.body);
     var ownerId = req.body.ownerId || req.user._id;
 
-    console.log('Creating company for owner: [%s]: %s', ownerId, company._id);
+    log.debug('create', 'Creating company for owner: [%s]: %s', ownerId, company._id);
 
     company.owner = mongoose.Types.ObjectId(ownerId);
     company.agents = [];
 
-    console.log('now saving company w owner [%s], %s', company.owner, company._id);
+    log.debug('create', 'now saving company w owner [%s], %s', company.owner, company._id);
 
 
     company.save(function (err) {
         if (err) {
-            console.log('Saving company failed with error: %j', err);
+            log.error('create', 'Saving company failed with error: %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err),
                 error: err
             });
         } else {
-            console.log('Successfully saved company: %s', company._id);
+            log.debug('create', 'Successfully saved company: %s', company._id);
             res.json(company);
         }
     });
@@ -78,13 +83,13 @@ exports.create = function (req, res) {
 exports.read = function (req, res) {
 
     if (!req.company) {
-        console.log('[CompaniesCtrl.read] No Company available in request');
+        log.debug('[CompaniesCtrl.read] No Company available in request');
         return res.status(404).send({
             message: 'No company found'
         });
     }
 
-    console.log('[CompaniesCtrl.read] Returning company %s', req.company._id);
+    log.debug('[CompaniesCtrl.read] Returning company %s', req.company._id);
 
     res.json(req.company);
 };
@@ -93,22 +98,45 @@ exports.read = function (req, res) {
  * Update a Company
  */
 exports.update = function (req, res) {
-    console.log('[CompaniesCtrl.update] Start');
+    log.debug('[CompaniesCtrl.update] Start');
 
     var company = req.company;
 
-    company = _.extend(company, req.body);
+    log.debug('update', 'Updating company from body', {body: req.body});
 
-    company.save(function (err) {
-        if (err) {
+    company = _.extend(company, req.body);
+    company.locations = req.body.locations || [];
+
+    company.gateway = company.gateway || new Gateway();
+
+    _.extend(company.gateway, req.body.gateway);
+
+    log.debug('update', 'saving gateway:', {gateway: company.gateway});
+
+    company.gateway.save()
+        .then(function (gateway) {
+            company.gateway = gateway;
+
+            log.debug('update', 'now saving company:', {company: company});
+
+            return company.save();
+        },
+        function (err) {
+            log.error('update', 'Error saving Gateway ... oh well. Trying to recover', err);
+
+            return company.save();
+        })
+        .then(function (company) {
+            log.debug('update', 'Successfully updated Company', {company: company});
+            res.json(company);
+        },
+        function (err) {
+            log.error('update', 'Error saving Company', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err),
                 error: err
             });
-        } else {
-            res.json(company);
-        }
-    });
+        });
 };
 
 
@@ -116,7 +144,7 @@ exports.update = function (req, res) {
  * Update profile picture
  */
 exports.changeProfilePicture = function (req, res) {
-    console.log('[CompaniesCtrl.changeProfilePicture] Start');
+    log.debug('[CompaniesCtrl.changeProfilePicture] Start');
     var company = req.company;
     var user = req.user;
 
@@ -132,8 +160,8 @@ exports.changeProfilePicture = function (req, res) {
         });
     }
 
-    console.log('ownerId:`%s` %s `%s`:userId', company.owner._id, (company.owner._id.equals(user._id) ? '==' : '!='), user._id);
-    console.log('Company Agents:`%s` %s `%s`:userId', company.agents, (_.contains(company.agents, user) ? '==' : '!='), user._id);
+    log.debug('ownerId:`%s` %s `%s`:userId', company.owner._id, (company.owner._id.equals(user._id) ? '==' : '!='), user._id);
+    log.debug('Company Agents:`%s` %s `%s`:userId', company.agents, (_.contains(company.agents, user) ? '==' : '!='), user._id);
 
     if (!company.owner._id.equals(user._id) && !_.contains(company.agents, user)) {
         return res.status(400).send({
@@ -143,24 +171,14 @@ exports.changeProfilePicture = function (req, res) {
 
     fileUploader.saveFileToCloud(req.files, 'companies').then(
         function (successURL) {
-            console.log('successfully uploaded company profile picture to %s', successURL);
+            log.debug('successfully uploaded company profile picture to %s', successURL);
 
-            company.profileImageURL = successURL;
+            req.company.profileImageURL = successURL;
 
-            company.save(function (saveError) {
-                if (saveError) {
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(saveError)
-                    });
-                }
-
-                console.log('[CompaniesCtrl.changeProfilePicture] Success! %j', company);
-
-                res.json(company);
-
-            });
+            return exports.update(req, res);
 
         }, function (error) {
+            log.error('changeProfilePicture', 'Failed to save file to cloud', {error: error});
             return res.status(400).send({
                 message: 'Unable to save Company Profile Picture. Please try again later'
             });
@@ -172,7 +190,7 @@ exports.changeProfilePicture = function (req, res) {
  * Delete an Company
  */
 exports.delete = function (req, res) {
-    console.log('[CompaniesCtrl.delete] Start');
+    log.debug('[CompaniesCtrl.delete] Start');
 
     var company = req.company;
 
@@ -191,7 +209,7 @@ exports.delete = function (req, res) {
  * List of Companies
  */
 exports.list = function (req, res) {
-    console.log('[CompaniesCtrl.list] Start');
+    log.debug('[CompaniesCtrl.list] Start');
 
     req.sort = '-created';
 
@@ -199,9 +217,9 @@ exports.list = function (req, res) {
 };
 
 exports.listDrivers = function (req, res) {
-    console.log('[CompaniesCtrl.listDrivers] Start');
+    log.debug('[CompaniesCtrl.listDrivers] Start');
 
-    console.log('NOT IMPLEMENTED');
+    log.debug('NOT IMPLEMENTED');
 
     res.json([{
         error: 'NOT IMPLEMENTED',
@@ -210,7 +228,7 @@ exports.listDrivers = function (req, res) {
 };
 
 exports.companiesByUserID = function (req, res) {
-    console.log('[CompaniesCtrl.companiesByUserID] Start');
+    log.debug('[CompaniesCtrl.companiesByUserID] Start');
 
 
     req.query = {
@@ -221,7 +239,7 @@ exports.companiesByUserID = function (req, res) {
 };
 
 exports.companyByUserID = function (req, res, next) {
-    console.log('[CompaniesCtrl.companyByUserID] Start');
+    log.debug('[CompaniesCtrl.companyByUserID] Start');
 
 
     req.query = {
@@ -236,8 +254,8 @@ exports.companyByUserID = function (req, res, next) {
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
-            } else if(!!company) {
-                console.log('[Company.findOne] setting req.company = %s', company._id);
+            } else if (!!company) {
+                log.debug('[Company.findOne] setting req.company = %s', company._id);
                 req.company = company;
                 //res.json(company);
 
@@ -254,14 +272,16 @@ exports.companyByUserID = function (req, res, next) {
  */
 exports.companyByID = function (req, res, next, id) {
     if (/([0-9a-f]{24})$/i.test(id)) {
-        console.log('Querying for company with id %s', id);
+        log.debug('Querying for company with id %s', id);
 
         Company
             .findById(id)
             .populate('owner', 'displayName')
             .populate('subscription')
+            .populate('gateway')
             .exec(function (err, company) {
                 if (err) {
+                    log.error('companyById', 'Unable to find company', {error: err});
                     return next(err);
                 }
 
@@ -277,13 +297,16 @@ exports.companyByID = function (req, res, next, id) {
  * Company authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
-    console.log('[CompaniesCtrl.hasAuthorization] Start');
+    log.trace('hasAuthorization', 'Start', {company: req.company, user: req.user});
+    log.debug('hasAuthorization', 'Start', {company: req.company.owner._id, user: req.user._id});
 
-    if (req.company.owner.id !== req.user.id) {
-        console.log('Owner != User :(: %j vs %j', req.company.owner, req.user);
+    if (req.user.equals(req.company.owner)) {
+        next();
+    }
+    else {
+        log.debug('Owner != User :(: %j vs %j', req.company.owner, req.user);
         return res.status(403).send('User is not authorized');
     }
-    next();
 };
 
 
@@ -293,7 +316,7 @@ exports.hasAuthorization = function (req, res, next) {
 exports.getSubscription = function (req, res) {
     if (!req.company) {
         var msg = 'No Company found for id `' + req.companyId + '`';
-        console.log(msg);
+        log.debug(msg);
         return res.status(404).send(msg);
     }
 
@@ -319,7 +342,7 @@ exports.createSubscription = function (req, res, next) {
 
     if (!req.company) {
         var msg = 'No Company found for id `' + req.companyId + '`';
-        console.log(msg);
+        log.debug(msg);
         return res.status(400).send(msg);
     }
 
@@ -338,7 +361,7 @@ exports.createSubscription = function (req, res, next) {
     req.price = req.query.price;
 
 
-    console.log('[CreateSubscription] Looking up subscription for planId: %s', req.planId);
+    log.debug('[CreateSubscription] Looking up subscription for planId: %s', req.planId);
     req.subscriptionType = _.find(constants.subscriptionPackages.packages, {'planId': req.planId});
 
     next();
@@ -360,30 +383,30 @@ exports.saveSubscription = function (req, res) {
             company: req.company
         });
 
-        console.log('[CompanySubscription] Creating new subscription: %j', sub);
+        log.debug('[CompanySubscription] Creating new subscription: %j', sub);
 
-        sub.save(function(err, newSub) {
+        sub.save(function (err, newSub) {
             if (err) {
-                console.log('[CompanySubscription.sub] error saving subscription information: ', err);
+                log.debug('[CompanySubscription.sub] error saving subscription information: ', err);
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err),
                     error: err
                 });
             }
 
-            console.log('[Subscription] Successfully saved subscription with id `%s`!', newSub.id);
+            log.debug('[Subscription] Successfully saved subscription with id `%s`!', newSub.id);
 
-            console.log('[CompanySubscription] Saving sub to company `%s`: %j', req.company.id, req.company);
+            log.debug('[CompanySubscription] Saving sub to company `%s`: %j', req.company.id, req.company);
 
-            Company.findOneAndUpdate({_id: req.company.id}, {'subscription': newSub._id}, {new: true}, function(err, updatedCo) {
+            Company.findOneAndUpdate({_id: req.company.id}, {'subscription': newSub._id}, {new: true}, function (err, updatedCo) {
                 if (err) {
-                    console.log('[CompanySubscription.co] error saving subscription information: ', err);
+                    log.debug('[CompanySubscription.co] error saving subscription information: ', err);
                     return res.status(400).send({
                         message: errorHandler.getErrorMessage(err),
                         error: err
                     });
                 } else {
-                    console.log('[CompanySubscription.co] Successfully created subscription to company `%s`!', updatedCo.id);
+                    log.debug('[CompanySubscription.co] Successfully created subscription to company `%s`!', updatedCo.id);
                     res.json(sub);
                 }
             });

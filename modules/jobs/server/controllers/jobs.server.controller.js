@@ -211,11 +211,17 @@ exports.list = function (req, res) {
  * Update a Job
  */
 exports.update = function (req, res) {
+    log.trace('update', 'START', {body: req.body});
     var job = req.job;
 
     debugger;
 
     job = _.extend(job, req.body);
+
+    //job.location = Address.map(req.body.location);
+    job.location = req.body.location;
+
+    log.trace('update', 'Saving job', {job: job});
 
     job.save(function (err) {
         if (err) {
@@ -224,6 +230,7 @@ exports.update = function (req, res) {
                 message: getErrorMessage(err)
             });
         } else {
+            log.trace('update', 'Successfully Saved job', {job: job});
             res.json(job);
         }
     });
@@ -314,8 +321,11 @@ exports.jobByID = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
     if (req.job.user.id !== req.user.id) {
+        log.warn('hasAuthorization', 'User is NOT Authorized');
         return res.send(403, 'User is not authorized');
     }
+
+    log.trace('hasAuthorization', 'User is Authorized');
     next();
 };
 

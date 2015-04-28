@@ -6,14 +6,82 @@
         <span data-ng-bind="vm.job.user.displayName"></span>
     </os-page-header>
 
-    <div class="row">
+    <div class="row profile">
+
+        <!--Left hand sidebar for the Job's Owner/Creator-->
+        <div class="col-md-4 col-lg-3 profile-sidebar"
+             ng-if="!!vm.enableEdit">
+
+
+            <div class="panel-heading overflow-h">
+                <span class="panel-title heading-sm">
+                        <i class="fa fa-sort mgn-right"></i> Categories
+                </span>
+            </div>
+
+            <div class="panel panel-profile">
+                <div class="panel-body mgn-btm" ng-show="vm.job.categories.length || dm.canEdit">
+                    <oset-categories class="text-center" model="vm.job.categories" mode="view" lbl-class="btn-xs">
+                         <span ng-if="dm.showEdit" class="text-center">You can help users to find your job by adding specific categories in
+                             <a ui-sref="jobs.edit({jobId: vm.job._id})"> your driver profile</a></span>
+                    </oset-categories>
+                </div>
+            </div>
+
+            <div class="panel panel-profile" data-ng-if="vm.user.type === 'owner' && vm.enableEdit">
+                <div class="panel-heading overflow-h">
+                    <span class="panel-title heading-sm">
+                        <i class="fa fa-send mgn-right"></i> Applicants
+
+                        <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'applicants'})"><i
+                                class="fa fa-external-link pull-right"></i></a>
+                    </span>
+                </div>
+                <div id="scrollbar3" class="panel-body no-padding">
+                    <div class="scrollme" ng-scrollbar rebuild-on-resize rebuild-on="rebuild:me"
+                         style="min-height: 50px; height: 400px; max-height: 500px;">
+
+
+                        <div ng-repeat="application in vm.applications" ng-init="user=application.user"
+                             class="alert-blocks small"
+                             ng-class="{'alert-blocks-success': application.isUnreviewed}">
+                            <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'messaging'})">
+                                <i class="fa fa-comments-o pull-right"></i>
+                            </a>
+                            <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'documents'})">
+                                <i class="fa fa-file-o pull-right"></i>
+                            </a>
+
+                            <img class="rounded-x mCS_img_loaded" ng-src="{{user.profileImageURL}}" alt="">
+
+                            <div class="overflow-h">
+                                <strong class="color-green">{{application.user.displayName}}
+                                    <small class="pull-right"><em>{{application.updated | amDateFormat : 'L'}}</em>
+                                    </small>
+                                </strong>
+                            </div>
+                        </div>
+
+                        <!--&lt;!&ndash;alert-blocks-success    green&ndash;&gt;-->
+                        <!--&lt;!&ndash;alert-blocks-info       blue&ndash;&gt;-->
+                        <!--&lt;!&ndash;alert-blocks-error      red&ndash;&gt;-->
+                        <!--&lt;!&ndash;*                       gray&ndash;&gt;-->
+                        <!--&lt;!&ndash;alert-blocks-pending    yellow&ndash;&gt;-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <!--Primary content column: Show the Job Details in Read-only mode-->
-        <div class="col-md-8">
+        <div class="col-md-8 {{!!vm.enableEdit ? 'col-lg-9' : 'col-lg-8'}} profile-body">
             <os-job job="vm.job" show-edit="vm.enableEdit"></os-job>
         </div>
 
+
         <!--Right-Hand sidebar for secondary information and links-->
-        <div class="col-md-4">
+        <div class="col-md-4 profile-sidebar"
+             ng-if="!vm.enableEdit">
 
             <!--Company Profile Image-->
             <div class="company-image mgn-bottom">
@@ -21,45 +89,23 @@
             </div>
 
             <!--Signup-Apply Modal Launch Button-->
-            <div class="mgn-bottom" data-ng-if="!vm.user" oset-signup-apply-modal type="driver" job='vm.job'>
-                <button class="btn btn-cta-primary btn-lg btn-block bigger">
-                    apply
-                </button>
-            </div>
+            <!--<div class="mgn-bottom" data-ng-if="!vm.user" oset-signup-apply-modal type="driver" job='vm.job'>-->
+            <!--<button class="btn btn-cta-primary btn-lg btn-block bigger">-->
+            <!--apply-->
+            <!--</button>-->
+            <!--</div>-->
 
             <!--Gateway Signup/Apply/Info Launch Button-->
             <div class="mgn-bottom" type="driver" job='vm.job'
                  data-ng-if="!vm.user || vm.user.type === 'driver' || vm.user.company._id !== vm.job.company._id">
                 <button class="btn btn-cta-primary btn-lg btn-block bigger" ui-sref="gateway({jobId:vm.job._id})">
-                    gateway
+                    apply now <i class="fa fa-send mgn-left"></i>
                 </button>
             </div>
 
             <!--Application Summary for Driver-->
             <div class="mgn-bottom" data-ng-if="vm.user.isDriver">
                 <oset-application-summary job="vm.job" profile="vm.user" display-mode="mine"></oset-application-summary>
-            </div>
-
-            <!--Application List Summary info for Owner-->
-            <div class="panel panel-default" data-ng-if="vm.user.type === 'owner' && vm.enableEdit">
-                <div class="panel-heading ">
-                    <span class="h4">Applications</span>
-                </div>
-                <div class="panel-body">
-
-                    <table class="table table-hover">
-                        <tbody>
-                        <tr ng-repeat="application in vm.applications">
-                            <td>{{application.user.displayName}}</td>
-                            <td class="text-right">
-                                <os-application-status-badge model="application"></os-application-status-badge>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <pre ng-if="true || vm.debug">{{vm.applications.length}}</pre>
-                </div>
             </div>
 
             <!--Map & Location Information - Only shown if location is available-->
@@ -73,33 +119,8 @@
                 </div>
             </div>
 
-            <!--Summary and Additional Info-->
-            <div class="panel panel-default ">
-                <div class="panel-heading ">
-                    <span class="h4">Info</span>
-                </div>
-                <div class="panel-body ">
-                    <span ng-if="vm.job.positionType">
-                        <strong>Type: </strong><span>{{ vm.job.positionType }}</span>
-                    </span>
-
-                    <span ng-if="!!vm.job.payString || vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">
-                        <strong>Pay: </strong>
-                            <span ng-show="!!vm.job.payRate.min">{{ vm.job.payRate.min | currency }}</span>
-                            <span ng-show="!!vm.job.payRate.max"><span ng-show="!!vm.job.payRate.min"> to </span>{{ vm.job.payRate.max | currency }}</span>
-                            <span ng-show="!!vm.job.payString && !!vm.job.payRate.period"> per {{vm.job.payRate.period}}</span>
-                    </span>
-                </div>
-            </div>
-
 
         </div>
 
-    </div>
-
-    <div class="row">
-        <div class="panel panel-default col-md-10 col-md-offset-1">
-            <pre>{{vm.applications | prettyPrint}}</pre>
-        </div>
     </div>
 </section>

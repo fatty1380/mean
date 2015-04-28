@@ -194,7 +194,7 @@
             job.$update(function (response) {
                 $state.go('jobs.view', {jobId: response._id});
             }, function (errorResponse) {
-                if (!!errorResponse.data.message) {
+                if (!!errorResponse.data && errorResponse.data.message) {
                     vm.error = errorResponse.data.message;
                 }
                 else {

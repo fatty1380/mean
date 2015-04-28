@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+_            = require('lodash'),
 Schema       = mongoose.Schema;
 
 var GatewaySchema = new Schema({
@@ -40,10 +41,12 @@ var GatewaySchema = new Schema({
 }, {'toJSON': {virtuals: true}});
 
 GatewaySchema.pre('save', function (next) {
-    if(this.isNew()) {
+    if (_.isUndefined(this.isNew) || _.isFunction(this.isNew) ? this.isNew() : !!this.isNew) {
         this.created = Date.now();
     }
-    this.modified = Date.now();
+    if (!_.isFunction(this.isModified) || this.isModified()) {
+        this.modified = Date.now();
+    }
     next();
 });
 

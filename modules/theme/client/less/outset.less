@@ -2266,3 +2266,148 @@ pdf {
     //padding-bottom : 2px;
   }
 }
+
+/** ------------------------------- **
+* profile pg? */
+
+/*Panel Title Box*/
+.profile {
+  .list-group i {
+    min-width: 20px;
+    margin-right: 5px;
+    text-align: center;
+  }
+
+  .heading-sm-v2 {
+    font-size: 16px;
+  }
+
+  .profile-body {
+    padding: 20px;
+    background: #f7f7f7;
+  }
+
+  .panel-profile, .panel-default {
+    border        : none;
+    margin-bottom : 0;
+    box-shadow    : none;
+    &.no-bg {
+      background : inherit;
+    }
+  }
+
+  .panel-heading {
+    color         : #585f69;
+    background    : #fff;
+    padding       : 7px 15px;
+    border-bottom : solid 3px #f7f7f7;
+  }
+
+  .panel-heading, .panel-heading-v2 {
+    .overflow-h {
+      i.pull-right {
+        top      : 7px;
+        position : relative;
+      }
+
+      a {
+        i {
+          color : #777;
+        }
+
+        &:hover i {
+          color : #555;
+        }
+      }
+
+      i.pull-right {
+        color: #777;
+        &:hover {
+          color: #555;
+        }
+      }
+    }
+  }
+
+  .panel-title {
+    font-size : 16px;
+  }
+
+  .alert-blocks {
+    margin     : 0 0 5px;
+    background : #f7f7f7;
+    padding    : 10px 10px 13px;
+
+    &:first-child {
+      margin-top : 15px;
+    }
+
+    &.alert-blocks-pending {
+      background : #fffdcc;
+    }
+
+    &.alert-blocks-success {
+      background : #e1febc;
+    }
+
+    &.alert-blocks-pending {
+      background : #fffdcc;
+    }
+
+    &.alert-blocks-error {
+      background : #fee0e0;
+    }
+
+    &.alert-blocks-info {
+      background : #e0f3fe;
+    }
+
+    &.alert-dismissable {
+      padding-right : 35px;
+    }
+
+    i {
+      float        : left;
+      margin-right : 15px;
+    }
+
+    &.small {
+      &:first-child {
+        margin-top: 5px;
+      }
+
+      font-size: small;
+
+      img {
+        width: 28px;
+        height: 28px;
+        margin-right: 10px;
+      }
+
+//      i.fa {
+//        font-size: x-small;
+//        margin-right: 0;
+//        padding-right: 0;
+//        margin: 0 2px;
+//        padding: 0 2px;
+//      }
+    }
+
+    img {
+      float        : left;
+      width        : 40px;
+      height       : 40px;
+      margin-right : 15px;
+    }
+
+    strong small {
+      color       : #a3a3a3;
+      font-weight : 200;
+    }
+
+    p {
+      color         : #999;
+      margin-bottom : 0;
+    }
+  }
+}

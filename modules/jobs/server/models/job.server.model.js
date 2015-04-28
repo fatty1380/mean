@@ -8,7 +8,12 @@ _            = require('lodash'),
 Q            = require('q'),
 Address      = mongoose.model('Address'),
 Company      = mongoose.model('Company'),
-Schema       = mongoose.Schema;
+Schema       = mongoose.Schema,
+path         = require('path'),
+log          = require(path.resolve('./config/lib/logger')).child({
+    module: 'jobs',
+    file: 'Jobs.Model'
+});
 
 /**
  * Job Schema
@@ -50,7 +55,9 @@ var JobSchema = new Schema({
         default: ''
     },
 
-    location: [Address],
+    location: {
+        type: ['Address']
+    },
 
     payRate: {
         min: {
@@ -125,29 +132,41 @@ JobSchema.pre('save', function (next) {
     next();
 });
 
+JobSchema.pre('validate', function (next) {
+    log.trace('pre.validate', 'START', {Addresses: this.location});
+
+    this.location = Address.map(this.location);
+
+    log.trace('pre.validate', 'End Result location(s)', {Addresses: this.location});
+
+    next();
+});
+
 // This migrates non-AddressSchema documents into Addresses
 // TODO: Determine why we need to assign to _this._doc, not data
 JobSchema.pre('init', function (next, data) {
     var _this = this;
 
-     _this._doc.location = _.map(data.location, function (location) {
-        return (location instanceof Address) ? location : new Address(location);
-    });
+    _this._doc.location = Address.map(data.location);
 
     next();
 });
 
 JobSchema.virtual('payString').get(function () {
+    log.debug('virtual.payString', 'GET', {payRate: this.payRate});
+
     var retval = '';
 
-    if (!!this.payRate.min) {
-        retval = '$' + this.payRate.min;
-    }
-    if (!!this.payRate.max) {
-        retval += (!!retval ? ' to $' : '$') + this.payRate.max;
-    }
-    if (!!retval && !!this.payRate.period) {
-        retval += ' per ' + this.payRate.period;
+    if (!!this.payRate) {
+        if (!!this.payRate.min) {
+            retval = '$' + this.payRate.min;
+        }
+        if (!!this.payRate.max) {
+            retval += (!!retval ? ' to $' : '$') + this.payRate.max;
+        }
+        if (!!retval && !!this.payRate.period) {
+            retval += ' per ' + this.payRate.period;
+        }
     }
 
     return retval;

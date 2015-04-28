@@ -95,6 +95,87 @@ describe('Job Model Unit Tests:', function () {
                 done();
             });
         });
+
+        it('should interpret an empty Address as an `empty` address with the corret virtuals', function(done) {
+            var proto = {};
+            job.location = [proto];
+
+            return job.save(function (err) {
+                should.not.exist(err);
+
+                job.should.have.property('location').with.length(1);
+
+                var loc = job.location[0];
+
+                should.exist(loc);
+
+                loc.should.have.property('zipOnly', false);
+                loc.should.have.property('empty', true);
+                loc.should.have.property('type', 'main');
+
+                done();
+            });
+        });
+
+
+        it('should be able to save with a POJO address', function (done) {
+            var proto = {city: 'Laramie', state: 'WY'};
+            job.location = [proto];
+
+            return job.save(function (err) {
+                should.not.exist(err);
+
+                job.should.have.property('location').with.length(1);
+
+                var loc = job.location[0];
+
+                should.exist(loc);
+
+                loc.should.have.property('city', proto.city);
+                loc.should.have.property('state', proto.state);
+
+                loc.should.have.property('zipOnly', false);
+                loc.should.have.property('empty', false);
+                loc.should.have.property('type', 'main');
+
+                done();
+            });
+        });
+
+
+
+        it('should be able to update an existing address', function (done) {
+            var proto = {city: 'Laramie', state: 'WY'};
+            job.location = [proto];
+
+            return job.save(function (err) {
+                should.not.exist(err);
+
+                job.should.have.property('location').with.length(1);
+
+                proto = {city: 'Seattle', state: 'WA', zipCode: '98011'};
+                job.location = [proto];
+
+                return job.save(function(err) {
+                    should.not.exist(err);
+
+                    var loc = job.location[0];
+
+                    should.exist(loc);
+
+                    loc.should.have.property('city', proto.city);
+                    loc.should.have.property('state', proto.state);
+                    loc.should.have.property('zipCode', proto.zipCode);
+
+                    loc.should.have.property('zipOnly', false);
+                    loc.should.have.property('empty', false);
+                    loc.should.have.property('type', 'main');
+
+                    done();
+
+                });
+            });
+        });
     });
 
     afterEach(function (done) {
