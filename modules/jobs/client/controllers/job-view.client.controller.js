@@ -15,8 +15,6 @@
         vm.applications = applications;
         vm.company = job && typeof job.company === 'object' && job.company || undefined;
 
-        activate();
-
         function activate() {
 
             if (vm.user.type === 'driver') {
@@ -56,10 +54,14 @@
                 });
             }
         };
+
+
+        activate();
+
     }
 
 
-    JobViewController.$inject = ['$stateParams', '$state', '$log', 'Authentication','job', 'applications'];
+    JobViewController.$inject = ['$stateParams', '$scope', '$state', '$log', 'Authentication','job', 'applications'];
 
     angular.module('jobs')
         .controller('JobViewController', JobViewController);
