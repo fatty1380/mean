@@ -240,6 +240,8 @@ function saveLocally(files, folder) {
                 }
 
                 var url = config.services.fs.writePath + files.file.name;
+
+                url = url.replace('/client/', '/');
                 console.log('[SaveLocally.S3] resolving with URL', url);
 
                 return deferred.resolve(url);
