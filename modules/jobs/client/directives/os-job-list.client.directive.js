@@ -34,8 +34,6 @@
                 }
             }
 
-            debugger;
-
             if (!!vm.companyId && !!vm.driverId) {
                 $log.warn('[%s] Both company and driver specified, defaulting to company', 'JobListController');
             }

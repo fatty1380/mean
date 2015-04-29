@@ -96,7 +96,7 @@ var CompanySchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, {toJSON: {virtuals: true}});
 
 CompanySchema.pre('validate', function (next) {
     debugger;
