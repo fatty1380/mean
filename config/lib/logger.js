@@ -12,12 +12,23 @@ vsprintf    = require('sprintf-js').vsprintf;
  */
  chalk.enabled = true;
 
+var reqSerializer = function(req) {
+    return {
+        method: req.method,
+        url: req.url,
+        id: req.id
+    }
+};
+
 /**
  * Default logger, shows anything level _trace_ and above
  */
 var logger = bunyan.createLogger({
     name: 'outset',
-    level: 'trace'
+    level: 'trace',
+    serializers: {
+        req: reqSerializer //bunyan.stdSerializers.req
+    }
 });
 
 

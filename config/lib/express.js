@@ -19,10 +19,14 @@ helmet         = require('helmet'),
 passport       = require('passport'),
 flash          = require('connect-flash'),
 consolidate    = require('consolidate'),
+addRequestId   = require('express-request-id')(),
 path           = require('path'),
+log            = require(path.resolve('./config/lib/logger')),
 fs             = require('fs'),
 http           = require('http'),
 https          = require('https');
+
+var reqIndex = 0;
 
 /**
  * Initialize local variables
@@ -37,26 +41,6 @@ module.exports.initLocalVariables = function (app) {
     app.locals.jsFiles = config.files.client.js;
     app.locals.cssFiles = config.files.client.css;
     app.locals.fontFiles = config.files.client.font;
-
-    // Passing the request url to environment locals
-    app.use(function (req, res, next) {
-        res.locals.host = req.protocol + '://' + req.hostname;
-        res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
-        next();
-    });
-
-    console.log('EXPRESS ROUTER: config: %j', config.https)
-
-    if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
-        app.use(function (req, res, next) {
-            if ((config.https.enabled) && (!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'] !== 'https') {
-                console.log('[EXPRESS.ROUTER] HTTPS Redirect %s', req.get('Host'));
-                return res.redirect(['https://', req.get('Host'), req.url].join(''));
-            }
-            return next();
-        });
-    }
-
 };
 
 /**
@@ -81,6 +65,37 @@ module.exports.initMiddleware = function (app) {
     app.use(favicon('./modules/core/client/img/brand/favicon.ico'));
 
     var accessLogStream, streamType;
+
+    // Init a unique Request ID
+    app.use(addRequestId);
+
+    app.use(function (req, res, next) {
+        req.log = log.child({
+            req: req,
+            req_id: req.id
+        });
+
+        next();
+    })
+
+    // Passing the request url to environment locals
+    app.use(function (req, res, next) {
+        res.locals.host = req.protocol + '://' + req.hostname;
+        res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
+        next();
+    });
+
+    console.log('EXPRESS ROUTER: config: %j', config.https)
+
+    if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
+        app.use(function (req, res, next) {
+            if ((config.https.enabled) && (!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'] !== 'https') {
+                console.log('[EXPRESS.ROUTER] HTTPS Redirect %s', req.get('Host'));
+                return res.redirect(['https://', req.get('Host'), req.url].join(''));
+            }
+            return next();
+        });
+    }
 
     // Environment dependent middleware
     if (process.env.NODE_ENV === 'development') {

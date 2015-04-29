@@ -25,7 +25,7 @@ Q            = require('q');
 
 exports.executeQuery = function (req, res, next) {
 
-    log.debug('ExecuteQuery', {query: req.query, sort: req.sort});
+    req.log.debug('ExecuteQuery', {query: req.query, sort: req.sort});
 
     var query = req.query || {};
     var sort = req.sort || '-posted';
@@ -64,7 +64,7 @@ exports.executeQuery = function (req, res, next) {
 
             Job.populate(jobs, options, function (err, populated) {
                 if (err) {
-                    log.error('error looking up users for applications, returning non-populated version', err);
+                    req.log.error('error looking up users for applications, returning non-populated version', err);
                     next();
                 }
 
@@ -77,7 +77,7 @@ exports.executeQuery = function (req, res, next) {
 
                 Job.populate(jobs, options, function (err, populated) {
                     if (err) {
-                        log.error('error looking up users for applications, returning non-populated version', err);
+                        req.log.error('error looking up users for applications, returning non-populated version', err);
                         next();
                     }
 
@@ -123,14 +123,14 @@ var getErrorMessage = function (err) {
 
 var incrementJobsCount = function(req) {
     if(!req.company) {
-        log.error('No Company defined in request');
+        req.log.error('No Company defined in request');
         return false;
     }
 
     var sub = req.company.subscription;
 
     if(!sub) {
-        log.error('No Subscription for company `%s`', req.company.id);
+        req.log.error('No Subscription for company `%s`', req.company.id);
         return false;
     }
 
@@ -143,7 +143,7 @@ var incrementJobsCount = function(req) {
     }
 
     sub.save(function(err) {
-        log.info('updated company subscription', {subscription: sub});
+        req.log.info('updated company subscription', {subscription: sub});
     });
 };
 
@@ -155,7 +155,7 @@ exports.create = function (req, res) {
 
     var job = new Job(req.body);
 
-    log.info('Create', 'Company %s is posting a new job', req.companyId, {job: job});
+    req.log.info('Create', 'Company %s is posting a new job', req.companyId, {job: job});
 
     // Set properties
     job.user = req.user;
@@ -163,16 +163,16 @@ exports.create = function (req, res) {
     job.postStatus = 'posted';
     job.posted = Date.now();
 
-    log.trace('Create', 'Creating new job', {job: job});
+    req.log.trace('Create', 'Creating new job', {job: job});
 
     job.save(function (err) {
         if (err) {
-            log.error('Create', 'Error Creating new job', {error: err, job: job});
+            req.log.error('Create', 'Error Creating new job', {error: err, job: job});
             return res.send(400, {
                 message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later '+ (err.message ? '('+err.message+')': '')
             });
         } else {
-            log.info('Create', 'Created new job with ID `%s`', job._id);
+            req.log.info('Create', 'Created new job with ID `%s`', job._id);
             res.json(job);
 
             incrementJobsCount(req);
@@ -186,8 +186,8 @@ exports.create = function (req, res) {
  * Show the current Job
  */
 exports.read = function (req, res) {
-    log.info('read','Loaded Job', {jobId: req.job && req.job._id, query: req.query} );
-    log.trace('read','Loaded Job', {jobId: req.job && req.job._id, query: req.query, job: req.job} );
+    req.log.info('read','Loaded Job', {jobId: req.job && req.job._id, query: req.query} );
+    req.log.trace('read','Loaded Job', {jobId: req.job && req.job._id, query: req.query, job: req.job} );
 
     if (!req.job) {
         return res.status(404).send({
@@ -202,8 +202,8 @@ exports.read = function (req, res) {
  * List of Jobs stored in request
  */
 exports.list = function (req, res) {
-    log.info('list','Found %d jobs', req.jobs.length, {query: req.query} );
-    log.trace('list','Found %d jobs', req.jobs.length, {query: req.query, jobs: req.jobs} );
+    req.log.info({query: req.query, func: 'list'},'Found %d jobs', req.jobs.length);
+    req.log.trace({query: req.query, jobs: req.jobs, func: 'list'},'Found %d jobs', req.jobs.length);
     res.json(req.jobs);
 };
 
@@ -211,7 +211,7 @@ exports.list = function (req, res) {
  * Update a Job
  */
 exports.update = function (req, res) {
-    log.trace('update', 'START', {body: req.body});
+    req.log.trace('update', 'START', {body: req.body});
     var job = req.job;
 
     debugger;
@@ -221,16 +221,16 @@ exports.update = function (req, res) {
     //job.location = Address.map(req.body.location);
     job.location = req.body.location;
 
-    log.trace('update', 'Saving job', {job: job});
+    req.log.trace('update', 'Saving job', {job: job});
 
     job.save(function (err) {
         if (err) {
-            log.error('Update','Error Saving job', err);
+            req.log.error('Update','Error Saving job', err);
             return res.send(400, {
                 message: getErrorMessage(err)
             });
         } else {
-            log.trace('update', 'Successfully Saved job', {job: job});
+            req.log.trace('update', 'Successfully Saved job', {job: job});
             res.json(job);
         }
     });
@@ -256,7 +256,7 @@ exports.delete = function (req, res) {
 /** * List of a user's posted jobs
  */
 exports.queryByUserID = function (req, res, next) {
-    log.trace('queryByUserID', 'Querying by companyId', {companyId: req.params.userId, query: req.query});
+    req.log.trace('queryByUserID', 'Querying by companyId', {companyId: req.params.userId, query: req.query});
 
     req.query = {
         user: req.params.userId
@@ -269,7 +269,7 @@ exports.queryByUserID = function (req, res, next) {
  * List of a company's posted jobs
  */
 exports.queryByCompanyID = function (req, res, next) {
-    log.trace('queryByCompanyID', 'Querying by companyId', {companyId: req.params.companyId, query: req.query});
+    req.log.trace('queryByCompanyID', 'Querying by companyId', {companyId: req.params.companyId, query: req.query});
 
     req.query = {
         company: req.params.companyId
@@ -279,7 +279,7 @@ exports.queryByCompanyID = function (req, res, next) {
 };
 
 exports.populateApplications = function (req, res, next) {
-    log.trace('populateApplications', 'populating applications');
+    req.log.trace('populateApplications', 'populating applications');
     req.populate = [{property: 'applications', fields: ''}];
 
     next();
@@ -290,26 +290,26 @@ exports.populateApplications = function (req, res, next) {
  */
 exports.jobByID = function (req, res, next, id) {
 
-    log.debug('JobById', 'Loading job by id %s. URL: %s', {jobId: id, url: req.url});
-    log.trace('JobById', 'Request body', {reqBody: req.body, jobId: id, url:req.url});
+    req.log.debug('JobById', 'Loading job by id %s. URL: %s', {jobId: id, url: req.url});
+    req.log.trace('JobById', 'Request body', {reqBody: req.body, jobId: id, url:req.url});
 
     Job.findById(id)
         .populate('user', 'displayName email')
         .populate('company')
         .exec(function (err, job) {
             if (err) {
-                log.error('JobById', 'Error while loading job', {error: err});
+                req.log.error('JobById', 'Error while loading job', {error: err});
                 return next(err);
             }
 
             if (!!req.user && !!req.user.driver) {
-                log.debug('JobById', 'Requesting User has Driver defined!', {user: req.user, driver: req.user.driver});
+                req.log.debug('JobById', 'Requesting User has Driver defined!', {user: req.user, driver: req.user.driver});
             } else if (!!req.user && !!req.user.company) {
-                log.debug('JobById', 'Requesting User has Company defined!', {user: req.user, company: req.user.company});
+                req.log.debug('JobById', 'Requesting User has Company defined!', {user: req.user, company: req.user.company});
             }
 
-            log.debug('JobById', 'Returning job', {jobId: !!job && job._id});
-            log.trace('JobById', 'Returning job', {jobId: !!job && job._id, job: job});
+            req.log.debug('JobById', 'Returning job', {jobId: !!job && job._id});
+            req.log.trace('JobById', 'Returning job', {jobId: !!job && job._id, job: job});
 
             req.job = job;
             next();
@@ -321,11 +321,11 @@ exports.jobByID = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
     if (req.job.user.id !== req.user.id) {
-        log.warn('hasAuthorization', 'User is NOT Authorized');
+        req.log.warn('hasAuthorization', 'User is NOT Authorized');
         return res.send(403, 'User is not authorized');
     }
 
-    log.trace('hasAuthorization', 'User is Authorized');
+    req.log.trace('hasAuthorization', 'User is Authorized');
     next();
 };
 
@@ -337,12 +337,12 @@ exports.validateSubscription = function (req, res, next) {
     .populate('subscription')
     .exec(function(err, company) {
             if(err || !company) {
-                log.warn('ValidateSubscription', 'Unable to find Company', {companyId: req.companyId});
+                req.log.warn('ValidateSubscription', 'Unable to find Company', {companyId: req.companyId});
                 return res.status(404).send({message: 'Unable to find company', error: err});
             }
 
             if(!company.subscription.isValid) {
-                log.warn('ValidateSubscription', 'Invalid Subscription: %s', company.subscription.statusMessage, {subscription: company.subscription});
+                req.log.warn('ValidateSubscription', 'Invalid Subscription: %s', company.subscription.statusMessage, {subscription: company.subscription});
                 return res.status(403).send({message: company.subscription.statusMessage});
             }
 
