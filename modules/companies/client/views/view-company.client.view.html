@@ -29,7 +29,7 @@
 
     <div class="row profile">
         <div class="col-md-8" data-ng-class="{'col-md-offset-2': !vm.company}">
-            <os-company company="vm.company" config="vm.config"></os-company>
+            <os-company company="vm.company" config="vm.config" can-edit="vm.canEdit"></os-company>
 
             <os-job-list ng-if="vm.canEdit" header="Open Jobs" company="vm.company"
                          company-id="{{vm.company.id}}"

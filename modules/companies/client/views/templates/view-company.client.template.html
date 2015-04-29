@@ -44,25 +44,26 @@
                 <div data-ng-bind-html="vm.company.about"></div>
             </div>
         </div>
-        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && vm.createEnabled">
+
+        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && vm.canEdit">
             <div class="panel-heading"><span class="h4">Please create your company profile</span></div>
             <div class="panel-body">
                 <p class="text-muted">Hi {{::vm.user.firstName}},<br/>{{::vm.createText}}</p><br/>
 
-                <p class="text-right" ng-if="!vm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png"
+                <p class="text-right" ng-if="!vm.canEdit"><img src="/modules/core/img/brand/logo-blue.png"
                                                                      alt="The Outset Team"/></p>
 
-                <div class="text-center" ng-if="vm.createEnabled">
+                <div class="text-center" ng-if="vm.canEdit">
                     <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!
                     </button>
                 </div>
 
             </div>
         </div>
-        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.createEnabled">
+
+        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.canEdit">
             <div class="panel-body">
-                <p class="text-muted text-center">
-                    Sorry, but {{vm.company.owner.displayName}} has not completed their Company Profile.
+                <p ng-bind-html="vm.createText">
                 </p>
             </div>
         </div>

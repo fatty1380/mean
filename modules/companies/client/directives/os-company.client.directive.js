@@ -6,13 +6,11 @@
 
         vm.user = Authentication.user;
 
-        vm.createEnabled = !!vm.config ? vm.config.create : true;
-
-        if(vm.createEnabled) {
+        if(vm.canEdit) {
             vm.createText = 'Before posting any jobs, you will need to create your company profile. Click the button below to continue.';
         }
         else {
-            vm.createText = 'Thanks for signing up. Right now our site is only available to drivers to give them a chance to fill out their profiles and order reports. You will receive an email once the site is available for job postings.';
+            vm.createText = 'Sorry, but we have not finished our company profile page yet. Please check back again later.<br class="mgn-btm">Thanks, ' + vm.company.name;
         }
 
         vm.creEdit = function () {
@@ -33,7 +31,8 @@
             scope: {
                 company: '=',
                 inline: '=',
-                config: '=?'
+                config: '=?',
+                canEdit: '=?'
             },
             restrict: 'E',
             replace: true,

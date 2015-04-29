@@ -1684,25 +1684,26 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <div data-ng-bind-html="vm.company.about"></div>\n' +
   '            </div>\n' +
   '        </div>\n' +
-  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && vm.createEnabled">\n' +
+  '\n' +
+  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && vm.canEdit">\n' +
   '            <div class="panel-heading"><span class="h4">Please create your company profile</span></div>\n' +
   '            <div class="panel-body">\n' +
   '                <p class="text-muted">Hi {{::vm.user.firstName}},<br/>{{::vm.createText}}</p><br/>\n' +
   '\n' +
-  '                <p class="text-right" ng-if="!vm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png"\n' +
+  '                <p class="text-right" ng-if="!vm.canEdit"><img src="/modules/core/img/brand/logo-blue.png"\n' +
   '                                                                     alt="The Outset Team"/></p>\n' +
   '\n' +
-  '                <div class="text-center" ng-if="vm.createEnabled">\n' +
+  '                <div class="text-center" ng-if="vm.canEdit">\n' +
   '                    <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!\n' +
   '                    </button>\n' +
   '                </div>\n' +
   '\n' +
   '            </div>\n' +
   '        </div>\n' +
-  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.createEnabled">\n' +
+  '\n' +
+  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.canEdit">\n' +
   '            <div class="panel-body">\n' +
-  '                <p class="text-muted text-center">\n' +
-  '                    Sorry, but {{vm.company.owner.displayName}} has not completed their Company Profile.\n' +
+  '                <p ng-bind-html="vm.createText">\n' +
   '                </p>\n' +
   '            </div>\n' +
   '        </div>\n' +
