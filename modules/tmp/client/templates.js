@@ -1657,7 +1657,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="col-md-8 opaque-bg">\n' +
   '                <span class="nowrap"\n' +
   '                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;"\n' +
-  '                      ng-bind-html="vm.company.about | limitTo : 100"></span>\n' +
+  '                      ng-bind-html="vm.company.about | limitTo : 1000"></span>\n' +
   '            </div>\n' +
   '            <dl class="col-md-4 dl-horizontal">\n' +
   '                <dt>Location:</dt>\n' +
@@ -1702,7 +1702,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.createEnabled">\n' +
   '            <div class="panel-body">\n' +
   '                <p class="text-muted text-center">\n' +
-  '                    Sorry, but {{vm.user.displayName}} has not completed their Company Profile.\n' +
+  '                    Sorry, but {{vm.company.owner.displayName}} has not completed their Company Profile.\n' +
   '                </p>\n' +
   '            </div>\n' +
   '        </div>\n' +
@@ -4352,9 +4352,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <div class="panel panel-default job-info">\n' +
   '                    <div ng-show="dm.showSection( \'about\') ">\n' +
   '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')">\n' +
-  '                            <span class="h4">About {{dm.job.company.name || \'the Company\'}}</span>\n' +
+  '                            <span class="h4">\n' +
+  '                                About {{dm.job.company.name || \'the Company\'}}\n' +
+  '                                <i class="pull-right fa fa-external-link" ui-sref="companies.view({companyId:dm.job.company._id})"></i>\n' +
+  '                            </span>\n' +
   '                        </div>\n' +
-  '                        <div class="panel-body "><p data-ng-bind-html="dm.job.company.about">not available</p></div>\n' +
+  '                        <div class="panel-body ">\n' +
+  '                            <p data-ng-bind-html="dm.job.company.about">not available</p>\n' +
+  '\n' +
+  '                            <p class="text-center">\n' +
+  '                            <a class="btn btn-oset-secondary" ui-sref="companies.view({companyId:dm.job.company._id})">\n' +
+  '                                learn more ...\n' +
+  '                            </a>\n' +
+  '                            </p>\n' +
+  '                        </div>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
