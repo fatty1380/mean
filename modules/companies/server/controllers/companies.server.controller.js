@@ -321,6 +321,10 @@ exports.hasAuthorization = function (req, res, next) {
     if (req.user.equals(req.company.owner)) {
         next();
     }
+    else if (req.user.isAdmin) {
+        req.log.info({company: {id: req.company.id, user: req.user._id}}, 'COmpany being edited by admin `%s`', req.user.username);
+        next();
+    }
     else {
         req.log.debug({company: {id: req.company.id, owner: req.company.owner}}, 'Owner != User :(: %j vs %j', req.company.owner, req.user);
         return res.status(403).send('User is not authorized');

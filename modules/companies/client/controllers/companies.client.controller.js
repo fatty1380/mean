@@ -21,6 +21,10 @@
                 vm.canEdit = true;
                 vm.titleText = 'Company Profile';
                 vm.subtitle = 'Hi ' + vm.user.firstName + ', Welcome to Outset!';
+            } else if (auth.isAdmin()) {
+                vm.canEdit = true;
+                vm.titleText = 'Company Profile';
+                vm.subtitle = 'ADMINISTRATOR MODE';
             } else {
                 vm.canEdit = false;
                 vm.titleText = vm.company.name;
