@@ -162,9 +162,20 @@
                 <div class="panel panel-default job-info">
                     <div ng-show="dm.showSection( 'about') ">
                         <div class="panel-heading" ng-show="dm.showSection('all')">
-                            <span class="h4">About {{dm.job.company.name || 'the Company'}}</span>
+                            <span class="h4">
+                                About {{dm.job.company.name || 'the Company'}}
+                                <i class="pull-right fa fa-external-link" ui-sref="companies.view({companyId:dm.job.company._id})"></i>
+                            </span>
                         </div>
-                        <div class="panel-body "><p data-ng-bind-html="dm.job.company.about">not available</p></div>
+                        <div class="panel-body ">
+                            <p data-ng-bind-html="dm.job.company.about">not available</p>
+
+                            <p class="text-center">
+                            <a class="btn btn-oset-secondary" ui-sref="companies.view({companyId:dm.job.company._id})">
+                                learn more ...
+                            </a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

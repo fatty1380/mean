@@ -17,7 +17,7 @@
             <div class="col-md-8 opaque-bg">
                 <span class="nowrap"
                       style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;"
-                      ng-bind-html="vm.company.about | limitTo : 100"></span>
+                      ng-bind-html="vm.company.about | limitTo : 1000"></span>
             </div>
             <dl class="col-md-4 dl-horizontal">
                 <dt>Location:</dt>
@@ -62,7 +62,7 @@
         <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.createEnabled">
             <div class="panel-body">
                 <p class="text-muted text-center">
-                    Sorry, but {{vm.user.displayName}} has not completed their Company Profile.
+                    Sorry, but {{vm.company.owner.displayName}} has not completed their Company Profile.
                 </p>
             </div>
         </div>

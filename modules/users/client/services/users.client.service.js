@@ -57,7 +57,7 @@
                 }, {}).get({userId: userId}).$promise;
             },
             getUserForDriver : function(driver) {
-                var deferred = $q.defer;
+                var deferred = $q.defer();
 
                 if(_.isObject(driver.user) && !!driver.user._id) {
                     deferred.resolve(driver);
@@ -81,7 +81,7 @@
 
     UsersService.$inject = ['$resource', '$q'];
     NewUserService.$inject = ['Authentication', '$resource', '$log', '$http', '$q'];
-    ProfilesService.$inject = ['$resource'];
+    ProfilesService.$inject = ['$resource', '$q'];
 
     angular
         .module('users')
