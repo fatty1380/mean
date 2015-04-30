@@ -269,7 +269,6 @@
                                         };
 
                                         _this.driver.then(function (driver) {
-                                            debugger;
                                             _this.models.application.introduction = driver.about;
                                         });
 

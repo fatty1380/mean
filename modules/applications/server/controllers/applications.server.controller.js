@@ -45,7 +45,7 @@ function executeQuery(req, res) {
     var query = req.query || {};
     var sort = req.sort || '-created';
 
-    var populate = (req.populate || ['job', 'connection', 'messages']).join(' ')
+    var populate = (req.populate || ['job', 'connection', 'messages']).join(' ');
 
     Application.find(query)
         .sort(sort)
@@ -67,93 +67,123 @@ function executeQuery(req, res) {
         });
 }
 
+function processDocuments(req, application) {
+    return _.map(application.releases, function (release) {
+        if (_.isEmpty(release.file) || moment(release.signature.timestamp).isAfter(release.modified)) {
+            req.log.info('update', 'Saving file to cloud');
+            var newRelease = new Release(release);
+            return releaseDocs.generateDocument(newRelease, req.user);
+        }
+
+        req.log.info('update', 'File has already been saved to cloud');
+        return Q.when(release);
+    });
+}
+
 /**
  * Create a Application
  */
 function create(req, res) {
 
-    log.trace('create', 'Creating new application from body', {body: req.body, url: req.url});
-    log.info('create', 'Creating new application', {url: req.url});
+    var jobId = req.job && req.job.id || req.body.job && req.body.job.id || req.body.jobId || req.query.jobId;
+    req.log.trace({
+        func: 'create',
+        job: req.job,
+        bodyJob: req.body.job,
+        bodyId: req.body.jobId,
+        query: req.query
+    }, 'Creating application for job %s', jobId);
 
-    var releases = req.body.releases;
-    delete req.body.releases;
+    if (_.isEmpty(jobId)) {
+        req.log.error({
+            func: 'create',
+            job: req.job,
+            bodyJob: req.body.job,
+            bodyId: req.body.jobId,
+            query: req.query
+        }, 'Cannot create an application without a job to attach it to', {
+            job: req.job,
+            bodyJob: req.body.job,
+            bodyId: req.body.jobId,
+            query: req.query
+        });
+        return res.status(400).send({
+            message: 'Must specify which job this application is for'
+        });
+    }
 
+    //var releases = req.body.releases;
+    //delete req.body.releases;
     var application = new Application(req.body);
 
-    var processedDocs = _.map(releases, function (release) {
-        var newRelease = new Release(release);
+    (_.isEmpty(req.job) ? Job.findById(jobId) : Q.when(req.job))
+        .then(function (job) {
+            req.log.trace({func: 'create.findJob'}, 'Found Job: %j', job);
+            req.job = job;
 
-        return releaseDocs.generateDocument(newRelease, req.user)
-            .then(function (release) {
-                debugger;
-                _.extend(newRelease, release);
-            });
-    });
+            req.log.trace({body: req.body}, 'create', 'Creating new application from body');
+            req.log.info({func: 'create'}, 'Creating new application');
 
+            // TODO: Confirm that new logic properly processes documents
+            var processedDocs = processDocuments(req, application);
 
-    Q.allSettled(processedDocs).then(
+            return Q.all(processedDocs);
+        }).then(
         function (results) {
+            // TODO: Check if there is a difference
             application.releases = results;
 
-            log.debug('create.docsSaved', 'Saving application with releases', {releases: application.releases});
-
-
-            log.debug('create.docsSaved', 'Comparing request objects with Id Objects', {
-                reqJobId: req.job && req.job._id,
-                jobId: req.body.jobId,
-                reqUserId: req.user && req.user._id,
-                userId: req.body.userId
-            });
+            req.log.debug({
+                releases: application.releases,
+                func: 'create.docsSaved'
+            }, 'Saving application with releases');
 
             application.user = req.user;
             application.job = req.job;
             application.company = (!!req.job) ? req.job.company : null;
 
-            log.info('create.docsSaved', 'Creating new application', {
+            return application;
+        })
+        .then(function (application) {
+
+            req.log.info({func: 'create.docsSaved'}, 'Creating new application', {
                 user: application.user.id,
                 job: application.job.id
             });
-            log.trace('create.docsSaved', 'Creating new application', {application: application});
+            req.log.trace({func: 'create.docsSaved'}, 'Creating new application', {application: application});
 
-            application.save(function (err) {
-                if (err) {
-                    console.error('create.postSave', 'Error saving application: %j', err);
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
-                    });
-                } else {
-                    log.info('create.postSave', 'New Application save successfully!', {
-                        user: application.user.id,
-                        job: application.job.id
-                    });
-                    log.trace('create.postSave', 'New Application save successfully!', {application: application});
+            return application.save();
+        })
+        .then(function (application) {
+            req.log.info({func: 'create.postSave'},
+                'New Application save successfully! Now saving to the job',
+                {application: application.id, user: application.user.id, job: application.job.id});
+            req.log.trace({func: 'create.postSave'}, 'New Application save successfully!', {application: application});
 
-                    log.trace('create.postSave', 'Saving application to the existing Job', {
-                        application: application.id,
-                        job: application.job.id
-                    });
+            req.job.applications.push(application);
+            return req.job.save();
+        })
+        .then(function (job) {
+            req.log.info({func: 'create.postJobSave', applications: job.applications}, 'saved job application to job');
+        },
+        function (err) {
+            req.log.error({func: 'create.postJobSave', error: err}, 'error saving job application to job');
+        })
+        .then(function () {
 
-                    req.job.applications.push(application);
-                    req.job.save(function (err) {
-                        if (err) {
-                            log.error('create.postJobSave', 'error saving job application to job', {error: err});
-                        }
-                        else {
-                            log.info('create.postJobSave', 'saved job application to job');
-                        }
+            if (!application.isDraft) {
+                req.log.debug({func: 'create.postJobSave'}, 'Sending email for New Application');
+                sendNewApplicantEmail(req.user, req.job, application);
+            }
 
-                        if (!application.isDraft) {
-                            log.debug('create.postJobSave', 'Sending email for New Application');
-                            sendNewApplicantEmail(req.user, req.job, application);
-                        }
-                    });
-
-                    res.json(application);
-                }
+            res.json(application);
+        })
+        .catch(function (err) {
+            console.error({func: 'create.postSave'}, 'Error saving application: %j', err);
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
             });
-
-        }
-    );
+        });
 }
 
 function sendNewApplicantEmail(user, job, application) {
@@ -195,12 +225,8 @@ function read(req, res) {
  * Update a Application
  */
 function update(req, res) {
-    log.trace('update', 'Updating existing application from body', {
-        existing: req.application,
-        body: req.body,
-        url: req.url
-    });
-    log.info('update', 'Updating existing application', {url: req.url});
+    req.log.trace('update', 'Updating existing application from body', {application: req.application, body: req.body});
+    req.log.info('update', 'Updating existing application', {url: req.url});
 
     var application = req.application;
 
@@ -213,28 +239,20 @@ function update(req, res) {
         application.releases = data.releases;
     }
 
-    var processedDocs = _.map(application.releases, function (release) {
-        if (_.isEmpty(release.file) || moment(release.signature.timestamp).isAfter(release.modified)) {
-            log.info('update', 'Saving file to cloud');
-            var newRelease = new Release(release);
-            return releaseDocs.generateDocument(newRelease, req.user);
-        }
-
-        log.info('update', 'File has already been saved to cloud');
-        return Q.when(release);
-    });
+    var processedDocs = processDocuments(req, application);
 
     // Handle nested
 
-    Q.allSettled(processedDocs).then(
+    Q.all(processedDocs).then(
         function (releases) {
-            var fulfilledReleases = _.pluck(_.where(releases, {state: 'fulfilled'}), 'value');
+            // var fulfilledReleases = _.pluck(_.where(releases, {state: 'fulfilled'}), 'value');
 
-            _.each(fulfilledReleases, function (release) {
+            // TODO: Determine if this is necessary, or if it was handled in the map funciton above
+            _.each(releases, function (release) {
                 var existing = _.findIndex(application.releases, {releaseType: release.releaseType});
 
                 if (existing !== -1) {
-                    application.releases[0] = release;
+                    application.releases[existing] = release;
                 } else {
                     application.releases.push(release);
                 }
@@ -247,7 +265,7 @@ function update(req, res) {
                 return application.save();
             }
 
-            log.debug('update', 'Application has not been modified.... resolving');
+            req.log.debug('update', 'Application has not been modified.... resolving');
             return Q.when(application);
         }).then(function (success) {
             var options = [
@@ -261,19 +279,19 @@ function update(req, res) {
 
             Application.populate(application, options, function (err, populated) {
                 if (err) {
-                    log.warn('update', 'error retrieving application, returning non-populated version', err);
+                    req.log.warn('update', 'error retrieving application, returning non-populated version', err);
                     return res.json(application);
                 }
 
                 if (wasDraft && !application.isDraft) {
-                    log.debug('update', 'Sending email for Newly Published Application');
+                    req.log.debug('update', 'Sending email for Newly Published Application');
                     sendNewApplicantEmail(application.user, application.job, application);
                 }
 
                 res.json(populated);
             });
         }).catch(function (err) {
-            log.error('update', 'Error updating application', {application: application, error: err});
+            req.log.error('update', 'Error updating application', {application: application, error: err});
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });

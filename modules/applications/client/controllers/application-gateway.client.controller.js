@@ -187,6 +187,9 @@
                 vm.gw.application
                     .then(function (application) {
 
+                        debugger;
+                        // TODO: Double check that extend is needed
+
                         application = _.extend(application, {
                             status: 'submitted',
                             agreement: vm.gw.models.application.agreement,

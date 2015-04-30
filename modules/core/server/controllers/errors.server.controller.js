@@ -40,7 +40,7 @@ exports.getErrorMessage = function(err) {
         }
     }
 
-    return message;
+    return message || err.message || err;
 };
 
 /**

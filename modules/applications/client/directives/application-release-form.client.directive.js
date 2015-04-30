@@ -55,11 +55,15 @@
 
                 vm.updateSignatureStatus();
 
-                return $q.all({gw: vm.gateway.applicantGateway, app: vm.gateway.application, rel: vm.gateway.releases}).then(
+                return $q.all({
+                    gw: vm.gateway.applicantGateway,
+                    app: vm.gateway.application,
+                    rel: vm.gateway.releases
+                }).then(
                     function (values) {
                         vm.application = values.app;
                         vm.releaseType = values.gw.releaseType;
-                        vm.releaseText = $interpolate(vm.releaseTypes[vm.releaseType].text)({vm:vm});
+                        vm.releaseText = $interpolate(vm.releaseTypes[vm.releaseType].text)({vm: vm});
 
                         vm.releases = _.indexBy(_.where(values.rel, function (val) {
                             return !_.isEmpty(val && val.releaseType);
@@ -81,7 +85,7 @@
             submit: function () {
                 var application = vm.application;
 
-                if(_.isEqual(vm.release, vm.existingRelease)) {
+                if (_.isEqual(vm.release, vm.existingRelease)) {
                     $log.debug('Existing release was unchanged ... submit complete');
                     return $q.when(vm.application);
                 }
@@ -90,36 +94,37 @@
 
                 application.releases = _.values(vm.releases);
 
+                var actionPromise;
+
                 if (_.isEmpty(application._id)) {
-                    application = new Applications.ByJob(application);
-
-                    application.jobId = vm.gateway.models.job._id;
-
-                    return application.$save().then(function (success) {
-                        $log.debug('Created a new Application! %o', success);
-
-                        vm.gateway.application = success;
-
-                        return success;
-                    });
-                }
-                else {
+                    //application = new Applications.ByJob(application);
                     application = new Applications.ById(application);
 
-                    return application.$update().then(function (success) {
-                        $log.debug('Updated an existing Application! %o', success);
+                    application.job = vm.gateway.models.job;
+                    application.jobId = vm.gateway.models.job._id;
 
-                        vm.gateway.application = success;
-
-                        return success;
-                    });
+                    actionPromise = application.$save();
                 }
+                else if (!_.isFunction(application.$update)) {
+                    application = new Applications.ById(application);
+                }
+
+                actionPromise = actionPromise || application.$update();
+
+
+                return actionPromise.then(function (success) {
+                    $log.debug('Updated an existing Application! %o', success);
+
+                    _.extend(vm.gateway.application,success);
+
+                    return success;
+                });
 
             },
             validate: function () {
                 vm.releaseAuthForm.$setSubmitted(true);
 
-                if(_.isFunction(vm.signatureMethods.accept)) {
+                if (_.isFunction(vm.signatureMethods.accept)) {
                     vm.signatureMethods.accept();
                 }
 
