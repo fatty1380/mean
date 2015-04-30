@@ -1,7 +1,6 @@
 @import "mixins.less";
 @import "theme-default.less";
-@import "/public/lib/bootstrap/less/variables.less";
-@import "/public/lib/bootstrap/less/mixins.less";
+@import "variables.less";
 @import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,700);
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,700,900);
 @import url(http://fonts.googleapis.com/css?family=Lato:400,300,200);
@@ -33,8 +32,8 @@ html, body {
 }
 
 body {
-  padding-top    : 50px;
-  padding-bottom : 50px;
+  //padding-top    : 50px;
+  //padding-bottom : 50px;
 }
 
 span.cta-outline {
@@ -195,8 +194,8 @@ oset-chat-console > .chat-window {
         margin-top       : 0;
         margin-bottom    : 0;
         background-color : lighten(@divider, 10%);
-        #gradient > .radial(lighten(@divider, 10%), #FFF);
-        .reset-filter();
+       // #gradient > .radial(lighten(@divider, 10%), #FFF);
+        //.reset-filter();
       }
     }
   }
@@ -823,7 +822,7 @@ img.user-profile-picture {
   //    border     : 5px solid lighten(@outset-blue, 10%);
   //  }
   /* ======= Steps ======= */
-  .steps {
+  /*.steps {
     background     : @smoky-white;
     padding-top    : 60px;
     padding-bottom : 120px;
@@ -872,7 +871,7 @@ img.user-profile-picture {
       font-size  : 20px;
     }
 
-  }
+  }*/
 
   .leader {
     text-align : center;
