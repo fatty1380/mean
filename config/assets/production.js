@@ -35,7 +35,8 @@ module.exports = {
                 'public/lib/angular-sanitize/angular-sanitize.min.js',
                 'public/lib/angular-toastr/dist/angular-toastr.tpls.min.js',
                 'public/lib/ngSignaturePad/ngSignaturePad.js',
-                'public/lib/signature_pad/signature_pad.min.js'
+                'public/lib/signature_pad/signature_pad.min.js',
+                '//code.jquery.com/jquery-1.11.2.min.js' // TODO: Remove jQuery
             ]
         },
         css: 'public/dist/application.min.css',

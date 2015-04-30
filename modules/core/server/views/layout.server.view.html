@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" >
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
 	<title>{{title}}</title>
@@ -43,6 +43,11 @@
     <link rel="stylesheet" href="{{cssFile}}">
     {% endfor %}
 
+    <!--Application Font Files-->
+    {% for fontFile in fontFiles %}
+    <link type="text/css" rel="stylesheet" href="{{fontFile}}">
+    {% endfor %}
+
 	<!-- HTML5 Shim -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -69,9 +74,13 @@
 	<!--Load The Socket.io File-->
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-
 	<!--Application JavaScript Files-->
+    <!--To add JS File imports, use the files in the /config/assets/ directory                                      -->
+    <!--default.js    :    Place a non-minified version of the library here, or minified if no source is available  -->
+    <!--production.js : Place a reference to the minified version on CDN here. If referencing a local bower         -->
+    <!--                installed library, be sure to check it into the repo                                        -->
+    <!--                                                                                                            -->
+    <!--Follow the same instructions for CSS files                                                                  -->
     {% for jsFile in jsFiles %}
     <script type="text/javascript" src="{{jsFile}}"></script>
     {% endfor %} 

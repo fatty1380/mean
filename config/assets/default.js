@@ -14,6 +14,7 @@ module.exports = {
                 'public/lib/ngSignaturePad/ngSignaturePad.css'
             ],
             js: [
+                //'/socket.io/socket.io.js', // TODO: Determine if this is the correct way to inject this?
                 'public/lib/angular/angular.js',
                 'public/lib/angular-resource/angular-resource.js',
                 'public/lib/angular-animate/angular-animate.js',
@@ -36,7 +37,8 @@ module.exports = {
                 'public/lib/angular-sanitize/angular-sanitize.js',
                 'public/lib/angular-toastr/dist/angular-toastr.tpls.js',
                 'public/lib/ngSignaturePad/ngSignaturePad.js',
-                'public/lib/signature_pad/signature_pad.js'
+                'public/lib/signature_pad/signature_pad.js',
+                '//code.jquery.com/jquery-1.11.2.min.js' // TODO: Remove jQuery
             ],
             font: [
                 '//fonts.googleapis.com/css?family=Open+Sans:300,400,700',
