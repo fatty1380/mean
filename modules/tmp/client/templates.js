@@ -1889,8 +1889,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>\n' +
   '    </div>\n' +
   '\n' +
-  '    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!vm.pictureUrl">\n' +
-  '        <div class="center-block">\n' +
+  '    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
+  '        <div class="center-block full-width">\n' +
   '            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
   '                 class="img-thumbnail user-profile-picture img-responsive">\n' +
   '            <br data-ng-if="vm.showPicEdit"/>\n' +

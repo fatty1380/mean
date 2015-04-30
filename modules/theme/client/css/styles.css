@@ -3904,7 +3904,7 @@ img.user-profile-picture {
 }
 .profile-floater div {
   position: absolute;
-  bottom: -50px;
+  top: -110px;
   right: 0;
 }
 .profile-floater div a {
@@ -3956,7 +3956,7 @@ img.user-profile-picture {
   background-size: cover;
 }
 .headline-bg.headline-sm {
-  height: 210px;
+  height: 220px;
 }
 .headline-bg.headline-sm + .content-section {
   padding-top: 10px;
@@ -5861,6 +5861,9 @@ pdf > object {
 }
 .text-right-force {
   text-align: right !important;
+}
+.full-width {
+  width: 100%;
 }
 /** Padding Overrides **/
 .no-pad {

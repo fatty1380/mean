@@ -28,8 +28,8 @@
         <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>
     </div>
 
-    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!vm.pictureUrl">
-        <div class="center-block">
+    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">
+        <div class="center-block full-width">
             <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
                  class="img-thumbnail user-profile-picture img-responsive">
             <br data-ng-if="vm.showPicEdit"/>
