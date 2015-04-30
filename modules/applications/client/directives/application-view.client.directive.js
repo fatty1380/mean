@@ -75,9 +75,13 @@
 
             vm.application = application;
 
+            vm.ownerId = vm.job && (vm.job.user._id || vm.job.user);
+
             if(!_.isEmpty(vm.application)) {
                 var messages = vm.application.messages;
                 vm.lastMessage = !!messages && !!messages.length ? messages[0] : null;
+
+                vm.showNewBtn = vm.job.company !== vm.user.company;
             }
 
             vm.profile = !!application && application.user || vm.profile;
@@ -126,8 +130,7 @@
                 profile: '=?',
                 index: '=?',
                 text: '=?',
-                scrollToMessageFn: '&?',
-                showNewBtn: '='
+                scrollToMessageFn: '&?'
             },
             controller: 'ApplicationSummaryController',
             controllerAs: 'vm',
