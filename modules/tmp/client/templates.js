@@ -662,20 +662,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <!------------------------------------------------->\n' +
   '    <!-- For drivers, link to the new application creation -->\n' +
   '    <!-- For owners, tell them sorry :(                    -->\n' +
-  '    <section ng-show="!vm.application && !!vm.showNewBtn">\n' +
+  '    <section ng-show="!vm.application">\n' +
   '        <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->\n' +
-  '        <div data-ng-if="!!vm.job && vm.user.type === \'driver\' && !vm.job.externalApplicationLink" os-new-application-modal job=\'vm.job\'>\n' +
-  '            <button class="btn btn-cta-primary btn-lg btn-block bigger">\n' +
-  '                apply now!\n' +
+  '        <div data-ng-if="!!vm.job && vm.user.id !== vm.ownerId">\n' +
+  '            <button class="btn btn-cta-primary btn-lg btn-block bigger"\n' +
+  '                    ui-sref="gateway({jobId:vm.job._id})">\n' +
+  '                apply now <i class="fa fa-send mgn-left"></i>\n' +
   '            </button>\n' +
-  '        </div>\n' +
-  '        <div data-ng-if="!!vm.job && vm.user.type === \'driver\' && !!vm.job.externalApplicationLink" job=\'vm.job\'>\n' +
-  '            <a class="btn btn-cta-primary btn-lg btn-block bigger" data-ng-href="{{vm.job.externalApplicationLink}}" target="_blank">\n' +
-  '                apply now! <i class="fa fa-external-link mgn-left"></i>\n' +
-  '            </a>\n' +
-  '        </div>\n' +
-  '        <div data-ng-if="!!vm.job && vm.user.type === \'owner\'">\n' +
-  '            Sorry, no applicants yet. Please check back later.\n' +
   '        </div>\n' +
   '    </section>\n' +
   '</section>\n' +
