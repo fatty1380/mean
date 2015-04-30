@@ -3,11 +3,11 @@
 /**
  * Module dependencies.
  */
-var should = require('should'),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	Company = mongoose.model('Company'),
-	Subscription = mongoose.model('Subscription');
+var should   = require('should'),
+mongoose     = require('mongoose'),
+User         = mongoose.model('User'),
+Company      = mongoose.model('Company'),
+Subscription = mongoose.model('Subscription');
 
 /**
  * Globals
@@ -17,63 +17,61 @@ var user, company, subscription;
 /**
  * Unit tests
  */
-describe('Company Model Unit Tests:', function() {
-	beforeEach(function(done) {
-		user = new User({
-			firstName: 'Full',
-			lastName: 'Name',
-			displayName: 'Full Name',
-			email: 'test@test.com',
-			username: 'username',
-			password: 'password',
+describe('Company Model Unit Tests:', function () {
+    beforeEach(function (done) {
+        user = new User({
+            firstName: 'Full',
+            lastName: 'Name',
+            displayName: 'Full Name',
+            email: 'test@test.com',
+            username: 'username',
+            password: 'password',
             provider: 'local',
             type: 'driver'
-		});
+        });
 
-		user.save()
-            .then(function(user) {
-            subscription = new Subscription({
-                name: 'Plan Details',
-                sku: 'PLAN_DETAILS'
-            });
+        user.save()
+            .then(function (user) {
+                subscription = new Subscription({
+                    name: 'Plan Details',
+                    sku: 'PLAN_DETAILS'
+                });
 
-            return subscription.save();
-        }, function(err) {
+                return subscription.save();
+            }, function (err) {
                 console.error('Error Saving User', err);
             })
-            .then(function() {
-			company = new Company({
-				name: 'Company Name',
-				user: user
-			});
+            .then(function () {
+                company = new Company({
+                    name: 'Company Name',
+                    user: user
+                });
 
-			done();
-		}, function(err) {
-            console.error('Error Saving Subscription', err);
+                done();
+            }, function (err) {
+                console.error('Error Saving Subscription', err);
+            });
+    });
+
+    describe('Method Save', function () {
+        it('should be able to save without problems', function (done) {
+            return company.save(function (err) {
+                should.not.exist(err);
+                done();
+            });
         });
-	});
 
-	describe('Method Save', function() {
-		it('should be able to save without problems', function(done) {
-			return company.save(function(err) {
-				should.not.exist(err);
-				done();
-			});
-		});
+        it('should be able to show an error when try to save without name', function (done) {
+            company.name = '';
 
-		it('should be able to show an error when try to save without name', function(done) { 
-			company.name = '';
-
-			return company.save(function(err) {
-				should.exist(err);
-				done();
-			});
-		});
+            return company.save(function (err) {
+                should.exist(err);
+                done();
+            });
+        });
 
 
-
-
-        it('should interpret an empty Address as an `empty` address with the corret virtuals', function(done) {
+        it('should interpret an empty Address as an `empty` address with the corret virtuals', function (done) {
             var proto = {};
             company.locations = [proto];
 
@@ -120,7 +118,6 @@ describe('Company Model Unit Tests:', function() {
         });
 
 
-
         it('should be able to update an existing address', function (done) {
             var proto = {city: 'Laramie', state: 'WY'};
             company.locations = [proto];
@@ -133,7 +130,7 @@ describe('Company Model Unit Tests:', function() {
                 proto = {city: 'Seattle', state: 'WA', zipCode: '98011'};
                 company.locations = [proto];
 
-                return company.save(function(err) {
+                return company.save(function (err) {
                     should.not.exist(err);
 
                     var loc = company.locations[0];
@@ -153,21 +150,17 @@ describe('Company Model Unit Tests:', function() {
                 });
             });
         });
-	});
+    });
 
-    describe('Gateway Functionality', function() {
-        it('should save a default gateway with the expected settings', function(done) {
-            return company.save(function(err) {
+    describe('Gateway Functionality', function () {
+        it('should save a default gateway with the expected settings', function (done) {
+            return company.save(function (err) {
                 should.not.exist(err);
 
-                company.should.have.property('gateway');
-
-                console.log('COMPANY GATEWAY: %j', company.gateway);
-
-                (company.gateway === null).should.not.be.true;
+                company.should.have.property('gateway').and.not.be.equal(null);
 
                 company.gateway.should.have.property('sku');
-                company.gateway.should.have.property('required', false);
+                company.gateway.should.have.property('required').be.equal(false);
                 company.gateway.should.have.property('payment', 'applicant');
                 company.gateway.should.have.property('releaseType');
 
@@ -175,34 +168,43 @@ describe('Company Model Unit Tests:', function() {
             });
         });
 
-        it('should save a POCO gateway without problem', function(done) {
+        it('should save a POJO gateway without problem', function (done) {
             company.gateway = {payment: 'company'};
 
-            return company.save(function(err) {
+            return company.save(function (err) {
                 should.not.exist(err);
 
-                company.should.hae.property('gateway');
-
-                (company.gateway === null).should.not.be.true;
+                company.should.have.property('gateway').and.not.be.equal(null);
 
                 company.gateway.should.have.property('sku');
-                company.gateway.should.have.property('required', false);
+                company.gateway.should.have.property('required').and.be.equal(false);
                 company.gateway.should.have.property('payment', 'company');
                 company.gateway.should.have.property('releaseType');
 
+                done();
+            });
+        });
 
-            })
-        })
+        it('should fail to save an invalid payment method', function(done) {
+            company.gateway = {payment: 'shenanigans'};
+
+            return company.save(function(err) {
+                should.exist(err);
+                done();
+            });
+        });
     });
 
-    describe('Subscription Functionality', function() {
+    describe('Subscription Functionality', function () {
 
 
-        it('should interpret an empty Address as an `empty` subscription with the corret virtuals', function(done) {
+        it('should interpret an empty Address as an `empty` subscription with the corret virtuals', function (done) {
             company.subscription = subscription;
 
             return company.save(function (err) {
-                if(!!err) { console.log(err); }
+                if (!!err) {
+                    console.log(err);
+                }
                 should.not.exist(err);
 
                 company.should.have.property('subscription');
@@ -224,7 +226,6 @@ describe('Company Model Unit Tests:', function() {
         });
 
 
-
         it('should be able to save with an existing subscription', function (done) {
             company.subscription = subscription;
 
@@ -235,7 +236,7 @@ describe('Company Model Unit Tests:', function() {
 
                 company.legalEntityName = 'Supernanigans, LLC';
 
-                return company.save(function(err) {
+                return company.save(function (err) {
                     should.not.exist(err);
 
                     company.should.have.property('legalEntityName', 'Supernanigans, LLC');
@@ -259,11 +260,11 @@ describe('Company Model Unit Tests:', function() {
         });
     });
 
-	afterEach(function(done) { 
-		Company.remove().exec();
-		User.remove().exec();
+    afterEach(function (done) {
+        Company.remove().exec();
+        User.remove().exec();
         Subscription.remove().exec();
 
-		done();
-	});
+        done();
+    });
 });

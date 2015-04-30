@@ -5,18 +5,18 @@
  */
 var mongoose = require('mongoose'),
 _            = require('lodash'),
-path = require('path'),
+path         = require('path'),
 Job          = mongoose.model('Job'),
 Address      = mongoose.model('Address'),
 Application  = mongoose.model('Application'),
-Company  = mongoose.model('Company'),
+Company      = mongoose.model('Company'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 companies    = require(path.resolve('./modules/companies/server/controllers/companies.server.controller')),
 log          = require(path.resolve('./config/lib/logger')).child({
     module: 'jobs',
     file: 'Jobs.Controller'
 }),
-moment = require('moment'),
+moment       = require('moment'),
 Q            = require('q');
 
 /**
@@ -121,28 +121,28 @@ var getErrorMessage = function (err) {
 };
 
 
-var incrementJobsCount = function(req) {
-    if(!req.company) {
+var incrementJobsCount = function (req) {
+    if (!req.company) {
         req.log.error('No Company defined in request');
         return false;
     }
 
     var sub = req.company.subscription;
 
-    if(!sub) {
+    if (!sub) {
         req.log.error('No Subscription for company `%s`', req.company.id);
         return false;
     }
 
     var renewal = moment(sub.renews);
-    if(renewal < moment) {
+    if (renewal < moment) {
         sub.renews = renewal.add(30, 'days');
         sub.used = 1;
     } else {
         sub.used++;
     }
 
-    sub.save(function(err) {
+    sub.save(function (err) {
         req.log.info('updated company subscription', {subscription: sub});
     });
 };
@@ -169,7 +169,7 @@ exports.create = function (req, res) {
         if (err) {
             req.log.error('Create', 'Error Creating new job', {error: err, job: job});
             return res.send(400, {
-                message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later '+ (err.message ? '('+err.message+')': '')
+                message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later ' + (err.message ? '(' + err.message + ')' : '')
             });
         } else {
             req.log.info('Create', 'Created new job with ID `%s`', job._id);
@@ -186,8 +186,8 @@ exports.create = function (req, res) {
  * Show the current Job
  */
 exports.read = function (req, res) {
-    req.log.info('read','Loaded Job', {jobId: req.job && req.job._id, query: req.query} );
-    req.log.trace('read','Loaded Job', {jobId: req.job && req.job._id, query: req.query, job: req.job} );
+    req.log.info('read', 'Loaded Job', {jobId: req.job && req.job._id, query: req.query});
+    req.log.trace('read', 'Loaded Job', {jobId: req.job && req.job._id, query: req.query, job: req.job});
 
     if (!req.job) {
         return res.status(404).send({
@@ -202,8 +202,8 @@ exports.read = function (req, res) {
  * List of Jobs stored in request
  */
 exports.list = function (req, res) {
-    req.log.info({query: req.query, func: 'list'},'Found %d jobs', req.jobs.length);
-    req.log.trace({query: req.query, jobs: req.jobs, func: 'list'},'Found %d jobs', req.jobs.length);
+    req.log.info({query: req.query, func: 'list'}, 'Found %d jobs', req.jobs.length);
+    req.log.trace({query: req.query, jobs: req.jobs, func: 'list'}, 'Found %d jobs', req.jobs.length);
     res.json(req.jobs);
 };
 
@@ -225,7 +225,7 @@ exports.update = function (req, res) {
 
     job.save(function (err) {
         if (err) {
-            req.log.error('Update','Error Saving job', err);
+            req.log.error('Update', 'Error Saving job', err);
             return res.send(400, {
                 message: getErrorMessage(err)
             });
@@ -291,7 +291,7 @@ exports.populateApplications = function (req, res, next) {
 exports.jobByID = function (req, res, next, id) {
 
     req.log.debug('JobById', 'Loading job by id %s. URL: %s', {jobId: id, url: req.url});
-    req.log.trace('JobById', 'Request body', {reqBody: req.body, jobId: id, url:req.url});
+    req.log.trace('JobById', 'Request body', {reqBody: req.body, jobId: id, url: req.url});
 
     Job.findById(id)
         .populate('user', 'displayName email')
@@ -303,9 +303,15 @@ exports.jobByID = function (req, res, next, id) {
             }
 
             if (!!req.user && !!req.user.driver) {
-                req.log.debug('JobById', 'Requesting User has Driver defined!', {user: req.user, driver: req.user.driver});
+                req.log.debug('JobById', 'Requesting User has Driver defined!', {
+                    user: req.user,
+                    driver: req.user.driver
+                });
             } else if (!!req.user && !!req.user.company) {
-                req.log.debug('JobById', 'Requesting User has Company defined!', {user: req.user, company: req.user.company});
+                req.log.debug('JobById', 'Requesting User has Company defined!', {
+                    user: req.user,
+                    company: req.user.company
+                });
             }
 
             req.log.debug('JobById', 'Returning job', {jobId: !!job && job._id});
@@ -334,14 +340,18 @@ exports.validateSubscription = function (req, res, next) {
     req.companyId = req.body.companyId;
 
     Company.findById(req.companyId)
-    .populate('subscription')
-    .exec(function(err, company) {
-            if(err || !company) {
+        .populate('subscription')
+        .exec(function (err, company) {
+            if (err || !company) {
                 req.log.warn('ValidateSubscription', 'Unable to find Company', {companyId: req.companyId});
                 return res.status(404).send({message: 'Unable to find company', error: err});
             }
 
-            if(!company.subscription.isValid) {
+            if (!company.subscription) {
+                req.log.warn('ValidateSubscription', 'No Subscription object');
+                return res.status(403).send({message: 'No Active Subscription'});
+            }
+            else if(!company.subscription.isValid) {
                 req.log.warn('ValidateSubscription', 'Invalid Subscription: %s', company.subscription.statusMessage, {subscription: company.subscription});
                 return res.status(403).send({message: company.subscription.statusMessage});
             }

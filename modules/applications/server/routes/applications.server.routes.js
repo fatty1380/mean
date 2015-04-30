@@ -10,7 +10,7 @@ module.exports = function (app) {
 
     // Applications Routes
     app.route('/api/applications')
-        .get(applications.listAll)
+        .get(applications.executeQuery)
         .post(users.requiresLogin, applications.create);
 
     app.route('/api/applications/:applicationId')

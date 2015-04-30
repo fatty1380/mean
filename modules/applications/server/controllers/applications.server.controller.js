@@ -22,22 +22,36 @@ releaseDocs  = require(path.resolve('./modules/applications/server/controllers/r
 moment       = require('moment'),
 _            = require('lodash');
 
+exports.create = create;
+exports.read = read;
+exports.update = update;
+exports.delete = remove;
+
+exports.executeQuery = executeQuery;
+
+exports.applicationByID = applicationByID;
+exports.queryByUserID = queryByUserID;
+exports.loadMine = loadMine;
+exports.getByJobId = getByJobId;
+exports.queryByJobID = queryByJobId;
+exports.queryByCompanyID = queryByCompanyId;
+
 /**
  * "Instance" Methods
  */
 
-var executeQuery = function (req, res) {
+function executeQuery(req, res) {
 
     var query = req.query || {};
     var sort = req.sort || '-created';
 
+    var populate = (req.populate || ['job', 'connection', 'messages']).join(' ')
+
     Application.find(query)
         .sort(sort)
         .populate('user', 'displayName profileImageURL')
-        .populate('job') // TODO: Optimize Later
         .populate('company', 'name profileImageURL')
-        .populate('connection')
-        .populate('messages') // TODO: Optimize Later
+        .populate(populate)
         .exec(function (err, applications) {
             if (err) {
                 return res.status(400).send({
@@ -49,14 +63,14 @@ var executeQuery = function (req, res) {
             console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %j (%s)', req.applications.length, query, req.url);
 
             //console.log('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
-            res.json(req.applications);
+            return res.json(req.applications);
         });
-};
+}
 
 /**
  * Create a Application
  */
-exports.create = function (req, res) {
+function create(req, res) {
 
     log.trace('create', 'Creating new application from body', {body: req.body, url: req.url});
     log.info('create', 'Creating new application', {url: req.url});
@@ -95,7 +109,10 @@ exports.create = function (req, res) {
             application.job = req.job;
             application.company = (!!req.job) ? req.job.company : null;
 
-            log.info('create.docsSaved', 'Creating new application', {user: application.user.id, job: application.job.id});
+            log.info('create.docsSaved', 'Creating new application', {
+                user: application.user.id,
+                job: application.job.id
+            });
             log.trace('create.docsSaved', 'Creating new application', {application: application});
 
             application.save(function (err) {
@@ -105,10 +122,16 @@ exports.create = function (req, res) {
                         message: errorHandler.getErrorMessage(err)
                     });
                 } else {
-                    log.info('create.postSave', 'New Application save successfully!', {user: application.user.id, job: application.job.id});
+                    log.info('create.postSave', 'New Application save successfully!', {
+                        user: application.user.id,
+                        job: application.job.id
+                    });
                     log.trace('create.postSave', 'New Application save successfully!', {application: application});
 
-                    log.trace('create.postSave', 'Saving application to the existing Job', {application: application.id, job: application.job.id});
+                    log.trace('create.postSave', 'Saving application to the existing Job', {
+                        application: application.id,
+                        job: application.job.id
+                    });
 
                     req.job.applications.push(application);
                     req.job.save(function (err) {
@@ -131,7 +154,7 @@ exports.create = function (req, res) {
 
         }
     );
-};
+}
 
 function sendNewApplicantEmail(user, job, application) {
     var options = [
@@ -155,7 +178,10 @@ function sendNewApplicantEmail(user, job, application) {
 /**
  * Show the current Application
  */
-exports.read = function (req, res) {
+function read(req, res) {
+
+    req.application = req.application || req.applications && _.first(req.applications);
+
     if (!req.application) {
         return res.status(404).send({
             message: 'No application found'
@@ -163,13 +189,17 @@ exports.read = function (req, res) {
     }
 
     res.json(req.application);
-};
+}
 
 /**
  * Update a Application
  */
-exports.update = function (req, res) {
-    log.trace('update', 'Updating existing application from body', {existing: req.application, body: req.body, url: req.url});
+function update(req, res) {
+    log.trace('update', 'Updating existing application from body', {
+        existing: req.application,
+        body: req.body,
+        url: req.url
+    });
     log.info('update', 'Updating existing application', {url: req.url});
 
     var application = req.application;
@@ -248,13 +278,12 @@ exports.update = function (req, res) {
                 message: errorHandler.getErrorMessage(err)
             });
         });
-};
-
+}
 
 /**
  * Delete an Application
  */
-exports.delete = function (req, res) {
+function remove(req, res) {
     var application = req.application;
 
     application.remove(function (err) {
@@ -266,19 +295,9 @@ exports.delete = function (req, res) {
             res.json(application);
         }
     });
-};
+}
 
-/**
- * List of *ALL* Applications
- */
-exports.listAll = function (req, res) {
-    debugger; // TODO : route to correct list
-    req.sort = '-created';
-
-    executeQuery(req, res);
-};
-
-exports.queryByJobID = function (req, res) {
+function queryByJobId(req, res) {
     var jobId = req.params.jobId;
 
     if (!jobId) {
@@ -303,9 +322,9 @@ exports.queryByJobID = function (req, res) {
 
     executeQuery(req, res);
 
-};
+}
 
-exports.queryByCompanyID = function (req, res) {
+function queryByCompanyId(req, res) {
     var companyId = req.company && req.company._id || req.params.companyId;
     console.log('[ApplicationsController] queryByCompanyID(%s)', companyId);
 
@@ -323,13 +342,13 @@ exports.queryByCompanyID = function (req, res) {
     req.sort = '-modified';
 
     executeQuery(req, res);
-};
+}
 
-exports.loadMine = function (req, res) {
-    return this.queryByUserID(req, res, null, req.user._id);
-};
+function loadMine(req, res) {
+    return queryByUserID(req, res, null, req.user._id);
+}
 
-exports.queryByUserID = function (req, res) {
+function queryByUserID(req, res) {
 
     if (req.user.type === 'driver') {
         console.log('[ApplicationsController] queryByUserID(%s)', req.params.userId);
@@ -351,9 +370,9 @@ exports.queryByUserID = function (req, res) {
     };
 
     executeQuery(req, res);
-};
+}
 
-exports.getByJobId = function (req, res, next) {
+function getByJobId(req, res, next) {
 
     console.log('[ApplicationsController.byJob] Request: %j %s', req.route.methods, req.url);
     console.log('[ApplicationsController.byJob] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
@@ -374,12 +393,12 @@ exports.getByJobId = function (req, res, next) {
             req.application = application;
             next();
         });
-};
+}
 
 /**
  * Application middleware
  */
-exports.applicationByID = function (req, res, next, id) {
+function applicationByID(req, res, next, id) {
 
     console.log('[ApplicationsController] applicationById(%s) URL: %s', id, req.url);
 
@@ -418,7 +437,7 @@ exports.applicationByID = function (req, res, next, id) {
             });
 
         });
-};
+}
 
 
 /**

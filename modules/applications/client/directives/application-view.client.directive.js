@@ -47,16 +47,17 @@
                 deferred.resolve(vm.application);
 
             } else if (vm.job && vm.profile) {
-                Applications.ForDriver.get({jobId: vm.job._id, userId: vm.profile._id})
+                Applications.ById.query({job: vm.job._id, user: vm.profile._id})
                     .$promise.then(function (success) {
-                        $log.debug('Got application for driver: ', success);
+                        $log.debug('Got application(s) for driver: ', success);
 
-                        vm.application = success;
-                        var messages = vm.application.messages;
+                        if(!_.isEmpty(success)) {
+                            deferred.resolve(_.first(success));
+                        }
+                        else {
+                            deferred.resolve(null);
+                        }
 
-                        vm.lastMessage = !!messages && !!messages.length ? messages[0] : null;
-
-                        deferred.resolve(success);
                     }, function (failure) {
                         if (failure.status === 404) {
                             return null;
@@ -71,6 +72,13 @@
         }
 
         vm.setLocalProperties = function (application) {
+
+            vm.application = application;
+
+            if(!_.isEmpty(vm.application)) {
+                var messages = vm.application.messages;
+                vm.lastMessage = !!messages && !!messages.length ? messages[0] : null;
+            }
 
             vm.profile = !!application && application.user || vm.profile;
             vm.driver = vm.profile.driver || Drivers.getByUser(vm.profile._id);

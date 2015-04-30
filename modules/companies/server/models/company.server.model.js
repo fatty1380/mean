@@ -7,9 +7,11 @@ var mongoose = require('mongoose'),
 _            = require('lodash'),
 path         = require('path'),
 addrFile     = require(path.resolve('./modules/jobs/server/models/address.server.model')),
+subFile     = require(path.resolve('./modules/messages/server/models/subscription.server.model')),
 Address      = mongoose.model('Address'),
+Subscription = mongoose.model('Subscription'),
 Schema       = mongoose.Schema,
-Gateway =  mongoose.model('Gateway'),
+Gateway      = mongoose.model('Gateway'),
 log          = require(path.resolve('./config/lib/logger')).child({
     module: 'companies',
     file: 'Company.Model'
@@ -82,9 +84,23 @@ var CompanySchema = new Schema({
     },
 
     gateway: {
-        type: Schema.ObjectId,
-        ref: 'Gateway',
-        default: null
+        sku: {
+            type: String,
+            default: null // 'OUTSET_MVR'
+        },
+        required: {
+            type: Boolean,
+            default: false
+        },
+        payment: {
+            type: String,
+            enum: ['applicant', 'company', 'mixed', ''],
+            default: 'applicant' //'company'
+        },
+        releaseType: {
+            type: String,
+            default: null//'preEmployment'
+        }
     },
 
     created: {
@@ -104,8 +120,23 @@ CompanySchema.pre('validate', function (next) {
     next();
 });
 
+CompanySchema.pre('init', function (next, data) {
+    if (_.isEmpty(data.subscription)) {
+        data.subscription = new Subscription();
+    }
+
+    next();
+});
+
 CompanySchema.pre('save', function (next) {
-    this.modified = Date.now();
+    _.defaults(this.gateway, {type: null, required: false, payment: null, releaseType: null});
+    next();
+});
+
+CompanySchema.pre('save', function (next) {
+    if (this.isModified()) {
+        this.modified = Date.now();
+    }
     next();
 });
 

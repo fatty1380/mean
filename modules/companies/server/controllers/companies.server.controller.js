@@ -108,25 +108,26 @@ exports.update = function (req, res) {
     company = _.extend(company, req.body);
     company.locations = req.body.locations || [];
 
-    company.gateway = company.gateway || new Gateway();
+    //company.gateway = company.gateway || new Gateway();
 
-    _.extend(company.gateway, req.body.gateway);
+    //_.extend(company.gateway, req.body.gateway);
+    //
+    //req.log.debug('update', 'saving gateway:', {gateway: company.gateway});
 
-    req.log.debug('update', 'saving gateway:', {gateway: company.gateway});
-
-    company.gateway.save()
-        .then(function (gateway) {
-            company.gateway = gateway;
-
-            req.log.debug('update', 'now saving company:', {company: company});
-
-            return company.save();
-        },
-        function (err) {
-            req.log.error('update', 'Error saving Gateway ... oh well. Trying to recover', err);
-
-            return company.save();
-        })
+    //company.gateway.save()
+    //    .then(function (gateway) {
+    //        company.gateway = gateway;
+    //
+    //        req.log.debug('update', 'now saving company:', {company: company});
+    //
+    //        return company.save();
+    //    },
+    //    function (err) {
+    //        req.log.error('update', 'Error saving Gateway ... oh well. Trying to recover', err);
+    //
+    //        return company.save();
+    //    })
+        company.save()
         .then(function (company) {
             req.log.debug('update', 'Successfully updated Company', {company: company});
             res.json(company);
@@ -290,16 +291,16 @@ exports.companyByID = function (req, res, next, id) {
                     return next(err);
                 }
 
-                if(!_.isEmpty(company.gateway)){
-                    if(company.gateway instanceof mongoose.Schema.ObjectId) {
-                        debugger;
-                        company.populate('gateway');
-                    }
-                    else if (!company.gateway instanceof Gateway) {
-                        debugger;
-                        company.gateway = new Gateway(company.gateway);
-                    }
-                }
+                //if(!_.isEmpty(company.gateway)){
+                //    if(company.gateway instanceof mongoose.Schema.ObjectId) {
+                //        debugger;
+                //        company.populate('gateway');
+                //    }
+                //    else if (!company.gateway instanceof Gateway) {
+                //        debugger;
+                //        company.gateway = new Gateway(company.gateway);
+                //    }
+                //}
 
                 req.log.trace({company: company}, 'Found company: %s', company && company.id);
                 req.company = company;
