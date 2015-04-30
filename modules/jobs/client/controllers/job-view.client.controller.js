@@ -17,11 +17,11 @@
 
         function activate() {
 
-            if (!vm.user || vm.user.isDriver) {
-                vm.enableEdit = false;
-            }
-            else if (vm.user.isAdmin) {
+            if (vm.user.isAdmin) {
                 vm.enableEdit = true;
+            }
+            else if (!vm.user || vm.user.isDriver) {
+                vm.enableEdit = false;
             }
             else if (vm.user.isOwner) {
                 vm.enableEdit = vm.user._id === (vm.company && (vm.company.owner._id || vm.company.owner));
