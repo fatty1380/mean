@@ -5821,13 +5821,10 @@ pdf > object {
 /* New header Styles */
 .menu-item.dropdown.open a.dropdown-toggle,
 .menu-item.dropdown.open .dropdown-menu {
-  background-color: rgba(14, 45, 76, 0.85);
+  background-color: rgba(14, 45, 76, 0.9);
 }
 .menu-item.dropdown.open .dropdown-menu a {
   white-space: nowrap;
-}
-.menu-item.dropdown.open .dropdown-menu a:hover {
-  background-color: rgba(14, 45, 76, 0.95);
 }
 .menu-item.dropdown.open .dropdown-menu.pull-right a {
   text-align: right;
@@ -6098,6 +6095,11 @@ body {
 }
 .section-menu .content .main-menu .menu-block .menu-list .menu-item a:hover {
   color: #ffffff;
+}
+.section-menu .content .main-menu .menu-block .menu-list .menu-item.active a {
+  color: #ffffff;
+  font-weight: 400;
+  border-bottom: 1px solid #ffffff;
 }
 .section-menu .content .main-menu .menu-block .menu-list .auth-menu-item {
   display: inline-block;

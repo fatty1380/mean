@@ -17,7 +17,7 @@
                         <div class="menu-item fl-left" ng-class="{'active': $state.is('intro.owner')}">
                             <a ui-sref=" intro.owner">Employers</a>
                         </div>
-                        <div class="menu-item fl-left" ng-class="{'active': $state.is('jobs')}">
+                        <div class="menu-item fl-left" ng-class="{'active': $state.includes('jobs')}">
                             <a ui-sref="jobs.list">Jobs</a>
                         </div>
 
@@ -40,6 +40,9 @@
                         <div data-ng-repeat="item in menu.items | orderBy: 'position'"
                              data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.type"
                              class="menu-item fl-left {{item.class}} {{item.type}}"
+                             data-ui-sref-active="active"
+                             data-ng-init="itemParentName = item.state.split('.')[0] "
+                             data-ng-class="{'active': $state.includes(itemParentName)}"
                              ng-attr-dropdown="item.type === 'dropdown'">
 
                             <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
@@ -53,7 +56,7 @@
                                 </div>
                             </div>
 
-                            <a ng-switch-default data-ui-sref="{{item.state}}" data-ng-bind-html="item.title"></a>
+                            <a ng-switch-default data-ui-sref="{{item.state}}" data-ui-sref-active="active" data-ng-bind-html="item.title"></a>
                         </div>
 
                         <div class="fl-right right-menu">
