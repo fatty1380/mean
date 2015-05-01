@@ -40,3 +40,4 @@ config/sslcerts
 convenience.css
 modules/**/.jshintrc
 modules/tmp
+modules/theme/client/css
