@@ -1859,7 +1859,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-page-header.client.template.html',
-  '<div class="row" style="height: 39px;">\n' +
+  '<div style="height: 39px;" class="row">\n' +
   '    <h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"\n' +
   '        ng-class="{\'col-sm-8\':!!vm.pictureUrl}"></h2>\n' +
   '    <span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"\n' +
@@ -1867,10 +1867,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '\n' +
   '<!-- os-page-header directive : os-page-header.client.template -->\n' +
-  '<div class="page-header row" data-ng-if="vm.showHeader || vm.includeTransclude" ng-class="{well : !vm.level}"\n' +
+  '<div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"\n' +
+  '     ng-class="{\'panel panel-default\' : !vm.level}"\n' +
   '     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
   '\n' +
-  '    <div ng-class="{\'col-sm-8\':!!vm.pictureUrl}">\n' +
+  '    <div class="pad-vert {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
   '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
   '                ng-click="vm.backBtnFn()">\n' +
   '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
@@ -1887,6 +1888,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <!-- Sub-heading -->\n' +
   '        <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>\n' +
+  '        <small ng-if="!vm.includeTransclude"><br ng-if="vm.showHeader"/>&nbsp;</small>\n' +
   '    </div>\n' +
   '\n' +
   '    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +

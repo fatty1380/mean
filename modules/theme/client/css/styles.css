@@ -3976,7 +3976,11 @@ img.user-profile-picture {
   margin-bottom: 20px;
 }
 .headline-bg.headline-map-bg {
-  background: #0e2d4c url('/modules/core/img/intro/western-map.jpg') no-repeat 50% 50% !important;
+  background: #0e2d4c url('/modules/core/img/intro/western-map.jpg') no-repeat 50% 50% / cover !important;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 .headline-bg.headline-static {
   position: fixed;
