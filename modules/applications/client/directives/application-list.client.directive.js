@@ -13,6 +13,7 @@
                 company: '=?',
                 user: '=?',
                 applications: '=?',
+                jobs: '=?',
                 config: '=?'
             },
             controller: 'JobApplicationListController',
@@ -36,17 +37,24 @@
         vm.config = vm.config || {};
 
         vm.newMessages = 0;
+        vm.groupByJob = false;
         vm.noItemsText = 'No job applications yet';
 
         function activate() {
 
-            if (vm.applications && vm.applications.length) {
+            if(vm.jobs && vm.jobs.length) {
+                $log.debug('Job list (length %d) is already calculated', vm.jobs.length);
+                vm.groupByJob = true;
+            }
+            else if (vm.applications && vm.applications.length) {
                 var first = vm.applications[0];
 
                 if (first.hasOwnProperty('job')) {
                     $log.debug('Looking at a list of applications');
+                    vm.groupByJob = false;
                 } else if (first.hasOwnProperty('applications')) {
                     $log.debug('Looking at a list of jobs :)');
+                    vm.groupByJob = true;
 
                     vm.jobs = vm.applications;
                 }

@@ -53,6 +53,14 @@
         });
     }
 
+    function resolveAllApplications(auth, jobs, apps) {
+        if(!auth.isAdmin) {
+            return resolveApplications(auth, jobs, apps);
+        }
+
+        return apps.ById.query().$promise;
+    }
+
     function resolveApplications(auth, jobs, apps) {
         if (auth.user.type === 'driver') {
             return myApplications(auth, apps);
@@ -90,6 +98,18 @@
                 templateUrl: '/modules/applications/views/list-applications.client.view.html',
                 resolve: {
                     applications: resolveApplications
+                },
+                controller: 'ApplicationListController',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
+
+            state('applications.all', {
+                url: 'all?itemId&tabName',
+                reloadOnSearch: false,
+                templateUrl: '/modules/applications/views/list-applications.client.view.html',
+                resolve: {
+                    applications: resolveAllApplications
                 },
                 controller: 'ApplicationListController',
                 controllerAs: 'vm',
@@ -306,6 +326,7 @@
 
     myJobsWithApplications.$inject = ['Authentication', 'Jobs'];
     myApplications.$inject = ['Authentication', 'Applications'];
+    resolveAllApplications.$inject = ['Authentication', 'Jobs', 'Applications'];
     resolveApplications.$inject = ['Authentication', 'Jobs', 'Applications'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
 
