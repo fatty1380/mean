@@ -7,7 +7,6 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.css',
                 'public/lib/components-font-awesome/css/font-awesome.css',
-                'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.css',
                 'public/lib/ngImgCrop/compile/unminified/ng-img-crop.css',
                 'public/lib/angular-toastr/dist/angular-toastr.css',
@@ -48,7 +47,7 @@ module.exports = {
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },
         css: [
-            'modules/*/client/css/*.css'
+            'modules/theme/client/css/styles.css'
         ],
         less: [
             'modules/*/client/less/*.less'

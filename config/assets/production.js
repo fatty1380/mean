@@ -7,7 +7,6 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap.min.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
                 '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css',
-                'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.min.css',
                 'public/lib/ngImgCrop/compile/minified/ng-img-crop.css',
                 'public/lib/angular-toastr/dist/angular-toastr.min.css',

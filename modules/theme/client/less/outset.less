@@ -2428,3 +2428,23 @@ pdf {
     }
   }
 }
+
+/* New header Styles */
+.menu-item.dropdown.open {
+
+  a.dropdown-toggle, .dropdown-menu {
+    background-color : fade(@outset-blue, 90%);
+  }
+
+  .dropdown-menu {
+    a {
+      white-space: nowrap;
+    }
+    a:hover {
+    background-color : fade(@outset-blue, 95%);
+  }
+    &.pull-right a {
+      text-align: right;
+    }
+  }
+}

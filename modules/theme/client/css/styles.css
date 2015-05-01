@@ -5818,6 +5818,20 @@ pdf > object {
   color: #999;
   margin-bottom: 0;
 }
+/* New header Styles */
+.menu-item.dropdown.open a.dropdown-toggle,
+.menu-item.dropdown.open .dropdown-menu {
+  background-color: rgba(14, 45, 76, 0.85);
+}
+.menu-item.dropdown.open .dropdown-menu a {
+  white-space: nowrap;
+}
+.menu-item.dropdown.open .dropdown-menu a:hover {
+  background-color: rgba(14, 45, 76, 0.95);
+}
+.menu-item.dropdown.open .dropdown-menu.pull-right a {
+  text-align: right;
+}
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
   padding-right: 0;

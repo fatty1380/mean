@@ -37,9 +37,9 @@
                 <div data-ng-show="authentication.user">
 
                     <div class="menu-list">
-                        <div class="menu-item fl-left" data-ng-repeat="item in menu.items | orderBy: 'position'"
+                        <div data-ng-repeat="item in menu.items | orderBy: 'position'"
                              data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.type"
-                             data-ng-class="{active: $state.includes(item.state)}" class="{{item.class}} {{item.type}}"
+                             class="menu-item fl-left {{item.class}} {{item.type}}"
                              ng-attr-dropdown="item.type === 'dropdown'">
 
                             <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
@@ -59,12 +59,12 @@
                         <div class="fl-right right-menu">
                             <div class="menu-item fl-left dropdown" dropdown>
 
-                                <a ui-sref="settings.profile" class="dropdown-toggle" dropdown-toggle>
+                                <a ui-sref="settings.profile" class="dropdown-toggle text-right" dropdown-toggle>
                                     <i class="fa fa-cog fa-lg"></i>
                                     <i class="fa fa-caret-down"></i>
                                 </a>
 
-                                <div class="dropdown-menu blue-bg blue-mask">
+                                <div class="dropdown-menu pull-right">
                                     <div data-ui-sref-active="active">
                                         <a data-ui-sref="settings.profile">Edit Profile</a>
                                     </div>
