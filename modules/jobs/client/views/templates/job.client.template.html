@@ -113,13 +113,26 @@
 
         <div class="row">
 
-            <div class="col-sm-6">
-                <div class="panel panel-profile no-bg" ng-show="dm.showSection('location')">
-                    <div class="panel-heading overflow-h" ng-show="dm.showSection('all')">
-                        <h2 class="panel-title heading-sm pull-left"><i class="fa fa-map-marker"></i>Location</h2>
-                        <a href="#"><i class="fa fa-cog pull-right"></i></a>
-                    </div>
 
+            <!-- <div class="col-sm-6">
+                <div class="panel panel-default job-info">
+                    <div ng-show="dm.showSection( 'requirements') && !!dm.job.requirements">
+                        <div class="panel-heading" ng-show="dm.showSection('all')"><span class="h4">Requirements</span>
+                        </div>
+                        <div class="panel-body mgn-btm">
+                            <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+
+            <div class="col-sm-6">
+                <div class="panel panel-default" ng-show="dm.showSection('location')">
+                    <div class="panel-heading" ng-show="dm.showSection('all')">
+                        <span class="h4"><i class="fa fa-map-marker"></i>Location</span>
+                        <a ng-if="vm.enableEdit" href="#"><i class="fa fa-cog pull-right"></i></a>
+                    </div>
 
                     <div class="panel-body mgn-btm">
                         <os-address model="dm.job.location[0]" data-ng-show="!dm.job.location[0].empty"
@@ -131,11 +144,12 @@
             </div>
 
             <div class="col-sm-6">
-                <div class="panel panel-profile no-bg" ng-show="dm.showSection('info')">
-                    <div class="panel-heading overflow-h" ng-show="dm.showSection('all')">
-                        <h2 class="panel-title heading-sm pull-left"><i class="fa fa-info-circle"></i>Summary</h2>
-                        <a href="#"><i class="fa fa-cog pull-right"></i></a>
+                <div class="panel panel-default" ng-show="dm.showSection('info')">
+                    <div class="panel-heading" ng-show="dm.showSection('all')">
+                        <span class="h4"><i class="fa fa-info-circle"></i>Summary</span>
+                        <a ng-if="vm.enableEdit" href="#"><i class="fa fa-cog pull-right"></i></a>
                     </div>
+
 
 
                     <div class="panel-body mgn-btm">
