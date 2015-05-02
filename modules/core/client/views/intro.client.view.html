@@ -18,7 +18,7 @@
     <div class="content">
         <div class="title">{{vm.text.subhero.title}}</div>
         <div class="line-decoration"></div>
-        <div class="main-description">Lorem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor, orem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor</div>
+        <div class="main-description">{{vm.text.subhero.subtitle}}</div>
         <div class="slider-wrapper" slider="">
             <div class="slider-container">
                 <div class="slider-content">
@@ -30,9 +30,9 @@
                             </div>
                         </div>
                         <div class="slide-item description">
-                            <div class="slide-title">{{leadBullet}}</div>
+                            <div class="slide-title">{{leadBullet.title}}</div>
                             <div class="title-decoration"></div>
-                            <div class="slide-description">Lorem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor, orem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor</div>
+                            <div class="slide-description">{{leadBullet.description}}</div>
                         </div>
                     </div>
                 </div>
@@ -48,10 +48,10 @@
 
 <div class="section-steps">
     <div class="content">
-        <div class="steps-title"><span>3 Simple Steps</span> to get you started with Outset</div>
-        <div class="sub-title">Lorem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor, orem ipsum dolor sit amet</div>
+        <div class="steps-title" ng-bind-html="vm.text.threeSteps.title"></div>
+        <div class="sub-title" ng-bind-html="vm.text.threeSteps.subtitle"></div>
         <div class="steps">
-            <div class="step step-{{$index+1}}" ng-repeat="item in vm.text.conclusion">
+            <div class="step step-{{$index+1}}" ng-repeat="item in vm.text.threeSteps.bullets">
                 <div class="line first" ng-if="$index != 0"></div>
                 <div class="line second" ng-if="$index < 2"></div>
                 <div class="step-icon"></div>

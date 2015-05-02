@@ -23,6 +23,7 @@
                 subhero: {
                     videoURL: '//www.youtube.com/embed/aj4vz1jMSR8',
                     title: 'Why Outset?',
+                    subtitle: null,
                     bullets: [
                         'Free - Driver Focused Tools.',
                         'Own your Reputation - Use Outset as your Digital Business Card.',
@@ -57,7 +58,10 @@
                     ],
                     image: '/modules/core/img/intro/jobs.png'
                 },
-                conclusion: [
+                threeSteps: {
+                    title: '<span>3 Simple Steps</span> to get you started with Outset',
+                    subtitle: '',
+                    bullets: [
                     {
                         title: 'Sign up',
                         description: 'Create your Driver Portfolio, upload your Resume, and order Background Reports to share with multiple employers.'
@@ -70,15 +74,15 @@
                         title: 'Drive',
                         description: 'By giving employers more information upfront, you standout and get hired you faster - putting you in the driver’s seat in no time.'
                     }
-                ]
+                ]}
 
             },
             owner: {
                 header: {
-                    lead: 'Automated Driver Hiring<br>Increase Operational and Hiring Efficiency',
+                    lead: 'Automated Driver Hiring<br><small>Increase Operational and Hiring Efficiency</small>',
                     bullets: [
-                        'Automate - Background Checks, DOT Employment Verification, Applications & more.',
-                        'Utilize powerful active driver management & logistic tools.',
+                        'Automate Background Checks, DOT Employment Verification, Applications & more.',
+                        //'Utilize powerful active driver management & logistic tools.',
                         'Centralize & Manage your Applicant flow.',
                         'Schedule Recurring Checks for active drivers to stay in compliance.'
                     ],
@@ -87,20 +91,22 @@
                 subhero: {
                     videoURL: '//www.youtube.com/embed/Qzx1qTYLkrY',
                     title: 'Why Outset?',
+                    subtitle: null,
                     bullets: [
-                        'Created for the Transportation Industry.',
-                        'Designed to save you money lost in the hiring process.',
-                        'Customized solutions for your company’s needs.',
-                        'Let technology take the headache out of hiring and driver management.'
+                       {title: 'Created for the Transportation Industry.', description: ''},
+                       {title: 'Designed to save you money lost in the hiring process.', description: ''},
+                       {title: 'Customized solutions for your company’s needs.', description: ''},
+                       {title: 'Let technology take the headache out of hiring and driver management.', description: ''}
                     ]
                 },
                 section1: {
                     header: 'Reports',
-                    sub: 'Cut Background Check & Employment Verification Costs.',
+                    sub: 'Cut Hiring Costs.',
                     bullets: [
+                        'Background Checks & Employment Verification',
                         'View & Download applicant reports immediately.',
                         'Get Applicants Authorization with an e-Signature.',
-                        'Cut your time to hire - free up resources for recruiting, not paperwork',
+                        'Free up resources for recruiting, not paperwork',
                     ],
                     image: '/modules/core/img/intro/employer.png'
                 },
@@ -119,20 +125,24 @@
                     header: 'Pricing',
                     sub: 'Choose from one of the following packages:'
                 },
-                conclusion: [
-                    {
-                        title: 'Simplify your Process',
-                        description: 'Sign up - Then link job postings to Outset, and manage all of your applicants in one place.'
-                    },
-                    {
-                        title: 'Hire',
-                        description: 'Receive all of your applicant reports and employment verification electronically, and stop wasting time on bad apples.'
-                    },
-                    {
-                        title: 'Save Time & Money',
-                        description: 'By managing your hiring funnel within Outset, you’ll fill your empty vehicles faster, freeing up time for more driver recruiting.'
-                    }
-                ]
+                threeSteps: {
+                    title: '<span>3 Simple Steps</span> to get you started with Outset',
+                    subtitle: '',
+                    bullets: [
+                        {
+                            title: 'Sign up',
+                            description: 'Simplify your Process by linking job postings to Outset, and manage all of your applicants in one place.'
+                        },
+                        {
+                            title: 'Hire',
+                            description: 'Receive all of your applicant reports and employment verification electronically, and stop wasting time on bad apples.'
+                        },
+                        {
+                            title: 'Save Time & Money',
+                            description: 'By managing your hiring funnel within Outset, you’ll fill your empty vehicles faster, freeing up time for more driver recruiting.'
+                        }
+                    ]
+                }
 
 
             }
