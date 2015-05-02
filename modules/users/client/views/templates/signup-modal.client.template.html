@@ -4,12 +4,12 @@
 <script type="text/ng-template" id="signupModal.html">
     <div class="modal-header bg-primary">
 
-        <div ng-hide="vm.credentials.type" class="container-fluid">
+        <div ng-hide="!!vm.credentials.type" class="container-fluid">
             <user-signup-type model="vm.credentials.type"></user-signup-type>
         </div>
 
 
-        <div class="hidden-xs" ng-show="vm.credentials.type">
+        <div class="hidden-xs" ng-show="!!vm.credentials.type">
             <span class="modal-title h3 text-center">
                 <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i
                         class="fa fa-arrow-left fa-2x"></i></button>&nbsp;
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div class="visible-xs" ng-show="vm.credentials.type">
+        <div class="visible-xs" ng-show="!!vm.credentials.type">
             <span class="modal-title h4 text-center">
                 <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i
                         class="fa fa-arrow-left fa-lg"></i></button>&nbsp;
