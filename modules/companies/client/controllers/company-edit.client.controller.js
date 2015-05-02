@@ -23,7 +23,15 @@
         vm.editName = false;
         vm.editGW = false;
 
+        vm.options = {
+            language: 'en',
+            allowedContent: true,
+            entities: false
+        };
 
+        vm.onReady = function() {
+            $log.info('CompanyEditController onReady called');
+        }
         function activate() {
             if ($state.is('companies.create')) {
                 if (!vm.company || _.isEmpty(vm.company)) {
@@ -106,8 +114,18 @@
         }
     }
 
-    CompanyEditController.$inject = ['$state', '$log', 'Authentication', 'Companies', 'company'];
+    function CKEditorDirective($log) {
+        return {
+            require: 'ngModel',
+            link: function (scope, elm, attrs, ngModel) {
+                ngModel.$render = function() {
 
+                };
+            }
+        };
+    }
+
+    CompanyEditController.$inject = ['$state', '$log', 'Authentication', 'Companies', 'company'];
     angular.module('companies')
         .controller('CompanyEditController', CompanyEditController);
 
