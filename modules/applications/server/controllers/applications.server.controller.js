@@ -45,6 +45,8 @@ function executeQuery(req, res) {
     var query = req.query || {};
     var sort = req.sort || '-created';
 
+    req.log.debug({query: query}, 'Querying DB For Applications');
+
     var populate = (req.populate || ['job', 'connection', 'messages']).join(' ');
 
     Application.find(query)
@@ -54,15 +56,16 @@ function executeQuery(req, res) {
         .populate(populate)
         .exec(function (err, applications) {
             if (err) {
+                req.log.error('Failed to load applications from query', {error: err, query: query});
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             }
 
             req.applications = applications || [];
-            console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %j (%s)', req.applications.length, query, req.url);
+            req.log.debug('[ApplicationsCtrl.executeQuery] Found %d applications for query %j (%s)', req.applications.length, query, req.url);
 
-            //console.log('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
+            //req.log.debug('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
             return res.json(req.applications);
         });
 }
@@ -179,7 +182,7 @@ function create(req, res) {
             res.json(application);
         })
         .catch(function (err) {
-            console.error({func: 'create.postSave'}, 'Error saving application: %j', err);
+            req.log.error({func: 'create.postSave'}, 'Error saving application: %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
@@ -318,8 +321,8 @@ function remove(req, res) {
 function queryByJobId(req, res) {
     var jobId = req.params.jobId;
 
-    if (!jobId) {
-        console.log('[ApplicationsCtrl.queryByJobId]', 'Cannot search without a jobId');
+    if (!req.user.isAdmin && !jobId) {
+        req.log.debug('[ApplicationsCtrl.queryByJobId]', 'Cannot search without a jobId');
         return res.status(400).send({
             message: 'Must include jobID in request to find Applications by job'
         });
@@ -344,10 +347,10 @@ function queryByJobId(req, res) {
 
 function queryByCompanyId(req, res) {
     var companyId = req.company && req.company._id || req.params.companyId;
-    console.log('[ApplicationsController] queryByCompanyID(%s)', companyId);
+    req.log.debug('[ApplicationsController] queryByCompanyID(%s)', companyId);
 
     if (!companyId) {
-        console.log('[ApplicationsCtrl.queryByCompanyID]', 'Cannot search without a companyId');
+        req.log.debug('[ApplicationsCtrl.queryByCompanyID]', 'Cannot search without a companyId');
         return res.status(400).send({
             message: 'Must include companyId in request to find Applications by company'
         });
@@ -369,20 +372,20 @@ function loadMine(req, res) {
 function queryByUserID(req, res) {
 
     if (req.user.type === 'driver') {
-        console.log('[ApplicationsController] queryByUserID(%s)', req.params.userId);
+        req.log.debug('[ApplicationsController] queryByUserID(%s)', req.params.userId);
         req.query = {
             user: req.params.userId
         };
     }
     else if (req.user.type === 'owner') {
-        console.log('[ApplicationsController] queryByUserID(company.owner:%s)', req.userId);
+        req.log.debug('[ApplicationsController] queryByUserID(company.owner:%s)', req.userId);
         req.query = {
             'company.owner': req.userId
         };
     }
 
     debugger;
-    console.log('[ApplicationsController] queryByUserID: Overriding query to use request params only');
+    req.log.debug('[ApplicationsController] queryByUserID: Overriding query to use request params only');
     req.query = {
         user: req.params.userId
     };
@@ -392,8 +395,8 @@ function queryByUserID(req, res) {
 
 function getByJobId(req, res, next) {
 
-    console.log('[ApplicationsController.byJob] Request: %j %s', req.route.methods, req.url);
-    console.log('[ApplicationsController.byJob] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
+    req.log.debug('[ApplicationsController.byJob] Request: %j %s', req.route.methods, req.url);
+    req.log.debug('[ApplicationsController.byJob] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
 
     var query = {
         job: req.params.jobId,
@@ -406,7 +409,7 @@ function getByJobId(req, res, next) {
                 return next(err);
             }
 
-            console.log('[ApplicationController.byJob] Got application!');
+            req.log.debug('[ApplicationController.byJob] Got application!');
 
             req.application = application;
             next();
@@ -418,7 +421,7 @@ function getByJobId(req, res, next) {
  */
 function applicationByID(req, res, next, id) {
 
-    console.log('[ApplicationsController] applicationById(%s) URL: %s', id, req.url);
+    req.log.debug('[ApplicationsController] applicationById(%s) URL: %s', id, req.url);
 
     Application.findById(id)
         .populate({path: 'user', model: 'User'})
@@ -432,7 +435,7 @@ function applicationByID(req, res, next, id) {
             }
 
             if (!application) {
-                console.log('[ApplicationById] No Application Found');
+                req.log.debug('[ApplicationById] No Application Found');
                 return res.status(404).send({message: 'No application found for ID'});
             }
 
@@ -446,7 +449,7 @@ function applicationByID(req, res, next, id) {
 
             Application.populate(application, options, function (err, populated) {
                 if (err) {
-                    console.log('error retrieving application, returning non-populated version', err);
+                    req.log.error('error retrieving application, returning non-populated version', err);
                     next();
                 }
 
@@ -477,15 +480,15 @@ exports.getMessages = function (req, res, next) {
         return res.status(404).send({message: 'No application found for ID'});
     }
 
-    console.log('starting cleansing user from messages');
+    req.log.debug('starting cleansing user from messages');
     _.map(application.messages, function (message) {
         if (!!message.sender) {
-            console.log('cleansing user from message');
+            req.log.debug('cleansing user from message');
             message.sender.cleanse();
         }
     });
 
-    console.log('finished cleansing user from messages');
+    req.log.debug('finished cleansing user from messages');
 
     var response = {data: application.messages, theirs: [], latest: {}};
 
@@ -537,15 +540,15 @@ exports.persistMessage = function (applicationId, message) {
         status: message.status || 'sent'
     });
 
-    console.log('Saving new message object to DB: %j', msg);
+    log.debug('Saving new message object to DB: %j', msg);
 
     msg.save(function (err, newMessage) {
         if (err) {
-            console.log('CRAP - Couldn\'t save message, %j', err);
+            log.error('CRAP - Couldn\'t save message, %j', err);
             debugger;
         }
         else {
-            console.log('SAVED message object to DB: %j', newMessage);
+            log.debug('SAVED message object to DB: %j', newMessage);
 
             Application.findOneAndUpdate(
                 {_id: applicationId},
@@ -557,10 +560,10 @@ exports.persistMessage = function (applicationId, message) {
                 .exec(
                 function (err, model) {
                     if (err) {
-                        console.log('Couldn\'t save application with message, %j', err);
+                        log.error('Couldn\'t save application with message, %j', err);
                     }
 
-                    console.log('saved application: ' + model);
+                    log.debug('saved application: ' + model);
 
 
                     debugger; // CHECK FOR JOB NAME
@@ -571,7 +574,7 @@ exports.persistMessage = function (applicationId, message) {
 
                     Application.populate(model, options, function (err, populated) {
                         if (err) {
-                            console.log('error retrieving application, returning non-populated version', err);
+                            log.error('error retrieving application, returning non-populated version', err);
                             return false;
                         }
                         debugger;
@@ -613,19 +616,20 @@ exports.createConnection = function (req, res) {
         };
 
         if (req.application.connection) {
-            console.log('[CreateConnection] Updating existing connection');
+            req.log.debug('[CreateConnection] Updating existing connection');
             connection = _.extend(req.application.connection, cnxn);
         }
         else {
-            console.log('[CreateConnection] Creating new connection');
+            req.log.debug('[CreateConnection] Creating new connection');
             connection = new Connection(cnxn);
         }
 
 
-        console.log('[CreateConnection] Saving connection: %j', connection);
+        req.log.debug('[CreateConnection] Saving connection: %j', connection);
 
         connection.save(function (err) {
             if (err) {
+                req.log.error('Error saving connection', err);
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
@@ -636,9 +640,9 @@ exports.createConnection = function (req, res) {
 
                     req.application.save(function (err, newApp) {
                         if (err) {
-                            console.error('[CreateConnection] error saving connection to application', err);
+                            req.log.error('[CreateConnection] error saving connection to application', err);
                         }
-                        console.log('[CreateConnection] Did %sSave Connection to application', !!newApp.connection ? '' : 'NOT ');
+                        req.log.debug('[CreateConnection] Did %sSave Connection to application', !!newApp.connection ? '' : 'NOT ');
                     });
 
                     debugger; // CHECK FOR JOB NAME

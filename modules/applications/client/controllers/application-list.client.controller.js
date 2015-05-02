@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ApplicationListController(auth, moduleConfig, applications) {
+    function ApplicationListController(auth, moduleConfig, applications, $state) {
         var vm = this;
 
         vm.applications = applications;
@@ -15,7 +15,25 @@
         vm.enableHeaderEdit = vm.user.type === 'owner' && vm.config.enableEdit;
 
 
-        if (auth.user.type === 'driver') {
+        if($state.is('applications.all')) {
+            vm.jobIds = {};
+
+            _.map(vm.applications, function(app) {
+                app.jobId = app.job._id;
+
+                if(!_.contains(vm.jobIds,  app.jobId)) {
+                    vm.jobIds[app.jobId] = app.job;
+                }
+
+                vm.jobIds[app.jobId].applications[app._id] = app;
+            });
+
+            vm.jobs = _.values(vm.jobIds);
+
+            vm.listTitle = 'Admin Mode Application View';
+            vm.subtitle = vm.applications.length + ' Applications across ' + vm.jobs.length + ' Jobs';
+        }
+        else if (auth.user.type === 'driver') {
             vm.bodyCopy = {
                 heading: 'Your job search, all in one place!',
                 intro: '<p>Once you have applied to a job on Outset it will appear here for you to track its progress and message the employer.</p>',
@@ -65,7 +83,7 @@
     }
 
 
-    ApplicationListController.$inject = ['Authentication', 'config', 'applications'];
+    ApplicationListController.$inject = ['Authentication', 'config', 'applications', '$state'];
 
     angular.module('applications')
         .controller('ApplicationListController', ApplicationListController);
