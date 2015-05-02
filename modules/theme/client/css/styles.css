@@ -6086,6 +6086,14 @@ body {
 .section-menu .content .main-menu .menu-block .logo a {
   text-decoration: none;
 }
+.section-menu .content .main-menu .menu-block .menu-list .menu-item:hover,
+.section-menu .content .main-menu .menu-block .menu-list .auth-menu-item:hover {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  background-color: rgba(255, 255, 255, 0.2);
+}
 .section-menu .content .main-menu .menu-block .menu-list .menu-item {
   display: inline-block;
   vertical-align: top;
@@ -6111,9 +6119,17 @@ body {
   margin-left: 5px;
   font-weight: 400;
 }
+.section-menu .content .main-menu .menu-block .menu-list .auth-menu-item.active:hover {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  background-color: rgba(230, 73, 47, 0.2);
+}
 .section-menu .content .main-menu .menu-block .menu-list .auth-menu-item.active a {
   color: #e6492f;
   border-bottom: 4px solid #e6492f;
+  font-weight: 800;
 }
 .section-menu .content .main-menu .menu-block .menu-list .auth-menu-item a {
   text-decoration: none;

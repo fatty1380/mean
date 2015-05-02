@@ -12,9 +12,9 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Own your Reputation - Manage your Documents<br>Take Control with an Outset Driver Portfolio',
+                    lead: 'Own your Reputation<br><small>With an Outset Driver Portfolio</small>',
                     bullets: [
-                        'Pre-qualify for Jobs & Easily Apply.',
+                        'Pre-qualify for Jobs & Easily Apply with reusable Documents and saved Reports.',
                         'Create your Driver Portfolio and Make the First Impression you want with Companies.',
                         'Securely Share your: MVR, Resume, Background Check, Insurance etc. - From Anywhere.'
                     ],
@@ -25,9 +25,18 @@
                     title: 'Why Outset?',
                     subtitle: null,
                     bullets: [
-                        'Free - Driver Focused Tools.',
-                        'Own your Reputation - Use Outset as your Digital Business Card.',
-                        'Control who sees your information and never Fax anything again.'
+                        {
+                            title: 'Free Driver Focused Tools.',
+                            description: 'Outset has been built from the ground up with a focus on the driver. This means that the tools will be available whenever and wherever you are, with the ability to share with whoever you want'
+                        },
+                        {
+                            title: 'Own your Reputation',
+                            description: 'Use your Electronic Driver Portfolio as a digital business card, allowing you to make the First Impression you want with Companies.'
+                        },
+                        {
+                            title: 'Control your Information',
+                            description: 'Forget about tracking down a Fax machine, securely send all of your necessary documents with your Electronic Driver Portfolio.'
+                        }
                     ]
                 },
                 section1: {
@@ -35,16 +44,16 @@
                     sub: 'Your digital business card.',
                     bullets: ['Easily share information with Employers and Shippers.',
                         'Don’t let previous employers control your first impression.',
-                        'Grow your Driver Portfolio with your career.'],
+                        'Grow your Electronic Driver Portfolio with your career.'],
                     image: '/modules/core/img/intro/driver.png'
                 },
                 section2: {
                     header: 'Reports',
-                    sub: 'Your Pre-qualification tool',
+                    sub: 'Your Pre-qualification tool.',
                     bullets: [
-                        'Let Employers know you’re ready to roll now.',
+                        'Let Employers know you’re ready to roll <em>right now</em>.',
                         'Stand out from other applicants and Owner Operators.',
-                        'Securely store and share your choice of:<ul><li>Motor Vehicle Reports</li><li>Background Checks</li><li>Drug Test Results</li><li>Proof of Insurance</li>'
+                        'Securely store and share your Motor Vehicle Reports, Background Checks, Drug Test Results and Proof of Insurance'
                     ],
                     image: '/modules/core/img/intro/reports.png'
                 },
@@ -62,19 +71,20 @@
                     title: '<span>3 Simple Steps</span> to get you started with Outset',
                     subtitle: '',
                     bullets: [
-                    {
-                        title: 'Sign up',
-                        description: 'Create your Driver Portfolio, upload your Resume, and order Background Reports to share with multiple employers.'
-                    },
-                    {
-                        title: 'Get Hired',
-                        description: 'With your Driver Portfolio and Reports complete, use them over and over to search for and apply to jobs with one click.'
-                    },
-                    {
-                        title: 'Drive',
-                        description: 'By giving employers more information upfront, you standout and get hired you faster - putting you in the driver’s seat in no time.'
-                    }
-                ]}
+                        {
+                            title: 'Sign up',
+                            description: 'Create your Driver Portfolio, upload your Resume, and order Background Reports to share with multiple employers.'
+                        },
+                        {
+                            title: 'Get Hired',
+                            description: 'With your Driver Portfolio and Reports complete, use them over and over to search for and apply to jobs with one click.'
+                        },
+                        {
+                            title: 'Drive',
+                            description: 'By giving employers more information upfront, you standout and get hired you faster - putting you in the driver’s seat in no time.'
+                        }
+                    ]
+                }
 
             },
             owner: {
@@ -93,10 +103,13 @@
                     title: 'Why Outset?',
                     subtitle: null,
                     bullets: [
-                       {title: 'Created for the Transportation Industry.', description: ''},
-                       {title: 'Designed to save you money lost in the hiring process.', description: ''},
-                       {title: 'Customized solutions for your company’s needs.', description: ''},
-                       {title: 'Let technology take the headache out of hiring and driver management.', description: ''}
+                        {title: 'Created for the Transportation Industry.', description: ''},
+                        {title: 'Designed to save you money lost in the hiring process.', description: ''},
+                        {title: 'Customized solutions for your company’s needs.', description: ''},
+                        {
+                            title: 'Let technology take the headache out of hiring and driver management.',
+                            description: ''
+                        }
                     ]
                 },
                 section1: {
@@ -114,7 +127,7 @@
                     header: 'Applicant Flow',
                     sub: '',
                     bullets: [
-                    	'Increase Operational Efficiency, centralize your process.',
+                        'Increase Operational Efficiency, centralize your process.',
                         'View all Applicant reports and verifications in one place.',
                         'Communicate with all applicants from within Outset.',
                         'Backup your reporting compliance with e-storage of documents.'

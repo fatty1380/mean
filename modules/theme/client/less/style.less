@@ -176,6 +176,13 @@ body {
                 }
 
                 .menu-list {
+
+
+                    .menu-item:hover, .auth-menu-item:hover {
+                        .transition();
+                        background-color: fade(@text-color-light, 20%);
+                    }
+
                     .menu-item {
                         display: inline-block;
                         vertical-align: top;
@@ -206,12 +213,17 @@ body {
                         vertical-align: top;
                         margin-left: 5px;
 
-                      font-weight: 400;
+                        font-weight: 400;
 
                         &.active {
+                            &:hover {
+                            .transition();
+                            background-color: fade(@main-style-color-1, 20%);
+                        }
                             a {
                                 color: @main-style-color-1;
                                 border-bottom: 4px solid @main-style-color-1;
+                                font-weight: 800;
                             }
                         }
 
