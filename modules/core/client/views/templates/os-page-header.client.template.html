@@ -1,4 +1,4 @@
-<div class="row" style="height: 39px;">
+<div style="height: 39px;" class="row">
     <h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"
         ng-class="{'col-sm-8':!!vm.pictureUrl}"></h2>
     <span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"
@@ -6,10 +6,11 @@
 </div>
 
 <!-- os-page-header directive : os-page-header.client.template -->
-<div class="page-header row" data-ng-if="vm.showHeader || vm.includeTransclude" ng-class="{well : !vm.level}"
+<div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"
+     ng-class="{'panel panel-default' : !vm.level}"
      ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">
 
-    <div ng-class="{'col-sm-8':!!vm.pictureUrl}">
+    <div class="pad-vert {{!!vm.pictureUrl ? 'col-sm-8' : 'col-sm-12'}}">
         <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"
                 ng-click="vm.backBtnFn()">
             <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || 'Back'}}
@@ -26,10 +27,11 @@
 
         <!-- Sub-heading -->
         <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>
+        <small ng-if="!vm.includeTransclude"><br ng-if="vm.showHeader"/>&nbsp;</small>
     </div>
 
-    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!vm.pictureUrl">
-        <div class="center-block">
+    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">
+        <div class="center-block full-width">
             <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
                  class="img-thumbnail user-profile-picture img-responsive">
             <br data-ng-if="vm.showPicEdit"/>

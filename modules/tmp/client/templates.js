@@ -1544,7 +1544,135 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/companies/views/templates/subscriptions.client.template.html',
-  '<section class="subscription-client-template col-sm-12">\n' +
+  '<div class="pricing-table">\n' +
+  '            <div class="table-col fl-left first">\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="empty-header"></div>\n' +
+  '                    <div class="table-header local">\n' +
+  '                        <div class="title">local</div>\n' +
+  '                        <div class="price">\n' +
+  '                            <span class="small">$</span>\n' +
+  '                            <span class="value">60</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="period">per month</div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Job posts</div>\n' +
+  '                    <div class="row-cell">2</div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Applicant redirect</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Applicant tracking</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">downloadable reports</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Require reports</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Multiple log-ins</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Customized background checks</div>\n' +
+  '                    <div class="row-cell">N/A</div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="table-col fl-left second">\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="empty-header mobile"></div>\n' +
+  '                    <div class="table-header regional">\n' +
+  '                        <div class="title">regional</div>\n' +
+  '                        <div class="price">\n' +
+  '                            <span class="small">$</span>\n' +
+  '                            <span class="value">95</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="period">per month</div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Job posts</div>\n' +
+  '                    <div class="row-cell">5</div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant redirect</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant tracking</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">downloadable reports</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Require reports</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Multiple log-ins</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Customized background checks</div>\n' +
+  '                    <div class="row-cell">+65 per month</div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="table-col fl-left third">\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="empty-header mobile"></div>\n' +
+  '                    <div class="table-header fleet">\n' +
+  '                        <div class="title">fleet</div>\n' +
+  '                        <div class="price">\n' +
+  '                            <span class="small">$</span>\n' +
+  '                            <span class="value">145</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="period">per month</div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Job posts</div>\n' +
+  '                    <div class="row-cell">15</div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant redirect</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant tracking</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">downloadable reports</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Require reports</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Multiple log-ins</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Customized background checks</div>\n' +
+  '                    <div class="row-cell">+65 per month</div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="clearfix"></div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '<!--<section class="subscription-client-template col-sm-12">\n' +
   '    <div class="row">\n' +
   '        <h3 class="title text-center mgn-top">{{vm.text.sub}}</h3>\n' +
   '    </div>\n' +
@@ -1628,7 +1756,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
-  '</section>\n' +
+  '</section>-->\n' +
   '');
  $templateCache.put('/modules/companies/views/templates/view-company.client.template.html',
   '<section name="os-company.directive">\n' +
@@ -1731,7 +1859,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-page-header.client.template.html',
-  '<div class="row" style="height: 39px;">\n' +
+  '<div style="height: 39px;" class="row">\n' +
   '    <h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"\n' +
   '        ng-class="{\'col-sm-8\':!!vm.pictureUrl}"></h2>\n' +
   '    <span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"\n' +
@@ -1739,10 +1867,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '\n' +
   '<!-- os-page-header directive : os-page-header.client.template -->\n' +
-  '<div class="page-header row" data-ng-if="vm.showHeader || vm.includeTransclude" ng-class="{well : !vm.level}"\n' +
+  '<div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"\n' +
+  '     ng-class="{\'panel panel-default\' : !vm.level}"\n' +
   '     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
   '\n' +
-  '    <div ng-class="{\'col-sm-8\':!!vm.pictureUrl}">\n' +
+  '    <div class="pad-vert {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
   '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
   '                ng-click="vm.backBtnFn()">\n' +
   '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
@@ -1759,10 +1888,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <!-- Sub-heading -->\n' +
   '        <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>\n' +
+  '        <small ng-if="!vm.includeTransclude"><br ng-if="vm.showHeader"/>&nbsp;</small>\n' +
   '    </div>\n' +
   '\n' +
-  '    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!vm.pictureUrl">\n' +
-  '        <div class="center-block">\n' +
+  '    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
+  '        <div class="center-block full-width">\n' +
   '            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
   '                 class="img-thumbnail user-profile-picture img-responsive">\n' +
   '            <br data-ng-if="vm.showPicEdit"/>\n' +

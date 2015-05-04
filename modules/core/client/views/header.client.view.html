@@ -1,162 +1,99 @@
-<header class="header" data-ng-controller="HeaderController"
+<header class="section-menu" data-ng-controller="HeaderController"
         data-ng-class="{'navbar-landing' : $state.is('intro') }"
         data-ng-hide="!!hideHeader">
+    <div class="content">
+        <div class="main-menu">
+            <div class="mobile-nav" mobile-nav></div>
+            <div class="menu-block">
+                <div class="logo">
+                    <a href="/"><img src="modules/core/img/others/logo.png"></a>
+                </div>
 
-    <div class="navbar navbar-default mega-menu navbar-static" role="navigation">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <ul class="navbar-toggle" data-ng-hide="authentication.user">
-                    <li style="display:inline-block;" class="mgn-right">
-                        <a ui-sref="jobs.list">Jobs</a>
-                    </li>
-                    <li style="display:inline-block;">
-                        <a login-modal>Log In</a></li>
-                    <li style="display:inline-block;" class="hidden-xs">
-                        <a signup-modal>Sign Up</a>
-                    </li>
-                </ul>
-                <button type="button" class="navbar-toggle" data-toggle="collapse"
-                        data-ng-click="toggleCollapsibleMenu()" data-ng-show="authentication.user"
-                        data-target=".navbar-responsive-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html#top">
-                    <img id="logo-header" src="modules/core/img/brand/logo-dblue.png" alt="Outset">
-                </a>
+                <div data-ng-hide="authentication.user">
+                    <div class="menu-list">
+                        <div class="menu-item fl-left" ng-class="{'active': $state.is('intro.driver')}">
+                            <a ui-sref="intro.driver">Drivers</a>
+                        </div>
+                        <div class="menu-item fl-left" ng-class="{'active': $state.is('intro.owner')}">
+                            <a ui-sref=" intro.owner">Employers</a>
+                        </div>
+                        <div class="menu-item fl-left" ng-class="{'active': $state.includes('jobs')}">
+                            <a ui-sref="jobs.list">Jobs</a>
+                        </div>
+
+                        <div class="fl-right right-menu">
+                            <div class="auth-menu-item fl-left">
+                                <a login-modal>login</a>
+                            </div>
+                            <div class="auth-menu-item active fl-left">
+                                <a signup-modal>register</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div data-ng-show="authentication.user">
+
+                    <div class="menu-list">
+                        <div data-ng-repeat="item in menu.items | orderBy: 'position'"
+                             data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.type"
+                             class="menu-item fl-left {{item.class}} {{item.type}}"
+                             data-ui-sref-active="active"
+                             data-ng-init="itemParentName = item.state.split('.')[0] "
+                             data-ng-class="{'active': $state.includes(itemParentName)}"
+                             ng-attr-dropdown="item.type === 'dropdown'">
+
+                            <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
+                                <span data-ng-bind-html="item.title"></span>
+                                <b class="caret"></b>
+                            </a>
+                            <div ng-switch-when="dropdown" class="dropdown-menu">
+                                <div data-ng-repeat="subitem in item.items | orderBy: 'position'"
+                                    data-ng-if="subitem.shouldRender(authentication.user);" data-ui-sref-active="active">
+                                    <a data-ui-sref="{{subitem.state}}" data-ng-bind-html="subitem.title"></a>
+                                </div>
+                            </div>
+
+                            <a ng-switch-default data-ui-sref="{{item.state}}" data-ui-sref-active="active" data-ng-bind-html="item.title"></a>
+                        </div>
+
+                        <div class="fl-right right-menu">
+                            <div class="menu-item fl-left dropdown" dropdown>
+
+                                <a ui-sref="settings.profile" class="dropdown-toggle text-right" dropdown-toggle>
+                                    <i class="fa fa-cog fa-lg"></i>
+                                    <i class="fa fa-caret-down"></i>
+                                </a>
+
+                                <div class="dropdown-menu pull-right">
+                                    <div data-ui-sref-active="active">
+                                        <a data-ui-sref="settings.profile">Edit Profile</a>
+                                    </div>
+                                    <div data-ui-sref-active="active">
+                                        <a data-ui-sref="settings.picture">Change Profile Picture</a>
+                                    </div>
+                                    <div data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">
+                                        <a data-ui-sref="settings.password">Change Password</a>
+                                    </div>
+                                    <div data-ui-sref-active="active" ng-if="social.isEnabled">
+                                        <a data-ui-sref="settings.accounts">Manage Social Accounts</a>
+                                    </div>
+                                    <div class="divider"></div>
+                                    <div>
+                                        <a href="/api/auth/signout" target="_self">signout</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
             </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-responsive-collapse">
-                <!-- COLLAPSED MODE : Non-Authenticated User Menus-->
-                <ul class="nav navbar-nav navbar-right" data-ng-hide="authentication.user">
-                    <li class="nav-item stronger pad-right">
-                        <a login-modal>Log In</a></li>
-                    <li class="nav-item nav-item-cta last" signup-modal>
-                        <a class="btn btn-cta-secondary">Sign Up</a>
-                    </li>
-                </ul>
-
-                <!--COLLAPSED MODE : -->
-                <ul class="nav navbar-nav navbar-right" data-ng-if="menu.shouldRender(authentication.user);">
-                    <li class="" tooltip="change your user preferences and settings here"
-                        tooltip-placement="bottom" tooltip-popup-delay="500">
-                        <a ui-sref="settings.profile">
-                            <i class="fa fa-cog fa-lg"></i>
-                            <!--<img data-ng-src="{{authentication.user.profileImageURL}}"-->
-                            <!--alt="{{authentication.user.displayName}}"-->
-                            <!--class="header-profile-image"/>-->
-                            <!--<span data-ng-bind="authentication.user.displayName"></span></b>-->
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/api/auth/signout" target="_self" tooltip="click here to logout"
-                           tooltip-placement="bottom" tooltip-popup-delay="1000">
-                            <small>signout</small>
-                        </a>
-                    </li>
-                    <!--<li class="dropdown">-->
-                    <!--<a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown">-->
-                    <!--<img data-ng-src="{{authentication.user.profileImageURL}}"-->
-                    <!--alt="{{authentication.user.displayName}}"-->
-                    <!--class="header-profile-image"/>-->
-                    <!--<span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>-->
-                    <!--</a>-->
-                    <!--<ul class="dropdown-menu">-->
-                    <!--<li data-ui-sref-active="active">-->
-                    <!--<a data-ui-sref="settings.profile">Edit Profile</a>-->
-                    <!--</li>-->
-                    <!--<li data-ui-sref-active="active">-->
-                    <!--<a data-ui-sref="settings.picture">Change Profile Picture</a>-->
-                    <!--</li>-->
-                    <!--<li data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">-->
-                    <!--<a data-ui-sref="settings.password">Change Password</a>-->
-                    <!--</li>-->
-                    <!--<li data-ui-sref-active="active" ng-if="social.isEnabled">-->
-                    <!--<a data-ui-sref="settings.accounts">Manage Social Accounts</a>-->
-                    <!--</li>-->
-                    <!--<li class="divider"></li>-->
-                    <!--<li>-->
-                    <!--<a href="/api/auth/signout" target="_self">Signout</a>-->
-                    <!--</li>-->
-                    <!--</ul>-->
-                    <!--</li>-->
-                </ul>
-                <!--END : Authenticated User Menus-->
-
-
-                <!--Center Nav-->
-
-                <!--NON-AUTHENTICATED : Center Nav bar -->
-                <ul class="nav navbar-nav navbar-center" data-ng-if="!authentication.user">
-                    <li class="nav-item pad-sides" ng-class="{'active': $state.is('intro.driver')}">
-                        <a ui-sref="intro.driver">Drivers</a>
-                    </li>
-                    <li class="nav-item pad-sides" ng-class="{'active': $state.is('intro.owner')}">
-                        <a ui-sref="intro.owner">Employers</a>
-                    </li>
-                    <li class="nav-item pad-sides" data-ng-class="{active: $state.includes('jobs')}">
-                        <a ui-sref="jobs.list">Jobs</a>
-                    </li>
-                </ul>
-
-                <!--AUTHENTICATED USER : Center Nav Bar-->
-                <ul class="nav navbar-nav navbar-center" data-ng-if="menu.shouldRender(authentication.user);">
-                    <li data-ng-repeat="item in menu.items | orderBy: 'position'"
-                        data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.type"
-                        data-ng-class="{active: $state.includes(item.state)}" class="{{item.class}}"
-                        ng-attr-dropdown="item.type === 'dropdown'">
-                        <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
-                            <span data-ng-bind-html="item.title"></span>
-                            <b class="caret"></b>
-                        </a>
-                        <ul ng-switch-when="dropdown" class="dropdown-menu">
-                            <li data-ng-repeat="subitem in item.items | orderBy: 'position'"
-                                data-ng-if="subitem.shouldRender(authentication.user);" data-ui-sref-active="active">
-                                <a data-ui-sref="{{subitem.state}}" data-ng-bind-html="subitem.title"></a>
-                            </li>
-                        </ul>
-                        <a ng-switch-default data-ui-sref="{{item.state}}" data-ng-bind-html="item.title"></a>
-                    </li>
-                </ul>
-
-                <!-- navbar-right : used for logged in user's settings -->
-                <ul class="nav navbar-nav pull-right" data-ng-show="authentication.user">
-
-                    <li class="dropdown" ng-if="false">
-                        <a href="#" class="dropdown-toggle user-header-dropdown-toggle" data-toggle="dropdown">
-                            <img data-ng-src="{{authentication.user.profileImageURL}}"
-                                 alt="{{authentication.user.displayName}}"
-                                 class="header-profile-image"/>
-                            <span data-ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li data-ui-sref-active="active">
-                                <a data-ui-sref="settings.profile">Edit Profile</a>
-                            </li>
-                            <li data-ui-sref-active="active">
-                                <a data-ui-sref="settings.picture">Change Profile Picture</a>
-                            </li>
-                            <li data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">
-                                <a data-ui-sref="settings.password">Change Password</a>
-                            </li>
-                            <li data-ui-sref-active="active" ng-if="social.isEnabled">
-                                <a data-ui-sref="settings.accounts">Manage Social Accounts</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="/api/auth/signout" target="_self">signout</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
         </div>
-        <!--/navbar-collapse-->
-    </div>
     </div>
 </header>

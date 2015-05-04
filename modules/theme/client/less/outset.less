@@ -30,8 +30,8 @@ html, body {
 }
 
 body {
-  padding-top    : 50px;
-  padding-bottom : 50px;
+  //padding-top    : 50px;
+  //padding-bottom : 50px;
 }
 
 span.cta-outline {
@@ -192,8 +192,8 @@ oset-chat-console > .chat-window {
         margin-top       : 0;
         margin-bottom    : 0;
         background-color : lighten(@divider, 10%);
-        #gradient > .radial(lighten(@divider, 10%), #FFF);
-        .reset-filter();
+       // #gradient > .radial(lighten(@divider, 10%), #FFF);
+        //.reset-filter();
       }
     }
   }
@@ -484,7 +484,7 @@ img.user-profile-picture {
 
   div {
     position : absolute;
-    bottom   : -50px;
+    top   : -110px;
     right    : 0;
     img.user-profile-picture {
     }
@@ -542,7 +542,7 @@ img.user-profile-picture {
   background : @outset-blue url('/modules/core/img/intro/home-country-road.jpg') no-repeat 50% 75% !important;
   .background-size(cover);
   &.headline-sm {
-    height : 210px;
+    height : 220px;
 
     + .content-section {
       padding-top : 10px;
@@ -565,7 +565,8 @@ img.user-profile-picture {
   }
 
   &.headline-map-bg {
-    background: #0e2d4c url('/modules/core/img/intro/western-map.jpg') no-repeat 50% 50% !important;
+    background: #0e2d4c url('/modules/core/img/intro/western-map.jpg') no-repeat 50% 50% /cover !important;
+    .background-size(cover);
   }
 
   &.headline-static {
@@ -837,7 +838,7 @@ img.user-profile-picture {
   //    border     : 5px solid lighten(@outset-blue, 10%);
   //  }
   /* ======= Steps ======= */
-  .steps {
+  /*.steps {
     background     : @smoky-white;
     padding-top    : 60px;
     padding-bottom : 120px;
@@ -886,7 +887,7 @@ img.user-profile-picture {
       font-size  : 20px;
     }
 
-  }
+  }*/
 
   .leader {
     text-align : center;
@@ -2425,6 +2426,26 @@ pdf {
     p {
       color         : #999;
       margin-bottom : 0;
+    }
+  }
+}
+
+/* New header Styles */
+.menu-item.dropdown.open {
+
+  a.dropdown-toggle, .dropdown-menu {
+    background-color : fade(@outset-blue, 90%);
+  }
+
+  .dropdown-menu {
+    a {
+      white-space: nowrap;
+    }
+    a:hover {
+    //background-color : fade(@outset-blue, 95%);
+  }
+    &.pull-right a {
+      text-align: right;
     }
   }
 }

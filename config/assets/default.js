@@ -7,13 +7,13 @@ module.exports = {
                 'public/lib/bootstrap/dist/css/bootstrap.css',
                 'public/lib/bootstrap/dist/css/bootstrap-theme.css',
                 'public/lib/components-font-awesome/css/font-awesome.css',
-                'public/lib/textAngular/src/textAngular.css',
                 'public/lib/animate.css/animate.css',
                 'public/lib/ngImgCrop/compile/unminified/ng-img-crop.css',
                 'public/lib/angular-toastr/dist/angular-toastr.css',
                 'public/lib/ngSignaturePad/ngSignaturePad.css'
             ],
             js: [
+                //'/socket.io/socket.io.js', // TODO: Determine if this is the correct way to inject this?
                 'public/lib/angular/angular.js',
                 'public/lib/angular-ckeditor/angular-ckeditor.js',
                 'public/lib/angular-resource/angular-resource.js',
@@ -37,7 +37,8 @@ module.exports = {
                 'public/lib/angular-sanitize/angular-sanitize.js',
                 'public/lib/angular-toastr/dist/angular-toastr.tpls.js',
                 'public/lib/ngSignaturePad/ngSignaturePad.js',
-                'public/lib/signature_pad/signature_pad.js'
+                'public/lib/signature_pad/signature_pad.js',
+                '//code.jquery.com/jquery-1.11.2.min.js' // TODO: Remove jQuery
             ],
             font: [
                 '//fonts.googleapis.com/css?family=Open+Sans:300,400,700',
@@ -47,7 +48,7 @@ module.exports = {
             tests: ['public/lib/angular-mocks/angular-mocks.js']
         },
         css: [
-            'modules/*/client/css/*.css'
+            'modules/theme/client/css/styles.css'
         ],
         less: [
             'modules/*/client/less/*.less'

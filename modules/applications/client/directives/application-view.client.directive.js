@@ -148,12 +148,16 @@
             return false;
         }
 
-        vm.Applications = Applications;
+        vm.getMaskedDisplayName = Applications.getMaskedDisplayName;
 
         vm.initialize = function () {
             if (!!vm.application) {
                 vm.profile = vm.application.user;
                 vm.job = vm.job || vm.application.job;
+
+                if(_.isEmpty(vm.job)) {
+                    debugger;
+                }
 
                 if(_.isEmpty(vm.job.newMessages)) {
                     vm.job.newMessages = 0;
@@ -193,7 +197,7 @@
         vm.setApplicationStatus = function (application, status, $event) {
             $event.stopPropagation();
 
-            var app = vm.ApplicationFactory.setStatus(application._id, status);
+            var app = Applications.setStatus(application._id, status);
 
             app.then(function (success) {
                 $log.debug('[setApplicationStatus] %s', success);
@@ -216,11 +220,11 @@
         var ddo;
         ddo = {
             templateUrl: function (elem, attrs) {
-                switch (attrs.userType) {
-                    case 'driver':
-                        return '/modules/applications/views/templates/driver-list-item.client.template.html';
-                    case 'owner':
-                        return '/modules/applications/views/templates/owner-list-item.client.template.html';
+                if(!!attrs.job) {
+                    return '/modules/applications/views/templates/owner-list-item.client.template.html';
+                }
+                else {
+                    return '/modules/applications/views/templates/driver-list-item.client.template.html';
                 }
             },
             restrict: 'E',
