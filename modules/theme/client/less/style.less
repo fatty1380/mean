@@ -41,6 +41,7 @@
 
 @pagination-item-color: #BFBFBF;
 @pagination-current-item-color: #E9E9E9;
+@outset-blue: #0e2d4c;
 
 @main-background-url: url('/modules/core/img/backgrounds/header_bg.png');
 @steps-background-url: url('/modules/core/img/backgrounds/step_bg.png');
@@ -62,6 +63,8 @@
 @disable-icon-url: url('/modules/core/img/pricing/minus_table.png');
 
 @play-icon-url: url('/modules/core/img/others/play_btn.png');
+
+
 
 * {
   -moz-box-sizing: border-box;
@@ -222,6 +225,29 @@ body {
                 color: @text-color-light;
                 font-weight: 400;
                 border-bottom: 1px solid @text-color-light;
+              }
+            }
+
+            /* New header Styles */
+            &.dropdown.open {
+
+              a.dropdown-toggle, .dropdown-menu {
+                background-color : fade(@outset-blue, 90%);
+              }
+
+              .dropdown-menu {
+                a {
+                  white-space: nowrap;
+                  padding: 10px 20px;
+
+                  &:hover:after {
+                    content: "\f0d9";
+                    position: absolute;
+                  }
+                }
+                &.pull-right a {
+                  text-align: right;
+                }
               }
             }
           }

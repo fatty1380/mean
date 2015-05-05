@@ -5780,17 +5780,6 @@ pdf > object {
   color: #999;
   margin-bottom: 0;
 }
-/* New header Styles */
-.menu-item.dropdown.open a.dropdown-toggle,
-.menu-item.dropdown.open .dropdown-menu {
-  background-color: rgba(14, 45, 76, 0.9);
-}
-.menu-item.dropdown.open .dropdown-menu a {
-  white-space: nowrap;
-}
-.menu-item.dropdown.open .dropdown-menu.pull-right a {
-  text-align: right;
-}
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
   padding-right: 0;
@@ -6085,6 +6074,7 @@ body {
 .section-menu .content .main-menu .menu-block .menu-list .menu-item {
   display: inline-block;
   vertical-align: top;
+  /* New header Styles */
 }
 .section-menu .content .main-menu .menu-block .menu-list .menu-item a {
   text-decoration: none;
@@ -6100,6 +6090,21 @@ body {
   color: #ffffff;
   font-weight: 400;
   border-bottom: 1px solid #ffffff;
+}
+.section-menu .content .main-menu .menu-block .menu-list .menu-item.dropdown.open a.dropdown-toggle,
+.section-menu .content .main-menu .menu-block .menu-list .menu-item.dropdown.open .dropdown-menu {
+  background-color: rgba(14, 45, 76, 0.9);
+}
+.section-menu .content .main-menu .menu-block .menu-list .menu-item.dropdown.open .dropdown-menu a {
+  white-space: nowrap;
+  padding: 10px 20px;
+}
+.section-menu .content .main-menu .menu-block .menu-list .menu-item.dropdown.open .dropdown-menu a:hover:after {
+  content: "\f0d9";
+  position: absolute;
+}
+.section-menu .content .main-menu .menu-block .menu-list .menu-item.dropdown.open .dropdown-menu.pull-right a {
+  text-align: right;
 }
 .section-menu .content .main-menu .menu-block .menu-list .auth-menu-item {
   display: inline-block;
