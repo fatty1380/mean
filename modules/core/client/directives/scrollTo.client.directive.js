@@ -1,4 +1,5 @@
 ﻿(function () {
+    'use strict';
 
     angular.module('core').directive('scrollTo', function () {
         return {
@@ -8,7 +9,7 @@
             link: function (scope, element, attrs, ctrl) {
                 $(element).on('click touchstart', function(){
                    $('html, body').animate({
-                        scrollTop: $(".section-why-outset").offset().top
+                        scrollTop: $('.section-why-outset').offset().top
                     }, 300);
                 });
             }
