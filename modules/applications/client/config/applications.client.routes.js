@@ -44,6 +44,8 @@
             id: auth.user.company
         };
 
+        debugger;
+
         return jobs.listByCompany(query)
             .catch(function (err) {
             if (err.status === 404) {
