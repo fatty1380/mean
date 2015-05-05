@@ -30,6 +30,12 @@
                     id: '@_id'
                 }, {});
 
+                query.id = query.id || query.companyId;
+
+                if(!_.isString(query.id)) {
+                    query.id = query.id._id;
+                };
+
                 return rsrc.query(query).$promise;
             }
 
