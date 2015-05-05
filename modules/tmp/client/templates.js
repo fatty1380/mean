@@ -4427,26 +4427,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <div class="row">\n' +
   '\n' +
-  '\n' +
-  '            <!-- <div class="col-sm-6">\n' +
-  '                <div class="panel panel-default job-info">\n' +
-  '                    <div ng-show="dm.showSection( \'requirements\') && !!dm.job.requirements">\n' +
-  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Requirements</span>\n' +
-  '                        </div>\n' +
-  '                        <div class="panel-body mgn-btm">\n' +
-  '                            <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '            </div> -->\n' +
-  '\n' +
-  '\n' +
   '            <div class="col-sm-6">\n' +
-  '                <div class="panel panel-default" ng-show="dm.showSection(\'location\')">\n' +
-  '                    <div class="panel-heading" ng-show="dm.showSection(\'all\')">\n' +
-  '                        <span class="h4"><i class="fa fa-map-marker"></i>Location</span>\n' +
-  '                        <a ng-if="vm.enableEdit" href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
+  '                <div class="panel panel-profile no-bg" ng-show="dm.showSection(\'location\')">\n' +
+  '                    <div class="panel-heading overflow-h" ng-show="dm.showSection(\'all\')">\n' +
+  '                        <h2 class="panel-title heading-sm pull-left"><i class="fa fa-map-marker"></i>Location</h2>\n' +
+  '                        <a href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
   '                    </div>\n' +
+  '\n' +
   '\n' +
   '                    <div class="panel-body mgn-btm">\n' +
   '                        <os-address model="dm.job.location[0]" data-ng-show="!dm.job.location[0].empty"\n' +
@@ -4458,12 +4445,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '\n' +
   '            <div class="col-sm-6">\n' +
-  '                <div class="panel panel-default" ng-show="dm.showSection(\'info\')">\n' +
-  '                    <div class="panel-heading" ng-show="dm.showSection(\'all\')">\n' +
-  '                        <span class="h4"><i class="fa fa-info-circle"></i>Summary</span>\n' +
-  '                        <a ng-if="vm.enableEdit" href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
+  '                <div class="panel panel-profile no-bg" ng-show="dm.showSection(\'info\')">\n' +
+  '                    <div class="panel-heading overflow-h" ng-show="dm.showSection(\'all\')">\n' +
+  '                        <h2 class="panel-title heading-sm pull-left"><i class="fa fa-info-circle"></i>Summary</h2>\n' +
+  '                        <a href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
   '                    </div>\n' +
-  '\n' +
   '\n' +
   '\n' +
   '                    <div class="panel-body mgn-btm">\n' +

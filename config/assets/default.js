@@ -15,7 +15,6 @@ module.exports = {
             js: [
                 //'/socket.io/socket.io.js', // TODO: Determine if this is the correct way to inject this?
                 'public/lib/angular/angular.js',
-                'public/lib/angular-ckeditor/angular-ckeditor.js',
                 'public/lib/angular-resource/angular-resource.js',
                 'public/lib/angular-animate/angular-animate.js',
                 'public/lib/angular-messages/angular-messages.js',
