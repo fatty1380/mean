@@ -6,6 +6,7 @@
 var should = require('should'),
 mongoose   = require('mongoose'),
 User       = mongoose.model('User'),
+SeedUser       = mongoose.model('SeedUser'),
 Driver     = mongoose.model('Driver'),
 Company    = mongoose.model('Company'),
 _          = require('lodash'),
@@ -247,6 +248,31 @@ describe('User Model Unit Tests:', function () {
         it('should remove any driver records associated with the user');
         it('should remove any company records where the user is the only associated user');
         it('should keep any company records where the user is NOT the only associated user');
+    });
+
+    describe('Special functionality for "SEED" users', function() {
+        var seed;
+        beforeEach(function(done) {
+            seed = new SeedUser({
+                //firstName: 'Signup',
+                //lastName: 'User',
+                //email: 'signuponly@seed.com'
+            });
+
+            done();
+        });
+
+        it('should allow a minimal signup to be allowed by the db', function(done) {
+            seed.save(function (err) {
+                if (!!err) {
+                    console.log('[ERROR] Saving user: ', err);
+                }
+                should.not.exist(err && err.message);
+
+                done();
+            });
+        });
+
     });
 
     afterEach(function (done) {

@@ -22,6 +22,34 @@ var validateLocalStrategyPassword = function (password) {
     return (this.provider !== 'local' || (password && password.length >= 8));
 };
 
+var SeedSchema = new Schema({
+    firstName: {
+        type: String,
+        trim: true,
+        default: '',
+        validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+    },
+    lastName: {
+        type: String,
+        trim: true,
+        default: '',
+        validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+    },
+    email: {
+        type: String,
+        trim: true,
+        default: '',
+        match: [/.+\@.+\..+/, 'Please fill a valid email address']
+    },
+    zip: {
+        type: String,
+        trim: true,
+        default: ''
+    }
+});
+
+mongoose.model('SeedUser', SeedSchema);
+
 /**
  * User Schema
  */

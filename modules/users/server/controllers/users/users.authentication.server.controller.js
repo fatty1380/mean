@@ -3,16 +3,20 @@
 /**
  * Module dependencies.
  */
-var _        = require('lodash'),
-path         = require('path'),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-mongoose     = require('mongoose'),
-passport     = require('passport'),
-User         = mongoose.model('User'),
-Driver       = mongoose.model('Driver'),
-Company      = mongoose.model('Company'),
-emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
-Q            = require('q');
+var _ = require('lodash'),
+    path = require('path'),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    User = mongoose.model('User'),
+    Driver = mongoose.model('Driver'),
+    Company = mongoose.model('Company'),
+    emailer = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users',
+        file: 'Users.Authentication.Controller'
+    }),
+    Q = require('q');
 
 
 // DRY Simple Login Function
@@ -29,6 +33,14 @@ var login = function (req, res, user) {
     });
 };
 
+exports.userseed = function (req, res) {
+    delete req.body.roles;
+
+    log.info({email: req.body.email}, 'Creating Seed User for email %s', req.body.email);
+
+    var user = new User(req.body);
+};
+
 /**
  * Signup
  */
@@ -40,7 +52,6 @@ exports.signup = function (req, res) {
 
     // Init Variables
     var user = new User(req.body);
-    var message = null;
 
     var userType = req.body.type;
     // Add missing user fields
@@ -118,7 +129,7 @@ function completeUserHydration(req, res, user) {
                         return deferred.reject('Unable to create new driver: ' + err);
                     }
 
-                    if(!!newDriver) {
+                    if (!!newDriver) {
                         deferred.resolve({driver: newDriver._id});
                     }
                     else {
@@ -156,7 +167,7 @@ function completeUserHydration(req, res, user) {
                         return deferred.reject('Unable to create new company: ' + err);
                     }
 
-                    if(!!newCompany) {
+                    if (!!newCompany) {
                         deferred.resolve({company: newCompany._id});
                     }
                     else {
@@ -172,7 +183,7 @@ function completeUserHydration(req, res, user) {
 
     // The 'success' object is the result of the deferred resolutions above
     // which have the relevant 'company' or 'driver' added to them for updating
-    deferred.promise.then(function(success) {
+    deferred.promise.then(function (success) {
         var updateObj = success;
         console.log('[Auth.Hydrate] Updating with obj: %j', updateObj);
 
@@ -182,9 +193,9 @@ function completeUserHydration(req, res, user) {
             }, function (err) {
                 login(req, res, user);
             });
-    }, function(err) {
+    }, function (err) {
         console.log('Unable to resolve new %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
-        login(req,res,user);
+        login(req, res, user);
     });
 }
 
