@@ -40,8 +40,8 @@
 
     function myJobsWithApplications(auth, jobs) {
         var query = {
-            userId: auth.user,
-            companyId: auth.user.company
+            userId: auth.user && auth.user._id || auth.user,
+            id: auth.user.company
         };
 
         return jobs.listByCompany(query)

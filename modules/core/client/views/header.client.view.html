@@ -1,6 +1,7 @@
-<header class="section-menu" data-ng-controller="HeaderController"
-        data-ng-class="{'navbar-landing' : $state.is('intro') }"
-        data-ng-hide="!!hideHeader">
+<header class="section-menu" data-ng-controller="HeaderController as vm"
+        data-ng-class="{'navbar-landing' : vm.state.is('intro'), 'shadow' : (vm.scroll > 20)}"
+        data-ng-hide="!!vm.hideHeader">
+
     <div class="content">
         <div class="main-menu">
             <div class="mobile-nav" mobile-nav></div>
@@ -9,24 +10,24 @@
                     <a href="/"><img src="modules/core/img/others/logo.png"></a>
                 </div>
 
-                <div data-ng-hide="authentication.user">
+                <div data-ng-hide="vm.auth.user">
                     <div class="menu-list">
-                        <div class="menu-item fl-left" ng-class="{'active': $state.is('intro.driver')}">
+                        <div class="menu-item fl-left" ng-class="{'active': vm.state.is('intro.driver')}">
                             <a ui-sref="intro.driver">Drivers</a>
                         </div>
-                        <div class="menu-item fl-left" ng-class="{'active': $state.is('intro.owner')}">
-                            <a ui-sref=" intro.owner">Employers</a>
+                        <div class="menu-item fl-left" ng-class="{'active': vm.state.is('intro.owner')}">
+                            <a ui-sref="intro.owner">Employers</a>
                         </div>
-                        <div class="menu-item fl-left" ng-class="{'active': $state.includes('jobs')}">
-                            <a ui-sref="jobs.list">Jobs</a>
-                        </div>
-
+                        <!--<div class="menu-item fl-left" ng-class="{'active': vm.state.includes('jobs')}">-->
+                        <!--<a ui-sref="jobs.list">Jobs</a>-->
+                        <!--</div>-->
+                        
                         <div class="fl-right right-menu">
-                            <div class="auth-menu-item fl-left">
-                                <a login-modal>login</a>
+                            <div class="auth-menu-item fl-left" login-modal>
+                                <a>login</a>
                             </div>
-                            <div class="auth-menu-item active fl-left">
-                                <a signup-modal>register</a>
+                            <div class="auth-menu-item active fl-left" signup-modal>
+                                <a>register</a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -34,29 +35,31 @@
                     </div>
                 </div>
 
-                <div data-ng-show="authentication.user">
+                <div data-ng-show="vm.auth.user">
 
                     <div class="menu-list">
-                        <div data-ng-repeat="item in menu.items | orderBy: 'position'"
-                             data-ng-if="item.shouldRender(authentication.user);" ng-switch="item.type"
+                        <div data-ng-repeat="item in vm.menu.items | orderBy: 'position'"
+                             data-ng-if="item.shouldRender(vm.auth.user);" ng-switch="item.type"
                              class="menu-item fl-left {{item.class}} {{item.type}}"
                              data-ui-sref-active="active"
                              data-ng-init="itemParentName = item.state.split('.')[0] "
-                             data-ng-class="{'active': $state.includes(itemParentName)}"
+                             data-ng-class="{'active': vm.state.includes(itemParentName)}"
                              ng-attr-dropdown="item.type === 'dropdown'">
 
                             <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
                                 <span data-ng-bind-html="item.title"></span>
                                 <b class="caret"></b>
                             </a>
+
                             <div ng-switch-when="dropdown" class="dropdown-menu">
                                 <div data-ng-repeat="subitem in item.items | orderBy: 'position'"
-                                    data-ng-if="subitem.shouldRender(authentication.user);" data-ui-sref-active="active">
+                                     data-ng-if="subitem.shouldRender(vm.auth.user);" data-ui-sref-active="active">
                                     <a data-ui-sref="{{subitem.state}}" data-ng-bind-html="subitem.title"></a>
                                 </div>
                             </div>
 
-                            <a ng-switch-default data-ui-sref="{{item.state}}" data-ui-sref-active="active" data-ng-bind-html="item.title"></a>
+                            <a ng-switch-default data-ui-sref="{{item.state}}" data-ui-sref-active="active"
+                               data-ng-bind-html="item.title"></a>
                         </div>
 
                         <div class="fl-right right-menu">
@@ -74,7 +77,7 @@
                                     <div data-ui-sref-active="active">
                                         <a data-ui-sref="settings.picture">Change Profile Picture</a>
                                     </div>
-                                    <div data-ui-sref-active="active" data-ng-show="authentication.user.provider === 'local'">
+                                    <div data-ui-sref-active="active" data-ng-show="vm.auth.user.provider === 'local'">
                                         <a data-ui-sref="settings.password">Change Password</a>
                                     </div>
                                     <div data-ui-sref-active="active" ng-if="social.isEnabled">
@@ -97,3 +100,5 @@
         </div>
     </div>
 </header>
+
+

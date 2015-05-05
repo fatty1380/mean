@@ -22,6 +22,8 @@
     function SignupModalController($modal, $log, $attrs) {
         var vm = this;
 
+        vm.type = vm.type || null;
+
         vm.isOpen = false;
 
         if(angular.isDefined($attrs.job)) {
@@ -59,7 +61,7 @@
         };
     }
 
-    function SignupController($http, $state, $modalInstance, $log, Authentication, type, srefRedirect, $document) {
+    function SignupController($state, $modalInstance, $log, Authentication, type, srefRedirect) {
         var vm = this;
         vm.auth = Authentication;
         vm.credentials = { type: type, terms: '' };
@@ -102,7 +104,7 @@
         };
     }
 
-    SignupController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'type', 'srefRedirect', '$document'];
+    SignupController.$inject = ['$state', '$modalInstance', '$log', 'Authentication', 'type', 'srefRedirect'];
     SignupModalController.$inject = ['$modal', '$log', '$attrs'];
 
     angular.module('users')

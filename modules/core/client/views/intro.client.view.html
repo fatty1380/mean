@@ -10,7 +10,7 @@
         <div class="information-block">
             <div class="information-block-item" ng-repeat="bullet in vm.text.header.bullets" ng-bind-html="bullet"></div>
         </div>
-        <a href="#" class="arrow-down"></a>
+        <a href="#" class="arrow-down" scroll-to></a>
     </div>
 </section>
 
@@ -18,7 +18,7 @@
     <div class="content">
         <div class="title">{{vm.text.subhero.title}}</div>
         <div class="line-decoration"></div>
-        <div class="main-description">Lorem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor, orem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor</div>
+        <div class="main-description" ng-show="!!vm.text.subhero.subtitle">{{vm.text.subhero.subtitle}}</div>
         <div class="slider-wrapper" slider="">
             <div class="slider-container">
                 <div class="slider-content">
@@ -30,9 +30,9 @@
                             </div>
                         </div>
                         <div class="slide-item description">
-                            <div class="slide-title">{{leadBullet}}</div>
+                            <div class="slide-title">{{leadBullet.title}}</div>
                             <div class="title-decoration"></div>
-                            <div class="slide-description">Lorem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor, orem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor</div>
+                            <div class="slide-description">{{leadBullet.description}}</div>
                         </div>
                     </div>
                 </div>
@@ -48,10 +48,10 @@
 
 <div class="section-steps">
     <div class="content">
-        <div class="steps-title"><span>3 Simple Steps</span> to get you started with Outset</div>
-        <div class="sub-title">Lorem ipsum dolor sit amet, consectetur edit, sed do eiusmod tempor, orem ipsum dolor sit amet</div>
+        <div class="steps-title" ng-bind-html="vm.text.threeSteps.title"></div>
+        <div class="sub-title" ng-bind-html="vm.text.threeSteps.subtitle"></div>
         <div class="steps">
-            <div class="step step-{{$index+1}}" ng-repeat="item in vm.text.conclusion">
+            <div class="step step-{{$index+1}}" ng-repeat="item in vm.text.threeSteps.bullets">
                 <div class="line first" ng-if="$index != 0"></div>
                 <div class="line second" ng-if="$index < 2"></div>
                 <div class="step-icon"></div>
@@ -68,7 +68,7 @@
     <div class="content">
         <div class="features-wrapper">
             <div class="feature-block align-right">
-                <div class="feature-title " ng-bind-html="vm.text.section1.sub"></div>
+                <div class="feature-title "><span ng-bind-html="vm.text.section1.header"></span><br><span class="small" ng-bind-html="vm.text.section1.sub"></span></div>
                 <div class="bottom-decoration rigth"></div>
                 <div class="feature-items-wrapper">
                     <div class="feature-items-row" ng-repeat="item in vm.text.section1.bullets">
@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="feature-block align-left right-side">
-                <div class="feature-title">{{vm.text.section2.header}}</div>
+                <div class="feature-title"><span ng-bind-html="vm.text.section2.header"></span><br><span class="small" ng-bind-html="vm.text.section2.sub"></span></div>
                 <div class="bottom-decoration left"></div>
                 <div class="feature-items-wrapper">
                     <div class="feature-items-row" ng-repeat="item in vm.text.section2.bullets">
@@ -112,7 +112,7 @@
 <section class="section-footer">
     <div class="content">
         <div class="footer-title">Ready to try Outset for yourself?</div>
-        <signup-modal class="footer-button">
+        <signup-modal type="{{vm.type}}" class="footer-button">
             <a href="#">
                 Click here to sign up!
             </a>

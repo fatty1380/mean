@@ -24,10 +24,10 @@ a {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
 }
 a:hover {
   text-decoration: underline;
@@ -40,10 +40,10 @@ a.btn {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
   font-weight: bold;
 }
 .btn .fa,
@@ -189,10 +189,10 @@ input[type="button"] {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
   z-index: 30;
 }
 #topcontrol:hover {
@@ -663,10 +663,10 @@ input[type="button"] {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
 }
 .why .control .play-trigger:active,
 .why .control .play-trigger:focus {
@@ -1733,10 +1733,10 @@ input[type="button"] {
   -webkit-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
-  -moz-transition: all all 0.2s ease-in-out;
-  -o-transition: all all 0.2s ease-in-out;
-  -webkit-transition: all all 0.2s ease-in-out;
-  transition: all all 0.2s ease-in-out;
+  -moz-transition: all all 0.2s ease-in-out ease-in;
+  -o-transition: all all 0.2s ease-in-out ease-in;
+  -webkit-transition: all all 0.2s ease-in-out ease-in;
+  transition: all all 0.2s ease-in-out ease-in;
   -webkit-border-top-right-radius: 4px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -1769,10 +1769,10 @@ input[type="button"] {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
 }
 .blog-list .post .content {
   padding: 30px;
@@ -2132,10 +2132,10 @@ input[type="button"] {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
   text-align: center;
 }
 .story-section .team .member .member-inner img {
@@ -2758,10 +2758,10 @@ input[type="button"] {
   -webkit-transition: width 0.3s;
   -o-transition: width 0.3s;
   transition: width 0.3s;
-  -moz-transition: all width 0.3s;
-  -o-transition: all width 0.3s;
-  -webkit-transition: all width 0.3s;
-  transition: all width 0.3s;
+  -moz-transition: all width 0.3s ease-in;
+  -o-transition: all width 0.3s ease-in;
+  -webkit-transition: all width 0.3s ease-in;
+  transition: all width 0.3s ease-in;
 }
 .searchbox-container .searchbox.searchbox-open {
   width: 100%;
@@ -3486,10 +3486,10 @@ a {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
 }
 a:hover {
   text-decoration: underline;
@@ -3502,10 +3502,10 @@ a.btn {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
   font-weight: bold;
 }
 .btn .fa,
@@ -4212,10 +4212,10 @@ img.user-profile-picture {
   -webkit-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  -moz-transition: all all 0.3s ease-in-out;
-  -o-transition: all all 0.3s ease-in-out;
-  -webkit-transition: all all 0.3s ease-in-out;
-  transition: all all 0.3s ease-in-out;
+  -moz-transition: all all 0.3s ease-in-out ease-in;
+  -o-transition: all all 0.3s ease-in-out ease-in;
+  -webkit-transition: all all 0.3s ease-in-out ease-in;
+  transition: all all 0.3s ease-in-out ease-in;
 }
 .landing-page .nav-tabs li > a {
   background-color: transparent !important;
@@ -4336,48 +4336,6 @@ i.fa.fa-stack-1x.text-primary {
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
-}
-.header {
-  /* Extra small devices (phones, less than 768px) */
-}
-.header .navbar-brand img {
-  position: absolute;
-  top: 8px;
-}
-.header .navbar .navbar-right {
-  position: absolute;
-  float: right;
-  right: 5px;
-}
-.header .navbar li a {
-  color: #ec6952;
-  padding-top: 25px;
-  padding-bottom: 8px;
-}
-.header .navbar li a.btn.btn-cta-secondary {
-  margin-top: 18px;
-  padding-top: 5px !important;
-  padding-top: 3px !important;
-}
-.header .navbar-collapse.collapse .navbar-nav {
-  vertical-align: bottom;
-}
-@media (max-width: 767px) {
-  .header,
-  .header .navbar-fixed-top,
-  .header .navbar-fixed-top.navbar-landing {
-    height: 40px;
-  }
-  .header .main-nav,
-  .header .navbar-fixed-top .main-nav,
-  .header .navbar-fixed-top.navbar-landing .main-nav {
-    margin-top: 0;
-  }
-  .header .main-nav .navbar-toggle,
-  .header .navbar-fixed-top .main-nav .navbar-toggle,
-  .header .navbar-fixed-top.navbar-landing .main-nav .navbar-toggle {
-    top: 3px;
-  }
 }
 footer.navbar {
   -webkit-border-radius: 0;
@@ -4564,10 +4522,10 @@ form label.btn-cta-secondary.oset-toggles.oset-input * {
   -webkit-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  -moz-transition: all all 0.3s ease-in-out;
-  -o-transition: all all 0.3s ease-in-out;
-  -webkit-transition: all all 0.3s ease-in-out;
-  transition: all all 0.3s ease-in-out;
+  -moz-transition: all all 0.3s ease-in-out ease-in;
+  -o-transition: all all 0.3s ease-in-out ease-in;
+  -webkit-transition: all all 0.3s ease-in-out ease-in;
+  transition: all all 0.3s ease-in-out ease-in;
 }
 form label.btn-cta-secondary.oset-toggles.oset-input input {
   color: #ec6952;
@@ -4972,10 +4930,10 @@ tos ol > li {
   -webkit-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
-  -moz-transition: all all 0.2s ease-in-out;
-  -o-transition: all all 0.2s ease-in-out;
-  -webkit-transition: all all 0.2s ease-in-out;
-  transition: all all 0.2s ease-in-out;
+  -moz-transition: all all 0.2s ease-in-out ease-in;
+  -o-transition: all all 0.2s ease-in-out ease-in;
+  -webkit-transition: all all 0.2s ease-in-out ease-in;
+  transition: all all 0.2s ease-in-out ease-in;
   -webkit-border-top-right-radius: 4px;
   -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
@@ -5009,10 +4967,10 @@ tos ol > li {
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
 }
 .application-list .post.job-post .content,
 .outset-list .post.job-post .content {
@@ -5263,10 +5221,10 @@ a > .fa,
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
-  -moz-transition: all all 0.4s ease-in-out;
-  -o-transition: all all 0.4s ease-in-out;
-  -webkit-transition: all all 0.4s ease-in-out;
-  transition: all all 0.4s ease-in-out;
+  -moz-transition: all all 0.4s ease-in-out ease-in;
+  -o-transition: all all 0.4s ease-in-out ease-in;
+  -webkit-transition: all all 0.4s ease-in-out ease-in;
+  transition: all all 0.4s ease-in-out ease-in;
 }
 .btn-tab:hover {
   text-decoration: underline;
@@ -5549,10 +5507,10 @@ pdf > object {
   -webkit-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
-  -moz-transition: all all 0.5s ease-in-out;
-  -o-transition: all all 0.5s ease-in-out;
-  -webkit-transition: all all 0.5s ease-in-out;
-  transition: all all 0.5s ease-in-out;
+  -moz-transition: all all 0.5s ease-in-out ease-in;
+  -o-transition: all all 0.5s ease-in-out ease-in;
+  -webkit-transition: all all 0.5s ease-in-out ease-in;
+  transition: all all 0.5s ease-in-out ease-in;
   background-color: transparent;
   border: 1px solid transparent;
 }
@@ -6042,6 +6000,31 @@ body {
   left: 0;
   right: 0;
   z-index: 999;
+  background-color: transparent;
+  -moz-transition: background-color 500ms ease-in-out;
+  -o-transition: background-color 500ms ease-in-out;
+  -webkit-transition: background-color 500ms ease-in-out;
+  transition: background-color 500ms ease-in-out;
+}
+.section-menu.shadow {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 17, 0.6);
+  -moz-transition: background-color 500ms ease-in-out;
+  -o-transition: background-color 500ms ease-in-out;
+  -webkit-transition: background-color 500ms ease-in-out;
+  transition: background-color 500ms ease-in-out;
+}
+.section-menu.shadow .content .main-menu {
+  padding-top: 0;
+}
+.section-menu.shadow .content .main-menu .menu-block .logo {
+  padding-top: 7px;
+  -moz-transition: padding-top 100ms ease-in;
+  -o-transition: padding-top 100ms ease-in;
+  -webkit-transition: padding-top 100ms ease-in;
+  transition: padding-top 100ms ease-in;
 }
 .section-menu .content {
   text-align: center;
@@ -6049,7 +6032,7 @@ body {
   margin: 0 auto;
 }
 .section-menu .content .main-menu {
-  padding: 20px 15px 15px 20px;
+  padding: 20px 15px 0px 20px;
 }
 .section-menu .content .main-menu .mobile-nav {
   width: 55px;
@@ -6081,10 +6064,23 @@ body {
   display: inline-block;
   vertical-align: top;
   padding-right: 40px;
+  padding-top: 0;
   float: left;
+  -moz-transition: padding-top 100ms ease-in;
+  -o-transition: padding-top 100ms ease-in;
+  -webkit-transition: padding-top 100ms ease-in;
+  transition: padding-top 100ms ease-in;
 }
 .section-menu .content .main-menu .menu-block .logo a {
   text-decoration: none;
+}
+.section-menu .content .main-menu .menu-block .menu-list .menu-item:hover,
+.section-menu .content .main-menu .menu-block .menu-list .auth-menu-item:hover {
+  -moz-transition: background-color 300ms ease-in;
+  -o-transition: background-color 300ms ease-in;
+  -webkit-transition: background-color 300ms ease-in;
+  transition: background-color 300ms ease-in;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .section-menu .content .main-menu .menu-block .menu-list .menu-item {
   display: inline-block;
@@ -6111,9 +6107,20 @@ body {
   margin-left: 5px;
   font-weight: 400;
 }
+.section-menu .content .main-menu .menu-block .menu-list .auth-menu-item.active {
+  background-color: rgba(0, 0, 17, 0.2);
+}
+.section-menu .content .main-menu .menu-block .menu-list .auth-menu-item.active:hover {
+  -moz-transition: background-color 300ms ease-in;
+  -o-transition: background-color 300ms ease-in;
+  -webkit-transition: background-color 300ms ease-in;
+  transition: background-color 300ms ease-in;
+  background-color: rgba(230, 73, 47, 0.2);
+}
 .section-menu .content .main-menu .menu-block .menu-list .auth-menu-item.active a {
   color: #e6492f;
   border-bottom: 4px solid #e6492f;
+  font-weight: 800;
 }
 .section-menu .content .main-menu .menu-block .menu-list .auth-menu-item a {
   text-decoration: none;
@@ -6244,10 +6251,10 @@ body {
   -ms-transform: translateZ(0);
   -o-transform: translateZ(0);
   transform: translateZ(0);
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
+  -moz-transition: all 0.3s ease-in;
+  -o-transition: all 0.3s ease-in;
+  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
 }
 .section-why-outset .slider-wrapper .slider-container .slider-content .slide {
   float: left;
@@ -6819,10 +6826,10 @@ body {
     -ms-transform: translateZ(0);
     -o-transform: translateZ(0);
     transform: translateZ(0);
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
+    -moz-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in;
+    -webkit-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in;
     z-index: 2;
   }
   .section-menu .content .main-menu .mobile-nav.active {
@@ -6855,10 +6862,10 @@ body {
     -ms-transform: translateZ(0);
     -o-transform: translateZ(0);
     transform: translateZ(0);
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
+    -moz-transition: all 0.3s ease-in;
+    -o-transition: all 0.3s ease-in;
+    -webkit-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in;
   }
   .section-menu .content .main-menu .menu-block .menu-list.opened {
     right: 0;

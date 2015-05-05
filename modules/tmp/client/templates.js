@@ -788,8 +788,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="job-list blog-category-list">\n' +
   '\n' +
   '            <!-- Iterate over the list of jobs ... For Owners -->\n' +
-  '            <oset-application-job-list-item user-type="owner"\n' +
-  '                                        ng-if="vm.user.type === \'owner\'"\n' +
+  '            <oset-application-job-list-item ng-if="vm.groupByJob"\n' +
   '                                        ng-repeat="job in vm.jobs"\n' +
   '                                        job="job"\n' +
   '                                        class="post col-sm-12 applicant"\n' +
@@ -800,8 +799,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </oset-application-job-list-item>\n' +
   '\n' +
   '            <!-- Iterate over the list of applications ... For Drivers -->\n' +
-  '            <oset-application-list-item user-type="driver"\n' +
-  '                                        ng-if="vm.user.type === \'driver\'"\n' +
+  '            <oset-application-list-item ng-if="!vm.groupByJob"\n' +
   '                                        ng-repeat="application in vm.applications"\n' +
   '                                        application="application"\n' +
   '                                        class="post job-post col-sm-12 applicant"\n' +
@@ -968,7 +966,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="row">\n' +
   '            <div class="col-sm-12">\n' +
   '                <h4 class="stronger">\n' +
-  '                    {{vm.Applications.getMaskedDisplayName(vm.application)}}\n' +
+  '                    {{vm.getMaskedDisplayName(vm.application)}}\n' +
   '                    <br class="hidden-lg hidden-md">\n' +
   '                    <span class="pull-right">\n' +
   '                        <small>Status:</small>\n' +
@@ -5300,12 +5298,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<script type="text/ng-template" id="signupModal.html">\n' +
   '    <div class="modal-header bg-primary">\n' +
   '\n' +
-  '        <div ng-hide="vm.credentials.type" class="container-fluid">\n' +
+  '        <div ng-hide="!!vm.credentials.type" class="container-fluid">\n' +
   '            <user-signup-type model="vm.credentials.type"></user-signup-type>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="hidden-xs" ng-show="vm.credentials.type">\n' +
+  '        <div class="hidden-xs" ng-show="!!vm.credentials.type">\n' +
   '            <span class="modal-title h3 text-center">\n' +
   '                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i\n' +
   '                        class="fa fa-arrow-left fa-2x"></i></button>&nbsp;\n' +
@@ -5321,7 +5319,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="visible-xs" ng-show="vm.credentials.type">\n' +
+  '        <div class="visible-xs" ng-show="!!vm.credentials.type">\n' +
   '            <span class="modal-title h4 text-center">\n' +
   '                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i\n' +
   '                        class="fa fa-arrow-left fa-lg"></i></button>&nbsp;\n' +

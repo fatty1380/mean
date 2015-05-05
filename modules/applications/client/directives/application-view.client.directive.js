@@ -81,7 +81,7 @@
                 var messages = vm.application.messages;
                 vm.lastMessage = !!messages && !!messages.length ? messages[0] : null;
 
-                vm.showNewBtn = vm.job.company !== vm.user.company;
+                vm.showNewBtn = vm.job && vm.job.company !== vm.user.company;
             }
 
             vm.profile = !!application && application.user || vm.profile;
