@@ -108,6 +108,12 @@ body {
   overflow-x: hidden;
 }
 
+.youtube-container { display: block; margin: 20px auto; width: 100%; }
+.youtube-player { display: block; width: 100%; /* assuming that the video has a 16:9 ratio */ padding-bottom: 56.25%; overflow: hidden; position: relative; width: 100%; height: 100%; cursor: hand; cursor: pointer; display: block; }
+img.youtube-thumb { bottom: 0; display: block; left: 0; margin: auto; max-width: 100%; width: 100%; position: absolute; right: 0; top: 0; height: auto }
+div.play-button { height: 72px; width: 72px; left: 50%; top: 50%; margin-left: -36px; margin-top: -36px; position: absolute; background: url("http://i.imgur.com/TxzC70f.png") no-repeat; }
+#youtube-iframe { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+
 .section-menu {
   position: absolute;
   margin-left: auto;
@@ -198,7 +204,7 @@ body {
 
           .menu-item:hover, .auth-menu-item:hover {
             .transition(300ms, background-color);
-            background-color: fade(@text-color-light, 20%);
+            background-color: fade(@text-color-light, 40%);
           }
 
           .menu-item {
@@ -235,11 +241,11 @@ body {
 
             &.active {
 
-              background-color: rgba(0, 0, 17, 0.2);
+              //background-color: rgba(0, 0, 17, 0.3);
 
               &:hover {
                 .transition(300ms, background-color);
-                background-color: fade(@main-style-color-1, 20%);
+                background-color: fade(@main-style-color-1, 40%);
               }
               a {
                 color: @main-style-color-1;
@@ -673,23 +679,40 @@ body {
     right: 0;
     top: 50%;
     margin-top: -80px;
-    width: 105px;
+    width: 125px;
     cursor: pointer;
 
     .play-icon {
-      width: 105px;
-      height: 105px;
-      border: 1px solid @text-color-light;
+      width: 125px;
+      height: 125px;
+      border: 1px solid #444444;
       .borderRadius(50%);
-      .backgroundImage(@play-icon-url, no-repeat, 57% 50%, 30px);
+      //.backgroundImage(@play-icon-url, no-repeat, 57% 50%, 30px);
+      background-color: rgba(50, 50, 50, 0.3);
+      position:relative;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: rgba(50, 50, 50, 0.4);
+      }
+
+      .triangle{
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 24px 0 24px 34px;
+          border-color: transparent transparent transparent #444444;
+          position: absolute;
+          top: 50%;
+          margin-top: -23px;
+          margin-left: auto;
+          margin-right: auto;
+          left: 11px;
+          right: 0;
       }
     }
 
     .control-text {
-      color: @text-color-light;
+      color: #444444;
       text-align: center;
       font-size: 21px;
       padding-top: 25px;
@@ -2141,15 +2164,19 @@ body {
 
       .play-icon {
         margin: 0 auto;
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         cursor: pointer;
         .borderRadius(50%);
-        .backgroundImage(@play-icon-url, no-repeat, 57% 50%, 15px);
+
+        .triangle{
+          border-width: 10px 0 10px 14px;
+          margin-top: -9px; 
+          left:9px; 
+        }
       }
 
       .control-text {
-        color: @text-color-light;
         text-align: center;
         font-size: 17px;
         padding-top: 10px;

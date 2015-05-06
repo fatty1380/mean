@@ -22,6 +22,7 @@
                 },
                 subhero: {
                     videoURL: '//www.youtube.com/embed/aj4vz1jMSR8',
+                    videoID:'aj4vz1jMSR8',
                     title: 'Why Outset?',
                     subtitle: null,
                     bullets: [
@@ -100,6 +101,7 @@
                 },
                 subhero: {
                     videoURL: '//www.youtube.com/embed/Qzx1qTYLkrY',
+                    videoID:'Qzx1qTYLkrY',
                     title: 'Why Outset?',
                     subtitle: null,
                     bullets: [
