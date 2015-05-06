@@ -12,11 +12,11 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Own your Reputation<br><small>With an Outset Driver Portfolio</small>',
+                    lead: 'Own your Reputation<br><small>With your Outset Trucker Profile</small>',
                     bullets: [
-                        'Pre-qualify for Jobs & Easily Apply with reusable Documents and saved Reports.',
-                        'Create your Driver Portfolio and Make the First Impression you want with Companies.',
-                        'Securely Share your: MVR, Resume, Background Check, Insurance etc. - From Anywhere.'
+                        'Take back your Industry Reputation and own your future with your Driver Portfolio.',
+                        'Connect with other truckers to stay in touch, share your location & get their recommendations.',
+                        'Securely Share your: MVR, Resume, Background Check, Insurance etc. - Put yourself back in the driver’s seat.'
                     ],
                     signup: 'Get Started'
                 },
@@ -26,46 +26,38 @@
                     subtitle: null,
                     bullets: [
                         {
-                            title: 'Free Driver Focused Tools.',
-                            description: 'Outset has been built from the ground up with a focus on the driver. This means that the tools will be available whenever and wherever you are, with the ability to share with whoever you want'
+                            title: 'Putting Trucker’s back in the Driver’s Seat.',
+                            description: 'Outset has been built from the ground up with a focus on the driver. This means that everything we build is designed to help your career and make life on the road a little better.'
                         },
                         {
                             title: 'Own your Reputation',
-                            description: 'Use your Electronic Driver Portfolio as a digital business card, allowing you to make the First Impression you want with Companies.'
+                            description: 'Use your Driver Profile as your digital business card, allowing you to control your reputation in the industry.'
                         },
                         {
-                            title: 'Control your Information',
-                            description: 'Forget about tracking down a Fax machine, securely send all of your necessary documents with your Electronic Driver Portfolio.'
+                            title: 'Tap into your Network',
+                            description: 'Connect with Truckers you know - See when your friends are close by, share information with them and get their recommendations.'
                         }
                     ]
                 },
                 section1: {
-                    header: 'Portfolio',
+                    header: 'Driver Portfolio',
                     sub: 'Your digital business card.',
-                    bullets: ['Easily share information with Employers and Shippers.',
+                    bullets: [
                         'Don’t let previous employers control your first impression.',
-                        'Grow your Electronic Driver Portfolio with your career.'],
+                        'Easily share your professional information with Employers or Brokers.',
+                        'Grow your Driver Portfolio with your career.'
+                    ],
                     image: '/modules/core/img/intro/driver.png'
                 },
                 section2: {
-                    header: 'Reports',
-                    sub: 'Your Pre-qualification tool.',
+                    header: 'Your Network',
+                    sub: 'Your Biggest Asset.',
                     bullets: [
-                        'Let Employers know you’re ready to roll <em>right now</em>.',
-                        'Stand out from other applicants and Owner Operators.',
-                        'Securely store and share your Motor Vehicle Reports, Background Checks, Drug Test Results and Proof of Insurance'
+                        'Stay Connected and Share Information.',
+                        'Have people you trust recommend you and your ability.',
+                        'Update your network on your location, load and miles you’ve traveled'
                     ],
                     image: '/modules/core/img/intro/reports.png'
-                },
-                section3: {
-                    header: 'Jobs',
-                    sub: 'One-Click Applications',
-                    bullets: [
-                        'Use your Portfolio to apply to jobs.',
-                        'Securely share reports in your applications.',
-                        'Never fax anything again.'
-                    ],
-                    image: '/modules/core/img/intro/jobs.png'
                 },
                 threeSteps: {
                     title: '<span>3 Simple Steps</span> to get you started with Outset',
@@ -73,19 +65,18 @@
                     bullets: [
                         {
                             title: 'Sign up',
-                            description: 'Create your Driver Portfolio, upload your Resume, and order Background Reports to share with multiple employers.'
+                            description: 'Create your Driver Profile, Enter your Handle, update your experience, and order your MVR to be part of your Profile.'
                         },
                         {
-                            title: 'Get Hired',
-                            description: 'With your Driver Portfolio and Reports complete, use them over and over to search for and apply to jobs with one click.'
+                            title: 'Invite your Friends',
+                            description: 'Connect with Drivers you know on Outset to build your Driver Network, and make life on the road more enjoyable.'
                         },
                         {
-                            title: 'Drive',
-                            description: 'By giving employers more information upfront, you standout and get hired you faster - putting you in the driver’s seat in no time.'
+                            title: 'Get out there',
+                            description: 'Use your Outset profile to: Apply for jobs, Host your documents and Connect with friends on the road.'
                         }
                     ]
                 }
-
             },
             owner: {
                 header: {
