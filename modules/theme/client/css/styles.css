@@ -6176,7 +6176,7 @@ div.play-button {
 @media only screen and (min-device-width: 768px) {
   .section-main {
     height: 100vh;
-    max-height: 1080px;
+    max-height: 1200px;
   }
 }
 .section-main .content {

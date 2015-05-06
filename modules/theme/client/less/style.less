@@ -1,4 +1,4 @@
-﻿.backgroundImage(@url, @repeat: no-repeat, @position: left, @size: auto) {
+.backgroundImage(@url, @repeat: no-repeat, @position: left, @size: auto) {
   background-image: @url;
   background-repeat: @repeat;
   background-size: @size;
@@ -64,8 +64,6 @@
 @disable-icon-url: url('/modules/core/img/pricing/minus_table.png');
 
 @play-icon-url: url('/modules/core/img/others/play_btn.png');
-
-
 
 * {
   -moz-box-sizing: border-box;
@@ -268,7 +266,7 @@ div.play-button {
             &.dropdown.open {
 
               a.dropdown-toggle, .dropdown-menu {
-                background-color : fade(@outset-blue, 90%);
+                background-color: fade(@outset-blue, 90%);
               }
 
               .dropdown-menu {
@@ -333,9 +331,9 @@ div.play-button {
   min-height: 700px;
   .backgroundImage(@main-background-url, no-repeat, center, cover);
 
-  @media only screen and (min-device-width: 768px){
+  @media only screen and (min-device-width: 768px) {
     height: 100vh;
-    max-height: 1080px;
+    max-height: 1200px;
   }
 
   .content {
