@@ -92,11 +92,57 @@ body {
   overflow-x: hidden;
 }
 
-.youtube-container { display: block; margin: 20px auto; width: 100%; }
-.youtube-player { display: block; width: 100%; /* assuming that the video has a 16:9 ratio */ padding-bottom: 56.25%; overflow: hidden; position: relative; width: 100%; height: 100%; cursor: hand; cursor: pointer; display: block; }
-img.youtube-thumb { bottom: 0; display: block; left: 0; margin: auto; max-width: 100%; width: 100%; position: absolute; right: 0; top: 0; height: auto }
-div.play-button { height: 72px; width: 72px; left: 50%; top: 50%; margin-left: -36px; margin-top: -36px; position: absolute; background: url("http://i.imgur.com/TxzC70f.png") no-repeat; }
-#youtube-iframe { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+.youtube-container {
+  display: block;
+  margin: 20px auto;
+  width: 100%;
+}
+
+.youtube-player {
+  display: block;
+  width: 100%; /* assuming that the video has a 16:9 ratio */
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: hand;
+  cursor: pointer;
+  display: block;
+  background-color: black;
+}
+
+img.youtube-thumb {
+  bottom: 0;
+  display: block;
+  left: 0;
+  margin: auto;
+  max-width: 100%;
+  width: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: auto
+}
+
+div.play-button {
+  height: 72px;
+  width: 72px;
+  left: 50%;
+  top: 50%;
+  margin-left: -36px;
+  margin-top: -36px;
+  position: absolute;
+  background: url("http://i.imgur.com/TxzC70f.png") no-repeat;
+}
+
+#youtube-iframe {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
 .section-menu {
   position: absolute;
@@ -673,25 +719,25 @@ div.play-button { height: 72px; width: 72px; left: 50%; top: 50%; margin-left: -
       .borderRadius(50%);
       //.backgroundImage(@play-icon-url, no-repeat, 57% 50%, 30px);
       background-color: rgba(50, 50, 50, 0.3);
-      position:relative;
+      position: relative;
 
       &:hover {
         background-color: rgba(50, 50, 50, 0.4);
       }
 
-      .triangle{
-          width: 0;
-          height: 0;
-          border-style: solid;
-          border-width: 24px 0 24px 34px;
-          border-color: transparent transparent transparent #444444;
-          position: absolute;
-          top: 50%;
-          margin-top: -23px;
-          margin-left: auto;
-          margin-right: auto;
-          left: 11px;
-          right: 0;
+      .triangle {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 24px 0 24px 34px;
+        border-color: transparent transparent transparent #444444;
+        position: absolute;
+        top: 50%;
+        margin-top: -23px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 11px;
+        right: 0;
       }
     }
 
@@ -2153,10 +2199,10 @@ div.play-button { height: 72px; width: 72px; left: 50%; top: 50%; margin-left: -
         cursor: pointer;
         .borderRadius(50%);
 
-        .triangle{
+        .triangle {
           border-width: 10px 0 10px 14px;
-          margin-top: -9px; 
-          left:9px; 
+          margin-top: -9px;
+          left: 9px;
         }
       }
 

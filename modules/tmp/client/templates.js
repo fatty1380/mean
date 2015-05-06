@@ -1543,7 +1543,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/companies/views/templates/subscriptions.client.template.html',
   '<div class="pricing-table">\n' +
-  '            <div class="table-col fl-left first">\n' +
+  '            <div class="table-col pull-left first">\n' +
   '                <div class="table-row">\n' +
   '                    <div class="empty-header"></div>\n' +
   '                    <div class="table-header local">\n' +
@@ -1584,7 +1584,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <div class="row-cell">N/A</div>\n' +
   '                </div>\n' +
   '            </div>\n' +
-  '            <div class="table-col fl-left second">\n' +
+  '            <div class="table-col pull-left second">\n' +
   '                <div class="table-row">\n' +
   '                    <div class="empty-header mobile"></div>\n' +
   '                    <div class="table-header regional">\n' +
@@ -1625,7 +1625,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <div class="row-cell">+65 per month</div>\n' +
   '                </div>\n' +
   '            </div>\n' +
-  '            <div class="table-col fl-left third">\n' +
+  '            <div class="table-col pull-left third">\n' +
   '                <div class="table-row">\n' +
   '                    <div class="empty-header mobile"></div>\n' +
   '                    <div class="table-header fleet">\n' +
