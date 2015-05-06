@@ -3,10 +3,10 @@
 /**
  * Module dependencies.
  */
-var _         = require('lodash'),
-defaultAssets = require('./config/assets/default'),
-testAssets    = require('./config/assets/test'),
-multidest     = require('./grunt/multi_dest.js');
+var _ = require('lodash'),
+    defaultAssets = require('./config/assets/default'),
+    testAssets = require('./config/assets/test'),
+    multidest = require('./grunt/multi_dest.js');
 
 module.exports = function (grunt) {
     // Project Configuration
@@ -74,9 +74,7 @@ module.exports = function (grunt) {
                 }
             },
             express: {
-                options: {
-
-                },
+                options: {},
                 test: {
                     options: {
                         script: 'server.js'
@@ -260,11 +258,17 @@ module.exports = function (grunt) {
             },
             mochaTest: {
                 default: {
-                src: testAssets.tests.server,
-                options: {
-                    reporter: 'spec'
-                }
-            },
+                    src: testAssets.tests.server,
+                    options: {
+                        reporter: 'spec'
+                    }
+                },
+                routes: {
+                    src: testAssets.tests.routes
+                },
+                model: {
+                    src: testAssets.tests.model
+                },
                 watch: {
                     options: {
                         reporter: 'min'
@@ -318,6 +322,9 @@ module.exports = function (grunt) {
 
 // Connect to the MongoDB instance and load the models
     grunt.task.registerTask('mongoose', 'Task that connects to the MongoDB instance and loads the application models.', function () {
+
+        console.log('==== Connecting to MongoDB for Test Execution ====================================');
+
         // Get the callback
         var done = this.async();
 
@@ -344,6 +351,8 @@ module.exports = function (grunt) {
 // Run the project tests
     grunt.registerTask('test', ['env:test', 'mongoose', 'mochaTest', 'karma:unit']);
     grunt.registerTask('test:server', ['env:test', 'mongoose', 'mochaTest']);
+    grunt.registerTask('test:routes', ['env:test', 'mongoose', 'mochaTest:routes']);
+    grunt.registerTask('test:model', ['env:test', 'mongoose', 'mochaTest:model']);
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
 // Run the project in development mode
