@@ -1,7 +1,7 @@
 <section class="section-main ">
     <div class="content">
         <div class="main-title" ng-bind-html="vm.text.header.lead"></div>
-        <div class="sub-title" ng-bind-html="vm.text.header.subLead"></div>
+        <div class="sub-title" ng-bind-html="vm.text.header.subLead" ng-if="!!vm.text.header.subLead"></div>
         <div>
             <signup-modal signup-type="{{vm.signupType}}" class="button get-started">
                 <a href="#">{{vm.text.header.signup}}</a>

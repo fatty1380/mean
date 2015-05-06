@@ -19,7 +19,8 @@
                 })();
                  
             function labnolThumb(id) {
-                return '<img class="youtube-thumb" src="//i.ytimg.com/vi/' + id + '/hqdefault.jpg" /><div class="control-button-wrapper"><div class="play-icon"><div class="triangle"></div></div><div class="control-text">Play Video</div></div>';
+                //return '<img class="youtube-thumb" src="//i.ytimg.com/vi/' + id + '/hqdefault.jpg" /><div class="control-button-wrapper"><div class="play-icon"><div class="triangle"></div></div><div class="control-text">Play Video</div></div>';
+                return '<img class="youtube-thumb" src="modules/core/img/backgrounds/play_video_bg.jpg" /><div class="control-button-wrapper"><div class="play-icon"><div class="triangle"></div></div><div class="control-text">Play Video</div></div>';
             }
  
             function labnolIframe() {

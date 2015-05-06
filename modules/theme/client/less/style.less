@@ -304,13 +304,20 @@ div.play-button {
 }
 
 .section-main {
-  min-height: 800px;
+  min-height: 700px;
   .backgroundImage(@main-background-url, no-repeat, center, cover);
+
+  @media only screen and (min-device-width: 768px){
+    height: 100vh;
+    max-height: 1080px;
+  }
 
   .content {
     text-align: center;
     width: 1024px;
     margin: 0 auto;
+    position: relative;
+    height: 100%;
 
     .main-title {
       color: @text-color-light;
@@ -318,6 +325,7 @@ div.play-button {
       font-size: 70px;
       text-align: center;
       padding: 205px 0 70px 0;
+      padding-top: 20vh;
       font-family: RobotoRegular;
       letter-spacing: -2px;
     }
@@ -369,12 +377,14 @@ div.play-button {
     }
 
     .arrow-down {
-      width: 50px;
+      width: 100%;
       height: 45px;
       .backgroundImage(@arrow-down-icon-url, no-repeat, center, auto);
       display: block;
       margin: 0 auto;
       margin-top: 60px;
+      position: absolute;
+      bottom: 5%;
     }
   }
 }
@@ -685,6 +695,8 @@ div.play-button {
   }
 }
 
+@video-control-text: #DDDDDD;
+
 .section-video {
   position: relative;
 
@@ -715,7 +727,7 @@ div.play-button {
     .play-icon {
       width: 125px;
       height: 125px;
-      border: 1px solid #444444;
+      border: 1px solid @video-control-text;
       .borderRadius(50%);
       //.backgroundImage(@play-icon-url, no-repeat, 57% 50%, 30px);
       background-color: rgba(50, 50, 50, 0.3);
@@ -730,7 +742,7 @@ div.play-button {
         height: 0;
         border-style: solid;
         border-width: 24px 0 24px 34px;
-        border-color: transparent transparent transparent #444444;
+        border-color: transparent transparent transparent @video-control-text;
         position: absolute;
         top: 50%;
         margin-top: -23px;
@@ -742,7 +754,7 @@ div.play-button {
     }
 
     .control-text {
-      color: #444444;
+      color: @video-control-text;
       text-align: center;
       font-size: 21px;
       padding-top: 25px;

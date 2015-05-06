@@ -6162,16 +6162,24 @@ div.play-button {
   text-align: center;
 }
 .section-main {
-  min-height: 800px;
+  min-height: 700px;
   background-image: url('/modules/core/img/backgrounds/header_bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
+@media only screen and (min-device-width: 768px) {
+  .section-main {
+    height: 100vh;
+    max-height: 1080px;
+  }
+}
 .section-main .content {
   text-align: center;
   width: 1024px;
   margin: 0 auto;
+  position: relative;
+  height: 100%;
 }
 .section-main .content .main-title {
   color: #ffffff;
@@ -6179,6 +6187,7 @@ div.play-button {
   font-size: 70px;
   text-align: center;
   padding: 205px 0 70px 0;
+  padding-top: 20vh;
   font-family: RobotoRegular;
   letter-spacing: -2px;
 }
@@ -6223,7 +6232,7 @@ div.play-button {
   padding-left: 70px;
 }
 .section-main .content .arrow-down {
-  width: 50px;
+  width: 100%;
   height: 45px;
   background-image: url('/modules/core/img/others/scroll_icon.png');
   background-repeat: no-repeat;
@@ -6232,6 +6241,8 @@ div.play-button {
   display: block;
   margin: 0 auto;
   margin-top: 60px;
+  position: absolute;
+  bottom: 5%;
 }
 .section-why-outset {
   padding-bottom: 100px;
@@ -6532,7 +6543,7 @@ div.play-button {
 .section-video .control-button-wrapper .play-icon {
   width: 125px;
   height: 125px;
-  border: 1px solid #444444;
+  border: 1px solid #dddddd;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
@@ -6547,7 +6558,7 @@ div.play-button {
   height: 0;
   border-style: solid;
   border-width: 24px 0 24px 34px;
-  border-color: transparent transparent transparent #444444;
+  border-color: transparent transparent transparent #dddddd;
   position: absolute;
   top: 50%;
   margin-top: -23px;
@@ -6557,7 +6568,7 @@ div.play-button {
   right: 0;
 }
 .section-video .control-button-wrapper .control-text {
-  color: #444444;
+  color: #dddddd;
   text-align: center;
   font-size: 21px;
   padding-top: 25px;
