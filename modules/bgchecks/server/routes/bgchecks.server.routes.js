@@ -76,7 +76,7 @@ module.exports = function (app) {
         .get(acl.isAllowed, bgchecks.applicant.list);
 
     app.route('/api/reports/applicants/:applicantId')
-        .get(acl.isAllowed, bgchecks.applicant.get);
+        .get(acl.isAllowed, bgchecks.applicant.get, bgchecks.applicant.read);
 
 
     /** REPORTS --------------------------------------- */

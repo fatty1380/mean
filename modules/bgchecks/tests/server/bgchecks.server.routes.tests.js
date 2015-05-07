@@ -10,7 +10,7 @@ var should = require('should'),
     path = require('path'),
     express = require(path.resolve('./config/lib/express')),
     log = require(path.resolve('./config/lib/logger')).child({
-        module: 'bgchecks.routes.test',
+        module: 'bgchecks',
         file: 'bgchecks.server.routes.test'
     });
 
@@ -121,6 +121,32 @@ describe('BGCheck CRUD tests', function () {
 
     };
 
+    describe('Local Applicant methods', function() {
+        it('should be able to lookup a report applicant', function(done) {
+            var endpoint = '/api/reports/applicants/' + localApplicant.id;
+
+            log.trace({test: this.name, url: endpoint}, 'Making Request');
+
+            agent.get(endpoint)
+            .then(function(applicantResponse) {
+                    log.debug({result: applicantResponse}, 'Got Applicant Response from `%s`', endpoint);
+
+                    applicantResponse.should.have.property('body');
+
+                    var applicant = applicantResponse.body;
+
+                    applicant.should.have.property('reports').and.have.length(1);
+
+                    applicant.reports[0].should.have.property('remoteApplicantId');
+                    applicant.reports[0].should.have.property('localReportSku');
+                    applicant.reports[0].should.have.property('remoteReportSkus');
+
+                    done();
+                }, done);
+        });
+        it('should be able to look at report(s) status details');
+    });
+
     describe('Report Status Methods and Routes', function () {
 
         // Set a 20s timeout since eVerifile is involved;
@@ -131,13 +157,17 @@ describe('BGCheck CRUD tests', function () {
 
             var endpoint = '/api/users/' + user.id + '/reports';
 
-            log.trace({url: endpoint}, 'Making Request');
+            log.trace({test: this.name, url: endpoint}, 'Making Request');
 
             // Save a new article
             agent.get(endpoint)
                 .expect(200)
-                .then(function (articleResult) {
-                    log.debug({result: articleResult}, 'Got Response from /api/reports');
+                .then(function (response) {
+                    response.should.have.property('body');
+                    var reportStatuses = response.body;
+
+                    log.debug({result: reportStatuses}, 'Got Response from `%s`', endpoint);
+
 
                     done();
                 })

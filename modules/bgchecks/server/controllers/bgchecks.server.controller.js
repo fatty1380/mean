@@ -133,8 +133,11 @@ function applicantByID(req, res, next, id) {
         .findById(id)
         .exec(function (err, applicant) {
             if (err) {
+                log.error(err, 'Failed to lookup applicant by Id %s', id);
                 return next(err);
             }
+
+            log.debug({func:'applicantById', applicant: applicant}, 'Found Applicant by ID');
             req.applicant = applicant;
             next();
         });
@@ -455,6 +458,17 @@ function GetAllRemoteApplicants(req, res, next) {
  * @alias applicant.get
  */
 function GetReportApplicant(req, res, next) {
+
+    if(req.applicant && req.applicant instanceof ReportApplicant) {
+        log.debug({func: 'GetReportApplicant'}, 'Applicant already loaded');
+
+        return ReportApplicant.populate(req.applicant, {path: 'reports'})
+        .then(function(success) {
+                log.trace({func: GetReportApplicant}, 'Populated Reports');
+                next();
+            });
+    }
+
     var query, id;
 
     if (!!(id = req.remoteApplicantId || req.query.remoteApplicantId)) {
@@ -472,8 +486,10 @@ function GetReportApplicant(req, res, next) {
     log.debug({func: 'GetReportApplicant', query: query}, 'Loading Applicant based on query');
 
     ReportApplicant.findOne(query)
+        .populate('reports')
         .exec(function (err, localApplicant) {
             if (err) {
+                log.error(err, 'Unable to find, or error while finding ReportApplicant via query %o', query);
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
@@ -537,27 +553,45 @@ function GetRemoteApplicantData(req, res, next) {
         });
 }
 
+///**
+// * @alias applicant.read
+// *
+// * Reads the remoteApplicant from the response, combines it with the applicant, and returns
+// * a combined (extended) version of the two;
+// */
+//function ReadReportApplicant(req, res) {
+//
+//    if (!req.applicant && !req.remoteApplicant) {
+//        return res.status(404).send({
+//            message: 'No local or remote applicant found'
+//        });
+//    }
+//
+//    log.debug({func: 'ReportApplicant.read'}, 'Combining values from req.applicant[%s] and req.remoteApplicant[%s]', !!req.remoteApplicant ? 'X' : ' ', !!req.applicant ? 'X' : ' ');
+//
+//    var retval = _.extend(req.remoteApplicant || {}, (req.applicant || {}));
+//
+//    log.debug({func: 'ReportApplicant.read', applicant: retval}, 'Returning Combined Applicant');
+//
+//    res.json(retval);
+//}
+
 /**
  * @alias applicant.read
  *
- * Reads the remoteApplicant from the response, combines it with the applicant, and returns
- * a combined (extended) version of the two;
+ * Reads and returns the ReportApplcant from the response;
  */
 function ReadReportApplicant(req, res) {
 
-    if (!req.applicant && !req.remoteApplicant) {
+    if (!req.applicant) {
         return res.status(404).send({
-            message: 'No local or remote applicant found'
+            message: 'No local applicant found'
         });
     }
 
-    console.log('[ReportApplicant.read] Combining values from req.applicant[%s] and req.remoteApplicant[%s]', !!req.remoteApplicant ? 'X' : ' ', !!req.applicant ? 'X' : ' ');
+    log.debug({func: 'ReportApplicant.read', applicant: req.applicant}, 'Returning Applicant');
 
-    var retval = _.extend(req.remoteApplicant, (req.applicant || {}).toObject());
-
-    console.log('[ReportApplicant.read] Combined Applicant: %j', retval);
-
-    res.json(retval);
+    res.json(req.applicant);
 }
 
 /** SECTION : Report Manipulation ------------------------------------------------------ **/
@@ -754,13 +788,22 @@ function CheckApplicantReportStatus(req, res, next) {
 
                     _.each(reportStatus.reports, function(remoteReport) {
                         log.info({func: 'CheckApplicantReportStatus', result: remoteReport}, 'Looking at remote Report Status');
-                        _.find(req.applicant.reports, {remoteReportSkus: remoteReport.report.sku}, function(localReport){
-                            log.info({func: 'CheckApplicantReportStatus', result: remoteReport}, 'Comparing to local Report Status');
-                            localReport.status = remoteReport.reportCHeckStatus.status;
-                        });
+                        var localReport = _.find(req.applicant.reports, {remoteReportSkus: remoteReport.report.sku});
+
+                        if(!!localReport) {
+                            log.info({func: 'CheckApplicantReportStatus', result: localReport}, 'Comparing with local Report Status');
+                            _.extend(localReport.status, remoteReport.reportCheckStatus.status);
+                            log.info({func: 'CheckApplicantReportStatus', result: localReport}, 'Extended local Report Status');
+
+                        }
+                        else {
+                            log.warn('No Local Report Stored for applicant - saving in place');
+
+
+                        }
                     });
 
-                    res.json(req.applicant.reports);
+                    res.json(req.applicant);
 
                 });
         })
@@ -779,7 +822,7 @@ function CheckReportStatus(req, res, next) {
     everifile.GetSession().then(
         function (session) {
             everifile.RunReport(session, remoteId).then(
-                function (bgReport) {
+                function () {
 
                 }
             );
