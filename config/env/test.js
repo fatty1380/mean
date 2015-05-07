@@ -12,6 +12,39 @@ module.exports = {
 	app: {
 		title: 'outset - Test Environment'
 	},
+	services: {
+		everifile: { // Using 'PRODUCTION' instance for now
+			baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo.everifile.com/renovo',
+			username: process.env.EVERIFILE_USERNAME || 'api@joinoutset.com',
+			password: process.env.EVERIFILE_PASS || 'fax7^kaY'
+		},
+		braintree: {
+			MerchantId: process.env.BRAINTREE_MERCHANT_ID || '9thy557h7r7t5x95',
+			PublicKey: process.env.BRAINTREE_PUBLIC_KEY || 'sfnrsv2k6c78574s',
+			PrivateKey: process.env.BRAINTREE_PRIVATE_KEY || '9da8cb7ae133c4021633f00e495fbf77'
+		},
+		google: {},
+		s3: {
+			enabled: true,
+			clientConfig: {
+				maxAsyncS3: 20,
+				s3RetryCount: 3,
+				s3RetryDelay: 1000,
+				multipartUploadThreshold: 20971520,
+				multipartUploadSize: 15728640
+			},
+			s3Options: {
+				bucket: 'outset-test',
+				accessKeyId: process.env.S3_ACCESS_KEY || 'your s3 key',
+				secretAccessKey: process.env.S3_SECRET_KEY || 'your s3 secret'
+			},
+			folder: 'test-resources/'
+		},
+		fs: {
+			writePath: './modules/users/client/img/profile/uploads/'
+		}
+	},
+
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
 		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',

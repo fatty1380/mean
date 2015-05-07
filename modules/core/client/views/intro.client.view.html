@@ -1,7 +1,7 @@
 <section class="section-main ">
     <div class="content">
         <div class="main-title" ng-bind-html="vm.text.header.lead"></div>
-        <div class="sub-title" ng-bind-html="vm.text.header.subLead"></div>
+        <div class="sub-title" ng-bind-html="vm.text.header.subLead" ng-if="!!vm.text.header.subLead"></div>
         <div>
             <signup-modal signup-type="{{vm.signupType}}" class="button get-started">
                 <a href="#">{{vm.text.header.signup}}</a>
@@ -67,7 +67,7 @@
 <div class="section-features">
     <div class="content">
         <div class="features-wrapper">
-            <div class="feature-block align-right">
+            <div class="feature-block text-right">
                 <div class="feature-title "><span ng-bind-html="vm.text.section1.header"></span><br><span class="small" ng-bind-html="vm.text.section1.sub"></span></div>
                 <div class="bottom-decoration rigth"></div>
                 <div class="feature-items-wrapper">
@@ -77,7 +77,7 @@
                     </div>
                 </div>
             </div>
-            <div class="feature-block align-left right-side">
+            <div class="feature-block text-left right-side">
                 <div class="feature-title"><span ng-bind-html="vm.text.section2.header"></span><br><span class="small" ng-bind-html="vm.text.section2.sub"></span></div>
                 <div class="bottom-decoration left"></div>
                 <div class="feature-items-wrapper">
@@ -91,13 +91,11 @@
     </div>
 </div>
 
-<div class="section-video">
-    <div class="control-button-wrapper">
-        <div class="play-icon"></div>
-        <div class="control-text">Play Video</div>
-    </div>
+<div class="section-video" video-player>
+    
+
     <!--<fluidvids class="mid-vert" video="{{vm.videoURL}}" width="853" height="480"></fluidvids>-->
-    <img class="video" src="modules/core/img/backgrounds/play_video_bg.png" />
+    <!--<img class="video" src="modules/core/img/backgrounds/play_video_bg.png" />-->
     <!--<video></video>-->
 </div>
 

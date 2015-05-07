@@ -466,7 +466,7 @@ function searchForApplicant(cookie, applicant) {
 
                 deferred.resolve(response.body.applicants[0]);
             } else if (response.body.applicants) {
-                console.error('[searchForApplicant] Found a $d matches - cannot decide on one', response.body.applicants.length);
+                console.error('[searchForApplicant] Found a %d matches - cannot decide on one', response.body.applicants.length);
                 deferred.reject('[searchForApplicant] could not decide on a single result from %d matches', response.body.applicants.length);
             } else {
                 console.error('[searchForApplicant] Unkown problem: %j', response.body);
@@ -558,8 +558,6 @@ function GetReportStatus(cookie, remoteId) {
                 return deferred.reject(response.body.reason);
             }
 
-            var reportCheck = response.body.reportCheckStatus;
-
             deferred.resolve(response.body);
         });
 
@@ -579,16 +577,12 @@ function GetReportStatusByApplicant(cookie, applicantId) {
                 return deferred.reject(response.body.reason);
             }
 
-            var reportCheck = response.body.reportCheckStatus;
-
-
             deferred.resolve(response.body);
         });
 
     return deferred.promise;
 }
 function GetSummaryReportPDF(cookie, remoteApplicantId) {
-    console.log('[GetSummaryReportPDF] ');
 
     var deferred = Q.defer();
 
@@ -618,19 +612,18 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
 
     return deferred.promise;
 }
-function GetRawReport(cookie, bgReport) {
-    console.log('[GetRawReport] ');
-
+function GetRawReport(cookie, remoteReportId) {
     var deferred = Q.defer();
 
-    unirest.get(server.baseUrl + '/rest/reportCheck/' + bgReport.remoteId + '/report')
+    unirest.get(server.baseUrl + '/rest/reportCheck/' + remoteReportId + '/report')
         .jar(cookie.jar)
         .end(function (response) {
-            console.log(response.body);
 
             if (response.error) {
+                console.log('[GetRawReport] Error Getting Report Data', response.error);
                 return deferred.reject(response.body.reason);
             }
+            console.log('[GetRawReport] ', response.body);
 
             deferred.resolve(response.body);
         });

@@ -22,6 +22,8 @@ var reqSerializer = function(req) {
 
 /**
  * Default logger, shows anything level _trace_ and above
+ * TODO: Look into configuring special logging for 'TEST' runtime environment
+ * https://groups.google.com/d/msg/bunyan-logging/N1snks1NrcY/S5kIUcf1EbEJ
  */
 var logger = bunyan.createLogger({
     name: 'outset',

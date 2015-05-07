@@ -3,31 +3,32 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash'),
-    path = require('path'),
-    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-    mongoose = require('mongoose'),
-    passport = require('passport'),
-    User = mongoose.model('User'),
-    Driver = mongoose.model('Driver'),
-    Company = mongoose.model('Company'),
-    emailer = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+var _        = require('lodash'),
+path         = require('path'),
+errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+mongoose     = require('mongoose'),
+passport     = require('passport'),
+User         = mongoose.model('User'),
+Driver       = mongoose.model('Driver'),
+Company      = mongoose.model('Company'),
+emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+Q            = require('q'),
     log = require(path.resolve('./config/lib/logger')).child({
-        module: 'users',
-        file: 'Users.Authentication.Controller'
-    }),
-    Q = require('q');
+        module: 'users.authentication',
+        file: 'users.authentication.server.controller'
+    });
 
 
 // DRY Simple Login Function
 var login = function (req, res, user) {
-    console.log('[Auth.Ctrl] login()');
+    log.trace({func: 'login'}, 'Logging in user %s', user.email);
 
     req.login(user, function (err) {
         if (err) {
+            log.warn({err: err}, 'Login Failed due to error');
             res.status(400).send(err);
         } else {
-            console.log('Login Successful!');
+            log.info('Login Successful!');
             res.jsonp(user);
         }
     });
@@ -48,7 +49,7 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    console.log('[Auth.Ctrl] signup.%s(%s)', req.body.type, req.body.username);
+    log.info({func: 'signup', type: req.body.type, username: req.body.username}, 'Signup for new user');
 
     // Init Variables
     var user = new User(req.body);
@@ -129,7 +130,7 @@ function completeUserHydration(req, res, user) {
                         return deferred.reject('Unable to create new driver: ' + err);
                     }
 
-                    if (!!newDriver) {
+                    if(!!newDriver) {
                         deferred.resolve({driver: newDriver._id});
                     }
                     else {
@@ -167,7 +168,7 @@ function completeUserHydration(req, res, user) {
                         return deferred.reject('Unable to create new company: ' + err);
                     }
 
-                    if (!!newCompany) {
+                    if(!!newCompany) {
                         deferred.resolve({company: newCompany._id});
                     }
                     else {
@@ -183,7 +184,7 @@ function completeUserHydration(req, res, user) {
 
     // The 'success' object is the result of the deferred resolutions above
     // which have the relevant 'company' or 'driver' added to them for updating
-    deferred.promise.then(function (success) {
+    deferred.promise.then(function(success) {
         var updateObj = success;
         console.log('[Auth.Hydrate] Updating with obj: %j', updateObj);
 
@@ -193,9 +194,9 @@ function completeUserHydration(req, res, user) {
             }, function (err) {
                 login(req, res, user);
             });
-    }, function (err) {
+    }, function(err) {
         console.log('Unable to resolve new %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
-        login(req, res, user);
+        login(req,res,user);
     });
 }
 

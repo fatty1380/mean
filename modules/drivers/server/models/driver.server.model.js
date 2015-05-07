@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-Schema       = mongoose.Schema,
-moment       = require('moment'),
-_            = require('lodash');
+    Schema = mongoose.Schema,
+    moment = require('moment'),
+    _ = require('lodash');
 
 
 /**
@@ -155,10 +155,7 @@ DriverSchema.virtual('reports')
     });
 
 DriverSchema.pre('save', function (next) {
-    console.log('[DS.PRE] %s is about to be Saved', this._id);
     this.modified = Date.now();
-
-    console.log('[DS.PRE] Saving doc: %s', JSON.stringify(this, null, 2));
 
     next();
 });
@@ -179,19 +176,11 @@ DriverSchema.pre('save', function (next) {
     if (!!this.resume) {
         console.log('PRE Save Resume still here! aargh ===========================================P');
         this.resume = undefined;
-        console.log('Driver.Save: RESUME Is Modified: %s =====================================', this.isModified('resume'));
     }
 
-    if(!_.isEqual(this.reportsData, _.values(this.reports))) {
-        debugger;
-        console.log('Driver.Save: Reports & Array out of sync: %s =====================================', this.isModified());
+    if (!_.isEqual(this.reportsData, _.values(this.reports))) {
         this.reportsData = _.values(this.reports);
-        console.log('Driver.Save: Is Modified: %s =====================================', this.isModified());
     }
-
-    console.log('Driver.Save: Is Modified: %s =====================================', this.isModified());
-    //this.markModified('reportsData');
-    console.log('Driver.Save: Is Modified: %s =====================================', this.isModified());
 
     next();
 });
