@@ -24,10 +24,10 @@
             }
  
             function labnolIframe() {
-                var iframe = document.createElement("iframe");
-                iframe.setAttribute("src", scope.vm.text.subhero.videoURL+"?autoplay=1&autohide=2&border=0&wmode=opaque&enablejsapi=1&controls=0&showinfo=0");
-                iframe.setAttribute("frameborder", "0");
-                iframe.setAttribute("id", "youtube-iframe");
+                var iframe = document.createElement('iframe');
+                iframe.setAttribute('src', scope.vm.text.subhero.videoURL+'?autoplay=1&autohide=2&border=0&wmode=opaque&enablejsapi=1&controls=0&showinfo=0');
+                iframe.setAttribute('frameborder', '0');
+                iframe.setAttribute('id', 'youtube-iframe');
                 this.parentNode.replaceChild(iframe, this);
             }
             }
