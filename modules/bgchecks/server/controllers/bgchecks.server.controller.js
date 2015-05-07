@@ -3,16 +3,20 @@
 /**
  * Module dependencies.
  */
-var mongoose    = require('mongoose'),
-errorHandler    = require('../../../core/server/controllers/errors.server.controller'),
-Bgcheck         = mongoose.model('BackgroundReport'),
-ReportType      = mongoose.model('ReportType'),
-ReportApplicant = mongoose.model('ReportApplicant'),
-Q               = require('q'),
-everifile       = require('./everifile.server.service'),
-path            = require('path'),
-constants       = require(path.resolve('./modules/core/server/models/outset.constants')),
-_               = require('lodash');
+var mongoose = require('mongoose'),
+    errorHandler = require('../../../core/server/controllers/errors.server.controller'),
+    Bgcheck = mongoose.model('BackgroundReport'),
+    ReportType = mongoose.model('ReportType'),
+    ReportApplicant = mongoose.model('ReportApplicant'),
+    Q = require('q'),
+    everifile = require('./everifile.server.service'),
+    path = require('path'),
+    constants = require(path.resolve('./modules/core/server/models/outset.constants')),
+    _ = require('lodash'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'bgchecks',
+        file: 'bgchecks.server.controller'
+    });
 
 
 exports.availableReportTypes = availableReportTypes;
@@ -319,6 +323,9 @@ function reportTypeUpsert(dbValue, newReport) {
 
 /** SECTION : Applicants ---------------------------------------------------- */
 
+/**
+ * @alias applicant.create
+ */
 function UpsertRemoteApplicant(req, res, next) {
 
     var formApplicantRsrc = req.body;
@@ -386,6 +393,9 @@ function UpsertRemoteApplicant(req, res, next) {
         });
 }
 
+/**
+ * @alias applicant.save
+ */
 function SaveNewApplicant(req, res, next) {
 
     var applicantId = req.remoteApplicant && req.remoteApplicant.applicantId;
@@ -411,6 +421,9 @@ function SaveNewApplicant(req, res, next) {
     });
 }
 
+/**
+ * @alias applicant.list
+ */
 function GetAllRemoteApplicants(req, res, next) {
 
     if (!req.user || !req.user.isAdmin) {
@@ -438,26 +451,25 @@ function GetAllRemoteApplicants(req, res, next) {
         });
 }
 
+/**
+ * @alias applicant.get
+ */
 function GetReportApplicant(req, res, next) {
     var query, id;
 
     if (!!(id = req.remoteApplicantId || req.query.remoteApplicantId)) {
-        console.log('[GetReportApplicant] Searching based on remoteId');
         query = {remoteId: id};
     } else if (!!(id = req.applicantId || req.query.applicantId)) {
-        console.log('[GetReportApplicant] Searching based on applicantId');
         query = {remoteId: id};
     } else if (req.userId) {
-        console.log('[GetReportApplicant] Searching based on req.userId');
         query = {user: mongoose.Types.ObjectId(req.userId)};
     } else if (req.user) {
-        console.log('[GetReportApplicant] Searching based on req.user');
         query = {user: req.user._id};
     } else {
         return res.status(401).send({message: 'Unauthorized Access'});
     }
 
-    console.log('[GetReportApplicant] Searching for report applicant with query %j', query);
+    log.debug({func: 'GetReportApplicant', query: query}, 'Loading Applicant based on query');
 
     ReportApplicant.findOne(query)
         .exec(function (err, localApplicant) {
@@ -467,7 +479,7 @@ function GetReportApplicant(req, res, next) {
                 });
             }
 
-            console.log('[GetReportApplicant] Result: %j', localApplicant);
+            log.trace({func: 'GetReportApplicant', applicant: localApplicant}, 'Found Local Applicant');
 
             req.applicant = localApplicant;
             next();
@@ -476,6 +488,8 @@ function GetReportApplicant(req, res, next) {
 }
 
 /**
+ * @alias applicant.getRemote
+ *
  * In order to find a remote applicant, we must assume that we have saved that
  * data into the local collection of report applicants. If this is true, the object
  * req.applicant will be populated from the previous method: GetReportApplicant.
@@ -523,6 +537,12 @@ function GetRemoteApplicantData(req, res, next) {
         });
 }
 
+/**
+ * @alias applicant.read
+ *
+ * Reads the remoteApplicant from the response, combines it with the applicant, and returns
+ * a combined (extended) version of the two;
+ */
 function ReadReportApplicant(req, res) {
 
     if (!req.applicant && !req.remoteApplicant) {
@@ -541,6 +561,10 @@ function ReadReportApplicant(req, res) {
 }
 
 /** SECTION : Report Manipulation ------------------------------------------------------ **/
+
+/**
+ * @alias report.create
+ */
 function CreateNewReport(req, res, next) {
 
     var deferred = Q.defer();
@@ -652,6 +676,9 @@ function CreateNewReport(req, res, next) {
     });
 }
 
+/**
+ * @alias NONE
+ */
 module.exports.rerunReport = function ReRunReport(req, res, next) {
     var remoteId = req.applicantId;
 
@@ -677,23 +704,75 @@ module.exports.rerunReport = function ReRunReport(req, res, next) {
         });
 };
 
+/**
+ * @alias report.applicantStatus
+ *
+ * Expected res.applicant
+ * applicant: {
+ *   "_id": "554ad1e3456d47ed061a08aa",
+ *   "remoteId": 45958,
+ *   "user": "554ad1e3456d47ed061a08a9",
+ *   "__v": 0,
+ *   "modified": "2015-05-07T02:45:55.702Z",
+ *   "created": "2015-05-07T02:45:55.664Z",
+ *   "reports": [],
+ *   "governmentId": "",
+ *   "remoteSystem": "everifile",
+ *   "applicantId": 45958,
+ *   "id": "554ad1e3456d47ed061a08aa"
+ * }
+ */
 function CheckApplicantReportStatus(req, res, next) {
-    var remoteId = req.applicantId;
+    log.debug({func: 'CheckApplicantReportStatus'}, 'START');
+
+    var remoteId = req.remoteApplicantId || req.applicant && req.applicant.remoteId;
+
+    log.trace({func: 'CheckApplicantReportStatus', remoteId: remoteId}, 'Looking up Applicant Report(s) Status');
 
     everifile.GetSession().then(
         function (session) {
-            everifile.RunReport(session, remoteId).then(
-                function (bgReport) {
+            everifile.GetReportStatusByApplicant(session, remoteId)
+                .then(function (reportStatus) {
+                    log.info({func: 'CheckApplicantReportStatus', result: reportStatus}, 'Got Return response');
 
-                }
-            );
-        },
-        function (error) {
+                    // Expected Report Status Response:
+                    // ReportStatus = {
+                    //     'reports': [{
+                    //         'id': 93651,
+                    //         'startDate': 1421384400000,
+                    //         'completedDate': 1421691798000,
+                    //         'report': {'sku': 'MVRDOM'},
+                    //         'reportCheckStatus': {'timestamp': 1421691798000, 'status': 'COMPLETED'}
+                    //     }], 'applicant': {'id': 45958}
+                    // }
+
+                    if(reportStatus.applicant.id !== req.applicant.remoteId) {
+                        return req.status(500).send({
+                            message: 'Mismatched or missing remote applicant'
+                        });
+                    }
+
+                    _.each(reportStatus.reports, function(remoteReport) {
+                        log.info({func: 'CheckApplicantReportStatus', result: remoteReport}, 'Looking at remote Report Status');
+                        _.find(req.applicant.reports, {remoteReportSkus: remoteReport.report.sku}, function(localReport){
+                            log.info({func: 'CheckApplicantReportStatus', result: remoteReport}, 'Comparing to local Report Status');
+                            localReport.status = remoteReport.reportCHeckStatus.status;
+                        });
+                    });
+
+                    res.json(req.applicant.reports);
+
+                });
+        })
+        .catch(function (error) {
             console.log('[CreateNewReport] failed due to error: %j', error);
             next(error);
         });
 }
 
+/**
+ * @alias report.status
+ */
 function CheckReportStatus(req, res, next) {
     var remoteId = req.reportId;
 
@@ -711,6 +790,9 @@ function CheckReportStatus(req, res, next) {
         });
 }
 
+/**
+ * @alias report.get
+ */
 function GetReportData(req, res, next) {
     var remoteId = req.reportId;
 
@@ -727,6 +809,9 @@ function GetReportData(req, res, next) {
         });
 }
 
+/**
+ * @alias report.loadPDF
+ */
 function LoadPDFData(req, res, next) {
     var remoteId = req.applicantId;
 
