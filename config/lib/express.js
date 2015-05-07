@@ -302,6 +302,8 @@ module.exports.initHttps = function (app) {
  * Initialize the Express application
  */
 module.exports.init = function (db) {
+    log.info({func: 'init'}, 'Starting Initialization of Express Router');
+
     // Initialize express app
     var app = express();
 
@@ -346,6 +348,8 @@ module.exports.init = function (db) {
     if (httpsServer) {
         this.configureSocketIO(httpsServer, db);
     }
+
+    log.info({func: 'init'}, 'Completed Initialization of Express Router');
 
     return {http: httpServer, https: httpsServer};
 };

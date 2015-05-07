@@ -25,7 +25,7 @@ module.exports = {
 		},
 		google: {},
 		s3: {
-			enabled: false,
+			enabled: true,
 			clientConfig: {
 				maxAsyncS3: 20,
 				s3RetryCount: 3,
@@ -34,11 +34,11 @@ module.exports = {
 				multipartUploadSize: 15728640
 			},
 			s3Options: {
-				bucket: 'outset-public-resources',
+				bucket: 'outset-test',
 				accessKeyId: process.env.S3_ACCESS_KEY || 'your s3 key',
 				secretAccessKey: process.env.S3_SECRET_KEY || 'your s3 secret'
 			},
-			folder: 'profiles-dev/'
+			folder: 'test-resources/'
 		},
 		fs: {
 			writePath: './modules/users/client/img/profile/uploads/'

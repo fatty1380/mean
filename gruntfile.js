@@ -266,6 +266,9 @@ module.exports = function (grunt) {
                 routes: {
                     src: testAssets.tests.routes
                 },
+                integration: {
+                    src: testAssets.tests.integration
+                },
                 model: {
                     src: testAssets.tests.model
                 },

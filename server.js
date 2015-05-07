@@ -12,6 +12,8 @@ log        = require('./config/lib/logger');
 // Initialize mongoose
 mongoose.connect(function (db) {
 
+    log.info('-- Mongoose Connection Initialized --');
+
     // Init 'rootRequire' function:
     global.rootRequire = function (name) {
         console.log('[RootRequire] %s | %s', __dirname, name);
@@ -45,6 +47,5 @@ mongoose.connect(function (db) {
         }
     }
     log.info('--', 'black');
-    
-
 });
+

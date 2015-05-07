@@ -111,7 +111,8 @@
     "load-grunt-tasks": "^3.1.0",
     "run-sequence": "~1.0.1",
     "should": "~4.1.0",
-    "supertest": "~0.14.0",
+    "supertest": "~0.15.0",
+    "supertest-as-promised": "~2.0.0",
     "swig": "^1.4.2",
     "unirest": "^0.4.0"
   }

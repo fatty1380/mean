@@ -12,18 +12,23 @@ User         = mongoose.model('User'),
 Driver       = mongoose.model('Driver'),
 Company      = mongoose.model('Company'),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
-Q            = require('q');
+Q            = require('q'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users.authentication',
+        file: 'users.authentication.server.controller'
+    });
 
 
 // DRY Simple Login Function
 var login = function (req, res, user) {
-    console.log('[Auth.Ctrl] login()');
+    log.trace({func: 'login'}, 'Logging in user %s', user.email);
 
     req.login(user, function (err) {
         if (err) {
+            log.warn({err: err}, 'Login Failed due to error');
             res.status(400).send(err);
         } else {
-            console.log('Login Successful!');
+            log.info('Login Successful!');
             res.jsonp(user);
         }
     });
@@ -36,7 +41,7 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    console.log('[Auth.Ctrl] signup.%s(%s)', req.body.type, req.body.username);
+    log.info({func: 'signup', type: req.body.type, username: req.body.username}, 'Signup for new user');
 
     // Init Variables
     var user = new User(req.body);
