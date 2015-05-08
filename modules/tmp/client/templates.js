@@ -5098,7 +5098,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <span class="input-group-addon" id="basic-addon1">\n' +
   '                        <i class="fa fa-user"></i>\n' +
   '                    </span>\n' +
-  '                    <input type="email" data-ng-model="vm.model.handle" class="form-control" placeholder="handle"\n' +
+  '                    <input type="text" data-ng-model="vm.model.handle" class="form-control" placeholder="handle"\n' +
   '                           aria-describedby="unique handle">\n' +
   '                </div>\n' +
   '            </div>\n' +

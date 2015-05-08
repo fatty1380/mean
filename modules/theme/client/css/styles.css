@@ -6184,6 +6184,9 @@ div.play-button {
   font-size: 20px;
   padding-bottom: 1em;
 }
+.seed-signup .footer-button {
+  padding-top: 40px!important;
+}
 .section-main {
   min-height: 800px;
   background-image: url('/modules/core/img/backgrounds/header_bg.jpg');
