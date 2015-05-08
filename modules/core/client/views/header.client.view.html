@@ -12,22 +12,29 @@
 
                 <div data-ng-hide="vm.auth.user">
                     <div class="menu-list">
-                        <div class="menu-item pull-left" ng-class="{'active': vm.state.is('intro.driver')}">
-                            <a ui-sref="intro.driver">Drivers</a>
-                        </div>
-                        <div class="menu-item pull-left" ng-class="{'active': vm.state.is('intro.owner')}">
-                            <a ui-sref="intro.owner">Employers</a>
-                        </div>
+                        <!--<div class="menu-item pull-left" ng-class="{'active': vm.state.is('intro.driver')}">-->
+                            <!--<a ui-sref="intro.driver">Drivers</a>-->
+                        <!--</div>-->
+                        <!--<div class="menu-item pull-left" ng-class="{'active': vm.state.is('intro.owner')}">-->
+                        <!--<a ui-sref="intro.owner">Employers</a>-->
+                        <!--</div>-->
                         <!--<div class="menu-item pull-left" ng-class="{'active': vm.state.includes('jobs')}">-->
                         <!--<a ui-sref="jobs.list">Jobs</a>-->
                         <!--</div>-->
-                        
-                        <div class="pull-right right-menu">
+
+                        <div class="pull-right right-menu" ng-hide="true">
                             <div class="auth-menu-item pull-left" login-modal>
                                 <a>login</a>
                             </div>
                             <div class="auth-menu-item active pull-left" signup-modal>
                                 <a>register</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="pull-right right-menu">
+                            <div class="auth-menu-item pull-left">
+                                <a ui-sref="intro.driver">Truckers</a>
                             </div>
                             <div class="clearfix"></div>
                         </div>

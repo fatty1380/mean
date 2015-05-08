@@ -34,6 +34,14 @@ var login = function (req, res, user) {
     });
 };
 
+exports.userseed = function (req, res) {
+    delete req.body.roles;
+
+    log.info({email: req.body.email}, 'Creating Seed User for email %s', req.body.email);
+
+    var user = new User(req.body);
+};
+
 /**
  * Signup
  */
@@ -45,7 +53,6 @@ exports.signup = function (req, res) {
 
     // Init Variables
     var user = new User(req.body);
-    var message = null;
 
     var userType = req.body.type;
     // Add missing user fields

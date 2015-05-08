@@ -6166,17 +6166,35 @@ div.play-button {
   display: block;
   text-align: center;
 }
+.seed-signup .seed-form {
+  padding: 20px;
+  position: relative;
+  top: -50px;
+}
+.seed-signup .seed-form .form-control,
+.seed-signup .seed-form .input-group-addon,
+.seed-signup .seed-form button {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-size: 1.4em;
+  height: 2em;
+}
+.seed-signup .info-text {
+  color: #ffffff;
+  font-size: 20px;
+  padding-bottom: 1em;
+}
 .section-main {
-  min-height: 700px;
+  min-height: 800px;
   background-image: url('/modules/core/img/backgrounds/header_bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
 }
-@media only screen and (min-device-width: 768px) {
+@media only screen and (min-device-width: 1024px) {
   .section-main {
     height: 100vh;
-    max-height: 1200px;
+    max-height: 1080px;
   }
 }
 .section-main .content {
@@ -6191,14 +6209,14 @@ div.play-button {
   text-transform: uppercase;
   font-size: 70px;
   text-align: center;
-  padding: 205px 0 70px 0;
-  padding-top: 20vh;
+  padding: 205px 0 50px 0;
   font-family: RobotoRegular;
   letter-spacing: -2px;
 }
 .section-main .content .sub-title {
+  font-family: RobotoRegular;
   color: #ffffff;
-  font-size: 22px;
+  font-size: 24px;
   text-align: center;
   padding-bottom: 60px;
 }
@@ -6215,6 +6233,7 @@ div.play-button {
   color: #ffffff;
   text-decoration: none;
   font-size: 17px;
+  font-weight: 600;
   padding: 17px;
   text-align: center;
   display: block;
@@ -6223,10 +6242,11 @@ div.play-button {
   padding-top: 60px;
 }
 .section-main .content .information-block .information-block-item {
-  background-image: url('/modules/core/img/others/header_check.jpg');
+  background-image: url('/modules/core/img/others/header_check.png');
   background-repeat: no-repeat;
   background-size: auto;
   background-position: 25px 0;
+  font-family: RobotoRegular;
   color: #ffffff;
   font-size: 17px;
   line-height: 1.3;
@@ -6235,6 +6255,11 @@ div.play-button {
   vertical-align: top;
   width: 32%;
   padding-left: 70px;
+}
+.section-main .content .section-bottom-bar {
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
 }
 .section-main .content .arrow-down {
   width: 100%;
@@ -6246,8 +6271,6 @@ div.play-button {
   display: block;
   margin: 0 auto;
   margin-top: 60px;
-  position: absolute;
-  bottom: 5%;
 }
 .section-why-outset {
   padding-bottom: 100px;
@@ -6968,7 +6991,7 @@ div.play-button {
     padding-top: 60px;
   }
   .section-main .content .information-block .information-block-item {
-    background-image: url('/modules/core/img/others/header_check.jpg');
+    background-image: url('/modules/core/img/others/header_check.png');
     background-repeat: no-repeat;
     background-size: auto;
     background-position: 25px 0;

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function HomeController($location, $timeout, $document, $log, Authentication, $state) {
+    function HomeController($location, $timeout, $document, $log, Authentication, $state, Seed) {
         var vm = this;
 
         // This provides Authentication context.
@@ -12,11 +12,12 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Own your Trucking Future & Reputation<br><small>With your free Outset driver Profile</small>',
+                    lead: 'Control Your Reputation',
+                    subLead: 'Effortlessly Manage your Trucking Career <br>with your Outset Driver Profile',
                     bullets: [
                         'Create a Professionally based Driver Profile including your experience and secure elements like your MVR.',
-                        'Next, claim your Industry Handle and Connect with truckers you know and trust to share information, stay in-touch and see when they’re close by.',
-                        'Securely Share your: MVR, Resume, Background Check, Insurance etc. - Put yourself back in the driver’s seat.'
+                        'Claim your Handle and Connect with truckers you trust to share information, stay in-touch and see when they’re close by.',
+                        'Securely Share your Docs: MVR, Resume, Background Check, Insurance - From Anywhere .'
                     ],
                     signup: 'Get Started'
                 },
@@ -31,10 +32,10 @@
                         },
                         {
                             title: 'Take back your Reputation',
-                            description: 'Its time drivers stopped having their reputation controlled by previous employers and government reports. Host the documents you want people to see in your profile, and have your Industry buddies or your favorite Shipper recommend the work you do.'
+                            description: 'It’s time drivers stopped having their reputation controlled by previous employers and government reports. Host the documents you want people to see in your profile, and have your Industry buddies or your favorite Shipper recommend the work you do.'
                         },
                         {
-                            title: 'Its about the Team',
+                            title: 'It’s about the Team',
                             description: 'Join the fastest growing network of drivers in the country, and hold the industry accountable as a group. Time to give the Drivers a voice in the Industry, join the Outset team and let’s get it done.'
                         }
                     ]
@@ -42,18 +43,18 @@
                 section1: {
                     header: 'The Driver Profile',
                     sub: 'Your digital business card.',
-                    bullets: ['Don’t let previous employers reports control your first impression.’,
+                    bullets: ['Don’t let previous employers reports control your first impression.',
                         'Easily share your professional information with Employers or Brokers.',
                         'Grow your Driver Profile and Network with your career.'],
                     image: '/modules/core/img/intro/driver.png'
                 },
                 section2: {
-                    header: 'The Driver Network’,
-                    sub: 'Your Biggest Asset.’,
+                    header: 'The Driver Network',
+                    sub: 'Your Biggest Asset.',
                     bullets: [
                         'Stay Connected and Share Information with other drivers.',
                         'Have people you trust recommend you and your ability.',
-                        'Update your network on your load, location and where you’re headed’
+                        'Update your network on your load, location and where you’re headed'
                     ],
                     image: '/modules/core/img/intro/reports.png'
                 },
@@ -166,7 +167,7 @@
         }
     }
 
-    HomeController.$inject = ['$location', '$timeout', '$document', '$log', 'Authentication', '$state'];
+    HomeController.$inject = ['$location', '$timeout', '$document', '$log', 'Authentication', '$state', 'SeedService'];
 
     angular
         .module('core')

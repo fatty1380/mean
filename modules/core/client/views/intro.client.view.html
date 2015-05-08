@@ -2,15 +2,23 @@
     <div class="content">
         <div class="main-title" ng-bind-html="vm.text.header.lead"></div>
         <div class="sub-title" ng-bind-html="vm.text.header.subLead" ng-if="!!vm.text.header.subLead"></div>
-        <div>
+        <div ng-hide="true">
             <signup-modal signup-type="{{vm.signupType}}" class="button get-started">
                 <a href="#">{{vm.text.header.signup}}</a>
             </signup-modal>
         </div>
-        <div class="information-block">
-            <div class="information-block-item" ng-repeat="bullet in vm.text.header.bullets" ng-bind-html="bullet"></div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+                <oset-seed-signup model="vm.seed" show-form="false" hide-name="true"></oset-seed-signup>
+            </div>
         </div>
-        <a href="#" class="arrow-down" scroll-to></a>
+        <div class="information-block">
+            <div class="information-block-item" ng-repeat="bullet in vm.text.header.bullets"
+                 ng-bind-html="bullet"></div>
+        </div>
+        <div class="section-bottom-bar">
+            <a href="#" class="arrow-down" scroll-to></a>
+        </div>
     </div>
 </section>
 
@@ -103,7 +111,7 @@
     <!--<video></video>-->
 </div>
 
-<div class="section-pricing">
+<div class="section-pricing" ng-hide="true">
     <div class="content">
         <div class="pricing-title">{{vm.text.pricing.header}}</div>
         <div class="pricing-sub-title">{{vm.text.pricing.sub}}</div>
@@ -113,11 +121,16 @@
 
 <section class="section-footer">
     <div class="content">
-        <div class="footer-title">Ready to try Outset for yourself?</div>
-        <signup-modal type="{{vm.type}}" class="footer-button">
+        <div class="footer-title" ng-hide="true">Ready to try Outset for yourself?</div>
+        <signup-modal type="{{vm.type}}" class="footer-button" ng-hide="true">
             <a href="#">
                 Click here to sign up!
             </a>
         </signup-modal>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <oset-seed-signup model="vm.seed" show-form="true" hide-name="true"
+                              btn-class="footer-button"></oset-seed-signup>
+        </div>
     </div>
 </section>

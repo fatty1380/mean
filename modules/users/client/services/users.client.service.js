@@ -78,15 +78,26 @@
         return _data;
     }
 
+    function seedService($resource) {
+        return $resource('api/seed', {},
+            {
+                update: {
+                    method: 'PUT'
+                }
+            });
+    }
+
 
     UsersService.$inject = ['$resource', '$q'];
     NewUserService.$inject = ['Authentication', '$resource', '$log', '$http', '$q'];
     ProfilesService.$inject = ['$resource', '$q'];
+    seedService.$inject = ['$resource'];
 
     angular
         .module('users')
         .factory('Users', UsersService)
         .factory('UserService', NewUserService)
+        .factory('SeedService', seedService)
         .factory('Profiles', ProfilesService);
 
 

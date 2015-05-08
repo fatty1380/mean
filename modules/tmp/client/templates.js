@@ -5069,6 +5069,67 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/users/views/templates/seed-user-form.client.template.html',
+  '<section class="seed-signup">\n' +
+  '\n' +
+  '    <span class="{{vm.btnClass}}" ng-click="vm.showForm=true;" ng-hide="!!vm.showForm">\n' +
+  '        <a href="#">Get Started</a>\n' +
+  '    </span>\n' +
+  '\n' +
+  '    <form name="seedForm" id="seedForm" class="seed-form form-horizontal"\n' +
+  '          ng-hide="!!vm.model.success || !vm.showForm">\n' +
+  '\n' +
+  '        <div class="info-text">Coming Soon! Enter your email and reserve your handle</div>\n' +
+  '\n' +
+  '        <div class="row form-group" ng-if="!vm.hideName">\n' +
+  '            <div class="col-md-6">\n' +
+  '                <input type="text" data-ng-model="vm.model.firstName" class="form-control"\n' +
+  '                       placeholder="First Name" aria-describedby="first name">\n' +
+  '            </div>\n' +
+  '            <div class="col-md-6">\n' +
+  '                <input type="text" data-ng-model="vm.model.lastName" class="form-control" placeholder="Last Name"\n' +
+  '                       aria-describedby="last name">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row form-group">\n' +
+  '            <div class="col-md-8 col-md-offset-2">\n' +
+  '                <div class="input-group">\n' +
+  '                    <span class="input-group-addon" id="basic-addon1">\n' +
+  '                        <i class="fa fa-user"></i>\n' +
+  '                    </span>\n' +
+  '                    <input type="email" data-ng-model="vm.model.handle" class="form-control" placeholder="handle"\n' +
+  '                           aria-describedby="unique handle">\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row form-group">\n' +
+  '            <div class="col-md-8 col-md-offset-2">\n' +
+  '                <div class="input-group">\n' +
+  '                    <span class="input-group-addon" id="basic-addon1">@</span>\n' +
+  '                    <input type="email" data-ng-model="vm.model.email" class="form-control" placeholder="email"\n' +
+  '                           aria-describedby="email address">\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row form-group" ng-hide="true">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <oset-categories model="vm.model.interests" options="vm.interestOptions" lbl-class="btn-xs"></oset-categories>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="alert alert-warning" ng-show="!!vm.model.error" ng-bind="vm.model.error"></div>\n' +
+  '\n' +
+  '        <span class="{{vm.btnClass}}" ng-click="vm.postSeed()">\n' +
+  '            <a href="#">Register</a>\n' +
+  '        </span>\n' +
+  '    </form>\n' +
+  '\n' +
+  '    <div class="info-text" ng-show="!!vm.model.success" ng-bind="vm.model.success"></div>\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/users/views/templates/signup-apply.client.template.html',
   '<span ng-click="vm.show()" ng-transclude>Signup</span>\n' +
   '<!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->\n' +
