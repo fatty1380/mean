@@ -1,0 +1,47 @@
+<section class="seed-signup">
+
+    <span class="{{vm.btnClass}}" ng-click="vm.showForm=true;" ng-hide="!!vm.showForm">
+        <a href="#">Tell me More!</a>
+    </span>
+
+    <form name="seedForm" id="seedForm" class="seed-form form-horizontal"
+          ng-hide="!!vm.model.success || !vm.showForm">
+
+        <div class="info-text">Enter your email to be notified as soon as we launch</div>
+
+        <div class="row form-group" ng-if="!vm.hideName">
+            <div class="col-md-6">
+                <input type="text" data-ng-model="vm.model.firstName" class="form-control"
+                       placeholder="First Name" aria-describedby="first name">
+            </div>
+            <div class="col-md-6">
+                <input type="text" data-ng-model="vm.model.lastName" class="form-control" placeholder="Last Name"
+                       aria-describedby="last name">
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">@</span>
+                    <input type="email" data-ng-model="vm.model.email" class="form-control" placeholder="email"
+                           aria-describedby="email address">
+                </div>
+            </div>
+        </div>
+
+        <div class="row form-group" ng-hide="true">
+            <div class="col-sm-12">
+                <oset-categories model="vm.model.interests" options="vm.interestOptions" lbl-class="btn-xs"></oset-categories>
+            </div>
+        </div>
+
+        <div class="alert alert-warning" ng-show="!!vm.model.error" ng-bind="vm.model.error"></div>
+
+        <span class="{{vm.btnClass}}" ng-click="vm.postSeed()">
+            <a href="#">Submit</a>
+        </span>
+    </form>
+
+    <div class="info-text" ng-show="!!vm.model.success" ng-bind="vm.model.success"></div>
+</section>
