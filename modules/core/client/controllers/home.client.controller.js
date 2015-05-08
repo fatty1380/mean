@@ -42,18 +42,18 @@
                 section1: {
                     header: 'The Driver Profile',
                     sub: 'Your digital business card.',
-                    bullets: ['Don’t let previous employers reports control your first impression.’,
+                    bullets: ['Don’t let previous employers reports control your first impression.',
                         'Easily share your professional information with Employers or Brokers.',
                         'Grow your Driver Profile and Network with your career.'],
                     image: '/modules/core/img/intro/driver.png'
                 },
                 section2: {
-                    header: 'The Driver Network’,
-                    sub: 'Your Biggest Asset.’,
+                    header: 'The Driver Network',
+                    sub: 'Your Biggest Asset.',
                     bullets: [
                         'Stay Connected and Share Information with other drivers.',
                         'Have people you trust recommend you and your ability.',
-                        'Update your network on your load, location and where you’re headed’
+                        'Update your network on your load, location and where you’re headed'
                     ],
                     image: '/modules/core/img/intro/reports.png'
                 },
