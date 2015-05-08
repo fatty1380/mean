@@ -12,69 +12,67 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Own your Reputation<br><small>With your Outset Trucker Profile</small>',
+                    lead: 'Own your Trucking Future & Reputation<br><small>With your free Outset driver Profile</small>',
                     bullets: [
-                        'Take back your Industry Reputation and own your future with your Driver Portfolio.',
-                        'Connect with other truckers to stay in touch, share your location & get their recommendations.',
+                        'Create a Professionally based Driver Profile including your experience and secure elements like your MVR.',
+                        'Next, claim your Industry Handle and Connect with truckers you know and trust to share information, stay in-touch and see when they’re close by.',
                         'Securely Share your: MVR, Resume, Background Check, Insurance etc. - Put yourself back in the driver’s seat.'
                     ],
                     signup: 'Get Started'
                 },
                 subhero: {
                     videoURL: '//www.youtube.com/embed/aj4vz1jMSR8',
-                    videoID:'aj4vz1jMSR8',
                     title: 'Why Outset?',
                     subtitle: null,
                     bullets: [
                         {
-                            title: 'Putting Trucker’s back in the Driver’s Seat.',
-                            description: 'Outset has been built from the ground up with a focus on the driver. This means that everything we build is designed to help your career and make life on the road a little better.'
+                            title: 'Putting Truckers back in the Driver’s Seat.',
+                            description: 'Outset is built from the ground up with a focus on the industry’s biggest asset, the driver. Our goal is to put the power back in the driver’s hands, keep your information safe and make life on the road more enjoyable.'
                         },
                         {
-                            title: 'Own your Reputation',
-                            description: 'Use your Driver Profile as your digital business card, allowing you to control your reputation in the industry.'
+                            title: 'Take back your Reputation',
+                            description: 'Its time drivers stopped having their reputation controlled by previous employers and government reports. Host the documents you want people to see in your profile, and have your Industry buddies or your favorite Shipper recommend the work you do.'
                         },
                         {
-                            title: 'Tap into your Network',
-                            description: 'Connect with Truckers you know - See when your friends are close by, share information with them and get their recommendations.'
+                            title: 'Its about the Team',
+                            description: 'Join the fastest growing network of drivers in the country, and hold the industry accountable as a group. Time to give the Drivers a voice in the Industry, join the Outset team and let’s get it done.'
                         }
                     ]
                 },
                 section1: {
-                    header: 'Driver Portfolio',
+                    header: 'The Driver Profile',
                     sub: 'Your digital business card.',
-                    bullets: [
-                        'Don’t let previous employers control your first impression.',
+                    bullets: ['Don’t let previous employers reports control your first impression.’,
                         'Easily share your professional information with Employers or Brokers.',
-                        'Grow your Driver Portfolio with your career.'
-                    ],
+                        'Grow your Driver Profile and Network with your career.'],
                     image: '/modules/core/img/intro/driver.png'
                 },
                 section2: {
-                    header: 'Your Network',
-                    sub: 'Your Biggest Asset.',
+                    header: 'The Driver Network’,
+                    sub: 'Your Biggest Asset.’,
                     bullets: [
-                        'Stay Connected and Share Information.',
+                        'Stay Connected and Share Information with other drivers.',
                         'Have people you trust recommend you and your ability.',
-                        'Update your network on your location, load and miles you’ve traveled'
+                        'Update your network on your load, location and where you’re headed’
                     ],
                     image: '/modules/core/img/intro/reports.png'
                 },
+
                 threeSteps: {
                     title: '<span>3 Simple Steps</span> to get you started with Outset',
                     subtitle: '',
                     bullets: [
                         {
                             title: 'Sign up',
-                            description: 'Create your Driver Profile, Enter your Handle, update your experience, and order your MVR to be part of your Profile.'
+                            description: 'Create your Driver Profile, Enter your Handle, Update your experience, and Order your MVR to include in your Profile.'
                         },
                         {
                             title: 'Invite your Friends',
-                            description: 'Connect with Drivers you know on Outset to build your Driver Network, and make life on the road more enjoyable.'
+                            description: 'Connect with Drivers you know, build your Driver Network, and make life on the road more connected and enjoyable.'
                         },
                         {
                             title: 'Get out there',
-                            description: 'Use your Outset profile to: Apply for jobs, Host your documents and Connect with friends on the road.'
+                            description: 'Use your Outset profile to: Apply quickly for jobs, Access your documents and Connect with friends on the road.'
                         }
                     ]
                 }
@@ -92,7 +90,7 @@
                 },
                 subhero: {
                     videoURL: '//www.youtube.com/embed/Qzx1qTYLkrY',
-                    videoID:'Qzx1qTYLkrY',
+                    videoID: 'Qzx1qTYLkrY',
                     title: 'Why Outset?',
                     subtitle: null,
                     bullets: [
