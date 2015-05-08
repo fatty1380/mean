@@ -2,13 +2,51 @@
     <div class="content">
         <div class="main-title" ng-bind-html="vm.text.header.lead"></div>
         <div class="sub-title" ng-bind-html="vm.text.header.subLead" ng-if="!!vm.text.header.subLead"></div>
-        <div>
+        <div ng-hide="true">
             <signup-modal signup-type="{{vm.signupType}}" class="button get-started">
                 <a href="#">{{vm.text.header.signup}}</a>
             </signup-modal>
         </div>
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <form name="seedForm" id="seedForm" class="form-horizontal" data-ng-submit="vm.postSeed()"
+                  ng-hide="!!vm.seed.success">
+
+                <div class="row form-group">
+                    <div class="col-md-6">
+                        <input type="text" data-ng-model="vm.seed.firstName" class="form-control"
+                               placeholder="First Name" aria-describedby="first name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" data-ng-model="vm.seed.lastName" class="form-control" placeholder="Last Name"
+                               aria-describedby="last name">
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">@</span>
+                            <input type="email" data-ng-model="vm.seed.email" class="form-control" placeholder="email"
+                                   aria-describedby="email address">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <oset-categories model="vm.seed.interests" options="vm.interestOptions" lbl-class="btn-xs"></oset-categories>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning" ng-show="!!vm.seed.error" ng-bind="vm.seed.error"></div>
+
+                <button type="submit" class="button get-started">let me know!</button>
+            </form>
+            <div class="alert alert-success" ng-show="!!vm.seed.success" ng-bind="vm.seed.success"></div>
+        </div>
         <div class="information-block">
-            <div class="information-block-item" ng-repeat="bullet in vm.text.header.bullets" ng-bind-html="bullet"></div>
+            <div class="information-block-item" ng-repeat="bullet in vm.text.header.bullets"
+                 ng-bind-html="bullet"></div>
         </div>
         <a href="#" class="arrow-down" scroll-to></a>
     </div>

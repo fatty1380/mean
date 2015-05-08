@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function HomeController($location, $timeout, $document, $log, Authentication, $state) {
+    function HomeController($location, $timeout, $document, $log, Authentication, $state, Seed) {
         var vm = this;
 
         // This provides Authentication context.
@@ -166,9 +166,33 @@
             }, 100);
 
         }
+
+        vm.seed = {};
+        vm.interestOptions = [
+            {key: 'Local', value: false},
+            {key: 'Long Haul', value: false},
+            {key: 'Indep. Operator', value: false},
+            {key: 'Fleet Mgmt.', value: false},
+        ];
+
+        vm.postSeed = function () {
+
+            var seed = new Seed(vm.seed);
+
+            seed.$save()
+                .then(function (success) {
+                    $log.debug('Successfully Saved seed user: %o', success);
+
+                    vm.seed.success = 'Thank you for your interest, We will let you know as soon as we launch!';
+                })
+                .catch(function (err) {
+                    vm.seed.error = err.data.message || err;
+                });
+
+        };
     }
 
-    HomeController.$inject = ['$location', '$timeout', '$document', '$log', 'Authentication', '$state'];
+    HomeController.$inject = ['$location', '$timeout', '$document', '$log', 'Authentication', '$state', 'SeedService'];
 
     angular
         .module('core')
