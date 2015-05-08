@@ -370,17 +370,18 @@ div.play-button {
       text-transform: uppercase;
       font-size: 70px;
       text-align: center;
-      padding: 205px 0 70px 0;
-      padding-top: 20vh;
+      padding: 205px 0 20px 0;
+      padding-bottom: .2em;
+      padding-top: 15vh;
       font-family: RobotoRegular;
       letter-spacing: -2px;
     }
 
     .sub-title {
       color: @text-color-light;
-      font-size: 22px;
+      font-size: 55px;
       text-align: center;
-      padding-bottom: 60px;
+      padding-bottom: 0.7em;
     }
 
     .button {
@@ -409,6 +410,9 @@ div.play-button {
     .information-block {
       padding-top: 60px;
 
+      position: absolute;
+      bottom:10vh;
+
       .information-block-item {
         .backgroundImage(@check-icon-url, no-repeat, 25px 0, auto);
         color: @text-color-light;
@@ -419,6 +423,7 @@ div.play-button {
         vertical-align: top;
         width: 32%;
         padding-left: 70px;
+
       }
     }
 
@@ -430,7 +435,7 @@ div.play-button {
       margin: 0 auto;
       margin-top: 60px;
       position: absolute;
-      bottom: 5%;
+      bottom: 4vh;
     }
   }
 }

@@ -12,7 +12,8 @@
         vm.textBase = {
             driver: {
                 header: {
-                    lead: 'Own your Trucking Future & Reputation<br><small>With your free Outset driver Profile</small>',
+                    lead: 'Control Your Reputation',
+                    subLead: 'Truckers: Drive your future',
                     bullets: [
                         'Create a Professionally based Driver Profile including your experience and secure elements like your MVR.',
                         'Next, claim your Industry Handle and Connect with truckers you know and trust to share information, stay in-touch and see when they’re close by.',
