@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-Schema       = mongoose.Schema,
-crypto       = require('crypto'),
-_            = require('lodash');
+    Schema = mongoose.Schema,
+    crypto = require('crypto'),
+    _ = require('lodash');
 
 /**
  * A Validation function for local strategy properties
@@ -37,15 +37,39 @@ var SeedSchema = new Schema({
     },
     email: {
         type: String,
+        unique: 'Username already exists',
+        required: 'Please fill in your email address',
         trim: true,
-        default: '',
         match: [/.+\@.+\..+/, 'Please fill a valid email address']
     },
     zip: {
         type: String,
         trim: true,
         default: ''
+    },
+
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    },
+
+    modified: {
+        type: Date,
+        default: Date.now
+    },
+    created: {
+        type: Date,
+        default: Date.now
     }
+
+});
+
+
+SeedSchema.pre('save', function (next) {
+    if (!!this.isModified()) {
+        this.modified = Date.now();
+    }
+    next();
 });
 
 mongoose.model('SeedUser', SeedSchema);
@@ -275,8 +299,8 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 };
 
 UserSchema.virtual('shortName')
-    .get(function() {
-        return (!!this.firstName ? this.firstName : null) + (!!this.lastName ? this.lastName.substring(0,1) : null);
+    .get(function () {
+        return (!!this.firstName ? this.firstName : null) + (!!this.lastName ? this.lastName.substring(0, 1) : null);
     });
 
 UserSchema.virtual('isAdmin')

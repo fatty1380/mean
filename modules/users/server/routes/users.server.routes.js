@@ -12,6 +12,9 @@
         app.route('/api/users/password').post(users.changePassword);
         app.route('/api/users/picture').post(users.changeProfilePicture);
 
+        app.route('/api/seed')
+        .post(users.createSeed);
+
         // Finish by binding the user middleware
         app.param('userId', users.userByID);
     };
