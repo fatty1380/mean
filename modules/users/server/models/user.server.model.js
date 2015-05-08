@@ -42,6 +42,11 @@ var SeedSchema = new Schema({
         trim: true,
         match: [/.+\@.+\..+/, 'Please fill a valid email address']
     },
+    handle: {
+        type: String,
+        trim: true,
+        default: null
+    },
     zip: {
         type: String,
         trim: true,

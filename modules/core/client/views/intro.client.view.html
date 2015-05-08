@@ -7,14 +7,18 @@
                 <a href="#">{{vm.text.header.signup}}</a>
             </signup-modal>
         </div>
-        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
-            <oset-seed-signup model="vm.seed" show-form="true" hide-name="true"></oset-seed-signup>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+                <oset-seed-signup model="vm.seed" show-form="false" hide-name="true"></oset-seed-signup>
+            </div>
         </div>
         <div class="information-block">
             <div class="information-block-item" ng-repeat="bullet in vm.text.header.bullets"
                  ng-bind-html="bullet"></div>
         </div>
-        <a href="#" class="arrow-down" scroll-to></a>
+        <div class="section-bottom-bar">
+            <a href="#" class="arrow-down" scroll-to></a>
+        </div>
     </div>
 </section>
 
@@ -125,7 +129,8 @@
         </signup-modal>
 
         <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
-            <oset-seed-signup model="vm.seed" show-form="true" hide-name="true" btn-class="footer-button"></oset-seed-signup>
+            <oset-seed-signup model="vm.seed" show-form="true" hide-name="true"
+                              btn-class="footer-button"></oset-seed-signup>
         </div>
     </div>
 </section>

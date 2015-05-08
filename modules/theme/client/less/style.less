@@ -46,7 +46,7 @@
 @main-background-url: url('/modules/core/img/backgrounds/header_bg.jpg');
 @steps-background-url: url('/modules/core/img/backgrounds/step_bg.jpg');
 @footer-background-url: url('/modules/core/img/backgrounds/footer_bg.jpg');
-@check-icon-url: url('/modules/core/img/others/header_check.jpg');
+@check-icon-url: url('/modules/core/img/others/header_check.png');
 
 @arrow-down-icon-url: url('/modules/core/img/others/scroll_icon.png');
 @arrow-left-icon-url: url('/modules/core/img/slider/slider_Arrow_2.png');
@@ -331,10 +331,10 @@ div.play-button {
   .seed-form {
    // background-color: rgba(0,0,0,0.5);
     padding: 20px;
-    //position: relative;
-    //top: -50px;
+    position: relative;
+    top: -50px;
 
-    .form-control, .input-group-addon {
+    .form-control, .input-group-addon, button {
       background-color: rgba(0, 0, 0, 0.5);
       color: @text-color-light;
       font-size: 1.4em;
@@ -344,24 +344,26 @@ div.play-button {
 
   .info-text {
     color: @text-color-light;
-    font-size: 24px;
+    font-size: 20px;
     padding-bottom: 1em;
   }
 }
 
 .section-main {
-  min-height: 700px;
+  min-height: 800px;
   .backgroundImage(@main-background-url, no-repeat, center, cover);
 
-  @media only screen and (min-device-width: 768px) {
+  @media only screen and (min-device-width: 1024px) {
     height: 100vh;
-    max-height: 1200px;
+    max-height: 1080px;
   }
 
   .content {
+
     text-align: center;
     width: 1024px;
     margin: 0 auto;
+
     position: relative;
     height: 100%;
 
@@ -370,18 +372,17 @@ div.play-button {
       text-transform: uppercase;
       font-size: 70px;
       text-align: center;
-      padding: 205px 0 20px 0;
-      padding-bottom: .2em;
-      padding-top: 15vh;
+      padding: 205px 0 50px 0;
       font-family: RobotoRegular;
       letter-spacing: -2px;
     }
 
     .sub-title {
+      font-family: RobotoRegular;
       color: @text-color-light;
-      font-size: 55px;
+      font-size: 24px;
       text-align: center;
-      padding-bottom: 0.7em;
+      padding-bottom: 60px;
     }
 
     .button {
@@ -401,6 +402,7 @@ div.play-button {
         color: @text-color-light;
         text-decoration: none;
         font-size: 17px;
+        font-weight: 600;
         padding: 17px;
         text-align: center;
         display: block;
@@ -410,11 +412,12 @@ div.play-button {
     .information-block {
       padding-top: 60px;
 
-      position: absolute;
-      bottom:10vh;
+      //position: absolute;
+      //bottom:15%;
 
       .information-block-item {
         .backgroundImage(@check-icon-url, no-repeat, 25px 0, auto);
+        font-family: RobotoRegular;
         color: @text-color-light;
         font-size: 17px;
         line-height: 1.3;
@@ -427,6 +430,12 @@ div.play-button {
       }
     }
 
+    .section-bottom-bar {
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+    }
+
     .arrow-down {
       width: 100%;
       height: 45px;
@@ -434,8 +443,9 @@ div.play-button {
       display: block;
       margin: 0 auto;
       margin-top: 60px;
-      position: absolute;
-      bottom: 4vh;
+
+      //position: relative;
+      //bottom: 20px;
     }
   }
 }

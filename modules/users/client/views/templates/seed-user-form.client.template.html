@@ -1,13 +1,13 @@
 <section class="seed-signup">
 
     <span class="{{vm.btnClass}}" ng-click="vm.showForm=true;" ng-hide="!!vm.showForm">
-        <a href="#">Tell me More!</a>
+        <a href="#">Get Started</a>
     </span>
 
     <form name="seedForm" id="seedForm" class="seed-form form-horizontal"
           ng-hide="!!vm.model.success || !vm.showForm">
 
-        <div class="info-text">Enter your email to be notified as soon as we launch</div>
+        <div class="info-text">Coming Soon! Enter your email and reserve your handle</div>
 
         <div class="row form-group" ng-if="!vm.hideName">
             <div class="col-md-6">
@@ -21,7 +21,19 @@
         </div>
 
         <div class="row form-group">
-            <div class="col-sm-12">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <input type="email" data-ng-model="vm.model.handle" class="form-control" placeholder="handle"
+                           aria-describedby="unique handle">
+                </div>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-8 col-md-offset-2">
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1">@</span>
                     <input type="email" data-ng-model="vm.model.email" class="form-control" placeholder="email"
@@ -39,7 +51,7 @@
         <div class="alert alert-warning" ng-show="!!vm.model.error" ng-bind="vm.model.error"></div>
 
         <span class="{{vm.btnClass}}" ng-click="vm.postSeed()">
-            <a href="#">Submit</a>
+            <a href="#">Register</a>
         </span>
     </form>
 
