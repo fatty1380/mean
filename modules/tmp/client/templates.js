@@ -5073,13 +5073,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<section class="seed-signup">\n' +
   '\n' +
   '    <span class="{{vm.btnClass}}" ng-click="vm.showForm=true;" ng-hide="!!vm.showForm">\n' +
-  '        <a href="#">Tell me More!</a>\n' +
+  '        <a href="#">Get Started</a>\n' +
   '    </span>\n' +
   '\n' +
   '    <form name="seedForm" id="seedForm" class="seed-form form-horizontal"\n' +
   '          ng-hide="!!vm.model.success || !vm.showForm">\n' +
   '\n' +
-  '        <div class="info-text">Enter your email to be notified as soon as we launch</div>\n' +
+  '        <div class="info-text">Coming Soon! Enter your email and reserve your handle</div>\n' +
   '\n' +
   '        <div class="row form-group" ng-if="!vm.hideName">\n' +
   '            <div class="col-md-6">\n' +
@@ -5093,7 +5093,19 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row form-group">\n' +
-  '            <div class="col-sm-12">\n' +
+  '            <div class="col-md-8 col-md-offset-2">\n' +
+  '                <div class="input-group">\n' +
+  '                    <span class="input-group-addon" id="basic-addon1">\n' +
+  '                        <i class="fa fa-user"></i>\n' +
+  '                    </span>\n' +
+  '                    <input type="email" data-ng-model="vm.model.handle" class="form-control" placeholder="handle"\n' +
+  '                           aria-describedby="unique handle">\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row form-group">\n' +
+  '            <div class="col-md-8 col-md-offset-2">\n' +
   '                <div class="input-group">\n' +
   '                    <span class="input-group-addon" id="basic-addon1">@</span>\n' +
   '                    <input type="email" data-ng-model="vm.model.email" class="form-control" placeholder="email"\n' +
@@ -5111,7 +5123,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="alert alert-warning" ng-show="!!vm.model.error" ng-bind="vm.model.error"></div>\n' +
   '\n' +
   '        <span class="{{vm.btnClass}}" ng-click="vm.postSeed()">\n' +
-  '            <a href="#">Submit</a>\n' +
+  '            <a href="#">Register</a>\n' +
   '        </span>\n' +
   '    </form>\n' +
   '\n' +
