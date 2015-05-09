@@ -189,11 +189,11 @@ div.play-button {
 
       .mobile-nav {
         width: 55px;
-        height: 55px;
+        height: 100%;
         position: absolute;
         right: 0;
         top: 0;
-        background-color: @main-style-color-1;
+        background-color: transparent; // @main-style-color-1;
         z-index: 1;
         cursor: pointer;
         display: none;
@@ -389,6 +389,11 @@ div.play-button {
       padding-bottom: 60px;
     }
 
+    .action-row {
+      min-height: 40px;
+      padding-bottom: 20px;
+    }
+
     .button {
       min-width: 210px;
       margin: 0 auto;
@@ -415,6 +420,7 @@ div.play-button {
 
     .information-block {
       padding-top: 60px;
+      padding-bottom: 45px;
 
       //position: absolute;
       //bottom:15%;
@@ -2021,11 +2027,23 @@ div.play-button {
       .main-title {
         font-size: 30px;
         padding: 110px 15px 20px 15px;
+        font-family: RobotoLight;
       }
 
       .sub-title {
         font-size: 17px;
         padding: 0 15px 35px 15px;
+        font-family: RobotoLight;
+      }
+
+
+      .action-row {
+        min-height: 20px;
+        padding-bottom: 0;
+
+        .seed-form {
+          padding-bottom: 0;
+        }
       }
 
       .button {
@@ -2038,15 +2056,18 @@ div.play-button {
       }
 
       .information-block {
-        padding-top: 60px;
+        padding-top: 30px;
 
         .information-block-item {
+          font-family: RobotoLight;
           padding-right: 20px;
           padding-bottom: 40px;
           width: 100%;
           padding-left: 70px;
           font-size: 16px;
         }
+
+        padding-bottom: 45px;
       }
 
       .arrow-down {

@@ -6056,11 +6056,11 @@ div.play-button {
 }
 .section-menu .content .main-menu .mobile-nav {
   width: 55px;
-  height: 55px;
+  height: 100%;
   position: absolute;
   right: 0;
   top: 0;
-  background-color: #e6492f;
+  background-color: transparent;
   z-index: 1;
   cursor: pointer;
   display: none;
@@ -6223,6 +6223,10 @@ div.play-button {
   text-align: center;
   padding-bottom: 60px;
 }
+.section-main .content .action-row {
+  min-height: 40px;
+  padding-bottom: 20px;
+}
 .section-main .content .button {
   min-width: 210px;
   margin: 0 auto;
@@ -6243,6 +6247,7 @@ div.play-button {
 }
 .section-main .content .information-block {
   padding-top: 60px;
+  padding-bottom: 45px;
 }
 .section-main .content .information-block .information-block-item {
   background-image: url('/modules/core/img/others/header_check.png');
@@ -7090,15 +7095,26 @@ div.play-button {
   .section-main .content .main-title {
     font-size: 30px;
     padding: 110px 15px 20px 15px;
+    font-family: RobotoLight;
   }
   .section-main .content .sub-title {
     font-size: 17px;
     padding: 0 15px 35px 15px;
+    font-family: RobotoLight;
+  }
+  .section-main .content .action-row {
+    min-height: 20px;
+    padding-bottom: 0;
+  }
+  .section-main .content .action-row .seed-form {
+    padding-bottom: 0;
   }
   .section-main .content .information-block {
-    padding-top: 60px;
+    padding-top: 30px;
+    padding-bottom: 45px;
   }
   .section-main .content .information-block .information-block-item {
+    font-family: RobotoLight;
     padding-right: 20px;
     padding-bottom: 40px;
     width: 100%;
