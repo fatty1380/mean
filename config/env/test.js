@@ -2,7 +2,7 @@
 
 module.exports = {
 	db: {
-		db: 'mongodb://localhost/outset-test',
+		uri: 'mongodb://localhost/outset-test',
 		options: {
 			user: '',
 			pass: ''

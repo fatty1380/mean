@@ -38,7 +38,7 @@ describe('Seed User CRUD tests', function () {
         done();
     });
 
-    it('Should allow me to crate a basic seed user', function (done) {
+    it('Should allow me to create a basic seed user', function (done) {
         agent.post('/api/seed')
             .send(seeduser)
             .expect(200)

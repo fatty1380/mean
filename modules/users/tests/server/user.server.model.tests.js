@@ -254,9 +254,9 @@ describe('User Model Unit Tests:', function () {
         var seed;
         beforeEach(function(done) {
             seed = new SeedUser({
-                //firstName: 'Signup',
-                //lastName: 'User',
-                //email: 'signuponly@seed.com'
+                firstName: 'Signup',
+                lastName: 'User',
+                email: 'signuponly@seed.com'
             });
 
             done();
@@ -271,6 +271,13 @@ describe('User Model Unit Tests:', function () {
 
                 done();
             });
+        });
+
+        afterEach(function(done) {
+
+            SeedUser.remove().exec();
+
+            done();
         });
 
     });
