@@ -351,7 +351,7 @@ describe('Everifile CRUD tests', function (done) {
             });
 
             describe('PDF Reports', function() {
-                it('should be able to get the raw report data (by report ID)', function (done) {
+                it('should be able to get the PDF (by report ID)', function (done) {
                     everifile.GetSummaryReportPDF(session, 93651)
                         .then(function (reportDataPDF) {
                             should.exist(reportDataPDF);
