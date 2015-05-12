@@ -26,7 +26,7 @@ module.exports = function (app) {
 
 
     /**
-     * This returns a Report Defintion, including all necessary Field Definitions.
+     * This returns a Report Definition, including all necessary Field Definitions.
      * This will be used by the render-report page.
      */
     app.route('/api/reports/types/:sku')
@@ -80,7 +80,8 @@ module.exports = function (app) {
 
 
     /** REPORTS --------------------------------------- */
-    //app.route('/api/reports')
+    app.route('/api/reports')
+        .get(bgchecks.report.list);
     //    .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // Get status of all reports for applicant
     //    .post(bgchecks.applicant.get, bgchecks.report.create); // Create a new report
 
@@ -88,7 +89,7 @@ module.exports = function (app) {
         .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // get status of all reports for applicant
         .post(bgchecks.applicant.get, bgchecks.report.create); // create a new report
 
-    app.route('/api/reports/:reportId')
+    app.route('/api/reports/:reportId(/^[a-f\\d]{24}$/i)')
         .get(bgchecks.report.get) // Get the results of a report - maybe update if not complete?
         .post(bgchecks.report.status); // Update the report status (?)
 
@@ -99,9 +100,10 @@ module.exports = function (app) {
     app.param('reportId', bgchecks.reportByID);
 
 
-    /** DEBUG/TEST Routes **/
+    /** Report Update Routes **/
 
-
-    //app.route('/api/createApplicantTest')
-    //    .post(bgchecks.applicant.create);
+    app.route('/api/reports/update')
+        .get(bgchecks.report.sync);
+    app.route('/api/reports/pending'); // Get all Background Reports in a non-complete state;
+    app.route('/api/reports/pdf');      // Get
 };

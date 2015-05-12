@@ -16,7 +16,7 @@ var user, bgcheck;
 /**
  * Unit tests
  */
-describe.skip('Bgcheck Model Unit Tests:', function () {
+describe('Bgcheck Model Unit Tests:', function () {
     beforeEach(function (done) {
         user = new User({
             firstName: 'Full',
@@ -69,6 +69,45 @@ describe.skip('Bgcheck Model Unit Tests:', function () {
                 done();
             });
         });
+    });
+
+    describe('Status States and Checking', function() {
+
+        var baseStatus;
+
+        beforeEach(function(done) {
+            baseStatus = {
+                'id': 93651,
+                'startDate': 1421384400000,
+                'completedDate': 1421691798000,
+                'applicant': {'id': 45958},
+                'report': {'sku': 'MVRDOM'},
+                'reportCheckStatus': {'timestamp': 1421691798000, 'status': 'SUBMITTED'}
+            };
+
+            bgcheck.save().then(function() { done();}, done);
+        });
+
+        it('should insert an incomplete status and update top level accordingly', function(done) {
+            bgcheck.addStatus(baseStatus);
+
+            bgcheck.should.have.property('status', baseStatus.reportCheckStatus.status);
+            bgcheck.should.have.property('isComplete').and.be.equal(false);
+
+            done();
+        });
+
+
+        it('should insert an incomplete status and update top level accordingly', function(done) {
+            baseStatus.reportCheckStatus.status = 'COMPLETED';
+            bgcheck.addStatus(baseStatus);
+
+            bgcheck.should.have.property('status', baseStatus.reportCheckStatus.status);
+            bgcheck.should.have.property('isComplete').and.be.equal(true);
+
+            done();
+        });
+
     });
 
     afterEach(function (done) {

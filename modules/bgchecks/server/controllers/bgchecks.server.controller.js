@@ -4,14 +4,15 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    errorHandler = require('../../../core/server/controllers/errors.server.controller'),
+    path = require('path'),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
     Bgcheck = mongoose.model('BackgroundReport'),
     ReportType = mongoose.model('ReportType'),
     ReportApplicant = mongoose.model('ReportApplicant'),
     Q = require('q'),
     everifile = require('./everifile.server.service'),
-    path = require('path'),
     constants = require(path.resolve('./modules/core/server/models/outset.constants')),
+    fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     _ = require('lodash'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'bgchecks',
@@ -35,11 +36,13 @@ exports.applicant = {
 };
 
 exports.report = {
+    list: ListAllReports,
     create: CreateNewReport,
     applicantStatus: CheckApplicantReportStatus,
-    status: CheckReportStatus,
+    status: CheckRemoteReportStatus,
     get: GetReportData,
-    loadPDF: LoadPDFData // this should only be used internally?
+    loadPDF: LoadPDFData, // this should only be used internally?
+    sync: doReportSync
 };
 
 /** Bound Router Middleware ------------------------------------------ **/
@@ -137,7 +140,7 @@ function applicantByID(req, res, next, id) {
                 return next(err);
             }
 
-            log.debug({func:'applicantById', applicant: applicant}, 'Found Applicant by ID');
+            log.debug({func: 'applicantById', applicant: applicant}, 'Found Applicant by ID');
             req.applicant = applicant;
             next();
         });
@@ -459,11 +462,11 @@ function GetAllRemoteApplicants(req, res, next) {
  */
 function GetReportApplicant(req, res, next) {
 
-    if(req.applicant && req.applicant instanceof ReportApplicant) {
+    if (req.applicant && req.applicant instanceof ReportApplicant) {
         log.debug({func: 'GetReportApplicant'}, 'Applicant already loaded');
 
         return ReportApplicant.populate(req.applicant, {path: 'reports'})
-        .then(function(success) {
+            .then(function (success) {
                 log.trace({func: GetReportApplicant}, 'Populated Reports');
                 next();
             });
@@ -780,20 +783,29 @@ function CheckApplicantReportStatus(req, res, next) {
                     //     }], 'applicant': {'id': 45958}
                     // }
 
-                    if(reportStatus.applicant.id !== req.applicant.remoteId) {
+                    if (reportStatus.applicant.id !== req.applicant.remoteId) {
                         return req.status(500).send({
                             message: 'Mismatched or missing remote applicant'
                         });
                     }
 
-                    _.each(reportStatus.reports, function(remoteReport) {
-                        log.info({func: 'CheckApplicantReportStatus', result: remoteReport}, 'Looking at remote Report Status');
+                    _.each(reportStatus.reports, function (remoteReport) {
+                        log.info({
+                            func: 'CheckApplicantReportStatus',
+                            result: remoteReport
+                        }, 'Looking at remote Report Status');
                         var localReport = _.find(req.applicant.reports, {remoteReportSkus: remoteReport.report.sku});
 
-                        if(!!localReport) {
-                            log.info({func: 'CheckApplicantReportStatus', result: localReport}, 'Comparing with local Report Status');
+                        if (!!localReport) {
+                            log.info({
+                                func: 'CheckApplicantReportStatus',
+                                result: localReport
+                            }, 'Comparing with local Report Status');
                             _.extend(localReport.status, remoteReport.reportCheckStatus.status);
-                            log.info({func: 'CheckApplicantReportStatus', result: localReport}, 'Extended local Report Status');
+                            log.info({
+                                func: 'CheckApplicantReportStatus',
+                                result: localReport
+                            }, 'Extended local Report Status');
 
                         }
                         else {
@@ -813,10 +825,47 @@ function CheckApplicantReportStatus(req, res, next) {
         });
 }
 
+function queryForReports(query) {
+    return Bgcheck.find(query)
+        .exec()
+        .then(function (bgCheckResults) {
+
+            log.debug({
+                func: 'ListAllReports',
+                query: query
+            }, 'Found %d BackgroundCheck records in the db for query', bgCheckResults.length);
+
+            log.trace({
+                bgchecks: bgCheckResults,
+                type: typeof bgCheckResults
+            }, 'Logging full BG Check Results object');
+
+            return bgCheckResults || [];
+        });
+}
+
+function ListAllReports(req, res, next) {
+
+    var query = req.query || {};
+    req.log.debug({func: 'listAllReports', query: query}, 'Querying for reports');
+
+    queryForReports(query)
+        .then(function (bgCheckResults) {
+            req.reports = bgCheckResults || [];
+
+            res.json(req.reports);
+        }, function (err) {
+            req.log.error(err, 'Error loading reports');
+
+            res.status(400).send({error: err, message: 'Unable to load reports'});
+        });
+
+}
+
 /**
  * @alias report.status
  */
-function CheckReportStatus(req, res, next) {
+function CheckRemoteReportStatus(req, res, next) {
     var remoteId = req.reportId;
 
     everifile.GetSession().then(
@@ -882,12 +931,197 @@ function LoadPDFData(req, res, next) {
         });
 }
 
+
+function doReportSync(req, res, next) {
+
+    var data = {
+        results: {
+            startCt: 0,
+            newStatus: 0,
+            addedData: 0,
+            addedPDF: 0,
+            errors: []
+        }
+    };
+
+    req.log.debug({func: 'doReportSync'}, 'Starting Report Sync');
+
+
+    queryForReports({isComplete: false})
+        .then(function (reports) {
+            req.log.debug({func: 'doReportSync', step: 1}, 'got reports', reports);
+
+            data.reports = reports;
+            data.results.startCt = reports.length;
+
+            req.log.debug({func: 'doReportSync', step: 1}, 'Loaded %d reports to check sync', reports.length);
+
+            return everifile.GetSession();
+        })
+        .then(function (session) {
+            req.log.debug({func: 'doReportSync', step: 2}, 'got eVerifile session');
+            data.session = session;
+            var updates = _.map(data.reports, function (report) {
+                req.log.debug({func: 'doReportSync', step: 2}, 'Looking up report Status for report: ', report);
+
+                return everifile.GetReportStatus(session, report.remoteId)
+                    .then(function (status) {
+                        req.log.debug({func: 'doReportSync', step: 2}, 'Got Report Status: ', status);
+                        req.log.debug({func: 'doReportSync', step: 2}, 'Report.addStatus isFunction: ', _.isFunction(report.addStatus));
+
+                        if (report.addStatus(status)) {
+                            req.log.debug({func: 'doReportSync', step: 2}, 'adding new status');
+                            data.results.newStatus++;
+                            return report.save();
+                        }
+
+                        req.log.debug({func: 'doReportSync', step: 2}, 'Status has already been added');
+
+
+                        return Q(report);
+                    })
+                    .catch(function (err) {
+                        req.log.error({func: 'doReportSync', error: err}, 'Error while updating remote report status');
+
+                        data.results.errors.push(err);
+
+                        return Q(report);
+                    });
+
+
+            });
+
+            return Q.all(updates);
+        })
+        .then(function (reports) {
+
+            req.log.debug({func: 'doReportSync', step: 3}, 'Completed Report Sync for %d reports', reports.length);
+
+            var completeReports = _.where(reports, {isComplete: true});
+            req.log.debug({func: 'doReportSync', step: 3}, 'Now looking at %d completeReports', completeReports.length);
+
+
+            return Q.all(_.map(completeReports,
+                function (report) {
+                    if (_.isEmpty(report.data) || _.isEmpty(report.data.xml)) {
+                        req.log.debug({func: 'doReportSync', step: 3, report: report}, 'Report Data is currently empty for report');
+
+                        return everifile.GetRawReport(data.session, report.remoteId)
+                            .then(function (reportData) {
+                                req.log.debug({func: 'doReportSync', step: 3, report: reportData}, 'Saving Report Data');
+
+                                report.data = {
+                                    xml: reportData.response.universal.xmlData,
+                                    raw: reportData.response.universal.reportDisplayData
+                                };
+
+                                data.results.addedData++;
+
+                                return report.save();
+                            })
+                            .catch(function (err) {
+                                req.log.error({
+                                    func: 'doReportSync',
+                                    error: err
+                                }, 'Error while retrieving raw report data');
+
+                                data.results.errors.push(err);
+
+                                return Q(report);
+                            });
+                    }
+
+                    req.log.debug({func: 'doReportSync', step: 3, data: report.data}, 'Report Data is already present');
+
+
+                    return Q(report);
+                }));
+        })
+        .then(function (reports) {
+            req.log.debug({func: 'doReportSync', step: 4}, 'Completed Report Sync for %d reports', reports.length);
+
+            var completeReports = _.where(reports, {isComplete: true});
+            req.log.debug({func: 'doReportSync', step: 4}, 'Now looking at %d completeReports', completeReports.length);
+
+            return Q.all(_.map(completeReports,
+                function (report) {
+                    if (_.isEmpty(report.file) || _.isEmpty(report.file.url) ) {
+                        req.log.debug({func: 'doReportSync', step: 4, report: report}, 'Report File is currently empty for report');
+
+                        return everifile.GetSummaryReportPDF(data.session, report.remoteApplicantId)
+                            .then(function (reportData) {
+                                req.log.debug({func: 'doReportSync', step: 4, report: reportData}, 'Saving PDF Report Data');
+
+                                req.log.debug({
+                                    func: 'doReportSync',
+                                    report: reportData
+                                }, 'Recieved new PDF Report File');
+
+                                return fileUploader.saveContentToCloud(reportData)
+                                    .then(function (savedFile) {
+                                        req.log.info({
+                                            func: 'doReportSync',
+                                            report: report.remoteId,
+                                            file: savedFile
+                                        }, 'Saved file to Report');
+
+                                        report.file = savedFile;
+                                        data.results.addedPDF++;
+
+                                        return report.save();
+                                    }, function(err) {
+                                        req.log.error({
+                                            func: 'doReportSync',
+                                            error: err
+                                        }, 'Alternate fail output :(');
+
+                                        return Q.reject(err);
+
+                                    })
+                                .catch(function(err) {
+                                        req.log.error({
+                                            func: 'doReportSync',
+                                            error: err
+                                        }, 'Failed to save file to report');
+
+                                        return Q.reject(err);
+                                    });
+                            })
+                            .catch(function (err) {
+                                req.log.error({
+                                    func: 'doReportSync',
+                                    error: err
+                                }, 'Error while retrieving PDF report data');
+
+                                data.results.errors.push(err);
+
+                                return Q(report);
+                            });
+                    }
+                    req.log.debug({func: 'doReportSync', step: 4, file: report.file}, 'Report File is already present');
+
+                    return Q(report);
+                }));
+        })
+        .then(function (final) {
+            req.log.debug({func: 'doReportSync', results: data.results}, 'Completed Sync');
+
+            res.json(data.results);
+        })
+        .then(undefined, function (err) {
+            req.log.error({func: 'doReportSync', error: err});
+            next(err);
+        });
+}
+
+
 /** Section : Report Middleware --------------------------------------------------------- **/
 function reportByID(req, res, next, id) {
     Bgcheck.findById(id)
         .populate('user', 'displayName')
         .exec(function (err, bgcheck) {
             if (err) {
+                req.log.error({error: err}, 'Error looking up report by id `%s`', id);
                 return next(err);
             }
             req.bgcheck = bgcheck;

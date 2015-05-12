@@ -62,7 +62,9 @@ exports.changeProfilePicture = function (req, res) {
 
     if (user) {
         fileUploader.saveFileToCloud(req.files).then(
-            function (successURL) {
+            function (successResponse) {
+
+                var successURL = successResponse.url;
 
                 console.log('successfully uploaded profile picture to %s', successURL);
 
