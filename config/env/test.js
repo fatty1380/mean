@@ -26,19 +26,12 @@ module.exports = {
 		google: {},
 		s3: {
 			enabled: true,
-			clientConfig: {
-				maxAsyncS3: 20,
-				s3RetryCount: 3,
-				s3RetryDelay: 1000,
-				multipartUploadThreshold: 20971520,
-				multipartUploadSize: 15728640
-			},
 			s3Options: {
 				bucket: 'outset-test',
-				accessKeyId: process.env.S3_ACCESS_KEY || 'your s3 key',
-				secretAccessKey: process.env.S3_SECRET_KEY || 'your s3 secret'
+				accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
+				secretAccessKey: process.env.S3_SECRET_KEY || 'jD2IbZrZJT1nQmB21z0pzB1HhMyNRUWE56tdUAFJ'
 			},
-			folder: 'test-resources/'
+			folder: 'test-resources'
 		},
 		fs: {
 			writePath: './modules/users/client/img/profile/uploads/'
