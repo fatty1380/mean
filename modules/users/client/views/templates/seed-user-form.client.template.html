@@ -4,10 +4,11 @@
         <a href="#">Get Started</a>
     </span>
 
-    <form name="seedForm" id="seedForm" class="seed-form form-horizontal"
+    <form name="seedForm" id="seedForm" class="seed-form form-horizontal animated fadeIn"
           ng-hide="!!vm.model.success || !vm.showForm">
 
-        <div class="info-text">Coming Soon! Enter your email and reserve your handle</div>
+        <div class="info-text">
+            <span class="strong">Coming Soon!</span><br> Enter your email and reserve your handle</div>
 
         <div class="row form-group" ng-if="!vm.hideName">
             <div class="col-md-6">
@@ -50,7 +51,7 @@
 
         <div class="alert alert-warning" ng-show="!!vm.model.error" ng-bind="vm.model.error"></div>
 
-        <span class="{{vm.btnClass}}" ng-click="vm.postSeed()">
+        <span class="{{vm.btnClass}} mgn-btm" ng-click="vm.postSeed()">
             <a href="#">Register</a>
         </span>
     </form>

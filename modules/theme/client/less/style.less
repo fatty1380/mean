@@ -1,3 +1,7 @@
+
+@import "/public/lib/bootstrap/less/variables.less";
+@import "/public/lib/bootstrap/less/mixins.less";
+
 .backgroundImage(@url, @repeat: no-repeat, @position: left, @size: auto) {
   background-image: @url;
   background-repeat: @repeat;
@@ -350,6 +354,15 @@ div.play-button {
 
   .footer-button {
     padding-top: 40px!important;
+  }
+
+  @media only screen and (max-width: @screen-sm-max) {
+    .seed-form {
+      padding: 15px;
+      top: 0px;
+
+      background-color: rgba(0,0,0,0.5);
+    }
   }
 }
 
