@@ -29,8 +29,13 @@ exports.createSeed = function(req, res) {
         res.json(success);
 
     }, function(err) {
-        log.error(err, 'Unable to save Seed User');
-
+        if(err.code === 11000) {
+            log.info('User email has already been registered');
+        }
+        else {
+            log.error(err, 'Unable to save Seed User');
+        }
+        
         res.status(400).send({
             message: errorHandler.getErrorMessage(err)
         });

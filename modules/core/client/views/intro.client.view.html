@@ -1,7 +1,7 @@
 <section class="section-main ">
     <div class="content">
         <div class="main-title" ng-bind-html="vm.text.header.lead"></div>
-        <div class="sub-title" ng-bind-html="vm.text.header.subLead" ng-if="!!vm.text.header.subLead"></div>
+        <div class="sub-title animated" ng-bind-html="vm.text.header.subLead" ng-if="!!vm.text.header.subLead" ng-class="{'fadeOut ng-hide':vm.showForm}"></div>
         <div ng-hide="true">
             <signup-modal signup-type="{{vm.signupType}}" class="button get-started">
                 <a href="#">{{vm.text.header.signup}}</a>
@@ -9,7 +9,7 @@
         </div>
         <div class="action-row">
             <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
-                <oset-seed-signup model="vm.seed" show-form="false" hide-name="true"></oset-seed-signup>
+                <oset-seed-signup model="vm.seed" show-form="vm.showForm" hide-name="true"></oset-seed-signup>
             </div>
         </div>
         <div class="information-block">

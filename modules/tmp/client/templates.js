@@ -5076,10 +5076,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <a href="#">Get Started</a>\n' +
   '    </span>\n' +
   '\n' +
-  '    <form name="seedForm" id="seedForm" class="seed-form form-horizontal"\n' +
+  '    <form name="seedForm" id="seedForm" class="seed-form form-horizontal animated fadeIn"\n' +
   '          ng-hide="!!vm.model.success || !vm.showForm">\n' +
   '\n' +
-  '        <div class="info-text">Coming Soon! Enter your email and reserve your handle</div>\n' +
+  '        <div class="info-text">\n' +
+  '            <span class="strong">Coming Soon!</span><br> Enter your email and reserve your handle</div>\n' +
   '\n' +
   '        <div class="row form-group" ng-if="!vm.hideName">\n' +
   '            <div class="col-md-6">\n' +
@@ -5122,7 +5123,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <div class="alert alert-warning" ng-show="!!vm.model.error" ng-bind="vm.model.error"></div>\n' +
   '\n' +
-  '        <span class="{{vm.btnClass}}" ng-click="vm.postSeed()">\n' +
+  '        <span class="{{vm.btnClass}} mgn-btm" ng-click="vm.postSeed()">\n' +
   '            <a href="#">Register</a>\n' +
   '        </span>\n' +
   '    </form>\n' +
