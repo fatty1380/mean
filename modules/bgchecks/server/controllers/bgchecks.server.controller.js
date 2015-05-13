@@ -1050,11 +1050,11 @@ function doReportSync(req, res, next) {
 
                         return everifile.GetSummaryReportPDF(data.session, report.remoteApplicantId)
                             .then(function (reportData) {
-                                req.log.debug({func: 'doReportSync', step: 4, report: reportData}, 'Saving PDF Report Data');
+                                req.log.debug({func: 'doReportSync', step: 4, report: reportData.headers}, 'Saving PDF Report Data');
 
                                 req.log.debug({
                                     func: 'doReportSync',
-                                    report: reportData
+                                    report: reportData.headers
                                 }, 'Recieved new PDF Report File');
 
                                 return fileUploader.saveContentToCloud(reportData)

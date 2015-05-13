@@ -30,23 +30,19 @@ if (!!config.services.s3 && config.services.s3.enabled) {
 }
 
 function uploadSummaryPDF(data) {
-    log.trace({func: 'uploadSummaryPDF', dataContent: data.content});
+    log.trace({func: 'uploadSummaryPDF'}, 'START');
 
-    //var buffer = new Buffer(data.content.length);
-    //buffer.write(data.content, 'utf-8');
+    var buffer = (data.content instanceof Buffer) ? data.content : new Buffer(data.content, 'utf-8');
 
-    var buffer = new Buffer(data.content, 'utf-8');
-
-    //log.trace({func: 'uploadSummaryPDF', buffer: buffer});
+    log.trace({func: 'uploadSummaryPDF', dataContentLength: buffer.toString().length});
 
     var file = {
         name: data.filename,
-        buffer: buffer,
-        contentType: data.contentType
+        buffer: buffer
     };
 
     //return Q(directUpload({file: file}, null, true));
-    var p = directUpload({file: file}, null, false);
+    var p = directUpload({file: file}, null, true);
 
     return p.then(function (success) {
             log.debug({func: 'uploadSummaryPDF', result: success}, 'Returning promise');
@@ -73,14 +69,14 @@ function directUpload(files, folder, isSecure) {
 
         var file = files.file;
 
-        log.debug('[s3.directUpload] Uploading file: %s', JSON.stringify(file, function (key, value) {
-            return (key === 'buffer') ? [] : value;
+        log.debug({func: 'directUpload'}, 'Uploading file: %s', JSON.stringify(file, function (key, value) {
+            return (key === 'buffer') ? '<BufferLength:' + value.length + '>' : value;
         }, 2));
 
         if (file) {
             var fileName = _.contains(file.path, file.name) ? file.originalname : file && file.name || file.originalname;
 
-            log.debug('[s3.directUpload] Attempting S3 Upload for %s to %s', fileName, folder);
+            log.debug({func: 'directUpload'}, 'Attempting S3 Upload for %s to %s', fileName, folder);
             var params = {
                 Bucket: config.services.s3.s3Options.bucket,
                 Key: folder + '/' + fileName,
@@ -88,7 +84,7 @@ function directUpload(files, folder, isSecure) {
                 Body: file.buffer
             };
 
-            if(!!file.contentType) {
+            if (!!file.contentType) {
                 params.ContentType = file.contentType;
             } else {
                 switch ((file.extension || fileName.slice(-3)).toLowerCase()) {
@@ -98,23 +94,29 @@ function directUpload(files, folder, isSecure) {
                 }
             }
 
-            log.debug('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
+            if (!!file.contentEncoding) {
+                params.ContentEncoding = file.contentEncoding;
+            }
+
+            log.debug({func: 'directUpload'}, 'Uploading file with params: %s', JSON.stringify(params, function (key, value) {
+                return (key === 'Body') ? '<BufferLength:' + value.length + '>' : value;
+            }, 2));
+
 
             var uploader = client.s3.putObject(params);
 
-
             log.debug({func: 'directUpload'}, 'Uploader Initialized');
-
 
             uploader.
                 on('success', function (response) {
-                    log.debug('[s3.directUpload] done uploading, got data!', response.data);
+                    console.log('Logger is%s defined', _.isEmpty(log) ? ' NOT' : '');
+                    log.debug({func: 'directUpload', response: response.data}, 'done uploading, got data!');
 
                     var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
-                    log.debug('[s3.directUpload] Got public URL: %s', publicURL);
+                    log.debug({func: 'directUpload'}, 'Got public URL: %s', publicURL);
 
                     var strippedURL = publicURL.replace('http://', 'https://');
-                    log.debug('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
+                    log.debug({func: 'directUpload'}, 'Post stripping, resolving with : %s', strippedURL);
 
                     if (isSecure) {
                         response = {
@@ -130,12 +132,12 @@ function directUpload(files, folder, isSecure) {
                                 response.url = success;
                                 response.expires = (Date.now() + 15 * 60 * 1000);
 
-                                log.debug('[s3.directUpload] Post secure upload, resolving with : %j', response);
+                                log.debug({func: 'directUpload'}, 'Post secure upload, resolving with : %j', response);
 
                                 deferred.resolve(response);
                             }, function (err) {
-                                log.debug('[s3.directUpload] Post secure upload failed: %j', err);
-                                log.debug('[s3.directUpload] Resolving with public URL?');
+                                log.debug({func: 'directUpload'}, 'Post secure upload failed: %j', err);
+                                log.debug({func: 'directUpload'}, 'Resolving with public URL?');
 
                                 deferred.resolve(response);
                             });

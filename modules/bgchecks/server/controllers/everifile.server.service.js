@@ -595,6 +595,7 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
     log.debug({func: 'GetSummaryReportPDF', endpoint: endpoint}, 'Connectin to endpoint');
     unirest.get(endpoint)
         .jar(cookie.jar)
+        .encoding(null) // Set encoding to NULL in order to return a Buffer rather than string :)
         .end(function (response) {
             if (response.error) {
                 log.error({func: 'GetSummaryReportPDF', error: response.error}, 'Error retreiving PDF Report');
@@ -602,9 +603,10 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
             }
 
             log.debug({func: 'GetSummaryReportPDF'}, 'Response headers: %j', response.headers);
-            log.debug({func: 'GetSummaryReportPDF', response: response}, 'Complete Response:');
 
             var disposition = contentDisposition.parse(response.headers['content-disposition']);
+
+            log.debug({func: 'GetSummaryReportPDF', disposition: disposition}, 'Parsed Disposition');
 
             var retval = {
                 headers: response.headers,
@@ -612,8 +614,7 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
                 date: response.headers.date,
                 filename: disposition.parameters.filename,
                 type: disposition.type,
-                content: response.body //raw_body // jshint ignore:line
-                //response: response
+                content: response.raw_body // jshint ignore:line
             };
 
             deferred.resolve(retval);

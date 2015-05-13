@@ -166,7 +166,7 @@ describe('BGCheck CRUD tests', function () {
         getApplicantById: '/api/reports/applicants/:applicantId'
     };
 
-    describe.skip('Local Applicant methods', function () {
+    describe('Local Applicant methods', function () {
         it('should be able to lookup a report applicant', function (done) {
             var endpoint = '/api/reports/applicants/' + localApplicant.id;
 
@@ -320,7 +320,7 @@ describe('BGCheck CRUD tests', function () {
         });
     });
 
-    describe.skip('Report Status Methods and Routes', function () {
+    describe('Report Status Methods and Routes', function () {
 
         // Set a 20s timeout since eVerifile is involved;
         // TODO: Mock? once stuff is figured out
