@@ -72,18 +72,6 @@ module.exports.initMiddleware = function (app) {
 
     var accessLogStream, streamType;
 
-    // Init a unique Request ID
-    app.use(addRequestId);
-
-    app.use(function (req, res, next) {
-        req.log = log.child({
-            req: req,
-            req_id: req.id
-        });
-
-        next();
-    })
-
     // Passing the request url to environment locals
     app.use(function (req, res, next) {
         res.locals.host = req.protocol + '://' + req.hostname;
@@ -150,6 +138,18 @@ module.exports.initMiddleware = function (app) {
         dest: './uploads/',
         inMemory: true
     }));
+
+    // Init a unique Request ID
+    app.use(addRequestId);
+
+    app.use(function (req, res, next) {
+        req.log = log.child({
+            req: req,
+            req_id: req.id
+        });
+
+        next();
+    });
 
     log.trace({func: 'initLocalVariables'}, 'Completed Initializing Middleware');
 };
