@@ -1,62 +1,51 @@
 <section name="os-driver.directive" class="panel panel-default">
-    <div class="panel-heading">
-        <h4>About Me<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
+
+    <!--<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
                        ui-sref="drivers.edit({driverId: vm.driver._id })">edit driver profile
             <i class="fa fa-pencil-square-o"></i>
-        </a></h4>
-    </div>
-
-    <div class="panel-body">
-        <div data-ng-bind-html="vm.driver.about"></div>
-    </div>
-
-    <div class="panel-heading" ng-show="vm.driver.experience.length > 0">
-        <h4>Experience:</h4>
-    </div>
-    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">
-        <oset-experience-list ng-switch-when="true"
-                              list="vm.driver.experience" view-only="true" max-ct="5">
-
-        </oset-experience-list>
-
-        <p class="text-center" ng-switch-default>None Added</p>
-    </div>
-
-    <div class="panel-heading" ng-show="vm.driver.interests.length > 0">
-        <h4>Interests</h4>
-    </div>
-    <div class="panel-body text-center">
-        <oset-categories model="vm.driver.interests" mode="view">
-             <span ng-if="vm.canEdit">You can specify what kind of jobs you are interested in finding by <a
-                     ui-sref="drivers.edit({driverId: vm.driver._id})">editing your driver profile</a>!</span>
-            <span ng-if="!vm.canEdit">{{vm.driver.displayName}} has not yet entered any job type preferences or interests.</span></span>
-        </oset-categories>
-
-    </div>
-
-    <div class="panel-heading">
-        <h4>
-            License
-        </h4>
-    </div>
-    <div class="panel-body">
-
-        <div ng-repeat="license in vm.driver.licenses" class="license"
-             ng-init="filtered = (vm.filterEndorsements(license))">
-            <p>
-                <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}<span
-                    ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>
-                Driver License
-                <span class="pull-right" ng-if="!!filtered.length">
-                    <small class="strong">Endorsements:</small>
-
-                    <oset-list-endorsements model="license.endorsements"></oset-list-endorsements>
-                </span>
-            </p>
-
+    </a>-->
+    <div class="info">
+        <div class="info-header">
+            <span class="title" ng-show="vm.driver.experience.length > 0">
+                EXPERIENCE
+            </span>
         </div>
-        <p ng-show="!vm.driver.licenses || vm.driver.licenses.length <= 0">No License on File</p>
+        <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">
+            <oset-experience-list ng-switch-when="true"
+                                  list="vm.driver.experience" view-only="true" max-ct="5">
+
+            </oset-experience-list>
+
+            <p class="text-center" ng-switch-default>None Added</p>
+        </div>
     </div>
+    
+    <div class="info">
+        <div class="info-header">
+            <span class="title">
+                About Me
+            </span>
+        </div>
+        <div class="panel-body">
+            <div class="about" data-ng-bind-html="vm.driver.about"></div>
+        </div>
+    </div>
+
+    <div class="info">
+        <div class="info-header">
+            <span class="title">
+                Interests
+            </span>
+        </div>
+        <div class="panel-body text-center">
+            <oset-categories model="vm.driver.interests" mode="view">
+                 <span ng-if="vm.canEdit">You can specify what kind of jobs you are interested in finding by <a
+                         ui-sref="drivers.edit({driverId: vm.driver._id})">editing your driver profile</a>!</span>
+                <span ng-if="!vm.canEdit">{{vm.driver.displayName}} has not yet entered any job type preferences or interests.</span></span>
+            </oset-categories>
+        </div>
+    </div>
+    
 
     <os-view-schedule data-ng-if="false" model="vm.driver.schedule"></os-view-schedule>
 </section>

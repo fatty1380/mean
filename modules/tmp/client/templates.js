@@ -1065,24 +1065,19 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div class="item price text-center" ng-click="vm.viewReports()">\n' +
   '        <div class="item-inner">\n' +
   '            <div class="heading text-center">\n' +
-  '                <h3>Enhance Your Profile!</h3>\n' +
-  '\n' +
+  '                <div class="head-block"></div>\n' +
   '                <div class="row item-content center-block">\n' +
-  '                    <div class="col-xs-12">\n' +
-  '                        <span class="fa-stack fa-3x">\n' +
-  '                            <i class="fa fa-certificate fa-stack-2x text-primary"></i>\n' +
-  '                            <i class="fa fa-check fa-stack-1x text-success"></i>\n' +
-  '                        </span>\n' +
-  '                    </div>\n' +
-  '\n' +
+  '                    <span class="percent">75%</span>\n' +
   '                </div>\n' +
+  '                 <h3>Enhance Your Profile!</h3>\n' +
+  '\n' +
   '            </div>\n' +
   '            <div class="item-content">\n' +
   '                <ul class="list-unstyled feature-list">\n' +
-  '                    <li><i class="fa fa-check"></i>Motor Vehicle Report</li>\n' +
-  '                    <li><i class="fa fa-check"></i>National &amp; County Background Check</li>\n' +
-  '                    <li><i class="fa fa-check"></i>Drug Test</li>\n' +
-  '                    <li><a class="btn btn-block btn-cta-secondary" ng-sref="reviewReports">Get Reports!</a>\n' +
+  '                    <li><img src="modules/bgchecks/img/check.png">Motor Vehicle Report</li>\n' +
+  '                    <li><img src="modules/bgchecks/img/check.png">National &amp; County Background Check</li>\n' +
+  '                    <li><img src="modules/bgchecks/img/check.png">Drug Test</li>\n' +
+  '                    <li class="get-reports"><a class="btn btn-block btn-cta-secondary" ng-sref="reviewReports">Get Reports</a>\n' +
   '                    </li>\n' +
   '                </ul>\n' +
   '\n' +
@@ -1857,39 +1852,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-page-header.client.template.html',
-  '<div style="height: 39px;" class="row">\n' +
-  '    <h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"\n' +
-  '        ng-class="{\'col-sm-8\':!!vm.pictureUrl}"></h2>\n' +
-  '    <span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"\n' +
-  '          ng-class="{\'col-sm-8\':!!vm.pictureUrl}"></span>\n' +
-  '</div>\n' +
-  '\n' +
   '<!-- os-page-header directive : os-page-header.client.template -->\n' +
   '<div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"\n' +
   '     ng-class="{\'panel panel-default\' : !vm.level}"\n' +
   '     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
   '\n' +
-  '    <div class="pad-vert {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
-  '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
-  '                ng-click="vm.backBtnFn()">\n' +
-  '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
-  '        </button>\n' +
-  '        <span class="h3" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>\n' +
-  '        <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">\n' +
-  '            <a class="btn btn-link" ui-sref="{{vm.editSref}}">edit\n' +
-  '                <i class="fa fa-pencil-square-o"></i>\n' +
-  '            </a>\n' +
-  '        </span>\n' +
-  '        <button ng-if="vm.btnShow && (!!vm.btnText && !!vm.btnSref)" class="btn btn-oset-primary pull-right"\n' +
-  '                ui-sref="{{vm.btnSref}}">{{::vm.btnText}}\n' +
-  '        </button>\n' +
-  '\n' +
-  '        <!-- Sub-heading -->\n' +
-  '        <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>\n' +
-  '        <small ng-if="!vm.includeTransclude"><br ng-if="vm.showHeader"/>&nbsp;</small>\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
+  '     <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
   '        <div class="center-block full-width">\n' +
   '            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
   '                 class="img-thumbnail user-profile-picture img-responsive">\n' +
@@ -1898,6 +1866,50 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <i class="fa fa-pencil-square-o"></i>\n' +
   '            </a>\n' +
   '        </div>\n' +
+  '        <div class="icons">\n' +
+  '            <a href="" class="icon"><div class="twitter"></div></a>\n' +
+  '            <a href="" class="icon"><div class="google"></div></a>\n' +
+  '            <a href="" class="icon"><div class="facebook"></div></a>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="pad-vert profile-info {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
+  '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
+  '                ng-click="vm.backBtnFn()">\n' +
+  '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
+  '        </button>\n' +
+  '        <span class="title" data-ng-bind-html="vm.title" data-ng-if="vm.showHeader">&nbsp;</span>\n' +
+  '        <br/>\n' +
+  '        <span class="subtitle" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>\n' +
+  '        <div class="licenses">\n' +
+  '            <b>LICENSES</b>\n' +
+  '            <div ng-repeat="license in vm.driver.licenses" class="license"\n' +
+  '                 ng-init="filtered = (vm.filterEndorsements(license))">\n' +
+  '                <p>\n' +
+  '                    <sapn class="license-icon"></sapn> &nbsp;{{license.state.name}}<span\n' +
+  '                        ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>\n' +
+  '                    Driver License\n' +
+  '                    <br/>\n' +
+  '                    <span class="endorsements" ng-if="!!filtered.length">\n' +
+  '                        <small class="strong">Endorsements:</small>\n' +
+  '                        <br/>\n' +
+  '                        <oset-list-endorsements model="license.endorsements"></oset-list-endorsements>\n' +
+  '                    </span>\n' +
+  '                </p>\n' +
+  '\n' +
+  '            </div>\n' +
+  '            <p ng-show="!vm.driver.licenses || vm.driver.licenses.length <= 0">No License on File</p>\n' +
+  '        </div>\n' +
+  '        <div class="edit-profile-btn" data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">\n' +
+  '            <a class="btn btn-link" ui-sref="{{vm.editSref}}">\n' +
+  '            </a>\n' +
+  '        </div>\n' +
+  '        <button ng-if="vm.btnShow && (!!vm.btnText && !!vm.btnSref)" class="btn btn-oset-primary pull-right"\n' +
+  '                ui-sref="{{vm.btnSref}}">{{::vm.btnText}}\n' +
+  '        </button>\n' +
+  '        <button class="connect-btn">\n' +
+  '            Connect\n' +
+  '        </button>\n' +
   '    </div>\n' +
   '</div>\n' +
   '<!-- os-page-header directive : END -->\n' +
@@ -3868,72 +3880,61 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/drivers/views/templates/driver-profile.client.template.html',
   '<section name="os-driver.directive" class="panel panel-default">\n' +
-  '    <div class="panel-heading">\n' +
-  '        <h4>About Me<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"\n' +
+  '\n' +
+  '    <!--<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"\n' +
   '                       ui-sref="drivers.edit({driverId: vm.driver._id })">edit driver profile\n' +
   '            <i class="fa fa-pencil-square-o"></i>\n' +
-  '        </a></h4>\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <div class="panel-body">\n' +
-  '        <div data-ng-bind-html="vm.driver.about"></div>\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <div class="panel-heading" ng-show="vm.driver.experience.length > 0">\n' +
-  '        <h4>Experience:</h4>\n' +
-  '    </div>\n' +
-  '    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">\n' +
-  '        <oset-experience-list ng-switch-when="true"\n' +
-  '                              list="vm.driver.experience" view-only="true" max-ct="5">\n' +
-  '\n' +
-  '        </oset-experience-list>\n' +
-  '\n' +
-  '        <p class="text-center" ng-switch-default>None Added</p>\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <div class="panel-heading" ng-show="vm.driver.interests.length > 0">\n' +
-  '        <h4>Interests</h4>\n' +
-  '    </div>\n' +
-  '    <div class="panel-body text-center">\n' +
-  '        <oset-categories model="vm.driver.interests" mode="view">\n' +
-  '             <span ng-if="vm.canEdit">You can specify what kind of jobs you are interested in finding by <a\n' +
-  '                     ui-sref="drivers.edit({driverId: vm.driver._id})">editing your driver profile</a>!</span>\n' +
-  '            <span ng-if="!vm.canEdit">{{vm.driver.displayName}} has not yet entered any job type preferences or interests.</span></span>\n' +
-  '        </oset-categories>\n' +
-  '\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <div class="panel-heading">\n' +
-  '        <h4>\n' +
-  '            License\n' +
-  '        </h4>\n' +
-  '    </div>\n' +
-  '    <div class="panel-body">\n' +
-  '\n' +
-  '        <div ng-repeat="license in vm.driver.licenses" class="license"\n' +
-  '             ng-init="filtered = (vm.filterEndorsements(license))">\n' +
-  '            <p>\n' +
-  '                <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}<span\n' +
-  '                    ng-if="license.type"><span ng-if="license.rating"> Class {{license.rating | uppercase }}</span> {{license.type}}</span>\n' +
-  '                Driver License\n' +
-  '                <span class="pull-right" ng-if="!!filtered.length">\n' +
-  '                    <small class="strong">Endorsements:</small>\n' +
-  '\n' +
-  '                    <oset-list-endorsements model="license.endorsements"></oset-list-endorsements>\n' +
-  '                </span>\n' +
-  '            </p>\n' +
-  '\n' +
+  '    </a>-->\n' +
+  '    <div class="info">\n' +
+  '        <div class="info-header">\n' +
+  '            <span class="title" ng-show="vm.driver.experience.length > 0">\n' +
+  '                EXPERIENCE\n' +
+  '            </span>\n' +
   '        </div>\n' +
-  '        <p ng-show="!vm.driver.licenses || vm.driver.licenses.length <= 0">No License on File</p>\n' +
+  '        <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">\n' +
+  '            <oset-experience-list ng-switch-when="true"\n' +
+  '                                  list="vm.driver.experience" view-only="true" max-ct="5">\n' +
+  '\n' +
+  '            </oset-experience-list>\n' +
+  '\n' +
+  '            <p class="text-center" ng-switch-default>None Added</p>\n' +
+  '        </div>\n' +
   '    </div>\n' +
+  '    \n' +
+  '    <div class="info">\n' +
+  '        <div class="info-header">\n' +
+  '            <span class="title">\n' +
+  '                About Me\n' +
+  '            </span>\n' +
+  '        </div>\n' +
+  '        <div class="panel-body">\n' +
+  '            <div class="about" data-ng-bind-html="vm.driver.about"></div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="info">\n' +
+  '        <div class="info-header">\n' +
+  '            <span class="title">\n' +
+  '                Interests\n' +
+  '            </span>\n' +
+  '        </div>\n' +
+  '        <div class="panel-body text-center">\n' +
+  '            <oset-categories model="vm.driver.interests" mode="view">\n' +
+  '                 <span ng-if="vm.canEdit">You can specify what kind of jobs you are interested in finding by <a\n' +
+  '                         ui-sref="drivers.edit({driverId: vm.driver._id})">editing your driver profile</a>!</span>\n' +
+  '                <span ng-if="!vm.canEdit">{{vm.driver.displayName}} has not yet entered any job type preferences or interests.</span></span>\n' +
+  '            </oset-categories>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '    \n' +
   '\n' +
   '    <os-view-schedule data-ng-if="false" model="vm.driver.schedule"></os-view-schedule>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/drivers/views/templates/experience-list.client.template.html',
-  '<section name="experience-list.client.template">\n' +
+  '<section name="experience-list.client.template" class="experience-list">\n' +
   '    <div ng-form="experienceForm" class="row profile-row">\n' +
-  '        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)">\n' +
+  '        <div class="col-sm-12 exp-item-wrapper" ng-switch="!!(vm.models && vm.models.length > 0)">\n' +
   '\n' +
   '            <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"\n' +
   '                                  model-index="$index"\n' +
@@ -3952,7 +3953,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <button type="button" class="btn btn-oset-link" ng-click="(vm.maxCt = vm.maxCt+5);">view more ...\n' +
   '                </button>\n' +
   '            </p>\n' +
-  '\n' +
   '        </div>\n' +
   '    </div>\n' +
   '</section>\n' +
@@ -4061,31 +4061,31 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"\n' +
   '             ng-class="{\'last\':vm.isLast && !vm.canEdit}">\n' +
-  '        <p class="top-header">\n' +
-  '            <strong>\n' +
-  '                {{vm.model.title}}\n' +
-  '            </strong>\n' +
-  '            <small class="pull-right">\n' +
-  '                {{vm.model.location}}\n' +
-  '            </small>\n' +
-  '        </p>\n' +
-  '\n' +
-  '        <p class="sub-header" ng-class="{\'no-mgn-btm\': !vm.canEdit && !vm.model.expanded}">\n' +
-  '            <small>\n' +
-  '                <span ng-show="!vm.canEdit"\n' +
+  '        <div class="top-header row">\n' +
+  '            <div class="col-sm-8">\n' +
+  '                <strong class="top-title">\n' +
+  '                    {{vm.model.title}}\n' +
+  '                </strong>\n' +
+  '                <br/>\n' +
+  '                <span class="location">\n' +
+  '                    {{vm.model.location}}\n' +
+  '                </span>\n' +
+  '            </div>\n' +
+  '            <div class="col-sm-4">\n' +
+  '                <small class="pull-right">\n' +
+  '                    <span class="work-time"\n' +
+  '                          ng-bind="vm.getDateRangeString(vm.model.startDate, vm.model.endDate)">\n' +
+  '                    </span>\n' +
+  '                </small>\n' +
+  '                <br/>\n' +
+  '                <a class="pull-right more-details" ng-show="!vm.canEdit"\n' +
   '                      ng-click="vm.model.expanded = !vm.model.expanded"\n' +
   '                      class="pull-left pointer text-oset">\n' +
-  '                    <i class="fa"\n' +
-  '                       ng-class="{\'fa-caret-right\': !vm.model.expanded, \'fa-caret-down\': !!vm.model.expanded}"></i>\n' +
-  '                    {{ !!vm.model.expanded ? \'hide\' : \'show details...\'}}\n' +
-  '                </span>\n' +
-  '                &nbsp;\n' +
-  '                <span class="text-muted pull-right"\n' +
-  '                      ng-bind="vm.getDateRangeString(vm.model.startDate, vm.model.endDate)">\n' +
-  '\n' +
-  '                </span>\n' +
-  '            </small>\n' +
-  '        </p>\n' +
+  '                    {{ !!vm.model.expanded ? \'hide\' : \'More details\'}}\n' +
+  '                </a>\n' +
+  '            </div>\n' +
+  '            \n' +
+  '        </div>\n' +
   '\n' +
   '        <p class="pnl-body" ng-show="vm.model.expanded || vm.canEdit">{{vm.model.description}}</p>\n' +
   '\n' +
@@ -4116,13 +4116,14 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </span>\n' +
   '            </span>\n' +
   '        </p>\n' +
-  '\n' +
+  '        <div class="circle"></div>\n' +
   '    </section>\n' +
   '    <div class="pull-right" data-ng-show="vm.isLast && !vm.isEditing && vm.canEdit">\n' +
   '        <button type="button" class="btn btn-oset-primary" ng-click="vm.push()" ng-if="!!vm.push">\n' +
   '            <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> add\n' +
   '        </button>\n' +
   '    </div>\n' +
+  '\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/jobs/views/templates/job-list.client.template.html',

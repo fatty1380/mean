@@ -18,7 +18,8 @@
                 editPicSref: '@?',
                 pictureEditFn: '&?',
                 backBtnText: '@?',
-                backBtnFn: '&?'
+                backBtnFn: '&?',
+                driver: '=?'
             },
             transclude: true,
             restrict: 'E',
@@ -48,6 +49,10 @@
                         $log.debug('calling backBtnFn');
                         return vm.backBtnFn();
                     }
+                };
+                
+                vm.filterEndorsements = function(license) {
+                    return _.compact(_.keys(license.endorsements).map(function(item) { return (license.endorsements[item]) ? item : null; })) || [];
                 };
             }],
             controllerAs: 'vm',

@@ -1,16 +1,31 @@
 <section class="container-fluid">
-    <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
-                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
-                    show-edit="vm.canEdit" btn-sref="settings.profile"
-                    picture-url="vm.user.profileImageURL"
-                    edit-pic-sref="settings.picture">
-        Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
-    </os-page-header>
-
     <div class="row profile">
 
         <!-- Main Column and content -->
         <div class="col-md-8">
+            <div class="profile-navigation-wrapper">
+                    <a href=""><div class="nav-item active">PROFILE</div></a>
+                    <a href=""><div class="nav-item">MESSAGES</div></a>
+                    <a href=""><div class="nav-item">INVITE FRIENDS</div></a>
+            </div>
+            <os-page-header title="{{vm.user.displayName}}"
+                            sub-title="{{vm.user.type}}"
+                            show-edit="vm.canEdit" btn-sref="settings.profile"
+                            picture-url="vm.user.profileImageURL"
+                            edit-pic-sref="settings.picture"
+                            driver="vm.driver">
+                Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
+            </os-page-header>
+            <div class="info portfolio">
+                <div class="info-header">
+                    <span class="title">MY PORTFOLIO</span>
+                    <a href="" class="icon"><img src="modules/drivers/img/share.png" title="share" class="share"/></a>
+                </div>
+                <div id="portfolio-carousel" class="carousel" data-ride="carousel">
+                    
+                </div>
+
+            </div>
             <div>
                 <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
 
@@ -49,22 +64,150 @@
         </div>
 
         <!-- Right-hand sidebar and content -->
-        <div class="gutter right col-md-4">
-
-            <os-bg-check-summary user="vm.user"></os-bg-check-summary>
+        <div class="gutter profile-gutter right col-md-4">
+            <div class="search input-group add-on">
+              <input type="text" class="form-control" placeholder="Search" name="srch-term">
+              <div class="icon">
+                  <div class="search-icon"></div>
+              </div>
+            </div>
+            <div class="check-wrapper">
+                <os-bg-check-summary user="vm.user"></os-bg-check-summary>
+            </div>
 
             <div class="panel panel-oset">
-                <div class="panel-heading text-center">
-                    <h3 class="no-mgn">Documents</h3>
-                    <hr/>
+                <div class="map-wrapper">
+                    <img src="modules/drivers/img/map.png">
                 </div>
-                <div class="panel-body list-group">
-                    <a class="list-group-item" ng-repeat="report in vm.driver.reportsData"
-                       ng-click="vm.openReport(report.sku)"
-                       ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
-                        {{report.name || report.sku | titleCase }}
-                        <i class="fa fa-check text-success pull-right"></i>
-                    </a>
+            </div>
+            <div class="panel panel-oset">
+                <div class="news">
+                    <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_1.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_2.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_3.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span>has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_4.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_5.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_6.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -3931,6 +3931,7 @@ img.user-profile-picture {
 .clear-bg {
   background-color: #cccccc;
   background-color: transparent;
+  background-color: #f3f3f3;
 }
 .semi-bg {
   background-color: #cccccc;
@@ -5673,6 +5674,9 @@ pdf > object {
 /** ------------------------------- **
 * profile pg? */
 /*Panel Title Box*/
+.profile {
+  background-color: white;
+}
 .profile .list-group i {
   min-width: 20px;
   margin-right: 5px;
@@ -5684,6 +5688,9 @@ pdf > object {
 .profile .profile-body {
   padding: 20px;
   background: #f7f7f7;
+}
+.profile panel-default {
+  margin-top: 20px;
 }
 .profile .panel-profile,
 .profile .panel-default {
@@ -5779,6 +5786,437 @@ pdf > object {
 .profile .alert-blocks p {
   color: #999;
   margin-bottom: 0;
+}
+.profile .profile-photo div {
+  position: relative;
+  text-align: center;
+}
+.profile .profile-photo div .user-profile-picture {
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+.profile .profile-photo div.icons {
+  padding: 10px;
+  width: 220px;
+}
+@media (max-width: 1200px) {
+  .profile .profile-photo div.icons {
+    width: 200px;
+  }
+}
+@media (max-width: 768px) {
+  .profile .profile-photo div.icons {
+    width: auto;
+  }
+}
+.profile .profile-photo div.icons .icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin: 0 8px;
+  position: relative;
+  opacity: 1;
+}
+.profile .profile-photo div.icons .icon div {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  background-size: 40px 80px;
+  background-repeat: no-repeat;
+  border: 1px solid #c4c4c4;
+}
+.profile .profile-photo div.icons .icon div:hover {
+  border-color: black;
+  background-position-y: -40px;
+}
+.profile .profile-photo div.icons .facebook {
+  background-image: url("/modules/drivers/img/facebook.png");
+}
+.profile .profile-photo div.icons .google {
+  background-image: url("/modules/drivers/img/google_plus.png");
+}
+.profile .profile-photo div.icons .twitter {
+  background-image: url("/modules/drivers/img/twitter.png");
+}
+.profile .profile-photo div a {
+  margin: 0 4px;
+  opacity: 0.5;
+  width: 100%;
+  max-width: 300px;
+  margin-top: -55px;
+}
+.profile .profile-photo div a i {
+  opacity: 0.0;
+}
+.profile .profile-photo div:hover a {
+  opacity: 1;
+  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.profile .profile-photo div:hover a i {
+  display: inline;
+  color: #000066 !important;
+}
+.profile .profile-navigation-wrapper {
+  position: absolute;
+  top: 150px;
+  left: -160px;
+  font-weight: bold;
+}
+.profile .profile-navigation-wrapper a:hover {
+  text-decoration: none;
+}
+.profile .profile-navigation-wrapper .nav-item {
+  line-height: 2;
+  color: #ccc;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 18px;
+  border-bottom: 3px solid #ccc;
+  width: 160px;
+}
+.profile .profile-navigation-wrapper .nav-item.active {
+  color: #21778F;
+  border-color: #21778F;
+}
+.profile .profile-info .title {
+  color: black;
+  font-size: 60px;
+  line-height: 1;
+}
+.profile .profile-info .subtitle {
+  font-size: 20px;
+  color: #BB531D;
+  font-weight: bold;
+  line-height: 1;
+}
+.profile .profile-info .licenses {
+  margin-top: 25px;
+  font-size: 24px;
+}
+.profile .profile-info .licenses .license {
+  font-size: 16px;
+}
+.profile .profile-info .licenses .license .license-icon {
+  width: 24px;
+  height: 22px;
+  background: transparent url("/modules/drivers/img/licenses.png") center no-repeat;
+  float: left;
+}
+.profile .profile-info .licenses .license .endorsements .endorsement {
+  border-radius: 0;
+  background-color: #27DD63;
+  padding: 2px 7px;
+  font-size: 14px;
+}
+.profile .profile-info .connect-btn {
+  border: 1px solid #F6795A;
+  font-size: 16px;
+  padding: 5px 15px;
+  background-color: white;
+  font-weight: 600;
+  float: right;
+}
+.profile .profile-info .edit-profile-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  width: 22px;
+  height: 21px;
+}
+.profile .profile-info .edit-profile-btn a {
+  width: 100%;
+  height: 100%;
+  background: url("/modules/drivers/img/edit.png") center no-repeat;
+}
+.profile .portfolio {
+  min-height: 80px;
+}
+.profile .info {
+  background-color: #F2F2F2;
+  margin-bottom: 15px;
+}
+.profile .info .info-header {
+  position: relative;
+}
+.profile .info .info-header .title {
+  background-color: #ccc;
+  top: 0;
+  position: absolute;
+  padding: 5px 20px;
+  font-size: 22px;
+  color: black;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.profile .info .panel-body {
+  padding: 0 20px 0 40px;
+}
+.profile .info .panel-body .experience-list {
+  border-left: 3px solid #dadada;
+  padding-top: 80px;
+  padding-bottom: 30px;
+}
+.profile .info .panel-body .experience-list .profile-row {
+  margin: 0;
+}
+.profile .info .panel-body .experience-list .profile-row .experience {
+  padding-left: 0;
+  border: none;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view {
+  position: relative;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .top-header > div {
+  line-height: 1.2;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .top-header .col-sm-4 {
+  padding-top: 20px;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .top-header .top-title {
+  text-transform: uppercase;
+  color: black;
+  font-size: 24px;
+  font-weight: bold;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .top-header .work-time {
+  font-weight: bold;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .top-header .location {
+  text-transform: uppercase;
+  font-size: 16px;
+  color: #E6492F;
+  font-weight: bold;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .top-header .more-details {
+  color: #21778F;
+  font-weight: bold;
+}
+@media (max-width: 991px) {
+  .profile .info .panel-body .experience-list .profile-row .experience.view .top-header .pull-right {
+    float: none !important;
+    padding-top: 5px;
+  }
+  .profile .info .panel-body .experience-list .profile-row .experience.view .top-header .col-sm-4 {
+    padding-top: 5px;
+  }
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .pnl-body {
+  margin-top: 10px;
+  text-align: justify;
+}
+.profile .info .panel-body .experience-list .profile-row .experience.view .circle {
+  width: 10px;
+  height: 10px;
+  border: 3px solid #E75D46;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+  border-radius: 100%;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  left: -22px;
+  top: 40px;
+  position: absolute;
+}
+.profile .info .panel-body .about {
+  padding: 60px 0 20px 0;
+  text-align: justify;
+}
+.profile .info .panel-body .category-directive {
+  padding: 60px 0 20px 0;
+}
+.profile .info .icon {
+  position: absolute;
+  width: 24px;
+  right: 20px;
+  top: 10px;
+  cursor: pointer;
+}
+.profile .profile-gutter {
+  padding-right: 0;
+  padding-top: 10px;
+  background-color: #f3f3f3;
+}
+.profile .profile-gutter .search {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+  padding-right: 40px;
+}
+.profile .profile-gutter .search input {
+  background-color: transparent;
+  border: none;
+  height: 40px;
+  font-size: 16px;
+}
+.profile .profile-gutter .search .icon {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.profile .profile-gutter .search .icon .search-icon {
+  background: transparent url("/modules/drivers/img/search.png") center no-repeat;
+  width: 100%;
+  height: 100%;
+}
+.profile .profile-gutter .search .icon .search-icon:hover {
+  background-color: #e3e3e3;
+  cursor: pointer;
+}
+.profile .profile-gutter .check-wrapper {
+  padding: 10px;
+  background-color: white;
+  margin-bottom: 10px;
+}
+.profile .profile-gutter .check-wrapper .pricing .item {
+  margin-bottom: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: none;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .heading {
+  position: relative;
+  color: white;
+  background-color: #E6492F;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  padding: 0 0 20px 0;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .heading h3 {
+  text-transform: uppercase;
+  margin-top: 20px;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .heading .head-block {
+  background: #F7735B ;
+  width: 100%;
+  height: 60px;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .heading .item-content {
+  margin-top: -40px;
+  font-size: 60px;
+  font-weight: bold;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .feature-list {
+  text-align: left;
+  padding-top: 10px;
+  margin-bottom: 0;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .feature-list img {
+  margin-right: 20px;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .feature-list li {
+  border: none;
+  font-size: 14px;
+  padding-top: 0px;
+  padding-bottom: 0;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .feature-list li.get-reports {
+  padding-top: 10px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.profile .profile-gutter .check-wrapper .pricing .item .item-inner .feature-list li.get-reports a {
+  border: none;
+  color: white;
+  background-color: #E6492F;
+  border-radius: 0;
+  padding: 17px 0;
+  text-transform: uppercase;
+}
+@media (max-width: 991px) {
+  .profile .profile-gutter .check-wrapper .pricing .item .item-inner .feature-list li {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+}
+.profile .profile-gutter .panel.panel-oset {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.profile .profile-gutter .panel.panel-oset .map-wrapper {
+  width: 100%;
+  height: 100%;
+}
+.profile .profile-gutter .panel.panel-oset .map-wrapper img {
+  width: 100%;
+}
+.profile .profile-gutter .panel.panel-oset .news .news-item {
+  margin-bottom: 10px;
+}
+.profile .profile-gutter .panel.panel-oset .news .news-item .row .col-xs-9 {
+  padding-left: 0;
+}
+.profile .profile-gutter .panel.panel-oset .news .news-item .row .img img {
+  max-width: 54px;
+}
+.profile .profile-gutter .panel.panel-oset .news .news-item .row .news-info {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+.profile .profile-gutter .panel.panel-oset .news .news-item .row .news-info .news-head .name {
+  color: #E6492F;
+  font-weight: bold;
+}
+.profile .profile-gutter .panel.panel-oset .news .news-item .row .news-info .news-desc {
+  margin-top: 5px;
+}
+@media (max-width: 991px) {
+  .profile .profile-gutter .panel.panel-oset .news .news-item .row .img img {
+    width: 100px;
+    max-width: 100px;
+  }
+  .profile .profile-gutter .panel.panel-oset .news .news-item .row .news-head {
+    font-size: 24px;
+  }
+  .profile .profile-gutter .panel.panel-oset .news .news-item .row .news-info .news-desc {
+    font-size: 20px;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 768px) {
+  .profile .profile-gutter .panel.panel-oset .news .news-item .row .img img {
+    width: 70px;
+    max-width: 70px;
+  }
+  .profile .profile-gutter .panel.panel-oset .news .news-item .row .news-head {
+    font-size: 20px;
+  }
+  .profile .profile-gutter .panel.panel-oset .news .news-item .row .news-info .news-desc {
+    font-size: 16px;
+    margin-top: 5px;
+  }
+}
+@media (max-width: 991px) {
+  .profile .profile-gutter {
+    padding-left: 0;
+  }
 }
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
