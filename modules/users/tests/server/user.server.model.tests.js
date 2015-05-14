@@ -3,14 +3,16 @@
 /**
  * Module dependencies.
  */
-var should = require('should'),
-mongoose   = require('mongoose'),
-User       = mongoose.model('User'),
-SeedUser       = mongoose.model('SeedUser'),
-Driver     = mongoose.model('Driver'),
-Company    = mongoose.model('Company'),
-_          = require('lodash'),
-Q          = require('q');
+var should   = require('should'),
+    mongoose = require('mongoose'),
+    User     = mongoose.model('User'),
+    SeedUser = mongoose.model('SeedUser'),
+    Driver   = mongoose.model('Driver'),
+    Company  = mongoose.model('Company'),
+    path     = require('path'),
+    stubs    = require(path.resolve('./config/lib/test.stubs')),
+    _        = require('lodash'),
+    Q        = require('q');
 
 /**
  * Globals
@@ -23,15 +25,7 @@ var user;
 describe('User Model Unit Tests:', function () {
 
     beforeEach(function (done) {
-        user = new User({
-            firstName: 'User',
-            lastName: 'One',
-            email: 'user1@test.com',
-            username: 'username',
-            password: 'password',
-            provider: 'local',
-            type: 'driver'
-        });
+        user = new User(stubs.user);
 
         done();
     });
@@ -160,21 +154,21 @@ describe('User Model Unit Tests:', function () {
             user.save()
                 .then(function (user) {
                     company = new Company({owner: user, name: 'My Super Company, llc.'});
-                    driver = new Driver({user: user});
+                    driver  = new Driver({user: user});
 
                     return Q.all({company: company.save(), driver: driver.save()});
-                },done)
+                }, done)
                 .then(function (result) {
 
                     company.owner.equals(user).should.be.true;
                     driver.user.equals(user).should.be.true;
 
                     user.company = company;
-                    user.driver = driver;
+                    user.driver  = driver;
 
                     return user.save();
 
-                },done)
+                }, done)
                 .then(function (user) {
                     should.exist(user);
 
@@ -187,9 +181,9 @@ describe('User Model Unit Tests:', function () {
         it('should be able to save an address to this user', function (done) {
             var address = {
                 streetAddresses: ['123 Fake Street'],
-                city: 'Anywhere',
-                state: 'MN',
-                zipCode: '90210'
+                city           : 'Anywhere',
+                state          : 'MN',
+                zipCode        : '90210'
             };
 
             user.addresses.push(address);
@@ -225,10 +219,10 @@ describe('User Model Unit Tests:', function () {
     describe('Method Update(?)', function () {
         it('should allow update to an existing user without overwriting the existing password & salt', function (done) {
             user.save(function (err) {
-                var pw = user.password;
+                var pw   = user.password;
                 var salt = user.salt;
 
-                user.phone = '123-456-7389';
+                user.phone           = '123-456-7389';
                 user.profileImageURL = 'profile.png';
 
                 user.save(function (err, dbUser) {
@@ -250,19 +244,19 @@ describe('User Model Unit Tests:', function () {
         it('should keep any company records where the user is NOT the only associated user');
     });
 
-    describe('Special functionality for "SEED" users', function() {
+    describe('Special functionality for "SEED" users', function () {
         var seed;
-        beforeEach(function(done) {
+        beforeEach(function (done) {
             seed = new SeedUser({
                 firstName: 'Signup',
-                lastName: 'User',
-                email: 'signuponly@seed.com'
+                lastName : 'User',
+                email    : 'signuponly@seed.com'
             });
 
             done();
         });
 
-        it('should allow a minimal signup to be allowed by the db', function(done) {
+        it('should allow a minimal signup to be allowed by the db', function (done) {
             seed.save(function (err) {
                 if (!!err) {
                     console.log('[ERROR] Saving user: ', err);
@@ -273,7 +267,7 @@ describe('User Model Unit Tests:', function () {
             });
         });
 
-        afterEach(function(done) {
+        afterEach(function (done) {
 
             SeedUser.remove().exec();
 

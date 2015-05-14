@@ -10,6 +10,7 @@ var should = require('should'),
     request = require('supertest-as-promised')(Q.Promise),
     path = require('path'),
     express = require(path.resolve('./config/lib/express')),
+    stubs = require(path.resolve('./config/lib/test.stubs')),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'bgchecks',
         file: 'bgchecks.server.routes.test'

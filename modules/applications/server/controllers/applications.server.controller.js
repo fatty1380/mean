@@ -3,37 +3,38 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-Q            = require('q'),
-path         = require('path'),
-Application  = mongoose.model('Application'),
-Release      = mongoose.model('Release'),
-Message      = mongoose.model('Message'),
-User         = mongoose.model('User'),
-Job          = mongoose.model('Job'),
-Connection   = mongoose.model('Connection'),
-log          = require(path.resolve('./config/lib/logger')).child({
-    module: 'applications',
-    file: 'Applications.Controller'
-}),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
-releaseDocs  = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller')),
-moment       = require('moment'),
-_            = require('lodash');
+var mongoose     = require('mongoose'),
+    Q            = require('q'),
+    path         = require('path'),
+    Application  = mongoose.model('Application'),
+    Release      = mongoose.model('Release'),
+    Message      = mongoose.model('Message'),
+    User         = mongoose.model('User'),
+    Job          = mongoose.model('Job'),
+    Connection   = mongoose.model('Connection'),
+    log          = require(path.resolve('./config/lib/logger')).child({
+        module: 'applications',
+        file  : 'Applications.Controller'
+    }),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+    releaseDocs  = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller')),
+    moment       = require('moment'),
+    _            = require('lodash');
 
 exports.create = create;
-exports.read = read;
+exports.read   = read;
 exports.update = update;
+exports.patch  = patchUpdate;
 exports.delete = remove;
 
 exports.executeQuery = executeQuery;
 
-exports.applicationByID = applicationByID;
-exports.queryByUserID = queryByUserID;
-exports.loadMine = loadMine;
-exports.getByJobId = getByJobId;
-exports.queryByJobID = queryByJobId;
+exports.applicationByID  = applicationByID;
+exports.queryByUserID    = queryByUserID;
+exports.loadMine         = loadMine;
+exports.getByJobId       = getByJobId;
+exports.queryByJobID     = queryByJobId;
 exports.queryByCompanyID = queryByCompanyId;
 
 /**
@@ -43,7 +44,11 @@ exports.queryByCompanyID = queryByCompanyId;
 function executeQuery(req, res) {
 
     var query = req.query || {};
-    var sort = req.sort || '-created';
+    var sort  = req.sort || '-created';
+
+    if (!req.user.isAdmin && req.user.isDriver) {
+        query.user = req.user.id;
+    }
 
     req.log.debug({query: query}, 'Querying DB For Applications');
 
@@ -65,8 +70,7 @@ function executeQuery(req, res) {
             req.applications = applications || [];
             req.log.debug('[ApplicationsCtrl.executeQuery] Found %d applications for query %j (%s)', req.applications.length, query, req.url);
 
-            //req.log.debug('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
-            return res.json(req.applications);
+            res.json(req.applications);
         });
 }
 
@@ -90,36 +94,34 @@ function create(req, res) {
 
     var jobId = req.job && req.job.id || req.body.job && req.body.job.id || req.body.jobId || req.query.jobId;
     req.log.trace({
-        func: 'create',
-        job: req.job,
+        func   : 'create',
+        job    : req.job,
         bodyJob: req.body.job,
-        bodyId: req.body.jobId,
-        query: req.query
+        bodyId : req.body.jobId,
+        query  : req.query
     }, 'Creating application for job %s', jobId);
 
     if (_.isEmpty(jobId)) {
         req.log.error({
-            func: 'create',
-            job: req.job,
+            func   : 'create',
+            job    : req.job,
             bodyJob: req.body.job,
-            bodyId: req.body.jobId,
-            query: req.query
+            bodyId : req.body.jobId,
+            query  : req.query
         }, 'Cannot create an application without a job to attach it to', {
-            job: req.job,
+            job    : req.job,
             bodyJob: req.body.job,
-            bodyId: req.body.jobId,
-            query: req.query
+            bodyId : req.body.jobId,
+            query  : req.query
         });
         return res.status(400).send({
             message: 'Must specify which job this application is for'
         });
     }
 
-    //var releases = req.body.releases;
-    //delete req.body.releases;
     var application = new Application(req.body);
 
-    (_.isEmpty(req.job) ? Job.findById(jobId) : Q.when(req.job))
+    return (_.isEmpty(req.job) ? Job.findById(jobId) : Q.when(req.job))
         .then(function (job) {
             req.log.trace({func: 'create.findJob'}, 'Found Job: %j', job);
             req.job = job;
@@ -131,33 +133,33 @@ function create(req, res) {
             var processedDocs = processDocuments(req, application);
 
             return Q.all(processedDocs);
-        }).then(
-        function (results) {
+        })
+        .then(function (results) {
+
             // TODO: Check if there is a difference
             application.releases = results;
 
             req.log.debug({
                 releases: application.releases,
-                func: 'create.docsSaved'
+                func    : 'create.docsSaved'
             }, 'Saving application with releases');
 
-            application.user = req.user;
-            application.job = req.job;
+            application.user    = req.user;
+            application.job     = req.job;
             application.company = (!!req.job) ? req.job.company : null;
-
-            return application;
-        })
-        .then(function (application) {
 
             req.log.info({func: 'create.docsSaved'}, 'Creating new application', {
                 user: application.user.id,
-                job: application.job.id
+                job : application.job.id
             });
+
             req.log.trace({func: 'create.docsSaved'}, 'Creating new application', {application: application});
 
             return application.save();
         })
         .then(function (application) {
+            req.application = application;
+
             req.log.info({func: 'create.postSave'},
                 'New Application save successfully! Now saving to the job',
                 {application: application.id, user: application.user.id, job: application.job.id});
@@ -165,23 +167,34 @@ function create(req, res) {
 
             req.job.applications.push(application);
             return req.job.save();
+        },
+        function (err) {
+            req.log.error({func: 'create.applicationSave', error: err}, 'error saving job application');
+            throw err;
         })
         .then(function (job) {
-            req.log.info({func: 'create.postJobSave', applications: job.applications}, 'saved job application to job');
+            req.log.info({
+                func        : 'create.postJobSave',
+                applications: job.applications
+            }, 'saved job application to job');
+            return job;
         },
         function (err) {
             req.log.error({func: 'create.postJobSave', error: err}, 'error saving job application to job');
+            throw err;
         })
         .then(function () {
 
-            if (!application.isDraft) {
+            if (!req.application.isDraft) {
                 req.log.debug({func: 'create.postJobSave'}, 'Sending email for New Application');
-                sendNewApplicantEmail(req.user, req.job, application);
+                sendNewApplicantEmail(req.user, req.job, req.application);
             }
 
-            res.json(application);
+            req.log.debug({func: 'create.postJobSave'}, 'Successfully saved new application');
+
+            return res.status(201).json(req.application.toObject());
         })
-        .catch(function (err) {
+        .then(null, function (err) {
             req.log.error({func: 'create.postSave'}, 'Error saving application: %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
@@ -192,15 +205,15 @@ function create(req, res) {
 function sendNewApplicantEmail(user, job, application) {
     var options = [
         {
-            name: 'APPLICANT',
+            name   : 'APPLICANT',
             content: user.firstName + ' ' + user.lastName.substring(0, 1).toUpperCase()
         },
         {
-            name: 'COVER_LTR',
+            name   : 'COVER_LTR',
             content: application.introduction
         },
         {
-            name: 'LINK_URL',
+            name   : 'LINK_URL',
             content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
         }
     ];
@@ -228,7 +241,10 @@ function read(req, res) {
  * Update a Application
  */
 function update(req, res) {
-    req.log.trace('update', 'Updating existing application from body', {application: req.application, body: req.body});
+    req.log.trace('update', 'Updating existing application from body', {
+        application: req.application,
+        body       : req.body
+    });
     req.log.info('update', 'Updating existing application', {url: req.url});
 
     var application = req.application;
@@ -301,6 +317,12 @@ function update(req, res) {
         });
 }
 
+function patchUpdate(req, res) {
+    req.log.trace({func: 'patchUpdate'}, 'Patching existing application');
+
+
+}
+
 /**
  * Delete an Application
  */
@@ -318,6 +340,7 @@ function remove(req, res) {
     });
 }
 
+// deprecate ?
 function queryByJobId(req, res) {
     var jobId = req.params.jobId;
 
@@ -332,19 +355,15 @@ function queryByJobId(req, res) {
         job: jobId
     };
 
-    var user = req.user;
-    var isAdmin = !!user && ((typeof user.isAdmin !== 'undefined') ? user.isAdmin : user.roles.indexOf('admin') !== -1);
-
-    if (!isAdmin && !!user && user.type.toLowerCase() === 'driver') {
-        query.user = user.id;
-    }
-
     req.query = query;
+
+    req.log.debug({query: req.query}, 'Executing Query with params');
 
     executeQuery(req, res);
 
 }
 
+// depreacate ?
 function queryByCompanyId(req, res) {
     var companyId = req.company && req.company._id || req.params.companyId;
     req.log.debug('[ApplicationsController] queryByCompanyID(%s)', companyId);
@@ -399,7 +418,7 @@ function getByJobId(req, res, next) {
     req.log.debug('[ApplicationsController.byJob] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
 
     var query = {
-        job: req.params.jobId,
+        job : req.params.jobId,
         user: req.params.userId
     };
 
@@ -536,7 +555,7 @@ exports.persistMessage = function (applicationId, message) {
     debugger;
     var msg = new Message({
         sender: message.sender,
-        text: message.text,
+        text  : message.text,
         status: message.status || 'sent'
     });
 
@@ -582,11 +601,11 @@ exports.persistMessage = function (applicationId, message) {
 
                         var options = [
                             {
-                                name: 'JOB_TITLE',
+                                name   : 'JOB_TITLE',
                                 content: populated.job.name
                             },
                             {
-                                name: 'LINK_URL',
+                                name   : 'LINK_URL',
                                 content: 'https://joinoutset.com/applications/' + populated.id
                             }
                         ];
@@ -611,8 +630,8 @@ exports.createConnection = function (req, res) {
     if (req.application) {
         var connection, cnxn = {
             company: req.application.company,
-            user: req.application.user,
-            status: 'full'
+            user   : req.application.user,
+            status : 'full'
         };
 
         if (req.application.connection) {
@@ -636,7 +655,7 @@ exports.createConnection = function (req, res) {
             } else {
                 if (!req.application.connection) {
                     req.application.connection = connection;
-                    req.application.status = 'connected';
+                    req.application.status     = 'connected';
 
                     req.application.save(function (err, newApp) {
                         if (err) {
@@ -649,15 +668,15 @@ exports.createConnection = function (req, res) {
 
                     var options = [
                         {
-                            name: 'COMPANY_NAME',
+                            name   : 'COMPANY_NAME',
                             content: req.application.company.name
                         },
                         {
-                            name: 'JOB_TITLE',
+                            name   : 'JOB_TITLE',
                             content: req.application.job.name
                         },
                         {
-                            name: 'LINK_URL',
+                            name   : 'LINK_URL',
                             content: 'https://joinoutset.com/applications/' + req.application.id
                         }
                     ];
@@ -680,10 +699,10 @@ var questionList = {
     'default': [
         {
             'description': 'Cover Letter',
-            'name': '',
-            'length': '',
-            'type': 'text',
-            'required': true
+            'name'       : '',
+            'length'     : '',
+            'type'       : 'text',
+            'required'   : true
         }
     ]
 };

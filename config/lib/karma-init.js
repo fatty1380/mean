@@ -3,11 +3,19 @@
 
 var Raygun;
 
-before(function() {
-    console.log('------------- Initializing Karma Global Variables ------------')
-    Raygun = {
-        init: function() { return true },
-        send: function() { return true },
-        setUser: function() { return true }
-    };
-})
+describe('Karma Globals', function () {
+    beforeEach(function () {
+        Raygun = {
+            init: function () {
+                return true
+            },
+            send: function () {
+                return true
+            },
+            setUser: function () {
+                return true
+            }
+        };
+    });
+
+});

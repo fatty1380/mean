@@ -16,6 +16,7 @@ module.exports = function (app) {
     app.route('/api/applications/:applicationId')
         .get(applications.read)
         .put(users.requiresLogin, applications.hasAuthorization, applications.update)
+        .patch(users.requiresLogin, applications.hasAuthorization, applications.patch)
         .delete(users.requiresLogin, applications.hasAuthorization, applications.delete);
 
     app.route('/api/applications/:applicationId/connect')
@@ -40,3 +41,24 @@ module.exports = function (app) {
     // Finish by binding the Application middleware
     app.param('applicationId', applications.applicationByID);
 };
+
+var coreRoutes = {
+
+    // LISTING (GET)
+    // All Applicants - only available to admins
+    // All applicants for a job
+    // All applicants to a company
+
+    // GET (GET)
+    // Specific Applicant by ID
+    // Specific Applicant By UserId
+
+    // CREATE (POST)
+
+    // UPDATE (PUT)
+    // Specific Applicant by ID
+
+    // SET (PATCH)
+    // Application Status
+
+}
