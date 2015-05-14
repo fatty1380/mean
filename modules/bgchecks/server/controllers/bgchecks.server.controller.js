@@ -521,63 +521,48 @@ function GetReportApplicant(req, res, next) {
 function GetRemoteApplicantData(req, res, next) {
     if (!req.applicant && !req.remoteApplicantId) {
         var message = 'Cannot find applicant without access to existing remoteApplicantId';
-        console.log('[GetRemoteApplicantData] %s', message);
+        log.warn({func: 'GetRemoteApplicantData'}, message);
         return next();
     }
 
     var id = req.remoteApplicantId || req.applicant && req.applicant.remoteId;
 
     if (req.remoteApplicantId) {
-        console.log('Using req.remoteApplicantId remoteId source');
+        log.debug({func: 'GetRemoteApplicantData'}, 'Using req.remoteApplicantId remoteId source');
     } else if (id) {
-        console.log('Using req.applicant for remoteId source');
+        log.debug({func: 'GetRemoteApplicantData'}, 'Using req.applicant for remoteId source');
     } else if (!id) {
-        console.log('[GetRemoteApplicantData] Unable to search for applicant from request data');
+        log.warn({func: 'GetRemoteApplicantData'}, 'Unable to search for applicant from request data');
         req.remoteApplicant = null;
         return next();
     }
 
-    everifile.GetSession().then(
+    return everifile.GetSession().then(
         function (session) {
             everifile.GetApplicant(session, id).then(
                 function (remoteApplicant) {
 
-                    console.log('[GetRemoteApplicantData] Got remoteApplicant info: %j', remoteApplicant);
+                    log.debug({func: 'GetRemoteApplicantData'}, 'Got remoteApplicant info: %j', remoteApplicant);
                     req.remoteApplicant = remoteApplicant;
                     next();
                 }
             ).catch(function (error) {
-                    console.log('[GetRemoteApplicantData] failed due to error: %j', error);
-                    next(error);
+                    log.debug({func: 'GetRemoteApplicantData'}, 'failed due to error: %j', error);
+                    if(error.status === 401) {
+                        log.warn({func: 'GetRemoteApplicantData'}, 'Value for remote applicant is invalid');
+
+                        req.remoteApplicant = null;
+
+                        next();
+                    } else {
+                        next(error);
+                    }
                 });
         }).catch(function (error) {
-            console.log('[GetRemoteApplicantData] Unable to get remote session: %j', error);
+            log.error({func: 'GetRemoteApplicantData', error: error}, 'Unable to get remote session: %j', error);
             next(error);
         });
 }
-
-///**
-// * @alias applicant.read
-// *
-// * Reads the remoteApplicant from the response, combines it with the applicant, and returns
-// * a combined (extended) version of the two;
-// */
-//function ReadReportApplicant(req, res) {
-//
-//    if (!req.applicant && !req.remoteApplicant) {
-//        return res.status(404).send({
-//            message: 'No local or remote applicant found'
-//        });
-//    }
-//
-//    log.debug({func: 'ReportApplicant.read'}, 'Combining values from req.applicant[%s] and req.remoteApplicant[%s]', !!req.remoteApplicant ? 'X' : ' ', !!req.applicant ? 'X' : ' ');
-//
-//    var retval = _.extend(req.remoteApplicant || {}, (req.applicant || {}));
-//
-//    log.debug({func: 'ReportApplicant.read', applicant: retval}, 'Returning Combined Applicant');
-//
-//    res.json(retval);
-//}
 
 /**
  * @alias applicant.read
@@ -592,7 +577,8 @@ function ReadReportApplicant(req, res) {
         });
     }
 
-    log.debug({func: 'ReportApplicant.read', applicant: req.applicant}, 'Returning Applicant');
+    log.trace({func: 'ReportApplicant.read', applicant: req.applicant}, 'Returning Applicant');
+    log.debug({func: 'ReportApplicant.read', applicant: req.applicant.id}, 'Returning Applicant ID');
 
     res.json(req.applicant);
 }

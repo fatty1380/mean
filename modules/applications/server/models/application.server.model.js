@@ -96,6 +96,19 @@ var ApplicationSchema = new Schema({
     /* Virtual Members - END */
 }, {'toJSON': {virtuals: true}});
 
+/**
+ * New flow for an applicant:
+ *  Draft ------> Submitted ------> Withdrawn
+ *                   |
+ *                   \ ----------> Hired
+ *
+ * For a Company:
+ *  New -----> Reviewed -----> Rejected
+ *              |
+ *              \------------> Hired
+ *
+ */
+
 
 ApplicationSchema.virtual('isDraft')
     .get(function () {

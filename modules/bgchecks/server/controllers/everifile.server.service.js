@@ -4,21 +4,21 @@
  * Module dependencies.
  */
 var
-_                  = require('lodash'),
-mongoose           = require('mongoose'),
-Bgcheck            = mongoose.model('BackgroundReport'),
-ReportType         = mongoose.model('ReportType'),
-ReportApplicant    = mongoose.model('ReportApplicant'),
-unirest            = require('unirest'),
-Q                  = require('q'),
-moment             = require('moment'),
-contentDisposition = require('content-disposition'),
-path               = require('path'),
-config             = require(path.resolve('./config/config')),
-constants          = require(path.resolve('./modules/core/server/models/outset.constants')),
-    log = require(path.resolve('./config/lib/logger')).child({
+    _                  = require('lodash'),
+    mongoose           = require('mongoose'),
+    Bgcheck            = mongoose.model('BackgroundReport'),
+    ReportType         = mongoose.model('ReportType'),
+    ReportApplicant    = mongoose.model('ReportApplicant'),
+    unirest            = require('unirest'),
+    Q                  = require('q'),
+    moment             = require('moment'),
+    contentDisposition = require('content-disposition'),
+    path               = require('path'),
+    config             = require(path.resolve('./config/config')),
+    constants          = require(path.resolve('./modules/core/server/models/outset.constants')),
+    log                = require(path.resolve('./config/lib/logger')).child({
         module: 'bgchecks',
-        file: 'everifile.service'
+        file  : 'bgchecks.server.controller'
     });
 
 
@@ -33,23 +33,23 @@ constants          = require(path.resolve('./modules/core/server/models/outset.c
 
 /** SECTION: Public, Bound Members */
 
-exports.GetSession = GetSession;
-exports.SetSKUFilter = SetSKUFilter;
+exports.GetSession               = GetSession;
+exports.SetSKUFilter             = SetSKUFilter;
 exports.GetReportTypeDefinitions = GetReportTypeDefinitions;
 
-exports.GetAllApplicants = GetAllApplicants;
-exports.GetApplicant = GetApplicant;
-exports.CreateApplicant = UpsertApplicant;
+exports.GetAllApplicants   = GetAllApplicants;
+exports.GetApplicant       = GetApplicant;
+exports.CreateApplicant    = UpsertApplicant;
 exports.SearchForApplicant = searchForApplicant;
 
-exports.RunReport = RunReport;
-exports.GetReportStatus = GetReportStatus;
+exports.RunReport                  = RunReport;
+exports.GetReportStatus            = GetReportStatus;
 exports.GetReportStatusByApplicant = GetReportStatusByApplicant;
-exports.GetPdfReport = function () {
+exports.GetPdfReport               = function () {
     throw new Error('Not Implemented');
 };
-exports.GetSummaryReportPDF = GetSummaryReportPDF;
-exports.GetRawReport = GetRawReport;
+exports.GetSummaryReportPDF        = GetSummaryReportPDF;
+exports.GetRawReport               = GetRawReport;
 
 
 /**
@@ -57,12 +57,12 @@ exports.GetRawReport = GetRawReport;
  * TODO: Move to config;
  */
 
-var reportPackages = constants.reportPackages;
-var enabledSKUs = constants.reportPackages.fieldSkus;
+var reportPackages    = constants.reportPackages;
+var enabledSKUs       = constants.reportPackages.fieldSkus;
 var fieldTranslations = {'PKG_PREMIUM': ['NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER']};
 
 var server = {
-    baseUrl: 'https://renovo-api-test.everifile.com/renovo',
+    baseUrl : 'https://renovo-api-test.everifile.com/renovo',
     username: 'api@dswheels.com',
     password: 'Test#123'
 };
@@ -70,10 +70,10 @@ var server = {
 server = _.extend(server, config.services.everifile);
 
 var Cookie = {
-    jar: null, // CookieJar
-    created: null, // moment
+    jar         : null, // CookieJar
+    created     : null, // moment
     lastAccessed: null, // moment
-    maxAge: null, // long - milliseconds
+    maxAge      : null, // long - milliseconds
     maxKeepalive: 20 * 60 * 1000, // long - milliseconds
 
     isValid: function () {
@@ -142,7 +142,7 @@ function GetSession() {
                 }
 
                 log.debug('[GetSession] Success: %j', newJar);
-                Cookie.jar = newJar;
+                Cookie.jar     = newJar;
                 Cookie.created = Cookie.lastAccessed = moment();
 
                 return deferredGetSession.resolve(Cookie);
@@ -200,7 +200,7 @@ function GetReportTypeDefinitions(cookie, filter, enable) {
                 .then(function (reports) {
                     return defer.resolve(reports);
                 }, function (error) {
-                    console.error('Unable to get updated report fields from the server', error);
+                    log.error('Unable to get updated report fields from the server', error);
                     log.debug('Returning updated report types without ', error);
                     return defer.resolve(reportTypes);
                 });
@@ -360,8 +360,9 @@ function GetApplicant(cookie, id, noSanitize) {
         .jar(cookie.jar)
         .end(function (response) {
             if (response.error) {
-                console.error('[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body);
-                return deferred.reject(response.body.reason);
+                log.error({func: 'GetApplicant', error: response.error},
+                    '[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body);
+                return deferred.reject({status: response.error.status, message: response.body.reason});
             }
 
             log.debug('[GetApplicant] Got response Body for: %j', response.body.firstName + ' ' + response.body.lastName);
@@ -384,15 +385,15 @@ function UpsertApplicant(cookie, applicantData) {
     var method, trailer;
 
     if (applicantData.applicantId) {
-        method = 'PUT';
+        method  = 'PUT';
         trailer = '/' + applicantData.applicantId;
     } else {
-        method = 'POST';
+        method  = 'POST';
         trailer = '';
     }
 
     var requestBody = applicantData;
-    var endpoint = server.baseUrl + '/rest/applicant' + trailer;
+    var endpoint    = server.baseUrl + '/rest/applicant' + trailer;
 
     log.debug('%s %s : %j', method, endpoint, requestBody);
 
@@ -438,16 +439,16 @@ function searchForApplicant(cookie, applicant) {
     log.debug('[searchForApplicant] Searching for existing applicant from info');
 
     if (!applicant.governmentId) {
-        console.error('Will not search for applicant without govId');
+        log.error('Will not search for applicant without govId');
         return Q.reject('Will Not search for applicant without govId');
     }
 
     var deferred = Q.defer();
 
-    var query = {
-        'firstName': applicant.firstName,
-        'lastName': applicant.lastName,
-        'birthDate': applicant.birthDate,
+    var query  = {
+        'firstName'   : applicant.firstName,
+        'lastName'    : applicant.lastName,
+        'birthDate'   : applicant.birthDate,
         'governmentId': applicant.governmentId
     };
     var method = 'GET';
@@ -470,10 +471,10 @@ function searchForApplicant(cookie, applicant) {
 
                 deferred.resolve(response.body.applicants[0]);
             } else if (response.body.applicants) {
-                console.error('[searchForApplicant] Found a %d matches - cannot decide on one', response.body.applicants.length);
+                log.error('[searchForApplicant] Found a %d matches - cannot decide on one', response.body.applicants.length);
                 deferred.reject('[searchForApplicant] could not decide on a single result from %d matches', response.body.applicants.length);
             } else {
-                console.error('[searchForApplicant] Unkown problem: %j', response.body);
+                log.error('[searchForApplicant] Unkown problem: %j', response.body);
                 deferred.reject('Unknown issue with search: ' + response.body);
             }
         });
@@ -488,7 +489,7 @@ function searchForApplicant(cookie, applicant) {
 function RunReport(cookie, remoteSku, remoteApplicantId) {
 
     var reportResponseData = {
-        reportSku: remoteSku,
+        reportSku  : remoteSku,
         applicantId: remoteApplicantId
     };
     log.debug('[RunReport] Executing with parameters: %j', reportResponseData);
@@ -507,36 +508,36 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
             }
 
             if (response.status === 204) {
-                console.error('Bastards didn\'t give us any info! - 204:NO CONTENT');
+                log.error('Bastards didn\'t give us any info! - 204:NO CONTENT');
 
                 return deferred.resolve(reportResponseData);
             }
 
-            var resultId = parseInt(reportResponseData.applicantId);
+            var resultId   = parseInt(reportResponseData.applicantId);
             var inherantId = parseInt(response.body.applicant.id);
 
             if (resultId !== inherantId) {
                 var message = 'Mismatched Applicants : Response report is for different applicant than request!';
-                console.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
+                log.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
                 return deferred.reject(new Error(message));
             }
 
             var sampleResponse = {
-                'id': 4,
-                'applicant': {'id': 14},
-                'report': {'sku': 'G_EDUVRF'},
+                'id'               : 4,
+                'applicant'        : {'id': 14},
+                'report'           : {'sku': 'G_EDUVRF'},
                 'reportCheckStatus': {
-                    'timestamp': '2014-12-12',
-                    'status': 'INVOKED',
+                    'timestamp'   : '2014-12-12',
+                    'status'      : 'INVOKED',
                     'requiredData': []
                 },
-                'startDate': 1360959827087,
-                'completedDate': null,
-                'resource_key': 'lastName',
-                'name': 'lastName',
-                'length': 50,
-                'type': 'string',
-                'required': true
+                'startDate'        : 1360959827087,
+                'completedDate'    : null,
+                'resource_key'     : 'lastName',
+                'name'             : 'lastName',
+                'length'           : 50,
+                'type'             : 'string',
+                'required'         : true
             };
 
             var resolution = updateReportStatus(reportResponseData, response.body);
@@ -609,11 +610,11 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
             log.debug({func: 'GetSummaryReportPDF', disposition: disposition}, 'Parsed Disposition');
 
             var retval = {
-                headers: response.headers,
+                headers    : response.headers,
                 contentType: response.headers['content-type'],
-                date: response.headers.date,
-                filename: disposition.parameters.filename,
-                type: disposition.type,
+                date       : response.headers.date,
+                filename   : disposition.parameters.filename,
+                type       : disposition.type,
                 content: response.raw_body // jshint ignore:line
             };
 
@@ -633,7 +634,7 @@ function GetRawReport(cookie, remoteReportId) {
                 log.debug('[GetRawReport] Error Getting Report Data', response.error);
                 return deferred.reject(response.body.reason);
             }
-            log.debug('[GetRawReport] ', response.body);
+            log.trace('[GetRawReport] ', response.body);
             deferred.resolve(response.body);
         });
 
@@ -644,13 +645,13 @@ function GetRawReport(cookie, remoteReportId) {
 
 function updateReportStatus(reportStatusResponse, body) {
     if (!reportStatusResponse.remoteId) {
-        reportStatusResponse.remoteId = body.id;
+        reportStatusResponse.remoteId  = body.id;
         reportStatusResponse.reportSku = body.report.sku;
     }
 
-    reportStatusResponse.status = body.reportCheckStatus.status;
-    reportStatusResponse.timestamp = body.reportCheckStatus.timestamp;
-    reportStatusResponse.completed = !!body.completedDate ? moment(body.completedDate) : null;
+    reportStatusResponse.status       = body.reportCheckStatus.status;
+    reportStatusResponse.timestamp    = body.reportCheckStatus.timestamp;
+    reportStatusResponse.completed    = !!body.completedDate ? moment(body.completedDate) : null;
     reportStatusResponse.requiredData = body.reportCheckStatus.requiredData;
 
     return reportStatusResponse;

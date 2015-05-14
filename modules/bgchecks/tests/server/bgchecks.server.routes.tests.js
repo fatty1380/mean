@@ -1,25 +1,25 @@
 'use strict';
 
-var should = require('should'),
+var should          = require('should'),
     _ = require('lodash'),
-    mongoose = require('mongoose'),
-    User = mongoose.model('User'),
+    mongoose        = require('mongoose'),
+    User            = mongoose.model('User'),
     ReportApplicant = mongoose.model('ReportApplicant'),
-    BGReport = mongoose.model('BackgroundReport'),
-    Q = require('q'),
-    request = require('supertest-as-promised')(Q.Promise),
-    path = require('path'),
-    express = require(path.resolve('./config/lib/express')),
+    BGReport        = mongoose.model('BackgroundReport'),
+    Q               = require('q'),
+    request         = require('supertest-as-promised')(Q.Promise),
+    path            = require('path'),
+    express         = require(path.resolve('./config/lib/express')),
     stubs = require(path.resolve('./config/lib/test.stubs')),
-    log = require(path.resolve('./config/lib/logger')).child({
+    log             = require(path.resolve('./config/lib/logger')).child({
         module: 'bgchecks',
-        file: 'bgchecks.server.routes.test'
+        file  : 'bgchecks.server.routes.test'
     });
 
 /**
  * Globals
  */
-var app, agent, credentials, user, article, report, localApplicant, statuses;
+var app, agent, credentials, user, article, report, localApplicant, statuses, endpoint;
 
 function signin(done) {
     log.trace({func: 'signin', credentials: credentials}, 'START');
@@ -89,7 +89,7 @@ function seedReports(user, done) {
 describe('BGCheck CRUD tests', function () {
     before(function (done) {
         // Get application
-        app = express.init(mongoose).http;
+        app   = express.init(mongoose).http;
         agent = request.agent(app);
 
         done();
@@ -109,28 +109,28 @@ describe('BGCheck CRUD tests', function () {
 
         // Create a new user
         user = new User({
-            firstName: 'Full',
-            lastName: 'Name',
+            firstName  : 'Full',
+            lastName   : 'Name',
             displayName: 'Full Name',
-            email: 'test@test.com',
-            username: credentials.username,
-            password: credentials.password,
-            provider: 'local',
-            type: 'driver'
+            email      : 'test@test.com',
+            username   : credentials.username,
+            password   : credentials.password,
+            provider   : 'local',
+            type       : 'driver'
         });
 
         report = new BGReport({
-            user: user,
-            remoteId: 93651,
+            user             : user,
+            remoteId         : 93651,
             remoteApplicantId: 45958,
-            localReportSku: 'OUTSET_MVR',
-            remoteReportSkus: 'MVRDOM'
+            localReportSku   : 'OUTSET_MVR',
+            remoteReportSkus : 'MVRDOM'
         });
 
         localApplicant = new ReportApplicant({
             remoteId: 45958,
-            user: user,
-            reports: [report]
+            user    : user,
+            reports : [report]
         });
 
         // Save a user to the test db and create new article
@@ -156,24 +156,55 @@ describe('BGCheck CRUD tests', function () {
     });
 
     var routes = {
-        getReportTypes: '/api/reports/types',
+        getReportTypes : '/api/reports/types',
         postReportTypes: '/api/reports/:remoteSystem/update',
-        getReportDef: '/api/reports/types/:sku',
-        createReport: '/api/reports/types/:sku/create',
-        getApplicant: '/api/users/:userId/driver/applicant',
+        getReportDef   : '/api/reports/types/:sku',
+        createReport   : '/api/reports/types/:sku/create',
+        getApplicant   : '/api/users/:userId/driver/applicant',
         postApplicant: '/api/users/:userId/driver/applicant',
 
-        listApplicants: '/api/reports/applicants',
+        listApplicants  : '/api/reports/applicants',
         getApplicantById: '/api/reports/applicants/:applicantId'
     };
 
     describe('Local Applicant methods', function () {
-        it('should be able to lookup a report applicant', function (done) {
+        it('should be able to lookup a report applicant', function () {
+            var _test = this.test;
             var endpoint = '/api/reports/applicants/' + localApplicant.id;
 
-            log.trace({test: this.test.title, url: endpoint}, 'Making Request');
+            log.trace({test: _test.title, url: endpoint}, 'Making Request');
 
-            agent.get(endpoint)
+            return agent.get(endpoint)
+                .then(function (applicantResponse) {
+                    log.debug({result: applicantResponse}, 'Got Applicant Response from `%s`', endpoint);
+
+                    applicantResponse.should.have.property('body');
+
+                    var applicant = applicantResponse.body;
+
+                    applicant.should.have.property('reports').and.have.length(1);
+
+                    applicant.reports[0].should.have.property('remoteApplicantId');
+                    applicant.reports[0].should.have.property('localReportSku');
+                    applicant.reports[0].should.have.property('remoteReportSkus');
+                });
+        });
+        it('should be able to look at report(s) status details');
+
+        it('should get an empty applicant response when the remote applicant is inaccessible', function () {
+            var _test = this.test;
+            log.trace({test: _test.title, url: endpoint}, 'Making Request');
+            localApplicant.remoteId = 99999;
+
+            return localApplicant.save()
+                .then(function (applicant) {
+                    applicant.should.have.property('remoteId', 99999);
+
+                    endpoint = '/api/users/' + user.id + '/driver/applicant';
+                    log.trace({test: _test.title, url: endpoint}, 'Making Request');
+
+                    return agent.get(endpoint).expect(200);
+                })
                 .then(function (applicantResponse) {
                     log.debug({result: applicantResponse}, 'Got Applicant Response from `%s`', endpoint);
 
@@ -187,10 +218,9 @@ describe('BGCheck CRUD tests', function () {
                     applicant.reports[0].should.have.property('localReportSku');
                     applicant.reports[0].should.have.property('remoteReportSkus');
 
-                    done();
-                }, done);
-        });
-        it('should be able to look at report(s) status details');
+
+                });
+        })
     });
 
     describe('Local Report Status Routes', function () {
@@ -328,10 +358,11 @@ describe('BGCheck CRUD tests', function () {
         this.timeout(60000);  // OK: 60, because, slow
 
         it('should be able to get report statuses for a user', function (done) {
+            var _test = this.test;
 
             var endpoint = '/api/users/' + user.id + '/reports';
 
-            log.trace({test: this.test.title, url: endpoint}, 'Making Request');
+            log.trace({test: _test.title, url: endpoint}, 'Making Request');
 
             // Save a new article
             agent.get(endpoint)
