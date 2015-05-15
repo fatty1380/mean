@@ -14,10 +14,11 @@ module.exports = function (app) {
         .post(users.requiresLogin, applications.create);
 
     app.route('/api/applications/:applicationId')
+        .all(users.requiresLogin, applications.hasAuthorization)
         .get(applications.read)
-        .put(users.requiresLogin, applications.hasAuthorization, applications.update)
-        .patch(users.requiresLogin, applications.hasAuthorization, applications.patch)
-        .delete(users.requiresLogin, applications.hasAuthorization, applications.delete);
+        .put(applications.update)
+        .patch(applications.patch)
+        .delete(applications.delete);
 
     app.route('/api/applications/:applicationId/connect')
         .post(applications.createConnection);

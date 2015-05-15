@@ -46,8 +46,25 @@ function executeQuery(req, res) {
     var query = req.query || {};
     var sort  = req.sort || '-created';
 
-    if (!req.user.isAdmin && req.user.isDriver) {
-        query.user = req.user.id;
+    if (!req.user.isAdmin) {
+        if (req.user.isDriver) {
+            log.trace({
+                func: 'executeQuery',
+                user: req.user.id
+            }, 'Restricting query by user');
+            query.user = req.user.id;
+        } else if (req.user.isOwner) {
+            log.trace({
+                func   : 'executeQuery',
+                company: req.user.company
+            }, 'Restricting query by Company');
+            query.company = req.user.company;
+        }
+        log.debug({
+            func : 'executeQuery',
+            query: {user: query.user, company: query.company},
+            user : req.user
+        }, 'Restricting query based on user type');
     }
 
     req.log.debug({query: query}, 'Querying DB For Applications');
@@ -320,7 +337,22 @@ function update(req, res) {
 function patchUpdate(req, res) {
     req.log.trace({func: 'patchUpdate'}, 'Patching existing application');
 
+    var patch = req.body;
 
+    if (!_.isEmpty(patch._id)) {
+        return res.status(400).send('Invalid patch request - cannot change document ID');
+    }
+
+    var application = _.extend(req.application, patch);
+
+    if (application.isModified()) {
+        return application.save()
+            .then(function (application) {
+                return res.json(application);
+            });
+    }
+
+    return res.json(application);
 }
 
 /**
@@ -484,10 +516,26 @@ function applicationByID(req, res, next, id) {
  * Application authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
-    if (req.application.user.id !== req.user.id && !req.application.job.user.equals(req.user.id)) {
-        return res.status(403).send('User is not authorized');
+    req.log.trace({func: 'hasAuthorization', user: req.user, application: req.application}, 'Authorizing access to this Application');
+
+    if(req.user.isDriver && req.application.user._id.equals(req.user.id)) {
+        req.log.debug({func: 'hasAuthorization'}, 'Authorized: Driver matches Application User');
+        return next();
     }
-    next();
+
+    if(req.user.isOwner && req.application.company._id.equals(req.user.company)) {
+        req.log.debug({func: 'hasAuthorization'}, 'Authorized: Owner Company matches Application Company');
+        return next();
+    }
+
+    if(req.user.isAdmin) {
+        req.log.debug({func: 'hasAuthorization'}, 'Authorized: User is an Admin');
+        return next();
+    }
+
+    req.log.debug({func: 'hasAuthorization'}, 'Unauthorized: User does not have access to this application');
+
+    return res.status(403).send('User is not authorized');
 };
 
 /** ---- MESSAGES ------------------------------------------ */

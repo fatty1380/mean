@@ -22,6 +22,8 @@ var should      = require('should'),
  */
 var app, agent, application, credentials, cUser, dUser, article, company, job, _test;
 
+var u2, c2, j2, a2;
+
 function signin() {
 
     log.trace({func: 'signin', credentials: credentials}, 'START');
@@ -71,16 +73,18 @@ describe('Applications CRUD tests', function () {
         dUser = new User(stubs.users.driver);
         cUser = new User(_.extend(stubs.users.owner, {company: company}));
 
-        var u1 = new User(stubs.getUser());
-        var a1 = new Application(stubs.getApplication(u1, company, job));
+        u2 = new User(stubs.getUser());
+        c2 = new Company({name: 'Not your Company', user: u2});
+        j2 = new Job({user: u2, company: c2, name: 'Other Job Title', description: 'You Wish'});
+        a2 = new Application(stubs.getApplication(u2, c2, j2));
 
         credentials = stubs.credentials;
 
         // Save a user to the test db and create new article
-        return Q.all([dUser.save(), cUser.save(), company.save(), job.save(), a1.save(), u1.save()])
+        return Q.all([dUser.save(), cUser.save(), company.save(), job.save(), j2.save(), a2.save(), u2.save(), c2.save()])
             .then(function (results) {
                 log.trace({func: 'beforeEach', results: results}, 'Saved initial users and company');
-                application = stubs.getApplication(dUser, company, job);
+                application = new Application(stubs.getApplication(dUser, company, job));
             }, function (err) {
                 log.error({func: 'beforeEach', error: err}, 'Local Applicant Save Failed');
                 should.not.exist(err, err.message);
@@ -90,10 +94,11 @@ describe('Applications CRUD tests', function () {
     describe('Anonymous Route Method Checks', function () {
 
         it('should not be able to create a new application', function () {
-            _test = this.test;
+            var data = stubs.getApplication(dUser, company, job);
+            _test    = this.test;
 
             return agent.post('/api/applications')
-                .send(application)
+                .send(data)
                 .expect(401)
                 .then(function (response) {
                     should.exist(response);
@@ -103,12 +108,72 @@ describe('Applications CRUD tests', function () {
                     response.should.have.property('text');
                 });
         });
+
+        it('should not be able to list any applications');
+        it('should not be able to get any applications', function () {
+            it('... by id');
+            it('... by job');
+            it('... by company');
+            it('... by user');
+        });
     });
 
     describe('Logged in as Company Owner Method Checks', function () {
         beforeEach(function () {
             credentials.username = cUser.username;
-            return signin();
+            return application.save().then(function () {
+                return signin();
+            });
+        });
+
+        it('should only return applications to their own jobs when listing all', function () {
+            _test = this.test;
+
+            return agent.get('/api/applications')
+                .expect(200)
+                .then(function (response) {
+                    log.debug({test: _test.title, response: response}, 'Got Query Response');
+                    response.should.have.property('body');
+
+                    var applications = response.body;
+
+                    _.each(applications, function (application) {
+                        application.should.have.property('company');
+                        application.company.should.have.property('id', company.id);
+                    });
+
+                    applications.should.have.property('length', 1);
+                });
+        });
+        it('should be able to load an application to their job', function () {
+            _test = this.test;
+        });
+        it('should not be able to load an application to someone elses job', function () {
+            _test = this.test;
+
+            return agent.get('/api/applications/' + a2.id)
+                .expect(403)
+                .then(function (response) {
+                    response.should.have.property('status', 403);
+                });
+        });
+
+        it('should be able to set the status via a patch call', function () {
+            _test        = this.test;
+            var endpoint = '/api/applications/' + application.id;
+
+            var patch = {status: 'read'};
+
+            return agent.patch(endpoint)
+                .send(patch)
+                .expect(200)
+                .then(function (response) {
+                    response.should.have.property('body');
+
+                    response.body.should.have.property('status', patch.status);
+                    response.body.should.have.property('_id');
+                });
+
         });
 
     });
@@ -120,9 +185,11 @@ describe('Applications CRUD tests', function () {
         });
 
         it('should be able to create a new application', function () {
-            _test = this.test;
+            _test    = this.test;
+            var data = stubs.getApplication(dUser, company, job);
+
             return agent.post('/api/applications')
-                .send(application)
+                .send(data)
                 .expect(201)
                 .then(function (response) {
                     response.should.have.property('body');
@@ -130,33 +197,42 @@ describe('Applications CRUD tests', function () {
                 });
         });
 
-        it('should return their own application', function () {
+        it('should not be able to load someone elses application', function () {
             _test = this.test;
 
-            return agent.get('/api/applications')
-                .query({job: job.id})
-                .expect(200)
+            return agent.get('/api/applications/' + a2.id)
+                .expect(403)
                 .then(function (response) {
-                    log.debug({test: _test.title, response: response}, 'Got Query Response');
-                    response.should.have.property('body');
-                    response.body.should.have.property('length', 0);
-                })
-                .then(function () {
-                    return (new Application(stubs.getApplication(dUser, company, job))).save();
+                    response.should.have.property('status', 403);
+                });
+        });
 
-                })
-                .then(function () {
+        describe('with an existing application', function () {
 
-                    return agent.get('/api/applications')
-                        .query({job: job.id})
-                        .expect(200)
-                        .then(function (response) {
-                            log.debug({test: _test.title, response: response}, 'Got Query Response');
-                            response.should.have.property('body');
-                            response.body.should.have.property('length', 1);
-                        });
-                })
+            beforeEach(function () {
+                application = new Application(stubs.getApplication(dUser, company, job));
 
+                return application.save();
+            });
+
+            it('should return their own application', function () {
+                _test = this.test;
+
+                return agent.get('/api/applications')
+                    .query({job: job.id})
+                    .expect(200)
+                    .then(function (response) {
+                        log.debug({test: _test.title, response: response}, 'Got Query Response');
+                        response.should.have.property('body');
+                        response.body.should.have.property('length', 1);
+
+                        var app = response.body[0];
+
+                        app.user.should.have.property('id', dUser.id);
+
+                    });
+
+            });
         });
     });
 
