@@ -54,7 +54,7 @@
 
             <!--- OWNER VIEW - Shows Applicant Information ---->
             <div ng-if="vm.user.type==='owner'">
-                <oset-application-summary model="vm.application" display-mode="details"></oset-application-summary>
+                <oset-application-summary ng-model="vm.application" display-mode="details"></oset-application-summary>
             </div>
 
             <!--- Show Connection Information VIEW ---->

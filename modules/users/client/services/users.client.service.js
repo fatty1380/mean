@@ -49,12 +49,12 @@
 
         var _data = {
             query: function(query) {
-                return $resource('api/profiles', {},{}).query(query).$promise;
+                return $resource('api/profiles').query(query).$promise;
             },
-            get: function(userId) {
+            load: function(userId) {
                 return $resource('api/profiles/:userId', {
                     userId: '@userId'
-                }, {}).get({userId: userId}).$promise;
+                }).get({userId: userId}).$promise;
             },
             getUserForDriver : function(driver) {
                 var deferred = $q.defer();

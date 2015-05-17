@@ -1,0 +1,51 @@
+<section class="content-section">
+    <div class="container-fluid">
+        <os-page-header title="{{vm.listTitle || 'My Active Job Applications'}}"
+                        btn-sref="jobs.create({companyId: '{{vm.company._id}}' })"
+                        btn-show="vm.enableHeaderEdit"
+                        btn-text="Post New Job"
+                        sub-title="{{vm.subtitle}}">
+        </os-page-header>
+
+        <div class="row profile">
+            <div class="col-md-4 text-center">
+                <div class="workflow-item">
+                <span class="fa-stack fa-2x step-badge">
+                    <i class="fa fa-stack-2x fa-circle badge-bg"></i>
+                    <i class="fa fa-stack-2x fa-circle-o"></i>
+                    <span class="fa fa-stack-1x step-index">{{vm.jobs.length || 'no'}}</span>
+                </span><br>
+                    <span class="step-title">Jobs</span>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="workflow-item">
+                <span class="fa-stack fa-2x step-badge">
+                    <i class="fa fa-stack-2x fa-circle badge-bg"></i>
+                    <i class="fa fa-stack-2x fa-circle-o"></i>
+                    <span class="fa fa-stack-1x step-index">{{vm.newApps.length}}</span>
+                </span><br>
+                    <span class="step-title">New Applicants</span>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="workflow-item">
+                <span class="fa-stack fa-2x step-badge">
+                    <i class="fa fa-stack-2x fa-circle badge-bg"></i>
+                    <i class="fa fa-stack-2x fa-circle-o"></i>
+                    <span class="fa fa-stack-1x step-index">{{vm.newMessageCt}}</span>
+                </span><br>
+                    <span class="step-title">New Messages</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row profile">
+            <div ui-view="sidebar" class="col-md-4 col-lg-3 profile-sidebar">
+            </div>
+
+            <div ui-view="bodycontent" class="col-md-8 col-lg-9 profile-body">
+            </div>
+        </div>
+    </div>
+</section>

@@ -37,9 +37,7 @@
                 vm.canEdit = vm.user._id === Authentication.user._id;
 
             } else if ($stateParams.userId) {
-                vm.user = Profiles.get({
-                    userId: $stateParams.userId
-                })
+                vm.user = Profiles.load($stateParams.userId)
                     .$promise
                     .then(function (profile) {
                         debugger;

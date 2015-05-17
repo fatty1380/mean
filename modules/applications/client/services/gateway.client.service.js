@@ -53,7 +53,7 @@
                             var _this = this;
                             $log.debug('[Gateway] Setting `User` to %o', val);
                             _this.promises.user = _this.promises.user || $q.defer();
-                            return (!!val && _.isString(val) ? Profiles.get(val) : $q.when(val))
+                            return (!!val && _.isString(val) ? Profiles.load(val) : $q.when(val))
                                 .then(function (userResponse) {
                                     _this.promises.user.resolve(userResponse);
 

@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="job-list blog-category-list">
+
+        <!-- Iterate over the list of jobs ... For Owners -->
+        <oset-application-job-list-item ng-repeat="job in vm.jobs"
+                                        job="job"
+                                        class="post col-sm-12 applicant"
+                                        visible-id="vm.visibleId"
+                                        visible-tab="vm.visibleTab"
+                                        ng-show="vm.visibleId === job._id || !vm.visibleId">
+            <!-- TODO: Move ng-show into the filter on teh repeater -->
+        </oset-application-job-list-item>
+
+    </div>
+</div>

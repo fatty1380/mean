@@ -2,7 +2,7 @@
 
     <!--ui-sref="applications.view({'applicationId': vm.application._id})"-->
     <div class="row tab-body-item applicant_item"
-         ng-show="vm.visibleId === vm.job._id"
+         ng-show="vm.visible()"
          ng-class="{'disabled': vm.application.disabled}">
 
         <div class="row">
@@ -24,7 +24,7 @@
             </div>
 
             <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">
-                <oset-application-summary model="vm.application" ng-show="vm.visibleTab === 'applicants'"
+                <oset-application-summary ng-model="vm.application" ng-show="vm.visibleTab === 'applicants'"
                                           display-mode="inline"></oset-application-summary>
 
                 <dl class="dl-horizontal" ng-="vm.visibleTab === 'messaging'">

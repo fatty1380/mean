@@ -27,8 +27,8 @@
             <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
                   class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>
 
-            <span ng-show="!visibleInterests.length">
-                <span ng-show="!vm.canEdit">none entered</span>
+            <span ng-hide="!!visibleInterests.length">
+                <em class="small text-muted" ng-hide="!!vm.license">none entered</em>
             </span>
             </div>
 

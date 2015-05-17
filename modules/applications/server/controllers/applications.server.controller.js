@@ -646,6 +646,7 @@ exports.persistMessage = function (applicationId, message) {
                         }
                         debugger;
                         var recipient = msg.sender.equals(populated.user.id) ? populated.company.owner : populated.user;
+                        var recipient = msg.sender._id.equals(populated.user._id) ? populated.company.owner : populated.user;
 
                         var options = [
                             {

@@ -1,4 +1,5 @@
 <div>
+    <span ng-show="!!vm.license">
     <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}
         <span ng-show="vm.license.type">
             <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>
@@ -6,4 +7,6 @@
         </span>
         Driver License
     <oset-list-endorsements ng-if="!!vm.showEndorsements" model="vm.license.endorsements"></oset-list-endorsements>
+        </span>
+    <em class="small text-muted" ng-hide="!!vm.license">no license on file</em>
 </div>

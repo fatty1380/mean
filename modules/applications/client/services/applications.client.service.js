@@ -18,7 +18,7 @@
 
         _this._data = {
             ByJob: $resource('api/jobs/:jobId/applications', {
-                jobId: '@jobId'
+                jobId: '@_id'
             }, {
                 query: {
                     method: 'GET',

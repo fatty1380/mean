@@ -108,7 +108,7 @@
                     resolve: {
                         user: ['Profiles', '$stateParams' , function(Profiles, $stateParams) {
                             console.log('loading profile for userId: %s', $stateParams.userId);
-                            return Profiles.get({'userId':$stateParams.userId}).$promise;
+                            return Profiles.load($stateParams.userId);
                         }]
                     }
                 }).

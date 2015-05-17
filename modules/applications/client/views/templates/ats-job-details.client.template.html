@@ -1,0 +1,98 @@
+<div class="panel panel-profile animated fadeInRight">
+
+    <div class="panel-heading overflow-h">
+        <span class="panel-title">
+            {{vm.job.name}}
+        </span>
+    </div>
+
+    <div class="panel-body text-center">
+
+        <button class="btn btn-link">edit</button>
+        <button class="btn btn-link">applicants</button>
+        <button class="btn btn-link">description</button>
+        <button class="btn btn-link">documents</button>
+    </div>
+</div>
+
+<div class="panel panel-profile animated fadeInRight" ng-show="!!vm.applications">
+    <div class="panel-heading overflow-h">
+        <span class="panel-title heading-sm">
+            <i class="fa fa-send mgn-right"></i> Applicants
+
+            <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'applicants'})"><i
+                    class="fa fa-external-link pull-right"></i></a>
+        </span>
+    </div>
+    <div class="row panel-body">
+        <div class="{{!!vm.applicant ? 'col-md-4' : 'col-md-12'}}">
+            <div ng-repeat="application in vm.applications" ng-init="user=application.user"
+                 class="alert-blocks small"
+                 ng-click="vm.toggleApplicant(application)"
+                 ng-class="{'alert-blocks-success': vm.applicant.id === application.id}">
+
+                <span ng-hide="!!vm.applicant">
+                <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'messaging'})">
+                    <i class="fa fa-comments-o pull-right"></i>
+                </a>
+                <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'documents'})">
+                    <i class="fa fa-file-o pull-right"></i>
+                </a>
+                </span>
+
+                <img class="rounded-x mCS_img_loaded" ng-src="{{user.profileImageURL}}" alt="">
+
+                <div class="overflow-h">
+                    <strong class="color-green">{{application.user.displayName}}
+                        <small class="pull-right">
+                            <em>{{application.updated | amDateFormat : 'L'}}</em>
+                            <span class="badge">{{application.messages.length}}</span>
+                        </small>
+                        <br>
+                        <os-application-status-badge model="application"></os-application-status-badge>
+                    </strong>
+                </div>
+            </div>
+        </div>
+
+        <!--animated {{!!vm.applicant ? 'fadeInRight' : 'fadeOutRight'}}"-->
+        <div class="col-md-8"
+             ng-show="!!vm.applicant">
+            <div ng-repeat="app in vm.applications"
+                 ng-show="app.id === vm.applicant.id"
+                 class="animated {{app.id === vm.applicant.id ? 'fadeInRight' : 'fadeOut'}}"
+                    >
+                <oset-application-summary ng-model="app" display-mode="inline"></oset-application-summary>
+                <hr>
+                <oset-chat-console connection="app.connection"
+                                   messages="app.messages"
+                                   room="app.id"></oset-chat-console>
+            </div>
+        </div>
+
+
+        <!--&lt;!&ndash;alert-blocks-success    green&ndash;&gt;-->
+        <!--&lt;!&ndash;alert-blocks-info       blue&ndash;&gt;-->
+        <!--&lt;!&ndash;alert-blocks-error      red&ndash;&gt;-->
+        <!--&lt;!&ndash;*                       gray&ndash;&gt;-->
+        <!--&lt;!&ndash;alert-blocks-pending    yellow&ndash;&gt;-->
+    </div>
+</div>
+
+<div class="panel panel-profile animated fadeInRight">
+
+    <div class="panel-heading overflow-h">
+        <span class="panel-title heading-sm">
+        <i class="fa fa-sort mgn-right"></i> My Drivers
+        </span>
+    </div>
+
+    <div class="panel-body mgn-btm">
+        <ul>
+            <li>Messaging</li>
+            <li>Documents & Checks</li>
+            <li>Locations</li>
+
+        </ul>
+    </div>
+</div>
