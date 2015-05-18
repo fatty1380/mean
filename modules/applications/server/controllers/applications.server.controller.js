@@ -59,6 +59,12 @@ function executeQuery(req, res) {
                 company: req.user.company
             }, 'Restricting query by Company');
             query.company = req.user.company;
+
+            if (!!query.status) {
+                query.status = {$nin: ['draft', 'deleted'], $eq: query.status};
+            } else {
+                query.status = {$nin: ['draft', 'deleted']};
+            }
         }
         log.debug({
             func : 'executeQuery',
@@ -94,7 +100,12 @@ function executeQuery(req, res) {
 function processDocuments(req, application) {
     return _.map(application.releases, function (release) {
         if (_.isEmpty(release.file) || moment(release.signature.timestamp).isAfter(release.modified)) {
-            req.log.info('update', 'Saving file to cloud');
+            req.log.info({
+                func       : 'update.processDocuments',
+                fileIsEmpty: _.isEmpty(release.file),
+                sigTs      : release.signature.timestamp,
+                mod        : release.modified
+            }, 'Saving file to cloud');
             var newRelease = new Release(release);
             return releaseDocs.generateDocument(newRelease, req.user);
         }
@@ -516,19 +527,23 @@ function applicationByID(req, res, next, id) {
  * Application authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
-    req.log.trace({func: 'hasAuthorization', user: req.user, application: req.application}, 'Authorizing access to this Application');
+    req.log.trace({
+        func       : 'hasAuthorization',
+        user       : req.user,
+        application: req.application
+    }, 'Authorizing access to this Application');
 
-    if(req.user.isDriver && req.application.user._id.equals(req.user.id)) {
+    if (req.user.isDriver && req.application.user._id.equals(req.user.id)) {
         req.log.debug({func: 'hasAuthorization'}, 'Authorized: Driver matches Application User');
         return next();
     }
 
-    if(req.user.isOwner && req.application.company._id.equals(req.user.company)) {
+    if (req.user.isOwner && req.application.company._id.equals(req.user.company)) {
         req.log.debug({func: 'hasAuthorization'}, 'Authorized: Owner Company matches Application Company');
         return next();
     }
 
-    if(req.user.isAdmin) {
+    if (req.user.isAdmin) {
         req.log.debug({func: 'hasAuthorization'}, 'Authorized: User is an Admin');
         return next();
     }

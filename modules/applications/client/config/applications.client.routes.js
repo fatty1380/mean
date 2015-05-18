@@ -91,9 +91,6 @@
             state('ats.root', {
                 url   : '?itemId&tabName&jobId',
                 views : {
-                    'title@fixed-opaque': {
-                        template: '<h1>Look at me now!</h1>'
-                    },
                     'sidebar@ats': {
                         templateUrl     : '/modules/applications/views/templates/ats-sidebar.client.template.html',
                         controller      : 'ApplicationListController',
@@ -115,7 +112,6 @@
                         default: null
                     }
                 }
-
             }).
 
             state('ats.root.job', {
@@ -128,6 +124,10 @@
 
                             vm.applicant = null;
 
+                            vm.loading = {
+                                applicant: true
+                            };
+
                             Jobs.get(params.jobId)
                                 .then(function (job) {
                                     vm.job = job;
@@ -139,6 +139,10 @@
                                 })
                             .catch(function(err) {
                                     console.error(err);
+                                })
+                                .finally(function() {
+                                        vm.loading.applicant = false;
+
                                 });
 
                             vm.toggleApplicant = function(applicant) {

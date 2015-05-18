@@ -1,3 +1,6 @@
+
+
+
 <div class="panel panel-profile">
 
     <div class="panel-heading overflow-h">
@@ -52,7 +55,7 @@
                     <strong class="color-green">{{application.user.displayName}}
                         <small class="pull-right"><em>{{application.updated | amDateFormat : 'L'}}</em>
                         </small><br>
-                        <os-application-status-badge model="application"></os-application-status-badge>
+                        <os-application-status-badge ng-model="application"></os-application-status-badge>
                     </strong>
                 </div>
 
@@ -69,23 +72,5 @@
                 {{job.name}}
             </a>
         </div>
-    </div>
-</div>
-
-<div class="panel panel-profile">
-
-    <div class="panel-heading overflow-h">
-        <span class="panel-title heading-sm">
-        <i class="fa fa-sort mgn-right"></i> My Drivers
-        </span>
-    </div>
-
-    <div class="panel-body mgn-btm">
-        <ul>
-            <li>Messaging</li>
-            <li>Documents & Checks</li>
-            <li>Locations</li>
-
-        </ul>
     </div>
 </div>

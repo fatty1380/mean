@@ -33,12 +33,22 @@
             }, {
                 update: {
                     method: 'PUT'
+                },
+                patch: {
+                    method: 'PATCH'
                 }
             }),
             setStatus: function (id, status) {
                 debugger;
 
-                return new _this._data.ById({_id: id, 'status': status}).$update();
+                var rsrc = new _this._data.ById();
+
+                return rsrc.$get({id: id}).then(function(app) {
+                        app.status = status;
+
+                        return app.$update();
+                    }
+                );
             },
             getApplication: function (query) {
 

@@ -3,6 +3,10 @@
     <div class="panel-heading overflow-h">
         <span class="panel-title">
             {{vm.job.name}}
+
+
+            <a ui-sref="ats.root({jobId: ''})"><i
+                    class="fa fa-close pull-right"></i></a>
         </span>
     </div>
 
@@ -15,7 +19,7 @@
     </div>
 </div>
 
-<div class="panel panel-profile animated fadeInRight" ng-show="!!vm.applications">
+<div class="panel panel-profile animated fadeInRight">
     <div class="panel-heading overflow-h">
         <span class="panel-title heading-sm">
             <i class="fa fa-send mgn-right"></i> Applicants
@@ -49,9 +53,18 @@
                             <span class="badge">{{application.messages.length}}</span>
                         </small>
                         <br>
-                        <os-application-status-badge model="application"></os-application-status-badge>
+                        <os-application-status-badge ng-model="application"></os-application-status-badge>
                     </strong>
                 </div>
+            </div>
+
+            <div class="text-center" ng-show="!!vm.loading.applicant">
+                <i class="fa fa-spinner fa-2x fa-spin"></i>
+                <h2>Loading</h2>
+            </div>
+
+            <div class="text-center" ng-show="!vm.applications.length && !vm.loading.applicant">
+                <h4>No one has applied to this job</h4>
             </div>
         </div>
 
@@ -60,8 +73,7 @@
              ng-show="!!vm.applicant">
             <div ng-repeat="app in vm.applications"
                  ng-show="app.id === vm.applicant.id"
-                 class="animated {{app.id === vm.applicant.id ? 'fadeInRight' : 'fadeOut'}}"
-                    >
+                 class="animated {{app.id === vm.applicant.id ? 'fadeInRight' : 'fadeOut'}}">
                 <oset-application-summary ng-model="app" display-mode="inline"></oset-application-summary>
                 <hr>
                 <oset-chat-console connection="app.connection"

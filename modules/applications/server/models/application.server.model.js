@@ -145,6 +145,11 @@ ApplicationSchema.virtual('isHired')
         return this.status === 'hired';
     });
 
+ApplicationSchema.virtual('isActive')
+    .get(function () {
+        return !!this.status.match(/submitted|read|connected/i);
+    });
+
 ApplicationSchema.virtual('statusCat')
 .get(function() {
         switch(this.status) {

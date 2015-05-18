@@ -79,8 +79,6 @@
 
 
         vm.setLocalProperties = function (application) {
-            debugger;
-
             vm.application = application;
 
             vm.ownerId = vm.job && (vm.job.user._id || vm.job.user);
@@ -210,8 +208,12 @@
                 return false;
             }
 
+            if (_.isFunction(vm.filter) && !vm.filter()(vm.application)) {
+                return false;
+            }
+
             return true;
-        }
+        };
 
         vm.showTab = function (itemId, tabName) {
             if (!!vm.visibleId && vm.visibleTab === tabName) {
@@ -229,7 +231,10 @@
             Applications.checkMessages(vm.application, auth.user._id)
                 .then(function (applicationResponse) {
                     vm.application = applicationResponse;
-                    vm.job.newMessages += vm.application.newMessages || 0;
+
+                    if(vm.application.isActive) {
+                        vm.job.newMessages += vm.application.newMessages || 0;
+                    }
                 })
                 .catch(function (err) {
                     if (!!vm.application.connection) {
@@ -248,7 +253,7 @@
 
             app.then(function (success) {
                 $log.debug('[setApplicationStatus] %s', success);
-                application = success;
+                _.extend(application,success);
             }, function (reject) {
                 debugger;
                 $log.warn('[setApplicationStatus] %s', reject);
@@ -281,7 +286,8 @@
                 job        : '=?',
                 visibleApp : '=?',
                 visibleId  : '=?',
-                visibleTab : '=?'
+                visibleTab : '=?',
+                filter : '&'
             },
             controller      : 'ApplicationListItemController',
             controllerAs    : 'vm',
@@ -392,6 +398,10 @@
             return true;
         };
 
+        vm.getActiveApplicationCount = function (applications) {
+            return _.where(applications || vm.job.applications, {isActive: true}).length;
+        };
+
         vm.setApplicationStatus = function (application, status, $event) {
             $event.stopPropagation();
 
@@ -399,7 +409,7 @@
 
             app.then(function (success) {
                 $log.debug('[setApplicationStatus] %s', success);
-                application = success;
+                _.extend(application,success);
             }, function (reject) {
                 debugger;
                 $log.warn('[setApplicationStatus] %s', reject);

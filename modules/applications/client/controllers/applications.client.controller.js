@@ -47,11 +47,9 @@
 
             var app = vm.Applications.setStatus(vm.application._id, status);
 
-            debugger; /// TODO: Double Check promise
-
             app.then(function(success) {
                 $log.debug('[setApplicationStatus] %s', success);
-                application = success;
+                _.extend(application,success);
             }, function(reject) {
                 $log.warn('[setApplicationStatus] %s', reject);
             });

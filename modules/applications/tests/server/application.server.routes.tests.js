@@ -140,6 +140,9 @@ describe('Applications CRUD tests', function () {
                     _.each(applications, function (application) {
                         application.should.have.property('company');
                         application.company.should.have.property('id', company.id);
+                        application.should.have.property('status');
+                        application.should.not.containDeep({status: 'draft'});
+                        application.should.not.containDeep({status: 'rejected'});
                     });
 
                     applications.should.have.property('length', 1);
@@ -174,6 +177,47 @@ describe('Applications CRUD tests', function () {
                     response.body.should.have.property('_id');
                 });
 
+        });
+
+        it('should not be able to see DRAFT applications in results', function () {
+            _test        = this.test;
+            var endpoint = '/api/applications';
+
+            application.status = 'draft';
+
+            return application.save()
+                .then(function () {
+                    return agent.get(endpoint)
+                        .expect(200);
+                })
+                .then(function (response) {
+
+                    _.each(response.body, function (application) {
+                        application.status.should.not.match(/draft|rejected/);
+                    });
+                });
+        });
+
+        it('should be able to query for specific status only, and not see draft', function () {
+            _test        = this.test;
+            var endpoint = '/api/applications';
+
+            application.status = 'draft';
+            var a = new Application(new Application(stubs.getApplication(u2, company, job)));
+            a.status='submitted';
+
+            return Q.all(application.save(), a.save())
+                .then(function () {
+                    return agent.get(endpoint)
+                        .query({status: 'submitted'})
+                        .expect(200);
+                })
+                .then(function (response) {
+
+                    _.each(response.body, function (application) {
+                        application.status.should.match(/submitted/);
+                    });
+                });
         });
 
     });

@@ -57,7 +57,8 @@ exports.getApplication = function(user, company, job) {
         introduction: exports.application.introduction,
         user: user,
         job: job,
-        company: company
+        company: company,
+        status: 'submitted'
     };
 }
 
