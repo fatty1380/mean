@@ -5,24 +5,43 @@
         var ddo;
 
         ddo = {
-            template: '<span class="label {{vm.labelClass}}" ng-if="vm.model">{{ vm.labelText | uppercase }}</span>',
+            template: '<span class="label {{vm.labelClass}}">{{ vm.labelText | uppercase }}</span>',
             restrict: 'E',
-            scope: {
-                model: '='
+            scope: true,
+            require: 'ngModel',
+            link            : function (scope, element, attrs, ngModel) {
+                var vm = scope.vm;
+                if (!!ngModel) {
+                    scope.$watch(function () {
+                        debugger;
+                        return ngModel.$modelValue;
+                    }, function (newValue) {
+                        debugger;
+                        vm.labelClass = vm.getLabelClass(newValue);
+                        vm.labelText = newValue.statusCat;
+                    });
+
+                    scope.vm.application = ngModel.$modelValue;
+                } else {
+                    debugger;
+                }
             },
             controller: function () {
                 var vm = this;
 
                 vm.labelClass = 'label-default';
+                vm.labelText = 'unknown';
 
-                if (!!vm.model) {
+                vm.getText = function(val) {
+                    return !!val ? val.statusCat : 'view now';
+                };
 
-                    vm.labelText = vm.model.statusCat;
-                    var cnxn = vm.model.connection;
+                vm.getLabelClass = function(val) {
+                    var cnxn = val.connection;
 
-                    if (vm.model.isUnreviewed) {
+                    if (val.isUnreviewed) {
                         vm.labelClass = 'label-primary';
-                    } else if (vm.model.isConnected) {
+                    } else if (val.isConnected) {
                         if (cnxn.isValid && (!cnxn.expires || cnxn.remainingDays >= 5)) {
                             vm.labelClass = 'label-success';
                         }
@@ -32,17 +51,13 @@
                         } else if (!cnxn.isValid) {
                             vm.labelClass = 'label-danger';
                         }
-                    } else if (vm.model.isRejected) {
+                    } else if (val.isRejected) {
                         vm.labelClass = 'label-danger';
                     }
-                    else if(vm.model.status === 'read') {
+                    else if(val.status === 'read') {
                         vm.labelClass = 'label-default';
                     }
-
-                }
-                else {
-                    vm.labelText = 'view now';
-                }
+                };
             },
             controllerAs: 'vm',
             bindToController: true
