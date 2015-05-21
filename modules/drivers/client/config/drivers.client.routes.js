@@ -91,17 +91,21 @@
             authenticate: true
         }).
 
-        state('drivers.view', {
-            url: '/{driverId:[0-9a-fA-F]{24}}',
-            templateUrl: '/modules/drivers/views/view-driver.client.view.html',
-            parent: 'drivers',
-            resolve: {
-                driver: driverResolve
-            },
-            controller: 'DriverViewController',
-            controllerAs: 'vm',
-            bindToController: true
-        }).
+        //state('drivers.view', {
+        //    url: '/{userId:[0-9a-fA-F]{24}}',
+        //    templateUrl: '/modules/drivers/views/view-driver.client.view.html',
+        //    parent: 'drivers',
+        //    resolve: {
+        //        driver: ['Drivers', '$stateParams', function(Drivers, $stateParams) {
+        //                return Drivers.ByUser.get({
+        //                    userId: $stateParams.userId
+        //                }).$promise;
+        //            }]
+        //    },
+        //    controller: 'DriverViewController',
+        //    controllerAs: 'vm',
+        //    bindToController: true
+        //}).
 
         state('drivers.edit', {
             url: '/{driverId:[0-9a-fA-F]{24}}/edit',

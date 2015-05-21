@@ -71,7 +71,7 @@
                     abstract: true,
                     url: '/users',
                     template: '<div ui-view class="content-section container"></div>',
-                    parent: 'full-opaque'
+                    parent: 'fixed-opaque'
                 }).
 
             /**
@@ -99,9 +99,9 @@
              * View Profile
              * @description Allows a user to view another user's profile page.
              */
-                state('users.view', {
+                state('users.modules', {
                     parent: 'users',
-                    url: '/{userId:[0-9a-fA-F]{24}}',
+                    url: '/modules/{userId:[0-9a-fA-F]{24}}',
                     templateUrl: '/modules/users/views/settings/profile.client.view.html',
                     controller: 'ProfileController',
                     controllerAs: 'vm',
@@ -109,6 +109,26 @@
                         user: ['Profiles', '$stateParams' , function(Profiles, $stateParams) {
                             console.log('loading profile for userId: %s', $stateParams.userId);
                             return Profiles.load($stateParams.userId);
+                        }]
+                    }
+                }).
+
+                state('users.view', {
+                    parent: 'drivers',
+                    url: '/{userId:[0-9a-fA-F]{24}}',
+                    templateUrl: '/modules/drivers/views/view-driver.client.view.html',
+                    controller: 'ProfileController',
+                    controllerAs: 'vm',
+                    bindToController: true,
+                    resolve: {
+                        user: ['Profiles', '$stateParams' , function(Profiles, $stateParams) {
+                            console.log('loading profile for userId: %s', $stateParams.userId);
+                            return Profiles.load($stateParams.userId);
+                        }],
+                        driver: ['Drivers', '$stateParams', function(Drivers, $stateParams) {
+                            return Drivers.ByUser.get({
+                                userId: $stateParams.userId
+                            }).$promise;
                         }]
                     }
                 }).
