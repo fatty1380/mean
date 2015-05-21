@@ -1,37 +1,45 @@
-<section>
-    <h3 class="text-center text-danger">Controller Moved</h3>
-    <span class="col-md-12 opaque-bg">
-        <legend>Driver Profile</legend>
-        <div class="list-group" data-ng-show="driver">
-            <a data-ng-href="drivers/{{driver._id}}" class="list-group-item">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h4 class="list-group-item-heading">{{driver.name}}
-                        </h4>
-                    </div>
-                    <div class="col-md-4">
-                        <small class="list-group-item-text">
-                            <p class="text-right">Added on
-                                <span data-ng-bind="driver.created | date:'shortDate'"></span>
-                            </p>
-                        </small>
-                    </div>
-                </div>
+<section class="profile-header">
+    <div class="panel panel-default row">
+        <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">
+            <div class="center-block full-width">
+                <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
+                     class="img-thumbnail user-profile-picture img-responsive">
+                <br data-ng-if="vm.canEdit"/>
+                <a class="btn btn-link" data-ng-click="vm.editPicFn()"
+                   data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || '.'}}">edit
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+            </div>
+        </div>
 
-                <div class="row">
-                    <div class="col-md-8 opaque-bg">
-                        {{driver.about}}
-                    </div>
-                    <div class="col-md-4">
-                        <label>Location:
-                            <strong>{{driver.zip}}</strong>
-                        </label>
-                    </div>
-                </div>
-            </a>
+        <div class="profile-info {{!!vm.pictureUrl ? 'col-sm-8' : 'col-sm-12'}}">
+            <span class="title" data-ng-bind-html="vm.profile.displayName">&nbsp;</span>
+            <br/>
+            <span class="subtitle" data-ng-bind-html="vm.subTitle">&nbsp;</span>
+
+            <div class="licenses">
+                <oset-license-inline model="vm.driver.licenses[0]" show-endorsements="true"></oset-license-inline>
+            </div>
         </div>
-        <div class="alert alert-warning text-center" data-ng-hide="driver || !createEnabled">
-            Want to drive? <a href="/drivers/create">create a profile</a>?
+
+        <div class="profile-actions col-sm-12">
+
+            <div class="icons icon-group pull-left">
+                <a href="" class="icon">
+                    <div class="twitter"></div>
+                </a>
+                <a href="" class="icon">
+                    <div class="google"></div>
+                </a>
+                <a href="" class="icon">
+                    <div class="facebook"></div>
+                </a>
+            </div>
+
+            <div class="icons icon-group pull-right text-right">
+                <button type="button" class="btn btn-oset-link"><i class="fa fa-2x fa-edit"></i></button>
+                <button type="button" class="btn btn-oset-secondary">Connect</button>
+            </div>
         </div>
-    </span>
+    </div>
 </section>

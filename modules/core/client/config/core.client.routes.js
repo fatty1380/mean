@@ -65,32 +65,14 @@
                 parent: 'fixed-opaque'
             }).
 
-            state('full-clear', {
-                abstract: true,
-                templateUrl: '/modules/core/views/full-clear.client.view.html'
-            }).
-
-            state('full-opaque', {
-                abstract: true,
-                templateUrl: '/modules/core/views/full-opaque.client.view.html'
-            }).
-
-            state('fixed-clear', {
-                abstract: true,
-                templateUrl: '/modules/core/views/fixed-clear.client.view.html',
-                parent: 'full-clear'
-            }).
-
             state('fixed-opaque', {
                 abstract: true,
-                templateUrl: '/modules/core/views/fixed-opaque.client.view.html',
-                parent: 'full-clear'
+                templateUrl: '/modules/core/views/fixed-opaque.client.view.html'
             }).
 
             state('headline-bg', {
                 abstract: true,
-                templateUrl: '/modules/core/views/headline-bg.client.view.html',
-                parent: 'full-clear'
+                templateUrl: '/modules/core/views/headline-bg.client.view.html'
             }).
 
             state('intro', {

@@ -100,34 +100,42 @@
     <!--Display when Item is not Editing-->
 
     <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"
-             ng-class="{'last':vm.isLast && !vm.canEdit}">
-        <p class="top-header">
-            <strong>
-                {{vm.model.title}}
-            </strong>
-            <small class="pull-right">
-                {{vm.model.location}}
-            </small>
-        </p>
-
-        <p class="sub-header" ng-class="{'no-mgn-btm': !vm.canEdit && !vm.model.expanded}">
-            <small>
-                <span ng-show="!vm.canEdit"
-                      ng-click="vm.model.expanded = !vm.model.expanded"
-                      class="pull-left pointer text-oset">
-                    <i class="fa"
-                       ng-class="{'fa-caret-right': !vm.model.expanded, 'fa-caret-down': !!vm.model.expanded}"></i>
-                    {{ !!vm.model.expanded ? 'hide' : 'show details...'}}
+             ng-class="{'last':vm.isLast && !vm.canEdit, 'expanded': vm.model.expanded}"
+             ng-click="vm.model.expanded = !vm.model.expanded">
+        <div class="top-header row">
+            <div class="col-sm-12">
+                <strong class="top-title">
+                    {{vm.model.title}}
+                </strong>
+            </div>
+            <div class="col-sm-12">
+                <span class="location">
+                    {{vm.model.location}}
                 </span>
-                &nbsp;
-                <span class="text-muted pull-right"
+                <span class="work-time pull-right"
                       ng-bind="vm.getDateRangeString(vm.model.startDate, vm.model.endDate)">
-
                 </span>
-            </small>
-        </p>
+            </div>
 
-        <p class="pnl-body" ng-show="vm.model.expanded || vm.canEdit">{{vm.model.description}}</p>
+        </div>
+
+        <div class="row animated">
+            <div class="pnl-body col-sm-12" ng-show="vm.model.expanded || vm.canEdit">
+                <p>
+                    <span ng-bind-html="vm.model.description"></span>
+                </p>
+            </div>
+
+            <div class="col-sm-12 text-center">
+                <a class="text-center more-details text-oset" ng-show="!vm.canEdit">
+                    <span class="fa-stack fa">
+                      <i ng-hide="!!vm.model.expanded" class="fa fa-circle-thin fa-stack-2x"></i>
+                      <i class="fa {{ !!vm.model.expanded ? 'fa-chevron-up' : 'fa-chevron-down'}} fa-stack-1x"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+
 
         <p class="pnl-controls" ng-if="vm.canEdit">
             &nbsp;
@@ -156,11 +164,12 @@
                 </span>
             </span>
         </p>
-
+        <div class="circle"></div>
     </section>
     <div class="pull-right" data-ng-show="vm.isLast && !vm.isEditing && vm.canEdit">
         <button type="button" class="btn btn-oset-primary" ng-click="vm.push()" ng-if="!!vm.push">
             <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> add
         </button>
     </div>
+
 </section>

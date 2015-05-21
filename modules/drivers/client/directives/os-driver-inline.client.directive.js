@@ -24,11 +24,48 @@
         };
     }
 
+    function OsProfileHeader() {
+        return {
+            templateUrl: '/modules/drivers/views/templates/driver-badge.client.template.html',
+            restrict: 'E',
+            scope : {
+                profile: '=model',
+                driver: '=?',
+                pictureEditFn : '&?',
+                canEdit: '=?'
+            },
+            link: function(scope, elem, attrs) {
+                var vm = scope.vm;
+
+                vm.driver = vm.driver || vm.profile.driver;
+                vm.pictureUrl = vm.profile.profileImageURL;
+                vm.subTitle = vm.profile.type;
+
+                vm.canEdit = _.isUndefined(vm.canEdit) ? false : vm.canEdit;
+                vm.editSref = 'settings.profile';
+                vm.editPicSref = 'settings.picture';
+                vm.editPicFn = function () {
+                    if (!!angular.isFunction(attrs.pictureEditFn)) {
+                        return vm.pictureEditFn();
+                    }
+                };
+
+            },
+            controller: function() {
+                var vm = this;
+                vm.unknown = 'is this thing on?';
+            },
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }
+
 
 
     OsDriverInlineView.$inject = [];
 
     angular
         .module('drivers')
-        .directive('osDriverInline', OsDriverInlineView);
+        .directive('osDriverInline', OsDriverInlineView)
+    .directive('osProfileHeader', OsProfileHeader);
 })();

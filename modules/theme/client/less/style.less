@@ -1,6 +1,7 @@
 
-@import "/public/lib/bootstrap/less/variables.less";
-@import "/public/lib/bootstrap/less/mixins.less";
+@import "variables.less";
+@import "mixins.less";
+@import "theme-default.less";
 
 .backgroundImage(@url, @repeat: no-repeat, @position: left, @size: auto) {
   background-image: @url;
@@ -35,17 +36,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
-@text-color-light: #ffffff;
-@text-color-dark: #666666;
-
-@light-grey-color: #D9D9D9;
-
-@main-style-color-1: #E6492F;
-
-@pagination-item-color: #BFBFBF;
-@pagination-current-item-color: #E9E9E9;
-@outset-blue: #0e2d4c;
 
 @main-background-url: url('/modules/core/img/backgrounds/header_bg.jpg');
 @steps-background-url: url('/modules/core/img/backgrounds/step_bg.jpg');
@@ -913,7 +903,8 @@ div.play-button {
             }
 
             &.regional {
-              background-color: #E6492F;
+              background-color: @main-style-color-1
+            ;
             }
 
             &.fleet {

@@ -75,6 +75,7 @@
                 url: '/bgchecks/:bgcheckId/edit',
                 templateUrl: '/modules/bgchecks/views/edit-bgcheck.client.view.html'
             }).
+
             state('reviewReports', {
                 url: '/reports/:sku',
                 templateUrl: '/modules/bgchecks/views/review-reports.client.view.html',
