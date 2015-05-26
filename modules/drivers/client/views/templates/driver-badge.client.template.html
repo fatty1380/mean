@@ -1,44 +1,53 @@
 <section class="profile-header">
-    <div class="panel panel-default row">
-        <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">
-            <div class="center-block full-width">
-                <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
-                     class="img-thumbnail user-profile-picture img-responsive">
-                <br data-ng-if="vm.canEdit"/>
-                <a class="btn btn-link" data-ng-click="vm.editPicFn()"
-                   data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || '.'}}">edit
-                    <i class="fa fa-pencil-square-o"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="profile-info {{!!vm.pictureUrl ? 'col-sm-8' : 'col-sm-12'}}">
-            <span class="title" data-ng-bind-html="vm.profile.displayName">&nbsp;</span>
-            <br/>
-            <span class="subtitle" data-ng-bind-html="vm.subTitle">&nbsp;</span>
-
-            <div class="licenses">
-                <oset-license-inline model="vm.driver.licenses[0]" show-endorsements="true"></oset-license-inline>
-            </div>
-        </div>
-
-        <div class="profile-actions col-sm-12">
-
-            <div class="icons icon-group pull-left">
-                <a href="" class="icon">
-                    <div class="twitter"></div>
-                </a>
-                <a href="" class="icon">
-                    <div class="google"></div>
-                </a>
-                <a href="" class="icon">
-                    <div class="facebook"></div>
-                </a>
+    <div class="panel panel-default">
+        <div class="row">
+            <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">
+                <div class="center-block full-width">
+                    <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
+                         class="img-thumbnail user-profile-picture img-responsive">
+                    <br data-ng-if="vm.canEdit"/>
+                    <a class="btn btn-link" data-ng-click="vm.editPicFn()"
+                       data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || '.'}}">edit
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                </div>
             </div>
 
-            <div class="icons icon-group pull-right text-right">
-                <button type="button" class="btn btn-oset-link"><i class="fa fa-2x fa-edit"></i></button>
-                <button type="button" class="btn btn-oset-secondary">Connect</button>
+            <div class="profile-info {{!!vm.pictureUrl ? 'col-sm-8' : 'col-sm-12'}}">
+                <span class="title" data-ng-bind-html="vm.profile.displayName">&nbsp;</span>
+                <br/>
+                <span class="subtitle" data-ng-bind-html="vm.subTitle">&nbsp;</span>
+
+                <div class="licenses">
+                    <oset-license-inline model="vm.driver.licenses[0]" show-endorsements="true"></oset-license-inline>
+                </div>
+            </div>
+
+            <div class="profile-actions col-sm-12">
+
+                <div class="icons icon-group pull-left">
+                    <a href="" class="icon">
+                        <div class="twitter"></div>
+                    </a>
+                    <a href="" class="icon">
+                        <div class="google"></div>
+                    </a>
+                    <a href="" class="icon">
+                        <div class="facebook"></div>
+                    </a>
+                </div>
+
+                <div class="icons icon-group pull-right text-right">
+                    <button type="button" class="btn btn-oset-link"
+                            ng-if="!!vm.canEdit"
+                            ui-sref="drivers.edit({driverId:vm.driver.id})">
+                        <i class="fa fa-2x fa-edit"></i>
+                    </button>
+                    <button type="button"
+                            ng-show="!vm.isConnected"
+                            class="btn btn-oset-secondary">Connect
+                    </button>
+                </div>
             </div>
         </div>
     </div>
