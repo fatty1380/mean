@@ -10,14 +10,14 @@
                 // === Users Settings ======================================================
 
                 state('settings', {
-                    abstract: true,
-                    url: '/settings',
+                    abstract   : true,
+                    url        : '/settings',
                     templateUrl: '/modules/users/views/settings/settings.client.view.html',
-                    parent: 'fixed-opaque'
+                    parent     : 'fixed-opaque'
                 }).
 
                 state('settings.profile', {
-                    url: '/profile',
+                    url        : '/profile',
                     templateUrl: '/modules/users/views/settings/edit-profile.client.view.html'
                 }).
 
@@ -26,32 +26,32 @@
              * @description Allows the user to change their password
              */
                 state('settings.password', {
-                    url: '/password',
+                    url        : '/password',
                     templateUrl: '/modules/users/views/settings/change-password.client.view.html'
                 }).
 
                 state('settings.accounts', {
-                    url: '/accounts',
+                    url        : '/accounts',
                     templateUrl: '/modules/users/views/settings/manage-social-accounts.client.view.html'
                 }).
 
                 state('settings.picture', {
-                    url: '/picture',
-                    templateUrl: '/modules/users/views/settings/change-profile-picture.client.view.html',
-                    resolve: {
-                        user : ['Authentication', function(auth) {
+                    url             : '/picture',
+                    templateUrl     : '/modules/users/views/settings/change-profile-picture.client.view.html',
+                    resolve         : {
+                        user: ['Authentication', function (auth) {
                             return auth.user;
                         }]
                     },
-                    controller: ['Authentication', 'user', function(auth, user) {
-                        var vm = this;
+                    controller      : ['Authentication', 'user', function (auth, user) {
+                        var vm  = this;
                         vm.user = user;
 
                         // Change Picture Success method:
                         vm.successFunction = function (fileItem, response, status, headers) {
                             // Populate user object
                             debugger;
-                            vm.user = response;
+                            vm.user     = response;
                             vm.imageURL = vm.user.profileImageURL;
 
                             auth.user.profileImageURL = response.profileImageURL;
@@ -59,7 +59,7 @@
                             vm.showPhotoEdit = false;
                         };
                     }],
-                    controllerAs: 'vm',
+                    controllerAs    : 'vm',
                     bindToController: true
                 }).
 
@@ -69,9 +69,9 @@
              */
                 state('users', {
                     abstract: true,
-                    url: '/users',
+                    url     : '/users',
                     template: '<div ui-view class="content-section container"></div>',
-                    parent: 'fixed-opaque'
+                    parent  : 'fixed-opaque'
                 }).
 
             /**
@@ -79,17 +79,17 @@
              * @description Only available to admin users
              */
                 state('users.list', {
-                    url: '',
-                    templateUrl: '/modules/users/views/list-users.client.view.html',
-                    parent: 'users',
-                    controller: ['users', function(users) {
-                        var vm = this;
+                    url             : '',
+                    templateUrl     : '/modules/users/views/list-users.client.view.html',
+                    parent          : 'users',
+                    controller      : ['users', function (users) {
+                        var vm   = this;
                         vm.users = users;
                     }],
-                    controllerAs: 'vm',
+                    controllerAs    : 'vm',
                     bindToController: true,
-                    resolve: {
-                        users: ['Profiles', function(Profiles) {
+                    resolve         : {
+                        users: ['Profiles', function (Profiles) {
                             return Profiles.query();
                         }]
                     }
@@ -100,13 +100,13 @@
              * @description Allows a user to view another user's profile page.
              */
                 state('users.modules', {
-                    parent: 'users',
-                    url: '/modules/{userId:[0-9a-fA-F]{24}}',
-                    templateUrl: '/modules/users/views/settings/profile.client.view.html',
-                    controller: 'ProfileController',
+                    parent      : 'users',
+                    url         : '/modules/{userId:[0-9a-fA-F]{24}}',
+                    templateUrl : '/modules/users/views/settings/profile.client.view.html',
+                    controller  : 'ProfileController',
                     controllerAs: 'vm',
-                    resolve: {
-                        user: ['Profiles', '$stateParams' , function(Profiles, $stateParams) {
+                    resolve     : {
+                        user: ['Profiles', '$stateParams', function (Profiles, $stateParams) {
                             console.log('loading profile for userId: %s', $stateParams.userId);
                             return Profiles.load($stateParams.userId);
                         }]
@@ -120,12 +120,12 @@
                     controller: 'ProfileController',
                     controllerAs: 'vm',
                     bindToController: true,
-                    resolve: {
-                        user: ['Profiles', '$stateParams' , function(Profiles, $stateParams) {
+                    resolve         : {
+                        user  : ['Profiles', '$stateParams', function (Profiles, $stateParams) {
                             console.log('loading profile for userId: %s', $stateParams.userId);
                             return Profiles.load($stateParams.userId);
                         }],
-                        driver: ['Drivers', '$stateParams', function(Drivers, $stateParams) {
+                        driver: ['Drivers', '$stateParams', function (Drivers, $stateParams) {
                             return Drivers.ByUser.get({
                                 userId: $stateParams.userId
                             }).$promise;
@@ -139,7 +139,7 @@
              * or signing up.
              */
                 state('authentication', {
-                    url: '/authentication',
+                    url        : '/authentication',
                     templateUrl: '/modules/users/views/authentication/authentication.client.view.html'
                 }).
 
@@ -149,9 +149,9 @@
 
                 state('password', {
                     abstract: true,
-                    url: '/password',
+                    url     : '/password',
                     template: '<ui-view/>',
-                    parent: 'fixed-opaque'
+                    parent  : 'fixed-opaque'
                 }).
 
             /**
@@ -159,13 +159,13 @@
              * @description Allows the user to reset their password
              */
                 state('password.forgot', {
-                    url: '/forgot',
+                    url        : '/forgot',
                     templateUrl: '/modules/users/views/password/forgot-password.client.view.html'
                 }).
 
                 state('password.reset', {
                     abstract: true,
-                    url: '/reset',
+                    url     : '/reset',
                     template: '<ui-view/>'
                 }).
 
@@ -174,7 +174,7 @@
              * @description Route if password reset was unsuccessful
              */
                 state('password.reset.invalid', {
-                    url: '/invalid',
+                    url        : '/invalid',
                     templateUrl: '/modules/users/views/password/reset-password-invalid.client.view.html'
                 }).
 
@@ -183,7 +183,7 @@
              * @description Route if the password reset was successful
              */
                 state('password.reset.success', {
-                    url: '/success',
+                    url        : '/success',
                     templateUrl: '/modules/users/views/password/reset-password-success.client.view.html'
                 }).
 
@@ -192,7 +192,7 @@
              * @description Route for resetting a password based on a form
              */
                 state('password.reset.form', {
-                    url: '/:token',
+                    url        : '/:token',
                     templateUrl: '/modules/users/views/password/reset-password.client.view.html'
                 });
         }

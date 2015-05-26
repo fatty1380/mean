@@ -34,31 +34,6 @@
         // Home state routing
         $stateProvider.
 
-            state('superbase', {
-                abstract: true,
-                template: '<div ui-view class="superbase"></div>',
-                params: {
-                    'delay': {
-                        value: '0',
-                        squash: true
-                    }
-                },
-                resolve: {
-                    waitforit: function ($stateParams, $timeout) {
-                        if (!!$stateParams.delay) {
-                            debugger;
-                            console.log('Waiting for %d seconds', $stateParams.delay);
-                            $timeout(function () {
-                                return 'waited';
-                            }, $stateParams.delay * 1000);
-                        }
-                        else {
-                            return 'go ahead';
-                        }
-                    }
-                }
-            }).
-
             state('privacy', {
                 url: '/privacy',
                 templateUrl: '/modules/core/views/templates/privacy.template.html',
@@ -78,7 +53,6 @@
             state('intro', {
                 url: '/',
                 template: '<div ui-view></div>',
-                parent: 'superbase',
                 controller: ['$state', '$timeout', function ($state, $timeout) {
                     if ($state.is('intro')) {
                         $timeout(function () {
