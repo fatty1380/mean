@@ -16,11 +16,14 @@ var _ = require('lodash'),
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
+    var select = req.select || '-password -oldPass -salt -roles';
+
     req.log.debug({func: 'userById', params: req.params}, 'looking up user by id: %s', id);
     User
         .findOne({
             _id: id
         })
+        .select(select)
         .exec(function(err, user) {
             if (err) { return next(err); }
             if (!user) {

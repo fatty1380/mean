@@ -188,6 +188,18 @@ var UserSchema = new Schema({
      */
     addresses: ['Address'],
 
+    /**
+     * Friends & Connections : START
+     */
+
+    friends: {
+        type: [{type: Schema.ObjectId,
+            ref: 'Driver'}],
+        default: []
+    },
+
+    /** Friends & Connections : END **/
+
     /** Section Begin : Virtual Members **/
 
     displayName: {
@@ -276,6 +288,12 @@ UserSchema.methods.cleanse = function () {
 
     this.password = undefined;
     this.salt = undefined;
+};
+
+UserSchema.methods.loadFriends = function() {
+    return this.db.model('User')
+        .find({_id: {'$in': this.friends}, 'friends': this._id})
+        .select('_id handle displayName username profileImageURL');
 };
 
 /**

@@ -100,7 +100,7 @@ describe('Application Model Unit Tests:', function () {
 
     describe('Release Model Methods', function () {
 
-        beforeEach(function (done) {
+        beforeEach(function () {
 
             releasePrimitive = {
                 releaseType: 'preEmployment',

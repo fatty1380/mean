@@ -12,6 +12,12 @@
         app.route('/api/users/password').post(users.changePassword);
         app.route('/api/users/picture').post(users.changeProfilePicture);
 
+        // Friends & Connections
+        app.route('/api/users/me/friends')
+        .get(users.loadFriends)
+        .post(users.addFriend);
+
+        // Seed User Creation
         app.route('/api/seed')
         .post(users.createSeed);
 

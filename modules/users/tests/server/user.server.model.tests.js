@@ -244,6 +244,54 @@ describe('User Model Unit Tests:', function () {
         it('should keep any company records where the user is NOT the only associated user');
     });
 
+    describe('Friends & Connections', function() {
+        var u;
+
+        beforeEach(function() {
+            u = new User(stubs.getUser());
+            return user.save();
+        });
+
+        it('should not have any friends to start', function() {
+            user.should.have.property('friends').and.have.length(0);
+
+            user.should.have.property('loadFriends').and.be.a.Function;
+        });
+        it('should be able to request a friend and not be added to your friends immediately', function() {
+
+            user.friends.push(u._id);
+
+            Q.all([u.save(), user.save()])
+            .then(function(success) {
+                    user.should.have.property('friends').with.length(1);
+                    u.should.have.property('friends').with.length(0);
+
+                    return user.loadFriends();
+                })
+            .then(function(friends) {
+                    friends.should.have.property('length', 0);
+                });
+        });
+        it('should show another user as a friend after they have added you', function() {
+            user.friends.push(u._id);
+            u.friends.push(user._id);
+
+            Q.all([u.save(), user.save()])
+                .then(function(success) {
+                    user.should.have.property('friends').with.length(1);
+                    u.should.have.property('friends').with.length(1);
+
+                    return Q.all({friends: user.loadFriends(), other: u.loadFriends()});
+                })
+                .then(function(results) {
+                    results.friends.should.have.property('length', 1);
+                    results.other.should.have.property('length', 1);
+                });
+        });
+
+
+    });
+
     describe('Special functionality for "SEED" users', function () {
         var seed;
         beforeEach(function (done) {

@@ -1,96 +1,157 @@
 'use strict';
 
-var should = require('should'),
-    Q = require('q'),
-    path = require('path'),
+var should   = require('should'),
+    _           = require('lodash'),
+    Q        = require('q'),
+    path     = require('path'),
     mongoose = require('mongoose'),
-    User = mongoose.model('User'),
+    stubs    = require(path.resolve('./config/lib/test.stubs')),
+    User     = mongoose.model('User'),
     SeedUser = mongoose.model('SeedUser'),
-    express = require(path.resolve('./config/lib/express')),
-    request = require('supertest-as-promised')(Q.Promise),
-    log = require(path.resolve('./config/lib/logger')).child({
+    express  = require(path.resolve('./config/lib/express')),
+    request  = require('supertest-as-promised')(Q.Promise),
+    log      = require(path.resolve('./config/lib/logger')).child({
         module: 'article.routes.test',
-        file: 'article.server.routes.test'
+        file  : 'article.server.routes.test'
     });
 
 /**
  * Globals
  */
-var app, agent, credentials, user, seeduser;
+var app, agent, credentials, user, _test;
 
 
-describe('Seed User CRUD tests', function () {
+describe('User CRUD tests', function () {
     before(function (done) {
         // Get application
-        app = express.init(mongoose).http;
+        app   = express.init(mongoose).http;
         agent = request.agent(app);
 
         done();
     });
 
-    beforeEach(function (done) {
-        seeduser = {
-            firstName: 'Signup',
-            lastName: 'User',
-            email: 'signuponly@seed.com'
-        };
-
-        done();
+    beforeEach(function () {
+        user        = stubs.user;
+        credentials = stubs.credentials;
     });
 
-    it('Should allow me to create a basic seed user', function (done) {
-        agent.post('/api/seed')
-            .send(seeduser)
-            .expect(200)
-            .then(function (seedResponse) {
-                log.debug({response: seedResponse.body}, 'Got Response');
+    describe('Profile specific tests', function () {
 
-                seedResponse.should.have.property('body');
+        beforeEach(function () {
+            user = new User(user);
 
-                var newSeed = seedResponse.body;
-
-                newSeed.should.have.property('_id');
-                newSeed.should.have.property('firstName', seeduser.firstName);
-                newSeed.should.have.property('lastName', seeduser.lastName);
-                newSeed.should.have.property('email', seeduser.email);
-
-                done();
-            }, done);
-    });
-
-    it('Should not allow me to create a seed user for an email that is already seeded', function (done) {
-        this.timeout(5000);
-
-        agent.post('/api/seed')
-            .send(seeduser)
-            .expect(200)
-            .then(function (seedResponse) {
-
-                return agent.post('/api/seed')
-                    .send(seeduser)
-                    .expect(400);
-            })
-            .then(function (response) {
-                log.debug('Got response from dupe seed user');
-
-                response.should.have.property('error');
-                response.error.should.have.property('text');
-
-                done();
-            })
-            .catch(function (err) {
-                log.debug(err, 'Got ERR response creating seed user');
-
-                should.not.exist(err);
-
-                done();
-            });
-    });
-
-    afterEach(function (done) {
-        SeedUser.remove().exec(function () {
-            done();
+            return user.save();
         });
+
+        it('should be able to load a profile by userId');
+        it('should be able to load a profile by handle');
+        it('should return a list of profiles without sensitive data', function () {
+            _test        = this.test;
+            var endpoint = '/api/profiles';
+
+            var admin = new User(stubs.getUser());
+            admin.roles.push('admin');
+
+            return admin.save()
+                .then(function () {
+                    credentials.username = admin.username;
+
+                    return stubs.agentLogin(agent, credentials);
+                })
+                .then(function () {
+                    return agent.get(endpoint)
+                        .expect(200);
+                })
+                .then(function (response) {
+                    log.debug({
+                        test: _test.title,
+                        body: response.body,
+                        err : response.error
+                    }, 'Got Response from %s', endpoint);
+
+                    var profiles = response.body;
+
+                    _.each(profiles, function (profile) {
+                        profile.should.not.have.property('salt');
+                        profile.should.not.have.property('password');
+                        profile.should.not.have.property('roles');
+                    });
+                    return true;
+                });
+        });
+        it('should return profiles without sensitive fields', function () {
+            _test        = this.test;
+            var endpoint = '/api/profiles/' + user.id;
+
+            return agent.get(endpoint)
+                .expect(200)
+                .then(function (response) {
+                    log.debug({
+                        test: _test.title,
+                        body: response.body,
+                        err : response.error
+                    }, 'Got Response from %s', endpoint);
+
+                    var profile = response.body;
+
+                    profile.should.have.property('displayName');
+                    profile.should.have.property('profileImageURL');
+
+                    profile.should.not.have.property('salt');
+                    profile.should.not.have.property('password');
+                    profile.should.not.have.property('roles');
+                });
+        });
+    });
+
+    describe('for creating, loading and rejecting friends', function () {
+        var u1, u2;
+        beforeEach(function () {
+
+            user = new User(user);
+            u1   = new User(stubs.getUser());
+            u2   = new User(stubs.getUser());
+
+            user.friends.push(u1.id);
+            user.friends.push(u2.id);
+            u1.friends.push(user.id);
+
+            credentials.username = user.username;
+            var token            = stubs.agentLogin(agent, credentials);
+
+            return Q.all([user.save(), u1.save(), u2.save(), token]);
+        });
+
+        it('should return one friend for `user`', function () {
+            _test        = this.test;
+            var endpoint = '/api/users/me/friends';
+            return agent.get(endpoint)
+                .expect(200)
+                .then(function (response) {
+                    log.debug({
+                        test: _test.title,
+                        body: response.body,
+                        err : response.error
+                    }, 'Got Response from %s', endpoint);
+                    var friends = response.body;
+
+                    friends.should.have.property('length', 1);
+                    return friends[0];
+                })
+                .then(function (friend) {
+                    friend.should.have.property('username');
+                    friend.should.have.property('profileImageURL');
+
+                    friend.should.not.have.property('password');
+                    friend.should.not.have.property('salt');
+                });
+        });
+        it('should return no friends for u2');
+    });
+
+
+    afterEach(function () {
+        return User.remove();
     });
 });
 

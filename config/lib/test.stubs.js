@@ -2,7 +2,8 @@
     'use strict';
 
 var
-    _            = require('lodash');
+    _            = require('lodash'),
+    Q = require('q');
 
 var stubs = {};
 
@@ -81,3 +82,19 @@ function randomUser() {
         provider: 'local'
     }
 }
+
+/**
+ *  Functional methods - should be move to stub-functions or something
+ */
+
+exports.agentLogin = function(agent, credentials) {
+    return agent.post('/api/auth/signin')
+        .send(credentials)
+        .expect(200)
+        .then(function (signinRes) {
+            return signinRes;
+        })
+        .catch(function (signinErr) {
+            return Q.reject(signinErr);
+        });
+};

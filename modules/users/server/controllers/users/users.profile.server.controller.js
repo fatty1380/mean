@@ -103,8 +103,11 @@ exports.changeProfilePicture = function (req, res) {
 };
 
 exports.list = function (req, res, next) {
+    var select = req.select || '-password -oldPass -salt -roles';
+
     User
         .find()
+        .select(select)
         .sort('-created')
         .exec(function (err, users) {
             if (err) {
