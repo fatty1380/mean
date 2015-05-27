@@ -50,6 +50,21 @@
                 templateUrl: '/modules/core/views/headline-bg.client.view.html'
             }).
 
+            state('profile-base', {
+                url: '/profile-base',
+                views: {
+                    '' : {
+                        templateUrl: '/modules/core/views/profile-base.client.template.html'
+                    },
+                    'content@profile-base': {
+                        template: '<h1 class="text-center">CONTENT</h1>'
+                    },
+                    'sidebar@profile-base': {
+                        template: '<h1 class="text-center">SIDEBAR</h1>'
+                    }
+                }
+            }).
+
             state('intro', {
                 url: '/',
                 template: '<div ui-view></div>',
