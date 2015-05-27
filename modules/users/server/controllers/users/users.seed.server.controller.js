@@ -10,6 +10,7 @@ var _        = require('lodash'),
     mongoose     = require('mongoose'),
     User         = mongoose.model('User'),
     SeedUser         = mongoose.model('SeedUser'),
+    emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
     Q            = require('q'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users.seed',
@@ -25,6 +26,7 @@ exports.createSeed = function(req, res) {
     seed.save().then(function(success) {
 
         log.info('Successfully created seed user');
+        emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', success);
 
         res.json(success);
 
