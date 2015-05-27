@@ -76,13 +76,13 @@ module.exports = function (app) {
         .get(acl.isAllowed, bgchecks.applicant.list);
 
     app.route('/api/reports/applicants/:applicantId')
-        .get(acl.isAllowed, bgchecks.applicant.get);
+        .get(acl.isAllowed, bgchecks.applicant.get, bgchecks.applicant.read);
 
 
     /** REPORTS --------------------------------------- */
-    app.route('/api/reports')
-        .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // Get status of all reports for applicant
-        .post(bgchecks.applicant.get, bgchecks.report.create); // Create a new report
+    //app.route('/api/reports')
+    //    .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // Get status of all reports for applicant
+    //    .post(bgchecks.applicant.get, bgchecks.report.create); // Create a new report
 
     app.route('/api/users/:userId/reports')
         .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // get status of all reports for applicant

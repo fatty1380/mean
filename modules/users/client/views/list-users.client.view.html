@@ -1,5 +1,5 @@
-<section data-ng-init="ctrl.initList()" data-ng-controller="ProfileController as ctrl">
-    <h3>{{listTitle}}</h3>
+<section>
+    <h3>Users List</h3>
     <div class="list-group">
         <div class="row list-group-item active">
             <h4>
@@ -23,10 +23,10 @@
                 </div>
             </h4>
         </div>
-        <a data-ng-repeat="user in ctrl.users" data-ng-href="users/{{user._id}}" class="row list-group-item">
+        <a data-ng-repeat="user in vm.users" data-ng-href="users/{{user._id}}" class="row list-group-item">
             <div class="col-sm-9 col-xs-8">
                 {{user.displayName}}
-                <span class="label label-danger" ng-show="{{user.roles.indexOf('admin') !== -1}}">Administrator</span>
+                <span class="label label-danger" ng-show="user.roles.indexOf('admin') !== -1">Administrator</span>
             </div>
             <div class="col-sm-1 col-xs-4">
                 <span class="label" ng-class="{driver:'label-primary', owner:'label-success'}[user.type]">{{user.type}}</span>
@@ -39,7 +39,8 @@
             </div>
         </a>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!users.$resolved || users.length">
-        No users yet, why don't you <a href="/users/create">create one</a>?
+    <div class="alert alert-warning text-center" data-ng-hide="!users || !users.length">
+        No users yet, why don't you <a href="/users/create">create one</a>? <br>
+        wait a second, how are you even here if there are no users?
     </div>
 </section>

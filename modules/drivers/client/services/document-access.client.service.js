@@ -5,18 +5,52 @@
     function DocumentAccessFactory($q, $log, Drivers, Auth) {
 
         return {
-            hasAccess: function(driverId) {
+            hasAccess: function(driverId, application) {
                 $log.debug('[DocAccess.hasAccess] Looking up access for driver `%s`', driverId);
 
                 if (Auth.user.driver && (Auth.user.driver === driverId || Auth.user.driver._id === driverId)) {
-                    $log.debug('[DocAccess.hasAccess] Granting access to their own documents');
-                    return $q.when(true);
+                    return true;
                 }
+                else {
+                    if (!application || !application.canViewDocs) {
+                        return false;
+                    }
 
+                    return true;
+                }
+            },
+            getDriver: function(driverId, application) {
+                $log.debug('[DocAccess.hasAccess] Looking up access for `%s` to driver `%s`', Auth.user._id, driverId);
 
-                $log.warning('[DocAccess.hasAccess] TODO: Check access against existing connections. Granting access for now');
-                return $q.when(true);
+                if(this.hasAccess(driverId, application)) {
+                    if (Auth.user.driver && (Auth.user.driver === driverId || Auth.user.driver._id === driverId)) {
+                        $log.debug('[DocAccess.hasAccess] Granting access to their own documents');
+                        return $q.when(Auth.user.driver);
+                    }
+                    else {
+                        if (!application || !application.canViewDocs) {
+                            return $q.reject('Sorry, but you do not have access to this applicant\'s documents');
+                        }
 
+                        var deferred = $q.defer();
+                        Drivers.get(driverId).then(
+                            function(driverProfile) {
+                                $log.debug('got driver');
+
+                                if(!!driverProfile && !_.isEmpty(driverProfile)) {
+                                    return deferred.resolve(driverProfile);
+                                }
+
+                                return deferred.reject('No Driver Profile found for driver id: ' + driverId);
+                            }
+                        );
+
+                        return deferred.promise;
+                    }
+                }
+                else {
+                    return $q.reject('Sorry, but you do not have access to this driver\'s documents');
+                }
             },
             updateFileUrl: function (driverId, file) {
 

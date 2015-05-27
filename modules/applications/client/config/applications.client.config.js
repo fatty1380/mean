@@ -26,7 +26,7 @@
         });
         Menus.addSubMenuItem('adminbar', 'applications', {
             title: 'All Applications',
-            state: 'applications.list'
+            state: 'applications.all'
         });
         Menus.addSubMenuItem('adminbar', 'applications', {
             title: 'New Application',

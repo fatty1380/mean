@@ -1,7 +1,7 @@
 <section class="container-fluid">
 
-    <os-page-header title="{{vm.titleText}}"
-                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
+    <os-page-header title="{{vm.company.name}}"
+                    sub-title="{{vm.subtitle}}"
                     show-edit="!!vm.company && vm.canEdit"
                     edit-sref="companies.edit({'companyId': '{{vm.company._id}}'})"
                     picture-url="vm.imageURL" picture-edit-fn="vm.showModal()">
@@ -27,25 +27,25 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row profile">
         <div class="col-md-8" data-ng-class="{'col-md-offset-2': !vm.company}">
-            <os-company company="vm.company" config="vm.config"></os-company>
+            <os-company company="vm.company" config="vm.config" can-edit="vm.canEdit"></os-company>
 
-            <os-job-list ng-if="!!vm.company && vm.company.about" header="Open Jobs" company="vm.company"
-                         company-id="{{vm.company._id}}"
-                         show-post="vm.user._id === vm.company.owner._id" show-search="false"
+            <os-job-list ng-if="vm.canEdit" header="Open Jobs" company="vm.company"
+                         company-id="{{vm.company.id}}"
+                         show-post="vm.canEdit" show-search="false"
                          btn-class="btn-sm"></os-job-list>
         </div>
 
         <div class="gutter right col-md-4" ng-if="!!vm.company">
 
             <a class="btn btn-cta-primary btn-lg btn-block bigger mgn-bottom"
-               dta-ng-if="vm.canEdit"
+               data-ng-if="vm.canEdit"
                ui-sref="jobs.create({'companyId' : vm.company._id})">
                 Post a New Job!
             </a>
 
-            <div class="panel panel-default">
+            <div class="panel panel-default" data-ng-if="vm.canEdit">
                 <div class="panel-heading">
                     <span class="h4">Subscription Information</span>
                 </div>
@@ -97,6 +97,28 @@
                                      precision="exact"></os-map-location>
 
                     <os-address-list models="vm.company.locations" can-edit="false" full-width="true"></os-address-list>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Active Jobs</div>
+                <div class="panel-body">
+
+                    <div ng-repeat="job in vm.jobs"
+                         class="alert-blocks small"
+                         ng-class="{'alert-blocks-success': job.isNew}"
+                         ui-sref="jobs.view({jobId: job.id})">
+
+                        <img class="rounded-x mCS_img_loaded" ng-src="{{vm.imageURL}}" alt="">
+
+                        <div class="overflow-h">
+                            <strong class="color-green">{{job.name}}
+                                <small class="pull-right"><em>{{job.posted | amDateFormat : 'L'}}</em>
+                                </small>
+                            </strong>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

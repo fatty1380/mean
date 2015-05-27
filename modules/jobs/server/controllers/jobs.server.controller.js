@@ -4,14 +4,19 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-_            = require('lodash'), path = require('path'),
+_            = require('lodash'),
+path         = require('path'),
 Job          = mongoose.model('Job'),
 Address      = mongoose.model('Address'),
 Application  = mongoose.model('Application'),
-Company  = mongoose.model('Company'),
+Company      = mongoose.model('Company'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 companies    = require(path.resolve('./modules/companies/server/controllers/companies.server.controller')),
-moment = require('moment'),
+log          = require(path.resolve('./config/lib/logger')).child({
+    module: 'jobs',
+    file: 'Jobs.Controller'
+}),
+moment       = require('moment'),
 Q            = require('q');
 
 /**
@@ -20,10 +25,10 @@ Q            = require('q');
 
 exports.executeQuery = function (req, res, next) {
 
-    console.log('[JobCtrl] ExecuteQuery');
+    req.log.debug('ExecuteQuery', {query: req.query, sort: req.sort});
 
     var query = req.query || {};
-    var sort = req.sort || '';
+    var sort = req.sort || '-posted';
     var populate = [
         {property: 'user', fields: 'displayName'},
         {property: 'company', fields: null}
@@ -59,7 +64,7 @@ exports.executeQuery = function (req, res, next) {
 
             Job.populate(jobs, options, function (err, populated) {
                 if (err) {
-                    console.log('error looking up users for applications, returning non-populated version', err);
+                    req.log.error('error looking up users for applications, returning non-populated version', err);
                     next();
                 }
 
@@ -72,7 +77,7 @@ exports.executeQuery = function (req, res, next) {
 
                 Job.populate(jobs, options, function (err, populated) {
                     if (err) {
-                        console.log('error looking up users for applications, returning non-populated version', err);
+                        req.log.error('error looking up users for applications, returning non-populated version', err);
                         next();
                     }
 
@@ -115,6 +120,33 @@ var getErrorMessage = function (err) {
     return message;
 };
 
+
+var incrementJobsCount = function (req) {
+    if (!req.company) {
+        req.log.error('No Company defined in request');
+        return false;
+    }
+
+    var sub = req.company.subscription;
+
+    if (!sub) {
+        req.log.error('No Subscription for company `%s`', req.company.id);
+        return false;
+    }
+
+    var renewal = moment(sub.renews);
+    if (renewal < moment) {
+        sub.renews = renewal.add(30, 'days');
+        sub.used = 1;
+    } else {
+        sub.used++;
+    }
+
+    sub.save(function (err) {
+        req.log.info('updated company subscription', {subscription: sub});
+    });
+};
+
 /**
  * Create a Job
  */
@@ -123,7 +155,7 @@ exports.create = function (req, res) {
 
     var job = new Job(req.body);
 
-    console.log('[Job.Create] Company %s is posting job with headline `%s`', req.companyId, job.name);
+    req.log.info('Create', 'Company %s is posting a new job', req.companyId, {job: job});
 
     // Set properties
     job.user = req.user;
@@ -131,16 +163,16 @@ exports.create = function (req, res) {
     job.postStatus = 'posted';
     job.posted = Date.now();
 
-    console.log('[Job.Create] Creating new job: %j', job);
+    req.log.trace('Create', 'Creating new job', {job: job});
 
     job.save(function (err) {
         if (err) {
-            console.error('[Job.Create] Error Creating new job: %j\n\t%j', err, job);
+            req.log.error('Create', 'Error Creating new job', {error: err, job: job});
             return res.send(400, {
-                message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later '+ (err.message ? '('+err.message+')': '')
+                message: getErrorMessage(err) || 'Unable to create a new job at this time. Please try again later ' + (err.message ? '(' + err.message + ')' : '')
             });
         } else {
-            console.log('[Job.Create] Created new job with ID `%s`', job._id);
+            req.log.info('Create', 'Created new job with ID `%s`', job._id);
             res.json(job);
 
             incrementJobsCount(req);
@@ -150,36 +182,13 @@ exports.create = function (req, res) {
 
 };
 
-var incrementJobsCount = function(req) {
-    if(!req.company) {
-        console.error('No Company defined in request');
-        return false;
-    }
-
-    var sub = req.company.subscription;
-
-    if(!sub) {
-        console.error('No Subscription for company `%s`', req.company.id);
-        return false;
-    }
-
-    var renewal = moment(sub.renews);
-    if(renewal < moment) {
-        sub.renews = renewal.add(30, 'days');
-        sub.used = 1;
-    } else {
-        sub.used++;
-    }
-
-    sub.save(function(err) {
-        console.log('updated company subscription to %j', sub);
-    });
-};
-
 /**
  * Show the current Job
  */
 exports.read = function (req, res) {
+    req.log.info('read', 'Loaded Job', {jobId: req.job && req.job._id, query: req.query});
+    req.log.trace('read', 'Loaded Job', {jobId: req.job && req.job._id, query: req.query, job: req.job});
+
     if (!req.job) {
         return res.status(404).send({
             message: 'No job found'
@@ -193,7 +202,8 @@ exports.read = function (req, res) {
  * List of Jobs stored in request
  */
 exports.list = function (req, res) {
-    console.log('[JobsCtrl.executeQuery] Found %d jobs for query %j', req.jobs.length, req.query);
+    req.log.info({query: req.query, func: 'list'}, 'Found %d jobs', req.jobs.length);
+    req.log.trace({query: req.query, jobs: req.jobs, func: 'list'}, 'Found %d jobs', req.jobs.length);
     res.json(req.jobs);
 };
 
@@ -201,19 +211,26 @@ exports.list = function (req, res) {
  * Update a Job
  */
 exports.update = function (req, res) {
+    req.log.trace('update', 'START', {body: req.body});
     var job = req.job;
 
     debugger;
 
     job = _.extend(job, req.body);
 
+    //job.location = Address.map(req.body.location);
+    job.location = req.body.location;
+
+    req.log.trace('update', 'Saving job', {job: job});
+
     job.save(function (err) {
         if (err) {
-            console.log('[Job.Update] Error Saving job: %j', err);
+            req.log.error('Update', 'Error Saving job', err);
             return res.send(400, {
                 message: getErrorMessage(err)
             });
         } else {
+            req.log.trace('update', 'Successfully Saved job', {job: job});
             res.json(job);
         }
     });
@@ -236,16 +253,11 @@ exports.delete = function (req, res) {
     });
 };
 
-
-exports.queryAll = function (req, res, next) {
-    req.sort = '-created';
-
-    next();
-};
-
 /** * List of a user's posted jobs
  */
 exports.queryByUserID = function (req, res, next) {
+    req.log.trace('queryByUserID', 'Querying by companyId', {companyId: req.params.userId, query: req.query});
+
     req.query = {
         user: req.params.userId
     };
@@ -257,6 +269,7 @@ exports.queryByUserID = function (req, res, next) {
  * List of a company's posted jobs
  */
 exports.queryByCompanyID = function (req, res, next) {
+    req.log.trace('queryByCompanyID', 'Querying by companyId', {companyId: req.params.companyId, query: req.query});
 
     req.query = {
         company: req.params.companyId
@@ -266,7 +279,7 @@ exports.queryByCompanyID = function (req, res, next) {
 };
 
 exports.populateApplications = function (req, res, next) {
-    console.log('populating applications');
+    req.log.trace('populateApplications', 'populating applications');
     req.populate = [{property: 'applications', fields: ''}];
 
     next();
@@ -277,23 +290,32 @@ exports.populateApplications = function (req, res, next) {
  */
 exports.jobByID = function (req, res, next, id) {
 
-    console.log('[JobById] Loading job by id %s', id);
+    req.log.debug('JobById', 'Loading job by id %s. URL: %s', {jobId: id, url: req.url});
+    req.log.trace('JobById', 'Request body', {reqBody: req.body, jobId: id, url: req.url});
 
     Job.findById(id)
         .populate('user', 'displayName email')
         .populate('company')
         .exec(function (err, job) {
             if (err) {
-                console.log('[JobById] Error: %j', err);
+                req.log.error('JobById', 'Error while loading job', {error: err});
                 return next(err);
             }
 
             if (!!req.user && !!req.user.driver) {
-                console.log('[JobById] Both User and Driver are defined in the request!');
-
+                req.log.debug('JobById', 'Requesting User has Driver defined!', {
+                    user: req.user,
+                    driver: req.user.driver
+                });
+            } else if (!!req.user && !!req.user.company) {
+                req.log.debug('JobById', 'Requesting User has Company defined!', {
+                    user: req.user,
+                    company: req.user.company
+                });
             }
 
-            console.log('[JobById] Returning job %s', !!job && job._id);
+            req.log.debug('JobById', 'Returning job', {jobId: !!job && job._id});
+            req.log.trace('JobById', 'Returning job', {jobId: !!job && job._id, job: job});
 
             req.job = job;
             next();
@@ -305,8 +327,11 @@ exports.jobByID = function (req, res, next, id) {
  */
 exports.hasAuthorization = function (req, res, next) {
     if (req.job.user.id !== req.user.id) {
+        req.log.warn('hasAuthorization', 'User is NOT Authorized');
         return res.send(403, 'User is not authorized');
     }
+
+    req.log.trace('hasAuthorization', 'User is Authorized');
     next();
 };
 
@@ -315,15 +340,19 @@ exports.validateSubscription = function (req, res, next) {
     req.companyId = req.body.companyId;
 
     Company.findById(req.companyId)
-    .populate('subscription')
-    .exec(function(err, company) {
-            if(err || !company) {
-                console.log('[Jobs.ValidateSubscription] Unable to find Company');
+        .populate('subscription')
+        .exec(function (err, company) {
+            if (err || !company) {
+                req.log.warn('ValidateSubscription', 'Unable to find Company', {companyId: req.companyId});
                 return res.status(404).send({message: 'Unable to find company', error: err});
             }
 
-            if(!company.subscription.isValid) {
-                console.log('[Jobs.ValidateSubscription] Subscription invalid: %s', company.subscription.statusMessage);
+            if (!company.subscription) {
+                req.log.warn('ValidateSubscription', 'No Subscription object');
+                return res.status(403).send({message: 'No Active Subscription'});
+            }
+            else if(!company.subscription.isValid) {
+                req.log.warn('ValidateSubscription', 'Invalid Subscription: %s', company.subscription.statusMessage, {subscription: company.subscription});
                 return res.status(403).send({message: company.subscription.statusMessage});
             }
 

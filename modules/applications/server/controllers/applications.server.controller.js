@@ -4,106 +4,217 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+Q            = require('q'),
 path         = require('path'),
 Application  = mongoose.model('Application'),
+Release      = mongoose.model('Release'),
 Message      = mongoose.model('Message'),
 User         = mongoose.model('User'),
 Job          = mongoose.model('Job'),
 Connection   = mongoose.model('Connection'),
+log          = require(path.resolve('./config/lib/logger')).child({
+    module: 'applications',
+    file: 'Applications.Controller'
+}),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+releaseDocs  = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller')),
+moment       = require('moment'),
 _            = require('lodash');
+
+exports.create = create;
+exports.read = read;
+exports.update = update;
+exports.delete = remove;
+
+exports.executeQuery = executeQuery;
+
+exports.applicationByID = applicationByID;
+exports.queryByUserID = queryByUserID;
+exports.loadMine = loadMine;
+exports.getByJobId = getByJobId;
+exports.queryByJobID = queryByJobId;
+exports.queryByCompanyID = queryByCompanyId;
 
 /**
  * "Instance" Methods
  */
 
-var executeQuery = function (req, res) {
+function executeQuery(req, res) {
 
     var query = req.query || {};
     var sort = req.sort || '-created';
 
+    req.log.debug({query: query}, 'Querying DB For Applications');
+
+    var populate = (req.populate || ['job', 'connection', 'messages']).join(' ');
+
     Application.find(query)
         .sort(sort)
         .populate('user', 'displayName profileImageURL')
-        .populate('job') // TODO: Optimize Later
         .populate('company', 'name profileImageURL')
-        .populate('connection')
-        .populate('messages') // TODO: Optimize Later
+        .populate(populate)
         .exec(function (err, applications) {
             if (err) {
+                req.log.error('Failed to load applications from query', {error: err, query: query});
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             }
 
             req.applications = applications || [];
-            console.log('[ApplicationsCtrl.executeQuery] Found %d applications for query %j', req.applications.length, query);
+            req.log.debug('[ApplicationsCtrl.executeQuery] Found %d applications for query %j (%s)', req.applications.length, query, req.url);
 
-            console.log('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
-            res.json(req.applications);
+            //req.log.debug('[ApplicationCtrl.returnValue(s): %s', JSON.stringify(req.applications, undefined, 2));
+            return res.json(req.applications);
         });
-};
+}
+
+function processDocuments(req, application) {
+    return _.map(application.releases, function (release) {
+        if (_.isEmpty(release.file) || moment(release.signature.timestamp).isAfter(release.modified)) {
+            req.log.info('update', 'Saving file to cloud');
+            var newRelease = new Release(release);
+            return releaseDocs.generateDocument(newRelease, req.user);
+        }
+
+        req.log.info('update', 'File has already been saved to cloud');
+        return Q.when(release);
+    });
+}
 
 /**
  * Create a Application
  */
-exports.create = function (req, res) {
+function create(req, res) {
+
+    var jobId = req.job && req.job.id || req.body.job && req.body.job.id || req.body.jobId || req.query.jobId;
+    req.log.trace({
+        func: 'create',
+        job: req.job,
+        bodyJob: req.body.job,
+        bodyId: req.body.jobId,
+        query: req.query
+    }, 'Creating application for job %s', jobId);
+
+    if (_.isEmpty(jobId)) {
+        req.log.error({
+            func: 'create',
+            job: req.job,
+            bodyJob: req.body.job,
+            bodyId: req.body.jobId,
+            query: req.query
+        }, 'Cannot create an application without a job to attach it to', {
+            job: req.job,
+            bodyJob: req.body.job,
+            bodyId: req.body.jobId,
+            query: req.query
+        });
+        return res.status(400).send({
+            message: 'Must specify which job this application is for'
+        });
+    }
+
+    //var releases = req.body.releases;
+    //delete req.body.releases;
     var application = new Application(req.body);
 
-    console.log('[ApplicationController.create] req.job: %j, req.body.jobId: %j', req.job, req.body.jobId);
+    (_.isEmpty(req.job) ? Job.findById(jobId) : Q.when(req.job))
+        .then(function (job) {
+            req.log.trace({func: 'create.findJob'}, 'Found Job: %j', job);
+            req.job = job;
 
-    application.user = req.user;
-    application.job = req.job;
-    application.company = (!!req.job) ? req.job.company : null;
+            req.log.trace({body: req.body}, 'create', 'Creating new application from body');
+            req.log.info({func: 'create'}, 'Creating new application');
 
-    console.log('[ApplicationController.create] Creating new application: %j', application);
+            // TODO: Confirm that new logic properly processes documents
+            var processedDocs = processDocuments(req, application);
 
-    application.save(function (err) {
-        if (err) {
+            return Q.all(processedDocs);
+        }).then(
+        function (results) {
+            // TODO: Check if there is a difference
+            application.releases = results;
+
+            req.log.debug({
+                releases: application.releases,
+                func: 'create.docsSaved'
+            }, 'Saving application with releases');
+
+            application.user = req.user;
+            application.job = req.job;
+            application.company = (!!req.job) ? req.job.company : null;
+
+            return application;
+        })
+        .then(function (application) {
+
+            req.log.info({func: 'create.docsSaved'}, 'Creating new application', {
+                user: application.user.id,
+                job: application.job.id
+            });
+            req.log.trace({func: 'create.docsSaved'}, 'Creating new application', {application: application});
+
+            return application.save();
+        })
+        .then(function (application) {
+            req.log.info({func: 'create.postSave'},
+                'New Application save successfully! Now saving to the job',
+                {application: application.id, user: application.user.id, job: application.job.id});
+            req.log.trace({func: 'create.postSave'}, 'New Application save successfully!', {application: application});
+
+            req.job.applications.push(application);
+            return req.job.save();
+        })
+        .then(function (job) {
+            req.log.info({func: 'create.postJobSave', applications: job.applications}, 'saved job application to job');
+        },
+        function (err) {
+            req.log.error({func: 'create.postJobSave', error: err}, 'error saving job application to job');
+        })
+        .then(function () {
+
+            if (!application.isDraft) {
+                req.log.debug({func: 'create.postJobSave'}, 'Sending email for New Application');
+                sendNewApplicantEmail(req.user, req.job, application);
+            }
+
+            res.json(application);
+        })
+        .catch(function (err) {
+            req.log.error({func: 'create.postSave'}, 'Error saving application: %j', err);
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
-        } else {
-            req.job.applications.push(application);
-            req.job.save(function (err) {
-                if (err) {
-                    console.log('[ApplicationController.create] error saving job application to job');
-                }
-                else {
-                    console.log('[ApplicationController.create] saved job application to job');
-                }
+        });
+}
 
-
-                debugger;
-
-                var options = [
-                    {
-                        name: 'APPLICANT',
-                        content: req.user.firstName + ' ' + req.user.lastName.substring(0, 1).toUpperCase()
-                    },
-                    {
-                        name: 'COVER_LTR',
-                        content: application.introduction
-                    },
-                    {
-                        name: 'LINK_URL',
-                        content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
-                    }
-                ];
-
-                emailer.sendTemplateBySlug('outset-new-applicant', req.job.user, options);
-            });
-
-            res.json(application);
+function sendNewApplicantEmail(user, job, application) {
+    var options = [
+        {
+            name: 'APPLICANT',
+            content: user.firstName + ' ' + user.lastName.substring(0, 1).toUpperCase()
+        },
+        {
+            name: 'COVER_LTR',
+            content: application.introduction
+        },
+        {
+            name: 'LINK_URL',
+            content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
         }
-    });
-};
+    ];
+
+    emailer.sendTemplateBySlug('outset-new-applicant', job.user, options);
+}
 
 /**
  * Show the current Application
  */
-exports.read = function (req, res) {
+function read(req, res) {
+
+    req.application = req.application || req.applications && _.first(req.applications);
+
     if (!req.application) {
         return res.status(404).send({
             message: 'No application found'
@@ -111,52 +222,89 @@ exports.read = function (req, res) {
     }
 
     res.json(req.application);
-};
+}
 
 /**
  * Update a Application
  */
-exports.update = function (req, res) {
+function update(req, res) {
+    req.log.trace('update', 'Updating existing application from body', {application: req.application, body: req.body});
+    req.log.info('update', 'Updating existing application', {url: req.url});
+
     var application = req.application;
 
-    debugger;
+    var wasDraft = application.isDraft;
 
-    application = _.extend(application, req.body);
+    var data = _.merge(application.toJSON(), req.body);
+    _.extend(application, data);
 
-    application.save(function (err) {
-            if (err) {
-                console.log('[APPLICATION.Update] %j', err);
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            } else {
-                var options = [
-                    //{path: 'user', model: 'User'},
-                    {path: 'job', model: 'Job'},
-                    {path: 'company', model: 'Company', select: 'name owner agents profileImageURL'},
-                    //{path: 'messages'},
-                    {path: 'connection'},
-                    {path: 'messages.sender', model: 'User'},
-                    {path: 'user.driver', model: 'Driver'},
-                    {path: 'connection.isValid'}
-                ];
+    if (!_.isEmpty(data.releases) && _.isString(application.releases)) {
+        application.releases = data.releases;
+    }
 
-                Application.populate(application, options, function (err, populated) {
-                    if (err) {
-                        console.log('error retrieving application, returning non-populated version', err);
-                        return res.json(application);
-                    }
+    var processedDocs = processDocuments(req, application);
 
-                    res.json(populated);
-                });
+    // Handle nested
+
+    Q.all(processedDocs).then(
+        function (releases) {
+            // var fulfilledReleases = _.pluck(_.where(releases, {state: 'fulfilled'}), 'value');
+
+            // TODO: Determine if this is necessary, or if it was handled in the map funciton above
+            _.each(releases, function (release) {
+                var existing = _.findIndex(application.releases, {releaseType: release.releaseType});
+
+                if (existing !== -1) {
+                    application.releases[existing] = release;
+                } else {
+                    application.releases.push(release);
+                }
+            });
+
+            return application;
+        }).then(function (application) {
+
+            if (application.isModified()) {
+                return application.save();
             }
+
+            req.log.debug('update', 'Application has not been modified.... resolving');
+            return Q.when(application);
+        }).then(function (success) {
+            var options = [
+                {path: 'job', model: 'Job'},
+                {path: 'company', model: 'Company', select: 'name owner agents profileImageURL'},
+                {path: 'connection'},
+                {path: 'messages.sender', model: 'User'},
+                {path: 'user.driver', model: 'Driver'},
+                {path: 'connection.isValid'}
+            ];
+
+            Application.populate(application, options, function (err, populated) {
+                if (err) {
+                    req.log.warn('update', 'error retrieving application, returning non-populated version', err);
+                    return res.json(application);
+                }
+
+                if (wasDraft && !application.isDraft) {
+                    req.log.debug('update', 'Sending email for Newly Published Application');
+                    sendNewApplicantEmail(application.user, application.job, application);
+                }
+
+                res.json(populated);
+            });
+        }).catch(function (err) {
+            req.log.error('update', 'Error updating application', {application: application, error: err});
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
         });
-};
+}
 
 /**
  * Delete an Application
  */
-exports.delete = function (req, res) {
+function remove(req, res) {
     var application = req.application;
 
     application.remove(function (err) {
@@ -168,23 +316,13 @@ exports.delete = function (req, res) {
             res.json(application);
         }
     });
-};
+}
 
-/**
- * List of *ALL* Applications
- */
-exports.listAll = function (req, res) {
-    debugger; // TODO : route to correct list
-    req.sort = '-created';
-
-    executeQuery(req, res);
-};
-
-exports.queryByJobID = function (req, res) {
+function queryByJobId(req, res) {
     var jobId = req.params.jobId;
 
-    if (!jobId) {
-        console.log('[ApplicationsCtrl.queryByJobId]', 'Cannot search without a jobId');
+    if (!req.user.isAdmin && !jobId) {
+        req.log.debug('[ApplicationsCtrl.queryByJobId]', 'Cannot search without a jobId');
         return res.status(400).send({
             message: 'Must include jobID in request to find Applications by job'
         });
@@ -205,14 +343,14 @@ exports.queryByJobID = function (req, res) {
 
     executeQuery(req, res);
 
-};
+}
 
-exports.queryByCompanyID = function (req, res) {
+function queryByCompanyId(req, res) {
     var companyId = req.company && req.company._id || req.params.companyId;
-    console.log('[ApplicationsController] queryByCompanyID(%s)', companyId);
+    req.log.debug('[ApplicationsController] queryByCompanyID(%s)', companyId);
 
     if (!companyId) {
-        console.log('[ApplicationsCtrl.queryByCompanyID]', 'Cannot search without a companyId');
+        req.log.debug('[ApplicationsCtrl.queryByCompanyID]', 'Cannot search without a companyId');
         return res.status(400).send({
             message: 'Must include companyId in request to find Applications by company'
         });
@@ -225,39 +363,40 @@ exports.queryByCompanyID = function (req, res) {
     req.sort = '-modified';
 
     executeQuery(req, res);
-};
+}
 
-exports.loadMine = function (req, res) {
-    return this.queryByUserID(req, res, null, req.user._id);
-};
+function loadMine(req, res) {
+    return queryByUserID(req, res, null, req.user._id);
+}
 
-exports.queryByUserID = function (req, res) {
+function queryByUserID(req, res) {
 
     if (req.user.type === 'driver') {
-        console.log('[ApplicationsController] queryByUserID(%s)', req.params.userId);
+        req.log.debug('[ApplicationsController] queryByUserID(%s)', req.params.userId);
         req.query = {
             user: req.params.userId
         };
     }
     else if (req.user.type === 'owner') {
-        console.log('[ApplicationsController] queryByUserID(company.owner:%s)', req.userId);
+        req.log.debug('[ApplicationsController] queryByUserID(company.owner:%s)', req.userId);
         req.query = {
             'company.owner': req.userId
         };
     }
 
     debugger;
-    console.log('[ApplicationsController] queryByUserID: Overriding query to use request params only');
+    req.log.debug('[ApplicationsController] queryByUserID: Overriding query to use request params only');
     req.query = {
         user: req.params.userId
     };
 
     executeQuery(req, res);
-};
+}
 
-exports.getByJobId = function (req, res, next) {
+function getByJobId(req, res, next) {
 
-    console.log('[ApplicationsController] getByJobId(%s)', req.params.jobId);
+    req.log.debug('[ApplicationsController.byJob] Request: %j %s', req.route.methods, req.url);
+    req.log.debug('[ApplicationsController.byJob] Loading applications for job %s for user %s', req.params.jobId, req.params.userId);
 
     var query = {
         job: req.params.jobId,
@@ -270,17 +409,19 @@ exports.getByJobId = function (req, res, next) {
                 return next(err);
             }
 
+            req.log.debug('[ApplicationController.byJob] Got application!');
+
             req.application = application;
             next();
         });
-};
+}
 
 /**
  * Application middleware
  */
-exports.applicationByID = function (req, res, next, id) {
+function applicationByID(req, res, next, id) {
 
-    console.log('[ApplicationsController] applicationById(%s)', id);
+    req.log.debug('[ApplicationsController] applicationById(%s) URL: %s', id, req.url);
 
     Application.findById(id)
         .populate({path: 'user', model: 'User'})
@@ -294,21 +435,21 @@ exports.applicationByID = function (req, res, next, id) {
             }
 
             if (!application) {
-                console.log('[ApplicationById] No Application Found');
+                req.log.debug('[ApplicationById] No Application Found');
                 return res.status(404).send({message: 'No application found for ID'});
             }
 
             req.application = application;
 
             var options = [
-                {path: 'messages.sender', model: 'User'},
+                {path: 'messages.sender', model: 'User', select: 'displayName profileImageURL'},
                 {path: 'user.driver', model: 'Driver'},
                 {path: 'connection.isValid'}
             ];
 
             Application.populate(application, options, function (err, populated) {
                 if (err) {
-                    console.log('error retrieving application, returning non-populated version', err);
+                    req.log.error('error retrieving application, returning non-populated version', err);
                     next();
                 }
 
@@ -317,7 +458,7 @@ exports.applicationByID = function (req, res, next, id) {
             });
 
         });
-};
+}
 
 
 /**
@@ -339,14 +480,25 @@ exports.getMessages = function (req, res, next) {
         return res.status(404).send({message: 'No application found for ID'});
     }
 
+    req.log.debug('starting cleansing user from messages');
+    _.map(application.messages, function (message) {
+        if (!!message.sender) {
+            req.log.debug('cleansing user from message');
+            message.sender.cleanse();
+        }
+    });
+
+    req.log.debug('finished cleansing user from messages');
+
     var response = {data: application.messages, theirs: [], latest: {}};
 
-    if (application && !application.connection) {
-        response.message = 'No valid connection';
-        return res.status(404).send(response);
-    }
-
     var myLast = _.findLast(application.messages, function (msg) {
+        if (!msg || !msg.sender) {
+            return false;
+        }
+        if (!req.user) {
+            return false;
+        }
         return req.user.equals(msg.sender);
     });
 
@@ -354,20 +506,30 @@ exports.getMessages = function (req, res, next) {
 
     response.theirs = _.filter(application.messages, function (msg) {
         if (!myLast || myLast.created < msg.created) {
-            msg.isNew = true;
+            msg.isFresh = true;
             newCt++;
         }
+
+        if (!msg.sender) {
+            return false;
+        }
+
         return !req.user.equals(msg.sender);
     });
 
     response.newMessages = newCt;
 
-
     response.latest = _.max(application.messages, function (msg) {
         return msg.created;
     });
 
-    res.json(response);
+
+    if (application && (!application.connection || !application.isConnected)) {
+        response.message = 'No valid connection';
+        return res.status(403).send(response);
+    } else {
+        res.json(response);
+    }
 };
 
 exports.persistMessage = function (applicationId, message) {
@@ -378,15 +540,15 @@ exports.persistMessage = function (applicationId, message) {
         status: message.status || 'sent'
     });
 
-    console.log('Saving new message object to DB: %j', msg);
+    log.debug('Saving new message object to DB: %j', msg);
 
     msg.save(function (err, newMessage) {
         if (err) {
-            console.log('CRAP - Couldn\'t save message, %j', err);
+            log.error('CRAP - Couldn\'t save message, %j', err);
             debugger;
         }
         else {
-            console.log('SAVED message object to DB: %j', newMessage);
+            log.debug('SAVED message object to DB: %j', newMessage);
 
             Application.findOneAndUpdate(
                 {_id: applicationId},
@@ -398,10 +560,10 @@ exports.persistMessage = function (applicationId, message) {
                 .exec(
                 function (err, model) {
                     if (err) {
-                        console.log('Couldn\'t save application with message, %j', err);
+                        log.error('Couldn\'t save application with message, %j', err);
                     }
 
-                    console.log('saved application: ' + model);
+                    log.debug('saved application: ' + model);
 
 
                     debugger; // CHECK FOR JOB NAME
@@ -412,7 +574,7 @@ exports.persistMessage = function (applicationId, message) {
 
                     Application.populate(model, options, function (err, populated) {
                         if (err) {
-                            console.log('error retrieving application, returning non-populated version', err);
+                            log.error('error retrieving application, returning non-populated version', err);
                             return false;
                         }
                         debugger;
@@ -454,19 +616,20 @@ exports.createConnection = function (req, res) {
         };
 
         if (req.application.connection) {
-            console.log('[CreateConnection] Updating existing connection');
+            req.log.debug('[CreateConnection] Updating existing connection');
             connection = _.extend(req.application.connection, cnxn);
         }
         else {
-            console.log('[CreateConnection] Creating new connection');
+            req.log.debug('[CreateConnection] Creating new connection');
             connection = new Connection(cnxn);
         }
 
 
-        console.log('[CreateConnection] Saving connection: %j', connection);
+        req.log.debug('[CreateConnection] Saving connection: %j', connection);
 
         connection.save(function (err) {
             if (err) {
+                req.log.error('Error saving connection', err);
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
@@ -477,9 +640,9 @@ exports.createConnection = function (req, res) {
 
                     req.application.save(function (err, newApp) {
                         if (err) {
-                            console.error('[CreateConnection] error saving connection to application', err);
+                            req.log.error('[CreateConnection] error saving connection to application', err);
                         }
-                        console.log('[CreateConnection] Did %sSave Connection to application', !!newApp.connection ? '' : 'NOT ');
+                        req.log.debug('[CreateConnection] Did %sSave Connection to application', !!newApp.connection ? '' : 'NOT ');
                     });
 
                     debugger; // CHECK FOR JOB NAME
@@ -509,4 +672,34 @@ exports.createConnection = function (req, res) {
     else {
         res.status(404).send({message: 'no application found'});
     }
+};
+
+/** Questionairre Intake Forms **/
+
+var questionList = {
+    'default': [
+        {
+            'description': 'Cover Letter',
+            'name': '',
+            'length': '',
+            'type': 'text',
+            'required': true
+        }
+    ]
+};
+
+exports.getQuestions = function (req, res) {
+
+    var response = {
+        'default': questionList['default']
+    };
+
+    if (req.job && req.job.company.id) {
+        var questions = questionList[req.job.company.id];
+        if (!!questions) {
+            return (response.company = questions);
+        }
+    }
+
+    res.json(response);
 };

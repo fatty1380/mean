@@ -29,7 +29,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{\'col-sm-4\' : !vm.fullWidth}"\n' +
   '         ng-animate="\'animate\'">\n' +
   '        <div ng-class="{\'form-group\': !vm.fullWidth}">\n' +
-  '            <os-address data-ng-if="!vm.inlineEdit" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>\n' +
+  '            <os-address data-ng-if="!vm.inlineEdit" address-count="vm.addresses.length" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>\n' +
   '            <os-edit-address data-ng-if="vm.inlineEdit" model="vm.addresses[a]" can-remove="vm.canRemove" remove="vm.removeAddress"></os-edit-address>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -51,7 +51,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/addresses/views/address.client.template.html',
   '<!-- os-address : address.client.template.html -->\n' +
   '<div class="panel" ng-if="!!vm.address">\n' +
-  '     <div class="panel-heading">\n' +
+  '     <div class="panel-heading" ng-if="vm.addressCount > 1 || vm.canEdit">\n' +
   '        <span class="h4">{{vm.getAddressType()}}</span>\n' +
   '        <button data-ng-if="vm.canEdit" type="button" class="pull-right btn-link" value="edit"\n' +
   '                ng-click="vm.editAddress(this)">\n' +
@@ -67,7 +67,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div ng-repeat="(s,street) in vm.address.streetAddresses track by s">\n' +
   '                {{vm.address.streetAddresses[s]}}\n' +
   '            </div>\n' +
-  '            {{vm.address.city}}, {{vm.address.state}} {{vm.address.zipCode}}\n' +
+  '            {{!!vm.address.city ? vm.address.city + \', \': \'\'}}{{vm.address.state}} {{vm.address.zipCode}}\n' +
   '            <br/>\n' +
   '        </address>\n' +
   '    </div>\n' +
@@ -86,7 +86,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '    <form role="form" data-ng-submit="signin()" class="signin form-horizontal" spellcheck="false" novalidate>\n' +
   '        <div class="modal-body">\n' +
-  '            Address: {{ vm.address }}, Text: {{ vm.text }}, debugger? {{ debugger; }}\n' +
   '            <os-edit-address model="vm.address" enable-edit="true"></os-edit-address>\n' +
   '        </div>\n' +
   '\n' +
@@ -122,7 +121,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </ul>\n' +
   '            </span>\n' +
   '\n' +
-  '            <p class="form-control-static" ng-show="vm.address.type !== \'other\' && !!vm.address.type"><b>{{vm.address.type | titlecase }}</b></p>\n' +
+  '            <p class="form-control-static" ng-show="vm.address.type !== \'other\' && !!vm.address.type"><b>{{vm.address.type | titleCase }}</b></p>\n' +
   '            <input type="text" id="typeOther" name="typeOther" class="form-control" data-ng-model="vm.address.typeOther"\n' +
   '                   data-ng-show="vm.address.type === \'other\'" placeholder="Address Type"/>\n' +
   '            <!-- /btn-group -->\n' +
@@ -154,207 +153,262 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
- $templateCache.put('/modules/applications/views/templates/application-summary.client.template.html',
-  '<section name=\'oset-application-summary\'>\n' +
+ $templateCache.put('/modules/applications/views/form/authorization.client.template.html',
+  '<section ng-form="releaseAuthForm">\n' +
   '\n' +
-  '    <!--This view is used primarily for the display of simple inline template views.-->\n' +
-  '    <div ng-show="vm.application">\n' +
-  '        <div data-ng-if="vm.displayMode === \'minimal\' || vm.displayMode === \'mine\'" class="panel panel-default pad">\n' +
-  '            <dl class="dl-horizontal">\n' +
-  '                <dt>Status:</dt>\n' +
-  '                <dd>\n' +
-  '                    <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
-  '                </dd>\n' +
-  '                <dt>Applied On:</dt>\n' +
-  '                <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
-  '            </dl>\n' +
-  '            <div class="text-center" data-ng-if="vm.displayMode === \'mine\'">\n' +
-  '                <button type="button" class="btn-link read-more strong mgn-left"\n' +
-  '                        ui-sref="applications.view({applicationId: vm.application._id})">\n' +
-  '                    Review<i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
+  '    <div class="row">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 smaller">\n' +
+  '            <div class="well" ng-show="vm.releaseType === \'preEmployment\'">\n' +
+  '                <span ng-bind-html="vm.releaseText"></span>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '\n' +
+  '    <div class="row mgn-vert" ng-hide="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">\n' +
+  '        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">\n' +
+  '            <h4 class="text-center">Please sign here:</h4>\n' +
+  '\n' +
+  '            <div signature-pad id="signature" signature="vm.release.signature" close="vm.updateSignatureStatus()"\n' +
+  '                 methods="vm.signatureMethods"\n' +
+  '                 ng-class="{\'ng-submitted\':vm.releaseAuthForm.$submitted, \'ng-invalid\': (!vm.isSigValid || vm.releaseAuthForm.signature_input.$invalid)}"></div>\n' +
+  '            <input type="hidden" ng-model="vm.release.signature" name="signature_input" ng-required="true"/>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row mgn-vert" ng-show="!!vm.release.signature.dataUrl && !!vm.release.signature.timestamp">\n' +
+  '        <section class="form-inline form-paper">\n' +
+  '            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group text-center">\n' +
+  '                <img class="img-responsive" ng-src="{{vm.release.signature.dataUrl}}">\n' +
+  '            </div>\n' +
+  '            <div class="col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 form-group">\n' +
+  '                <p class="form-control-static pull-left">\n' +
+  '                    <strong>Signed:</strong> {{vm.release.signature.timestamp | amDateFormat : "LL LT"}}\n' +
+  '                </p>\n' +
+  '\n' +
+  '                <button type="button" ng-click="vm.release.signature = {}" class="btn btn-oset-link pull-right">\n' +
+  '                    <i class="fa fa-times"></i>&nbsp;clear\n' +
   '                </button>\n' +
   '            </div>\n' +
-  '        </div>\n' +
-  '\n' +
-  '        <section data-ng-if="vm.displayMode === \'table\'" class="applicant mini-table">\n' +
-  '            <td>{{vm.index}}</td>\n' +
-  '            <td>\n' +
-  '                <img ng-src="{{vm.user.profileImageURL}}"\n' +
-  '                     class="profile-image medium center-block">\n' +
-  '            </td>\n' +
-  '            <td>\n' +
-  '                <span class="stronger">{{vm.user.firstName}}&nbsp;{{vm.user.lastName.substring(0,1)}}</span>\n' +
-  '                <br>\n' +
-  '                <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
-  '            </td>\n' +
-  '            <td>\n' +
-  '                <dl class="dl-horizontal mini-table">\n' +
-  '                    <dt>License</dt>\n' +
-  '                    <dd>\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                            <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
-  '                            <span ng-show="vm.license.type">\n' +
-  '                                <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
-  '                                {{vm.license.type}}\n' +
-  '                            </span>\n' +
-  '                            Driver License\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dt>Endorsements</dt>\n' +
-  '                    <dd>\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                            <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dt>Interests</dt>\n' +
-  '                    <dd>\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                        <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
-  '                              class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
-  '\n' +
-  '                        <span ng-show="!visibleInterests.length">\n' +
-  '                            <span ng-show="!vm.canEdit">none entered</span>\n' +
-  '                        </span>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dt>Messages:</dt>\n' +
-  '                    <dd ng-show="!!vm.application.isConnected"\n' +
-  '                        ng-init="otherMsgs = (vm.application.messages | filter : {\'sender\' : (\'!\'+vm.user._id)})">\n' +
-  '                        <p style="margin-bottom: 2px;" ng-show="vm.application.messages && vm.application.messages.length">\n' +
-  '                            {{otherMsgs.length ? otherMsgs.length : \'no\'}} received messages\n' +
-  '                            <a class="pull-right"\n' +
-  '                               ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
-  '                                send a new message\n' +
-  '                            </a>\n' +
-  '                        </p>\n' +
-  '\n' +
-  '                        <p style="margin-bottom: 2px;" ng-hide="vm.application.messages && vm.application.messages.length">\n' +
-  '                            discuss the job and schedule an interview\n' +
-  '                            <a class="pull-right"\n' +
-  '                               ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
-  '                                send a new message\n' +
-  '                            </a>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                    <dd ng-hide="!!vm.application.isConnected">\n' +
-  '                        <p style="margin-bottom: 2px;">\n' +
-  '                            <em class="text-muted" ng-if="vm.user.type === \'owner\'">\n' +
-  '                                once connected, you will be able to exchange messages with the applicant\n' +
-  '                            </em>\n' +
-  '                            <em class="text-muted" ng-if="vm.user.type === \'driver\'">\n' +
-  '                                once connected, you will be able to exchange messages with the employer\n' +
-  '                            </em>\n' +
-  '                        </p>\n' +
-  '                    </dd>\n' +
-  '                </dl>\n' +
-  '            </td>\n' +
-  '            <td style="white-space: nowrap">\n' +
-  '                <a class="read-more strong align-right mgn-bottom pull-right"\n' +
-  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'read\'})">\n' +
-  '                    Review\n' +
-  '                    <i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
-  '                </a>\n' +
-  '                <br>\n' +
-  '                <a class="read-more strong align-right mgn-bottom pull-right"\n' +
-  '                   tooltip="vm.messagingText" tooltip-popup-delay="1000"\n' +
-  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'message\'})">\n' +
-  '                    Messages\n' +
-  '                    <i class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
-  '                </a>\n' +
-  '                <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
-  '                <!--<br>-->\n' +
-  '                <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->\n' +
-  '                <!--ng-click="vm.setApplicationStatus(job.applications[$index], \'rejected\', $event, this)">-->\n' +
-  '                <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->\n' +
-  '                <!--</a>-->\n' +
-  '            </td>\n' +
-  '\n' +
   '        </section>\n' +
-  '\n' +
-  '        <div data-ng-if="vm.displayMode === \'inline\'" class="row">\n' +
-  '            <dl class="dl-horizontal">\n' +
-  '                <dt>Applicant:</dt>\n' +
-  '                <dd>{{vm.application.user.displayName}}</dd>\n' +
-  '                <dt>Job:</dt>\n' +
-  '                <dd>{{vm.application.job.name || \'UNKNOWN\'}}\n' +
-  '                    <span class="label label-info">{{vm.application.status}}</span>\n' +
-  '                </dd>\n' +
-  '                <dt>Applied On:</dt>\n' +
-  '                <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
-  '            </dl>\n' +
-  '        </div>\n' +
-  '\n' +
-  '        <div data-ng-if="!vm.displayMode || vm.displayMode === \'normal\'" class="row">\n' +
-  '            <div class="col-md-4">\n' +
-  '                <dl class="dl-horizontal">\n' +
-  '                    <dt>Job:</dt>\n' +
-  '                    <dd>{{vm.application.job.name || \'UNKNOWN\'}}\n' +
-  '                        <span class="label label-info">{{vm.application.status}}</span>\n' +
-  '                    </dd>\n' +
-  '                    <dt>Applicant:</dt>\n' +
-  '                    <dd>{{vm.application.user.displayName}}</dd>\n' +
-  '                    <dt>Applied On:</dt>\n' +
-  '                    <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
-  '                </dl>\n' +
-  '            </div>\n' +
-  '            <div class="col-md-8">\n' +
-  '                <dl class="dl-horizontal"\n' +
-  '                    ng-repeat="message in vm.application.messages | orderBy:\'-created\' | limitTo: 1">\n' +
-  '                    <dt>Last Message:</dt>\n' +
-  '                    <dd>{{message.text | limitTo : 100}}</dd>\n' +
-  '                    <dt>Sent:</dt>\n' +
-  '                    <dd>{{message.created | date: \'short\'}}</dd>\n' +
-  '                </dl>\n' +
-  '            </div>\n' +
-  '        </div>\n' +
   '    </div>\n' +
   '\n' +
-  '    <!-- Show this if there is no application present -->\n' +
-  '    <!------------------------------------------------->\n' +
-  '    <!-- For drivers, link to the new application creation -->\n' +
-  '    <!-- For owners, tell them sorry :(                    -->\n' +
-  '    <section ng-show="!vm.application">\n' +
-  '        <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->\n' +
-  '        <div data-ng-if="!!vm.job && vm.user.type === \'driver\' && !vm.job.externalApplicationLink" os-new-application-modal job=\'vm.job\'>\n' +
-  '            <button class="btn btn-cta-primary btn-lg btn-block bigger">\n' +
-  '                apply now!\n' +
-  '            </button>\n' +
-  '        </div>\n' +
-  '        <div data-ng-if="!!vm.job && vm.user.type === \'driver\' && !!vm.job.externalApplicationLink" job=\'vm.job\'>\n' +
-  '            <a class="btn btn-cta-primary btn-lg btn-block bigger" data-ng-href="{{vm.job.externalApplicationLink}}" target="_blank">\n' +
-  '                apply now! <i class="fa fa-external-link mgn-left"></i>\n' +
-  '            </a>\n' +
-  '        </div>\n' +
-  '        <div data-ng-if="!!vm.job && vm.user.type === \'owner\'">\n' +
-  '            Sorry, no applicants yet. Please check back later.\n' +
-  '        </div>\n' +
-  '    </section>\n' +
+  '\n' +
+  '    <div class="row mgn-vert">\n' +
+  '\n' +
+  '            <section class="form-inline form-paper text-center">\n' +
+  '                <div class="col-sm-8 form-group">\n' +
+  '                    <label for="authorizationName">Name:</label>\n' +
+  '                    <input type="text" class="form-control" id="firstName" ng-model="vm.release.name.first"\n' +
+  '                           placeholder="First" ng-required="true">\n' +
+  '                    <input type="text" class="form-control" id="middleName" ng-model="vm.release.name.middle"\n' +
+  '                           placeholder="Middle" ng-required="true">\n' +
+  '                    <input type="text" class="form-control" id="lastName" ng-model="vm.release.name.last"\n' +
+  '                           placeholder="Last" ng-required="true">\n' +
+  '                </div>\n' +
+  '                <div class="col-sm-4 form-group">\n' +
+  '                    <label for="dateOfBirth">Date of Birth:</label>\n' +
+  '                    <date-input model="vm.release.dob" is-required="true" name="dateOfBirth" class="form-control"></date-input>\n' +
+  '                </div>\n' +
+  '            </section>\n' +
+  '    </div>\n' +
   '</section>\n' +
   '');
- $templateCache.put('/modules/applications/views/templates/os-applicant.client.template.html',
-  '<div class="applicant" name="os-applicant.client-template">\n' +
-  '    <div class="h4 stronger">{{vm.applicant.displayName}}\n' +
-  '        <small class="pull-right">Applied {{vm.application.created | date: \'short\'}}</small>\n' +
+ $templateCache.put('/modules/applications/views/form/complete.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '\n' +
+  '    <section ng-if="vm.gw.models.application.isDraft" ng-hide="!!vm.success">\n' +
+  '        <div class="controls col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <div class="text-center text-muted" ng-show="!vm.gw.models.application.introduction">\n' +
+  '                Please introduce yourself to the employer here\n' +
+  '            </div>\n' +
+  '                    <textarea os-html-edit minimal type="text" data-ng-model="vm.gw.models.application.introduction"\n' +
+  '                              name="message" id="message" class="editor-md" ng-required="true"></textarea>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row" ng-hide="!!vm.success">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '                <p class="text-center">\n' +
+  '                    Your application is now ready to submit to {{vm.gw.models.company.name}}. Review the information\n' +
+  '                    below,\n' +
+  '                    and click \'Submit\' below when ready submit your application.\n' +
+  '                </p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row" ng-hide="!!vm.success">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 well text-center">\n' +
+  '                By submitting this application, you agree to the\n' +
+  '                <tos>Outset terms and conditions</tos>\n' +
+  '                , as well as those governing the pre-employment check process.\n' +
+  '\n' +
+  '                <div ng-if="vm.enableFinalCheckbox" class="checkbox text-center">\n' +
+  '                    <label class="panel" style="padding: 10px 20px 10px 40px"\n' +
+  '                           ng-class="{\'panel-success\':!!vm.gw.models.application.agreement, \'panel-danger\':!vm.gw.models.application.agreement}">\n' +
+  '                        <input type="checkbox" data-ng-model="vm.gw.models.application.agreement"\n' +
+  '                               data-ng-required="true"\n' +
+  '                               name="disclaimer"/> I Agree\n' +
+  '                    </label>\n' +
+  '                </div>\n' +
+  '\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '    </section>\n' +
+  '\n' +
+  '    <section ng-show="!!vm.success">\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '                <h3 class="text-center">\n' +
+  '                    <span class="label label-success">Success!</span>\n' +
+  '                </h3>\n' +
+  '\n' +
+  '                <p class="info mgn-top">\n' +
+  '                    Congratulations, you have applied to a position with {{vm.gw.models.company.name}}. You can now look at your\n' +
+  '                    active job applications, browse job listings, or return to your profile home.\n' +
+  '                </p>\n' +
+  '\n' +
+  '                <p class="text-center">\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="applications.view">View Applications\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Job Listings</button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>\n' +
+  '                </p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </section>\n' +
+  '\n' +
+  '    <section ng-show="!vm.success && !vm.gw.models.application.isDraft">\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '                <h3 class="text-center">\n' +
+  '                    Current Application Status: <os-application-status-badge model="vm.gw.models.application"></os-application-status-badge>\n' +
+  '                </h3>\n' +
+  '\n' +
+  '                <p class="info mgn-top">\n' +
+  '                    Congratulations, you have successfully submitted your application for a position with\n' +
+  '                    {{vm.gw.models.company.name}}. You can now look at your active job applications, browse\n' +
+  '                    job listings, or return to your profile home page.\n' +
+  '                </p>\n' +
+  '\n' +
+  '                <p class="text-center">\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="applications.list">Active Applications</button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Job Listings</button>\n' +
+  '                    <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>\n' +
+  '                </p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </section>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/documents.client.template.html',
+  '<section class="workflow-stage-form" ng-form="vm.subForm3">\n' +
+  '\n' +
+  '    <div class="col-sm-12">\n' +
+  '\n' +
+  '        <div class="col-sm-6">\n' +
+  '            <div class="text-center control-label">Profile Picture</div>\n' +
+  '            <os-picture-uploader model="vm.gw.models.user" mode="user"\n' +
+  '                                 auto-crop="true" allow-blank="true"\n' +
+  '                                 title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
+  '        </div>\n' +
+  '        <div class="col-sm-6">\n' +
+  '            <oset-file-upload mode="resume" allow-blank="true" model-path="resume"\n' +
+  '                              model="vm.gw.models.driver"\n' +
+  '                              title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
+  '        </div>\n' +
   '    </div>\n' +
-  '    <hr/>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/driver-info.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '    <!--model="vm.gw.driver" user="vm.gw.user"-->\n' +
+  '    <driver-info-form ng-form="vm.driverInfoForm" gateway="vm.gw" display-mode="min"\n' +
+  '                      text="vm.about" class="col-sm-12" methods="vm.subformMethods">\n' +
+  '    </driver-info-form>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/payment.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '\n' +
+  '    <div class="row" ng-switch="vm.gw.models.gateway.payment">\n' +
+  '        <div ng-switch-when="company" class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <p class="text-center">\n' +
+  '                The cost of your background check and other reports will be covered by {{vm.gw.models.company.name}}.\n' +
+  '                Once the reports are complete, the results will be part of your profile and yours to keep.\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/report-fields.client.template.html',
+  '<section class="workflow-stage-form" ng-form="vm.reportForm">\n' +
+  '    <oset-custom-question-form class="form-horizontal" gateway="vm.gw" model="vm.gw.models.applicant" report="vm.gw.models.report" methods="vm.subformMethods"></oset-custom-question-form>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/reports.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <p class="text-center">\n' +
+  '                As a part of your application, {{vm.gw.models.company.name}} has requested that you fill in data\n' +
+  '                requried to run a pre-employment check. This data will only be used if {{vm.gw.models.company.name}}\n' +
+  '                decides to proceed with your application and interview process.\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">\n' +
+  '            <div class="panel panel-default">\n' +
+  '                <div class="panel-heading">\n' +
+  '                    <h4 class="text-center">Requested Report(s)</h4>\n' +
+  '                </div>\n' +
+  '                <div class="panel-body">\n' +
+  '                    <ul>\n' +
+  '                        <li>{{vm.gw.models.report.title}}</li>\n' +
+  '                    </ul>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/form/user-info.client.template.html',
+  '<section class="workflow-stage-form">\n' +
+  '    <user-signup-form ng-form="vm.subForm1" model="vm.gw.models.user" gateway="vm.gw" methods="vm.subformMethods"></user-signup-form>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/templates/applicant-details.client.template.html',
+  '<div class="applicant" name="os-applicant.client-template">\n' +
+  '\n' +
   '    <div class="row">\n' +
   '        <div class="col-sm-12">\n' +
   '            <dl class="dl-horizontal">\n' +
-  '                <dt> <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive center-block"></dt>\n' +
+  '                <dt><img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive center-block"></dt>\n' +
   '                <dd>\n' +
   '                    <span class="strong">Cover Letter:</span>\n' +
+  '\n' +
   '                    <p class="panel panel-default letter" data-ng-bind-html="vm.application.introduction"></p>\n' +
   '                </dd>\n' +
   '                <dt>About:</dt>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
+  '                <dd ng-show="vm.application.canViewDocs">\n' +
   '                    <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>\n' +
   '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected">\n' +
+  '                <dd ng-hide="vm.application.canViewDocs">\n' +
   '                    <em class="text-muted" ng-bind-html="vm.text.pre.about"> </em>\n' +
   '                </dd>\n' +
   '\n' +
   '                <dt>Messages:</dt>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
+  '                <dd ng-show="vm.application.canViewDocs">\n' +
   '                    <p ng-show="vm.application.messages && vm.application.messages.length">\n' +
   '                        {{vm.application.messages.length}} Total Messages\n' +
   '                        <a href="#messaging" class="pull-right" ng-click="vm.scrollToMessageFn()">\n' +
@@ -374,7 +428,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        </a>\n' +
   '                    </p>\n' +
   '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected">\n' +
+  '                <dd ng-hide="vm.application.canViewDocs">\n' +
   '                    <p>\n' +
   '                        <em class="text-muted" ng-if="vm.user.type === \'owner\'"\n' +
   '                            ng-bind-html="vm.text.pre.messaging.owner"></em>\n' +
@@ -385,125 +439,37 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '                <dt>License:</dt>\n' +
   '                <dd>\n' +
-  '                    <p>\n' +
-  '                        <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
-  '                    <span ng-show="vm.license.type">\n' +
-  '                        <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
-  '                        {{vm.license.type}}\n' +
-  '                    </span>\n' +
-  '                        Driver License\n' +
-  '                    </p>\n' +
+  '                    <oset-license-inline model="vm.license" show-endorsements="false"></oset-license-inline>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt>Endorsements</dt>\n' +
-  '                <dd>\n' +
-  '                    <p>\n' +
-  '                        <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
-  '                    </p>\n' +
+  '                <dt ng-if="!!vm.license.endorsements.length">Endorsements</dt>\n' +
+  '                <dd ng-if="!!vm.license.endorsements.length">\n' +
+  '                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
   '                </dd>\n' +
   '\n' +
   '                <dt ng-if="vm.debug">raw</dt>\n' +
-  '                <dd ng-if="vm.debug"><pre>{{vm.driver.reports | prettyPrint}}</pre></dd>\n' +
-  '\n' +
-  '                <dt>Reports</dt>\n' +
-  '                <dd class="report-badges" ng-class="{\'not-visible\':!vm.isConnected}">\n' +
-  '\n' +
-  '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Resume{{vm.isConnected ? (!!vm.driver.resume ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                        ng-class="{\'available\': !!vm.driver.resume}"\n' +
-  '                        ng-click="vm.isConnected && vm.openResumeFile()">\n' +
-  '                    <i class="fa fa-file fa-stack-2x"></i>\n' +
-  '                    <span class="badge-info">\n' +
-  '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
-  '                            <i class="fa fa-check fa-1x"></i>\n' +
-  '                            <span class="title">Resume</span>\n' +
-  '                        </span>\n' +
-  '                    </span>\n' +
-  '                </span>\n' +
-  '\n' +
-  '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Motor Vehicle Report{{vm.isConnected ? (!!vm.driver.reports[\'mvr\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                      ng-class="{\'available\': !!vm.driver.reports[\'mvr\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'mvr\')">\n' +
-  '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
-  '                    <span class="badge-info">\n' +
-  '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
-  '                            <i class="fa fa-check fa-1x hidden"></i>\n' +
-  '                            <span class="title">MVR</span>\n' +
-  '                        </span>\n' +
-  '                    </span>\n' +
-  '                </span>\n' +
-  '\n' +
-  '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Background Check{{vm.isConnected ? (!!vm.driver.reports[\'bgcheck\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                      ng-class="{\'available\': !!vm.driver.reports[\'bgcheck\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'bgcheck\')">\n' +
-  '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
-  '                    <span class="badge-info">\n' +
-  '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
-  '                        <i class="fa fa-times fa-1x hidden"></i>\n' +
-  '                        <span class="title">BG</span>\n' +
-  '                    </span>\n' +
-  '                    </span>\n' +
-  '                </span>\n' +
-  '\n' +
-  '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="National Criminal{{vm.isConnected ? (!!vm.driver.reports[\'ncrim\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                      ng-class="{\'available\': !!vm.driver.reports[\'ncrim\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'ncrim\')">\n' +
-  '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
-  '                    <span class="badge-info">\n' +
-  '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
-  '                        <i class="fa fa-question fa-1x hidden"></i>\n' +
-  '                        <span class="title">N-CRIM</span>\n' +
-  '                    </span>\n' +
-  '                    </span>\n' +
-  '                </span>\n' +
-  '\n' +
-  '                <span class="fa-stack fa-3x report-badge mgn-right"\n' +
-  '                      tooltip="Drug Screen{{vm.isConnected ? (!!vm.driver.reports[\'drugs\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
-  '                      ng-class="{\'available\': !!vm.driver.reports[\'drugs\']}"\n' +
-  '                      ng-click="vm.isConnected && vm.openReport(\'drugs\')">\n' +
-  '                    <i class="fa fa-certificate fa-stack-2x"></i>\n' +
-  '                    <span class="badge-info">\n' +
-  '                        <span class="badge-info-inner fa fa-stack-1x">\n' +
-  '                        <i class="fa fa-question fa-1x hidden"></i>\n' +
-  '                        <span class="title">DRUG</span>\n' +
-  '                    </span>\n' +
-  '                    </span>\n' +
-  '                </span>\n' +
-  '\n' +
-  '\n' +
-  '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected">\n' +
-  '                    <em class="text-muted">\n' +
-  '                        <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>\n' +
-  '                        <span ng-show="vm.driver.reports.length || !!vm.driver.resume">You will be able to download reports once connected</span>\n' +
-  '                    </em>\n' +
-  '                </dd>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
-  '                    <em class="text-muted">\n' +
-  '                        <span ng-hide="vm.driver.reports.length || !!vm.driver.resume">No reports on file</span>\n' +
-  '                        <span ng-show="vm.driver.reports.length || !!vm.driver.resume">Click on available reports to view or download</span>\n' +
-  '\n' +
-  '                    </em>\n' +
+  '                <dd ng-if="vm.debug">\n' +
+  '                    <pre>{{vm.driver.reports | prettyPrint}}</pre>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt>Interests</dt>\n' +
-  '                <dd><p>\n' +
-  '                    <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
-  '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</span></span>\n' +
+  '                <dt>Documents:</dt>\n' +
+  '\n' +
+  '                <oset-document-list driver="vm.driver" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
+  '\n' +
+  '                <dt>Interests:</dt>\n' +
+  '                <dd class="label-list">\n' +
+  '                    <div ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
+  '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</div></span>\n' +
   '\n' +
   '                    <span ng-show="!visibleInterests.length">\n' +
   '                        <span ng-show="!vm.canEdit">The applicant has not yet entered any job type preferences or interests.</span>\n' +
   '                    </span>\n' +
-  '                    </p>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt ng-init="vm.expCt=4">\n' +
-  '                    Experience\n' +
-  '                    <br ng-show="vm.isConnected"/>\n' +
-  '                    <span ng-show="vm.isConnected && vm.driver.experience.length"\n' +
+  '                <dt ng-init="vm.expCt=4" ng-class="{\'pad-top\':vm.application.canViewDocs}">\n' +
+  '                    Experience:\n' +
+  '                    <br ng-show="vm.application.canViewDocs"/>\n' +
+  '                    <span ng-show="vm.application.canViewDocs && vm.driver.experience.length"\n' +
   '                          ng-switch="!vm.expCt && !!vm.driver.experience.length">\n' +
   '                        <button type="button" class="btn btn-oset-link"\n' +
   '                                ng-click="vm.expCt = 0;" ng-switch-when="false">\n' +
@@ -515,353 +481,584 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        </button>\n' +
   '                    </span>\n' +
   '                </dt>\n' +
-  '                <dd ng-show="vm.isConnected">\n' +
-  '                    <div class="panel-body" ng-switch="!!(vm.driver.experience.length)">\n' +
-  '                        <oset-experience-list ng-switch-when="true"\n' +
-  '                                              list="vm.driver.experience" view-only="true" max-ct="vm.expCt">\n' +
-  '\n' +
+  '                <dd ng-show="vm.application.canViewDocs">\n' +
+  '                        <p class="text-center" ng-hide="!!vm.driver.experience.length">None Added</p>\n' +
+  '                        <oset-experience-list ng-show="!!vm.driver.experience.length" list="vm.driver.experience"\n' +
+  '                                              view-only="true" max-ct="vm.expCt">\n' +
   '                        </oset-experience-list>\n' +
-  '\n' +
-  '                        <p class="text-center" ng-switch-default>None Added</p>\n' +
-  '                    </div>\n' +
   '                </dd>\n' +
-  '                <dd ng-hide="vm.isConnected"><em class="text-muted" ng-bind-html="vm.experienceText">\n' +
-  '                    experience will be available once you have connected</em>\n' +
+  '                <dd ng-hide="vm.application.canViewDocs">\n' +
+  '                    <em class="text-muted"\n' +
+  '                        ng-bind-html="vm.experienceText || \'experience will be available once you have connected\'">\n' +
+  '                    </em>\n' +
   '                </dd>\n' +
   '            </dl>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '</div>\n' +
   '');
+ $templateCache.put('/modules/applications/views/templates/applicant-normal.client.template.html',
+  '<section name="os-driver-inline.directive" class="row inline-item">\n' +
+  '    <div class="col-sm-12">\n' +
+  '        <div class="row">\n' +
+  '            <!-- Driver Inline Template Begin -->\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                License\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
+  '                <oset-license-inline model="vm.license" show-endorsements="true"></oset-license-inline>\n' +
+  '            </div>\n' +
+  '\n' +
+  '\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                Documents\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
+  '                <oset-document-list driver="vm.driver" application="vm.application"\n' +
+  '                                    doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
+  '            </div>\n' +
+  '\n' +
+  '\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                Interests\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content label-list">\n' +
+  '\n' +
+  '            <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
+  '                  class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
+  '\n' +
+  '            <span ng-show="!visibleInterests.length">\n' +
+  '                <span ng-show="!vm.canEdit">none entered</span>\n' +
+  '            </span>\n' +
+  '            </div>\n' +
+  '\n' +
+  '\n' +
+  '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
+  '                Messages\n' +
+  '            </div>\n' +
+  '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
+  '                <span ng-show="!!vm.application.connection && !vm.application.messageCt">\n' +
+  '                        discuss the job and schedule an interview\n' +
+  '                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
+  '                        by sending a message\n' +
+  '                    </a>\n' +
+  '                </span>\n' +
+  '                <span ng-show="!!vm.application.connection && !!vm.application.messageCt">\n' +
+  '                        {{vm.application.messagingText}}\n' +
+  '                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
+  '                        ... view now\n' +
+  '                    </a>\n' +
+  '                </span>\n' +
+  '                <span ng-hide="!!vm.application.isConnected">\n' +
+  '                        <em class="text-muted" ng-if="vm.profile.type === \'owner\'">\n' +
+  '                            once connected, you will be able to exchange messages with\n' +
+  '                            the applicant\n' +
+  '                        </em>\n' +
+  '                        <em class="text-muted" ng-if="vm.profile.type === \'driver\'">\n' +
+  '                            once connected, you will be able to exchange messages with\n' +
+  '                            the employer\n' +
+  '                        </em>\n' +
+  '                </span>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/templates/application-questionnaire-form.client.template.html',
+  '<section class="form-data">\n' +
+  '\n' +
+  '    <fieldset ng-class="{\'text-muted\': vm.disabled || vm.ispay}">\n' +
+  '        <div class="form-group row" ng-repeat="field in vm.questions"\n' +
+  '             ng-class="{\'has-error\':(vm.form[field.name].$invalid || vm.form[\'hidden_\'+field.name].$invalid) && (vm.form.$submitted || vm.form[field.name].$touched)}">\n' +
+  '            <!-- field = { description, length, name, required, type } -->\n' +
+  '            <label class="col-sm-3 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!field.required}">\n' +
+  '                {{field.description | titleCase}} </label>\n' +
+  '\n' +
+  '            <input type="hidden" ng-model="vm.responses[field.name]" name="hidden_{{field.name}}"\n' +
+  '                   ng-required="field.required"\n' +
+  '                   ng-maxlength="field.ngMaxLength || field.length"/>\n' +
+  '\n' +
+  '            <div class="col-sm-9 col-md-8">\n' +
+  '                <form-input field="field" ng-hide="!!vm.verify" model="vm.responses"></form-input>\n' +
+  '                <form-input field="field" ng-show="!!vm.verify" model="vm.responses" mode="static"></form-input>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </fieldset>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/templates/application-summary.client.template.html',
+  '<section name=\'oset-application-summary\'>\n' +
+  '    <!--This view is used primarily for the display of simple inline template views.-->\n' +
+  '    <div ng-show="!!vm.application">\n' +
+  '        <div data-ng-if="vm.displayMode === \'minimal\' || vm.displayMode === \'mine\'" class="panel panel-default pad">\n' +
+  '            <dl class="dl-horizontal">\n' +
+  '                <dt>Status:</dt>\n' +
+  '                <dd>\n' +
+  '                    <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
+  '                </dd>\n' +
+  '                <dt>Applied On:</dt>\n' +
+  '                <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
+  '            </dl>\n' +
+  '            <div class="text-center" data-ng-if="vm.displayMode === \'mine\'">\n' +
+  '                <button type="button" class="btn-link read-more strong mgn-left"\n' +
+  '                        ui-sref="applications.view({applicationId: vm.application._id})">\n' +
+  '                    Review<i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
+  '                </button>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div data-ng-if="vm.displayMode === \'compact\'" class="row">\n' +
+  '            <dl class="dl-horizontal">\n' +
+  '                <dt>Applicant:</dt>\n' +
+  '                <dd>{{vm.application.user.displayName}}</dd>\n' +
+  '                <dt>Job:</dt>\n' +
+  '                <dd>{{vm.application.job.name || \'UNKNOWN\'}}\n' +
+  '                    <span class="label label-info">{{vm.application.status}}</span>\n' +
+  '                </dd>\n' +
+  '                <dt>Applied On:</dt>\n' +
+  '                <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
+  '            </dl>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <tr data-ng-if="vm.displayMode === \'table\'" class="row">\n' +
+  '\n' +
+  '                <td>{{vm.application.user.displayName}}</td>\n' +
+  '                <td>\n' +
+  '                    <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
+  '                </td>\n' +
+  '                <td>{{vm.application.created | date:\'short\'}}</td>\n' +
+  '        </tr>\n' +
+  '\n' +
+  '        <div data-ng-if="!vm.displayMode || vm.displayMode === \'normal\'" class="row">\n' +
+  '            <div class="col-md-4">\n' +
+  '                <dl class="dl-horizontal">\n' +
+  '                    <dt>Job:</dt>\n' +
+  '                    <dd>{{vm.application.job.name || \'UNKNOWN\'}}\n' +
+  '                        <span class="label label-info">{{vm.application.status}}</span>\n' +
+  '                    </dd>\n' +
+  '                    <dt>Applicant:</dt>\n' +
+  '                    <dd>{{vm.application.user.displayName}}</dd>\n' +
+  '                    <dt>Applied On:</dt>\n' +
+  '                    <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
+  '                </dl>\n' +
+  '            </div>\n' +
+  '            <div class="col-md-8">\n' +
+  '                <dl class="dl-horizontal"\n' +
+  '                    ng-repeat="message in vm.application.messages | limitTo: -1">\n' +
+  '                    <dt>Last Message:</dt>\n' +
+  '                    <dd>{{message.text | limitTo : 100}}</dd>\n' +
+  '                    <dt>Sent:</dt>\n' +
+  '                    <dd>{{message.created | date: \'short\'}}</dd>\n' +
+  '                </dl>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!-- Show this if there is no application present -->\n' +
+  '    <!------------------------------------------------->\n' +
+  '    <!-- For drivers, link to the new application creation -->\n' +
+  '    <!-- For owners, tell them sorry :(                    -->\n' +
+  '    <section ng-show="!vm.application">\n' +
+  '        <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->\n' +
+  '        <div data-ng-if="!!vm.job && vm.user.id !== vm.ownerId">\n' +
+  '            <button class="btn btn-cta-primary btn-lg btn-block bigger"\n' +
+  '                    ui-sref="gateway({jobId:vm.job._id})">\n' +
+  '                apply now <i class="fa fa-send mgn-left"></i>\n' +
+  '            </button>\n' +
+  '        </div>\n' +
+  '    </section>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/templates/driver-list-item.client.template.html',
+  '<article class="post job-post col-sm-12 applicant">\n' +
+  '    <!--ng-show="vm.visibleId === vm.application._id || !vm.visibleId">-->\n' +
+  '    <div class="post-inner">\n' +
+  '        <div class="content lead-content">\n' +
+  '            <img ng-src="{{vm.application.company.profileImageURL}}"\n' +
+  '                 ng-if="!!vm.application.company.profileImageURL"\n' +
+  '                 class="col-xs-hidden col-sm-2 img-responsive medium">\n' +
+  '\n' +
+  '            <div ng-class="{\'col-sm-10\':!!vm.application.company.profileImageURL, \'col-sm-12\':!vm.application.company.profileImageURL}">\n' +
+  '                <h3 class="post-title" ui-sref="jobs.view({jobId: vm.job._id})">{{vm.job.name}}</h3>\n' +
+  '\n' +
+  '                <div class="row"\n' +
+  '                     ng-init="user = vm.application.user; driver = user.driver; license = driver.licenses[0]"\n' +
+  '                     ui-sref="applications.view({\'applicationId\': vm.application._id})"\n' +
+  '                     ng-class="{\'disabled\': vm.application.disabled}">\n' +
+  '\n' +
+  '                    <dl class="dl-horizontal" style="margin-bottom: 0;">\n' +
+  '                        <dt>Applied On</dt>\n' +
+  '                        <dd>{{vm.application.created | amDateFormat : \'LL LT\'}}</dd>\n' +
+  '                        <dt>Status</dt>\n' +
+  '                        <dd>\n' +
+  '                            <os-application-status-badge\n' +
+  '                                    model="vm.application"></os-application-status-badge>\n' +
+  '                        </dd>\n' +
+  '\n' +
+  '                        <dt ng-hide="!!vm.application.messages && !!vm.application.messages.length">\n' +
+  '                            Messages\n' +
+  '                        </dt>\n' +
+  '                        <dd ng-hide="!!vm.application.messages && !!vm.application.messages.length">\n' +
+  '                            <span ng-show="!!vm.application.isConnected">\n' +
+  '                                <p style="margin-bottom: 2px;">\n' +
+  '                                    discuss the job and schedule an interview\n' +
+  '                                    <a ui-sref="applications.view({applicationId: vm.application._id, target: \'message\'})">\n' +
+  '                                        by sending a message\n' +
+  '                                    </a>\n' +
+  '                                </p>\n' +
+  '                            </span>\n' +
+  '                            <span ng-hide="!!vm.application.isConnected">\n' +
+  '                                <p style="margin-bottom: 2px;">\n' +
+  '                                    <em class="text-muted">chat available once connected</em></span>\n' +
+  '                                </p>\n' +
+  '                            </span>\n' +
+  '                        </dd>\n' +
+  '                    </dl>\n' +
+  '\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="content body">\n' +
+  '            <!--meta-->\n' +
+  '            <div class="row">\n' +
+  '                <div class="pull-right">\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong"\n' +
+  '                            ng-click="vm.showTab()" ng-class="{\'hidden\':!vm.visibleId}">\n' +
+  '                        <i class="fa fa-close fa-lg mgn-right"></i>\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong"\n' +
+  '                            ng-click="vm.showTab(vm.application._id, \'application\')"\n' +
+  '                            ng-class="{\'active\': vm.visibleId === vm.job._id && vm.visibleTab === \'application\'}">\n' +
+  '                        <i class="fa fa-lg fa-file-text mgn-right"></i> Your Application\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
+  '                            ng-click="vm.showTab(vm.application._id, \'details\')"\n' +
+  '                            ng-class="{\'active\': vm.visibleId === vm.job._id && vm.visibleTab === \'details\'}">\n' +
+  '                        <i class="fa fa-lg fa-info mgn-right"></i> Job Description\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
+  '                            ng-show="vm.application.isConnected || !!vm.application.messages.length"\n' +
+  '                            tooltip="{{vm.application.messagingText || vm.messagingText}}"\n' +
+  '                            tooltip-popup-delay="1000"\n' +
+  '                            ui-sref="applications.view({applicationId: vm.application._id})">\n' +
+  '                        {{vm.application.newMessages ? vm.application.newMessages + \' New \' :\n' +
+  '                        \'\'}}Message{{vm.application.newMessages === 1 ? \'\': \'s\'}}&nbsp;<i\n' +
+  '                            class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="content body">\n' +
+  '            <div class="row  tab-body" ng-show="vm.visibleId === vm.application._id">\n' +
+  '                <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === \'application\'">\n' +
+  '                    <div class="post-entry col-sm-10 col-sm-offset-1">\n' +
+  '                        <dt>Intro</dt>\n' +
+  '                        <dd ng-bind-html="vm.application.introduction"></dd>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === \'details\'">\n' +
+  '                    <h4>Description</h4>\n' +
+  '\n' +
+  '                    <p ng-bind-html="vm.job.description"></p>\n' +
+  '                    <h4>Requirements</h4>\n' +
+  '\n' +
+  '                    <p ng-bind-html="vm.job.requirements"></p>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <a class="read-more strong pull-right" ng-click="vm.visibleId = null"\n' +
+  '               ng-class="{\'hidden\':!vm.visibleId}"> </a>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <!--//content-->\n' +
+  '    </div>\n' +
+  '    <!--//post-inner-->\n' +
+  '</article>\n' +
+  '');
  $templateCache.put('/modules/applications/views/templates/os-list-applications.client.template.html',
   '<section name="os-list-applications.directive" class="application-list">\n' +
   '\n' +
   '    <div class="row">\n' +
-  '        <div class="job-list blog-category-list" ng-switch="vm.user.type">\n' +
+  '        <div class="job-list blog-category-list">\n' +
   '\n' +
   '            <!-- Iterate over the list of jobs ... For Owners -->\n' +
-  '\n' +
-  '            <article class="post col-sm-12 applicant"\n' +
-  '                     ng-switch-when="owner" ng-repeat="job in vm.jobs"\n' +
-  '                     ng-show="vm.visibleId === job._id || !vm.visibleId"\n' +
-  '                     ng-init="job.newMessages=0;">\n' +
-  '\n' +
-  '                <!--INNER OWNER CONTENT-->\n' +
-  '                <div class="post-inner">\n' +
-  '                    <div class="content lead-content">\n' +
-  '                        <div class="date-label">\n' +
-  '                            <span class="month">{{(job.posted || job.created)  | amDateFormat : \'MMM\' | uppercase}}</span>\n' +
-  '                            <span class="date-number">{{job.posted | amDateFormat : \'D\'}}</span>\n' +
-  '                        </div>\n' +
-  '                        <h3 class="post-title" ng-click="vm.showTab(job._id, \'applicants\', job.applications.length)">\n' +
-  '                            {{job.name}}</h3>\n' +
-  '\n' +
-  '                        <!--meta-->\n' +
-  '                        <div class="row">\n' +
-  '                            <div class="pull-right">\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong"\n' +
-  '                                        ng-click="vm.showTab()" ng-class="{\'hidden\':!vm.visibleId}">\n' +
-  '                                    <i class="fa fa-close fa-lg"></i><span class="hidden-xs mgn-left">&nbsp;</span>\n' +
-  '                                </button>\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong"\n' +
-  '                                        ng-click="vm.showTab(job._id, \'applicants\', job.applications.length)"\n' +
-  '                                        ng-class="{\'active\': vm.visibleId === job._id && vm.visibleTab === \'applicants\'}">\n' +
-  '                                    <i class="fa fa-users fa-lg"></i><span class="hidden-xs mgn-left">{{job.applications.length}} Applicant{{job.applications.length === 1 ? \'\' : \'s\'}}</span>\n' +
-  '                                    <i class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
-  '                                    <span class="badge" ng-show="!!job.newMessages"\n' +
-  '                                          tooltip="{{job.newMessages}} new message{{job.newMessages>1?\'s\':\'\'}}">{{job.newMessages}}</span>\n' +
-  '                                </button>\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
-  '                                        ng-click="vm.showTab(job._id, \'details\')"\n' +
-  '                                        ng-class="{\'active\': vm.visibleId === job._id && vm.visibleTab === \'details\'}">\n' +
-  '                                    <i class="fa fa-lg fa-file-text"></i><span class="hidden-xs mgn-left">View Description</span>\n' +
-  '                                </button>\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
-  '                                        ui-sref="jobs.edit({jobId: job._id})">\n' +
-  '                                    <i class="fa fa-edit fa-lg"></i><span class="hidden-xs mgn-left">Edit</span>\n' +
-  '                                </button>\n' +
-  '                            </div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                    <div class="content body">\n' +
-  '                        <div class="tab-body">\n' +
-  '                            <div class="post-entry" ng-show="vm.visibleTab === \'applicants\'">\n' +
-  '                                <div class="row applicant_item" ng-show="vm.visibleId === job._id"\n' +
-  '                                     data-ng-repeat="application in job.applications"\n' +
-  '                                     data-ng-init="user = application.user; driver = user.driver;license = driver.licenses[0]; vm.checkMessages(application, job)"\n' +
-  '                                     ui-sref="applications.view({\'applicationId\': application._id})"\n' +
-  '                                     ng-class="{\'disabled\': application.disabled}">\n' +
-  '\n' +
-  '                                    <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">\n' +
-  '                                        <img ng-src="{{user.profileImageURL}}"\n' +
-  '                                             class="img-responsive">\n' +
-  '                                    </div>\n' +
-  '\n' +
-  '                                    <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
-  '                                        <p>\n' +
-  '                                            <span\n' +
-  '                                                    class="stronger">{{user.firstName}}&nbsp;{{user.lastName.substring(0,1)}}</span>\n' +
-  '                                            <br class="hidden-lg hidden-md">\n' +
-  '                                            <os-application-status-badge\n' +
-  '                                                    model="application"></os-application-status-badge>\n' +
-  '                                        </p>\n' +
-  '                                        <p>\n' +
-  '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
-  '                                            License\n' +
-  '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '                                            <p style="margin-bottom: 2px;">\n' +
-  '                                                <i class="fa fa-credit-card"></i> &nbsp;{{license.state.name}}\n' +
-  '                                            <span ng-show="license.type">\n' +
-  '                                                <span ng-if="license.rating"> Class {{license.rating | uppercase }}</span>\n' +
-  '                                                {{license.type}}\n' +
-  '                                            </span>\n' +
-  '                                                Driver License\n' +
-  '                                            </p>\n' +
-  '                                        </div>\n' +
-  '\n' +
-  '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
-  '                                            Endorsements\n' +
-  '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '                                            <p style="margin-bottom: 2px;">\n' +
-  '                                                <oset-list-endorsements\n' +
-  '                                                        model="license.endorsements"></oset-list-endorsements>\n' +
-  '                                            </p>\n' +
-  '                                        </div>\n' +
-  '\n' +
-  '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right">\n' +
-  '                                            Interests\n' +
-  '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12">\n' +
-  '                                            <p style="margin-bottom: 2px;">\n' +
-  '                                        <span ng-repeat="interest in visibleInterests = (driver.interests | filter: {value: true})"\n' +
-  '                                              class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
-  '\n' +
-  '                                        <span ng-show="!visibleInterests.length">\n' +
-  '                                            <span ng-show="!vm.canEdit">none entered</span>\n' +
-  '                                        </span>\n' +
-  '                                            </p>\n' +
-  '                                        </div>\n' +
-  '\n' +
-  '\n' +
-  '                                        <div class="col-md-3 col-lg-2 hidden-sm hidden-xs stronger text-right"\n' +
-  '                                             ng-hide="!!application.messages && !!application.messages.length">\n' +
-  '                                            Messages\n' +
-  '                                        </div>\n' +
-  '                                        <div class="col-md-9 col-lg-10 col-xs-12"\n' +
-  '                                             ng-hide="!!application.messages && !!application.messages.length">\n' +
-  '                                            <span ng-show="!!application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    discuss the job and schedule an interview\n' +
-  '                                                    <a ui-sref="applications.view({applicationId: application._id, target: \'message\'})">\n' +
-  '                                                        by sending a message\n' +
-  '                                                    </a>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
-  '                                            <span ng-hide="!!application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    <em class="text-muted" ng-if="user.type === \'owner\'">\n' +
-  '                                                        once connected, you will be able to exchange messages with\n' +
-  '                                                        the applicant\n' +
-  '                                                    </em>\n' +
-  '                                                    <em class="text-muted" ng-if="user.type === \'driver\'">\n' +
-  '                                                        once connected, you will be able to exchange messages with\n' +
-  '                                                        the employer\n' +
-  '                                                    </em>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
-  '                                        </div>\n' +
-  '\n' +
-  '                                        </p>\n' +
-  '                                    </div>\n' +
-  '                                    <br class="hidden-lg"/>\n' +
-  '\n' +
-  '                                    <div class="col-lg-2 col-md-3 col-xs-12 text-right">\n' +
-  '                                        <a class="read-more strong"\n' +
-  '                                           style="white-space: nowrap"\n' +
-  '                                           ui-sref="applications.view({applicationId: application._id, action: \'read\'})">\n' +
-  '                                            Review&nbsp<i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
-  '                                        </a>\n' +
-  '                                        <br class="visible-lg mgn-vert"/>\n' +
-  '                                        <a class="read-more strong"\n' +
-  '                                           style="white-space: nowrap"\n' +
-  '                                           tooltip="{{application.messagingText || vm.messagingText}}"\n' +
-  '                                           tooltip-popup-delay="1000"\n' +
-  '                                           ui-sref="applications.view({applicationId: application._id, action: \'message\'})">\n' +
-  '                                            {{application.newMessages ? application.newMessages + \' New \' :\n' +
-  '                                            \'\'}}Message{{application.newMessages === 1 ? \'\': \'s\'}}&nbsp;<i\n' +
-  '                                                class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
-  '                                        </a>\n' +
-  '                                        <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
-  '                                        <!--<br>-->\n' +
-  '                                        <!--<a class="read-more align-right hidden mgn-bottom pull-right"-->\n' +
-  '                                        <!--ng-click="vm.setApplicationStatus(job.applications[$index], \'rejected\', $event, this)">-->\n' +
-  '                                        <!--Reject<i class="fa fa-close fa-lg mgn-left"></i>-->\n' +
-  '                                        <!--</a>-->\n' +
-  '                                    </div>\n' +
-  '                                </div>\n' +
-  '\n' +
-  '\n' +
-  '                                <div class="list-group" ng-if="!(job.applications && job.applications.length)"\n' +
-  '                                     ng-show="vm.visibleId === job._id">\n' +
-  '                                    <div class="list-group-item text-center">\n' +
-  '                                        <h4>No one has applied to this job yet. Would you like to <a\n' +
-  '                                                ui-sref="jobs.edit({\'jobId\':job._id})">edit\n' +
-  '                                            your post?</a></h4>\n' +
-  '                                    </div>\n' +
-  '                                </div>\n' +
-  '                            </div>\n' +
-  '\n' +
-  '                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === \'details\'">\n' +
-  '\n' +
-  '                                <h4>Description\n' +
-  '                                </h4>\n' +
-  '\n' +
-  '                                <p ng-bind-html="job.description"></p>\n' +
-  '                                <h4>Requirements</h4>\n' +
-  '\n' +
-  '                                <p ng-bind-html="job.requirements"></p>\n' +
-  '                                <hr/>\n' +
-  '\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more center-block"\n' +
-  '                                        ui-sref="jobs.view({jobId: job._id})">\n' +
-  '                                    view full job post\n' +
-  '                                    <i class="fa fa-external-link fa-lg"></i><span class="hidden-xs mgn-left">\n' +
-  '                                </span>\n' +
-  '                                </button>\n' +
-  '                            </div>\n' +
-  '                        </div>\n' +
-  '                        <a class="read-more strong pull-right" ng-click="vm.visibleId = null"\n' +
-  '                           ng-class="{\'hidden\':!vm.visibleId}"> </a>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <!--//post-inner-->\n' +
-  '            </article>\n' +
-  '            <!--//post-->\n' +
-  '\n' +
+  '            <oset-application-job-list-item ng-if="vm.groupByJob"\n' +
+  '                                        ng-repeat="job in vm.jobs"\n' +
+  '                                        job="job"\n' +
+  '                                        class="post col-sm-12 applicant"\n' +
+  '                                        visible-id="vm.visibleId"\n' +
+  '                                        visible-tab="vm.visibleTab"\n' +
+  '                                        ng-show="vm.visibleId === job._id || !vm.visibleId">\n' +
+  '                <!-- TODO: Move ng-show into the filter on teh repeater -->\n' +
+  '            </oset-application-job-list-item>\n' +
   '\n' +
   '            <!-- Iterate over the list of applications ... For Drivers -->\n' +
+  '            <oset-application-list-item ng-if="!vm.groupByJob"\n' +
+  '                                        ng-repeat="application in vm.applications"\n' +
+  '                                        application="application"\n' +
+  '                                        class="post job-post col-sm-12 applicant"\n' +
+  '                                        visible-id="vm.visibleId"\n' +
+  '                                        visible-tab="vm.visibleTab">\n' +
   '\n' +
-  '            <article class="post job-post col-sm-12 applicant"\n' +
-  '                     ng-switch-when="driver"\n' +
-  '                     ng-repeat="application in vm.applications"\n' +
-  '                     ng-init="job = application.job;  vm.checkMessages(application, job)">\n' +
-  '                <!--ng-show="vm.visibleId === application._id || !vm.visibleId">-->\n' +
-  '                <div class="post-inner">\n' +
-  '                    <div class="content lead-content">\n' +
-  '                        <img ng-src="{{application.company.profileImageURL}}"\n' +
-  '                             ng-if="!!application.company.profileImageURL"\n' +
-  '                             class="col-xs-hidden col-sm-2 img-responsive medium">\n' +
+  '                <!-- TODO: Figure out disagreement between \'visibleId\', ng-show, and inline (nested) vs top level behavior -->er\n' +
+  '                <!-- TODO: Combine with the \'owner\' repeater above, if possible :) -->\n' +
   '\n' +
-  '                        <div ng-class="{\'col-sm-10\':!!application.company.profileImageURL, \'col-sm-12\':!application.company.profileImageURL}">\n' +
-  '                            <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>\n' +
-  '\n' +
-  '                            <div class="row"\n' +
-  '                                 ng-init="user = application.user; driver = user.driver; license = driver.licenses[0]"\n' +
-  '                                 ui-sref="applications.view({\'applicationId\': application._id})"\n' +
-  '                                 ng-class="{\'disabled\': application.disabled}">\n' +
-  '\n' +
-  '                                <dl class="dl-horizontal" style="margin-bottom: 0;">\n' +
-  '                                    <dt>Applied On</dt>\n' +
-  '                                    <dd>{{application.created | amDateFormat : \'LL LT\'}}</dd>\n' +
-  '                                    <dt>Status</dt>\n' +
-  '                                    <dd>\n' +
-  '                                        <os-application-status-badge\n' +
-  '                                                model="application"></os-application-status-badge>\n' +
-  '                                    </dd>\n' +
-  '\n' +
-  '                                    <dt ng-hide="!!application.messages && !!application.messages.length">\n' +
-  '                                        Messages\n' +
-  '                                    </dt>\n' +
-  '                                    <dd ng-hide="!!application.messages && !!application.messages.length">\n' +
-  '                                            <span ng-show="!!application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    discuss the job and schedule an interview\n' +
-  '                                                    <a ui-sref="applications.view({applicationId: application._id, target: \'message\'})">\n' +
-  '                                                        by sending a message\n' +
-  '                                                    </a>\n' +
-  '                                                </p>\n' +
-  '                                            </span>\n' +
-  '                                            <span ng-hide="!!application.isConnected">\n' +
-  '                                                <p style="margin-bottom: 2px;">\n' +
-  '                                                    <em class="text-muted">chat available once connected</em></span>\n' +
-  '                                        </p>\n' +
-  '                                        </span>\n' +
-  '                                    </dd>\n' +
-  '                                </dl>\n' +
-  '\n' +
-  '                            </div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                    <div class="content body">\n' +
-  '                        <!--meta-->\n' +
-  '                        <div class="row">\n' +
-  '                            <div class="pull-right">\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong"\n' +
-  '                                        ng-click="vm.showTab()" ng-class="{\'hidden\':!vm.visibleId}">\n' +
-  '                                    <i class="fa fa-close fa-lg mgn-right"></i>\n' +
-  '                                </button>\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong"\n' +
-  '                                        ng-click="vm.showTab(application._id, \'application\')"\n' +
-  '                                        ng-class="{\'active\': vm.visibleId === job._id && vm.visibleTab === \'application\'}">\n' +
-  '                                    <i class="fa fa-lg fa-file-text mgn-right"></i> Your Application\n' +
-  '                                </button>\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
-  '                                        ng-click="vm.showTab(application._id, \'details\')"\n' +
-  '                                        ng-class="{\'active\': vm.visibleId === job._id && vm.visibleTab === \'details\'}">\n' +
-  '                                    <i class="fa fa-lg fa-info mgn-right"></i> Job Description\n' +
-  '                                </button>\n' +
-  '                                <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
-  '                                        ng-show="application.isConnected || !!application.messages.length"\n' +
-  '                                        tooltip="{{application.messagingText || vm.messagingText}}"\n' +
-  '                                        tooltip-popup-delay="1000"\n' +
-  '                                        ui-sref="applications.view({applicationId: application._id})">\n' +
-  '                                    {{application.newMessages ? application.newMessages + \' New \' :\n' +
-  '                                    \'\'}}Message{{application.newMessages === 1 ? \'\': \'s\'}}&nbsp;<i\n' +
-  '                                        class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
-  '                                </button>\n' +
-  '                            </div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                    <div class="content body">\n' +
-  '                        <div class="row  tab-body" ng-show="vm.visibleId === application._id">\n' +
-  '                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === \'application\'">\n' +
-  '                                <div class="post-entry col-sm-10 col-sm-offset-1">\n' +
-  '                                    <dt>Intro</dt>\n' +
-  '                                    <dd ng-bind-html="application.introduction"></dd>\n' +
-  '                                </div>\n' +
-  '                            </div>\n' +
-  '\n' +
-  '                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === \'details\'">\n' +
-  '                                <h4>Description</h4>\n' +
-  '\n' +
-  '                                <p ng-bind-html="job.description"></p>\n' +
-  '                                <h4>Requirements</h4>\n' +
-  '\n' +
-  '                                <p ng-bind-html="job.requirements"></p>\n' +
-  '                            </div>\n' +
-  '                        </div>\n' +
-  '                        <a class="read-more strong pull-right" ng-click="vm.visibleId = null"\n' +
-  '                           ng-class="{\'hidden\':!vm.visibleId}"> </a>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '\n' +
-  '                    <!--//content-->\n' +
-  '                </div>\n' +
-  '                <!--//post-inner-->\n' +
-  '            </article>\n' +
+  '            </oset-application-list-item>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '</section>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/templates/owner-job-list-item.client.template.html',
+  '<article class="post col-sm-12 applicant">\n' +
+  '\n' +
+  '    <!--INNER OWNER CONTENT-->\n' +
+  '    <div class="post-inner">\n' +
+  '        <div class="content lead-content">\n' +
+  '            <div class="date-label">\n' +
+  '                <span class="month">{{(vm.job.posted || vm.job.created)  | amDateFormat : \'MMM\' | uppercase}}</span>\n' +
+  '                <span class="date-number">{{vm.job.posted | amDateFormat : \'D\'}}</span>\n' +
+  '            </div>\n' +
+  '            <div class="pull-right">\n' +
+  '                <button type="button" class="btn-tab btn-link strong"\n' +
+  '                        ng-click="vm.showTab()" ng-class="{\'hidden\':!vm.visibleId}">\n' +
+  '                    <i class="fa fa-close fa-lg"></i>\n' +
+  '                </button>\n' +
+  '            </div>\n' +
+  '            <h3 class="post-title" ng-click="vm.showTab(vm.job._id, \'applicants\', vm.job.applications.length)">\n' +
+  '                {{vm.job.name}}\n' +
+  '\n' +
+  '                <small>\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
+  '                            ui-sref="jobs.edit({jobId: vm.job._id})">\n' +
+  '                        <span class="hidden-xs">Edit</span>\n' +
+  '                        <i class="fa fa-edit fa-lg"></i>\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong"\n' +
+  '                            ui-sref="jobs.view({jobId: vm.job._id})">\n' +
+  '                        <span class="hidden-xs">View</span>\n' +
+  '                        <i class="fa fa-external-link fa-lg"></i>\n' +
+  '                    </button>\n' +
+  '                </small>\n' +
+  '            </h3>\n' +
+  '\n' +
+  '            <div class="row">\n' +
+  '                <div class="pull-right">\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong"\n' +
+  '                            ng-click="vm.showTab(vm.job._id, \'applicants\', vm.job.applications.length)"\n' +
+  '                            ng-class="{\'active\': vm.visibleId === vm.job._id && vm.visibleTab === \'applicants\'}">\n' +
+  '                        <i class="fa fa-users fa-lg"></i><span class="hidden-xs mgn-left">{{vm.job.applications.length}} Applicant{{vm.job.applications.length === 1 ? \'\' : \'s\'}}</span>\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong"\n' +
+  '                            ng-click="vm.showTab(vm.job._id, \'messaging\', vm.job.applications.length)"\n' +
+  '                            ng-class="{\'active\': vm.visibleId === vm.job._id && vm.visibleTab === \'messaging\'}">\n' +
+  '                        <i class="fa fa-comments-o fa-lg"></i><span\n' +
+  '                            class="hidden-xs mgn-left">Messaging</span>\n' +
+  '                                    <span class="badge" ng-show="!!vm.job.newMessages"\n' +
+  '                                          tooltip="{{vm.job.newMessages}} new message{{vm.job.newMessages>1?\'s\':\'\'}}">{{vm.job.newMessages}}</span>\n' +
+  '                    </button>\n' +
+  '                    <button type="button" class="btn-tab btn-link read-more strong mgn-left"\n' +
+  '                            ng-click="vm.showTab(vm.job._id, \'documents\')"\n' +
+  '                            ng-class="{\'active\': vm.visibleId === vm.job._id && vm.visibleTab === \'documents\'}">\n' +
+  '                        <i class="fa fa-lg fa-file-text"></i><span\n' +
+  '                            class="hidden-xs mgn-left">Documents</span>\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="content body">\n' +
+  '            <div class="tab-body row">\n' +
+  '                <div class="post-entry col-sm-12" ng-show="!!vm.visibleTab">\n' +
+  '\n' +
+  '                    <div class="row list-controls" ng-show="vm.visibleTab === \'applicants\'">\n' +
+  '                        <div class="col-sm-12 text-center">\n' +
+  '                            <span class="pull-left">\n' +
+  '                                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
+  '                                        ng-click="vm.toggleFilter(\'status\', \'all\', true)"\n' +
+  '                                        ng-class="{\'disabled\':!!vm.filters.status.all}"\n' +
+  '                                        name="clear"><i class="fa fa-times"></i></button>\n' +
+  '\n' +
+  '                                <div class="btn-group">\n' +
+  '                                    <label class="btn btn-cta-secondary btn-sm"\n' +
+  '                                           ng-click="vm.toggleFilter(\'status\', \'unreviewed\', true)" btn-checkbox\n' +
+  '                                           ng-model="vm.filters.status.unreviewed" name="unreviewed">New</label>\n' +
+  '                                    <label class="btn btn-cta-secondary btn-sm"\n' +
+  '                                           ng-click="vm.toggleFilter(\'status\', \'reviewed\', true)" btn-checkbox\n' +
+  '                                           ng-model="vm.filters.status.reviewed" name="reviewed">Reviewed</label>\n' +
+  '                                    <label class="btn btn-cta-secondary btn-sm"\n' +
+  '                                           ng-click="vm.toggleFilter(\'status\', \'connected\', true)" btn-checkbox\n' +
+  '                                           ng-model="vm.filters.status.connected" name="connected">Connected</label>\n' +
+  '                                </div>\n' +
+  '                            </span>\n' +
+  '\n' +
+  '                            <span class="pull-right">\n' +
+  '                                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
+  '                                        ng-click="vm.reverseSort = !vm.reverseSort"\n' +
+  '                                        name="sort">\n' +
+  '                                    Reverse Sort <i\n' +
+  '                                        class="fa {{!vm.reverseSort ? \'fa-sort-amount-asc\':\'fa-sort-amount-desc\'}}"></i>\n' +
+  '                                </button>\n' +
+  '                            </span>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '                    <div ng-repeat="application in vm.job.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"\n' +
+  '                         class="row tab-body-item applicant_item">\n' +
+  '                        <oset-application-list-item user-type="owner"\n' +
+  '                                                    application="application" job="vm.job"\n' +
+  '                                                    visible-id="vm.visibleId"\n' +
+  '                                                    visible-tab="vm.visibleTab">\n' +
+  '                        </oset-application-list-item>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '                    <div class="row list-controls">\n' +
+  '                        <div class="col-sm-12 text-center">\n' +
+  '                            <span>\n' +
+  '                                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
+  '                                        ng-click="vm.toggleFilter(\'negStatus\', \'expired\')"\n' +
+  '                                        btn-checkbox ng-model="vm.filters.negStatus.expired"\n' +
+  '                                        name="expired">show expired applicants\n' +
+  '                                </button>\n' +
+  '                                <button type="button" class="btn-tab btn-link read-more btn-sm"\n' +
+  '                                        ng-show="vm.visibleTab === \'applicants\'"\n' +
+  '                                        ng-click="vm.toggleFilter(\'negStatus\', \'rejected\')"\n' +
+  '                                        btn-checkbox ng-model="vm.filters.negStatus.rejected"\n' +
+  '                                        name="rejected">show rejected applicants\n' +
+  '                                </button>\n' +
+  '                            </span>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '\n' +
+  '                    <div class="list-group" ng-if="!(vm.job.applications && vm.job.applications.length)"\n' +
+  '                         ng-show="vm.visibleId === vm.job._id">\n' +
+  '                        <div class="list-group-item text-center">\n' +
+  '                            <h4>No one has applied to this job yet. Would you like to <a\n' +
+  '                                    ui-sref="jobs.edit({\'jobId\':vm.job._id})">edit\n' +
+  '                                your post?</a></h4>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <a class="read-more strong pull-right" ng-click="vm.visibleId = null"\n' +
+  '               ng-class="{\'hidden\':!vm.visibleId}"> </a>\n' +
+  '        </div>\n' +
+  '\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!--//post-inner-->\n' +
+  '</article>\n' +
+  '');
+ $templateCache.put('/modules/applications/views/templates/owner-list-item.client.template.html',
+  '<article class="post applicant">\n' +
+  '\n' +
+  '    <!--ui-sref="applications.view({\'applicationId\': vm.application._id})"-->\n' +
+  '    <div class="row tab-body-item applicant_item"\n' +
+  '         ng-show="vm.visibleId === vm.job._id"\n' +
+  '         ng-class="{\'disabled\': vm.application.disabled}">\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <h4 class="stronger">\n' +
+  '                    {{vm.getMaskedDisplayName(vm.application)}}\n' +
+  '                    <br class="hidden-lg hidden-md">\n' +
+  '                    <span class="pull-right">\n' +
+  '                        <small>Status:</small>\n' +
+  '                        <os-application-status-badge model="vm.application"></os-application-status-badge>\n' +
+  '                    </span>\n' +
+  '                </h4>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">\n' +
+  '                <img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive">\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
+  '                <oset-application-summary model="vm.application" ng-show="vm.visibleTab === \'applicants\'"\n' +
+  '                                          display-mode="inline"></oset-application-summary>\n' +
+  '\n' +
+  '                <dl class="dl-horizontal" ng-="vm.visibleTab === \'messaging\'">\n' +
+  '                    <span ng-repeat="message in vm.application.messages | limitTo: -3">\n' +
+  '                        <dt>{{message.sender.displayName}}</dt>\n' +
+  '                        <dd><span ng-bind-html="message.text"></span>\n' +
+  '                            <small class="smaller text-muted mgn-left">\n' +
+  '                                {{message.created | amDateFormat:\'L LT\'}}\n' +
+  '                            </small>\n' +
+  '                        </dd>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <span ng-if="!vm.application.connection">\n' +
+  '                        <h4 class="text-muted text-center">\n' +
+  '                            Please review this application to send messages\n' +
+  '                            </h4>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <span ng-if="!!vm.application.connection && !(vm.application.messages && vm.application.messages.length)">\n' +
+  '                        <h4 class="text-muted text-center">No Messages</h4>\n' +
+  '                    </span>\n' +
+  '                </dl>\n' +
+  '\n' +
+  '                <div ng-show="vm.visibleTab === \'documents\'">\n' +
+  '                    <pre ng-if="vm.debug">{{vm.application.user.driver.reports}}</pre>\n' +
+  '                    <oset-document-list driver="vm.application.user.driver" application="vm.application" display-mode="full"\n' +
+  '                                        doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
+  '                </div>\n' +
+  '\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <br class="hidden-lg"/>\n' +
+  '\n' +
+  '            <div class="col-lg-2 col-md-3 col-xs-12 text-right">\n' +
+  '                <a class="btn-tab btn-link strong pull-right"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'read\'})">\n' +
+  '                    Full Profile\n' +
+  '                    <i class="fa fa-external-link fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert"/>\n' +
+  '                <a class="btn-tab btn-link strong pull-right"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   tooltip="{{vm.application.messagingText || vm.messagingText}}"\n' +
+  '                   tooltip-popup-delay="1000"\n' +
+  '                   ui-sref="applications.view({applicationId: vm.application._id, action: \'message\'})">\n' +
+  '\n' +
+  '                    <span class="badge" ng-show="!!vm.application.newMessages">{{vm.application.newMessages}}</span>\n' +
+  '                    Messaging\n' +
+  '                    <i class="fa fa-comments-o fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert pull-right"/>\n' +
+  '\n' +
+  '                <a class="btn-tab btn-link strong"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   tooltip="{{vm.application.documentText || vm.documentText}}"\n' +
+  '                   tooltip-popup-delay="1000"\n' +
+  '                   ui-sref="drivers.documents({driverId: vm.application.user.driver.id})">\n' +
+  '                    Documents\n' +
+  '                    <i class="fa fa-file-text fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert"/>\n' +
+  '\n' +
+  '                <!--TODO: Change the "Reject" into a state rather than a callback-->\n' +
+  '                <a class="btn-tab btn-link strong"\n' +
+  '                   style="white-space: nowrap"\n' +
+  '                   ng-click="vm.setApplicationStatus(vm.job.applications[$index], \'rejected\', $event)">\n' +
+  '                    Reject\n' +
+  '                    <i class="fa fa-close fa-lg mgn-left"></i>\n' +
+  '                </a>\n' +
+  '                <br class="visible-lg mgn-vert"/>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '    <!--//post-inner-->\n' +
+  '</article>\n' +
   '');
  $templateCache.put('/modules/bgchecks/views/bgcheck-summary.client.template.html',
   '<section class="pricing">\n' +
@@ -896,11 +1093,335 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/bgchecks/views/templates/custom-questionnaire.client.template.html',
+  '<oset-form-entry model="vm.model" report="vm.report" loading="vm.loading" read-only="vm.readOnly"></oset-form-entry>\n' +
+  '');
+ $templateCache.put('/modules/bgchecks/views/templates/document-list-dd.client.template.html',
+  '<section class="documentDD">\n' +
+  '    <dd class="report-badges" ng-class="{\'not-visible\':!vm.docAccess}">\n' +
+  '\n' +
+  '        <span class="fa-stack fa-3x report-badge mgn-right"\n' +
+  '              tooltip="Resume{{vm.docAccess ? (!!vm.driver.reports[\'resume\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '              ng-class="{\'available\': !!vm.driver.reports[\'resume\']}"\n' +
+  '              ng-click="vm.docAccess && vm.showDocument(\'resume\', $event)">\n' +
+  '            <i class="fa fa-file fa-stack-2x"></i>\n' +
+  '            <span class="badge-info">\n' +
+  '                <span class="badge-info-inner fa fa-stack-1x">\n' +
+  '                    <i class="fa fa-check fa-1x"></i>\n' +
+  '                    <span class="title">Resume</span>\n' +
+  '                </span>\n' +
+  '            </span>\n' +
+  '        </span>\n' +
+  '\n' +
+  '        <span class="fa-stack fa-3x report-badge mgn-right"\n' +
+  '              tooltip="Motor Vehicle Report{{vm.docAccess ? (!!vm.driver.reports[\'mvr\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '              ng-class="{\'available\': !!vm.driver.reports[\'mvr\']}"\n' +
+  '              ng-click="vm.docAccess && vm.showDocument(\'mvr\', $event)">\n' +
+  '            <i class="fa fa-certificate fa-stack-2x"></i>\n' +
+  '            <span class="badge-info">\n' +
+  '                <span class="badge-info-inner fa fa-stack-1x">\n' +
+  '                    <i class="fa fa-check fa-1x hidden"></i>\n' +
+  '                    <span class="title">MVR</span>\n' +
+  '                </span>\n' +
+  '            </span>\n' +
+  '        </span>\n' +
+  '\n' +
+  '        <span class="fa-stack fa-3x report-badge mgn-right"\n' +
+  '              tooltip="Background Check{{vm.docAccess ? (!!vm.driver.reports[\'bgcheck\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '              ng-class="{\'available\': !!vm.driver.reports[\'bgcheck\']}"\n' +
+  '              ng-click="vm.docAccess && vm.showDocument(\'bgcheck\', $event)">\n' +
+  '            <i class="fa fa-certificate fa-stack-2x"></i>\n' +
+  '            <span class="badge-info">\n' +
+  '                <span class="badge-info-inner fa fa-stack-1x">\n' +
+  '                <i class="fa fa-times fa-1x hidden"></i>\n' +
+  '                <span class="title">BG</span>\n' +
+  '            </span>\n' +
+  '            </span>\n' +
+  '        </span>\n' +
+  '\n' +
+  '        <span class="fa-stack fa-3x report-badge mgn-right"\n' +
+  '              tooltip="National Criminal{{vm.docAccess ? (!!vm.driver.reports[\'ncrim\']  ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '              ng-class="{\'available\': !!vm.driver.reports[\'ncrim\']}"\n' +
+  '              ng-click="vm.docAccess && vm.showDocument(\'ncrim\', $event)">\n' +
+  '            <i class="fa fa-certificate fa-stack-2x"></i>\n' +
+  '            <span class="badge-info">\n' +
+  '                <span class="badge-info-inner fa fa-stack-1x">\n' +
+  '                <i class="fa fa-question fa-1x hidden"></i>\n' +
+  '                <span class="title">N-CRIM</span>\n' +
+  '            </span>\n' +
+  '            </span>\n' +
+  '        </span>\n' +
+  '\n' +
+  '        <span class="fa-stack fa-3x report-badge mgn-right"\n' +
+  '              tooltip="Drug Screen{{vm.docAccess ? (!!vm.driver.reports[\'drugs\'] ? \' - click to download\': \' - not available\') : \'\'}}"\n' +
+  '              ng-class="{\'available\': !!vm.driver.reports[\'drugs\']}"\n' +
+  '              ng-click="vm.docAccess && vm.showDocument(\'drugs\', $event)">\n' +
+  '            <i class="fa fa-certificate fa-stack-2x"></i>\n' +
+  '            <span class="badge-info">\n' +
+  '                <span class="badge-info-inner fa fa-stack-1x">\n' +
+  '                <i class="fa fa-question fa-1x hidden"></i>\n' +
+  '                <span class="title">DRUG</span>\n' +
+  '            </span>\n' +
+  '            </span>\n' +
+  '        </span>\n' +
+  '\n' +
+  '\n' +
+  '    </dd>\n' +
+  '    <dd ng-hide="vm.docAccess">\n' +
+  '        <em class="text-muted">\n' +
+  '            <span ng-hide="!!vm.driver.reportsData.length">No reports on file</span>\n' +
+  '            <span ng-show="!!vm.driver.reportsData.length">You will be able to download reports once connected</span>\n' +
+  '        </em>\n' +
+  '    </dd>\n' +
+  '    <dd ng-show="vm.docAccess">\n' +
+  '        <em class="text-muted">\n' +
+  '            <span ng-hide="!!vm.driver.reportsData.length">No reports on file</span>\n' +
+  '            <span ng-show="!!vm.driver.reportsData.length">Click on available reports to view or download</span>\n' +
+  '\n' +
+  '        </em>\n' +
+  '    </dd>\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/bgchecks/views/templates/document-list-inline.client.template.html',
+  '<span class="documentsInline">\n' +
+  '    <label ng-if="vm.driver.reportsData && vm.driver.reportsData.length"\n' +
+  '           class="document label {{vm.docAccess ? \'label-success pointer\' : \'label-default\'}}"\n' +
+  '           ng-click="vm.showDocument(\'resume\', $event)"\n' +
+  '           tooltip-popup-delay="750" tooltip="View Applicant\'s Documents">BG Reports&nbsp;\n' +
+  '        <i class="fa fa-external-link" ng-if="!!vm.docAccess"></i>\n' +
+  '    </label>\n' +
+  '    <em class="small text-muted" ng-if="!vm.driver.reportsData.length">no documents on file</em>\n' +
+  '</span>\n' +
+  '');
+ $templateCache.put('/modules/bgchecks/views/templates/form-entry.client.template.html',
+  '<fieldset ng-class="{\'text-muted\': vm.disabled || vm.ispay}">\n' +
+  '\n' +
+  '        <accordion ng-if="vm.debug">\n' +
+  '            <accordion-group heading="View Model @ Form-Entry Directive Level">\n' +
+  '                <pre>{{vm.model | prettyPrint}}</pre>\n' +
+  '            </accordion-group>\n' +
+  '        </accordion>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="form-group" ng-repeat="field in vm.fields"\n' +
+  '             ng-class="{\'has-error\': (vm.form[field.name].$invalid || vm.form[\'hidden_\'+field.name].$invalid) && (vm.form.$submitted || vm.form[field.name].$touched)}">\n' +
+  '            <label class="col-sm-3 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!field.required}">\n' +
+  '                {{field.description | titleCase}} </label>\n' +
+  '\n' +
+  '            <input type="hidden" ng-model="vm.model[field.name]" name="hidden_{{field.name}}"\n' +
+  '                   ng-required="field.required"\n' +
+  '                   ng-maxlength="field.ngMaxLength || field.length"/>\n' +
+  '\n' +
+  '            <div class="col-sm-9 col-md-8">\n' +
+  '                <form-input field="field" ng-hide="vm.readOnly" model="vm.model"></form-input>\n' +
+  '                <form-input field="field" ng-show="vm.readOnly" model="vm.model" mode="static"></form-input>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div ng-if="vm.debug" class="visible-md visible-lg col-md-1">\n' +
+  '                <span class="{{!!vm.form[field.name].$invalid ? \'text-danger\' : \'text-muted\'}}"><i class="fa fa-check"></i></span>\n' +
+  '                <span class="{{!!vm.form[\'hidden_\' + field.name].$invalid ? \'text-danger\' : \'text-muted\'}}"><i class="fa fa-check-circle-o"></i></span>\n' +
+  '                <span class="{{!!vm.form[field.name].$touched ? \'text-success\' : \'text-muted\'}}"><i class="fa fa-hand-o-down"></i></span>\n' +
+  '                <span class="{{!!vm.form.$submitted ? \'text-success\' : \'text-muted\'}}"><i class="fa fa-forward"></i></span>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </fieldset>\n' +
+  '');
+ $templateCache.put('/modules/bgchecks/views/templates/form-input.client.template.html',
+  '<section>\n' +
+  '    <div class="ng-hide" field-name="{{vm.field.name}}" type="{{vm.field.type}}" req="{{vm.field.required}}"></div>\n' +
+  '\n' +
+  '    <input ng-if="!!vm.field.ngType" type="{{vm.field.ngType}}" class="form-control"\n' +
+  '           name="{{vm.field.name}}" ng-model="vm.model[vm.field.name]"\n' +
+  '           ng-maxlength="vm.field.ngMaxLength" ng-required="vm.field.required"/>\n' +
+  '\n' +
+  '    <textarea os-html-edit ng-if="!!vm.field.isTextArea" class="editor-sm"\n' +
+  '              name="{{vm.field.name}}" data-ng-model="vm.model[vm.field.name]"\n' +
+  '              ng-maxlength="vm.field.length" ng-required="vm.field.required">\n' +
+  '    </textarea>\n' +
+  '\n' +
+  '    <date-input ng-if="vm.field.isDate" format="vm.field.format" model="vm.model[vm.field.name]"\n' +
+  '                class="form-control" name="{{vm.field.name}}"></date-input>\n' +
+  '    <!-- ng-required="vm.field.required" -->\n' +
+  '\n' +
+  '    <input type="checkbox" ng-if="vm.field.isCheckbox"\n' +
+  '           ng-model="vm.model[vm.field.name]"\n' +
+  '           ng-required="vm.field.required"\n' +
+  '           name="{{vm.field.name}}"/>\n' +
+  '\n' +
+  '    <span ng-repeat="opt in vm.field.options">\n' +
+  '    <input type="radio" ng-if="vm.field.isRadio"\n' +
+  '           ng-model="vm.model[vm.field.name]"\n' +
+  '           name="{{vm.field.name}}"\n' +
+  '           ng-value="opt.value"/>{{opt.label}}\n' +
+  '    </span>\n' +
+  '\n' +
+  '    <input ng-if="!!vm.field.ngSensitive" type="text" ng-model="vm.model[vm.field.name]"\n' +
+  '           name="{{vm.field.name}}" ng-required="vm.required"\n' +
+  '           ui-mask="999-99-9999" class="form-control"/>\n' +
+  '\n' +
+  '\n' +
+  '    <!-- States -->\n' +
+  '    <select ng-if="vm.field.isState" class="form-control" name="{{vm.field.name}}"\n' +
+  '            ng-options="state.id as state.name for state in vm.field.options"\n' +
+  '            ng-model="vm.model[vm.field.name]" ng-required="vm.field.required" autocomplete="off">\n' +
+  '    </select>\n' +
+  '\n' +
+  '    <!-- Countries -->\n' +
+  '    <p class="form-control-static" ng-if="vm.field.isCountry"\n' +
+  '       ng-init="vm.model[vm.field.name] = \'united_states\'">United States</p>\n' +
+  '\n' +
+  '    <select ng-if="vm.field.isPickList" class="form-control" name="{{vm.field.name}}"\n' +
+  '            ng-options="item.value as item.description for item in vm.field.pickList"\n' +
+  '            ng-model="vm.model[vm.field.name]">\n' +
+  '    </select>\n' +
+  '\n' +
+  '    <div class="" ng-if="vm.field.isArray" name="{{vm.field.name}}">\n' +
+  '        <div ng-repeat="(i,arrayItem) in vm.model[vm.field.name]">\n' +
+  '            <div ng-repeat="df1 in vm.field.dataFields" class="well">\n' +
+  '                <div class="col-xs-12" style="vertical-align: baseline;">\n' +
+  '                    <label class="pull-left">{{df1.description}} #{{i+1}}</label>\n' +
+  '                    <button type="button" class="btn btn-close pull-right"\n' +
+  '                            data-ng-click="vm.model[vm.field.name].splice($index, 1);">&times;</button>\n' +
+  '                    <div class="clearfix"></div>\n' +
+  '                </div>\n' +
+  '                <hr/>\n' +
+  '\n' +
+  '                <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"\n' +
+  '                     class="form-group"\n' +
+  '                     ng-class="{\'has-error\':vm.form[vm.field.name+\'_\'+i+\'_\'+df2.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+\'_\'+i+\'_\'+df2.name].$touched)}">\n' +
+  '                    <label class="col-md-4 control-label"\n' +
+  '                           data-ng-class="{\'optional\':!df2.required}">{{df2.description | titleCase}}</label>\n' +
+  '\n' +
+  '                    <div class="col-md-8">\n' +
+  '                        <input ng-if="!!df2.ngType || df2.type === \'string\' || !df2.isDate"\n' +
+  '                               type="{{df2.ngType || text}}" class="form-control"\n' +
+  '                               name="{{vm.field.name}}_{{i}}_{{df2.name}}"\n' +
+  '                               ng-model="vm.model[vm.field.name][i][df2.name]"\n' +
+  '                               maxlength="{{df2.length}}" ng-required="df2.required"/>\n' +
+  '\n' +
+  '                        <date-input ng-if="df2.isDate" format="df2.format"\n' +
+  '                                    name="{{vm.field.name}}_{{i}}_{{df2.name}}"\n' +
+  '                                    model="vm.model[vm.field.name][i][df2.name]"\n' +
+  '                                    class="form-control"\n' +
+  '                                ></date-input>\n' +
+  '                        <!--ng-required="df2.required"-->\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '        </div>\n' +
+  '        <button type="button" data-ng-click="vm.model[vm.field.name].push({})">Add</button>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="well" ng-if="vm.field.isObject" name="{{vm.field.name}}">\n' +
+  '        <div ng-repeat="dataField in vm.field.dataFields" class="form-group"\n' +
+  '             ng-class="{\'has-error\':vm.form[vm.field.name+\'_\'+dataField.name].$invalid && (vm.form.$submitted || vm.form[vm.field.name+\'_\'+dataField.name].$touched)}">\n' +
+  '\n' +
+  '            <label class="col-sm-4 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!dataField.required}">{{dataField.description\n' +
+  '                | titleCase}}</label>\n' +
+  '\n' +
+  '            <div class="col-sm-8">\n' +
+  '                <input ng-if="!dataField.isDate && !dataField.isState && !dataField.isCountry"\n' +
+  '                       type="{{dataField.ngType || text}}" class="form-control"\n' +
+  '                       name="{{vm.field.name}}_{{dataField.name}}"\n' +
+  '                       ng-model="vm.model[vm.field.name][dataField.name]"\n' +
+  '                       ng-maxlength="dataField.length" ng-required="dataField.required"/>\n' +
+  '\n' +
+  '                <date-input ng-if="dataField.isDate" format="dataField.format"\n' +
+  '                            model="vm.model[vm.field.name][dataField.name]"\n' +
+  '                            class="form-control"\n' +
+  '                            name="{vm.field.name}}_{{dataField.name}}"></date-input>\n' +
+  '\n' +
+  '                <!-- States -->\n' +
+  '                <select ng-if="dataField.isState" class="form-control"\n' +
+  '                        ng-options="state.id as state.name for state in dataField.options"\n' +
+  '                        ng-model="vm.model[vm.field.name][dataField.name]"\n' +
+  '                        ng-required="dataField.required" autocomplete="off">\n' +
+  '                </select>\n' +
+  '\n' +
+  '                <p class="form-control-static" ng-if="dataField.isCountry"\n' +
+  '                   ng-init="vm.model[vm.field.name][dataField.name] = \'united_states\'">United\n' +
+  '                    States</p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!--  <option ng-repeat="option in vm.field.pickList" value="{{option.name}}">\n' +
+  '            {{option.description}}\n' +
+  '        </option> -->\n' +
+  '</section>\n' +
+  '');
+ $templateCache.put('/modules/bgchecks/views/templates/form-static.client.template.html',
+  '<section class=form-input-static-directive>\n' +
+  '    <p ng-if="!vm.field.isObject && !vm.field.isArray && !vm.field.isDate" type="{{vm.field.ngType}}"\n' +
+  '       class="form-control-static">\n' +
+  '        {{(vm.model[vm.field.name] | titleCase) || \'not specified\'}}\n' +
+  '    </p>\n' +
+  '\n' +
+  '    <p ng-if="vm.field.isDate"\n' +
+  '       class="form-control-static">\n' +
+  '        {{(vm.model[vm.field.name] | isoDatePrint) || \'--\'}}</p>\n' +
+  '\n' +
+  '    <div ng-if="vm.field.isArray">\n' +
+  '        <div ng-if="!vm.model[vm.field.name] || !vm.model[vm.field.name].length"><p\n' +
+  '                class="text-muted">none specified</p></div>\n' +
+  '        <div ng-repeat="(i,arrayItem) in vm.model[vm.field.name]">\n' +
+  '            <div ng-repeat="df1 in vm.field.dataFields" class="well">\n' +
+  '                <div class="col-xs-12" style="vertical-align: baseline;">\n' +
+  '                    <label class="pull-left">{{df1.description}} #{{i+1}}</label>\n' +
+  '                </div>\n' +
+  '                <hr/>\n' +
+  '\n' +
+  '                <div ng-repeat="df2 in df1.dataFields" ng-init="$ai = $index"\n' +
+  '                     class="form-group">\n' +
+  '                    <label class="col-sm-3 control-label">{{df2.description}}</label>\n' +
+  '\n' +
+  '                    <div class="col-sm-8"\n' +
+  '                         ng-class="{\'text-muted\': !vm.model[vm.field.name][i][df2.name]}">\n' +
+  '\n' +
+  '                        <p ng-if="!df2.isDate" class="form-control-static">\n' +
+  '                            {{(vm.model[vm.field.name][i][df2.name] | titleCase) || \'--\'}}</p>\n' +
+  '\n' +
+  '                        <p ng-if="df2.isDate" class="form-control-static">\n' +
+  '                            {{(vm.model[vm.field.name][i][df2.name] | isoDatePrint) || \'--\'}}\n' +
+  '                        </p>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '\n' +
+  '    <div class="well" ng-if="vm.field.isObject">\n' +
+  '        <div ng-repeat="dataField in vm.field.dataFields" class="form-group">\n' +
+  '            <label class="col-sm-3 control-label"\n' +
+  '                   data-ng-class="{\'optional\':!dataField.required}">{{dataField.description}}</label>\n' +
+  '\n' +
+  '            <div class="col-sm-8"\n' +
+  '                 ng-class="{\'text-muted\': !vm.model[vm.field.name][dataField.name]}">\n' +
+  '                <p ng-if="!dataField.isDate" type="{{vm.field.ngType}}"\n' +
+  '                   class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |\n' +
+  '                    titleCase) || \'--\'}}</p>\n' +
+  '\n' +
+  '                <p ng-if="dataField.isDate" type="{{vm.field.ngType}}"\n' +
+  '                   class="form-control-static">{{(vm.model[vm.field.name][dataField.name] |\n' +
+  '                    isoDatePrint) || \'--\'}}</p>\n' +
+  '                <pre ng-if="vm.debugMode">{{vm.model[vm.field.name][dataField.name]}}</pre>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/chat/views/chat-console.client.template.html',
-  '<div class="row chat-window" ng-show="vm.activeConnection">\n' +
+  '<div class="row chat-window" ng-show="!!vm.connection">\n' +
   '    <div class="col-sm-12">\n' +
-  '        <h4>Messages\n' +
-  '            <small class="pull-right">\n' +
+  '        <h4>\n' +
+  '            Messages\n' +
+  '            <small class="pull-right" ng-show="!!vm.activeConnection">\n' +
   '                <em>\n' +
   '                    <strong>Connection Status</strong>\n' +
   '                    Me:\n' +
@@ -914,8 +1435,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </h4>\n' +
   '\n' +
   '\n' +
-  '        <div class="chat-section"\n' +
-  '             scroll-bottom="vm.messages">\n' +
+  '        <div class="chat-section" scroll-bottom="vm.messages">\n' +
   '            <div ng-repeat="message in vm.messages | filter : {type: \'!status\'}"\n' +
   '                 ng-init="message.username = message.username || message.sender.username"\n' +
   '                 ng-class="{\'last\':!!$last,\'first\':!!$first}" class="{{vm.getSenderClass(message.username)}}">\n' +
@@ -945,9 +1465,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
-  '\n' +
+  '            <div ng-show="!vm.messages || !vm.messages.length">\n' +
+  '                <div class="text-muted text-center">no messages</div>\n' +
+  '            </div>\n' +
   '        </div>\n' +
-  '        <div class="chat-entry" id="messaging">\n' +
+  '        <div class="chat-entry" id="messaging" ng-show="vm.activeConnection">\n' +
   '            <div class="row mgn-vert">\n' +
   '                <div class="col-md-8 col-md-offset-2">\n' +
   '                    <input type="text" ng-show="vm.messageMode === \'text\'"\n' +
@@ -1020,7 +1542,135 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/companies/views/templates/subscriptions.client.template.html',
-  '<section class="subscription-client-template col-sm-12">\n' +
+  '<div class="pricing-table">\n' +
+  '            <div class="table-col pull-left first">\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="empty-header"></div>\n' +
+  '                    <div class="table-header local">\n' +
+  '                        <div class="title">local</div>\n' +
+  '                        <div class="price">\n' +
+  '                            <span class="small">$</span>\n' +
+  '                            <span class="value">60</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="period">per month</div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Job posts</div>\n' +
+  '                    <div class="row-cell">2</div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Applicant redirect</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Applicant tracking</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">downloadable reports</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Require reports</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Multiple log-ins</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title">Customized background checks</div>\n' +
+  '                    <div class="row-cell">N/A</div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="table-col pull-left second">\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="empty-header mobile"></div>\n' +
+  '                    <div class="table-header regional">\n' +
+  '                        <div class="title">regional</div>\n' +
+  '                        <div class="price">\n' +
+  '                            <span class="small">$</span>\n' +
+  '                            <span class="value">95</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="period">per month</div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Job posts</div>\n' +
+  '                    <div class="row-cell">5</div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant redirect</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant tracking</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">downloadable reports</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Require reports</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Multiple log-ins</div>\n' +
+  '                    <div class="row-cell disable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Customized background checks</div>\n' +
+  '                    <div class="row-cell">+65 per month</div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="table-col pull-left third">\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="empty-header mobile"></div>\n' +
+  '                    <div class="table-header fleet">\n' +
+  '                        <div class="title">fleet</div>\n' +
+  '                        <div class="price">\n' +
+  '                            <span class="small">$</span>\n' +
+  '                            <span class="value">145</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="period">per month</div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Job posts</div>\n' +
+  '                    <div class="row-cell">15</div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant redirect</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Applicant tracking</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">downloadable reports</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Require reports</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Multiple log-ins</div>\n' +
+  '                    <div class="row-cell enable"></div>\n' +
+  '                </div>\n' +
+  '                <div class="table-row">\n' +
+  '                    <div class="row-cell row-title mobile">Customized background checks</div>\n' +
+  '                    <div class="row-cell">+65 per month</div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '            <div class="clearfix"></div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '\n' +
+  '<!--<section class="subscription-client-template col-sm-12">\n' +
   '    <div class="row">\n' +
   '        <h3 class="title text-center mgn-top">{{vm.text.sub}}</h3>\n' +
   '    </div>\n' +
@@ -1104,19 +1754,20 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
-  '</section>\n' +
+  '</section>-->\n' +
   '');
  $templateCache.put('/modules/companies/views/templates/view-company.client.template.html',
   '<section name="os-company.directive">\n' +
   '    <!-- os-company directive : view-company.client.template.html -->\n' +
-  '    <div ng-if="inline">\n' +
+  '    <div ng-show="!!vm.inline">\n' +
   '        <div class="row">\n' +
   '            <div class="col-md-8">\n' +
   '                <h4 class="list-group-item-heading">{{vm.company.name}}</h4>\n' +
   '            </div>\n' +
   '            <div class="col-md-4">\n' +
   '                <small class="list-group-item-text">\n' +
-  '                    <p class="text-right">Added on<span data-ng-bind="vm.company.created | date:\'shortDate\'"></span></p>\n' +
+  '                    <p class="text-right">Added on <span data-ng-bind="vm.company.created | date:\'shortDate\'"></span>\n' +
+  '                    </p>\n' +
   '                </small>\n' +
   '            </div>\n' +
   '        </div>\n' +
@@ -1124,45 +1775,55 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="row">\n' +
   '            <div class="col-md-8 opaque-bg">\n' +
   '                <span class="nowrap"\n' +
-  '                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;">{{ vm.company.about | limitTo : 100 }}</span>\n' +
+  '                      style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; display: block;"\n' +
+  '                      ng-bind-html="vm.company.about | limitTo : 1000"></span>\n' +
   '            </div>\n' +
-  '            <div class="col-md-4">\n' +
-  '                <label>Location:\n' +
-  '                    <strong>{{vm.company.zipCode}}</strong>\n' +
-  '                </label>\n' +
-  '            </div>\n' +
+  '            <dl class="col-md-4 dl-horizontal">\n' +
+  '                <dt>Location:</dt>\n' +
+  '                <dd>{{vm.company.zipCode || vm.company.addresses.length && vm.company.addresses[0] || \'n/a\'}}&nbsp;</dd>\n' +
+  '                <dt>Owner:</dt>\n' +
+  '                <dd>{{vm.company.owner.displayName}}</dd>\n' +
+  '            </dl>\n' +
   '        </div>\n' +
   '    </div>\n' +
   '\n' +
-  '    <div ng-if="!inline">\n' +
+  '    <div ng-hide="!!vm.inline">\n' +
   '        <div class="panel panel-default" ng-if="!!vm.company && vm.company.about">\n' +
   '            <div class="panel-heading">\n' +
   '                <span class="h4">\n' +
   '                    About Us\n' +
   '                    <a data-ng-if="vm.canEdit"\n' +
-  '                                            class="btn btn-link pull-right"\n' +
-  '                                            ui-sref="companies.create({\'companyId\': vm.company._id})">\n' +
+  '                       class="btn btn-link pull-right"\n' +
+  '                       ui-sref="companies.create({\'companyId\': vm.company._id})">\n' +
   '                        edit company profile\n' +
-  '                    <i class="fa fa-pencil-square-o"></i></a>\n' +
+  '                        <i class="fa fa-pencil-square-o"></i></a>\n' +
   '                </span>\n' +
   '            </div>\n' +
   '            <div class="panel-body">\n' +
   '                <div data-ng-bind-html="vm.company.about"></div>\n' +
   '            </div>\n' +
   '        </div>\n' +
-  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && vm.createEnabled">\n' +
+  '\n' +
+  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && vm.canEdit">\n' +
   '            <div class="panel-heading"><span class="h4">Please create your company profile</span></div>\n' +
   '            <div class="panel-body">\n' +
   '                <p class="text-muted">Hi {{::vm.user.firstName}},<br/>{{::vm.createText}}</p><br/>\n' +
   '\n' +
-  '                <p class="text-right" ng-if="!vm.createEnabled"><img src="/modules/core/img/brand/logo-blue.png"\n' +
+  '                <p class="text-right" ng-if="!vm.canEdit"><img src="/modules/core/img/brand/logo-blue.png"\n' +
   '                                                                     alt="The Outset Team"/></p>\n' +
   '\n' +
-  '                <div class="text-center" ng-if="vm.createEnabled">\n' +
+  '                <div class="text-center" ng-if="vm.canEdit">\n' +
   '                    <button type="button" class="btn btn-cta-secondary btn-lg" ng-click="vm.creEdit()">Get Started!\n' +
   '                    </button>\n' +
   '                </div>\n' +
   '\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="panel panel-default" ng-if="(!vm.company || !vm.company.about) && !vm.canEdit">\n' +
+  '            <div class="panel-body">\n' +
+  '                <p ng-bind-html="vm.createText">\n' +
+  '                </p>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -1170,8 +1831,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</section>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-datepicker.client.template.html',
-  '<input type="text" ng-model="vm.shadow" name="{{vm.osName}}" ng-required="vm.required"\n' +
-  '       ng-model-options="{ updateOn: \'blur\' }" ui-mask="{{vm.mask}}" placeholder="{{vm.displayFormat}}"/>\n' +
+  '<input type="text" ng-model="vm.shadow" ng-required="vm.required"\n' +
+  '       ng-model-options="{ updateOn: \'blur\' }"\n' +
+  '       ui-mask="{{vm.mask}}" placeholder="{{vm.displayFormat}}"/>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-debug-info.client.template.html',
   '<div ng-if="enabled" class="row alert alert-info" role="alert" ng-click="toggle()" ng-class="{collapsed: collapsed}">\n' +
@@ -1195,7 +1857,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-page-header.client.template.html',
-  '<div class="row" style="height: 39px;">\n' +
+  '<div style="height: 39px;" class="row">\n' +
   '    <h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"\n' +
   '        ng-class="{\'col-sm-8\':!!vm.pictureUrl}"></h2>\n' +
   '    <span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"\n' +
@@ -1203,10 +1865,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</div>\n' +
   '\n' +
   '<!-- os-page-header directive : os-page-header.client.template -->\n' +
-  '<div class="page-header row" data-ng-if="vm.showHeader || vm.includeTransclude" ng-class="{well : !vm.level}"\n' +
+  '<div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"\n' +
+  '     ng-class="{\'panel panel-default\' : !vm.level}"\n' +
   '     ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">\n' +
   '\n' +
-  '    <div ng-class="{\'col-sm-8\':!!vm.pictureUrl}">\n' +
+  '    <div class="pad-vert {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
   '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +
   '                ng-click="vm.backBtnFn()">\n' +
   '            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || \'Back\'}}\n' +
@@ -1223,10 +1886,11 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <!-- Sub-heading -->\n' +
   '        <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>\n' +
+  '        <small ng-if="!vm.includeTransclude"><br ng-if="vm.showHeader"/>&nbsp;</small>\n' +
   '    </div>\n' +
   '\n' +
-  '    <div class="profile-floater col-sm-4 center-block" data-ng-if="!!vm.pictureUrl">\n' +
-  '        <div class="center-block">\n' +
+  '    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
+  '        <div class="center-block full-width">\n' +
   '            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
   '                 class="img-thumbnail user-profile-picture img-responsive">\n' +
   '            <br data-ng-if="vm.showPicEdit"/>\n' +
@@ -1720,7 +2384,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    <p>We also share Personal Information with vendors who perform services on behalf of Outset,\n' +
   '                        including\n' +
   '                        without limitation vendors who provide email services, demographic information, or geo-location\n' +
-  '                        information, vendors who perform background checks (including MVR�s and other verification\n' +
+  '                        information, vendors who perform background checks (including MVRs and other verification\n' +
   '                        checks),\n' +
   '                        vendors who process credit card payments, vendors who run classified advertising businesses, and\n' +
   '                        vendors who send SMS messages to Registered Users\' mobile phone numbers, in each case to the\n' +
@@ -1795,7 +2459,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        and results of a Background Check (including the Motor Vehicle Records Report) that resulted in\n' +
   '                        Outset suspending or terminating your account will not be shared with other parties including\n' +
   '                        Site\n' +
-  '                        Visitor�s and Registered User�s unless you specifically request us to do so. If you have\n' +
+  '                        Visitors and Registered Users unless you specifically request us to do so. If you have\n' +
   '                        requested\n' +
   '                        a background check through Outset, a statement may be included in your profile to confirm that\n' +
   '                        you\n' +
@@ -2985,62 +3649,222 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </span>\n' +
   '</section>\n' +
   '');
- $templateCache.put('/modules/drivers/views/templates/driver-inline.client.template.html',
-  '<section name="os-driver-inline.directive">\n' +
+ $templateCache.put('/modules/drivers/views/templates/driver-edit-form.client.template.html',
+  '<fieldset>\n' +
   '\n' +
-  '    <div class="col-md-2 text-center">\n' +
-  '        <img ng-src="{{vm.driver.user.profileImageURL}}" class="img-thumbnail user-profile-picture" />\n' +
+  '    <div class="row">\n' +
+  '        <div data-ng-show="vm.error" class="panel panel-danger mgn-vert col-md-8 col-md-offset-2">\n' +
+  '            <div class="text-danger text-center mgn-vert">\n' +
+  '                <strong data-ng-bind="vm.error"></strong>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
   '    </div>\n' +
   '\n' +
-  '    <!-- Driver Inline Template Begin -->\n' +
+  '    <h3>Interests\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            Tell us about what kind of jobs you are interested in. Select from the list or add your own.\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
   '\n' +
-  '    <div class="col-md-10">\n' +
-  '        <os-page-header title="{{vm.driver.user.displayName}}" level="h3">\n' +
-  '            Member Since <span data-ng-bind="vm.driver.user.created | date:\'mediumDate\'"></span>\n' +
-  '        </os-page-header>\n' +
+  '    <div class="well">\n' +
+  '        <div class="row text-center">\n' +
+  '            <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
+  '            <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
   '\n' +
-  '        <div class="row col-sm-12">\n' +
-  '            <div data-ng-bind-html="vm.driver.about"></div>\n' +
+  '    <!-- Driver\'s License Information -->\n' +
+  '    <h3>Driver License\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            The basic information about your license will be made available when you apply for a job.\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
   '\n' +
-  '            <div class="col-sm-4">\n' +
-  '                <label>Experience:</label>\n' +
-  '                <div ng-repeat="exp in vm.driver.experience">\n' +
-  '                    {{exp.title || \'Job\'}} - {{exp.startDate | date: \'shortDate\'}} to {{exp.endDate | date: \'shortDate\'}}\n' +
-  '                    <span ng-hide="$last">,&nbsp;</span>\n' +
-  '                    <p ng-hide="vm.driver.experience && vm.driver.experience.length > 0">None Added</p>\n' +
+  '    <div class="well">\n' +
+  '        <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"></os-edit-license>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!-- Driver\'s Experience Breakdown -->\n' +
+  '    <h3>Experience\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            Add information about past work experience to help employers know more about you and your background\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
+  '\n' +
+  '    <div class="panel">\n' +
+  '        <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!-- Biography -->\n' +
+  '    <h3 class="clearfix">About Me\n' +
+  '        <br/>\n' +
+  '        <small>\n' +
+  '            Include an introduction to yourself here to help employers know who you are\n' +
+  '        </small>\n' +
+  '    </h3>\n' +
+  '    <div class="container-fluid well">\n' +
+  '\n' +
+  '        <div class="row"\n' +
+  '             ng-show="vm.driverForm.description.$invalid && (vm.driverForm.$submitted || vm.driverForm.description.$dirty)">\n' +
+  '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
+  '                <div class="text-danger text-center mgn-vert">\n' +
+  '                    Please add some information about yourself here.\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <!--<textarea os-html-edit data-ng-model="vm.driver.about" class="editor-lg" ng-required="true"></textarea>-->\n' +
+  '\n' +
+  '                    <textarea os-html-edit type="text" data-ng-model="vm.driver.about"\n' +
+  '                              name="description" id="description" class="editor-md"\n' +
+  '                              placeholder="Please introduce yourself to the employer here"\n' +
+  '                              ng-required="true"></textarea>\n' +
+  '        <!--<input type="hidden" ng-model="vm.driver.about" name="description" ng-required="true"/>-->\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div ng-if="vm.enableSchedule">\n' +
+  '\n' +
+  '        <h3>Availability</h3>\n' +
+  '        <!-- Driver\'s Availability -->\n' +
+  '        <div class="container-fluid well">\n' +
+  '            <div class="row profile-row" ng-show="vm.driver.schedule && !!vm.driver.schedule.length">\n' +
+  '                <div class="col-md-12 availability_matrix" name="schedule">\n' +
+  '                    <div class="container-fluid well">\n' +
+  '                        <div class="col-md-12">\n' +
+  '                            <div class="row availability-header">\n' +
+  '                                <div class="col-md-5">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Time</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">M</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Tu</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">W</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Th</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">F</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Sa</h6>\n' +
+  '                                </div>\n' +
+  '                                <div class="col-md-1">\n' +
+  '                                    <h6 class="heading profile-label profile-label-1">Su</h6>\n' +
+  '                                </div>\n' +
+  '                            </div>\n' +
+  '                            <div ng-include="\'modules/users/views/templates/schedule.client.template.html\'"\n' +
+  '                                 ng-repeat=\'schedule in vm.driver.schedule\'></div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <div class="col-sm-4">\n' +
-  '                <label>Location:</label>\n' +
-  '                <span class="text-danger">TODO: Directivize</span>\n' +
-  '                <ul><small>\n' +
-  '                <li ng-show="vm.driver.user.addresses.length > 0" ng-repeat="address in vm.driver.user.addresses">\n' +
-  '                    <strong>{{address.type}}</strong> {{address.city}}, {{address.state}} {{address.zipCode}}\n' +
-  '                    <br ng-hide="$last"/>\n' +
-  '                </li></small></ul>\n' +
-  '\n' +
-  '                <p ng-hide="vm.driver.user.addresses && vm.driver.user.addresses.length > 0">No Address on File</p>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="col-sm-4">\n' +
-  '                <label>Licenses</label>\n' +
-  '                <div ng-repeat="license in vm.driver.licenses">\n' +
-  '\n' +
-  '                    <p>\n' +
-  '                        <i class="fa fa-credit-card"></i> &nbsp;{{license.state}}<span ng-if="license.type"> {{license.type}}</span> Driver License\n' +
-  '                        <span ng-if="license.rating">: Class {{license.rating}}</span>\n' +
-  '\n' +
-  '                        <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
-  '                    </p>\n' +
-  '\n' +
+  '            <div class="row profile-row" ng-hide="vm.driver.schedule">\n' +
+  '                <div class="col-sm-8 col-sm-offset-2">\n' +
+  '                    <alert type="info text-center">\n' +
+  '                        <i class="fa fa-info-circle text-info fa-2x pull-left"\n' +
+  '                           style="padding-right: 10px;"></i>\n' +
+  '                        <span>You will be able to set your schedule after saving your primary information</span>\n' +
+  '                    </alert>\n' +
   '                </div>\n' +
-  '                <p ng-show="vm.driver.licenses.length === 0">No License on File</p>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '    </div>\n' +
+  '</fieldset>\n' +
+  '');
+ $templateCache.put('/modules/drivers/views/templates/driver-info-form.client.template.html',
+  '<fieldset>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--What type of license do you have? -->\n' +
+  '        <div class="col-md-10 col-md-offset-1">\n' +
+  '            <p class="info">\n' +
+  '                What type of driver license do you have?\n' +
+  '            </p>\n' +
+  '\n' +
+  '            <div class="panel panel-default pad-vert">\n' +
+  '                <os-edit-license model="vm.driver.licenses[0]"\n' +
+  '                                 form-name="licenseForm"\n' +
+  '                                 mode="minimal"></os-edit-license>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--What are you interested in -->\n' +
+  '        <div class="col-sm-10 col-sm-offset-1">\n' +
+  '            <p class="info">\n' +
+  '                What types of jobs are you interested in?\n' +
+  '            </p>\n' +
+  '\n' +
+  '            <div class="panel panel-default pad-vert text-center">\n' +
+  '                <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
+  '                <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '\n' +
+  '        <h4 class="col-sm-12">Work Experience</h4>\n' +
+  '\n' +
+  '        <p class="info col-sm-12">\n' +
+  '            Add information about past Experience to help employers know more about you and your\n' +
+  '            background.\n' +
+  '            <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"\n' +
+  '                    ng-click="vm.driver.experience = [];"\n' +
+  '                    event-focus="click" event-focus-id="introText">\n' +
+  '                skip\n' +
+  '            </button>\n' +
+  '        </p>\n' +
+  '\n' +
+  '        <!--What are you interested in -->\n' +
+  '        <div class="form-group">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--Cover Letter-->\n' +
+  '\n' +
+  '        <h4 class="col-sm-12">Cover Letter</h4>\n' +
+  '\n' +
+  '        <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
+  '           ng-bind-html="vm.about.messageSubHeading"></p>\n' +
+  '\n' +
+  '        <div class="form-group"\n' +
+  '             ng-class="{\'has-error\': vm.form.introText.$invalid && (vm.form.$submitted || vm.form.introText.$touched)}">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="info pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
+  '                    Please introduce yourself in a few sentences. This will serve as the template for your job\n' +
+  '                    application cover letter.\n' +
+  '                </div>\n' +
+  '                <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
+  '                    {{vm.introTextError}}\n' +
+  '                </div>\n' +
+  '                <textarea os-html-edit type="text" data-ng-model="vm.driver.about"\n' +
+  '                          name="introText" id="introText" class="editor-md"\n' +
+  '                          placeholder="Please introduce yourself to the employer here"\n' +
+  '                          ng-required="true"></textarea>\n' +
   '            </div>\n' +
   '\n' +
   '        </div>\n' +
+  '\n' +
   '    </div>\n' +
-  '</section>\n' +
+  '\n' +
+  '</fieldset>\n' +
   '');
  $templateCache.put('/modules/drivers/views/templates/driver-profile.client.template.html',
   '<section name="os-driver.directive" class="panel panel-default">\n' +
@@ -3106,49 +3930,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <os-view-schedule data-ng-if="false" model="vm.driver.schedule"></os-view-schedule>\n' +
   '</section>\n' +
   '');
- $templateCache.put('/modules/drivers/views/templates/driver.client.template.html',
-  '<section >\n' +
-  '    <h3 class="text-center text-danger">Controller Moved</h3>\n' +
-  '    <span class="col-md-12 opaque-bg">\n' +
-  '        <div data-ng-show="!!driver.$resolved || !!driver">\n' +
-  '            <div class="row">\n' +
-  '                <div class="col-md-8">\n' +
-  '                    <h4 class="list-group-item-heading">{{driver.user.displayName}}\n' +
-  '                    </h4>\n' +
-  '                </div>\n' +
-  '                <div class="col-md-4">\n' +
-  '                    <small class="list-group-item-text">\n' +
-  '                        <p class="text-right">Added on\n' +
-  '                            <span data-ng-bind="driver.created | date:\'shortDate\'"></span>\n' +
-  '                        </p>\n' +
-  '                    </small>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="row">\n' +
-  '                <div class="col-md-8 opaque-bg">\n' +
-  '                    {{driver.experience}}\n' +
-  '                </div>\n' +
-  '                <div class="col-md-4">\n' +
-  '                    <label>IsActive:\n' +
-  '                        <strong>{{driver.isActive}}</strong>\n' +
-  '                    </label>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '        </div>\n' +
-  '        <div class="alert alert-warning text-center" data-ng-hide="!!driver || !createEnabled">\n' +
-  '            Are you a driver? <a href="/drivers/create">create a profile!</a>?\n' +
-  '        </div>\n' +
-  '        <div>Create Enabled: {{createEnabled}}</div>\n' +
-  '    </span>\n' +
-  '</section>\n' +
-  '');
  $templateCache.put('/modules/drivers/views/templates/experience-list.client.template.html',
   '<section name="experience-list.client.template">\n' +
-  '    <div class="row profile-row">\n' +
+  '    <div ng-form="experienceForm" class="row profile-row">\n' +
   '        <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)">\n' +
   '\n' +
   '            <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"\n' +
+  '                                  model-index="$index"\n' +
   '                                  model="exp" is-last="$last" ng-switch-when="true"\n' +
   '                                  view-only="vm.viewOnly" can-edit="vm.canEdit" edit-mode="exp.isFresh && vm.isEditing"\n' +
   '                                  add-fn="vm.add" drop-fn="vm.drop" is-last="$last">\n' +
@@ -3161,7 +3949,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </div>\n' +
   '\n' +
   '            <p class="text-center" ng-if="vm.models.length > vm.maxCt">\n' +
-  '                <button type="button" class="btn btn-oset-link" ng-click="(vm.maxCt = vm.maxCt+5);">view more ...</button>\n' +
+  '                <button type="button" class="btn btn-oset-link" ng-click="(vm.maxCt = vm.maxCt+5);">view more ...\n' +
+  '                </button>\n' +
   '            </p>\n' +
   '\n' +
   '        </div>\n' +
@@ -3171,10 +3960,13 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
  $templateCache.put('/modules/drivers/views/templates/experience.client.template.html',
   '<section class="experience">\n' +
   '\n' +
-  '    <ng-form name="vm.experienceForm" ng-init="vm.activate()" class="edit form-horizontal" ng-show="vm.isEditing"\n' +
-  '             ng-if="!vm.viewOnly">\n' +
+  '    <!--Form When Editing is Active-->\n' +
   '\n' +
-  '        <div class="row" ng-show="vm.experienceForm.$invalid && (vm.experienceForm.$submitted)">\n' +
+  '    <div ng-form="{{\'experienceItem_\' +vm.modelIndex}}" ng-init="vm.activate()"\n' +
+  '         class="edit form-horizontal" ng-show="vm.isEditing"\n' +
+  '         ng-if="!vm.viewOnly">\n' +
+  '\n' +
+  '        <div class="row" ng-show="vm.formItem.$invalid && (vm.formItem.$submitted || vm.formItem._submitted)">\n' +
   '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
   '                <div class="text-danger text-center mgn-vert">\n' +
   '                    {{vm.error || \'Please fill in required fields and correct errors\'}}\n' +
@@ -3183,7 +3975,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row mgn-vert"\n' +
-  '             ng-class="{\'has-error\':(vm.experienceForm.title.$invalid || vm.experienceForm[\'hidden_title\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.title.$touched)}">\n' +
+  '             ng-class="{\'has-error\':(vm.formItem.title.$invalid || vm.formItem[\'hidden_title\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.title.$touched)}">\n' +
   '            <label class="col-sm-2 control-label">Job Title</label>\n' +
   '\n' +
   '            <div class="controls col-sm-9 controls">\n' +
@@ -3194,7 +3986,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row mgn-vert"\n' +
-  '             ng-class="{\'has-error\':(vm.experienceForm.description.$invalid || vm.experienceForm[\'hidden_description\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.description.$touched)}">\n' +
+  '             ng-class="{\'has-error\':(vm.formItem.description.$invalid || vm.formItem[\'hidden_description\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.description.$touched)}">\n' +
   '            <label class="col-sm-2 control-label">About</label>\n' +
   '\n' +
   '            <div class="controls col-sm-9 controls">\n' +
@@ -3206,14 +3998,14 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '        <div class="row mgn-vert">\n' +
   '            <label class="col-sm-2 control-label"\n' +
-  '                   ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && vm.experienceForm.$submitted}">\n' +
+  '                   ng-class="{\'has-error\':(vm.formItem.time_start.$invalid || vm.formItem[\'hidden_time_start\'].$invalid) && vm.formItem.$submitted || vm.formItem._submitted}">\n' +
   '                Time Period\n' +
   '            </label>\n' +
   '\n' +
   '            <div class="col-sm-9 form-inline">\n' +
   '                <div class="col-sm-5 input-group"\n' +
-  '                     ng-class="{\'has-error\':(vm.experienceForm.time_start.$invalid || vm.experienceForm[\'hidden_time_start\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_start.$touched)}">\n' +
-  '                    <div class="input-group-addon">{{ \'start\' | titlecase }}</div>\n' +
+  '                     ng-class="{\'has-error\':(vm.formItem.time_start.$invalid || vm.formItem[\'hidden_time_start\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.time_start.$touched)}">\n' +
+  '                    <div class="input-group-addon">{{ \'start\' | titleCase }}</div>\n' +
   '                    <date-input class="form-control" model="vm.model.startDate" os-name="time_start"\n' +
   '                                dformat="MM/DD/YYYY"></date-input>\n' +
   '\n' +
@@ -3222,8 +4014,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </div>\n' +
   '\n' +
   '                <div class="col-sm-5 input-group"\n' +
-  '                     ng-class="{\'has-error\':(vm.experienceForm.time_end.$invalid || vm.experienceForm[\'hidden_time_end\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.time_end.$touched)}">\n' +
-  '                    <div class="input-group-addon">{{ \'end\' | titlecase }}</div>\n' +
+  '                     ng-class="{\'has-error\':(vm.formItem.time_end.$invalid || vm.formItem[\'hidden_time_end\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.time_end.$touched)}">\n' +
+  '                    <div class="input-group-addon">{{ \'end\' | titleCase }}</div>\n' +
   '\n' +
   '                    <date-input class="form-control" model="vm.model.endDate" os-name="time_end"></date-input>\n' +
   '                    <input type="hidden" ng-model="vm.model.endDate" ng-required="vm.isRequired"\n' +
@@ -3234,7 +4026,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row mgn-vert"\n' +
-  '             ng-class="{\'has-error\':(vm.experienceForm.location.$invalid || vm.experienceForm[\'hidden_location\'].$invalid) && (vm.experienceForm.$submitted || vm.experienceForm.location.$touched)}">\n' +
+  '             ng-class="{\'has-error\':(vm.formItem.location.$invalid || vm.formItem[\'hidden_location\'].$invalid) && (vm.formItem.$submitted || vm.formItem._submitted || vm.formItem.location.$touched)}">\n' +
   '            <label class="col-sm-2 control-label">Location</label>\n' +
   '\n' +
   '            <div class="col-md-9 controls">\n' +
@@ -3263,7 +4055,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                </div>\n' +
   '            </div>\n' +
   '        </div>\n' +
-  '    </ng-form>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <!--Display when Item is not Editing-->\n' +
   '\n' +
   '    <section class="experience view col-xs-12" ng-hide="vm.isEditing" ng-switch="vm.confirmDelete"\n' +
   '             ng-class="{\'last\':vm.isLast && !vm.canEdit}">\n' +
@@ -3281,7 +4075,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                <span ng-show="!vm.canEdit"\n' +
   '                      ng-click="vm.model.expanded = !vm.model.expanded"\n' +
   '                      class="pull-left pointer text-oset">\n' +
-  '                    <i class="fa" ng-class="{\'fa-caret-right\': !vm.model.expanded, \'fa-caret-down\': !!vm.model.expanded}"></i>\n' +
+  '                    <i class="fa"\n' +
+  '                       ng-class="{\'fa-caret-right\': !vm.model.expanded, \'fa-caret-down\': !!vm.model.expanded}"></i>\n' +
   '                    {{ !!vm.model.expanded ? \'hide\' : \'show details...\'}}\n' +
   '                </span>\n' +
   '                &nbsp;\n' +
@@ -3394,7 +4189,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        <div class="job-list blog-category-list">\n' +
   '\n' +
   '            <article class="post col-sm-12"\n' +
-  '                     data-ng-repeat="job in (vm.jobs | filter: vm.jobCatFilter | filter: vm.filter | withinPastDays: \'posted\': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | orderBy: vm.random  | limitTo: vm.limitTo)"\n' +
+  '                     data-ng-repeat="job in (vm.jobs | filter: vm.jobCatFilter | filter: vm.filter | withinPastDays: \'posted\': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | limitTo: vm.limitTo)"\n' +
   '                     ng-if="vm.jobs"\n' +
   '                     ng-init="job.cats=_.pluck(_.where(job.categories, \'value\'), \'key\')"\n' +
   '                     ng-show="vm.visibleId === job._id || !vm.visibleId">\n' +
@@ -3564,70 +4359,151 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </section>\n' +
   '\n' +
   '    <section ng-if="!dm.inline">\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div class="panel-heading" ng-if="dm.enableHeadingControls">\n' +
+  '                        <div class="btn-group" role="group" aria-label="...">\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'description\', true)}"\n' +
+  '                                    ng-click=" dm.setDisplay( \'description\') " class="btn btn-link "\n' +
+  '                                    ng-show="!!dm.job.description">\n' +
+  '                                <span class="h4">Description</span>\n' +
+  '                            </button>\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'requirements\', true)}"\n' +
+  '                                    ng-click="dm.setDisplay( \'requirements\') " class="btn btn-link "\n' +
+  '                                    ng-class="{\'disabled\': !dm.job.requirements}">\n' +
+  '                                <span class="h4">Requirements</span>\n' +
+  '                            </button>\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'location\', true)}"\n' +
+  '                                    ng-click="dm.setDisplay( \'location\') " class="btn btn-link "\n' +
+  '                                    ng-class="{\'disabled\' : !dm.job.location[0] || dm.job.location[0].empty}">\n' +
+  '                                <span class="h4">Location</span>\n' +
+  '                            </button>\n' +
+  '                            <button type="button" ng-class="{active : dm.showSection(\'about\', true)}"\n' +
+  '                                    ng-click="dm.setDisplay( \'about\') " class="btn btn-link "\n' +
+  '                                    ng-show="!!dm.job.company.about">\n' +
+  '                                <span class="h4">About</span>\n' +
+  '                            </button>\n' +
+  '                        </div>\n' +
   '\n' +
-  '        <div class="panel panel-default job-info">\n' +
-  '            <div class="panel-heading">\n' +
-  '                <div class="btn-group" role="group" aria-label="...">\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'description\', true)}"\n' +
-  '                            ng-click=" dm.setDisplay( \'description\') " class="btn btn-link "><span class="h4">Description</span>\n' +
-  '                    </button>\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'requirements\', true)}"\n' +
-  '                            ng-click="dm.setDisplay( \'requirements\') " class="btn btn-link "><span class="h4">Requirements</span>\n' +
-  '                    </button>\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'location\', true)}"\n' +
-  '                            ng-click="dm.setDisplay( \'location\') " class="btn btn-link "><span\n' +
-  '                            class="h4">Location</span>\n' +
-  '                    </button>\n' +
-  '                    <button type="button" ng-class="{active : dm.showSection(\'about\', true)}"\n' +
-  '                            ng-click="dm.setDisplay( \'about\') " class="btn btn-link "><span\n' +
-  '                            class="h4">About</span>\n' +
-  '                    </button>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <button type="button" ng-click="dm.setDisplay()" class="btn btn-link pull-right"><span\n' +
-  '                        class="h4">&times;</span>\n' +
-  '                </button>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div>\n' +
-  '                <div class="panel-body" ng-show="dm.job.categories.length || dm.canEdit">\n' +
-  '                    <oset-categories model="dm.job.categories" mode="view">\n' +
-  '                         <span ng-if="dm.showEdit" class="text-center">You can help users to find your job by adding specific categories in\n' +
-  '                             <a ui-sref="jobs.edit({jobId: dm.job._id})"> your driver profile</a></span>\n' +
-  '                    </oset-categories>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div ng-show="dm.showSection( \'description\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Description</span></div>\n' +
-  '                <div class="panel-body ">\n' +
-  '                    <div ng-bind-html="dm.job.description">No Description Listed</div>\n' +
-  '                    <hr/>\n' +
+  '                        <button type="button" ng-click="dm.setDisplay()" class="btn btn-link pull-right"><span\n' +
+  '                                class="h4">&times;</span>\n' +
+  '                        </button>\n' +
+  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div ng-show="dm.showSection( \'requirements\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Requirements</span></div>\n' +
-  '                <div class="panel-body ">\n' +
-  '                    <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>\n' +
-  '                    <hr/>\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div ng-show="dm.showSection( \'description\') ">\n' +
+  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Description</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="panel-body mgn-btm">\n' +
+  '                            <div ng-bind-html="dm.job.description">No Description Listed</div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div ng-show="dm.showSection( \'requirements\') && !!dm.job.requirements">\n' +
+  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Requirements</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="panel-body mgn-btm">\n' +
+  '                            <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '\n' +
+  '\n' +
+  '            <!-- <div class="col-sm-6">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div ng-show="dm.showSection( \'requirements\') && !!dm.job.requirements">\n' +
+  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Requirements</span>\n' +
+  '                        </div>\n' +
+  '                        <div class="panel-body mgn-btm">\n' +
+  '                            <div ng-bind-html="dm.job.requirements">No Requirements Listed</div>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
+  '                </div>\n' +
+  '            </div> -->\n' +
+  '\n' +
+  '\n' +
+  '            <div class="col-sm-6">\n' +
+  '                <div class="panel panel-default" ng-show="dm.showSection(\'location\')">\n' +
+  '                    <div class="panel-heading" ng-show="dm.showSection(\'all\')">\n' +
+  '                        <span class="h4"><i class="fa fa-map-marker"></i>Location</span>\n' +
+  '                        <a ng-if="vm.enableEdit" href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '                    <div class="panel-body mgn-btm">\n' +
+  '                        <os-address model="dm.job.location[0]" data-ng-show="!dm.job.location[0].empty"\n' +
+  '                                    enable-edit="false"></os-address>\n' +
+  '                        <div class="text-center" data-ng-hide="!dm.job.location[0].empty">No Location Available\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <div ng-show="dm.showSection( \'location\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">Location</span></div>\n' +
-  '                <div class="panel-body ">\n' +
-  '                    <os-address model="dm.job.location[0]" data-ng-show="dm.job.location[0]"\n' +
-  '                                enable-edit="false"></os-address>\n' +
-  '                    <div class="text-center" data-ng-hide="dm.job.location[0]">No Location Available</div>\n' +
-  '                    <hr/>\n' +
+  '            <div class="col-sm-6">\n' +
+  '                <div class="panel panel-default" ng-show="dm.showSection(\'info\')">\n' +
+  '                    <div class="panel-heading" ng-show="dm.showSection(\'all\')">\n' +
+  '                        <span class="h4"><i class="fa fa-info-circle"></i>Summary</span>\n' +
+  '                        <a ng-if="vm.enableEdit" href="#"><i class="fa fa-cog pull-right"></i></a>\n' +
+  '                    </div>\n' +
+  '\n' +
+  '\n' +
+  '\n' +
+  '                    <div class="panel-body mgn-btm">\n' +
+  '\n' +
+  '                    <span ng-if="vm.job.positionType">\n' +
+  '                        <strong>Type: </strong><span>{{ vm.job.positionType }}</span>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '                    <span ng-if="!!vm.job.payString || vm.job.payRate && (vm.job.payRate.min || vm.job.payRate.max)">\n' +
+  '                        <strong>Pay: </strong>\n' +
+  '                            <span ng-show="!!vm.job.payRate.min">{{ vm.job.payRate.min | currency }}</span>\n' +
+  '                            <span ng-show="!!vm.job.payRate.max"><span ng-show="!!vm.job.payRate.min"> to </span>{{ vm.job.payRate.max | currency }}</span>\n' +
+  '                            <span ng-show="!!vm.job.payString && !!vm.job.payRate.period"> per {{vm.job.payRate.period}}</span>\n' +
+  '                    </span>\n' +
+  '\n' +
+  '\n' +
+  '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div ng-show="dm.showSection( \'about\') ">\n' +
-  '                <div class="panel-heading" ng-show="dm.showSection(\'all\')"><span class="h4">About the Company</span>\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <div class="panel panel-default job-info">\n' +
+  '                    <div ng-show="dm.showSection( \'about\') ">\n' +
+  '                        <div class="panel-heading" ng-show="dm.showSection(\'all\')">\n' +
+  '                            <span class="h4">\n' +
+  '                                About {{dm.job.company.name || \'the Company\'}}\n' +
+  '                                <i class="pull-right fa fa-external-link" ui-sref="companies.view({companyId:dm.job.company._id})"></i>\n' +
+  '                            </span>\n' +
+  '                        </div>\n' +
+  '                        <div class="panel-body ">\n' +
+  '                            <p data-ng-bind-html="dm.job.company.about">not available</p>\n' +
+  '\n' +
+  '                            <p class="text-center">\n' +
+  '                            <a class="btn btn-oset-secondary" ui-sref="companies.view({companyId:dm.job.company._id})">\n' +
+  '                                learn more ...\n' +
+  '                            </a>\n' +
+  '                            </p>\n' +
+  '                        </div>\n' +
+  '                    </div>\n' +
   '                </div>\n' +
-  '                <div class="panel-body "><p data-ng-bind-html="dm.job.company.about">not available</p></div>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </section>\n' +
@@ -3680,11 +4556,23 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </form>\n' +
   '</script>\n' +
   '');
+ $templateCache.put('/modules/license/views/license-inline.client.template.html',
+  '<div>\n' +
+  '    <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}\n' +
+  '        <span ng-show="vm.license.type">\n' +
+  '            <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
+  '            {{vm.license.type}}\n' +
+  '        </span>\n' +
+  '        Driver License\n' +
+  '    <oset-list-endorsements ng-if="!!vm.showEndorsements" model="vm.license.endorsements"></oset-list-endorsements>\n' +
+  '</div>\n' +
+  '');
  $templateCache.put('/modules/license/views/license.client.template.html',
   '<ng-form name="vm.licenseForm" ng-init="vm.activate()">\n' +
-  '    <div class="container-fluid license-details" ng-class="{\'form-horizontal\':vm.view.horizontal}">\n' +
+  '    <div class="license-details form-horizontal">\n' +
   '\n' +
-  '        <div class="row" ng-show="vm.licenseForm.$invalid && (vm.licenseForm.$submitted || vm.licenseForm.description.$dirty)">\n' +
+  '        <div class="row"\n' +
+  '             ng-show="vm.licenseForm.$invalid && (vm.licenseForm.$submitted || vm.licenseForm.description.$dirty)">\n' +
   '            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">\n' +
   '                <div class="text-danger text-center mgn-vert">\n' +
   '                    Please fill in required fields and correct errors\n' +
@@ -3693,7 +4581,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '        </div>\n' +
   '\n' +
   '        <div class="row profile-row">\n' +
-  '            <div ng-class="{\'col-sm-6\':vm.view.cols === 2, \'col-sm-12\': vm.view.cols === 1}">\n' +
+  '            <div class="col-sm-{{12/(vm.view.cols||1)}}">\n' +
   '\n' +
   '                <div class="form-group" ng-if="!!vm.view.types" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
@@ -3711,9 +4599,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.classes"\n' +
+  '                <div class="form-group" ng-show="!!vm.view.classes"\n' +
   '                     ng-hide="vm.view.hideClasses && vm.license.type != \'Commercial\'"\n' +
-  '                     ng-class="{\'col-sm-6\':vm.view.horizontal, \'disabled\':vm.license.type != \'Commercial\'}">\n' +
+  '                     ng-class="{\'col-sm-6\':vm.view.horizontal, \'disabled\':vm.license.type !== \'Commercial\'}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal}">\n' +
   '                        Class Rating\n' +
@@ -3726,10 +4614,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                   ng-model="vm.license.rating" name="classRating"\n' +
   '                                   btn-radio="val">{{val}}</label>\n' +
   '                        </div>\n' +
+  '                        <button type="button" class="btn-tab btn-link read-more btn-sm" ng-click="vm.license.rating = null"\n' +
+  '                                ng-show="!!vm.license.rating"><i class="fa fa-times"></i></button>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.state" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.state" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal,\'text-danger\':vm.licenseForm.state.$invalid && vm.licenseForm.$submitted}">\n' +
   '                        State\n' +
@@ -3743,7 +4633,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.expires" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.expires" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal, \'text-danger\':vm.licenseForm.expires.$invalid}">\n' +
   '                        Expiration Date\n' +
@@ -3751,11 +4641,12 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '                    <div class="controls"\n' +
   '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
-  '                        <date-input model="vm.license.expires" class="form-control" name="expires" placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>\n' +
+  '                        <date-input model="vm.license.expires" class="form-control" name="expires"\n' +
+  '                                    placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.dob" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.dob" ng-class="{\'col-sm-6\':vm.view.horizontal}">\n' +
   '                    <label class="control-label"\n' +
   '                           ng-class="{\'col-sm-12 col-md-6\': !vm.view.horizontal, \'col-sm-5\': vm.view.horizontal, \'text-danger\':vm.licenseForm.dob.$invalid}">\n' +
   '                        Date of Birth\n' +
@@ -3765,7 +4656,8 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '                    <div class="controls"\n' +
   '                         ng-class="{\'col-sm-10 col-md-6\': !vm.view.horizontal, \'col-sm-7\': vm.view.horizontal}">\n' +
-  '                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob" placeholder="{{vm.dateFormat}}"></date-input>\n' +
+  '                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob"\n' +
+  '                                    placeholder="{{vm.dateFormat}}"></date-input>\n' +
   '                    </div>\n' +
   '                </div>\n' +
   '            </div>\n' +
@@ -3773,7 +4665,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div ng-class="{\'col-sm-6\':vm.view.cols === 2, \'col-sm-12\': vm.view.cols === 1}">\n' +
   '\n' +
   '\n' +
-  '                <div class="form-group" ng-if="!!vm.view.endorsements">\n' +
+  '                <div class="form-group" ng-show="!!vm.view.endorsements">\n' +
   '                    <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>\n' +
   '                        <small>any endorsements on your license?</small>\n' +
   '                    </label>\n' +
@@ -3785,6 +4677,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                                   ng-model="vm.license.endorsements[endorsement.key]"\n' +
   '                                   btn-checkbox data-ng-class="{\'active\':endorsement.value}">\n' +
   '                                <i class="fa pull-left"></i>\n' +
+  '\n' +
   '                                <div class="col-xs-4 text-left">{{endorsement.key}}</div>\n' +
   '                                <div class="col-xs-7 text-left">\n' +
   '                                    <small>{{endorsement.description}}\n' +
@@ -3797,56 +4690,65 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '            </div>\n' +
   '        </div>\n' +
+  '\n' +
+  '\n' +
+  '        <div class="row">\n' +
+  '            <div class="col-sm-12 text-center">\n' +
+  '                <button class="btn btn-oset-link" type="button" ng-click="vm.toggleView()" ng-switch="vm.mode">\n' +
+  '                    <span ng-switch-when="minimal">show more...</span>\n' +
+  '                    <span ng-switch-when="standard">show less...</span>\n' +
+  '                </button>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
   '    </div>\n' +
   '</ng-form>\n' +
   '');
  $templateCache.put('/modules/users/views/settings/file-upload.client.template.html',
-  '<section class="container-fluid">\n' +
-  '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
-  '        <fieldset>\n' +
+  '<section class="container-fluid" ng-form="vm.fileUploadForm">\n' +
+  '    <fieldset class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '\n' +
-  '            <div class="text-center form-group" ng-if="!!vm.title">\n' +
-  '                <span>{{vm.title}}</span>\n' +
-  '            </div>\n' +
+  '        <div class="text-center form-group" ng-if="!!vm.title">\n' +
+  '            <span>{{vm.title}}</span>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div class="text-center form-group">\n' +
+  '        <div class="text-center form-group">\n' +
   '\n' +
-  '                <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">\n' +
+  '            <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">\n' +
   '                    <span class="fa-stack fa-3x report-badge"\n' +
-  '                            ng-class="{\'available\': !!vm.fileName}">\n' +
+  '                          ng-class="{\'available\': !!vm.fileName || !!vm.hasFile}">\n' +
   '                        <i class="fa fa-file-o fa-stack-2x"></i>\n' +
   '                        <i class="fa fa-check fa-1x"></i>\n' +
   '                        <i class="fa fa-file fa-stack-2x"></i>\n' +
   '                        <i class="fa fa-question fa-1x"></i>\n' +
   '                    </span>\n' +
-  '                </div>\n' +
+  '            </div>\n' +
   '\n' +
   '                <span class="btn {{vm.uploadBtnClass || \'btn-oset-secondary\'}} btn-file"\n' +
   '                      data-ng-hide="vm.uploader.queue.length && !vm.autoUpload">\n' +
   '                    {{vm.uploadBtnText || \'Select File ...\'}}\n' +
   '                    <input type="file" nv-file-select uploader="vm.uploader">\n' +
   '                </span>\n' +
-  '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">\n' +
-  '                <button class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>\n' +
-  '                <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>\n' +
-  '            </div>\n' +
+  '        <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">\n' +
+  '            <button type="button" class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>\n' +
+  '            <button type="button" class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload\n' +
+  '            </button>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">\n' +
-  '                {{vm.fileName}}\n' +
-  '            </div>\n' +
-  '            \n' +
-  '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
-  '                <strong>{{!!vm.fileName ? vm.fileName + \' uploaded successfully!\' : \'Success!\'}}</strong>\n' +
-  '            </div>\n' +
-  '            <div data-ng-show="vm.error" class="text-center text-danger">\n' +
-  '                <strong data-ng-bind="vm.error"></strong>\n' +
-  '            </div>\n' +
+  '        <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">\n' +
+  '            {{vm.fileName}}\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div data-ng-show="vm.success" class="text-center text-success">\n' +
+  '            <strong>{{!!vm.fileName ? vm.fileName + \' uploaded successfully!\' : \'Success!\'}}</strong>\n' +
+  '        </div>\n' +
+  '        <div data-ng-show="vm.error" class="text-center text-danger">\n' +
+  '            <strong data-ng-bind="vm.error"></strong>\n' +
+  '        </div>\n' +
   '\n' +
   '\n' +
-  '        </fieldset>\n' +
-  '    </form>\n' +
+  '    </fieldset>\n' +
   '    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable to initialize\n' +
   '        the resume uploader. Please try again later.\n' +
   '    </div>\n' +
@@ -3881,23 +4783,22 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '');
  $templateCache.put('/modules/users/views/settings/picture-upload.client.template.html',
-  '<section class="container-fluid">\n' +
-  '    <form class="signin form-horizontal" ng-show="vm.initialized">\n' +
-  '        <fieldset>\n' +
+  '<section class="container-fluid" ng-form="vm.profileUploadForm">\n' +
+  '    <fieldset class="signin form-horizontal" ng-show="vm.initialized">\n' +
   '\n' +
-  '            <!--Section 1: Base State - Nothing Uploaded, nothing active -->\n' +
-  '            <div class="form-group text-center mgn-vert" ng-hide="vm.newImage || vm.uploader.queue.length">\n' +
-  '                <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"\n' +
-  '                     alt="{{vm.title}}" class="img-thumbnail user-profile-picture ng-hide">\n' +
+  '        <!--Section 1: Base State - Nothing Uploaded, nothing active -->\n' +
+  '        <div class="form-group text-center mgn-vert" ng-hide="vm.newImage || vm.uploader.queue.length">\n' +
+  '            <img data-ng-show="!!vm.imageURL" data-ng-src="{{vm.imageURL}}"\n' +
+  '                 alt="{{vm.title}}" class="img-thumbnail user-profile-picture ng-hide">\n' +
   '\n' +
-  '                <div data-ng-hide="!!vm.imageURL" class="report-badges uploader mgn-vert">\n' +
+  '            <div data-ng-hide="!!vm.imageURL" class="report-badges uploader mgn-vert">\n' +
   '                    <span class="fa-stack fa-3x report-badge">\n' +
   '                        <i class="fa fa-user fa-stack-2x"></i>\n' +
   '                        <i class="fa fa-question fa-1x"></i>\n' +
   '                    </span>\n' +
-  '                </div>\n' +
+  '            </div>\n' +
   '\n' +
-  '                <div class="text-center form-group mgn-top" data-ng-hide="vm.uploader.queue.length">\n' +
+  '            <div class="text-center form-group mgn-top" data-ng-hide="vm.uploader.queue.length">\n' +
   '                    <span ng-show="false && !!vm.imageURL" class="btn {{vm.uploadBtnClass || \'btn-oset-link\'}} btn-file"\n' +
   '                          ng-click="vm.startCrop()">\n' +
   '                        <!--Adjust Image Disabled due to imageURL != Image Object-->\n' +
@@ -3906,64 +4807,63 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        {{vm.uploadBtnText || \'Select Image ...\'}}\n' +
   '                        <input type="file" nv-file-select uploader="vm.uploader">\n' +
   '                    </span>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <!--Section 2: Upload in Progress-->\n' +
+  '        <div class="form-group tvm.newImage text-center mgn-vert"\n' +
+  '             ng-show="(vm.newImage || vm.uploader.queue.length) && ( vm.autoCrop && !vm.isCropping || !vm.autoCrop )">\n' +
+  '            <h4>Preview:</h4>\n' +
+  '\n' +
+  '            <div>\n' +
+  '                <img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"\n' +
+  '                     class="img-thumbnail user-profile-picture"/>\n' +
+  '                <img ng-src="{{vm.newImage}}" ng-hide="vm.useCropped || vm.isCropping"\n' +
+  '                     class="img-thumbnail user-profile-picture"/>\n' +
+  '\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.cancelUpload();">cancel</button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" data-ng-click="vm.startCrop()">\n' +
+  '                    {{ vm.useCropped ? \'Adjust\' : \'Crop\'}} Image\n' +
+  '                </button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload\n' +
+  '                </button>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <!--Section 3: Cropping in Progress-->\n' +
+  '        <div class="form-group tvm.newImage mgn-vert" ng-show="vm.isCropping">\n' +
+  '            <h4>Use the circle to select the best part of the image</h4>\n' +
+  '\n' +
+  '            <div class="text-center form-group" data-ng-hide="vm.autoCrop">\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="form-group-text-center-mgn-vert">\n' +
+  '                <div class="cropArea center-block" class="img-thumbnail user-profile-picture"\n' +
+  '                     style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">\n' +
+  '                    <img-crop image="vm.newImage" area-type="{{vm.shape}}"\n' +
+  '                              result-image="vm.croppedImage"></img-crop>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <!--Section 2: Upload in Progress-->\n' +
-  '            <div class="form-group tvm.newImage text-center mgn-vert"\n' +
-  '                 ng-show="(vm.newImage || vm.uploader.queue.length) && ( vm.autoCrop && !vm.isCropping || !vm.autoCrop )">\n' +
-  '                <h4>Preview:</h4>\n' +
-  '\n' +
-  '                <div>\n' +
-  '                    <img ng-src="{{vm.croppedImage}}" ng-show="vm.useCropped || vm.isCropping"\n' +
-  '                         class="img-thumbnail user-profile-picture"/>\n' +
-  '                    <img ng-src="{{vm.newImage}}" ng-hide="vm.useCropped || vm.isCropping"\n' +
-  '                         class="img-thumbnail user-profile-picture"/>\n' +
-  '\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.isCropping">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.cancelUpload();">cancel</button>\n' +
-  '                    <button class="btn btn-oset-primary" data-ng-click="vm.startCrop()">\n' +
-  '                        {{ vm.useCropped ? \'Adjust\' : \'Crop\'}} Image\n' +
-  '                    </button>\n' +
-  '                    <button class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload</button>\n' +
-  '                </div>\n' +
+  '            <div class="text-center form-group" data-ng-show="vm.autoCrop">\n' +
+  '                <button type="button" class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
+  '                <button type="button" class="btn btn-oset-primary" data-ng-click="vm.saveCrop();">Save</button>\n' +
   '            </div>\n' +
+  '        </div>\n' +
   '\n' +
-  '            <!--Section 3: Cropping in Progress-->\n' +
-  '            <div class="form-group tvm.newImage mgn-vert" ng-show="vm.isCropping">\n' +
-  '                <h4>Use the circle to select the best part of the image</h4>\n' +
-  '\n' +
-  '                <div class="text-center form-group" data-ng-hide="vm.autoCrop">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.saveCrop();">Save</button>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="form-group-text-center-mgn-vert">\n' +
-  '                    <div class="cropArea center-block" class="img-thumbnail user-profile-picture"\n' +
-  '                         style="background: #E4E4E4;overflow: hidden; width:400px; height:300px;">\n' +
-  '                        <img-crop image="vm.newImage" area-type="{{vm.shape}}"\n' +
-  '                                  result-image="vm.croppedImage"></img-crop>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="text-center form-group" data-ng-show="vm.autoCrop">\n' +
-  '                    <button class="btn btn-link" data-ng-click="vm.cancelCrop()">cancel</button>\n' +
-  '                    <button class="btn btn-oset-primary" data-ng-click="vm.saveCrop();">Save</button>\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <!--Section 4: Status Text for success or error-->\n' +
-  '            <div data-ng-show="vm.success" class="text-center text-success">\n' +
-  '                <strong>Profile Picture Changed Successfully</strong>\n' +
-  '            </div>\n' +
-  '            <div data-ng-show="vm.error" class="text-center text-danger">\n' +
-  '                <strong data-ng-bind="vm.error"></strong>\n' +
-  '            </div>\n' +
-  '        </fieldset>\n' +
-  '        </fieldset>\n' +
-  '    </form>\n' +
+  '        <!--Section 4: Status Text for success or error-->\n' +
+  '        <div data-ng-show="vm.success" class="text-center text-success">\n' +
+  '            <strong>Profile Picture Changed Successfully</strong>\n' +
+  '        </div>\n' +
+  '        <div data-ng-show="vm.error" class="text-center text-danger">\n' +
+  '            <strong data-ng-bind="vm.error"></strong>\n' +
+  '        </div>\n' +
+  '    </fieldset>\n' +
   '    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable to initialize\n' +
   '        the image uploader. Please try again later.\n' +
   '    </div>\n' +
@@ -4169,6 +5069,68 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '</section>\n' +
   '');
+ $templateCache.put('/modules/users/views/templates/seed-user-form.client.template.html',
+  '<section class="seed-signup">\n' +
+  '\n' +
+  '    <span class="{{vm.btnClass}}" ng-click="vm.showForm=true;" ng-hide="!!vm.showForm">\n' +
+  '        <a href="#">Get Started</a>\n' +
+  '    </span>\n' +
+  '\n' +
+  '    <form name="seedForm" id="seedForm" class="seed-form form-horizontal animated fadeIn"\n' +
+  '          ng-hide="!!vm.model.success || !vm.showForm">\n' +
+  '\n' +
+  '        <div class="info-text">\n' +
+  '            <span class="strong">Coming Soon!</span><br> Enter your email and reserve your handle</div>\n' +
+  '\n' +
+  '        <div class="row form-group" ng-if="!vm.hideName">\n' +
+  '            <div class="col-md-6">\n' +
+  '                <input type="text" data-ng-model="vm.model.firstName" class="form-control"\n' +
+  '                       placeholder="First Name" aria-describedby="first name">\n' +
+  '            </div>\n' +
+  '            <div class="col-md-6">\n' +
+  '                <input type="text" data-ng-model="vm.model.lastName" class="form-control" placeholder="Last Name"\n' +
+  '                       aria-describedby="last name">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row form-group">\n' +
+  '            <div class="col-md-8 col-md-offset-2">\n' +
+  '                <div class="input-group">\n' +
+  '                    <span class="input-group-addon" id="basic-addon1">\n' +
+  '                        <i class="fa fa-user"></i>\n' +
+  '                    </span>\n' +
+  '                    <input type="text" data-ng-model="vm.model.handle" class="form-control" placeholder="handle"\n' +
+  '                           aria-describedby="unique handle">\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row form-group">\n' +
+  '            <div class="col-md-8 col-md-offset-2">\n' +
+  '                <div class="input-group">\n' +
+  '                    <span class="input-group-addon" id="basic-addon1">@</span>\n' +
+  '                    <input type="email" data-ng-model="vm.model.email" class="form-control" placeholder="email"\n' +
+  '                           aria-describedby="email address">\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="row form-group" ng-hide="true">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <oset-categories model="vm.model.interests" options="vm.interestOptions" lbl-class="btn-xs"></oset-categories>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="alert alert-warning" ng-show="!!vm.model.error" ng-bind="vm.model.error"></div>\n' +
+  '\n' +
+  '        <span class="{{vm.btnClass}} mgn-btm" ng-click="vm.postSeed()">\n' +
+  '            <a href="#">Register</a>\n' +
+  '        </span>\n' +
+  '    </form>\n' +
+  '\n' +
+  '    <div class="info-text" ng-show="!!vm.model.success" ng-bind="vm.model.success"></div>\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/users/views/templates/signup-apply.client.template.html',
   '<span ng-click="vm.show()" ng-transclude>Signup</span>\n' +
   '<!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->\n' +
@@ -4180,227 +5142,31 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            </span>\n' +
   '    </div>\n' +
   '\n' +
-  '    <form id="vm.newUserApplicationForm" class="modal-form">\n' +
+  '    <form id="vm.newUserApplicationForm" class="oset-form">\n' +
   '        <div class="modal-body" ng-class="{\'bg-primary\': vm.currentStep === 0}">\n' +
   '\n' +
-  '            <section class="signup-type row" id="step_0_signupType"\n' +
-  '                     ng-form="vm.subForm0" ng-show="vm.currentStep === 0">\n' +
-  '                <div class="row text-center">\n' +
-  '                    <h2 class="lead-question">I want to ...</h2>\n' +
-  '                </div>\n' +
-  '                <div class="row text-center">\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectUserType(\'driver\')">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                                <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>\n' +
-  '                            </div>\n' +
-  '                            <br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Drive</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                    <br class="visible-xs"/>\n' +
-  '\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectUserType(\'owner\')">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                                <img src="modules/users/img/owner-group.png"\n' +
-  '                                     class="img-responsive center-block text-center"/>\n' +
-  '                            </div>\n' +
-  '                            <br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Hire</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '                <input type="hidden" ng-required="true" ng-model="vm.credentials.signupType"/>\n' +
+  '            <section class="row" ng-show="vm.currentStep===0">\n' +
+  '                <user-signup-type ng-form="vm.subForm0" model="vm.credentials.type" callback="vm.selectUserType()"></user-signup-type>\n' +
   '            </section>\n' +
   '\n' +
-  '            <section class="row" id="step_1_welcome"\n' +
-  '                     ng-form="vm.subForm1" ng-show="vm.currentStep === 1">\n' +
   '\n' +
-  '                <div class="col-sm-12">\n' +
+  '            <section class="row" ng-show="vm.currentStep===1">\n' +
+  '                <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic\n' +
+  '                    information\n' +
+  '                    <br/>\n' +
+  '                    <em class="text-muted">... or <a ng-click="$dismiss(\'login\')" login-modal>apply with an existing user</a> </em>\n' +
+  '                </p>\n' +
   '\n' +
-  '                    <p class="info col-sm-10 col-sm-offset-1">Lets get started with your email address and some basic\n' +
-  '                        information\n' +
-  '                        <br/>\n' +
-  '                        <em class="text-muted">... or <a ng-click="$dismiss(\'login\')" login-modal>apply with an existing user</a> </em>\n' +
-  '                    </p>\n' +
-  '\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '\n' +
-  '                        <label for="email" class="control-label col-xs-12">Email</label>\n' +
-  '\n' +
-  '                        <div class="col-xs-12">\n' +
-  '                            <input modal-focus="true" type="email" id="email" name="email"\n' +
-  '                                   class="form-control" debounce\n' +
-  '                                   data-ng-model="vm.credentials.email"\n' +
-  '                                   placeholder="Email" ng-required="true">\n' +
-  '\n' +
-  '                            <span class="form-control-feedback"\n' +
-  '                                  ng-show="vm.subForm0.email.$valid && vm.subForm0.email.$touched">\n' +
-  '                                <i class="fa fa-check text-success"></i>\n' +
-  '                            </span>\n' +
-  '                            <span class="form-control-feedback"\n' +
-  '                                  ng-show="vm.subForm0.email.$touched && vm.subForm0.email.$error.required">\n' +
-  '                                <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>\n' +
-  '                            </span>\n' +
-  '                        </div>\n' +
-  '\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <!--Enter your name-->\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '                        <label class="control-label col-xs-12">Your Name</label>\n' +
-  '\n' +
-  '                        <div class="col-xs-6">\n' +
-  '                            <input type="text" id="firstName" name="firstName"\n' +
-  '                                   class="form-control" debounce ng-required="true"\n' +
-  '                                   data-ng-model="vm.credentials.firstName" placeholder="First Name">\n' +
-  '                        </div>\n' +
-  '                        <div class="col-xs-6">\n' +
-  '                            <input type="text" id="lastName" name="lastName"\n' +
-  '                                   class="form-control" debounce ng-required="true"\n' +
-  '                                   data-ng-model="vm.credentials.lastName" placeholder="Last Name">\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                    <p class="verify col-xs-12 text-center">\n' +
-  '                        Your name will appear as <strong>{{vm.credentials.firstName || \'_________\'}}\n' +
-  '                        {{vm.credentials.lastName || \'_________\'}}</strong>\n' +
-  '                    </p>\n' +
-  '                </div>\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '                        <label class="control-label col-xs-12">Your Zip Code\n' +
-  '                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.zip}}"></i>\n' +
-  '                        </label>\n' +
-  '\n' +
-  '                        <div class="col-xs-12">\n' +
-  '                            <input type="text" id="zipCode" name="zipCode"\n' +
-  '                                   class="form-control" debounce ng-required="true"\n' +
-  '                                   data-ng-model="vm.credentials.addresses[0].zipCode" placeholder="Zip Code">\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-sm-12">\n' +
-  '                    <p class="info">\n' +
-  '                    </p>\n' +
-  '\n' +
-  '                    <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
-  '                        <label class="control-label col-xs-12">Password\n' +
-  '                            <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.about.password}}"></i>\n' +
-  '                        </label>\n' +
-  '\n' +
-  '                        <div class="col-xs-12">\n' +
-  '                            <input type="password" id="password" name="password" class="form-control mgn-vert"\n' +
-  '                                   data-ng-model="vm.credentials.password" placeholder="Password"\n' +
-  '                                   ng-required="true">\n' +
-  '\n' +
-  '                            <input type="password" id="confirmPassword" name="confirmPassword"\n' +
-  '                                   class="form-control mgn-vert"\n' +
-  '                                   data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"\n' +
-  '                                   ng-required="true" compare-to="vm.credentials.password">\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                    <div class="col-sm-10 col-sm-offset-1">\n' +
-  '                        <p class="text-center">Do you agree to all conditions in the Outset <span\n' +
-  '                                tos>Terms of Service</span>\n' +
-  '                            <i class="fa"\n' +
-  '                               ng-class="{\'fa-question\' : !vm.credentials.terms, \'fa-check-circle text-success fa-2x\': vm.credentials.terms==\'yes\', \'fa-times-circle-o text-danger\' : vm.credentials.terms==\'no\'}"></i>\n' +
-  '                            <button ng-hide="vm.credentials.terms === \'yes\'" type="button"\n' +
-  '                                    ng-click="vm.credentials.terms=\'yes\'" class="btn btn-oset-success btn-sm mgn-left">\n' +
-  '                                Yes, I Agree\n' +
-  '                            </button>\n' +
-  '                        </p>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
+  '                <user-signup-form ng-form="vm.subForm1" model="vm.credentials" text="vm.about"\n' +
+  '                                  methods="vm.subform1Methods">\n' +
+  '                </user-signup-form>\n' +
   '            </section>\n' +
   '\n' +
-  '            <section class="row" id="step_2_background"\n' +
-  '                     ng-form="vm.subForm2" ng-show="vm.currentStep === 2">\n' +
+  '            <section class="row" ng-show="vm.currentStep === 2">\n' +
   '\n' +
-  '\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <!--What type of license do you have? -->\n' +
-  '                    <div class="form-group">\n' +
-  '                        <p class="info col-sm-10 col-sm-offset-1">\n' +
-  '                            What type of driver license do you have?\n' +
-  '                        </p>\n' +
-  '\n' +
-  '                        <div class="col-sm-12 text-center">\n' +
-  '                            <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"\n' +
-  '                                             mode="minimal"></os-edit-license>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-xs-12">\n' +
-  '                    <!--What are you interested in -->\n' +
-  '                    <div class="form-group">\n' +
-  '                        <p class="info col-sm-10 col-sm-offset-1">\n' +
-  '                            What types of jobs are you interested in?\n' +
-  '                        </p>\n' +
-  '\n' +
-  '                        <div class="col-sm-12 text-center">\n' +
-  '                            <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
-  '                            <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-sm-12">\n' +
-  '\n' +
-  '                    <h4 class="col-sm-12">Work Experience</h4>\n' +
-  '                    <p class="info col-sm-12">\n' +
-  '                        Add information about past Experience to help employers know more about you and your\n' +
-  '                        background.\n' +
-  '                        <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"\n' +
-  '                                ng-click="vm.driver.experience = [];"\n' +
-  '                                event-focus="click" event-focus-id="introText">\n' +
-  '                            skip\n' +
-  '                        </button>\n' +
-  '                    </p>\n' +
-  '\n' +
-  '                    <!--What are you interested in -->\n' +
-  '                    <div class="form-group">\n' +
-  '                        <div class="col-sm-12">\n' +
-  '                            <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                </div>\n' +
-  '\n' +
-  '                <div class="col-sm-12">\n' +
-  '                    <!--Cover Letter-->\n' +
-  '\n' +
-  '                    <h4 class="col-sm-12">Cover Letter</h4>\n' +
-  '                    <p class="info col-sm-12" ng-if="vm.about.messageSubHeading"\n' +
-  '                       ng-bind-html="vm.about.messageSubHeading"></p>\n' +
-  '\n' +
-  '                    <div class="form-group"\n' +
-  '                         ng-class="{\'has-error\': vm.subForm2.introText.$error && (vm.subForm2.$submitted || vm.subForm2.introText.$touched)}">\n' +
-  '                        <div class="col-sm-12">\n' +
-  '                            <div class="text-center text-muted pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
-  '                                Please introduce yourself to the employer here\n' +
-  '                            </div>\n' +
-  '                            <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
-  '                                {{vm.introTextError}}\n' +
-  '                            </div>\n' +
-  '                            <textarea os-html-edit minimal type="text" data-ng-model="vm.driver.about"\n' +
-  '                                      name="introText" id="introText" class="editor-md"\n' +
-  '                                      placeholder="Please introduce yourself to the employer here"\n' +
-  '                                      ng-required="true"></textarea>\n' +
-  '                        </div>\n' +
-  '\n' +
-  '                    </div>\n' +
-  '\n' +
-  '                </div>\n' +
+  '                <driver-info-form ng-form="vm.subForm2" model="vm.driver" text="vm.about"\n' +
+  '                                  class="col-sm-12" methods="vm.subform2Methods">\n' +
+  '                </driver-info-form>\n' +
   '\n' +
   '            </section>\n' +
   '\n' +
@@ -4417,7 +5183,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    </div>\n' +
   '                    <div class="col-sm-6">\n' +
   '                        <oset-file-upload mode="resume"\n' +
-  '                                          model="vm.driver.resume" model-id="vm.driver._id"\n' +
+  '                                          model="vm.driver.reports[\'resume\']" model-id="vm.driver._id"\n' +
   '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '                    </div>\n' +
   '                </div>\n' +
@@ -4439,7 +5205,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '            <div class="pull-left">\n' +
   '                <button type="button" class="btn btn-oset-secondary"\n' +
   '                        ng-click="vm.prevStep()"\n' +
-  '                        ng-hide="vm.currentStep === 0 || vm.currentStep === 1"\n' +
   '                        ng-class="{\'disabled\': vm.currentStep === 2}"\n' +
   '                        tabindex="-1">\n' +
   '                    <i class="fa fa-arrow-circle-left"></i>&nbsp;Back\n' +
@@ -4453,7 +5218,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                    Next&nbsp;<i class="fa fa-arrow-circle-right"></i>\n' +
   '                </button>\n' +
   '                <button type="button" class="btn btn-oset-primary"\n' +
-  '                        ng-click="vm.saveDriverDetails()"\n' +
+  '                        ng-click="vm.createDriver()"\n' +
   '                        ng-show="vm.currentStep === 2"\n' +
   '                        ng-class="{\'disabled\':vm.loading}">\n' +
   '                    Next&nbsp;<i class="fa fa-arrow-circle-right"></i>\n' +
@@ -4475,6 +5240,133 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '</script>\n' +
   '');
+ $templateCache.put('/modules/users/views/templates/signup-form.client.template.html',
+  '<section>\n' +
+  '    <div class="row">\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '\n' +
+  '            <label for="email" class="control-label col-xs-12">Email</label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input modal-focus="vm.focusEmail" type="email" id="email" name="email"\n' +
+  '                       class="form-control" debounce\n' +
+  '                       data-ng-model="vm.user.email"\n' +
+  '                       placeholder="Email" ng-required="true"\n' +
+  '                       autocorrect="off">\n' +
+  '\n' +
+  '                <div ng-show="vm.form.$submitted || vm.form.email.$touched" ng-messages="vm.form.email.$error">\n' +
+  '                    <div ng-message="required" class="panel panel-danger">Please enter your email</div>\n' +
+  '                    <div ng-message="email" class="panel panel-danger">Please enter a valid email address</div>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <span class="form-control-feedback"\n' +
+  '                      ng-show="vm.form.email.$valid && vm.form.email.$touched">\n' +
+  '                    <i class="fa fa-check text-success"></i>\n' +
+  '                </span>\n' +
+  '                <span class="form-control-feedback"\n' +
+  '                      ng-show="vm.form.email.$touched && vm.form.email.$error.required">\n' +
+  '                    <i class="fa fa-times text-danger" tootltip="Please enter an email address"></i>\n' +
+  '                </span>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"\n' +
+  '             ng-show="vm.user.type === \'owner\'">\n' +
+  '            <label for="companyName" class="control-label col-xs-12">Business Name</label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input type="text" id="companyName" name="companyName" class="form-control"\n' +
+  '                       data-ng-model="vm.user.companyName" placeholder="Name of your Business"\n' +
+  '                       ng-required="!!vm.user.type && vm.user.type === \'owner\'"\n' +
+  '                       autocapitalize="words">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <!--Enter your name-->\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '            <label class="control-label col-xs-12">Your Name</label>\n' +
+  '\n' +
+  '            <div class="col-xs-6">\n' +
+  '                <input type="text" id="firstName" name="firstName"\n' +
+  '                       class="form-control" debounce ng-required="true"\n' +
+  '                       data-ng-model="vm.user.firstName" placeholder="First Name"\n' +
+  '                       autocapitalize="words">\n' +
+  '            </div>\n' +
+  '            <div class="col-xs-6">\n' +
+  '                <input type="text" id="lastName" name="lastName"\n' +
+  '                       class="form-control" debounce ng-required="true"\n' +
+  '                       data-ng-model="vm.user.lastName" placeholder="Last Name"\n' +
+  '                       autocapitalize="words">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <p class="verify col-xs-12 text-center">\n' +
+  '            Your name will appear as <strong>{{vm.user.firstName || \'_________\'}}\n' +
+  '            {{vm.user.lastName || \'_________\'}}</strong>\n' +
+  '        </p>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '            <label class="control-label col-xs-12">Your Zip Code\n' +
+  '                <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.text.zip}}"></i>\n' +
+  '            </label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input type="text" id="zipCode" name="zipCode"\n' +
+  '                       class="form-control" debounce ng-required="true"\n' +
+  '                       data-ng-model="vm.user.addresses[0].zipCode" placeholder="Zip Code">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row">\n' +
+  '        <p class="info">\n' +
+  '        </p>\n' +
+  '\n' +
+  '        <div class="form-group has-feedback col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">\n' +
+  '            <label class="control-label col-xs-12">Password\n' +
+  '                <i class="fa fa-info-circle mgn-left text-muted" tooltip="{{vm.text.password}}"></i>\n' +
+  '            </label>\n' +
+  '\n' +
+  '            <div class="col-xs-12">\n' +
+  '                <input type="password" id="password" name="password"\n' +
+  '                       class="form-control mgn-vert"\n' +
+  '                       data-ng-model="vm.user.password"\n' +
+  '                       placeholder="Password"\n' +
+  '                       ng-required="true" ng-minlength="8">\n' +
+  '\n' +
+  '                <input type="password" id="confirmPassword" name="confirmPassword"\n' +
+  '                       class="form-control mgn-vert"\n' +
+  '                       data-ng-model="vm.user.confirmPassword"\n' +
+  '                       placeholder="Confirm Password"\n' +
+  '                       ng-required="true" ng-minlength="8"\n' +
+  '                       compare-to="vm.user.password">\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '\n' +
+  '        <div class="col-sm-10 col-sm-offset-1">\n' +
+  '            <p class="text-center">\n' +
+  '                Do you agree to all conditions in the Outset <span tos>Terms of Service</span>\n' +
+  '                <i class="fa" ng-class="{\'fa-question\' : !vm.user.terms}"></i>\n' +
+  '            </p>\n' +
+  '            <p class="text-center">\n' +
+  '                <button type="button" class="btn btn-oset-secondary" ng-click="vm.user.terms=true"\n' +
+  '                        ng-class="{\'disabled\':!!vm.user.terms}">\n' +
+  '                    Yes, I Agree\n' +
+  '                    <i class="fa" ng-class="{\'fa-check-circle text-success\': !!vm.user.terms}"></i>\n' +
+  '                </button>\n' +
+  '\n' +
+  '            </p>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '\n' +
+  '</section>\n' +
+  '');
  $templateCache.put('/modules/users/views/templates/signup-modal.client.template.html',
   '<span ng-click="vm.showSignup()" ng-transclude>Signup</span>\n' +
   '<!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->\n' +
@@ -4482,63 +5374,37 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<script type="text/ng-template" id="signupModal.html">\n' +
   '    <div class="modal-header bg-primary">\n' +
   '\n' +
-  '        <div ng-hide="vm.credentials.signupType" class="container-fluid">\n' +
-  '            <section class="signup-type">\n' +
-  '                <div class="row text-center">\n' +
-  '                    <h2 class="lead-question">I want to ... {{vm.credentials.signupType}}</h2>\n' +
-  '                </div>\n' +
-  '                <div class="row text-center">\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectType(\'driver\', $event)">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                            <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>\n' +
-  '                            </div><br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Drive</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                    <br class="visible-xs"/>\n' +
-  '\n' +
-  '                    <div class="col-sm-6" ng-click="vm.selectType(\'owner\', $event)">\n' +
-  '                        <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
-  '                            <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
-  '                            <img src="modules/users/img/owner-group.png" class="img-responsive center-block text-center"/>\n' +
-  '                            </div><br class="hidden-xs"/>\n' +
-  '\n' +
-  '                            <div class="heading h3">Hire</div>\n' +
-  '                        </div>\n' +
-  '                    </div>\n' +
-  '                </div>\n' +
-  '            </section>\n' +
+  '        <div ng-hide="!!vm.credentials.type" class="container-fluid">\n' +
+  '            <user-signup-type model="vm.credentials.type"></user-signup-type>\n' +
   '        </div>\n' +
   '\n' +
   '\n' +
-  '        <div class="hidden-xs" ng-show="vm.credentials.signupType">\n' +
+  '        <div class="hidden-xs" ng-show="!!vm.credentials.type">\n' +
   '            <span class="modal-title h3 text-center">\n' +
-  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i\n' +
+  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i\n' +
   '                        class="fa fa-arrow-left fa-2x"></i></button>&nbsp;\n' +
-  '                Sign up as {{vm.credentials.signupType == \'owner\' ? \'an\' : \'a\'}} {{vm.credentials.signupType}}\n' +
+  '                Sign up as {{vm.credentials.type == \'owner\' ? \'an\' : \'a\'}} {{vm.credentials.type}}\n' +
   '            </span>\n' +
   '\n' +
   '            <div class="pull-right">\n' +
   '                <button type="button" class="close modal-title"\n' +
-  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.signupType)"><span aria-hidden="true">\n' +
+  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.type)"><span aria-hidden="true">\n' +
   '                    <i class="fa fa-close fa-2x"></i>\n' +
   '                    <span class="sr-only">Close</span></span>\n' +
   '                </button>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="visible-xs" ng-show="vm.credentials.signupType">\n' +
+  '        <div class="visible-xs" ng-show="!!vm.credentials.type">\n' +
   '            <span class="modal-title h4 text-center">\n' +
-  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.signupType = null;"><i\n' +
+  '                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i\n' +
   '                        class="fa fa-arrow-left fa-lg"></i></button>&nbsp;\n' +
-  '                {{vm.credentials.signupType | titlecase }} Sign Up\n' +
+  '                {{vm.credentials.type | titleCase }} Sign Up\n' +
   '            </span>\n' +
   '\n' +
   '            <span class="pull-right">\n' +
   '                <button type="button" class="close modal-title"\n' +
-  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.signupType)"><span aria-hidden="true">\n' +
+  '                        ng-click="$dismiss(\'cancel:\'+vm.credentials.type)"><span aria-hidden="true">\n' +
   '                    <i class="fa fa-close fa-lg"></i>\n' +
   '                    <span class="sr-only">Close</span></span>\n' +
   '                </button>\n' +
@@ -4548,90 +5414,26 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '\n' +
   '    <form role="form" data-ng-submit="vm.signup($event)" name="vm.signupForm"\n' +
-  '          class="signin form-horizontal" spellcheck="false" novalidate>\n' +
+  '          class="signin oset-form" spellcheck="false" novalidate>\n' +
   '\n' +
-  '        <div class="modal-body" ng-show="vm.credentials.signupType">\n' +
+  '        <div class="modal-body" ng-show="vm.credentials.type">\n' +
   '            <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">\n' +
-  '                <em><span>{{vm.extraText || \'Before continuing, please create an account\'}}</span> or <a ng-click="$dismiss(\'login\')" login-modal redirect="vm.srefRedirect">Log in with an existing account</a></span> </em>\n' +
+  '                <em><span>{{vm.extraText || \'Before continuing, please create an account\'}}</span> or <a\n' +
+  '                        ng-click="$dismiss(\'login\')" login-modal redirect="vm.srefRedirect">Log in with an existing\n' +
+  '                    account</a></span> </em>\n' +
   '            </p>\n' +
   '\n' +
-  '            <div class="form-group" ng-show="vm.credentials.signupType === \'owner\'">\n' +
-  '                <label for="companyName" class="col-sm-2 control-label">Business Name</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === \'owner\'"\n' +
-  '                           type="text" id="companyName" name="companyName" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.companyName" placeholder="Name of your Business"\n' +
-  '                            ng-required="!!vm.credentials.signupType && vm.credentials.signupType === \'owner\'">\n' +
-  '                </div>\n' +
+  '            <div class="row">\n' +
+  '            <div class="col-sm-12">\n' +
+  '                <user-signup-form model="vm.credentials" methods="vm.signupFormMethods"></user-signup-form>\n' +
   '            </div>\n' +
-  '\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="firstName" class="col-sm-2 control-label">First Name</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input modal-focus="!!vm.credentials.signupType && vm.credentials.signupType === \'driver\'"\n' +
-  '                           type="text" ng-required="true" id="firstName" name="firstName" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.firstName" placeholder="First Name">\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="lastName" class="col-sm-2 control-label">Last Name</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input type="text" id="lastName" name="lastName" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.lastName" placeholder="Last Name"\n' +
-  '                           ng-required="true">\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="email" class="col-sm-2 control-label">Email</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input type="text" id="email" name="email" class="form-control" data-ng-model="vm.credentials.email"\n' +
-  '                           placeholder="Email" ng-required="true">\n' +
-  '                </div>\n' +
-  '            </div>\n' +
-  '            <div class="form-group">\n' +
-  '                <label for="password" class="col-sm-2 control-label">Password</label>\n' +
-  '\n' +
-  '                <div class="col-sm-10">\n' +
-  '                    <input type="password" id="password" name="password" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.password" placeholder="Password"\n' +
-  '                            ng-required="true">\n' +
-  '                    <br/>\n' +
-  '                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"\n' +
-  '                           data-ng-model="vm.credentials.confirmPassword" placeholder="Confirm Password"\n' +
-  '                            ng-required="true" compare-to="vm.credentials.password">\n' +
-  '                </div>\n' +
   '            </div>\n' +
   '\n' +
   '        </div>\n' +
   '\n' +
-  '        <div class="modal-footer" ng-show="vm.credentials.signupType">\n' +
-  '            <div class="col-sm-2 ">\n' +
-  '                <label class="strong text-right" style="height:30px;">\n' +
-  '                    Terms\n' +
-  '                </label>\n' +
-  '            </div>\n' +
-  '\n' +
-  '            <div class="col-sm-10">\n' +
-  '                <p class="text-left">Do you agree to all conditions in the Outset <span tos>Terms of Service</span>\n' +
-  '                    <i class="fa"\n' +
-  '                       ng-class="{\'fa-question\' : !vm.credentials.terms, \'fa-check-circle text-success fa-2x\': vm.credentials.terms==\'yes\', \'fa-times-circle-o text-danger\' : vm.credentials.terms==\'no\'}"></i>\n' +
-  '                    <button ng-hide="vm.credentials.terms === \'yes\'" type="button"\n' +
-  '                            ng-click="vm.credentials.terms=\'yes\'" class="btn btn-oset-success btn-sm mgn-left">Yes,\n' +
-  '                        I Agree!\n' +
-  '                    </button>\n' +
-  '                </p>\n' +
-  '            </div>\n' +
-  '\n' +
-  '        </div>\n' +
-  '\n' +
-  '        <div class="modal-footer" ng-show="vm.credentials.signupType">\n' +
-  '            <button type="submit" class="btn btn-oset-primary" ng-class="{\'disabled\':vm.credentials.terms != \'yes\'}">Sign\n' +
-  '                Up!\n' +
+  '        <div class="modal-footer" ng-show="vm.credentials.type">\n' +
+  '            <button type="submit" class="btn btn-oset-primary" ng-class="{\'disabled\':!vm.credentials.terms}">\n' +
+  '                Sign Up!\n' +
   '            </button>\n' +
   '            <div data-ng-show="vm.error" class="text-center text-danger">\n' +
   '                <strong data-ng-bind="vm.error"></strong>\n' +
@@ -4641,6 +5443,39 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '\n' +
   '\n' +
   '</script>\n' +
+  '');
+ $templateCache.put('/modules/users/views/templates/signup-type.client.template.html',
+  '<section class="signup-type bg-primary">\n' +
+  '    <div class="row text-center">\n' +
+  '        <h2 class="lead-question">I want to ... </h2>\n' +
+  '    </div>\n' +
+  '    <div class="row text-center">\n' +
+  '        <div class="col-sm-6" ng-click="vm.selectType(\'driver\', $event)">\n' +
+  '            <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
+  '                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
+  '                    <img src="modules/users/img/steering-wheel.png" class="img-responsive center-block"/>\n' +
+  '                </div>\n' +
+  '                <br class="hidden-xs"/>\n' +
+  '\n' +
+  '                <div class="heading h3">Drive</div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '        <br class="visible-xs"/>\n' +
+  '\n' +
+  '        <div class="col-sm-6" ng-click="vm.selectType(\'owner\', $event)">\n' +
+  '            <div class="type-option col-xs-offset-1 col-sm-offset-0 col-xs-10 col-sm-12">\n' +
+  '                <div class="col-xs-10 col-xs-offset-1 col-sm-12 col-sm-offset-0">\n' +
+  '                    <img src="modules/users/img/owner-group.png"\n' +
+  '                         class="img-responsive center-block text-center"/>\n' +
+  '                </div>\n' +
+  '                <br class="hidden-xs"/>\n' +
+  '\n' +
+  '                <div class="heading h3">Hire</div>\n' +
+  '            </div>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
+  '    <input type="hidden" name="type" ng-required="true" ng-model="vm.model"/>\n' +
+  '</section>\n' +
   '');
  $templateCache.put('/modules/users/views/templates/user-badge.client.template.html',
   '<section>\n' +

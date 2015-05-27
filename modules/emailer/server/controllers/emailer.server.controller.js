@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint camelcase:false */
+/* TODO: Camelcase is deprectated - migrate to jscs */
+
 exports.sendMessage = sendMessage;
 exports.sendTemplate = sendTemplate;
 exports.sendTemplateBySlug = sendGenericTemplateEmail;
@@ -51,7 +54,7 @@ function sendGenericTemplateEmail(templateName, user, options) {
     var mailOptions = {
         to: [{
             email: user.email,
-            name: user.displayName
+            name: user.displayName || user.handle || user.email
         }],
         inline_css: true,
 

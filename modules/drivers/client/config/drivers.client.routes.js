@@ -15,16 +15,10 @@
 
     function driverResolve(rsrc, params) {
         if (!!params.driverId) {
-            var val = params.driverId;
-            console.log('Searching for driver ID: %s', val);
-
-            var drivers = rsrc.ById.get({
-                driverId: val
-            }).$promise;
-
-            return drivers;
+            console.log('Searching for driver ID: %s', params.driverId);
+            return rsrc.get(params.driverId);
         }
-        return {};
+        return rsrc.default;
     }
 
     function userResolve(rsrc, params, auth) {

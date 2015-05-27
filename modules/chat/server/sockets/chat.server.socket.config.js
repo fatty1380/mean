@@ -61,8 +61,6 @@ module.exports = function (io, socket) {
             debugger;
             console.error('[SOCKET.%s] NO Room Specified - aborting send: %o', message.type, message);
             return false;
-            console.log('[SOCKET.%s] No Room Specified - directing to `lobby`: %s', message.type, message.username);
-            io.sockets.in('lobby').emit('chatMessage', message);
         }
     });
 
@@ -143,7 +141,7 @@ module.exports = function (io, socket) {
             });
             socket.leave(room);
         }
-    })
+    });
 
     socket.on('chatMessage', function (data) {
         console.log('[SOCKET.ALT.%s] NOT emitting message to room `%s` with data: %j', data.type, data.room, data);

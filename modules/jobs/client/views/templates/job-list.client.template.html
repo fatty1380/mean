@@ -61,7 +61,7 @@
         <div class="job-list blog-category-list">
 
             <article class="post col-sm-12"
-                     data-ng-repeat="job in (vm.jobs | filter: vm.jobCatFilter | filter: vm.filter | withinPastDays: 'posted': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | orderBy: vm.random  | limitTo: vm.limitTo)"
+                     data-ng-repeat="job in (vm.jobs | filter: vm.jobCatFilter | filter: vm.filter | withinPastDays: 'posted': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | limitTo: vm.limitTo)"
                      ng-if="vm.jobs"
                      ng-init="job.cats=_.pluck(_.where(job.categories, 'value'), 'key')"
                      ng-show="vm.visibleId === job._id || !vm.visibleId">

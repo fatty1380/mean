@@ -20,11 +20,13 @@ var SubscriptionSchema = new Schema({
     },
     used: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     },
     available: {
         type: Number,
-        required: true
+        required: true,
+        default: 1
     },
     renews: {
         type: Date,

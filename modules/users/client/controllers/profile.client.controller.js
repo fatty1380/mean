@@ -1,47 +1,51 @@
 (function() {
     'use strict';
 
-    function ProfileController($scope, $state, $stateParams, $location, $log, Profiles, Authentication) {
+    function ProfileController($state, $log, user, Companies, Drivers) {
+        if(!user) {
+            $log.error('no user defined in profile instantiation');
+            return $state.go('home');
+        }
 
-        this.header = 'User Profile';
+        var vm = this;
 
-        // Find existing User Profile
-        this.init = function() {
-            if (!$stateParams.userId) { // Viewing your own profile
-                this.user = Authentication.user;
-                this.header = this.user.displayName + ' <small>(you)</small>';
-                this.showEditLink = true;
-            } else { // Viewing someone else's profile
-                this.user = Profiles.get({
-                    userId: $stateParams.userId
-                });
+        vm.user = user;
 
-                var promise = this.user.$promise;
-
-                promise
-                    .then(this.setProfile, function(err) {
-                        $log.debug('Error retrieving profile', err);
-                    });
+        if(!!vm.user) {
+            if(!!vm.user.driver) {
+                if(typeof vm.user.driver === 'string') {
+                    Drivers.getByUser(vm.user._id).then(
+                        function(driver) {
+                            vm.driver = driver;
+                        },
+                        function(error) {
+                            $log.error('Unable to get driver for user due to `%s`', error);
+                        }
+                    );
+                }
+                else {
+                    vm.driver = vm.user.driver;
+                }
             }
-        };
-
-        this.setProfile = function(profile) {
-            // TODO: Fix this logic - it's fully borked!
-            $scope.profile = profile;
-            $scope.header = profile.displayName;
-            $scope.showEditLink = profile._id === Authentication.user._id;
-        };
-
-        this.initList = function() {
-            if (Authentication.isAdmin()) {
-                this.users = Profiles.query();
-            } else {
-                $location.path('/');
+            if(!!vm.user.company) {
+                if(typeof vm.user.company === 'string') {
+                    Companies.getByUser(vm.user._id).then(
+                        function(company) {
+                            vm.company = company;
+                        },
+                        function(error) {
+                            $log.error('Unable to get company for user due to `%s`', error);
+                        }
+                    );
+                }
+                else {
+                    vm.company = vm.user.company;
+                }
             }
-        };
+        }
     }
 
-    ProfileController.$inject = ['$scope', '$state', '$stateParams', '$location', '$log', 'Profiles', 'Authentication'];
+    ProfileController.$inject = ['$state', '$log', 'user', 'Companies', 'Drivers'];
 
     angular
         .module('users')

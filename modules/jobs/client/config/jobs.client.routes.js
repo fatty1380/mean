@@ -5,27 +5,26 @@
         return AppConfig.getModuleConfig(auth.user.type, 'jobs');
     }
 
-    function companyResolve(rsrc, params, auth, $q) {
+    function companyResolve(Companies, params, auth, $q) {
         var promise;
 
         if (!!params.companyId) {
-            var val = params.companyId;
-            console.log('Searching for company ID: %s', val);
+            console.log('Searching for company ID: %s', params.companyId);
 
-            promise = rsrc.ById.get({
-                companyId: val
+            promise = Companies.ById.get({
+                companyId: params.companyId
             }).$promise;
         } else if (!!params.jobId) {
             console.log('Not resolving company - find it in the job');
             return null;
         } else if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
-            promise = rsrc.ByUser.get({
+            promise = Companies.ByUser.get({
                 userId: params.userId
             }).$promise;
         } else if (auth.user.type === 'owner') {
             console.log('Searching for company data for logged in user');
-            promise = rsrc.ByUser.get({
+            promise = Companies.ByUser.get({
                 userId: auth.user._id
             }).$promise;
         } else {
@@ -42,43 +41,52 @@
         });
     }
 
-    function jobResolve(rsrc, params) {
+    function jobResolve(Jobs, params) {
         var val = params.jobId;
         console.log('Searching for job ID: %s', val);
 
-        return !!val ? rsrc.ById.get({
-            jobId: val
+        return !!val ? Jobs.ById.get({
+            id: val
         }).$promise : null;
     }
 
-    function listUserResolve(rsrc, params, auth, $q) {
-        var promise;
+    function getApplications(job, Applications) {
+        return Applications.ById.query({job: job._id}).$promise;
+    }
+
+    getApplications.$inject = ['job', 'Applications'];
+
+    function listUserResolve(Jobs, params, auth, $q) {
+        var promise, p2;
+
+        debugger;
 
         if (auth.user && auth.user.type === 'owner') {
-            promise = rsrc.ByUser.query({
-                userId: auth.user._id,
-                companyId: params.companyId
+            promise = Jobs.ById.query({
+                user: auth.user._id,
+                company: params.companyId
             }).$promise;
         } else if (auth.user) {
-            promise = rsrc.ByUser.query({
+            promise = Jobs.ByUser.query({
                 userId: auth.user._id
             }).$promise;
         } else {
             return [];
         }
 
-        return promise.catch(function (err) {
+        return promise
+            .catch(function (err) {
             // recover here if err is 404
             if (err.status === 404) {
-                return null;
+                return [];
             } //returning recovery
             // otherwise return a $q.reject
             return $q.reject(err);
         });
     }
 
-    function listAllResolve(rsrc) {
-        return rsrc.ById.query().$promise;
+    function listAllResolve(Jobs) {
+        return Jobs.ById.query().$promise;
     }
 
     function config($stateProvider) {
@@ -147,7 +155,8 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    job: jobResolve
+                    job: jobResolve,
+                    applications: getApplications
                 },
                 parent: 'jobs'
             }).

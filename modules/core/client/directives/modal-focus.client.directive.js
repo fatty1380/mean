@@ -27,8 +27,9 @@
             // are triggered.
             $timeout(function () {
                 var element = document.getElementById(id);
-                if (element)
+                if (element) {
                     element.focus();
+                }
             });
         };
     }
@@ -57,6 +58,6 @@
 
     FocusDirective.$inject = ['focus'];
     angular.module('core')
-        .directive('eventFocus', FocusDirective)
+        .directive('eventFocus', FocusDirective);
 
 })();

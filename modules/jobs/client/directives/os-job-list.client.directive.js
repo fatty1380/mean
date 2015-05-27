@@ -45,12 +45,8 @@
                 vm.filter.company = {'_id': vm.companyId};
                 vm.myJobsOnly = true;
 
-                vm.jobs = Jobs.ByCompany.query({
-                    companyId: vm.companyId
-                });
-            } else if (!!vm.driverId) {
-                vm.jobs = Jobs.ByUser.query({
-                    userId: vm.driverId
+                vm.jobs = Jobs.ById.query({
+                    company: vm.companyId
                 });
             } else {
                 vm.jobs = [];
@@ -132,7 +128,7 @@
             }
         }
 
-        vm.predicate = '';
+        vm.predicate = 'posted';
         vm.reverse = true;
 
         vm.toggleSort = function(field, reverse) {
@@ -143,20 +139,6 @@
                 vm.predicate = field;
                 vm.reverse = !!reverse;
             }
-        };
-
-        vm.random = function(item){
-
-            if(!!vm.predicate || vm.filters.mine || !vm.filters.clear) {
-                return item.postingDate;
-            }
-
-            if(item.rand) {
-                return item.rand;
-            }
-
-            item.rand = 0.5 + Math.random();
-            return item.rand;
         };
 
         vm.showAllTypes = true;
@@ -216,7 +198,6 @@
             scope: {
                 header: '@?',
                 companyId: '@?',
-                driverId: '@?',
                 srcJobs: '=?',
                 showPost: '=?',
                 limitTo: '=?',
@@ -235,17 +216,5 @@
     angular.module('jobs')
         .controller('JobListController', JobListController)
         .directive('osJobList', JobListDirective);
-
-    angular.module('core').filter('withinPastDays', function(){
-        return function(items, field, days){
-            if(!days) { return items.filter(function(){return true;}); }
-
-            var timeStart = moment().subtract(days, 'days');
-            console.log('filtering back %s days to %s', days, timeStart.format('L'));
-            return items.filter(function(item){
-                return (moment(item[field]).isAfter(timeStart));
-            });
-        };
-    });
 
 })();

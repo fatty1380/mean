@@ -36,7 +36,7 @@
 
             if (vm.mode === 'edit' || vm.mode === 'select') {
                 $log.debug('Confirming all defaults present in edit control');
-                _.each(defaults[vm.dataType], function (option) {
+                _.each(vm.options || defaults[vm.dataType], function (option) {
 
                     if (_.find(vm.categories, {key: option.key})) {
                         $log.debug('driver already contains %s', option.key);
@@ -117,6 +117,7 @@
             transclude: true,
             scope: {
                 categories: '=model',
+                options: '=?',
                 summary: '=?',
                 mode: '@?',
                 dataType: '@?',

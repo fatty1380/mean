@@ -13,6 +13,7 @@
                 apiUrl: '@?',
                 successCallback: '&?',
                 failCallback: '&?',
+                allowBlank: '=?',
                 isEditing: '=?'
             },
             controller: 'ChangeProfilePictureController',
@@ -29,6 +30,7 @@
             templateUrl: '/modules/users/views/settings/file-upload.client.template.html',
             scope: {
                 model: '=',
+                modelPath: '@',
                 title: '@',
                 mode: '@?',
                 apiUrl: '@?',

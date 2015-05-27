@@ -2,7 +2,7 @@
     'use strict';
 
     // Drivers controller
-    function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig, $document) {
+    function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig, $document, Applications) {
         var vm = this;
 
         if (!Authentication.user) {
@@ -12,7 +12,12 @@
         // Variables:
         vm.user = Authentication.user;
         vm.action = $state.current.name.replace('drivers.', '');
-        vm.driver = _.defaults(driver || {}, {experience: [], licenses: [{}], interests: []});
+        vm.driver = _.defaults(driver || {}, {
+            experience: [],
+            licenses: [{}],
+            interests: [],
+            profile: {responses: [], questions: []}
+        });
 
         //if (typeof vm.user.driver === 'string' && vm.user.driver !==vm.driver._id) {
         //    return $state.go('home');
@@ -29,12 +34,29 @@
         vm.create = create;
         vm.cancel = cancel;
 
+        vm.methods = {
+            submit: submit,
+            update: update,
+            create: create,
+            cancel: cancel
+        };
+
         function activate() {
 
             if ($state.is('drivers.create')) {
                 if (!!vm.driver && !!vm.driver._id) {
                     $state.go('drivers.edit', {driverId: vm.driver._id});
                 }
+            }
+
+            if (!vm.driver.profile.questions || _.isEmpty(vm.driver.profile.questions)) {
+                vm.driver.profile.questions = Applications.getQuestions();
+            }
+
+            if (!vm.driver.profile.responses || _.isEmpty(vm.driver.profile.responses)) {
+                vm.driver.profile.responses = {
+                    'default': []
+                };
             }
         }
 
@@ -47,7 +69,7 @@
             }
 
             vm.experienceForm = vm.driverForm['vm.experienceForm'];
-            if(!!vm.experienceForm) {
+            if (!!vm.experienceForm) {
                 vm.experienceForm.$setSubmitted(true);
             }
 
@@ -129,7 +151,7 @@
 
     }
 
-    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig', '$document'];
+    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig', '$document', 'Applications'];
 
     angular.module('drivers').controller('DriverEditController', DriverEditController);
 })

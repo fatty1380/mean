@@ -17,6 +17,11 @@
 
         vm.revertValue = angular.copy(vm.model);
 
+        vm.activate = function() {
+            vm.formItem = vm.form['experienceItem_'+vm.modelIndex];
+            return !!vm.formItem;
+        };
+
         vm.edit = function () {
             vm.revertValue = angular.copy(vm.model);
             vm.isEditing = true;
@@ -42,19 +47,22 @@
         vm.save = function (action) {
             vm.error = null;
 
-            vm.experienceForm.$setSubmitted(true);
+            vm.formItem = vm.formItem || vm.form['formItem_'+ vm.modelIndex];
 
-            if (action !== 'add' && vm.experienceForm.$pristine && vm.model.isFresh) {
+            //vm.formItem.$setSubmitted(true);
+            vm.formItem._submitted = true;
+
+            if (action !== 'add' && vm.formItem.$pristine && vm.model.isFresh) {
 
                 vm.cancel();
-                vm.experienceForm.$setValidity('model', true);
-                vm.experienceForm.$setSubmitted();
+                vm.formItem.$setValidity('model', true);
+                vm.formItem.$setSubmitted();
                 return true;
             }
 
-            if (vm.experienceForm.$invalid) {
+            if (vm.formItem.$invalid) {
 
-                if (vm.experienceForm.$error.required) {
+                if (vm.formItem.$error.required) {
                     vm.error = 'Please fill in all required fields before saving';
                 }
                 else {
@@ -84,9 +92,12 @@
             }
             return null;
         };
+
+        //vm.form.save = vm.save;
+        //vm.form.cancel = vm.cancel;
     }
 
-    function ExperienceDirective() {
+    function ExperienceItemDirective() {
         return {
             priority: 0,
             templateUrl: '/modules/drivers/views/templates/experience.client.template.html',
@@ -99,7 +110,13 @@
                 addFn: '&?',
                 dropFn: '&?',
                 isLast: '=?',
+                modelIndex: '=?',
                 viewOnly: '=?'
+            },
+            require: ['^osetExperienceList', '^?form'],
+            link: function(scope, element, attrs, ctrls) {
+                scope.vm.form = ctrls[1];
+                scope.vm.list = ctrls[0];
             },
             controller: 'ExperienceItemController',
             controllerAs: 'vm',
@@ -109,7 +126,7 @@
 
     ExperienceItemController.$inject = ['AppConfig', '$attrs'];
 
-    function ExperienceListController() {
+    function ExperienceListController($log) {
         var vm = this;
 
         vm.viewOnly = vm.viewOnly || false;
@@ -149,6 +166,8 @@
         }
     }
 
+    ExperienceListController.$inject = ['$log'];
+
     function ExperienceListDirective() {
         var ddo;
         ddo = {
@@ -160,6 +179,10 @@
                 viewOnly: '=?',
                 maxCt: '=?'
             },
+            require: ['^?form'],
+            link: function(scope, element, attrs, ctrls) {
+                scope.vm.form = ctrls[0];
+            },
             controller: 'ExperienceListController',
             controllerAs: 'vm',
             bindToController: true
@@ -170,7 +193,7 @@
 
     angular.module('drivers')
         .controller('ExperienceItemController', ExperienceItemController)
-        .directive('osetExperienceItem', ExperienceDirective)
+        .directive('osetExperienceItem', ExperienceItemDirective)
         .controller('ExperienceListController', ExperienceListController)
         .directive('osetExperienceList', ExperienceListDirective);
 

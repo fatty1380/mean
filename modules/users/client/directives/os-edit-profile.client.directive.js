@@ -6,7 +6,7 @@
             function() {
                 return {
                     scope: {
-                        profile: '=',
+                        profile: '=model',
                         editFn: '&',
                         cancelFn: '&',
                         updateFn: '&'

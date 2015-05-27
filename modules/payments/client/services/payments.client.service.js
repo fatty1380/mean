@@ -39,8 +39,7 @@
                     $save: {
                         method: 'POST'
                     }
-                })
-            ,
+                }),
             Plans: $resource('/api/companies/subscriptions/:planId',{
                     planId: '@planId',
                     promoCode: '@promoCode'

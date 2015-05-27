@@ -1,12 +1,16 @@
 'use strict';
 
-module.exports = function(app) {
-    var users = require('../../../../modules/users/server/controllers/users.server.controller');
-    var applications = require('../controllers/applications.server.controller');
+module.exports = function (app) {
+    var
+        path = require('path'),
+        users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
+        applications = require(path.resolve('./modules/applications/server/controllers/applications.server.controller')),
+        drivers = require(path.resolve('./modules/drivers/server/controllers/drivers.server.controller')),
+        releaseDocs = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller'));
 
     // Applications Routes
     app.route('/api/applications')
-        .get(applications.listAll)
+        .get(applications.executeQuery)
         .post(users.requiresLogin, applications.create);
 
     app.route('/api/applications/:applicationId')
@@ -24,8 +28,8 @@ module.exports = function(app) {
         .get(applications.queryByJobID) // ,
         .post(users.requiresLogin, applications.create);
 
-    app.route('/api/jobs/:jobId/applications/:userId')
-        .get(applications.getByJobId, applications.read);
+    app.route('/api/jobs/:jobId/applications/questions')
+        .get(applications.getQuestions);
 
     app.route('/api/companies/:companyId/applications')
         .get(applications.queryByCompanyID);

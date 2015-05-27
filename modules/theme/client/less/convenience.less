@@ -2,8 +2,8 @@
 
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
-  padding-right:0;
-  padding-left:0;
+  padding-right : 0;
+  padding-left  : 0;
 }
 
 /* Color Related Overrides */
@@ -12,7 +12,7 @@
 }
 
 .transparent {
-  background-color: transparent!important;
+  background-color : transparent !important;
 }
 
 .shadow {
@@ -29,19 +29,19 @@
 }
 
 .bigger {
-  font-size : larger;
+  font-size : 125%;
 }
 
 .big {
-  font-size : large;
-}
-
-.smaller {
-  font-size : smaller !important;
+  font-size : 115%;
 }
 
 .small {
-  font-size : small !important;
+  font-size : 85% !important;
+}
+
+.smaller {
+  font-size : 70% !important;
 }
 
 /** Text Alignment Overrides **/
@@ -55,6 +55,10 @@
 
 .text-right-force {
   text-align : right !important;
+}
+
+.full-width {
+  width: 100%;
 }
 
 /** Padding Overrides **/
@@ -88,11 +92,12 @@
 }
 
 .pad-vert {
-  padding-top : 10px !important;
+  padding-top    : 10px !important;
   padding-bottom : 10px !important;
 }
+
 .pad-sides {
-  padding-left : 10px !important;
+  padding-left  : 10px !important;
   padding-right : 10px !important;
 }
 
@@ -113,9 +118,8 @@
 }
 
 .pad {
-  padding: 20px 10px!important;
+  padding : 20px 10px !important;
 }
-
 
 /** Margin Overrides **/
 .no-margin {
@@ -124,7 +128,6 @@
   margin-bottom : 0 !important;
   margin-right  : 0 !important;
 }
-
 
 .no-mgn-sides, .no-margin-sides {
   margin-left  : 0 !important;
@@ -165,14 +168,24 @@
 
 .mgn-vert {
   margin-bottom : 15px !important;
-  margin-top : 15px !important;
+  margin-top    : 15px !important;
 }
 
 .mgn-sides {
-  margin-left : 15px !important;
+  margin-left  : 15px !important;
   margin-right : 15px !important;
 }
 
 .pointer {
-  cursor: pointer;
+  cursor : pointer;
+}
+
+.vert-middle {
+  &h1, &h2, &h3, &h4 {
+    position          : relative;
+    top               : 50%;
+    transform         : translateY(-50%);
+    -webkit-transform : translateY(-50%);
+    -ms-transform     : translateY(-50%);
+  }
 }

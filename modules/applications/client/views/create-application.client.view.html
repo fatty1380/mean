@@ -1,8 +1,54 @@
-<section class="container opaque-bg">
-    <div class="page-header">
-        <h1>New Application</h1>
-    </div>
-    <div class="col-md-12">
-        <div ng-include="'/modules/applications/views/templates/create-application.client.template.html'"></div>
+<section class="container-fluid">
+    <os-page-header title="NEW WORKFLOW PAGE"></os-page-header>
+
+    <div class="panel panel-default">
+        <div class="row pad">
+            <div class="col-sm-12">
+                <accordion close-others="false">
+                    <accordion-group heading="{{group.title}}" ng-repeat="group in groups">
+                        {{group.content}}
+                    </accordion-group>
+
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            User Type
+                        </accordion-heading>
+
+                        <user-signup-type ng-form="vm.subForm0" model="vm.credentials.type" callback="vm.selectUserType()"></user-signup-type>
+                    </accordion-group>
+
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            User Signup Information
+                            <i class="pull-right glyphicon"
+                               ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}">
+                            </i>
+                        </accordion-heading>
+
+                        <user-signup-form ng-form="vm.subForm1"></user-signup-form>
+
+                    </accordion-group>
+
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            Driver Details
+                        </accordion-heading>
+
+                        <driver-info-form ng-form="vm.subForm2" model="vm.driver" text="vm.about"
+                                          class="col-sm-12" methods="vm.subform2Methods">
+                        </driver-info-form>
+                    </accordion-group>
+
+                    <accordion-group is-open="true">
+                        <accordion-heading>
+                            Questionaire
+                        </accordion-heading>
+
+                        <application-questionnaire-form ng-form="vm.questionForm" model="vm.questions"></application-questionnaire-form>
+                    </accordion-group>
+
+                </accordion>
+            </div>
+        </div>
     </div>
 </section>

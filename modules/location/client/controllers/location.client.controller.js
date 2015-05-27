@@ -84,7 +84,7 @@
                         vm.gotoLocation(loc, result.geometry.viewport);
 
                     } else {
-                        alert('Sorry, this search produced no results.');
+                        $log.info('[location.geocode] Sorry, this search produced no results.', vm.search);
                     }
                 });
             }

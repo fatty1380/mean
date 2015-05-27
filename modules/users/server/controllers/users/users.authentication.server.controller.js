@@ -12,21 +12,34 @@ User         = mongoose.model('User'),
 Driver       = mongoose.model('Driver'),
 Company      = mongoose.model('Company'),
 emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
-Q            = require('q');
+Q            = require('q'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users.authentication',
+        file: 'users.authentication.server.controller'
+    });
 
 
 // DRY Simple Login Function
 var login = function (req, res, user) {
-    console.log('[Auth.Ctrl] login()');
+    log.trace({func: 'login'}, 'Logging in user %s', user.email);
 
     req.login(user, function (err) {
         if (err) {
+            log.warn({err: err}, 'Login Failed due to error');
             res.status(400).send(err);
         } else {
-            console.log('Login Successful!');
+            log.info('Login Successful!');
             res.jsonp(user);
         }
     });
+};
+
+exports.userseed = function (req, res) {
+    delete req.body.roles;
+
+    log.info({email: req.body.email}, 'Creating Seed User for email %s', req.body.email);
+
+    var user = new User(req.body);
 };
 
 /**
@@ -36,11 +49,10 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    console.log('[Auth.Ctrl] signup.%s(%s)', req.body.type, req.body.username);
+    log.info({func: 'signup', type: req.body.type, username: req.body.username}, 'Signup for new user');
 
     // Init Variables
     var user = new User(req.body);
-    var message = null;
 
     var userType = req.body.type;
     // Add missing user fields
@@ -110,19 +122,19 @@ function completeUserHydration(req, res, user) {
                 deferred.resolve({driver: driver._id});
             } else {
                 console.log('[SIGNUP] - Creating new Driver for user');
-                var driver = new Driver({'user': user});
+                var newDriver = new Driver({'user': user});
 
-                driver.save(function (err) {
+                newDriver.save(function (err) {
                     if (err) {
                         console.error('[SIGNUP] - err creating new driver', err);
                         return deferred.reject('Unable to create new driver: ' + err);
                     }
 
-                    if(!!driver) {
-                        deferred.resolve({driver: driver._id});
+                    if(!!newDriver) {
+                        deferred.resolve({driver: newDriver._id});
                     }
                     else {
-                        deferred.reject('Unknown problem in creating new company');
+                        deferred.reject('Unknown problem in creating new Driver');
                     }
 
                 });
@@ -148,16 +160,16 @@ function completeUserHydration(req, res, user) {
             else {
                 console.log('[SIGNUP] - Creating new Company for user');
 
-                var company = new Company({'owner': user, 'name': req.body.companyName});
+                var newCompany = new Company({'owner': user, 'name': req.body.companyName});
 
-                company.save(function (err) {
+                newCompany.save(function (err) {
                     if (err) {
                         console.error('[SIGNUP] - err creating new Company', err);
                         return deferred.reject('Unable to create new company: ' + err);
                     }
 
-                    if(!!company) {
-                        deferred.resolve({company: company._id});
+                    if(!!newCompany) {
+                        deferred.resolve({company: newCompany._id});
                     }
                     else {
                         deferred.reject('Unknown Problem in creating new company');

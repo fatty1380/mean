@@ -1,0 +1,103 @@
+<article class="post applicant">
+
+    <!--ui-sref="applications.view({'applicationId': vm.application._id})"-->
+    <div class="row tab-body-item applicant_item"
+         ng-show="vm.visibleId === vm.job._id"
+         ng-class="{'disabled': vm.application.disabled}">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="stronger">
+                    {{vm.getMaskedDisplayName(vm.application)}}
+                    <br class="hidden-lg hidden-md">
+                    <span class="pull-right">
+                        <small>Status:</small>
+                        <os-application-status-badge model="vm.application"></os-application-status-badge>
+                    </span>
+                </h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">
+                <img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive">
+            </div>
+
+            <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">
+                <oset-application-summary model="vm.application" ng-show="vm.visibleTab === 'applicants'"
+                                          display-mode="inline"></oset-application-summary>
+
+                <dl class="dl-horizontal" ng-="vm.visibleTab === 'messaging'">
+                    <span ng-repeat="message in vm.application.messages | limitTo: -3">
+                        <dt>{{message.sender.displayName}}</dt>
+                        <dd><span ng-bind-html="message.text"></span>
+                            <small class="smaller text-muted mgn-left">
+                                {{message.created | amDateFormat:'L LT'}}
+                            </small>
+                        </dd>
+                    </span>
+
+                    <span ng-if="!vm.application.connection">
+                        <h4 class="text-muted text-center">
+                            Please review this application to send messages
+                            </h4>
+                    </span>
+
+                    <span ng-if="!!vm.application.connection && !(vm.application.messages && vm.application.messages.length)">
+                        <h4 class="text-muted text-center">No Messages</h4>
+                    </span>
+                </dl>
+
+                <div ng-show="vm.visibleTab === 'documents'">
+                    <pre ng-if="vm.debug">{{vm.application.user.driver.reports}}</pre>
+                    <oset-document-list driver="vm.application.user.driver" application="vm.application" display-mode="full"
+                                        doc-access="vm.application.canViewDocs"></oset-document-list>
+                </div>
+
+            </div>
+
+            <br class="hidden-lg"/>
+
+            <div class="col-lg-2 col-md-3 col-xs-12 text-right">
+                <a class="btn-tab btn-link strong pull-right"
+                   style="white-space: nowrap"
+                   ui-sref="applications.view({applicationId: vm.application._id, action: 'read'})">
+                    Full Profile
+                    <i class="fa fa-external-link fa-lg mgn-left"></i>
+                </a>
+                <br class="visible-lg mgn-vert"/>
+                <a class="btn-tab btn-link strong pull-right"
+                   style="white-space: nowrap"
+                   tooltip="{{vm.application.messagingText || vm.messagingText}}"
+                   tooltip-popup-delay="1000"
+                   ui-sref="applications.view({applicationId: vm.application._id, action: 'message'})">
+
+                    <span class="badge" ng-show="!!vm.application.newMessages">{{vm.application.newMessages}}</span>
+                    Messaging
+                    <i class="fa fa-comments-o fa-lg mgn-left"></i>
+                </a>
+                <br class="visible-lg mgn-vert pull-right"/>
+
+                <a class="btn-tab btn-link strong"
+                   style="white-space: nowrap"
+                   tooltip="{{vm.application.documentText || vm.documentText}}"
+                   tooltip-popup-delay="1000"
+                   ui-sref="drivers.documents({driverId: vm.application.user.driver.id})">
+                    Documents
+                    <i class="fa fa-file-text fa-lg mgn-left"></i>
+                </a>
+                <br class="visible-lg mgn-vert"/>
+
+                <!--TODO: Change the "Reject" into a state rather than a callback-->
+                <a class="btn-tab btn-link strong"
+                   style="white-space: nowrap"
+                   ng-click="vm.setApplicationStatus(vm.job.applications[$index], 'rejected', $event)">
+                    Reject
+                    <i class="fa fa-close fa-lg mgn-left"></i>
+                </a>
+                <br class="visible-lg mgn-vert"/>
+            </div>
+        </div>
+    </div>
+    <!--//post-inner-->
+</article>

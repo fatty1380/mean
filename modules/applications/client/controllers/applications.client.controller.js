@@ -7,7 +7,7 @@
         if(!application) {
             debugger;
         }
-        vm.ApplicationFactory = Applications;
+        vm.Applications = Applications;
         vm.application = application;
         vm.user = auth.user;
         vm.text = {};
@@ -24,6 +24,8 @@
             }, processError);
         };
 
+        vm.goBack = $state.gotoPrevious;
+
         var activate = function () {
             if (vm.application.connection && vm.application.connection.isValid) {
                 vm.activeConnection = true;
@@ -32,18 +34,18 @@
                 $log.debug('No connection, or invalid connection - not creating socket.');
             }
 
-            if(vm.user.isOwner && vm.application.isNew) {
+            if(vm.user.isOwner && vm.application.isUnreviewed) {
                 vm.setApplicationStatus('read');
             }
 
-            vm.text.noconnection = (vm.user.isDriver)
-                ? 'The employer has not yet connected with you. Once they have, they will have access to your full profile and will be able to chat with you right here.'
-                : 'In order to view reports and chat with this applicant, you must first <em>Connect</em> with them using the button below. This will count against your monthly allotment of connections.';
+            vm.text.noconnection = (vm.user.isDriver) ?
+                'The employer has not yet connected with you. Once they have, they will have access to your full profile and will be able to chat with you right here.' :
+                'In order to view reports and chat with this applicant, you must first <em>Connect</em> with them using the button below. This will count against your monthly allotment of connections.';
         };
 
         vm.setApplicationStatus = function(status) {
 
-            var app = vm.ApplicationFactory.setStatus(vm.application._id, status);
+            var app = vm.Applications.setStatus(vm.application._id, status);
 
             debugger; /// TODO: Double Check promise
 

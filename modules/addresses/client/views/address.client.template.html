@@ -1,6 +1,6 @@
 <!-- os-address : address.client.template.html -->
 <div class="panel" ng-if="!!vm.address">
-     <div class="panel-heading">
+     <div class="panel-heading" ng-if="vm.addressCount > 1 || vm.canEdit">
         <span class="h4">{{vm.getAddressType()}}</span>
         <button data-ng-if="vm.canEdit" type="button" class="pull-right btn-link" value="edit"
                 ng-click="vm.editAddress(this)">
@@ -16,7 +16,7 @@
             <div ng-repeat="(s,street) in vm.address.streetAddresses track by s">
                 {{vm.address.streetAddresses[s]}}
             </div>
-            {{vm.address.city}}, {{vm.address.state}} {{vm.address.zipCode}}
+            {{!!vm.address.city ? vm.address.city + ', ': ''}}{{vm.address.state}} {{vm.address.zipCode}}
             <br/>
         </address>
     </div>
@@ -35,7 +35,6 @@
 
     <form role="form" data-ng-submit="signin()" class="signin form-horizontal" spellcheck="false" novalidate>
         <div class="modal-body">
-            Address: {{ vm.address }}, Text: {{ vm.text }}, debugger? {{ debugger; }}
             <os-edit-address model="vm.address" enable-edit="true"></os-edit-address>
         </div>
 

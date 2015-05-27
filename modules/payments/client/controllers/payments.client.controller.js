@@ -62,9 +62,6 @@
                     vm.promoError = null;
                     $log.debug('Found promo item %o', vm.promoItem);
                     vm.subtotal = parseFloat(vm.serverPlan.price) - parseFloat(vm.promoItem.amount);
-
-                    vm.promoItem.priceString = vm.getPriceString(vm.promoItem.amount);
-                    vm.subtotalString = vm.getPriceString(vm.subtotal);
                 }
                 else {
                     $log.debug('No Promo Item found');
@@ -130,12 +127,6 @@
                     vm.error = errorResponse.data && errorResponse.data.message || 'Please try again later (' + errorResponse.status + ')';
                 }
             });
-        };
-
-        vm.getPriceString = function (price) {
-            var base = Number(price);
-            var next = base.toFixed(2);
-            return '$' + next;
         };
 
         vm.setSuccess = function (response) {

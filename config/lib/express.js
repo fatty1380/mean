@@ -19,15 +19,24 @@ helmet         = require('helmet'),
 passport       = require('passport'),
 flash          = require('connect-flash'),
 consolidate    = require('consolidate'),
+addRequestId   = require('express-request-id')(),
 path           = require('path'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'lib',
+        file: 'express'
+    }),
 fs             = require('fs'),
 http           = require('http'),
 https          = require('https');
+
+var reqIndex = 0;
 
 /**
  * Initialize local variables
  */
 module.exports.initLocalVariables = function (app) {
+    log.trace({func: 'initLocalVariables'}, 'Initializing Local Variables');
+
     // Setting application local variables
     app.locals.title = config.app.title;
     app.locals.description = config.app.description;
@@ -36,32 +45,14 @@ module.exports.initLocalVariables = function (app) {
     app.locals.facebookAppId = config.facebook.clientID;
     app.locals.jsFiles = config.files.client.js;
     app.locals.cssFiles = config.files.client.css;
-
-    // Passing the request url to environment locals
-    app.use(function (req, res, next) {
-        res.locals.host = req.protocol + '://' + req.hostname;
-        res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
-        next();
-    });
-
-    console.log('EXPRESS ROUTER: config: %j', config.https)
-
-    if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
-        app.use(function (req, res, next) {
-            if ((config.https.enabled) && (!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'] !== 'https') {
-                console.log('[EXPRESS.ROUTER] HTTPS Redirect %s', req.get('Host'));
-                return res.redirect(['https://', req.get('Host'), req.url].join(''));
-            }
-            return next();
-        });
-    }
-
+    app.locals.fontFiles = config.files.client.font;
 };
 
 /**
  * Initialize application middleware
  */
 module.exports.initMiddleware = function (app) {
+    log.trace({func: 'initMiddleware'}, 'START Initializing Middleware');
     // Showing stack errors
     app.set('showStackError', true);
 
@@ -80,6 +71,37 @@ module.exports.initMiddleware = function (app) {
     app.use(favicon('./modules/core/client/img/brand/favicon.ico'));
 
     var accessLogStream, streamType;
+
+    // Init a unique Request ID
+    app.use(addRequestId);
+
+    app.use(function (req, res, next) {
+        req.log = log.child({
+            req: req,
+            req_id: req.id
+        });
+
+        next();
+    })
+
+    // Passing the request url to environment locals
+    app.use(function (req, res, next) {
+        res.locals.host = req.protocol + '://' + req.hostname;
+        res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
+        next();
+    });
+
+    log.info(config.https, 'EXPRESS ROUTER HTTPS Config')
+
+    if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
+        app.use(function (req, res, next) {
+            if ((config.https.enabled) && (!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'] !== 'https') {
+                console.log('[EXPRESS.ROUTER] HTTPS Redirect %s', req.get('Host'));
+                return res.redirect(['https://', req.get('Host'), req.url].join(''));
+            }
+            return next();
+        });
+    }
 
     // Environment dependent middleware
     if (process.env.NODE_ENV === 'development') {
@@ -128,12 +150,16 @@ module.exports.initMiddleware = function (app) {
         dest: './uploads/',
         inMemory: true
     }));
+
+    log.trace({func: 'initLocalVariables'}, 'Completed Initializing Middleware');
 };
 
 /**
  * Configure view engine
  */
 module.exports.initViewEngine = function (app) {
+    log.trace({func: 'initViewEngine'}, 'Initializing View Engine');
+
     // Set swig as the template engine
     app.engine('server.view.html', consolidate[config.templateEngine]);
 
@@ -146,13 +172,15 @@ module.exports.initViewEngine = function (app) {
  * Configure Express session
  */
 module.exports.initSession = function (app, db) {
+    log.trace({func: 'initSession'}, 'Initializing Session');
+
     // Express MongoDB session storage
     app.use(session({
         saveUninitialized: true,
         resave: true,
         secret: config.sessionSecret,
         store: new MongoStore({
-            db: db.connection.db,
+            mongooseConnection: db.connection,
             collection: config.sessionCollection
         })
     }));
@@ -162,15 +190,20 @@ module.exports.initSession = function (app, db) {
  * Invoke modules server configuration
  */
 module.exports.initModulesConfiguration = function (app, db) {
+    log.trace({func: 'initModulesConfiguration'}, 'Initializing Modules Configuration');
+
     config.files.server.configs.forEach(function (configPath) {
         require(path.resolve(configPath))(app, db);
     });
+    log.trace({func: 'initModulesConfiguration'}, 'Completed Modules Configuration');
 };
 
 /**
  * Configure Helmet headers configuration
  */
 module.exports.initHelmetHeaders = function (app) {
+    log.trace({func: 'initHelmetHeaders'}, 'Initializing Helmet Headers');
+
     // Use helmet to secure Express headers
     app.use(helmet.xframe());
     app.use(helmet.xssFilter());
@@ -183,6 +216,8 @@ module.exports.initHelmetHeaders = function (app) {
  * Configure the modules static routes
  */
 module.exports.initModulesClientRoutes = function (app) {
+    log.trace({func: 'initModulesClientRoutes'}, 'Initializing Modules Client Routes');
+
     // Setting the app router and static folder
     app.use('/', express.static(path.resolve('./public')));
 
@@ -196,6 +231,8 @@ module.exports.initModulesClientRoutes = function (app) {
  * Configure the modules ACL policies
  */
 module.exports.initModulesServerPolicies = function (app) {
+    log.trace({func: 'initModulesServerPolicies'}, 'Initializing Modules Server Policies');
+
     // Globbing policy files
     config.files.server.policies.forEach(function (policyPath) {
         require(path.resolve(policyPath)).invokeRolesPolicies();
@@ -206,6 +243,8 @@ module.exports.initModulesServerPolicies = function (app) {
  * Configure the modules server routes
  */
 module.exports.initModulesServerRoutes = function (app) {
+    log.trace({func: 'initModulesServerRoutes'}, 'Initializing Modules Server Routes');
+
     // Globbing routing files
     config.files.server.routes.forEach(function (routePath) {
         require(path.resolve(routePath))(app);
@@ -216,6 +255,8 @@ module.exports.initModulesServerRoutes = function (app) {
  * Configure error handling
  */
 module.exports.initErrorRoutes = function (app) {
+    log.trace({func: 'initErrorRoutes'}, 'Initializing Error Routes');
+
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
     app.use(function (err, req, res, next) {
         // If the error object doesn't exists
@@ -241,6 +282,8 @@ module.exports.initErrorRoutes = function (app) {
  * Configure Socket.io
  */
 module.exports.configureSocketIO = function (app, db) {
+    log.trace({func: 'configureSocketIO'}, 'Initializing SocketIO');
+
     // Load the Socket.io configuration
     var server = require('./socket.io')(app, db);
 
@@ -251,41 +294,46 @@ module.exports.configureSocketIO = function (app, db) {
 module.exports.initHttps = function (app) {
     if (!!config.https.enabled && !!config.https.port) {
         // Log SSL usage
-        console.log('Initializing HTTPS Server Protocol: %j', config.https);
+        log.debug(config.https, 'Initializing HTTPS Server Protocol');
 
         var options = {};
 
         if (!!config.https.privateKeyPath && fs.existsSync(config.https.privateKeyPath)) {
-            console.log('using private key at path: %s', config.https.privateKeyPath);
+            log.debug('using private key at path: %s', config.https.privateKeyPath);
             options.key = fs.readFileSync(config.https.privateKeyPath, 'utf8');
         }
         if (!!config.https.publicKeyPath && fs.existsSync(config.https.publicKeyPath)) {
-            console.log('using public key at path: %s', config.https.publicKeyPath);
+            log.debug('using public key at path: %s', config.https.publicKeyPath);
             options.cert = fs.readFileSync(config.https.publicKeyPath, 'utf8');
         }
         if (!!config.https.passphrase) {
-            console.log('... with key passphrase');
+            log.trace('... with a key passphrase');
             options.passphrase = config.https.passphrase;
         }
 
-        console.log('Initializing HTTPS Server Options: %j', options);
+        log.debug(config.https, 'Initializing HTTPS Server Options');
 
         var httpsServer;
         try {
             // Create HTTPS Server
             httpsServer = https.createServer(options, app);
+            log.info('HTTPS server successfully initialized');
         } catch (err) {
-            console.error(chalk.red('Unable to initialize HTTPS Server', err));
+            log.error({error: err}, 'HTTPS Initialization failed');
         }
         // Return HTTPS server instance
         return httpsServer;
     }
+
+    log.trace({func: 'initHttps'}, 'HTTPS is not Configured - Skipping');
 }
 
 /**
  * Initialize the Express application
  */
 module.exports.init = function (db) {
+    log.info({func: 'init'}, 'Starting Initialization of Express Router');
+
     // Initialize express app
     var app = express();
 
@@ -330,6 +378,8 @@ module.exports.init = function (db) {
     if (httpsServer) {
         this.configureSocketIO(httpsServer, db);
     }
+
+    log.info({func: 'init'}, 'Completed Initialization of Express Router');
 
     return {http: httpServer, https: httpsServer};
 };

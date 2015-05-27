@@ -1,121 +1,15 @@
 (function () {
     'use strict';
 
-
-    function completeApplicantModel(field) {
-        var model = this.model;
-        var source = this.applicant;
-
-        if (!model.hasOwnProperty(field.name)) {
-
-            if (!!source && source.hasOwnProperty(field.name)) {
-                model[field.name] = source[field.name];
-            } else {
-                switch (field.type) {
-                    case 'array':
-                        model[field.name] = [];
-                        break;
-                    case 'object':
-                        model[field.name] = {};
-                        break;
-                    default:
-                        model[field.name] = '';
-                }
-            }
-        }
-    }
-
-    function translateFieldsToNg(field, index, _vm) { // jshint ignore:line
-        var model = this.subModel || this.model;
-
-        switch (field.type) {
-            case 'string':
-                if (!!field.pickList) {
-                    field.isPickList = true;
-                    break;
-                }
-                field.ngType = 'text';
-                field.ngMaxLength = field.length;
-                break;
-            case 'datelong':
-                // TODO: Fix this code once format is known
-                var d = model[field.name];
-                var format = 'YYYYMMDD';
-
-                if (!!d && d.length > 8) {
-                    if (d.length <= 10 && (/[-\/]/).test(d)) {
-                        format = d.replace(/\d{4}/, 'YYYY').replace(/\d{2}/, 'MM').replace(/\d{2}/, 'DD');
-                    } else {
-
-                        var m;
-                        if (!!(m = moment(d)).toArray().splice(3).reduce(function (p, n) {
-                                return p + n;
-                            })) {
-                            console.error('Unsure How to Handle "date" string: %s', d);
-                            // Assume that we are in (EST:UTC-5)
-                            model[field.name] = moment.utc(d).subtract(5, 'hours');
-                        } else {
-                            console.error('Treating %s as date-only with default format', d);
-                            model[field.name] = m.format(format);
-                        }
-
-                    }
-                }
-                else if (!d) {
-                    model[field.name] = '';
-                }
-
-
-                field.isDate = true;
-                field.format = format;
-
-                break;
-            case 'state':
-                field.isState = true;
-                break;
-            case 'country':
-                field.isCountry = true;
-                break;
-            case 'object':
-                if (field.dataFields) {
-                    this.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, this);
-                    this.subModel = null;
-                }
-                field.isObject = true;
-                break;
-            case 'array':
-                if (field.dataFields) {
-                    this.subModel = model[field.name];
-                    _.map(field.dataFields, translateFieldsToNg, this);
-                    this.subModel = null;
-                }
-                field.isArray = true;
-                field.values = field.values || [];
-                break;
-        }
-
-        var sensitive = /^governmentId|SSN$/i;
-
-        if (sensitive.test(field.name) || sensitive.test(field.description)) {
-            field.ngType = null;
-            field.ngSensitive = true;
-        }
-
-        return field;
-    }
-
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document) {
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document, PolyField) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');
 
 
         vm.report = report;
-        vm.applicant = applicant;
+        vm.applicant = applicant || {};
         vm.config = appConfig;
-
-        vm.model = {};
 
         vm.verify = false;
         vm.pay = false;
@@ -123,6 +17,7 @@
         vm.introText = 'All reports are run by leading verification company, eEverifile. Outset will never store your Social Security , Driver License or Credit Card numbers.';
         vm.getStartedText = 'All required fields are <b>Marked in Bold</b>';
         vm.correctErrorsText = 'Please review any answers that are <span class="cta-outline">marked in red</span> below.';
+        vm.reviewText = 'Please review your information and click continue at the bottom of the page when ready.';
         vm.createText = 'Please review your information and click continue when ready. Please note, that this may take a moment to complete.';
         vm.payExplanation = 'Please click continue to enter your payment information';
 
@@ -131,23 +26,10 @@
         vm.countries = null;
 
         function activate() {
-            if (!!vm.applicant && !!vm.applicant.remoteId) {
-                console.log('adding remote applicant id [%d] to model', vm.applicant.remoteId);
-                vm.model.applicantId = vm.applicant.remoteId;
-            }
-
             vm.price = vm.report.promo || vm.report.price;
 
-            vm.report.fields.map(completeApplicantModel, vm);
-            _.map(vm.report.fields, translateFieldsToNg, vm);
-
-
-            if (!vm.states) {
-                vm.states = vm.config.getStates();
-            }
-            if (!vm.countries) {
-                vm.countries = vm.config.getCountries();
-            }
+            PolyField.completeModel(vm.report.fields, vm.applicant);
+            PolyField.translateFields(vm.report.fields, vm.applicant);
         }
 
         /**
@@ -179,24 +61,21 @@
 
             vm.showSpinner();
 
-            var applicantRsrc = new Applicants.FromForm(vm.model, auth.user._id);
+            var applicantRsrc = new Applicants.FromForm(vm.applicant, auth.user._id);
 
             $log.debug('Creating new applicant Rsrc with data: %o', applicantRsrc);
 
             applicantRsrc.$save(function (response) {
 
                 if (response.updated) {
-
-                    console.log('Successfully updated existing applicant: %j', response);
+                    $log.debug('Successfully updated existing applicant: %j', response);
                 }
                 else {
-                    console.log('SUCCESS! Created new Applicant: %o', response);
+                    $log.debug('SUCCESS! Created new Applicant: %o', response);
                 }
 
                 vm.success = 'Applicant data has been verified on the server!';
-
                 vm.error = null;
-
 
                 $state.go('reportpayments', {'sku': vm.report.sku});
 
@@ -259,48 +138,10 @@
             });
         };
 
-
-        vm.getPriceString = function (price) {
-            var base = Number(price);
-            var next = base.toFixed(2);
-            return '$' + next;
-        };
-
         activate();
     }
 
-    function capFilter() {
-        return function (input, all) {
-            return (!!input) ? /^[A-Z]+$/.test(input) ? input :
-                input.replace(/_/g, ' ').replace(/[a-z][A-Z]/g, function (txt) {
-                    return txt.charAt(0) + ' ' + txt.charAt(1);
-                })
-                    .replace(/([^\W_]+[^\s-]*) */g, function (txt) {
-                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                    })
-                : '';
-        };
-    }
-
-    function prettyPrint() {
-        return function (input) {
-            return (!!input) ? JSON.stringify(input, undefined, 2) : '';
-        };
-    }
-
-    function isoDateFilter() {
-        return function (input, parseFmt) {
-            var format = parseFmt || 'YYYYMMDD';
-            return (!!input) ? moment(input, format).format('L') : '';
-        };
-    }
-
-    angular.module('core')
-        .filter('titlecase', capFilter)
-        .filter('prettyPrint', prettyPrint)
-        .filter('isoDatePrint', isoDateFilter);
-
-    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document'];
+    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document', 'PolyFieldService'];
     angular.module('bgchecks')
         .controller('ReportDetailsController', ReportDetailsController);
 

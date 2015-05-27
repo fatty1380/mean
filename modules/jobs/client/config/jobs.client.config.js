@@ -17,7 +17,7 @@
             title: 'Jobs',
             state: 'jobs',
             type: 'dropdown',
-            roles: ['Admin']
+            roles: ['admin']
         });
         Menus.addSubMenuItem('adminbar', 'jobs', {
             title: 'My Jobs',

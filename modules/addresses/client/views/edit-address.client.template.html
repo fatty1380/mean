@@ -17,7 +17,7 @@
                 </ul>
             </span>
 
-            <p class="form-control-static" ng-show="vm.address.type !== 'other' && !!vm.address.type"><b>{{vm.address.type | titlecase }}</b></p>
+            <p class="form-control-static" ng-show="vm.address.type !== 'other' && !!vm.address.type"><b>{{vm.address.type | titleCase }}</b></p>
             <input type="text" id="typeOther" name="typeOther" class="form-control" data-ng-model="vm.address.typeOther"
                    data-ng-show="vm.address.type === 'other'" placeholder="Address Type"/>
             <!-- /btn-group -->

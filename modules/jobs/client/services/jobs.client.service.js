@@ -2,30 +2,39 @@
     'use strict';
 
 //Jobs service used to communicate Jobs REST endpoints
-    function JobsService($resource) {
+    function JobsService($resource, $q) {
+
+        var jobRsrc = $resource('api/jobs/:id', {
+            id: '@_id'
+        }, {
+            update: {
+                method: 'PUT'
+            }
+        });
+
         return {
-            ById: $resource('api/jobs/:jobId', {
-                jobId: '@_id'
-            }, {
-                update: {
-                    method: 'PUT'
-                }
-            }),
+
+            ById: jobRsrc,
             ByUser: $resource('api/users/:userId/jobs', {
                 userId: '@userId'
             }),
-            ByCompany: $resource('api/companies/:companyId/jobs', {
-                companyId: '@companyId'
-            }),
-            listByCompany: function(query) {
-                var rsrc = $resource('/api/companies/:companyId/jobs/applications', {
-                    companyId: '@companyId'
-                }, {
-                    query: {
-                        method: 'GET',
-                        isArray: true
-                    }
-                });
+            list: function(query) {
+                return jobRsrc.query(query).$promise;
+            },
+            get: function (jobId) {
+                return jobRsrc.get({id: jobId}).$promise;
+            },
+            listByCompany: function (query) {
+                // Maintain this method because it populates the applications
+                var rsrc = $resource('/api/companies/:id/jobs/applications', {
+                    id: '@_id'
+                }, {});
+
+                query.id = query.id || query.companyId;
+
+                if(!_.isString(query.id)) {
+                    query.id = query.id._id;
+                };
 
                 return rsrc.query(query).$promise;
             }
@@ -33,7 +42,7 @@
         };
     }
 
-    JobsService.$inject = ['$resource'];
+    JobsService.$inject = ['$resource', '$q'];
 
     angular
         .module('jobs')

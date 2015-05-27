@@ -35,15 +35,24 @@ function directUpload(files, folder, isSecure) {
             folder = folder.substring(0, folder.length - 1);
         }
 
-        if(files.file) {
+        var file = files.file;
 
-            console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', files.file && files.file.name, folder);
+        console.log('[s3.directUpload] Uploading file: %s', JSON.stringify(file, function(key, value) { return (key === 'buffer') ?  [] :  value; }, 2));
+
+        if(file) {
+            var fileName = _.contains(file.path, file.name) ? file.originalname : file && file.name || file.originalname;
+
+            console.log('[s3.directUpload] Attempting S3 Upload for %s to %s', fileName, folder);
             var params = {
                 Bucket: config.services.s3.s3Options.bucket,
-                Key: folder + '/' + files.file.name,
+                Key: folder + '/' + fileName,
                 ACL: 'public-read',
-                Body: files.file.buffer
+                Body: file.buffer
             };
+
+            switch((file.extension || fileName.slice( -3 )).toLowerCase()) {
+                case 'pdf': params.ContentType = 'application/pdf'; break;
+            }
 
             console.log('[s3.directUpload] Uploading to bucket `%s` with key `%s`', params.Bucket, params.Key);
 
@@ -56,7 +65,7 @@ function directUpload(files, folder, isSecure) {
                     var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
                     console.log('[s3.directUpload] Got public URL: %s', publicURL);
 
-                    var strippedURL = publicURL.replace('http://', '//');
+                    var strippedURL = publicURL.replace('http://', 'https://');
                     console.log('[s3.directUpload] Post stripping, resolving with : %s', strippedURL);
 
                     if (isSecure) {
@@ -143,23 +152,29 @@ function getSecureReadURL(bucket, key) {
         Bucket: bucket || config.services.s3.s3Options.bucket
     };
 
-    console.log('[s3.directRead] Attempting S3 Download for %j', params);
+    if(!client) {
+        console.log('[s3.directRead] S3 is not configured - cannot update secure read url');
+        deferred.reject('Unable to update file from cloud store');
+    } else {
 
-    var getter = client.s3.getSignedUrl('getObject', params, function (err, url) {
-        if (err) {
-            console.error('[s3.directRead] unable to download:', err && err.stack);
+        console.log('[s3.directRead] Attempting S3 Download for %j', params);
 
-            return deferred.reject(err);
-        }
+        client.s3.getSignedUrl('getObject', params, function (err, url) {
+            if (err) {
+                console.error('[s3.directRead] unable to download:', err && err.stack);
 
-        console.log('[s3.directRead] Got signed url: `%s`', url);
+                return deferred.reject(err);
+            }
 
-        var strippedURL = url.replace('http://', '//').replace('https://', '//');
-        console.log('[s3.directRead] Post stripping, resolving with : %s', strippedURL);
+            console.log('[s3.directRead] Got signed url: `%s`', url);
 
-        deferred.resolve(strippedURL);
+            var strippedURL = url.replace('http://', 'https://'); //.replace('https://', '//');
+            console.log('[s3.directRead] Post stripping, resolving with : %s', strippedURL);
 
-    });
+            deferred.resolve(strippedURL);
+
+        });
+    }
 
     return deferred.promise;
 }
@@ -207,6 +222,11 @@ function saveLocally(files, folder) {
 
     var deferred = Q.defer();
 
+    var tmp = _.cloneDeep(files.file);
+    tmp.buffer = '[Omitted]';
+
+    console.log('[FileUpload.saveLocally] Saving file: %s', JSON.stringify(tmp, null, 2));
+
     fs.writeFile(config.services.fs.writePath + files.file.name, files.file.buffer,
         function (uploadError) {
             if (uploadError) {
@@ -220,6 +240,8 @@ function saveLocally(files, folder) {
                 }
 
                 var url = config.services.fs.writePath + files.file.name;
+
+                url = url.replace('/client/', '/');
                 console.log('[SaveLocally.S3] resolving with URL', url);
 
                 return deferred.resolve(url);

@@ -1,37 +1,41 @@
 <section>
     <os-page-header title="Documents"
                     sub-title="{{vm.text.title}}"
-            back-btn-text="{{!!vm.goBack ? 'back' : ''}}"
-            back-btn-fn="vm.goBack()">
+                    back-btn-text="{{!!vm.goBack ? 'back' : ''}}"
+                    back-btn-fn="vm.goBack()">
     </os-page-header>
 
     <div class="content-container container-fluid">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <ul class="nav nav-tabs">
-                            <li role="presentation"
-                                ng-click="vm.viewFile('resume')"
-                                ng-class="{'disabled': !vm.driver.resume, 'active': vm.activeReport==='resume'}">
-                                <a>Resume</a>
-                            </li>
-                            <li role="presentation" ng-repeat="report in vm.driver.reportsData"
-                                ng-click="vm.viewFile(report.sku)"
-                                ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
-                                <a>{{report.sku}}</a>
-                            </li>
-                        </ul>
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" ng-repeat="report in vm.driver.reportsData"
+                        ng-click="vm.viewFile(report.sku)"
+                        ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
+                        <a>{{report.name || report.sku | titleCase }}</a>
+                    </li>
+                </ul>
 
-                        <div class="col-sm-12 center-block pdf-container">
-                            <pdf ng-hide="vm.error" pdf-src="{{vm.documentUrl}}"></pdf>
-                            <h4 class="text-danger strong">{{vm.error}}</h4>
+                <div class="col-sm-12 center-block pdf-container">
+                    <div class="row mgn-btm">
+                        <div class="col-sm-12 text-right" ng-show="{{vm.documentUrl}}">
+                            <a class="btn btn-cta-primary" target="_self" ng-href="{{vm.documentUrl}}"
+                               download="{{vm.documentTitle}}" type="application/pdf">
+                                Download Report <i class="fa fa-download"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <div class="container-fluid row" ng-hide="vm.success" class="payment-form"
-                         ng-class="{'disabled':vm.processing}">
-
-
-                    </div>
+                    <pdf ng-hide="vm.error" pdf-src="{{vm.documentUrl}}"></pdf>
+                    <h4 class="text-danger strong text-center">{{vm.error}}</h4>
                 </div>
             </div>
+
+            <div class="container-fluid row" ng-hide="vm.success" class="payment-form"
+                 ng-class="{'disabled':vm.processing}">
+
+
+            </div>
+        </div>
+    </div>
 </section>

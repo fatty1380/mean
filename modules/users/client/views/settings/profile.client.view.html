@@ -1,3 +1,99 @@
-<section class="container-fluid">
-    <h3 class="text-center text-danger">Page Moved</h3>
+<section class="container">
+    <h2 class="text-center">USER Directives</h2><hr/>
+
+    <h3>os-profile</h3>
+
+    <div class="row panel panel-default">
+        <div class="col-sm-12">
+            <os-profile model="vm.user"></os-profile>
+        </div>
+    </div>
+
+    <h3>os-edit-profile</h3>
+
+    <div class="row panel panel-default">
+        <div class="col-sm-12">
+            <os-edit-profile model="vm.user" update-fn='alert("update")' cancel-fn='alert("update")'></os-edit-profile>
+        </div>
+    </div>
+
+    <h2 class="text-center">COMPANY Directives ({{vm.company._id}})
+    <span class="pull-right" ng-click="vm.showCoModel = !vm.showCoModel">
+            <small><i class="fa" ng-class="{'fa-caret-right': !vm.showCoModel, 'fa-caret-down': !!vm.showCoModel}"></i> {{!!vm.showCoModel ? 'Hide' : 'Show'}} Model</small>
+        </span>
+    </h2><hr/>
+    <section ng-if="!!vm.company._id">
+        <div class="row" ng-show="vm.showCoModel">
+            <pre class="col-sm-12">{{vm.company | prettyPrint}}</pre>
+        </div>
+
+        <h3>os-company</span>
+            <span class="pull-right" ng-click="vm.osCoInline = !vm.osCoInline">
+                Display: <i class="fa" ng-class="{'fa-list': !vm.osCoInline, 'fa-minus': !!vm.osCoInline}"></i> {{vm.osCoInline ? 'inline' : 'standard'}}</span>
+        </h3>
+
+        <div class="row panel panel-default">
+            <div class="col-sm-12">
+                <os-company company="vm.company" inline="vm.osCoInline"></os-company>
+            </div>
+        </div>
+
+        <h3>oset-subscription-info</h3>
+
+        <div class="row panel panel-default">
+            <div class="col-sm-12">
+                <oset-subscription-info user="vm.user" company-id="vm.company._id"></oset-subscription-info>
+            </div>
+        </div>
+    </section>
+    <div class="text-muted text-center" ng-if="!vm.company._id">No Company Profile for User</div>
+
+    <h2 class="text-center">DRIVER Directives ({{vm.driver._id}})
+    <span class="pull-right" ng-click="vm.showDrModel = !vm.showDrModel">
+            <small><i class="fa" ng-class="{'fa-caret-right': !vm.showDrModel, 'fa-caret-down': !!vm.showDrModel}"></i> {{!!vm.showDrModel ? 'Hide' : 'Show'}} Model</small>
+        </span>
+    </h2><hr/>
+    <section ng-if="!!vm.driver._id">
+
+
+
+        <div class="row" ng-show="vm.showDrModel">
+            <pre class="col-sm-12">{{vm.driver | prettyPrint}}</pre>
+        </div>
+
+        <h3>os-driver-inline</h3>
+
+        <div class="row panel panel-default">
+            <div class="col-sm-12">
+                <os-driver-inline model="vm.driver"></os-driver-inline>
+            </div>
+        </div>
+
+        <h3>os-driver-view</h3>
+
+        <div class="row panel panel-default">
+            <div class="col-sm-12">
+                <os-driver-view model="vm.driver"></os-driver-view>
+            </div>
+        </div>
+
+        <h3>os-experience
+            <small class="pull-right">
+                <span ng-click="vm.expCanEdit = !vm.expCanEdit">
+                    canEdit <i class="fa {{vm.expCanEdit ? 'fa-edit' : 'fa-book'}}"></i> {{vm.expCanEdit}}</span>
+            <span ng-click="vm.expViewOnly = !vm.expViewOnly">
+                viewOnly <i class="fa {{vm.expViewOnly ? 'fa-eye' : 'fa-eye-slash'}}"></i> {{vm.expViewOnly}}</span>
+            <span>Max Ct: <input type="number" ng-model="vm.maxExperienceCt"/></span>
+            </small>
+        </h3>
+
+        <div class="row panel panel-default">
+            <div class="col-sm-12">
+                <oset-experience-list list="vm.driver.experience" can-edit="vm.expCanEdit" view-only="vm.expViewOnly"
+                                      max-ct="vm.maxExperienceCt"></oset-experience-list>
+            </div>
+        </div>
+
+    </section>
+    <div class="text-muted text-center" ng-if="!vm.driver._id">No Driver Profile for User</div>
 </section>

@@ -45,7 +45,7 @@
 			$location = _$location_;
 
 			// Initialize the Applications controller.
-			ApplicationsController = $controller('ApplicationsController', {
+			ApplicationsController = $controller('ApplicationMainController', {
 				$scope: scope
 			});
 		}));

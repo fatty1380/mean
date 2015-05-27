@@ -20,10 +20,10 @@
             </p>
 
             <span ng-bind-html="vm.bodyCopy.wrap"></span>
-            <button class="btn btn-oset-primary center-block" ui-sref="{{vm.bodyCopy.btnSref}}">{{vm.bodyCopy.btnText}}</button>
+            <button class="btn btn-oset-primary center-block" ng-if="!!vm.bodyCopy.btnSref" ui-sref="{{vm.bodyCopy.btnSref}}">{{vm.bodyCopy.btnText}}</button>
             <p></p>
         </div>
 
         <!-- List of applications -->
-        <os-list-applications applications="vm.applications" display-mode="normal" config="vm.config"></os-list-applications>
+        <os-list-applications applications="vm.applications" jobs="vm.jobs" display-mode="normal" config="vm.config"></os-list-applications>
     </section>

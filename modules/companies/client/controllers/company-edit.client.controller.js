@@ -21,6 +21,8 @@
         vm.cancel = cancel;
         vm.submitClass = '';
         vm.editName = false;
+        vm.editGW = false;
+
 
         function activate() {
             if ($state.is('companies.create')) {
@@ -74,6 +76,7 @@
                 // Clear the form object
                 vm.company = null;
             }, function (errorResponse) {
+                $log.error('Unable to Create Company', errorResponse);
                 vm.error = errorResponse.data.message || errorResponse.data.error.message;
             });
         }
@@ -92,6 +95,7 @@
             company.$update(function () {
                 $state.go('companies.home', {companyId: company._id});
             }, function (errorResponse) {
+                $log.error('Unable to Update Company', errorResponse);
                 vm.error = errorResponse.data.message;
             });
         }

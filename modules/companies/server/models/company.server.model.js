@@ -4,7 +4,18 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+_            = require('lodash'),
+path         = require('path'),
+addrFile     = require(path.resolve('./modules/jobs/server/models/address.server.model')),
+subFile     = require(path.resolve('./modules/messages/server/models/subscription.server.model')),
+Address      = mongoose.model('Address'),
+Subscription = mongoose.model('Subscription'),
+Schema       = mongoose.Schema,
+Gateway      = mongoose.model('Gateway'),
+log          = require(path.resolve('./config/lib/logger')).child({
+    module: 'companies',
+    file: 'Company.Model'
+});
 
 /**
  * Company Schema
@@ -25,6 +36,12 @@ var CompanySchema = new Schema({
         type: String,
         default: '',
         required: 'Please fill in your Company\'s name',
+        trim: true
+    },
+
+    legalEntityName: {
+        type: String,
+        default: null,
         trim: true
     },
 
@@ -66,6 +83,26 @@ var CompanySchema = new Schema({
         default: 'modules/companies/img/profile/default.png'
     },
 
+    gateway: {
+        sku: {
+            type: String,
+            default: null // 'OUTSET_MVR'
+        },
+        required: {
+            type: Boolean,
+            default: false
+        },
+        payment: {
+            type: String,
+            enum: ['applicant', 'company', 'mixed', ''],
+            default: 'applicant' //'company'
+        },
+        releaseType: {
+            type: String,
+            default: null//'preEmployment'
+        }
+    },
+
     created: {
         type: Date,
         default: Date.now
@@ -75,11 +112,42 @@ var CompanySchema = new Schema({
         type: Date,
         default: Date.now
     }
+}, {toJSON: {virtuals: true}});
+
+CompanySchema.pre('validate', function (next) {
+    debugger;
+
+    next();
 });
 
-CompanySchema.pre('save', function(next){
-  this.modified = Date.now();
-  next();
+CompanySchema.pre('init', function (next, data) {
+    if (_.isEmpty(data.subscription)) {
+        data.subscription = new Subscription();
+    }
+
+    next();
+});
+
+CompanySchema.pre('save', function (next) {
+    _.defaults(this.gateway, {type: null, required: false, payment: null, releaseType: null});
+    next();
+});
+
+CompanySchema.pre('save', function (next) {
+    if (this.isModified()) {
+        this.modified = Date.now();
+    }
+    next();
+});
+
+CompanySchema.pre('validate', function (next) {
+    log.trace('pre.validate', 'START', {Addresses: this.locations});
+
+    this.locations = Address.map(this.locations);
+
+    log.trace('pre.validate', 'End Result location(s)', {Addresses: this.locations});
+
+    next();
 });
 
 mongoose.model('Company', CompanySchema);

@@ -104,7 +104,6 @@ exports.delete = function(req, res) {
  * List of Addresses
  */
 exports.list = function(req, res) {
-    Address.schema.methods.checkConfig();
 
     Address.find().sort('-created').populate('user', 'displayName').exec(function(err, addresses) {
         if (err) {

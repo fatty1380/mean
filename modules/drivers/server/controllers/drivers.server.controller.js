@@ -67,6 +67,8 @@ var executeFind = function (req, res, next, driverFind) {
                 console.log('[Driver.executeFind] found driver: %s', driver.id);
             }
 
+            driver.user.cleanse();
+
             if (!!next) {
                 req.driver = driver;
                 next();
@@ -147,7 +149,7 @@ exports.create = function (req, res) {
  * Show the current Driver
  */
 exports.read = function (req, res) {
-    console.log('[Driver.read] Result: ', req.driver);
+    console.log('[Driver.read] Req.driver has value: %s', !!req.driver);
 
     if (!req.driver) {
         return res.status(404).send({
@@ -192,6 +194,7 @@ exports.uploadResume = function (req, res) {
     console.log('[DriverCtrl.uploadResume] Start');
     var user = req.user;
     var driver = req.driver;
+    var sku = req.files.file.sku || 'resume';
 
     if (!user) {
         return res.status(400).send({
@@ -205,16 +208,17 @@ exports.uploadResume = function (req, res) {
         });
     }
 
+    req.files.file.name = sku + '.' + req.user.shortName + '.' + req.files.file.extension;
+
     fileUploader.saveFileToCloud(req.files, 'secure-content', true).then(
         function (response) {
             console.log('successfully uploaded user resume to %j', response);
 
-            driver.resume = {
-                url: response.url,
-                expires: moment().add(15, 'm'),
-                bucket: response.bucket,
-                key: response.key
-            };
+            if(_.isEmpty(driver.reports[sku])) {
+                driver.reportsData.push({ sku: sku });
+            }
+
+            _.extend(driver.reports[sku], response, {expires: moment().add(15, 'm').toDate()});
 
             driver.save(function (saveError) {
                 if (saveError) {
@@ -223,9 +227,7 @@ exports.uploadResume = function (req, res) {
                     });
                 }
 
-                console.log('[DriverCtrl.uploadResume] Success! %j', driver);
-
-                res.json(driver.resume);
+                res.json(driver.reports[sku]);
 
             });
 
@@ -240,51 +242,10 @@ exports.uploadResume = function (req, res) {
 
 exports.refreshResume = function (req, res) {
     console.log('[DriverCtrl.refreshResume] Start');
-    var user = req.user;
-    var driver = req.driver;
 
-    if (!user) {
-        return res.status(401).send({
-            message: 'User is not signed in'
-        });
-    }
+    req.params.reportSku = 'resume';
 
-    if (!driver) {
-        return res.status(400).send({
-            message: 'No Available Driver Profile'
-        });
-    }
-
-    if (!(driver.resume && driver.resume.bucket && driver.resume.key)) {
-        return res.status(404).send({
-            message: 'Driver does not have a resume on file'
-        });
-    }
-
-    fileUploader.getSecureReadURL(driver.resume.bucket, driver.resume.key).then(
-        function (success) {
-            driver.resume.url = success;
-            driver.resume.expires = moment().add(15, 'm');
-
-            console.log('[DriverCtrl.refreshResume] Post secure upload, resolving with : %j', driver.resume);
-
-            res.json(driver.resume);
-
-            driver.save(function (err) {
-                if (err) {
-                    console.log('[DriverCtrl.refreshResume] unable to save driver\'s updated resume url', err);
-                } else {
-                    console.log('[DriverCtrl.refreshResume] Saved driver\'s updated resume URL');
-                }
-            });
-        }, function (err) {
-            console.log('[DriverCtrl.refreshResume] Post secure upload failed: %j', err);
-
-            return res.status(400).send({
-                message: 'Unable to retrieve fresh URL for resume'
-            });
-        });
-
+    return exports.refreshReport(req,res);
 };
 
 exports.refreshReport = function (req, res) {
@@ -293,26 +254,33 @@ exports.refreshReport = function (req, res) {
     var user = req.user;
     var driver = req.driver;
     var sku = req.params.reportSku || !!driver.reportsData && driver.reportsData.length && driver.reportsData[0].sku;
+    var report = !!sku && !!driver ? driver.reports[sku] : null;
 
     if (!user) {
+        console.log('[DriverCtrl.refreshReport] User is not signed in');
         return res.status(401).send({
             message: 'User is not signed in'
         });
     }
 
     if (!driver) {
+        console.log('[DriverCtrl.refreshReport] No Available Driver Profile');
         return res.status(400).send({
             message: 'No Available Driver Profile'
         });
     }
 
-    if (!sku || !(driver.reports[sku] && driver.reports[sku].bucket && driver.reports[sku].key)) {
+    if (!sku || !(report && report.bucket && report.key)) {
+        console.log('[DriverCtrl.refreshReport] Driver does not have a %s on file', sku);
         return res.status(404).send({
             message: 'Driver does not have a ' + sku + ' report on file'
         });
     }
 
-    var report = driver.reports[sku];
+    if(moment().isBefore(report.expires)) {
+        console.log('[DriverCtrl.refreshReport] Report has not yet expired ==================================================================================================');
+        return res.json(report);
+    }
 
     fileUploader.getSecureReadURL(report.bucket, report.key).then(
         function (success) {
@@ -341,6 +309,30 @@ exports.refreshReport = function (req, res) {
 };
 
 /**
+ * Handle the profile forms (eg: DOT Questionnaire
+ */
+exports.getProfileFormAnswers = function(req, res) {
+    var list;
+    if(!!req.query.formId) {
+        console.log('Searching for profile form answers for `%s`', req.query.formId);
+        list = _.find(req.driver.profile, {listId: req.query.formId});
+    }
+    else {
+        list = req.driver.profile;
+    }
+
+    var indexed = _.indexBy(list, 'listId');
+
+    res.json(indexed);
+};
+exports.createProfileFormAnswers = function(req, res) {
+    // TODO: Save Profile form answers without saving the full driver
+};
+exports.updateProfileFormAnswers = function(req, res) {
+    // TODO: Save Updated Profile form answers without saving the full driver
+};
+
+/**
  * Delete an Driver
  */
 exports.delete = function (req, res) {
@@ -361,7 +353,7 @@ exports.delete = function (req, res) {
  * List of *ALL* Drivers
  */
 exports.list = function (req, res) {
-    console.log('[Driver.Controller] list()');
+    console.log('[Driver.Controller] list(): ', req.url);
 
     req.sort = '-created';
 
@@ -371,7 +363,7 @@ exports.list = function (req, res) {
 
 exports.driverByUserID = function (req, res, next) {
     console.log('[Driver.driverByUserId] start');
-    var userId = req.params.userId || req.query.userId;
+    var userId = req.params.userId || req.query.userId || req.user.id;
 
     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
@@ -397,14 +389,19 @@ exports.driverByID = function (req, res, next, id) {
     if ((/^[a-f\d]{24}$/i).test(id)) {
         return executeFind(req, res, next, Driver.findById(id));
     }
+
+    return res.status(404).send({
+        message: 'Unable to find a profile associated with that user'
+    });
 };
 
 /**
  * Driver authorization middleware
  */
 exports.hasAuthorization = function (req, res, next) {
+    console.log('[Drivers.Ctrl.hasAuthorization] Checking...');
     if (req.driver.user.id !== req.user.id) {
-        return res.send(403, 'User is not authorized');
+        return res.status(403).send({message: 'User is not authorized'});
     }
     next();
 };

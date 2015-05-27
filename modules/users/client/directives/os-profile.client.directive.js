@@ -21,7 +21,7 @@
             function() {
                 return {
                     scope: {
-                        profile: '=',
+                        profile: '=model',
                         title: '@?',
                         editable: '=?',
                         editFn: '&?'

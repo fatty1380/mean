@@ -3,7 +3,7 @@
     <div ng-repeat="(a,address) in vm.addresses track by a" ng-class="{'col-sm-4' : !vm.fullWidth}"
          ng-animate="'animate'">
         <div ng-class="{'form-group': !vm.fullWidth}">
-            <os-address data-ng-if="!vm.inlineEdit" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>
+            <os-address data-ng-if="!vm.inlineEdit" address-count="vm.addresses.length" model="vm.addresses[a]" is-editing="vm.isEditing" can-edit="vm.canEdit" can-remove="vm.canRemove" remove="vm.removeAddress"></os-address>
             <os-edit-address data-ng-if="vm.inlineEdit" model="vm.addresses[a]" can-remove="vm.canRemove" remove="vm.removeAddress"></os-edit-address>
         </div>
     </div>

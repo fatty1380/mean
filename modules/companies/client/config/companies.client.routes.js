@@ -5,7 +5,7 @@
         return AppConfig.getModuleConfig(auth.user.type, 'company');
     }
 
-    function companyResolve(rsrc, params, auth) {
+    function companyResolve(Companies, params, auth) {
 
         var val;
 
@@ -13,7 +13,7 @@
             val = params.companyId;
             console.log('Searching for company ID: %s', val);
 
-            return rsrc.ById.get({
+            return Companies.ById.get({
                 companyId: val
             }).$promise;
         }
@@ -29,12 +29,12 @@
         }
 
 
-        return rsrc.ByUser.get({
+        return Companies.ByUser.get({
             userId: val
         }).$promise.catch(function (error) {
                 if (error.status === 404) {
                     console.log('Unable to find company');
-                    return null;
+                    return {};
                 }
                 else {
                     throw error;
@@ -87,12 +87,15 @@
                 url: '/list',
                 templateUrl: '/modules/companies/views/list-companies.client.view.html',
                 parent: 'companies',
-                controller: 'CompaniesController',
+                controller: ['companies', function(companies) {
+                    var vm = this;
+                    vm.companies = companies;
+                }],
                 controllerAs: 'vm',
                 resolve: {
-                    companies: function (rsrc) {
+                    companies: ['Companies', function (rsrc) {
                         return rsrc.ById.query().$promise;
-                    },
+                    }],
                     config: moduleConfigResolve
                 }
             }).

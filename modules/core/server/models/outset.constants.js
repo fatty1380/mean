@@ -5,9 +5,7 @@
  */
 var _ = require('lodash');
 
-var abbreviations;
-
-module.exports.baseSchedule = [
+var baseSchedule = [
     {
         'description': 'Early Morning',
         'time': {
@@ -52,9 +50,9 @@ module.exports.baseSchedule = [
         }
     },];
 
-module.exports.countries = [{id: 'united_states', name: 'United States', 'alpha-2': 'US', 'alpha-3': 'USA'}];
+var countries = [{id: 'united_states', name: 'United States', 'alpha-2': 'US', 'alpha-3': 'USA'}];
 
-module.exports.usStates = [{id: 'alabama', name: 'Alabama', 'alpha-2': 'AL'},
+var usStates = [{id: 'alabama', name: 'Alabama', 'alpha-2': 'AL'},
     {id: 'alaska', name: 'Alaska', 'alpha-2': 'AK'},
     {id: 'arizona', name: 'Arizona', 'alpha-2': 'AZ'},
     {id: 'arkansas', name: 'Arkansas', 'alpha-2': 'AR'},
@@ -72,7 +70,7 @@ module.exports.usStates = [{id: 'alabama', name: 'Alabama', 'alpha-2': 'AL'},
     {id: 'iowa', name: 'Iowa', 'alpha-2': 'IA'},
     {id: 'kansas', name: 'Kansas', 'alpha-2': 'KS'},
     {id: 'kentucky', name: 'Kentucky', 'alpha-2': 'KY'},
-    {id: 'lousiana', name: 'Lousiana', 'alpha-2': 'LA'},
+    {id: 'louisiana', name: 'Louisiana', 'alpha-2': 'LA'},
     {id: 'maine', name: 'Maine', 'alpha-2': 'ME'},
     {id: 'maryland', name: 'Maryland', 'alpha-2': 'MD'},
     {id: 'massachusetts', name: 'Massachusetts', 'alpha-2': 'MA'},
@@ -106,7 +104,9 @@ module.exports.usStates = [{id: 'alabama', name: 'Alabama', 'alpha-2': 'AL'},
     {id: 'wisconsin', name: 'Wisconsin', 'alpha-2': 'WI'},
     {id: 'wyoming', name: 'Wyoming', 'alpha-2': 'WY'}];
 
-module.exports.faqs = [
+var stateAbbreviations = _.pluck(usStates, 'alpha-2');
+
+var faqs = [
     {
         category: 'driver',
         question: 'How do I sign up as a Driver looking for work?',
@@ -288,7 +288,7 @@ module.exports.faqs = [
         keywords: ['term', 'term']
     }];
 
-module.exports.fields = {
+var fields = {
     'OUTSET_MVR': [
         {
             'description': 'First Name',
@@ -1228,7 +1228,7 @@ module.exports.fields = {
     ]
 };
 
-module.exports.reportPackages = {
+var reportPackages = {
     base: {
         title: 'Motor Vehicle Report',
         name: 'Motor Vehicle Report',
@@ -1236,7 +1236,7 @@ module.exports.reportPackages = {
         price: '5',
         promo: '1',
         sku: 'OUTSET_MVR',
-        fields: module.exports.fields.OUTSET_MVR,
+        fields: fields.OUTSET_MVR,
         skus: ['MVRDOM'],
         enabled: true,
         logo: './modules/bgchecks/img/everifile_logo.png'
@@ -1247,7 +1247,7 @@ module.exports.reportPackages = {
         description: 'National Background Report and Motor Vehicle Report',
         price: '14.50',
         sku: 'OUTSET_BASE',
-        fields: module.exports.fields.OUTSET_BASE,
+        fields: fields.OUTSET_BASE,
         skus: ['NBDS', 'MVRDOM'],
         enabled: true,
         logo: './modules/bgchecks/img/everifile_logo.png'
@@ -1258,7 +1258,7 @@ module.exports.reportPackages = {
         description: 'Premium Background Report and Motor Vehicle Report',
         price: '44.95',
         sku: 'OUTSET_PREMIUM',
-        fields: module.exports.fields.OUTSET_PREMIUM,
+        fields: fields.OUTSET_PREMIUM,
         skus: ['PKG_PREMIMUM', 'MVRDOM'],
         enabled: true,
         logo: './modules/bgchecks/img/everifile_logo.png'
@@ -1269,7 +1269,7 @@ module.exports.reportPackages = {
         description: 'Enterprise Background Report, Motor Vehicle Report and Drug Test',
         price: '84.95',
         sku: 'OUTSET_ENTERPRISE',
-        fields: module.exports.fields.OUTSET_ENTERPRISE,
+        fields: fields.OUTSET_ENTERPRISE,
         skus: ['PKG_PREMIMUM', 'MVRDOM', 'ES_ECUPIT'],
         enabled: true,
         logo: './modules/bgchecks/img/everifile_logo.png'
@@ -1280,7 +1280,7 @@ module.exports.reportPackages = {
         description: '',
         price: '40',
         sku: 'OUTSET_DRUGS',
-        fields: module.exports.fields.OUTSET_DRUGS,
+        fields: fields.OUTSET_DRUGS,
         skus: ['ES_ECUPIT'],
         enabled: false,
         logo: './modules/bgchecks/img/everifile_logo.png'
@@ -1288,7 +1288,7 @@ module.exports.reportPackages = {
     fieldSkus: ['MVRDOM', 'NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER', 'ES_ECUPIT']
 };
 
-module.exports.subscriptionPackages = {
+var subscriptionPackages = {
     features: ['Job Posts', 'Applicant Redirect', 'Applicant Tracking', 'Downloadable Reports', 'Require Reports', 'Multiple Log-ins', 'Customized Background Checks'],
     packages: [
         {
@@ -1326,8 +1326,14 @@ module.exports.subscriptionPackages = {
                 'Downloadable Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
                 'Require Reports': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
                 'Multiple Log-ins': {value: false, text: null, classes: 'text-muted', icon: 'fa-minus'},
-                'Customized Background Checks': {value: true, text: '+ $65', classes: '', icon: '', tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'}
-},
+                'Customized Background Checks': {
+                    value: true,
+                    text: '+ $65',
+                    classes: '',
+                    icon: '',
+                    tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'
+                }
+            },
             price: '95',
             promos: [''],
             planId: 'regional',
@@ -1347,7 +1353,13 @@ module.exports.subscriptionPackages = {
                 'Downloadable Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
                 'Require Reports': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
                 'Multiple Log-ins': {value: true, text: null, classes: 'text-success', icon: 'fa-check'},
-                'Customized Background Checks': {value: true, text: '+ $65', classes: '', icon: '', tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'}
+                'Customized Background Checks': {
+                    value: true,
+                    text: '+ $65',
+                    classes: '',
+                    icon: '',
+                    tooltip: 'Outset will work with you to setup a package of background reports to meet your individual needs'
+                }
             },
             price: '145',
             promos: [''],
@@ -1361,7 +1373,7 @@ module.exports.subscriptionPackages = {
     ]
 };
 
-module.exports.individualFields = {
+var individualFields = {
     MVRDOM: {
         'fields': [
             {
@@ -2299,7 +2311,7 @@ module.exports.individualFields = {
     }
 };
 
-module.exports.interests = {
+var interests = {
     driver: [
         'Courier',
         'Local CDL',
@@ -2308,4 +2320,18 @@ module.exports.interests = {
         'Ridesharing (Uber/Lyft)',
         'Non-Emergency Medical'
     ]
+};
+
+
+module.exports = {
+    baseSchedule: baseSchedule,
+    countries: countries,
+    usStates: usStates,
+    stateAbbreviations: stateAbbreviations,
+    faqs: faqs,
+    fields: fields,
+    reportPackages: reportPackages,
+    subscriptionPackages: subscriptionPackages,
+    individualFields: individualFields,
+    interests: interests
 };

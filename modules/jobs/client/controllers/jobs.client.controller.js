@@ -53,14 +53,13 @@
             }
 
             // TODO: Split out into Edit/Create/List permissions
-            if (vm.user.type === 'driver') {
+            if (vm.user.isAdmin) {
+                vm.enableEdit = true;
+            } else if (vm.user.type === 'driver') {
                 vm.enableEdit = false;
             }
             else if (vm.user.type === 'owner') {
                 vm.enableEdit = vm.user._id === (vm.company && (vm.company.owner._id || vm.company.owner));
-            }
-            else if (vm.user.isAdmin) {
-                vm.enableEdit = true;
             }
         }
 

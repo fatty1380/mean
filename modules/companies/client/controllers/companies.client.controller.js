@@ -2,12 +2,12 @@
     'use strict';
 
     // Companies controller
-    function CompaniesController($state, Authentication, company, moduleConfig) {
+    function CompaniesController($state, auth, company, moduleConfig, Jobs) {
         var vm = this;
 
-        vm.authentication = Authentication;
-        vm.user = Authentication.user;
+        vm.user = auth.user;
         vm.company = company;
+        vm.owner = company && company.owner;
         vm.config = moduleConfig || {};
 
         vm.canEdit = false;
@@ -16,25 +16,30 @@
 
         console.log('[CompaniesCtrl] Init w/ Company: %o', vm.company);
 
-        if (!!vm.company) {
-            vm.canEdit = !!vm.config.edit && !!vm.company.owner && vm.company.owner._id === Authentication.user._id;
+        function activate() {
+            if (auth.isLoggedIn() && vm.company.owner.id === vm.user.id) {
+                vm.canEdit = true;
+                vm.titleText = 'Company Profile';
+                vm.subtitle = 'Hi ' + vm.user.firstName + ', Welcome to Outset!';
+            } else if (auth.isAdmin()) {
+                vm.canEdit = true;
+                vm.titleText = 'Company Profile';
+                vm.subtitle = 'ADMINISTRATOR MODE';
+            } else {
+                vm.canEdit = false;
+                vm.titleText = vm.company.name;
+                vm.subtitle = 'Welcome to the home of ' + vm.company.name + ' on Outset!';
 
-            if (!!vm.company.name) {
-                var name = vm.company.name;
-
-                if (name.charAt(name.length - 1).toLowerCase() === 's') {
-                    vm.titleText = name + '\' Profile';
-                } else {
-                    vm.titleText = name + '\'s Profile';
-                }
+                Jobs.ById.query({company: vm.company.id}).$promise
+                    .then(function (success) {
+                        vm.jobs = success;
+                    })
+                    .catch(function (err) {
+                        console.log('job list failed', err);
+                    });
             }
-
             vm.imageURL = vm.company.profileImageURL || vm.imageURL;
-        }
-        else if ($state.is('companies.home')) {
-            vm.canEdit = !!vm.config.edit;
-        } else {
-            debugger;
+
         }
 
         // Change Picture Success method:
@@ -58,9 +63,11 @@
         vm.hideModal = function () {
             vm.showPhotoEdit = false;
         };
+
+        activate();
     }
 
-    CompaniesController.$inject = ['$state', 'Authentication', 'company', 'config'];
+    CompaniesController.$inject = ['$state', 'Authentication', 'company', 'config', 'Jobs'];
 
     angular.module('companies').controller('CompaniesController', CompaniesController);
 })();

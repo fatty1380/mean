@@ -1,8 +1,9 @@
 <section name="experience-list.client.template">
-    <div class="row profile-row">
+    <div ng-form="experienceForm" class="row profile-row">
         <div class="col-sm-12" ng-switch="!!(vm.models && vm.models.length > 0)">
 
             <oset-experience-item data-ng-repeat="exp in vm.models | limitTo: vm.maxCt"
+                                  model-index="$index"
                                   model="exp" is-last="$last" ng-switch-when="true"
                                   view-only="vm.viewOnly" can-edit="vm.canEdit" edit-mode="exp.isFresh && vm.isEditing"
                                   add-fn="vm.add" drop-fn="vm.drop" is-last="$last">
@@ -15,7 +16,8 @@
             </div>
 
             <p class="text-center" ng-if="vm.models.length > vm.maxCt">
-                <button type="button" class="btn btn-oset-link" ng-click="(vm.maxCt = vm.maxCt+5);">view more ...</button>
+                <button type="button" class="btn btn-oset-link" ng-click="(vm.maxCt = vm.maxCt+5);">view more ...
+                </button>
             </p>
 
         </div>

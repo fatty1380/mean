@@ -7,7 +7,7 @@
         'class="endorsement label label-success" ' +
         'tooltip-popup-delay="750" ' +
         'tooltip="{{description}}">{{name}}&nbsp;</span>' +
-        '<span ng-if="vm.filteredEndorsements.length===0">None</span></span>';
+        '<span ng-if="!!vm.filteredEndorsements.length">None</span></span>';
 
     function EndorsementDisplayDirective() {
         var ddo;

@@ -36,7 +36,7 @@ exports.GetReportTypeDefinitions = GetReportTypeDefinitions;
 exports.GetAllApplicants = GetAllApplicants;
 exports.GetApplicant = GetApplicant;
 exports.CreateApplicant = UpsertApplicant;
-exports.SearchForApplicant = SearchForApplicant;
+exports.SearchForApplicant = searchForApplicant;
 
 exports.RunReport = RunReport;
 exports.GetReportStatus = GetReportStatus;
@@ -356,7 +356,7 @@ function GetApplicant(cookie, id, noSanitize) {
         .jar(cookie.jar)
         .end(function (response) {
             if (response.error) {
-                console.error('[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body)
+                console.error('[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body);
                 return deferred.reject(response.body.reason);
             }
 
@@ -408,7 +408,7 @@ function UpsertApplicant(cookie, applicantData) {
                 if (response.statusCode === 406) {
                     console.log('[UpsertApplicant] Applicant already exists, searching...');
 
-                    SearchForApplicant(cookie, requestBody).then(
+                    searchForApplicant(cookie, requestBody).then(
                         function (success) {
                             console.log('[UpsertApplicant] Success! found applicantId: %s! ', success.applicantId);
                             deferred.resolve(success);
@@ -430,8 +430,8 @@ function UpsertApplicant(cookie, applicantData) {
     return deferred.promise;
 }
 
-function SearchForApplicant(cookie, applicant) {
-    console.log('[SearchForApplicant] Searching for existing applicant from info');
+function searchForApplicant(cookie, applicant) {
+    console.log('[searchForApplicant] Searching for existing applicant from info');
 
     if (!applicant.governmentId) {
         console.error('Will not search for applicant without govId');
@@ -455,21 +455,21 @@ function SearchForApplicant(cookie, applicant) {
         .query(query)
         .jar(cookie.jar)
         .end(function (response) {
-            console.log('[SearchForApplicant] Got response Body: %j', !!response.body); // Use truthy to hide sensitive info
+            console.log('[searchForApplicant] Got response Body: %j', !!response.body); // Use truthy to hide sensitive info
 
             if (response.error) {
-                console.log('[SearchForApplicant] Full Error Response: \n\n%j\n\n', response);
+                console.log('[searchForApplicant] Full Error Response: \n\n%j\n\n', response);
 
                 deferred.reject(response.body.reason + '[' + JSON.stringify(response.error) + ']');
             } else if (response.body.applicants && response.body.applicants.length === 1) {
-                console.log('[SearchForApplicant] Found a single match!');
+                console.log('[searchForApplicant] Found a single match!');
 
                 deferred.resolve(response.body.applicants[0]);
             } else if (response.body.applicants) {
-                console.error('[SearchForApplicant] Found a $d matches - cannot decide on one', response.body.applicants.length);
-                deferred.reject('[SearchForApplicant] could not decide on a single result from %d matches', response.body.applicants.length)
+                console.error('[searchForApplicant] Found a %d matches - cannot decide on one', response.body.applicants.length);
+                deferred.reject('[searchForApplicant] could not decide on a single result from %d matches', response.body.applicants.length);
             } else {
-                console.error('[SearchForApplicant] Unkown problem: %j', response.body);
+                console.error('[searchForApplicant] Unkown problem: %j', response.body);
                 deferred.reject('Unknown issue with search: ' + response.body);
             }
         });
@@ -558,8 +558,6 @@ function GetReportStatus(cookie, remoteId) {
                 return deferred.reject(response.body.reason);
             }
 
-            var reportCheck = response.body.reportCheckStatus;
-
             deferred.resolve(response.body);
         });
 
@@ -579,16 +577,12 @@ function GetReportStatusByApplicant(cookie, applicantId) {
                 return deferred.reject(response.body.reason);
             }
 
-            var reportCheck = response.body.reportCheckStatus;
-
-
             deferred.resolve(response.body);
         });
 
     return deferred.promise;
 }
 function GetSummaryReportPDF(cookie, remoteApplicantId) {
-    console.log('[GetSummaryReportPDF] ');
 
     var deferred = Q.defer();
 
@@ -609,7 +603,7 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
                 date: response.headers.date,
                 filename: disposition.parameters.filename,
                 type: disposition.type,
-                content: response.raw_body,
+                content: response.raw_body, // jshint ignore:line
                 response: response
             };
 
@@ -618,19 +612,18 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
 
     return deferred.promise;
 }
-function GetRawReport(cookie, bgReport) {
-    console.log('[GetRawReport] ');
-
+function GetRawReport(cookie, remoteReportId) {
     var deferred = Q.defer();
 
-    unirest.get(server.baseUrl + '/rest/reportCheck/' + bgReport.remoteId + '/report')
+    unirest.get(server.baseUrl + '/rest/reportCheck/' + remoteReportId + '/report')
         .jar(cookie.jar)
         .end(function (response) {
-            console.log(response.body);
 
             if (response.error) {
+                console.log('[GetRawReport] Error Getting Report Data', response.error);
                 return deferred.reject(response.body.reason);
             }
+            console.log('[GetRawReport] ', response.body);
 
             deferred.resolve(response.body);
         });

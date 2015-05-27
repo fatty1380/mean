@@ -13,6 +13,7 @@
                 company: '=?',
                 user: '=?',
                 applications: '=?',
+                jobs: '=?',
                 config: '=?'
             },
             controller: 'JobApplicationListController',
@@ -23,7 +24,7 @@
         return ddo;
     }
 
-    function JobApplicationListController(Applications, Authentication, $log, $state, params, $location) {
+    function JobApplicationListController(Applications, Authentication, $log, $state, params, $location, $q) {
         var vm = this;
 
         vm.visibleId = params.itemId;
@@ -36,17 +37,24 @@
         vm.config = vm.config || {};
 
         vm.newMessages = 0;
+        vm.groupByJob = false;
         vm.noItemsText = 'No job applications yet';
 
         function activate() {
 
-            if (vm.applications && vm.applications.length) {
+            if(vm.jobs && vm.jobs.length) {
+                $log.debug('Job list (length %d) is already calculated', vm.jobs.length);
+                vm.groupByJob = true;
+            }
+            else if (vm.applications && vm.applications.length) {
                 var first = vm.applications[0];
 
                 if (first.hasOwnProperty('job')) {
                     $log.debug('Looking at a list of applications');
+                    vm.groupByJob = false;
                 } else if (first.hasOwnProperty('applications')) {
                     $log.debug('Looking at a list of jobs :)');
+                    vm.groupByJob = true;
 
                     vm.jobs = vm.applications;
                 }
@@ -64,69 +72,11 @@
             }
         }
 
-        vm.setApplicationStatus = function(application, status, $event, state) {
-            $event.stopPropagation();
-
-            var app = vm.ApplicationFactory.setStatus(application._id, status);
-
-            app.then(function(success) {
-                $log.debug('[setApplicationStatus] %s', success);
-                application = success;
-            }, function(reject) {
-                debugger;
-                $log.warn('[setApplicationStatus] %s', reject);
-            });
-
-            state.application.status = status;
-            state.application.isNew = state.application.isConnected = false;
-            state.application.isRejected = true;
-            state.application.disabled = true;
-        };
-
-        vm.checkMessages = function(application, job) {
-            var applicationId = application._id;
-            var userId = vm.user._id;
-
-            vm.ApplicationFactory.getMessages(applicationId, userId).then(function(success) {
-                if(vm.visibleId === applicationId) {
-                    debugger;
-                }
-                application.messages = success.data;
-                application.lastMessage = success.latest;
-                application.messageCt = success.theirs.length;
-                application.newMessages = success.newMessages || 0;
-
-                if(application.newMessages > 0) {
-                    application.messagingText = application.newMessages + ' new message' + (application.newMessages === 1?'':'s') + ' awaiting your reply';
-                } else {
-                    application.messagingText = application.messages.length + ' total messages';
-                }
-
-                job.newMessages += application.newMessages;
-                vm.newMessages += application.newMessages;
-
-            }, function(err) {
-                debugger;
-            });
-        };
-
-        vm.showTab = function (itemId, tabName) {
-            if(!!vm.visibleId && vm.visibleTab === tabName) {
-                vm.visibleId = vm.visibleTab = null;
-            } else {
-                vm.visibleId = itemId;
-                vm.visibleTab = tabName;
-            }
-
-            $state.transitionTo($state.current, {'itemId':vm.visibleId, 'tabName':vm.visibleTab});
-            $location.search({'itemId':vm.visibleId, 'tabName':vm.visibleTab});
-        };
-
         activate();
 
     }
 
-    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location'];
+    JobApplicationListController.$inject = ['Applications', 'Authentication', '$log', '$state', '$stateParams', '$location', '$q'];
 
     angular.module('applications')
         .controller('JobApplicationListController', JobApplicationListController)

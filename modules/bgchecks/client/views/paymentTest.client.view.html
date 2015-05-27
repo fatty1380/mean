@@ -32,7 +32,7 @@
                                 </ul>
                             </div>
                             <div class="col-sm-2 text-right">
-                                {{::vm.getPriceString(vm.price)}}
+                                {{::vm.price | toDollarString}}
                                 <small ng-if="vm.report.recurring && vm.report.monthly" class="text-muted">
                                     <br/>per month
                                 </small>
@@ -49,12 +49,12 @@
                                 <span ng-class="{'text-muted': !vm.logo}">{{::vm.promoItem.description}}</span>
                             </div>
                             <div class="col-sm-2 text-right">
-                                - {{vm.promoItem.priceString}}
+                                - {{vm.promoItem.amount | toDollarString}}
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-xs-12" ng-if="!!vm.serverPlan.enablePromoCodes" ng-show="!!vm.subtotalString || !!vm.report.promos"
+                    <div class="col-xs-12" ng-if="!!vm.serverPlan.enablePromoCodes" ng-show="!!vm.subtotal || !!vm.report.promos"
                          ng-class="{'col-sm-7 col-sm-offset-1':!!vm.logo, 'col-sm-10 col-sm-offset-1': !vm.logo}">
                         <div class="row">
                             <hr class="col-sm-12"/>
@@ -70,11 +70,11 @@
                                 </div>
                                 <span ng-show="vm.promoError"><br><span class="text-danger text-center">{{vm.promoError}}</span></span>
                             </div>
-                            <div class="col-sm-4 text-right text-muted" ng-show="!!vm.subtotalString">
+                            <div class="col-sm-4 text-right text-muted" ng-show="!!vm.subtotal">
                                 subtotal:
                             </div>
-                            <div class="col-sm-2 text-right" ng-show="!!vm.subtotalString">
-                                {{vm.subtotalString}}
+                            <div class="col-sm-2 text-right" ng-show="!!vm.subtotal">
+                                {{vm.subtotal | toDollarString }}
                             </div>
                         </div>
                     </div>
@@ -89,6 +89,7 @@
 
                 <div class="container-fluid row" ng-hide="vm.success" class="payment-form"
                      ng-class="{'disabled':vm.processing}">
+
                     <form id="paymentAuthForm" name="vm.paymentAuthForm" method="POST" action="/api/payments/create/">
                         <div class="well col-xs-12 col-md-offset-2 col-md-8">
                             <h4>Payment Information
@@ -113,6 +114,7 @@
 
                         </div>
                     </form>
+
                 </div>
 
                 <div class="container-fluid row" ng-show="vm.error">

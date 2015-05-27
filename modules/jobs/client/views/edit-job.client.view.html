@@ -84,9 +84,10 @@
                         <div class="panel-heading">
                             <span class="h4"><label class="control-label" for="pay">Pay</label></span>
                         </div>
-                        <div class="panel-body form-inline" id="pay">
-                            <div class="form-group mgn-right">
-                                <label for="payMin">Minimum Pay : </label>
+                        <div class="panel-body form-inline text-center" id="pay">
+
+                            <div class="form-group">
+                                <label for="payMin">Min Pay : </label>
 
                                 <div class="input-group">
                                     <div class="input-group-addon">$</div>
@@ -99,8 +100,8 @@
                                     </small>
                                 </div>
                             </div>
-                            <div class="form-group mgn-right">
-                                <label for="payMax">Maximum Pay : </label>
+                            <div class="form-group">
+                                <label for="payMax" class="mgn-left">Max Pay : </label>
 
                                 <div class="input-group">
                                     <div class="input-group-addon">$</div>
@@ -114,7 +115,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="payBy">Paid per : </label>
+                                <label for="payBy" class="mgn-left">Paid per : </label>
                                 <select id="payBy" class="form-control" name="payBy"
                                         ng-model="vm.job.payRate.period">
                                     <option value="hour">Hour</option>

@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    moment = require('moment');
+    moment = require('moment'),
+    _ = require('lodash');
 
 
 /**
@@ -19,6 +20,11 @@ var ConnectionSchema = new Schema({
     user: {
         type: Schema.ObjectId,
         ref: 'User'
+    },
+
+    expires: {
+        type: Boolean,
+        default: false
     },
 
     validFrom: {
@@ -66,6 +72,11 @@ ConnectionSchema.virtual('remainingDays')
         return -1;
     });
 
+ConnectionSchema.virtual('isExpired')
+.get(function() {
+        return this.expires ? moment(this.validTo).isBefore(moment()) : false;
+    });
+
 ConnectionSchema.pre('save', function(next) {
     debugger;
     if(!this.validTo && !!this.validForDays) {
@@ -91,10 +102,10 @@ ConnectionSchema.pre('save', function(next) {
 function checkValidity(cnxn) {
     var now = moment();
 
-    if(!!cnxn.validTo) {
+    if(cnxn.expires && !!cnxn.validTo) {
         return now.isBefore(cnxn.validTo);
     }
-    if(!!cnxn.validFrom && !!cnxn.validForDays) {
+    if(cnxn.expires && !!cnxn.validFrom && !!cnxn.validForDays) {
         var validTo = moment(cnxn.validFrom).add(cnxn.validForDays, 'd');
         return now.isBefore(validTo);
     }

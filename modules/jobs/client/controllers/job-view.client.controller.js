@@ -2,7 +2,7 @@
     'use strict';
 
     // Jobs controller
-    function JobViewController($stateParams, $state, $log, Authentication, job) {
+    function JobViewController($stateParams, $state, $log, Authentication, job, applications) {
 
         var vm = this;
 
@@ -12,21 +12,20 @@
         vm.enableEdit = false;
 
         vm.job = job;
+        vm.applications = applications;
         vm.company = job && typeof job.company === 'object' && job.company || undefined;
-
-        activate();
 
         function activate() {
 
-            if (vm.user.type === 'driver') {
+            if (vm.user.isAdmin) {
+                vm.enableEdit = true;
+            }
+            else if (!vm.user || vm.user.isDriver) {
                 vm.enableEdit = false;
             }
-            else if (vm.user.type === 'owner') {
+            else if (vm.user.isOwner) {
                 vm.enableEdit = vm.user._id === (vm.company && (vm.company.owner._id || vm.company.owner));
             }
-
-            $log.debug('[JobViewCtrl.activate] %s enableEdit: %o', vm.user.type, vm.enableEdit);
-
         }
 
         vm.delist = function (job) {
@@ -55,10 +54,14 @@
                 });
             }
         };
+
+
+        activate();
+
     }
 
 
-    JobViewController.$inject = ['$stateParams', '$state', '$log', 'Authentication','job'];
+    JobViewController.$inject = ['$stateParams', '$state', '$log', 'Authentication','job', 'applications'];
 
     angular.module('jobs')
         .controller('JobViewController', JobViewController);

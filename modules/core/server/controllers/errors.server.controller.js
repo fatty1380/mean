@@ -11,7 +11,7 @@ var getUniqueErrorMessage = function(err) {
         output = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ' already exists';
 
     } catch (ex) {
-        output = 'Unique field already exist';
+        output = 'Unique field already exists';
     }
 
     return output;
@@ -40,7 +40,7 @@ exports.getErrorMessage = function(err) {
         }
     }
 
-    return message;
+    return message || err.message || err;
 };
 
 /**

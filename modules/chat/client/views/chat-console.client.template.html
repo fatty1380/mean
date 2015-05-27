@@ -1,7 +1,8 @@
-<div class="row chat-window" ng-show="vm.activeConnection">
+<div class="row chat-window" ng-show="!!vm.connection">
     <div class="col-sm-12">
-        <h4>Messages
-            <small class="pull-right">
+        <h4>
+            Messages
+            <small class="pull-right" ng-show="!!vm.activeConnection">
                 <em>
                     <strong>Connection Status</strong>
                     Me:
@@ -15,8 +16,7 @@
         </h4>
 
 
-        <div class="chat-section"
-             scroll-bottom="vm.messages">
+        <div class="chat-section" scroll-bottom="vm.messages">
             <div ng-repeat="message in vm.messages | filter : {type: '!status'}"
                  ng-init="message.username = message.username || message.sender.username"
                  ng-class="{'last':!!$last,'first':!!$first}" class="{{vm.getSenderClass(message.username)}}">
@@ -46,9 +46,11 @@
                     </div>
                 </div>
             </div>
-
+            <div ng-show="!vm.messages || !vm.messages.length">
+                <div class="text-muted text-center">no messages</div>
+            </div>
         </div>
-        <div class="chat-entry" id="messaging">
+        <div class="chat-entry" id="messaging" ng-show="vm.activeConnection">
             <div class="row mgn-vert">
                 <div class="col-md-8 col-md-offset-2">
                     <input type="text" ng-show="vm.messageMode === 'text'"

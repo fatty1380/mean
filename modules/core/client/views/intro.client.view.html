@@ -1,197 +1,136 @@
-<section class="home landing-page">
-
-    <section class="promo section bg-slider-wrapper" id="top">
-
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-
-                    <h2 class="title" ng-bind-html="vm.text.header.lead" style="line-height: 130%;"></h2>
-                    </div>
-                <div class="col-sm-8">
-
-                    <div class="job-banner mgn-left mgn-top">
-                        <ul class="h3">
-                            <li ng-repeat="bullet in vm.text.header.bullets" ng-bind-html="bullet"></li>
-                        </ul>
-
-                        <p class="text-center mgn-top no-margin">
-                            <signup-modal signup-type="{{vm.signupType}}" class="mgn-sides">
-                                <btn class="btn btn-cta btn-cta-primary">{{vm.text.header.signup}}</btn>
-                            </signup-modal>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-sm-6">
-                </div>
+<section class="section-main ">
+    <div class="content">
+        <div class="main-title" ng-bind-html="vm.text.header.lead"></div>
+        <div class="sub-title animated" ng-bind-html="vm.text.header.subLead" ng-if="!!vm.text.header.subLead" ng-class="{'fadeOut ng-hide':vm.showForm}"></div>
+        <div ng-hide="true">
+            <signup-modal signup-type="{{vm.signupType}}" class="button get-started">
+                <a href="#">{{vm.text.header.signup}}</a>
+            </signup-modal>
+        </div>
+        <div class="action-row">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+                <oset-seed-signup model="vm.seed" show-form="vm.showForm" hide-name="true"></oset-seed-signup>
             </div>
         </div>
-        <!--//container-->
-    </section>
+        <div class="information-block">
+            <div class="information-block-item" ng-repeat="bullet in vm.text.header.bullets"
+                 ng-bind-html="bullet"></div>
+        </div>
+        <div class="section-bottom-bar">
+            <a href="#" class="arrow-down" scroll-to></a>
+        </div>
+    </div>
+</section>
 
-    <div class="sections-wrapper darken">
-
-        <section class="container subhero panel">
-            <div class="row">
-                <div class="col-sm-7">
-                    <fluidvids class="mid-vert" video="{{vm.videoURL}}" width="853" height="480"></fluidvids>
-                </div>
-                <div class="col-sm-5 pad-top">
-                    <h2 class="mgn-top text-center">{{vm.text.subhero.title}}</h2>
-                    <ul class="h3">
-                        <li ng-repeat="leadBullet in vm.text.subhero.bullets" ng-bind-html="leadBullet"></li>
-                    </ul>
+<div class="section-why-outset">
+    <div class="content">
+        <div class="title">{{vm.text.subhero.title}}</div>
+        <div class="line-decoration"></div>
+        <div class="main-description" ng-show="!!vm.text.subhero.subtitle">{{vm.text.subhero.subtitle}}</div>
+        <div class="slider-wrapper" slider="">
+            <div class="slider-container">
+                <div class="slider-content">
+                    <div class="slide" ng-repeat="leadBullet in vm.text.subhero.bullets" on-repeat-done="bullet_done">
+                        <div class="slide-item">
+                            <div class="circle">
+                                <span class="helper"></span>
+                                <img src="modules/core/img/slider/tools_slider_icon.png"/>
+                            </div>
+                        </div>
+                        <div class="slide-item description">
+                            <div class="slide-title">{{leadBullet.title}}</div>
+                            <div class="title-decoration"></div>
+                            <div class="slide-description">{{leadBullet.description}}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-    </div>
-
-    <div class="image-break west-map">
-        <div class="black_mask">&nbsp;</div>
-        <div class="sections-wrapper transparent">
-            <div class="section container transparent">
-                <tabset justified="true">
-                    <tab>
-                        <tab-heading>
-                            <h3>
-                                <i class="fa fa-user fa-2x mgn-right text-oset"></i>
-                                {{vm.text.section1.header}}
-                            </h3>
-                        </tab-heading>
-
-                        <div class="panel row">
-                            <!--//item-->
-
-                            <div class="col-md-5 col-sm-12 col-xs-12">
-
-                                <div class="desc">
-                                    <h3 ng-bind-html="vm.text.section1.sub"></h3>
-
-                                    <ul class="h4">
-                                        <li ng-repeat="item in vm.text.section1.bullets" ng-bind-html="item"></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!--//content-->
-                            <div class="col-md-7 col-sm-12 col-xs-12 text-center">
-                                <img class="img-responsive" ng-src="{{vm.text.section1.image}}" alt="">
-
-                                <!--//control-->
-                            </div>
-                        </div>
-                    </tab>
-                    <tab>
-                        <tab-heading>
-                            <h3>
-                                <i class="fa fa-files-o fa-2x mgn-right text-oset"></i>
-                                {{vm.text.section2.header}}
-                            </h3>
-                        </tab-heading>
-
-                        <div class="panel row">
-                            <!--//item-->
-
-                            <div class="col-md-7 col-sm-12 col-xs-12 text-center">
-                                <img class="img-responsive" ng-src="{{vm.text.section2.image}}" alt="">
-
-                                <!--//control-->
-                            </div>
-
-                            <div class="col-md-5 col-sm-12 col-xs-12">
-
-                                <div class="desc">
-                                    <h3 ng-bind-html="vm.text.section2.sub"></h3>
-
-                                    <ul class="h4">
-                                        <li ng-repeat="item in vm.text.section2.bullets" ng-bind-html="item"></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!--//content-->
-                        </div>
-                    </tab>
-                    <tab ng-if="!!vm.text.section3">
-                        <tab-heading>
-                            <h3>
-                                <i class="fa fa-car fa-2x mgn-right text-oset"></i>
-                                {{vm.text.section3.header}}
-                            </h3>
-                        </tab-heading>
-
-                        <div class="panel row">
-                            <!--//item-->
-                            <div class="col-md-5 col-sm-12 col-xs-12">
-
-                                <div class="desc">
-                                    <h3 ng-bind-html="vm.text.section3.sub"></h3>
-
-                                    <ul class="h4">
-                                        <li ng-repeat="item in vm.text.section3.bullets" ng-bind-html="item"></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!--//content-->
-                            <div class="col-md-7 col-sm-12 col-xs-12 text-center">
-                                <img class="img-responsive" ng-src="{{vm.text.section3.image}}" alt="">
-
-                                <!--//control-->
-                            </div>
-                        </div>
-                    </tab>
-                    <tab ng-if="!!vm.text.pricing">
-                        <tab-heading>
-                            <h3>
-                                <i class="fa fa-dollar fa-2x mgn-right text-oset"></i>
-                                {{vm.text.pricing.header}}
-                            </h3>
-                        </tab-heading>
-                        <div class="panel row">
-                            <oset-subscription-info text="vm.text.pricing"></oset-subscription-info>
-                        </div>
-                    </tab>
-                </tabset>
+            <div class="slider-arrow left-arrow"></div>
+            <div class="slider-arrow right-arrow"></div>
+            <div class="pagination-wrapper">
+                <div class="pagination-item" ng-repeat="leadBullet in vm.text.subhero.bullets"></div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="sections-wrapper">
-        <section class="steps section">
-            <div class="container">
-                <h2 class="title text-center">3 Simple Steps to get you started with Outset</h2>
+<div class="section-steps">
+    <div class="content">
+        <div class="steps-title" ng-bind-html="vm.text.threeSteps.title"></div>
+        <div class="sub-title" ng-bind-html="vm.text.threeSteps.subtitle"></div>
+        <div class="steps">
+            <div class="step step-{{$index+1}}" ng-repeat="item in vm.text.threeSteps.bullets">
+                <div class="line first" ng-if="$index != 0"></div>
+                <div class="line second" ng-if="$index < 2"></div>
+                <div class="step-icon"></div>
+                <div class="step-title">{{item.title}}</div>
+                <div class="step-description" ng-bind-html="item.description">
+                </div>
+            </div>
 
-                <div class="row">
-                    <div class="step text-center col-md-4 col-sm-4 col-xs-12" ng-repeat="item in vm.text.conclusion">
-                        <h3 class="title"><span class="number">{{$index+1}}</span><br><span
-                                class="text">{{item.title}}</span></h3>
+        </div>
+    </div>
+</div>
 
-                        <p data-ng-bind-html="item.description"></p>
+<div class="section-features">
+    <div class="content">
+        <div class="features-wrapper">
+            <div class="feature-block text-right">
+                <div class="feature-title "><span ng-bind-html="vm.text.section1.header"></span><br><span class="small"
+                                                                                                          ng-bind-html="vm.text.section1.sub"></span>
+                </div>
+                <div class="bottom-decoration rigth"></div>
+                <div class="feature-items-wrapper">
+                    <div class="feature-items-row" ng-repeat="item in vm.text.section1.bullets">
+                        <div class="feature-icon mobile"></div>
+                        <div class="feature-item" ng-bind-html="item"></div>
                     </div>
                 </div>
-                <!--//row-->
-
             </div>
-            <!--//container-->
-        </section>
-    </div>
-
-    <div class="sections-wrapper">
-
-        <section id="cta-section" class="section cta-section text-center home-cta-section">
-            <div class="container">
-                <h2 class="title text-center">Ready to try Outset for yourself?</h2>
-
-                <p>
-                    <signup-modal class="mgn-sides">
-                        <btn class="btn btn-cta btn-cta-primary">
-                            Click here to sign up!
-                        </btn>
-                    </signup-modal>
-                </p>
+            <div class="feature-block text-left right-side">
+                <div class="feature-title"><span ng-bind-html="vm.text.section2.header"></span><br><span class="small"
+                                                                                                         ng-bind-html="vm.text.section2.sub"></span>
+                </div>
+                <div class="bottom-decoration left"></div>
+                <div class="feature-items-wrapper">
+                    <div class="feature-items-row" ng-repeat="item in vm.text.section2.bullets">
+                        <div class="feature-icon"></div>
+                        <div class="feature-item" ng-bind-html="item"></div>
+                    </div>
+                </div>
             </div>
-            <!--//container-->
-        </section>
-
+        </div>
     </div>
+</div>
 
+<div class="section-video" video-player>
+
+
+    <!--<fluidvids class="mid-vert" video="{{vm.videoURL}}" width="853" height="480"></fluidvids>-->
+    <!--<img class="video" src="modules/core/img/backgrounds/play_video_bg.png" />-->
+    <!--<video></video>-->
+</div>
+
+<div class="section-pricing" ng-hide="true">
+    <div class="content">
+        <div class="pricing-title">{{vm.text.pricing.header}}</div>
+        <div class="pricing-sub-title">{{vm.text.pricing.sub}}</div>
+        <oset-subscription-info text="vm.text.pricing"></oset-subscription-info>
+    </div>
+</div>
+
+<section class="section-footer">
+    <div class="content">
+        <div class="footer-title" ng-hide="true">Ready to try Outset for yourself?</div>
+        <signup-modal type="{{vm.type}}" class="footer-button" ng-hide="true">
+            <a href="#">
+                Click here to sign up!
+            </a>
+        </signup-modal>
+
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+            <oset-seed-signup model="vm.seed" show-form="true" hide-name="true"
+                              btn-class="footer-button"></oset-seed-signup>
+        </div>
+    </div>
 </section>

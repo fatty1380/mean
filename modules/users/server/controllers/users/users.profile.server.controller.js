@@ -110,7 +110,8 @@ exports.list = function (req, res, next) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                res.jsonp(users);
+                console.log('[Profiles] Returning %d profiles', (users || []).length);
+                res.json(users);
             }
         });
 };
@@ -122,7 +123,8 @@ exports.readProfile = function (req, res) {
         });
     }
 
-    res.jsonp(req.profile);
+    console.log('[Profiles] Returning profile %j', req.profile);
+    res.json(req.profile);
 };
 
 /**
@@ -131,8 +133,8 @@ exports.readProfile = function (req, res) {
 exports.me = function (req, res) {
 
     if (!req.user) {
-        return res.status(404).send({
-            message: 'No user found'
+        return res.status(401).send({
+            message: 'unauthorized'
         });
     }
 

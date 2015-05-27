@@ -40,11 +40,14 @@
 
     function myJobsWithApplications(auth, jobs) {
         var query = {
-            userId: auth.user,
-            companyId: auth.user.company
+            userId: auth.user && auth.user._id || auth.user,
+            id: auth.user.company
         };
 
-        return jobs.listByCompany(query).catch(function (err) {
+        debugger;
+
+        return jobs.listByCompany(query)
+            .catch(function (err) {
             if (err.status === 404) {
                 return [];
             }
@@ -52,11 +55,19 @@
         });
     }
 
+    function resolveAllApplications(auth, jobs, apps) {
+        if(!auth.isAdmin) {
+            return resolveApplications(auth, jobs, apps);
+        }
+
+        return apps.ById.query().$promise;
+    }
+
     function resolveApplications(auth, jobs, apps) {
-        if(auth.user.type === 'driver') {
+        if (auth.user.type === 'driver') {
             return myApplications(auth, apps);
         }
-        else if(auth.user.type === 'owner') {
+        else if (auth.user.type === 'owner') {
             return myJobsWithApplications(auth, jobs);
         }
     }
@@ -85,10 +96,22 @@
 
             state('applications.list', {
                 url: '?itemId&tabName',
-                reloadOnSearch : false,
+                reloadOnSearch: false,
                 templateUrl: '/modules/applications/views/list-applications.client.view.html',
                 resolve: {
                     applications: resolveApplications
+                },
+                controller: 'ApplicationListController',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
+
+            state('applications.all', {
+                url: 'all?itemId&tabName',
+                reloadOnSearch: false,
+                templateUrl: '/modules/applications/views/list-applications.client.view.html',
+                resolve: {
+                    applications: resolveAllApplications
                 },
                 controller: 'ApplicationListController',
                 controllerAs: 'vm',
@@ -131,11 +154,181 @@
             state('applications.edit', {
                 url: '/:applicationId/edit',
                 templateUrl: '/modules/applications/views/edit-application.client.view.html'
+            }).
+
+            state('gateway', {
+                url: '/application?jobId',
+                templateUrl: '/modules/applications/views/gateway-form.client.view.html',
+                controller: 'ApplicationGatewayController',
+                controllerAs: 'vm',
+                data: {
+                    hideHeader: true
+                },
+                params: {
+                    jobId: ''
+                },
+                resolve: {
+                    gateway: ['Gateway', '$stateParams', function (Gateway, Params) {
+                        return new Gateway().initialize(Params.jobId, Params.userId);
+                    }],
+                    resolutions: ['gateway', 'Authentication', '$stateParams', '$q', '$log', function (gateway, auth, Params, $q, $log) {
+
+                        return $q.all({gateway: gateway, company: gateway.company, job: gateway.job})
+                            .then(function (result) {
+                                $log.warn('Gateway Initialized with Job `%s` and Company `%s`', result.job.name, result.company.name);
+                                return result;
+                            });
+                    }],
+                    application: ['gateway', '$q', '$timeout', function (gateway, $q, $timeout) {
+
+                        var deferred = $q.defer();
+
+                        var timeout = $timeout(function() {
+                            deferred.resolve('timeout');
+                        }, 2000);
+
+                        gateway.application.then(function(app) {
+                            $timeout.cancel(timeout);
+
+                            deferred.resolve(app);
+                        });
+
+                        return deferred.promise;
+                    }],
+                    user: ['gateway', function (gateway) {
+                    }]
+
+                }
+            }).
+
+            state('gateway.userInfo', {
+                url: '/userInfo',
+                templateUrl: '/modules/applications/views/form/user-info.client.template.html',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
+
+            state('gateway.driverInfo', {
+                url: '/driverInfo',
+                templateUrl: '/modules/applications/views/form/driver-info.client.template.html',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    driver: ['gateway', function (gateway) {
+                        return gateway.driver;
+                    }]
+                }
+            }).
+
+            state('gateway.documents', {
+                url: '/documents',
+                templateUrl: '/modules/applications/views/form/documents.client.template.html',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    driver: ['gateway', function (gateway) {
+                        return gateway.driver;
+                    }]
+                }
+            }).
+
+            state('gateway.reports', {
+                url: '/reports',
+                templateUrl: '/modules/applications/views/form/reports.client.template.html',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    applicantGateway: ['gateway', function (gateway) {
+                        return gateway.applicantGateway;
+                    }],
+                    report: ['gateway', function (gateway) {
+                        return gateway.report;
+                    }]
+                }
+            }).
+
+            state('gateway.reportFields', {
+                url: '/reportFields?readonly',
+                params: {
+                    readonly: false
+                },
+                templateUrl: '/modules/applications/views/form/report-fields.client.template.html',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    gateway: ['gateway', function (gateway) {
+                        return gateway;
+                    }],
+                    report: ['gateway', function (gateway) {
+                        return gateway.report.then(function(success) {
+                            console.log('resolved REPORT');
+                            return success;
+                        });
+                    }],
+                    applicant: ['gateway', function (gateway) {
+                        return gateway.applicant.then(function(success) {
+                            console.log('resolved APPLICANT');
+                            return success;
+                        });
+                    }],
+                    applicantGateway: ['gateway', function (gateway) {
+                        debugger;
+                        return gateway.applicantGateway.then(function(success) {
+                            console.log('resolved APPLICANT GATEWAY');
+                            return success;
+                        });
+                    }]
+                }
+            }).
+
+            state('gateway.authorization', {
+                url: '/authorization',
+                template: '<application-release-form gateway="vm.gw" model="vm.gw.models.release" methods="vm.subformMethods"></application-release-form>',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    requirements: ['gateway', '$q', function (gateway, $q) {
+                        var gw = gateway;
+                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function (result) {
+
+                        });
+                    }]
+                }
+            }).
+
+            state('gateway.payment', {
+                url: '/payment',
+                templateUrl: '/modules/applications/views/form/payment.client.template.html',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
+
+            state('gateway.complete', {
+                url: '/complete',
+                templateUrl: '/modules/applications/views/form/complete.client.template.html',
+                controller: '',
+                controllerAs: 'vm',
+                bindToController: true,
+                resolve: {
+                    application: ['gateway', function (gateway) {
+                        return gateway.application;
+                    }]
+                }
             });
+
+
     }
 
     myJobsWithApplications.$inject = ['Authentication', 'Jobs'];
     myApplications.$inject = ['Authentication', 'Applications'];
+    resolveAllApplications.$inject = ['Authentication', 'Jobs', 'Applications'];
     resolveApplications.$inject = ['Authentication', 'Jobs', 'Applications'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
 

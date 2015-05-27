@@ -2,7 +2,7 @@
     'use strict';
 
     // Jobs controller
-    function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company, $modal) {
+    function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company, $modal, config) {
 
         if(!Authentication.user) {
             return $state.go('intro');
@@ -16,14 +16,6 @@
         // Bound Objects
         vm.job = job;
         vm.company = company || job && typeof job.company === 'object' && job.company || undefined;
-
-
-        if (typeof vm.user.company === 'string' && vm.user.company !== (vm.company && vm.company._id)) {
-            return $state.go('home');
-        }
-        else if (typeof vm.user.company === 'object' &&  vm.user.company._id === (vm.company && vm.company._id)) {
-            return $state.go('home');
-        }
 
         // Bindable Functions:
         vm.cancel = cancel;
@@ -39,8 +31,6 @@
         vm.types = ['main', 'home', 'business', 'billing', 'other'];
         vm.pageTitle = 'Edit Job';
 
-        activate();
-
         function activate() {
             if ($state.is('jobs.create')) {
                 vm.pageTitle = 'Post new job';
@@ -50,50 +40,7 @@
                     $state.go('home');
                 }
 
-                if (!vm.company.subscription) {
-                    vm.invalidSubscription = 'Sorry, but you will need to purchase a subscription before posting jobs';
-                } else if (!vm.company.subscription.isValid) {
-                    vm.invalidSubscription = vm.company.subscription.statusMessage;
-                }
-
-                if (!vm.company.subscription || !vm.company.subscription.isValid) {
-                    var modalInstance = $modal.open({
-                        templateUrl: 'invalidSubscription.html',
-                        controller: ['$state', '$modalInstance', 'statusMessage',
-                            function ($state, $modalInstance, statusMessage) {
-                                var vm = this;
-
-                                vm.statusMessage = statusMessage;
-
-                                vm.gotoPlans = function () {
-                                    $state.go('subscriptionsReview');
-                                    $modalInstance.close('subscriptions');
-                                };
-
-                                vm.cancel = function () {
-                                    $state.go('home');
-                                    $modalInstance.close('home');
-                                };
-                            }],
-                        backdrop: true,
-                        backdropClass: 'shadow',
-                        controllerAs: 'vm',
-                        size: 'lg',
-                        keyboard: false,
-                        resolve: {
-                            statusMessage: function () {
-                                return vm.invalidSubscription;
-                            }
-                        }
-                    });
-
-                    modalInstance.result.then(function (message) {
-                        $log.info('Modal accepted with message: %s', message);
-                    }, function () {
-                        $log.info('Modal dismissed at: ' + new Date());
-                        $state.go('home');
-                    });
-                }
+                config.requireSubscription && checkSubscription();
 
                 vm.job = {
                     payRate: {
@@ -115,6 +62,57 @@
                     vm.job.location.push(defaultAddress);
                 }
             }
+        }
+
+        function checkSubscription() {
+            if (!vm.company.subscription) {
+                vm.invalidSubscription = 'Sorry, but you will need to purchase a subscription before posting jobs';
+            } else if (!vm.company.subscription.isValid) {
+                vm.invalidSubscription = vm.company.subscription.statusMessage;
+            }
+
+            if (!vm.company.subscription || !vm.company.subscription.isValid) {
+                openSubscriptionModal();
+            }
+        }
+
+        function openSubscriptionModal() {
+            var modalInstance = $modal.open({
+                templateUrl: 'invalidSubscription.html',
+                controller: ['$state', '$modalInstance', 'statusMessage',
+                    function ($state, $modalInstance, statusMessage) {
+                        var vm = this;
+
+                        vm.statusMessage = statusMessage;
+
+                        vm.gotoPlans = function () {
+                            $state.go('subscriptionsReview');
+                            $modalInstance.close('subscriptions');
+                        };
+
+                        vm.cancel = function () {
+                            $state.go('home');
+                            $modalInstance.close('home');
+                        };
+                    }],
+                backdrop: true,
+                backdropClass: 'shadow',
+                controllerAs: 'vm',
+                size: 'lg',
+                keyboard: false,
+                resolve: {
+                    statusMessage: function () {
+                        return vm.invalidSubscription;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (message) {
+                $log.info('Modal accepted with message: %s', message);
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+                $state.go('home');
+            });
         }
 
         // Method Implementations
@@ -167,21 +165,7 @@
             // Redirect after save
             job.$save(function (response) {
                 $state.go('jobs.view', {jobId: response._id});
-            }, function (errorResponse) {
-                if (!!errorResponse.data.message) {
-                    vm.error = errorResponse.data.message;
-                }
-                else {
-                    debugger;
-                    vm.error = 'Unable to save changes at this time';
-                    $log.error('[JobEditCtrl] Error Saving New Job: %o', job, errorResponse);
-                }
-                vm.disabled=false;
-            });
-
-            // Clear form fields
-            // TODO: Clear all form fields
-            ///this.name = '';
+            }, handleErr );
         }
 
         // Update existing Job
@@ -191,22 +175,26 @@
 
             job.$update(function (response) {
                 $state.go('jobs.view', {jobId: response._id});
-            }, function (errorResponse) {
-                if (!!errorResponse.data.message) {
-                    vm.error = errorResponse.data.message;
-                }
-                else {
-                    debugger;
-                    vm.error = 'Unable to save changes at this time';
-                    $log.error('[JobEditCtrl] Error Saving New Job: %o', job, errorResponse);
-                }
-                vm.disabled=false;
-            });
+            }, handleErr);
         }
+
+        function handleErr(errorResponse) {
+            if (!!errorResponse.data && errorResponse.data.message) {
+                vm.error = errorResponse.data.message;
+            }
+            else {
+                debugger;
+                vm.error = 'Unable to save changes at this time';
+                $log.error('[JobEditCtrl] Error Saving Job: %o', job, errorResponse);
+            }
+            vm.disabled=false;
+        }
+
+        activate();
     }
 
 
-    JobEditController.$inject = ['$stateParams', '$state', '$log', 'Authentication', 'Jobs', 'job', 'company', '$modal'];
+    JobEditController.$inject = ['$stateParams', '$state', '$log', 'Authentication', 'Jobs', 'job', 'company', '$modal', 'AppConfig'];
 
     angular.module('jobs')
         .controller('JobEditController', JobEditController);
