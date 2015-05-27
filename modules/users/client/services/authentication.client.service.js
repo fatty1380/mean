@@ -7,12 +7,11 @@
         var _this = this;
 
         function isLoggedIn() {
-            return !!_this._data.user;
+            return !_.isEmpty(_this._data.user);
         }
 
         function isAdmin() {
-            var user = _this._data.user;
-            return !!user && (user.roles.indexOf('admin') !== -1);
+            return !!_this._data.user && _this._data.user.isAdmin;
         }
 
         _this._data = {

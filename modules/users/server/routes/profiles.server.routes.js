@@ -12,9 +12,6 @@
         app.route('/api/profiles/:userId')
             .get(users.readProfile)
             .put(users.requiresLogin, users.hasAuthorization, users.update);
-
-        // Finish by binding the user middleware
-        //app.param('userId', users.userByID);
     };
 
 })();

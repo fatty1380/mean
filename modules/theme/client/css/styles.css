@@ -3387,7 +3387,8 @@ input[type="button"] {
   background-color: #f2f2f2;
 }
 .pnl-info .panel-body > :first-child {
-  padding-top: 60px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .pnl-info .panel-body oset-experience-list {
   padding-top: 0;
@@ -5059,6 +5060,8 @@ div.play-button {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+  border-radius: 0;
+  background-clip: padding-box;
 }
 /** Body **/
 html,
@@ -5076,7 +5079,7 @@ body {
   position: relative;
 }
 body {
-  background-color: #f7f7f7;
+  background-color: #fafafa;
 }
 span.cta-outline {
   border: 1px solid #a94442;
@@ -5088,6 +5091,11 @@ span.cta-outline {
 }
 .content > section > *:last-child.superbase {
   padding-bottom: 0 !important;
+}
+/** Display Options for directives **/
+oset-categories,
+oset-document-list {
+  display: inline-block;
 }
 /* Map Container */
 .angular-google-map-container {
@@ -5447,6 +5455,25 @@ oset-chat-console > .chat-window .chat-section .chat-box .timestamp a {
 oset-chat-console > .chat-window .chat-section .chat-box .timestamp a:hover {
   color: #808080;
 }
+/** NEW REPLACEMENT for content-seciton **/
+.headline-bg + .profile-base {
+  padding-top: 130px;
+  z-index: 10;
+}
+.profile-base .row.profile > div {
+  background-color: #fafafa;
+  min-height: 200px;
+}
+.profile-base .row.profile > div.right {
+  padding-right: 0;
+}
+.profile-base .row.profile > div.left {
+  padding-left: 0;
+}
+.profile-base .profile-header .panel {
+  margin-top: 0;
+  padding: 15px 0 0;
+}
 /* ======= Standardized Header BG Page : based on "story" ======= */
 .content-section {
   padding-top: 90px;
@@ -5643,7 +5670,6 @@ img.user-profile-picture {
   width: 100%;
   height: 100%;
   min-height: 1000px;
-  z-index: 2;
 }
 .blue-mask {
   background-color: transparent;
@@ -5652,7 +5678,6 @@ img.user-profile-picture {
   position: relative;
   width: 100%;
   height: 100%;
-  z-index: 3;
 }
 @media (max-width: 768px) {
   .container {

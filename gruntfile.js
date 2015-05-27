@@ -268,18 +268,26 @@ module.exports = function (grunt) {
                 default    : {
                     src    : testAssets.tests.server,
                     options: {
-                        reporter: 'spec',
-                        clearRequireCache: true
+                        reporter: 'spec'
                     }
                 },
                 routes     : {
-                    src: testAssets.tests.routes
+                    src: testAssets.tests.routes,
+                    options: {
+                        reporter: 'spec'
+                    }
                 },
                 integration: {
-                    src: testAssets.tests.integration
+                    src: testAssets.tests.integration,
+                    options: {
+                        reporter: 'spec'
+                    }
                 },
                 model      : {
-                    src: testAssets.tests.model
+                    src: testAssets.tests.model,
+                    options: {
+                        reporter: 'spec'
+                    }
                 },
                 watch      : {
                     options: {
@@ -335,16 +343,17 @@ module.exports = function (grunt) {
     // Connect to the MongoDB instance and load the models
     grunt.task.registerTask('mongoose', 'Task that connects to the MongoDB instance and loads the application models.', function () {
 
-        console.log('==== Connecting to MongoDB for Test Execution ====================================');
-
         // Get the callback
         var done = this.async();
 
         // Use mongoose configuration
         var mongoose = require('./config/lib/mongoose.js');
+        console.log('==== Connecting to MongoDB for Test Execution ====================================');
+
 
         // Connect to database
         mongoose.connect(function (db) {
+            console.log('==== MongoDB Connection Complete ====================================');
             done();
         });
     });
@@ -368,7 +377,8 @@ module.exports = function (grunt) {
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
     // Run the project in development mode
-    grunt.registerTask('default', ['env:dev', 'bunyan', 'lint', 'concurrent:default']);
+    grunt.registerTask('default', ['env:dev', 'lint', 'concurrent:default']);
+    grunt.registerTask('nolint', ['env:dev', 'less', 'html2js', 'concurrent:default']);
 
     grunt.registerTask('nowatch', ['env:dev', 'lint', 'concurrent:nowatch']);
 

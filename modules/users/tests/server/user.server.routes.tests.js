@@ -43,7 +43,23 @@ describe('User CRUD tests', function () {
             return user.save();
         });
 
-        it('should be able to load a profile by userId');
+        it('should be able to load a profile by userId', function() {
+
+            _test        = this.test;
+            var endpoint = '/api/profiles/' + user.id;
+
+            return agent.get(endpoint)
+                .expect(200)
+                .then(function (response) {
+                    log.debug({
+                        test: _test.title,
+                        body: response.body,
+                        err : response.error
+                    }, 'Got Response from %s', endpoint);
+
+                    response.body.should.have.property('id', user.id);
+                });
+        });
         it('should be able to load a profile by handle');
         it('should return a list of profiles without sensitive data', function () {
             _test        = this.test;
@@ -74,7 +90,6 @@ describe('User CRUD tests', function () {
                     _.each(profiles, function (profile) {
                         profile.should.not.have.property('salt');
                         profile.should.not.have.property('password');
-                        profile.should.not.have.property('roles');
                     });
                     return true;
                 });
@@ -99,7 +114,6 @@ describe('User CRUD tests', function () {
 
                     profile.should.not.have.property('salt');
                     profile.should.not.have.property('password');
-                    profile.should.not.have.property('roles');
                 });
         });
     });

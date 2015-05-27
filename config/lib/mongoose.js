@@ -8,16 +8,19 @@ var config = require('../config'),
 	path = require('path'),
 	mongoose = require('mongoose'),
 	log = require(path.resolve('./config/lib/logger')).child({
-		module: 'article.routes.test',
-		file: 'article.server.routes.test'
+		module: 'lib',
+		file: 'mongoose'
 	});
 
 // Load the mongoose models
 module.exports.loadModels = function() {
 	// Globbing model files
 	config.files.server.models.forEach(function(modelPath) {
+		log.trace('Loading Models at path: %s', modelPath);
 		require(path.resolve(modelPath));
 	});
+
+	log.trace('Finished loading models');
 };
 
 // Initialize Mongoose

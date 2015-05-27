@@ -3,16 +3,16 @@
 /**
  * Module dependencies.
  */
-var _        = require('lodash'),
-fs           = require('fs'),
-path         = require('path'),
-fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-config       = require(path.resolve('./config/config')),
-mongoose     = require('mongoose'),
-passport     = require('passport'),
-User         = mongoose.model('User'),
-Q            = require('q');
+var _            = require('lodash'),
+    fs           = require('fs'),
+    path         = require('path'),
+    fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    config       = require(path.resolve('./config/config')),
+    mongoose     = require('mongoose'),
+    passport     = require('passport'),
+    User         = mongoose.model('User'),
+    Q            = require('q');
 
 /**
  * Update user details
@@ -26,8 +26,8 @@ exports.update = function (req, res) {
 
     if (user) {
         // Merge existing user
-        user = _.extend(user, req.body);
-        user.modified = Date.now();
+        user             = _.extend(user, req.body);
+        user.modified    = Date.now();
         user.displayName = user.firstName + ' ' + user.lastName;
 
         user.save(function (err) {
@@ -51,7 +51,6 @@ exports.update = function (req, res) {
         });
     }
 };
-
 
 
 /**
@@ -103,11 +102,38 @@ exports.changeProfilePicture = function (req, res) {
 };
 
 exports.list = function (req, res, next) {
-    var select = req.select || '-password -oldPass -salt -roles';
+    var select = req.select || '-password -oldPass -salt';
 
-    User
-        .find()
-        .select(select)
+    // req.query.text = ['jon', 'doe']
+    //
+    // USER WHERE   ( 'jon' IN displayName OR 'jon' in handle OR 'jon' in email)
+    //              ( 'doe' IN displayName OR 'doe' in handle OR 'doe' in email)
+    //
+    // .or([
+    //      {displayName: new RegExp(text[0], "i")}
+    //      {handle: new RegExp(text[0], "i")}
+    //      {email: new RegExp(text[0], "i")}
+    //
+
+    var query = User.find();
+
+    var queryStrings = (_.isString(req.query.text) ? [req.query.text] : req.query.text) || [];
+
+    req.log.debug('Query Search terms: `%s`', queryStrings);
+
+    _.each(queryStrings, function (search) {
+        req.log.debug('Adding search term `%s`', search);
+
+        var q = [
+            {displayName: new RegExp(search, 'i')},
+            {handle: new RegExp(search, 'i')},
+            {email: new RegExp(search, 'i')}
+        ];
+
+        query.and({$or : q});
+    });
+
+    query.select(select)
         .sort('-created')
         .exec(function (err, users) {
             if (err) {

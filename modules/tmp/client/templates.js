@@ -416,7 +416,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '                        </a>\n' +
   '                    </p>\n' +
   '\n' +
-  '                    <p class="panel panel-oset letter"\n' +
+  '                    <p class="panel panel-info letter"\n' +
   '                       ng-hide="vm.application.messages && vm.application.messages.length">\n' +
   '                        Now that you are connected, use the messaging functionality to communicate with the\n' +
   '                        {{vm.user.type === \'driver\' ? \'Employer\' : \'Applicant\'}}.\n' +
@@ -2072,6 +2072,38 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '    <!-- os-company directive : END -->\n' +
   '</section>\n' +
+  '');
+ $templateCache.put('/modules/core/views/profile-base.client.template.html',
+  '<div class="headline-bg headline-sm headline-map-bg">\n' +
+  '    <div class="blue-mask container-fluid"></div>\n' +
+  '</div>\n' +
+  '\n' +
+  '<div class="container profile-base section section-on-bg">\n' +
+  '    <div class="profile-navigation-wrapper">\n' +
+  '        <a href="">\n' +
+  '            <div class="nav-item active">\n' +
+  '                <span class="text">PROFILE</span>\n' +
+  '                <span class="icon pull-right"><i class="fa fa-user"></i></span>\n' +
+  '            </div>\n' +
+  '        </a>\n' +
+  '        <a href="">\n' +
+  '            <div class="nav-item">\n' +
+  '                <span class="text">MESSAGES</span>\n' +
+  '                <span class="icon pull-right"><i class="fa fa-comments-o"></i></span></div>\n' +
+  '        </a>\n' +
+  '        <a href="">\n' +
+  '            <div class="nav-item">\n' +
+  '                <span class="text">INVITE FRIENDS</span>\n' +
+  '                <span class="icon pull-right"><i class="fa fa-users"></i></span></div>\n' +
+  '        </a>\n' +
+  '    </div>\n' +
+  '\n' +
+  '    <div class="row profile">\n' +
+  '        <div ui-view="content" class="col-md-8 profile-body left"></div>\n' +
+  '\n' +
+  '        <div ui-view="sidebar" class="col-md-4 gutter profile-gutter right"></div>\n' +
+  '    </div>\n' +
+  '</div>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-datepicker.client.template.html',
   '<input type="text" ng-model="vm.shadow" ng-required="vm.required"\n' +
@@ -3847,46 +3879,55 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '');
  $templateCache.put('/modules/drivers/views/templates/driver-badge.client.template.html',
   '<section class="profile-header">\n' +
-  '    <div class="panel panel-default row">\n' +
-  '        <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
-  '            <div class="center-block full-width">\n' +
-  '                <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
-  '                     class="img-thumbnail user-profile-picture img-responsive">\n' +
-  '                <br data-ng-if="vm.canEdit"/>\n' +
-  '                <a class="btn btn-link" data-ng-click="vm.editPicFn()"\n' +
-  '                   data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || \'.\'}}">edit\n' +
-  '                    <i class="fa fa-pencil-square-o"></i>\n' +
-  '                </a>\n' +
-  '            </div>\n' +
-  '        </div>\n' +
-  '\n' +
-  '        <div class="profile-info {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
-  '            <span class="title" data-ng-bind-html="vm.profile.displayName">&nbsp;</span>\n' +
-  '            <br/>\n' +
-  '            <span class="subtitle" data-ng-bind-html="vm.subTitle">&nbsp;</span>\n' +
-  '\n' +
-  '            <div class="licenses">\n' +
-  '                <oset-license-inline model="vm.driver.licenses[0]" show-endorsements="true"></oset-license-inline>\n' +
-  '            </div>\n' +
-  '        </div>\n' +
-  '\n' +
-  '        <div class="profile-actions col-sm-12">\n' +
-  '\n' +
-  '            <div class="icons icon-group pull-left">\n' +
-  '                <a href="" class="icon">\n' +
-  '                    <div class="twitter"></div>\n' +
-  '                </a>\n' +
-  '                <a href="" class="icon">\n' +
-  '                    <div class="google"></div>\n' +
-  '                </a>\n' +
-  '                <a href="" class="icon">\n' +
-  '                    <div class="facebook"></div>\n' +
-  '                </a>\n' +
+  '    <div class="panel panel-default">\n' +
+  '        <div class="row">\n' +
+  '            <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
+  '                <div class="center-block full-width">\n' +
+  '                    <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
+  '                         class="img-thumbnail user-profile-picture img-responsive">\n' +
+  '                    <br data-ng-if="vm.canEdit"/>\n' +
+  '                    <a class="btn btn-link" data-ng-click="vm.editPicFn()"\n' +
+  '                       data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || \'.\'}}">edit\n' +
+  '                        <i class="fa fa-pencil-square-o"></i>\n' +
+  '                    </a>\n' +
+  '                </div>\n' +
   '            </div>\n' +
   '\n' +
-  '            <div class="icons icon-group pull-right text-right">\n' +
-  '                <button type="button" class="btn btn-oset-link"><i class="fa fa-2x fa-edit"></i></button>\n' +
-  '                <button type="button" class="btn btn-oset-secondary">Connect</button>\n' +
+  '            <div class="profile-info {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
+  '                <span class="title" data-ng-bind-html="vm.profile.displayName">&nbsp;</span>\n' +
+  '                <br/>\n' +
+  '                <span class="subtitle" data-ng-bind-html="vm.subTitle">&nbsp;</span>\n' +
+  '\n' +
+  '                <div class="licenses">\n' +
+  '                    <oset-license-inline model="vm.driver.licenses[0]" show-endorsements="true"></oset-license-inline>\n' +
+  '                </div>\n' +
+  '            </div>\n' +
+  '\n' +
+  '            <div class="profile-actions col-sm-12">\n' +
+  '\n' +
+  '                <div class="icons icon-group pull-left">\n' +
+  '                    <a href="" class="icon">\n' +
+  '                        <div class="twitter"></div>\n' +
+  '                    </a>\n' +
+  '                    <a href="" class="icon">\n' +
+  '                        <div class="google"></div>\n' +
+  '                    </a>\n' +
+  '                    <a href="" class="icon">\n' +
+  '                        <div class="facebook"></div>\n' +
+  '                    </a>\n' +
+  '                </div>\n' +
+  '\n' +
+  '                <div class="icons icon-group pull-right text-right">\n' +
+  '                    <button type="button" class="btn btn-oset-link"\n' +
+  '                            ng-if="!!vm.canEdit"\n' +
+  '                            ui-sref="drivers.edit({driverId:vm.driver.id})">\n' +
+  '                        <i class="fa fa-2x fa-edit"></i>\n' +
+  '                    </button>\n' +
+  '                    <button type="button"\n' +
+  '                            ng-show="!vm.isConnected"\n' +
+  '                            class="btn btn-oset-secondary">Connect\n' +
+  '                    </button>\n' +
+  '                </div>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -4110,7 +4151,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</fieldset>\n' +
   '');
  $templateCache.put('/modules/drivers/views/templates/driver-profile.client.template.html',
-  '<section name="os-driver.directive" class="panel panel-default">\n' +
+  '<section name="os-driver.directive">\n' +
   '\n' +
   '    <!--<a data-ng-if="vm.canEdit" class="btn btn-link pull-right"\n' +
   '                       ui-sref="drivers.edit({driverId: vm.driver._id })">edit driver profile\n' +
@@ -4119,7 +4160,9 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    <div class="pnl-info portfolio">\n' +
   '        <div class="pnl-heading">\n' +
   '            <span class="title">MY PORTFOLIO</span>\n' +
-  '            <a href="" class="icon"><img src="modules/drivers/img/share.png" title="share" class="share"/></a>\n' +
+  '            <a href="" class="icon" tooltip="securely share your documents">\n' +
+  '               <i class="fa fa-share-square-o"></i>\n' +
+  '            </a>\n' +
   '        </div>\n' +
   '\n' +
   '        <div class="panel-body">\n' +

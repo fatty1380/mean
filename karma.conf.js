@@ -19,7 +19,7 @@ module.exports = function(karmaConfig) {
 		// Test results reporter to use
 		// Possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
 		//reporters: ['progress'],
-        reporters: ['progress', 'osx'], //, 'coverage'],
+        reporters: ['progress', 'osx', 'coverage'],
 
 		// Web server port
 		port: 9876,
@@ -53,7 +53,8 @@ module.exports = function(karmaConfig) {
 
         // Coverage Setup per https://blog.sergiocruz.me/angularjs-how-to-generate-code-coverage-for-yeoman-scaffolded-apps/
         preprocessors: {
-            'app/scripts/**/*.js': ['coverage']
+            'modules/applications/server/**/*.js': ['coverage']
+            //'app/scripts/**/*.js': ['coverage']
         },
 
         coverageReporter: {
