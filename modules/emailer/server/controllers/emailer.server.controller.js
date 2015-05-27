@@ -54,7 +54,7 @@ function sendGenericTemplateEmail(templateName, user, options) {
     var mailOptions = {
         to: [{
             email: user.email,
-            name: user.displayName
+            name: user.displayName || user.handle || user.email
         }],
         inline_css: true,
 
