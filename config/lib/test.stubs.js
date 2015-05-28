@@ -88,6 +88,7 @@ function randomUser() {
  */
 
 exports.agentLogin = function(agent, credentials) {
+    log.debug({creds: credentials}, 'Logging in with credentials');
     return agent.post('/api/auth/signin')
         .send(credentials)
         .expect(200)
@@ -95,6 +96,7 @@ exports.agentLogin = function(agent, credentials) {
             return signinRes;
         })
         .catch(function (signinErr) {
+            log.error({error: signinErr}, 'Error logging into app');
             return Q.reject(signinErr);
         });
 };

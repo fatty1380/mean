@@ -21,24 +21,6 @@ var should          = require('should'),
  */
 var app, agent, credentials, user, article, report, localApplicant, statuses, endpoint;
 
-function signin(done) {
-    log.trace({func: 'signin', credentials: credentials}, 'START');
-
-    return agent.post('/api/auth/signin')
-        .send(credentials)
-        .expect(200)
-        .then(function (signinRes) {
-            log.trace({func: 'signin'}, 'Login Complete');
-
-            done();
-        })
-        .catch(function (signinErr) {
-            // Handle signin error
-            log.error({error: signinErr}, 'Signin Failed');
-            done(signinErr);
-        });
-}
-
 function seedReports(user, done) {
 
     var remoteApplicantIndex = 1313;
@@ -95,7 +77,7 @@ describe('BGCheck CRUD tests', function () {
         done();
     });
 
-    beforeEach(function (done) {
+    beforeEach(function () {
         this.timeout(10000);
         log.trace({func: 'beforeEach'}, 'START');
 
@@ -134,7 +116,7 @@ describe('BGCheck CRUD tests', function () {
         });
 
         // Save a user to the test db and create new article
-        user.save()
+        return user.save()
             .then(function (user) {
                 log.trace({func: 'beforeEach', user: user}, 'Saved User');
                 return report.save();
@@ -148,7 +130,7 @@ describe('BGCheck CRUD tests', function () {
             })
             .then(function (applicant) {
                 log.trace({func: 'beforeEach', applicant: applicant}, 'Saved Applicant');
-                return signin(done);
+                return stubs.agentLogin(agent, credentials);
             }, function (err) {
                 log.error({func: 'beforeEach', error: err}, 'Signin Failed');
                 should.not.exist(err, err.message);
@@ -220,7 +202,7 @@ describe('BGCheck CRUD tests', function () {
 
 
                 });
-        })
+        });
     });
 
     describe('Local Report Status Routes', function () {

@@ -24,25 +24,6 @@ var app, agent, application, credentials, cUser, dUser, article, company, job, _
 
 var u2, c2, j2, a2;
 
-function signin() {
-
-    log.trace({func: 'signin', credentials: credentials}, 'START');
-
-    return agent.post('/api/auth/signin')
-        .send(credentials)
-        .expect(200)
-        .then(function (signinRes) {
-            log.trace({func: 'signin'}, 'Login Complete');
-            return signinRes;
-        })
-        .catch(function (signinErr) {
-            // Handle signin error
-            log.error({error: signinErr}, 'Signin Failed');
-
-            return Q.reject(signinErr);
-        });
-}
-
 /**
  * Article routes tests
  */
@@ -122,7 +103,7 @@ describe('Applications CRUD tests', function () {
         beforeEach(function () {
             credentials.username = cUser.username;
             return application.save().then(function () {
-                return signin();
+                return stubs.agentLogin(agent, credentials);
             });
         });
 
@@ -225,7 +206,7 @@ describe('Applications CRUD tests', function () {
     describe('Logged in as Driver/User Method Checks', function () {
         beforeEach(function () {
             credentials.username = dUser.username;
-            return signin();
+            return stubs.agentLogin(agent, credentials);
         });
 
         it('should be able to create a new application', function () {
