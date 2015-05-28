@@ -50,11 +50,18 @@ var getGlobbedPaths = function(globPatterns, excludes) {
 };
 
 /**
+ * Returns a boolean whether the runtime is "dev" - aka, not production
+ */
+var isDevMode = function() {
+    return process.env.NODE_ENV !== 'production';
+};
+
+/**
  * Validate NODE_ENV existance
  */
 var validateEnvironmentVariable = function() {
     var environmentFiles = glob.sync('./config/env/' + process.env.NODE_ENV + '.js');
-    console.log();
+
     if (!environmentFiles.length) {
         if (process.env.NODE_ENV) {
             console.error(chalk.red('No configuration file found for "' + process.env.NODE_ENV + '" environment using development instead'));
@@ -65,8 +72,6 @@ var validateEnvironmentVariable = function() {
     } else {
         console.log(chalk.bold('Application loaded using the "' + process.env.NODE_ENV + '" environment configuration'));
     }
-    // Reset console color
-    console.log(chalk.white(''));
 };
 
 /**
@@ -154,7 +159,8 @@ var initGlobalConfig = function() {
 
     // Expose configuration utilities
     config.utils = {
-        getGlobbedPaths: getGlobbedPaths
+        getGlobbedPaths: getGlobbedPaths,
+        isDevMode: isDevMode
     };
 
     return config;
