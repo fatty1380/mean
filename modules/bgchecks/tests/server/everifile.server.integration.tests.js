@@ -385,10 +385,10 @@ describe('Everifile CRUD tests', function (done) {
                         });
 
                 });
-            })
+            });
 
 
-        })
+        });
 
     });
 

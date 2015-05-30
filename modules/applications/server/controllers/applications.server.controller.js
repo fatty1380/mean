@@ -659,9 +659,9 @@ exports.persistMessage = function (applicationId, message) {
                             log.error('error retrieving application, returning non-populated version', err);
                             return false;
                         }
-                        debugger;
-                        var recipient = msg.sender.equals(populated.user.id) ? populated.company.owner : populated.user;
-                        var recipient = msg.sender._id.equals(populated.user._id) ? populated.company.owner : populated.user;
+                        var senderId = msg.sender.id || msg.sender._id || msg.sender;
+                        
+                        var recipient = senderId.equals(populated.user.id) ? populated.company.owner : populated.user;
 
                         var options = [
                             {

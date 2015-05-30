@@ -7,13 +7,13 @@ describe('Karma Globals', function () {
     beforeEach(function () {
         Raygun = {
             init: function () {
-                return true
+                return true;
             },
             send: function () {
-                return true
+                return true;
             },
             setUser: function () {
-                return true
+                return true;
             }
         };
     });

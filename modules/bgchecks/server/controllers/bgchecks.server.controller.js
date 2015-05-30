@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
     Bgcheck = mongoose.model('BackgroundReport'),
     ReportType = mongoose.model('ReportType'),
     ReportApplicant = mongoose.model('ReportApplicant'),
-    Q = require('q'),
+    q = require('q'),
     everifile = require('./everifile.server.service'),
     constants = require(path.resolve('./modules/core/server/models/outset.constants')),
     fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
@@ -229,17 +229,17 @@ function SaveUpdatedReportDefinitions(req, res, next) {
 
     console.log('[SaveUpdatedReportDefinitions] Analyzing %d of $d report types', reportsToBeProcessed.length, req.reportTypes.length);
 
-    Q.allSettled(reportsToBeProcessed).then(
+    q.allSettled(reportsToBeProcessed).then(
         function (processedReportTypes) {
             console.log('Ready to upsert %d report types', processedReportTypes.length);
 
-            return Q.allSettled(processedReportTypes.map(function (preAndUpdateVals) {
-                return Q.resolve(preAndUpdateVals.value).spread(reportTypeUpsert);
+            return q.allSettled(processedReportTypes.map(function (preAndUpdateVals) {
+                return q.resolve(preAndUpdateVals.value).spread(reportTypeUpsert);
             }));
         },
         function (error) {
             console.error('Error reported in processing reports', error);
-            Q.reject(error);
+            q.reject(error);
         })
         .done(function (results) {
             req.reportTypes = handleSettledPromises(results, req, 'reportTypes', 'failures');
@@ -292,7 +292,7 @@ function generateQueries(reportTypeData) {
         .exec();
 
     // Resolve as array to facilitate spreading to reportTypeUpsert
-    return Q.all([reportQueryPromise, Q.resolve(reportTypeData)]);
+    return q.all([reportQueryPromise, q.resolve(reportTypeData)]);
 }
 
 function reportTypeUpsert(dbValue, newReport) {
@@ -311,19 +311,19 @@ function reportTypeUpsert(dbValue, newReport) {
             console.log('[UpdateAvailableReports] Report Type is unchanged from DB copy');
             dbValue.unchanged = true;
 
-            return Q.resolve(dbValue);
+            return q.resolve(dbValue);
         }
         console.log('[UpdateAvailableReports] Updating a new report type for SKU: %s', newReport.sku);
     }
 
-    return Q.ninvoke(report, 'save').then(
+    return q.ninvoke(report, 'save').then(
         function (success) {
             var doc = success[0];
             var rows = success.length > 1 ? success[1] : -1;
             console.log('Saved %d rows, returning report sku %s, version %d', rows, doc.sku, doc.__v);
-            return Q.resolve(doc);
+            return q.resolve(doc);
         }, function (err) {
-            return Q.reject(err);
+            return q.reject(err);
         });
 }
 
@@ -590,7 +590,7 @@ function ReadReportApplicant(req, res) {
  */
 function CreateNewReport(req, res, next) {
 
-    var deferred = Q.defer();
+    var deferred = q.defer();
 
     var bgcheck = new Bgcheck({
         user: req.user,
@@ -645,7 +645,7 @@ function CreateNewReport(req, res, next) {
 
                 var deferrals = _.map(req.reportType.skus, function (remoteSku) {
 
-                    var defer = Q.defer();
+                    var defer = q.defer();
 
                     var remoteApplicant = bgcheck.remoteApplicantId;
 
@@ -669,7 +669,7 @@ function CreateNewReport(req, res, next) {
                     return defer.promise;
                 });
 
-                Q.allSettled(deferrals).then(function (statusUpdates) {
+                q.allSettled(deferrals).then(function (statusUpdates) {
                     console.log('Finished Report requests!');
 
                     statusUpdates.map(function (statusUpdate) {
@@ -964,20 +964,20 @@ function doReportSync(req, res, next) {
                         req.log.debug({func: 'doReportSync', step: 2}, 'Status has already been added');
 
 
-                        return Q(report);
+                        return q(report);
                     })
                     .catch(function (err) {
                         req.log.error({func: 'doReportSync', error: err}, 'Error while updating remote report status');
 
                         data.results.errors.push(err);
 
-                        return Q(report);
+                        return q(report);
                     });
 
 
             });
 
-            return Q.all(updates);
+            return q.all(updates);
         })
         .then(function (reports) {
 
@@ -987,7 +987,7 @@ function doReportSync(req, res, next) {
             req.log.debug({func: 'doReportSync', step: 3}, 'Now looking at %d completeReports', completeReports.length);
 
 
-            return Q.all(_.map(completeReports,
+            return q.all(_.map(completeReports,
                 function (report) {
                     if (_.isEmpty(report.data) || _.isEmpty(report.data.xml)) {
                         req.log.debug({func: 'doReportSync', step: 3, report: report}, 'Report Data is currently empty for report');
@@ -1013,14 +1013,14 @@ function doReportSync(req, res, next) {
 
                                 data.results.errors.push(err);
 
-                                return Q(report);
+                                return q(report);
                             });
                     }
 
                     req.log.debug({func: 'doReportSync', step: 3, data: report.data}, 'Report Data is already present');
 
 
-                    return Q(report);
+                    return q(report);
                 }));
         })
         .then(function (reports) {
@@ -1029,7 +1029,7 @@ function doReportSync(req, res, next) {
             var completeReports = _.where(reports, {isComplete: true});
             req.log.debug({func: 'doReportSync', step: 4}, 'Now looking at %d completeReports', completeReports.length);
 
-            return Q.all(_.map(completeReports,
+            return q.all(_.map(completeReports,
                 function (report) {
                     if (_.isEmpty(report.file) || _.isEmpty(report.file.url) ) {
                         req.log.debug({func: 'doReportSync', step: 4, report: report}, 'Report File is currently empty for report');
@@ -1061,7 +1061,7 @@ function doReportSync(req, res, next) {
                                             error: err
                                         }, 'Alternate fail output :(');
 
-                                        return Q.reject(err);
+                                        return q.reject(err);
 
                                     })
                                 .catch(function(err) {
@@ -1070,7 +1070,7 @@ function doReportSync(req, res, next) {
                                             error: err
                                         }, 'Failed to save file to report');
 
-                                        return Q.reject(err);
+                                        return q.reject(err);
                                     });
                             })
                             .catch(function (err) {
@@ -1081,12 +1081,12 @@ function doReportSync(req, res, next) {
 
                                 data.results.errors.push(err);
 
-                                return Q(report);
+                                return q(report);
                             });
                     }
                     req.log.debug({func: 'doReportSync', step: 4, file: report.file}, 'Report File is already present');
 
-                    return Q(report);
+                    return q(report);
                 }));
         })
         .then(function (final) {

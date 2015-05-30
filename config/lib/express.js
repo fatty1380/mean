@@ -79,7 +79,7 @@ module.exports.initMiddleware = function (app) {
         next();
     });
 
-    log.info(config.https, 'EXPRESS ROUTER HTTPS Config')
+    log.info(config.https, 'EXPRESS ROUTER HTTPS Config');
 
     if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
         app.use(function (req, res, next) {
@@ -96,7 +96,7 @@ module.exports.initMiddleware = function (app) {
         // Disable views cache
         app.set('view cache', false);
 
-        streamType = 'dev'
+        streamType = 'dev';
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
 
@@ -326,7 +326,7 @@ module.exports.initHttps = function (app) {
     }
 
     log.trace({func: 'initHttps'}, 'HTTPS is not Configured - Skipping');
-}
+};
 
 /**
  * Initialize the Express application

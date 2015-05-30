@@ -4,10 +4,7 @@ module.exports = function (app) {
     var
         path = require('path'),
         users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
-        applications = require(path.resolve('./modules/applications/server/controllers/applications.server.controller')),
-        drivers = require(path.resolve('./modules/drivers/server/controllers/drivers.server.controller')),
-        releaseDocs = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller'));
-
+        applications = require(path.resolve('./modules/applications/server/controllers/applications.server.controller'));
     // Applications Routes
     app.route('/api/applications')
         .get(applications.executeQuery)
@@ -62,4 +59,4 @@ var coreRoutes = {
     // SET (PATCH)
     // Application Status
 
-}
+};

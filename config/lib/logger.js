@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /**
  * Module dependencies.
  */
@@ -20,7 +20,7 @@ var reqSerializer = function (req) {
         method: req.method,
         url   : req.url,
         id    : req.id
-    }
+    };
 };
 
 
@@ -45,8 +45,34 @@ var reqSerializer = function (req) {
  * API for custom log with colors, default colors included if not specified
  */
 
-var colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray']
+var colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray'];
 
+
+var _log = {
+    trace: function (message, color) {
+        log('trace', arguments);
+    },
+    debug: function (message, color) {
+        log('debug', arguments);
+    },
+    info : function (message, color) {
+        log('info', arguments);
+    },
+    warn : function (message, color) {
+        log('warn', arguments);
+    },
+    error: function (message, color) {
+        log('error', arguments);
+    },
+    fatal: function (message, color) {
+        log('fatal', arguments);
+    },
+
+    // TODO: Fix this temporary workaround - or decide that it's best
+    child: function (opts) {
+        return _log.logger.child(opts);
+    }
+};
 
 // test('hi %s %d', 'philip', 1, 'GREEN');
 // test('outset %s', 'vault');
@@ -58,7 +84,7 @@ function test(message) {
     var color = 'blue';
     var args  = Array.prototype.slice.call(arguments);
     
-    if (colors.indexOf(opts.toLowerCase()) != -1) {
+    if (colors.indexOf(opts.toLowerCase()) !== -1) {
         color = opts;
         console.log('color supplied: ' + color);
         args  = args.slice(0, -1);
@@ -70,7 +96,7 @@ function test(message) {
     console.log(message);
 }
 
-function Log(level, inputArgs) {
+function log(level, inputArgs) {
     var opts  = _.last(inputArgs);
     var args  = Array.prototype.slice.call(inputArgs);
     var color = 'stripColor';
@@ -87,38 +113,12 @@ function Log(level, inputArgs) {
         message = args[0];
     }
 
-    log.logger[level](chalk[color](message));
-}
-
-var log = {
-    trace: function (message, color) {
-        Log('trace', arguments);
-    },
-    debug: function (message, color) {
-        Log('debug', arguments);
-    },
-    info : function (message, color) {
-        Log('info', arguments);
-    },
-    warn : function (message, color) {
-        Log('warn', arguments);
-    },
-    error: function (message, color) {
-        Log('error', arguments);
-    },
-    fatal: function (message, color) {
-        Log('fatal', arguments);
-    },
-
-    // TODO: Fix this temporary workaround - or decide that it's best
-    child: function (opts) {
-        return log.logger.child(opts);
-    }
+    _log.logger[level](chalk[color](message));
 }
 
 var _logger;
 
-Object.defineProperty(log, 'logger', {
+Object.defineProperty(_log, 'logger', {
     enumerable: true,
     get: function() {
         if(_.isEmpty(_logger)) {
@@ -137,13 +137,13 @@ Object.defineProperty(log, 'logger', {
                     level: 'debug',
                     type: 'raw',
                     stream: prettyStdOut
-                })
+                });
             }
 
             _logger = bunyan.createLogger(opts);
         }
         return _logger;
     }
-})
+});
 
-module.exports = log;
+module.exports = _log;

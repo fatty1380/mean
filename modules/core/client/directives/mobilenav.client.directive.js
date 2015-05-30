@@ -1,6 +1,6 @@
 ﻿(function () {
-
-    angular.module('core').directive("mobileNav", function ($timeout) {
+    'use strict';
+    angular.module('core').directive('mobileNav', function ($timeout) {
         return {
             restriction: 'A',
             link: function ($scope, element, attributes) {
@@ -22,6 +22,6 @@
                     }
                 });
             }
-        }
+        };
     });
 })();

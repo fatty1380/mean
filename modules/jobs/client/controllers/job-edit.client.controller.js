@@ -40,7 +40,9 @@
                     $state.go('home');
                 }
 
-                config.requireSubscription && checkSubscription();
+                if(config.requireSubscription) {
+                    checkSubscription();
+                }
 
                 vm.job = {
                     payRate: {

@@ -1,5 +1,6 @@
 ﻿(function () {
-
+    'use strict';
+    
     angular.module('core').directive('slider', function () {
         return {
             restrict: 'A',
