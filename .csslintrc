@@ -11,5 +11,9 @@
 	"regex-selectors": false,
 	"unique-headings": false,
 	"universal-selector": false,
-	"unqualified-attributes": false
+	"unqualified-attributes": false,
+	"fallback-colors": false,
+	"shorthand": false,
+	"duplicate-background-images": false //This may be useful later 
 }
+ 

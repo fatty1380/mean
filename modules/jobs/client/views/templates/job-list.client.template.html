@@ -1,7 +1,7 @@
 <section name="os-job-list.directive" class="outset-list">
 
     <!-- SEARCH HEADER --->
-    <div class="panel panel-default search-section" data-ng-if="!!vm.showSearch && !!vm.jobs.length">
+    <div class="panel panel-default" data-ng-if="!!vm.showSearch && !!vm.jobs.length">
         <form class="panel-body form-inline">
             <div class="col-sm-12 text-center mgn-btm">
                 <oset-categories model="vm.jobTypes" summary="vm.jobCats" show-all="vm.showAllTypes" lbl-class="btn-sm no-mgn" mode="select"></oset-categories>

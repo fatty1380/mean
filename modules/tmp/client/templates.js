@@ -1315,7 +1315,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '</article>\n' +
   '');
  $templateCache.put('/modules/bgchecks/views/bgcheck-summary.client.template.html',
-  '<section class="pricing">\n' +
+  '<section>\n' +
   '    <div class="item price text-center" ng-click="vm.viewReports()">\n' +
   '        <div class="item-inner">\n' +
   '            <div class="heading text-center">\n' +
@@ -2072,38 +2072,6 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '    </div>\n' +
   '    <!-- os-company directive : END -->\n' +
   '</section>\n' +
-  '');
- $templateCache.put('/modules/core/views/profile-base.client.template.html',
-  '<div class="headline-bg headline-sm headline-map-bg">\n' +
-  '    <div class="blue-mask container-fluid"></div>\n' +
-  '</div>\n' +
-  '\n' +
-  '<div class="container profile-base section section-on-bg">\n' +
-  '    <div class="profile-navigation-wrapper">\n' +
-  '        <a href="">\n' +
-  '            <div class="nav-item active">\n' +
-  '                <span class="text">PROFILE</span>\n' +
-  '                <span class="icon pull-right"><i class="fa fa-user"></i></span>\n' +
-  '            </div>\n' +
-  '        </a>\n' +
-  '        <a href="">\n' +
-  '            <div class="nav-item">\n' +
-  '                <span class="text">MESSAGES</span>\n' +
-  '                <span class="icon pull-right"><i class="fa fa-comments-o"></i></span></div>\n' +
-  '        </a>\n' +
-  '        <a href="">\n' +
-  '            <div class="nav-item">\n' +
-  '                <span class="text">INVITE FRIENDS</span>\n' +
-  '                <span class="icon pull-right"><i class="fa fa-users"></i></span></div>\n' +
-  '        </a>\n' +
-  '    </div>\n' +
-  '\n' +
-  '    <div class="row profile">\n' +
-  '        <div ui-view="content" class="col-md-8 profile-body left"></div>\n' +
-  '\n' +
-  '        <div ui-view="sidebar" class="col-md-4 gutter profile-gutter right"></div>\n' +
-  '    </div>\n' +
-  '</div>\n' +
   '');
  $templateCache.put('/modules/core/views/templates/os-datepicker.client.template.html',
   '<input type="text" ng-model="vm.shadow" ng-required="vm.required"\n' +
@@ -4429,7 +4397,7 @@ angular.module('oset-templates', []).run(['$templateCache', function($templateCa
   '<section name="os-job-list.directive" class="outset-list">\n' +
   '\n' +
   '    <!-- SEARCH HEADER --->\n' +
-  '    <div class="panel panel-default search-section" data-ng-if="!!vm.showSearch && !!vm.jobs.length">\n' +
+  '    <div class="panel panel-default" data-ng-if="!!vm.showSearch && !!vm.jobs.length">\n' +
   '        <form class="panel-body form-inline">\n' +
   '            <div class="col-sm-12 text-center mgn-btm">\n' +
   '                <oset-categories model="vm.jobTypes" summary="vm.jobCats" show-all="vm.showAllTypes" lbl-class="btn-sm no-mgn" mode="select"></oset-categories>\n' +

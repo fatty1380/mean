@@ -1140,7 +1140,7 @@ os-bg-check-summary > .pricing {
 }
 
 /***** PRICING *******/
-.pricing, .pnl-oset {
+.pricing {
   &.section.section-on-bg {
     padding-top: 0;
   }
@@ -1149,7 +1149,7 @@ os-bg-check-summary > .pricing {
     margin-bottom: 50px;
     > .row {
       position: relative;
-      top: 0px;
+      top: 0;
     }
     .title {
       font-size: 42px;
@@ -1168,15 +1168,12 @@ os-bg-check-summary > .pricing {
     padding: 0 0 0 0;
   }
   .item {
-    -webkit-transition: -webkit-transform .2s, -webkit-box-shadow .2s;
-    transition: transform .2s;
+    .transition(transform 200ms);
     top: 15px;
 
     &:hover {
       z-index: 15;
-      -ms-transform: scale(1.03); /* IE 9 */
-      -webkit-transform: scale(1.03); /* Chrome, Safari, Opera */
-      transform: scale(1.03);
+      .scale(1.03);
     }
     &.best-buy .item-content {
       padding-bottom: 0;
@@ -1194,8 +1191,7 @@ os-bg-check-summary > .pricing {
       font-size: 22px;
     }
     .item-inner {
-      -webkit-transition: -webkit-transform .2s, -webkit-box-shadow .2s;
-      transition: transform .2s;
+      .transition(transform .2s);
       &:hover {
         background-color: #FFF;
       }
@@ -1265,8 +1261,8 @@ os-bg-check-summary > .pricing {
 
 [tos], tos {
   button.btn-link {
-    pading-left: 0px !important;
-    padding-right: 0px !important;
+    pading-left: 0 !important;
+    padding-right: 0 !important;
     padding: 0 0 !important;
   }
 
@@ -1490,15 +1486,15 @@ os-bg-check-summary > .pricing {
       .border-radiuses(4px, 0, 0, 4px);
       img {
         .opacity(1);
-        .transition(all .2s ease-in-out;);
+        .transition(all .2s ease-in-out);
         .border-radiuses(4px, 0, 0, 4px);
         margin: 0 auto;
         text-align: center;
 
         &:hover {
-          .transform (scale(1.1));
+          .transform(scale(1.1));
           .opacity(0.6);
-          .transition(all .4s ease-in-out;);
+          .transition(all .4s ease-in-out);
         }
 
       }
@@ -1517,11 +1513,11 @@ os-bg-check-summary > .pricing {
       color: @text-color-secondary;
 
       &.lead-content {
-        padding-bottom: 0px;
+        padding-bottom: 0;
       }
 
       &.body {
-        padding-top: 0px;
+        padding-top: 0;
         padding-left: 30px;
       }
 
@@ -1548,8 +1544,6 @@ os-bg-check-summary > .pricing {
         li {
           &:first-child {
             padding-left: 0;
-          }
-          &.post-author {
           }
           .fa {
             margin-right: 5px;
@@ -1672,8 +1666,8 @@ text-angular {
   .ta-toolbar.focused {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    margin-left: 0px;
-    margin-bottom: 0px;
+    margin-left: 0;
+    margin-bottom: 0;
     padding: 7px 5px 9px 5px;
     display: block;
     background-color: @smoky-white;
@@ -1778,7 +1772,7 @@ dl.mini-table {
   dt {
     padding-top: 2px;
     dd p {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
   }
 }
@@ -2003,7 +1997,7 @@ form.applicant-form {
         }
 
         &:hover {
-          .transition(all .2s ease-in-out;);
+          .transition(all .2s ease-in-out);
           background-color: fade(@black, 3%);
           cursor: pointer;
 
@@ -2055,9 +2049,7 @@ a {
 
 .fluidvids.mid-vert iframe {
   top: 50%;
-  transform: translateY(-50%);
-  -webkit-transform: translateY(-25%);
-  -ms-transform: translateY(-50%);
+  .translate(0,-50%);
 }
 
 .pdf-container {
