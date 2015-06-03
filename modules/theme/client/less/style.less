@@ -10,19 +10,6 @@
   background-position: @position;
 }
 
-.borderRadius(@radius) {
-  -moz-border-radius: @radius;
-  -webkit-border-radius: @radius;
-  border-radius: @radius;
-}
-
-.transition(@duration: 0.3s, @param: all, @easing: ease-in) {
-  -moz-transition: @param @duration @easing;
-  -o-transition: @param @duration @easing;
-  -webkit-transition: @param @duration @easing;
-  transition: @param @duration @easing;
-}
-
 @font-face {
   font-family: 'RobotoRegular';
   src: url('/modules/theme/fonts/ROBOTODRAFT_REGULAR.TTF') format('truetype');
@@ -148,7 +135,7 @@ div.play-button {
   z-index: 999;
 
   background-color: transparent;
-  .transition(500ms, background-color, ease-in-out);
+  .transition(background-color 500ms ease-in-out);
 
   &.shadow {
     position: fixed;
@@ -156,17 +143,16 @@ div.play-button {
     right: 0;
 
     background-color: rgba(0, 0, 17, 0.6);
-    .transition(500ms, background-color, ease-in-out);
+    .transition(background-color 500ms ease-in-out);
 
     .content {
       .main-menu {
         padding-top: 0;
-        //.transition(300ms, padding-top);
 
         .menu-block
         .logo {
           padding-top: 7px;
-          .transition(100ms, padding-top);
+          .transition(padding-top 100ms ease-in-out);
         }
       }
     }
@@ -179,7 +165,6 @@ div.play-button {
 
     .main-menu {
       padding: 20px 15px 0px 20px;
-      //.transition(100ms, padding-top);
 
       .mobile-nav {
         width: 55px;
@@ -215,7 +200,7 @@ div.play-button {
           padding-right: 40px;
           padding-top: 0;
           float: left;
-          .transition(100ms, padding-top);
+          .transition(padding-top 100ms);
 
           a {
             text-decoration: none;
@@ -228,7 +213,7 @@ div.play-button {
         .menu-list {
 
           .menu-item:hover, .auth-menu-item:hover {
-            .transition(300ms, background-color);
+            .transition(background-color 300ms);
             background-color: fade(@text-color-light, 40%);
           }
 
@@ -292,7 +277,7 @@ div.play-button {
               //background-color: rgba(0, 0, 17, 0.3);
 
               &:hover {
-                .transition(300ms, background-color);
+                .transition(background-color 300ms);
                 background-color: fade(@main-style-color-1, 40%);
               }
               a {
@@ -534,7 +519,7 @@ div.play-button {
               height: 180px;
               position: absolute;
               margin: 10px 20px;
-              .borderRadius(90px);
+              .border-radius(90px);
               //border: 2px solid @light-grey-color;
               z-index: -1;
 
@@ -595,7 +580,7 @@ div.play-button {
       .pagination-item {
         width: 17px;
         height: 17px;
-        .borderRadius(50%);
+        .border-radius(50%);
         background-color: @pagination-item-color;
         display: inline-block;
         margin: 4px;
@@ -802,7 +787,7 @@ div.play-button {
       width: 125px;
       height: 125px;
       border: 1px solid @video-control-text;
-      .borderRadius(50%);
+      .border-radius(50%);
       //.backgroundImage(@play-icon-url, no-repeat, 57% 50%, 30px);
       background-color: rgba(50, 50, 50, 0.3);
       position: relative;
@@ -2299,7 +2284,7 @@ div.play-button {
         width: 60px;
         height: 60px;
         cursor: pointer;
-        .borderRadius(50%);
+        .border-radius(50%);
 
         .triangle {
           border-width: 10px 0 10px 14px;
