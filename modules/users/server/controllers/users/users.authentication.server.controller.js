@@ -18,26 +18,10 @@ Q            = require('q'),
         file: 'users.authentication.server.controller'
     });
 
-
-// DRY Simple Login Function
-var login = function (req, res, user) {
-    log.trace({func: 'login'}, 'Logging in user %s', user.email);
-
-    req.login(user, function (err) {
-        if (err) {
-            log.warn({err: err}, 'Login Failed due to error');
-            res.status(400).send(err);
-        } else {
-            log.info('Login Successful!');
-            res.jsonp(user);
-        }
-    });
-};
-
 exports.userseed = function (req, res) {
     delete req.body.roles;
 
-    log.info({email: req.body.email}, 'Creating Seed User for email %s', req.body.email);
+    req.log.info({ email: req.body.email }, 'Creating Seed User for email %s', req.body.email);
 
     var user = new User(req.body);
 };
@@ -49,7 +33,7 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    log.info({func: 'signup', type: req.body.type, username: req.body.username}, 'Signup for new user');
+    req.log.info({ func: 'signup', type: req.body.type, username: req.body.username }, 'Signup for new user');
 
     // Init Variables
     var user = new User(req.body);
@@ -75,7 +59,7 @@ exports.signup = function (req, res) {
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user);
             }
             else {
-                console.log('[SIGNPU] - Creating new User of type `%s` ... what to do?', userType);
+                req.log.debug('[SIGNPU] - Creating new User of type `%s` ... what to do?', userType);
             }
         }
     });
@@ -87,7 +71,7 @@ exports.signup = function (req, res) {
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
-    console.log('[Auth.Ctrl] signin()');
+    req.log.debug('[Auth.Ctrl] signin()');
 
     passport.authenticate('local', function (err, user, info) {
         if (err || !user) {
@@ -98,130 +82,6 @@ exports.signin = function (req, res, next) {
         }
     })(req, res, next);
 };
-
-function completeUserHydration(req, res, user) {
-
-    user.cleanse();
-
-    var deferred = Q.defer();
-
-    if (user.isDriver && !user.driver) {
-        console.log('[Auth] - Creating new Driver for user `%s`', user.id);
-
-        Driver.findOne({
-            user: user
-        }).exec(function (err, driver) {
-            if (err) {
-                console.log('Error finding driver for user %s', user.id);
-                return login(req, res, user);
-            }
-
-            if (!!driver) {
-                console.log('[LOGIN] Found Driver %s for user %s', driver.id, user.id);
-
-                deferred.resolve({driver: driver._id});
-            } else {
-                console.log('[SIGNUP] - Creating new Driver for user');
-                var newDriver = new Driver({'user': user});
-
-                newDriver.save(function (err) {
-                    if (err) {
-                        console.error('[SIGNUP] - err creating new driver', err);
-                        return deferred.reject('Unable to create new driver: ' + err);
-                    }
-
-                    if(!!newDriver) {
-                        deferred.resolve({driver: newDriver._id});
-                    }
-                    else {
-                        deferred.reject('Unknown problem in creating new Driver');
-                    }
-
-                });
-            }
-        });
-    }
-    else if (user.isOwner && !user.company) {
-        console.log('[Auth] - Creating new Company for user `%s`', user.id);
-
-        Company.findOne({
-            owner: user
-        }).exec(function (err, company) {
-            if (err) {
-                console.log('Error finding company for user %s', user.id);
-                return login(req, res, user);
-            }
-
-            if (!!company) {
-                console.log('[LOGIN] Found Company %s for user %s', company.id, user.id);
-
-                deferred.resolve({company: company._id});
-            }
-            else {
-                console.log('[SIGNUP] - Creating new Company for user');
-
-                var newCompany = new Company({'owner': user, 'name': req.body.companyName});
-
-                newCompany.save(function (err) {
-                    if (err) {
-                        console.error('[SIGNUP] - err creating new Company', err);
-                        return deferred.reject('Unable to create new company: ' + err);
-                    }
-
-                    if(!!newCompany) {
-                        deferred.resolve({company: newCompany._id});
-                    }
-                    else {
-                        deferred.reject('Unknown Problem in creating new company');
-                    }
-                });
-            }
-        });
-    }
-    else {
-        return login(req, res, user);
-    }
-
-    // The 'success' object is the result of the deferred resolutions above
-    // which have the relevant 'company' or 'driver' added to them for updating
-    deferred.promise.then(function(success) {
-        var updateObj = success;
-        console.log('[Auth.Hydrate] Updating with obj: %j', updateObj);
-
-        updateAndLogin(user.id, updateObj).then(
-            function (newUser) {
-                login(req, res, newUser);
-            }, function (err) {
-                login(req, res, user);
-            });
-    }, function(err) {
-        console.log('Unable to resolve new %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
-        login(req,res,user);
-    });
-}
-
-
-function updateAndLogin(id, update) {
-
-    var deferred = Q.defer();
-
-    var query = {'_id': id};
-    var options = {new: true}; // Return the updated object
-
-    update.modified = Date.now();
-
-    User.findOneAndUpdate(query, update, options, function (err, updatedUser) {
-        if (err) {
-            console.log('got an error: %j', err);
-            return deferred.reject('Unable to save user\'s sub-profile due to ' + err.message);
-        }
-        updatedUser.cleanse();
-
-        deferred.resolve(updatedUser);
-    });
-
-    return deferred.promise;
-}
 
 /**
  * Signout
@@ -350,14 +210,108 @@ exports.removeOAuthProvider = function (req, res, next) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                req.login(user, function (err) {
-                    if (err) {
-                        res.status(400).send(err);
-                    } else {
-                        res.json(user);
-                    }
-                });
+                login(req, res, user);
             }
         });
     }
 };
+
+
+
+function updateUser(id, update) {
+
+    var deferred = Q.defer();
+
+    var query = { '_id': id };
+    var options = { new: true };
+
+    log.info({ func: 'updateUser', query: query, update: _.keys(update), options: options }, 'Updating User');
+
+    User.findOneAndUpdate(query, update, options, function (err, updatedUser) {
+        if (err) {
+            log.error({ func: 'updateUser', error: err }, 'got an error: %j', err);
+            return deferred.reject('Unable to save user\'s sub-profile due to ' + err.message);
+        }
+        
+        deferred.resolve(updatedUser);
+    });
+
+    return deferred.promise;
+}
+
+// DRY Simple Login Function
+function login(req, res, user) {
+    req.log.trace({ func: 'login' }, 'Logging in user %s', user.email);
+    
+    if (!_.isEmpty(user.salt + user.password)) {
+        req.log.info({ func: 'login' }, 'USER HAS NOT BEEN CLEANSED!')
+        user.cleanse();
+    }
+
+    req.login(user, function (err) {
+        if (err) {
+            log.warn({ err: err }, 'Login Failed due to error');
+            res.status(400).send(err);
+        } else {
+            log.info({func: 'login', user: user.username}, 'Login Successful!');
+
+            res.jsonp(user);
+        }
+    });
+};
+
+function completeUserHydration(req, res, user) {
+
+    var typeProfileSearch;
+
+    if (user.isDriver && !user.driver) {
+        typeProfileSearch = Driver.findOne({
+            user: user
+        });
+    }
+    else if (user.isOwner && !user.company) {
+        typeProfileSearch = Company.findOne({
+            owner: user
+        })
+    } else {
+        return login(req, res, user);
+    }
+
+    typeProfileSearch.then(function (success) {
+        req.log.debug({ func: 'completeUserHydration' }, 'Creating new %s for user `%s`', user.isOwner ? 'COMPANY' : 'DRIVER', user.id);
+        var promises = {};
+        var userUpdateDoc = { modified: Date.now() };
+
+        if (user.isDriver) {
+            var newDriver = success || new Driver({ 'user': user });
+            userUpdateDoc.driver = newDriver;
+
+            promises.driver = !!success ? success : newDriver.save();
+        }
+
+        if (user.isOwner) {
+            var newCompany = success || new Company({ 'owner': user, 'name': req.body.companyName });
+            userUpdateDoc.company = newCompany;
+
+            promises.company = !!success ? success : newCompany.save();
+        }
+
+        promises.user = updateUser(user._id, userUpdateDoc);
+
+        req.log.info({ func: 'completeUserHydration'}, 'Saving Profile and User');
+
+        return Q.all([promises.user, promises.driver, promises.company]);
+    })
+        .then(function (success) {
+        req.log.info({ func: 'completeUserHydration' },
+            'Successfully updated user with new %s Object ... logging in now', user.isOwner ? 'Company' : 'Driver');
+
+        var newUser = success[0];
+        return login(req, res, newUser);
+    })
+        .then(null, function (err) {
+        req.log.error('Failed to create or update user\'s %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
+
+        return login(req, res, user);
+    });
+}
