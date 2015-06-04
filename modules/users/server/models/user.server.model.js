@@ -225,6 +225,15 @@ var UserSchema = new Schema({
     }
 }, {'toJSON': {virtuals: true}});
 
+
+
+UserSchema.index({
+    firstName: 'text',
+    lastName: 'text',
+    username: 'text',
+    email: 'text'
+});
+
 UserSchema.post('init', function (next) {
     if (!this.displayName) {
         this.displayName = this.firstName + ' ' + this.lastName;
