@@ -5,43 +5,35 @@ var path      = require('path'),
     constants = require('../models/outset.constants'),
     _         = require('lodash');
 
+var configOptions = {
+    'states': constants.usStates,
+    'countries': constants.countries,
+    'baseSchedule': constants.baseSchedule,
+    'reports': constants.reportPackages,
+    'faqs': getFAQs,
+    'debug': { debug: false },
+    'modules': getModules,
+    'subscriptions': getSubscriptions
+}
+
 exports.getConfig = function (req, res, next, varName) {
 
-    console.log('[CONFIG] Looking up config for `%s`', varName);
+    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, 'Looking up config for `%s`', varName);
+
+    var configVal = configOptions[varName.toLowerCase] || { varName: null };
+
+    if (_.isFunction(configVal)) {
+        req.configVal = configVal(req);
+    } else if (_.isObject(configVal)) {
+        req.configVal = configVal;
+    } else {
+        return next(new Error('Unknown Configuration Option'));
+    }
+
+    return next();
 
     switch (varName) {
-        case 'states':
-            req.configVal = constants.usStates;
-            return next();
-        case 'states':
-            req.configVal = constants.countries;
-            return next();
-        case 'baseSchedule':
-            req.configVal = constants.baseSchedule;
-            return next();
-        case 'reports':
-            req.configVal = constants.reportPackages;
-            return next();
-        case 'faqs':
-            var filter = req.query;
-            console.log('looking up faqs with filter: %j', filter);
-            req.configVal = constants.faqs;
-            console.log('got %d faqs to return', req.configVal.length);
-            return next();
-        case 'debug':
-            req.configVal = {debug: false};
-            return next();
-        case 'modules' :
-            console.log('[CONFIG] returning module configs: %j', config.modules);
-            req.configVal = config.modules;
-            return next();
-        case 'subscriptions' :
-            console.log('[CONFIG] returning company subscriptions: %j', constants.subscriptionPackages);
-            req.configVal = constants.subscriptionPackages;
-            return next();
-        default:
-            req.configVal = {varName: null};
-            next();
+
     }
 };
 
@@ -71,18 +63,33 @@ exports.validate = function (varName, value) {
     }
 };
 
+
+
+function getFAQs(req) {
+    var filter = req.query;
+    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, 'looking up faqs with filter: %j', filter);
+    req.configVal = _.filter(constants.faqs, req.query);
+    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, 'got %d faqs to return', req.configVal.length);
+}
+function getModules(req) {
+    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, '[CONFIG] returning module configuration');
+    return config.modules;
+}
+
+function getSubscriptions(req) {
+    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, '[CONFIG] returning company subscription data');
+    return constants.subscriptionPackages;
+}
+
 function validateState(value) {
     debugger;
     if (_.contains(constants.usStates, value)) {
-        console.log('validateState: Contains!');
         return true;
     }
     if (_.find(constants.usStates, value)) {
-        console.log('validateState: find!');
         return true;
     }
     if (_.filter(constants.usStates, value)) {
-        console.log('validateState: filter!');
         return true;
     }
 
