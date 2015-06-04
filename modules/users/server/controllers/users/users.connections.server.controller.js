@@ -39,7 +39,7 @@ exports.loadFriends = function (req, res, next) {
 
     req.log.debug({ func: 'loadFriends', params: req.params }, 'Loading friends for user: %s', user.id);
 
-    user.loadFriends().populate('friends').then(
+    user.loadFriends().then(
         function (success) {
             req.log.debug({ func: 'loadFriends', result: success }, 'Found %s\'s friends', user.username);
             return res.json(success);
