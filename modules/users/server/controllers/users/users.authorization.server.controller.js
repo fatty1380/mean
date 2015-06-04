@@ -16,8 +16,16 @@ var _ = require('lodash'),
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-    var select = req.select || '-password -oldPass -salt -roles';
+    req.log.debug({func: 'userById', params: req.params}, 'looking up user by id: %s', id);
 
+    if(_.isEmpty(id) || !mongoose.Types.ObjectId.isValid(id)) {
+        req.log.info({func: 'userById', id: id}, 'UserID is invalid - setting request user to profile');
+
+        req.profile = req.user;
+        return next();
+    }
+
+    var select = req.select || '-password -oldPass -salt -roles';
     req.log.debug({func: 'userById', params: req.params}, 'looking up user by id: %s', id);
     User
         .findOne({
@@ -62,7 +70,6 @@ exports.hasAuthorization = function(roles) {
     return function(req, res, next) {
         _this.requiresLogin(req, res, function() {
             if (_.intersection(req.user.roles, roles).length) {
-
                 req.log.debug({func: 'hasAuthorization'}, 'Authorized');
                 return next();
             } else {

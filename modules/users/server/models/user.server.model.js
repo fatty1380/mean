@@ -101,6 +101,13 @@ var UserSchema = new Schema({
         required: 'Please fill in a username',
         trim: true
     },
+    
+    profileImageURL: {
+        type: String,
+        default: 'modules/users/img/profile/default.png'
+    },
+    
+    // Sensitive and/or Auth Related Info //
     password: {
         type: String,
         default: '',
@@ -113,22 +120,19 @@ var UserSchema = new Schema({
         type: Boolean,
         default: false
     },
-    profileImageURL: {
-        type: String,
-        default: 'modules/users/img/profile/default.png'
-    },
     provider: {
         type: String,
         required: 'Provider is required'
     },
     providerData: {},
     additionalProvidersData: {},
-    modified: {
-        type: Date
-    },
-    created: {
-        type: Date,
-        default: Date.now
+
+    roles: {
+        type: [{
+            type: String,
+            enum: ['user', 'admin']
+        }],
+        default: ['user']
     },
 
     /* For reset password */
@@ -138,14 +142,15 @@ var UserSchema = new Schema({
     resetPasswordExpires: {
         type: Date
     },
-
-    roles: {
-        type: [{
-            type: String,
-            enum: ['user', 'admin']
-        }],
-        default: ['user']
+    
+    modified: {
+        type: Date
     },
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    
     type: {
         type: String,
         enum: ['driver', 'owner'],
@@ -193,10 +198,22 @@ var UserSchema = new Schema({
      */
 
     friends: {
-        type: [{type: Schema.ObjectId,
-            ref: 'Driver'}],
+        type: [{
+            type: Schema.ObjectId,
+            ref: 'User'
+        }],
         default: []
     },
+    
+    requests: {
+        type: [{
+            type: Schema.ObjectId,
+            ref: 'RequestMessage'
+        }],
+        default: []
+    },
+    
+    //conversations: [{}],
 
     /** Friends & Connections : END **/
 
@@ -293,7 +310,11 @@ UserSchema.methods.cleanse = function () {
 UserSchema.methods.loadFriends = function() {
     return this.db.model('User')
         .find({_id: {'$in': this.friends}, 'friends': this._id})
-        .select('_id handle displayName username profileImageURL');
+        .select(UserSchema.statics.fields.social);
+};
+
+UserSchema.statics.fields = {
+    social: 'firstName lastName username friends handle profileImageURL type driver company email'
 };
 
 /**
