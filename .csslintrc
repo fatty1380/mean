@@ -14,6 +14,6 @@
 	"unqualified-attributes": false,
 	"fallback-colors": false,
 	"shorthand": false,
-	"duplicate-background-images": false //This may be useful later 
+	"duplicate-background-images": false
 }
  

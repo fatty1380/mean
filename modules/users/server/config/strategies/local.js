@@ -34,8 +34,6 @@ module.exports = function() {
 					});
 				}
 
-                    console.log('[Local.Passport] User: ' + user);
-
 				return done(null, user);
 			});
 		}

@@ -38,18 +38,7 @@
     "args": [
         //"--no-color"
     ],
-    "tasks": [
-//        {
-//            "taskName": "build",
-//            "args": [],
-//            "isBuildCommand": true,
-//            "problemMatcher": [
-//                "$lessCompile",
-//                "$tsc",
-//                "$jshint"
-//            ]
-//        }
-    ]
+    "tasks": []
 }
 
 // A task runner configuration for gulp. Gulp provides a less task
