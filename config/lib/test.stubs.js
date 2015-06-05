@@ -71,14 +71,16 @@ exports.getApplication = function(user, company, job) {
     };
 };
 
+var index = 0;
+
 var randomUser = function() {
-    var alt = ~~(Math.random() * 100);
+    var alt = (index++ % 100);
 
     return {
         firstName: SeedUsers[alt].user.name.first,
         lastName: SeedUsers[alt].user.name.last,
         email: SeedUsers[alt].user.email,
-        username: SeedUsers[alt].user.username,
+        username: SeedUsers[alt].user.username + '_' + alt,
         password: 'password',
         provider: 'local'
     };
