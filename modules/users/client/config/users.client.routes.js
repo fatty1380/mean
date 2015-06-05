@@ -144,11 +144,32 @@
                 }).
 
                 state('users.view', {
-                    parent: 'drivers',
-                    url: '/{userId:[0-9a-fA-F]{24}}',
-                    templateUrl: '/modules/drivers/views/view-driver.client.view.html',
-                    controller: 'ProfileController',
-                    controllerAs: 'vm',
+                    parent          : 'profile-base',
+                    url             : '/{userId:[0-9a-fA-F]{24}}',
+                    views           : {
+                        'content': {
+                            templateUrl        : '/modules/drivers/views/templates/driver-body.client.view.html',
+                            controller      : ['user', 'driver', function (user, driver) {
+                                var vm    = this;
+                                vm.user   = user;
+                                vm.driver = driver;
+                            }],
+                            controllerAs    : 'vm',
+                            bindToController: true
+                        },
+                        'sidebar': {
+                            templateUrl        : '/modules/drivers/views/templates/my-driver-sidebar.client.view.html',
+                            controller      : ['user', 'driver', function (user, driver) {
+                                var vm    = this;
+                                vm.user   = user;
+                                vm.driver = driver;
+                            }],
+                            controllerAs    : 'vm',
+                            bindToController: true
+                        }
+                    },
+                    controller      : 'ProfileController',
+                    controllerAs    : 'vm',
                     bindToController: true,
                     resolve         : {
                         user  : ['Profiles', '$stateParams', function (Profiles, $stateParams) {
