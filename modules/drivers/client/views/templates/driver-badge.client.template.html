@@ -43,10 +43,8 @@
                             ui-sref="drivers.edit({driverId:vm.driver.id})">
                         <i class="fa fa-2x fa-edit"></i>
                     </button>
-                    <button type="button"
-                            ng-show="!vm.isConnected"
-                            class="btn btn-oset-secondary">Connect
-                    </button>
+                    
+                    <oset-connection-button profile="vm.profile" class="btn btn-oset-secondary"></oset-connection-button>
                 </div>
             </div>
         </div>

@@ -46,6 +46,14 @@
 
 
     function ProfilesService($resource, $q) {
+        
+        var RootFriendRsrc = $resource('api/friends');
+        var friendRequestRsrc = $resource('api/friends/:requestId',
+            {}, {
+                update: {
+                    method: 'PUT'
+                }
+            });
 
         var _data = {
             query: function(query) {
@@ -71,6 +79,17 @@
                 }
 
                 return deferred.promise;
+            },
+            addFriend: function(friend) {
+                var id = _.isString(friend) ? friend : friend.id;
+                
+                var req = new RootFriendRsrc({friendId: id});
+                
+                return req.$save().$promise.then(
+                    function(success) {
+                        $log.debug('created new friend request: %o', success);
+                        return success;
+                });
             }
 
         };
