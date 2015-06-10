@@ -3,15 +3,16 @@
 var should = require('should'),
     Q = require('q'),
     path = require('path'),
-    mongoose = require('mongoose'),
-    User = mongoose.model('User'),
-    SeedUser = mongoose.model('SeedUser'),
     express = require(path.resolve('./config/lib/express')),
     request = require('supertest-as-promised')(Q.Promise),
+	stubs = require(path.resolve('./config/lib/test.stubs')),
     log = require(path.resolve('./config/lib/logger')).child({
-        module: 'article.routes.test',
-        file: 'article.server.routes.test'
+        module: 'users.test',
+        file: 'seed-user.routes'
     });
+    
+var mongoose = require('mongoose'),
+    SeedUser = mongoose.model('SeedUser');
 
 /**
  * Globals
@@ -87,10 +88,8 @@ describe('Seed User CRUD tests', function () {
             });
     });
 
-    afterEach(function (done) {
-        SeedUser.remove().exec(function () {
-            done();
-        });
+    afterEach(function () {
+        return stubs.cleanTables([SeedUser]);
     });
 });
 

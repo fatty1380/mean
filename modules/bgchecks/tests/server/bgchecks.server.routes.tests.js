@@ -12,58 +12,14 @@ var should          = require('should'),
     express         = require(path.resolve('./config/lib/express')),
     stubs = require(path.resolve('./config/lib/test.stubs')),
     log             = require(path.resolve('./config/lib/logger')).child({
-        module: 'bgchecks',
-        file  : 'bgchecks.server.routes.test'
+        module: 'tests',
+        file  : 'bgchecks.server.routes'
     });
 
 /**
  * Globals
  */
 var app, agent, credentials, user, article, report, localApplicant, statuses, endpoint;
-
-function seedReports(user, done) {
-
-    var remoteApplicantIndex = 1313;
-
-    return Q.all(_.map(statuses, function (status) {
-
-        var remoteStatus = status === 'PAID' ? 'UNKNOWN' : status;
-
-        var rpt = new BGReport({
-            'user': user,
-            'remoteApplicantId': remoteApplicantIndex++,
-            'paymentInfo': {
-                'transactionId': '9tmph8',
-                'success': true
-            },
-            'status': status,
-            'statuses': [
-                {
-                    'sku': 'MVRDOM',
-                    'value': remoteStatus
-                }
-            ],
-            'remoteReportSkus': 'MVRDOM',
-            'localReportSku': 'OUTSET_MVR'
-        });
-
-        return rpt.save();
-    }))
-        .then(
-        function (results) {
-            if (_.isFunction(done)) {
-                done();
-            }
-            return results;
-        }, function (err) {
-            log.error(err, 'seed reports failed');
-            if (_.isFunction(done)) {
-                done(err);
-            }
-            return Q.reject(err);
-        }
-    );
-}
 
 /**
  * Article routes tests
@@ -386,3 +342,47 @@ describe('BGCheck CRUD tests', function () {
             });
     });
 });
+
+function seedReports(user, done) {
+
+    var remoteApplicantIndex = 1313;
+
+    return Q.all(_.map(statuses, function (status) {
+
+        var remoteStatus = status === 'PAID' ? 'UNKNOWN' : status;
+
+        var rpt = new BGReport({
+            'user': user,
+            'remoteApplicantId': remoteApplicantIndex++,
+            'paymentInfo': {
+                'transactionId': '9tmph8',
+                'success': true
+            },
+            'status': status,
+            'statuses': [
+                {
+                    'sku': 'MVRDOM',
+                    'value': remoteStatus
+                }
+            ],
+            'remoteReportSkus': 'MVRDOM',
+            'localReportSku': 'OUTSET_MVR'
+        });
+
+        return rpt.save();
+    }))
+        .then(
+        function (results) {
+            if (_.isFunction(done)) {
+                done();
+            }
+            return results;
+        }, function (err) {
+            log.error(err, 'seed reports failed');
+            if (_.isFunction(done)) {
+                done(err);
+            }
+            return Q.reject(err);
+        }
+    );
+}

@@ -4,16 +4,17 @@ var should = require('should'),
     _ = require('lodash'),
     Q = require('q'),
     path = require('path'),
-    mongoose = require('mongoose'),
     stubs = require(path.resolve('./config/lib/test.stubs')),
-    User = mongoose.model('User'),
-    RequestMessage = mongoose.model('RequestMessage'),
     express = require(path.resolve('./config/lib/express')),
     request = require('supertest-as-promised')(Q.Promise),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'user',
         file: 'user.server.routes.test'
     });
+    
+var mongoose = require('mongoose'),
+    User = mongoose.model('User'),
+    RequestMessage = mongoose.model('RequestMessage');
 
 /**
  * Globals
@@ -366,7 +367,7 @@ describe('User CRUD tests', function () {
         return agent.get('/api/auth/signout')
             .then(function () {
             log.trace('Logged out of app');
-            return Q.all([User.remove(), RequestMessage.remove()]);
+            return stubs.cleanTables([User, RequestMessage]);
         });
     });
 });
@@ -485,6 +486,6 @@ describe('User SEARCH tests', function () {
     it('should be able to find users by handle');
 
     after(function () {
-        return User.remove();
+        return stubs.cleanTables([User]);
     });
 });
