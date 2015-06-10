@@ -6,3 +6,5 @@
 /// <reference path="node/node-0.10.d.ts" />
 /// <reference path="mongoose/mongoose.d.ts" />
 /// <reference path="lodash/lodash.d.ts" />
+
+/* global ApplicationConfiguration */

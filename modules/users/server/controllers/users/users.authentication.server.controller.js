@@ -3,25 +3,25 @@
 /**
  * Module dependencies.
  */
-var _        = require('lodash'),
-path         = require('path'),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-mongoose     = require('mongoose'),
-passport     = require('passport'),
-User         = mongoose.model('User'),
-Driver       = mongoose.model('Driver'),
-Company      = mongoose.model('Company'),
-emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
-Q            = require('q'),
-    log = require(path.resolve('./config/lib/logger')).child({
+var _            = require('lodash'),
+    path         = require('path'),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    mongoose     = require('mongoose'),
+    passport     = require('passport'),
+    User         = mongoose.model('User'),
+    Driver       = mongoose.model('Driver'),
+    Company      = mongoose.model('Company'),
+    emailer      = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+    Q            = require('q'),
+    log          = require(path.resolve('./config/lib/logger')).child({
         module: 'users.authentication',
-        file: 'users.authentication.server.controller'
+        file  : 'users.authentication.server.controller'
     });
 
 exports.userseed = function (req, res) {
     delete req.body.roles;
 
-    req.log.info({ email: req.body.email }, 'Creating Seed User for email %s', req.body.email);
+    req.log.info({email: req.body.email}, 'Creating Seed User for email %s', req.body.email);
 
     var user = new User(req.body);
 };
@@ -33,14 +33,14 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    req.log.info({ func: 'signup', type: req.body.type, username: req.body.username }, 'Signup for new user');
+    req.log.info({func: 'signup', type: req.body.type, username: req.body.username}, 'Signup for new user');
 
     // Init Variables
     var user = new User(req.body);
 
     var userType = req.body.type;
     // Add missing user fields
-    user.provider = 'local';
+    user.provider    = 'local';
     user.displayName = user.firstName + ' ' + user.lastName;
 
     // Then save the user
@@ -117,16 +117,16 @@ exports.oauthCallback = function (strategy) {
 exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
     if (!req.user) {
         // Define a search query fields
-        var searchMainProviderIdentifierField = 'providerData.' + providerUserProfile.providerIdentifierField;
+        var searchMainProviderIdentifierField       = 'providerData.' + providerUserProfile.providerIdentifierField;
         var searchAdditionalProviderIdentifierField = 'additionalProvidersData.' + providerUserProfile.provider + '.' + providerUserProfile.providerIdentifierField;
 
         // Define main provider search query
-        var mainProviderSearchQuery = {};
-        mainProviderSearchQuery.provider = providerUserProfile.provider;
+        var mainProviderSearchQuery                                = {};
+        mainProviderSearchQuery.provider                           = providerUserProfile.provider;
         mainProviderSearchQuery[searchMainProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
 
         // Define additional provider search query
-        var additionalProviderSearchQuery = {};
+        var additionalProviderSearchQuery                                      = {};
         additionalProviderSearchQuery[searchAdditionalProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
 
         // Define a search query to find existing user with current provider profile
@@ -143,14 +143,14 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 
                     User.findUniqueUsername(possibleUsername, null, function (availableUsername) {
                         user = new User({
-                            firstName: providerUserProfile.firstName,
-                            lastName: providerUserProfile.lastName,
-                            username: availableUsername,
-                            displayName: providerUserProfile.displayName,
-                            email: providerUserProfile.email,
+                            firstName      : providerUserProfile.firstName,
+                            lastName       : providerUserProfile.lastName,
+                            username       : availableUsername,
+                            displayName    : providerUserProfile.displayName,
+                            email          : providerUserProfile.email,
                             profileImageURL: providerUserProfile.profileImageURL,
-                            provider: providerUserProfile.provider,
-                            providerData: providerUserProfile.providerData
+                            provider       : providerUserProfile.provider,
+                            providerData   : providerUserProfile.providerData
                         });
 
                         // And save the user
@@ -192,7 +192,7 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
  * Remove OAuth provider
  */
 exports.removeOAuthProvider = function (req, res, next) {
-    var user = req.user;
+    var user     = req.user;
     var provider = req.param('provider');
 
     if (user && provider) {
@@ -217,45 +217,31 @@ exports.removeOAuthProvider = function (req, res, next) {
 };
 
 
-
 function updateUser(id, update) {
+    var options = {new: true};
 
-    var deferred = Q.defer();
+    log.trace({func: 'updateUser', id: id, update: _.keys(update), options: options}, 'Updating User');
 
-    var query = { '_id': id };
-    var options = { new: true };
-
-    log.info({ func: 'updateUser', query: query, update: _.keys(update), options: options }, 'Updating User');
-
-    User.findOneAndUpdate(query, update, options, function (err, updatedUser) {
-        if (err) {
-            log.error({ func: 'updateUser', error: err }, 'got an error: %j', err);
-            return deferred.reject('Unable to save user\'s sub-profile due to ' + err.message);
-        }
-        
-        deferred.resolve(updatedUser);
-    });
-
-    return deferred.promise;
+    return User.findByIdAndUpdate(id, update, options).exec();
 }
 
 // DRY Simple Login Function
 function login(req, res, user) {
-    req.log.trace({ func: 'login' }, 'Logging in user %s', user.email);
-    
+    req.log.trace({func: 'login'}, 'Logging in user %s', user.email);
+
     if (!_.isEmpty(user.salt + user.password)) {
-        req.log.info({ func: 'login' }, 'USER HAS NOT BEEN CLEANSED!')
+        req.log.debug({func: 'login'}, 'USER HAS NOT BEEN CLEANSED!')
         user.cleanse();
     }
 
     req.login(user, function (err) {
         if (err) {
-            log.warn({ err: err }, 'Login Failed due to error');
+            log.warn({err: err}, 'Login Failed due to error');
             res.status(400).send(err);
         } else {
-            log.info({func: 'login', user: user.username}, 'Login Successful!');
+            req.log.info({func: 'login', user: req.user, roles: req.user.roles.join(',')}, 'Login Successful!');
 
-            res.jsonp(user);
+            res.json(req.user);
         }
     });
 };
@@ -267,30 +253,33 @@ function completeUserHydration(req, res, user) {
     if (user.isDriver && !user.driver) {
         typeProfileSearch = Driver.findOne({
             user: user
-        });
+        }).exec();
     }
     else if (user.isOwner && !user.company) {
         typeProfileSearch = Company.findOne({
             owner: user
-        })
+        }).exec();
     } else {
         return login(req, res, user);
     }
 
-    typeProfileSearch.then(function (success) {
-        req.log.debug({ func: 'completeUserHydration' }, 'Creating new %s for user `%s`', user.isOwner ? 'COMPANY' : 'DRIVER', user.id);
-        var promises = {};
-        var userUpdateDoc = { modified: Date.now() };
+    return typeProfileSearch.then(function (success) {
+        req.log.debug({
+            func   : 'completeUserHydration',
+            success: success
+        }, 'Creating new %s for user `%s`', user.isOwner ? 'COMPANY' : 'DRIVER', user.id);
+        var promises      = {};
+        var userUpdateDoc = {modified: Date.now()};
 
         if (user.isDriver) {
-            var newDriver = success || new Driver({ 'user': user });
+            var newDriver        = success || new Driver({'user': user});
             userUpdateDoc.driver = newDriver;
 
             promises.driver = !!success ? success : newDriver.save();
         }
 
         if (user.isOwner) {
-            var newCompany = success || new Company({ 'owner': user, 'name': req.body.companyName });
+            var newCompany        = success || new Company({'owner': user, 'name': req.body.companyName});
             userUpdateDoc.company = newCompany;
 
             promises.company = !!success ? success : newCompany.save();
@@ -298,20 +287,21 @@ function completeUserHydration(req, res, user) {
 
         promises.user = updateUser(user._id, userUpdateDoc);
 
-        req.log.info({ func: 'completeUserHydration'}, 'Saving Profile and User');
+        req.log.info({func: 'completeUserHydration'}, 'Saving Profile and User');
 
         return Q.all([promises.user, promises.driver, promises.company]);
     })
-        .then(function (success) {
-        req.log.info({ func: 'completeUserHydration' },
-            'Successfully updated user with new %s Object ... logging in now', user.isOwner ? 'Company' : 'Driver');
+        .then(
+        function (success) {
+            req.log.info({func: 'completeUserHydration'},
+                'Successfully updated user with new %s Object ... logging in now', user.isOwner ? 'Company' : 'Driver');
 
-        var newUser = success[0];
-        return login(req, res, newUser);
-    })
-        .then(null, function (err) {
-        req.log.error('Failed to create or update user\'s %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
+            var newUser = success[0];
+            return login(req, res, newUser);
+        },
+        function (err) {
+            req.log.error('Failed to create or update user\'s %s due to `%s`', user.isOwner ? 'Company' : 'Driver', err);
 
-        return login(req, res, user);
-    });
+            return login(req, res, user);
+        });
 }

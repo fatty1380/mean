@@ -253,6 +253,7 @@ module.exports.initModulesServerPolicies = function (app) {
 
     // Globbing policy files
     config.files.server.policies.forEach(function (policyPath) {
+        log.trace({func: 'initModulesServerPolicies'}, 'Resolving policy path `%s`', policyPath);
         require(path.resolve(policyPath)).invokeRolesPolicies();
     });
 };

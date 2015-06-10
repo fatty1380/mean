@@ -36,7 +36,7 @@ module.exports.connect = function(cb) {
 			log.error(err, 'Could not connect to MongoDB!');
 			console.log(err);
 		} else {
-			log.info(config.db, 'Successful connection to MongoDB!');
+			log.trace(config.db, 'Successful connection to MongoDB!');
 			// Load modules
 			_this.loadModels();
 

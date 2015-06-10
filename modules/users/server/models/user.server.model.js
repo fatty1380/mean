@@ -153,7 +153,7 @@ var UserSchema = new Schema({
     
     type: {
         type: String,
-        enum: ['driver', 'owner'],
+        enum: ['driver', 'owner', ''],
         default: ''
     },
     email: {
