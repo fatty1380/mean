@@ -97,15 +97,15 @@
         
         var RootFriendRsrc = $resource('api/friends',
             {}, { update: { method: 'PUT' } });
-        var FriendStatusRsrc = $resource('api/friends/status/:userId');
-        var FriendRequestRsrc = $resource('api/friends/requests/:requestId',
+        var FriendStatusRsrc = $resource('api/friends/:userId');
+        var FriendRequestRsrc = $resource('api/requests/:requestId',
             {}, {
                 update: { method: 'PUT' },
                 accept: { method: 'PUT', action: 'accept' },
                 ignore: { method: 'PUT', action: 'deny' }
             });
         
-        // POST /api/friends/requests
+        // POST /api/requests
         function requestFriend(friend) {
 
             var id = _.isString(friend) ? friend : friend.id;
@@ -122,7 +122,7 @@
 
         }
         
-        // PUT /api/friends/requests/:requestId
+        // PUT /api/requests/:requestId
         function acceptRequest(requestId) {
             return FriendRequestRsrc.$accept({ requestId: requestId });
         }
@@ -130,12 +130,12 @@
             return FriendRequestRsrc.$ignore({ requestId: requestId });
         }
         
-        // GET /api/friends/status/:userId
+        // GET /api/friends/:userId
         function checkFriend(userId) {
             return FriendStatusRsrc.$get({ userId: userId });
         }
         
-        // DELETE /api/friends/status/:userId
+        // DELETE /api/friends/:userId
         function removeFriend(userId) {
             return FriendStatusRsrc.$delete({ userId: userId });
         }

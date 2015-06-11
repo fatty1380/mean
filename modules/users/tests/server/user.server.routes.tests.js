@@ -191,7 +191,7 @@ describe('User CRUD tests', function () {
         it('should return correct friend status', function () {
             _test = this.test;
 
-            var endpoint = '/api/friends/status/' + u1.id;
+            var endpoint = '/api/friends/' + u1.id;
             return agent.get(endpoint)
                 .expect(200)
                 .then(function (response) {
@@ -205,7 +205,7 @@ describe('User CRUD tests', function () {
                 
                 //////////////
                 
-                endpoint = '/api/friends/status/' + u2.id;
+                endpoint = '/api/friends/' + u2.id;
                 return agent.get(endpoint)
                     .expect(200);
             })
@@ -220,7 +220,7 @@ describe('User CRUD tests', function () {
                 
                 //////////////
                 
-                endpoint = '/api/friends/status/' + u3.id;
+                endpoint = '/api/friends/' + u3.id;
                 return agent.get(endpoint)
                     .expect(200);
             })
@@ -235,7 +235,7 @@ describe('User CRUD tests', function () {
                 
                 //////////////
                 
-                endpoint = '/api/friends/status/' + user.id;
+                endpoint = '/api/friends/' + user.id;
                 return agent.get(endpoint)
                     .expect(200);
             })
@@ -278,7 +278,7 @@ describe('User CRUD tests', function () {
         it('should return a list of pending friend requests', function () {
             _test = this.test;
 
-            var endpoint = '/api/friends/requests';
+            var endpoint = '/api/requests';
 
             return agent.get(endpoint)
                 .expect(200)
@@ -300,7 +300,7 @@ describe('User CRUD tests', function () {
         it('should return a list of all friend requests when queried', function () {
             _test = this.test;
 
-            var endpoint = '/api/friends/requests';
+            var endpoint = '/api/requests';
 
             return agent.get(endpoint)
                 .expect(200)
@@ -321,7 +321,7 @@ describe('User CRUD tests', function () {
         it('should allow me to make a friend request and get that request back', function () {
             _test = this.test;
 
-            var endpoint = '/api/friends/requests';
+            var endpoint = '/api/requests';
             var postData = { friendId: u3.id };
 
             return agent.post(endpoint)
@@ -342,7 +342,7 @@ describe('User CRUD tests', function () {
         it('should allow me to load a specific friend request', function () {
             _test = this.test;
 
-            var endpoint = '/api/friends/requests/' + r1.id;
+            var endpoint = '/api/requests/' + r1.id;
 
             log.debug({ test: _test.title }, 'Making call to accept a friend');
 
@@ -375,7 +375,7 @@ describe('User CRUD tests', function () {
         it('should allow the user to accept a friend request', function () {
             _test = this.test;
 
-            var endpoint = '/api/friends/requests/' + r2.id;
+            var endpoint = '/api/requests/' + r2.id;
 
             return agent.put(endpoint)
                 .send({ action: 'accept' })

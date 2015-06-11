@@ -18,7 +18,7 @@
             .all(users.requiresLogin)
             .get(users.loadFriends);
             
-        app.route('/api/friends/status/:userId')
+        app.route('/api/friends/:userId')
             .all(users.requiresLogin)
             .get(users.checkFriendStatus)
             .delete(users.removeFriend);
@@ -31,12 +31,12 @@
          *      sender : id
          *      recipient : id
          */
-        app.route('/api/friends/requests')
+        app.route('/api/requests')
             .all(users.requiresLogin)
             .get(users.listRequests)
             .post(users.createRequest);
             
-        app.route('/api/friends/requests/:requestId')
+        app.route('/api/requests/:requestId')
             .all(users.requiresLogin)
             .get(users.getRequest)
             .put(users.updateRequest);
