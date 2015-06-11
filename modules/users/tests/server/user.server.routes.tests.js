@@ -11,7 +11,7 @@ var should = require('should'),
         module: 'user',
         file: 'user.server.routes.test'
     });
-    
+
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     RequestMessage = mongoose.model('RequestMessage');
@@ -120,7 +120,7 @@ describe('User CRUD tests', function () {
     });
 
     describe('for creating, loading and rejecting friends', function () {
-        var u1, u2, u3, r1, r2, r3;
+        var u1, u2, u3, r1, r2;
         beforeEach(function () {
 
             user = new User(user);
@@ -137,6 +137,8 @@ describe('User CRUD tests', function () {
                 message: 'Yes man - be my buddy',
                 status: 'accepted'
             });
+            user.requests.push(r1);
+            u1.requests.push(r1);
 
             // U2 Has Requested User
             r2 = new RequestMessage({
@@ -144,6 +146,8 @@ describe('User CRUD tests', function () {
                 to: user,
                 message: 'Yo! Will you join my convoy?'
             });
+            user.requests.push(r2);
+            u2.requests.push(r2);
 
             credentials.username = user.username;
 
@@ -181,7 +185,70 @@ describe('User CRUD tests', function () {
 
                 friends.should.have.property('length', 1);
                 friends[0].should.have.property('id', u1.id);
+            });
+        });
+
+        it('should return correct friend status', function () {
+            _test = this.test;
+
+            var endpoint = '/api/friends/status/' + u1.id;
+            return agent.get(endpoint)
+                .expect(200)
+                .then(function (response) {
+                log.debug({
+                    test: _test.title,
+                    body: response.body,
+                    err: response.error
+                }, 'Got Response from %s', endpoint);
+
+                response.body.should.have.property('status', 'friends');
+                
+                //////////////
+                
+                endpoint = '/api/friends/status/' + u2.id;
+                return agent.get(endpoint)
+                    .expect(200);
             })
+                .then(function (response) {
+                log.debug({
+                    test: _test.title,
+                    body: response.body,
+                    err: response.error
+                }, 'Got Response from %s', endpoint);
+
+                response.body.should.have.property('status', 'pending');
+                
+                //////////////
+                
+                endpoint = '/api/friends/status/' + u3.id;
+                return agent.get(endpoint)
+                    .expect(200);
+            })
+                .then(function (response) {
+                log.debug({
+                    test: _test.title,
+                    body: response.body,
+                    err: response.error
+                }, 'Got Response from %s', endpoint);
+
+                response.body.should.have.property('status', 'none');
+                
+                //////////////
+                
+                endpoint = '/api/friends/status/' + user.id;
+                return agent.get(endpoint)
+                    .expect(200);
+            })
+                .then(function (response) {
+                log.debug({
+                    test: _test.title,
+                    body: response.body,
+                    err: response.error
+                }, 'Got Response from %s', endpoint);
+
+                response.body.should.have.property('status', 'me');
+
+            });
         });
 
         it('should return a list of friends for another user', function () {
@@ -202,7 +269,8 @@ describe('User CRUD tests', function () {
 
                 friends.should.have.property('length', 1);
                 friends[0].should.have.property('id', user.id);
-            })
+                friends[0].should.have.property('displayName');
+            });
         });
 
         it('should return no friends for u2');
@@ -253,7 +321,7 @@ describe('User CRUD tests', function () {
         it('should allow me to make a friend request and get that request back', function () {
             _test = this.test;
 
-            var endpoint = '/api/friends';
+            var endpoint = '/api/friends/requests';
             var postData = { friendId: u3.id };
 
             return agent.post(endpoint)

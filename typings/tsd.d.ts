@@ -8,3 +8,4 @@
 /// <reference path="lodash/lodash.d.ts" />
 
 /* global ApplicationConfiguration */
+/* global _ */

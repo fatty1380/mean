@@ -1,4 +1,24 @@
 'use strict';
+/** Friends & Connections Controller
+ * ----------------------------------
+ * @example 
+ */
+    
+/** Friend Operations */
+exports.loadFriends = loadFriends;
+exports.removeFriend = removeFriend;
+exports.checkFriendStatus = checkFriendStatus
+
+/** Request Operations */
+exports.listRequests = listRequests;
+exports.getRequest = getRequest;
+exports.createRequest = createRequest;
+exports.updateRequest = updateRequest;
+exports.acceptRequest = acceptRequest;
+exports.rejectRequest = rejectRequest; 
+
+/** Middleware */
+exports.requestById = requestById; 
 
 /**
  * Module dependencies.
@@ -31,7 +51,7 @@ var _ = require('lodash'),
 /**
  * User middleware
  */
-exports.loadFriends = function (req, res, next) {
+function loadFriends(req, res, next) {
 
     req.log.debug({ func: 'loadFriends', user: req.user.id, profile: req.profile && req.profile.id }, 'Beginning friend query based on user and profile');
 
@@ -50,13 +70,89 @@ exports.loadFriends = function (req, res, next) {
 };
 
 /**
+ * checkFriendStatus
+ * @description Checks the status of the link between friends
+ * 
+ * @returns status String ['me', 'friends', 'sent', 'pending', 'none']
+ */
+function checkFriendStatus(req, res, next) {
+    debugger;
+    var me = req.user;
+    var them = req.profile;
+
+    if (me.equals(them)) {
+        return res.json({ status: 'me' });
+    }
+
+    req.log.debug({ myFriends: me.friends, theirFriends: them.friends }, 'searching for friend intersection');
+
+    var mySide = _.find(me.friends, them._id);
+    var theirSide = _.find(them.friends, me._id);
+
+    req.log.debug({ mySide: mySide, theirSide: theirSide }, 'Cross Search Results');
+
+
+    if (!_.isEmpty(mySide) && !_.isEmpty(theirSide)) {
+
+        return res.json({ status: 'friends' });
+    }
+    
+    Request.find({status: {$ne: 'rejected'}})
+    .or([{to: them._id, from: me._id}, {to: me._id, from: them._id}])
+    .sort('created').exec().then(
+        function (requests) {
+
+            var myRequest = _.find(requests, { to: them._id });
+            var theirRequest = _.find(requests, { from: them._id });
+
+            req.log.debug({ them: them._id, requests: requests, myRequests: myRequest, theirRequest: theirRequest }, 'searching for requests intersection');
+
+            var status = 'none';
+
+            if (!!myRequest) {
+                status = (function (status) {
+                    switch (status) {
+                        case 'new': return 'sent';
+                        case 'accepted': return 'friends';
+                        default: return 'none';
+                    }
+                })(myRequest.status);
+
+                req.log.debug({ status: status }, 'Found myRequest status');
+            }
+
+            if (!!theirRequest) {
+                status = (function (status) {
+                    switch (status) {
+                        case 'new': return 'pending';
+                        case 'accepted': return 'friends';
+                        default: return 'none';
+                    }
+                })(theirRequest.status);
+
+                req.log.debug({ status: status }, 'Found theirRequest status');
+            }
+
+            return res.json({ status: status });
+
+
+
+        });
+
+
+
+
+
+}
+
+/**
  * Adds a new UserId to the requesting Profile's [FRIENDS]
  * @param req
  * @param res
  * @param next
  */
 
-exports.addFriend = function (req, res, next) {
+function createRequest(req, res, next) {
     
     // TODO: Check for existing requests, both sender and recipient (?);
     if (!!req.profile && !req.user.isAdmin) {
@@ -66,10 +162,10 @@ exports.addFriend = function (req, res, next) {
     var me = !!req.profile ? req.profile.id : req.user.id;
     var them = req.param('friendId');
 
-    req.log.debug({ func: 'addFriend', body: req.body, friend: them }, 'Adding friend with POSTed body content');
+    req.log.debug({ func: 'createRequest', body: req.body, friend: them }, 'Adding friend with POSTed body content');
 
     if (_.isEmpty(them)) {
-        req.log.error({ func: 'addFriend' }, 'No Friend Parameter present in request');
+        req.log.error({ func: 'createRequest' }, 'No Friend Parameter present in request');
         return res.status(400).send({ message: 'No Friend Specified in Request' });
     }
 
@@ -82,13 +178,13 @@ exports.addFriend = function (req, res, next) {
 
     return request.save()
         .then(function (request) {
-        req.log.debug({ func: 'addFriend', friendRequest: request });
+        req.log.debug({ func: 'createRequest', friendRequest: request });
 
         return res.json(request);
     });
 };
 
-exports.listRequests = function (req, res) {
+function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
 
     var statuses = req.param('status') || ['new'];
@@ -108,15 +204,14 @@ exports.listRequests = function (req, res) {
         function (err) {
             req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
 
-        }
-        )
+        });
 }
 
-exports.getRequest = function (req, res, next) {
+function getRequest(req, res, next) {
     return res.json(req.request);
 }
 
-exports.updateRequest = function (req, res, next) {
+function updateRequest(req, res, next) {
 
     var action = req.param('action');
     req.log.debug({ func: 'updateRequest', action: action }, 'Updating request based on action: `%s`', action);
@@ -141,7 +236,7 @@ exports.updateRequest = function (req, res, next) {
     return res.status(400).send({ message: 'Unknown Action', action: action });
 }
 
-exports.acceptRequest = function (req, res, next) {
+function acceptRequest(req, res, next) {
 
     var request = req.request;
     var user = req.profile || req.user;
@@ -183,18 +278,18 @@ exports.acceptRequest = function (req, res, next) {
         });
 };
 
-exports.rejectRequest = function (req, res, next) {
+function rejectRequest(req, res, next) {
     next(new Error('not implemented'));
 };
 
-exports.removeFriend = function (req, res, next) {
+function removeFriend(req, res, next) {
 
     req.log.debug({ func: 'removeFriend', profile: req.profile.id, friend: req.params.friendId }, 'Removing friend from DELETE method call');
 
     next(new Error('not implemented'));
 };
 
-exports.requestById = function (req, res, next, id) {
+function requestById(req, res, next, id) {
 
     Request.findById(id)
     //.populate('from', 'displayName')

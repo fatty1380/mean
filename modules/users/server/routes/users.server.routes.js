@@ -14,11 +14,13 @@
 
         // Friends & Connections
         
-        // /api/users/:userId/friends
         app.route('/api/friends')
             .all(users.requiresLogin)
-            .get(users.loadFriends)
-            .post(users.addFriend)
+            .get(users.loadFriends);
+            
+        app.route('/api/friends/status/:userId')
+            .all(users.requiresLogin)
+            .get(users.checkFriendStatus)
             .delete(users.removeFriend);
             
         /** 
@@ -31,7 +33,8 @@
          */
         app.route('/api/friends/requests')
             .all(users.requiresLogin)
-            .get(users.listRequests);
+            .get(users.listRequests)
+            .post(users.createRequest);
             
         app.route('/api/friends/requests/:requestId')
             .all(users.requiresLogin)
