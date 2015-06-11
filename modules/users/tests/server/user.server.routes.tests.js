@@ -344,12 +344,11 @@ describe('User CRUD tests', function () {
 
             var endpoint = '/api/requests/' + r1.id;
 
-            log.debug({ test: _test.title }, 'Making call to accept a friend');
+            log.debug({ test: _test.title }, 'Making call to get a friend request');
 
             return agent.get(endpoint)
                 .expect(200).then(
                 function (response) {
-                    log.debug({ test: _test.title }, 'Making call to accept a friend');
                     log.debug({
                         test: _test.title,
                         body: response.body,

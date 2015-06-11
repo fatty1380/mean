@@ -96,10 +96,10 @@ function checkFriendStatus(req, res, next) {
 
         return res.json({ status: 'friends' });
     }
-    
-    Request.find({status: {$ne: 'rejected'}})
-    .or([{to: them._id, from: me._id}, {to: me._id, from: them._id}])
-    .sort('created').exec().then(
+
+    Request.find({ status: { $ne: 'rejected' } })
+        .or([{ to: them._id, from: me._id }, { to: me._id, from: them._id }])
+        .sort('created').exec().then(
         function (requests) {
 
             var myRequest = _.find(requests, { to: them._id });
@@ -108,6 +108,7 @@ function checkFriendStatus(req, res, next) {
             req.log.debug({ them: them._id, requests: requests, myRequests: myRequest, theirRequest: theirRequest }, 'searching for requests intersection');
 
             var status = 'none';
+            var request = null;
 
             if (!!myRequest) {
                 status = (function (status) {
@@ -118,10 +119,11 @@ function checkFriendStatus(req, res, next) {
                     }
                 })(myRequest.status);
 
+                request = myRequest;
+
                 req.log.debug({ status: status }, 'Found myRequest status');
             }
-
-            if (!!theirRequest) {
+            else if (!!theirRequest) {
                 status = (function (status) {
                     switch (status) {
                         case 'new': return 'pending';
@@ -130,10 +132,11 @@ function checkFriendStatus(req, res, next) {
                     }
                 })(theirRequest.status);
 
+                request = theirRequest;
                 req.log.debug({ status: status }, 'Found theirRequest status');
             }
 
-            return res.json({ status: status });
+            return res.json({ status: status, request: request });
 
 
 
@@ -176,23 +179,44 @@ function createRequest(req, res, next) {
         message: req.body.message || ''
     });
 
-    return request.save()
-        .then(function (request) {
-        req.log.debug({ func: 'createRequest', friendRequest: request });
+    var u1 = User.where({ '_id': { '$in': [me, them] } })
+        .update(
+        { '$push': { 'requests': { '_id': request } } },
+        { 'new': true, 'upsert': true }
+        );
 
-        return res.json(request);
+    return Q.all([request.save(), u1.exec()])
+        .then(function (results) {
+        req.log.debug({ func: 'createRequest', friendRequest: results[0], users: results[1] });
+
+        return res.json(results[0]);
     });
 };
 
 function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
 
-    var statuses = req.param('status') || ['new'];
-    statuses = statuses.length > 1 ? { $in: statuses } : statuses;
+    // var statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
+    // statuses = statuses.length > 1 ? { $in: statuses } : statuses;
 
     req.log.debug({ func: 'listRequests', statuses: statuses, query: req.query }, 'Executing find');
 
-    return Request.find({ 'to': req.user.id, 'status': statuses }).exec().then(
+    var orQuery = [];
+
+    if (!!req.query && !!req.query.userId) {
+        orQuery.push({ to: req.user.id, from: req.query.userId });
+        orQuery.push({ from: req.user.id, to: req.query.userId });
+    } else {
+        orQuery.push({ to: req.user.id });
+        orQuery.push({ from: req.user.id });
+    }
+
+
+    Request//.find({ status: { $ne: 'rejected' } })
+        .or(orQuery)
+        .sort('created').exec()
+    //return Request.find({ 'to': req.user.id, 'status': statuses }).exec()
+        .then(
         function (requests) {
             if (!requests) {
                 requests = [];

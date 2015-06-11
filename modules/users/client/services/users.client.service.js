@@ -79,37 +79,41 @@
 
     function FriendService($resource, $log) {
 
+        // Externally Accessible Members
         var service = {
-            getRequests: FriendRequestRsrc.$query(),
+            getRequests: listRequests,
             request: requestFriend,
             accept: acceptRequest,
             ignore: ignoreRequest,
 
-            get: RootFriendRsrc.$query(),
+            get: listFriends,
             check: checkFriend,
             remove: removeFriend
-
         };
+        
+        /// Local Vars
+        var RootFriendRsrc = $resource('api/friends',
+            {}, { update: { method: 'PUT' } });
+            
+        //var FriendStatusRsrc = $resource('api/friends/:userId');
+        
+        var FriendRequestRsrc = $resource('api/requests/:requestId',
+            {requestId: '@_id'}, {
+                update: { method: 'PUT' }
+            });
 
         return service;
         
         ///////////////////////
-        
-        var RootFriendRsrc = $resource('api/friends',
-            {}, { update: { method: 'PUT' } });
-        var FriendStatusRsrc = $resource('api/friends/:userId');
-        var FriendRequestRsrc = $resource('api/requests/:requestId',
-            {}, {
-                update: { method: 'PUT' },
-                accept: { method: 'PUT', action: 'accept' },
-                ignore: { method: 'PUT', action: 'deny' }
-            });
+            
+        // GET /api/requests
+        function listRequests(query) {
+            return FriendRequestRsrc.query(query);
+        }
         
         // POST /api/requests
         function requestFriend(friend) {
-
-            var id = _.isString(friend) ? friend : friend.id;
-            var _id = !!friend && friend.id || friend;
+            var id = !!friend && friend.id || friend;
 
             debugger; // check ID
             var friendRequest = new FriendRequestRsrc({ friendId: id });
@@ -123,21 +127,40 @@
         }
         
         // PUT /api/requests/:requestId
-        function acceptRequest(requestId) {
-            return FriendRequestRsrc.$accept({ requestId: requestId });
+        function acceptRequest(request) {
+            debugger;
+            return FriendRequestRsrc
+            .update({ requestId: request.id || request._id}, {action: 'accept' }).$promise;
         }
-        function ignoreRequest(requestId) {
-            return FriendRequestRsrc.$ignore({ requestId: requestId });
+        function ignoreRequest(request) {
+            return FriendRequestRsrc
+            .update({ requestId: request.id || request._id}, {action: 'deny' }).$promise;
+        }
+        
+        // GET /api/friends
+        function listFriends(query) {
+            return RootFriendRsrc.query(query);
         }
         
         // GET /api/friends/:userId
-        function checkFriend(userId) {
-            return FriendStatusRsrc.$get({ userId: userId });
+        function checkFriend(user) {
+            var id = !!user && user.id || user;
+            
+            return FriendRequestRsrc.query({userId: id}).$promise.then(
+                function(results) {
+                    $log.debug('Got Requests from server: %o', results);
+                    return _.first(results);
+                })
+                .then(function(request) {
+                    $log.debug('Returning first result %o', request);
+                    
+                    return request;
+                });
         }
         
         // DELETE /api/friends/:userId
         function removeFriend(userId) {
-            return FriendStatusRsrc.$delete({ userId: userId });
+            return FriendStatusRsrc.delete({ userId: userId });
         }
     }
 

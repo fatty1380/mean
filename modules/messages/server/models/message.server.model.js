@@ -64,7 +64,7 @@ var RequestMessageSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, {toJSON: {virtuals: true}});
 
 RequestMessageSchema.statics.reqTypes = {
     friendRequest : 'friendRequest'
