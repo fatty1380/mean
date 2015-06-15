@@ -2,8 +2,8 @@
 	<div class="page-header">
 		<h1 data-ng-bind="feed.name"></h1>
 	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == feed.user._id">
-		<a class="btn btn-primary" href="/#!/feeds/{{feed._id}}/edit">
+	<div class="pull-right" data-ng-show="vm.authentication.user._id == vm.feedItem.user._id">
+		<a class="btn btn-primary" href="/feed/{{vm.feedItem._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
 		<a class="btn btn-primary" data-ng-click="remove();">
