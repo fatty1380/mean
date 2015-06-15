@@ -199,7 +199,7 @@ function listRequests(req, res) {
     // var statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
     // statuses = statuses.length > 1 ? { $in: statuses } : statuses;
 
-    req.log.debug({ func: 'listRequests', statuses: statuses, query: req.query }, 'Executing find');
+    req.log.debug({ func: 'listRequests', query: req.query }, 'Executing find');
 
     var orQuery = [];
 
@@ -212,7 +212,7 @@ function listRequests(req, res) {
     }
 
 
-    Request//.find({ status: { $ne: 'rejected' } })
+    Request.find({ status: { $ne: 'rejected' } })
         .or(orQuery)
         .sort('created').exec()
     //return Request.find({ 'to': req.user.id, 'status': statuses }).exec()

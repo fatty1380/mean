@@ -18,12 +18,12 @@ var FeedSchema = new Schema({
 	},
 	// Stores activity from other users
 	items: {
-		type: [{type: Schema.ObjectId, ref: 'Feed.activity'}],
+		type: [{type: Schema.ObjectId, ref: 'FeedItem'}],
 		default: []
 	},
 	// Stores the user's activty
 	activity: {
-		type: [{type: Schema.ObjectId, ref: 'Feed.activity'}],
+		type: [{type: Schema.ObjectId, ref: 'FeedItem'}],
 		//type: ['FeedItem'],
 		default: []
 	},
@@ -75,6 +75,16 @@ var FeedItemSchema = new Schema({
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
+	},
+	comments: {
+		type: [{
+			message: String,
+			user: {
+				type: Schema.ObjectId,
+				ref: 'User'
+			}
+		}],
+		default: []
 	},
 	isPublic: {
 		type: Boolean,

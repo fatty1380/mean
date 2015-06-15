@@ -183,8 +183,10 @@ exports.readProfile = function (req, res) {
             message: 'No profile found'
         });
     }
+    
+    req.profile.cleanse();
 
-    req.log.debug({func: 'readProfile', file: 'users.profile'}, '[Profiles] Returning profile %j', req.profile);
+    req.log.debug({func: 'readProfile', file: 'users.profile', profile: req.profile}, '[Profiles] Returning profile');
     res.json(req.profile);
 };
 

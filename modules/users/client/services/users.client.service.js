@@ -70,6 +70,13 @@
                 }
 
                 return deferred.promise;
+            },
+            
+            lookup: function(user) {
+                if(_.isString(user)) {
+                    return _data.load(user);
+                }
+                return $q.when(user);
             }
 
         };
@@ -92,7 +99,7 @@
         };
         
         /// Local Vars
-        var RootFriendRsrc = $resource('api/friends',
+        var RootFriendRsrc = $resource('api/friends/:userId',
             {}, { update: { method: 'PUT' } });
             
         //var FriendStatusRsrc = $resource('api/friends/:userId');
@@ -160,7 +167,8 @@
         
         // DELETE /api/friends/:userId
         function removeFriend(userId) {
-            return FriendStatusRsrc.delete({ userId: userId });
+            debugger; // TODO: Test and determine if needed
+            return RootFriendRsrc.delete({ userId: userId });
         }
     }
 

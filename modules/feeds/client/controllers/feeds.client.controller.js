@@ -1,65 +1,97 @@
 'use strict';
 
 // Feeds controller
-angular.module('feeds').controller('FeedsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Feeds',
-	function($scope, $stateParams, $location, Authentication, Feeds ) {
-		$scope.authentication = Authentication;
+angular.module('feeds')
+.controller('FeedsController', ['$scope', '$stateParams', '$state', 'Authentication', 'Feed', 'Profiles',
+	function($scope, $stateParams, $state, Authentication, Feed, Profiles ) {
+		var vm = this;
+		
+		vm.authentication = Authentication;
 
 		// Create new Feed
-		$scope.create = function() {
+		vm.create = function() {
 			// Create new Feed object
-			var feed = new Feeds ({
-				name: this.name
+			var feedItem = new Feed.item ({
+				title: vm.title,
+				message: vm.message
 			});
 
 			// Redirect after save
-			feed.$save(function(response) {
-				$location.path('feeds/' + response._id);
+			feedItem.$save(function(response) {
+				$state.go('feed.list', {feedItemId: response.id});
 
 				// Clear form fields
-				$scope.name = '';
+				vm.title = '';
+				vm.message = '';
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				vm.error = errorResponse.data.message;
 			});
 		};
 
 		// Remove existing Feed
-		$scope.remove = function( feed ) {
-			if ( feed ) { feed.$remove();
+		vm.remove = function( feedItem ) {
+			if ( feedItem ) { feedItem.$remove();
 
-				for (var i in $scope.feeds ) {
-					if ($scope.feeds [i] === feed ) {
-						$scope.feeds.splice(i, 1);
+				for (var i in vm.feed ) {
+					if (vm.feed [i] === feedItem ) {
+						vm.feed.splice(i, 1);
 					}
 				}
 			} else {
-				$scope.feed.$remove(function() {
-					$location.path('feeds');
+				vm.feedItem.$remove(function() {
+					$state.go('feed.list');
 				});
 			}
 		};
 
 		// Update existing Feed
-		$scope.update = function() {
-			var feed = $scope.feed ;
+		vm.update = function() {
+			var feedItem = vm.feedItem ;
 
-			feed.$update(function() {
-				$location.path('feeds/' + feed._id);
+			feedItem.$update(function() {
+				$state.go('feed.list', {feedItemId: feedItem.id});
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				vm.error = errorResponse.data.message;
 			});
 		};
 
-		// Find a list of Feeds
-		$scope.find = function() {
-			$scope.feeds = Feeds.query();
+		// Find a list of Feed Items
+		vm.find = function() {
+			Feed.load().then(function(result) {
+				vm.feed = result;
+				
+				return Profiles.lookup(result.user);
+			}).then(function(feedUser) {
+				vm.feed.user = feedUser;
+			});
 		};
+		
+		vm.populateItem = function(feedItem, index) {
+			Feed.getItem(feedItem).then(
+				function(item) {
+					debugger;
+					_.extend(vm.feed.items[index],item);
+					
+					return Profiles.lookup(item.user);
+				}).then(
+					function(user) {
+						vm.feed.items[index].user = user;
+					}
+				);
+		}
 
 		// Find existing Feed
-		$scope.findOne = function() {
-			$scope.feed = Feeds.get({ 
-				feedId: $stateParams.feedId
-			});
+		vm.findOne = function() {
+			Feed.getItem($stateParams.feedItemId).then(
+				function(item) {
+					vm.feedItem = item;
+					
+					Profiles.lookup(item.user).then(
+						function(feedUser) {
+						vm.feedItem.user = feedUser;
+					});
+				}
+			);
 		};
 	}
 ]);

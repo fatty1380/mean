@@ -1,19 +1,23 @@
-<section data-ng-controller="FeedsController" data-ng-init="find()">
+<section data-ng-controller="FeedsController as vm" data-ng-init="vm.find()">
     <div class="page-header">
-        <h1>Feeds</h1>
+        <h1>Feed for {{vm.feed.user.displayName}}</h1>
     </div>
     <div class="list-group">
-        <a data-ng-repeat="feed in feeds" data-ng-href="/#!/feeds/{{feed._id}}" class="list-group-item">
+        <a data-ng-repeat="feedItem in vm.feed.items track by $index" 
+            data-ng-href="/feed/{{feedItem._id}}" class="list-group-item"
+            data-ng-init="vm.populateItem(feedItem, $index)">
 			<small class="list-group-item-text">
 				Posted on
-				<span data-ng-bind="feed.created | date:'medium'"></span>
+				<span data-ng-bind="feedItem.created | date:'medium'"></span>
 				by
-				<span data-ng-bind="feed.user.displayName"></span>
+				<span data-ng-bind="feedItem.user.displayName"></span>
 			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="feed.name"></h4>
+			<h4 class="list-group-item-heading" data-ng-bind="feedItem.message"></h4>
         </a>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!feeds.$resolved || feeds.length">
-    	No Feeds yet, why don't you <a href="/#!/feeds/create">create one</a>?
+    <div class="alert alert-warning text-center" data-ng-hide="!vm.feed.$resolved || feed.items.length">
+    	No Feeds yet, why don't you <a href="/feed/create">create one</a>?
     </div>
+    
+    <div><pre>{{vm.feed | prettyPrint}}</pre></div>
 </section>
