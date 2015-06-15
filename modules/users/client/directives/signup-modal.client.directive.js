@@ -72,7 +72,8 @@
         vm.handleRedirect = function(response) {
             if ($state.is('jobs.view') && response.isDriver) {
                 $log.debug('New Driver currently at state `%s`, Redirecting to home', $state.$current.name);
-                $state.go('drivers.home', {newUser: true}, {reload: true});
+                debugger; // TODO: Convert the new-user functionality from drivers.home state to user.view
+                $state.go('users.view', {newUser: true}, {reload: true});
             } else if(vm.srefRedirect) {
                 $state.go(vm.srefRedirect.state, vm.srefRedirect.params, {reload: true});
             } else if (!$state.includes('intro')) {

@@ -34,7 +34,7 @@
                         isRedirectInProgress = true;
                         $log.info('[HomeController] Re-Routing to driver\'s profile page');
                         event.preventDefault();
-                        $state.go('drivers.home');
+                        $state.go('users.view');
                         return;
                     case 'owner':
                         isRedirectInProgress = true;

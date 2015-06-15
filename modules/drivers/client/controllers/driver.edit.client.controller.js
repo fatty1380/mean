@@ -135,8 +135,8 @@
 
             driver.$update(function (response) {
 
-                if (response.user._id === vm.user._id) {
-                    $state.go('drivers.home');
+                if (response.user.id === vm.user.id) {
+                    $state.go('users.view');
                 } else {
                     $state.go('drivers.view', {
                         driverId: response._id

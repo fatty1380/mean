@@ -145,7 +145,7 @@
 
                 state('users.view', {
                     parent          : 'profile-base',
-                    url             : '/{userId:[0-9a-fA-F]{24}}',
+                    url             : '/profile/{userId:[0-9a-fA-F]{24}}',
                     views           : {
                         'content': {
                             templateUrl        : '/modules/drivers/views/templates/driver-body.client.view.html',
@@ -172,9 +172,10 @@
                     controllerAs    : 'vm',
                     bindToController: true,
                     resolve         : {
-                        user  : ['Profiles', '$stateParams', function (Profiles, $stateParams) {
-                            console.log('loading profile for userId: %s', $stateParams.userId);
-                            return Profiles.load($stateParams.userId);
+                        user  : ['Authentication', 'Profiles', '$stateParams', function (Authentication, Profiles, $stateParams) {
+                            var userId = $stateParams.userId || Authentication.user && Authentication.user.id;
+                            console.log('loading profile for userId: %s', userId);
+                            return Profiles.load(userId);
                         }],
                         driver: ['Drivers', '$stateParams', function (Drivers, $stateParams) {
                             return Drivers.ByUser.get({

@@ -51,7 +51,7 @@
             }).
 
             state('profile-base', {
-                url: '/profile-base',
+                abstract: true,
                 views: {
                     '' : {
                         templateUrl: '/modules/core/views/profile-base.client.template.html'
@@ -103,7 +103,8 @@
                             $state.go('intro.owner');
                         }
                         else if (auth.user.isDriver) {
-                            $state.go('drivers.home');
+                            //$state.go('drivers.home');
+                            $state.go('users.view', {userId: auth.user.id});
                         }
                         else if (auth.user.isOwner) {
                             $state.go('companies.home');
