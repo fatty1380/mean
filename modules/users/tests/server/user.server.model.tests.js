@@ -12,7 +12,11 @@ var should   = require('should'),
     path     = require('path'),
     stubs    = require(path.resolve('./config/lib/test.stubs')),
     _        = require('lodash'),
-    Q        = require('q');
+    Q        = require('q'),
+    log      = require(path.resolve('./config/lib/logger')).child({
+        module: 'server.tests',
+        file  : 'user.model'
+    });
 
 /**
  * Globals
@@ -206,6 +210,20 @@ describe('User Model Unit Tests:', function () {
                     done();
                 });
         });
+        
+        it('should return a display name if none is set', function() {
+            var expected = user.firstName + ' ' + user.lastName;
+            log.debug({dispName: user.displayName, expecting: expected, user: user}, 'Saving user without displayname');
+    
+            return user.save()
+            .then(function(user) {
+                
+                log.debug({user: user, dispName: user.displayName}, 'Got displayname from new user');
+                
+                should.exist(user.displayName);
+                user.displayName.should.be.equal(expected);
+            })
+        })
         it('should be able to save multiple addresses');
         it('should be able to mark a single address as the primary address');
     });
@@ -324,12 +342,9 @@ describe('User Model Unit Tests:', function () {
 
     });
 
-    afterEach(function (done) {
-        Driver.remove().exec();
-        Company.remove().exec();
-        User.remove().exec();
-
-        done();
+    afterEach(function () {
+       return Q.all([Driver.remove().exec(),
+        Company.remove().exec(),
+        User.remove().exec()]) ;
     });
-})
-;
+});

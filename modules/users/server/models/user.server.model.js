@@ -234,10 +234,12 @@ UserSchema.index({
     email: 'text'
 });
 
-UserSchema.post('init', function (next) {
-    if (!this.displayName) {
-        this.displayName = this.firstName + ' ' + this.lastName;
+UserSchema.pre('init', function (next, data) {
+    if (!data.displayName) {
+        data.displayName = data.firstName + ' ' + data.lastName;
     }
+    
+    next();
 });
 
 /**
@@ -246,6 +248,10 @@ UserSchema.post('init', function (next) {
 UserSchema.pre('save', function (next) {
     if (!this.isModified('password')) {
         return next();
+    }
+    
+    if (this.isModified('firstName') || this.isModified('lastName')) {
+        this.displayName = this.firstName + ' ' + this.lastName;
     }
 
     if (this.password && this.password.length > 6) {
