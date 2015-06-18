@@ -13,6 +13,8 @@ var _ = require('lodash'),
 
 var stylish = require('jshint-stylish'),
 ngHtml2Js = require('gulp-ng-html2js'),
+argv = require('yargs').argv,
+wrap = require('gulp-wrap'),
 concat = require('gulp-concat');
 
 // Set NODE_ENV to 'test'
@@ -48,7 +50,8 @@ gulp.task('watch', function () {
 	// Add watch rules
 	gulp.watch(defaultAssets.server.views).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.server.allJS, ['jshint']).on('change', plugins.livereload.changed);
-	gulp.watch(defaultAssets.client.views).on('change', plugins.livereload.changed);
+	
+	gulp.watch(defaultAssets.client.views, ['html2js']).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed);
@@ -79,21 +82,23 @@ gulp.task('jshint', function () {
 });
 
 gulp.task('html2js', function() {
-	return gulp.src('modules/**/*.template.html')
+	return gulp.src('modules/**/client/**/*.template.html')
 	.pipe(ngHtml2Js({
-		moduleName: 'oset-templates',
-		declareModule: false,
-		stripPrefix: 'client/',
+		moduleName: 'theme',
+		// declareModule: true,
+		// stripPrefix: 'client/',
 		rename      : function (templateUrl, templateFile) {
                         return '/' + templateUrl.replace('/client', '').replace('../', '');
                     },
-		template: 	"angular.module('<%= moduleName %>').run(['$templateCache', function($templateCache) {\n" +
-				    "  'use strict';\n" + 
-					"  $templateCache.put('<%= template.url %>',\n    '<%= template.escapedContent %>');\n" +
-				    "}]);\n"
+		template: 	'\t\t $templateCache.put(\'<%= template.url %>\',\n\t\t\t \'<%= template.escapedContent %>\');\n'
 	}))
 	.pipe(concat('templates.js'))
-	.pipe(gulp.dest('./modules/tmp/client'));
+	.pipe(wrap('(function() { \n\t\'use strict\'; \n\n\tApplicationConfiguration.registerModule(\'theme\'); \n\n' +
+		'\t angular.module(\'theme\').run([\'$templateCache\', function($templateCache) {\n\n' +
+		'<%= contents %>' + 
+		'\t}]);' +
+		'\n})();'))
+	.pipe(gulp.dest('./modules/theme/client'));
 });
 
 
@@ -149,7 +154,8 @@ gulp.task('mongoose', function (done) {
 gulp.task('mocha', function () {
     return gulp.src(testAssets.tests.server)
         .pipe(plugins.mocha({
-		reporter: 'spec'
+		reporter: 'spec',
+		grep: argv.grep
 	}))
 		.on('error', function (err) {
 		// If an error occurs, save it
@@ -193,7 +199,7 @@ gulp.task('protractor', function () {
 
 // Lint CSS and JavaScript files.
 gulp.task('lint', function (done) {
-	runSequence('less', 'sass', ['csslint', 'jshint'], done);
+	runSequence('less', 'sass', 'html2js', ['csslint', 'jshint'], done);
 });
 
 // Lint project files and minify them into two production files.

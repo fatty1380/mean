@@ -184,7 +184,7 @@ module.exports = function (grunt) {
                     quoteChar   : '\'',
                     singleModule: true,
                     useStrict   : true,
-                    module      : 'oset-templates',
+                    module      : 'theme',
                     indentString: ' ',
                     rename      : function (moduleName) {
                         return '/' + moduleName.replace('/client', '').replace('../', '');
@@ -192,7 +192,7 @@ module.exports = function (grunt) {
                 },
                 main   : {
                     src : ['modules/**/*.template.html'],
-                    dest: 'modules/tmp/client/templates.js'
+                    dest: 'modules/theme/client/templates.js'
                 }
             },
             csslint         : {
