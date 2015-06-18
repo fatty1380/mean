@@ -41,3 +41,4 @@ convenience.css
 modules/**/.jshintrc
 modules/tmp
 modules/theme/client/css
+typings/**/*.d.ts
