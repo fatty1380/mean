@@ -93,7 +93,7 @@
             accept: acceptRequest,
             ignore: ignoreRequest,
 
-            get: listFriends,
+            query: listFriends,
             check: checkFriend,
             remove: removeFriend
         };
@@ -146,7 +146,7 @@
         
         // GET /api/friends
         function listFriends(query) {
-            return RootFriendRsrc.query(query);
+            return RootFriendRsrc.query(query).$promise;
         }
         
         // GET /api/friends/:userId

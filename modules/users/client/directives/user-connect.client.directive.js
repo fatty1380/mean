@@ -56,7 +56,6 @@
 
 			Friends.check(vm.profile).then(
 				function (response) {
-					debugger;
 					$log.debug('Got Friend Check Response: %o', response);
 					vm.setStatus(response);
 				},
@@ -77,8 +76,6 @@
 		
 		function setStatus(request) {
 			vm.request = request;
-			
-			alert('Request Status: ' + request.status);
 			
 			if(vm.auth.isLoggedIn() && vm.auth.user.id === vm.profile.id) {
 				return vm.status = 'me';

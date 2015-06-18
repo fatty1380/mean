@@ -8,18 +8,18 @@
     <div class="row profile">
         <div class="col-md-8 profile-body left">
             <div class="profile-navigation-wrapper">
-                <a ui-sref='home'>
-                    <div class="nav-item active">
+                <a ui-sref="users.view({userId: null})" data-ui-sref-active="active">
+                    <div class="nav-item" >
                         <span class="text">My Profile</span>
                         <span class="icon pull-right"><i class="fa fa-user"></i></span>
                     </div>
                 </a>
-                <a ui-sref="feed.list">
+                <a ui-sref="feed.list" data-ui-sref-active="active">
                     <div class="nav-item">
                         <span class="text">Feed</span>
                         <span class="icon pull-right"><i class="fa fa-comments-o"></i></span></div>
                 </a>
-                <a href="users.list">
+                <a href="users.list" data-ui-sref-active="active">
                     <div class="nav-item">
                         <span class="text">Friends</span>
                         <span class="icon pull-right"><i class="fa fa-users"></i></span></div>
