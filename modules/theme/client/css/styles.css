@@ -3176,7 +3176,8 @@ h4.vert-middle {
   border-bottom: 3px solid #dadada;
   width: 160px;
 }
-.profile-navigation-wrapper .nav-item.active {
+.profile-navigation-wrapper .nav-item.active,
+.active > .profile-navigation-wrapper .nav-item {
   color: #21778F;
   border-color: #21778F;
 }

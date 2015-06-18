@@ -69,7 +69,6 @@ angular.module('feeds')
 		vm.populateItem = function(feedItem, index) {
 			Feed.getItem(feedItem).then(
 				function(item) {
-					debugger;
 					_.extend(vm.feed.items[index],item);
 					
 					return Profiles.lookup(item.user);

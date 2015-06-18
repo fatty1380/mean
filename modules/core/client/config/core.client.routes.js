@@ -34,12 +34,7 @@
         // Home state routing
         $stateProvider.
 
-            state('privacy', {
-                url: '/privacy',
-                templateUrl: '/modules/core/views/templates/privacy.template.html',
-                parent: 'fixed-opaque'
-            }).
-
+            // High Level Abstract Parent States
             state('fixed-opaque', {
                 abstract: true,
                 templateUrl: '/modules/core/views/fixed-opaque.client.view.html'
@@ -64,6 +59,8 @@
                     }
                 }
             }).
+            
+            // Landing Page 'Intro' States
 
             state('intro', {
                 url: '/',
@@ -113,6 +110,14 @@
                         }
                     }, 1000);
                 }]
+            }).
+            
+            /// Page - Specific States
+
+            state('privacy', {
+                url: '/privacy',
+                templateUrl: '/modules/core/views/templates/privacy.template.html',
+                parent: 'fixed-opaque'
             });
     }
 
