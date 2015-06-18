@@ -53,7 +53,7 @@ Object.defineProperty(stubs, 'user', {
 
 Object.defineProperty(stubs, 'owner', {
     get: function() {
-        return {
+        return _.clone({
             firstName: 'Owen',
             lastName: 'Owner',
             email: 'userOwner@test.com',
@@ -61,7 +61,7 @@ Object.defineProperty(stubs, 'owner', {
             password: 'password',
             provider: 'local',
             type: 'owner'
-        };
+        });
     }
 });
 
@@ -71,6 +71,23 @@ exports.owner = stubs.owner;
 exports.application = {
     introduction : 'Hello, please allow me to introduce myself'
 };
+
+exports.getCompany = function getCompany(owner) {
+    return {
+            owner: owner,
+            name: 'My Company Name',
+            type: 'owner'
+    };
+}
+
+exports.getJob = function getJob(owner, company) {
+    return {
+            user: owner,
+            company: company,
+            name: 'Job Title Name',
+            description: 'Describe Me'
+        };
+}
 
 exports.getApplication = function getApplication(user, company, job) {
 

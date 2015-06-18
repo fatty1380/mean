@@ -13,7 +13,11 @@ var should = require('should'),
     Company = mongoose.model('Company'),
     Job = mongoose.model('Job'),
     path = require('path'),
-    stubs = require(path.resolve('./config/lib/test.stubs'));
+    stubs = require(path.resolve('./config/lib/test.stubs')),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'tests.server',
+        file: 'application.model'
+    });
 
 /**
  * Globals
@@ -28,21 +32,12 @@ var releasePrimitive, realReleasePrimitive, applicationPrimitive;
 describe('Application Model Unit Tests:', function () {
     beforeEach(function (done) {
 
-        user = new User(stubs.users.driver);
-        owner = new User(stubs.users.owner);
+        user = new User(stubs.user);
+        owner = new User(stubs.owner);
 
-        job = new Job({
-            user: owner,
-            company: company,
-            name: 'Job Title Name',
-            description: 'Describe Me'
-        });
+        company = new Company(stubs.getCompany(owner));
+        job = new Job(stubs.getJob(owner, company));
 
-        company = new Company({
-            owner: owner,
-            name: 'My Company Name',
-            type: 'owner'
-        });
 
         applicationPrimitive = {
             'user': user,
@@ -50,14 +45,19 @@ describe('Application Model Unit Tests:', function () {
             'company': company
         };
 
-        Q.all([user.save(), owner.save(), company.save(), job.save()]).done(function (result) {
+        return Q.all([user.save(), owner.save(), company.save(), job.save()]).done(
+            function (result) {
 
-            application = new Application(stubs.getApplication(user, company, job));
+                application = new Application(stubs.getApplication(user, company, job));
 
-            application2 = new Application(applicationPrimitive);
+                application2 = new Application(applicationPrimitive);
 
-            done();
-        });
+                done();
+            }, function (err) {
+                log.debug({ user: user, owner: owner, company: company, job: job })
+
+                should.not.exist(err);
+            });
     });
 
     describe('Method Save', function () {
@@ -221,11 +221,11 @@ describe('Application Model Unit Tests:', function () {
 
             return application.save(function (err, applicationResult) {
                 if (!!err) {
-                    console.error('Error saving application: %j', err);
+                    log.error('Error saving application: %j', err);
                 }
                 should.not.exist(err);
 
-                console.log('APPLICATION: %j', applicationResult);
+                log.trace('APPLICATION: %j', applicationResult);
                 applicationResult.releases.should.have.lengthOf(1);
                 done();
             });
@@ -237,7 +237,7 @@ describe('Application Model Unit Tests:', function () {
 
             return application2.save(function (err, applicationResult) {
                 if (!!err) {
-                    console.error('Error saving application2: %j', err);
+                    log.error('Error saving application2: %j', err);
                 }
                 should.not.exist(err);
 
