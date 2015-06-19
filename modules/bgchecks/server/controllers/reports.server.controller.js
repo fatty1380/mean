@@ -16,26 +16,20 @@ var mongoose = require('mongoose'),
     _ = require('lodash'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'bgchecks',
-        file: 'bgchecks.server.controller'
+        file: 'reports.server.controller'
     });
 
+exports.types = {
+    list: availableReportTypes,
+    update: UpdateReportDefinitionsFromServer,
+    save: SaveUpdatedReportDefinitions
+};
 
 exports.availableReportTypes = availableReportTypes;
-
-
 exports.UpdateReportDefinitionsFromServer = UpdateReportDefinitionsFromServer;
 exports.SaveUpdatedReportDefinitions = SaveUpdatedReportDefinitions;
 
-exports.applicant = {
-    list: GetAllRemoteApplicants,
-    create: UpsertRemoteApplicant,
-    save: SaveNewApplicant,
-    get: GetReportApplicant, /* Searches for local ReportApplicant and sets req.applicant */
-    getRemote: GetRemoteApplicantData,
-    read: ReadReportApplicant
-};
-
-exports.report = {
+_.extend(exports, {
     list: ListAllReports,
     create: CreateNewReport,
     applicantStatus: CheckApplicantReportStatus,
@@ -43,29 +37,23 @@ exports.report = {
     get: GetReportData,
     loadPDF: LoadPDFData, // this should only be used internally?
     sync: doReportSync
-};
+});
 
 /** Bound Router Middleware ------------------------------------------ **/
 exports.reportDefinitionBySKU = reportBySKU;
-exports.applicantByID = applicantByID;
 exports.reportByID = reportByID;
 
-exports.list = {
-    reports: function (req, res) {
-        return listHandler(req, res, 'report types', req.reportTypes);
-    },
-    fields: function (req, res) {
-        return listHandler(req, res, 'report fields', req.fieldDefs);
-    }
+_.extend(exports, {
+    listReports: listReports,
+    listFields: listFields,
+    readReport: readReport,
+    readFields: readFields
+});
+
+exports.debug = {
+    run : rerunReport
 };
-exports.read = {
-    report: function (req, res) {
-        return readHandler(req, res, 'report types', req.reportType);
-    },
-    fields: function (req, res) {
-        return readHandler(req, res, 'report fields', req.reportType.fields);
-    }
-};
+
 
 /** BEGIN : Implementation -------------------------------------------- **/
 
@@ -127,41 +115,21 @@ function reportBySKU(req, res, next, id) {
 }
 
 /**
- * Bgcheck middleware
- */
-
-function applicantByID(req, res, next, id) {
-    req.applicantId = id;
-    ReportApplicant
-        .findById(id)
-        .exec(function (err, applicant) {
-            if (err) {
-                log.error(err, 'Failed to lookup applicant by Id %s', id);
-                return next(err);
-            }
-
-            log.debug({func: 'applicantById', applicant: applicant}, 'Found Applicant by ID');
-            req.applicant = applicant;
-            next();
-        });
-}
-
-/**
- * Bgcheck authorization middleware
- */
-exports.hasAuthorization = function (req, res, next) {
-    if (req.bgcheck.user.id === req.user.id) {
-        return next();
-    }
-    else {
-        return res.status(403).send('User is not authorized');
-    }
-};
-
-/**
  * Helper Functions
  */
 
+    function listReports(req, res) {
+        return listHandler(req, res, 'report types', req.reportTypes);
+    }
+    function listFields(req, res) {
+        return listHandler(req, res, 'report fields', req.fieldDefs);
+    }
+    function readReport(req, res) {
+        return readHandler(req, res, 'report types', req.reportType);
+    }
+    function readFields(req, res) {
+        return readHandler(req, res, 'report fields', req.reportType.fields);
+    }
 
 function listHandler(req, res, name, vals) {
     debugger;
@@ -327,405 +295,7 @@ function reportTypeUpsert(dbValue, newReport) {
         });
 }
 
-/** SECTION : Applicants ---------------------------------------------------- */
 
-/**
- * @alias applicant.create
- */
-function UpsertRemoteApplicant(req, res, next) {
-
-    var formApplicantRsrc = req.body;
-    var formData = formApplicantRsrc.reportSource;
-
-    console.log('[UpserRemoteApplicant] SENSITIVE REMOVE: Form Data: $s', JSON.stringify(formData, undefined, 2));
-
-    debugger; // check that request body has correct ssn/dlid s
-
-    var message = 'Requesting user does not match applicant user';
-
-    if (!req.user._id.equals(formApplicantRsrc.userId)) {
-        message = message + ' (' + req.user._id + '!=' + formApplicantRsrc.userId + ')';
-        console.error('[UpsertRemoteApplicant] %s', message);
-        res.status(401).send({message: message});
-    }
-
-    everifile.GetSession().then(
-        function (session) {
-            everifile.CreateApplicant(session, formData).then(
-                function (applicantUpsertResponse) {
-                    console.log('[UpsertRemoteApplicant] Got applicant response from eVerifile: %j', applicantUpsertResponse);
-
-
-                    req.remoteApplicant = applicantUpsertResponse;
-
-                    if (applicantUpsertResponse.updated) {
-
-
-                        ReportApplicant.findOne({
-                            'remoteId': applicantUpsertResponse.applicantId,
-                            'remoteSystem': 'everifile'
-                        }).
-                            exec(function (err, localApplicant) {
-                                if (err || !localApplicant) {
-                                    return res.status(400).send({
-                                        message: 'Unable to find your data in our system',
-                                        response: applicantUpsertResponse
-                                    });
-                                }
-
-                                if (localApplicant.remoteId !== applicantUpsertResponse.applicantId) {
-                                    console.error('Mismatched remoteIds between %j and %j', applicantUpsertResponse, localApplicant);
-                                }
-
-                                res.json(localApplicant);
-                                return;
-                            });
-                    }
-                    else {
-                        console.log('[UpsertRemoteApplicant] Continuing to next to save teh applicant ...');
-                        next();
-                    }
-
-
-                },
-                function (reject) {
-                    console.log('[UpsertRemoteApplicant] Error response: %j', reject, reject);
-                    next(reject);
-                }
-            );
-        }, function (error) {
-            console.log('[GetAllRemoteApplicants] failed due to error: %j', error);
-            next(error);
-        });
-}
-
-/**
- * @alias applicant.save
- */
-function SaveNewApplicant(req, res, next) {
-
-    var applicantId = req.remoteApplicant && req.remoteApplicant.applicantId;
-
-    var applicant = new ReportApplicant({
-        remoteId: applicantId,
-        user: req.user
-    });
-
-    applicant.save(function (err) {
-        if (err) {
-            console.log('Saving ReportApplicant failed with error: %j', err);
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err),
-                error: err
-            });
-        }
-
-        console.log('Successfully saved ReportApplicant: %j', applicant);
-
-        applicant.remoteData = req.remoteApplicant;
-        res.json(applicant);
-    });
-}
-
-/**
- * @alias applicant.list
- */
-function GetAllRemoteApplicants(req, res, next) {
-
-    if (!req.user || !req.user.isAdmin) {
-        var message = 'No User, No Deal - only admins here';
-        console.error('[GetAllRemoteApplicants] %s', message);
-        return res.status(404);
-    }
-
-    everifile.GetSession().then(
-        function (session) {
-            everifile.GetAllApplicants(session).then(
-                function (applicantModels) {
-                    console.log('[GetAllRemoteApplicants] Got %d applicant models from eVerifile');
-
-                    res.json(applicantModels);
-                },
-                function (reject) {
-                    console.log('[GetAllRemoteApplicants] Error response: %j', reject, reject);
-                    next(reject);
-                }
-            );
-        }, function (error) {
-            console.log('[GetAllRemoteApplicants] failed due to error: %j', error);
-            next(error);
-        });
-}
-
-/**
- * @alias applicant.get
- */
-function GetReportApplicant(req, res, next) {
-
-    if (req.applicant && req.applicant instanceof ReportApplicant) {
-        log.debug({func: 'GetReportApplicant'}, 'Applicant already loaded');
-
-        return ReportApplicant.populate(req.applicant, {path: 'reports'})
-            .then(function (success) {
-                log.trace({func: GetReportApplicant}, 'Populated Reports');
-                next();
-            });
-    }
-
-    var query, id;
-
-    if (!!(id = req.remoteApplicantId || req.query.remoteApplicantId)) {
-        query = {remoteId: id};
-    } else if (!!(id = req.applicantId || req.query.applicantId)) {
-        query = {remoteId: id};
-    } else if (req.userId) {
-        query = {user: mongoose.Types.ObjectId(req.userId)};
-    } else if (req.user) {
-        query = {user: req.user._id};
-    } else {
-        return res.status(401).send({message: 'Unauthorized Access'});
-    }
-
-    log.debug({func: 'GetReportApplicant', query: query}, 'Loading Applicant based on query');
-
-    ReportApplicant.findOne(query)
-        .populate('reports')
-        .exec(function (err, localApplicant) {
-            if (err) {
-                log.error(err, 'Unable to find, or error while finding ReportApplicant via query %o', query);
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            }
-
-            log.trace({func: 'GetReportApplicant', applicant: localApplicant}, 'Found Local Applicant');
-
-            req.applicant = localApplicant;
-            next();
-        });
-
-}
-
-/**
- * @alias applicant.getRemote
- *
- * In order to find a remote applicant, we must assume that we have saved that
- * data into the local collection of report applicants. If this is true, the object
- * req.applicant will be populated from the previous method: GetReportApplicant.
- *
- * If it is not populated, we will assume that no remote applicant exists and one
- * should be created.
- *
- * In the future, we may choose to search for applicants, but maybe not.
- */
-function GetRemoteApplicantData(req, res, next) {
-    if (!req.applicant && !req.remoteApplicantId) {
-        var message = 'Cannot find applicant without access to existing remoteApplicantId';
-        log.warn({func: 'GetRemoteApplicantData'}, message);
-        return next();
-    }
-
-    var id = req.remoteApplicantId || req.applicant && req.applicant.remoteId;
-
-    if (req.remoteApplicantId) {
-        log.debug({func: 'GetRemoteApplicantData'}, 'Using req.remoteApplicantId remoteId source');
-    } else if (id) {
-        log.debug({func: 'GetRemoteApplicantData'}, 'Using req.applicant for remoteId source');
-    } else if (!id) {
-        log.warn({func: 'GetRemoteApplicantData'}, 'Unable to search for applicant from request data');
-        req.remoteApplicant = null;
-        return next();
-    }
-
-    return everifile.GetSession().then(
-        function (session) {
-            everifile.GetApplicant(session, id).then(
-                function (remoteApplicant) {
-
-                    log.debug({func: 'GetRemoteApplicantData'}, 'Got remoteApplicant info: %j', remoteApplicant);
-                    req.remoteApplicant = remoteApplicant;
-                    next();
-                }
-            ).catch(function (error) {
-                    log.debug({func: 'GetRemoteApplicantData'}, 'failed due to error: %j', error);
-                    if(error.status === 401) {
-                        log.warn({func: 'GetRemoteApplicantData'}, 'Value for remote applicant is invalid');
-
-                        req.remoteApplicant = null;
-
-                        next();
-                    } else {
-                        next(error);
-                    }
-                });
-        }).catch(function (error) {
-            log.error({func: 'GetRemoteApplicantData', error: error}, 'Unable to get remote session: %j', error);
-            next(error);
-        });
-}
-
-/**
- * @alias applicant.read
- *
- * Reads and returns the ReportApplcant from the response;
- */
-function ReadReportApplicant(req, res) {
-
-    if (!req.applicant) {
-        return res.status(404).send({
-            message: 'No local applicant found'
-        });
-    }
-
-    log.trace({func: 'ReportApplicant.read', applicant: req.applicant}, 'Returning Applicant');
-    log.debug({func: 'ReportApplicant.read', applicant: req.applicant.id}, 'Returning Applicant ID');
-
-    res.json(req.applicant);
-}
-
-/** SECTION : Report Manipulation ------------------------------------------------------ **/
-
-/**
- * @alias report.create
- */
-function CreateNewReport(req, res, next) {
-
-    var deferred = q.defer();
-
-    var bgcheck = new Bgcheck({
-        user: req.user,
-        remoteApplicantId: req.applicant.remoteId,
-        localReportSku: req.reportType.sku,
-        remoteReportSkus: req.reportType.skus,
-        paymentInfo: {success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id},
-        status: 'PAID'
-    });
-
-    console.log('[PostNonce] Creating bg check record: %j', bgcheck);
-
-    bgcheck.save(function (err) {
-        if (err) {
-            console.log('[PostNonce] Unable to save due to error: %j', err);
-            return res.status(400).send({
-                message: err.message
-            });
-        }
-
-        req.bgcheck = bgcheck;
-
-        // bgcheck was saved successfully
-        // update teh applicant's record
-        var applicant = req.applicant;
-        applicant.reports.push(bgcheck);
-
-        console.log('[PostNonce] pushing bg check to applicant reports', req.applicant.reports);
-
-        applicant.save(function (err) {
-            if (err) {
-                console.error('Crap, unable to save applicant %j', applicant, err);
-            }
-
-            req.applicant = applicant;
-            deferred.resolve();
-        });
-
-
-    });
-
-    deferred.then(function () {
-
-        var bgcheck = req.bgcheck;
-
-        console.log('[CreateNewReport] START for bgcheck %j', bgcheck);
-
-        everifile.GetSession().then(
-            function (session) {
-
-                console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, req.reportType.skus);
-
-                var deferrals = _.map(req.reportType.skus, function (remoteSku) {
-
-                    var defer = q.defer();
-
-                    var remoteApplicant = bgcheck.remoteApplicantId;
-
-                    everifile.RunReport(session, remoteSku, remoteApplicant).then(
-                        function (remoteReportStatus) {
-                            console.log('[CreateNewReport] Created remote report: %j', remoteReportStatus);
-
-                            var status = {
-                                remoteId: remoteReportStatus.remoteId,
-                                sku: remoteReportStatus.reportSku,
-                                value: remoteReportStatus.status.toUpperCase(),
-                                requiredData: remoteReportStatus.requiredData,
-                                completed: remoteReportStatus.completed,
-                                timestamp: remoteReportStatus.timestamp
-                            };
-
-                            defer.resolve(status);
-                        }
-                    );
-
-                    return defer.promise;
-                });
-
-                q.allSettled(deferrals).then(function (statusUpdates) {
-                    console.log('Finished Report requests!');
-
-                    statusUpdates.map(function (statusUpdate) {
-                        bgcheck.statuses.push(statusUpdate.value);
-                    });
-
-                    bgcheck.statuses = bgcheck.statuses.concat(statusUpdates);
-
-                    bgcheck.save(function (err) {
-                        if (err) {
-                            console.log(errorHandler.getErrorMessage(err));
-                            res.status(500).send({message: errorHandler.getErrorMessage(err)});
-                            return;
-                        }
-
-                        res.json(bgcheck);
-                    });
-                    // TODO, more!
-                });
-
-
-            },
-            function (error) {
-                console.log('[CreateNewReport] failed due to error: %j', error);
-                next(error);
-            });
-    });
-}
-
-/**
- * @alias NONE
- */
-module.exports.rerunReport = function ReRunReport(req, res, next) {
-    var remoteId = req.applicantId;
-
-    everifile.GetSession().then(
-        function (session) {
-            everifile.RunReport(session, 'MVRDOM', 44679).then(
-                function (bgReport) {
-                    console.log('[rerunReport] Created remote report: %j', bgReport);
-
-                    bgReport.save(function (err) {
-                        if (err) {
-                            return res.status(500).send({message: errorHandler.getErrorMessage(err)});
-                        }
-
-                        res.json(bgReport);
-                    });
-                }
-            );
-        },
-        function (error) {
-            console.log('[rerunReport] failed due to error: %j', error);
-            next(error);
-        });
-};
 
 /**
  * @alias report.applicantStatus
@@ -1099,6 +669,147 @@ function doReportSync(req, res, next) {
             next(err);
         });
 }
+
+/**
+ * @alias report.create
+ */
+function CreateNewReport(req, res, next) {
+
+    var deferred = q.defer();
+
+    var bgcheck = new Bgcheck({
+        user: req.user,
+        remoteApplicantId: req.applicant.remoteId,
+        localReportSku: req.reportType.sku,
+        remoteReportSkus: req.reportType.skus,
+        paymentInfo: {success: req.paymentResult.success, transactionId: req.paymentResult.transaction.id},
+        status: 'PAID'
+    });
+
+    console.log('[PostNonce] Creating bg check record: %j', bgcheck);
+
+    bgcheck.save(function (err) {
+        if (err) {
+            console.log('[PostNonce] Unable to save due to error: %j', err);
+            return res.status(400).send({
+                message: err.message
+            });
+        }
+
+        req.bgcheck = bgcheck;
+
+        // bgcheck was saved successfully
+        // update teh applicant's record
+        var applicant = req.applicant;
+        applicant.reports.push(bgcheck);
+
+        console.log('[PostNonce] pushing bg check to applicant reports', req.applicant.reports);
+
+        applicant.save(function (err) {
+            if (err) {
+                console.error('Crap, unable to save applicant %j', applicant, err);
+            }
+
+            req.applicant = applicant;
+            deferred.resolve();
+        });
+
+
+    });
+
+    deferred.then(function () {
+
+        var bgcheck = req.bgcheck;
+
+        console.log('[CreateNewReport] START for bgcheck %j', bgcheck);
+
+        everifile.GetSession().then(
+            function (session) {
+
+                console.log('[CreateNewReport] Local "%s" report has remote SKUs: "%j"', bgcheck.localReportSku, req.reportType.skus);
+
+                var deferrals = _.map(req.reportType.skus, function (remoteSku) {
+
+                    var defer = q.defer();
+
+                    var remoteApplicant = bgcheck.remoteApplicantId;
+
+                    everifile.RunReport(session, remoteSku, remoteApplicant).then(
+                        function (remoteReportStatus) {
+                            console.log('[CreateNewReport] Created remote report: %j', remoteReportStatus);
+
+                            var status = {
+                                remoteId: remoteReportStatus.remoteId,
+                                sku: remoteReportStatus.reportSku,
+                                value: remoteReportStatus.status.toUpperCase(),
+                                requiredData: remoteReportStatus.requiredData,
+                                completed: remoteReportStatus.completed,
+                                timestamp: remoteReportStatus.timestamp
+                            };
+
+                            defer.resolve(status);
+                        }
+                    );
+
+                    return defer.promise;
+                });
+
+                q.allSettled(deferrals).then(function (statusUpdates) {
+                    console.log('Finished Report requests!');
+
+                    statusUpdates.map(function (statusUpdate) {
+                        bgcheck.statuses.push(statusUpdate.value);
+                    });
+
+                    bgcheck.statuses = bgcheck.statuses.concat(statusUpdates);
+
+                    bgcheck.save(function (err) {
+                        if (err) {
+                            console.log(errorHandler.getErrorMessage(err));
+                            res.status(500).send({message: errorHandler.getErrorMessage(err)});
+                            return;
+                        }
+
+                        res.json(bgcheck);
+                    });
+                    // TODO, more!
+                });
+
+
+            },
+            function (error) {
+                console.log('[CreateNewReport] failed due to error: %j', error);
+                next(error);
+            });
+    });
+}
+
+
+function rerunReport(req, res, next) {
+    var remoteId = req.applicantId;
+
+    everifile.GetSession().then(
+        function (session) {
+            everifile.RunReport(session, 'MVRDOM', 44679).then(
+                function (bgReport) {
+                    console.log('[rerunReport] Created remote report: %j', bgReport);
+
+                    bgReport.save(function (err) {
+                        if (err) {
+                            return res.status(500).send({message: errorHandler.getErrorMessage(err)});
+                        }
+
+                        res.json(bgReport);
+                    });
+                }
+            );
+        },
+        function (error) {
+            console.log('[rerunReport] failed due to error: %j', error);
+            next(error);
+        });
+};
+
 
 
 /** Section : Report Middleware --------------------------------------------------------- **/

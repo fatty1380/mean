@@ -18,7 +18,7 @@ var
     constants          = require(path.resolve('./modules/core/server/models/outset.constants')),
     log                = require(path.resolve('./config/lib/logger')).child({
         module: 'bgchecks',
-        file  : 'bgchecks.server.controller'
+        file  : 'everifile.server.service'
     });
 
 
