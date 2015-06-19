@@ -13,15 +13,15 @@
         throw err;
     }
 
-    function driverResolve(rsrc, params) {
+    function driverResolve(Drivers, params) {
         if (!!params.driverId) {
             console.log('Searching for driver ID: %s', params.driverId);
-            return rsrc.get(params.driverId);
+            return Drivers.get(params.driverId);
         }
-        return rsrc.default;
+        return Drivers.default;
     }
 
-    function userResolve(rsrc, params, auth) {
+    function userResolve(Drivers, params, auth) {
         var val;
         if (!!params.userId) {
             val = params.userId;
@@ -31,15 +31,13 @@
             console.log('Searching for driver data for logged in user: %s', val);
         }
 
-        var driver = rsrc.ByUser.get({
-            userId: val
-        }).$promise;
+        var driver = Drivers.getByUser(val);
 
         return driver.catch(handle404s);
     }
 
-    function driverListResolve(rsrc) {
-        return rsrc.ById.query().$promise;
+    function driverListResolve(Drivers) {
+        return Drivers.ById.query().$promise;
     }
 
     function config($stateProvider) {

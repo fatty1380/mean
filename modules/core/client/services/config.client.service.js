@@ -117,6 +117,10 @@
                 }
 
                 function paramFilter(configs, userType, moduleName) {
+                    $log.debug('Filtering configs by userType: (%s) and moduleName: (%s). %o', userType, moduleName, configs);
+                    if (!configs) {
+                        return {};
+                    }
 
                     var retVal = configs;
 

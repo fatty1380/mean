@@ -14,100 +14,30 @@ fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpl
 moment       = require('moment'),
 _            = require('lodash');
 
-/**
- * "Instance" Methods
- */
-
-var executeQuery = function (req, res, next) {
-    var query = req.query || {};
-    var sort = req.sort || '';
-
-    Driver.find(query)
-        .sort(sort)
-        .populate('user', 'displayName created profileImageURL addresses')
-        .exec(function (err, drivers) {
-            if (err) {
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            }
-
-            req.drivers = drivers || [];
-            console.log('[DriversCtrl.executeQuery] Found %d drivers for query %j', req.drivers.length, query);
-            res.json(req.drivers);
-        });
-};
-
-// Searches for a single instance of a driver, based on the passed in 'driverFind' function;
-
-var executeFind = function (req, res, next, driverFind) {
-    driverFind
-        .populate('user')
-        .exec(function (err, driver) {
-            if (err) {
-                console.log('[Driver.executeFind] Driver search errored: ', err.message);
-                if (!!next) {
-                    return next(err);
-                }
-
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
-            }
-
-            if (!driver) {
-                console.log('[Driver.executeFind] No Driver Found');
-
-                if (!!next) {
-                    return next();
-                }
 
 
-            } else {
-                console.log('[Driver.executeFind] found driver: %s', driver.id);
-            }
+exports.create = create;
+exports.read = read;
+exports.update = update;
+exports.uploadResume = uploadResume;
+exports.refreshResume = refreshResume;
+exports.refreshReport = refreshReport;
+exports.getProfileFormAnswers = getProfileFormAnswers;
+exports.createProfileFormAnswers = createProfileFormAnswers;
+exports.updateProfileFormAnswers = updateProfileFormAnswers;
+exports.delete = deleteDriver;
+exports.list = list;
+exports.driverByUserID = driverByUserID;
+exports.me = me;
+exports.driverByID = driverByID;
+exports.hasAuthorization = hasAuthorization;
 
-            driver.user.cleanse();
 
-            if (!!next) {
-                req.driver = driver;
-                next();
-            } else {
-                res.json(driver);
-            }
-        });
-};
-
-/**
- * Get the error message from error object
- */
-var getErrorMessage = function (err) {
-    var message = '';
-
-    if (err.code) {
-        switch (err.code) {
-            case 11000:
-            case 11001:
-                message = 'Driver already exists';
-                break;
-            default:
-                message = 'Something went wrong';
-        }
-    } else {
-        for (var errName in err.errors) {
-            if (err.errors[errName].message) {
-                message = err.errors[errName].message;
-            }
-        }
-    }
-
-    return message;
-};
-
+//////////////////////////////////////////////////////////
 /**
  * Create a Driver
  */
-exports.create = function (req, res) {
+function create(req, res) {
     debugger;
     var driver = new Driver(req.body);
     driver.user = req.user;
@@ -143,12 +73,12 @@ exports.create = function (req, res) {
             res.json(driver);
         }
     });
-};
+}
 
 /**
  * Show the current Driver
  */
-exports.read = function (req, res) {
+function read(req, res) {
     console.log('[Driver.read] Req.driver has value: %s', !!req.driver);
 
     if (!req.driver) {
@@ -158,12 +88,12 @@ exports.read = function (req, res) {
     }
 
     res.json(req.driver);
-};
+}
 
 /**
  * Update a Driver
  */
-exports.update = function (req, res) {
+function update(req, res) {
     console.log('[Driver.Controller] update()');
     var driver = req.driver;
 
@@ -185,12 +115,12 @@ exports.update = function (req, res) {
             res.json(driver);
         }
     });
-};
+}
 
 /**
  * Update profile picture
  */
-exports.uploadResume = function (req, res) {
+function uploadResume(req, res) {
     console.log('[DriverCtrl.uploadResume] Start');
     var user = req.user;
     var driver = req.driver;
@@ -238,17 +168,17 @@ exports.uploadResume = function (req, res) {
             });
         }
     );
-};
+}
 
-exports.refreshResume = function (req, res) {
+function refreshResume(req, res) {
     console.log('[DriverCtrl.refreshResume] Start');
 
     req.params.reportSku = 'resume';
 
     return exports.refreshReport(req,res);
-};
+}
 
-exports.refreshReport = function (req, res) {
+function refreshReport(req, res) {
 
     console.log('[DriverCtrl.refreshReport] Start');
     var user = req.user;
@@ -306,12 +236,12 @@ exports.refreshReport = function (req, res) {
                 message: 'Unable to retrieve fresh URL for resume'
             });
         });
-};
+}
 
 /**
  * Handle the profile forms (eg: DOT Questionnaire
  */
-exports.getProfileFormAnswers = function(req, res) {
+function getProfileFormAnswers(req, res) {
     var list;
     if(!!req.query.formId) {
         console.log('Searching for profile form answers for `%s`', req.query.formId);
@@ -324,18 +254,18 @@ exports.getProfileFormAnswers = function(req, res) {
     var indexed = _.indexBy(list, 'listId');
 
     res.json(indexed);
-};
-exports.createProfileFormAnswers = function(req, res) {
+}
+function createProfileFormAnswers(req, res) {
     // TODO: Save Profile form answers without saving the full driver
-};
-exports.updateProfileFormAnswers = function(req, res) {
+}
+function updateProfileFormAnswers(req, res) {
     // TODO: Save Updated Profile form answers without saving the full driver
-};
+}
 
 /**
  * Delete an Driver
  */
-exports.delete = function (req, res) {
+function deleteDriver(req, res) {
     var driver = req.driver;
 
     driver.remove(function (err) {
@@ -347,21 +277,21 @@ exports.delete = function (req, res) {
             res.json(driver);
         }
     });
-};
+}
 
 /**
  * List of *ALL* Drivers
  */
-exports.list = function (req, res) {
+function list(req, res) {
     console.log('[Driver.Controller] list(): ', req.url);
 
     req.sort = '-created';
 
     executeQuery(req, res);
-};
+}
 
 
-exports.driverByUserID = function (req, res, next) {
+function driverByUserID(req, res, next) {
     console.log('[Driver.driverByUserId] start');
     var userId = req.params.userId || req.query.userId || req.user.id;
 
@@ -372,18 +302,18 @@ exports.driverByUserID = function (req, res, next) {
             user: userId
         }));
     }
-};
+}
 
-exports.me = function (req, res, next) {
+function me(req, res, next) {
     executeFind(req, res, next, Driver.findOne({
         user: req.user.id
     }));
-};
+}
 
 /**
  * Driver middleware
  */
-exports.driverByID = function (req, res, next, id) {
+function driverByID(req, res, next, id) {
     console.log('[Driver.driverById] start ');
 
     if ((/^[a-f\d]{24}$/i).test(id)) {
@@ -393,15 +323,107 @@ exports.driverByID = function (req, res, next, id) {
     return res.status(404).send({
         message: 'Unable to find a profile associated with that user'
     });
-};
+}
 
 /**
  * Driver authorization middleware
  */
-exports.hasAuthorization = function (req, res, next) {
+function hasAuthorization(req, res, next) {
     console.log('[Drivers.Ctrl.hasAuthorization] Checking...');
     if (req.driver.user.id !== req.user.id) {
         return res.status(403).send({message: 'User is not authorized'});
     }
     next();
-};
+}
+
+////////////////////////////////////////////
+
+/**
+ * "Instance" Methods
+ */
+
+function executeQuery(req, res, next) {
+    var query = req.query || {};
+    var sort = req.sort || '';
+
+    Driver.find(query)
+        .sort(sort)
+        .populate('user', 'displayName created profileImageURL addresses')
+        .exec(function (err, drivers) {
+            if (err) {
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+
+            req.drivers = drivers || [];
+            console.log('[DriversCtrl.executeQuery] Found %d drivers for query %j', req.drivers.length, query);
+            res.json(req.drivers);
+        });
+}
+
+// Searches for a single instance of a driver, based on the passed in 'driverFind' function;
+
+function executeFind(req, res, next, driverFind) {
+    driverFind
+        .populate('user')
+        .exec(function (err, driver) {
+            if (err) {
+                console.log('[Driver.executeFind] Driver search errored: ', err.message);
+                if (!!next) {
+                    return next(err);
+                }
+
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            }
+
+            if (!driver) {
+                console.log('[Driver.executeFind] No Driver Found');
+
+                if (!!next) {
+                    return next();
+                }
+
+
+            } else {
+                console.log('[Driver.executeFind] found driver: %s', driver.id);
+            }
+
+            driver.user.cleanse();
+
+            if (!!next) {
+                req.driver = driver;
+                next();
+            } else {
+                res.json(driver);
+            }
+        });
+}
+
+/**
+ * Get the error message from error object
+ */
+function getErrorMessage(err) {
+    var message = '';
+
+    if (err.code) {
+        switch (err.code) {
+            case 11000:
+            case 11001:
+                message = 'Driver already exists';
+                break;
+            default:
+                message = 'Something went wrong';
+        }
+    } else {
+        for (var errName in err.errors) {
+            if (err.errors[errName].message) {
+                message = err.errors[errName].message;
+            }
+        }
+    }
+
+    return message;
+}

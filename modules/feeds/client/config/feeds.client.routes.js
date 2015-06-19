@@ -6,6 +6,7 @@ angular.module('feeds').config(['$stateProvider',
 		// Feeds state routing
 		$stateProvider.
 			state('feed', {
+			parent: 'profile-base',
 			abstract: true,
 			url: '/feed',
 			views: {
@@ -22,8 +23,7 @@ angular.module('feeds').config(['$stateProvider',
 					controllerAs: 'vm',
 					bindToController: true
 				}
-			},
-			parent: 'profile-base'
+			}
 		}).
 			state('feed.list', {
 			url: '',

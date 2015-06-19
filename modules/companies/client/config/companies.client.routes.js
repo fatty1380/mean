@@ -7,46 +7,40 @@
 
     function companyResolve(Companies, params, auth) {
 
-        var val;
 
         if (!!params.companyId) {
-            val = params.companyId;
-            console.log('Searching for company ID: %s', val);
-
-            return Companies.ById.get({
-                companyId: val
-            }).$promise;
+            return Companies.get(params.companyId);
         }
+
+
+        var userId;
 
         if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
-            val = params.userId;
+            userId = params.userId;
         } else if (!!auth.user) {
             console.log('Searching for company data for logged in user');
-            val = auth.user._id;
+            userId = auth.user._id;
         } else {
             return null;
         }
 
-
-        return Companies.ByUser.get({
-            userId: val
-        }).$promise.catch(function (error) {
-                if (error.status === 404) {
-                    console.log('Unable to find company');
-                    return {};
-                }
-                else {
-                    throw error;
-                }
-            });
+        return Companies.getByUser(userId).catch(function (error) {
+            if (error.status === 404) {
+                console.log('Unable to find company');
+                return {};
+            }
+            else {
+                throw error;
+            }
+        });
     }
 
     function resolveSubscription(Payments, params, auth) {
 
         var companyId = params.companyId || auth.user && auth.user.company && (auth.user.company._id || auth.user.company);
 
-        return Payments.Subscription.get({companyId: companyId}).$promise;
+        return Payments.Subscription.get({ companyId: companyId }).$promise;
     }
 
     function resolveSubscriptions(config) {
@@ -181,16 +175,16 @@
             });
     }
 
-// Dependency Injection
+    // Dependency Injection
     companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
     moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
-    resolveSubscriptions.$inject=['AppConfig'];
-    resolveSubscription.$inject=['Payments', '$stateParams', 'Authentication'];
-    resolveSubscriptionDetails.$inject=['AppConfig', '$stateParams', '$log'];
+    resolveSubscriptions.$inject = ['AppConfig'];
+    resolveSubscription.$inject = ['Payments', '$stateParams', 'Authentication'];
+    resolveSubscriptionDetails.$inject = ['AppConfig', '$stateParams', '$log'];
 
     config.$inject = ['$stateProvider'];
 
-//Setting up route
+    //Setting up route
     angular.module('companies').config(config);
 })
-();
+    ();

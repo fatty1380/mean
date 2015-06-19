@@ -44,7 +44,7 @@
                 abstract: true,
                 templateUrl: '/modules/core/views/headline-bg.client.view.html'
             }).
-
+ 
             state('profile-base', {
                 abstract: true,
                 views: {
@@ -57,7 +57,18 @@
                     'sidebar@profile-base': {
                         template: '<h1 class="text-center">SIDEBAR</h1>'
                     }
-                }
+                },
+			resolve: {
+				user: ['Authentication', function resolveUser(Authentication) {
+					return Authentication.user;
+				}],
+				driver: ['user', 'Drivers', function resolveDriver(user, Drivers) {
+					return Drivers.get(user.driver);
+                }],
+                company: ['user', 'Companies', function resolveCompany(user, Companies) {
+                    return Companies.get(user.company);
+                }]
+			}
             }).
             
             // Landing Page 'Intro' States

@@ -14,10 +14,20 @@ var _            = require('lodash'),
     User         = mongoose.model('User'),
     Q            = require('q');
 
+
+exports.update = update;
+exports.search = search;
+exports.list = list;
+exports.readProfile = read;
+exports.changeProfilePicture = changeProfilePicture;
+exports.me = me;
+
+//////////////////////////////////////////////
+
 /**
  * Update user details
  */
-exports.update = function (req, res) {
+function update(req, res) {
     // Init Variables
     var user = req.user;
 
@@ -55,7 +65,7 @@ exports.update = function (req, res) {
 /**
  * Update profile picture
  */
-exports.changeProfilePicture = function (req, res) {
+function changeProfilePicture(req, res) {
     var user = req.user;
 
     if (user) {
@@ -100,7 +110,7 @@ exports.changeProfilePicture = function (req, res) {
     }
 };
 
-exports.search = function (req, res, next) {
+function search(req, res, next) {
 
     req.log.debug({query: req.query}, 'Searching based on query string');
     var queryStrings = (_.isString(req.query.text) ? [req.query.text] : req.query.text) || [];
@@ -130,7 +140,7 @@ exports.search = function (req, res, next) {
         });
 };
 
-exports.list = function (req, res, next) {
+function list(req, res, next) {
     var select = req.select || '-password -oldPass -salt';
 
     // req.query.text = ['jon', 'doe']
@@ -176,7 +186,7 @@ exports.list = function (req, res, next) {
         });
 };
 
-exports.readProfile = function (req, res) {
+function read(req, res) {
     if (!req.profile) {
         return res.status(404).send({
             message: 'No profile found'
@@ -192,7 +202,7 @@ exports.readProfile = function (req, res) {
 /**
  * Send User
  */
-exports.me = function (req, res) {
+function me(req, res) {
 
     if (!req.user) {
         return res.status(401).send({
