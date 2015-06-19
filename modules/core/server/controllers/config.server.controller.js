@@ -14,7 +14,7 @@ var configOptions = {
     'debug': { debug: false },
     'modules': getModules,
     'subscriptions': getSubscriptions
-}
+};
 
 exports.getConfig = function (req, res, next, varName) {
 
@@ -31,10 +31,6 @@ exports.getConfig = function (req, res, next, varName) {
     }
 
     return next();
-
-    switch (varName) {
-
-    }
 };
 
 exports.getAllConfigs = function (req, res) {

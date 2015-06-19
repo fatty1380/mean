@@ -78,11 +78,11 @@
 			vm.request = request;
 			
 			if(vm.auth.isLoggedIn() && vm.auth.user.id === vm.profile.id) {
-				return vm.status = 'me';
+				return (vm.status = 'me');
 			}
 			
 			if(request.status === 'accepted') {
-				return vm.status = 'friends';
+				return (vm.status = 'friends');
 			}
 			
 			if(request.status === 'new') {
@@ -108,7 +108,7 @@
 					}
 				})
 				.catch(function(err) {
-					$log.error(err, 'unable to %s the friend request', !!reject ? 'reject': 'accept')
+						$log.error(err, 'unable to %s the friend request', !!reject ? 'reject' : 'accept');
 				});
 			}
 
@@ -122,8 +122,8 @@
 						vm.status = success.status;
 
 						switch (success.status) {
-							case 'new': return vm.status = 'sent';
-							case 'accepted': return vm.status = 'friends';
+							case 'new': return (vm.status = 'sent');
+							case 'accepted': return (vm.status = 'friends');
 						}
 					})
 					.catch(function (error) {

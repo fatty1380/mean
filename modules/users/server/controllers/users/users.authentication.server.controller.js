@@ -229,7 +229,7 @@ function login(req, res, user) {
     req.log.trace({func: 'login'}, 'Logging in user %s', user.email);
 
     if (!_.isEmpty(user.salt + user.password)) {
-        req.log.debug({func: 'login'}, 'USER HAS NOT BEEN CLEANSED!')
+        req.log.trace({ func: 'login' }, 'Cleansing User before returning');
         user.cleanse();
     }
 
@@ -243,7 +243,7 @@ function login(req, res, user) {
             res.json(req.user);
         }
     });
-};
+}
 
 function completeUserHydration(req, res, user) {
 

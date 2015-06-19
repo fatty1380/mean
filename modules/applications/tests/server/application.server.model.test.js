@@ -54,7 +54,7 @@ describe('Application Model Unit Tests:', function () {
 
                 done();
             }, function (err) {
-                log.debug({ user: user, owner: owner, company: company, job: job })
+                log.debug({ user: user, owner: owner, company: company, job: job });
 
                 should.not.exist(err);
             });

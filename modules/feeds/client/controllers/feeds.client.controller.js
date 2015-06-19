@@ -66,18 +66,17 @@ angular.module('feeds')
 			});
 		};
 		
-		vm.populateItem = function(feedItem, index) {
+		vm.populateItem = function (feedItem, index) {
 			Feed.getItem(feedItem).then(
-				function(item) {
-					_.extend(vm.feed.items[index],item);
-					
+				function (item) {
+					_.extend(vm.feed.items[index], item);
+
 					return Profiles.lookup(item.user);
 				}).then(
-					function(user) {
-						vm.feed.items[index].user = user;
-					}
-				);
-		}
+				function (user) {
+					vm.feed.items[index].user = user;
+				});
+		};
 
 		// Find existing Feed
 		vm.findOne = function() {

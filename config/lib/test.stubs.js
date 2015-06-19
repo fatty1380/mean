@@ -27,6 +27,12 @@ exports.cleanTables = cleanTables;
 exports.populateAdminUser = populateAdminUser;
 exports.getAdminCredentials = getAdminCredentials;
 
+exports.getCompany = getCompany;
+exports.getJob = getJob;
+exports.getApplication = getApplication;
+
+exports.agentLogin = agentLogin;
+
 exports.users = {
     driver: exports.user,
     owner: stubs.owner
@@ -72,15 +78,15 @@ exports.application = {
     introduction : 'Hello, please allow me to introduce myself'
 };
 
-exports.getCompany = function getCompany(owner) {
+function getCompany(owner) {
     return {
-            owner: owner,
-            name: 'My Company Name',
-            type: 'owner'
+        owner: owner,
+        name: 'My Company Name',
+        type: 'owner'
     };
 }
 
-exports.getJob = function getJob(owner, company) {
+function getJob(owner, company) {
     return {
             user: owner,
             company: company,
@@ -89,7 +95,7 @@ exports.getJob = function getJob(owner, company) {
         };
 }
 
-exports.getApplication = function getApplication(user, company, job) {
+function getApplication(user, company, job) {
 
     return {
         introduction: exports.application.introduction,
@@ -113,11 +119,11 @@ function getRandomUser() {
         password: 'password',
         provider: 'local'
     };
-};
+}
 
 function getUser() {
     return _.extend({}, getRandomUser(), {type: 'driver'});
-};
+}
 
 function getCredentials(user) { 
     var tmp = _.extend({}, exports.credentials, {username: user.username});
@@ -127,13 +133,13 @@ function getCredentials(user) {
 
 function getOwner() {
     return _.extend({}, getRandomUser(), {type: 'owner'});
-};
+}
 
 /**
  *  Functional methods - should be move to stub-functions or something
  */
 
-exports.agentLogin = function(agent, credentials) {
+function agentLogin(agent, credentials) {
     log.debug({creds: credentials}, 'Logging in with credentials');
     return agent.post('/api/auth/signin')
         .send(credentials)
@@ -147,7 +153,7 @@ exports.agentLogin = function(agent, credentials) {
             log.error({error: signinErr}, 'Error logging into app');
             return Q.reject(signinErr);
         });
-};
+}
 
 function cleanTables(tables) {
     var promises = _.map(tables, function(table) {

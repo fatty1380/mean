@@ -214,12 +214,12 @@ describe('Feed CRUD tests', function () {
 			var userId = user.id;
 
 			// Save a new Feed
-			agent.post('/api/feed')
+			return agent.post('/api/feed')
 				.send(feedItem)
 				.expect(200)
 				.end(function (feedSaveErr, feedSaveRes) {
 				// Handle Feed save error
-				if (feedSaveErr) done(feedSaveErr);
+				if (feedSaveErr) {return done(feedSaveErr);}
 
 				// Delete existing Feed
 				agent.delete('/api/feed/' + feedSaveRes.body._id)
@@ -227,7 +227,7 @@ describe('Feed CRUD tests', function () {
 					.expect(200)
 					.end(function (feedDeleteErr, feedDeleteRes) {
 					// Handle Feed error error
-					if (feedDeleteErr) done(feedDeleteErr);
+					if (feedDeleteErr) {return done(feedDeleteErr);}
 
 					should.exist(feedDeleteRes.body);
 

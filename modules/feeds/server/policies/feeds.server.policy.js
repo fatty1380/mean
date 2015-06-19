@@ -57,9 +57,9 @@ exports.feedIsAllowed = function (req, res, next) {
 		return next();
 	}
 
-	req.log.debug({func: 'feedIsAllowed'}, 'Couldn`t short circuit - checking ACLs');
+	req.log.debug({ func: 'feedIsAllowed' }, 'Couldn`t short circuit - checking ACLs');
 	exports.isAllowed(req, res, next);
-}
+};
 
 exports.feedItemIsAllowed = function (req, res, next) {
 	// If a feedItem is marked as "PUBLIC", allow the route to continue
@@ -67,7 +67,7 @@ exports.feedItemIsAllowed = function (req, res, next) {
 		return next();
 	}
 	
-	req.log.debug({item: req.feedItem, user: req.user, itemUser: req.feedItem.user}, 'checking user permissions')
+	req.log.debug({ item: req.feedItem, user: req.user, itemUser: req.feedItem.user }, 'checking user permissions');
 	
 	if(!!req.feedItem && !!req.user && req.user._id.equals(req.feedItem.user)) {
 		req.log.debug('Feed Item user equals request user');

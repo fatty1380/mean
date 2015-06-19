@@ -211,19 +211,19 @@ describe('User Model Unit Tests:', function () {
                 });
         });
         
-        it('should return a display name if none is set', function() {
+        it('should return a display name if none is set', function () {
             var expected = user.firstName + ' ' + user.lastName;
-            log.debug({dispName: user.displayName, expecting: expected, user: user}, 'Saving user without displayname');
-    
+            log.debug({ dispName: user.displayName, expecting: expected, user: user }, 'Saving user without displayname');
+
             return user.save()
-            .then(function(user) {
-                
-                log.debug({user: user, dispName: user.displayName}, 'Got displayname from new user');
-                
+                .then(function (user) {
+
+                log.debug({ user: user, dispName: user.displayName }, 'Got displayname from new user');
+
                 should.exist(user.displayName);
                 user.displayName.should.be.equal(expected);
-            })
-        })
+            });
+        });
         it('should be able to save multiple addresses');
         it('should be able to mark a single address as the primary address');
     });

@@ -7,7 +7,7 @@
 /** Friend Operations */
 exports.loadFriends = loadFriends;
 exports.removeFriend = removeFriend;
-exports.checkFriendStatus = checkFriendStatus
+exports.checkFriendStatus = checkFriendStatus;
 
 /** Request Operations */
 exports.listRequests = listRequests;
@@ -67,7 +67,7 @@ function loadFriends(req, res, next) {
             req.log.error({ func: 'loadFriends', error: err }, 'Failed to find %s\'s friends due to error', user.username);
             next(err);
         });
-};
+}
 
 /**
  * checkFriendStatus
@@ -137,15 +137,7 @@ function checkFriendStatus(req, res, next) {
             }
 
             return res.json({ status: status, request: request });
-
-
-
         });
-
-
-
-
-
 }
 
 /**
@@ -191,7 +183,7 @@ function createRequest(req, res, next) {
 
         return res.json(results[0]);
     });
-};
+}
 
 function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
@@ -300,18 +292,18 @@ function acceptRequest(req, res, next) {
 
             req.request = request;
         });
-};
+}
 
 function rejectRequest(req, res, next) {
     next(new Error('not implemented'));
-};
+}
 
 function removeFriend(req, res, next) {
 
     req.log.debug({ func: 'removeFriend', profile: req.profile.id, friend: req.params.friendId }, 'Removing friend from DELETE method call');
 
     next(new Error('not implemented'));
-};
+}
 
 function requestById(req, res, next, id) {
 
@@ -332,4 +324,4 @@ function requestById(req, res, next, id) {
             req.log.error({ func: 'requestById', error: err }, 'Unable to find request due to error');
             next(err);
         });
-};
+}

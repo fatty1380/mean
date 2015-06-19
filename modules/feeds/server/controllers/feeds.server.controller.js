@@ -34,7 +34,7 @@ function postItem(req, res) {
 	var item = new FeedItem(req.body);
 	item.user = req.user;
 
-	req.log.info({ item: item, func: 'postItem' }, 'Saving Item')
+	req.log.info({ item: item, func: 'postItem' }, 'Saving Item');
 
 	var feed = req.feed;
 	feed.activity.push(item);
@@ -58,7 +58,7 @@ function postItem(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		});
-};
+}
 
 /**
  * Update a Feed Item
@@ -72,13 +72,13 @@ function updateItem(req, res) {
 		req.feedItem = feedItem;
 		res.jsonp(feedItem);
 	}, function (err) {
-			req.log.error({ error: err, item: item }, 'failed to save item');
+			req.log.error({ error: err, item: feedItem }, 'failed to save item');
 
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		});
-};
+}
 
 /**
  * Delete a Feed Item
@@ -95,7 +95,7 @@ function deleteItem(req, res) {
 			res.jsonp(feed);
 		}
 	});
-};
+}
 
 /**
  * List of Feed Items
@@ -112,7 +112,7 @@ function listItems(req, res) {
 			res.jsonp(feeds);
 		}
 	});
-};
+}
 
 /**
  * Single Feed Item
@@ -125,7 +125,7 @@ function readItem(req, res) {
 
 // *** START Comments *** //
 
-function addComment(req, res) {
+function addComment(req, res, next) {
 	return next(new Error('not implemented exception'));
 }
 
@@ -136,7 +136,7 @@ function addComment(req, res) {
  */
 function read(req, res) {
 	res.json(req.feed);
-};
+}
 
 /**
  * List of Feeds
@@ -153,7 +153,7 @@ function list(req, res) {
 			res.json(feeds);
 		}
 	});
-};
+}
 
 /**
  * Feed middleware
@@ -162,12 +162,12 @@ function feedByID(req, res, next, id) {
 	req.log.debug({ func: 'feedByid', id: id }, 'Looking up Feed by ID');
 
 	Feed.findById(id).populate('user', 'displayName').exec(function (err, feed) {
-		if (err) return next(err);
-		if (!feed) return next(new Error('Failed to load Feed ' + id));
+		if (err) {return next(err);}
+		if (!feed) {return next(new Error('Failed to load Feed ' + id));}
 		req.feed = feed;
 		next();
 	});
-};
+}
 
 function feedItemByID(req, res, next, id) {
 	req.log.debug({ func: 'feedItemByID', id: id }, 'Looking up Feed Item by ID');
@@ -189,7 +189,7 @@ function feedItemByID(req, res, next, id) {
 			req.log.error({ error: err }, 'Error retrieving feed item %s', id);
 			return next(err);
 		});
-};
+}
 
 function myFeed(req, res, next) {
 	if (!req.user || !req.user._id) {
@@ -223,7 +223,7 @@ function myFeed(req, res, next) {
 			req.log.error({ func: 'myFeed', error: err });
 			return next(err);
 		});
-};
+}
 
 /** Private Method implementations ____________________________________________________________________ */
 
