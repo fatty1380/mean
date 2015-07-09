@@ -7,11 +7,12 @@
             'ui.router',
             'home',
             'login',
-            'signup'
+            'signup',
+            'directives'
         ])
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                $urlRouterProvider.otherwise("/home");
+                $urlRouterProvider.otherwise("/signup");
             }
         ])
         .run(function($ionicPlatform) {

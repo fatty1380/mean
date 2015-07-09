@@ -15,6 +15,7 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../../libs/ionic/fonts" !default;
 
@@ -26,3 +27,24 @@ $ionicons-font-path: "../../libs/ionic/fonts" !default;
   display:block;
   background: $calm;
 }
+
+
+
+
+.list .item-input{
+  margin: 5px 0;
+  color:white;
+}
+
+.list .item {
+  margin: 5px 0;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.signup-title{
+  text-align: center;
+  margin: 40px 0 80px;
+  color:white;
+}
+
+.list .item-input::-webkit-input-placeholder {color:#c0392b;}

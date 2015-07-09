@@ -7697,3 +7697,19 @@ a.button {
   height: 300px;
   display: block;
   background: #11c1f3; }
+
+.list .item-input {
+  margin: 5px 0;
+  color: white; }
+
+.list .item {
+  margin: 5px 0;
+  background-color: rgba(255, 255, 255, 0.6); }
+
+.signup-title {
+  text-align: center;
+  margin: 40px 0 80px;
+  color: white; }
+
+.list .item-input::-webkit-input-placeholder {
+  color: #c0392b; }
