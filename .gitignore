@@ -6,5 +6,6 @@ platforms/
 plugins/
 www/libs/
 .idea
+.DS_Store
 
 

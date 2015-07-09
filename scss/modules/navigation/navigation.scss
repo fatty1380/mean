@@ -1,0 +1,26 @@
+.navigation-bar{
+  height: 66px;
+  padding: 0;
+
+  .button-bar .button{
+    font-size: 10px;
+    line-height: 16px;
+    font-weight: bold;
+    padding-top: 10px;
+    border-width: 1px 0 0 1px;
+    text-transform: uppercase;
+
+    &:first-child{
+      border-width: 1px 0 0;
+    }
+
+    &.active{
+      background-color: $positive;
+      color: #fff;
+    }
+  }
+  .ico{
+    display: block;
+    margin: 0 auto 3px;
+  }
+}

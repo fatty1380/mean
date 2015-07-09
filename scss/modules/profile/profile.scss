@@ -1,0 +1,35 @@
+.profile-visual{
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  top:15px;
+  height:125px;
+  text-align: center;
+  z-index: 2;
+
+  .photo{
+    display: inline-block;
+    vertical-align: top;
+    width: 125px;
+    height: 125px;
+    background: #666666;
+    border: 2px solid #999;
+    @include rounded-corner(100%);
+  }
+
+  .contacts-amount{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -13px;
+  }
+}
+
+.tabs-holder{
+  position: absolute;
+  top: 130px;
+  left: 15px;
+  bottom: 44px;
+  right: 15px;
+  z-index: 1;
+}
