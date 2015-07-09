@@ -7904,21 +7904,18 @@ a.button {
   right: 15px;
   z-index: 1; }
 
-.navigation-bar {
-  height: 66px;
-  padding: 0; }
-  .navigation-bar .button-bar .button {
+.main-tabs > .tab-nav {
+  height: 69px; }
+  .main-tabs > .tab-nav .tab-item {
+    padding: 10px 0;
     font-size: 10px;
     line-height: 16px;
     font-weight: bold;
-    padding-top: 10px;
+    border: solid #333;
     border-width: 1px 0 0 1px;
     text-transform: uppercase; }
-    .navigation-bar .button-bar .button:first-child {
-      border-width: 1px 0 0; }
-    .navigation-bar .button-bar .button.active {
-      background-color: #387ef5;
+    .main-tabs > .tab-nav .tab-item.tab-item-active {
+      background: #387ef5;
       color: #fff; }
-  .navigation-bar .ico {
-    display: block;
-    margin: 0 auto 3px; }
+    .main-tabs > .tab-nav .tab-item .ico {
+      margin-bottom: 3px; }
