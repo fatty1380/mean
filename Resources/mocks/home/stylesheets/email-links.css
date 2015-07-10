@@ -1,0 +1,103 @@
+ body {
+   padding-left: 0;
+   padding-right: 0;
+ }
+ /* This makes absolutely positioned elements like p, h1,
+     and some bootstrap elements placed properly. */
+ #absolute-wrapper p, #absolute-wrapper h1, #absolute-wrapper h2, #absolute-wrapper h3, #absolute-wrapper h4, #absolute-wrapper h5, #absolute-wrapper h6 {
+   margin-top: 0 !important;
+ }
+ #absolute-wrapper {
+   position: relative;
+   width: 980px;
+   margin: 0 auto;
+   height: 1px;
+ }
+ #absolute-wrapper .brand {
+   background: rgba(0, 0, 0, 0);
+   width: 147px;
+   height: 49px;
+   position: absolute;
+   top: -124px;
+   left: -10px;
+ }
+ #absolute-wrapper .container-fluid {
+   background: rgba(17, 88, 139, 0.839844);
+   padding: 30px 20px 30px 20px;
+   width: 940px;
+   height: 47px;
+   position: absolute;
+   top: 869px;
+   left: 0;
+ }
+ #absolute-wrapper p {
+   font-family:"museo-sans";
+   font-weight: 300;
+   color: #ffffff;
+   line-height: 36px;
+ }
+ #absolute-wrapper .nav {
+   margin: 0;
+ }
+ #absolute-wrapper .nav li a {
+   font-family:"museo-sans";
+   text-align: center;
+   color: #cccccc;
+ }
+ .navbar {
+   height: 67px;
+ }
+ .navbar .navbar-inner {
+   background: rgba(161, 161, 161, 0.328125);
+   border: none;
+   border-radius: 0;
+   height: 67px;
+   padding-left: 20px;
+   padding-right: 20px;
+ }
+ .navbar .navbar-inner .nav li a {
+   padding: 20px 15px 10px 15px;
+   text-shadow: none;
+   font-family:"museo-sans";
+   color: #ffffff;
+   line-height: 40px;
+   font-weight: bold;
+   font-size: 17px;
+ }
+ .container .row-fluid.row-fluid-1 {
+   padding: 10px 0 0 0;
+ }
+ .container .row-fluid-1 .span6 .btn-success {
+   background: #5475b6;
+   background-image: -moz-linear-gradient(270deg, #5475b6 0%, #0f34a2 100%);
+   background-image: -webkit-linear-gradient(270deg, #5475b6 0%, #0f34a2 100%);
+   background-image: -o-linear-gradient(270deg, #5475b6 0%, #0f34a2 100%);
+   background-image: linear-gradient(180deg, #5475b6 0%, #0f34a2 100%);
+   font-family:"alternate-gothic-no-2-d";
+   font-size: 40px;
+   padding: 25px 60px 25px 60px;
+   margin-top: 80px;
+ }
+ .container .row-fluid.row-fluid-2 {
+   padding: 30px 0 0 0;
+ }
+ .container .row-fluid-2 .span4 .heading {
+   font-family:"museo-sans";
+   font-weight: normal;
+   font-size: 29px;
+   text-align: center;
+   color: #454545;
+ }
+ .container .row-fluid-2 .span4 p {
+   font-family:"museo-sans";
+   font-weight: 300;
+   font-size: 16px;
+   text-align: center;
+   line-height: 25px;
+ }
+ .container .row-fluid-2 .span4 .image.image-1 {
+   opacity: 0.5;
+ }
+ .container .row-fluid-2 .span4 .image.image-2 {
+   opacity: 0.8;
+ }

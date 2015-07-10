@@ -1,0 +1,134 @@
+@media (min-width: 992px) {
+    .nav-users {
+        position: fixed;
+    }
+}
+
+.social-account-container {
+    display: inline-block;
+    position: relative;
+}
+
+.btn-remove-account {
+    top: 10px;
+    right: 10px;
+    position: absolute;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+/* SCHEDULE.css */
+.availability-row > div.yes {
+    background-color: rgb(0,255,0);
+background-color: rgba(0,255,0, 0.3);
+}
+.availability-row > div.no {
+    background-color: rgb(255,0,0);
+    background-color: rgba(255,0,0, 0.3);
+}
+
+/* TODO: Move these to SIGNUP Specific CSS File */
+/* Signup classes */
+
+/* driver-profile client template */
+/* Commented out for a fresh start
+.profile-row {
+    padding: 5px 10px;
+}
+.profile-row > div {
+    padding: 0;
+}
+.profile-row p {
+    margin: 0;
+}
+.availability_matrix > .well {
+    padding: 5px;
+}
+.availability-header {
+    border-bottom: 1px solid #CCC;
+}
+.availability-header > div {
+    padding: 0;
+}
+.col-md-6 .profile-row .profile-label {
+    margin: 0;
+}
+.profile-row .pull-right {
+    margin: 0 10px 10px 0;
+    width: 108px;
+}
+.profile-row .row-fluid .col-md-5 p {
+    text-align: right;
+}
+.profile-row .col-md-8 .row-fluid select {
+    margin: 0;
+    width: 108px;
+}
+.profile-row .row-fluid .col-md-6 p span {
+    background-color: rgba(255, 255, 255, 0);
+}
+.profile-row .row-fluid .btn-group.btn-group-1 {
+    width: 137px;
+}
+.profile-row .row-fluid .btn-group.btn-group-vertical .btn {
+    width: 120px;
+}
+.profile-row .profile-label {
+    margin: 6px;
+}
+.col-md-6 .profile-row .col-md-12 .well {
+    background: rgba(245, 245, 245, 0.0509804);
+    padding: 5px 20px 0 10px;
+}
+.col-md-6 .profile-row .availability-row .control-label {
+    line-height: 14px;
+}
+.availability-row .checkbox {
+    text-align: center;
+    line-height: 12px;
+}
+*/
+/* License Details */
+/* Commented out
+.license_details .license_label {
+    width: 80px;
+    text-align: right;
+}
+.license_details select {
+    -webkit-appearance: none;
+} */
+/* Signup Typing */
+/* Commented out
+.signup-type {
+    color: #ffffff;
+}
+.signup-type .heading {
+    border: none;
+    color: #fff;
+    padding-top: 10px;
+}
+.signup-type > .row > div > div {
+    border: none;
+    background: #0e2d4c;
+    padding: 20px;
+    text-align: center;
+}*/
+/*.container-fluid .signup-type img {}*/

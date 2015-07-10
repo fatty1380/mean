@@ -1,0 +1,13 @@
+<section class="schedule">
+    <div class="row availability-row">
+        <div class="col-md-5">
+            <label class="control-label" title="{{schedule.time.start}} to {{schedule.time.end}}">{{ schedule.description }}</label>
+        </div>
+
+        <h3>Days: {{schedule.days}} ({{schedule.days.length}})</h3>
+
+        <div class="col-md-1" ng-repeat='(i,day) in schedule.days track by i' ng-class="{yes: day, no: !day, unknown: (day || null === null)}">
+            <input ng-disabled="!editMode" type="checkbox" ng-bind="schedule.days[i]" name="">
+        </div>
+    </div>
+</section>

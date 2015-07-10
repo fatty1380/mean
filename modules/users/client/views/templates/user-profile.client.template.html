@@ -1,0 +1,24 @@
+<section>
+    <div ng-hide="ctrl.editMode.enabled" class="row-fluid">
+        <legend class="pull-left">{{ctrl.title || 'Personal Information'}}
+            <div class="pull-right">
+                <a class="btn btn-link" ng-click="ctrl.edit()" ng-if="ctrl.editable">
+                    <i class="fa fa-pencil"></i>&nbsp;edit
+                </a>
+            </div>
+        </legend>
+
+        <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd>{{ctrl.profile.displayName}}</dd>
+            <dt>Email</dt>
+            <dd>{{ctrl.profile.email}}</dd>
+            <dt>Phone</dt>
+            <dd>{{ctrl.profile.phone}}</dd>
+            <dt>({{ctrl.profile.addresses.length}}) Addresses</dt>
+            <dd>
+                <os-address-list addresses="ctrl.profile.addresses" is-editing="false" required="false"></os-address-list>
+            </dd>
+        </dl>
+    </div>
+</section>

@@ -1,0 +1,56 @@
+ body {
+   padding-left: 0;
+   padding-right: 0;
+ }
+ /* This makes absolutely positioned elements like p, h1,
+     and some bootstrap elements placed properly. */
+ #absolute-wrapper p, #absolute-wrapper h1, #absolute-wrapper h2, #absolute-wrapper h3, #absolute-wrapper h4, #absolute-wrapper h5, #absolute-wrapper h6 {
+   margin-top: 0 !important;
+ }
+ #absolute-wrapper {
+   position: relative;
+   width: 700px;
+   margin: 0 auto;
+   height: 1px;
+ }
+ #absolute-wrapper .row-fluid {
+   width: 940px;
+   height: 30px;
+   position: absolute;
+   top: -219px;
+   left: -719px;
+ }
+ #absolute-wrapper .icon.icon-question-sign {
+   position: absolute;
+   top: 893px;
+   left: -423px;
+ }
+ .container-fluid .row-fluid .span12 .heading {
+   font-family:"museo-sans";
+   text-align: center;
+   color: #0e2d4c;
+ }
+ .container-fluid .row-fluid .span12 .heading.heading-1 {
+   font-weight: normal;
+ }
+ .container-fluid .row-fluid .span12 .well {
+   background: rgba(245, 245, 245, 0.773438);
+   padding: 5px;
+   margin: 5px;
+   -moz-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -webkit-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   -o-box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+   box-shadow: 0 1px 2px 0 #000000, inset 0 1px 1px 0 rgba(0, 0, 0, 0.046875);
+ }
+ .container-fluid .row-fluid .span12 .well .heading-1.heading-2 {
+   margin: 50px 0 10px 0;
+ }
+ .container-fluid .row-fluid .span12 .well form .form-actions {
+   background: rgba(245, 245, 245, 0);
+ }
+ .container-fluid .row-fluid .span12 .well form .form-actions .btn {
+   font-family:"museo-sans";
+ }
+ .container-fluid .row-fluid .span12 .well form .form-actions .btn-primary {
+   margin: 0 10px 0 0;
+ }

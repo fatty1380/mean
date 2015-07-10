@@ -1,0 +1,182 @@
+<section name="os-job-list.directive" class="outset-list">
+
+    <!-- SEARCH HEADER --->
+    <div class="panel panel-default search-section" data-ng-if="!!vm.showSearch && !!vm.jobs.length">
+        <form class="panel-body form-inline">
+            <div class="col-sm-12 text-center mgn-btm">
+                <oset-categories model="vm.jobTypes" summary="vm.jobCats" show-all="vm.showAllTypes" lbl-class="btn-sm no-mgn" mode="select"></oset-categories>
+            </div>
+
+            <div class="form-group search">
+                <input id="job-search" ng-model="vm.searchTerms" type="search"
+                       class="form-control job-search"
+                       ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 300, 'blur': 0 } }"
+                       placeholder="search terms ...">
+            </div>
+
+            <div class="form-group pull-right">
+
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-link no-pad-right" ng-show="!!vm.predicate"
+                            ng-click="vm.toggleSort(null,true)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <button type="button" class="btn btn-link" ng-click="vm.toggleSort('posted',true)">
+                        <span ng-hide="!!vm.predicate">Sort by </span>
+                        Posting Date
+                        <i class="fa"
+                           ng-show="!!vm.predicate"
+                           ng-class="{'fa-sort-amount-desc':vm.reverse, 'fa-sort-amount-asc':!vm.reverse}"></i>
+                    </button>
+                </div>
+
+                <button type="button" class="btn-tab btn-link read-more btn-sm"
+                        ng-click="vm.toggleFilter('clear')"
+                        ng-disabled="vm.filters.clear"
+                        name="clear"><i class="fa fa-times"></i></button>
+
+                <div class="btn-group">
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-if="vm.user.type === 'owner'"
+                           ng-click="vm.toggleFilterMine()" btn-checkbox
+                           ng-model="vm.filters.mine" name="mine">My Jobs</label>
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-if="!!vm.user.driver.jobStatuses"
+                           ng-click="vm.toggleFilter('unseen')" btn-checkbox
+                           ng-model="vm.filters.unseen" name="unseen">New</label>
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-click="vm.toggleFilter('today')" btn-checkbox
+                           ng-model="vm.filters.day" name="newest">New Today</label>
+                    <label class="btn btn-cta-secondary btn-sm"
+                           ng-click="vm.toggleFilter('week')" btn-checkbox
+                           ng-model="vm.filters.week" name="newest">New This Week</label>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <!--LIST ITEM REPEATER-->
+    <div class="row">
+        <div class="job-list blog-category-list">
+
+            <article class="post col-sm-12"
+                     data-ng-repeat="job in (vm.jobs | filter: vm.jobCatFilter | filter: vm.filter | withinPastDays: 'posted': vm.filters.numDays | filter: vm.searchTermFilter | orderBy: vm.predicate : vm.reverse | limitTo: vm.limitTo)"
+                     ng-if="vm.jobs"
+                     ng-init="job.cats=_.pluck(_.where(job.categories, 'value'), 'key')"
+                     ng-show="vm.visibleId === job._id || !vm.visibleId">
+
+                <!--Begin Job Item Content-->
+                <div class="post-inner">
+                    <div class="content lead-content">
+                        <div class="list-picture" ng-if="job.company.profileImageURL">
+                            <img ng-src="{{job.company.profileImageURL}}" class="img-responsive"/>
+                        </div>
+                        <div class="list-date">
+                            {{job.posted | amDateFormat : 'L LT'}}
+                        </div>
+                        <div class="date-label" ng-if="!job.company.profileImageURL">
+                            <span class="month">{{(job.posted || job.created)  | amDateFormat : 'MMM' | uppercase}}</span>
+                            <span class="date-number">{{job.posted | amDateFormat : 'D'}}</span>
+                        </div>
+                        <h3 class="post-title" ui-sref="jobs.view({jobId: job._id})">{{job.name}}</h3>
+
+                        <p>
+                            <oset-categories model="job.categories" mode="view" lbl-class="btn-xs"></oset-categories>
+                        </p>
+                        <!--meta-->
+                        <div class="row">
+                            <div class="pull-right">
+                                <button type="button" class="btn-tab btn-link read-more strong {{vm.btnClass}}"
+                                        ng-click="vm.showTab()" ng-class="{'hidden':!vm.visibleId}">
+                                    <i class="fa fa-close fa-lg mgn-right"></i>
+                                </button>
+                                <button type="button" class="btn-tab btn-link read-more strong {{vm.btnClass}}"
+                                        ng-click="vm.showTab(job._id, 'applicants', job.applications.length)"
+                                        ng-show="job.company._id === (vm.companyId || vm.user.company.id)"
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'applicants'}">
+                                    <i class="fa fa-users fa-lg mgn-right"></i>{{job.applications.length}} Applicants
+                                </button>
+                                <button type="button"
+                                        class="btn-tab btn-link read-more strong {{vm.btnClass || 'mgn-left'}}"
+                                        ng-click="vm.showTab(job._id, 'details')"
+                                        ng-class="{'active': vm.visibleId === job._id && vm.visibleTab === 'details'}">
+                                    <i class="fa fa-lg fa-file-text mgn-right"></i>View Description
+                                </button>
+                                <button type="button"
+                                        class="btn-tab btn-link read-more strong {{vm.btnClass || 'mgn-left'}}"
+                                        ui-sref="jobs.edit({jobId: job._id})"
+                                        ng-show="job.company._id === (vm.companyId || vm.user.company.id)">
+                                    <i class="fa fa-edit fa-lg mgn-right"></i>Edit
+                                </button>
+                                <button type="button"
+                                        class="btn-tab btn-link read-more strong {{vm.btnClass || 'mgn-left'}}"
+                                        ui-sref="jobs.view({jobId: job._id})">
+                                    <i class="fa fa-external-link fa-lg" ng-class="{'mgn-right': !vm.btnClass}"></i>
+                                    <span ng-if="!vm.btnClass">{{vm.user.type === 'owner' ? 'View' : 'Apply'}}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content body">
+                        <div class="row  tab-body" ng-show="vm.visibleId === job._id">
+                            <div class="post-entry col-xs-12" ng-show="vm.visibleTab === 'applicants'">
+                                <div class="text-center" ng-if="job.applications && job.applications.length">
+                                    <button type="button" class="btn btn-cta-secondary">
+                                        applicant details available here... <i class="fa fa-external-link"></i>
+                                    </button>
+                                </div>
+                                <!--Disabled until applicant data can be fully populated-->
+                                <!--<table class="table" ng-if="false && job.applications && job.applications.length">-->
+                                    <!--<thead>-->
+                                    <!--<tr>-->
+                                        <!--<th></th>-->
+                                        <!--<th>Applicant</th>-->
+                                        <!--<th class="hidden-sm"></th>-->
+                                        <!--<th></th>-->
+                                        <!--<th></th>-->
+                                    <!--</tr>-->
+                                    <!--</thead>-->
+                                    <!--<tbody>-->
+                                    <!--<tr data-ng-repeat="application in job.applications"-->
+                                        <!--ui-sref="applications.view({'applicationId': application._id})"-->
+                                        <!--ng-class="{'disabled': application.disabled}"-->
+                                        <!--oset-application-summary model="application" display-mode="table">-->
+                                    <!--</tr>-->
+                                    <!---->
+                                    <!--</tbody>-->
+                                <!--</table>-->
+
+                                <div class="list-group" ng-if="!(job.applications && job.applications.length)"
+                                     ng-show="vm.visibleId === job._id">
+                                    <div class="list-group-item text-center">
+                                        <h4>No one has applied to this job yet. Would you like to <a
+                                                ui-sref="jobs.edit({'jobId':job._id})">edit
+                                            your post?</a></h4>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="post-entry col-sm-10 col-sm-offset-1" ng-show="vm.visibleTab === 'details'">
+                                <h4>Description</h4>
+
+                                <p ng-bind-html="job.description">No Description Available</p>
+                                <h4>Requirements</h4>
+
+                                <p ng-bind-html="job.requirements">No Requirements Listed</p>
+                            </div>
+                        </div>
+                        <a class="read-more strong pull-right" ng-click="vm.visibleId = null"
+                           ng-class="{'hidden':!vm.visibleId}"> </a>
+                    </div>
+                    <!--//content-->
+                </div>
+                <!--//post-inner-->
+            </article>
+            <!--//post-->
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,81 @@
+<section name='oset-application-summary'>
+    <!--This view is used primarily for the display of simple inline template views.-->
+    <div ng-show="!!vm.application">
+        <div data-ng-if="vm.displayMode === 'minimal' || vm.displayMode === 'mine'" class="panel panel-default pad">
+            <dl class="dl-horizontal">
+                <dt>Status:</dt>
+                <dd>
+                    <os-application-status-badge model="vm.application"></os-application-status-badge>
+                </dd>
+                <dt>Applied On:</dt>
+                <dd>{{vm.application.created | date:'short'}}</dd>
+            </dl>
+            <div class="text-center" data-ng-if="vm.displayMode === 'mine'">
+                <button type="button" class="btn-link read-more strong mgn-left"
+                        ui-sref="applications.view({applicationId: vm.application._id})">
+                    Review<i class="fa fa-external-link fa-lg mgn-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <div data-ng-if="vm.displayMode === 'compact'" class="row">
+            <dl class="dl-horizontal">
+                <dt>Applicant:</dt>
+                <dd>{{vm.application.user.displayName}}</dd>
+                <dt>Job:</dt>
+                <dd>{{vm.application.job.name || 'UNKNOWN'}}
+                    <span class="label label-info">{{vm.application.status}}</span>
+                </dd>
+                <dt>Applied On:</dt>
+                <dd>{{vm.application.created | date:'short'}}</dd>
+            </dl>
+        </div>
+
+        <tr data-ng-if="vm.displayMode === 'table'" class="row">
+
+                <td>{{vm.application.user.displayName}}</td>
+                <td>
+                    <os-application-status-badge model="vm.application"></os-application-status-badge>
+                </td>
+                <td>{{vm.application.created | date:'short'}}</td>
+        </tr>
+
+        <div data-ng-if="!vm.displayMode || vm.displayMode === 'normal'" class="row">
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+                    <dt>Job:</dt>
+                    <dd>{{vm.application.job.name || 'UNKNOWN'}}
+                        <span class="label label-info">{{vm.application.status}}</span>
+                    </dd>
+                    <dt>Applicant:</dt>
+                    <dd>{{vm.application.user.displayName}}</dd>
+                    <dt>Applied On:</dt>
+                    <dd>{{vm.application.created | date:'short'}}</dd>
+                </dl>
+            </div>
+            <div class="col-md-8">
+                <dl class="dl-horizontal"
+                    ng-repeat="message in vm.application.messages | limitTo: -1">
+                    <dt>Last Message:</dt>
+                    <dd>{{message.text | limitTo : 100}}</dd>
+                    <dt>Sent:</dt>
+                    <dd>{{message.created | date: 'short'}}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show this if there is no application present -->
+    <!------------------------------------------------->
+    <!-- For drivers, link to the new application creation -->
+    <!-- For owners, tell them sorry :(                    -->
+    <section ng-show="!vm.application">
+        <!-- Show "Job Apply" button if job is specified and no application is found for the user. -->
+        <div data-ng-if="!!vm.job && vm.user.id !== vm.ownerId">
+            <button class="btn btn-cta-primary btn-lg btn-block bigger"
+                    ui-sref="gateway({jobId:vm.job._id})">
+                apply now <i class="fa fa-send mgn-left"></i>
+            </button>
+        </div>
+    </section>
+</section>

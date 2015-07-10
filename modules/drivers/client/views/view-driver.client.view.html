@@ -1,0 +1,160 @@
+<section class="container-fluid">
+    <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
+                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
+                    show-edit="vm.canEdit" btn-sref="settings.profile"
+                    picture-url="vm.user.profileImageURL"
+                    edit-pic-sref="settings.picture">
+        Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
+    </os-page-header>
+
+    <div class="row profile">
+
+        <!-- Main Column and content -->
+        <div class="col-md-8">
+            <div>
+                <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
+
+                <div class="panel panel-info" data-ng-if="!vm.canEdit && (!vm.driver || !vm.driver.about)">
+                    <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
+                        soon!</p>
+                </div>
+
+                <div class="panel panel-default" data-ng-show="vm.canEdit && (!vm.driver || !vm.driver.about)">
+                    <div class="content-container-inner">
+                        <h3 class="text-center no-margin">Time to Create Your Driver Profile</h3>
+
+                        <div class="about">
+
+                            <div class="container-fluid row no-pad-sides">
+                                <p><span class="bigger stronger">Remember:</span>
+                                <ul class="fa-ul">
+                                    <li class="pad-bottom" data-ng-repeat="item in vm.text.bulletPoints"><i
+                                            class="fa fa-li fa-check text-success fa-lg pad-bottom"></i><span
+                                            ng-bind-html="item"></span>
+                                    </li>
+                                </ul>
+                                </p>
+                            </div>
+
+                            <button type="button" class="btn btn-cta btn-cta-primary center-block"
+                                    ui-sref="drivers.create"
+                                    data-ng-show="vm.canEdit">
+                                Create Your Driver Profile
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right-hand sidebar and content -->
+        <div class="gutter right col-md-4">
+
+            <os-bg-check-summary user="vm.user"></os-bg-check-summary>
+
+            <div class="panel panel-oset">
+                <div class="panel-heading text-center">
+                    <h3 class="no-mgn">Documents</h3>
+                    <hr/>
+                </div>
+                <div class="panel-body list-group">
+                    <a class="list-group-item" ng-repeat="report in vm.driver.reportsData"
+                       ng-click="vm.openReport(report.sku)"
+                       ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
+                        {{report.name || report.sku | titleCase }}
+                        <i class="fa fa-check text-success pull-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel panel-oset" ng-if="vm.driver.user._id === vm.auth.user._id">
+                <div class="panel-heading text-center">
+                    <h3 class="no-mgn" ng-hide="vm.driver.reports['resume']">Add your Resume</h3>
+
+                    <h3 class="no-mgn" ng-show="vm.driver.reports['resume']">Your Resume</h3>
+                </div>
+                <div class="panel-body no-pad-top" ng-hide="!!vm.driver.reports['resume']">
+                    <p class="text-center">
+
+                    <div class="report-badges uploader pull-right text-center">
+                            <span class="fa-stack fa-3x report-badge" tooltip="Resume">
+                                <i class="fa fa-file fa-stack-2x"></i>
+                                <i class="fa fa-question fa-1x"></i>
+                            </span>
+                    </div>
+                    In addition to your profile, uploading a resume will help employers see why you are the best fit
+                    for the job.
+                    </p>
+
+
+                    <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
+                                      model="vm.driver.reports['resume']" model-id="vm.driver._id"
+                                      allow-blank="true"></oset-file-upload>
+                </div>
+                <div class="panel-body no-pad-top" ng-show="!!vm.driver.reports['resume']">
+                    <p class="text-center">
+
+                    <div class="report-badges uploader pull-right text-center">
+                            <span class="fa-stack fa-3x report-badge available" tooltip="Resume">
+                                <i class="fa fa-file-o fa-stack-2x"></i>
+                                <i class="fa fa-check fa-1x"></i>
+                            </span>
+                    </div>
+                    Thanks for uploading your resume! It will be included with your job applications,
+                    and only available to employers after connecting with you.<br>
+
+                    <div class="btn-group btn-group-justified" role="group"
+                         ng-hide="vm.resumeLoading || vm.resumeError">
+                        <div class="btn-group" role="group">
+
+                            <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
+                                              model="vm.driver.reports['resume']" model-id="vm.driver._id"
+                                              upload-btn-class="btn-link" upload-btn-text="update"
+                                              allow-blank="true"></oset-file-upload>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-link" ng-click="vm.openResumeFile()">
+                                view <i class="fa fa-external-link mgn-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-center" ng-show="vm.resumeLoading">
+                        <i class="fa fa-spinner fa-spin"></i> loading
+                    </div>
+                    <div class="text-center text-danger stronger" ng-show="vm.resumeError">
+                        <i class="fa fa-close fa-lg mgn-right" ng-click="vm.resumeError = null"></i> {{vm.resumeError
+                        || 'sorry, we were unable to load your resume at this time'}}
+                    </div>
+                    </p>
+
+
+                </div>
+            </div>
+
+
+            <!-- data-ng-if="!!vm.driver.user.addresses && !!vm.driver.user.addresses.length" -->
+            <div class="panel panel-oset">
+                <div class="panel-heading">
+                    Location
+                    <a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
+                       ui-sref="settings.profile">edit location
+                        <i class="fa fa-pencil-square-o"></i></a></div>
+                <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
+                <div class="panel-body" ng-show="vm.driver.user.addresses && vm.driver.user.addresses.length">
+                    <os-address-list ng-if="vm.canEdit" models="vm.driver.user.addresses" can-edit="false"
+                                     full-width="true"></os-address-list>
+                    <p ng-if="!vm.canEdit" ng-init="vm.addr = vm.driver.user.addresses[0]">{{vm.addr.city &&
+                        (vm.addr.city +
+                        ', ')}}{{vm.addr.state}} {{vm.addr.zipCode}}</p>
+                </div>
+                <div class="panel-body" ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">
+                    <p>No Address on File</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>

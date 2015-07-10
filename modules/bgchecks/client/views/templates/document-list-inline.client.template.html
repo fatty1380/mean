@@ -1,0 +1,9 @@
+<span class="documentsInline">
+    <label ng-if="vm.driver.reportsData && vm.driver.reportsData.length"
+           class="document label {{vm.docAccess ? 'label-success pointer' : 'label-default'}}"
+           ng-click="vm.showDocument('resume', $event)"
+           tooltip-popup-delay="750" tooltip="View Applicant's Documents">BG Reports&nbsp;
+        <i class="fa fa-external-link" ng-if="!!vm.docAccess"></i>
+    </label>
+    <em class="small text-muted" ng-if="!vm.driver.reportsData.length">no documents on file</em>
+</span>

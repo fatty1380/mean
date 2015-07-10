@@ -1,0 +1,49 @@
+<section class="container-fluid" ng-form="vm.fileUploadForm">
+    <fieldset class="signin form-horizontal" ng-show="vm.initialized">
+
+        <div class="text-center form-group" ng-if="!!vm.title">
+            <span>{{vm.title}}</span>
+        </div>
+
+        <div class="text-center form-group">
+
+            <div class="report-badges uploader mgn-vert" ng-if="!vm.hideIcon">
+                    <span class="fa-stack fa-3x report-badge"
+                          ng-class="{'available': !!vm.fileName || !!vm.hasFile}">
+                        <i class="fa fa-file-o fa-stack-2x"></i>
+                        <i class="fa fa-check fa-1x"></i>
+                        <i class="fa fa-file fa-stack-2x"></i>
+                        <i class="fa fa-question fa-1x"></i>
+                    </span>
+            </div>
+
+                <span class="btn {{vm.uploadBtnClass || 'btn-oset-secondary'}} btn-file"
+                      data-ng-hide="vm.uploader.queue.length && !vm.autoUpload">
+                    {{vm.uploadBtnText || 'Select File ...'}}
+                    <input type="file" nv-file-select uploader="vm.uploader">
+                </span>
+        </div>
+
+        <div class="text-center form-group" data-ng-show="vm.uploader.queue.length && !vm.autoUpload">
+            <button type="button" class="btn btn-link" data-ng-click="vm.cancelUpload();">Cancel</button>
+            <button type="button" class="btn btn-oset-primary" data-ng-click="vm.uploadProfilePicture();">Upload
+            </button>
+        </div>
+
+        <div data-ng-show="!vm.success && !vm.error && vm.fileName && !vm.uploader.queue.length">
+            {{vm.fileName}}
+        </div>
+
+        <div data-ng-show="vm.success" class="text-center text-success">
+            <strong>{{!!vm.fileName ? vm.fileName + ' uploaded successfully!' : 'Success!'}}</strong>
+        </div>
+        <div data-ng-show="vm.error" class="text-center text-danger">
+            <strong data-ng-bind="vm.error"></strong>
+        </div>
+
+
+    </fieldset>
+    <div ng-hide="vm.initialized" class="alert alert-danger" role="alert"><strong>Error!</strong> Unable to initialize
+        the resume uploader. Please try again later.
+    </div>
+</section>

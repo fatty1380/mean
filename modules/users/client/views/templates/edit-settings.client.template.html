@@ -1,0 +1,84 @@
+<form name="vm.userForm" data-ng-submit="vm.updateUserProfile(vm.userForm.$valid)" class="form" autocomplete="off">
+    <fieldset class="create">
+        <div class="form-group">
+            <label class="control-label" for="name">Name</label>
+
+            <div class="form-inline margin-bottom-sm" name="name" id="name">
+                <div class="input-group margin-bottom-sm" name="First">
+                    <span class="input-group-addon">First</span>
+                    <input class="form-control" type="text" data-ng-model="vm.profile.firstName" placeholder="First">
+                </div>
+
+                <div class="input-group margin-bottom-sm" name="Last">
+                    <span class="input-group-addon">Last</span>
+                    <input class="form-control" type="text" data-ng-model="vm.profile.lastName" placeholder="Last">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email/Username</label>
+
+            <div class="input-group margin-bottom-sm" id="email">
+                <span class="input-group-addon">
+                    <i class="fa fa-envelope-o fa-fw"></i>
+                </span>
+
+                <p class="form-control-static" type="text" placeholder="Email address"
+                   data-ng-bind="vm.profile.email"></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="panel panel-info col-md-10 col-md-offset-1">
+                <h4>Looking for your username?</h4>
+
+                <p>In order to keep accounts linked with people, we use your email address as your username. If you'd
+                    like to change it, please <a href="mailto:accounts@joinoutset.com">let us know</a>!</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="addresses">Addresses</label>
+            <div class="container-fluid" id="addresses">
+                <os-address-list models="vm.profile.addresses" inline-edit="true" full-width="true" required="false"></os-address-list>
+            </div>
+        </div>
+
+        <!-- Driver's Telephone -->
+        <div class="form-group">
+            <label for="phone">Phone</label>
+
+            <div class="input-group margin-bottom-sm" id="phone">
+                <input class="form-control" type="tel" name="phone" data-ng-model="vm.profile.phone"
+                       placeholder="(xxx) xxx-xxxx">
+                <span class="input-group-addon">
+                    <i class="fa fa-phone fa-fw"></i>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group" data-ng-show="vm.show">
+            <div class="text-right form-group">
+                <button type="button" value="cancel" class="btn btn-large btn-link" ng-click="vm.cancel()">cancel
+                </button>
+                <button type="submit" value="update" class="btn btn-large btn-oset-primary">Save Profile</button>
+            </div>
+            <div data-ng-show="vm.error" class="text-center text-danger">
+                <strong data-ng-bind="vm.error"></strong>
+            </div>
+        </div>
+
+
+    </fieldset>
+
+    <div class="pull-right">
+        <input type="submit" class="btn btn-oset-success" data-ng-class="{'disabled': vm.userForm.$pristine}" value="Save Changes">
+    </div>
+    <div data-ng-show="vm.error" class="text-center text-danger">
+        <strong data-ng-bind="vm.error"></strong>
+    </div>
+    <div data-ng-show="vm.success" class="text-center text-success">
+        <strong>Profile Saved Successfully!</strong>
+    </div>
+</form>

@@ -1,0 +1,77 @@
+
+
+.undecorated-link:hover {
+    text-decoration: none;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.ng-invalid.ng-dirty {
+    border-color: #FA787E;
+}
+
+/* Forms Specific Styling */
+
+/*div.controls > input, div.controls > .input-group {*/
+    /*top: 10px;*/
+    /*position: relative;*/
+/*}*/
+
+/*div.controls > label.control-label {*/
+    /*float: right;*/
+/*}*/
+
+/*label > small {*/
+    /*font-weight: normal;*/
+/*}*/
+
+/* Home/Intro Styling */
+
+/* Debug Info */
+
+os-debug-info > div {
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    z-index: 1500;
+}
+
+os-debug-info > div.collapsed > div {
+    display: none;
+    min-height: 20px;
+}
+
+/* Profile & Dashboard Styles */
+
+
+/* Can I haz animation? */
+.animate-enter,
+.animate-leave
+{
+    -webkit-transition: 5400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 5400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 5400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 5400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 5400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-overflow: clip;
+    white-space:nowrap;
+}
+
+.animate-leave.animate-leave-active,
+.animate-enter {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.animate-enter.animate-enter-active,
+.animate-leave {
+    opacity : 1;
+    width   : 150px;
+    height  : 30px;
+}

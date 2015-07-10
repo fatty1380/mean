@@ -1,0 +1,48 @@
+<section name="schedule.client.directive">
+    <div class="row  col-md-12">
+        <label for="schedule">{{vm.title || 'Availability'}}</label>
+        <div class="col-md-12 availability_matrix" name="schedule">
+            <div class="container-fluid well">
+                <div class="col-md-12">
+                    <div class="row availability-header">
+                        <div class="col-md-5">
+                            <h6 class="heading profile-label profile-label-1">Time</h6>
+                        </div>
+                        <div class="col-md-1">
+                            <h6 class="heading profile-label profile-label-1">M</h6>
+                        </div>
+                        <div class="col-md-1">
+                            <h6 class="heading profile-label profile-label-1">Tu</h6>
+                        </div>
+                        <div class="col-md-1">
+                            <h6 class="heading profile-label profile-label-1">W</h6>
+                        </div>
+                        <div class="col-md-1">
+                            <h6 class="heading profile-label profile-label-1">Th</h6>
+                        </div>
+                        <div class="col-md-1">
+                            <h6 class="heading profile-label profile-label-1">F</h6>
+                        </div>
+                        <div class="col-md-1">
+                            <h6 class="heading profile-label profile-label-1">Sa</h6>
+                        </div>
+                        <div class="col-md-1">
+                            <h6 class="heading profile-label profile-label-1">Su</h6>
+                        </div>
+                    </div>
+                    <div ng-repeat='schedule in vm.model'>
+                        <div class="row availability-row">
+                            <div class="col-md-5">
+                                <label class="control-label" title="{{schedule.time.start}} to {{schedule.time.end}}">{{ schedule.description }}</label>
+                            </div>
+
+                            <div class="col-md-1" ng-repeat='(i,day) in schedule.days track by i' ng-class="{yes: day, no: !day, unknown: (day || null === null)}">
+                                <input ng-disabled="!editMode" type="checkbox" ng-bind="schedule.days[i]" name="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

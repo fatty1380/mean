@@ -1,0 +1,67 @@
+html {
+  background-color: #f5f5f5;
+}
+body {
+  padding-left: 0;
+  padding-right: 0;
+  background: transparent;
+}
+/* This makes absolutely positioned elements like p, h1,
+     and some bootstrap elements placed properly. */
+ #absolute-wrapper p, #absolute-wrapper h1, #absolute-wrapper h2, #absolute-wrapper h3, #absolute-wrapper h4, #absolute-wrapper h5, #absolute-wrapper h6 {
+  margin-top: 0 !important;
+}
+#absolute-wrapper {
+  position: relative;
+  width: 700px;
+  margin: 0 auto;
+  height: 1px;
+}
+#absolute-wrapper .brand {
+  background: rgba(0, 0, 0, 0);
+  width: 147px;
+  height: 49px;
+  position: absolute;
+  top: -124px;
+  left: -10px;
+}
+.container-fluid {
+  background: #f5f5f5;
+}
+.container-fluid .well {
+  border: none;
+  padding: 10px;
+  margin: 0;
+}
+.container-fluid .well .heading {
+  font-family:"museo-sans";
+  font-weight: 900;
+  text-align: center;
+}
+.container-fluid .well .form-horizontal .control-group {
+  margin: 0;
+}
+.container-fluid .well .form-horizontal .control-group .control-label {
+  font-family:"museo-sans";
+}
+.container-fluid .well .form-horizontal input.textinput {
+  font-family:"museo-sans";
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.container-fluid .well .form-horizontal .checkbox.checkbox-1 {
+  font-family:"museo-sans";
+  padding: 10px 0 0 180px;
+}
+.container-fluid .well .form-horizontal .form-actions {
+  margin: 0;
+  border: none;
+  padding: 0 20px 0 0;
+}
+.container-fluid .well .form-horizontal .form-actions .btn-primary {
+  background: #436f8e;
+  background-image: -moz-linear-gradient(270deg, #436f8e 0%, #11588b 100%);
+  background-image: -webkit-linear-gradient(270deg, #436f8e 0%, #11588b 100%);
+  background-image: -o-linear-gradient(270deg, #436f8e 0%, #11588b 100%);
+  background-image: linear-gradient(180deg, #436f8e 0%, #11588b 100%);
+}

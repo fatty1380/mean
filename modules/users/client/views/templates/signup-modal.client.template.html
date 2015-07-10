@@ -1,0 +1,75 @@
+<span ng-click="vm.showSignup()" ng-transclude>Signup</span>
+<!-- <a data-ui-sref="authentication.signup" target="_self">Sign Up</a>  -->
+
+<script type="text/ng-template" id="signupModal.html">
+    <div class="modal-header bg-primary">
+
+        <div ng-hide="!!vm.credentials.type" class="container-fluid">
+            <user-signup-type model="vm.credentials.type"></user-signup-type>
+        </div>
+
+
+        <div class="hidden-xs" ng-show="!!vm.credentials.type">
+            <span class="modal-title h3 text-center">
+                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i
+                        class="fa fa-arrow-left fa-2x"></i></button>&nbsp;
+                Sign up as {{vm.credentials.type == 'owner' ? 'an' : 'a'}} {{vm.credentials.type}}
+            </span>
+
+            <div class="pull-right">
+                <button type="button" class="close modal-title"
+                        ng-click="$dismiss('cancel:'+vm.credentials.type)"><span aria-hidden="true">
+                    <i class="fa fa-close fa-2x"></i>
+                    <span class="sr-only">Close</span></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="visible-xs" ng-show="!!vm.credentials.type">
+            <span class="modal-title h4 text-center">
+                <button type="button" class="btn btn-link" ng-click="vm.credentials.type = null;"><i
+                        class="fa fa-arrow-left fa-lg"></i></button>&nbsp;
+                {{vm.credentials.type | titleCase }} Sign Up
+            </span>
+
+            <span class="pull-right">
+                <button type="button" class="close modal-title"
+                        ng-click="$dismiss('cancel:'+vm.credentials.type)"><span aria-hidden="true">
+                    <i class="fa fa-close fa-lg"></i>
+                    <span class="sr-only">Close</span></span>
+                </button>
+            </span>
+        </div>
+    </div>
+
+
+    <form role="form" data-ng-submit="vm.signup($event)" name="vm.signupForm"
+          class="signin oset-form" spellcheck="false" novalidate>
+
+        <div class="modal-body" ng-show="vm.credentials.type">
+            <p ng-if="!!vm.srefRedirect" class="text-muted text-center mgn-vert">
+                <em><span>{{vm.extraText || 'Before continuing, please create an account'}}</span> or <a
+                        ng-click="$dismiss('login')" login-modal redirect="vm.srefRedirect">Log in with an existing
+                    account</a></span> </em>
+            </p>
+
+            <div class="row">
+            <div class="col-sm-12">
+                <user-signup-form model="vm.credentials" methods="vm.signupFormMethods"></user-signup-form>
+            </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer" ng-show="vm.credentials.type">
+            <button type="submit" class="btn btn-oset-primary" ng-class="{'disabled':!vm.credentials.terms}">
+                Sign Up!
+            </button>
+            <div data-ng-show="vm.error" class="text-center text-danger">
+                <strong data-ng-bind="vm.error"></strong>
+            </div>
+        </div>
+    </form>
+
+
+</script>

@@ -1,0 +1,45 @@
+<span ng-click="vm.showModal()" ng-transclude>Apply</span>
+
+<script type="text/ng-template" id="applyModal.html">
+    <div class="modal-header bg-primary" ng-init="yo()">
+        <span class="h4" data-ng-bind="vm.placeholders.title">Apply to job</span>
+
+        <div class="pull-right">
+            <button type="button" class="close modal-title" ng-click="$dismiss('cancel')">
+                <span aria-hidden="true">&times;<span class="sr-only">Close</span></span>
+            </button>
+        </div>
+    </div>
+    <form class="form-horizontal applicant-form" name="vm.applicantForm" data-ng-submit="vm.createApplication()" novalidate>
+        <div class="modal-body">
+            <fieldset>
+                <span class="h4" for="message" ng-bind-html="vm.placeholders.messageHeading"></span>
+                <p class="text-muted text-center" ng-bind-html="vm.placeholders.messageSubHeading"></p>
+
+                <div class="controls">
+                    <div class="text-center text-muted" ng-show="!vm.application.message">
+                        Please introduce yourself to the employer here
+                    </div>
+                    <textarea os-html-edit minimal type="text" data-ng-model="vm.application.message" name="message"
+                              id="message" class="editor-md" placeholder="{{vm.placeholders.intro}}" ng-required="true"></textarea>
+                </div>
+                <div class="checkbox">
+                    <label class="small">
+                        <input type="checkbox" data-ng-model="vm.application.termsAccepted" data-ng-required="true" name="disclaimer"/>
+                        <small data-ng-bind-html="vm.placeholders.disclaimer"></small>
+                    </label>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <div class="pull-right">
+                <input type="button" class="btn btn-link" value="cancel" ng-click="$dismiss('cancel')">
+                <!--<input type="button" class="btn btn-oset-secondary" value="Save as draft" ng-click="vm.saveDraft()">-->
+                <input type="submit" class="btn btn-oset-success" ng-class="{disabled:(!vm.job)}" value="Apply!">
+            </div>
+            <div data-ng-show="vm.error" class="text-danger text-center">
+                <strong data-ng-bind="vm.error"></strong>
+            </div>
+        </div>
+    </form>
+</script>

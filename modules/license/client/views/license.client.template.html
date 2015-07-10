@@ -1,0 +1,134 @@
+<ng-form name="vm.licenseForm" ng-init="vm.activate()">
+    <div class="license-details form-horizontal">
+
+        <div class="row"
+             ng-show="vm.licenseForm.$invalid && (vm.licenseForm.$submitted || vm.licenseForm.description.$dirty)">
+            <div class="panel panel-danger mgn-btm col-md-8 col-md-offset-2">
+                <div class="text-danger text-center mgn-vert">
+                    Please fill in required fields and correct errors
+                </div>
+            </div>
+        </div>
+
+        <div class="row profile-row">
+            <div class="col-sm-{{12/(vm.view.cols||1)}}">
+
+                <div class="form-group" ng-if="!!vm.view.types" ng-class="{'col-sm-6':vm.view.horizontal}">
+                    <label class="control-label"
+                           ng-class="{'col-sm-12 col-md-6': !vm.view.horizontal, 'col-sm-5': vm.view.horizontal, 'text-danger':vm.licenseForm.type.$invalid && vm.licenseForm.$submitted}">
+                        License Type
+                    </label>
+
+                    <div class="controls"
+                         ng-class="{'col-sm-10 col-md-6': !vm.view.horizontal, 'col-sm-7': vm.view.horizontal}">
+                        <div class="btn-group">
+                            <label ng-repeat="licenseType in vm.licenseTypes" class="btn btn-cta-secondary btn-sm"
+                                   ng-model="vm.license.type" ng-required="true" name="type"
+                                   btn-radio="licenseType">{{licenseType}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="!!vm.view.classes"
+                     ng-hide="vm.view.hideClasses && vm.license.type != 'Commercial'"
+                     ng-class="{'col-sm-6':vm.view.horizontal, 'disabled':vm.license.type !== 'Commercial'}">
+                    <label class="control-label"
+                           ng-class="{'col-sm-12 col-md-6': !vm.view.horizontal, 'col-sm-5': vm.view.horizontal}">
+                        Class Rating
+                    </label>
+
+                    <div class="controls"
+                         ng-class="{'col-sm-10 col-md-6': !vm.view.horizontal, 'col-sm-7': vm.view.horizontal}">
+                        <div class="btn-group">
+                            <label ng-repeat="val in vm.ratings" class="btn btn-cta-secondary btn-sm"
+                                   ng-model="vm.license.rating" name="classRating"
+                                   btn-radio="val">{{val}}</label>
+                        </div>
+                        <button type="button" class="btn-tab btn-link read-more btn-sm" ng-click="vm.license.rating = null"
+                                ng-show="!!vm.license.rating"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="!!vm.view.state" ng-class="{'col-sm-6':vm.view.horizontal}">
+                    <label class="control-label"
+                           ng-class="{'col-sm-12 col-md-6': !vm.view.horizontal, 'col-sm-5': vm.view.horizontal,'text-danger':vm.licenseForm.state.$invalid && vm.licenseForm.$submitted}">
+                        State
+                    </label>
+
+                    <div class="controls"
+                         ng-class="{'col-sm-10 col-md-6': !vm.view.horizontal, 'col-sm-7': vm.view.horizontal}">
+                        <input type="text" ng-model="vm.license.state" autocomplete="off"
+                               typeahead="state as state.name for state in vm.states | filter:$viewValue | limitTo:8"
+                               name="state" ng-required="true" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="!!vm.view.expires" ng-class="{'col-sm-6':vm.view.horizontal}">
+                    <label class="control-label"
+                           ng-class="{'col-sm-12 col-md-6': !vm.view.horizontal, 'col-sm-5': vm.view.horizontal, 'text-danger':vm.licenseForm.expires.$invalid}">
+                        Expiration Date
+                    </label>
+
+                    <div class="controls"
+                         ng-class="{'col-sm-10 col-md-6': !vm.view.horizontal, 'col-sm-7': vm.view.horizontal}">
+                        <date-input model="vm.license.expires" class="form-control" name="expires"
+                                    placeholder="{{vm.dateFormat}}" name="expires" id="expiration"></date-input>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="!!vm.view.dob" ng-class="{'col-sm-6':vm.view.horizontal}">
+                    <label class="control-label"
+                           ng-class="{'col-sm-12 col-md-6': !vm.view.horizontal, 'col-sm-5': vm.view.horizontal, 'text-danger':vm.licenseForm.dob.$invalid}">
+                        Date of Birth
+                        <br/>
+                        <small>Your birthdate</small>
+                    </label>
+
+                    <div class="controls"
+                         ng-class="{'col-sm-10 col-md-6': !vm.view.horizontal, 'col-sm-7': vm.view.horizontal}">
+                        <date-input model="vm.license.dateOfBirth" class="form-control" name="dob"
+                                    placeholder="{{vm.dateFormat}}"></date-input>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-class="{'col-sm-6':vm.view.cols === 2, 'col-sm-12': vm.view.cols === 1}">
+
+
+                <div class="form-group" ng-show="!!vm.view.endorsements">
+                    <label class="control-label col-md-8 col-md-offset-2 col-xs-12 text-left-force">Endorsements<br>
+                        <small>any endorsements on your license?</small>
+                    </label>
+                    <pre class='row' ng-if="vm.debug">{{vm.license.endorsements}}</pre>
+                    <div class="controls col-md-8 col-md-offset-2 col-xs-12">
+                        <div class="btn-group btn-group-vertical center-block">
+                            <label ng-repeat="endorsement in vm.endorsements"
+                                   class="btn btn-cta-secondary btn-md container-fluid oset-toggles"
+                                   ng-model="vm.license.endorsements[endorsement.key]"
+                                   btn-checkbox data-ng-class="{'active':endorsement.value}">
+                                <i class="fa pull-left"></i>
+
+                                <div class="col-xs-4 text-left">{{endorsement.key}}</div>
+                                <div class="col-xs-7 text-left">
+                                    <small>{{endorsement.description}}
+                                    </small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <button class="btn btn-oset-link" type="button" ng-click="vm.toggleView()" ng-switch="vm.mode">
+                    <span ng-switch-when="minimal">show more...</span>
+                    <span ng-switch-when="standard">show less...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-form>

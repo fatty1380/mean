@@ -1,0 +1,85 @@
+<div class="row chat-window" ng-show="!!vm.connection">
+    <div class="col-sm-12">
+        <h4>
+            Messages
+            <small class="pull-right" ng-show="!!vm.activeConnection">
+                <em>
+                    <strong>Connection Status</strong>
+                    Me:
+                    <div class="label label-{{vm.status.me ? 'success' : vm.status.me === null ? 'default' : 'warning'}}">
+                        &nbsp;</div>
+                    Them:
+                    <div class="label label-{{vm.status.them ? 'success' : vm.status.them === null ? 'default' : 'warning'}}">
+                        &nbsp;</div>
+                </em>
+            </small>
+        </h4>
+
+
+        <div class="chat-section" scroll-bottom="vm.messages">
+            <div ng-repeat="message in vm.messages | filter : {type: '!status'}"
+                 ng-init="message.username = message.username || message.sender.username"
+                 ng-class="{'last':!!$last,'first':!!$first}" class="{{vm.getSenderClass(message.username)}}">
+
+                <div class="separator row">
+                    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2"></div>
+                </div>
+
+                <div class="row chat-box">
+                    <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+                        <img class="profile-image medium"
+                             ng-src="{{message.profileImageURL || message.sender.profileImageURL}}">
+
+
+                        <div class="chat-details">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <blockquote><p ng-bind-html="message.text"></p></blockquote>
+                                </div>
+                            </div>
+                            <div class="row ts">
+                                <div class="col-sm-12">
+                                    <span class="timestamp smaller">{{message.created | date: 'short' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="!vm.messages || !vm.messages.length">
+                <div class="text-muted text-center">no messages</div>
+            </div>
+        </div>
+        <div class="chat-entry" id="messaging" ng-show="vm.activeConnection">
+            <div class="row mgn-vert">
+                <div class="col-md-8 col-md-offset-2">
+                    <input type="text" ng-show="vm.messageMode === 'text'"
+                           data-ng-model="vm.message" class="form-control "
+                           placeholder="new message ..."/>
+
+                    <textarea type="text" ng-show="vm.messageMode === 'multiline'" rows="3"
+                              data-ng-model="vm.message" class="form-control"
+                              placeholder="new message..." modal-focus="vm.msgFocus"></textarea>
+
+                    <div ng-show="vm.messageMode === 'html'">
+                        <textarea os-html-edit minimal class="editor-min" data-ng-model="vm.message"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row mgn-vert no-mgn-sides">
+                <div class="col-xs-12 col-sm-8 col-md-6 col-md-offset-2">
+                    <span data-ng-show="vm.error" class="text-danger text-center">
+                        <strong data-ng-bind="vm.error"></strong>
+                    </span>
+                </div>
+                <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-2">
+                    <!--<div class="btn-group" dropdown>-->
+                    <button type="button" class="btn btn-oset-primary btn-block" value="send"
+                            ng-click="vm.postMessage();"
+                            ng-class="{'disabled':(vm.sending || !vm.message)}">Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

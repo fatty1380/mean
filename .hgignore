@@ -1,0 +1,12 @@
+syntax: glob
+.DS_Store
+.nodemonignore
+.sass-cache/
+npm-debug.log
+node_modules/
+public/lib
+app/tests/coverage/
+data/db
+.bower-*/
+.idea/
+*.pem

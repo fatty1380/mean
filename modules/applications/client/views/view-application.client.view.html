@@ -1,0 +1,94 @@
+<section>
+    <os-page-header title="{{vm.pageTitle || 'Job Application Details'}}"
+                    sub-title="{{vm.application.job.name}}"
+                    back-btn-text="{{!!vm.goBack ? 'back' : ''}}"
+                    back-btn-fn="vm.goBack()">
+    </os-page-header>
+
+    <div class="application panel panel-default">
+        <div class="panel-heading">
+            <span class="h3"><span ng-bind="vm.application.user.displayName"></span>
+                <span class="pull-right text-right smaller">
+                    <os-application-status-badge model="vm.application"></os-application-status-badge>
+                </span>
+            </span>
+                    <br>
+                    <small class="text-muted"><em>Applied {{vm.application.created | date: 'short'}}</em></small>
+        </div>
+        <div class="panel-body">
+
+            <!--- DRIVER VIEW - Shows Company Information ---->
+            <div class="row" ng-if="vm.user.type==='driver'">
+                <h4 class="strong col-xs-12">Employer: {{vm.application.company.name}}
+                    <small class="pull-right">Applied on {{vm.application.created | date:'mediumDate'}}</small>
+                    <hr/>
+                </h4>
+                <div class="col-sm-4">
+                    <img class="img-responsive center-block" ng-src="{{vm.application.company.profileImageURL}}"/>
+                </div>
+                <div class="col-sm-8">
+                    <p ng-bind-html="vm.application.job.description">
+                        {{vm.application.job.description}}
+                    </p>
+                </div>
+                <div class="col-sm-12" ng-if="vm.isConnected"
+                     ng-init="otherMsgs = (vm.application.messages | filter : {'sender' : ('!'+vm.user._id)})">
+                    <p ng-show="vm.application.messages && vm.application.messages.length">
+                        {{vm.application.messages.length}} Total Messages
+                        <a href="#messaging" class="pull-right btn btn-link">send a new message</a>
+                    </p>
+
+                    <p class="panel panel-info letter"
+                       ng-hide="vm.application.messages && vm.application.messages.length">
+                        Now that you are connected, use the messaging functionality to communicate with the
+                        {{vm.user.type === 'driver' ? 'Employer' : 'Applicant'}}.
+                        You can ask and answer questions, and coordinate a telephone or in-person interview.
+                    </p>
+
+                    <p class="text-center">
+                        <a href="#messaging" class="btn btn-primary">Click Here to Begin</a>
+                    </p>
+                </div>
+            </div>
+
+
+            <!--- OWNER VIEW - Shows Applicant Information ---->
+            <div ng-if="vm.user.type==='owner'">
+                <oset-application-summary model="vm.application" display-mode="details"></oset-application-summary>
+            </div>
+
+            <!--- Show Connection Information VIEW ---->
+            <div class="row"
+                 ng-hide="vm.connecting || !!vm.application.connection">
+                <p class="panel panel-info letter text-center col-sm-10 col-sm-offset-1"
+                   ng-bind-html="vm.text.noconnection"></p>
+
+                <div class="col-xs-12 text-right col-sm-10 col-sm-offset-1" ng-show="vm.user.type === 'owner'">
+                    <button type="button" class="btn btn-cta btn-cta-primary hidden"><i class="fa fa-trash"></i>Reject
+                    </button>
+                    <button type="button" class="btn btn-cta btn-cta-secondary" ng-click="vm.createConnection()">
+                        Connect
+                    </button>
+                </div>
+            </div>
+
+            <div class="row" ng-show="vm.connecting">
+                <h3 class="text-center"><i class="fa fa-spinner fa-spin"></i>&nbsp;Connecting...</h3>
+            </div>
+
+            <div class="row" ng-show="vm.newlyConnected">
+                <p class="panel panel-info letter text-center">You are now connected to
+                    {{vm.application.user.displayName}}. You will now be
+                    able to view any reports they have ordered and message directly with them.</p>
+            </div>
+
+            <div class="row" ng-show="!!vm.application.connection">
+                <div class="col-sm-12">
+                    <oset-chat-console connection="vm.application.connection"
+                                       messages="vm.application.messages"
+                                       room="vm.application._id"></oset-chat-console>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
