@@ -8,11 +8,11 @@
             'home',
             'login',
             'signup',
-            'profile'
+            'account'
         ])
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                $urlRouterProvider.otherwise("/signup");
+                $urlRouterProvider.otherwise("/account/profile");
             }
         ])
         .run(function($ionicPlatform) {
