@@ -1,34 +1,31 @@
-(function() {
+(function () {
     'use strict';
 
 
-//Companies service used to communicate Companies REST endpoints
+    //Companies service used to communicate Companies REST endpoints
     function Companies($resource) {
-        return {
-            ById: $resource('api/companies/:company:companyId', {
-                company: '@_id',
-                companyId: '@_companyId'
-            }, {
+        var rsrc = $resource('api/companies/:id',
+            { id: '@_id' },
+            {
                 update: {
                     method: 'PUT'
                 }
-            }),
-            ByUser: $resource('api/users/:userId/companies', {
-                userId: '@_userId'
-            }),
-            get: function(companyId) {
-                var rsrc = $resource('api/companies/:id', {
-                    id: '@id'
-                });
+            });
 
-                return rsrc.get({id: companyId}).$promise;
+        var rsrcUser = $resource('api/users/:userId/companies', {
+            userId: '@_userId'
+        });
+
+        return {
+            ById: rsrc,
+            ByUser: rsrcUser,
+            get: function (company) {
+                var companyId = !!company && company.id || company;
+                return rsrc.get({ id: companyId }).$promise;
             },
-            getByUser: function(userId) {
-                var rsrc = $resource('api/users/:userId/companies', {
-                    userId: '@_userId'
-                });
-
-                return rsrc.get({userId: userId}).$promise;
+            getByUser: function (user) {
+                var userId = user && user.id || user;
+                return rsrcUser.get({ userId: userId }).$promise;
             }
         };
     }

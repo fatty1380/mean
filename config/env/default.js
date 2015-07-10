@@ -83,6 +83,9 @@ module.exports = {
         },
         fs: {
             writePath: './modules/users/client/img/profile/uploads/'
+        },
+        mandrill: {
+            apiKey: ''
         }
     },
     port: process.env.PORT || 3000,

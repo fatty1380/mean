@@ -172,7 +172,10 @@ exports.changeProfilePicture = function (req, res) {
     }
 
     fileUploader.saveFileToCloud(req.files, 'companies').then(
-        function (successURL) {
+        function (successResponse) {
+
+            var successURL = successResponse.url;
+
             req.log.debug('successfully uploaded company profile picture to %s', successURL);
 
             req.company.profileImageURL = successURL;

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function HomeController($location, $timeout, $document, $log, Authentication, $state, Seed) {
+    function HomeController($location, $timeout, $document, $log, Authentication, $state) {
         var vm = this;
 
         // This provides Authentication context.
@@ -167,7 +167,7 @@
         }
     }
 
-    HomeController.$inject = ['$location', '$timeout', '$document', '$log', 'Authentication', '$state', 'SeedService'];
+    HomeController.$inject = ['$location', '$timeout', '$document', '$log', 'Authentication', '$state'];
 
     angular
         .module('core')

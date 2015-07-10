@@ -14,7 +14,9 @@
             ByUser: $resource('api/users/:userId/driver', {
                 userId: '@_userId'
             }),
-            get: function(driverId) {
+            get: function (driver) {
+                var driverId = !!driver && driver.id || driver;
+                
                 return $resource('api/drivers/:driverId', {
                     driverId: '@_id'
                 }, {

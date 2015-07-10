@@ -1,25 +1,38 @@
 <section class="container-fluid">
-    <os-page-header title="{{vm.auth.user._id === vm.driver.user._id ? 'My ' : ''}}Driver Profile"
-                    sub-title="Hi {{vm.user.displayName}}, Welcome to Outset Phoenix!&nbsp;"
-                    show-edit="vm.canEdit" btn-sref="settings.profile"
-                    picture-url="vm.user.profileImageURL"
-                    edit-pic-sref="settings.picture">
-        Member Since <span data-ng-bind="vm.user.created | date:'mediumDate'"></span>
-    </os-page-header>
-
     <div class="row profile">
 
         <!-- Main Column and content -->
         <div class="col-md-8">
+            <div class="profile-navigation-wrapper">
+                    <a href="">
+                        <div class="nav-item active">
+                            <span class="text">PROFILE</span>
+                            <span class="icon pull-right"><i class="fa fa-user"></i></span>
+                        </div>
+                    </a>
+                    <a href="">
+                        <div class="nav-item">
+                            <span class="text">MESSAGES</span>
+                            <span class="icon pull-right"><i class="fa fa-comments-o"></i></span></div>
+                    </a>
+                    <a href="">
+                        <div class="nav-item">
+                            <span class="text">INVITE FRIENDS</span>
+                            <span class="icon pull-right"><i class="fa fa-users"></i></span></div>
+                    </a>
+            </div>
+
+            <os-profile-header model="vm.user" driver="vm.driver" can-edit="vm.canEdit"></os-profile-header>
+
             <div>
                 <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
 
-                <div class="panel panel-info" data-ng-if="!vm.canEdit && (!vm.driver || !vm.driver.about)">
+                <div class="panel panel-oset" data-ng-if="!vm.canEdit && (!vm.driver || !vm.driver.about)">
                     <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
                         soon!</p>
                 </div>
 
-                <div class="panel panel-default" data-ng-show="vm.canEdit && (!vm.driver || !vm.driver.about)">
+                <div class="panel panel-oset" data-ng-show="vm.canEdit && (!vm.driver || !vm.driver.about)">
                     <div class="content-container-inner">
                         <h3 class="text-center no-margin">Time to Create Your Driver Profile</h3>
 
@@ -49,22 +62,151 @@
         </div>
 
         <!-- Right-hand sidebar and content -->
-        <div class="gutter right col-md-4">
-
-            <os-bg-check-summary user="vm.user"></os-bg-check-summary>
+        <div class="gutter profile-gutter right col-md-4">
+            <div class="search input-group add-on">
+              <input type="text" class="form-control" placeholder="Search" name="srch-term">
+              <div class="icon">
+                  <div class="search-icon"></div>
+              </div>
+            </div>
+            <div class="check-wrapper">
+                <os-bg-check-summary user="vm.user"></os-bg-check-summary>
+            </div>
 
             <div class="panel panel-oset">
-                <div class="panel-heading text-center">
-                    <h3 class="no-mgn">Documents</h3>
-                    <hr/>
+                <div class="map-wrapper">
+                    <!--<img src="modules/drivers/img/map.png">-->
+                    <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
                 </div>
-                <div class="panel-body list-group">
-                    <a class="list-group-item" ng-repeat="report in vm.driver.reportsData"
-                       ng-click="vm.openReport(report.sku)"
-                       ng-class="{'disabled': !vm.driver.reports[report.sku], 'active': vm.activeReport===report.sku}">
-                        {{report.name || report.sku | titleCase }}
-                        <i class="fa fa-check text-success pull-right"></i>
-                    </a>
+            </div>
+            <div class="panel panel-oset">
+                <div class="news">
+                    <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_1.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_2.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_3.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span>has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_4.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_5.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="news-item">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="img">
+                                    <img src="modules/drivers/img/prof_6.png" />
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="news-info">
+                                    <div class="news-head">
+                                        <span class="name">Richard Branson</span>
+                                        <span class="news-desc">has a new job</span>
+                                    </div>
+                                    <div class="news-desc">
+                                        Author - the real life MBA <br/>
+                                        HarperColins Publisher
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -129,27 +271,6 @@
                     </p>
 
 
-                </div>
-            </div>
-
-
-            <!-- data-ng-if="!!vm.driver.user.addresses && !!vm.driver.user.addresses.length" -->
-            <div class="panel panel-oset">
-                <div class="panel-heading">
-                    Location
-                    <a data-ng-if="vm.canEdit" class="btn btn-link pull-right"
-                       ui-sref="settings.profile">edit location
-                        <i class="fa fa-pencil-square-o"></i></a></div>
-                <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
-                <div class="panel-body" ng-show="vm.driver.user.addresses && vm.driver.user.addresses.length">
-                    <os-address-list ng-if="vm.canEdit" models="vm.driver.user.addresses" can-edit="false"
-                                     full-width="true"></os-address-list>
-                    <p ng-if="!vm.canEdit" ng-init="vm.addr = vm.driver.user.addresses[0]">{{vm.addr.city &&
-                        (vm.addr.city +
-                        ', ')}}{{vm.addr.state}} {{vm.addr.zipCode}}</p>
-                </div>
-                <div class="panel-body" ng-show="!vm.driver.user.addresses || vm.driver.user.addresses.length <= 0">
-                    <p>No Address on File</p>
                 </div>
             </div>
         </div>

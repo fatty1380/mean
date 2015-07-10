@@ -10,23 +10,16 @@
 
         if (!!params.companyId) {
             console.log('Searching for company ID: %s', params.companyId);
-
-            promise = Companies.ById.get({
-                companyId: params.companyId
-            }).$promise;
+            promise = Companies.get(params.companyId);
         } else if (!!params.jobId) {
             console.log('Not resolving company - find it in the job');
             return null;
         } else if (!!params.userId) {
             console.log('Searching for company data for user %s', params.userId);
-            promise = Companies.ByUser.get({
-                userId: params.userId
-            }).$promise;
+            promise = Companies.getByUser(params.userId);
         } else if (auth.user.type === 'owner') {
             console.log('Searching for company data for logged in user');
-            promise = Companies.ByUser.get({
-                userId: auth.user._id
-            }).$promise;
+            promise = Companies.getByUser(auth.user._id);
         } else {
             return null;
         }

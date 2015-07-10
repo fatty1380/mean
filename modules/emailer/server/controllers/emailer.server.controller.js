@@ -11,7 +11,7 @@ var _              = require('lodash'),
     path           = require('path'),
     config         = require(path.resolve('./config/config')),
     mandrill       = require('mandrill-api/mandrill'),
-    mandrillClient = new mandrill.Mandrill('5151B5l4NJ2YVYQANFTKpA'); // TODO: Move to CONFIG
+    mandrillClient = !!config.services.mandrill.apiKey ? new mandrill.Mandrill(config.services.mandrill.apiKey) : null;
 
 var recipientOverrideAddress = config.mailer.toOverride;
 
@@ -88,6 +88,11 @@ function sendGenericTemplateEmail(templateName, user, options) {
 
 function sendTemplate(templateName, mailOptions) {
 
+    if(!mandrillClient) {
+        console.log('Mandril API Not Configured');
+        return false;
+    }
+
     var message = getMessage(mailOptions);
     var async = false;
     var ipPool = 'Main Pool';
@@ -112,6 +117,10 @@ function sendTemplate(templateName, mailOptions) {
 }
 
 function sendMessage(mailOptions) {
+    if(!mandrillClient) {
+        console.log('Mandril API Not Configured');
+        return false;
+    }
 
     var message = getMessage(mailOptions);
     var async = false;

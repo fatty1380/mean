@@ -96,6 +96,19 @@ var ApplicationSchema = new Schema({
     /* Virtual Members - END */
 }, {'toJSON': {virtuals: true}});
 
+/**
+ * New flow for an applicant:
+ *  Draft ------> Submitted ------> Withdrawn
+ *                   |
+ *                   \ ----------> Hired
+ *
+ * For a Company:
+ *  New -----> Reviewed -----> Rejected
+ *              |
+ *              \------------> Hired
+ *
+ */
+
 
 ApplicationSchema.virtual('isDraft')
     .get(function () {
@@ -130,6 +143,11 @@ ApplicationSchema.virtual('isDeleted')
 ApplicationSchema.virtual('isHired')
     .get(function () {
         return this.status === 'hired';
+    });
+
+ApplicationSchema.virtual('isActive')
+    .get(function () {
+        return !!this.status.match(/submitted|read|connected/i);
     });
 
 ApplicationSchema.virtual('statusCat')

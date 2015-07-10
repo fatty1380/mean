@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function ApplicationListController(auth, moduleConfig, applications, $state) {
+    function ApplicationListController(auth, moduleConfig, applications, Applications, $log, $state, params) {
         var vm = this;
 
         vm.applications = applications;
@@ -14,6 +14,34 @@
 
         vm.enableHeaderEdit = vm.user.type === 'owner' && vm.config.enableEdit;
 
+        vm.params = params;
+
+        vm.visibleId = params.itemId;
+        vm.visibleTab = params.tabName;
+
+        var co = vm.user.company && vm.user.company.id || null;
+
+        Applications.ById.query({job: vm.params.jobId, company: co}).$promise
+        .then(function(applications) {
+                vm.apps = applications;
+
+                vm.newApps = _.where(applications, {'isUnreviewed': true});
+
+                vm.newMessageCt = _.reduce(applications, function(total, app) {
+                    $log.debug('Reducing Messages for app: %o', app);
+
+                    var last = _.findLastIndex(app.messages, {sender: vm.user.id});
+                    var newCt = app.messages.length - last + 1;
+
+                    $log.debug('Reduced found %d + 1 - %d = %d', last, app.messages.length, newCt);
+
+                    return total + newCt;
+                }, 0);
+            });
+
+        // 0 1 2 3 4 5 : 6
+        // m m y y m y : 4 5
+        // y y y y y y :-1 0
 
         if($state.is('applications.all')) {
             vm.jobIds = {};
@@ -83,7 +111,7 @@
     }
 
 
-    ApplicationListController.$inject = ['Authentication', 'config', 'applications', '$state'];
+    ApplicationListController.$inject = ['Authentication', 'config', 'applications', 'Applications', '$log', '$state', '$stateParams'];
 
     angular.module('applications')
         .controller('ApplicationListController', ApplicationListController);

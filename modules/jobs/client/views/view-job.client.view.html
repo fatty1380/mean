@@ -13,13 +13,14 @@
              ng-if="!!vm.enableEdit">
 
 
-            <div class="panel-heading overflow-h">
+            <div class="panel panel-profile">
+
+                <div class="panel-heading overflow-h">
                 <span class="panel-title heading-sm">
                         <i class="fa fa-sort mgn-right"></i> Categories
                 </span>
-            </div>
+                </div>
 
-            <div class="panel panel-profile">
                 <div class="panel-body mgn-btm" ng-show="vm.job.categories.length || dm.canEdit">
                     <oset-categories class="text-center" model="vm.job.categories" mode="view" lbl-class="btn-xs">
                          <span ng-if="dm.showEdit" class="text-center">You can help users to find your job by adding specific categories in
@@ -105,7 +106,7 @@
 
             <!--Application Summary for Driver-->
             <div class="mgn-bottom" data-ng-if="vm.user.isDriver">
-                <oset-application-summary job="vm.job" profile="vm.user" display-mode="mine"></oset-application-summary>
+                <oset-application-summary ng-model="vm.application" job="vm.job" profile="vm.user" display-mode="mine"></oset-application-summary>
             </div>
 
             <!--Map & Location Information - Only shown if location is available-->

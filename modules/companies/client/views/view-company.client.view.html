@@ -1,43 +1,44 @@
 <section class="container-fluid">
+    <div class="row profile">
+        <div class="col-md-8">
+            <os-page-header title="{{vm.company.name}}"
+                            sub-title="{{vm.subtitle}}"
+                            show-edit="!!vm.company && vm.canEdit"
+                            edit-sref="companies.edit({'companyId': '{{vm.company._id}}'})"
+                            picture-url="vm.imageURL" picture-edit-fn="vm.showModal()">
+                Member Since <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>
+            </os-page-header>
 
-    <os-page-header title="{{vm.company.name}}"
-                    sub-title="{{vm.subtitle}}"
-                    show-edit="!!vm.company && vm.canEdit"
-                    edit-sref="companies.edit({'companyId': '{{vm.company._id}}'})"
-                    picture-url="vm.imageURL" picture-edit-fn="vm.showModal()">
-        Member Since <span data-ng-bind="vm.company.created | date:'mediumDate'"></span>
-    </os-page-header>
-
-    <div class="row" ng-if="!!vm.company" ng-show="vm.showPhotoEdit">
-        <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="row" ng-if="!!vm.company" ng-show="vm.showPhotoEdit">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-oset">
+                        <div class="panel-heading">
                     <span class="h4">Change Profile Picture
                     <div class="pull-right">
                         <button type="button" class="close modal-title" ng-click="vm.hideModal()"><span
                                 aria-hidden="true">&times;<span class="sr-only">Close</span></span></button>
                     </div></span>
-                </div>
-                <div class="panel-body">
-                    <os-picture-uploader model="vm.company" title="{{vm.company.name}}" mode="company"
-                                         success-callback="vm.successFunction" shape="rectangle">
-                    </os-picture-uploader>
+                        </div>
+                        <div class="panel-body">
+                            <os-picture-uploader model="vm.company" title="{{vm.company.name}}" mode="company"
+                                                 success-callback="vm.successFunction" shape="rectangle">
+                            </os-picture-uploader>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row profile">
-        <div class="col-md-8" data-ng-class="{'col-md-offset-2': !vm.company}">
-            <os-company company="vm.company" config="vm.config" can-edit="vm.canEdit"></os-company>
+            <div>
+                <os-company company="vm.company" config="vm.config" can-edit="vm.canEdit"></os-company>
 
-            <os-job-list ng-if="vm.canEdit" header="Open Jobs" company="vm.company"
-                         company-id="{{vm.company.id}}"
-                         show-post="vm.canEdit" show-search="false"
-                         btn-class="btn-sm"></os-job-list>
+                <os-job-list ng-if="vm.canEdit" header="Open Jobs" company="vm.company"
+                             company-id="{{vm.company.id}}"
+                             show-post="vm.canEdit" show-search="false"
+                             btn-class="btn-sm"></os-job-list>
+            </div>
         </div>
 
-        <div class="gutter right col-md-4" ng-if="!!vm.company">
+        <div class="gutter profile-gutter right col-md-4" ng-if="!!vm.company">
 
             <a class="btn btn-cta-primary btn-lg btn-block bigger mgn-bottom"
                data-ng-if="vm.canEdit"
@@ -45,13 +46,13 @@
                 Post a New Job!
             </a>
 
-            <div class="panel panel-default" data-ng-if="vm.canEdit">
+            <div class="panel panel-oset" data-ng-if="vm.canEdit">
                 <div class="panel-heading">
-                    <span class="h4">Subscription Information</span>
+                    <span class="h4">Subscription</span>
                 </div>
                 <div class="panel-body" ng-if="!!vm.company.subscription"
                      ng-init="sub = vm.company.subscription; sub.remaining = sub.available - sub.used;">
-                    <p class="info text-center">You are subscribed to the {{sub.name}} package.</p>
+                    <p class="panel-oset text-center">You are subscribed to the {{sub.name}} package.</p>
 
                     <p>
                         <span ng-show="sub.remaining > 0 && sub.available != -1">
@@ -81,26 +82,22 @@
 
                 </div>
                 <div class="panel-body" ng-if="!vm.company.subscription">
-                    <p class="text-center">Before you post your first job, you will need to sign up for a subscription.</p>
+                    <p class="text-center">Before you post your first job, you will need to sign up for a
+                        subscription.</p>
                     <button type="button" class="btn btn-oset-secondary center-block" ui-sref="subscriptionsReview">
                         Review Subscription Options...
                     </button>
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="h4">Where we are</span>
-                </div>
-                <div class="panel-body">
+            <div class="panel panel-oset">
+                <div class="map-wrapper">
                     <os-map-location zip-code='vm.company.zipCode' addresses="vm.company.locations"
                                      precision="exact"></os-map-location>
-
-                    <os-address-list models="vm.company.locations" can-edit="false" full-width="true"></os-address-list>
                 </div>
             </div>
 
-            <div class="panel panel-default">
+            <div class="panel panel-oset">
                 <div class="panel-heading">Active Jobs</div>
                 <div class="panel-body">
 
@@ -121,7 +118,6 @@
 
                 </div>
             </div>
-
         </div>
     </div>
 </section>

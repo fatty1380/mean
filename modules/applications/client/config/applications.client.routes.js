@@ -24,7 +24,7 @@
 
         if (auth.user.type === 'owner') {
             query.companyId = auth.user.company || auth.user.company._id;
-            applications = apps.listByCompany(query);
+            applications    = apps.listByCompany(query);
         } else {
             applications = apps.listByUser(query);
         }
@@ -41,22 +41,20 @@
     function myJobsWithApplications(auth, jobs) {
         var query = {
             userId: auth.user && auth.user._id || auth.user,
-            id: auth.user.company
+            id    : auth.user.company
         };
-
-        debugger;
 
         return jobs.listByCompany(query)
             .catch(function (err) {
-            if (err.status === 404) {
-                return [];
-            }
-            return err;
-        });
+                if (err.status === 404) {
+                    return [];
+                }
+                return err;
+            });
     }
 
     function resolveAllApplications(auth, jobs, apps) {
-        if(!auth.isAdmin) {
+        if (!auth.isAdmin) {
             return resolveApplications(auth, jobs, apps);
         }
 
@@ -76,50 +74,138 @@
         // Applications state routing
         $stateProvider.
 
-            state('applications', {
-                abstract: true,
-                url: '/applications',
-                template: '<div ui-view class="content-section something"></div>',
-                parent: 'fixed-opaque',
+            state('ats', {
+                url             : '/ats',
+                abstract        : true,
+                parent          : 'fixed-opaque',
+                templateUrl     : '/modules/applications/views/ats.client.view.html',
+                resolve         : {
+                    applications: resolveApplications,
+                    config      : moduleConfigResolve
+                },
+                controller      : 'ApplicationListController',
+                controllerAs    : 'vm',
+                bindToController: true
+            }).
+
+            state('ats.root', {
+                url   : '?itemId&tabName&jobId',
+                views : {
+                    'sidebar@ats': {
+                        templateUrl     : '/modules/applications/views/templates/ats-sidebar.client.template.html',
+                        controller      : 'ApplicationListController',
+                        controllerAs    : 'vm',
+                        bindToController: true
+                    },
+                    'bodycontent': {
+                        templateUrl     : '/modules/applications/views/templates/job-list-content.client.template.html',
+                        controller      : 'ApplicationListController',
+                        controllerAs    : 'vm',
+                        bindToController: true
+                    }
+                },
                 params: {
                     companyId: {
                         default: null
                     },
-                    userId: {
+                    userId   : {
+                        default: null
+                    }
+                }
+            }).
+
+            state('ats.root.job', {
+                url  : 'job',
+                views: {
+                    'bodycontent@ats': {
+                        templateUrl     : '/modules/applications/views/templates/ats-job-details.client.template.html',
+                        controller      : ['$stateParams', '$q', 'Jobs', 'Applications', function (params, $q, Jobs, Applications) {
+                            var vm = this;
+
+                            vm.applicant = null;
+
+                            vm.loading = {
+                                applicant: true
+                            };
+
+                            Jobs.get(params.jobId)
+                                .then(function (job) {
+                                    vm.job = job;
+
+                                    return Applications.ByJob.query({jobId: vm.job.id}).$promise;
+                                })
+                                .then(function (applications) {
+                                    vm.applications = applications;
+                                })
+                            .catch(function(err) {
+                                    console.error(err);
+                                })
+                                .finally(function() {
+                                        vm.loading.applicant = false;
+
+                                });
+
+                            vm.toggleApplicant = function(applicant) {
+                                var tmp = vm.applicant && vm.applicant.id;
+
+                                if(tmp !== applicant.id) {
+                                    vm.applicant = applicant;
+                                }
+                                else {
+                                    vm.applicant = null;
+                                }
+                            };
+                        }],
+                        controllerAs    : 'vm',
+                        bindToController: true
+                    }
+                }
+            }).
+
+            state('applications', {
+                abstract: true,
+                url     : '/applications',
+                template: '<div ui-view class="content-section something"></div>',
+                parent  : 'fixed-opaque',
+                params  : {
+                    companyId: {
+                        default: null
+                    },
+                    userId   : {
                         default: null
                     }
                 },
-                resolve: {
+                resolve : {
                     config: moduleConfigResolve
                 }
             }).
 
             state('applications.list', {
-                url: '?itemId&tabName',
-                reloadOnSearch: false,
-                templateUrl: '/modules/applications/views/list-applications.client.view.html',
-                resolve: {
+                url             : '?itemId&tabName',
+                reloadOnSearch  : false,
+                templateUrl     : '/modules/applications/views/list-applications.client.view.html',
+                resolve         : {
                     applications: resolveApplications
                 },
-                controller: 'ApplicationListController',
-                controllerAs: 'vm',
+                controller      : 'ApplicationListController',
+                controllerAs    : 'vm',
                 bindToController: true
             }).
 
             state('applications.all', {
-                url: 'all?itemId&tabName',
-                reloadOnSearch: false,
-                templateUrl: '/modules/applications/views/list-applications.client.view.html',
-                resolve: {
+                url             : 'all?itemId&tabName',
+                reloadOnSearch  : false,
+                templateUrl     : '/modules/applications/views/list-applications.client.view.html',
+                resolve         : {
                     applications: resolveAllApplications
                 },
-                controller: 'ApplicationListController',
-                controllerAs: 'vm',
+                controller      : 'ApplicationListController',
+                controllerAs    : 'vm',
                 bindToController: true
             }).
 
             state('applications.reject', {
-                url: '/reject',
+                url    : '/reject',
                 resolve: {
                     application: ['$stateParams', 'Applications', function ($stateParams, Applications) {
                         debugger;
@@ -128,47 +214,47 @@
             }).
 
             state('applications.create', {
-                url: '/create',
+                url        : '/create',
                 templateUrl: '/modules/applications/views/create-application.client.view.html'
             }).
 
             state('applications.view', {
-                url: '/:applicationId',
-                templateUrl: '/modules/applications/views/view-application.client.view.html',
-                resolve: {
+                url             : '/:applicationId',
+                templateUrl     : '/modules/applications/views/view-application.client.view.html',
+                resolve         : {
                     application: ['$stateParams', 'Applications', function ($stateParams, Applications) {
 
                         var query = {
                             applicationId: $stateParams.applicationId,
-                            action: 'view'
+                            action       : 'view'
                         };
 
                         return Applications.getApplication(query).catch(handle404s);
                     }]
                 },
-                controller: 'ApplicationMainController',
-                controllerAs: 'vm',
+                controller      : 'ApplicationMainController',
+                controllerAs    : 'vm',
                 bindToController: true
             }).
 
             state('applications.edit', {
-                url: '/:applicationId/edit',
+                url        : '/:applicationId/edit',
                 templateUrl: '/modules/applications/views/edit-application.client.view.html'
             }).
 
             state('gateway', {
-                url: '/application?jobId',
-                templateUrl: '/modules/applications/views/gateway-form.client.view.html',
-                controller: 'ApplicationGatewayController',
+                url         : '/application?jobId',
+                templateUrl : '/modules/applications/views/gateway-form.client.view.html',
+                controller  : 'ApplicationGatewayController',
                 controllerAs: 'vm',
-                data: {
+                data        : {
                     hideHeader: true
                 },
-                params: {
+                params      : {
                     jobId: ''
                 },
-                resolve: {
-                    gateway: ['Gateway', '$stateParams', function (Gateway, Params) {
+                resolve     : {
+                    gateway    : ['Gateway', '$stateParams', function (Gateway, Params) {
                         return new Gateway().initialize(Params.jobId, Params.userId);
                     }],
                     resolutions: ['gateway', 'Authentication', '$stateParams', '$q', '$log', function (gateway, auth, Params, $q, $log) {
@@ -183,11 +269,11 @@
 
                         var deferred = $q.defer();
 
-                        var timeout = $timeout(function() {
+                        var timeout = $timeout(function () {
                             deferred.resolve('timeout');
                         }, 2000);
 
-                        gateway.application.then(function(app) {
+                        gateway.application.then(function (app) {
                             $timeout.cancel(timeout);
 
                             deferred.resolve(app);
@@ -195,27 +281,27 @@
 
                         return deferred.promise;
                     }],
-                    user: ['gateway', function (gateway) {
+                    user       : ['gateway', function (gateway) {
                     }]
 
                 }
             }).
 
             state('gateway.userInfo', {
-                url: '/userInfo',
-                templateUrl: '/modules/applications/views/form/user-info.client.template.html',
-                controller: '',
-                controllerAs: 'vm',
+                url             : '/userInfo',
+                templateUrl     : '/modules/applications/views/form/user-info.client.template.html',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true
             }).
 
             state('gateway.driverInfo', {
-                url: '/driverInfo',
-                templateUrl: '/modules/applications/views/form/driver-info.client.template.html',
-                controller: '',
-                controllerAs: 'vm',
+                url             : '/driverInfo',
+                templateUrl     : '/modules/applications/views/form/driver-info.client.template.html',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true,
-                resolve: {
+                resolve         : {
                     driver: ['gateway', function (gateway) {
                         return gateway.driver;
                     }]
@@ -223,12 +309,12 @@
             }).
 
             state('gateway.documents', {
-                url: '/documents',
-                templateUrl: '/modules/applications/views/form/documents.client.template.html',
-                controller: '',
-                controllerAs: 'vm',
+                url             : '/documents',
+                templateUrl     : '/modules/applications/views/form/documents.client.template.html',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true,
-                resolve: {
+                resolve         : {
                     driver: ['gateway', function (gateway) {
                         return gateway.driver;
                     }]
@@ -236,49 +322,49 @@
             }).
 
             state('gateway.reports', {
-                url: '/reports',
-                templateUrl: '/modules/applications/views/form/reports.client.template.html',
-                controller: '',
-                controllerAs: 'vm',
+                url             : '/reports',
+                templateUrl     : '/modules/applications/views/form/reports.client.template.html',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true,
-                resolve: {
+                resolve         : {
                     applicantGateway: ['gateway', function (gateway) {
                         return gateway.applicantGateway;
                     }],
-                    report: ['gateway', function (gateway) {
+                    report          : ['gateway', function (gateway) {
                         return gateway.report;
                     }]
                 }
             }).
 
             state('gateway.reportFields', {
-                url: '/reportFields?readonly',
-                params: {
+                url             : '/reportFields?readonly',
+                params          : {
                     readonly: false
                 },
-                templateUrl: '/modules/applications/views/form/report-fields.client.template.html',
-                controller: '',
-                controllerAs: 'vm',
+                templateUrl     : '/modules/applications/views/form/report-fields.client.template.html',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true,
-                resolve: {
-                    gateway: ['gateway', function (gateway) {
+                resolve         : {
+                    gateway         : ['gateway', function (gateway) {
                         return gateway;
                     }],
-                    report: ['gateway', function (gateway) {
-                        return gateway.report.then(function(success) {
+                    report          : ['gateway', function (gateway) {
+                        return gateway.report.then(function (success) {
                             console.log('resolved REPORT');
                             return success;
                         });
                     }],
-                    applicant: ['gateway', function (gateway) {
-                        return gateway.applicant.then(function(success) {
+                    applicant       : ['gateway', function (gateway) {
+                        return gateway.applicant.then(function (success) {
                             console.log('resolved APPLICANT');
                             return success;
                         });
                     }],
                     applicantGateway: ['gateway', function (gateway) {
                         debugger;
-                        return gateway.applicantGateway.then(function(success) {
+                        return gateway.applicantGateway.then(function (success) {
                             console.log('resolved APPLICANT GATEWAY');
                             return success;
                         });
@@ -287,12 +373,12 @@
             }).
 
             state('gateway.authorization', {
-                url: '/authorization',
-                template: '<application-release-form gateway="vm.gw" model="vm.gw.models.release" methods="vm.subformMethods"></application-release-form>',
-                controller: '',
-                controllerAs: 'vm',
+                url             : '/authorization',
+                template        : '<application-release-form gateway="vm.gw" model="vm.gw.models.release" methods="vm.subformMethods"></application-release-form>',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true,
-                resolve: {
+                resolve         : {
                     requirements: ['gateway', '$q', function (gateway, $q) {
                         var gw = gateway;
                         return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function (result) {
@@ -303,20 +389,20 @@
             }).
 
             state('gateway.payment', {
-                url: '/payment',
-                templateUrl: '/modules/applications/views/form/payment.client.template.html',
-                controller: '',
-                controllerAs: 'vm',
+                url             : '/payment',
+                templateUrl     : '/modules/applications/views/form/payment.client.template.html',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true
             }).
 
             state('gateway.complete', {
-                url: '/complete',
-                templateUrl: '/modules/applications/views/form/complete.client.template.html',
-                controller: '',
-                controllerAs: 'vm',
+                url             : '/complete',
+                templateUrl     : '/modules/applications/views/form/complete.client.template.html',
+                controller      : '',
+                controllerAs    : 'vm',
                 bindToController: true,
-                resolve: {
+                resolve         : {
                     application: ['gateway', function (gateway) {
                         return gateway.application;
                     }]
@@ -327,10 +413,10 @@
     }
 
     myJobsWithApplications.$inject = ['Authentication', 'Jobs'];
-    myApplications.$inject = ['Authentication', 'Applications'];
+    myApplications.$inject         = ['Authentication', 'Applications'];
     resolveAllApplications.$inject = ['Authentication', 'Jobs', 'Applications'];
-    resolveApplications.$inject = ['Authentication', 'Jobs', 'Applications'];
-    moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
+    resolveApplications.$inject    = ['Authentication', 'Jobs', 'Applications'];
+    moduleConfigResolve.$inject    = ['AppConfig', 'Authentication'];
 
     config.$inject = ['$stateProvider'];
 

@@ -6,26 +6,37 @@
 var config = require('../config'),
 	chalk = require('chalk'),
 	path = require('path'),
-	mongoose = require('mongoose');
+	mongoose = require('mongoose'),
+	log = require(path.resolve('./config/lib/logger')).child({
+		module: 'lib',
+		file: 'mongoose'
+	});
 
 // Load the mongoose models
 module.exports.loadModels = function() {
 	// Globbing model files
 	config.files.server.models.forEach(function(modelPath) {
+		log.trace('Loading Models at path: %s', modelPath);
 		require(path.resolve(modelPath));
 	});
+
+	log.trace('Finished loading models');
 };
 
 // Initialize Mongoose
 module.exports.connect = function(cb) {
 	var _this = this;
 
+
+	log.info(config.db, 'Making connection to MongoDB');
+
 	var db = mongoose.connect(config.db.uri, config.db.options, function (err) {
 		// Log Error
 		if (err) {
-			console.error(chalk.red('Could not connect to MongoDB!'));
+			log.error(err, 'Could not connect to MongoDB!');
 			console.log(err);
 		} else {
+			log.trace(config.db, 'Successful connection to MongoDB!');
 			// Load modules
 			_this.loadModels();
 

@@ -1,12 +1,13 @@
 'use strict';
 
 module.exports = function (app) {
+    
     var acl = require('../policies/bgchecks.server.policy'),
-        bgchecks = require('../controllers/bgchecks.server.controller'),
+        reports = require('../controllers/reports.server.controller'),
+        remoteApplicant = require('../controllers/remote-applicant.server.controller'),
         path = require('path'),
         users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
         braintree = require(path.resolve('./modules/payments/server/controllers/braintree.server.controller'));
-
 
     // Report Type centric routes
     /**
@@ -19,21 +20,21 @@ module.exports = function (app) {
      * this will likely be called occasionally.
      */
     app.route('/api/reports/types')
-        .get(bgchecks.availableReportTypes, bgchecks.list.reports);
+        .get(reports.types.list, reports.listReports);
 
     app.route('/api/reports/:remoteSystem/update')
-        .post(bgchecks.UpdateReportDefinitionsFromServer, bgchecks.SaveUpdatedReportDefinitions, bgchecks.list.reports);
+        .post(reports.types.update, reports.types.save, reports.listReports);
 
 
     /**
-     * This returns a Report Defintion, including all necessary Field Definitions.
+     * This returns a Report Definition, including all necessary Field Definitions.
      * This will be used by the render-report page.
      */
     app.route('/api/reports/types/:sku')
-        .get(acl.isAllowed, bgchecks.read.report);
+        .get(acl.isAllowed, reports.readReport);
 
     app.route('/api/reports/types/:sku/create')
-        .post(acl.isAllowed, bgchecks.applicant.get, braintree.findCustomer, braintree.postApplicant, bgchecks.report.create);
+        .post(acl.isAllowed, remoteApplicant.get, braintree.findCustomer, braintree.postApplicant, reports.create);
         // Removed "braintree.findCustomer" since existing customer comes from the Nonce
 
 
@@ -53,15 +54,15 @@ module.exports = function (app) {
      */
     app.route('/api/users/:userId/driver/applicant')
         .all(acl.isAllowed)
-        .get(bgchecks.applicant.get, bgchecks.applicant.getRemote, bgchecks.applicant.read)
-        .post(bgchecks.applicant.create, bgchecks.applicant.save);
+        .get(remoteApplicant.get, remoteApplicant.getRemote, remoteApplicant.read)
+        .post(remoteApplicant.create, remoteApplicant.save);
 
 
     app.route('/api/override')
-        .get(bgchecks.rerunReport);
+        .get(reports.debug.run);
 
     app.route('/api/reports/pdf')
-        .get(bgchecks.report.loadPDF);
+        .get(reports.loadPDF);
 
     /**
      *  * path: /api/reports/applicants
@@ -73,35 +74,36 @@ module.exports = function (app) {
      *      nickname: Get All Applicants
      */
     app.route('/api/reports/applicants')
-        .get(acl.isAllowed, bgchecks.applicant.list);
+        .get(acl.isAllowed, remoteApplicant.list);
 
     app.route('/api/reports/applicants/:applicantId')
-        .get(acl.isAllowed, bgchecks.applicant.get, bgchecks.applicant.read);
+        .get(acl.isAllowed, remoteApplicant.get, remoteApplicant.read);
 
 
     /** REPORTS --------------------------------------- */
-    //app.route('/api/reports')
-    //    .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // Get status of all reports for applicant
-    //    .post(bgchecks.applicant.get, bgchecks.report.create); // Create a new report
+    app.route('/api/reports')
+        .get(reports.list);
+    //    .get(remoteApplicant.get, reports.applicantStatus) // Get status of all reports for applicant
+    //    .post(remoteApplicant.get, reports.create); // Create a new report
 
     app.route('/api/users/:userId/reports')
-        .get(bgchecks.applicant.get, bgchecks.report.applicantStatus) // get status of all reports for applicant
-        .post(bgchecks.applicant.get, bgchecks.report.create); // create a new report
+        .get(remoteApplicant.get, reports.applicantStatus) // get status of all reports for applicant
+        .post(remoteApplicant.get, reports.create); // create a new report
 
-    app.route('/api/reports/:reportId')
-        .get(bgchecks.report.get) // Get the results of a report - maybe update if not complete?
-        .post(bgchecks.report.status); // Update the report status (?)
+    app.route('/api/reports/:reportId(/^[a-f\\d]{24}$/i)')
+        .get(reports.get) // Get the results of a report - maybe update if not complete?
+        .post(reports.status); // Update the report status (?)
 
 
     // Finish by binding the Bgcheck middleware
-    app.param('sku', bgchecks.reportDefinitionBySKU);
-    app.param('applicantId', bgchecks.applicantByID);
-    app.param('reportId', bgchecks.reportByID);
+    app.param('sku', reports.reportDefinitionBySKU);
+    app.param('reportId', reports.reportByID);
+    app.param('applicantId', remoteApplicant.applicantByID);
 
 
-    /** DEBUG/TEST Routes **/
-
-
-    //app.route('/api/createApplicantTest')
-    //    .post(bgchecks.applicant.create);
+    /** Report Update Routes **/
+    app.route('/api/reports/update')
+        .get(reports.sync);
+    app.route('/api/reports/pending'); // Get all Background Reports in a non-complete state;
+    app.route('/api/reports/pdf');      // Get
 };

@@ -48,7 +48,7 @@
                     <span class="label label-success">Success!</span>
                 </h3>
 
-                <p class="info mgn-top">
+                <p class="pnl-info mgn-top">
                     Congratulations, you have applied to a position with {{vm.gw.models.company.name}}. You can now look at your
                     active job applications, browse job listings, or return to your profile home.
                 </p>
@@ -57,7 +57,7 @@
                     <button type="button" class="btn btn-oset-primary" ui-sref="applications.view">View Applications
                     </button>
                     <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Job Listings</button>
-                    <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>
+                    <button type="button" class="btn btn-oset-primary" ui-sref="users.view">Home</button>
                 </p>
             </div>
         </div>
@@ -68,10 +68,10 @@
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
                 <h3 class="text-center">
-                    Current Application Status: <os-application-status-badge model="vm.gw.models.application"></os-application-status-badge>
+                    Current Application Status: <os-application-status-badge ng-model="vm.gw.models.application"></os-application-status-badge>
                 </h3>
 
-                <p class="info mgn-top">
+                <p class="pnl-info mgn-top">
                     Congratulations, you have successfully submitted your application for a position with
                     {{vm.gw.models.company.name}}. You can now look at your active job applications, browse
                     job listings, or return to your profile home page.
@@ -80,7 +80,7 @@
                 <p class="text-center">
                     <button type="button" class="btn btn-oset-primary" ui-sref="applications.list">Active Applications</button>
                     <button type="button" class="btn btn-oset-primary" ui-sref="jobs.list">Job Listings</button>
-                    <button type="button" class="btn btn-oset-primary" ui-sref="drivers.home">Home</button>
+                    <button type="button" class="btn btn-oset-primary" ui-sref="users.view">Home</button>
                 </p>
             </div>
         </div>

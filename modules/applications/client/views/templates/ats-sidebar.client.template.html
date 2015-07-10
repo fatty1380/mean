@@ -1,0 +1,76 @@
+
+
+
+<div class="panel panel-profile">
+
+    <div class="panel-heading overflow-h">
+        <span class="panel-title heading-sm">
+        <i class="fa fa-sort mgn-right"></i> Active Jobs
+        <a ui-sref="jobs.create({companyId: vm.company.id})"><i class="fa fa-plus pull-right"></i></a>
+        </span>
+    </div>
+
+    <div class="panel-body mgn-btm">
+
+        <!--Future Directive : oset-inline-job-list-->
+        <div ng-repeat="job in vm.jobs"
+             ui-sref="ats.root.job({jobId: job.id})"
+             class="alert-blocks small"
+             ng-class="{'alert-blocks-success': vm.params.jobId === job.id}">
+
+            <div class="overflow-h">
+                <strong>{{job.name}}
+                    <small class="pull-right">
+                        <span class="badge">{{job.applications.length}}</span>
+                    </small>
+                </strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-profile">
+
+    <div class="panel-heading overflow-h">
+        <span class="panel-title heading-sm">
+        <i class="fa fa-sort mgn-right"></i> Applicants
+        </span>
+    </div>
+
+    <div class="panel-body mgn-btm">
+        <!--Future Directive : oset-inline-applicant-list-->
+            <div ng-repeat="application in vm.apps" ng-init="user=application.user"
+                 class="alert-blocks small" ng-click="vm.visibleApplication = (!!vm.visibleApplication && vm.visibleApplication === application.id ? null : application.id)"
+                 ng-class="{'alert-blocks-success': application.isUnreviewed}">
+                <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'messaging'})">
+                    <i class="fa fa-comments-o pull-right"></i>
+                </a>
+                <a ui-sref="applications.list({itemId: vm.job._id, tabName: 'documents'})">
+                    <i class="fa fa-file-o pull-right"></i>
+                </a>
+
+                <img class="rounded-x mCS_img_loaded" ng-src="{{user.profileImageURL}}" alt="">
+
+                <div class="overflow-h">
+                    <strong class="color-green">{{application.user.displayName}}
+                        <small class="pull-right"><em>{{application.updated | amDateFormat : 'L'}}</em>
+                        </small><br>
+                        <os-application-status-badge ng-model="application"></os-application-status-badge>
+                    </strong>
+                </div>
+
+                <oset-application-summary ng-model="vm.application" ng-show="vm.visibleApplication === application.id"
+                                          display-mode="inline"></oset-application-summary>
+            </div>
+
+
+        <div class="list-group" ng-if="vm.activeJob">
+            <a href="#" ng-repeat="applicant in vm.job.applications"
+               class="list-group-item text-nowrap"
+               ng-class="{'active': vm.visibleId === job.id}"
+               ng-click="vm.visibleId = job.id">
+                {{job.name}}
+            </a>
+        </div>
+    </div>
+</div>

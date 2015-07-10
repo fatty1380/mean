@@ -101,6 +101,19 @@ var UserSchema = new Schema({
         required: 'Please fill in a username',
         trim: true
     },
+    
+    profileImageURL: {
+        type: String,
+        default: 'modules/users/img/profile/default.png'
+    },
+    
+    handle: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    
+    // Sensitive and/or Auth Related Info //
     password: {
         type: String,
         default: '',
@@ -113,22 +126,19 @@ var UserSchema = new Schema({
         type: Boolean,
         default: false
     },
-    profileImageURL: {
-        type: String,
-        default: 'modules/users/img/profile/default.png'
-    },
     provider: {
         type: String,
         required: 'Provider is required'
     },
     providerData: {},
     additionalProvidersData: {},
-    modified: {
-        type: Date
-    },
-    created: {
-        type: Date,
-        default: Date.now
+
+    roles: {
+        type: [{
+            type: String,
+            enum: ['user', 'admin']
+        }],
+        default: ['user']
     },
 
     /* For reset password */
@@ -138,17 +148,18 @@ var UserSchema = new Schema({
     resetPasswordExpires: {
         type: Date
     },
-
-    roles: {
-        type: [{
-            type: String,
-            enum: ['user', 'admin']
-        }],
-        default: ['user']
+    
+    modified: {
+        type: Date
     },
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    
     type: {
         type: String,
-        enum: ['driver', 'owner'],
+        enum: ['driver', 'owner', ''],
         default: ''
     },
     email: {
@@ -188,6 +199,30 @@ var UserSchema = new Schema({
      */
     addresses: ['Address'],
 
+    /**
+     * Friends & Connections : START
+     */
+
+    friends: {
+        type: [{
+            type: Schema.ObjectId,
+            ref: 'User'
+        }],
+        default: []
+    },
+    
+    requests: {
+        type: [{
+            type: Schema.ObjectId,
+            ref: 'RequestMessage'
+        }],
+        default: []
+    },
+    
+    //conversations: [{}],
+
+    /** Friends & Connections : END **/
+
     /** Section Begin : Virtual Members **/
 
     displayName: {
@@ -196,10 +231,21 @@ var UserSchema = new Schema({
     }
 }, {'toJSON': {virtuals: true}});
 
-UserSchema.post('init', function (next) {
-    if (!this.displayName) {
-        this.displayName = this.firstName + ' ' + this.lastName;
+
+
+UserSchema.index({
+    firstName: 'text',
+    lastName: 'text',
+    username: 'text',
+    email: 'text'
+});
+
+UserSchema.pre('init', function (next, data) {
+    if (!data.displayName) {
+        data.displayName = data.firstName + ' ' + data.lastName;
     }
+    
+    next();
 });
 
 /**
@@ -208,6 +254,10 @@ UserSchema.post('init', function (next) {
 UserSchema.pre('save', function (next) {
     if (!this.isModified('password')) {
         return next();
+    }
+    
+    if (this.isModified('firstName') || this.isModified('lastName')) {
+        this.displayName = this.firstName + ' ' + this.lastName;
     }
 
     if (this.password && this.password.length > 6) {
@@ -276,6 +326,16 @@ UserSchema.methods.cleanse = function () {
 
     this.password = undefined;
     this.salt = undefined;
+};
+
+UserSchema.methods.loadFriends = function() {
+    return this.db.model('User')
+        .find({_id: {'$in': this.friends}, 'friends': this._id})
+        .select(UserSchema.statics.fields.social);
+};
+
+UserSchema.statics.fields = {
+    social: 'firstName lastName username friends handle profileImageURL type driver company email'
 };
 
 /**

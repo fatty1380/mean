@@ -1,0 +1,52 @@
+<section class="content-section">
+    <div class="container-fluid">
+        <os-page-header title="{{vm.listTitle || 'ATS Dashboard'}}"
+                        btn-sref="jobs.create({companyId: '{{vm.company._id}}' })"
+                        btn-show="vm.enableHeaderEdit"
+                        btn-text="Post New Job"
+                        sub-title="{{vm.subtitle}}">
+        </os-page-header>
+
+        <div class="row profile">
+            <div class="col-md-4 col-lg-3 profile-sidebar">
+                <div class="panel panel-profile">
+
+                    <div class="panel-heading overflow-h">
+                        <span class="panel-title heading-sm">
+                        <i class="fa fa-sort mgn-right"></i> Jobs
+                        </span>
+                    </div>
+
+                    <div class="panel-body mgn-btm">
+                        <ul>
+                            <li>All Jobs</li>
+                            <li>Active Jobs</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel panel-profile">
+
+                    <div class="panel-heading overflow-h">
+                        <span class="panel-title heading-sm">
+                        <i class="fa fa-sort mgn-right"></i> Applicants
+                        </span>
+                    </div>
+
+                    <div class="panel-body mgn-btm">
+                        <ul>
+                            <li>All Applicants</li>
+                            <li>New Messages</li>
+                            <li>Updated Documents</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div ui-view="sidebar"></div>
+            </div>
+
+            <div ui-view="bodycontent" class="col-md-8 col-lg-9 profile-body">
+            </div>
+        </div>
+    </div>
+</section>

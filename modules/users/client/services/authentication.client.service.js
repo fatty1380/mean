@@ -4,24 +4,22 @@
 // Authentication service for user variables
 
     function AuthenticationService($window) {
-        var _this = this;
-
-        function isLoggedIn() {
-            return !!_this._data.user;
-        }
-
-        function isAdmin() {
-            var user = _this._data.user;
-            return !!user && (user.roles.indexOf('admin') !== -1);
-        }
-
-        _this._data = {
+        var service = {
             user: $window.user,
             isLoggedIn: isLoggedIn,
             isAdmin: isAdmin
-		};
+        };
+        
+        return service;
+        
+        // Service Method Implementations
+        function isLoggedIn() {
+            return !_.isEmpty(service.user);
+        }
 
-		return _this._data;
+        function isAdmin() {
+            return !!service.user && service.user.isAdmin;
+        }
 	}
 
 	AuthenticationService.$inject = ['$window'];

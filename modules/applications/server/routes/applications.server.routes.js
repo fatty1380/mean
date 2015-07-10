@@ -4,19 +4,18 @@ module.exports = function (app) {
     var
         path = require('path'),
         users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
-        applications = require(path.resolve('./modules/applications/server/controllers/applications.server.controller')),
-        drivers = require(path.resolve('./modules/drivers/server/controllers/drivers.server.controller')),
-        releaseDocs = require(path.resolve('./modules/applications/server/controllers/release-documents.server.controller'));
-
+        applications = require(path.resolve('./modules/applications/server/controllers/applications.server.controller'));
     // Applications Routes
     app.route('/api/applications')
         .get(applications.executeQuery)
         .post(users.requiresLogin, applications.create);
 
     app.route('/api/applications/:applicationId')
+        .all(users.requiresLogin, applications.hasAuthorization)
         .get(applications.read)
-        .put(users.requiresLogin, applications.hasAuthorization, applications.update)
-        .delete(users.requiresLogin, applications.hasAuthorization, applications.delete);
+        .put(applications.update)
+        .patch(applications.patch)
+        .delete(applications.delete);
 
     app.route('/api/applications/:applicationId/connect')
         .post(applications.createConnection);
@@ -39,4 +38,25 @@ module.exports = function (app) {
 
     // Finish by binding the Application middleware
     app.param('applicationId', applications.applicationByID);
+};
+
+var coreRoutes = {
+
+    // LISTING (GET)
+    // All Applicants - only available to admins
+    // All applicants for a job
+    // All applicants to a company
+
+    // GET (GET)
+    // Specific Applicant by ID
+    // Specific Applicant By UserId
+
+    // CREATE (POST)
+
+    // UPDATE (PUT)
+    // Specific Applicant by ID
+
+    // SET (PATCH)
+    // Application Status
+
 };

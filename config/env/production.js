@@ -86,6 +86,9 @@ module.exports = {
         },
         fs: {
             writePath: '/tmp/'
+        },
+        mandrill: {
+            apiKey: '5151B5l4NJ2YVYQANFTKpA'
         }
     },
     reports: {},

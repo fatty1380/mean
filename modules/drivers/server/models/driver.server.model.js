@@ -107,6 +107,11 @@ var DriverSchema = new Schema({
         default: []
     },
 
+    summaryReport: {
+        type: Schema.ObjectId,
+        ref: 'BackgroundReport'
+    },
+
     profile: [
         {
             listId: {

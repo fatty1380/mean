@@ -72,18 +72,6 @@ module.exports.initMiddleware = function (app) {
 
     var accessLogStream, streamType;
 
-    // Init a unique Request ID
-    app.use(addRequestId);
-
-    app.use(function (req, res, next) {
-        req.log = log.child({
-            req: req,
-            req_id: req.id
-        });
-
-        next();
-    })
-
     // Passing the request url to environment locals
     app.use(function (req, res, next) {
         res.locals.host = req.protocol + '://' + req.hostname;
@@ -91,7 +79,7 @@ module.exports.initMiddleware = function (app) {
         next();
     });
 
-    log.info(config.https, 'EXPRESS ROUTER HTTPS Config')
+    log.info(config.https, 'EXPRESS ROUTER HTTPS Config');
 
     if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
         app.use(function (req, res, next) {
@@ -108,7 +96,7 @@ module.exports.initMiddleware = function (app) {
         // Disable views cache
         app.set('view cache', false);
 
-        streamType = 'dev'
+        streamType = 'dev';
     } else if (process.env.NODE_ENV === 'production') {
         app.locals.cache = 'memory';
 
@@ -133,6 +121,24 @@ module.exports.initMiddleware = function (app) {
         app.use(morgan(streamType));
     }
 
+    if (process.env.NODE_ENV === 'development') {
+        log.info({ func: 'initMiddleware' }, 'Configuring CORS Specific headers and OPTIONS for development only');
+        app.use(function (req, res, next) {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+       
+            // intercept OPTIONS method
+            if ('OPTIONS' === req.method) {
+                log.trace('Intercepted OPTIONS method');
+                res.send(200);
+            }
+            else {
+                next();
+            }
+        });
+    }
+
+
     // Request body parsing middleware should be above methodOverride
     app.use(bodyParser.urlencoded({
         limit: '10mb',
@@ -150,6 +156,18 @@ module.exports.initMiddleware = function (app) {
         dest: './uploads/',
         inMemory: true
     }));
+
+    // Init a unique Request ID
+    app.use(addRequestId);
+
+    app.use(function (req, res, next) {
+        req.log = log.child({
+            req: req,
+            req_id: req.id
+        });
+
+        next();
+    });
 
     log.trace({func: 'initLocalVariables'}, 'Completed Initializing Middleware');
 };
@@ -235,6 +253,7 @@ module.exports.initModulesServerPolicies = function (app) {
 
     // Globbing policy files
     config.files.server.policies.forEach(function (policyPath) {
+        log.trace({func: 'initModulesServerPolicies'}, 'Resolving policy path `%s`', policyPath);
         require(path.resolve(policyPath)).invokeRolesPolicies();
     });
 };
@@ -326,7 +345,7 @@ module.exports.initHttps = function (app) {
     }
 
     log.trace({func: 'initHttps'}, 'HTTPS is not Configured - Skipping');
-}
+};
 
 /**
  * Initialize the Express application

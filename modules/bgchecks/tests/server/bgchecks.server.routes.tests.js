@@ -1,41 +1,25 @@
 'use strict';
 
-var should = require('should'),
-    mongoose = require('mongoose'),
-    User = mongoose.model('User'),
+var should          = require('should'),
+    _ = require('lodash'),
+    mongoose        = require('mongoose'),
+    User            = mongoose.model('User'),
     ReportApplicant = mongoose.model('ReportApplicant'),
-    BGReport = mongoose.model('BackgroundReport'),
-    Q = require('q'),
-    request = require('supertest-as-promised')(Q.Promise),
-    path = require('path'),
-    express = require(path.resolve('./config/lib/express')),
-    log = require(path.resolve('./config/lib/logger')).child({
-        module: 'bgchecks',
-        file: 'bgchecks.server.routes.test'
+    BGReport        = mongoose.model('BackgroundReport'),
+    Q               = require('q'),
+    request         = require('supertest-as-promised')(Q.Promise),
+    path            = require('path'),
+    express         = require(path.resolve('./config/lib/express')),
+    stubs = require(path.resolve('./config/lib/test.stubs')),
+    log             = require(path.resolve('./config/lib/logger')).child({
+        module: 'tests',
+        file  : 'bgchecks.server.routes'
     });
 
 /**
  * Globals
  */
-var app, agent, credentials, user, article, report, localApplicant;
-
-function signin(done) {
-    log.trace({func: 'signin', credentials: credentials}, 'START');
-
-    return agent.post('/api/auth/signin')
-        .send(credentials)
-        .expect(200)
-        .then(function (signinRes) {
-            log.trace({func: 'signin'}, 'Login Complete');
-
-            done();
-        })
-        .catch(function (signinErr) {
-            // Handle signin error
-            log.error({error: signinErr}, 'Signin Failed');
-            done(signinErr);
-        });
-}
+var app, agent, credentials, user, article, report, localApplicant, statuses, endpoint;
 
 /**
  * Article routes tests
@@ -43,15 +27,17 @@ function signin(done) {
 describe('BGCheck CRUD tests', function () {
     before(function (done) {
         // Get application
-        app = express.init(mongoose).http;
+        app   = express.init(mongoose).http;
         agent = request.agent(app);
 
         done();
     });
 
-    beforeEach(function (done) {
+    beforeEach(function () {
         this.timeout(10000);
         log.trace({func: 'beforeEach'}, 'START');
+
+        statuses = ['UNKNOWN', 'PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED'];
 
         // Create user credentials
         credentials = {
@@ -61,38 +47,38 @@ describe('BGCheck CRUD tests', function () {
 
         // Create a new user
         user = new User({
-            firstName: 'Full',
-            lastName: 'Name',
+            firstName  : 'Full',
+            lastName   : 'Name',
             displayName: 'Full Name',
-            email: 'test@test.com',
-            username: credentials.username,
-            password: credentials.password,
-            provider: 'local',
-            type: 'driver'
+            email      : 'test@test.com',
+            username   : credentials.username,
+            password   : credentials.password,
+            provider   : 'local',
+            type       : 'driver'
         });
 
         report = new BGReport({
-            user: user,
-            remoteId: 93651,
+            user             : user,
+            remoteId         : 93651,
             remoteApplicantId: 45958,
-            localReportSku: 'OUTSET_MVR',
-            remoteReportSkus: 'MVRDOM'
+            localReportSku   : 'OUTSET_MVR',
+            remoteReportSkus : 'MVRDOM'
         });
 
         localApplicant = new ReportApplicant({
             remoteId: 45958,
-            user: user,
-            reports: [report]
+            user    : user,
+            reports : [report]
         });
 
         // Save a user to the test db and create new article
-        user.save()
+        return user.save()
             .then(function (user) {
                 log.trace({func: 'beforeEach', user: user}, 'Saved User');
                 return report.save();
             })
             .then(function (report) {
-                log.trace({func: 'beforeEach', report:report}, 'Saved BGReport');
+                log.trace({func: 'beforeEach', report: report}, 'Saved BGReport');
                 return localApplicant.save();
             }, function (err) {
                 log.error({func: 'beforeEach', error: err}, 'Local Applicant Save Failed');
@@ -100,7 +86,7 @@ describe('BGCheck CRUD tests', function () {
             })
             .then(function (applicant) {
                 log.trace({func: 'beforeEach', applicant: applicant}, 'Saved Applicant');
-                return signin(done);
+                return stubs.agentLogin(agent, credentials);
             }, function (err) {
                 log.error({func: 'beforeEach', error: err}, 'Signin Failed');
                 should.not.exist(err, err.message);
@@ -108,27 +94,56 @@ describe('BGCheck CRUD tests', function () {
     });
 
     var routes = {
-        getReportTypes: '/api/reports/types',
+        getReportTypes : '/api/reports/types',
         postReportTypes: '/api/reports/:remoteSystem/update',
-        getReportDef: '/api/reports/types/:sku',
-        createReport: '/api/reports/types/:sku/create',
-        getApplicant: '/api/users/:userId/driver/applicant',
-        postApplicant: '/apid/users/:userId/driver/applicant',
+        getReportDef   : '/api/reports/types/:sku',
+        createReport   : '/api/reports/types/:sku/create',
+        getApplicant   : '/api/users/:userId/driver/applicant',
+        postApplicant: '/api/users/:userId/driver/applicant',
 
-        listApplicants: '/api/reports/applicants',
+        listApplicants  : '/api/reports/applicants',
         getApplicantById: '/api/reports/applicants/:applicantId'
-
-
     };
 
-    describe('Local Applicant methods', function() {
-        it('should be able to lookup a report applicant', function(done) {
+    describe('Local Applicant methods', function () {
+        it('should be able to lookup a report applicant', function () {
+            var _test = this.test;
             var endpoint = '/api/reports/applicants/' + localApplicant.id;
 
-            log.trace({test: this.name, url: endpoint}, 'Making Request');
+            log.trace({test: _test.title, url: endpoint}, 'Making Request');
 
-            agent.get(endpoint)
-            .then(function(applicantResponse) {
+            return agent.get(endpoint)
+                .then(function (applicantResponse) {
+                    log.debug({result: applicantResponse}, 'Got Applicant Response from `%s`', endpoint);
+
+                    applicantResponse.should.have.property('body');
+
+                    var applicant = applicantResponse.body;
+
+                    applicant.should.have.property('reports').and.have.length(1);
+
+                    applicant.reports[0].should.have.property('remoteApplicantId');
+                    applicant.reports[0].should.have.property('localReportSku');
+                    applicant.reports[0].should.have.property('remoteReportSkus');
+                });
+        });
+        it('should be able to look at report(s) status details');
+
+        it('should get an empty applicant response when the remote applicant is inaccessible', function () {
+            var _test = this.test;
+            log.trace({test: _test.title, url: endpoint}, 'Making Request');
+            localApplicant.remoteId = 99999;
+
+            return localApplicant.save()
+                .then(function (applicant) {
+                    applicant.should.have.property('remoteId', 99999);
+
+                    endpoint = '/api/users/' + user.id + '/driver/applicant';
+                    log.trace({test: _test.title, url: endpoint}, 'Making Request');
+
+                    return agent.get(endpoint).expect(200);
+                })
+                .then(function (applicantResponse) {
                     log.debug({result: applicantResponse}, 'Got Applicant Response from `%s`', endpoint);
 
                     applicantResponse.should.have.property('body');
@@ -141,10 +156,137 @@ describe('BGCheck CRUD tests', function () {
                     applicant.reports[0].should.have.property('localReportSku');
                     applicant.reports[0].should.have.property('remoteReportSkus');
 
-                    done();
-                }, done);
+
+                });
         });
-        it('should be able to look at report(s) status details');
+    });
+
+    describe('Local Report Status Routes', function () {
+
+        beforeEach(function (done) {
+            seedReports(user).then(function (results) {
+                done();
+            });
+        });
+
+        it('should restrict to a logged in user');
+
+        it('should be able to load an unfiltered list of bg reports', function (done) {
+            var test = this.test;
+
+            var endpoint = '/api/reports';
+
+            log.trace({test: this.test.title, url: endpoint}, 'Making Request');
+
+            agent.get(endpoint)
+                .query({})
+                .expect(200)
+                .then(function (response) {
+                    should.exist(response.body);
+                    log.debug({test: test.title, body: response.body}, 'Response has a body property');
+
+                    var body = response.body;
+
+                    log.debug({test: test.title, length: response.body.length}, 'body with length');
+
+                    body.should.have.property('length').and.be.equal(14);
+
+                    done();
+                })
+                .catch(function (err) {
+                    log.error({test: test.title, error: err}, 'Test failed due to error');
+
+                    should.not.exist(err);
+                    done();
+                });
+        });
+
+        it('should be able to query for only complete reports', function (done) {
+            var test = this.test;
+            agent.get('/api/reports')
+                .query({isComplete: true})
+                .expect(200)
+                .then(function (response) {
+                    should.exist(response.body);
+                    log.debug({
+                        test: test.title,
+                        resultLength: response.body.length
+                    }, 'Looking at %d reports in response', response.body.length);
+
+                    var reports = response.body;
+
+                    _.each(reports, function (rpt) {
+                        log.debug({test: test.title, isComplete: rpt.isComplete}, 'Inspecting Report');
+
+                        rpt.isComplete.should.be.true;
+                    });
+
+                    done();
+                })
+                .catch(function (err) {
+                    done(err);
+                });
+        });
+
+        it('should be able to query for only incomplete reports', function (done) {
+            var test = this.test;
+            agent.get('/api/reports')
+                .query({isComplete: false})
+                .expect(200)
+                .then(function (response) {
+                    should.exist(response.body);
+                    log.debug({
+                        test: test.title,
+                        resultLength: response.body.length
+                    }, 'Looking at %d reports in response', response.body.length);
+
+                    var reports = response.body;
+
+                    _.each(reports, function (rpt) {
+                        log.debug({test: test.title, isComplete: rpt.isComplete}, 'Inspecting Report');
+
+                        rpt.isComplete.should.be.false;
+                    });
+
+                    done();
+                })
+                .catch(function (err) {
+                    done(err);
+                });
+        });
+
+        it('should be able to load a single bg report');
+    });
+
+    describe('Complete Status Report Update', function() {
+        this.timeout(60000);
+
+        it('should run without a hitch on a vanilla setup', function(done) {
+            var test = this.test;
+
+            agent.get('/api/reports/update')
+            .expect(200)
+            .then(function(response) {
+                    should.exist(response.body);
+
+                    log.debug({
+                        test: test.title,
+                        response: response.body
+                    }, 'Looking at a fresh response');
+
+                    response.body.should.have.property('startCt');
+                    response.body.should.have.property('newStatus');
+                    response.body.should.have.property('addedData');
+                    response.body.should.have.property('addedPDF');
+                    response.body.should.have.property('errors').and.have.length(0);
+
+                    done();
+                })
+            .catch(function(err) {
+                    log.error({error: err}, 'Problem running Complete Status Update');
+                    done(err);
+                });
+        });
     });
 
     describe('Report Status Methods and Routes', function () {
@@ -154,10 +296,11 @@ describe('BGCheck CRUD tests', function () {
         this.timeout(60000);  // OK: 60, because, slow
 
         it('should be able to get report statuses for a user', function (done) {
+            var _test = this.test;
 
             var endpoint = '/api/users/' + user.id + '/reports';
 
-            log.trace({test: this.name, url: endpoint}, 'Making Request');
+            log.trace({test: _test.title, url: endpoint}, 'Making Request');
 
             // Save a new article
             agent.get(endpoint)
@@ -199,3 +342,47 @@ describe('BGCheck CRUD tests', function () {
             });
     });
 });
+
+function seedReports(user, done) {
+
+    var remoteApplicantIndex = 1313;
+
+    return Q.all(_.map(statuses, function (status) {
+
+        var remoteStatus = status === 'PAID' ? 'UNKNOWN' : status;
+
+        var rpt = new BGReport({
+            'user': user,
+            'remoteApplicantId': remoteApplicantIndex++,
+            'paymentInfo': {
+                'transactionId': '9tmph8',
+                'success': true
+            },
+            'status': status,
+            'statuses': [
+                {
+                    'sku': 'MVRDOM',
+                    'value': remoteStatus
+                }
+            ],
+            'remoteReportSkus': 'MVRDOM',
+            'localReportSku': 'OUTSET_MVR'
+        });
+
+        return rpt.save();
+    }))
+        .then(
+        function (results) {
+            if (_.isFunction(done)) {
+                done();
+            }
+            return results;
+        }, function (err) {
+            log.error(err, 'seed reports failed');
+            if (_.isFunction(done)) {
+                done(err);
+            }
+            return Q.reject(err);
+        }
+    );
+}

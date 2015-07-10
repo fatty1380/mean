@@ -1,44 +1,36 @@
-<div style="height: 39px;" class="row">
-    <h2 ng-if="!vm.level" class="title container-fluid text-center" data-ng-bind="vm.title"
-        ng-class="{'col-sm-8':!!vm.pictureUrl}"></h2>
-    <span ng-if="vm.level" class="title container-fluid text-center {{vm.level}}" data-ng-bind="vm.title"
-          ng-class="{'col-sm-8':!!vm.pictureUrl}"></span>
-</div>
-
 <!-- os-page-header directive : os-page-header.client.template -->
 <div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"
      ng-class="{'panel panel-default' : !vm.level}"
      ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">
 
-    <div class="pad-vert {{!!vm.pictureUrl ? 'col-sm-8' : 'col-sm-12'}}">
-        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"
-                ng-click="vm.backBtnFn()">
-            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || 'Back'}}
-        </button>
-        <span class="h3" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>
-        <span data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">
-            <a class="btn btn-link" ui-sref="{{vm.editSref}}">edit
-                <i class="fa fa-pencil-square-o"></i>
-            </a>
-        </span>
-        <button ng-if="vm.btnShow && (!!vm.btnText && !!vm.btnSref)" class="btn btn-oset-primary pull-right"
-                ui-sref="{{vm.btnSref}}">{{::vm.btnText}}
-        </button>
-
-        <!-- Sub-heading -->
-        <small ng-if="vm.includeTransclude"><br ng-if="vm.showHeader"/><em class="text-muted" ng-transclude></em></small>
-        <small ng-if="!vm.includeTransclude"><br ng-if="vm.showHeader"/>&nbsp;</small>
-    </div>
-
-    <div class="profile-floater col-sm-4" data-ng-if="!!vm.pictureUrl">
+    <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">
         <div class="center-block full-width">
             <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
                  class="img-thumbnail user-profile-picture img-responsive">
             <br data-ng-if="vm.showPicEdit"/>
-            <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.showPicEdit" ui-sref="{{vm.editPicSref || '.'}}">edit
+            <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.showPicEdit"
+               ui-sref="{{vm.editPicSref || '.'}}">edit
                 <i class="fa fa-pencil-square-o"></i>
             </a>
         </div>
+    </div>
+
+    <div class="profile-info {{!!vm.pictureUrl ? 'col-sm-8' : 'col-sm-12'}}">
+        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"
+                ng-click="vm.backBtnFn()">
+            <i class="fa fa-arrow-left"></i>{{::vm.backBtnText || 'Back'}}
+        </button>
+        <span class="title" data-ng-bind-html="vm.title" data-ng-if="vm.showHeader">&nbsp;</span>
+        <br/>
+        <span class="subtitle" data-ng-bind-html="vm.subTitle" data-ng-if="vm.showHeader">&nbsp;</span>
+
+        <div class="edit-profile-btn" data-ng-if="!!vm.editSref" data-ng-show="vm.showEdit">
+            <a class="btn btn-link" ui-sref="{{vm.editSref}}">
+            </a>
+        </div>
+        <button ng-if="vm.btnShow && (!!vm.btnText && !!vm.btnSref)" class="btn btn-oset-primary pull-right"
+                ui-sref="{{vm.btnSref}}">{{::vm.btnText}}
+        </button>
     </div>
 </div>
 <!-- os-page-header directive : END -->

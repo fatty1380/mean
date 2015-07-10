@@ -1,0 +1,32 @@
+<section class="container-fluid" data-ng-controller="FeedsController as vm" data-ng-init="vm.findOne()">
+	<div class="page-header">
+		<h1 data-ng-bind="vm.feedItem.title"></h1>
+	</div>
+	<div class="pull-right" data-ng-show="vm.authentication.user._id == vm.feedItem.user._id">
+		<a class="btn btn-primary" href="/feed/{{vm.feedItem._id}}/edit">
+			<i class="glyphicon glyphicon-edit"></i>
+		</a>
+		<a class="btn btn-primary" data-ng-click="remove();">
+			<i class="glyphicon glyphicon-trash"></i>
+		</a>
+	</div>
+	<small>
+		<em class="text-muted">
+			Posted on
+			<span data-ng-bind="vm.feedItem.created | date:'mediumDate'"></span>
+			by
+			<span data-ng-bind="vm.feedItem.user.displayName"></span>
+		</em>
+	</small>
+	<div class="row">
+		<div class="col-sm-12">
+			<p ng-bind-html="vm.feedItem.message"></p>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-8 col-sm-offset-2">
+			<pre>{{vm.feedItem | prettyPrint}}</pre>
+		</div>
+	</div>
+</section>

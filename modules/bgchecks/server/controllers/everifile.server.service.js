@@ -4,18 +4,22 @@
  * Module dependencies.
  */
 var
-_                  = require('lodash'),
-mongoose           = require('mongoose'),
-Bgcheck            = mongoose.model('BackgroundReport'),
-ReportType         = mongoose.model('ReportType'),
-ReportApplicant    = mongoose.model('ReportApplicant'),
-unirest            = require('unirest'),
-Q                  = require('q'),
-moment             = require('moment'),
-contentDisposition = require('content-disposition'),
-path               = require('path'),
-config             = require(path.resolve('./config/config')),
-constants          = require(path.resolve('./modules/core/server/models/outset.constants'));
+    _                  = require('lodash'),
+    mongoose           = require('mongoose'),
+    Bgcheck            = mongoose.model('BackgroundReport'),
+    ReportType         = mongoose.model('ReportType'),
+    ReportApplicant    = mongoose.model('ReportApplicant'),
+    unirest            = require('unirest'),
+    Q                  = require('q'),
+    moment             = require('moment'),
+    contentDisposition = require('content-disposition'),
+    path               = require('path'),
+    config             = require(path.resolve('./config/config')),
+    constants          = require(path.resolve('./modules/core/server/models/outset.constants')),
+    log                = require(path.resolve('./config/lib/logger')).child({
+        module: 'bgchecks',
+        file  : 'everifile.server.service'
+    });
 
 
 /** eVERIFILE Service
@@ -29,23 +33,23 @@ constants          = require(path.resolve('./modules/core/server/models/outset.c
 
 /** SECTION: Public, Bound Members */
 
-exports.GetSession = GetSession;
-exports.SetSKUFilter = SetSKUFilter;
+exports.GetSession               = GetSession;
+exports.SetSKUFilter             = SetSKUFilter;
 exports.GetReportTypeDefinitions = GetReportTypeDefinitions;
 
-exports.GetAllApplicants = GetAllApplicants;
-exports.GetApplicant = GetApplicant;
-exports.CreateApplicant = UpsertApplicant;
+exports.GetAllApplicants   = GetAllApplicants;
+exports.GetApplicant       = GetApplicant;
+exports.CreateApplicant    = UpsertApplicant;
 exports.SearchForApplicant = searchForApplicant;
 
-exports.RunReport = RunReport;
-exports.GetReportStatus = GetReportStatus;
+exports.RunReport                  = RunReport;
+exports.GetReportStatus            = GetReportStatus;
 exports.GetReportStatusByApplicant = GetReportStatusByApplicant;
-exports.GetPdfReport = function () {
+exports.GetPdfReport               = function () {
     throw new Error('Not Implemented');
 };
-exports.GetSummaryReportPDF = GetSummaryReportPDF;
-exports.GetRawReport = GetRawReport;
+exports.GetSummaryReportPDF        = GetSummaryReportPDF;
+exports.GetRawReport               = GetRawReport;
 
 
 /**
@@ -53,12 +57,12 @@ exports.GetRawReport = GetRawReport;
  * TODO: Move to config;
  */
 
-var reportPackages = constants.reportPackages;
-var enabledSKUs = constants.reportPackages.fieldSkus;
+var reportPackages    = constants.reportPackages;
+var enabledSKUs       = constants.reportPackages.fieldSkus;
 var fieldTranslations = {'PKG_PREMIUM': ['NBDS', 'SSNVAL', 'CRIMESC', 'FORM_EVER']};
 
 var server = {
-    baseUrl: 'https://renovo-api-test.everifile.com/renovo',
+    baseUrl : 'https://renovo-api-test.everifile.com/renovo',
     username: 'api@dswheels.com',
     password: 'Test#123'
 };
@@ -66,10 +70,10 @@ var server = {
 server = _.extend(server, config.services.everifile);
 
 var Cookie = {
-    jar: null, // CookieJar
-    created: null, // moment
+    jar         : null, // CookieJar
+    created     : null, // moment
     lastAccessed: null, // moment
-    maxAge: null, // long - milliseconds
+    maxAge      : null, // long - milliseconds
     maxKeepalive: 20 * 60 * 1000, // long - milliseconds
 
     isValid: function () {
@@ -83,7 +87,7 @@ var Cookie = {
             expires = this.created.add(this.maxAge, 'milliseconds');
 
             if (moment().isAfter(expires)) {
-                console.log('Cookie has expired');
+                log.debug('Cookie has expired');
                 this.jar = this.created = this.lastAccessed = null;
                 return false;
             }
@@ -93,7 +97,7 @@ var Cookie = {
             expires = this.lastAccessed.add(this.maxKeepalive, 'milliseconds');
 
             if (moment().isAfter(expires)) {
-                console.log('Cookie keep alive has expired');
+                log.debug('Cookie keep alive has expired');
                 this.jar = this.created = this.lastAccessed = null;
                 return false;
             }
@@ -122,7 +126,7 @@ function GetSession() {
             'password': server.password
         };
 
-        console.log('[GetSession] with username %j to baseUrl %s', postData.username, server.baseUrl);
+        log.debug('[GetSession] with username %j to baseUrl %s', postData.username, server.baseUrl);
 
         // post login request to get new session;
         unirest.post(server.baseUrl + '/rest/session')
@@ -130,15 +134,15 @@ function GetSession() {
             .send(postData)
             .jar(newJar)
             .end(function (response) {
-                console.log('[GetSession] Response: %j', response.body);
+                log.debug('[GetSession] Response: %j', response.body);
 
                 if (response.error) {
-                    console.log('[GetSession] Request Errored: %j', response.error);
+                    log.debug('[GetSession] Request Errored: %j', response.error);
                     return deferredGetSession.reject(response.error);
                 }
 
-                console.log('[GetSession] Success: %j', newJar);
-                Cookie.jar = newJar;
+                log.debug('[GetSession] Success: %j', newJar);
+                Cookie.jar     = newJar;
                 Cookie.created = Cookie.lastAccessed = moment();
 
                 return deferredGetSession.resolve(Cookie);
@@ -170,12 +174,12 @@ function GetReportTypeDefinitions(cookie, filter, enable) {
         .end(function (response) {
 
             if (response.error) {
-                console.log('[GetReportTypeDefinitions] Error in response');
+                log.debug('[GetReportTypeDefinitions] Error in response');
                 return defer.reject(response.error);
             }
 
             var reportTypes = response.body.reports;
-            console.log('[GetReportTypeDefinitions] Got %d report types from server', reportTypes && reportTypes.length);
+            log.debug('[GetReportTypeDefinitions] Got %d report types from server', reportTypes && reportTypes.length);
 
             if (!!enabledSKUs) {
                 if (filter) {
@@ -196,8 +200,8 @@ function GetReportTypeDefinitions(cookie, filter, enable) {
                 .then(function (reports) {
                     return defer.resolve(reports);
                 }, function (error) {
-                    console.error('Unable to get updated report fields from the server', error);
-                    console.log('Returning updated report types without ', error);
+                    log.error('Unable to get updated report fields from the server', error);
+                    log.debug('Returning updated report types without ', error);
                     return defer.resolve(reportTypes);
                 });
 
@@ -213,7 +217,7 @@ function filterBySku(reportTypeData) {
 }
 
 function updateReportFields(reportTypes, cookieJar) {
-    console.log('[updateReportFields] updating %d report types', reportTypes.length);
+    log.debug('[updateReportFields] updating %d report types', reportTypes.length);
 
     var fields = reportTypes.map(function (reportType) {
         return getUpdatedReportFieldsPromise(reportType, cookieJar);
@@ -236,10 +240,10 @@ function updateReportFields(reportTypes, cookieJar) {
 function getUpdatedReportFieldsPromise(reportType, cookieJar) {
 
     var sku = reportType.sku;
-    console.log('Getting Report Fields for SKU "%s"', sku);
+    log.debug('Getting Report Fields for SKU "%s"', sku);
 
     if (!!fieldTranslations[sku]) {
-        console.log('Translating sku %s into %j', sku, fieldTranslations[sku]);
+        log.debug('Translating sku %s into %j', sku, fieldTranslations[sku]);
 
         var componentFields = fieldTranslations[sku].map(function (reportType) {
             return getUpdatedReportFieldsPromise(reportType, cookieJar);
@@ -249,7 +253,7 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
 
         Q.allSettled(componentFields).then(
             function (processedFields) {
-                console.log('[TranslatedReportFields] Coalescing %d field sources: %j', processedFields);
+                log.debug('[TranslatedReportFields] Coalescing %d field sources: %j', processedFields);
 
                 var retFields = {};
 
@@ -257,7 +261,7 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
                 for (i = 0; i < processedFields.length; i++) {
                     retFields = _.extend(retFields, processedFields[i]);
 
-                    console.log('[Coalesce_%d] %j', i, retFields);
+                    log.debug('[Coalesce_%d] %j', i, retFields);
                 }
 
                 defer.resolve(retFields);
@@ -280,19 +284,19 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
                 .end(function (response) {
 
                     if (response.error) {
-                        console.log('[getUpdatedReportFieldsPromise] Error in response: %j', response.body);
+                        log.debug('[getUpdatedReportFieldsPromise] Error in response: %j', response.body);
 
                         return deferred.reject(response.body.reason);
                     }
 
-                    console.log('[getUpdatedReportFieldsPromise] Got Fields: %j', response.body);
+                    log.debug('[getUpdatedReportFieldsPromise] Got Fields: %j', response.body);
 
                     reportType.fields = response.body.fields;
 
                     return deferred.resolve(reportType);
                 });
         } else {
-            console.log('Not loading fields for disabled report type: %s', sku);
+            log.debug('Not loading fields for disabled report type: %s', sku);
             return deferred.resolve(reportType);
         }
 
@@ -306,20 +310,20 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
 /** SECTION : Remote Applicants ------------------------------------------------- */
 
 function GetAllApplicants(cookie) {
-    console.log('[GetAllApplicants] Requesting all applicants from everifile server');
+    log.debug('[GetAllApplicants] Requesting all applicants from everifile server');
 
     var deferred = Q.defer();
 
     unirest.get(server.baseUrl + '/rest/applicant')
         .jar(cookie.jar)
         .end(function (response) {
-            console.log('[GetAllApplicants] Got response Body: %j', response.body);
+            log.debug('[GetAllApplicants] Got response Body: %j', response.body);
 
             if (response.error) {
                 return deferred.reject(response.body.reason);
             }
 
-            console.log('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
+            log.debug('[GetAllApplicants] Got %d applicants', response.body.applicants && response.body.applicants.length);
 
             var applicantModels = _.map(response.body.applicants, sanitizeReportApplicant);
 
@@ -334,12 +338,12 @@ function sanitizeReportApplicant(model) {
     model.remoteId = model.applicantId;
 
     if (model.hasOwnProperty('governmentId')) {
-        console.log('[initReportApplicantModel] Clearing govId from response object');
+        log.debug('[initReportApplicantModel] Clearing govId from response object');
         model.governmentId = '';
     }
 
     if (model.hasOwnProperty('driversLicense')) {
-        console.log('[initReportApplicantModel] Clearing dlId from response object');
+        log.debug('[initReportApplicantModel] Clearing dlId from response object');
         model.driversLicense = '';
     }
 
@@ -347,7 +351,7 @@ function sanitizeReportApplicant(model) {
 }
 
 function GetApplicant(cookie, id, noSanitize) {
-    console.log('[GetApplicant] Requesting applicant "%d" from everifile server', id);
+    log.debug('[GetApplicant] Requesting applicant "%d" from everifile server', id);
 
     var deferred = Q.defer();
     var endpoint = server.baseUrl + '/rest/applicant/' + (id || '');
@@ -356,11 +360,12 @@ function GetApplicant(cookie, id, noSanitize) {
         .jar(cookie.jar)
         .end(function (response) {
             if (response.error) {
-                console.error('[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body);
-                return deferred.reject(response.body.reason);
+                log.error({func: 'GetApplicant', error: response.error},
+                    '[%d] Error at endpoint GET `%s`\n\t\tBody: %j', response.error.status, endpoint, response.body);
+                return deferred.reject({status: response.error.status, message: response.body.reason});
             }
 
-            console.log('[GetApplicant] Got response Body for: %j', response.body.firstName + ' ' + response.body.lastName);
+            log.debug('[GetApplicant] Got response Body for: %j', response.body.firstName + ' ' + response.body.lastName);
 
             var applicantModel = sanitizeReportApplicant(response.body);
 
@@ -372,7 +377,7 @@ function GetApplicant(cookie, id, noSanitize) {
 
 
 function UpsertApplicant(cookie, applicantData) {
-    console.log('[UpsertApplicant] %s an applicant', !!applicantData.applicantId ? 'Updating' : 'Creating');
+    log.debug('[UpsertApplicant] %s an applicant', !!applicantData.applicantId ? 'Updating' : 'Creating');
 
     var deferred = Q.defer();
     debugger;
@@ -380,17 +385,17 @@ function UpsertApplicant(cookie, applicantData) {
     var method, trailer;
 
     if (applicantData.applicantId) {
-        method = 'PUT';
+        method  = 'PUT';
         trailer = '/' + applicantData.applicantId;
     } else {
-        method = 'POST';
+        method  = 'POST';
         trailer = '';
     }
 
     var requestBody = applicantData;
-    var endpoint = server.baseUrl + '/rest/applicant' + trailer;
+    var endpoint    = server.baseUrl + '/rest/applicant' + trailer;
 
-    console.log('%s %s : %j', method, endpoint, requestBody);
+    log.debug('%s %s : %j', method, endpoint, requestBody);
 
     debugger; // check applicant data. Should we be using applicant.toObject()? merging with the report field def?
     // Ensure that response Body contains Gov ID
@@ -401,19 +406,19 @@ function UpsertApplicant(cookie, applicantData) {
         .send(requestBody)
         .jar(cookie.jar)
         .end(function (response) {
-            console.log('[UpsertApplicant] Got response Body: %j', response.body);
+            log.debug('[UpsertApplicant] Got response Body: %j', response.body);
 
             if (response.error) {
-                console.log('[UpsertApplicant] Handling Error Code %d', response.statusCode);
+                log.debug('[UpsertApplicant] Handling Error Code %d', response.statusCode);
                 if (response.statusCode === 406) {
-                    console.log('[UpsertApplicant] Applicant already exists, searching...');
+                    log.debug('[UpsertApplicant] Applicant already exists, searching...');
 
                     searchForApplicant(cookie, requestBody).then(
                         function (success) {
-                            console.log('[UpsertApplicant] Success! found applicantId: %s! ', success.applicantId);
+                            log.debug('[UpsertApplicant] Success! found applicantId: %s! ', success.applicantId);
                             deferred.resolve(success);
                         }, function (err) {
-                            console.log('[UpsertApplicant] Applicant search failed');
+                            log.debug('[UpsertApplicant] Applicant search failed');
                             deferred.reject(err);
                         });
                 } else {
@@ -431,45 +436,45 @@ function UpsertApplicant(cookie, applicantData) {
 }
 
 function searchForApplicant(cookie, applicant) {
-    console.log('[searchForApplicant] Searching for existing applicant from info');
+    log.debug('[searchForApplicant] Searching for existing applicant from info');
 
     if (!applicant.governmentId) {
-        console.error('Will not search for applicant without govId');
+        log.error('Will not search for applicant without govId');
         return Q.reject('Will Not search for applicant without govId');
     }
 
     var deferred = Q.defer();
 
-    var query = {
-        'firstName': applicant.firstName,
-        'lastName': applicant.lastName,
-        'birthDate': applicant.birthDate,
+    var query  = {
+        'firstName'   : applicant.firstName,
+        'lastName'    : applicant.lastName,
+        'birthDate'   : applicant.birthDate,
         'governmentId': applicant.governmentId
     };
     var method = 'GET';
 
-    console.log('%s /rest/applicant query:%j', method, query);
+    log.debug('%s /rest/applicant query:%j', method, query);
 
     unirest(method, server.baseUrl + '/rest/applicant')
         .headers({'Content-Type': 'application/json'})
         .query(query)
         .jar(cookie.jar)
         .end(function (response) {
-            console.log('[searchForApplicant] Got response Body: %j', !!response.body); // Use truthy to hide sensitive info
+            log.debug('[searchForApplicant] Got response Body: %j', !!response.body); // Use truthy to hide sensitive info
 
             if (response.error) {
-                console.log('[searchForApplicant] Full Error Response: \n\n%j\n\n', response);
+                log.debug('[searchForApplicant] Full Error Response: \n\n%j\n\n', response);
 
                 deferred.reject(response.body.reason + '[' + JSON.stringify(response.error) + ']');
             } else if (response.body.applicants && response.body.applicants.length === 1) {
-                console.log('[searchForApplicant] Found a single match!');
+                log.debug('[searchForApplicant] Found a single match!');
 
                 deferred.resolve(response.body.applicants[0]);
             } else if (response.body.applicants) {
-                console.error('[searchForApplicant] Found a %d matches - cannot decide on one', response.body.applicants.length);
+                log.error('[searchForApplicant] Found a %d matches - cannot decide on one', response.body.applicants.length);
                 deferred.reject('[searchForApplicant] could not decide on a single result from %d matches', response.body.applicants.length);
             } else {
-                console.error('[searchForApplicant] Unkown problem: %j', response.body);
+                log.error('[searchForApplicant] Unkown problem: %j', response.body);
                 deferred.reject('Unknown issue with search: ' + response.body);
             }
         });
@@ -484,10 +489,10 @@ function searchForApplicant(cookie, applicant) {
 function RunReport(cookie, remoteSku, remoteApplicantId) {
 
     var reportResponseData = {
-        reportSku: remoteSku,
+        reportSku  : remoteSku,
         applicantId: remoteApplicantId
     };
-    console.log('[RunReport] Executing with parameters: %j', reportResponseData);
+    log.debug('[RunReport] Executing with parameters: %j', reportResponseData);
 
     var deferred = Q.defer();
 
@@ -495,48 +500,48 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
         .jar(cookie.jar)
         .query(reportResponseData)
         .end(function (response) {
-            console.log('[RunReport] Response Body: %j', response.body);
-            console.log('[RunReport] Response Error: %j', response.error);
+            log.debug('[RunReport] Response Body: %j', response.body);
+            log.debug('[RunReport] Response Error: %j', response.error);
 
             if (response.error) {
                 return deferred.reject(response.body.reason);
             }
 
             if (response.status === 204) {
-                console.error('Bastards didn\'t give us any info! - 204:NO CONTENT');
+                log.error('Bastards didn\'t give us any info! - 204:NO CONTENT');
 
                 return deferred.resolve(reportResponseData);
             }
 
-            var resultId = parseInt(reportResponseData.applicantId);
+            var resultId   = parseInt(reportResponseData.applicantId);
             var inherantId = parseInt(response.body.applicant.id);
 
             if (resultId !== inherantId) {
                 var message = 'Mismatched Applicants : Response report is for different applicant than request!';
-                console.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
+                log.error('ERROR! %s, request: %d vs response: %d', message, reportResponseData.applicantId, response.body.applicant.id);
                 return deferred.reject(new Error(message));
             }
 
             var sampleResponse = {
-                'id': 4,
-                'applicant': {'id': 14},
-                'report': {'sku': 'G_EDUVRF'},
+                'id'               : 4,
+                'applicant'        : {'id': 14},
+                'report'           : {'sku': 'G_EDUVRF'},
                 'reportCheckStatus': {
-                    'timestamp': '2014-12-12',
-                    'status': 'INVOKED',
+                    'timestamp'   : '2014-12-12',
+                    'status'      : 'INVOKED',
                     'requiredData': []
                 },
-                'startDate': 1360959827087,
-                'completedDate': null,
-                'resource_key': 'lastName',
-                'name': 'lastName',
-                'length': 50,
-                'type': 'string',
-                'required': true
+                'startDate'        : 1360959827087,
+                'completedDate'    : null,
+                'resource_key'     : 'lastName',
+                'name'             : 'lastName',
+                'length'           : 50,
+                'type'             : 'string',
+                'required'         : true
             };
 
             var resolution = updateReportStatus(reportResponseData, response.body);
-            console.log('[RunReport] Resolving with data: %j', resolution);
+            log.debug('[RunReport] Resolving with data: %j', resolution);
 
             deferred.resolve(resolution);
         }
@@ -545,14 +550,14 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
     return deferred.promise;
 }
 function GetReportStatus(cookie, remoteId) {
-    console.log('[GetReportStatus] ');
+    log.debug('[GetReportStatus] for remoteId %s', remoteId);
 
     var deferred = Q.defer();
 
     unirest.get(server.baseUrl + '/rest/reportCheck/' + remoteId)
         .jar(cookie.jar)
         .end(function (response) {
-            console.log(response.body);
+            log.debug(response.body);
 
             if (response.error) {
                 return deferred.reject(response.body.reason);
@@ -564,14 +569,14 @@ function GetReportStatus(cookie, remoteId) {
     return deferred.promise;
 }
 function GetReportStatusByApplicant(cookie, applicantId) {
-    console.log('[GetReportStatusByApplicant] ');
+    log.debug('[GetReportStatusByApplicant] ');
 
     var deferred = Q.defer();
 
     unirest.get(server.baseUrl + '/rest/applicant/' + applicantId + '/reports')
         .jar(cookie.jar)
         .end(function (response) {
-            console.log(response.body);
+            log.debug(response.body);
 
             if (response.error) {
                 return deferred.reject(response.body.reason);
@@ -586,25 +591,31 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
 
     var deferred = Q.defer();
 
-    unirest.get(server.baseUrl + '/rest/reportSummary/find/' + remoteApplicantId)
+    var endpoint = server.baseUrl + '/rest/reportSummary/find/' + remoteApplicantId;
+
+    log.debug({func: 'GetSummaryReportPDF', endpoint: endpoint}, 'Connectin to endpoint');
+    unirest.get(endpoint)
         .jar(cookie.jar)
+        .encoding(null) // Set encoding to NULL in order to return a Buffer rather than string :)
         .end(function (response) {
             if (response.error) {
+                log.error({func: 'GetSummaryReportPDF', error: response.error}, 'Error retreiving PDF Report');
                 return deferred.reject(response.body.reason || response.error.message);
             }
 
-            console.log('[GetSummaryReportPDF] Response headers: %j', response.headers);
+            log.debug({func: 'GetSummaryReportPDF'}, 'Response headers: %j', response.headers);
 
             var disposition = contentDisposition.parse(response.headers['content-disposition']);
 
+            log.debug({func: 'GetSummaryReportPDF', disposition: disposition}, 'Parsed Disposition');
+
             var retval = {
-                headers: response.headers,
+                headers    : response.headers,
                 contentType: response.headers['content-type'],
-                date: response.headers.date,
-                filename: disposition.parameters.filename,
-                type: disposition.type,
-                content: response.raw_body, // jshint ignore:line
-                response: response
+                date       : response.headers.date,
+                filename   : disposition.parameters.filename,
+                type       : disposition.type,
+                content: response.raw_body // jshint ignore:line
             };
 
             deferred.resolve(retval);
@@ -620,11 +631,10 @@ function GetRawReport(cookie, remoteReportId) {
         .end(function (response) {
 
             if (response.error) {
-                console.log('[GetRawReport] Error Getting Report Data', response.error);
+                log.debug('[GetRawReport] Error Getting Report Data', response.error);
                 return deferred.reject(response.body.reason);
             }
-            console.log('[GetRawReport] ', response.body);
-
+            log.trace('[GetRawReport] ', response.body);
             deferred.resolve(response.body);
         });
 
@@ -635,13 +645,13 @@ function GetRawReport(cookie, remoteReportId) {
 
 function updateReportStatus(reportStatusResponse, body) {
     if (!reportStatusResponse.remoteId) {
-        reportStatusResponse.remoteId = body.id;
+        reportStatusResponse.remoteId  = body.id;
         reportStatusResponse.reportSku = body.report.sku;
     }
 
-    reportStatusResponse.status = body.reportCheckStatus.status;
-    reportStatusResponse.timestamp = body.reportCheckStatus.timestamp;
-    reportStatusResponse.completed = !!body.completedDate ? moment(body.completedDate) : null;
+    reportStatusResponse.status       = body.reportCheckStatus.status;
+    reportStatusResponse.timestamp    = body.reportCheckStatus.timestamp;
+    reportStatusResponse.completed    = !!body.completedDate ? moment(body.completedDate) : null;
     reportStatusResponse.requiredData = body.reportCheckStatus.requiredData;
 
     return reportStatusResponse;

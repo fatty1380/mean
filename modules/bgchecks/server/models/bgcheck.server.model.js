@@ -3,9 +3,14 @@
 /**
  * Module dependencies.
  */
-var _    = require('lodash'),
-mongoose = require('mongoose'),
-Schema   = mongoose.Schema;
+var _ = require('lodash'),
+    mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    path = require('path'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'bgchecks',
+        file: 'bgcheck.model'
+    });
 
 /**
  * BackgroundReport Schema
@@ -61,12 +66,14 @@ var BackgroundReportSchema = new Schema({
         sku: String,
         value: {
             type: String,
-            enum: ['SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED']
+            enum: ['UNKNOWN', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'SUSPENDED', 'VALIDATED', 'REJECTED', 'QUEUED', 'FAILED', 'NEED_INFO', 'COMPLETED'],
+            default: 'UNKNOWN'
         },
         requiredData: [{
             type: String
         }],
-        completed: Boolean
+        completed: Boolean,
+        timestamp: Date
     }],
 
     /**
@@ -89,9 +96,22 @@ var BackgroundReportSchema = new Schema({
         default: false
     },
 
+    completed: {
+        type: Date,
+        default: null
+    },
+
     data: {
         xml: String,
         raw: Schema.Types.Mixed
+    },
+
+    file: {
+        url: String,
+        expires: Date,
+        bucket: String,
+        key: String,
+        timestamp: Date
     },
 
     paymentInfo: {
@@ -107,11 +127,6 @@ var BackgroundReportSchema = new Schema({
     modified: {
         type: Date,
         default: Date.now
-    },
-
-    completed: {
-        type: Date,
-        default: null
     }
 }, {toJSON: {virtuals: true}});
 
@@ -149,45 +164,92 @@ BackgroundReportSchema.virtual('isPaid')
 BackgroundReportSchema.virtual('latestStatuses')
     .get(function () {
 
+        var retval = {};
         var statuses = this.statuses;
         var skus = this.remoteReportSkus && this.remoteReportSkus.split(',');
-        var retval = {};
+        skus = _.union(skus,_.unique(_.pluck(this.statuses, 'sku')));
 
-        var latest = _.each(skus, function(sku) {
+        log.debug({func: 'latestStatuses', skus: skus},'Iterating over skus');
+
+        _.each(skus, function (sku) {
             var stati = _.findLast(statuses, {sku: sku});
 
-            console.log('[BGSchema.latestStatuses] %s --> %s', sku, stati && stati.value);
-            retval[sku] = stati || null;
+            retval[sku] = stati && stati.value || 'UNKNOWN';
+            log.debug({func: 'latestStatuses'}, 'Report [%s] has status`%s`', sku, retval[sku]);
         });
 
+        log.debug({func: 'latestStatuses', retval: retval},'Returning Latest Statuses');
         return retval;
     });
+
+//Expected Remote Status Schema = {
+//    'id': 93651,
+//    'startDate': 1421384400000,
+//    'completedDate': 1421691798000,
+//    'applicant': {'id': 45958},
+//    'report': {'sku': 'MVRDOM'},
+//    'reportCheckStatus': {'timestamp': 1421691798000, 'status': 'COMPLETED'}
+//};
+BackgroundReportSchema.methods.addStatus = function (remoteStatus) {
+
+    log.debug({func: 'addStatus'},'START', remoteStatus);
+    var localStatus = {
+        sku: remoteStatus.report.sku,
+        value: remoteStatus.reportCheckStatus.status,
+        completed: !_.isEmpty(remoteStatus.completedDate),
+        timestamp: new Date(remoteStatus.reportCheckStatus.timestamp)
+    };
+
+    if(_.contains(this.statuses, localStatus)) {
+        log.debug({func: 'addStatus'},'Already inserted - aborting');
+        return false;
+    }
+    log.debug({func: 'addStatus'},' Adding new remote status', remoteStatus);
+
+    this.statuses.push(localStatus);
+    this.updateStatus();
+
+    log.debug({func: 'addStatus', status: this.status, sku: this.latestStatuses[localStatus.sku]}, 'RESULTS');
+
+    return true;
+};
 
 
 var statusOrder = ['PAID', 'SUBMITTED', 'INVOKED', 'ERRORED', 'RESPONDED', 'VALIDATED', 'QUEUED', 'SUSPENDED', 'REJECTED', 'FAILED', 'NEED_INFO'];
 
 BackgroundReportSchema.methods.updateStatus = function () {
-    var status = this.status;
-    var index = statusOrder.indexOf(status);
-    var allComplete = true;
+    var index = 99;
+    var latest = this.latestStatuses;
+    var allComplete = !_.isEmpty(latest);
 
-    _.each(this.latestStatuses, function(stat) {
-        if(allComplete && (!stat || stat.value !== 'COMPLETED')) {
+    _.each(latest, function (status) {
+        log.debug({func: 'updateStatus'}, 'evaluating status value %o', status);
+        if (allComplete && (!status || status !== 'COMPLETED')) {
+            log.debug({func: 'updateStatus'}, 'status is `%s` - marking incomplete', status);
             allComplete = false;
         }
 
-        var i = statusOrder.indexOf(stat);
-        if(i > index) {
+        var i = _.indexOf(statusOrder,status);
+        log.debug({func: 'updateStatus'}, 'status `%s` - with index %d', status, i);
+        if (i < index) {
+            log.debug({func: 'updateStatus'}, 'status `%s` is lower index than existing %d', status, index);
             index = i;
-            status = stat.value;
         }
     });
 
-    if(allComplete) {
+    if (allComplete) {
+        log.info({func: 'updateStatus'}, 'All Reports are Complete!!!');
         this.status = 'COMPLETED';
+        this.isComplete = true;
+        this.completed = Date.now();
+    } else if(index !== -1 && index !== 99) {
+        this.status = statusOrder[index];
     } else {
-        this.status = status;
+        this.status = 'UNKNOWN';
     }
+
+
+    log.debug({func: 'updateStatus'}, 'Final Status Result: %s', this.status);
 };
 
 mongoose.model('BackgroundReport', BackgroundReportSchema);

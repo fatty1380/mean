@@ -11,7 +11,11 @@ var _ = require('lodash'),
 	runSequence = require('run-sequence'),
 	plugins = gulpLoadPlugins();
 
-var stylish = require('jshint-stylish');
+var stylish = require('jshint-stylish'),
+ngHtml2Js = require('gulp-ng-html2js'),
+argv = require('yargs').argv,
+wrap = require('gulp-wrap'),
+concat = require('gulp-concat');
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {
@@ -39,14 +43,15 @@ gulp.task('nodemon', function () {
 });
 
 // Watch Files For Changes
-gulp.task('watch', function() {
+gulp.task('watch', function () {
 	// Start livereload
 	plugins.livereload.listen();
 
 	// Add watch rules
 	gulp.watch(defaultAssets.server.views).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.server.allJS, ['jshint']).on('change', plugins.livereload.changed);
-	gulp.watch(defaultAssets.client.views).on('change', plugins.livereload.changed);
+	
+	gulp.watch(defaultAssets.client.views, ['html2js']).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.client.js, ['jshint']).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.client.css, ['csslint']).on('change', plugins.livereload.changed);
 	gulp.watch(defaultAssets.client.sass, ['sass', 'csslint']).on('change', plugins.livereload.changed);
@@ -59,10 +64,10 @@ gulp.task('csslint', function (done) {
 		.pipe(plugins.csslint('.csslintrc'))
 		.pipe(plugins.csslint.reporter())
 		.pipe(plugins.csslint.reporter(function (file) {
-			if (!file.csslint.errorCount) {
-				done();
-			}
-		}));
+		if (!file.csslint.errorCount) {
+			done();
+		}
+	}));
 });
 
 // JS linting task
@@ -71,9 +76,29 @@ gulp.task('jshint', function () {
         .src(_.union(defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e))
 		.pipe(plugins.jshint())
         .pipe(plugins.jshint.reporter('jshint-stylish'))
-        //.pipe(plugins.jshint.reporter('default'))
-//        .pipe(plugins.jshint.reporter('fail'))
+	//.pipe(plugins.jshint.reporter('default'))
+	//        .pipe(plugins.jshint.reporter('fail'))
         ;
+});
+
+gulp.task('html2js', function() {
+	return gulp.src('modules/**/client/**/*.template.html')
+	.pipe(ngHtml2Js({
+		moduleName: 'theme',
+		// declareModule: true,
+		// stripPrefix: 'client/',
+		rename      : function (templateUrl, templateFile) {
+                        return '/' + templateUrl.replace('/client', '').replace('../', '');
+                    },
+		template: 	'\t\t $templateCache.put(\'<%= template.url %>\',\n\t\t\t \'<%= template.escapedContent %>\');\n'
+	}))
+	.pipe(concat('templates.js'))
+	.pipe(wrap('(function() { \n\t\'use strict\'; \n\n\tApplicationConfiguration.registerModule(\'theme\'); \n\n' +
+		'\t angular.module(\'theme\').run([\'$templateCache\', function($templateCache) {\n\n' +
+		'<%= contents %>' + 
+		'\t}]);' +
+		'\n})();'))
+	.pipe(gulp.dest('./modules/theme/client'));
 });
 
 
@@ -82,8 +107,8 @@ gulp.task('uglify', function () {
 	return gulp.src(defaultAssets.client.js)
 		.pipe(plugins.ngAnnotate())
 		.pipe(plugins.uglify({
-			mangle: false
-		}))
+		mangle: false
+	}))
 		.pipe(plugins.concat('application.min.js'))
 		.pipe(gulp.dest('public/dist'));
 });
@@ -101,8 +126,8 @@ gulp.task('sass', function () {
 	return gulp.src(defaultAssets.client.sass)
 		.pipe(plugins.sass())
 		.pipe(plugins.rename(function (path) {
-			path.dirname = path.dirname.replace('/scss', '/css');
-		}))
+		path.dirname = path.dirname.replace('/scss', '/css');
+	}))
 		.pipe(gulp.dest('./modules/'));
 });
 
@@ -111,8 +136,8 @@ gulp.task('less', function () {
 	return gulp.src(defaultAssets.client.less)
 		.pipe(plugins.less())
 		.pipe(plugins.rename(function (path) {
-			path.dirname = path.dirname.replace('/less', '/css');
-		}))
+		path.dirname = path.dirname.replace('/less', '/css');
+	}))
 		.pipe(gulp.dest('./modules/'));
 });
 
@@ -123,37 +148,39 @@ gulp.task('mongoose', function (done) {
     mongoose.connect(function (db) {
         done();
 				});
-			});
+});
 
 // Mocha tests task
 gulp.task('mocha', function () {
     return gulp.src(testAssets.tests.server)
         .pipe(plugins.mocha({
-            reporter: 'spec'
-        }))
+		reporter: 'spec',
+		grep: argv.grep
+	}))
 		.on('error', function (err) {
-			// If an error occurs, save it
-			error = err;
-		})
-		.on('end', function() {
-			// When the tests are done, disconnect mongoose and pass the error state back to gulp
-			mongoose.disconnect(function() {
-				done(error);
-			});
+		// If an error occurs, save it
+		error = err;
+	})
+		.on('end', function () {
+		// When the tests are done, disconnect mongoose and pass the error state back to gulp
+		mongoose.disconnect(function () {
+			done(error);
 		});
+	});
 });
 
 // Karma test runner task
 gulp.task('karma', function (done) {
 	return gulp.src([])
 		.pipe(plugins.karma({
-			configFile: 'karma.conf.js',
-			action: 'run',
-			singleRun: true
-        }))
+		configFile: 'karma.conf.js',
+		action: 'run',
+		singleRun: true
+	}))
         .on('error', function (err) {
-            // Make sure failed tests cause gulp to exit non-zero
-            throw err;
+		// Make sure failed tests cause gulp to exit non-zero
+		throw err;
+	});
 });
 
 // Selenium standalone WebDriver update task
@@ -163,39 +190,39 @@ gulp.task('webdriver-update', plugins.protractor.webdriver_update);
 gulp.task('protractor', function () {
 	gulp.src([])
 		.pipe(plugins.protractor.protractor({
-			configFile: 'protractor.conf.js'
-		}))
+		configFile: 'protractor.conf.js'
+	}))
 		.on('error', function (e) {
-			throw e;
-		});
+		throw e;
+	});
 });
 
 // Lint CSS and JavaScript files.
-gulp.task('lint', function(done) {
-	runSequence('less', 'sass', ['csslint', 'jshint'], done);
+gulp.task('lint', function (done) {
+	runSequence('less', 'sass', 'html2js', ['csslint', 'jshint'], done);
 });
 
 // Lint project files and minify them into two production files.
-gulp.task('build', function(done) {
-	runSequence('env:dev' ,'lint', ['uglify', 'cssmin'], done);
+gulp.task('build', function (done) {
+	runSequence('env:dev', 'lint', ['uglify', 'cssmin'], done);
 });
 
 // Run the project tests
-gulp.task('test', function(done) {
-    runSequence('env:test', 'mongoose', ['karma', 'mocha'], done);
+gulp.task('test', function (done) {
+	runSequence('env:test', 'mongoose', ['karma', 'mocha'], done);
 });
 
 // Run the project in development mode
-gulp.task('default', function(done) {
+gulp.task('default', function (done) {
 	runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
 });
 
 // Run the project in debug mode
-gulp.task('debug', function(done) {
+gulp.task('debug', function (done) {
 	runSequence('env:dev', 'lint', ['nodemon', 'watch'], done);
 });
 
 // Run the project in production mode
-gulp.task('prod', function(done) {
-    runSequence('env:prod', 'build', ['nodemon', 'watch'], done);
+gulp.task('prod', function (done) {
+	runSequence('env:prod', 'build', ['nodemon', 'watch'], done);
 });

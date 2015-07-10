@@ -1,4 +1,5 @@
 @import "outset.less";
+@import "mixins.less";
 
 /** Bootstrap Grid Overrides */
 .no-gutter > [class*='col-'] {
@@ -17,6 +18,10 @@
 
 .shadow {
   background-color : fade(@text-color, 70%);
+}
+
+.text-oset {
+  color: @outset-blue;
 }
 
 /* Font Size/Weight Overrides */
@@ -181,11 +186,9 @@
 }
 
 .vert-middle {
-  &h1, &h2, &h3, &h4 {
+  h1&, h2&, h3&, h4& {
     position          : relative;
     top               : 50%;
-    transform         : translateY(-50%);
-    -webkit-transform : translateY(-50%);
-    -ms-transform     : translateY(-50%);
+    .translate(0, -50%);
   }
 }

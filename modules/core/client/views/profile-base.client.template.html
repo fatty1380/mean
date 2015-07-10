@@ -1,0 +1,33 @@
+
+<div class="headline-bg headline-sm headline-map-bg">
+    <div class="blue-mask container-fluid"></div>
+</div>
+
+<div class="container profile-base section section-on-bg">
+
+    <div class="row profile">
+        <div class="col-md-8 profile-body left">
+            <div class="profile-navigation-wrapper">
+                <a ui-sref="users.view({userId: null})" data-ui-sref-active="active">
+                    <div class="nav-item" >
+                        <span class="text">My Profile</span>
+                        <span class="icon pull-right"><i class="fa fa-user"></i></span>
+                    </div>
+                </a>
+                <a ui-sref="feed.list" data-ui-sref-active="active">
+                    <div class="nav-item">
+                        <span class="text">Feed</span>
+                        <span class="icon pull-right"><i class="fa fa-comments-o"></i></span></div>
+                </a>
+                <a href="users.list" data-ui-sref-active="active">
+                    <div class="nav-item">
+                        <span class="text">Friends</span>
+                        <span class="icon pull-right"><i class="fa fa-users"></i></span></div>
+                </a>
+            </div>
+            <div ui-view="content"></div>
+        </div>
+
+        <div ui-view="sidebar" class="col-md-4 gutter profile-gutter right"></div>
+    </div>
+</div>

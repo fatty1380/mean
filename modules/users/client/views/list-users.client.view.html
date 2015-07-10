@@ -1,5 +1,20 @@
 <section>
+    <div class="row">
+        <div class="col-sm-12 panel panel-oset">
+            <div class="panel-heading">
+                {{vm.users.length}} USERS
+            </div>
+            <div class="panel-body">
+                <div class="input-group">
+                    <label for="search">search: </label>
+                    <input type="text" ng-model="vm.searchTerms" ng-change="vm.doSearch()"/>
+                </div>
+            </div>
+
+        </div>
+    </div>
     <h3>Users List</h3>
+
     <div class="list-group">
         <div class="row list-group-item active">
             <h4>
@@ -23,13 +38,19 @@
                 </div>
             </h4>
         </div>
-        <a data-ng-repeat="user in vm.users" data-ng-href="users/{{user._id}}" class="row list-group-item">
+        <a data-ng-repeat="user in vm.users | filter: vm.doFilter" data-ui-sref="users.view({userId: user.id})" class="row list-group-item">
             <div class="col-sm-9 col-xs-8">
+                <img ng-src="{{user.profileImageURL}}" alt="" class="profile-image small round" tooltip="{{user | prettyPrint}}"/>
+                
+                <button type="button" ui-sref="users.view({userId: user.id})" class="btn btn-link"><i
+                        class="fa fa-edit"></i></button>
                 {{user.displayName}}
-                <span class="label label-danger" ng-show="user.roles.indexOf('admin') !== -1">Administrator</span>
+                <span class="label label-danger" ng-show="user.isAdmin">Administrator</span>
+                <span class="label label-info" ng-show="user.id === vm.myId">Me</span>
             </div>
             <div class="col-sm-1 col-xs-4">
-                <span class="label" ng-class="{driver:'label-primary', owner:'label-success'}[user.type]">{{user.type}}</span>
+                <span class="label"
+                      ng-class="{driver:'label-primary', owner:'label-success'}[user.type]">{{user.type}}</span>
             </div>
             <div class="col-sm-1 hidden-xs">
                 {{user.modified | date: 'shortDate'}}

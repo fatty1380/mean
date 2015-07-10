@@ -1,0 +1,53 @@
+<section class="row profile">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-4 text-center">
+                <div>
+                <span class="fa-stack fa-3x step-badge">
+                    <span class="fa fa-stack-2x step-index">{{vm.jobs.length || 'no'}}</span>
+                </span><br>
+                    <h3>Jobs</h3>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div>
+                <span class="fa-stack fa-3x step-badge">
+                    <span class="fa fa-stack-2x step-index">{{vm.newApps.length}}</span>
+                </span><br>
+                    <h3>New Applicants</h3>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div>
+                <span class="fa-stack fa-3x step-badge">
+                    <span class="fa fa-stack-2x step-index">{{vm.newMessageCt}}</span>
+                </span><br>
+                    <h3>New Messages</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row profile">
+    <div class="job-list blog-category-list panel panel-default">
+        <div class="panel-heading">
+            Active Jobs
+        </div>
+
+        <div class="panel-body">
+
+        <!-- Iterate over the list of jobs ... For Owners -->
+        <oset-application-job-list-item ng-repeat="job in vm.jobs"
+                                        job="job"
+                                        class="post col-sm-12 applicant"
+                                        visible-id="vm.visibleId"
+                                        visible-tab="vm.visibleTab"
+                                        ng-show="vm.visibleId === job._id || !vm.visibleId">
+            <!-- TODO: Move ng-show into the filter on teh repeater -->
+        </oset-application-job-list-item>
+
+        </div>
+
+    </div>
+</div>

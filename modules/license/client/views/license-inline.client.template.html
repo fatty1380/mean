@@ -1,9 +1,20 @@
 <div>
-    <i class="fa fa-credit-card"></i> &nbsp;{{vm.license.state.name}}
-        <span ng-show="vm.license.type">
-            <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>
-            {{vm.license.type}}
-        </span>
-        Driver License
-    <oset-list-endorsements ng-if="!!vm.showEndorsements" model="vm.license.endorsements"></oset-list-endorsements>
+    <span ng-show="!!vm.license" class="license">
+        <p>
+            <span class="license-icon"></span> &nbsp;{{vm.license.state.name}}
+            <span ng-show="vm.license.type">
+                <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>
+                {{vm.license.type === 'Standard' ? '' : vm.license.type}}
+            </span>
+            Driver License
+            <span class="endorsements" ng-if="!!vm.showEndorsements">
+                <br/>
+                <small class="strong">Endorsements: </small>
+                <oset-list-endorsements ng-if="!!vm.showEndorsements"
+                                    model="vm.license.endorsements"></oset-list-endorsements>
+            </span>
+        </p>
+    </span>
+
+    <em class="small text-muted" ng-hide="!!vm.license">no license on file</em>
 </div>
