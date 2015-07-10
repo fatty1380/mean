@@ -32,20 +32,20 @@
                 switch (Auth.user.type) {
                     case 'driver':
                         isRedirectInProgress = true;
-                        $log.info('[HomeController] Re-Routing to driver\'s profile page');
+                        $log.info('[CoreConfig] Re-Routing to driver\'s profile page');
                         event.preventDefault();
                         $state.go('users.view');
                         return;
                     case 'owner':
                         isRedirectInProgress = true;
-                        $log.info('[HomeController] Re-Routing to the user\'s company home');
+                        $log.info('[CoreConfig] Re-Routing to the user\'s company home');
                         event.preventDefault();
                         $state.go('companies.home');
                         return;
                     default:
-                        $log.warn('[HomeController] Unknown User Type');
+                        $log.warn('[CoreConfig] Unknown User Type');
                         if (Auth.isAdmin()) {
-                            $log.warn('[HomeController] Admin User - routing to user list');
+                            $log.warn('[CoreConfig] Admin User - routing to user list');
                             $state.go('users.list');
                             return;
                         }

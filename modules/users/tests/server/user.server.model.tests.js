@@ -211,6 +211,9 @@ describe('User Model Unit Tests:', function () {
                 });
         });
         
+        it('should be able to save multiple addresses');
+        it('should be able to mark a single address as the primary address');
+        
         it('should return a display name if none is set', function () {
             var expected = user.firstName + ' ' + user.lastName;
             log.debug({ dispName: user.displayName, expecting: expected, user: user }, 'Saving user without displayname');
@@ -224,8 +227,15 @@ describe('User Model Unit Tests:', function () {
                 user.displayName.should.be.equal(expected);
             });
         });
-        it('should be able to save multiple addresses');
-        it('should be able to mark a single address as the primary address');
+        
+        it('should be able to save a user handle', function () {
+            var handle = 'Mad Dog';
+            user.handle = handle;
+            
+            return user.save().then(function (userResult) {
+                userResult.should.have.property('handle', handle)
+            });
+        })
     });
 
     describe('Disabling a User', function () {

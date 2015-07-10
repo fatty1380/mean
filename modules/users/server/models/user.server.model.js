@@ -107,6 +107,12 @@ var UserSchema = new Schema({
         default: 'modules/users/img/profile/default.png'
     },
     
+    handle: {
+        type: String,
+        trim: true,
+        default: null
+    },
+    
     // Sensitive and/or Auth Related Info //
     password: {
         type: String,

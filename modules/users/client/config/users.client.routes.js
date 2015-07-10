@@ -82,40 +82,7 @@
                 url: '',
                 templateUrl: '/modules/users/views/list-users.client.view.html',
                 parent: 'users',
-                controller: ['Authentication', 'Profiles', '$log', 'users', function (Auth, Profiles, $log, users) {
-                    var vm = this;
-                    vm.users = users;
-
-                    vm.myId = Auth.user.id;
-
-                    vm.queryIndex = -1;
-
-                    vm.doSearch = function () {
-
-                        var index = ++vm.queryIndex;
-
-                        var terms = vm.searchTerms.split(' ');
-                        $log.debug('Searching for `%s`', terms);
-
-                        Profiles.query({ 'text': terms }).then(function (results) {
-                            $log.debug('Query %d of %d', index, vm.queryIndex);
-
-                            if (index < vm.queryIndex) {
-                                $log.error('Ignoring stale query result: %d', index);
-                                return false;
-                            }
-
-                            $log.debug('Got %d results', results.length);
-                            vm.filter = _.pluck(results, 'id');
-                            vm.queryIndex = index;
-                        });
-
-                    };
-
-                    vm.doFilter = function (value, index) {
-                        return _.isEmpty(vm.searchTerms) || _.contains(vm.filter, value.id);
-                    };
-                }],
+                controller: 'UserListController',
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
@@ -129,19 +96,6 @@
              * View Profile
              * @description Allows a user to view another user's profile page.
              */
-                state('users.modules', {
-                parent: 'users',
-                url: '/modules/{userId:[0-9a-fA-F]{24}}',
-                templateUrl: '/modules/users/views/settings/profile.client.view.html',
-                controller: 'ProfileController',
-                controllerAs: 'vm',
-                resolve: {
-                    user: ['Profiles', '$stateParams', function (Profiles, $stateParams) {
-                        console.log('loading profile for userId: %s', $stateParams.userId);
-                        return Profiles.load($stateParams.userId);
-                    }]
-                }
-            }).
 
                 state('users.view', {
                     parent          : 'profile-base',
@@ -156,33 +110,11 @@
                             }],
                             controllerAs    : 'vm',
                             bindToController: true
-                        },
-                        'sidebar': {
-                            templateUrl        : '/modules/drivers/views/templates/my-driver-sidebar.client.view.html',
-                            controller      : ['user', 'driver', function (user, driver) {
-                                var vm    = this;
-                                vm.user   = user;
-                                vm.driver = driver;
-                            }],
-                            controllerAs    : 'vm',
-                            bindToController: true
                         }
                     },
                     controller      : 'ProfileController',
                     controllerAs    : 'vm',
-                    bindToController: true,
-                    resolve         : {
-                        user  : ['Authentication', 'Profiles', '$stateParams', function (Authentication, Profiles, $stateParams) {
-                            var userId = $stateParams.userId || Authentication.user && Authentication.user.id;
-                            console.log('loading profile for userId: %s', userId);
-                            return Profiles.load(userId);
-                        }],
-                        driver: ['Drivers', '$stateParams', function (Drivers, $stateParams) {
-                            return Drivers.ByUser.get({
-                                userId: $stateParams.userId
-                            }).$promise;
-                        }]
-                    }
+                    bindToController: true
                 }).
 
 

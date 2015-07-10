@@ -12,16 +12,6 @@ angular.module('feeds').config(['$stateProvider',
 			views: {
 				'content@profile-base': {
 					template: '<div ui-view class="content-section"></div>',
-				},
-				'sidebar@profile-base': {
-					templateUrl: '/modules/drivers/views/templates/my-driver-sidebar.client.view.html',
-					controller: ['user', 'driver', function (user, driver) {
-						var vm = this;
-						vm.user = user;
-						vm.driver = driver;
-					}],
-					controllerAs: 'vm',
-					bindToController: true
 				}
 			}
 		}).

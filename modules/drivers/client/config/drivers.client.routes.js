@@ -76,18 +76,18 @@
             bindToController: true
         }).
 
-        state('drivers.home', {
-            url: '/home',
-            templateUrl: '/modules/drivers/views/view-driver.client.view.html',
-            parent: 'drivers',
-            controller: 'DriverViewController',
-            controllerAs: 'vm',
-            bindToController: true,
-            resolve: {
-                driver: userResolve
-            },
-            authenticate: true
-        }).
+        // state('drivers.home', {
+        //     url: '/home',
+        //     templateUrl: '/modules/drivers/views/view-driver.client.view.html',
+        //     parent: 'drivers',
+        //     controller: 'DriverViewController',
+        //     controllerAs: 'vm',
+        //     bindToController: true,
+        //     resolve: {
+        //         driver: userResolve
+        //     },
+        //     authenticate: true
+        // }).
 
         //state('drivers.view', {
         //    url: '/{userId:[0-9a-fA-F]{24}}',
