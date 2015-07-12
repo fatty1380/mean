@@ -211,6 +211,41 @@ function initGateway() {
 
 }
 
+/**
+ * @function getPaymentToken
+ * @description Looks at a braintreeCustomer and returns the payment method marked
+ *              as the `default`. Looks at paymentMethods, creditCards then paypal.
+ * @returns A payment token. Null if no default payment token was found.
+ */
+function getPaymentToken(customer) {
+    if (!!customer.paymentMethods) {
+        // TODO: Use the "Find PaymentMethods" api call to simplify this
+        var defaultMethod = _.find(customer.paymentMethods, {'default': true});
+
+        if (!!defaultMethod) {
+            return defaultMethod.token;
+        }
+    }
+
+    if (!!customer.creditCards) {
+        var defaultCC = _.find(customer.creditCards, {'default': true});
+
+        if (!!defaultCC) {
+            return defaultCC.token;
+        }
+    }
+
+    if (!!customer.paypalAccounts) {
+        var defaultPaypal = _.find(customer.paypalAccounts, {'default': true});
+
+        if (!!defaultPaypal) {
+            return defaultPaypal.token;
+        }
+    }
+    
+    return null;
+}
+
 
 var initializeSubscription = function (req, res) {
 
@@ -224,28 +259,7 @@ var initializeSubscription = function (req, res) {
         planId: req.planId
     };
 
-    var paymentToken;
-
-    if (!!req.braintreeCustomer.paymentMethods) {
-        // TODO: Use the "Find PaymentMethods" api call to simplify this
-        var defaultMethod = _.find(req.braintreeCustomer.paymentMethods, {'default': true});
-
-        if (!!defaultMethod) {
-            paymentToken = defaultMethod.token;
-        }
-    } else if (!!req.braintreeCustomer.creditCards) {
-        var defaultCC = _.find(req.braintreeCustomer.creditCards, {'default': true});
-
-        if (!!defaultCC) {
-            paymentToken = defaultCC.token;
-        }
-    } else if (!!req.braintreeCustomer.paypalAccounts) {
-        var defaultPaypal = _.find(req.braintreeCustomer.paypalAccounts, {'default': true});
-
-        if (!!defaultPaypal) {
-            paymentToken = defaultPaypal.token;
-        }
-    }
+    var paymentToken = getPaymentToken(req.braintreeCustomer);
 
     if (!!paymentToken) {
         console.log('[Braintree.InitSubscription] Applying payment token from customer\'s information');
