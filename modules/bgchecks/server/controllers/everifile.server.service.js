@@ -24,32 +24,34 @@ var
 
 /** eVERIFILE Service
  * ----------------------------
- * The eVERIFILE service will make requests to the eVERIFILE API and
+ * @description The eVERIFILE service will make requests to the eVERIFILE API and
  * return a promise that will be fulfilled once completed. These methods
  * should not be used directly by any routes, but instead by the base
  * bgchecks/reports controller to manage flow.
  *
  */
 
-/** SECTION: Public, Bound Members */
+/** SECTION: Public, Bound Members 
+ *  
+ */
 
-exports.GetSession               = GetSession;
-exports.SetSKUFilter             = SetSKUFilter;
-exports.GetReportTypeDefinitions = GetReportTypeDefinitions;
+exports.GetSession               = getSession;
+exports.SetSKUFilter             = setSKUFilter;
+exports.GetReportTypeDefinitions = getReportTypeDefinitions;
 
-exports.GetAllApplicants   = GetAllApplicants;
-exports.GetApplicant       = GetApplicant;
-exports.CreateApplicant    = UpsertApplicant;
+exports.GetAllApplicants   = getAllApplicants;
+exports.GetApplicant       = getApplicant;
+exports.CreateApplicant    = upsertApplicant;
 exports.SearchForApplicant = searchForApplicant;
 
 exports.RunReport                  = RunReport;
-exports.GetReportStatus            = GetReportStatus;
-exports.GetReportStatusByApplicant = GetReportStatusByApplicant;
+exports.GetReportStatus            = getReportStatus;
+exports.GetReportStatusByApplicant = getReportStatusByApplicant;
 exports.GetPdfReport               = function () {
     throw new Error('Not Implemented');
 };
-exports.GetSummaryReportPDF        = GetSummaryReportPDF;
-exports.GetRawReport               = GetRawReport;
+exports.GetSummaryReportPDF        = getSummaryReportPDF;
+exports.GetRawReport               = getRawReport;
 
 
 /**
@@ -110,10 +112,9 @@ var Cookie = {
 /**
  * GetSession : Returns a promise containing a session cookie to use in subsequent requests
  * @returns {Promise.promise|Cookie}
- * @constructor
  */
 
-function GetSession() {
+function getSession() {
     var deferredGetSession = Q.defer();
 
     if (!Cookie.isValid()) {
@@ -157,7 +158,7 @@ function GetSession() {
 
 /** SECTION : Report Definitions ---------------------------------------------------- */
 
-function SetSKUFilter(filter) {
+function setSKUFilter(filter) {
     enabledSKUs = _.map(filter, function (str) {
         return str.toUpperCase();
     });
@@ -165,7 +166,7 @@ function SetSKUFilter(filter) {
     return Q.when(enabledSKUs);
 }
 
-function GetReportTypeDefinitions(cookie, filter, enable) {
+function getReportTypeDefinitions(cookie, filter, enable) {
 
     var defer = Q.defer();
 
@@ -309,7 +310,7 @@ function getUpdatedReportFieldsPromise(reportType, cookieJar) {
 
 /** SECTION : Remote Applicants ------------------------------------------------- */
 
-function GetAllApplicants(cookie) {
+function getAllApplicants(cookie) {
     log.debug('[GetAllApplicants] Requesting all applicants from everifile server');
 
     var deferred = Q.defer();
@@ -350,7 +351,7 @@ function sanitizeReportApplicant(model) {
     return model;
 }
 
-function GetApplicant(cookie, id, noSanitize) {
+function getApplicant(cookie, id, noSanitize) {
     log.debug('[GetApplicant] Requesting applicant "%d" from everifile server', id);
 
     var deferred = Q.defer();
@@ -376,7 +377,7 @@ function GetApplicant(cookie, id, noSanitize) {
 }
 
 
-function UpsertApplicant(cookie, applicantData) {
+function upsertApplicant(cookie, applicantData) {
     log.debug('[UpsertApplicant] %s an applicant', !!applicantData.applicantId ? 'Updating' : 'Creating');
 
     var deferred = Q.defer();
@@ -486,7 +487,7 @@ function searchForApplicant(cookie, applicant) {
 
 /** SECTION: Report Manipulation ------------------------------------------------------------- */
 
-function RunReport(cookie, remoteSku, remoteApplicantId) {
+function runReport(cookie, remoteSku, remoteApplicantId) {
 
     var reportResponseData = {
         reportSku  : remoteSku,
@@ -549,7 +550,7 @@ function RunReport(cookie, remoteSku, remoteApplicantId) {
 
     return deferred.promise;
 }
-function GetReportStatus(cookie, remoteId) {
+function getReportStatus(cookie, remoteId) {
     log.debug('[GetReportStatus] for remoteId %s', remoteId);
 
     var deferred = Q.defer();
@@ -568,7 +569,7 @@ function GetReportStatus(cookie, remoteId) {
 
     return deferred.promise;
 }
-function GetReportStatusByApplicant(cookie, applicantId) {
+function getReportStatusByApplicant(cookie, applicantId) {
     log.debug('[GetReportStatusByApplicant] ');
 
     var deferred = Q.defer();
@@ -587,7 +588,7 @@ function GetReportStatusByApplicant(cookie, applicantId) {
 
     return deferred.promise;
 }
-function GetSummaryReportPDF(cookie, remoteApplicantId) {
+function getSummaryReportPDF(cookie, remoteApplicantId) {
 
     var deferred = Q.defer();
 
@@ -623,7 +624,7 @@ function GetSummaryReportPDF(cookie, remoteApplicantId) {
 
     return deferred.promise;
 }
-function GetRawReport(cookie, remoteReportId) {
+function getRawReport(cookie, remoteReportId) {
     var deferred = Q.defer();
 
     unirest.get(server.baseUrl + '/rest/reportCheck/' + remoteReportId + '/report')

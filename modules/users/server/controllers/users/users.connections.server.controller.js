@@ -1,7 +1,7 @@
 'use strict';
 /** Friends & Connections Controller
  * ----------------------------------
- * @example 
+ * @example none entered
  */
     
 /** Friend Operations */
