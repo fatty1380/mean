@@ -4,33 +4,31 @@
     function ApplicationListController(auth, moduleConfig, applications, Applications, $log, $state, params) {
         var vm = this;
 
-        vm.applications = applications;
-        vm.config = moduleConfig || {};
-
-        vm.subtitle = !!vm.applications && vm.applications.length ? vm.applications.length + ' Job Applicants' : 'No Active Posts';
-
-        vm.enableEdt = !!vm.config.edit;
         vm.user = auth.user;
-
-        vm.enableHeaderEdit = vm.user.type === 'owner' && vm.config.enableEdit;
-
+        vm.applications = applications;
         vm.params = params;
 
+        vm.subtitle = !!vm.applications && vm.applications.length ? vm.applications.length + ' Job Applicants' : 'No Active Posts';
         vm.visibleId = params.itemId;
         vm.visibleTab = params.tabName;
 
+        vm.config = moduleConfig || {};
+        vm.enableEdt = !!vm.config.edit;
+
+        vm.enableHeaderEdit = vm.user.type === 'owner' && vm.config.enableEdit;
+
         var co = vm.user.company && vm.user.company.id || null;
 
-        Applications.ById.query({job: vm.params.jobId, company: co}).$promise
-        .then(function(applications) {
+        Applications.ById.query({ job: vm.params.jobId, company: co }).$promise
+            .then(function (applications) {
                 vm.apps = applications;
 
-                vm.newApps = _.where(applications, {'isUnreviewed': true});
+                vm.newApps = _.where(applications, { 'isUnreviewed': true });
 
-                vm.newMessageCt = _.reduce(applications, function(total, app) {
+                vm.newMessageCt = _.reduce(applications, function (total, app) {
                     $log.debug('Reducing Messages for app: %o', app);
 
-                    var last = _.findLastIndex(app.messages, {sender: vm.user.id});
+                    var last = _.findLastIndex(app.messages, { sender: vm.user.id });
                     var newCt = app.messages.length - last + 1;
 
                     $log.debug('Reduced found %d + 1 - %d = %d', last, app.messages.length, newCt);
@@ -43,13 +41,26 @@
         // m m y y m y : 4 5
         // y y y y y y :-1 0
 
-        if($state.is('applications.all')) {
+        if ($state.is('applications.all')) {
+            setAdminCopy();
+        }
+        else if (auth.user.type === 'driver') {
+            setDriverCopy();
+
+        } else if (auth.user.type === 'owner') {
+            setOwnerCopy();
+
+        } else {
+            vm.bodyCopy = {};
+        }
+        
+        function setAdminCopy() {
             vm.jobIds = {};
 
-            _.map(vm.applications, function(app) {
+            _.map(vm.applications, function (app) {
                 app.jobId = app.job._id;
 
-                if(!_.contains(vm.jobIds,  app.jobId)) {
+                if (!_.contains(vm.jobIds, app.jobId)) {
                     vm.jobIds[app.jobId] = app.job;
                 }
 
@@ -61,7 +72,8 @@
             vm.listTitle = 'Admin Mode Application View';
             vm.subtitle = vm.applications.length + ' Applications across ' + vm.jobs.length + ' Jobs';
         }
-        else if (auth.user.type === 'driver') {
+
+        function setDriverCopy() {
             vm.bodyCopy = {
                 heading: 'Your job search, all in one place!',
                 intro: '<p>Once you have applied to a job on Outset it will appear here for you to track its progress and message the employer.</p>',
@@ -76,8 +88,10 @@
             };
 
             vm.subtitle = (vm.applications && vm.applications.length || 'No') + ' Active Applications';
+        }
 
-        } else if (auth.user.type === 'owner') {
+
+        function setOwnerCopy() {
             vm.bodyCopy = {
                 heading: 'Your Applicant Tracking System, all in one place!',
                 intro: '<p>Once prospective employees have applied to your jobs, this will be the center of your applicant tracking.</p>',
@@ -89,8 +103,8 @@
 
             vm.jobs = vm.applications;
 
-            if(!!vm.jobs) {
-                var applicationCount = _.reduce(vm.jobs, function(sum, job, other1, other2) {
+            if (!!vm.jobs) {
+                var applicationCount = _.reduce(vm.jobs, function (sum, job, other1, other2) {
                     return sum + (!!job.applications ? job.applications.length : 0);
                 }, 0);
 
@@ -98,18 +112,14 @@
                     vm.subtitle = vm.jobs.length + ' Active Job' + (vm.jobs.length > 1 ? 's' : '');
                 }
 
-                if(applicationCount > 0) {
+                if (applicationCount > 0) {
                     vm.subtitle = vm.subtitle + ' <small>' + applicationCount + ' Applications</small>';
                 } else {
                     vm.subtitle = vm.subtitle + ' <small>no applications</small>';
                 }
             }
-
-        } else {
-            vm.bodyCopy = {};
         }
     }
-
 
     ApplicationListController.$inject = ['Authentication', 'config', 'applications', 'Applications', '$log', '$state', '$stateParams'];
 

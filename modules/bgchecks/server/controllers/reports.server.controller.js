@@ -808,7 +808,7 @@ function rerunReport(req, res, next) {
             console.log('[rerunReport] failed due to error: %j', error);
             next(error);
         });
-};
+}
 
 
 

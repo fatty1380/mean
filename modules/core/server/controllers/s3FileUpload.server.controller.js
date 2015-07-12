@@ -59,9 +59,20 @@ function uploadSummaryPDF(data) {
 function directUpload(files, folder, isSecure) {
     var deferred = Q.defer();
 
-
     if (!!client) {
-        folder = folder || config.services.s3.folder;
+        doDirectUpload(files, folder, isSecure, deferred);
+    }
+    else {
+        log.debug('[getFileURL] No S3 Configured - Saving locally');
+        return saveLocally(files, folder);
+    }
+
+    log.trace({func: 'directUpload'}, 'Returning promise');
+    return deferred.promise;
+}
+
+function doDirectUpload(files, folder, isSecure, deferred) {
+    folder = folder || config.services.s3.folder;
 
         if (folder.substring(folder.length - 1) === '/') {
             folder = folder.substring(0, folder.length - 1);
@@ -102,64 +113,7 @@ function directUpload(files, folder, isSecure) {
                 return (key === 'Body') ? '<BufferLength:' + value.length + '>' : value;
             }, 2));
 
-
-            var uploader = client.s3.putObject(params);
-
-            log.debug({func: 'directUpload'}, 'Uploader Initialized');
-
-            uploader.
-                on('success', function (response) {
-                    console.log('Logger is%s defined', _.isEmpty(log) ? ' NOT' : '');
-                    log.debug({func: 'directUpload', response: response.data}, 'done uploading, got data!');
-
-                    var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
-                    log.debug({func: 'directUpload'}, 'Got public URL: %s', publicURL);
-
-                    var strippedURL = publicURL.replace('http://', 'https://');
-                    log.debug({func: 'directUpload'}, 'Post stripping, resolving with : %s', strippedURL);
-
-                    if (isSecure) {
-                        response = {
-                            key: params.Key,
-                            bucket: params.Bucket,
-                            url: strippedURL,
-                            timestamp: Date.now(),
-                            expires: Date.now()
-                        };
-
-                        return getSecureReadURL(response.bucket, response.key).then(
-                            function (success) {
-                                response.url = success;
-                                response.expires = (Date.now() + 15 * 60 * 1000);
-
-                                log.debug({func: 'directUpload'}, 'Post secure upload, resolving with : %j', response);
-
-                                deferred.resolve(response);
-                            }, function (err) {
-                                log.debug({func: 'directUpload'}, 'Post secure upload failed: %j', err);
-                                log.debug({func: 'directUpload'}, 'Resolving with public URL?');
-
-                                deferred.resolve(response);
-                            });
-                    }
-                    else {
-
-
-                        response = {
-                            key: params.Key,
-                            bucket: params.Bucket,
-                            url: strippedURL,
-                            timestamp: Date.now()
-                        };
-
-                        deferred.resolve(response);
-                    }
-                }).
-                on('error', function (response) {
-                    log.error({func: 'directUpload', response: response}, 'File upload failed: `%s`', response.message);
-
-                    deferred.reject(response);
-                });
+            var uploader = initializeUploader(params, isSecure, deferred);
 
 
             log.debug({func: 'directUpload'}, 'Event Handlers in place');
@@ -169,14 +123,69 @@ function directUpload(files, folder, isSecure) {
             debugger;
             deferred.reject('No file present in request');
         }
-    }
-    else {
-        log.debug('[getFileURL] No S3 Configured - Saving locally');
-        return saveLocally(files, folder);
-    }
+}
 
-    log.trace({func: 'directUpload'}, 'Returning promise');
-    return deferred.promise;
+function initializeUploader(params, isSecure, deferred) {
+    var uploader = client.s3.putObject(params);
+
+    log.debug({ func: 'initializeUploader' }, 'Initializing Uploader');
+
+    uploader.
+        on('success', function (response) {
+            console.log('Logger is%s defined', _.isEmpty(log) ? ' NOT' : '');
+            log.debug({ func: 'initializeUploader:onSuccess', response: response.data }, 'done uploading, got data!');
+
+            var publicURL = s3.getPublicUrlHttp(params.Bucket, params.Key);
+            log.debug({ func: 'initializeUploader:onSuccess' }, 'Got public URL: %s', publicURL);
+
+            var strippedURL = publicURL.replace('http://', 'https://');
+            log.debug({ func: 'initializeUploader:onSuccess' }, 'Post stripping, resolving with : %s', strippedURL);
+
+            if (isSecure) {
+                response = {
+                    key: params.Key,
+                    bucket: params.Bucket,
+                    url: strippedURL,
+                    timestamp: Date.now(),
+                    expires: Date.now()
+                };
+
+                return getSecureReadURL(response.bucket, response.key).then(
+                    function (success) {
+                        response.url = success;
+                        response.expires = (Date.now() + 15 * 60 * 1000);
+
+                        log.debug({ func: 'initializeUploader:onSuccess' }, 'Post secure upload, resolving with : %j', response);
+
+                        deferred.resolve(response);
+                    }, function (err) {
+                        log.debug({ func: 'initializeUploader:onSuccess' }, 'Post secure upload failed: %j', err);
+                        log.debug({ func: 'initializeUploader:onSuccess' }, 'Resolving with public URL?');
+
+                        deferred.resolve(response);
+                    });
+            }
+            else {
+                response = {
+                    key: params.Key,
+                    bucket: params.Bucket,
+                    url: strippedURL,
+                    timestamp: Date.now()
+                };
+
+                deferred.resolve(response);
+            }
+        }).
+        on('error', function (response) {
+            log.error({ func: 'initializeUploader:onError', response: response }, 'File upload failed: `%s`', response.message);
+
+            deferred.reject(response);
+        });
+        
+    log.debug({ func: 'initializeUploader' }, 'Uploader Initialized and Events Registered');
+        
+    return uploader;
+
 }
 
 function directRead(key, bucket) {

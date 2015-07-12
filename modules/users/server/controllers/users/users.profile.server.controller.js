@@ -14,13 +14,21 @@ var _            = require('lodash'),
     User         = mongoose.model('User'),
     Q            = require('q');
 
+_.extend(exports, {
+    update: update,
+    search: search,
+    list: list,
+    readProfile: read,
+    changeProfilePicture: changeProfilePicture,
+    me: me
+});
 
-exports.update = update;
-exports.search = search;
-exports.list = list;
-exports.readProfile = read;
-exports.changeProfilePicture = changeProfilePicture;
-exports.me = me;
+// exports.update = update;
+// exports.search = search;
+// exports.list = list;
+// exports.readProfile = read;
+// exports.changeProfilePicture = changeProfilePicture;
+// exports.me = me;
 
 //////////////////////////////////////////////
 
@@ -59,7 +67,7 @@ function update(req, res) {
             message: 'User is not signed in'
         });
     }
-};
+}
 
 
 /**
@@ -108,7 +116,7 @@ function changeProfilePicture(req, res) {
             message: 'User is not signed in'
         });
     }
-};
+}
 
 function search(req, res, next) {
 
@@ -138,7 +146,7 @@ function search(req, res, next) {
                 res.json(users);
             }
         });
-};
+}
 
 function list(req, res, next) {
     var select = req.select || '-password -oldPass -salt';
@@ -184,7 +192,8 @@ function list(req, res, next) {
                 res.json(users);
             }
         });
-};
+}
+
 
 function read(req, res) {
     if (!req.profile) {
@@ -197,7 +206,7 @@ function read(req, res) {
 
     req.log.debug({func: 'readProfile', file: 'users.profile', profile: req.profile}, '[Profiles] Returning profile');
     res.json(req.profile);
-};
+}
 
 /**
  * Send User
@@ -211,4 +220,4 @@ function me(req, res) {
     }
 
     res.json(req.user);
-};
+}

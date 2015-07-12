@@ -223,7 +223,6 @@ describe('Feed CRUD tests', function () {
 
 				// Delete existing Feed
 				agent.delete('/api/feed/' + feedSaveRes.body._id)
-					.send(feed)
 					.expect(200)
 					.end(function (feedDeleteErr, feedDeleteRes) {
 					// Handle Feed error error
