@@ -44,7 +44,7 @@ exports.GetApplicant       = getApplicant;
 exports.CreateApplicant    = upsertApplicant;
 exports.SearchForApplicant = searchForApplicant;
 
-exports.RunReport                  = RunReport;
+exports.RunReport                  = runReport;
 exports.GetReportStatus            = getReportStatus;
 exports.GetReportStatusByApplicant = getReportStatusByApplicant;
 exports.GetPdfReport               = function () {
