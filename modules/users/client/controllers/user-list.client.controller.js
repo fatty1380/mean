@@ -36,8 +36,8 @@
                     };
 	}
 				
-	UserListController.$inject = ['Authentication', 'Profiles', '$log', 'users']
+    UserListController.$inject = ['Authentication', 'Profiles', '$log', 'users'];
  
- angular.module('users').controller('UserListController', UserListController)
+    angular.module('users').controller('UserListController', UserListController);
 	
  })();

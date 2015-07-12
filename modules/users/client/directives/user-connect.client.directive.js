@@ -132,7 +132,7 @@
 			}
 			
 			return false;
-		};
+		}
 	}
 
 	ConnectionButtonController.$inject = ['$log', 'Friends', 'Authentication'];

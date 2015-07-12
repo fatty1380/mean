@@ -231,11 +231,11 @@ describe('User Model Unit Tests:', function () {
         it('should be able to save a user handle', function () {
             var handle = 'Mad Dog';
             user.handle = handle;
-            
+
             return user.save().then(function (userResult) {
-                userResult.should.have.property('handle', handle)
+                userResult.should.have.property('handle', handle);
             });
-        })
+        });
     });
 
     describe('Disabling a User', function () {

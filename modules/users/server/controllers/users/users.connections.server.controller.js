@@ -259,7 +259,7 @@ function acceptRequest(req, res, next) {
 
     if (!req.user.isAdmin && (!!req.profile || !req.user._id.equals(request.to))) {
         return Q.reject({ statusCode: 403, message: 'Cannot accept friends for other users' });
-    };
+    }
     
     // We need to accept the request, and update the friends arrays
     request.status = 'accepted';
