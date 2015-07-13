@@ -1,23 +1,30 @@
 (function () {
     'use strict';
 
-    function FooterController($scope) {
-        $scope.isCollapsed = false;
+    function FooterController($scope, auth, AppConfig) {
+        var vm = this;
+        
+        vm.auth = auth;
+        vm.isCollapsed = false;
+        vm.year = (new Date()).getFullYear();
+        vm.options = {};
 
-        $scope.toggleCollapsibleMenu = function () {
-            $scope.isCollapsed = !$scope.isCollapsed;
+        AppConfig.getOptions()
+            .then(function (options) {
+            vm.options = options;
+        });
+
+        vm.toggleCollapsibleMenu = function () {
+            vm.isCollapsed = !vm.isCollapsed;
         };
 
         // Collapsing the menu after navigation
         $scope.$on('$stateChangeSuccess', function () {
-            $scope.isCollapsed = false;
+            vm.isCollapsed = false;
         });
-
-        $scope.year = ( new Date() )
-            .getFullYear();
     }
 
-    FooterController.$inject = ['$scope'];
+    FooterController.$inject = ['$scope', 'Authentication', 'AppConfig'];
 
     angular
         .module('core')

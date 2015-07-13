@@ -1,8 +1,9 @@
-<div class="section-bottom-menu" data-ng-controller="FooterController">
+<div class="section-bottom-menu" data-ng-controller="FooterController as vm">
     <div class="bottom-menu-item">
         <a ui-sref="intro.owner">Information for Employers</a>
     </div>
-    <div class="bottom-menu-item" login-modal><a>Login</a></div>
+    <div class="bottom-menu-item" login-modal ng-show="vm.options.login" ng-hide="vm.options.showAuth"><a>Login</a></div>
+    <div class="bottom-menu-item" signup-modal  ng-show="vm.options.signup" ng-hide="vm.options.showAuth"><a>Signup</a></div>
     <div class="bottom-menu-item">
         <a ui-sref="privacy">Privacy</a>
     </div>
@@ -13,7 +14,6 @@
         <a href="mailto:info@joinoutset.com">Contact</a>
     </div>
 </div>
-
 
 <!--<div class="container-fluid navbar-inverse" data-ng-controller="FooterController">
     <nav class="collapse navbar-collapse">

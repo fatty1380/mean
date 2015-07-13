@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function registerRootScopeEventListeners($rootScope, $state, Auth, $log,$document, $location, $window) {
+    function registerRootScopeEventListeners($rootScope, $state, Auth, $log, $document, $location, $window) {
 
         /** SECTION: State Change Listeners */
         var isRedirectInProgress = false;

@@ -22,11 +22,11 @@
                         <!--<a ui-sref="jobs.list">Jobs</a>-->
                         <!--</div>-->
 
-                        <div class="pull-right right-menu" ng-hide="true">
-                            <div class="auth-menu-item pull-left" login-modal>
+                        <div class="pull-right right-menu" ng-show="vm.options.showAuth">
+                            <div class="auth-menu-item pull-left" ng-show="vm.options.login" login-modal>
                                 <a>login</a>
                             </div>
-                            <div class="auth-menu-item active pull-left" signup-modal>
+                            <div class="auth-menu-item active pull-left" ng-show="vm.options.signup" signup-modal>
                                 <a>register</a>
                             </div>
                             <div class="clearfix"></div>

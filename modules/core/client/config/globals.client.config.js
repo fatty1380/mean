@@ -5,5 +5,5 @@
 	angular
 		.module('core')
 		.constant('_', _)
-	.constant('moment', moment);
+		.constant('moment', moment);
 })();
