@@ -22,6 +22,12 @@ module.exports = {
         publicKeyPath: process.env.PUBLIC_KEY_PATH || './config/sslcerts/cert.pem',
         passphrase: null
     },
+    options: {
+        debug: false,
+        login: true,
+       signup: true,
+       showAuth: false
+    },
     modules: {
         driver: {
             jobs : {

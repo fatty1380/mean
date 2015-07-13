@@ -18,6 +18,12 @@ module.exports = {
         privateKeyPath: '',
         publicKeyPath: ''
     },
+    options: {
+        debug: false,
+        login: false,
+       signup: false ,
+       showAuth: true
+    },
     modules: {
         driver: {
             jobs : {

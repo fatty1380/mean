@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function HeaderController($scope, $state, $document, Authentication, Menus) {
+    function HeaderController($scope, $state, $document, Authentication, Menus, AppConfig) {
         var vm = this;
 
         vm.state = $state;
@@ -9,22 +9,11 @@
         vm.navbarClass = ''; //'navbar-inverse';
         vm.menu = Menus.getMenu('topbar');
         vm.cmenu = 'topbar';
-
-        // Get the topbar menu
-        var loadMenus = function() {
-            if (Authentication.isAdmin() && vm.cmenu !== 'adminbar') {
-                vm.cmenu = 'adminbar';
-                vm.menu.length = 0;
-                _.extend(vm.menu, Menus.getMenu('adminbar'));
-                //vm.navbarClass = 'navbar-inverse';
-            } else if(vm.cmenu !== 'topbar') {
-                vm.cmenu = 'topbar';
-                vm.menu.length = 0;
-
-                _.extend(vm.menu,Menus.getMenu('topbar'));
-                //vm.navbarClass = 'navbar-default';
-            }
-        };
+        vm.options = {};
+        
+        AppConfig.getOptions().then(function (options) {
+            vm.options = options;
+        });
 
         vm.stateLink = '';
 
@@ -49,10 +38,27 @@
         handler();
 
         loadMenus();
+        
+
+        // Get the topbar menu
+        function loadMenus() {
+            if (Authentication.isAdmin() && vm.cmenu !== 'adminbar') {
+                vm.cmenu = 'adminbar';
+                vm.menu.length = 0;
+                _.extend(vm.menu, Menus.getMenu('adminbar'));
+                //vm.navbarClass = 'navbar-inverse';
+            } else if(vm.cmenu !== 'topbar') {
+                vm.cmenu = 'topbar';
+                vm.menu.length = 0;
+
+                _.extend(vm.menu,Menus.getMenu('topbar'));
+                //vm.navbarClass = 'navbar-default';
+            }
+        }
     }
 
 
-    HeaderController.$inject = ['$scope', '$state', '$document', 'Authentication', 'Menus'];
+    HeaderController.$inject = ['$scope', '$state', '$document', 'Authentication', 'Menus', 'AppConfig'];
 
     angular
         .module('core')

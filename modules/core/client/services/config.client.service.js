@@ -1,9 +1,10 @@
 (function () {
     'use strict';
 
-//Drivers service used to communicate Drivers REST endpoints
+    //Drivers service used to communicate Drivers REST endpoints
     function ConfigFactory($resource, $log, $q) {
-        var months, faqs, modules;
+        var months, faqs, modules, options;
+
         return {
             getStates: function () {
                 var rsrc = $resource('api/config/states');
@@ -21,7 +22,7 @@
                     months = [];
                     while (months.length < 12) {
                         var m = moment().month(months.length);
-                        months.push({num: m.format('MM'), name: m.format('MMMM')});
+                        months.push({ num: m.format('MM'), name: m.format('MMMM') });
                     }
 
                     console.log('ConfigFactory] Returning newly generated months', JSON.stringify(months));
@@ -44,11 +45,11 @@
                         $log.log('[AppCfg] "%s" is not an available', config, err);
                         d.reject(err);
                     }
-                );
+                    );
 
-                d.promise.then(function(f) {
+                d.promise.then(function (f) {
                     return f;
-                }, function(e) {
+                }, function (e) {
                     $log.warn('Swallowing error: %o', e);
                     return null;
                 });
@@ -68,7 +69,7 @@
                         $log.log('[AppCfg] "%s" is not an available', config, err);
                         return $q.when(null);
                     }
-                );
+                    );
             },
             getReports: function () {
                 var rsrc = $resource('api/config/reports');
@@ -80,9 +81,9 @@
                     var rsrc = $resource('api/config/faqs');
                     rsrc.query().$promise.then(function (resp) {
                         $log.debug('faq response: %o', resp);
-                        var filter =  myfilter || {};
-                        if(!!filter.category && !!filter.category.length) {
-                            faqs = _.filter(resp, function(item) {
+                        var filter = myfilter || {};
+                        if (!!filter.category && !!filter.category.length) {
+                            faqs = _.filter(resp, function (item) {
                                 return _.contains(filter.category, item['category']);
                             });
                         }
@@ -101,43 +102,53 @@
 
                 return d.promise;
             },
-            getModuleConfig: function(userType, moduleName) {
-                var d = $q.defer();
+            getOptions: function () {
+                if (!!options) {
+                    return options;
+                }
+
+                var rsrc = $resource('api/config/options');
+
+                return rsrc.get().$promise.then(function (response) {
+                    options = response;
+                    return options;
+                });
+            },
+            getModuleConfig: function (userType, moduleName) {
                 if (!modules) {
                     var rsrc = $resource('api/config/modules');
 
-                    rsrc.get().$promise.then(function (resp) {
-                        d.resolve(paramFilter(resp, userType, moduleName));
-                    }, function (err) {
-                        $log.debug('got config error: %o', err);
-                        d.resolve({});
-                    });
+                    return rsrc.get().$promise
+                        .then(function (resp) {
+                            return paramFilter(resp, userType, moduleName);
+                        }, function (err) {
+                            $log.debug('got config error: %o', err);
+                            return {};
+                        });
                 } else {
                     return paramFilter(modules, userType, moduleName);
                 }
-
-                function paramFilter(configs, userType, moduleName) {
-                    $log.debug('Filtering configs by userType: (%s) and moduleName: (%s). %o', userType, moduleName, configs);
-                    if (!configs) {
-                        return {};
-                    }
-
-                    var retVal = configs;
-
-                    if(userType) {
-                        retVal = retVal[userType];
-                    }
-
-                    if(moduleName) {
-                        retVal = retVal[moduleName];
-                    }
-
-                    return retVal;
-                }
-
-                return d.promise;
             }
         };
+
+        function paramFilter(configs, userType, moduleName) {
+            $log.debug('Filtering configs by userType: (%s) and moduleName: (%s). %o', userType, moduleName, configs);
+            if (!configs) {
+                return {};
+            }
+
+            var retVal = configs;
+
+            if (userType) {
+                retVal = retVal[userType];
+            }
+
+            if (moduleName) {
+                retVal = retVal[moduleName];
+            }
+
+            return retVal;
+        }
     }
 
     ConfigFactory.$inject = ['$resource', '$log', '$q'];
