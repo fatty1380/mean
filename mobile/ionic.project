@@ -6,7 +6,7 @@
     "watch"
   ],
   "watchPatterns": [
-    "../www/**/*",
-    "!../www/lib/**/*"
+    "www/**/*",
+    "!www/lib/**/*"
   ]
 }

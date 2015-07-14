@@ -1,63 +1,90 @@
 <ion-view>
+
+    <div class="bg-wrapper">
+        <div class="bg">
+        </div>
+    </div>
+
     <ion-nav-bar>
         <ion-nav-back-button>Back</ion-nav-back-button>
     </ion-nav-bar>
 
-    <ion-header-bar align-title="center" class="bar-stable">
+    <ion-header-bar align-title="center" class="bar bar-header bar-light">
         <h1 class="title">Create Account</h1>
+
     </ion-header-bar>
 
     <ion-content>
-        <h2>Choose Truck Type</h2>
-        <div class="list">
+        <p class="title">Choose Your Truck Make</p>
+        <div class="list select-truck">
             <label class="item item-radio">
                 <input type="radio" name="group">
                 <div class="item-content">
-                    Truck 1
+                    <p>Peterbilt Motor Co</p>
+                    <div class="logo">
+                        <div class="peterbilt-logo" ></div>
+                     </div>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
+               <!-- <i class="radio-icon ion-checkmark"></i>-->
             </label>
 
             <label class="item item-radio">
                 <input type="radio" name="group">
                 <div class="item-content">
-                    Truck 2
+                    <p>international</p>
+
+                    <div class="logo">
+                    <div class="international-logo" ></div>
+                    </div>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
+              <!--  <i class="radio-icon ion-checkmark"></i>-->
             </label>
 
             <label class="item item-radio">
                 <input type="radio" name="group">
                 <div class="item-content">
-                    Truck 3
+                    <p>freightliner</p>
+                    <div class="logo">
+                         <div class="freightliner-logo" ></div>
+                    </div>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
+                <!--<i class="radio-icon ion-checkmark"></i>-->
             </label>
             <label class="item item-radio">
                 <input type="radio" name="group">
                 <div class="item-content">
-                    Truck 4
+                    <p>Mack</p>
+                    <div class="logo">
+                     <div class="mack-logo" ></div>
+                    </div>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
+               <!-- <i class="radio-icon ion-checkmark"></i>-->
             </label>
             <label class="item item-radio">
                 <input type="radio" name="group">
                 <div class="item-content">
-                    Truck 5
+                    <p>kenworth</p>
+                    <div class="logo">
+                    <div class="kenworth-logo" ></div>
+                    </div>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
+               <!-- <i class="radio-icon ion-checkmark"></i>-->
             </label>
+
             <label class="item item-radio">
                 <input type="radio" name="group">
                 <div class="item-content">
-                    Truck 6
+                    <p class="item-center">Other ...</p>
+                  <!--  <div class="logo">
+                        <div class="kenworth-logo" ></div>
+                    </div>-->
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
+                <!-- <i class="radio-icon ion-checkmark"></i>-->
             </label>
         </div>
     </ion-content>
-    <ion-footer-bar class="bar-positive">
-        <button class="bar bar-footer bar-positive" ui-sref="signup/trailer">
+    <ion-footer-bar class="bar-light">
+        <button class="bar bar-footer bar-light" ng-click="continue()" type="submit" >
             <p class="title">Continue<p>
         </button>
     </ion-footer-bar>

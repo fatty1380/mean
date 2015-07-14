@@ -8,8 +8,13 @@
             'home',
             'login',
             'signup',
-            'profile',
-            'directives'
+
+            //'directives',
+           /* 'services',*/
+            //'AppControllers',
+
+            'profile'
+
         ])
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {

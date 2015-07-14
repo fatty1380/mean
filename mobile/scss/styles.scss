@@ -1,50 +1,16 @@
-/*
-To customize the look and feel of Ionic, you can override the variables
-in ionic's _variables.scss file.
-
-For example, you might change some of the default colors:
-
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
-*/
-
-
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../../libs/ionic/fonts" !default;
+// Include Variables, Placeholders & Mixins
+@import "base/variables";
+@import "base/placeholders";
+@import "base/mixins";
 
 // Include all of Ionic
 @import "../www/libs/ionic/scss/ionic";
 
-.home-slide-box .slide{
-  height: 300px;
-  display:block;
-  background: $calm;
-}
+// Include sprites
+@import "sprites/sprites";
 
+// Include modules scss
+@import "modules/profile/profile";
+@import "modules/navigation/navigation";
+@import "modules/signup/signup";
 
-
-
-.list .item-input{
-  margin: 5px 0;
-  color:white;
-}
-
-.list .item {
-  margin: 5px 0;
-  background-color: rgba(255, 255, 255, 0.6);
-}
-
-.signup-title{
-  text-align: center;
-  margin: 40px 0 80px;
-  color:white;
-}
-
-.list .item-input::-webkit-input-placeholder {color:#c0392b;}

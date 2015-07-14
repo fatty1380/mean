@@ -1,11 +1,11 @@
 // Karma configuration
-// Generated on Wed Jul 08 2015 11:55:37 GMT+0300 (EEST)
+// Generated on Thu Jul 09 2015 17:29:34 GMT+0300 (EEST)
 
 module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: 'www',
+    basePath: '',
 
 
     // frameworks to use
@@ -15,15 +15,14 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-
-       "libs/ionic/js/ionic.bundle.js",
-       "libs/angular-ui-router/release/angular-ui-router.js",
-        '../node_modules/angular-mocks/angular-mocks.js',
-        'app.js',
-        'modules/home/home.js',
-        'modules/home/home_test.js'
+      /*"www/libs/ionic/js/ionic.bundle.js",*/
+      'www/libs/angular/angular.js',
+      'node_modules/angular-mocks/angular-mocks.js',
+      'www/app.js',
+      'www/modules/*.js'
 
     ],
+
 
     // list of files to exclude
     exclude: [
@@ -61,7 +60,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // Continuous Integration mode

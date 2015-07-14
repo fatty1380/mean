@@ -1,76 +1,94 @@
 <ion-view>
+
+    <div class="bg-wrapper">
+        <div class="bg">
+        </div>
+    </div>
+
     <ion-nav-bar>
         <ion-nav-back-button>Back</ion-nav-back-button>
     </ion-nav-bar>
 
-    <ion-header-bar align-title="center" class="bar-stable">
+    <ion-header-bar align-title="center" class="bar bar-header bar-light">
         <h1 class="title">Create Account</h1>
     </ion-header-bar>
 
     <ion-content>
-        <h2>Select your license</h2>
-        <div class="list">
+        <p class="title">Select your license</p>
+
+
+        <div class="list license">
             <label class="item item-radio">
-                <input type="radio" name="group">
+                <input type="radio" name="group" class="category-a" ng-model="radios.name" ng-value="'A'">
                 <div class="item-content">
-                    Licence A
+                    <i class="ico ico-licenseainactive" ></i>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
             </label>
 
             <label class="item item-radio">
-                <input type="radio" name="group">
+                <input type="radio" name="group" class="category-b" ng-init="radios.name = 'B' " ng-model="radios.name" ng-value="'B'">
                 <div class="item-content">
-                    Licence B
+                    <i class="ico ico-licensebinactive" ></i>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
             </label>
 
             <label class="item item-radio">
-                <input type="radio" name="group">
+                <input type="radio" name="group" class="category-c" ng-model="radios.name" ng-value="'C'">
                 <div class="item-content">
-                    Licence C
+                    <i class="ico ico-licensecinactive" ></i>
                 </div>
-                <i class="radio-icon ion-checkmark"></i>
             </label>
+            <p>{{radios.name | json}}</p>
         </div>
 
-        <h2>Select your endorsements</h2>
-        <ul class="list">
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                1
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                2
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                3
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                4
-            </li>
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                </label>
-                5
-            </li>
+
+
+
+
+        <p class="title">Select your endorsements</p>
+        <ul class="list endorsements">
+            <div class="row">
+                <li class="item item-checkbox endorsement-a col">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                    </label>
+                    <p>Double /<br>
+                    Triple trailers</p>
+                </li>
+                <li class="item item-checkbox endorsement-b col">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                    </label>
+                    <p>Passenger</p>
+                </li>
+                <li class="item item-checkbox endorsement-c col">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                    </label>
+                    <p>Tank Vehicle</p>
+                </li>
+             </div>
+
+            <div class="endorsements-bottom row">
+                <li class="item item-checkbox endorsement-d col">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                    </label>
+                    <p>Hazardous Materials</p>
+                </li>
+                <li class="item item-checkbox endorsement-e col">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                    </label>
+                    <p>Tank Vehicle<br>
+                    and<br>
+                    Hazardous Materials</p>
+                </li>
+            </div>
         </ul>
     </ion-content>
-    <ion-footer-bar class="bar-positive">
-        <button class="bar bar-footer bar-positive" ui-sref="signup/truck">
+    <ion-footer-bar class="bar-light">
+        <button class="bar bar-footer bar-light" ng-click="continue()" type="submit" >
             <p class="title">Continue<p>
         </button>
     </ion-footer-bar>

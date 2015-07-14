@@ -1,63 +1,87 @@
 <ion-view>
+
+    <div class="bg-wrapper">
+        <div class="trailers-bg">
+        </div>
+    </div>
+
     <ion-nav-bar>
         <ion-nav-back-button>Back</ion-nav-back-button>
     </ion-nav-bar>
 
-    <ion-header-bar align-title="center" class="bar-stable">
+    <ion-header-bar align-title="center" class="bar bar-header bar-light">
         <h1 class="title">Create Account</h1>
     </ion-header-bar>
 
     <ion-content>
-        <h2>Choose Trailer Type</h2>
-        <div class="list">
-            <label class="item item-radio">
-                <input type="radio" name="group" ng-checked>
-                <div class="item-content">
-                    Trailer 1
-                </div>
-                <i class="radio-icon ion-checkmark"></i>
-            </label>
+        <p class="title">Choose Trailer Types</p>
 
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    Trailer 2
-                </div>
-                <i class="radio-icon ion-checkmark"></i>
-            </label>
+        <ul class="list select-trailer">
 
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    Trailer 3
-                </div>
-                <i class="radio-icon ion-checkmark"></i>
-            </label>
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    Trailer 4
-                </div>
-                <i class="radio-icon ion-checkmark"></i>
-            </label>
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    Trailer 5
-                </div>
-                <i class="radio-icon ion-checkmark"></i>
-            </label>
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    Trailer 6
-                </div>
-                <i class="radio-icon ion-checkmark"></i>
-            </label>
-        </div>
+            <li class="item item-checkbox">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <div class="item-content">
+                        <i class="ico ico-checkboxselected" ></i>
+                    </div>
+                </label>
+                <p>Trailer 1</p>
+            </li>
+
+            <li class="item item-checkbox">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <div class="item-content">
+                        <i class="ico ico-checkboxselected" ></i>
+                    </div>
+                </label>
+                <p>Trailer 2</p>
+            </li>
+
+            <li class="item item-checkbox">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <div class="item-content">
+                        <i class="ico ico-checkboxselected" ></i>
+                    </div>
+                </label>
+                <p>Trailer 3</p>
+            </li>
+
+            <li class="item item-checkbox">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <div class="item-content">
+                        <i class="ico ico-checkboxselected" ></i>
+                    </div>
+                </label>
+                <p>Trailer 4</p>
+            </li>
+
+            <li class="item item-checkbox">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <div class="item-content">
+                        <i class="ico ico-checkboxselected" ></i>
+                    </div>
+                </label>
+                <p>Trailer 5</p>
+            </li>
+
+            <li class="item item-checkbox">
+                <label class="checkbox ">
+                    <input type="checkbox">
+                    <div class="item-content">
+                        <i class="ico ico-checkboxselected" ></i>
+                    </div>
+                </label>
+                <p>Trailer 6</p>
+            </li>
+        </ul>
+
     </ion-content>
-    <ion-footer-bar class="bar-positive">
-        <button class="bar bar-footer bar-positive" ui-sref="signup/trailer">
+    <ion-footer-bar class="bar-light">
+        <button class="bar bar-footer bar-light" ng-click="continue()" type="submit" >
             <p class="title">Continue<p>
         </button>
     </ion-footer-bar>

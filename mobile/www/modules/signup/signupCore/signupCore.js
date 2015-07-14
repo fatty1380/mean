@@ -2,6 +2,8 @@ angular
     .module('signupCore', [])
 
     .controller('signupCtrl', function ($scope, $location) {
+
+        //console.log('signupCtrl');
         var vm = this;
 
         var user = {
@@ -12,31 +14,36 @@ angular
             confirmPassword: ''
         };
 
-        $scope.register = function(){
-            console.log('register');
-            clearForm();
+        $scope.continue = function(){
+            console.log('continue engagement');
+            $location.path("signup/engagement");
         }
 
-        var clearForm = function () {
-            console.log('clearForm');
-            $location.path("signup/engagement");
-        };
 
-
-
+        $scope.$on( '$ionicView.afterEnter', function () {
+            // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
+            if ( window.cordova && window.cordova.plugins.Keyboard ) {
+                window.cordova.plugins.Keyboard.disableScroll( true );
+            }
+        });
+        $scope.$on( '$ionicView.beforeLeave', function () {
+            if ( window.cordova && window.cordova.plugins.Keyboard ) {
+                // return to keyboard default scroll state
+                window.cordova.plugins.Keyboard.disableScroll( false );
+            }
+        });
 })
 angular.module('directives', [])
     .directive("compareTo", function(){
-        console.log("!!!dsfsdf");
+        //console.log("compareTo");
         return {
             require: "ngModel",
             scope: {
                 otherModelValue: "=compareTo"
             },
             link: function(scope, element, attributes, ngModel) {
-                console.log("sdfsdf");
+                //console.log("compareTo link");
                 ngModel.$validators.compareTo = function(modelValue) {
-                    console.log("!!");
                     return modelValue == scope.otherModelValue;
                 };
 
