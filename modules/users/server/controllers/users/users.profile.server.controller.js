@@ -129,7 +129,7 @@ function search(req, res, next) {
 
     req.log.debug({query: qs}, 'Updated Searching based on query string to `%s`', qs);
 
-    req.select = 'firstName lastName username handle profileImageURL type driver company email';
+    req.select = 'firstName lastName handle profileImageURL type driver company email';
 
     User.find(
         {$text: {$search: qs.join(' ')}},

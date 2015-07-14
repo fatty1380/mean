@@ -15,7 +15,8 @@ var stylish = require('jshint-stylish'),
 ngHtml2Js = require('gulp-ng-html2js'),
 argv = require('yargs').argv,
 wrap = require('gulp-wrap'),
-concat = require('gulp-concat');
+concat = require('gulp-concat'),
+shell = require('gulp-shell')	;
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {
@@ -182,6 +183,8 @@ gulp.task('karma', function (done) {
 		throw err;
 	});
 });
+
+gulp.task('apidoc', shell.task(['aglio -i modules/users/server/routes/users.server.routes.md -s -p 3001']));
 
 // Selenium standalone WebDriver update task
 gulp.task('webdriver-update', plugins.protractor.webdriver_update);
