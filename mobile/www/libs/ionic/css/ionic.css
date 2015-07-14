@@ -1,20 +1,16 @@
-@charset "UTF-8";
-/*
-To customize the look and feel of Ionic, you can override the variables
-in ionic's _variables.scss file.
-
-For example, you might change some of the default colors:
-
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
-*/
+/*!
+ * Copyright 2014 Drifty Co.
+ * http://drifty.com/
+ *
+ * Ionic, v1.0.1
+ * A powerful HTML5 mobile app framework.
+ * http://ionicframework.com/
+ *
+ * By @maxlynch, @benjsperry, @adamdbradley <3
+ *
+ * Licensed under the MIT license. Please see LICENSE for more information.
+ *
+ */
 /*!
   Ionicons, v2.0.1
   Created by Ben Sperry for the Ionic Framework, http://ionicons.com/
@@ -7692,24 +7688,3 @@ a.button {
   opacity: 0;
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
-
-.home-slide-box .slide {
-  height: 300px;
-  display: block;
-  background: #11c1f3; }
-
-.list .item-input {
-  margin: 5px 0;
-  color: white; }
-
-.list .item {
-  margin: 5px 0;
-  background-color: rgba(255, 255, 255, 0.6); }
-
-.signup-title {
-  text-align: center;
-  margin: 40px 0 80px;
-  color: white; }
-
-.list .item-input::-webkit-input-placeholder {
-  color: #c0392b; }

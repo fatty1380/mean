@@ -51,4 +51,5 @@ mobile/node_modules/
 mobile/platforms/
 mobile/plugins/
 mobile/www/libs/
+www/libs
 .idea
