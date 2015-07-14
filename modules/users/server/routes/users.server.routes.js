@@ -1,12 +1,26 @@
 (function() {
     'use strict';
+    
+    /**
+     * Users Routes
+     * @module users
+     */
 
-    module.exports = function(app) {
+    module.exports = function (app) {
         // User Routes
         var users = require('../controllers/users.server.controller');
 
-        // Setting up the users profile api
+        /**
+         * @api {get} /users/me Request the logged in user's User
+         * @apiName GetMyUser
+         * @apiGroup Users
+         */
         app.route('/api/users/me').get(users.me);
+        /**
+         * @api {put} /users Update the logged in user
+         * @apiName GetAllUsers
+         * @apiGroup Users
+         */
         app.route('/api/users').put(users.update);
         app.route('/api/users/accounts').delete(users.removeOAuthProvider);
         app.route('/api/users/password').post(users.changePassword);
