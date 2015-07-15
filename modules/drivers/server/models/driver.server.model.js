@@ -13,7 +13,7 @@ var mongoose = require('mongoose'),
         module: 'drivers',
         file: 'driver.server.model'
     });
-    
+
 var Schema = mongoose.Schema,
     UserSchema = mongoose.model('User').schema;
 
@@ -35,20 +35,38 @@ var Schema = mongoose.Schema,
  * modified
  */
 var DriverSchema = UserSchema.extend({
-    
+
     handle: {
         type: String,
         trim: true,
         default: null
     },
-    
-    licenses: ['License'],
 
-    //schedule: ['Schedule'],
+    license: {
+        class: {
+            type: String,
+            enum: ['A', 'B', 'C', 'D', null],
+            default: null
+        },
+        endorsements: {
+            type: [String],
+            default: []
+        },
+        state: {
+            type: String,
+            default: null,
+            trim: true
+        }
+    },
 
     about: {
         type: String,
-        default: ''
+        default: null
+    },
+    
+    started: {
+        type: Number,
+        default: null
     },
 
     experience: [{
@@ -58,18 +76,6 @@ var DriverSchema = UserSchema.extend({
         description: {
             type: String
         },
-
-        //time: {
-        //    start: {      // YYYY-MM-DD
-        //        type: Date,
-        //        default: null
-        //    },
-        //    end: {        // YYYY-MM-DD
-        //        type: Date,
-        //        default: null
-        //    }
-        //},
-
         startDate: {      // YYYY-MM-DD
             type: String,
             default: null
@@ -78,7 +84,6 @@ var DriverSchema = UserSchema.extend({
             type: String,
             default: null
         },
-
         location: {
             type: String
         }
@@ -111,7 +116,7 @@ DriverSchema.statics.fields = {
 };
 
 DriverSchema.methods.updateReportURL = function (sku, url) {
-    var i = _.findIndex(this.reportsData, {sku: sku});
+    var i = _.findIndex(this.reportsData, { sku: sku });
 
     if (i !== -1) {
         this.reportsData[i].url = url;
@@ -161,7 +166,7 @@ DriverSchema.pre('save', function (next) {
 
 DriverSchema.pre('init', function (next, data) {
 
-    if (!!data.resume && !_.find(data.reportsData, {sku: 'resume'})) {
+    if (!!data.resume && !_.find(data.reportsData, { sku: 'resume' })) {
         data.reportsData = data.reportsData || [];
         console.log('Migrating Resume to Documents Array: %j in migration', data.reportsData);
         data.resume.sku = 'resume';

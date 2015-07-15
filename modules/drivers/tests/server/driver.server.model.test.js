@@ -41,7 +41,10 @@ describe('Driver Model Unit Tests:', function () {
                 
                 (driver instanceof Driver).should.be.true;
                 
-                driver.should.have.property('licenses');
+                driver.should.have.property('handle');
+                driver.should.have.property('license');
+                driver.should.have.property('about');
+                driver.should.have.property('started');
                 driver.should.have.property('interests');
                 driver.should.have.property('reportsData');
                 done();
