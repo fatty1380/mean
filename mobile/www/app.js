@@ -8,7 +8,9 @@
             'home',
             'login',
             'signup',
-            'account'
+            'account',
+            'directives',
+            'profile'
         ])
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {

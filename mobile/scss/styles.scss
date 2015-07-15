@@ -10,6 +10,9 @@
 @import "general/general";
 @import "general/sprites";
 
-// Include "per module" styles
+// Include modules scss
 @import "modules/profile";
 @import "modules/account";
+@import "modules/signup/signup";
+
+

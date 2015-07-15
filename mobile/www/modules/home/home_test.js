@@ -5,7 +5,7 @@ describe('homeCtrl', function(){
 
     beforeEach(angular.mock.module('home'));
 
-    beforeEach(angular.mock.inject(function($rootScope, $controller) {
+    beforeEach(angular.mock.inject(function($rootScope, $controller  ) {
         scope = $rootScope.$new();
         console.log(scope);
          $controller('homeCtrl', {$scope: scope});
