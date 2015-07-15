@@ -57,7 +57,7 @@ module.exports = {
         }
     },
     logs: {
-        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
+        access: process.env.LOG_ACCESS_PATH || './log/'
     },
     services: {
         everifile: {
