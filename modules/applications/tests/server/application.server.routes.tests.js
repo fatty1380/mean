@@ -5,6 +5,7 @@ var should      = require('should'),
     mongoose    = require('mongoose'),
     User        = mongoose.model('User'),
     Company     = mongoose.model('Company'),
+    Driver     = mongoose.model('Driver'),
     Job         = mongoose.model('Job'),
     Application = mongoose.model('Application'),
     Q           = require('q'),
@@ -22,7 +23,7 @@ var should      = require('should'),
  */
 var app, agent, application, credentials, cUser, dUser, article, company, job, _test;
 
-var u2, c2, j2, a2;
+var cu2, c2, j2, a2;
 
 /**
  * Article routes tests
@@ -39,10 +40,17 @@ describe('Applications CRUD tests', function () {
         this.timeout(10000);
         log.trace({func: 'beforeEach'}, 'START');
 
+        dUser = new Driver(stubs.user);
+
         company = new Company({
-            name: 'Test Company',
-            user: cUser
+            name: 'Test Company'
         });
+        cUser = new User(_.extend(stubs.owner, { company: company._id }));
+        company.owner = cUser._id;
+        
+        c2 = new Company({name: 'Not your Company', user: cu2});
+        cu2 = new User(stubs.getUser());
+        c2.owner = cu2._id
 
         job = new Job({
             user       : cUser,
@@ -51,18 +59,13 @@ describe('Applications CRUD tests', function () {
             description: 'Describe Me'
         });
 
-        dUser = new User(stubs.users.driver);
-        cUser = new User(_.extend(stubs.users.owner, {company: company}));
-
-        u2 = new User(stubs.getUser());
-        c2 = new Company({name: 'Not your Company', user: u2});
-        j2 = new Job({user: u2, company: c2, name: 'Other Job Title', description: 'You Wish'});
-        a2 = new Application(stubs.getApplication(u2, c2, j2));
+        j2 = new Job({user: cu2, company: c2, name: 'Other Job Title', description: 'You Wish'});
+        a2 = new Application(stubs.getApplication(cu2, c2, j2));
 
         credentials = stubs.credentials;
 
         // Save a user to the test db and create new article
-        return Q.all([dUser.save(), cUser.save(), company.save(), job.save(), j2.save(), a2.save(), u2.save(), c2.save()])
+        return Q.all([dUser.save(), cUser.save(), company.save(), job.save(), j2.save(), a2.save(), cu2.save(), c2.save()])
             .then(function (results) {
                 log.trace({func: 'beforeEach', results: results}, 'Saved initial users and company');
                 application = new Application(stubs.getApplication(dUser, company, job));
@@ -184,7 +187,7 @@ describe('Applications CRUD tests', function () {
             var endpoint = '/api/applications';
 
             application.status = 'draft';
-            var a = new Application(new Application(stubs.getApplication(u2, company, job)));
+            var a = new Application(new Application(stubs.getApplication(cu2, company, job)));
             a.status='submitted';
 
             return Q.all(application.save(), a.save())

@@ -261,7 +261,6 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.pre('validate', function (next) {
     this.username = this.username || this.email;
-
     next();
 });
 

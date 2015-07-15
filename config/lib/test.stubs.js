@@ -33,11 +33,6 @@ exports.getApplication = getApplication;
 
 exports.agentLogin = agentLogin;
 
-exports.users = {
-    driver: exports.user,
-    owner: stubs.owner
-};
-
 exports.credentials = {
     username: '',
     password: 'password'
