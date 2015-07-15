@@ -41,12 +41,17 @@ describe('Driver Model Unit Tests:', function () {
                 
                 (driver instanceof Driver).should.be.true;
                 
-                driver.should.have.property('handle');
-                driver.should.have.property('license');
-                driver.should.have.property('about');
-                driver.should.have.property('started');
-                driver.should.have.property('interests');
-                driver.should.have.property('reportsData');
+                var d = driver.toJSON();
+                
+                d.should.have.property('handle', null);
+                d.should.have.property('license');
+                d.license.should.have.property('class', null);
+                d.license.should.have.property('endorsements', []);
+                d.license.should.have.property('state', null);
+                d.should.have.property('about', null);
+                d.should.have.property('started', null);
+                d.should.have.property('interests', []);
+                d.should.have.property('reportsData', []);
                 done();
             });
         });
