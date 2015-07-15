@@ -4,9 +4,14 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    path = require('path'),
     Schema = mongoose.Schema,
     crypto = require('crypto'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users',
+        file: 'users.server.model'
+    });
 
 /**
  * A Validation function for local strategy properties
@@ -42,11 +47,7 @@ var SeedSchema = new Schema({
         trim: true,
         match: [/.+\@.+\..+/, 'Please fill a valid email address']
     },
-    handle: {
-        type: String,
-        trim: true,
-        default: null
-    },
+    
     zip: {
         type: String,
         trim: true,
@@ -157,11 +158,6 @@ var UserSchema = new Schema({
         default: Date.now
     },
     
-    type: {
-        type: String,
-        enum: ['driver', 'owner', ''],
-        default: ''
-    },
     email: {
         type: String,
         trim: true,
@@ -177,21 +173,11 @@ var UserSchema = new Schema({
         // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
 
-    /**
-     * Driver & Company Links
-     */
-    driver: {
-        type: Schema.ObjectId,
-        ref: 'Driver',
-        default: null
-    },
-
     company: {
         type: Schema.ObjectId,
         ref: 'Company',
         default: null
     },
-
 
     /**
      * Addresses holds one or more Address Objects, nested
@@ -222,6 +208,11 @@ var UserSchema = new Schema({
     //conversations: [{}],
 
     /** Friends & Connections : END **/
+    
+    /**
+     * User Profile Data and Information
+     */
+     
 
     /** Section Begin : Virtual Members **/
 
@@ -229,7 +220,7 @@ var UserSchema = new Schema({
         type: String,
         trim: true
     }
-}, {'toJSON': {virtuals: true}});
+}, {collection: 'users', discriminatorKey : '_type', 'toJSON': {virtuals: true}});
 
 
 
@@ -240,13 +231,13 @@ UserSchema.index({
     email: 'text'
 });
 
-UserSchema.pre('init', function (next, data) {
-    if (!data.displayName) {
-        data.displayName = data.firstName + ' ' + data.lastName;
-    }
+// UserSchema.pre('init', function (next, data) {
+//     if (!data.displayName) {
+//         data.displayName = data.firstName + ' ' + data.lastName;
+//     }
     
-    next();
-});
+//     next();
+// });
 
 /**
  * Hook a pre save method to hash the password
@@ -324,9 +315,21 @@ UserSchema.methods.authenticate = function (password) {
 UserSchema.methods.cleanse = function () {
     console.log('[UserSchema] Cleansing sensitive Data');
 
+    this.oldPass = undefined;
     this.password = undefined;
     this.salt = undefined;
 };
+
+UserSchema.methods.socialify = function () {
+    console.log('[UserSchema] Cleansing semi-sensitive Data');
+    
+    this.provider = undefined;
+    this.username = null;
+    this.email = null;
+    this.phone = null;
+    
+    this.cleanse();
+}
 
 UserSchema.methods.loadFriends = function() {
     return this.db.model('User')
@@ -335,7 +338,7 @@ UserSchema.methods.loadFriends = function() {
 };
 
 UserSchema.statics.fields = {
-    social: 'firstName lastName username friends handle profileImageURL type driver company email'
+    social: ['firstName','lastName','username','friends','profileImageURL','company'].join(' ')
 };
 
 /**
@@ -376,13 +379,14 @@ UserSchema.virtual('isAdmin')
 
 UserSchema.virtual('isDriver')
     .get(function () {
-        return this.type === 'driver';
+        return /driver/i.test(this._type);
     });
 
 
 UserSchema.virtual('isOwner')
     .get(function () {
-        return this.type === 'owner';
+        return !!this.company;
     });
 
+log.debug({ func: 'register' }, 'Registering `User` with mongoose');
 mongoose.model('User', UserSchema);

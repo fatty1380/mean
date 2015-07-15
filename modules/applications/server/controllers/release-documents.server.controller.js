@@ -84,12 +84,12 @@ exports.generateDocument = function (release, user) {
 exports.saveFileToCloud = function (release, user) {
     log.debug({func: 'saveFileToCloud'}, 'START');
 
-    return Driver.findOne({user: user.id}).then(
+    return Driver.findOne({_id: user.id}).then(
         function (driver) {
 
             log.debug({func: 'saveFileToCloud', driver: driver}, 'Loaded driver from user');
 
-            user.driver = driver;
+            //user.driver = driver;
             var sku     = release.releaseType;
 
             log.debug({func: 'saveFileToCloud', releaseType: sku}, 'Generating new Release');

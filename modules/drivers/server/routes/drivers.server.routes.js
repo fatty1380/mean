@@ -14,8 +14,6 @@ module.exports = function (app) {
     // Setup routes for getting a User's driver profile
     app.route('/api/users/:userId/driver')
         .get(drivers.driverByUserID, drivers.read);
-    app.route('/api/drivers/me')
-        .get(drivers.me, drivers.read);
 
     app.route('/api/drivers/:driverId')
         .get(drivers.read)

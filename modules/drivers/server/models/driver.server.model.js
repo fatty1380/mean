@@ -4,9 +4,18 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
+    extend = require('mongoose-schema-extend'),
     moment = require('moment'),
-    _ = require('lodash');
+    path = require('path'),
+    UserModel = require(path.resolve('./modules/users/server/models/user.server.model')),
+    _ = require('lodash'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'drivers',
+        file: 'driver.server.model'
+    });
+    
+var Schema = mongoose.Schema,
+    UserSchema = mongoose.model('User').schema;
 
 
 /**
@@ -25,14 +34,14 @@ var mongoose = require('mongoose'),
  * created
  * modified
  */
-var DriverSchema = new Schema({
-
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User',
-        required: true
+var DriverSchema = UserSchema.extend({
+    
+    handle: {
+        type: String,
+        trim: true,
+        default: null
     },
-
+    
     licenses: ['License'],
 
     //schedule: ['Schedule'],
@@ -83,17 +92,6 @@ var DriverSchema = new Schema({
         default: []
     },
 
-    resume: {
-        type: {
-            url: String,
-            expires: Date,
-            bucket: String,
-            key: String
-        },
-        default: null
-    },
-
-    // TODO: Migrate to RemoteFile type
     reportsData: {
         type: [{
             sku: String,
@@ -105,42 +103,12 @@ var DriverSchema = new Schema({
             key: String
         }],
         default: []
-    },
-
-    summaryReport: {
-        type: Schema.ObjectId,
-        ref: 'BackgroundReport'
-    },
-
-    profile: [
-        {
-            listId: {
-                type: Schema.ObjectId
-            },
-            responses: [{id: String, value: String}],
-            questions: [{id: String, description: String, answer: String}]
-        }
-    ],
-
-    isActive: {
-        type: Boolean,
-        default: true
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false
-    },
-
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    modified: {
-        type: Date,
-        default: Date.now
     }
-}, {toJSON: {virtuals: true}});
+});
+
+DriverSchema.statics.fields = {
+    social: [UserSchema.statics.fields.social, 'handle', 'licenses', 'about', 'experience', 'interests'].join(' ')
+};
 
 DriverSchema.methods.updateReportURL = function (sku, url) {
     var i = _.findIndex(this.reportsData, {sku: sku});
@@ -264,5 +232,6 @@ function translateTimes(doc) {
 
 }
 
+log.debug({ func: 'register' }, 'Registering `Driver` with mongoose');
 
 mongoose.model('Driver', DriverSchema);
