@@ -9,10 +9,7 @@
             'login',
             'signup',
 
-            //'directives',
-           /* 'services',*/
-            //'AppControllers',
-
+            'directives',
             'profile'
 
         ])

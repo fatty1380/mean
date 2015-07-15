@@ -18,6 +18,36 @@ ion-content {
   }
 }
 
+.sign-up {
+
+  .item {
+    padding:0;
+  }
+
+  .submit-btn{
+    position:fixed;
+
+  }
+
+  .item-input {
+    padding:0;
+
+    input{
+      height: 50px;
+      padding: 0 30px;
+    }
+  }
+
+
+  .ng-dirty.ng-invalid {
+    border:2px solid rgba(255, 0, 0, 0.4);
+  }
+
+  .ng-dirty.ng-valid {
+    border:0;
+  }
+}
+
 
 .list {
   .item-input{

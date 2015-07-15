@@ -3,12 +3,11 @@ angular
 
     .controller('signupCtrl', function ($scope, $location) {
 
-        //console.log('signupCtrl');
         var vm = this;
 
-        var user = {
+        vm.user = {
             firstName: '',
-            lastName: '',
+            lastName: '22222',
             email: '',
             password: '',
             confirmPassword: ''
@@ -35,18 +34,15 @@ angular
 })
 angular.module('directives', [])
     .directive("compareTo", function(){
-        //console.log("compareTo");
         return {
             require: "ngModel",
             scope: {
                 otherModelValue: "=compareTo"
             },
             link: function(scope, element, attributes, ngModel) {
-                //console.log("compareTo link");
                 ngModel.$validators.compareTo = function(modelValue) {
                     return modelValue == scope.otherModelValue;
                 };
-
                 scope.$watch("otherModelValue", function() {
                     ngModel.$validate();
                 });

@@ -7968,6 +7968,20 @@ ion-content .title {
   margin: 20px;
   color: white; }
 
+.sign-up .item {
+  padding: 0; }
+.sign-up .submit-btn {
+  position: fixed; }
+.sign-up .item-input {
+  padding: 0; }
+  .sign-up .item-input input {
+    height: 50px;
+    padding: 0 30px; }
+.sign-up .ng-dirty.ng-invalid {
+  border: 2px solid rgba(255, 0, 0, 0.4); }
+.sign-up .ng-dirty.ng-valid {
+  border: 0; }
+
 .list .item-input {
   color: white; }
   .list .item-input input::-webkit-input-placeholder {
