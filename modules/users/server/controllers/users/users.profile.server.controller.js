@@ -36,15 +36,14 @@ _.extend(exports, {
  * Update user details
  */
 function update(req, res) {
-    // Init Variables
-    var user = req.user;
 
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
+    req.log.debug({func: 'update', file: 'users.profile.ctrl', body: req.body}, 'Updating Logged in user with body contents');
 
-    if (user) {
+    if (req.user) {
         // Merge existing user
-        user             = _.extend(user, req.body);
+        var user             = _.extend(req.user, req.body);
         user.modified    = Date.now();
 
         user.save(function (err) {
