@@ -8,7 +8,8 @@ var rename = require('gulp-rename');
 var sh = require('shelljs');
 
 var paths = {
-  sass: ['./scss/**/*.scss']
+  sass: ['scss/styles.scss', 'scss/**/*.scss'],
+  css: 'www/assets/css'
 };
 
 gulp.task('default', ['sass']);
@@ -18,12 +19,12 @@ gulp.task('sass', function(done) {
     .pipe(sass({
       errLogToConsole: true
     }))
-    .pipe(gulp.dest('./www/assets/css'))
+    .pipe(gulp.dest(paths.css))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
     .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/assets/css/'))
+    .pipe(gulp.dest(paths.css))
     .on('end', done);
 });
 
