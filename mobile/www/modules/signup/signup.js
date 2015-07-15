@@ -3,7 +3,7 @@
     'use strict';
 
     angular
-        .module('signup', [ 'signupCore','signupEngagement','signupLicense','signupTrailer','signupTruck'])
+        .module('signup', [ 'signup.register','signup.engagement','signup.license','signup.trailers','signup.trucks'])
         .config(['$stateProvider', function ($stateProvider) {
             $stateProvider
                 .state('signup/signin', {
@@ -12,34 +12,34 @@
                     controller: 'signinCtrl'
                 })
 
-                .state('signup/', {
-                    url: '/signup',
-                    templateUrl: 'modules/signup/signupCore/signupCore.html',
-                    controller: 'signupCtrl'
+                .state('signup/register', {
+                    url: '/signup/register',
+                    templateUrl: 'modules/signup/register/register.html',
+                    controller: 'registerCtrl'
                 })
 
                 .state('signup/engagement', {
                     url: '/signup/engagement',
-                    templateUrl: 'modules/signup/signupEngagement/signupEngagement.html',
-                    controller: 'signupEngagementCtrl'
+                    templateUrl: 'modules/signup/engagement/engagement.html',
+                    controller: 'engagementCtrl'
                 })
 
                 .state('signup/license', {
                     url: '/signup/license',
-                    templateUrl: 'modules/signup/signupLicense/signupLicense.html',
-                    controller: 'signupLicenseCtrl'
+                    templateUrl: 'modules/signup/license/license.html',
+                    controller: 'licenseCtrl'
                 })
 
-                .state('signup/truck', {
-                    url: '/signup/truck',
-                    templateUrl: 'modules/signup/signupTruck/signupTruck.html',
-                    controller: 'signupTruckCtrl'
+                .state('signup/trucks', {
+                    url: '/signup/trucks',
+                    templateUrl: 'modules/signup/trucks/trucks.html',
+                    controller: 'trucksCtrl'
                 })
 
-                .state('signup/trailer', {
-                    url: '/signup/trailer',
-                    templateUrl: 'modules/signup/signupTrailer/signupTrailer.html',
-                    controller: 'signupTrailerCtrl'
+                .state('signup/trailers', {
+                    url: '/signup/trailers',
+                    templateUrl: 'modules/signup/trailers/trailers.html',
+                    controller: 'trailersCtrl'
                 })
         }])
 })();

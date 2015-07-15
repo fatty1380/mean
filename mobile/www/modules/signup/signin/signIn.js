@@ -1,5 +1,5 @@
 angular
-    .module('signin', [])
+    .module('signup.signin', [])
 
     .controller('signinCtrl', function ($scope, $location) {
 
