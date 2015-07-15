@@ -5,11 +5,18 @@
  */
 var should = require('should'),
     mongoose = require('mongoose'),
-    User = mongoose.model('User'),
-    Driver = mongoose.model('Driver'),
     path = require('path'),
-    constants = require(path.resolve('./modules/core/server/models/outset.constants'));
+    stubs = require(path.resolve('./config/lib/test.stubs')),
+    log      = require(path.resolve('./config/lib/logger')).child({
+        module: 'tests',
+        file  : 'driver.model'
+    }),
+    constants = require(path.resolve('./modules/core/server/models/outset.constants')),
+    _ = require('lodash');
 
+
+var User = mongoose.model('User'),
+    Driver = mongoose.model('Driver');
 /**
  * Globals
  */
@@ -20,48 +27,31 @@ var scheduleCount = constants.baseSchedule.length;
 /**
  * Unit tests
  */
-describe('Driver Model Unit Tests:', function() {
-    beforeEach(function(done) {
-        user = new User({
-            firstName: 'Full',
-            lastName: 'Name',
-            displayName: 'Full Name',
-            email: 'test@test.com',
-            username: 'username',
-            password: 'password'
-        });
-
-        user.save(function() {
-            driver = new Driver({
-                user: user,
-                licenses: [],
-                endorsements: [],
-                schedule: []
-            });
-
-            done();
-        });
+describe('Driver Model Unit Tests:', function () {
+    beforeEach(function (done) {
+        driver = new Driver(stubs.user);
+        done();
     });
 
-    describe('Method Save', function() {
-        it('should be able to save without problems', function(done) {
-            return driver.save(function(err) {
+    describe('Method Save', function () {
+        it('should be able to save without problems', function (done) {
+            return driver.save(function (err) {
+                log.debug({ driver: driver }, 'Saved Driver!!!');
                 should.not.exist(err);
+                
+                (driver instanceof Driver).should.be.true;
+                
+                driver.should.have.property('licenses');
+                driver.should.have.property('interests');
+                driver.should.have.property('reportsData');
                 done();
             });
         });
 
-        it('should be able to show an error when try to save without user', function(done) {
-            driver.user = null;
-
-            return driver.save(function(err) {
-                should.exist(err);
-                done();
-            });
-        });
+        
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         Driver.remove().exec();
         User.remove().exec();
 

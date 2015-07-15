@@ -16,7 +16,7 @@ _            = require('lodash');
 
 
 
-exports.create = create;
+exports.create = errorHandler.notAvailable; //create;
 exports.read = read;
 exports.update = update;
 exports.uploadResume = uploadResume;
@@ -27,8 +27,7 @@ exports.createProfileFormAnswers = createProfileFormAnswers;
 exports.updateProfileFormAnswers = updateProfileFormAnswers;
 exports.delete = deleteDriver;
 exports.list = list;
-exports.driverByUserID = driverByUserID;
-exports.me = me;
+exports.driverByUserID = errorHandler.notAvailable;
 exports.driverByID = driverByID;
 exports.hasAuthorization = hasAuthorization;
 
@@ -36,6 +35,7 @@ exports.hasAuthorization = hasAuthorization;
 //////////////////////////////////////////////////////////
 /**
  * Create a Driver
+ * @deprecated drivers are now a type of user
  */
 function create(req, res) {
     debugger;
@@ -119,22 +119,18 @@ function update(req, res) {
 
 /**
  * Update profile picture
+ * -----------------------
+ * Driver Migration: True
+ * This has been updated to handle the new combined user/driver object.
  */
 function uploadResume(req, res) {
     console.log('[DriverCtrl.uploadResume] Start');
     var user = req.user;
-    var driver = req.driver;
     var sku = req.files.file.sku || 'resume';
 
     if (!user) {
         return res.status(400).send({
             message: 'User is not signed in'
-        });
-    }
-
-    if (!driver) {
-        return res.status(400).send({
-            message: 'No Available Driver Profile'
         });
     }
 
@@ -144,20 +140,20 @@ function uploadResume(req, res) {
         function (response) {
             console.log('successfully uploaded user resume to %j', response);
 
-            if(_.isEmpty(driver.reports[sku])) {
-                driver.reportsData.push({ sku: sku });
+            if(_.isEmpty(user.reports[sku])) {
+                user.reportsData.push({ sku: sku });
             }
 
-            _.extend(driver.reports[sku], response, {expires: moment().add(15, 'm').toDate()});
+            _.extend(user.reports[sku], response, {expires: moment().add(15, 'm').toDate()});
 
-            driver.save(function (saveError) {
+            user.save(function (saveError) {
                 if (saveError) {
                     return res.status(400).send({
                         message: errorHandler.getErrorMessage(saveError)
                     });
                 }
 
-                res.json(driver.reports[sku]);
+                res.json(user.reports[sku]);
 
             });
 
@@ -178,25 +174,27 @@ function refreshResume(req, res) {
     return exports.refreshReport(req,res);
 }
 
+/**
+ * Refresh Report
+ * -----------------------
+ * Driver Migration: True
+ * This has been updated to handle the new combined user/driver object.
+ * -----------------------
+ * This method returns the URL of a specific reportSKU. If the URL is public, or
+ * if it is private and has not expired, it will return that URL. Otherwise, it
+ * will make a request to get a new secure signed URL.
+ */
 function refreshReport(req, res) {
 
     console.log('[DriverCtrl.refreshReport] Start');
     var user = req.user;
-    var driver = req.driver;
-    var sku = req.params.reportSku || !!driver.reportsData && driver.reportsData.length && driver.reportsData[0].sku;
-    var report = !!sku && !!driver ? driver.reports[sku] : null;
+    var sku = req.params.reportSku || !!user.reportsData && user.reportsData.length && user.reportsData[0].sku;
+    var report = !!sku && !!user ? user.reports[sku] : null;
 
     if (!user) {
         console.log('[DriverCtrl.refreshReport] User is not signed in');
         return res.status(401).send({
             message: 'User is not signed in'
-        });
-    }
-
-    if (!driver) {
-        console.log('[DriverCtrl.refreshReport] No Available Driver Profile');
-        return res.status(400).send({
-            message: 'No Available Driver Profile'
         });
     }
 
@@ -220,9 +218,9 @@ function refreshReport(req, res) {
 
             res.json(report);
 
-            driver.updateReportURL(sku, report.url);
+            user.updateReportURL(sku, report.url);
 
-            driver.save(function (err, updated) {
+            user.save(function (err, updated) {
                 if (err) {
                     console.log('[DriverCtrl.refreshReport] unable to save driver\'s updated report url', err);
                 } else {
@@ -240,6 +238,9 @@ function refreshReport(req, res) {
 
 /**
  * Handle the profile forms (eg: DOT Questionnaire
+ * -----------------------------------------------
+ * Driver Migration: False
+ * THis has not been updated to handle the new user/driver object
  */
 function getProfileFormAnswers(req, res) {
     var list;
@@ -263,7 +264,7 @@ function updateProfileFormAnswers(req, res) {
 }
 
 /**
- * Delete an Driver
+ * Delete a Driver
  */
 function deleteDriver(req, res) {
     var driver = req.driver;
@@ -291,30 +292,24 @@ function list(req, res) {
 }
 
 
-function driverByUserID(req, res, next) {
-    console.log('[Driver.driverByUserId] start');
-    var userId = req.params.userId || req.query.userId || req.user.id;
+// function driverByUserID(req, res, next) {
+//     console.log('[Driver.driverByUserId] start');
+//     var userId = req.params.userId || req.query.userId || req.user.id;
 
-    console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
+//     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
-    if (!!userId) {
-        return executeFind(req, res, next, Driver.findOne({
-            user: userId
-        }));
-    }
-}
-
-function me(req, res, next) {
-    executeFind(req, res, next, Driver.findOne({
-        user: req.user.id
-    }));
-}
+//     if (!!userId) {
+//         return executeFind(req, res, next, Driver.findOne({
+//             _id: userId
+//         }));
+//     }
+// }
 
 /**
  * Driver middleware
  */
 function driverByID(req, res, next, id) {
-    console.log('[Driver.driverById] start ');
+    console.log('[Driver.driverById] start for id: ', id);
 
     if ((/^[a-f\d]{24}$/i).test(id)) {
         return executeFind(req, res, next, Driver.findById(id));
@@ -330,7 +325,7 @@ function driverByID(req, res, next, id) {
  */
 function hasAuthorization(req, res, next) {
     console.log('[Drivers.Ctrl.hasAuthorization] Checking...');
-    if (req.driver.user.id !== req.user.id) {
+    if (req.driver.id !== req.user.id) {
         return res.status(403).send({message: 'User is not authorized'});
     }
     next();
@@ -348,13 +343,23 @@ function executeQuery(req, res, next) {
 
     Driver.find(query)
         .sort(sort)
-        .populate('user', 'displayName created profileImageURL addresses')
+        .select(Driver.fields.social)
         .exec(function (err, drivers) {
             if (err) {
+                if(!drivers)
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             }
+            
+            // var fields = Driver.fields.social.split(' ');
+            // fields.push('id')
+            
+            // req.drivers = _.map(drivers, function (d) {
+            //     d.socialify();
+                
+            //     return d;
+            // })
 
             req.drivers = drivers || [];
             console.log('[DriversCtrl.executeQuery] Found %d drivers for query %j', req.drivers.length, query);
@@ -366,7 +371,7 @@ function executeQuery(req, res, next) {
 
 function executeFind(req, res, next, driverFind) {
     driverFind
-        .populate('user')
+        //.populate(Driver.fields.social)
         .exec(function (err, driver) {
             if (err) {
                 console.log('[Driver.executeFind] Driver search errored: ', err.message);
@@ -391,7 +396,8 @@ function executeFind(req, res, next, driverFind) {
                 console.log('[Driver.executeFind] found driver: %s', driver.id);
             }
 
-            driver.user.cleanse();
+            // TODO: Check social connection and access to fields
+            driver.socialify();
 
             if (!!next) {
                 req.driver = driver;
