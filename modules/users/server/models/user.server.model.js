@@ -312,7 +312,7 @@ UserSchema.methods.authenticate = function (password) {
 };
 
 UserSchema.methods.cleanse = function () {
-    console.log('[UserSchema] Cleansing sensitive Data');
+    log.trace({ func: 'cleanse' }, 'Cleansing sensitive Data');
 
     this.oldPass = undefined;
     this.password = undefined;
@@ -320,7 +320,7 @@ UserSchema.methods.cleanse = function () {
 };
 
 UserSchema.methods.socialify = function () {
-    console.log('[UserSchema] Cleansing semi-sensitive Data');
+    log.trace({ func: 'socialify' }, 'Cleansing semi-sensitive Data');
     
     this.provider = undefined;
     this.username = null;

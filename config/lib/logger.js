@@ -134,7 +134,7 @@ Object.defineProperty(_log, 'logger', {
                 prettyStdOut.pipe(process.stdout);
 
                 opts.streams.push({
-                    level: 'debug',
+                    level: config.logs.stdout.level || 'debug',
                     type: 'raw',
                     stream: prettyStdOut
                 });

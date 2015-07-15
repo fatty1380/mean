@@ -57,8 +57,22 @@ module.exports = {
         }
     },
     logs: {
-        access: process.env.LOG_ACCESS_PATH || './log/'
+        access: process.env.LOG_ACCESS_PATH || './log/',
+        stdout: {
+            level: 'error'
+        }
     },
+	mailer: {
+        toOverride: false,
+		from: process.env.MAILER_FROM || 'MAILER_FROM',
+		options: {
+			service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
+			auth: {
+				user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
+				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+			}
+		}
+	},
     services: {
         everifile: {
             baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo-api-test.everifile.com/renovo',

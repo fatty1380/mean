@@ -31,7 +31,7 @@ exports.getCompany = getCompany;
 exports.getJob = getJob;
 exports.getApplication = getApplication;
 
-exports.agentLogin = agentLogin;
+exports.agentLogin = login;
 
 exports.credentials = {
     username: '',
@@ -134,7 +134,7 @@ function getOwner() {
  *  Functional methods - should be move to stub-functions or something
  */
 
-function agentLogin(agent, credentials) {
+function login(agent, credentials) {
     log.debug({creds: credentials}, 'Logging in with credentials');
     return agent.post('/api/auth/signin')
         .send(credentials)
