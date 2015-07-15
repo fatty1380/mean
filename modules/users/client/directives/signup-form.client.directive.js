@@ -16,9 +16,13 @@
         vm.methods = _.defaults({
             submit: function () {
                 return UserService.createUser(vm.user)
-                    .then(function(success) {
-                        debugger;
-                        vm.gateway.user = success;
+                    .then(function (success) {
+                        $log.debug('Successfully created a new user and logged in');
+                        
+                        if (!!vm.gateway) {
+                            $log.debug('Setting Gateway User Object');
+                            vm.gateway.user = success;
+                        }
                     });
             },
             validate: function () {
