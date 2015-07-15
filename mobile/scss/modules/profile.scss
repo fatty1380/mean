@@ -2,19 +2,24 @@
   position: absolute;
   left: 15px;
   right: 15px;
-  top:15px;
-  height:125px;
+  top:65px;
+  height:104px;
   text-align: center;
   z-index: 2;
 
   .photo{
     display: inline-block;
     vertical-align: top;
-    width: 125px;
-    height: 125px;
-    background: #666666;
+    width: 104px;
+    height: 104px;
+    background: #333;
     border: 2px solid #999;
     @include rounded-corner(100%);
+
+    img{
+      @include rounded-corner(100%);
+      vertical-align: top;
+    }
   }
 
   .contacts-amount{
@@ -25,11 +30,119 @@
   }
 }
 
-.tabs-holder{
+.profile-tabs{
   position: absolute;
-  top: 130px;
-  left: 15px;
-  bottom: 44px;
-  right: 15px;
+  top: 0;
+  left: 0;
+  bottom: 69px;
+  right: 0;
   z-index: 1;
+
+    > .tab-nav{
+      top: 0;
+      height: 69px;
+      background: $ribbon-bg;
+      text-transform: uppercase;
+      padding: 20px 0;
+      color: $secondary-text-action;
+
+      .tab-item{
+        font-weight: bold;
+        font-size: 13px;
+        line-height: 30px;
+        color: #999;
+
+        &.tab-item-active{
+          color: $white;
+        }
+      }
+    }
+    .tab-content{
+      padding-top: 70px;
+      padding-bottom: 46px;
+      background: #eee;
+
+      .content-button{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    }
+}
+
+.reviews-list{
+  height: 100%;
+
+   .item > .ico{
+    float: left;
+    margin-right: 15px;
+  }
+  .review{
+    overflow: hidden;
+
+    .top{
+      padding: 0 0 5px;
+      overflow: hidden;
+      .time{
+        float: right;
+      }
+    }
+
+    .title{
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 0 5px;
+    }
+    .message{
+      margin: 0 0 5px;
+      display: block;
+      display: -webkit-box;
+      overflow: hidden;
+      white-space: normal;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+    .button-holder{
+      overflow: hidden;
+
+      button{
+        float: right;
+      }
+    }
+  }
+}
+
+.profile-list{
+  height: 100%;
+
+  .list{
+    border-bottom: 1px solid #999;
+    margin: 0 20px;
+    padding-top: 20px;
+  }
+
+  .item{
+    background: none;
+    padding: 10px 0 15px;
+    border: none;
+  }
+}
+
+.experience-list{
+  height: 100%;
+
+  .list{
+    border-bottom: 1px solid #999;
+    margin: 0 20px;
+    padding-top: 20px;
+  }
+
+  .item{
+    background: none;
+    padding: 10px 0 15px;
+    border: none;
+  }
 }

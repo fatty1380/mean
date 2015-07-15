@@ -1,19 +1,143 @@
 <ion-view>
-    <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="edit()">Edit</button>
-        <h1 class="title">Profile</h1>
-        <button class="button button-clear">
-            <i class="ico ico-settingsicon ico-text-top"></i>
-        </button>
-    </ion-header-bar>
-    <ion-content>
+    <ion-pane class="header mid-size">
+        <ion-header-bar align-title="center">
+            <button class="button button-clear" ng-click="edit()">Edit</button>
+            <h1 class="title">Profile</h1>
+            <button class="button button-clear">
+                <i class="ico ico-settingsicon ico-text-top"></i>
+            </button>
+        </ion-header-bar>
         <div class="profile-visual">
-            <div class="photo"></div>
+            <div class="photo"><img src="../../../assets/img/profile-photo.jpg" alt=""/></div>
             <div class="contacts-amount">
                 <span class="ico ico-avatar ico-middle"></span>
                 <strong>30</strong>
             </div>
         </div>
-        <div class="tabs-holder"></div>
-    </ion-content>
+    </ion-pane>
+    <ion-pane class="profile-pane">
+        <ion-tabs class="profile-tabs tabs-top">
+            <ion-tab title="REVIEWS">
+                <ion-scroll class="reviews-list">
+                    <ion-list>
+                        <ion-item>
+                            <div class="ico ico-avatar"></div>
+                            <div class="review">
+                                <div class="top">
+                                    <div class="ratings"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> 2 Months ago</div>
+                                </div>
+                                <strong class="title">Username - Company Name</strong>
+                                <div class="message">Etiam porta sem malesuada magna mollis eusimod. Etiam porta sem malesuada magna mollis eusimod.</div>
+                                <div class="button-holder">
+                                    <button class="button button-small">Reply</button>
+                                </div>
+                            </div>
+                        </ion-item>
+                        <ion-item>
+                            <div class="ico ico-avatar"></div>
+                            <div class="review">
+                                <div class="top">
+                                    <div class="ratings"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> 2 Months ago</div>
+                                </div>
+                                <strong class="title">Username - Company Name</strong>
+                                <div class="message">Etiam porta sem malesuada magna mollis eusimod. Etiam porta sem malesuada magna mollis eusimod.</div>
+                                <div class="button-holder">
+                                    <button class="button button-small">Reply</button>
+                                </div>
+                            </div>
+                        </ion-item>
+                        <ion-item>
+                            <div class="ico ico-avatar"></div>
+                            <div class="review">
+                                <div class="top">
+                                    <div class="ratings"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> 2 Months ago</div>
+                                </div>
+                                <strong class="title">Username - Company Name</strong>
+                                <div class="message">Etiam porta sem malesuada magna mollis eusimod. Etiam porta sem malesuada magna mollis eusimod.</div>
+                                <div class="button-holder">
+                                    <button class="button button-small">Reply</button>
+                                </div>
+                            </div>
+                        </ion-item>
+                        <ion-item>
+                            <div class="ico ico-avatar"></div>
+                            <div class="review">
+                                <div class="top">
+                                    <div class="ratings"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> 2 Months ago</div>
+                                </div>
+                                <strong class="title">Username - Company Name</strong>
+                                <div class="message">Etiam porta sem malesuada magna mollis eusimod. Etiam porta sem malesuada magna mollis eusimod.</div>
+                                <div class="button-holder">
+                                    <button class="button button-small">Reply</button>
+                                </div>
+                            </div>
+                        </ion-item>
+                        <ion-item>
+                            <div class="ico ico-avatar"></div>
+                            <div class="review">
+                                <div class="top">
+                                    <div class="ratings"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> 2 Months ago</div>
+                                </div>
+                                <strong class="title">Username - Company Name</strong>
+                                <div class="message">Etiam porta sem malesuada magna mollis eusimod. Etiam porta sem malesuada magna mollis eusimod.</div>
+                                <div class="button-holder">
+                                    <button class="button button-small">Reply</button>
+                                </div>
+                            </div>
+                        </ion-item>
+                        <ion-item>
+                            <div class="ico ico-avatar"></div>
+                            <div class="review">
+                                <div class="top">
+                                    <div class="ratings"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> 2 Months ago</div>
+                                </div>
+                                <strong class="title">Username - Company Name</strong>
+                                <div class="message">Etiam porta sem malesuada magna mollis eusimod. Etiam porta sem malesuada magna mollis eusimod.</div>
+                                <div class="button-holder">
+                                    <button class="button button-small">Reply</button>
+                                </div>
+                            </div>
+                        </ion-item>
+                    </ion-list>
+                </ion-scroll>
+                <button class="button content-button">Share</button>
+            </ion-tab>
+            <ion-tab title="PROFILE">
+                <ion-scroll class="profile-list">
+                    <ion-list>
+                        <ion-item>
+                            <div class="label">CURRENT JOB TITLE</div>
+                            <span class="item-note">Driver</span>
+                        </ion-item>
+                        <ion-item>
+                            <div class="label">TYPE OF TRUCK</div>
+                            <span class="item-note">Mack</span>
+                        </ion-item>
+                    </ion-list>
+                </ion-scroll>
+                <button class="button content-button">Request Review</button>
+            </ion-tab>
+            <ion-tab title="EXPERIENCE">
+                <ion-scroll class="experience-list">
+                    <ion-list>
+                        <ion-item>
+                            <div class="label">CURRENT JOB TITLE</div>
+                            <span class="item-note">Driver</span>
+                        </ion-item>
+                        <ion-item>
+                            <div class="label">TYPE OF TRUCK</div>
+                            <span class="item-note">Mack</span>
+                        </ion-item>
+                    </ion-list>
+                </ion-scroll>
+                <button class="button content-button">Share</button>
+            </ion-tab>
+        </ion-tabs>
+    </ion-pane>
 </ion-view>

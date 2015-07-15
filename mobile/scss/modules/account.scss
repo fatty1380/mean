@@ -1,6 +1,7 @@
 .main-tabs{
   > .tab-nav{
     height: 69px;
+    padding-top: 0;
 
     .tab-item{
       padding: 10px 0;
@@ -10,16 +11,17 @@
       border: solid #333;
       border-width: 1px 0 0 1px;
       text-transform: uppercase;
+      background-color: $white;
+      color: $tab-text;
 
       &.tab-item-active{
-        background: $positive;
-        color: #fff;
+        color: $white;
+        background-color: $tab-selected
       }
 
       .ico{
         margin-bottom: 3px;
       }
-
     }
   }
 }

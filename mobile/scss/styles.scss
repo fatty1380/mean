@@ -6,9 +6,10 @@
 // Include all of Ionic
 @import "../www/libs/ionic/scss/ionic";
 
-// Include sprites
-@import "sprites/sprites";
+// general(global) styles
+@import "general/general";
+@import "general/sprites";
 
-// Include modules scss
+// Include "per module" styles
 @import "modules/profile";
 @import "modules/account";
