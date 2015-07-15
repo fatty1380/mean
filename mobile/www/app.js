@@ -9,8 +9,7 @@
             'login',
             'signup',
             'account',
-            'directives',
-            'profile'
+            'directives'
         ])
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
