@@ -3,11 +3,11 @@
     'use strict';
 
     angular
-        .module('signup', [ 'signup.register','signup.engagement','signup.license','signup.trailers','signup.trucks'])
+        .module('signup', [ 'signup.signin', 'signup.register','signup.engagement','signup.license','signup.trailers','signup.trucks'])
         .config(['$stateProvider', function ($stateProvider) {
             $stateProvider
                 .state('signup/signin', {
-                    url: '/signin/signin',
+                    url: '/signup/signin',
                     templateUrl: 'modules/signup/signin/signin.html',
                     controller: 'signinCtrl'
                 })

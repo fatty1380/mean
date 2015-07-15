@@ -40,7 +40,7 @@ ion-content {
 
 
   .ng-dirty.ng-invalid {
-    border:2px solid rgba(255, 0, 0, 0.4);
+    border-left: 5px solid red;
   }
 
   .ng-dirty.ng-valid {

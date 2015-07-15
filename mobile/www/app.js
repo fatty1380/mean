@@ -13,7 +13,7 @@
         ])
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                $urlRouterProvider.otherwise("/account/profile");
+                $urlRouterProvider.otherwise("/signup/register");
             }
         ])
         .run(function($ionicPlatform) {

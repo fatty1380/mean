@@ -13,10 +13,15 @@ angular
             confirmPassword: ''
         };
 
-       /* $scope.continue = function(){
-            console.log('continue engagement');
-            $location.path("signup/engagement");
-        }*/
+        $scope.continueRegister = function(){
+            console.log('continue register');
+            $location.path("signup/register");
+        }
+
+        $scope.continueProfile = function(){
+            console.log('continue profile');
+            $location.path("account/profile");
+        }
 
 
         $scope.$on( '$ionicView.afterEnter', function () {
