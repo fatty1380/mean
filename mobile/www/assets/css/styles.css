@@ -7997,7 +7997,7 @@ body {
     width: 104px;
     height: 104px;
     background: #333;
-    border: 2px solid #999;
+    border: 2px solid #333;
     -moz-border-radius: 100%;
     -webkit-border-radius: 100%;
     border-radius: 100%; }
@@ -8106,7 +8106,6 @@ body {
     font-weight: bold;
     border: solid #333;
     border-width: 1px 0 0 1px;
-<<<<<<< HEAD
     text-transform: uppercase;
     background-color: #ffffff;
     color: #807b84; }
@@ -8115,16 +8114,6 @@ body {
       background-color: #3e86b1; }
     .main-tabs > .tab-nav .tab-item .ico {
       margin-bottom: 3px; }
-=======
-    text-transform: uppercase; }
-    .navigation-bar .button-bar .button:first-child {
-      border-width: 1px 0 0; }
-    .navigation-bar .button-bar .button.active {
-      background-color: #387ef5;
-      color: #fff; }
-  .navigation-bar .ico {
-    display: block;
-    margin: 0 auto 3px; }
 
 ion-content .signup-title {
   text-align: center;
@@ -8385,4 +8374,3 @@ ion-content .title {
     border: 0; }
   .select-trailer .checkbox input:after, .select-trailer .checkbox .checkbox-icon:after {
     border: 0; }
->>>>>>> 1a3aa5a0582a560556d72c133ec143fe40b1f884
