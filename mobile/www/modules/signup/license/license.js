@@ -9,6 +9,6 @@ angular
 
         $scope.continue = function() {
             console.log('continue truck');
-            $location.path("signup/truck");
+            $location.path("signup/trucks");
         }
     });

@@ -5,6 +5,6 @@ angular
 
         $scope.continue = function() {
             console.log('continue trailer');
-            $location.path("signup/trailer");
+            $location.path("signup/trailers");
         }
     });

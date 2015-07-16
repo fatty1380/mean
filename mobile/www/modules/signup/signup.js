@@ -9,7 +9,8 @@
                 .state('signup/signin', {
                     url: '/signup/signin',
                     templateUrl: 'modules/signup/signin/signin.html',
-                    controller: 'signinCtrl'
+                    controller: 'signinCtrl',
+                    controllerAs: 'vmu'
                 })
 
                 .state('signup/register', {
