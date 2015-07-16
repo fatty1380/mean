@@ -1,15 +1,9 @@
 (function () {
     'use strict';
 
+    // creating main application module
     angular
-        .module('outset', [
-            'ionic',
-            'ui.router',
-            'home',
-            'login',
-            'signup',
-            'account'
-        ])
+        .module(AppConfig.appModuleName, AppConfig.appModuleDependencies)
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
                 $urlRouterProvider.otherwise("/account/profile");
@@ -25,5 +19,4 @@
                 }
             });
         });
-
 })();

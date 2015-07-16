@@ -25,7 +25,6 @@ module.exports = function(config) {
 
         'libs/ionic/js/ionic.bundle.js',
         '../node_modules/angular-mocks/angular-mocks.js',
-        'app.js',
         'modules/home/home.js',
         'modules/home/home_test.js'
 
@@ -75,4 +74,4 @@ module.exports = function(config) {
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false
   })
-}
+};

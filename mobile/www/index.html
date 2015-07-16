@@ -15,14 +15,22 @@
     <script src="libs/ionic/js/ionic.bundle.js"></script>
     <script src="libs/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="cordova.js"></script>
+    <!-- app -->
+    <script src="modules/app/app.config.js"></script>
+    <script src="modules/app/app.init.js"></script>
     <!-- modules -->
     <script src="modules/home/home.js"></script>
     <script src="modules/login/login.js"></script>
     <script src="modules/signup/signup.js"></script>
-    <script src="modules/account/account.js"></script>
-    <!-- app -->
-    <script src="app.js"></script>
+
+    <script src="modules/account/account.module.js"></script>
+    <script src="modules/account/config/account.module.routes.js"></script>
+
+    <script src="modules/account/child_modules/profile/profile.module.js"></script>
+    <script src="modules/account/child_modules/profile/controllers/profile.controller.js"></script>
+    <script src="modules/account/child_modules/profile/services/profile.services.js"></script>
+
     <!-- constants -->
-    <script src="modules/constants/userData.js"></script>
+    <script src="modules/app/constants/userData.js"></script>
 </body>
 </html>
