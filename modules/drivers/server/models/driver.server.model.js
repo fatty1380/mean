@@ -64,6 +64,10 @@ var DriverSchema = UserSchema.extend({
         default: null
     },
     
+    props: {
+        type: Schema.MixedTypes
+    },
+    
     started: {
         type: Number,
         default: null

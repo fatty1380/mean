@@ -65,24 +65,28 @@ describe('Driver CRUD tests', function () {
 				});
 		});
 
-		var props = {
+		var attrs = {
 			'handle': 'gearjammer',
 			'about': 'this is about you',
-			'started': 1989,
 			'license': {
 				'class': 'A',
 				'endorsements': ['H'],
 				'state': 'CA'
+			},
+			'props': {
+				'started': 1989,
+				'truck': 'Kenworth',
+				'trailers': ['Box Trailer', 'Curatin Side']
 			}
 		}
 
-		_.each(_.keys(props), function (key) {
+		_.each(_.keys(attrs), function (key) {
 			it('should be able to set the driver\'s ' + key, function () {
 				_test = this.test;
 				var endpoint = '/api/users';
 
 				var data = {};
-				data[key] = props[key];
+				data[key] = attrs[key];
 
 				log.debug({
 					test: _test.title,
@@ -99,7 +103,7 @@ describe('Driver CRUD tests', function () {
 							err: response.error
 						}, 'Got Response from %s', endpoint);
 
-						response.body.should.have.property(key, props[key]);
+						response.body.should.have.property(key, attrs[key]);
 
 					});
 			});
