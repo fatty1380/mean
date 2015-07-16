@@ -31,6 +31,8 @@ exports.driverByUserID = errorHandler.notAvailable;
 exports.driverByID = driverByID;
 exports.hasAuthorization = hasAuthorization;
 
+exports.setProps = setProperties;
+
 
 //////////////////////////////////////////////////////////
 /**
@@ -62,7 +64,7 @@ function create(req, res) {
         driver.schedule = null;
     }
 
-    console.log('[Driver Create] %j', driver);
+    req.log.debug('[Driver Create] %j', driver);
 
     driver.save(function (err) {
         if (err) {
@@ -79,7 +81,7 @@ function create(req, res) {
  * Show the current Driver
  */
 function read(req, res) {
-    console.log('[Driver.read] Req.driver has value: %s', !!req.driver);
+    req.log.debug('[Driver.read] Req.driver has value: %s', !!req.driver);
 
     if (!req.driver) {
         return res.status(404).send({
@@ -92,9 +94,10 @@ function read(req, res) {
 
 /**
  * Update a Driver
+ * @migrated: false
  */
 function update(req, res) {
-    console.log('[Driver.Controller] update()');
+    req.log.debug({ module: 'drivers', func: 'update', body: req.body }, 'Start');
     var driver = req.driver;
 
     driver = _.extend(driver, req.body);
@@ -105,16 +108,37 @@ function update(req, res) {
 
     driver.save(function (err) {
         if (err) {
-            console.log('[Driver.Update] Unable to update driver due to error: %j', err);
+            req.log.debug('[Driver.Update] Unable to update driver due to error: %j', err);
             return res.send(400, {
                 message: 'Unable to save changes at this time. Please try again later',
                 error: err.stack
             });
         } else {
-            console.log('Driver Saved %s', driver._id);
+            req.log.debug('Driver Saved %s', driver._id);
             res.json(driver);
         }
     });
+}
+
+function setProperties(req, res) {
+    req.log.debug({ module: 'drivers', func: 'setProperties', current: req.user.props, body: req.body }, 'Start');
+    
+    req.user.props = _.extend(req.user.props, req.body);
+    
+    return req.user.save()
+        .then(function (user) {
+            req.log.debug({ module: 'drivers', func: 'setProperties', result: user.props }, 'Result');
+
+            req.user = user;
+
+            res.json(req.user.props);
+        }, function (err) {
+            req.log.error({ module: 'drivers', func: 'setProperties', error: err }, 'unable to set properties for driver user');
+            return res.send(400, {
+                message: 'Unable to save changes at this time. Please try again later',
+                error: err.stack
+            });
+        });
 }
 
 /**
@@ -124,7 +148,7 @@ function update(req, res) {
  * This has been updated to handle the new combined user/driver object.
  */
 function uploadResume(req, res) {
-    console.log('[DriverCtrl.uploadResume] Start');
+    req.log.debug('[DriverCtrl.uploadResume] Start');
     var user = req.user;
     var sku = req.files.file.sku || 'resume';
 
@@ -138,7 +162,7 @@ function uploadResume(req, res) {
 
     fileUploader.saveFileToCloud(req.files, 'secure-content', true).then(
         function (response) {
-            console.log('successfully uploaded user resume to %j', response);
+            req.log.debug('successfully uploaded user resume to %j', response);
 
             if(_.isEmpty(user.reports[sku])) {
                 user.reportsData.push({ sku: sku });
@@ -158,7 +182,7 @@ function uploadResume(req, res) {
             });
 
         }, function (error) {
-            console.log('Failed to save Resume: %j', error);
+            req.log.debug('Failed to save Resume: %j', error);
             return res.status(400).send({
                 message: 'Unable to save Driver Resume. Please try again later'
             });
@@ -167,7 +191,7 @@ function uploadResume(req, res) {
 }
 
 function refreshResume(req, res) {
-    console.log('[DriverCtrl.refreshResume] Start');
+    req.log.debug('[DriverCtrl.refreshResume] Start');
 
     req.params.reportSku = 'resume';
 
@@ -186,27 +210,27 @@ function refreshResume(req, res) {
  */
 function refreshReport(req, res) {
 
-    console.log('[DriverCtrl.refreshReport] Start');
+    req.log.debug('[DriverCtrl.refreshReport] Start');
     var user = req.user;
     var sku = req.params.reportSku || !!user.reportsData && user.reportsData.length && user.reportsData[0].sku;
     var report = !!sku && !!user ? user.reports[sku] : null;
 
     if (!user) {
-        console.log('[DriverCtrl.refreshReport] User is not signed in');
+        req.log.debug('[DriverCtrl.refreshReport] User is not signed in');
         return res.status(401).send({
             message: 'User is not signed in'
         });
     }
 
     if (!sku || !(report && report.bucket && report.key)) {
-        console.log('[DriverCtrl.refreshReport] Driver does not have a %s on file', sku);
+        req.log.debug('[DriverCtrl.refreshReport] Driver does not have a %s on file', sku);
         return res.status(404).send({
             message: 'Driver does not have a ' + sku + ' report on file'
         });
     }
 
     if(moment().isBefore(report.expires)) {
-        console.log('[DriverCtrl.refreshReport] Report has not yet expired ==================================================================================================');
+        req.log.debug('[DriverCtrl.refreshReport] Report has not yet expired ==================================================================================================');
         return res.json(report);
     }
 
@@ -214,7 +238,7 @@ function refreshReport(req, res) {
         function (success) {
 
             report.url = success;
-            console.log('[DriverCtrl.refreshReport] Post secure upload, resolving with : %j', report);
+            req.log.debug('[DriverCtrl.refreshReport] Post secure upload, resolving with : %j', report);
 
             res.json(report);
 
@@ -222,13 +246,13 @@ function refreshReport(req, res) {
 
             user.save(function (err, updated) {
                 if (err) {
-                    console.log('[DriverCtrl.refreshReport] unable to save driver\'s updated report url', err);
+                    req.log.debug('[DriverCtrl.refreshReport] unable to save driver\'s updated report url', err);
                 } else {
-                    console.log('[DriverCtrl.refreshReport] Saved driver\'s updated report URL');
+                    req.log.debug('[DriverCtrl.refreshReport] Saved driver\'s updated report URL');
                 }
             });
         }, function (err) {
-            console.log('[DriverCtrl.refreshReport] Post secure upload failed: %j', err);
+            req.log.debug('[DriverCtrl.refreshReport] Post secure upload failed: %j', err);
 
             return res.status(400).send({
                 message: 'Unable to retrieve fresh URL for resume'
@@ -245,7 +269,7 @@ function refreshReport(req, res) {
 function getProfileFormAnswers(req, res) {
     var list;
     if(!!req.query.formId) {
-        console.log('Searching for profile form answers for `%s`', req.query.formId);
+        req.log.debug('Searching for profile form answers for `%s`', req.query.formId);
         list = _.find(req.driver.profile, {listId: req.query.formId});
     }
     else {
@@ -284,7 +308,7 @@ function deleteDriver(req, res) {
  * List of *ALL* Drivers
  */
 function list(req, res) {
-    console.log('[Driver.Controller] list(): ', req.url);
+    req.log.debug('[Driver.Controller] list(): ', req.url);
 
     req.sort = '-created';
 
@@ -293,10 +317,10 @@ function list(req, res) {
 
 
 // function driverByUserID(req, res, next) {
-//     console.log('[Driver.driverByUserId] start');
+//     req.log.debug('[Driver.driverByUserId] start');
 //     var userId = req.params.userId || req.query.userId || req.user.id;
 
-//     console.log('[Driver.driverByUserId] Looking for Driver for user: ', userId);
+//     req.log.debug('[Driver.driverByUserId] Looking for Driver for user: ', userId);
 
 //     if (!!userId) {
 //         return executeFind(req, res, next, Driver.findOne({
@@ -309,7 +333,7 @@ function list(req, res) {
  * Driver middleware
  */
 function driverByID(req, res, next, id) {
-    console.log('[Driver.driverById] start for id: ', id);
+    req.log.debug('[Driver.driverById] start for id: ', id);
 
     if ((/^[a-f\d]{24}$/i).test(id)) {
         return executeFind(req, res, next, Driver.findById(id));
@@ -324,7 +348,7 @@ function driverByID(req, res, next, id) {
  * Driver authorization middleware
  */
 function hasAuthorization(req, res, next) {
-    console.log('[Drivers.Ctrl.hasAuthorization] Checking...');
+    req.log.debug('[Drivers.Ctrl.hasAuthorization] Checking...');
     if (req.driver.id !== req.user.id) {
         return res.status(403).send({message: 'User is not authorized'});
     }
@@ -362,7 +386,7 @@ function executeQuery(req, res, next) {
             // })
 
             req.drivers = drivers || [];
-            console.log('[DriversCtrl.executeQuery] Found %d drivers for query %j', req.drivers.length, query);
+            req.log.debug('[DriversCtrl.executeQuery] Found %d drivers for query %j', req.drivers.length, query);
             res.json(req.drivers);
         });
 }
@@ -374,7 +398,7 @@ function executeFind(req, res, next, driverFind) {
         //.populate(Driver.fields.social)
         .exec(function (err, driver) {
             if (err) {
-                console.log('[Driver.executeFind] Driver search errored: ', err.message);
+                req.log.debug('[Driver.executeFind] Driver search errored: ', err.message);
                 if (!!next) {
                     return next(err);
                 }
@@ -385,7 +409,7 @@ function executeFind(req, res, next, driverFind) {
             }
 
             if (!driver) {
-                console.log('[Driver.executeFind] No Driver Found');
+                req.log.debug('[Driver.executeFind] No Driver Found');
 
                 if (!!next) {
                     return next();
@@ -393,7 +417,7 @@ function executeFind(req, res, next, driverFind) {
 
 
             } else {
-                console.log('[Driver.executeFind] found driver: %s', driver.id);
+                req.log.debug('[Driver.executeFind] found driver: %s', driver.id);
             }
 
             // TODO: Check social connection and access to fields

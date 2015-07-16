@@ -34,7 +34,7 @@ describe('Driver Model Unit Tests:', function () {
     });
 
     describe('Method Save', function () {
-        it('should be able to save without problems', function (done) {
+        it('should be able to save without problems', function () {
             return driver.save(function (err) {
                 log.debug({ driver: driver }, 'Saved Driver!!!');
                 should.not.exist(err);
@@ -49,10 +49,15 @@ describe('Driver Model Unit Tests:', function () {
                 d.license.should.have.property('endorsements', []);
                 d.license.should.have.property('state', null);
                 d.should.have.property('about', null);
-                d.should.have.property('started', null);
                 d.should.have.property('interests', []);
                 d.should.have.property('reportsData', []);
-                done();
+                
+                d.should.have.property('props');
+                d.props.should.have.property('started');
+                d.props.should.have.property('truck');
+                d.props.should.have.property('trailer', []);
+                d.props.should.have.property('freight');
+                d.props.should.have.property('company');
             });
         });
 

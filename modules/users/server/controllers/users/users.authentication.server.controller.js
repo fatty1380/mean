@@ -243,15 +243,6 @@ exports.removeOAuthProvider = function (req, res, next) {
     }
 };
 
-
-function updateUser(id, update) {
-    var options = { new: true };
-
-    log.trace({ func: 'updateUser', id: id, update: _.keys(update), options: options }, 'Updating User');
-
-    return User.findByIdAndUpdate(id, update, options).exec();
-}
-
 // DRY Simple Login Function
 function login(req, res, user) {
     req.log.debug({ func: 'login' }, 'Logging in user %s', user.email);

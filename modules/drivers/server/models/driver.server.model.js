@@ -65,12 +65,14 @@ var DriverSchema = UserSchema.extend({
     },
     
     props: {
-        type: Schema.MixedTypes
-    },
-    
-    started: {
-        type: Number,
-        default: null
+        type: Schema.Types.Mixed,
+        default: { 
+            'started': null,
+            truck: null,
+            trailer: [],
+            freight: null,
+            company: null
+        }
     },
 
     experience: [{

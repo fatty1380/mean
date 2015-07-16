@@ -4,6 +4,12 @@ module.exports = function (app) {
     var users = require('../../../../modules/users/server/controllers/users.server.controller');
     var drivers = require('../controllers/drivers.server.controller');
 
+    /**
+     * New "Driver" routes
+     */
+     app.route('/api/users/me/props')
+         .put(users.requiresLogin, drivers.setProps);
+
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
 
