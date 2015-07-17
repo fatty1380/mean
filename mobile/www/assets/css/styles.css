@@ -7949,6 +7949,23 @@ body {
     background: url('../img/shareIconOrange@2x.png') 0 0 no-repeat;
     background-size: 18px 15px;
     -webkit-background-size: 18px 15px; }
+  .ico.ico-request-review {
+    width: 15px;
+    height: 18px;
+    vertical-align: text-bottom !important;
+    background: url('../img/bg-request-review.png') 0 0 no-repeat;
+    background-size: 15px 18px;
+    -webkit-background-size: 15px 18px; }
+  .ico.ico-freight {
+    width: 13px;
+    height: 16px;
+    vertical-align: bottom;
+    background: url('../img/bg-freight.png') 0 0 no-repeat; }
+  .ico.ico-exp-truck {
+    width: 34px;
+    height: 34px;
+    vertical-align: middle;
+    background: url('../img/ico01.png') 0 0 no-repeat; }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .ico {
@@ -8088,24 +8105,37 @@ body {
 .profile-list {
   height: 100%; }
   .profile-list .list {
-    border-bottom: 1px solid #999;
     margin: 0 20px;
     padding-top: 20px; }
   .profile-list .item {
     background: none;
     padding: 10px 0 15px;
     border: none; }
+    .profile-list .item.item-divider {
+      padding: 0;
+      height: 1px;
+      margin-bottom: 15px;
+      min-height: 0;
+      background: #D2D2D2; }
+    .profile-list .item .item-note {
+      width: 50%;
+      text-align: right;
+      color: #9b9b9b;
+      white-space: normal; }
 
 .experience-list {
   height: 100%; }
   .experience-list .list {
-    border-bottom: 1px solid #999;
     margin: 0 20px;
     padding-top: 20px; }
   .experience-list .item {
     background: none;
     padding: 10px 0 15px;
     border: none; }
+    .experience-list .item.item-icon-right .icon {
+      right: 0; }
+    .experience-list .item .item-note {
+      color: #9b9b9b; }
 
 .main-tabs > .tab-nav {
   height: 69px;

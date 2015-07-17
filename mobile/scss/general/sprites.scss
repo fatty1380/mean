@@ -287,6 +287,26 @@
     background-size: 18px 15px;
     -webkit-background-size: 18px 15px;
   }
+  &.ico-request-review{
+    width: 15px;
+    height: 18px;
+    vertical-align: text-bottom !important;
+    background: url('../img/bg-request-review.png') 0 0 no-repeat;
+    background-size: 15px 18px;
+    -webkit-background-size: 15px 18px;
+  }
+  &.ico-freight{
+    width: 13px;
+    height: 16px;
+    vertical-align: bottom;
+    background: url('../img/bg-freight.png') 0 0 no-repeat;
+  }
+  &.ico-exp-truck{
+    width: 34px;
+    height: 34px;
+    vertical-align: middle;
+    background: url('../img/ico01.png') 0 0 no-repeat;
+  }
 
 }
 
