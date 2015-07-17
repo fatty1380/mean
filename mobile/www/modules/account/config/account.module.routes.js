@@ -15,7 +15,7 @@
                     views:{
                         'profile':{
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                            controller: 'ProfileCtrl'
+                            controller: 'ProfileCtrl as vm'
                         }
                     }
                 })

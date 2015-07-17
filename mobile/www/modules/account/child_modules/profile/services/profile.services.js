@@ -1,19 +1,25 @@
 (function () {
     'use strict';
 
-    var profileService = function ($http, user) {
+    var profileService = function ($http, $q, user) {
         var profileData = {},
             profilesList = [],
             getProfileByID = function (id) {
                 if (!id) return;
-                var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/';
-                $http
-                    .get(url + id)
+
+                var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/' + id,
+                    deferred = $q.defer();
+
+                $http.get(url)
                     .success(function (response) {
-                        profileData = response;
-                        return profileData;
+                        deferred.resolve(response);
+                    }).error(function (response) {
+                        deferred.reject(response.message);
                     });
+
+                return deferred.promise;
             },
+
             getAllProfiles = function () {
                 var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles';
                 $http
@@ -28,13 +34,11 @@
             profileData: profileData,
             profilesList: profilesList,
             getProfileByID: getProfileByID,
-            getAllProfiles: getAllProfiles(),
-            getCurrentUserProfile: getProfileByID(user.id)
-
+            getAllProfiles: getAllProfiles()
         }
     };
 
-    profileService.$inject = ['$http', 'user'];
+    profileService.$inject = ['$http', '$q', 'user'];
 
     angular
         .module('profile')

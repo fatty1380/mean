@@ -1,15 +1,19 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl($state, profileService) {
+    function ProfileCtrl(profileService) {
         var vm = this;
+        vm.profileData = {};
 
-        console.log(profileService);
-        console.log($state.current.name);
+        profileService.getProfileByID('55a6600d2944b0bd1536414e')
+            .then(function (data) {
+                vm.profileData = data;
+                console.log(vm.profileData);
+            });
 
     }
 
-    ProfileCtrl.$inject = ['$state', 'profileService'];
+    ProfileCtrl.$inject = ['profileService'];
 
     angular
         .module('account')

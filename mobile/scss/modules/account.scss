@@ -8,19 +8,25 @@
       font-size: 10px;
       line-height: 16px;
       font-weight: bold;
-      border: solid #333;
-      border-width: 1px 0 0 1px;
+      border: solid #D2D2D2;
+      border-width: 1px 1px 0 0;
       text-transform: uppercase;
       background-color: $white;
       color: $tab-text;
 
+      &:last-child{
+        border-right: 0;
+      }
+
       &.tab-item-active{
         color: $white;
+        border-left: 0;
         background-color: $tab-selected
       }
 
       .ico{
-        margin-bottom: 3px;
+        margin: 3px auto;
+        min-height: 22px;
       }
     }
   }

@@ -12,12 +12,16 @@
     vertical-align: top;
     width: 104px;
     height: 104px;
-    background: #333;
-    border: 2px solid #999;
+    background: #333 url('../img/bg-profile-default.jpg') 50% no-repeat;
+    -webkit-background-size: 100px 100px;
+    background-size: 100px 100px;
+    border: 2px solid #8C8B8B;
+    text-align: center;
     @include rounded-corner(100%);
 
     img{
       @include rounded-corner(100%);
+      width: 100%;
       vertical-align: top;
     }
   }
@@ -27,6 +31,10 @@
     left: 0;
     top: 50%;
     margin-top: -13px;
+
+    strong{
+      vertical-align: middle;
+    }
   }
 }
 
@@ -67,6 +75,12 @@
         left: 0;
         bottom: 0;
         width: 100%;
+        border-width: 1px 0 0;
+
+        .ico{
+          margin-right: 10px;
+          vertical-align: middle;
+        }
       }
     }
 }
@@ -82,8 +96,33 @@
     overflow: hidden;
 
     .top{
-      padding: 0 0 5px;
+      padding: 5px 0;
       overflow: hidden;
+
+      .ratings{
+        float: left;
+        height: 12px;
+        width: 72px;
+        background: url('../img/bg-stars.png') 0 0 no-repeat;
+        position: relative;
+
+        &:after{
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width:0;
+          background: url('../img/bg-stars.png') 0 100% no-repeat;
+        }
+
+        &[data-mark="1"]:after{width: 20%;}
+        &[data-mark="2"]:after{width: 40%;}
+        &[data-mark="3"]:after{width: 60%;}
+        &[data-mark="4"]:after{width: 80%;}
+        &[data-mark="5"]:after{width: 100%;}
+      }
+
       .time{
         float: right;
       }
@@ -110,6 +149,8 @@
 
       button{
         float: right;
+        padding: 0 25px;
+        min-height: 26px;
       }
     }
   }
