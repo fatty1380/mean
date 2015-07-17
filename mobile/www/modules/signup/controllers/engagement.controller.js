@@ -3,18 +3,16 @@
 
     angular
         .module('signup.engagement', [])
-        .controller('engagementCtrl', function ($scope, $location) {
+        .controller('engagementCtrl', function ($scope, $location, registerService, $ionicPopup, $ionicLoading) {
 
-            console.log("werewrwer");
             var vm = this;
-            vm.handle = "t";
-            vm.date = "tt";
+            vm.handle = "";
+            vm.started = "";
+            vm.company = "Default Company";
 
-            vm.cont = cont;
 
-            function cont(){
-                console.log('12312');
-                console.log(vm);
+            vm.initForm= function(scope){
+                vm.form = scope;
             }
 
             $scope.$on( '$ionicView.afterEnter', function () {
@@ -28,11 +26,39 @@
                 }
             });
 
-            $scope.cont = function() {
+            vm.continue = function() {
                 console.log('continue license');
-                console.log(vm);
-                console.log(this);
-               // $location.path("signup/license");
+
+                var data = {
+                    "handle": vm.handle,
+                    props:
+                    {
+                        "started": vm.started,
+                        "company" : vm.company
+                    }
+                };
+                console.log(data);
+
+                registerService.updateUser(data)
+                    .then(function (response) {
+                        $ionicLoading.hide();
+                        if(response.success) {
+                            $location.path("signup/license");
+                        }else{
+                            vm.showPopup(JSON.stringify(response));
+                        }
+                    });
+            }
+
+            vm.showPopup = function (response) {
+                console.log(response);
+                var alertPopup = $ionicPopup.alert({
+                    title: response.title || "title",
+                    template: response || "no message"
+                });
+                alertPopup.then(function(res) {
+                    $location.path("signup/license");
+                });
             }
 
             $scope.avatarShot = function() {

@@ -10,6 +10,10 @@
             }
         ])
 
+       /* .config(function ($httpProvider) {
+            $httpProvider.defaults.withCredentials = true;
+        })*/
+
         .run(function($ionicPlatform) {
             $ionicPlatform.ready(function() {
                 if(window.cordova && window.cordova.plugins.Keyboard) {

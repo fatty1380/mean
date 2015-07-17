@@ -18,6 +18,9 @@
         }
 
          vm.continue = function(){
+
+             console.log('vm.continue ');
+
              $ionicLoading.show({
                  template: 'please wait'
              });
@@ -27,17 +30,19 @@
                     if(response.success) {
                         $location.path("signup/engagement");
                     }else{
-                        vm.showPopup(response);
+                        vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
 
          vm.showPopup = function (response) {
+             console.log(response);
              var alertPopup = $ionicPopup.alert({
                  title: response.title || "title",
-                 template: response.message || "no message"
+                 template: response || "no message"
              });
              alertPopup.then(function(res) {
+                 $location.path("signup/engagement");
              });
          }
 

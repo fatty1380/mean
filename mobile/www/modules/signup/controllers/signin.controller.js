@@ -25,7 +25,7 @@
                      .then(function (response) {
                      $ionicLoading.hide();
                      if(response.success) {
-                        // $location.path("account/profile");
+                         //$location.path("account/profile");
                          vm.showPopup(JSON.stringify(response.message.data || "none"));
                      }else{
                         //vm.showPopup(response);
@@ -119,7 +119,7 @@
 
 
             vm.continueRegister = function(){
-                //console.log('continue register');
+                console.log('continue register');
                 $location.path("signup/register");
             }
 
