@@ -10,12 +10,12 @@
             vm.handle = "t";
             vm.date = "tt";
 
-            /*vm.cont = cont;
+            vm.cont = cont;
 
             function cont(){
                 console.log('12312');
                 console.log(vm);
-            }*/
+            }
 
             $scope.$on( '$ionicView.afterEnter', function () {
                 if ( window.cordova && window.cordova.plugins.Keyboard ) {

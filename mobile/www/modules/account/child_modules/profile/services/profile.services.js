@@ -6,7 +6,8 @@
             profilesList = [],
             getProfileByID = function (id) {
                 if (!id) return;
-                var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/';
+                //var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/';
+                var url = 'http://outset-d.elasticbeanstalk.com/api/profiles/';
                 $http
                     .get(url + id)
                     .success(function (response) {
@@ -15,7 +16,8 @@
                     });
             },
             getAllProfiles = function () {
-                var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles';
+                //var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles';
+                var url = 'http://outset-d.elasticbeanstalk.com/api/profiles';
                 $http
                     .get(url)
                     .success(function (response) {

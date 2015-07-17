@@ -14,29 +14,29 @@
     </ion-header-bar>
 
     <ion-content>
-        <form name="mainForm" id="mainForm" class="list sign-up" ng-submit="continue()"  ng-init="setFormScope(this)" novalidate >
+        <form name="mainForm" id="mainForm" class="list sign-up" ng-init="vm.initForm(this)" ng-submit="vm.continue()" novalidate >
              <p class="signup-title">Create your outset account below</p>
             <label class="item item-input">
-                <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="user.firstName" required>
+                <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" required>
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="Last Name"  ng-model="user.lastName" required>
+                <input type="text" placeholder="Last Name"  ng-model="vm.user.lastName" required>
             </label>
             <label class="item item-input">
-                <input type="email" name="email" placeholder="Email" ng-model="user.email" required>
+                <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" required>
             </label>
             <label class="item item-input">
-                <input type="password" placeholder="Password" ng-model="user.password"  required>
+                <input type="password" placeholder="Password" ng-model="vm.user.password"  required>
             </label>
             <label class="item item-input item-ass">
-                <input  name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="user.confirmPassword" compare-to="user.password" required  >
+                <input  name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" compare-to="vm.user.password" required  >
             </label>
         </form>
     </ion-content>
 
     <ion-footer-bar class="bar-light">
-        <button class="bar bar-footer bar-light submit-btn" ng-disabled="formScope.mainForm.$invalid"  form="mainForm"  type="submit" >
-            <p class="title"> - {{ formScope.mainForm.$invalid }} - Continue</p>
+        <button class="bar bar-footer bar-light submit-btn" ng-disabled="vm.form.mainForm.$invalid"  form="mainForm"  type="submit" >
+            <p class="title">  {{ vm.form.mainForm.$invalid }} - Continue</p>
         </button>
     </ion-footer-bar>
 

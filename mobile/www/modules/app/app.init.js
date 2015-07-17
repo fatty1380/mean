@@ -6,9 +6,10 @@
         .module(AppConfig.appModuleName, AppConfig.appModuleDependencies)
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                $urlRouterProvider.otherwise("/signup/register");
+                $urlRouterProvider.otherwise("/signup/signin");
             }
         ])
+
         .run(function($ionicPlatform) {
             $ionicPlatform.ready(function() {
                 if(window.cordova && window.cordova.plugins.Keyboard) {
