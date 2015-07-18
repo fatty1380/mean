@@ -64,6 +64,8 @@ exports.requiresLogin = function(req, res, next) {
  */
 exports.hasAuthorization = function(roles) {
     var _this = this;
+    
+    roles = roles || ['admin']
 
     log.debug({func: 'hasAuthorization', roles: roles}, 'Initializing Authorization Function with Roles');
 

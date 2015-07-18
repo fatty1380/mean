@@ -4,34 +4,50 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-path         = require('path'),
-Driver       = mongoose.model('Driver'),
-License      = mongoose.model('License'),
-Schedule     = mongoose.model('Schedule'),
-constants    = require(path.resolve('./modules/core/server/models/outset.constants')),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
-moment       = require('moment'),
-_            = require('lodash');
+    path = require('path'),
+    constants = require(path.resolve('./modules/core/server/models/outset.constants')),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
+    moment = require('moment'),
+    _ = require('lodash'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'drivers',
+        file: 'controller'
+    });
+
+var props = require('./drivers.properties.server.controller'),
+    exp = require('./drivers.experience.server.controller');
+
+var
+    Driver = mongoose.model('Driver'),
+    License = mongoose.model('License'),
+    Schedule = mongoose.model('Schedule');
 
 
+log.error({ props: _.keys(props) }, 'AVAILABLE PROPERTY FUNCTIONS');
 
-exports.create = errorHandler.notAvailable; //create;
-exports.read = read;
-exports.update = update;
-exports.uploadResume = uploadResume;
-exports.refreshResume = refreshResume;
-exports.refreshReport = refreshReport;
-exports.getProfileFormAnswers = getProfileFormAnswers;
-exports.createProfileFormAnswers = createProfileFormAnswers;
-exports.updateProfileFormAnswers = updateProfileFormAnswers;
-exports.delete = deleteDriver;
-exports.list = list;
-exports.driverByUserID = errorHandler.notAvailable;
-exports.driverByID = driverByID;
-exports.hasAuthorization = hasAuthorization;
+_.extend(exports, {
+    create: errorHandler.notAvailable, //create,
+    read: read,
+    update: update,
+    uploadResume: uploadResume,
+    refreshResume: refreshResume,
+    refreshReport: refreshReport,
+    getProfileFormAnswers: getProfileFormAnswers,
+    createProfileFormAnswers: createProfileFormAnswers,
+    updateProfileFormAnswers: updateProfileFormAnswers,
+    delete: deleteDriver,
+    list: list,
+    driverByUserID: errorHandler.notAvailable,
+    driverByID: driverByID,
+    hasAuthorization: hasAuthorization,
 
-exports.setProps = setProperties;
+    setProps: props.setProperties,
+    getProps: props.getProperties,
+
+    getExperience: exp.getExperience,
+    setExperience: exp.setExperience
+});
 
 
 //////////////////////////////////////////////////////////
@@ -120,27 +136,6 @@ function update(req, res) {
     });
 }
 
-function setProperties(req, res) {
-    req.log.debug({ module: 'drivers', func: 'setProperties', current: req.user.props, body: req.body }, 'Start');
-    
-    req.user.props = _.extend(req.user.props, req.body);
-    
-    return req.user.save()
-        .then(function (user) {
-            req.log.debug({ module: 'drivers', func: 'setProperties', result: user.props }, 'Result');
-
-            req.user = user;
-
-            res.json(req.user.props);
-        }, function (err) {
-            req.log.error({ module: 'drivers', func: 'setProperties', error: err }, 'unable to set properties for driver user');
-            return res.send(400, {
-                message: 'Unable to save changes at this time. Please try again later',
-                error: err.stack
-            });
-        });
-}
-
 /**
  * Update profile picture
  * -----------------------
@@ -164,11 +159,11 @@ function uploadResume(req, res) {
         function (response) {
             req.log.debug('successfully uploaded user resume to %j', response);
 
-            if(_.isEmpty(user.reports[sku])) {
+            if (_.isEmpty(user.reports[sku])) {
                 user.reportsData.push({ sku: sku });
             }
 
-            _.extend(user.reports[sku], response, {expires: moment().add(15, 'm').toDate()});
+            _.extend(user.reports[sku], response, { expires: moment().add(15, 'm').toDate() });
 
             user.save(function (saveError) {
                 if (saveError) {
@@ -187,7 +182,7 @@ function uploadResume(req, res) {
                 message: 'Unable to save Driver Resume. Please try again later'
             });
         }
-    );
+        );
 }
 
 function refreshResume(req, res) {
@@ -195,7 +190,7 @@ function refreshResume(req, res) {
 
     req.params.reportSku = 'resume';
 
-    return exports.refreshReport(req,res);
+    return exports.refreshReport(req, res);
 }
 
 /**
@@ -229,7 +224,7 @@ function refreshReport(req, res) {
         });
     }
 
-    if(moment().isBefore(report.expires)) {
+    if (moment().isBefore(report.expires)) {
         req.log.debug('[DriverCtrl.refreshReport] Report has not yet expired ==================================================================================================');
         return res.json(report);
     }
@@ -268,9 +263,9 @@ function refreshReport(req, res) {
  */
 function getProfileFormAnswers(req, res) {
     var list;
-    if(!!req.query.formId) {
+    if (!!req.query.formId) {
         req.log.debug('Searching for profile form answers for `%s`', req.query.formId);
-        list = _.find(req.driver.profile, {listId: req.query.formId});
+        list = _.find(req.driver.profile, { listId: req.query.formId });
     }
     else {
         list = req.driver.profile;
@@ -350,7 +345,7 @@ function driverByID(req, res, next, id) {
 function hasAuthorization(req, res, next) {
     req.log.debug('[Drivers.Ctrl.hasAuthorization] Checking...');
     if (req.driver.id !== req.user.id) {
-        return res.status(403).send({message: 'User is not authorized'});
+        return res.status(403).send({ message: 'User is not authorized' });
     }
     next();
 }
@@ -370,10 +365,10 @@ function executeQuery(req, res, next) {
         .select(Driver.fields.social)
         .exec(function (err, drivers) {
             if (err) {
-                if(!drivers)
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err)
-                });
+                if (!drivers)
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
             }
             
             // var fields = Driver.fields.social.split(' ');
@@ -395,7 +390,7 @@ function executeQuery(req, res, next) {
 
 function executeFind(req, res, next, driverFind) {
     driverFind
-        //.populate(Driver.fields.social)
+    //.populate(Driver.fields.social)
         .exec(function (err, driver) {
             if (err) {
                 req.log.debug('[Driver.executeFind] Driver search errored: ', err.message);

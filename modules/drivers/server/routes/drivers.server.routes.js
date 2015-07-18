@@ -8,7 +8,12 @@ module.exports = function (app) {
      * New "Driver" routes
      */
      app.route('/api/users/me/props')
-         .put(users.requiresLogin, drivers.setProps);
+         .put(users.requiresLogin, drivers.setProps)
+        .get(users.requiresLogin, drivers.getProps);
+        
+     app.route('/api/users/me/experience')
+         .put(users.requiresLogin, drivers.setExperience)
+        .get(users.requiresLogin, drivers.getExperience);
 
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
