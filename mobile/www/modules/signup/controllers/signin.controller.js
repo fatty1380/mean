@@ -20,6 +20,10 @@
                 vm.form = scope;
             }
 
+            /**
+             * @description
+             * Sign In
+             */
             vm.signIn = function(){
                  $ionicLoading.show({
                     template: 'please wait'

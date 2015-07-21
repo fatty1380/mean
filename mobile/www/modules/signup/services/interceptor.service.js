@@ -23,6 +23,7 @@
         return {
             request: function (config) {
 
+                //@TODO add filter
                 if(config.method == "GET" || config.method == "PUT" ){
                     config.url += ("?access_token="+tokenService.get('access_token'));
                   //  config.headers.Authorization = "Bearer "+tokenService.get('access_token');

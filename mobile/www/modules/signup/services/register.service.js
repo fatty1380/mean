@@ -49,8 +49,8 @@
                 .then(handleSuccess, handleError);
         }
 
-        function getProfilesID () {
-            return  requestApi("api/profiles/55a8c832f58ef0900b7ca14c" , "get" )
+        function getProfilesID (profileId) {
+            return  requestApi("api/profiles/"+profileId , "get" )
                 .then(handleSuccess, handleError);
         }
 
