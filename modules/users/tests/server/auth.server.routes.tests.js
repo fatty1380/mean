@@ -145,6 +145,44 @@ describe('Auth Routes tests', function () {
                         user.should.have.property('firstName');
                     });
             });
+            
+            it('should return a list of profiles', function () {
+                var _test = this.test;
+                var endpoint = '/api/profiles?access_token=' + token.access_token;
+
+                return agent.get(endpoint)
+                //.set({access_token: token.access_token})
+                    .expect(200)
+                    .then(function (response) {
+                        log.debug({
+                            test: _test.title,
+                            body: response.body,
+                            err: response.error
+                        }, 'Got Response from %s', endpoint);
+
+                        _.isArray(response.body).should.be.true;
+                    });
+            });
+            
+            it('should return a profile object', function () {
+                var _test = this.test;
+                var endpoint = '/api/profiles/' + user.id + '?access_token=' + token.access_token;
+
+                return agent.get(endpoint)
+                //.set({access_token: token.access_token})
+                    .expect(200)
+                    .then(function (response) {
+                        log.debug({
+                            test: _test.title,
+                            body: response.body,
+                            err: response.error
+                        }, 'Got Response from %s', endpoint);
+
+                        var user = response.body;
+
+                        user.should.have.property('firstName');
+                    });
+            });
 
         })
 

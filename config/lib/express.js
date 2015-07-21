@@ -294,12 +294,15 @@ module.exports.initErrorRoutes = function (app) {
         console.error(err.stack);
 
         // Redirect to error page
-        res.redirect('/server-error');
+        //res.redirect('/server-error');
+        res.status(500).json({error: err.stack})
     });
 
     // Assume 404 since no middleware responded
     app.use(function (req, res) {
         // Redirect to not found page
+        
+        res.status(404).json({error: 'not found'})
         res.redirect('/not-found');
     });
 };
