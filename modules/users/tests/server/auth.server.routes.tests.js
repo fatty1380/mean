@@ -14,6 +14,7 @@ var should = require('should'),
 
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
+    Driver = mongoose.model('Driver'),
     ClientApp = mongoose.model('ClientApplication'),
     AccessToken = mongoose.model('AccessToken');
     
@@ -41,7 +42,7 @@ describe('Auth Routes tests', function () {
     describe('JWT Tests', function () {
 
         beforeEach(function () {
-            user = new User(stubs.user);
+            user = new Driver(stubs.user);
             credentials = stubs.getCredentials(user);
 
             return user.save();
@@ -109,8 +110,8 @@ describe('Auth Routes tests', function () {
                     response.body.should.not.have.property('token');
                 });
         });
-        
-        
+
+
         describe('Authenticated JWT', function () {
 
             var token;
@@ -128,10 +129,10 @@ describe('Auth Routes tests', function () {
 
             it('should return my user object', function () {
                 var _test = this.test;
-                var endpoint = '/api/users/me?access_token='+token.access_token;
+                var endpoint = '/api/users/me?access_token=' + token.access_token;
 
                 return agent.get(endpoint)
-                    //.set({access_token: token.access_token})
+                //.set({access_token: token.access_token})
                     .expect(200)
                     .then(function (response) {
                         log.debug({
@@ -145,7 +146,7 @@ describe('Auth Routes tests', function () {
                         user.should.have.property('firstName');
                     });
             });
-            
+
             it('should return a list of profiles', function () {
                 var _test = this.test;
                 var endpoint = '/api/profiles?access_token=' + token.access_token;
@@ -163,7 +164,7 @@ describe('Auth Routes tests', function () {
                         _.isArray(response.body).should.be.true;
                     });
             });
-            
+
             it('should return a profile object', function () {
                 var _test = this.test;
                 var endpoint = '/api/profiles/' + user.id + '?access_token=' + token.access_token;
@@ -181,6 +182,36 @@ describe('Auth Routes tests', function () {
                         var user = response.body;
 
                         user.should.have.property('firstName');
+                    });
+            });
+
+
+            it('should allow me to update my user', function () {
+                var _test = this.test;
+                var endpoint = '/api/users?access_token=' + token.access_token;
+
+                var data = {
+                    'handle': 'gearjammer',
+                    'about': 'I bet you think this test is about you'
+                }
+
+                return agent.put(endpoint)
+                //.set({access_token: token.access_token})
+                    .send(data)
+                    .expect(200)
+                    .then(function (response) {
+                        log.debug({
+                            test: _test.title,
+                            body: response.body,
+                            err: response.error
+                        }, 'Got Response from %s', endpoint);
+
+                        var user = response.body;
+
+                        user.should.have.property('handle', data.handle);
+                        user.should.have.property('about', data.about);
+
+                        user.should.have.property('id', user.id);
                     });
             });
 

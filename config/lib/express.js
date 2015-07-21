@@ -94,6 +94,23 @@ module.exports.initMiddleware = function (app) {
         });
     }
 
+    if (process.env.NODE_ENV !== 'production') {
+        var errorhandler = require('errorhandler');
+
+        app.use(errorhandler({ log: function errorNotification(err, str, req) {
+            var title = 'Error in ' + req.method + ' ' + req.url
+
+            req.log.error({
+                title: title,
+                method: req.method,
+                url: req.url,
+                error: err
+            }, str);
+        } }))
+
+        
+    }
+
     // Environment dependent middleware
     if (process.env.NODE_ENV !== 'production') {
         // Disable views cache
@@ -295,14 +312,14 @@ module.exports.initErrorRoutes = function (app) {
 
         // Redirect to error page
         //res.redirect('/server-error');
-        res.status(500).json({error: err.stack})
+        res.status(500).json({ error: err.stack })
     });
 
     // Assume 404 since no middleware responded
     app.use(function (req, res) {
         // Redirect to not found page
         
-        res.status(404).json({error: 'not found'})
+        res.status(404).json({ error: 'not found' })
         res.redirect('/not-found');
     });
 };

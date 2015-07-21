@@ -132,14 +132,6 @@ var generateTokens = function (data, done) {
     });
 };
 
-
-
-var serverToken = server.token(),
-	errorHandler = server.errorHandler(),
-	auth = passport.authenticate(['basic', 'oauth2-client-password'], { session: false });
-	
-log.debug({ func: 'init', token: serverToken.toString(), errors: errorHandler.toString(), auth: passport.authenticate(['basic', 'oauth2-client-password'], { session: false }).toString() }, 'Exporting the following');
-
 // token endpoint
 exports.token = [
     passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
