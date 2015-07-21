@@ -21,18 +21,19 @@
             </div>
         </div>
 
-        <form name="mainForm" class="list" ng-submit="register()" role="form">
+        <form name="mainForm" id="mainForm" class="list" ng-init="vm.initForm(this)" ng-submit="vm.continue()" role="form">
             <label class="item item-input">
-                <input type="text" placeholder="Handle" autofocus>
+                <input type="text" placeholder="Handle" ng-model="vm.handle" autofocus>
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="Driving Since (Enter Year)" onfocus="this.type='date';this.setAttribute('onfocus','');this.blur();this.focus();" >
+                <input type="text" placeholder="Driving Since (Enter Year)" ng-model="vm.started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();" >
             </label>
         </form>
+
     </ion-content>
 
     <ion-footer-bar class="bar-light">
-        <button class="bar bar-footer bar-light" ng-click="continue()" type="submit" >
+        <button class="bar bar-footer bar-light" form="mainForm" ng-click="vm.continue()" >
             <p class="title">Continue<p>
         </button>
     </ion-footer-bar>
