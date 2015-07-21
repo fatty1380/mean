@@ -15,7 +15,31 @@
                     views:{
                         'profile':{
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                            controller: 'ProfileCtrl'
+                            controller: 'ProfileCtrl as vm'
+                        }
+                    }
+                })
+                .state('account.profile.share', {
+                    url: '/share',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/share-profile.html'
+                        }
+                    }
+                })
+                .state('account.profile.request', {
+                    url: '/request',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/request-review.html'
+                        }
+                    }
+                })
+                .state('account.profile.edit', {
+                    url: '/edit',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/edit-profile.html'
                         }
                     }
                 })

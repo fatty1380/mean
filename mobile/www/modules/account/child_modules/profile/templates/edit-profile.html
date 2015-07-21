@@ -1,0 +1,47 @@
+<ion-view class="profile-screen">
+    <div class="header mid-size">
+        <ion-header-bar>
+            <h1 class="title">Edit Profile Page</h1>
+        </ion-header-bar>
+        <div class="profile-visual compact">
+            <div class="photo"><img src="assets/img/profile-photo.jpg" alt=""/></div>
+            <div class="text">
+                <strong>Trucker Handle</strong>
+                <em>Driver</em>
+            </div>
+        </div>
+    </div>
+    <ion-pane class="has-footer">
+        <ion-scroll>
+            <div class="list">
+                <label class="item item-input">
+                    <input type="text" placeholder="First Name">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Last Name">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Category">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Phone Number">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Email Address">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Truck Type">
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Years of Experience">
+                </label>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary" ui-sref="account.profile">Cancel</button>
+            <button class="button primary">Save</button>
+        </div>
+    </ion-footer-bar>
+</ion-view>

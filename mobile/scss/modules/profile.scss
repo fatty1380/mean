@@ -12,12 +12,16 @@
     vertical-align: top;
     width: 104px;
     height: 104px;
-    background: #333;
-    border: 2px solid #333;
+    background: #333 url('../img/bg-profile-default.jpg') 50% no-repeat;
+    -webkit-background-size: 100px 100px;
+    background-size: 100px 100px;
+    border: 2px solid #8C8B8B;
+    text-align: center;
     @include rounded-corner(100%);
 
     img{
       @include rounded-corner(100%);
+      width: 100%;
       vertical-align: top;
     }
   }
@@ -27,7 +31,49 @@
     left: 0;
     top: 50%;
     margin-top: -13px;
+
+    strong{
+      vertical-align: middle;
+    }
   }
+
+  &.compact{
+    position: static;
+    left: auto;
+    top:auto;
+    right: auto;
+    bottom: auto;
+    height: auto;
+    overflow: hidden;
+    padding: 74px 20px 0;
+
+    .photo{
+      float: left;
+      width: 60px;
+      height: 60px;
+      margin-right: 15px;
+      -webkit-background-size: 60px 60px;
+      background-size: 60px 60px;
+    }
+    .text{
+      padding-top: 11px;
+      overflow: hidden;
+      text-align:left;
+
+      strong,
+      em{
+        display: block;
+        padding-bottom: 3px;
+      }
+
+      em{
+        color: rgba(255,255,255,0.6);
+        font-size: 12px;
+      }
+
+    }
+  }
+
 }
 
 .profile-tabs{
@@ -59,7 +105,7 @@
     }
     .tab-content{
       padding-top: 70px;
-      padding-bottom: 46px;
+      padding-bottom: 42px;
       background: #eee;
 
       .content-button{
@@ -67,6 +113,14 @@
         left: 0;
         bottom: 0;
         width: 100%;
+        font-size: 14px;
+        min-height: 44px;
+        border-width: 1px 0 0;
+
+        .ico{
+          margin-right: 10px;
+          vertical-align: middle;
+        }
       }
     }
 }
@@ -82,8 +136,33 @@
     overflow: hidden;
 
     .top{
-      padding: 0 0 5px;
+      padding: 5px 0;
       overflow: hidden;
+
+      .ratings{
+        float: left;
+        height: 12px;
+        width: 72px;
+        background: url('../img/bg-stars.png') 0 0 no-repeat;
+        position: relative;
+
+        &:after{
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width:0;
+          background: url('../img/bg-stars.png') 0 100% no-repeat;
+        }
+
+        &[data-mark="1"]:after{width: 20%;}
+        &[data-mark="2"]:after{width: 40%;}
+        &[data-mark="3"]:after{width: 60%;}
+        &[data-mark="4"]:after{width: 80%;}
+        &[data-mark="5"]:after{width: 100%;}
+      }
+
       .time{
         float: right;
       }
@@ -110,6 +189,8 @@
 
       button{
         float: right;
+        padding: 0 25px;
+        min-height: 26px;
       }
     }
   }
@@ -119,7 +200,6 @@
   height: 100%;
 
   .list{
-    border-bottom: 1px solid #999;
     margin: 0 20px;
     padding-top: 20px;
   }
@@ -128,6 +208,21 @@
     background: none;
     padding: 10px 0 15px;
     border: none;
+
+    &.item-divider{
+      padding: 0;
+      height: 1px;
+      margin-bottom: 15px;
+      min-height: 0;
+      background: #D2D2D2;
+    }
+
+    .item-note{
+      width: 40%;
+      text-align: right;
+      color: $content-body-text;
+      white-space: normal;
+    }
   }
 }
 
@@ -135,7 +230,6 @@
   height: 100%;
 
   .list{
-    border-bottom: 1px solid #999;
     margin: 0 20px;
     padding-top: 20px;
   }
@@ -144,5 +238,43 @@
     background: none;
     padding: 10px 0 15px;
     border: none;
+
+    &.item-icon-right .icon {right: 0;}
+    .item-note{color: $content-body-text;}
+  }
+}
+
+/**
+    Share Profile Page 1
+**/
+.profile-screen{
+  .top {
+    height: 64px;
+    padding: 14px 20px;
+    color: $tab-text;
+
+    .button {
+      @include rounded-corner(5px);
+      margin: 0;
+      border-width: 1px;
+      font-size: 14px;
+      min-height: 32px;
+      line-height: 32px;
+    }
+  }
+
+  .profile-share-form{
+    height: 100%;
+
+    .item-input{
+      padding: 5px 15px;
+      border-width: 1px 0 0 ;
+      input{
+        padding-right: 0;
+      }
+      textarea{
+        background: none;
+      }
+    }
   }
 }
