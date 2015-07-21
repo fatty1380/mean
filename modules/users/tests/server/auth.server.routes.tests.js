@@ -90,25 +90,25 @@ describe('Auth Routes tests', function () {
                 });
         });
 
-        // it('should get a 401 when supplying invalid credentials', function () {
-        //     var _test = this.test;
+        it('should get a 401 when supplying invalid credentials', function () {
+            var _test = this.test;
 
-        //     var endpoint = '/oauth/token';
-        //     credentials.password = 'incorrect'
+            var endpoint = '/oauth/token';
+            credentials.password = 'incorrect'
 
-        //     return agent.post(endpoint)
-        //         .send(credentials)
-        //         .expect(401)
-        //         .then(function (response) {
-        //             log.debug({
-        //                 test: _test.title,
-        //                 body: response.body,
-        //                 err: response.error
-        //             }, 'Got Response from %s', endpoint);
+            return agent.post(endpoint)
+                .send(credentials)
+                .expect(401)
+                .then(function (response) {
+                    log.debug({
+                        test: _test.title,
+                        body: response.body,
+                        err: response.error
+                    }, 'Got Response from %s', endpoint);
 
-        //             response.body.should.not.have.property('token');
-        //         });
-        // });
+                    response.body.should.not.have.property('token');
+                });
+        });
         
         
         describe('Authenticated JWT', function () {
@@ -131,7 +131,7 @@ describe('Auth Routes tests', function () {
                 var endpoint = '/api/users/me?access_token='+token.access_token;
 
                 return agent.get(endpoint)
-                    .set(token)
+                    //.set({access_token: token.access_token})
                     .expect(200)
                     .then(function (response) {
                         log.debug({
