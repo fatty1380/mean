@@ -138,9 +138,9 @@
                     template: 'please wait'
                 });
 
-                var obj = {handle:Math.random()};
+               // var obj = {handle:Math.random()};
 
-                registerService.updateUser(obj)
+                registerService.updateUser({handle:"ffffff"})
                     .then(function (response) {
                         $ionicLoading.hide();
                         if(response.success) {

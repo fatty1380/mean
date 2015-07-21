@@ -22,7 +22,7 @@
 
         function updateUser (data) {
             if (!data) return;
-            return requestApi("api/users" , "put", data)
+            return requestApi("api/users" , "put", data, true)
                 .then(handleSuccess, handleError);
         }
 
@@ -54,12 +54,16 @@
                 .then(handleSuccess, handleError);
         }
 
-        function requestApi(apiUrl, method, data) {
+        function requestApi(apiUrl, method, data, needSerialize) {
+            console.log("  ");
+            console.log("  requestApi");
+            console.log(apiUrl, method, data, !!needSerialize);
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
+
             return $http ({
                 url: baseUrl + apiUrl,
                 method: method,
-                data: serializeData( data )
+                data: !needSerialize ? serializeData(data) : data
             })
         }
 

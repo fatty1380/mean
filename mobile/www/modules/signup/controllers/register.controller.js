@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-     var registerCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading) {
+     var registerCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
 
          var vm = this;
 
@@ -20,7 +20,7 @@
 
          vm.continue = function(){
 
-             console.log('vm.continue ');
+             console.log('vm.continue !!!!!!');
 
              $ionicLoading.show({
                  template: 'please wait'
@@ -36,10 +36,32 @@
 
                     $ionicLoading.hide();
                     if(response.success) {
-                        $location.path("signup/engagement");
+
+                    /*    console.log('response.success: ',response);
+                        console.log('response.success: ',response.message);
+                        console.log('response.success: ',response.message.data);
+                        console.log('response.success: ',response.message.data.email);
+
+                          registerService.signIn({ email:response.message.data.email, password: vm.user.password })
+                            .then(function (response) {
+                                $ionicLoading.hide();
+                                console.log(response);
+                                if(response.success) {
+                                    tokenService.set('access_token', response.message.data.access_token);
+                                    tokenService.set('refresh_token', response.message.data.refresh_token);
+                                    tokenService.set('token_type', response.message.data.token_type);
+                                   // vm.showPopup(JSON.stringify(response.message.data || "none"));
+                                    $location.path("signup/engagement");
+                                }else{
+                                    //vm.showPopup(response);
+                                    vm.showPopup(JSON.stringify(response));
+                                }
+                            });*/
+
+                        $location.path("signup/signin");
                     }else{
-                        $location.path("signup/engagement");
-                       // vm.showPopup(JSON.stringify(response));
+                       // $location.path("signup/engagement");
+                        vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
@@ -51,7 +73,7 @@
                  template: response || "no message"
              });
              alertPopup.then(function(res) {
-                 $location.path("signup/engagement");
+                // $location.path("signup/engagement");
              });
          }
 
@@ -69,7 +91,7 @@
         });
      }
 
-    registerCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading' ];
+    registerCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading', 'tokenService'];
 
     angular
         .module('signup.register', [])

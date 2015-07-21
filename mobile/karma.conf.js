@@ -15,14 +15,15 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      /*"www/libs/ionic/js/ionic.bundle.js",*/
-      'www/libs/angular/angular.js',
+      "www/libs/ionic/js/ionic.bundle.js",
       'node_modules/angular-mocks/angular-mocks.js',
-      'www/modules/app/app.config.js',
-      'www/modules/app/app.init.js',
-      'tests/*.js',
-      'tests/**/*.js',
-      'tests/**/**/*.js'
+      'www/modules/app/*.js',
+
+      'www/modules/account/account.module.js',
+      'www/modules/account/child_modules/profile/profile.module.js',
+      'www/modules/account/child_modules/profile/services/profile.services.js',
+      'tests/account/profile/profile.services.test.js'
+      //'tests/account/profile/profile.controller.test.js'
     ],
 
 
