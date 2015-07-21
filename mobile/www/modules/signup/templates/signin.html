@@ -1,0 +1,39 @@
+<ion-view>
+
+    <div class="bg-wrapper">
+        <div class="bg">
+        </div>
+    </div>
+
+    <ion-nav-bar>
+        <ion-nav-back-button>Back</ion-nav-back-button>
+    </ion-nav-bar>
+
+    <ion-header-bar align-title="center" class="bar-stable">
+        <h1 class="title">Sign In</h1>
+    </ion-header-bar>
+
+    <ion-content>
+        <form name="mainForm" id="mainForm" class="list" ng-submit="vm.continue()"  ng-init="vm.initForm(this)" novalidate >
+            <p class="signup-title">Sign In Title</p>
+            <label class="item item-input">
+                <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" required>
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="Password" ng-model="vm.user.password"  required>
+            </label>
+        </form>
+        <button class="button button-full button-stable" ng-click="vm.signIn()">Sign in</button>
+        <button class="button button-full button-stable" ng-click="vm.signOut()">Sign out</button>
+        <button class="button button-full button-stable" ng-click="vm.me()">Me</button>
+        <button class="button button-full button-stable" ng-click="vm.getProfiles()">getProfiles</button>
+        <button class="button button-full button-stable" ng-click="vm.setHandle()">setHandle</button>
+    </ion-content>
+
+    <ion-footer-bar class="bar-light">
+        <button class="bar bar-footer bar-light submit-btn" ng-click="vm.continueRegister()" >
+            <p class="title">Create Account</p>
+        </button>
+    </ion-footer-bar>
+
+</ion-view>

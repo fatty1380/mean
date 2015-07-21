@@ -1,0 +1,92 @@
+<ion-view>
+
+    <div class="bg-wrapper">
+        <div class="bg">
+        </div>
+    </div>
+
+    <ion-nav-bar>
+        <ion-nav-back-button>Back</ion-nav-back-button>
+    </ion-nav-bar>
+
+    <ion-header-bar align-title="center" class="bar bar-header bar-light">
+        <h1 class="title">Create Account</h1>
+    </ion-header-bar>
+
+    <ion-content>
+        <p class="title">Select your license</p>
+
+        <div class="list license">
+            <label class="item item-radio">
+                <input type="radio" name="group" class="category-a" ng-model="vm.licence.class" ng-value="'A'">
+                <div class="item-content">
+                    <i class="ico ico-licenseainactive" ></i>
+                </div>
+            </label>
+
+            <label class="item item-radio">
+                <input type="radio" name="group" class="category-b"  ng-model="vm.class" ng-value="'B'">
+                <div class="item-content">
+                    <i class="ico ico-licensebinactive" ></i>
+                </div>
+            </label>
+
+            <label class="item item-radio">
+                <input type="radio" name="group" class="category-c" ng-model="vm.class" ng-value="'C'">
+                <div class="item-content">
+                    <i class="ico ico-licensecinactive" ></i>
+                </div>
+            </label>
+        </div>
+
+
+
+        <p class="title">Select your endorsements</p>
+        <ul class="list endorsements">
+            <div class="row">
+                <li class="item item-checkbox endorsement-a col">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="vm.endorsement.T">
+                    </label>
+                    <p>Double /<br>
+                    Triple trailers</p>
+                </li>
+                <li class="item item-checkbox endorsement-b col">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="vm.endorsement.P">
+                    </label>
+                    <p>Passenger</p>
+                </li>
+                <li class="item item-checkbox endorsement-c col">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="vm.endorsement.N">
+                    </label>
+                    <p>Tank Vehicle</p>
+                </li>
+             </div>
+
+            <div class="endorsements-bottom row">
+                <li class="item item-checkbox endorsement-d col">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="vm.endorsement.H">
+                    </label>
+                    <p>Hazardous Materials</p>
+                </li>
+                <li class="item item-checkbox endorsement-e col">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="vm.endorsement.X">
+                    </label>
+                    <p>Tank Vehicle<br>
+                    and<br>
+                    Hazardous Materials</p>
+                </li>
+            </div>
+        </ul>
+
+    </ion-content>
+    <ion-footer-bar class="bar-light">
+        <button class="bar bar-footer bar-light"  ng-click="vm.continue()" >
+            <p class="title">Continue<p>
+        </button>
+    </ion-footer-bar>
+</ion-view>

@@ -37,6 +37,10 @@ body{
     height: auto;
   }
 
+  & ~ .pane.has-footer{
+    bottom: 44px;
+  }
+
   .bar-header{
     padding: 0 5px;
     background: none;
