@@ -17,74 +17,28 @@
     <ion-content>
         <p class="title">Choose Your Truck Make</p>
         <div class="list select-truck">
-            <label class="item item-radio">
-                <input type="radio" name="group">
+            <label class="item item-radio"  ng-repeat="truck in vm.trucks"  >
+                <input type="radio" name="trucks"  ng-model="currentTruck.name" value="{{truck.name}}">
                 <div class="item-content">
-                    <p>Peterbilt Motor Co</p>
+                    <p>{{ truck.name }}</p>
                     <div class="logo">
-                        <div class="peterbilt-logo" ></div>
+                        <div class="{{ truck.logoClass }} " ></div>
                      </div>
                 </div>
-               <!-- <i class="radio-icon ion-checkmark"></i>-->
             </label>
 
             <label class="item item-radio">
-                <input type="radio" name="group">
+                <input type="radio" name="trucks">
                 <div class="item-content">
-                    <p>international</p>
-
-                    <div class="logo">
-                    <div class="international-logo" ></div>
-                    </div>
+                    <p class="center-text">Other...</p>
+                    <div class="logo" ></div>
                 </div>
-              <!--  <i class="radio-icon ion-checkmark"></i>-->
-            </label>
-
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    <p>freightliner</p>
-                    <div class="logo">
-                         <div class="freightliner-logo" ></div>
-                    </div>
-                </div>
-                <!--<i class="radio-icon ion-checkmark"></i>-->
-            </label>
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    <p>Mack</p>
-                    <div class="logo">
-                     <div class="mack-logo" ></div>
-                    </div>
-                </div>
-               <!-- <i class="radio-icon ion-checkmark"></i>-->
-            </label>
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    <p>kenworth</p>
-                    <div class="logo">
-                    <div class="kenworth-logo" ></div>
-                    </div>
-                </div>
-               <!-- <i class="radio-icon ion-checkmark"></i>-->
-            </label>
-
-            <label class="item item-radio">
-                <input type="radio" name="group">
-                <div class="item-content">
-                    <p class="item-center">Other ...</p>
-                  <!--  <div class="logo">
-                        <div class="kenworth-logo" ></div>
-                    </div>-->
-                </div>
-                <!-- <i class="radio-icon ion-checkmark"></i>-->
             </label>
         </div>
+
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button class="bar bar-footer bar-light" ng-click="continue()" type="submit" >
+        <button class="bar bar-footer bar-light" ng-click="vm.continueToTrailers()" type="submit" >
             <p class="title">Continue<p>
         </button>
     </ion-footer-bar>

@@ -94,6 +94,14 @@
                 });
                 registerService.getProfilesID(vm.user)
                     .then(function (response) {
+
+                        console.log(" ");
+                        console.log(" ");
+                        console.log("signin");
+                        console.log(vm.user);
+                        console.log(response);
+
+
                         $ionicLoading.hide();
                         console.log(response);
                        // console.log(JSON.stringify(response.message.data));
@@ -108,7 +116,6 @@
             }
 
             vm.showPopup = function (response) {
-
                 var alertPopup = $ionicPopup.alert({
                     title:  "title",
                     template: response

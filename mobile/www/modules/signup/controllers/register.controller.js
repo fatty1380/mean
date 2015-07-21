@@ -15,7 +15,8 @@
 
          vm.initForm= function(scope){
              vm.form = scope;
-        }
+         }
+
 
          vm.continue = function(){
 
@@ -26,11 +27,19 @@
              });
             registerService.registerUser(vm.user)
                 .then(function (response) {
+
+                    console.log(" ");
+                    console.log(" ");
+                    console.log("register");
+                    console.log(vm.user);
+                    console.log(response);
+
                     $ionicLoading.hide();
                     if(response.success) {
                         $location.path("signup/engagement");
                     }else{
-                        vm.showPopup(JSON.stringify(response));
+                        $location.path("signup/engagement");
+                       // vm.showPopup(JSON.stringify(response));
                     }
                 });
         }

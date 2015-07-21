@@ -1,7 +1,7 @@
 <ion-view>
 
     <div class="bg-wrapper">
-        <div class="trailers-bg">
+        <div class="bg">
         </div>
     </div>
 
@@ -9,79 +9,28 @@
         <ion-nav-back-button>Back</ion-nav-back-button>
     </ion-nav-bar>
 
-    <ion-header-bar align-title="center" class="bar bar-header bar-light">
+    <ion-header-bar align-title="center" class="">
         <h1 class="title">Create Account</h1>
+        <h3 class="title">Choose Trailer Types</h3>
     </ion-header-bar>
 
     <ion-content>
-        <p class="title">Choose Trailer Types</p>
-
         <ul class="list select-trailer">
 
-            <li class="item item-checkbox">
+            <li class="item item-checkbox" ng-repeat="trailer in vm.trailers">
                 <label class="checkbox">
-                    <input type="checkbox">
+                    <input type="checkbox" ng-model="trailer.checked">
                     <div class="item-content">
                         <i class="ico ico-checkboxselected" ></i>
                     </div>
                 </label>
-                <p>Trailer 1</p>
-            </li>
-
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    <div class="item-content">
-                        <i class="ico ico-checkboxselected" ></i>
-                    </div>
-                </label>
-                <p>Trailer 2</p>
-            </li>
-
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    <div class="item-content">
-                        <i class="ico ico-checkboxselected" ></i>
-                    </div>
-                </label>
-                <p>Trailer 3</p>
-            </li>
-
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    <div class="item-content">
-                        <i class="ico ico-checkboxselected" ></i>
-                    </div>
-                </label>
-                <p>Trailer 4</p>
-            </li>
-
-            <li class="item item-checkbox">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    <div class="item-content">
-                        <i class="ico ico-checkboxselected" ></i>
-                    </div>
-                </label>
-                <p>Trailer 5</p>
-            </li>
-
-            <li class="item item-checkbox">
-                <label class="checkbox ">
-                    <input type="checkbox">
-                    <div class="item-content">
-                        <i class="ico ico-checkboxselected" ></i>
-                    </div>
-                </label>
-                <p>Trailer 6</p>
+                <p>{{ trailer.name }}</p>
             </li>
         </ul>
 
     </ion-content>
     <ion-footer-bar class="bar-light">
-        <button class="bar bar-footer bar-light" ng-click="continue()" type="submit" >
+        <button class="bar bar-footer bar-light" ng-click="vm.continueToTrucks()" >
             <p class="title">Continue<p>
         </button>
     </ion-footer-bar>
