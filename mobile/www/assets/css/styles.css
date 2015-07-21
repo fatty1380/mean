@@ -2750,7 +2750,7 @@ ion-infinite-scroll {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-color: #f8f8f8;
   overflow: hidden; }
 
 .view-container {
@@ -3031,7 +3031,7 @@ a.subdued {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 5px;
+  padding: 0;
   width: 100%;
   height: 44px;
   border-width: 0;
@@ -7713,6 +7713,8 @@ body {
   .header.compact-size ~ .pane {
     top: 120px;
     height: auto; }
+  .header ~ .pane.has-footer {
+    bottom: 44px; }
   .header .bar-header {
     padding: 0 5px;
     background: none;
@@ -7731,12 +7733,14 @@ body {
 .action-buttons {
   height: 44px;
   letter-spacing: 0.82px; }
-  .action-buttons.primary {
-    color: #ffffff;
-    background-color: #3eaeb1; }
-  .action-buttons.secondary {
-    color: #858585;
-    background-color: #ffffff; }
+  .action-buttons .button {
+    font-weight: bold; }
+    .action-buttons .button.primary {
+      color: #ffffff;
+      background-color: #3eaeb1; }
+    .action-buttons .button.secondary {
+      color: #858585;
+      background-color: #ffffff; }
 
 .label {
   text-transform: uppercase;
@@ -8009,6 +8013,32 @@ body {
     margin-top: -13px; }
     .profile-visual .contacts-amount strong {
       vertical-align: middle; }
+  .profile-visual.compact {
+    position: static;
+    left: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    height: auto;
+    overflow: hidden;
+    padding: 74px 20px 0; }
+    .profile-visual.compact .photo {
+      float: left;
+      width: 60px;
+      height: 60px;
+      margin-right: 15px;
+      -webkit-background-size: 60px 60px;
+      background-size: 60px 60px; }
+    .profile-visual.compact .text {
+      padding-top: 11px;
+      overflow: hidden;
+      text-align: left; }
+      .profile-visual.compact .text strong, .profile-visual.compact .text em {
+        display: block;
+        padding-bottom: 3px; }
+      .profile-visual.compact .text em {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 12px; }
 
 .profile-tabs {
   position: absolute;
@@ -8033,13 +8063,15 @@ body {
         color: #ffffff; }
   .profile-tabs .tab-content {
     padding-top: 70px;
-    padding-bottom: 46px;
+    padding-bottom: 42px;
     background: #eee; }
     .profile-tabs .tab-content .content-button {
       position: absolute;
       left: 0;
       bottom: 0;
       width: 100%;
+      font-size: 14px;
+      min-height: 44px;
       border-width: 1px 0 0; }
       .profile-tabs .tab-content .content-button .ico {
         margin-right: 10px;
@@ -8118,7 +8150,7 @@ body {
       min-height: 0;
       background: #D2D2D2; }
     .profile-list .item .item-note {
-      width: 50%;
+      width: 40%;
       text-align: right;
       color: #9b9b9b;
       white-space: normal; }
@@ -8136,6 +8168,35 @@ body {
       right: 0; }
     .experience-list .item .item-note {
       color: #9b9b9b; }
+
+.profile-screen .ionic-scroll {
+  height: 100%; }
+
+/**
+    Share Profile Page 1
+**/
+.profile-screen .top {
+  height: 64px;
+  padding: 14px 20px;
+  color: #807b84; }
+  .profile-screen .top .button {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0;
+    border-width: 1px;
+    font-size: 14px;
+    min-height: 32px;
+    line-height: 32px; }
+.profile-screen .profile-share-form {
+  height: 100%; }
+  .profile-screen .profile-share-form .item-input {
+    padding: 5px 15px;
+    border-width: 1px 0 0; }
+    .profile-screen .profile-share-form .item-input input {
+      padding-right: 0; }
+    .profile-screen .profile-share-form .item-input textarea {
+      background: none; }
 
 .main-tabs > .tab-nav {
   height: 69px;

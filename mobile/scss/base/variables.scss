@@ -66,7 +66,7 @@ $headings-font-family:            $font-family-base !default;
 $headings-font-weight:            500 !default;
 $headings-line-height:            1.2 !default;
 
-$base-background-color:           #fff !default;
+$base-background-color:           #f8f8f8 !default;
 $base-color:                      $content-body-text !default;
 
 $link-color:                      $positive !default;
@@ -189,8 +189,8 @@ $button-default-active-border:    $button-stable-active-border !default;
 
 $bar-height:                      44px !default;
 $bar-title-font-size:             17px !default;
-$bar-padding-portrait:            5px !default;
-$bar-padding-landscape:           5px !default;
+$bar-padding-portrait:            0 !default;
+$bar-padding-landscape:           0 !default;
 $bar-transparency:                1 !default;
 
 $bar-footer-height:               $bar-height !default;

@@ -36,6 +36,44 @@
       vertical-align: middle;
     }
   }
+
+  &.compact{
+    position: static;
+    left: auto;
+    top:auto;
+    right: auto;
+    bottom: auto;
+    height: auto;
+    overflow: hidden;
+    padding: 74px 20px 0;
+
+    .photo{
+      float: left;
+      width: 60px;
+      height: 60px;
+      margin-right: 15px;
+      -webkit-background-size: 60px 60px;
+      background-size: 60px 60px;
+    }
+    .text{
+      padding-top: 11px;
+      overflow: hidden;
+      text-align:left;
+
+      strong,
+      em{
+        display: block;
+        padding-bottom: 3px;
+      }
+
+      em{
+        color: rgba(255,255,255,0.6);
+        font-size: 12px;
+      }
+
+    }
+  }
+
 }
 
 .profile-tabs{
@@ -67,7 +105,7 @@
     }
     .tab-content{
       padding-top: 70px;
-      padding-bottom: 46px;
+      padding-bottom: 42px;
       background: #eee;
 
       .content-button{
@@ -75,6 +113,8 @@
         left: 0;
         bottom: 0;
         width: 100%;
+        font-size: 14px;
+        min-height: 44px;
         border-width: 1px 0 0;
 
         .ico{
@@ -178,7 +218,7 @@
     }
 
     .item-note{
-      width: 50%;
+      width: 40%;
       text-align: right;
       color: $content-body-text;
       white-space: normal;
@@ -201,5 +241,47 @@
 
     &.item-icon-right .icon {right: 0;}
     .item-note{color: $content-body-text;}
+  }
+}
+
+
+.profile-screen {
+  .ionic-scroll{
+    height: 100%;
+  }
+}
+
+/**
+    Share Profile Page 1
+**/
+.profile-screen{
+  .top {
+    height: 64px;
+    padding: 14px 20px;
+    color: $tab-text;
+
+    .button {
+      @include rounded-corner(5px);
+      margin: 0;
+      border-width: 1px;
+      font-size: 14px;
+      min-height: 32px;
+      line-height: 32px;
+    }
+  }
+
+  .profile-share-form{
+    height: 100%;
+
+    .item-input{
+      padding: 5px 15px;
+      border-width: 1px 0 0 ;
+      input{
+        padding-right: 0;
+      }
+      textarea{
+        background: none;
+      }
+    }
   }
 }

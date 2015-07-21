@@ -1,14 +1,14 @@
 <ion-view>
     <ion-pane class="header mid-size">
         <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="edit()">Edit</button>
+            <button class="button button-clear" ui-sref="account.profile.edit">Edit</button>
             <h1 class="title" ng-bind="vm.profileData.displayName">Profile</h1>
             <button class="button button-clear">
                 <i class="ico ico-settingsicon ico-text-top"></i>
             </button>
         </ion-header-bar>
         <div class="profile-visual">
-            <div class="photo" ng-click="vm.clicksCount()"><img src="assets/img/profile-photo.jpg" alt=""/></div>
+            <div class="photo"><img src="assets/img/profile-photo.jpg" alt=""/></div>
             <div class="contacts-amount">
                 <span class="ico ico-avatar ico-middle"></span>
                 <strong>{{vm.profileData.friends.length}}</strong>
@@ -64,7 +64,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button"><i class="ico ico-request-review"></i>Request Review</button>
+                <button class="button content-button" ui-sref="account.profile.request"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
             <ion-tab title="PROFILE">
                 <ion-scroll class="profile-list">
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </ion-scroll>
-                <button class="button content-button"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
             <ion-tab title="EXPERIENCE">
                 <ion-scroll class="experience-list">
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 </ion-scroll>
-                <button class="button content-button"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button"  ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
         </ion-tabs>
     </ion-pane>

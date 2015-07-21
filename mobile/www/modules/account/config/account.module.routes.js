@@ -19,6 +19,30 @@
                         }
                     }
                 })
+                .state('account.profile.share', {
+                    url: '/share',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/share-profile.html'
+                        }
+                    }
+                })
+                .state('account.profile.request', {
+                    url: '/request',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/request-review.html'
+                        }
+                    }
+                })
+                .state('account.profile.edit', {
+                    url: '/edit',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/edit-profile.html'
+                        }
+                    }
+                })
                 .state('account.lockbox', {
                     url: '/lockbox',
                     views:{

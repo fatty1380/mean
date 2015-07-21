@@ -6,7 +6,6 @@ body{
 }
 
 
-
 /** HEADER STYLES **/
 .header{
   background-image: linear-gradient(-180deg, $tab-selected 0%, $gradient-bottom 100%);
@@ -37,6 +36,10 @@ body{
     height: auto;
   }
 
+  & ~ .pane.has-footer{
+    bottom: 44px;
+  }
+
   .bar-header{
     padding: 0 5px;
     background: none;
@@ -61,6 +64,9 @@ body{
   height: 44px;
   letter-spacing: 0.82px;
 
+  .button{
+    font-weight: bold;
+
     &.primary{
       color: $modal-primary-text;
       background-color: $modal-primary-bg;
@@ -70,6 +76,7 @@ body{
       color: $modal-secondary-text;
       background-color: $modal-secondary-bg;
     }
+  }
 }
 
 
