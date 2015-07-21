@@ -38,7 +38,7 @@ module.exports = {
 		}
 	},
     logs: {
-        access: process.env.LOG_ACCESS_PATH || './log/',
+        access: '', //åprocess.env.LOG_ACCESS_PATH || './log/',
         stdout: {
             level: 'debug'
         }

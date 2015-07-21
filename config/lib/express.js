@@ -3,31 +3,34 @@
 /**
  * Module dependencies.
  */
-var config     = require('../config'),
-chalk          = require('chalk'),
-express        = require('express'),
-morgan         = require('morgan'),
-bodyParser     = require('body-parser'),
-session        = require('express-session'),
-MongoStore     = require('connect-mongo')(session),
-multer         = require('multer'),
-favicon        = require('serve-favicon'),
-compress       = require('compression'),
-methodOverride = require('method-override'),
-cookieParser   = require('cookie-parser'),
-helmet         = require('helmet'),
-passport       = require('passport'),
-flash          = require('connect-flash'),
-consolidate    = require('consolidate'),
-addRequestId   = require('express-request-id')(),
-path           = require('path'),
+var config = require('../config'),
+    chalk = require('chalk'),
+    express = require('express'),
+    morgan = require('morgan'),
+    bodyParser = require('body-parser'),
+    session = require('express-session'),
+    MongoStore = require('connect-mongo')(session),
+    multer = require('multer'),
+    favicon = require('serve-favicon'),
+    compress = require('compression'),
+    methodOverride = require('method-override'),
+    cookieParser = require('cookie-parser'),
+    helmet = require('helmet'),
+    passport = require('passport'),
+    flash = require('connect-flash'),
+    consolidate = require('consolidate'),
+    addRequestId = require('express-request-id')(),
+    path = require('path'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'lib',
         file: 'express'
     }),
-fs             = require('fs'),
-http           = require('http'),
-https          = require('https');
+    fs = require('fs'),
+    http = require('http'),
+    https = require('https');
+
+var expressJwt = require('express-jwt'),
+    jwt = require('jsonwebtoken');
 
 var reqIndex = 0;
 
@@ -35,7 +38,7 @@ var reqIndex = 0;
  * Initialize local variables
  */
 module.exports.initLocalVariables = function (app) {
-    log.trace({func: 'initLocalVariables'}, 'Initializing Local Variables');
+    log.trace({ func: 'initLocalVariables' }, 'Initializing Local Variables');
 
     // Setting application local variables
     app.locals.title = config.app.title;
@@ -52,7 +55,7 @@ module.exports.initLocalVariables = function (app) {
  * Initialize application middleware
  */
 module.exports.initMiddleware = function (app) {
-    log.trace({func: 'initMiddleware'}, 'START Initializing Middleware');
+    log.trace({ func: 'initMiddleware' }, 'START Initializing Middleware');
     // Showing stack errors
     app.set('showStackError', true);
 
@@ -92,12 +95,12 @@ module.exports.initMiddleware = function (app) {
     }
 
     // Environment dependent middleware
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
         // Disable views cache
         app.set('view cache', false);
 
         streamType = 'dev';
-    } else if (process.env.NODE_ENV === 'production') {
+    } else {
         app.locals.cache = 'memory';
 
         streamType = 'combined';
@@ -137,6 +140,11 @@ module.exports.initMiddleware = function (app) {
             }
         });
     }
+    
+    /// JWT???
+    //app.use('/api', expressJwt({ secret: config.sessionSecret }));
+    //app.use('/api', expressJwt({ secret: config.sessionSecret }));
+    
 
 
     // Request body parsing middleware should be above methodOverride
@@ -144,7 +152,7 @@ module.exports.initMiddleware = function (app) {
         limit: '10mb',
         extended: true
     }));
-    app.use(bodyParser.json({limit: '10mb'}));
+    app.use(bodyParser.json({ limit: '10mb' }));
     app.use(methodOverride());
 
     // Add the cookie parser and flash middleware
@@ -169,14 +177,14 @@ module.exports.initMiddleware = function (app) {
         next();
     });
 
-    log.trace({func: 'initLocalVariables'}, 'Completed Initializing Middleware');
+    log.trace({ func: 'initLocalVariables' }, 'Completed Initializing Middleware');
 };
 
 /**
  * Configure view engine
  */
 module.exports.initViewEngine = function (app) {
-    log.trace({func: 'initViewEngine'}, 'Initializing View Engine');
+    log.trace({ func: 'initViewEngine' }, 'Initializing View Engine');
 
     // Set swig as the template engine
     app.engine('server.view.html', consolidate[config.templateEngine]);
@@ -190,7 +198,7 @@ module.exports.initViewEngine = function (app) {
  * Configure Express session
  */
 module.exports.initSession = function (app, db) {
-    log.trace({func: 'initSession'}, 'Initializing Session');
+    log.trace({ func: 'initSession' }, 'Initializing Session');
 
     // Express MongoDB session storage
     app.use(session({
@@ -208,19 +216,19 @@ module.exports.initSession = function (app, db) {
  * Invoke modules server configuration
  */
 module.exports.initModulesConfiguration = function (app, db) {
-    log.trace({func: 'initModulesConfiguration'}, 'Initializing Modules Configuration');
+    log.trace({ func: 'initModulesConfiguration' }, 'Initializing Modules Configuration');
 
     config.files.server.configs.forEach(function (configPath) {
         require(path.resolve(configPath))(app, db);
     });
-    log.trace({func: 'initModulesConfiguration'}, 'Completed Modules Configuration');
+    log.trace({ func: 'initModulesConfiguration' }, 'Completed Modules Configuration');
 };
 
 /**
  * Configure Helmet headers configuration
  */
 module.exports.initHelmetHeaders = function (app) {
-    log.trace({func: 'initHelmetHeaders'}, 'Initializing Helmet Headers');
+    log.trace({ func: 'initHelmetHeaders' }, 'Initializing Helmet Headers');
 
     // Use helmet to secure Express headers
     app.use(helmet.xframe());
@@ -234,7 +242,7 @@ module.exports.initHelmetHeaders = function (app) {
  * Configure the modules static routes
  */
 module.exports.initModulesClientRoutes = function (app) {
-    log.trace({func: 'initModulesClientRoutes'}, 'Initializing Modules Client Routes');
+    log.trace({ func: 'initModulesClientRoutes' }, 'Initializing Modules Client Routes');
 
     // Setting the app router and static folder
     app.use('/', express.static(path.resolve('./public')));
@@ -249,11 +257,11 @@ module.exports.initModulesClientRoutes = function (app) {
  * Configure the modules ACL policies
  */
 module.exports.initModulesServerPolicies = function (app) {
-    log.trace({func: 'initModulesServerPolicies'}, 'Initializing Modules Server Policies');
+    log.trace({ func: 'initModulesServerPolicies' }, 'Initializing Modules Server Policies');
 
     // Globbing policy files
     config.files.server.policies.forEach(function (policyPath) {
-        log.trace({func: 'initModulesServerPolicies'}, 'Resolving policy path `%s`', policyPath);
+        log.trace({ func: 'initModulesServerPolicies' }, 'Resolving policy path `%s`', policyPath);
         require(path.resolve(policyPath)).invokeRolesPolicies();
     });
 };
@@ -262,7 +270,7 @@ module.exports.initModulesServerPolicies = function (app) {
  * Configure the modules server routes
  */
 module.exports.initModulesServerRoutes = function (app) {
-    log.trace({func: 'initModulesServerRoutes'}, 'Initializing Modules Server Routes');
+    log.trace({ func: 'initModulesServerRoutes' }, 'Initializing Modules Server Routes');
 
     // Globbing routing files
     config.files.server.routes.forEach(function (routePath) {
@@ -274,7 +282,7 @@ module.exports.initModulesServerRoutes = function (app) {
  * Configure error handling
  */
 module.exports.initErrorRoutes = function (app) {
-    log.trace({func: 'initErrorRoutes'}, 'Initializing Error Routes');
+    log.trace({ func: 'initErrorRoutes' }, 'Initializing Error Routes');
 
     // Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
     app.use(function (err, req, res, next) {
@@ -301,7 +309,7 @@ module.exports.initErrorRoutes = function (app) {
  * Configure Socket.io
  */
 module.exports.configureSocketIO = function (app, db) {
-    log.trace({func: 'configureSocketIO'}, 'Initializing SocketIO');
+    log.trace({ func: 'configureSocketIO' }, 'Initializing SocketIO');
 
     // Load the Socket.io configuration
     var server = require('./socket.io')(app, db);
@@ -338,20 +346,20 @@ module.exports.initHttps = function (app) {
             httpsServer = https.createServer(options, app);
             log.info('HTTPS server successfully initialized');
         } catch (err) {
-            log.error({error: err}, 'HTTPS Initialization failed');
+            log.error({ error: err }, 'HTTPS Initialization failed');
         }
         // Return HTTPS server instance
         return httpsServer;
     }
 
-    log.trace({func: 'initHttps'}, 'HTTPS is not Configured - Skipping');
+    log.trace({ func: 'initHttps' }, 'HTTPS is not Configured - Skipping');
 };
 
 /**
  * Initialize the Express application
  */
 module.exports.init = function (db) {
-    log.info({func: 'init'}, 'Starting Initialization of Express Router');
+    log.info({ func: 'init' }, 'Starting Initialization of Express Router');
 
     // Initialize express app
     var app = express();
@@ -398,7 +406,7 @@ module.exports.init = function (db) {
         this.configureSocketIO(httpsServer, db);
     }
 
-    log.info({func: 'init'}, 'Completed Initialization of Express Router');
+    log.info({ func: 'init' }, 'Completed Initialization of Express Router');
 
-    return {http: httpServer, https: httpsServer};
+    return { http: httpServer, https: httpsServer };
 };

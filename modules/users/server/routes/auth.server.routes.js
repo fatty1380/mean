@@ -3,11 +3,39 @@
 /**
  * Module dependencies.
  */
-var passport = require('passport');
+var passport = require('passport'),
+path = require('path')	,
+	log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users',
+        file: 'auth.routes'
+    });
 
-module.exports = function(app) {
+var oauth2 = require(path.resolve('./config/lib/oauth2'));
+
+module.exports = function (app) {
 	/* User Routes */
 	var users = require('../controllers/users.server.controller');
+	
+	app.route('/')
+	.get(
+		function (req, res, next) {
+			req.log.debug({ func: 'get slash', user: req.user, headers: req.headers }, 'authenticated?');
+			next();
+		}
+		, passport.authenticate('bearer', { session: false }));
+	
+	/**
+	 * Allowing for JWT Based Authentication
+	 */
+	log.info({ func: 'init', token: oauth2.token }, 'Initializing JWT Routes');
+	// app.route('/oauth/token')
+	// 	.all(function (req, res, next) {
+	// 		req.log.debug('OAUTH TOKEN TEST')
+	// 		next();
+	// 	})
+	// 	.post(oauth2.token);
+		
+	app.route('/oauth/token').post(oauth2.token[0], oauth2.token[1], oauth2.token[2]);
 
 	/* Setting up the users password api */
 	app.route('/api/auth/forgot').post(users.forgot);

@@ -101,7 +101,7 @@ exports.signin = function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         req.log.debug({ func: 'signin', err: err, user: user, info: info }, '[Auth.Ctrl] Passport Auth Complete');
         if (err || !user) {
-            console.error(info, err);
+            req.log.error(info, err);
             res.status(400).send(info);
         } else {
             login(req, res, user);
@@ -256,8 +256,9 @@ function login(req, res, user) {
         if (err) {
             log.warn({ err: err }, 'Login Failed due to error');
             res.status(400).send(err);
-        } else {
-            req.log.info({ func: 'login', user: req.user, roles: req.user.roles.join(',') }, 'Login Successful!');
+        } 
+        else {
+            req.log.info({ func: 'login', user: req.user.email, roles: req.user.roles.join(',') }, 'Login Successful!');
 
             res.json(req.user);
         }

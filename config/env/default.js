@@ -112,6 +112,10 @@ module.exports = {
     templateEngine: 'swig',
     sessionSecret: 'Cinderella story. Outta nowhere. A former greenskeeper, now, about to become the Masters champion. It looks like a mirac... Its in the hole! Its in the hole! Its in the hole!',
     sessionCollection: 'sessions',
+    
+    security: {
+        tokenLife: 1000 * 3600 * 24 * 30
+    },
 
     facebook: {
         clientID: process.env.FACEBOOK_ID || 'APP_ID',
