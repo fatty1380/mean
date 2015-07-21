@@ -144,7 +144,6 @@ module.exports.initMiddleware = function (app) {
     /// JWT???
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));
-    
 
 
     // Request body parsing middleware should be above methodOverride

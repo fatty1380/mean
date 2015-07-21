@@ -17,7 +17,8 @@
          * @apiName GetMyUser
          * @apiGroup Users
          */
-        app.route('/api/users/me').all(passport.authenticate('bearer', { session: false })).get(users.me);
+        app.route('/api/users/me')
+            .get(users.me);
         /**
          * @api {put} /users Update the logged in user
          * @apiName GetAllUsers
