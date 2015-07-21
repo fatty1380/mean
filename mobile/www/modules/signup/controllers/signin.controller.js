@@ -4,13 +4,16 @@
     angular
         .module('signup.signin', [])
 
-        .controller('signinCtrl', function ($scope, $location, registerService, $ionicPopup, $ionicLoading ) {
+        .controller('signinCtrl', function ($scope, $location, registerService, $ionicPopup, $ionicLoading , tokenService) {
 
             var vm = this;
 
             vm.user = {
-                email: 'test@test.test',
-                password: 'testtest'
+                email: 'markov.flash@gmail.com',
+                password: 'sergey83mark',
+                grant_type: 'password',
+                client_id: 'mobile_v0_1',
+                client_secret: 'shenanigans'
             };
 
             vm.initForm= function(scope){
@@ -21,10 +24,17 @@
                  $ionicLoading.show({
                     template: 'please wait'
                  });
+
+                console.log(vm.user);
+
                  registerService.signIn(vm.user)
                      .then(function (response) {
                      $ionicLoading.hide();
+
                      if(response.success) {
+                         tokenService.set('access_token', response.message.data.access_token);
+                         tokenService.set('refresh_token', response.message.data.refresh_token);
+                         tokenService.set('token_type', response.message.data.token_type);
                          //$location.path("account/profile");
                          vm.showPopup(JSON.stringify(response.message.data || "none"));
                      }else{
@@ -38,6 +48,9 @@
                 $ionicLoading.show({
                     template: 'please wait'
                 });
+
+               // console.log('access_token: ', tokenService.get("access_token"));
+
                 registerService.me()
                     .then(function (response) {
                         $ionicLoading.hide();
@@ -59,6 +72,7 @@
                     .then(function (response) {
                         $ionicLoading.hide();
                         if(response.success) {
+                            tokenService.set('access_token','');
                             // $location.path("account/profile");
                             console.log(response);
                             //vm.showPopup(JSON.stringify(response.message.data));
@@ -110,6 +124,26 @@
                             //  $location.path("account/profile");
                             vm.showPopup(JSON.stringify(response.message.data));
                         }else{
+                            vm.showPopup(JSON.stringify(response));
+                        }
+                    });
+            }
+
+            vm.setHandle = function(){
+                $ionicLoading.show({
+                    template: 'please wait'
+                });
+
+                var obj = {handle:Math.random()};
+
+                registerService.updateUser(obj)
+                    .then(function (response) {
+                        $ionicLoading.hide();
+                        if(response.success) {
+                            // $location.path("account/profile");
+                            vm.showPopup(JSON.stringify(response.message.data));
+                        }else{
+                            //vm.showPopup(response);
                             vm.showPopup(JSON.stringify(response));
                         }
                     });

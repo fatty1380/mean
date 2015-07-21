@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
 
@@ -29,7 +28,8 @@
 
         function signIn (data) {
             if (!data) return;
-            return  requestApi("api/auth/signin" , "post", {  username: data.email, password: data.password } )
+            data.username = data.email;
+            return  requestApi("oauth/token/" , "post", data )
                 .then(handleSuccess, handleError);
         }
 
