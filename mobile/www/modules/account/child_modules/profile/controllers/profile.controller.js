@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl($state, profileService) {
+    function ProfileCtrl(profileService) {
         var vm = this;
         vm.profileData = {};
         vm.getProfile = function () {
@@ -15,7 +15,7 @@
 
     }
 
-    ProfileCtrl.$inject = ['$state', 'profileService'];
+    ProfileCtrl.$inject = ['profileService'];
 
     angular
         .module('account')
