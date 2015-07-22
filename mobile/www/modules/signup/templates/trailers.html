@@ -1,37 +1,33 @@
-<ion-view>
-
-    <div class="bg-wrapper">
-        <div class="bg">
+<ion-view class="signup-section">
+    <div class="header compact-size">
+        <ion-nav-bar>
+            <ion-nav-back-button>Back</ion-nav-back-button>
+        </ion-nav-bar>
+        <ion-header-bar align-title="center" class="bar-stable">
+            <h1 class="title">Create Account</h1>
+        </ion-header-bar>
+        <div class="bar bar-subheader">
+            <h3 class="title">Choose Your Truck Make</h3>
         </div>
     </div>
-
-    <ion-nav-bar>
-        <ion-nav-back-button>Back</ion-nav-back-button>
-    </ion-nav-bar>
-
-    <ion-header-bar align-title="center" class="">
-        <h1 class="title">Create Account</h1>
-        <h3 class="title">Choose Trailer Types</h3>
-    </ion-header-bar>
-
-    <ion-content>
-        <ul class="list select-trailer">
-
-            <li class="item item-checkbox" ng-repeat="trailer in vm.trailers">
-                <label class="checkbox">
-                    <input type="checkbox" ng-model="trailer.checked">
-                    <div class="item-content">
-                        <i class="ico ico-checkboxselected" ></i>
-                    </div>
-                </label>
-                <p>{{ trailer.name }}</p>
-            </li>
-        </ul>
-
-    </ion-content>
-    <ion-footer-bar class="bar-light">
-        <button class="bar bar-footer bar-light" ng-click="vm.continue()" >
-            <p class="title">Continue<p>
-        </button>
+    <ion-pane class="has-footer">
+        <ion-scroll>
+            <ul class="list select-trailer">
+                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="trailer.checked">
+                        <div class="item-content">
+                            <i class="ico ico-checkboxselected" ></i>
+                        </div>
+                    </label>
+                    <p>{{ trailer.name }}</p>
+                </li>
+            </ul>
+        </ion-scroll>
+    </ion-pane>
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary" ng-click="vm.continue()">Continue</button>
+        </div>
     </ion-footer-bar>
 </ion-view>

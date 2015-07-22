@@ -18,15 +18,12 @@ ion-content {
   }
 }
 
-.sign-up {
-
+#mainForm{
   .item {
     padding:0;
-  }
-
-  .submit-btn{
-    position:fixed;
-
+    border: 0;
+    margin-bottom: 2px;
+    background: $signup-entry-row-bg;
   }
 
   .item-input {
@@ -35,6 +32,9 @@ ion-content {
     input{
       height: 50px;
       padding: 0 30px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
     }
   }
 
@@ -49,25 +49,25 @@ ion-content {
 }
 
 
-.list {
-  .item-input{
-    color:white;
-    input::-webkit-input-placeholder {
-      color:white;
-      font-weight:400;
-    }
-    input{
-      color:white;
-      font-weight:600;
-    }
-  }
-
-  .item {
-    margin: 2px 0;
-    background-color: rgba(200, 200, 200, 0.4);
-    border:0;
-  }
-}
+//.list {
+//  .item-input{
+//    color:white;
+//    input::-webkit-input-placeholder {
+//      color:white;
+//      font-weight:400;
+//    }
+//    input{
+//      color:white;
+//      font-weight:600;
+//    }
+//  }
+//
+//  .item {
+//    margin: 2px 0;
+//    background-color: rgba(200, 200, 200, 0.4);
+//    border:0;
+//  }
+//}
 
 .bg-wrapper {
   width: 100%;
@@ -82,7 +82,7 @@ ion-content {
 
 .avatar-wrapper{
   width:100%;
-  margin: 40px 0 50px;
+  margin: 0 0 50px;
   .avatar{
     margin:auto;
     width:75px;
@@ -91,10 +91,29 @@ ion-content {
 
 
 
+.license-content{
+  padding-top: 50px;
+
+  h4{
+    color: $white;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .license,
+  .endorsements{
+    text-align: center;
+
+    .item{
+      border: 0;
+      margin-top: 0;
+      text-align:left;
+    }
+  }
+}
 
 /*  license */
 .license {
-
   margin: auto;
   width: 260px;
 
@@ -317,7 +336,9 @@ ion-content {
   }
 
   .item{
-    margin:2px 0;
+    margin:1px 0;
+    border: 0;
+    background: none;
 
     p{
       position:absolute;
@@ -354,17 +375,9 @@ ion-content {
 
 /*  select trailer */
 
-.list .select-trailer  {
- .item {
-   margin: 4px 0;
- }
-}
-
-
 $but-height: 90px;
 
 .select-trailer {
-
   .item-content{
     background-color: white;
     height:$but-height;
@@ -377,11 +390,13 @@ $but-height: 90px;
 
   .item{
     padding:0;
-    margin:0;
+    margin:1px 0 0;
     height:$but-height;
     background-color:transparent;
 
-
+    &:first-child{
+      margin-top: 0;
+    }
 
     p{
       position: absolute;
@@ -391,11 +406,9 @@ $but-height: 90px;
       pointer-events: none;
       left:0;
       top: 35px;
-      color:white;
-      font-weight: 600;
+      color:$dark;
       font-size: 22px;
       height:$but-height;
-      text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.4);
 
     }
 
@@ -455,4 +468,84 @@ $but-height: 90px;
     }
   }
 
+}
+
+
+
+
+
+.signup-section{
+  background: url("../img/welcomeBackground@2x.png") ;
+  -webkit-background-size: contain;
+  background-size: contain;
+
+  .header,
+  .bar,
+  .pane{background: none;}
+
+  .bar{
+    &.bar-subheader{
+      top:50%;
+
+      h3{
+        font-weight: normal;
+        color: #fff;
+      }
+    }
+  }
+
+}
+.trailers-bg{
+  background-image:url("../img/trailersBg.png");
+}
+
+.logo{
+  .freightliner-logo{
+    background-image:url("../img/freightliner_logo.png");
+    width: 102px;
+    height: 72px;
+  }
+  .kenworth-logo{
+    background-image:url("../img/kenworth_logo.png");
+    width: 102px;
+    height: 72px;
+  }
+  .international-logo{
+    background-image:url("../img/international_logo.png");
+    width: 102px;
+    height: 72px;
+  }
+  .mack-logo{
+    background-image:url("../img/mack_logo.png");
+    width: 102px;
+    height: 72px;
+  }
+  .peterbilt-logo{
+    background-image:url("../img/peterbilt_logo.png");
+    width: 102px;
+    height: 72px;
+  }
+  .volvo-logo{
+    background-image:url("../img/volvo_logo.png");
+    width: 102px;
+    height: 72px;
+  }
+}
+
+
+
+@media
+(-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi){
+  .signup-section{
+    background-image:url("../img/welcomeBackground@2x.png");
+  }
+}
+
+@media
+(-webkit-min-device-pixel-ratio: 3),
+(min-resolution: 401dpi){
+  .signup-section{
+    background-image:url("../img/welcomeBackground@3x.png");
+  }
 }
