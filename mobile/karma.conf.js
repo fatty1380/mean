@@ -24,7 +24,16 @@ module.exports = function(config) {
       'www/modules/account/child_modules/profile/profile.module.js',
       'www/modules/account/child_modules/profile/services/profile.services.js',
       'tests/account/profile/profile.services.test.js',
-      'tests/account/profile/profile.controller.test.js'
+      'tests/account/profile/profile.controller.test.js',
+
+      'www/modules/signup/signup.modules.js',
+      'www/modules/signup/controllers/signin.controller.js',
+      'www/modules/signup/controllers/trucks.controller.js',
+      'www/modules/signup/services/interceptor.service.js',
+      'www/modules/signup/services/register.service.js',
+      'www/modules/signup/services/token.service.js',
+      'tests/signup/signin.controller.test.js',
+      'tests/signup/register.service.test.js'
     ],
 
 
