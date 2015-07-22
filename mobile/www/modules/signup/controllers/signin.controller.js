@@ -10,10 +10,7 @@
 
             vm.user = {
                 email: 'markov.flash@gmail.com',
-                password: 'sergey83mark',
-                grant_type: 'password',
-                client_id: 'mobile_v0_1',
-                client_secret: 'shenanigans'
+                password: 'sergey83mark'
             };
 
             vm.initForm= function(scope){
@@ -24,6 +21,7 @@
              * @description
              * Sign In
              */
+
             vm.signIn = function(){
                  $ionicLoading.show({
                     template: 'please wait'
@@ -39,14 +37,79 @@
                          tokenService.set('access_token', response.message.data.access_token);
                          tokenService.set('refresh_token', response.message.data.refresh_token);
                          tokenService.set('token_type', response.message.data.token_type);
-                         //$location.path("account/profile");
-                         vm.showPopup(JSON.stringify(response.message.data || "none"));
+
+                         $location.path("account/profile");
+                         //$location.path("signup/engagement");
+
                      }else{
-                        //vm.showPopup(response);
                          vm.showPopup(JSON.stringify(response));
                      }
                  });
             }
+
+
+
+            vm.registerAndSignin = function(){
+                console.log(' ');
+                console.log(' ');
+                console.log('registerAndSignin()');
+
+               /* $ionicLoading.show({
+                    template: 'please wait'
+                });*/
+
+                var signupUser = {
+                    email:vm.user.email,
+                    password:vm.user.password,
+                    firstName: "testAccountName",
+                    lastName: "testAccountLastName"
+                };
+
+                registerService.registerUser(signupUser)
+                    .then(function (response) {
+
+                        console.log(" ");
+                        console.log(" ");
+                        console.log("registerUser response: ",response);
+
+                        $ionicLoading.hide();
+                        if(response.success) {
+
+                            tokenService.set('access_token', '');
+
+                           // setTimeout( function(){
+
+                                var signinUser = {
+                                    email: vm.user.email,
+                                    password: vm.user.password,
+                                    grant_type: 'password',
+                                    client_id: 'mobile_v0_1',
+                                    client_secret: 'shenanigans'
+                                };
+
+                                registerService.signIn(signinUser)
+                                    .then(function (response) {
+                                        $ionicLoading.hide();
+
+                                        if(response.success) {
+                                            tokenService.set('access_token', response.message.data.access_token);
+                                            tokenService.set('refresh_token', response.message.data.refresh_token);
+                                            tokenService.set('token_type', response.message.data.token_type);
+                                            $location.path("signup/engagement");
+                                        }else{
+                                            //vm.showPopup(response);
+                                            vm.showPopup(JSON.stringify(response));
+                                        }
+                                    });
+                           /// vm.showPopup(JSON.stringify(response));
+                        }else{
+                           // $location.path("signup/engagement");
+                             vm.showPopup(JSON.stringify(response));
+                        }
+                    });
+            }
+
+
 
             vm.me = function(){
                 $ionicLoading.show({
@@ -56,6 +119,27 @@
                // console.log('access_token: ', tokenService.get("access_token"));
 
                 registerService.me()
+                    .then(function (response) {
+                        $ionicLoading.hide();
+                        if(response.success) {
+                            // $location.path("account/profile");
+                            vm.showPopup(JSON.stringify(response.message.data));
+                        }else{
+                            //vm.showPopup(response);
+                            vm.showPopup(JSON.stringify(response));
+                        }
+                    });
+            }
+
+            vm.profileID = function(){
+                $ionicLoading.show({
+                    template: 'please wait'
+                });
+                $ionicLoading.hide();
+
+                 console.log('profileID');
+
+                registerService.getProfilesID('55a5317e4cec3d4a40d4bfa9')
                     .then(function (response) {
                         $ionicLoading.hide();
                         if(response.success) {

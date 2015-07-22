@@ -13,6 +13,13 @@
                 started:""
             }
         };
+
+        var signinData = {
+            grant_type: 'password',
+            client_id: 'mobile_v0_1',
+            client_secret: 'shenanigans'
+        }
+
         service.registerUser = registerUser;
         service.signIn = signIn;
         service.signOut = signOut;
@@ -21,6 +28,8 @@
         service.updateUserProps = updateUserProps;
         service.getProfiles = getProfiles;
         service.getProfilesID = getProfilesID;
+
+        //data
         service.dataProps = dataProps;
         return service;
 
@@ -46,6 +55,9 @@
         function signIn (data) {
             if (!data) return;
             data.username = data.email;
+            data.grant_type = signinData.grant_type;
+            data.client_id = signinData.client_id;
+            data.client_secret = signinData.client_secret;
             return  requestApi("oauth/token/" , "post", data )
                 .then(handleSuccess, handleError);
         }

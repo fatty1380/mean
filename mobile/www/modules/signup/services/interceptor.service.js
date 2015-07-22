@@ -1,13 +1,11 @@
 /**
  * Authentication interceptor.
- *
  * @author    Martin Micunda {@link http://martinmicunda.com}
  * @copyright Copyright (c) 2015, Martin Micunda
  * @license   The MIT License {@link http://opensource.org/licenses/MIT}
  */
 (function () {
     'use strict';
-
     /**
      * @description
      * The http interceptor that listens for authentication failures.
@@ -23,7 +21,7 @@
         return {
             request: function (config) {
                 if(config.url.substring(0, 4) == "http") {
-                    config.headers.Authorization = "Bearer " + tokenService.get('access_token');
+                    config.headers.Authorization = tokenService.get('token_type') +" "+ tokenService.get('access_token');
                 }
                 return config;
             },
@@ -33,7 +31,6 @@
                     //tokenService.remove();
                     $location.path('/');
                 }
-                console.log("responseError ");
                 return $q.reject(rejection);
             }
         };
@@ -43,7 +40,6 @@
         .module('signup')
         .factory('AuthenticationInterceptor', AuthenticationInterceptor)
         .config(function ($httpProvider) {
-            // we have to add the interceptor to the queue as a string because the interceptor depends upon service instances that are not available in the config block.
-            $httpProvider.interceptors.push('AuthenticationInterceptor');
+           $httpProvider.interceptors.push('AuthenticationInterceptor');
         });
 })();

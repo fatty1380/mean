@@ -17,7 +17,6 @@
              vm.form = scope;
          }
 
-
          vm.continue = function(){
 
              console.log('vm.continue !!!!!!');
@@ -36,41 +35,32 @@
 
                     $ionicLoading.hide();
                     if(response.success) {
-
-                       console.log('registerUser: ',response);
-
-                       /* tokenService.set('access_token', '');
-
+                        tokenService.set('access_token', '');
                           registerService.signIn({ email:response.message.data.email, password: vm.user.password })
-                            .then(function (response) {
-                                $ionicLoading.hide();
-                                console.log('signIn: ',response);
-                                if(response.success) {
-                                    tokenService.set('access_token', response.message.data.access_token);
-                                    tokenService.set('refresh_token', response.message.data.refresh_token);
-                                    tokenService.set('token_type', response.message.data.token_type);
-                                   // vm.showPopup(JSON.stringify(response.message.data || "none"));
+                            .then(function (signInresponse) {
+                                console.log('signIn: ',signInresponse);
+                                  $ionicLoading.hide();
+                                if(signInresponse.success) {
+                                    tokenService.set('access_token', signInresponse.message.data.access_token);
+                                    tokenService.set('refresh_token', signInresponse.message.data.refresh_token);
+                                    tokenService.set('token_type', signInresponse.message.data.token_type);
                                     $location.path("signup/engagement");
                                 }else{
-                                    //vm.showPopup(response);
-                                    vm.showPopup(JSON.stringify(response));
+                                    vm.showPopup(signInresponse.title, signInresponse.message.data.error_description);
                                 }
                             });
-*/
-                       // $location.path("signup/signin");
-                        $location.path("signup/engagement");
                     }else{
-                        $location.path("signup/engagement");
-                       // vm.showPopup(JSON.stringify(response));
+                        $ionicLoading.hide();
+                        vm.showPopup(response.title, response.message.data.message);
                     }
                 });
         }
 
-         vm.showPopup = function (response) {
-             console.log(response);
+         vm.showPopup = function (title, text) {
+             //console.log(title, text);
              var alertPopup = $ionicPopup.alert({
-                 title: response.title || "title",
-                 template: response || "no message"
+                 title: title || "title",
+                 template: text || "no message"
              });
              alertPopup.then(function(res) {
                 // $location.path("signup/engagement");
