@@ -5,24 +5,41 @@
         // var baseUrl = 'http://outset-shadow.elasticbeanstalk.com/api/auth/signup';
         var baseUrl = 'http://outset-d.elasticbeanstalk.com/';
         var service = {};
+        var dataProps = {
+            handle:"",
+            props:{
+                truck:"",
+                trailer:"",
+                started:""
+            }
+        };
         service.registerUser = registerUser;
         service.signIn = signIn;
         service.signOut = signOut;
         service.me = me;
         service.updateUser = updateUser;
+        service.updateUserProps = updateUserProps;
         service.getProfiles = getProfiles;
         service.getProfilesID = getProfilesID;
+        service.dataProps = dataProps;
         return service;
 
         function registerUser (data) {
             if (!data) return;
-            return requestApi("api/auth/signup" , "post", data)
+           // return requestApi("api/auth/signup" , "post", data)
+            return requestApi("oauth/signup" , "post", data)
                 .then(handleSuccess, handleError);
         }
 
         function updateUser (data) {
             if (!data) return;
             return requestApi("api/users" , "put", data, true)
+                .then(handleSuccess, handleError);
+        }
+
+        function updateUserProps (data) {
+            if (!data) return;
+            return requestApi("api/users/me/props" , "put", data, true)
                 .then(handleSuccess, handleError);
         }
 
@@ -63,6 +80,7 @@
             return $http ({
                 url: baseUrl + apiUrl,
                 method: method,
+                //data: serializeData(data)
                 data: !needSerialize ? serializeData(data) : data
             })
         }

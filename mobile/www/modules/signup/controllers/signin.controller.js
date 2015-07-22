@@ -29,7 +29,7 @@
                     template: 'please wait'
                  });
 
-                console.log(vm.user);
+                tokenService.set('access_token', "");
 
                  registerService.signIn(vm.user)
                      .then(function (response) {
@@ -133,14 +133,44 @@
                     });
             }
 
-            vm.setHandle = function(){
+            vm.setProps = function(){
                 $ionicLoading.show({
                     template: 'please wait'
                 });
 
-               // var obj = {handle:Math.random()};
+                var data = {
+                    "handle": "Gearjammer",
+                    "props": {"started": '1976', "company" : "Big Jim's Truck Lines"}
+                }
 
-                registerService.updateUser({handle:"ffffff"})
+
+                registerService.updateUserProps(data)
+                    .then(function (response) {
+                        $ionicLoading.hide();
+                        if(response.success) {
+                            // $location.path("account/profile");
+                            vm.showPopup(JSON.stringify(response.message.data));
+                        }else{
+                            //vm.showPopup(response);
+                            vm.showPopup(JSON.stringify(response));
+                        }
+                    });
+            }
+
+            vm.setLicense = function() {
+                $ionicLoading.show({
+                    template: 'please wait'
+                });
+
+                var data = {
+                    'license': {
+                        'class': 'C',
+                            'endorsements': ['H'],
+                            'state': 'CA'
+                    }
+                }
+
+                registerService.updateUserProps(data)
                     .then(function (response) {
                         $ionicLoading.hide();
                         if(response.success) {

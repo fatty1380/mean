@@ -37,15 +37,14 @@
                     $ionicLoading.hide();
                     if(response.success) {
 
-                    /*    console.log('response.success: ',response);
-                        console.log('response.success: ',response.message);
-                        console.log('response.success: ',response.message.data);
-                        console.log('response.success: ',response.message.data.email);
+                       console.log('registerUser: ',response);
+
+                       /* tokenService.set('access_token', '');
 
                           registerService.signIn({ email:response.message.data.email, password: vm.user.password })
                             .then(function (response) {
                                 $ionicLoading.hide();
-                                console.log(response);
+                                console.log('signIn: ',response);
                                 if(response.success) {
                                     tokenService.set('access_token', response.message.data.access_token);
                                     tokenService.set('refresh_token', response.message.data.refresh_token);
@@ -56,12 +55,13 @@
                                     //vm.showPopup(response);
                                     vm.showPopup(JSON.stringify(response));
                                 }
-                            });*/
-
-                        $location.path("signup/signin");
+                            });
+*/
+                       // $location.path("signup/signin");
+                        $location.path("signup/engagement");
                     }else{
-                       // $location.path("signup/engagement");
-                        vm.showPopup(JSON.stringify(response));
+                        $location.path("signup/engagement");
+                       // vm.showPopup(JSON.stringify(response));
                     }
                 });
         }

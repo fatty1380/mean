@@ -22,18 +22,9 @@
     function AuthenticationInterceptor($q, $location, tokenService) {
         return {
             request: function (config) {
-
-                //@TODO add filter
-                if(config.method == "GET" || config.method == "PUT" ){
-
-                  //  config.headers.Authorization = "Bearer "+tokenService.get('access_token');
+                if(config.url.substring(0, 4) == "http") {
+                    config.headers.Authorization = "Bearer " + tokenService.get('access_token');
                 }
-
-                config.url += ("?access_token="+tokenService.get('access_token'));
-
-               /* console.log(" ");
-                console.log(" ");
-                console.log(config);*/
                 return config;
             },
             responseError: function (rejection) {

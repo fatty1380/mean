@@ -23,31 +23,27 @@
             {name:'Other...', checked:false},
         ]
 
-        vm.continueToTrucks = function() {
-            console.log(vm);
-            //$location.path("signup/truck");
+        vm.continue = function() {
 
-            var obj = {};
-            obj.trailers = getNameKeys(vm.trailers);
+           registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
+           $location.path("signup/trailers");
 
-            registerService.updateUser(obj)
-                .then(function (response) {
+           registerService.updateUser(registerService.dataProps)
+               .then(function (response) {
 
                     console.log(" ");
                     console.log(" ");
                     console.log("trailers");
-                    console.log(obj);
                     console.log(response);
 
                     $ionicLoading.hide();
                     if(response.success) {
-                        $location.path("profile");
-                     //   vm.showPopup(JSON.stringify(response));
+                        $location.path("account/profile");
                     }else{
-                        $location.path("profile");
-                      //  vm.showPopup(JSON.stringify(response));
+                        $location.path("signin/signup");
+                        vm.showPopup(JSON.stringify(response));
                     }
-                });
+               });
         }
 
         var getNameKeys = function(obj) {
@@ -71,7 +67,6 @@
             alertPopup.then(function(res) {
             });
         }
-
     };
 
     trailersCtrl.$inject = ['$scope','$location','registerService', '$ionicLoading', '$ionicPopup'];

@@ -27,16 +27,22 @@
         vm.continue = function() {
             console.log('continue license');
 
-            var data = {
+           /* var data = {
                 "handle": vm.handle,
                 props:
                 {
                     "started": vm.started,
                     "company" : vm.company
                 }
-            };
+            };*/
 
-            registerService.updateUser(data)
+            registerService.dataProps.props.started = vm.started;
+            registerService.dataProps.handle = vm.handle;
+            console.log(registerService.dataProps);
+
+            $location.path("signup/license");
+
+            /*registerService.updateUser(data)
                 .then(function (response) {
 
                     console.log(" ");
@@ -52,7 +58,7 @@
                         // vm.showPopup(JSON.stringify(response));
                         $location.path("signup/license");
                     }
-                });
+                });*/
         }
 
         vm.showPopup = function (response) {
