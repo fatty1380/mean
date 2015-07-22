@@ -126,7 +126,7 @@
         it('$scope.update() should update a valid Job', inject(function(Jobs) {
             // Define a sample Job put data
             var sampleJobPutData = new Jobs({
-                _id: '525cf20451979dea2c000001',
+                _id: '525cf20451979dea2c00хз0001',
                 name: 'New Job'
             });
 
