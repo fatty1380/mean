@@ -5,6 +5,11 @@ body{
   margin-bottom: 5px;
 }
 
+.ionic-scroll,
+.ionic-scroll .scroll{
+  height: 100%;
+}
+
 
 /** HEADER STYLES **/
 .header{
@@ -13,6 +18,7 @@ body{
   font: 14px Helvetica Neue, Helvetica, Arial;
   color: $white;
   overflow: visible;
+  position: relative;
   z-index: 2;
 
   /** full size header and content pane **/
@@ -36,6 +42,13 @@ body{
     height: auto;
   }
 
+  /** min size header and content pane **/
+  &.min-size{height: 44px;}
+  &.min-size ~ .pane{
+    top: 44px;
+    height: auto;
+  }
+
   & ~ .pane.has-footer{
     bottom: 44px;
   }
@@ -55,6 +68,11 @@ body{
       color: $secondary-text-action;
       font-size: 14px;
       font-weight: bold;
+      &.back-button{
+        i{
+          display: none;
+        }
+      }
     }
   }
 }

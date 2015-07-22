@@ -308,60 +308,13 @@
     vertical-align: middle;
     background: url('../img/ico01.png') 0 0 no-repeat;
   }
-
 }
-
-.bg{
-   background-image:url("../img/welcomeBackground@2x.png");
-}
-.trailers-bg{
-   background-image:url("../img/trailersBg.png");
-}
-
-.logo{
-  .freightliner-logo{
-     background-image:url("../img/freightliner_logo.png");
-     width: 102px;
-    height: 72px;
-  }
-  .kenworth-logo{
-     background-image:url("../img/kenworth_logo.png");
-     width: 102px;
-    height: 72px;
-  }
-  .international-logo{
-     background-image:url("../img/international_logo.png");
-     width: 102px;
-    height: 72px;
-  }
-  .mack-logo{
-     background-image:url("../img/mack_logo.png");
-     width: 102px;
-    height: 72px;
-  }
-  .peterbilt-logo{
-     background-image:url("../img/peterbilt_logo.png");
-     width: 102px;
-     height: 72px;
-  }
-  .volvo-logo{
-     background-image:url("../img/volvo_logo.png");
-     width: 102px;
-     height: 72px;
-  }
-}
-
-
 
 @media
   (-webkit-min-device-pixel-ratio: 2),
   (min-resolution: 192dpi){
       .ico {
         background-image: url('../img/sprite2x.png');
-      }
-
-      .bg{
-         background-image:url("../img/welcomeBackground@2x.png");
       }
   }
 
@@ -371,10 +324,6 @@
     .ico {
       background-image: url('../img/sprite3x.png');
     }
-
-    .bg{
-         background-image:url("../img/welcomeBackground@3x.png");
-     }
 }
 
 
