@@ -42,48 +42,26 @@
 
             // Initialize the Articles controller.
             ProfileCtrl = $controller('ProfileCtrl', {
-                $scope: scope
             });
         }));
 
-        it('get profile ', inject(function(profileService) {
+        it('should get Profile Data for selected user ', inject(function(profileService) {
             // Create sample article using the Articles service
-            var profileSample = {
-                "_id": "55a6600d2944b0bd1536414e",
-                "modified": "2015-07-15T13:28:45.741Z",
-                "displayName": "Serge Rykov",
-                "username": "s.rykov@mobidev.biz",
-                "provider": "local",
-                "__v": 0,
-                "requests": [],
-                "friends": [],
-                "addresses": [],
-                "company": null,
-                "driver": "55a6600d2944b0bd1536414f",
-                "phone": "",
-                "email": "s.rykov@mobidev.biz",
-                "type": "driver",
-                "created": "2015-07-15T13:28:45.702Z",
-                "handle": null,
-                "profileImageURL": "modules/users/img/profile/default.png",
-                "lastName": "Rykov",
-                "firstName": "Serge",
-                "isOwner": false,
-                "isDriver": true,
-                "isAdmin": false,
-                "shortName": "SergeR",
-                "id": "55a6600d2944b0bd1536414e"
-            };
+            var profileSample = profileService.getProfile('55a6600d2944b0bd1536414e').then(function (data) {
+                return data;
+            });
 
-            // Set GET response
-            $httpBackend.expectGET('http://outset-shadow.elasticbeanstalk.com/api/profiles/55a6600d2944b0bd1536414e').respond(profileSample);
+            $httpBackend.whenGET("http://outset-shadow.elasticbeanstalk.com/api/profiles/55a6600d2944b0bd1536414e").respond(profileSample);
+
+            //expect a get request to "internalapi/quotes"
+            $httpBackend.expectGET("http://outset-shadow.elasticbeanstalk.com/api/profiles/55a6600d2944b0bd1536414e");
 
             // Run controller functionality
-            scope.getProfile();
+            ProfileCtrl.getProfile();
             $httpBackend.flush();
 
             // Test scope value
-            expect(scope.vm.profileData).toEqualData(profileSample);
+            expect(ProfileCtrl.profileData).toEqualData(profileSample);
         }));
     });
 }());

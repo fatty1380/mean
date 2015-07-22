@@ -21,10 +21,11 @@ module.exports = function(config) {
             'www/modules/app/app.init.js',
 
             'www/modules/account/account.module.js',
+            'www/modules/account/child_modules/profile/controllers/profile.controller.js',
             'www/modules/account/child_modules/profile/profile.module.js',
             'www/modules/account/child_modules/profile/services/profile.services.js',
-            'tests/account/profile/profile.services.test.js'
-            //'tests/account/profile/profile.controller.test.js'
+            'tests/account/profile/profile.services.test.js',
+            'tests/account/profile/profile.controller.test.js'
         ],
 
 
