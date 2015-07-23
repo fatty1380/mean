@@ -103,6 +103,8 @@ ion-content {
   .license,
   .endorsements{
     text-align: center;
+    margin:0 auto;
+    max-width: 350px;
 
     .item{
       border: 0;
@@ -482,6 +484,10 @@ $but-height: 90px;
   .header,
   .bar,
   .pane{background: none;}
+
+  input::-webkit-input-placeholder{
+    color: #fff !important;
+  }
 
   .bar{
     &.bar-subheader{

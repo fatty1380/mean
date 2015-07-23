@@ -9,13 +9,13 @@
             var vm = this;
 
             vm.user = {
-                email: 'markov.flash@gmail.com',
-                password: 'sergey83mark'
+                email: 's.rykov@mobidev.biz',
+                password: 'admin@123'
             };
 
             vm.initForm= function(scope){
                 vm.form = scope;
-            }
+            };
 
             /**
              * @description
@@ -45,7 +45,7 @@
                          vm.showPopup(JSON.stringify(response));
                      }
                  });
-            }
+            };
 
 
 

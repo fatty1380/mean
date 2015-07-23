@@ -15,7 +15,7 @@
 
          vm.initForm= function(scope){
              vm.form = scope;
-         }
+         };
 
          vm.continue = function(){
 
@@ -65,7 +65,7 @@
              alertPopup.then(function(res) {
                 // $location.path("signup/engagement");
              });
-         }
+         };
 
         $scope.$on( '$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
@@ -79,7 +79,7 @@
                 window.cordova.plugins.Keyboard.disableScroll( false );
             }
         });
-     }
+     };
 
     registerCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading', 'tokenService'];
 

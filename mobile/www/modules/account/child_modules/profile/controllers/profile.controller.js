@@ -1,21 +1,21 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl(profileService) {
+    function ProfileCtrl(registerService) {
         var vm = this;
         vm.profileData = {};
-        vm.getProfile = function () {
-            profileService
-                .getProfile('55a6600d2944b0bd1536414e')
-                .then(function (data) {
-                    vm.profileData = data;
+        vm.me = function(){
+            registerService.me()
+                .then(function (response) {
+                    if(response.success) {
+                        vm.profileData = response.message.data
+                    }
                 });
         };
-        vm.getProfile();
-
+        vm.me();
     }
 
-    ProfileCtrl.$inject = ['profileService'];
+    ProfileCtrl.$inject = ['registerService'];
 
     angular
         .module('account')

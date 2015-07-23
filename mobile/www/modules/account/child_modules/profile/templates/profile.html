@@ -1,5 +1,5 @@
-<ion-view>
-    <ion-pane class="header mid-size">
+<ion-view class="profile-screen">
+    <div class="header mid-size">
         <ion-header-bar align-title="center">
             <button class="button button-clear" ui-sref="account.profile.edit">Edit</button>
             <h1 class="title" ng-bind="vm.profileData.displayName">Profile</h1>
@@ -14,7 +14,7 @@
                 <strong>{{vm.profileData.friends.length}}</strong>
             </div>
         </div>
-    </ion-pane>
+    </div>
     <ion-pane class="profile-pane">
         <ion-tabs class="profile-tabs tabs-top">
             <ion-tab title="REVIEWS">

@@ -126,71 +126,74 @@
 }
 
 .reviews-list{
-  height: 100%;
+  .item{
+    margin-bottom: 2px;
+    > .ico{
+      float: left;
+      margin-right: 15px;
+    }
 
-   .item > .ico{
-    float: left;
-    margin-right: 15px;
-  }
-  .review{
-    overflow: hidden;
-
-    .top{
-      padding: 5px 0;
+    .review{
       overflow: hidden;
 
-      .ratings{
-        float: left;
-        height: 12px;
-        width: 72px;
-        background: url('../img/bg-stars.png') 0 0 no-repeat;
-        position: relative;
+      .top{
+        padding: 5px 0;
+        overflow: hidden;
+        height: auto;
 
-        &:after{
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width:0;
-          background: url('../img/bg-stars.png') 0 100% no-repeat;
+        .ratings{
+          float: left;
+          height: 12px;
+          width: 72px;
+          background: url('../img/bg-stars.png') 0 0 no-repeat;
+          position: relative;
+
+          &:after{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width:0;
+            background: url('../img/bg-stars.png') 0 100% no-repeat;
+          }
+
+          &[data-mark="1"]:after{width: 20%;}
+          &[data-mark="2"]:after{width: 40%;}
+          &[data-mark="3"]:after{width: 60%;}
+          &[data-mark="4"]:after{width: 80%;}
+          &[data-mark="5"]:after{width: 100%;}
         }
 
-        &[data-mark="1"]:after{width: 20%;}
-        &[data-mark="2"]:after{width: 40%;}
-        &[data-mark="3"]:after{width: 60%;}
-        &[data-mark="4"]:after{width: 80%;}
-        &[data-mark="5"]:after{width: 100%;}
+        .time{
+          float: right;
+        }
       }
 
-      .time{
-        float: right;
+      .title{
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0 0 5px;
       }
-    }
+      .message{
+        margin: 0 0 5px;
+        display: block;
+        display: -webkit-box;
+        overflow: hidden;
+        white-space: normal;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+      }
+      .button-holder{
+        overflow: hidden;
 
-    .title{
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      padding: 0 0 5px;
-    }
-    .message{
-      margin: 0 0 5px;
-      display: block;
-      display: -webkit-box;
-      overflow: hidden;
-      white-space: normal;
-      text-overflow: ellipsis;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-    }
-    .button-holder{
-      overflow: hidden;
-
-      button{
-        float: right;
-        padding: 0 25px;
-        min-height: 26px;
+        button{
+          float: right;
+          padding: 0 25px;
+          min-height: 26px;
+        }
       }
     }
   }
@@ -274,7 +277,18 @@
       }
       textarea{
         background: none;
+        padding: 8px 0 0;
       }
+    }
+  }
+}
+
+// edit screen
+.edit-fields-list{
+  .item{
+    border-width: 0 0 1px;
+    input::-webkit-input-placeholder{
+      color: #333;
     }
   }
 }
