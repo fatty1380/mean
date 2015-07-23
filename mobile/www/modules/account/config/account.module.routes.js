@@ -23,7 +23,15 @@
                     url: '/share',
                     views:{
                         '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/share-profile.html'
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share.html'
+                        }
+                    }
+                })
+                .state('account.profile.share.content', {
+                    url: '/content',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html'
                         }
                     }
                 })
@@ -39,7 +47,7 @@
                     url: '/edit',
                     views:{
                         '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/edit-profile.html'
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-edit.html'
                         }
                     }
                 })

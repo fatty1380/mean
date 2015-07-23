@@ -85,7 +85,10 @@
   z-index: 1;
 
     > .tab-nav{
-      top: 0;
+      top: 0 !important;
+      position: absolute;
+      left: 0;
+      right: 0;
       height: 69px;
       background: $ribbon-bg;
       text-transform: uppercase;
@@ -251,7 +254,7 @@
     Share Profile Page 1
 **/
 .profile-screen{
-  .top {
+  .content-top {
     height: 64px;
     padding: 14px 20px;
     color: $tab-text;
@@ -271,7 +274,7 @@
 
     .item-input{
       padding: 5px 15px;
-      border-width: 1px 0 0 ;
+      border-width: 1px 0 0;
       input{
         padding-right: 0;
       }
