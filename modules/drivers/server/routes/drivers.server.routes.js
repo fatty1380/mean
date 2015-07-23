@@ -1,19 +1,32 @@
 'use strict';
 
 module.exports = function (app) {
-    var users = require('../../../../modules/users/server/controllers/users.server.controller');
-    var drivers = require('../controllers/drivers.server.controller');
+    var path = require('path'),
+        users = require(path.resolve('./modules/users/server/controllers/users.server.controller')),
+        drivers = require(path.resolve('./modules/drivers/server/controllers/drivers.server.controller'));
 
     /**
      * New "Driver" routes
      */
-     app.route('/api/users/me/props')
-         .put(users.requiresLogin, drivers.setProps)
+    app.route('/api/users/me/props')
+        .put(users.requiresLogin, drivers.setProps)
         .get(users.requiresLogin, drivers.getProps);
-        
-     app.route('/api/users/me/experience')
-         .put(users.requiresLogin, drivers.setExperience)
+
+    app.route('/api/users/me/experience')
+        .put(users.requiresLogin, drivers.setExperience)
         .get(users.requiresLogin, drivers.getExperience);
+
+        /**
+         * Lockbox Stuff
+         * This will replace the existing "resume" and "reportSku" crap
+         */
+    app.route('/api/profiles/:userId/documents')
+        .get(function(req, res) { return res.status(500).send({message:'Not implemented'})
+        .post(function(req, res) { return res.status(500).send({message:'Not implemented'});
+    
+    app.route('/api/profiles/:userId/documents/:docId')
+        .get(function(req, res) { return res.status(500).send({message:'Not implemented'})
+        .delete(function(req, res) { return res.status(500).send({message:'Not implemented'})
 
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
@@ -40,9 +53,9 @@ module.exports = function (app) {
         .get(users.requiresLogin, drivers.refreshReport);
 
     app.route('/api/drivers/:driverId/profileforms')
-    .get(users.requiresLogin, drivers.getProfileFormAnswers)
-    .post(users.requiresLogin, drivers.hasAuthorization, drivers.createProfileFormAnswers)
-    .put(users.requiresLogin, drivers.hasAuthorization, drivers.updateProfileFormAnswers);
+        .get(users.requiresLogin, drivers.getProfileFormAnswers)
+        .post(users.requiresLogin, drivers.hasAuthorization, drivers.createProfileFormAnswers)
+        .put(users.requiresLogin, drivers.hasAuthorization, drivers.updateProfileFormAnswers);
 
 
     // Finish by binding the Driver middleware
