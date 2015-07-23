@@ -4,6 +4,8 @@
     var trucksCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading) {
         var vm = this;
 
+        vm.test = " dsfs dfs sdf";
+
         $scope.currentTruck = {
             name: ''
         };
@@ -17,8 +19,15 @@
             {name:'Volvo', logoClass:'volvo-logo', checked:false}
         ]
 
-        vm.continueToTrailers = function() {
-            registerService.dataProps.props.truck = $scope.currentTruck.name;
+        vm.continueToTrailers = function(isSave) {
+            console.log(" ");
+            console.log($scope.currentTruck.name);
+
+            if(isSave){
+                registerService.dataProps.props.truck = $scope.currentTruck.name;
+            }
+
+            console.log(registerService.dataProps.props.truck);
             $location.path("signup/trailers");
         }
     };

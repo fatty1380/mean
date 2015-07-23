@@ -26,8 +26,17 @@
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
-        <div class="button-bar action-buttons">
+        <!--<div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.continue()">Continue</button>
+        </div>-->
+
+
+        <div class="button-bar action-buttons">
+            <!-- button secondary -->
+            <button class=""  ng-click="vm.continue(true)" type="submit">Continue</button>
         </div>
+        <button class="skip button button-clear" ng-click="vm.continue(false)">
+            Skip
+        </button>
     </ion-footer-bar>
 </ion-view>

@@ -23,6 +23,12 @@
             obj.license.class = vm.class;
             obj.license.endorsements = getEndorsementKeys(vm.endorsement);
 
+            console.log(obj);
+
+            $ionicLoading.show({
+                template: 'please wait'
+            });
+
             registerService.updateUser(obj)
                 .then(function (response) {
                     $ionicLoading.hide();
@@ -36,8 +42,8 @@
                     if(response.success) {
                         $location.path("signup/trucks");
                     }else{
-                        $location.path("signup/trucks");
-                      //  vm.showPopup(JSON.stringify(response));
+                       // $location.path("signup/trucks");
+                        vm.showPopup(JSON.stringify(response));
                     }
                 });
         }

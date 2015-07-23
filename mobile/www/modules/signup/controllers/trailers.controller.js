@@ -23,10 +23,11 @@
             {name:'Other...', checked:false},
         ]
 
-        vm.continue = function() {
+        vm.continue = function(isSave) {
 
-           registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
-           $location.path("signup/trailers");
+            if(isSave){
+                registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
+            }
 
            registerService.updateUser(registerService.dataProps)
                .then(function (response) {

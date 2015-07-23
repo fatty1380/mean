@@ -1,15 +1,25 @@
 <ion-view class="signup-section">
-    <div class="header compact-size">
+
+
+    <div class="header compact-size" >
+
         <ion-nav-bar>
             <ion-nav-back-button>Back</ion-nav-back-button>
         </ion-nav-bar>
-        <ion-header-bar align-title="center" class="bar-stable">
+        <ion-header-bar align-title="center" class="bar-stable" >
             <h1 class="title">Create Account</h1>
         </ion-header-bar>
-        <div class="bar bar-subheader">
+
+       <div class="bar bar-subheader" >
             <h3 class="title">Choose Your Truck Make</h3>
         </div>
+
+        <button class="skip button button-clear" ui-sref="#">
+            Skip
+        </button>
+
     </div>
+
     <ion-pane class="has-footer">
         <ion-scroll>
             <div class="list select-truck">
@@ -35,7 +45,11 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary"  ng-click="vm.continueToTrailers()" type="submit">Continue</button>
+            <!-- button secondary -->
+            <button class=""  ng-click="vm.continueToTrailers(true)" type="submit">Continue</button>
         </div>
+        <button class="skip button button-clear" ng-click="vm.continueToTrailers(false)">
+            Skip
+        </button>
     </ion-footer-bar>
 </ion-view>

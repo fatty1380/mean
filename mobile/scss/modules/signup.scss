@@ -489,6 +489,15 @@ $but-height: 90px;
     color: #fff !important;
   }
 
+  .skip{
+    position:absolute;
+    right:0;
+    top:-4px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-weight: bold;
+  }
+
   .bar{
     &.bar-subheader{
       top:50%;
