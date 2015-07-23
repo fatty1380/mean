@@ -58,6 +58,6 @@
     licenseCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading' ];
 
     angular
-        .module('signup.license', [])
+        .module('signup')
         .controller('licenseCtrl',  licenseCtrl);
 })();
