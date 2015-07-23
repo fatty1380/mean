@@ -22,14 +22,19 @@
                     </label>
                     <p>{{ trailer.name }}</p>
                 </li>
+
+                <li class="item item-checkbox">
+                    <label class="item item-radio" ng-click="vm.addTrailer()">
+                        <div class="item-content button-other">
+                            <p class="center-text">Other</p>
+                        </div>
+                    </label>
+                </li>
+
             </ul>
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
-        <!--<div class="button-bar action-buttons">
-            <button class="button secondary" ng-click="vm.continue()">Continue</button>
-        </div>-->
-
 
         <div class="button-bar action-buttons">
             <!-- button secondary -->

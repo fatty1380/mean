@@ -330,7 +330,7 @@ ion-content {
 
   .item-radio  {
     input ~ .item-content {
-      background-color: rgba(250,250,250, 0.5);
+      background-color: $signup-entry-row-bg;
     }
     input:checked ~ .item-content {
       background-color: rgba(250,250,250, 1);
@@ -440,7 +440,7 @@ $but-height: 90px;
     }
 
     input + .item-content{
-      background-color: rgba(255, 255, 255, 0.3);
+      background-color: $signup-entry-row-bg;
      // background: none;
      // visibility:hidden;
     }
@@ -496,6 +496,10 @@ $but-height: 90px;
     color: rgba(255, 255, 255, 0.6);
     font-size: 14px;
     font-weight: bold;
+  }
+
+  .button-other{
+    background-color: $signup-entry-row-bg;
   }
 
   .bar{

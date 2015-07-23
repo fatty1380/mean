@@ -3,6 +3,9 @@
 
     var trailersCtrl = function ($scope, $location, registerService, $ionicLoading, $ionicPopup) {
         var vm = this;
+
+        vm.newTrailer = "";
+
         vm.trailers = [
             {name:'Box', checked:false},
             {name:'Car Carrier', checked:false},
@@ -18,30 +21,52 @@
             {name:'Lowboy', checked:false},
             {name:'Refrigerator Trailer', checked:false},
             {name:'Refrigerator Tank', checked:false},
-            {name:'Sidelifter', checked:false},
-            {name:'Tank', checked:false},
-            {name:'Other...', checked:false},
+            {name:'Sidelifter', checked:true},
+            {name:'Tank', checked:false}
         ]
 
-        vm.continue = function(isSave) {
 
+        vm.addTrailer = function() {
+            $ionicPopup.show({
+                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer">',
+                title: 'Please enter a trailer type',
+                scope: $scope,
+                buttons: [
+                    {
+                        text: 'Cancel',
+                        onTap: function (e) {
+                            vm.newTrailer = "";
+                        }
+                    },
+                    {
+                        text: 'Save',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            if (!vm.newTrailer) {
+                                e.preventDefault();
+                            } else {
+                                vm.trailers.push({name:vm.newTrailer, checked:true});
+                                vm.newTrailer = "";
+                                return vm.newTrailer;
+                            }
+                        }
+                    }
+                ]
+            });
+        }
+
+        vm.continue = function(isSave) {
             if(isSave){
                 registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
             }
 
            registerService.updateUser(registerService.dataProps)
                .then(function (response) {
-
-                    console.log(" ");
-                    console.log(" ");
-                    console.log("trailers");
-                    console.log(response);
-
                     $ionicLoading.hide();
                     if(response.success) {
                         $location.path("account/profile");
                     }else{
-                        $location.path("signin/signup");
+                       // $location.path("signin/signup");
                         vm.showPopup(JSON.stringify(response));
                     }
                });

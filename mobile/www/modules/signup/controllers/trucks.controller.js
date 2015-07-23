@@ -1,38 +1,60 @@
 (function() {
     'use strict';
 
-    var trucksCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading) {
+    var trucksCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $timeout, $ionicLoading) {
         var vm = this;
 
-        vm.test = " dsfs dfs sdf";
-
-        $scope.currentTruck = {
-            name: ''
-        };
+        vm.newTruck = "";
+        vm.currentTruck = '';
 
         vm.trucks = [
-            {name:'Peterbilt', logoClass:'peterbilt-logo', checked:false},
-            {name:'International', logoClass:'international-logo', checked:false},
-            {name:'Freightliner', logoClass:'freightliner-logo', checked:false},
-            {name:'Mack Trucks', logoClass:'mack-logo', checked:false},
-            {name:'Kenworth', logoClass:'kenworth-logo', checked:false},
-            {name:'Volvo', logoClass:'volvo-logo', checked:false}
+            {name:'Peterbilt', logoClass:'peterbilt-logo'},
+            {name:'International', logoClass:'international-logo'},
+            {name:'Freightliner', logoClass:'freightliner-logo'},
+            {name:'Mack Trucks', logoClass:'mack-logo'},
+            {name:'Kenworth', logoClass:'kenworth-logo'},
+            {name:'Volvo', logoClass:'volvo-logo'}
         ]
 
+        vm.addTruck = function() {
+           $ionicPopup.show({
+                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTruck">',
+                title: 'Please enter your truck manufacturer',
+                scope: $scope,
+                buttons: [
+                    {
+                        text: 'Cancel',
+                        onTap: function (e) {
+                            vm.newTruck = "";
+                        }
+                    },
+                    {
+                        text: 'Save',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            if (!vm.newTruck) {
+                                e.preventDefault();
+                            } else {
+                                vm.trucks.push({name:vm.newTruck, logoClass:''});
+                                vm.currentTruck = vm.newTruck;
+                                vm.newTruck = "";
+                                return vm.newTruck;
+                            }
+                        }
+                    }
+                ]
+            });
+        }
+
         vm.continueToTrailers = function(isSave) {
-            console.log(" ");
-            console.log($scope.currentTruck.name);
-
             if(isSave){
-                registerService.dataProps.props.truck = $scope.currentTruck.name;
+                registerService.dataProps.props.truck = vm.currentTruck;
             }
-
-            console.log(registerService.dataProps.props.truck);
             $location.path("signup/trailers");
         }
     };
 
-    trucksCtrl.$inject = ['$scope','$state','$location','registerService'];
+    trucksCtrl.$inject = ['$scope','$state','$location','registerService', '$ionicPopup', '$timeout'];
 
     angular
         .module('signup')
