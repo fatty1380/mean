@@ -92,7 +92,6 @@
             return $http ({
                 url: baseUrl + apiUrl,
                 method: method,
-                //data: serializeData(data)
                 data: !needSerialize ? serializeData(data) : data
             })
         }

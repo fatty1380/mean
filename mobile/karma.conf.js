@@ -17,14 +17,19 @@ module.exports = function(config) {
     files: [
       "www/libs/ionic/js/ionic.bundle.js",
       'node_modules/angular-mocks/angular-mocks.js',
-      'www/modules/app/*',
+      'www/modules/app/*.js',
 
       'www/modules/account/account.module.js',
       'www/modules/account/child_modules/profile/controllers/profile.controller.js',
       'www/modules/account/child_modules/profile/profile.module.js',
       'www/modules/account/child_modules/profile/services/profile.services.js',
-      'tests/account/profile/profile.services.test.js',
-      'tests/account/profile/profile.controller.test.js'
+
+      'www/modules/signup/signup.modules.js',
+      'www/modules/signup/controllers/*.js',
+      'www/modules/signup/services/*.js',
+
+      'tests/**/*.js',
+      'tests/**/**/*.js'
     ],
 
 

@@ -2,10 +2,7 @@
     'use strict';
 
     angular
-        .module('signup',
-
-        [ 'signup.signin', 'signup.register','signup.engagement','signup.license','signup.trailers','signup.trucks', 'directives'])
-
+        .module('signup')
         .config(['$stateProvider', function ($stateProvider) {
             $stateProvider
                 .state('signup/signin', {

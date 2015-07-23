@@ -1,4 +1,4 @@
-angular.module('directives', [])
+angular.module('signup')
     .directive("compareTo", function(){
         return {
             require: "ngModel",

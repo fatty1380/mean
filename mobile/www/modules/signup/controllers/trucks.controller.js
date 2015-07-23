@@ -26,7 +26,7 @@
     trucksCtrl.$inject = ['$scope','$state','$location','registerService'];
 
     angular
-        .module('signup.trucks', [] )
+        .module('signup')
         .controller('trucksCtrl', trucksCtrl )
 
 })();
