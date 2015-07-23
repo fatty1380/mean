@@ -84,7 +84,7 @@
     registerCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading', 'tokenService'];
 
     angular
-        .module('signup.register', [])
+        .module('signup')
         .controller('registerCtrl', registerCtrl);
 
 })();

@@ -12,9 +12,9 @@
         }
     }
 
+    tokenService.$inject = ['$window'];
+
     angular
         .module('signup')
         .factory('tokenService', tokenService);
-    tokenService.$inject = ['$window'];
-
 })();

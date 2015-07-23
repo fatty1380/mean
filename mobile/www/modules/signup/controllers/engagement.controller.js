@@ -80,6 +80,6 @@
     engagementCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading' ];
 
     angular
-        .module('signup.engagement', [])
+        .module('signup')
         .controller('engagementCtrl', engagementCtrl)
 })();

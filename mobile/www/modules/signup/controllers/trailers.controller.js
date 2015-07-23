@@ -72,7 +72,7 @@
     trailersCtrl.$inject = ['$scope','$location','registerService', '$ionicLoading', '$ionicPopup'];
 
     angular
-        .module('signup.trailers', [] )
+        .module('signup')
         .controller('trailersCtrl', trailersCtrl )
 
 })();
