@@ -18,7 +18,7 @@
 
         vm.addTruck = function() {
            $ionicPopup.show({
-                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTruck">',
+                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTruck" autofocus>',
                 title: 'Please enter your truck manufacturer',
                 scope: $scope,
                 buttons: [

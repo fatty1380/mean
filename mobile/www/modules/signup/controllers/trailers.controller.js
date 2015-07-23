@@ -28,7 +28,7 @@
 
         vm.addTrailer = function() {
             $ionicPopup.show({
-                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer">',
+                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer" autofocus>',
                 title: 'Please enter a trailer type',
                 scope: $scope,
                 buttons: [
