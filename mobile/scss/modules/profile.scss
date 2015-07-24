@@ -326,23 +326,23 @@
         left: 16px;
       }
     }
-  }
-  .document{
-    float: left;
+    .document{
+      float: left;
 
-    strong,
-    span{
-      display: block;
-      font-weight: normal;
-      line-height: 16px;
+      strong,
+      span{
+        display: block;
+        font-weight: normal;
+        line-height: 16px;
+      }
     }
-  }
-  .button{
-    padding: 0 25px;
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    margin-top: -15px;
-    z-index: 4;
+    .button{
+      padding: 0 25px;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      margin-top: -15px;
+      z-index: 4;
+    }
   }
 }
