@@ -9,32 +9,32 @@
         vm.company = "Default Company";
 
 
-        vm.initForm= function(scope){
+        vm.initForm = function (scope) {
             vm.form = scope;
         }
 
-        $scope.$on( '$ionicView.afterEnter', function () {
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
-                window.cordova.plugins.Keyboard.disableScroll( true );
+        $scope.$on('$ionicView.afterEnter', function () {
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                window.cordova.plugins.Keyboard.disableScroll(true);
             }
         });
-        $scope.$on( '$ionicView.beforeLeave', function () {
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
-                window.cordova.plugins.Keyboard.disableScroll( false );
+        $scope.$on('$ionicView.beforeLeave', function () {
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                window.cordova.plugins.Keyboard.disableScroll(false);
             }
         });
 
-        vm.continue = function() {
+        vm.continue = function () {
             console.log('continue license');
 
-           /* var data = {
-                "handle": vm.handle,
-                props:
-                {
-                    "started": vm.started,
-                    "company" : vm.company
-                }
-            };*/
+            /* var data = {
+                 "handle": vm.handle,
+                 props:
+                 {
+                     "started": vm.started,
+                     "company" : vm.company
+                 }
+             };*/
 
             registerService.dataProps.props.started = vm.started;
             registerService.dataProps.handle = vm.handle;
@@ -72,7 +72,7 @@
             });
         }
 
-        $scope.avatarShot = function() {
+        $scope.avatarShot = function () {
             console.log('avatarShot');
         }
     };

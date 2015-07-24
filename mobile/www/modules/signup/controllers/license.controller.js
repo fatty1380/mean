@@ -15,7 +15,7 @@
             X: false
         }
 
-        vm.continue = function() {
+        vm.continue = function () {
             console.log(" ");
 
             var obj = {};
@@ -42,11 +42,11 @@
                 });
         }
 
-        var getEndorsementKeys = function(obj) {
+        var getEndorsementKeys = function (obj) {
             var keys = [];
             for (var i in obj) {
                 if (obj.hasOwnProperty(i)) {
-                    if(obj[i]) {
+                    if (obj[i]) {
                         keys.push(i);
                     }
                 }
@@ -59,5 +59,5 @@
 
     angular
         .module('signup')
-        .controller('licenseCtrl',  licenseCtrl);
+        .controller('licenseCtrl', licenseCtrl);
 })();

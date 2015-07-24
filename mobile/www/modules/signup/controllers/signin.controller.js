@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function signinCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService) {
@@ -9,7 +9,7 @@
             password: 'sergey83mark'
         };
 
-        vm.initForm= function(scope){
+        vm.initForm = function (scope) {
             vm.form = scope;
         }
 
@@ -18,7 +18,7 @@
          * Sign In
          */
 
-        vm.signIn = function(){
+        vm.signIn = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -29,7 +29,7 @@
                 .then(function (response) {
                     $ionicLoading.hide();
 
-                    if(response.success) {
+                    if (response.success) {
                         tokenService.set('access_token', response.message.data.access_token);
                         tokenService.set('refresh_token', response.message.data.refresh_token);
                         tokenService.set('token_type', response.message.data.token_type);
@@ -42,7 +42,7 @@
 
 
 
-        vm.registerAndSignin = function(){
+        vm.registerAndSignin = function () {
             console.log(' ');
             console.log(' ');
             console.log('registerAndSignin()');
@@ -52,8 +52,8 @@
              });*/
 
             var signupUser = {
-                email:vm.user.email,
-                password:vm.user.password,
+                email: vm.user.email,
+                password: vm.user.password,
                 firstName: "testAccountName",
                 lastName: "testAccountLastName"
             };
@@ -63,10 +63,10 @@
 
                     console.log(" ");
                     console.log(" ");
-                    console.log("registerUser response: ",response);
+                    console.log("registerUser response: ", response);
 
                     $ionicLoading.hide();
-                    if(response.success) {
+                    if (response.success) {
 
                         tokenService.set('access_token', '');
 
@@ -84,7 +84,7 @@
                             .then(function (response) {
                                 $ionicLoading.hide();
 
-                                if(response.success) {
+                                if (response.success) {
                                     tokenService.set('access_token', response.message.data.access_token);
                                     tokenService.set('refresh_token', response.message.data.refresh_token);
                                     tokenService.set('token_type', response.message.data.token_type);
@@ -104,7 +104,7 @@
 
 
 
-        vm.me = function(){
+        vm.me = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -117,14 +117,14 @@
                     if (response.success) {
                         // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
-                    }else{
+                    } else {
                         //vm.showPopup(response);
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
 
-        vm.profileID = function(){
+        vm.profileID = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -138,14 +138,14 @@
                     if (response.success) {
                         // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
-                    }else{
+                    } else {
                         //vm.showPopup(response);
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
 
-        vm.signOut = function(){
+        vm.signOut = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -157,14 +157,14 @@
                         // $state.go('account.profile');
                         console.log(response);
                         //vm.showPopup(JSON.stringify(response.message.data));
-                    }else{
+                    } else {
                         //vm.showPopup(response);
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
 
-        vm.getProfiles = function(){
+        vm.getProfiles = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -176,14 +176,14 @@
                     if (response.success) {
                         //  $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
-                    }else{
+                    } else {
                         //    vm.showPopup(response);
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
 
-        vm.getProfilesID = function(){
+        vm.getProfilesID = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -204,20 +204,20 @@
                     if (response.success) {
                         //  $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
-                    }else{
+                    } else {
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
 
-        vm.setProps = function(){
+        vm.setProps = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
 
             var data = {
                 "handle": "Gearjammer",
-                "props": {"started": '1976', "company" : "Big Jim's Truck Lines"}
+                "props": { "started": '1976', "company": "Big Jim's Truck Lines" }
             }
 
 
@@ -227,14 +227,14 @@
                     if (response.success) {
                         // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
-                    }else{
+                    } else {
                         //vm.showPopup(response);
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
 
-        vm.setLicense = function() {
+        vm.setLicense = function () {
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -253,7 +253,7 @@
                     if (response.success) {
                         // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
-                    }else{
+                    } else {
                         //vm.showPopup(response);
                         vm.showPopup(JSON.stringify(response));
                     }
@@ -262,35 +262,35 @@
 
         vm.showPopup = function (response) {
             var alertPopup = $ionicPopup.alert({
-                title:  "title",
+                title: "title",
                 template: response
             });
-            alertPopup.then(function(res) {
+            alertPopup.then(function (res) {
             });
         }
 
 
-        vm.continueRegister = function(){
+        vm.continueRegister = function () {
             console.log('continue register');
             $state.go('signup/register');
         }
 
-        vm.continueProfile = function(){
+        vm.continueProfile = function () {
             console.log('continue profile');
             // $state.go('account.profile');
         }
 
 
-        $scope.$on( '$ionicView.afterEnter', function () {
+        $scope.$on('$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
-                window.cordova.plugins.Keyboard.disableScroll( true );
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                window.cordova.plugins.Keyboard.disableScroll(true);
             }
         });
-        $scope.$on( '$ionicView.beforeLeave', function () {
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
+        $scope.$on('$ionicView.beforeLeave', function () {
+            if (window.cordova && window.cordova.plugins.Keyboard) {
                 // return to keyboard default scroll state
-                window.cordova.plugins.Keyboard.disableScroll( false );
+                window.cordova.plugins.Keyboard.disableScroll(false);
             }
         });
     }
@@ -299,6 +299,6 @@
 
     angular
         .module('signup')
-        .controller('signinCtrl', signinCtrl );
+        .controller('signinCtrl', signinCtrl);
 })();
 

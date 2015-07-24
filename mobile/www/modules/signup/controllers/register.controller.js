@@ -1,29 +1,29 @@
-(function() {
+(function () {
     'use strict';
 
     var registerCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService) {
 
-         var vm = this;
+        var vm = this;
 
-         vm.user = {
-             firstName: "test",
-             lastName: "test",
-             email:"test@test.test",
-             password:"testtest",
-             confirmPassword:"testtest"
-         };
+        vm.user = {
+            firstName: "test",
+            lastName: "test",
+            email: "test@test.test",
+            password: "testtest",
+            confirmPassword: "testtest"
+        };
 
-         vm.initForm= function(scope){
-             vm.form = scope;
-         };
+        vm.initForm = function (scope) {
+            vm.form = scope;
+        };
 
-         vm.continue = function(){
+        vm.continue = function () {
 
-             console.log('vm.continue !!!!!!');
+            console.log('vm.continue !!!!!!');
 
-             $ionicLoading.show({
-                 template: 'please wait'
-             });
+            $ionicLoading.show({
+                template: 'please wait'
+            });
             registerService.registerUser(vm.user)
                 .then(function (response) {
 
@@ -34,13 +34,13 @@
                     console.log(response);
 
                     $ionicLoading.hide();
-                    if(response.success) {
+                    if (response.success) {
                         tokenService.set('access_token', '');
-                          registerService.signIn({ email:response.message.data.email, password: vm.user.password })
+                        registerService.signIn({ email: response.message.data.email, password: vm.user.password })
                             .then(function (signInresponse) {
-                                console.log('signIn: ',signInresponse);
-                                  $ionicLoading.hide();
-                                if(signInresponse.success) {
+                                console.log('signIn: ', signInresponse);
+                                $ionicLoading.hide();
+                                if (signInresponse.success) {
                                     tokenService.set('access_token', signInresponse.message.data.access_token);
                                     tokenService.set('refresh_token', signInresponse.message.data.refresh_token);
                                     tokenService.set('token_type', signInresponse.message.data.token_type);
@@ -49,7 +49,7 @@
                                     vm.showPopup(signInresponse.title, signInresponse.message.data.error_description);
                                 }
                             });
-                    }else{
+                    } else {
                         $ionicLoading.hide();
                         vm.showPopup(response.title, response.message.data.message);
                     }
@@ -67,19 +67,19 @@
             });
         };
 
-        $scope.$on( '$ionicView.afterEnter', function () {
+        $scope.$on('$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
-                window.cordova.plugins.Keyboard.disableScroll( true );
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                window.cordova.plugins.Keyboard.disableScroll(true);
             }
         });
-        $scope.$on( '$ionicView.beforeLeave', function () {
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
+        $scope.$on('$ionicView.beforeLeave', function () {
+            if (window.cordova && window.cordova.plugins.Keyboard) {
                 // return to keyboard default scroll state
-                window.cordova.plugins.Keyboard.disableScroll( false );
+                window.cordova.plugins.Keyboard.disableScroll(false);
             }
         });
-     };
+    };
 
     registerCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
 

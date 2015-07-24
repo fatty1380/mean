@@ -20,8 +20,8 @@
     function AuthenticationInterceptor($q, $location, tokenService) {
         return {
             request: function (config) {
-                if(config.url.substring(0, 4) == "http") {
-                    config.headers.Authorization = tokenService.get('token_type') +" "+ tokenService.get('access_token');
+                if (config.url.substring(0, 4) == "http") {
+                    config.headers.Authorization = tokenService.get('token_type') + " " + tokenService.get('access_token');
                 }
                 return config;
             },
@@ -42,6 +42,6 @@
         .module('signup')
         .factory('AuthenticationInterceptor', AuthenticationInterceptor)
         .config(function ($httpProvider) {
-           $httpProvider.interceptors.push('AuthenticationInterceptor');
+            $httpProvider.interceptors.push('AuthenticationInterceptor');
         });
 })();
