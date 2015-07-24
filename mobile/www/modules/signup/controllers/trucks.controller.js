@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var trucksCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading) {
+    var trucksCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading) {
         var vm = this;
 
         $scope.currentTruck = {
@@ -19,11 +19,11 @@
 
         vm.continueToTrailers = function() {
             registerService.dataProps.props.truck = $scope.currentTruck.name;
-            $location.path("signup/trailers");
+            $state.go('signup/trailers');
         }
     };
 
-    trucksCtrl.$inject = ['$scope','$state','$location','registerService'];
+    trucksCtrl.$inject = ['$scope', '$state', 'registerService'];
 
     angular
         .module('signup')

@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    var licenseCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading) {
+    var licenseCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading) {
         var vm = this;
 
         vm.class = null;
@@ -33,11 +33,11 @@
                     console.log(obj);
                     console.log(response);
 
-                    if(response.success) {
-                        $location.path("signup/trucks");
-                    }else{
-                        $location.path("signup/trucks");
-                      //  vm.showPopup(JSON.stringify(response));
+                    if (response.success) {
+                        $state.go('signup/trucks');
+                    } else {
+                        $state.go('signup/trucks');
+                        //  vm.showPopup(JSON.stringify(response));
                     }
                 });
         }
@@ -55,7 +55,7 @@
         }
     }
 
-    licenseCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading' ];
+    licenseCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading'];
 
     angular
         .module('signup')

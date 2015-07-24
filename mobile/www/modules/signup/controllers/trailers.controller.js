@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var trailersCtrl = function ($scope, $location, registerService, $ionicLoading, $ionicPopup) {
+    var trailersCtrl = function ($scope, $state, registerService, $ionicLoading, $ionicPopup) {
         var vm = this;
         vm.trailers = [
             {name:'Box', checked:false},
@@ -25,8 +25,8 @@
 
         vm.continue = function() {
 
-           registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
-           $location.path("signup/trailers");
+            registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
+            $state.go('signup/trailers');
 
            registerService.updateUser(registerService.dataProps)
                .then(function (response) {
@@ -37,10 +37,11 @@
                     console.log(response);
 
                     $ionicLoading.hide();
-                    if(response.success) {
-                        $location.path("account/profile");
-                    }else{
-                        $location.path("signin/signup");
+                    if (response.success) {
+                        $state.go('account.profile');
+                    } else {
+                        //$location.path("signin/signup"); // TODO: Determine unknown route if correct
+                        $state.go('signup/signin');
                         vm.showPopup(JSON.stringify(response));
                     }
                });
@@ -69,7 +70,7 @@
         }
     };
 
-    trailersCtrl.$inject = ['$scope','$location','registerService', '$ionicLoading', '$ionicPopup'];
+    trailersCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', '$ionicPopup'];
 
     angular
         .module('signup')

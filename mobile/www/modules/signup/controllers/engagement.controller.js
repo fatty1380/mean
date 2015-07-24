@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    var engagementCtrl = function($scope, $state, $location, registerService, $ionicPopup, $ionicLoading){
+    var engagementCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading) {
 
         var vm = this;
         vm.handle = "";
@@ -40,7 +40,7 @@
             registerService.dataProps.handle = vm.handle;
             console.log(registerService.dataProps);
 
-            $location.path("signup/license");
+            $state.go('signup/license');
 
             /*registerService.updateUser(data)
                 .then(function (response) {
@@ -53,10 +53,10 @@
 
                     $ionicLoading.hide();
                     if(response.success) {
-                        $location.path("signup/license");
+                        $state.go('signup/license');
                     }else{
                         // vm.showPopup(JSON.stringify(response));
-                        $location.path("signup/license");
+                        $state.go('signup/license');
                     }
                 });*/
         }
@@ -67,8 +67,8 @@
                 title: response.title || "title",
                 template: response || "no message"
             });
-            alertPopup.then(function(res) {
-                $location.path("signup/license");
+            alertPopup.then(function (res) {
+                $state.go('signup/license');
             });
         }
 
@@ -77,7 +77,7 @@
         }
     };
 
-    engagementCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading' ];
+    engagementCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading'];
 
     angular
         .module('signup')

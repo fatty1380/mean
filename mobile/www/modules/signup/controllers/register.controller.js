@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-     var registerCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
+    var registerCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService) {
 
          var vm = this;
 
@@ -44,8 +44,8 @@
                                     tokenService.set('access_token', signInresponse.message.data.access_token);
                                     tokenService.set('refresh_token', signInresponse.message.data.refresh_token);
                                     tokenService.set('token_type', signInresponse.message.data.token_type);
-                                    $location.path("signup/engagement");
-                                }else{
+                                    $state.go('signup/engagement');
+                                } else {
                                     vm.showPopup(signInresponse.title, signInresponse.message.data.error_description);
                                 }
                             });
@@ -56,16 +56,16 @@
                 });
         }
 
-         vm.showPopup = function (title, text) {
-             //console.log(title, text);
-             var alertPopup = $ionicPopup.alert({
-                 title: title || "title",
-                 template: text || "no message"
-             });
-             alertPopup.then(function(res) {
-                // $location.path("signup/engagement");
-             });
-         };
+        vm.showPopup = function (title, text) {
+            //console.log(title, text);
+            var alertPopup = $ionicPopup.alert({
+                title: title || "title",
+                template: text || "no message"
+            });
+            alertPopup.then(function (res) {
+                $state.go('signup/engagement');
+            });
+        };
 
         $scope.$on( '$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
@@ -81,7 +81,7 @@
         });
      };
 
-    registerCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading', 'tokenService'];
+    registerCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
 
     angular
         .module('signup')

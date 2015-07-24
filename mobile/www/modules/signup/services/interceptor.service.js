@@ -36,6 +36,8 @@
         };
     }
 
+    AuthenticationInterceptor.$inject = ['$q', '$location', 'tokenService'];
+
     angular
         .module('signup')
         .factory('AuthenticationInterceptor', AuthenticationInterceptor)

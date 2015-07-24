@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function signinCtrl ($scope, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
+    function signinCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService) {
         var vm = this;
 
         vm.user = {
@@ -33,8 +33,8 @@
                         tokenService.set('access_token', response.message.data.access_token);
                         tokenService.set('refresh_token', response.message.data.refresh_token);
                         tokenService.set('token_type', response.message.data.token_type);
-                        $location.path("account/profile");
-                    }else{
+                        $state.go('account.profile');
+                    } else {
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
@@ -88,15 +88,15 @@
                                     tokenService.set('access_token', response.message.data.access_token);
                                     tokenService.set('refresh_token', response.message.data.refresh_token);
                                     tokenService.set('token_type', response.message.data.token_type);
-                                    $location.path("signup/engagement");
-                                }else{
+                                    $state.go('signup/engagement');
+                                } else {
                                     //vm.showPopup(response);
                                     vm.showPopup(JSON.stringify(response));
                                 }
                             });
                         /// vm.showPopup(JSON.stringify(response));
-                    }else{
-                        // $location.path("signup/engagement");
+                    } else {
+                        // $state.go('signup/engagement');
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
@@ -114,8 +114,8 @@
             registerService.me()
                 .then(function (response) {
                     $ionicLoading.hide();
-                    if(response.success) {
-                        // $location.path("account/profile");
+                    if (response.success) {
+                        // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
                     }else{
                         //vm.showPopup(response);
@@ -135,8 +135,8 @@
             registerService.getProfilesID('55a5317e4cec3d4a40d4bfa9')
                 .then(function (response) {
                     $ionicLoading.hide();
-                    if(response.success) {
-                        // $location.path("account/profile");
+                    if (response.success) {
+                        // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
                     }else{
                         //vm.showPopup(response);
@@ -152,9 +152,9 @@
             registerService.signOut(vm.user)
                 .then(function (response) {
                     $ionicLoading.hide();
-                    if(response.success) {
-                        tokenService.set('access_token','');
-                        // $location.path("account/profile");
+                    if (response.success) {
+                        tokenService.set('access_token', '');
+                        // $state.go('account.profile');
                         console.log(response);
                         //vm.showPopup(JSON.stringify(response.message.data));
                     }else{
@@ -173,8 +173,8 @@
                     $ionicLoading.hide();
                     console.log(response);
 
-                    if(response.success) {
-                        //  $location.path("account/profile");
+                    if (response.success) {
+                        //  $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
                     }else{
                         //    vm.showPopup(response);
@@ -201,8 +201,8 @@
                     console.log(response);
                     // console.log(JSON.stringify(response.message.data));
                     //vm.showPopup(JSON.stringify(response.message.data));
-                    if(response.success) {
-                        //  $location.path("account/profile");
+                    if (response.success) {
+                        //  $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
                     }else{
                         vm.showPopup(JSON.stringify(response));
@@ -224,8 +224,8 @@
             registerService.updateUserProps(data)
                 .then(function (response) {
                     $ionicLoading.hide();
-                    if(response.success) {
-                        // $location.path("account/profile");
+                    if (response.success) {
+                        // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
                     }else{
                         //vm.showPopup(response);
@@ -250,8 +250,8 @@
             registerService.updateUserProps(data)
                 .then(function (response) {
                     $ionicLoading.hide();
-                    if(response.success) {
-                        // $location.path("account/profile");
+                    if (response.success) {
+                        // $state.go('account.profile');
                         vm.showPopup(JSON.stringify(response.message.data));
                     }else{
                         //vm.showPopup(response);
@@ -272,12 +272,12 @@
 
         vm.continueRegister = function(){
             console.log('continue register');
-            $location.path("signup/register");
+            $state.go('signup/register');
         }
 
         vm.continueProfile = function(){
             console.log('continue profile');
-            // $location.path("account/profile");
+            // $state.go('account.profile');
         }
 
 
@@ -295,7 +295,7 @@
         });
     }
 
-    signinCtrl.$inject = ['$scope', '$location', 'registerService', '$ionicPopup', '$ionicLoading' , 'tokenService'];
+    signinCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
 
     angular
         .module('signup')
