@@ -1,0 +1,25 @@
+<ion-view class="signup-section has-footer">
+<!--    <ion-content>
+        <ion-slide-box class="home-slide-box" active-slide="vm.activeSlide">
+            <ion-slide class="slide">
+                <p>Slide #1</p>
+            </ion-slide>
+            <ion-slide class="slide">
+                <p>Slide #2</p>
+            </ion-slide>
+            <ion-slide class="slide">
+                <p>Slide #3</p>
+            </ion-slide>
+        </ion-slide-box>
+    </ion-content>-->
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary submit" ng-disabled="vm.form.mainForm.$invalid"  ui-sref="signup/register">Sign Up</button>
+        </div>
+
+        <div class="button-bar action-buttons">
+            <button class="button primary submit" ng-disabled="vm.form.mainForm.$invalid"  ui-sref="signup/login">Login</button>
+        </div>
+    </ion-footer-bar>
+</ion-view>

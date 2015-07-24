@@ -6,7 +6,7 @@
         .module(AppConfig.appModuleName, AppConfig.appModuleDependencies)
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                $urlRouterProvider.otherwise("/signup/signin");
+                $urlRouterProvider.otherwise("signup/home");
             }
         ])
 
