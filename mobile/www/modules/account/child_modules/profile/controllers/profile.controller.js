@@ -8,7 +8,8 @@
             registerService.me()
                 .then(function (response) {
                     if(response.success) {
-                        vm.profileData = response.message.data
+                        vm.profileData = response.message.data;
+                        console.log('-=-=-=-=-=-=-=-=-=-=-=-=- USER  OBJECT =-==--=-=-=-=-=-=-=-=', vm.profileData);
                     }
                 });
         };

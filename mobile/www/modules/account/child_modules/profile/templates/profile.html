@@ -71,16 +71,29 @@
                     <div class="list">
                         <div class="item">
                             CUURENT JOB TITLE:
-                            <span class="item-note">Driver</span>
+                            <span class="item-note">{{vm.profileData._type}}</span>
                         </div>
                         <div class="item">
                             TYPE OF TRUCK:
-                            <span class="item-note">Mac</span>
+                            <span class="item-note">{{vm.profileData.props.truck}}</span>
                         </div>
                         <div class="item item-divider"></div>
                         <div class="item">
-                            CREDENTIALS:
-                            <span class="item-note">Credential 1, Credential 2, Credential 3</span>
+                            COMPANY
+                            <span class="item-note">{{vm.profileData.company}}</span>
+                        </div>
+                        <div class="item">
+                            YEARS WORKED
+                            <span class="item-note">{{vm.profileData.props.started}}</span>
+                        </div>
+                        <div class="item">
+                            <span class="ico ico-freight"></span>
+                            FREIGHT:
+                            <span class="item-note">{{vm.profileData.props.freight}}</span>
+                        </div>
+                        <div class="item item-icon-right">
+                            ENDORSEMENTS:
+                            <i class="ico icon ico-exp-truck"></i>
                         </div>
                     </div>
                 </ion-scroll>
