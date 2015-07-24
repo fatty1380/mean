@@ -31,7 +31,8 @@
                     url: '/content',
                     views:{
                         '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html'
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html',
+                            controller: 'ProfileShareCtrl as vm'
                         }
                     }
                 })

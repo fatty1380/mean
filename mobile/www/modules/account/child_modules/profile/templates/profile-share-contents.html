@@ -11,21 +11,24 @@
             </div>
         </div>
     </div>
-    <ion-pane class="content-pane has-footer">
-        <div class="content-top">
-            <button class="button button-block">Choose from Contact List</button>
-        </div>
-        <div class="list profile-share-form">
-            <label class="item item-input">
-                <input type="text" placeholder="Phone Number">
-            </label>
-            <label class="item item-input">
-                <input type="text" placeholder="Email Address">
-            </label>
-            <label class="item item-input">
-                <textarea placeholder="Enter message"></textarea>
-            </label>
-        </div>
+    <ion-pane class="content-pane has-footer has-title">
+        <div class="content-top">Your lockbox will contain all your secure documents.</div>
+        <ion-scroll>
+            <ul class="list document-list">
+                <li class="item item-checkbox" ng-repeat="document in vm.documents">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="document.checked">
+                    </label>
+                    <div class="item-content">
+                        <div class="document">
+                            <strong>{{document.name}}</strong>
+                            <span>{{document.date}}</span>
+                        </div>
+                    </div>
+                    <a class="button button-small">View</a>
+                </li>
+            </ul>
+        </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">

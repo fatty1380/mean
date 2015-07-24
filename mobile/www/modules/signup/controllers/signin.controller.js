@@ -5,13 +5,13 @@
         var vm = this;
 
         vm.user = {
-            email: 'markov.flash@gmail.com',
-            password: 'sergey83mark'
+            email: 'rykov.serge@gmail.com',
+            password: 'testtest'
         };
 
         vm.initForm= function(scope){
             vm.form = scope;
-        }
+        };
 
         /**
          * @description
