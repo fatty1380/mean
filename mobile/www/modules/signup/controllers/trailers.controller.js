@@ -55,7 +55,7 @@
             });
         }
 
-        vm.continue = function(isSave) {
+        vm.continueToProfile = function(isSave) {
             if(isSave){
                 registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
             }

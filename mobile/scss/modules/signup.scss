@@ -18,7 +18,7 @@ ion-content {
   }
 }
 
-#mainForm{
+.signup-form{
   .item {
     padding:0;
     border: 0;
@@ -489,15 +489,6 @@ $but-height: 90px;
     color: #fff !important;
   }
 
-  .skip{
-    position:absolute;
-    right:0;
-    top:-4px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 14px;
-    font-weight: bold;
-  }
-
   .button-other{
     background-color: $signup-entry-row-bg;
   }
@@ -512,7 +503,6 @@ $but-height: 90px;
       }
     }
   }
-
 }
 .trailers-bg{
   background-image:url("../img/trailersBg.png");

@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <form name="mainForm" id="mainForm" class="list" ng-init="vm.initForm(this)" ng-submit="vm.continue()" role="form">
+        <form name="mainEnagegmentForm" id="mainEnagegmentForm" class="list signup-form" ng-init="vm.initEngagementForm(this)" ng-submit="vm.continueToLicense()" role="form">
             <label class="item item-input">
                 <input type="text" placeholder="Handle" ng-model="vm.handle" autofocus>
             </label>
@@ -28,7 +28,7 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary submit" form="mainForm" ng-click="vm.continue()" >Continue</button>
+            <button class="button secondary submit" form="mainEnagegmentForm" ng-click="vm.continueToLicense()" >Continue</button>
         </div>
     </ion-footer-bar>
 </ion-view>

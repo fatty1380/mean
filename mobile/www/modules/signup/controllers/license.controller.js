@@ -15,8 +15,9 @@
             X: false
         }
 
-        vm.continue = function() {
+        vm.continueToTrucks = function() {
             console.log(" ");
+            console.log(" continueToTrucks() ");
 
             var obj = {};
             obj.license = {};
@@ -34,16 +35,13 @@
                     $ionicLoading.hide();
 
                     console.log(" ");
-                    console.log(" ");
-                    console.log("license");
-                    console.log(obj);
-                    console.log(response);
+                    console.log("license response update user : ", response);
 
                     if(response.success) {
                         $location.path("signup/trucks");
                     }else{
-                       // $location.path("signup/trucks");
-                        vm.showPopup(JSON.stringify(response));
+                        $location.path("signup/login");
+                       // vm.showPopup(JSON.stringify(response));
                     }
                 });
         }

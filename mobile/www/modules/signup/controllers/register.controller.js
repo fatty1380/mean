@@ -17,9 +17,11 @@
              vm.form = scope;
          };
 
-         vm.continue = function(){
+         vm.continueToEngagement = function(){
 
-             console.log('vm.continue !!!!!!');
+             console.log(' ');
+             console.log(' ');
+             console.log('continueToEngagement()');
 
              $ionicLoading.show({
                  template: 'please wait'
@@ -29,7 +31,7 @@
 
                     console.log(" ");
                     console.log(" ");
-                    console.log("register");
+                    console.log("registerService.registerUser()");
                     console.log(vm.user);
                     console.log(response);
 
@@ -38,7 +40,7 @@
                         tokenService.set('access_token', '');
                           registerService.signIn({ email:response.message.data.email, password: vm.user.password })
                             .then(function (signInresponse) {
-                                console.log('signIn: ',signInresponse);
+                                console.log('signInresponse : ',signInresponse);
                                   $ionicLoading.hide();
                                 if(signInresponse.success) {
                                     tokenService.set('access_token', signInresponse.message.data.access_token);
@@ -58,12 +60,9 @@
 
          vm.showPopup = function (title, text) {
              //console.log(title, text);
-             var alertPopup = $ionicPopup.alert({
+             $ionicPopup.alert({
                  title: title || "title",
                  template: text || "no message"
-             });
-             alertPopup.then(function(res) {
-                // $location.path("signup/engagement");
              });
          };
 
