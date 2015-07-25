@@ -59,4 +59,41 @@
     <icon src="resources/ios/icon/icon-50@2x.png" width="100" height="100"/>
   </plaform>
   <icon src="resources/ios/icon/icon-small@3x.png"/>
+  <config-file target="*/outset-Info.plist" parent="NSAppTransportSecurity">
+    <dict>
+      <key>NSExceptionDomains</key>
+      <dict>
+        <key>elasticbeanstalk.com</key>
+        <dict>
+          <key>NSExceptionAllowInsecureHTTPSLoads</key>
+          <true/>
+          <key>NSExceptionMinimumTLSVersion</key>
+          <string>TLSv1.2</string>
+          <key>NSIncludesSubdomains</key>
+          <true/>
+          <key>NSRequiresCertificateTransparency</key>
+          <false/>
+          <key>NSThirdPartyExceptionAllowInsecureHTTPSLoads</key>
+          <true/>
+          <key>NSThirdPartyExceptionMinimumTLSVersion</key>
+          <string>TLSv1.2</string>
+        </dict>
+        <key>joinoutset.com</key>
+        <dict>
+          <key>NSExceptionAllowInsecureHTTPSLoads</key>
+          <false/>
+          <key>NSExceptionMinimumTLSVersion</key>
+          <string>TLSv1.2</string>
+          <key>NSIncludesSubdomains</key>
+          <true/>
+          <key>NSRequiresCertificateTransparency</key>
+          <true/>
+          <key>NSThirdPartyExceptionAllowInsecureHTTPSLoads</key>
+          <false/>
+          <key>NSThirdPartyExceptionMinimumTLSVersion</key>
+          <string>TLSv1.2</string>
+        </dict>
+      </dict>
+    </dict>
+  </config-file>
 </widget>
