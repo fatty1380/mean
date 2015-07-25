@@ -55,13 +55,13 @@ describe('Review Model Unit Tests:', function() {
 		});
 	});
 	
-	describe('The moddel should store', function () {
+	describe('The model should store', function () {
 		it('a reference to the user/driver who is being reviewed');
 		it('an optional reference to the reviewer');
 		it('a "display name" for the reviewer');
 		it('the reviewers email address');
 		it('a "title" for the review');
-		it('the text-body of the review');
+		it('the text of the review');
 		it('the rating that the reviewer left on a scale of 1 to 5');
 		it('a created and modified date field');
 	});
