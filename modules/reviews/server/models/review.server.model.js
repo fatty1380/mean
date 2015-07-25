@@ -92,4 +92,15 @@ var ReviewSchema = new Schema({
 	}
 });
 
+ReviewSchema.pre('validate', function (next) {
+	if (!this.email && !!this.reviewer) {
+		this.email = this.reviewer.email;
+	}
+	if (!this.name && !!this.reviewer) {
+		this.name = this.reviewer.shortName;
+	}
+	
+	next();
+})
+
 mongoose.model('Review', ReviewSchema);
