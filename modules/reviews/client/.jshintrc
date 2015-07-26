@@ -1,0 +1,17 @@
+{
+  "extends": "../../../.jshintrc",
+  "globals": {
+    "angular": true,
+    "ApplicationConfiguration": true,
+    "moment": true,
+    "browser": true,
+    "element": true,
+    "google": true,
+    "braintree": true,
+    "angular": true,
+    "Raygun": true,
+    "tinymce": true,
+    "io": true,
+    "_": true
+  }
+}

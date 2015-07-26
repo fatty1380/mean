@@ -41,7 +41,7 @@ module.exports = function () {
 			ClientApp.findOne({ clientId: username }, function (err, client) {
 				if (err) { return done(err); }
 				if (!client) { return done(null, false); }
-				if (client.clientSecret != password) { return done(null, false); }
+				if (client.clientSecret !== password) { return done(null, false); }
 
 				log.debug({ strategy: 'basic', username: username }, 'Found client key for username');
 				return done(null, client);
@@ -56,7 +56,7 @@ module.exports = function () {
 			ClientApp.findOne({ clientId: clientId }, function (err, client) {
 				if (err) { return done(err); }
 				if (!client) { return done(null, false); }
-				if (client.clientSecret != clientSecret) { return done(null, false); }
+				if (client.clientSecret !== clientSecret) { return done(null, false); }
 
 				log.debug({ strategy: 'client-password', clientId: clientId }, 'Found client key for clientId');
 
@@ -76,7 +76,7 @@ module.exports = function () {
 
 				if (Math.round((Date.now() - token.created) / 1000) > config.security.tokenLife) {
 					AccessToken.remove({ token: accessToken }, function (err) {
-						if (err) return done(err);
+						if (err) { return done(err);}
 					});
 					return done(null, false, { message: 'Token expired' });
 				}

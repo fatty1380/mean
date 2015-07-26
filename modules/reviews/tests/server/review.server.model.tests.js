@@ -81,7 +81,7 @@ describe('Review Model Unit Tests:', function () {
 
 		beforeEach(function () {
 			return review.save();
-		})
+		});
 
 		it('a reference to the user/driver who is being reviewed', function () {
 			review.should.have.property('user');
@@ -105,7 +105,7 @@ describe('Review Model Unit Tests:', function () {
 			review.should.have.property('rating');
 		});
 		it('a created and modified date field', function () {
-			review.should.have.property('created').and.not.be.null;
+			review.should.have.property('created').and.not.be.null();
 			review.should.have.property('modified', review.created);
 		});
 	});
@@ -119,11 +119,9 @@ describe('Review Model Unit Tests:', function () {
 				function (review) {
 					review.should.have.property('name', reviewer.shortName);
 					review.should.have.property('email', reviewer.email);
-				}
-				)
+				});
 		});
-
-	})
+	});
 
 	afterEach(function (done) {
 		Review.remove().exec(function () {

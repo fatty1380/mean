@@ -85,4 +85,4 @@ exports.censor = function(censor) {
 
 exports.notAvailable = function (req, res) {
     res.status(404).send({ message: 'Method is not available' });
-}
+};

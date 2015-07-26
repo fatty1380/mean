@@ -99,8 +99,8 @@ ReviewSchema.pre('validate', function (next) {
 	if (!this.name && !!this.reviewer) {
 		this.name = this.reviewer.shortName;
 	}
-	
+
 	next();
-})
+});
 
 mongoose.model('Review', ReviewSchema);

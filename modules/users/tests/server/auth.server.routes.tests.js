@@ -95,7 +95,7 @@ describe('Auth Routes tests', function () {
             var _test = this.test;
 
             var endpoint = '/oauth/token';
-            credentials.password = 'incorrect'
+            credentials.password = 'incorrect';
 
             return agent.post(endpoint)
                 .send(credentials)
@@ -121,7 +121,7 @@ describe('Auth Routes tests', function () {
                     log.debug({ func: 'auth.before', token: response.body }, 'Got Token');
                     token = response.body;
                 });
-            })
+            });
 
             it('should have a token', function () {
                 should.exist(token);
@@ -193,7 +193,7 @@ describe('Auth Routes tests', function () {
                 var data = {
                     'handle': 'gearjammer',
                     'about': 'I bet you think this test is about you'
-                }
+                };
 
                 return agent.put(endpoint)
                 //.set({access_token: token.access_token})
@@ -214,8 +214,7 @@ describe('Auth Routes tests', function () {
                         user.should.have.property('id', user.id);
                     });
             });
-
-        })
+        });
 
     });
 
@@ -226,5 +225,5 @@ describe('Auth Routes tests', function () {
 
     after(function () {
         return stubs.cleanTables([ClientApp]);
-    })
+    });
 });
