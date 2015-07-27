@@ -102,7 +102,7 @@ exports.list = function (req, res) {
 
 	var reviewedParty = req.profile || req.user;
 
-	Review.find({ user: reviewedParty.id })
+	Review.find({ user: reviewedParty.id }) 
 		.sort('-created')
 		.populate('user', 'displayName')
 		.exec()
