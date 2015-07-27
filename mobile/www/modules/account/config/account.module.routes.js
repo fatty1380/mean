@@ -47,7 +47,8 @@
                     url: '/lockbox',
                     views: {
                         'lockbox': {
-                            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html'
+                            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
+                            controller: 'lockboxCtrl as vm'
                         }
                     }
                 })
