@@ -11,41 +11,58 @@ acl = new acl(new acl.memoryBackend());
 /**
  * Invoke Reviews Permissions
  */
-exports.invokeRolesPolicies = function() {
-	acl.allow([{
-		roles: ['admin'],
-		allows: [{
-			resources: '/api/reviews',
-			permissions: '*'
+exports.invokeRolesPolicies = function () {
+	acl.allow([
+		{
+			roles: ['admin'],
+			allows: [
+				{
+					resources: '/api/reviews',
+					permissions: '*'
+				}, {
+					resources: '/api/reviews/:reviewId',
+					permissions: '*'
+				}, {
+					resources: '/api/profiles/:reviewid/reviews',
+					permissions: '*'
+				}
+			]
 		}, {
-			resources: '/api/reviews/:reviewId',
-			permissions: '*'
-		}]
-	}, {
-		roles: ['user'],
-		allows: [{
-			resources: '/api/reviews',
-			permissions: ['get', 'post']
+			roles: ['user'],
+			allows: [
+				{
+					resources: '/api/reviews',
+					permissions: ['get', 'post']
+				}, {
+					resources: '/api/reviews/:reviewId',
+					permissions: ['get']
+				}, {
+					resources: '/api/profiles/:userId/reviews',
+					permissions: ['get', 'post']
+				}
+			]
 		}, {
-			resources: '/api/reviews/:reviewId',
-			permissions: ['get']
-		}]
-	}, {
-		roles: ['guest'],
-		allows: [{
-			resources: '/api/reviews',
-			permissions: ['get']
-		}, {
-			resources: '/api/reviews/:reviewId',
-			permissions: ['get']
-		}]
-	}]);
+			roles: ['guest'],
+			allows: [
+				{
+					resources: '/api/reviews',
+					permissions: ['get']
+				}, {
+					resources: '/api/reviews/:reviewId',
+					permissions: ['get']
+				}, {
+					resources: '/api/profiles/:userId/reviews',
+					permissions: ['get', 'post']
+				}
+			]
+		}
+	]);
 };
 
 /**
  * Check If Articles Policy Allows
  */
-exports.isAllowed = function(req, res, next) {
+exports.isAllowed = function (req, res, next) {
 	var roles = (req.user) ? req.user.roles : ['guest'];
 
 	/** 
@@ -57,7 +74,7 @@ exports.isAllowed = function(req, res, next) {
 	}
 
 	// Check for user roles
-	acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function(err, isAllowed) {
+	acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
 		if (err) {
 			// An authorization error occurred.
 			return res.status(500).send('Unexpected authorization error');
