@@ -537,3 +537,29 @@ $but-height: 90px;
     background-image:url("../img/welcomeBackground@3x.png");
   }
 }
+
+
+/* home */
+.home-content{
+  width: 300px;
+  height: 100px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -150px;
+  margin-top: -80px;
+  bottom: 0;
+  overflow: auto;
+
+  i{
+    display: block;
+    margin: auto;
+  }
+
+  h3{
+    font: 14px Helvetica Neue, Helvetica, Arial;
+    color: $white;
+    font-weight: bold;
+    text-align: center;
+  }
+}

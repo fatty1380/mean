@@ -1,3 +1,24 @@
+<ion-view class="signup-section home">
+    <ion-pane class="">
+        <div class="home-content">
+            <i class="ico ico-outsetlogo"></i>
+            <h3>Take control of your driving career</h3>
+        </div>
+
+    </ion-pane>
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary submit" ng-disabled="vm.form.mainForm.$invalid"  ui-sref="signup/register">Sign Up</button>
+        </div>
+        <div class="button-bar action-buttons">
+            <button class="button primary submit" ng-disabled="vm.form.mainForm.$invalid"  ui-sref="signup/login">Login</button>
+        </div>
+    </ion-footer-bar>
+</ion-view>
+
+
+<!--
 <ion-view class="signup-section">
 
     <div class="header compact-size">
@@ -30,3 +51,4 @@
     </ion-footer-bar>
 
 </ion-view>
+-->
