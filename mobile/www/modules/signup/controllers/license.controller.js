@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    var licenseCtrl = function ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading) {
+    var licenseCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading) {
         var vm = this;
 
         vm.class = null;
@@ -17,7 +17,6 @@
 
         vm.continueToTrucks = function() {
             console.log(" ");
-            console.log(" continueToTrucks() ");
 
             var obj = {};
             obj.license = {};
@@ -37,20 +36,19 @@
                     console.log(" ");
                     console.log("license response update user : ", response);
 
-                    if(response.success) {
-                        $location.path("signup/trucks");
-                    }else{
-                        $location.path("signup/login");
-                       // vm.showPopup(JSON.stringify(response));
+                    if (response.success) {
+                        $state.go('signup/trucks');
+                    } else {
+                        $state.go('signup/login');
                     }
                 });
         }
 
-        var getEndorsementKeys = function(obj) {
+        var getEndorsementKeys = function (obj) {
             var keys = [];
             for (var i in obj) {
                 if (obj.hasOwnProperty(i)) {
-                    if(obj[i]) {
+                    if (obj[i]) {
                         keys.push(i);
                     }
                 }
@@ -59,9 +57,9 @@
         }
     }
 
-    licenseCtrl.$inject = ['$scope','$state','$location','registerService','$ionicPopup', '$ionicLoading' ];
+    licenseCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading'];
 
     angular
         .module('signup')
-        .controller('licenseCtrl',  licenseCtrl);
+        .controller('licenseCtrl', licenseCtrl);
 })();

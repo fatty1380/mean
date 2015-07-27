@@ -12,8 +12,8 @@
                 })
                 .state('account.profile', {
                     url: '/profile',
-                    views:{
-                        'profile':{
+                    views: {
+                        'profile': {
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
                             controller: 'ProfileCtrl as vm'
                         }
@@ -21,48 +21,48 @@
                 })
                 .state('account.profile.share', {
                     url: '/share',
-                    views:{
-                        '@':{
+                    views: {
+                        '@': {
                             templateUrl: 'modules/account/child_modules/profile/templates/share-profile.html'
                         }
                     }
                 })
                 .state('account.profile.request', {
                     url: '/request',
-                    views:{
-                        '@':{
+                    views: {
+                        '@': {
                             templateUrl: 'modules/account/child_modules/profile/templates/request-review.html'
                         }
                     }
                 })
                 .state('account.profile.edit', {
                     url: '/edit',
-                    views:{
-                        '@':{
+                    views: {
+                        '@': {
                             templateUrl: 'modules/account/child_modules/profile/templates/edit-profile.html'
                         }
                     }
                 })
                 .state('account.lockbox', {
                     url: '/lockbox',
-                    views:{
-                        'lockbox':{
+                    views: {
+                        'lockbox': {
                             templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html'
                         }
                     }
                 })
                 .state('account.activity', {
                     url: '/activity',
-                    views:{
-                        'activity':{
+                    views: {
+                        'activity': {
                             templateUrl: 'modules/account/child_modules/activity/templates/activity.html'
                         }
                     }
                 })
                 .state('account.messages', {
                     url: '/messages',
-                    views:{
-                        'messages':{
+                    views: {
+                        'messages': {
                             templateUrl: 'modules/account/child_modules/messages/templates/messages.html'
                         }
                     }
