@@ -320,7 +320,10 @@ module.exports.initErrorRoutes = function (app) {
         // Redirect to not found page
         
         res.status(404).json({ error: 'not found' });
-        res.redirect('/not-found');
+        
+        if (!/^\/api\/.*/i.test(req.url)) {
+            res.redirect('/not-found');
+        }
     });
 };
 
