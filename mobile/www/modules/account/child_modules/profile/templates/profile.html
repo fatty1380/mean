@@ -101,7 +101,13 @@
             </ion-tab>
             <ion-tab title="EXPERIENCE">
                 <ion-scroll class="experience-list">
-                    <div class="list"></div>
+                    <ion-list>
+                        <ion-item class="item" ng-repeat="job in vm.experience">
+                            <strong>{{job.title}}</strong>
+                            <p>{{job.message}}</p>
+                            <em><i class="ico ico-timesmall"></i>{{job.date}}</em>
+                        </ion-item>
+                    </ion-list>
                 </ion-scroll>
                 <button class="button content-button"  ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
             </ion-tab>

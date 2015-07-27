@@ -233,20 +233,35 @@
 }
 
 .experience-list{
-  height: 100%;
-
-  .list{
-    margin: 0 20px;
-    padding-top: 20px;
-  }
-
   .item{
     background: none;
-    padding: 10px 0 15px;
-    border: none;
+    padding: 10px 15px 9px;
+    border-bottom: 1px solid #ddd;
+    font-size: 11px;
+    color: #666;
 
-    &.item-icon-right .icon {right: 0;}
-    .item-note{color: $content-body-text;}
+    strong,
+    p,
+    em{
+      display: block;
+      padding-bottom: 5px;
+    }
+
+    strong{
+      text-transform: uppercase;
+    }
+
+    p{
+      font-size: 11px;
+      white-space: normal;
+      text-overflow: initial;
+    }
+    em{
+      i{
+        margin-right: 5px;
+        vertical-align: text-top;
+      }
+    }
   }
 }
 
