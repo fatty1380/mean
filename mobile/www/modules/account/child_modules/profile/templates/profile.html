@@ -91,9 +91,13 @@
                             FREIGHT:
                             <span class="item-note">{{vm.profileData.props.freight}}</span>
                         </div>
-                        <div class="item item-icon-right">
+                        <div class="item endorsements-row">
                             ENDORSEMENTS:
-                            <i class="ico icon ico-exp-truck"></i>
+                            <ul class="endorsements-list">
+                                <li ng-repeat="endorsement in vm.profileData.license.endorsements">
+                                    <i class="ico icon {{ vm.endorsementsMap[endorsement].ico}}"></i>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </ion-scroll>

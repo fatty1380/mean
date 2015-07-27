@@ -131,6 +131,7 @@
 .reviews-list{
   .item{
     margin-bottom: 2px;
+
     > .ico{
       float: left;
       margin-right: 15px;
@@ -215,6 +216,11 @@
     padding: 10px 0 15px;
     border: none;
 
+    &.endorsements-row{
+      padding-top: 0;
+      line-height: 31px;
+    }
+
     &.item-divider{
       padding: 0;
       height: 1px;
@@ -261,6 +267,32 @@
         margin-right: 5px;
         vertical-align: text-top;
       }
+    }
+  }
+}
+
+.endorsements-list{
+  float: right;
+  width: 50%;
+  text-align: right;
+  white-space: normal;
+
+  li{
+    width: 36px;
+    padding: 0 0 5px 5px;
+    display: inline-block;
+
+    .ico{
+      width: 31px;
+      height: 31px;
+      -webkit-background-size: 1200px 1135px;
+      background-size: 1200px 1135px;
+
+      &.ico-doubletraileractive{background-position: -249px -233px;}
+      &.ico-passengeractive{background-position: -815px -742px;}
+      &.ico-tankvehicleactive{background-position: -1132px -1067px;}
+      &.ico-hazardousmaterialsactive{background-position: -311px -295px;}
+      &.ico-tankhazardousactive{background-position: -1070px -503px;}
     }
   }
 }

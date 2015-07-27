@@ -4,6 +4,32 @@
     function ProfileCtrl(registerService) {
         var vm = this;
         vm.profileData = {};
+        vm.endorsementsMap = {
+            T : {
+                title: 'Double/Triple Trailer',
+                ico: 'ico-doubletraileractive'
+            },
+            P : {
+                title: 'Passenger Vehicle',
+                ico: 'ico-passengeractive'
+            },
+            S : {
+                title: 'School Bus',
+                ico: 'ico-doubletraileractive'
+            },
+            N : {
+                title: 'Tank Truck',
+                ico: 'ico-tankvehicleactive'
+            },
+            H : {
+                title: 'Hazardous Materials',
+                ico: 'ico-hazardousmaterialsactive'
+            },
+            X : {
+                title: 'Tank + Hazardous',
+                ico: 'ico-tankhazardousactive'
+            }
+        };
         // experience array data example. Rendering this till the user object will contain needed data
         vm.experience = [
             {
