@@ -31,6 +31,7 @@ var _ = require('lodash'),
  * @usage: A user (req.user) POSTs a new review for a specific user in the system (req.body.user)
  */
 exports.create = function (req, res) {
+	req.log.debug({ module: 'reviews', func: 'create', body: req.body });
 	var review = new Review(req.body);
 
 	review.reviewer = req.user;
@@ -50,6 +51,7 @@ exports.create = function (req, res) {
  * Show the current Review
  */
 exports.read = function (req, res) {
+	req.log.debug({ module: 'reviews', func: 'read', review: req.review });
 	res.json(req.review);
 };
 
@@ -57,6 +59,7 @@ exports.read = function (req, res) {
  * Update a Review
  */
 exports.update = function (req, res) {
+	req.log.debug({ module: 'reviews', func: 'update', review: req.review });
 	var review = req.review;
 
 	review = _.extend(review, req.body);
@@ -76,6 +79,7 @@ exports.update = function (req, res) {
  * Delete an Review
  */
 exports.delete = function (req, res) {
+	req.log.debug({ module: 'reviews', func: 'delete', review: req.review });
 	var review = req.review;
 
 	review.remove(function (err) {
@@ -93,11 +97,12 @@ exports.delete = function (req, res) {
  * List of Reviews
  */
 exports.list = function (req, res) {
+	
+	req.log.debug({ module: 'reviews', func: 'list' });
 
 	var reviewedParty = req.profile || req.user;
 
-	Review.find()
-		.query({ user: reviewedParty.id })
+	Review.find({ user: reviewedParty.id })
 		.sort('-created')
 		.populate('user', 'displayName')
 		.exec()
@@ -116,6 +121,9 @@ exports.list = function (req, res) {
  * Review middleware
  */
 exports.reviewByID = function (req, res, next, id) {
+	
+	req.log.debug({ module: 'reviews', func: 'reviewByID' });
+	
 	Review.findById(id)
 		.populate('user', 'displayName')
 		.exec()
