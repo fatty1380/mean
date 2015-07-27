@@ -8,7 +8,6 @@
     "element": true,
     "google": true,
     "braintree": true,
-    "angular": true,
     "Raygun": true,
     "tinymce": true,
     "io": true,
