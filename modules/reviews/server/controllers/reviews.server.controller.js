@@ -35,6 +35,9 @@ exports.create = function (req, res) {
 	var review = new Review(req.body);
 
 	review.reviewer = req.user;
+	review.user = !!req.profile && req.profile.id || req.params.userId;
+	
+	req.log.debug({ module: 'reviews', func: 'create', review: review });
 
 	review.save(function (err) {
 		if (err) {

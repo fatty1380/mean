@@ -70,6 +70,7 @@ exports.isAllowed = function (req, res, next) {
 	 * @note In a review, the "reviewer" is the one who created it.
 	 */
 	if (req.review && req.user && req.review.reviewer.id === req.user.id) {
+		req.log.debug({module: 'reviews', func: 'isAllowed'}, 'Reviewer is Logged in User')
 		return next();
 	}
 
