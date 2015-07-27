@@ -104,8 +104,8 @@
                     <ion-list>
                         <ion-item class="item" ng-repeat="job in vm.experience">
                             <strong>{{job.title}}</strong>
-                            <p>{{job.message}}</p>
-                            <em><i class="ico ico-timesmall"></i>{{job.date}}</em>
+                            <p>{{job.description}}</p>
+                            <em><i class="ico ico-timesmall"></i>{{job.startDate | date : MMM : yyyy}} -  {{job.endDate | date : MMM : yyyy}}</em>
                         </ion-item>
                     </ion-list>
                 </ion-scroll>

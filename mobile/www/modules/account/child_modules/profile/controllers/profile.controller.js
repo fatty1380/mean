@@ -8,33 +8,45 @@
         vm.experience = [
             {
                 title: 'Diamond Dan\'s  truck lines',
-                message: 'Long Haul OTR Driver hauling Box Freight in West 11. Primrily dealing with HazMat materials hauling over high mountain passes',
-                date: 'Oct 2007 - Nov 2014'
+                description: 'Long Haul OTR Driver hauling Box Freight in West 11. Primrily dealing with HazMat materials hauling over high mountain passes',
+                startDate : '2007-12-03',
+                endDate : '2014-11-06',
+                location : 'Seattle, WA'
             },
             {
                 title: 'Justdrive freight haulers',
-                message: 'Short Haul, Long Haul, Box, Auto, Double, Triples and Tanks. I did it all.',
-                date: 'Oct 2005 - Nov 2007'
+                description: 'Short Haul, Long Haul, Box, Auto, Double, Triples and Tanks. I did it all.',
+                startDate : '2007-12-03',
+                endDate : '2014-11-06',
+                location : 'Seattle, WA'
             },
             {
                 title: 'local courier services',
-                message: 'Etiam porta sem malesuada magna mollis eusimod. Maecenas sed diam eget risus varius blandit sit amet non magna.',
-                date: 'Oct 2001 - Nov 2005'
+                description: 'Etiam porta sem malesuada magna mollis eusimod. Maecenas sed diam eget risus varius blandit sit amet non magna.',
+                startDate : '2007-12-03',
+                endDate : '2014-11-06',
+                location : 'Seattle, WA'
             },
             {
                 title: 'Diamond Dan\'s  truck lines',
-                message: 'Long Haul OTR Driver hauling Box Freight in West 11. Primrily dealing with HazMat materials hauling over high mountain passes',
-                date: 'Oct 2000 - Nov 2001'
+                description: 'Long Haul OTR Driver hauling Box Freight in West 11. Primrily dealing with HazMat materials hauling over high mountain passes',
+                startDate : '2007-12-03',
+                endDate : '2014-11-06',
+                location : 'Seattle, WA'
             },
             {
                 title: 'Justdrive freight haulers',
-                message: 'Short Haul, Long Haul, Box, Auto, Double, Triples and Tanks. I did it all.',
-                date: 'Oct 1997 - Nov 2000'
+                description: 'Short Haul, Long Haul, Box, Auto, Double, Triples and Tanks. I did it all.',
+                startDate : '2007-12-03',
+                endDate : '2014-11-06',
+                location : 'Seattle, WA'
             },
             {
                 title: 'local courier services',
-                message: 'Etiam porta sem malesuada magna mollis eusimod. Maecenas sed diam eget risus varius blandit sit amet non magna.',
-                date: 'Oct 1995 - Nov 1997'
+                description: 'Etiam porta sem malesuada magna mollis eusimod. Maecenas sed diam eget risus varius blandit sit amet non magna.',
+                startDate : '2007-12-03',
+                endDate : '2014-11-06',
+                location : 'Seattle, WA'
             }
         ];
         vm.me = (function(){
