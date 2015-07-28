@@ -365,10 +365,11 @@ function executeQuery(req, res, next) {
         .select(Driver.fields.social)
         .exec(function (err, drivers) {
             if (err) {
-                if (!drivers)
+                if (!drivers) {
                     return res.status(400).send({
                         message: errorHandler.getErrorMessage(err)
                     });
+                }
             }
             
             // var fields = Driver.fields.social.split(' ');

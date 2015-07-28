@@ -50,7 +50,7 @@ describe('Applications CRUD tests', function () {
         
         c2 = new Company({name: 'Not your Company', user: cu2});
         cu2 = new User(stubs.getUser());
-        c2.owner = cu2._id
+        c2.owner = cu2._id;
 
         job = new Job({
             user       : cUser,

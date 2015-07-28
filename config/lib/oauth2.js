@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path'),
 	passport = require('passport'),
 	oauth2orize = require('oauth2orize'),
@@ -90,7 +92,7 @@ var errFn = function (cb, err) {
 };
 
 // Destroys any old tokens and generates a new access and refresh token
-var generateTokens = function (data, done) {
+function generateTokens(data, done) {
 
 	// curries in `done` callback so we don't need to pass it
     var errorHandler = errFn.bind(undefined, done), 
@@ -130,11 +132,11 @@ var generateTokens = function (data, done) {
     		'expires_in': config.security.tokenLife 
     	});
     });
-};
+}
 
 // token endpoint
 exports.token = [
     passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
     server.token(),
     server.errorHandler()
-]
+];

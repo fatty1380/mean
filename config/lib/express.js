@@ -98,7 +98,7 @@ module.exports.initMiddleware = function (app) {
         var errorhandler = require('errorhandler');
 
         app.use(errorhandler({ log: function errorNotification(err, str, req) {
-            var title = 'Error in ' + req.method + ' ' + req.url
+            var title = 'Error in ' + req.method + ' ' + req.url;
 
             req.log.error({
                 title: title,
@@ -106,7 +106,7 @@ module.exports.initMiddleware = function (app) {
                 url: req.url,
                 error: err
             }, str);
-        } }))
+        } }));
 
         
     }
@@ -312,15 +312,18 @@ module.exports.initErrorRoutes = function (app) {
 
         // Redirect to error page
         //res.redirect('/server-error');
-        res.status(500).json({ error: err.stack })
+        res.status(500).json({ error: err.stack });
     });
 
     // Assume 404 since no middleware responded
     app.use(function (req, res) {
         // Redirect to not found page
         
-        res.status(404).json({ error: 'not found' })
-        res.redirect('/not-found');
+        res.status(404).json({ error: 'not found' });
+        
+        if (!/^\/api\/.*/i.test(req.url)) {
+            res.redirect('/not-found');
+        }
     });
 };
 

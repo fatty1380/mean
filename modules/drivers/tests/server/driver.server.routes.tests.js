@@ -73,7 +73,7 @@ describe('Driver CRUD tests', function () {
 				'endorsements': ['H'],
 				'state': 'CA'
 			}
-		}
+		};
 
 		_.each(_.keys(attrs), function (key) {
 			it('should be able to set the driver\'s ' + key, function () {
@@ -112,7 +112,7 @@ describe('Driver CRUD tests', function () {
 				'started': 1989,
 				'truck': 'Kenworth',
 				'trailers': ['Box Trailer', 'Curatin Side']
-			}
+			};
 
 			log.debug({
 				test: _test.title,

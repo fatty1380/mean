@@ -278,7 +278,7 @@ UserSchema.methods.socialify = function () {
     this.phone = null;
 
     this.cleanse();
-}
+};
 
 UserSchema.methods.loadFriends = function () {
     return this.db.model('User')
