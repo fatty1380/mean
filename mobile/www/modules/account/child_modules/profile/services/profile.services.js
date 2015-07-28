@@ -1,33 +1,32 @@
 (function () {
     'use strict';
 
-    var profileService = function ($http, $q) {
+    var profileService = function ($http, registerService ) {
         var profileData = {},
+            url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/',
             profilesList = [],
-            getProfile = function (id) {
-                var url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/',
-                    deferred = $q.defer();
-
+            getProfileByID = function (id) {
                 if(id) url += id;
-
-                $http.get(url)
-                    .success(function (response) {
-                        deferred.resolve(response);
-                    }).error(function (response) {
-                        deferred.reject(response.message);
+                return $http.get(url);
+            },
+            getMyProfile = function () {
+                return registerService.me()
+                    .then(function (response) {
+                        if(response.success) {
+                            return getProfileByID(response.message.data.id);
+                        }
                     });
-
-                return deferred.promise;
             };
-
+        
         return{
             profileData: profileData,
             profilesList: profilesList,
-            getProfile: getProfile
+            getProfile: getProfileByID,
+            getMyProfile: getMyProfile
         }
     };
 
-    profileService.$inject = ['$http', '$q'];
+    profileService.$inject = ['$http', 'registerService'];
 
     angular
         .module('profile')

@@ -7,23 +7,24 @@
         vm.newTrailer = "";
 
         vm.trailers = [
-            { name: 'Box', checked: false },
-            { name: 'Car Carrier', checked: false },
-            { name: 'Curtain Sider', checked: false },
-            { name: 'Drop Deck', checked: false },
-            { name: 'Double Decker', checked: false },
-            { name: 'Dry Bulk', checked: false },
-            { name: 'Dump Truck', checked: false },
-            { name: 'Flatbed', checked: false },
-            { name: 'Hopper Bottom', checked: false },
-            { name: 'Live Bottom', checked: false },
-            { name: 'Livestock', checked: false },
-            { name: 'Lowboy', checked: false },
-            { name: 'Refrigerator Trailer', checked: false },
-            { name: 'Refrigerator Tank', checked: false },
-            { name: 'Sidelifter', checked: false },
-            { name: 'Tank', checked: false }
-        ]
+            {name:'Box', checked:false},
+            {name:'Car Carrier', checked:false},
+            {name:'Curtain Sider', checked:false} ,
+            {name:'Drop Deck', checked:false},
+            {name:'Double Decker', checked:false},
+            {name:'Dry Bulk', checked:false},
+            {name:'Dump Truck', checked:false},
+            {name:'Flatbed', checked:false},
+            {name:'Hopper Bottom', checked:false},
+            {name:'Live Bottom', checked:false},
+            {name:'Livestock', checked:false},
+            {name:'Lowboy', checked:false},
+            {name:'Refrigerator Trailer', checked:false},
+            {name:'Refrigerator Tank', checked:false},
+            {name:'Sidelifter', checked:false},
+            {name:'Tank', checked:false},
+            {name:'Other...', checked:false}
+        ];
 
         vm.addTrailer = function() {
             $ionicPopup.show({
@@ -52,7 +53,7 @@
                     }
                 ]
             });
-        }
+        };
 
         vm.continueToProfile = function(isSave) {
             if(isSave){
@@ -69,7 +70,7 @@
                         vm.showPopup(JSON.stringify(response));
                     }
                 });
-        }
+        };
 
         var getNameKeys = function (obj) {
             var keys = [];
@@ -81,7 +82,7 @@
                 }
             }
             return keys;
-        }
+        };
 
         vm.showPopup = function (response) {
             console.log(response);
