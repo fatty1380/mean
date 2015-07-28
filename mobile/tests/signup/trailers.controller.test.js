@@ -1,10 +1,9 @@
 'use strict';
 
 (function() {
-
-    describe('trucksCtrl ', function() {
+    describe('trailersCtrl ', function() {
         // Initialize global variables
-        var trucksCtrl,
+        var trailersCtrl,
             httpBackend;
 
         beforeEach(module(AppConfig.appModuleName));
@@ -15,14 +14,14 @@
         }));
 
         beforeEach(inject(function($rootScope, $controller){
-           var scope = $rootScope.$new();
-            trucksCtrl = $controller('trucksCtrl', {
-                 $scope: scope
+            var scope = $rootScope.$new();
+            trailersCtrl = $controller('trailersCtrl', {
+                $scope: scope
             });
         }));
 
-        it('has at least one truck', function() {
-            expect(trucksCtrl.trucks.length).toBeGreaterThan(0);
+        it('has at least one trailer', function() {
+            expect(trailersCtrl.trailers.length).toBeGreaterThan(0);
         });
 
     });
