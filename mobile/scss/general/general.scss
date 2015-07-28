@@ -18,7 +18,10 @@ body{
   font: 14px Helvetica Neue, Helvetica, Arial;
   color: $white;
   overflow: visible;
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
   z-index: 2;
 
   /** full size header and content pane **/
@@ -49,9 +52,8 @@ body{
     height: auto;
   }
 
-  & ~ .pane.has-footer{
-    bottom: 44px;
-  }
+  & ~ .pane.has-title{padding-top: 64px;}
+  & ~ .pane.has-footer{bottom: 44px;}
 
   .bar-header{
     padding: 0 5px;

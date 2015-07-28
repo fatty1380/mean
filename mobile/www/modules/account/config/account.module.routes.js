@@ -21,9 +21,18 @@
                 })
                 .state('account.profile.share', {
                     url: '/share',
-                    views: {
-                        '@': {
-                            templateUrl: 'modules/account/child_modules/profile/templates/share-profile.html'
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share.html'
+                        }
+                    }
+                })
+                .state('account.profile.share.content', {
+                    url: '/content',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html',
+                            controller: 'ProfileShareCtrl as vm'
                         }
                     }
                 })
@@ -37,9 +46,9 @@
                 })
                 .state('account.profile.edit', {
                     url: '/edit',
-                    views: {
-                        '@': {
-                            templateUrl: 'modules/account/child_modules/profile/templates/edit-profile.html'
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-edit.html'
                         }
                     }
                 })

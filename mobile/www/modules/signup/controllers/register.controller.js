@@ -56,7 +56,7 @@
                         vm.showPopup(response.title, response.message.data.message);
                     }
                 });
-        }
+        };
 
          vm.showPopup = function (title, text) {
              //console.log(title, text);
