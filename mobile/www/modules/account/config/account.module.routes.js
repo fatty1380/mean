@@ -61,6 +61,24 @@
                         }
                     }
                 })
+                .state('account.lockbox.share', {
+                    url: '/share',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share.html',
+                            controller: 'LockboxShareCtrl as vm'
+                        }
+                    }
+                })
+                .state('account.lockbox.edit', {
+                    url: '/edit',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-edit.html',
+                            controller: 'LockboxEditCtrl as vm'
+                        }
+                    }
+                })
                 .state('account.activity', {
                     url: '/activity',
                     views: {
