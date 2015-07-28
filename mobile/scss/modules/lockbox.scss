@@ -93,9 +93,34 @@
       color: $content-body-text;
       white-space: normal;
     }
+  }
+}
 
-    button{
+/* action-sheet */
+.action-sheet {
 
+  .action-sheet-group{
+    background-color:$sheet-options-bg-color;
+  }
+
+  .action-sheet-options {
+    background:none;
+
+    .action-sheet-option {
+       background-color: $sheet-options-bg-color;
+       color: $tab-text;
+       margin: 2px 0;
     }
   }
+
+  .button{
+    font-size: 18px;
+    padding: 8px;
+  }
+
+  .title {
+    color:white;
+    font-size: 18px;
+  }
+
 }
