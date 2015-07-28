@@ -522,9 +522,9 @@ $toggle-hit-area-expansion:   5px;
 // Checkbox
 // -------------------------------
 
-$checkbox-width:                  28px !default;
-$checkbox-height:                 28px !default;
-$checkbox-border-radius:          $checkbox-width !default;
+$checkbox-width:                  20px !default;
+$checkbox-height:                 20px !default;
+$checkbox-border-radius:          2px !default;
 $checkbox-border-width:           1px !default;
 
 $checkbox-off-bg-color:           #fff !default;
@@ -546,9 +546,9 @@ $checkbox-off-border-royal:       $royal !default;
 $checkbox-on-bg-royal:            $royal !default;
 $checkbox-off-border-dark:        $dark !default;
 $checkbox-on-bg-dark:             $dark !default;
-$checkbox-off-border-default:     $button-light-border !default;
-$checkbox-on-bg-default:          $positive !default;
-$checkbox-on-border-default:      $positive !default;
+$checkbox-off-border-default:     #3EAEB1 !default;
+$checkbox-on-bg-default:          #3EAEB1 !default;
+$checkbox-on-border-default:      #3EAEB1 !default;
 
 $checkbox-check-width:            1px !default;
 $checkbox-check-color:            #fff !default;
@@ -656,7 +656,7 @@ $popup-background-color:          rgba(255,255,255,0.9) !default;
 
 $popup-button-border-radius:      2px !default;
 $popup-button-line-height:        20px !default;
-$popup-button-min-height:         45px !default;
+$popup-button-min-height:         35px !default;
 
 
 // Loading

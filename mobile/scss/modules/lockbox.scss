@@ -9,12 +9,15 @@
       h3{
         font-weight: normal;
         font-size: 15px;
+        line-height: 19px;
+        white-space: normal;
+        text-overflow: initial;
         color: #fff;
       }
     }
   }
 
-  .header.compact-size ~ .pane {
+  .content-pane {
     bottom: 69px;
     padding-bottom: 44px;
   }

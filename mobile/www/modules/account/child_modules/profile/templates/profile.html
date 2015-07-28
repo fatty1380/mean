@@ -71,16 +71,33 @@
                     <div class="list">
                         <div class="item">
                             CUURENT JOB TITLE:
-                            <span class="item-note">Driver</span>
+                            <span class="item-note">{{vm.profileData._type}}</span>
                         </div>
                         <div class="item">
                             TYPE OF TRUCK:
-                            <span class="item-note">Mac</span>
+                            <span class="item-note">{{vm.profileData.props.truck}}</span>
                         </div>
                         <div class="item item-divider"></div>
                         <div class="item">
-                            CREDENTIALS:
-                            <span class="item-note">Credential 1, Credential 2, Credential 3</span>
+                            COMPANY
+                            <span class="item-note">{{vm.profileData.company}}</span>
+                        </div>
+                        <div class="item">
+                            YEARS WORKED
+                            <span class="item-note">{{vm.profileData.props.started}}</span>
+                        </div>
+                        <div class="item">
+                            <span class="ico ico-freight"></span>
+                            FREIGHT:
+                            <span class="item-note">{{vm.profileData.props.freight}}</span>
+                        </div>
+                        <div class="item endorsements-row">
+                            ENDORSEMENTS:
+                            <ul class="endorsements-list">
+                                <li ng-repeat="endorsement in vm.profileData.license.endorsements">
+                                    <i class="ico icon {{ vm.endorsementsMap[endorsement].ico}}"></i>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </ion-scroll>
@@ -88,25 +105,13 @@
             </ion-tab>
             <ion-tab title="EXPERIENCE">
                 <ion-scroll class="experience-list">
-                    <div class="list">
-                        <div class="item">
-                            COMPANY
-                            <span class="item-note">Mack</span>
-                        </div>
-                        <div class="item">
-                            YEARS WORKED
-                            <span class="item-note">5 Years</span>
-                        </div>
-                        <div class="item">
-                            <span class="ico ico-freight"></span>
-                            FREIGHT:
-                            <span class="item-note">Cargo</span>
-                        </div>
-                        <div class="item item-icon-right">
-                            ENDORSEMENTS:
-                            <i class="ico icon ico-exp-truck"></i>
-                        </div>
-                    </div>
+                    <ion-list>
+                        <ion-item class="item" ng-repeat="job in vm.experience">
+                            <strong>{{job.title}}</strong>
+                            <p>{{job.description}}</p>
+                            <em><i class="ico ico-timesmall"></i>{{job.startDate | date : MMM : yyyy}} -  {{job.endDate | date : MMM : yyyy}}</em>
+                        </ion-item>
+                    </ion-list>
                 </ion-scroll>
                 <button class="button content-button"  ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
             </ion-tab>

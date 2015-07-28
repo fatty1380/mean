@@ -6,9 +6,7 @@ body{
 }
 
 .ionic-scroll,
-.ionic-scroll .scroll{
-  height: 100%;
-}
+.ionic-scroll .scroll{height: 100%;}
 
 
 /** HEADER STYLES **/
@@ -18,7 +16,10 @@ body{
   font: 14px Helvetica Neue, Helvetica, Arial;
   color: $white;
   overflow: visible;
-  position: relative;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
   z-index: 2;
 
   /** full size header and content pane **/
@@ -49,9 +50,8 @@ body{
     height: auto;
   }
 
-  & ~ .pane.has-footer{
-    bottom: 44px;
-  }
+  & ~ .pane.has-title{padding-top: 64px;}
+  & ~ .pane.has-footer{bottom: 44px;}
 
   .bar-header{
     padding: 0 5px;
@@ -94,6 +94,17 @@ body{
       color: $modal-secondary-text;
       background-color: $modal-secondary-bg;
     }
+
+    &.button-block{
+      margin-top: 0;
+      margin-bottom: 0;
+      border-width: 1px 0 0;
+
+      .ico{
+        vertical-align: middle;
+        margin-right: 10px;
+      }
+    }
   }
 }
 
@@ -122,5 +133,58 @@ body{
   margin-left: 5px;
 }
 
+// document list
+.document-list{
+  border-bottom: 1px solid #D2D2D2;
+  .item{
+    border-top: 1px solid #D2D2D2;
+    padding-left: 52px;
+    padding-right: 100px;
+
+    .item-content{
+      text-overflow: initial;
+      white-space: normal;
+
+      strong,
+      span{
+        display: block;
+        font-weight: normal;
+        line-height: 16px;
+      }
+    }
+
+    .checkbox{
+      left: 0;
+      right: 0;
+      top: 0;
+      margin: 0;
+      bottom: 0;
+
+      input{
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+        left: 16px;
+      }
+    }
+
+    .button{
+      padding: 0 25px;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      margin-top: -15px;
+      z-index: 4;
+    }
+  }
+}
 
 
+
+
+.popup-container{
+  input{
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
