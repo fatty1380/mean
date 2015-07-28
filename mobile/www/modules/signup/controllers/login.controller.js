@@ -1,15 +1,17 @@
 (function() {
     'use strict';
 
-    function loginCtrl ($scope, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
+    function loginCtrl ($scope, $state, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
         var vm = this;
+
+        vm.error = "";
 
         vm.user = {
             email: 'markov.flash@gmail.com',
             password: 'sergey83mark'
         };
 
-        vm.initForm= function(scope){
+        vm.initForm = function(scope){
             vm.form = scope;
         }
 
@@ -17,8 +19,10 @@
          * @description
          * Sign In
          */
-
         vm.signIn = function(){
+
+            console.log("signIn()");
+
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -34,20 +38,11 @@
                         tokenService.set('refresh_token', response.message.data.refresh_token);
                         tokenService.set('token_type', response.message.data.token_type);
                         $location.path("account/profile");
+                        vm.error = "";
                     }else{
-                        vm.showPopup(JSON.stringify(response));
+                        vm.error = response.message.data.error_description || "error";
                     }
                 });
-        }
-
-
-        vm.showPopup = function (response) {
-            var alertPopup = $ionicPopup.alert({
-                title:  "title",
-                template: response
-            });
-            alertPopup.then(function(res) {
-            });
         }
 
         $scope.$on( '$ionicView.afterEnter', function () {
@@ -64,7 +59,7 @@
         });
     }
 
-    loginCtrl.$inject = ['$scope', '$location', 'registerService', '$ionicPopup', '$ionicLoading' , 'tokenService'];
+    loginCtrl.$inject = ['$scope', '$state', '$location', 'registerService', '$ionicPopup', '$ionicLoading' , 'tokenService'];
 
     angular
         .module('signup')

@@ -563,3 +563,33 @@ $but-height: 90px;
     text-align: center;
   }
 }
+
+
+/* login */
+.login-content{
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  height: 210px;
+  margin-top: -125px;
+  i{
+    display: block;
+    margin: auto;
+  }
+
+  h3{
+    font: 14px Helvetica Neue, Helvetica, Arial;
+    color: $white;
+    font-weight: bold;
+    text-align: center;
+    margin:20px;
+  }
+
+  h4{
+    color:red;
+    text-align: center;
+  }
+}
+
+
+
