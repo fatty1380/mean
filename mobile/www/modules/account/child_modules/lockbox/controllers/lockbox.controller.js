@@ -16,10 +16,20 @@
                 key: 'kajifpaiueh13232'
             },
             {
-                id: '1234abcd5678efab90112',
-                sku: 'mvr',
+                id: '1234abcd5678efab9011212',
+                sku: 'bg',
                 name: 'Some name',
                 created: '2015-07-11 10:33:05',
+                url: 'http://someurl/somedocument.pdf',
+                expires: null,
+                bucket: 'outset-dev',
+                key: 'kajifpaiueh13232'
+            },
+            {
+                id: '1234abcd5678efab9011211',
+                sku: 'ev',
+                name: 'Some name111',
+                created: '2015-08-11 10:23:05',
                 url: 'http://someurl/somedocument.pdf',
                 expires: null,
                 bucket: 'outset-dev',

@@ -13,7 +13,7 @@
         <ion-scroll class="documents-list">
             <ul class="list">
                 <li class="item item-checkbox" ng-repeat="doc in vm.docs">
-                    <i class="{{doc.icon}}"></i>
+                    <i class="ico ico-documentimage{{doc.sku}}"></i>
                     <p><strong>{{ doc.name }}</strong></p>
                     <p>{{ doc.created }}</p>
                     <button class="button button-small">View</button>
