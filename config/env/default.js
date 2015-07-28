@@ -57,8 +57,22 @@ module.exports = {
         }
     },
     logs: {
-        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
+        access: process.env.LOG_ACCESS_PATH || './log/',
+        stdout: {
+            level: 'error'
+        }
     },
+	mailer: {
+        toOverride: false,
+		from: process.env.MAILER_FROM || 'MAILER_FROM',
+		options: {
+			service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
+			auth: {
+				user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
+				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+			}
+		}
+	},
     services: {
         everifile: {
             baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo-api-test.everifile.com/renovo',
@@ -98,6 +112,10 @@ module.exports = {
     templateEngine: 'swig',
     sessionSecret: 'Cinderella story. Outta nowhere. A former greenskeeper, now, about to become the Masters champion. It looks like a mirac... Its in the hole! Its in the hole! Its in the hole!',
     sessionCollection: 'sessions',
+    
+    security: {
+        tokenLife: 1000 * 3600 * 24 * 30
+    },
 
     facebook: {
         clientID: process.env.FACEBOOK_ID || 'APP_ID',

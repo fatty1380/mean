@@ -20,13 +20,6 @@ var validateState = function (property) {
     return config.validate('states', property);
 };
 
-/**
- * A method to retrieve any enum values
- */
-var getEnumValues = function () {
-    var enums;
-};
-
 
 var DateString = {
     value: {

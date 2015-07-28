@@ -1,9 +1,9 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://outset-shadow.elasticbeanstalk.com/
 
-# outset
+# Outset
 
-YES!!!
+This document describes Available API Functions for interfacing with the Outset Backend
 
 # group Profile
 
@@ -35,14 +35,20 @@ Returns a list of all user profiles (admin only).
     
 # Data Structures
     
+## User Base (Profile Base)
++ email: pat@joinoutset.com (required, string)
++ username: pat@joinoutset.com (required, string) - will take the value of email if not provided
++ requests: [requiestId] (optional, array[string])
++ friends: [userId] (optional, array[string])
++ addresses: [{Address}] (optional, array[string])
++ phone: 123–457–7890 (optional, string)
+    
 ## Profile Base (Profile Virtuals)
 + id: 55a453104cec3d4a40d4bf9c (fixed, string)
 + firstName: Pat (required, string)
 + lastName: Fowler (required, string)
-+ profileImageURL: modules/users/img/profile/default.png
-+ handle: Handle (optional, string)
++ profileImageURL: modules/users/img/profile/default.png (optional, string)
 + company: MongoId reference to Company (optional, Company Base)
-+ driver: MongoId reference to Driver (optional, Driver Base)
 
 ## Profile Virtuals (object)
 + isOwner: false (fixed, boolean)
@@ -54,12 +60,47 @@ Returns a list of all user profiles (admin only).
 ## Company Base (object)
 + id: 55a453104cec3d4a40d4bf9c (fixed, string)
 
-## Driver Base (object)
-+ id: 55a453104cec3d4a40d4bf9c (fixed, string)
+## Driver Attrs (object)
++ handle: Gearjammer (optional, string)
++ licenses: [(object)] (optional, array[object])
++ about: This is a note about me (optional, string)
++ experience: [] (optional, array)
++ interests: [] (optional, array)
++ reportsData: object (optional, array[object])
+
+## Driver Base (User Base)(Driver Attrs)
+
+# Group Driver
+
+**IMPORTANT**: By default, a newly created User will be a Driver. The driver object
+adds a few fields to the standard User object. It is expected that you interact 
+primarily with the User API for manipulation of the logged in user/driver.
+
+The attributes listed here only represent those fields added to the standard User
+
+## Driver [/api/users]
+
+A Driver object adds a few additional fields on top of the User object. 
+All users will be drivers unless otherwise specified.
+
+Please note that this section is illustrative and meant primarily to 
+show the additional fields available to a "Driver" as opposed to a regular 
+"User"
+
++ Attributes (Driver Attrs)
+
+## Get Driver by ID [GET /api/drivers/{id}]
+
++ Parameters
+    + id (string) - Driver ID
+
++ Response 200 (application/json)
+
+    + Attributes (Driver)
 
 # Group User
 
-## User [/api/users]
+## User [/api/users/{id}]
 
 The USERS API serves as the root for acting and updating users. These methods operate only on the logged in user and do not have ID parameters available.
 
@@ -85,8 +126,8 @@ The USERS API serves as the root for acting and updating users. These methods op
 
 + Attributes
 
-    + Files : form upload of picture data (required)
-	
+    + files (object, required)
+
 + Response 200
 
     + Attributes (User Base)
@@ -101,17 +142,6 @@ The USERS API serves as the root for acting and updating users. These methods op
 + Response 200 (application/json)
 
             { message: 'Password changed successfully' }
-
-
-# Data Structures
-
-## User Base (Profile Base)
-+ username: pat@joinoutset.com (required, string)
-+ email: pat@joinoutset.com (required, string)
-+ requests: [requiestId] (optional, array[string])
-+ friends: [userId] (optional, array[string])
-+ addresses: [{Address}] (optional, array[string])
-+ phone: "123-457-7890" (optional, string)
 
 # group Authentication
 

@@ -14,7 +14,8 @@
          * 
          */
         app.route('/api/profiles')
-            .get(users.requiresLogin, users.hasAuthorization(['admin']), users.list);
+            .get(users.requiresLogin, users.list);
+//            .get(users.requiresLogin, users.hasAuthorization(['admin']), users.list);
 
         /**
          * @api {get} /users Request a list of users

@@ -4,9 +4,15 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
+    path = require('path'),
     Schema = mongoose.Schema,
-    crypto = require('crypto'),
-    _ = require('lodash');
+    crypto = require('crypto');
+
+var _ = require('lodash'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users',
+        file: 'users.server.model'
+    });
 
 /**
  * A Validation function for local strategy properties
@@ -21,63 +27,6 @@ var validateLocalStrategyProperty = function (property) {
 var validateLocalStrategyPassword = function (password) {
     return (this.provider !== 'local' || (password && password.length >= 8));
 };
-
-var SeedSchema = new Schema({
-    firstName: {
-        type: String,
-        trim: true,
-        default: '',
-        validate: [validateLocalStrategyProperty, 'Please fill in your first name']
-    },
-    lastName: {
-        type: String,
-        trim: true,
-        default: '',
-        validate: [validateLocalStrategyProperty, 'Please fill in your last name']
-    },
-    email: {
-        type: String,
-        unique: 'Username already exists',
-        required: 'Please fill in your email address',
-        trim: true,
-        match: [/.+\@.+\..+/, 'Please fill a valid email address']
-    },
-    handle: {
-        type: String,
-        trim: true,
-        default: null
-    },
-    zip: {
-        type: String,
-        trim: true,
-        default: ''
-    },
-
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User'
-    },
-
-    modified: {
-        type: Date,
-        default: Date.now
-    },
-    created: {
-        type: Date,
-        default: Date.now
-    }
-
-});
-
-
-SeedSchema.pre('save', function (next) {
-    if (!!this.isModified()) {
-        this.modified = Date.now();
-    }
-    next();
-});
-
-mongoose.model('SeedUser', SeedSchema);
 
 /**
  * User Schema
@@ -101,12 +50,12 @@ var UserSchema = new Schema({
         required: 'Please fill in a username',
         trim: true
     },
-    
+
     profileImageURL: {
         type: String,
         default: 'modules/users/img/profile/default.png'
     },
-    
+
     handle: {
         type: String,
         trim: true,
@@ -122,16 +71,28 @@ var UserSchema = new Schema({
     salt: {
         type: String
     },
-    oldPass: {
-        type: Boolean,
-        default: false
-    },
     provider: {
         type: String,
         required: 'Provider is required'
     },
     providerData: {},
     additionalProvidersData: {},
+
+    /* For reset password */
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
+    },
+
+    modified: {
+        type: Date
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    },
 
     roles: {
         type: [{
@@ -141,27 +102,6 @@ var UserSchema = new Schema({
         default: ['user']
     },
 
-    /* For reset password */
-    resetPasswordToken: {
-        type: String
-    },
-    resetPasswordExpires: {
-        type: Date
-    },
-    
-    modified: {
-        type: Date
-    },
-    created: {
-        type: Date,
-        default: Date.now
-    },
-    
-    type: {
-        type: String,
-        enum: ['driver', 'owner', ''],
-        default: ''
-    },
     email: {
         type: String,
         trim: true,
@@ -177,21 +117,11 @@ var UserSchema = new Schema({
         // TODO: Look at https://github.com/albeebe/phoneformat.js or https://github.com/Bluefieldscom/intl-tel-input for phone # formatting
     },
 
-    /**
-     * Driver & Company Links
-     */
-    driver: {
-        type: Schema.ObjectId,
-        ref: 'Driver',
-        default: null
-    },
-
     company: {
         type: Schema.ObjectId,
         ref: 'Company',
         default: null
     },
-
 
     /**
      * Addresses holds one or more Address Objects, nested
@@ -210,7 +140,7 @@ var UserSchema = new Schema({
         }],
         default: []
     },
-    
+
     requests: {
         type: [{
             type: Schema.ObjectId,
@@ -222,14 +152,25 @@ var UserSchema = new Schema({
     //conversations: [{}],
 
     /** Friends & Connections : END **/
+    
+    /**
+     * User Profile Data and Information
+     */
+     
 
     /** Section Begin : Virtual Members **/
 
     displayName: {
         type: String,
         trim: true
+    },
+    
+    /** Deprecated */
+    oldPass: {
+        type: Boolean,
+        default: false
     }
-}, {'toJSON': {virtuals: true}});
+}, { collection: 'users', discriminatorKey: '_type', 'toJSON': { virtuals: true } });
 
 
 
@@ -240,13 +181,13 @@ UserSchema.index({
     email: 'text'
 });
 
-UserSchema.pre('init', function (next, data) {
-    if (!data.displayName) {
-        data.displayName = data.firstName + ' ' + data.lastName;
-    }
+// UserSchema.pre('init', function (next, data) {
+//     if (!data.displayName) {
+//         data.displayName = data.firstName + ' ' + data.lastName;
+//     }
     
-    next();
-});
+//     next();
+// });
 
 /**
  * Hook a pre save method to hash the password
@@ -255,7 +196,7 @@ UserSchema.pre('save', function (next) {
     if (!this.isModified('password')) {
         return next();
     }
-    
+
     if (this.isModified('firstName') || this.isModified('lastName')) {
         this.displayName = this.firstName + ' ' + this.lastName;
     }
@@ -270,7 +211,6 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.pre('validate', function (next) {
     this.username = this.username || this.email;
-
     next();
 });
 
@@ -322,20 +262,32 @@ UserSchema.methods.authenticate = function (password) {
 };
 
 UserSchema.methods.cleanse = function () {
-    console.log('[UserSchema] Cleansing sensitive Data');
+    log.trace({ func: 'cleanse' }, 'Cleansing sensitive Data');
 
+    this.oldPass = undefined;
     this.password = undefined;
     this.salt = undefined;
 };
 
-UserSchema.methods.loadFriends = function() {
+UserSchema.methods.socialify = function () {
+    log.trace({ func: 'socialify' }, 'Cleansing semi-sensitive Data');
+
+    this.provider = undefined;
+    this.username = null;
+    this.email = null;
+    this.phone = null;
+
+    this.cleanse();
+};
+
+UserSchema.methods.loadFriends = function () {
     return this.db.model('User')
-        .find({_id: {'$in': this.friends}, 'friends': this._id})
+        .find({ _id: { '$in': this.friends }, 'friends': this._id })
         .select(UserSchema.statics.fields.social);
 };
 
 UserSchema.statics.fields = {
-    social: 'firstName lastName username friends handle profileImageURL type driver company email'
+    social: ['firstName', 'lastName', 'username', 'friends', 'profileImageURL', 'company'].join(' ')
 };
 
 /**
@@ -348,7 +300,7 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
     var userNameRegex = new RegExp('^' + possibleUsername.toLowerCase() + '$', 'i');
 
     _this.findOne({
-        username: {$regex: userNameRegex}
+        username: { $regex: userNameRegex }
     }, function (err, user) {
         if (!err) {
             if (!user) {
@@ -376,13 +328,14 @@ UserSchema.virtual('isAdmin')
 
 UserSchema.virtual('isDriver')
     .get(function () {
-        return this.type === 'driver';
+        return /driver/i.test(this._type);
     });
 
 
 UserSchema.virtual('isOwner')
     .get(function () {
-        return this.type === 'owner';
+        return !!this.company;
     });
 
+log.debug({ func: 'register' }, 'Registering `User` with mongoose');
 mongoose.model('User', UserSchema);

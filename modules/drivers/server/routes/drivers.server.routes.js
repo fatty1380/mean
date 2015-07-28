@@ -4,6 +4,17 @@ module.exports = function (app) {
     var users = require('../../../../modules/users/server/controllers/users.server.controller');
     var drivers = require('../controllers/drivers.server.controller');
 
+    /**
+     * New "Driver" routes
+     */
+     app.route('/api/users/me/props')
+         .put(users.requiresLogin, drivers.setProps)
+        .get(users.requiresLogin, drivers.getProps);
+        
+     app.route('/api/users/me/experience')
+         .put(users.requiresLogin, drivers.setExperience)
+        .get(users.requiresLogin, drivers.getExperience);
+
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
 
@@ -14,8 +25,6 @@ module.exports = function (app) {
     // Setup routes for getting a User's driver profile
     app.route('/api/users/:userId/driver')
         .get(drivers.driverByUserID, drivers.read);
-    app.route('/api/drivers/me')
-        .get(drivers.me, drivers.read);
 
     app.route('/api/drivers/:driverId')
         .get(drivers.read)

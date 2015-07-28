@@ -4,9 +4,18 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
+    extend = require('mongoose-schema-extend'),
     moment = require('moment'),
-    _ = require('lodash');
+    path = require('path'),
+    UserModel = require(path.resolve('./modules/users/server/models/user.server.model')),
+    _ = require('lodash'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'drivers',
+        file: 'driver.server.model'
+    });
+
+var Schema = mongoose.Schema,
+    UserSchema = mongoose.model('User').schema;
 
 
 /**
@@ -25,21 +34,45 @@ var mongoose = require('mongoose'),
  * created
  * modified
  */
-var DriverSchema = new Schema({
+var DriverSchema = UserSchema.extend({
 
-    user: {
-        type: Schema.ObjectId,
-        ref: 'User',
-        required: true
+    handle: {
+        type: String,
+        trim: true,
+        default: null
     },
 
-    licenses: ['License'],
-
-    //schedule: ['Schedule'],
+    license: {
+        class: {
+            type: String,
+            enum: ['A', 'B', 'C', 'D', null],
+            default: null
+        },
+        endorsements: {
+            type: [String],
+            default: []
+        },
+        state: {
+            type: String,
+            default: null,
+            trim: true
+        }
+    },
 
     about: {
         type: String,
-        default: ''
+        default: null
+    },
+    
+    props: {
+        type: Schema.Types.Mixed,
+        default: { 
+            'started': null,
+            truck: null,
+            trailer: [],
+            freight: null,
+            company: null
+        }
     },
 
     experience: [{
@@ -49,18 +82,6 @@ var DriverSchema = new Schema({
         description: {
             type: String
         },
-
-        //time: {
-        //    start: {      // YYYY-MM-DD
-        //        type: Date,
-        //        default: null
-        //    },
-        //    end: {        // YYYY-MM-DD
-        //        type: Date,
-        //        default: null
-        //    }
-        //},
-
         startDate: {      // YYYY-MM-DD
             type: String,
             default: null
@@ -69,7 +90,6 @@ var DriverSchema = new Schema({
             type: String,
             default: null
         },
-
         location: {
             type: String
         }
@@ -83,17 +103,6 @@ var DriverSchema = new Schema({
         default: []
     },
 
-    resume: {
-        type: {
-            url: String,
-            expires: Date,
-            bucket: String,
-            key: String
-        },
-        default: null
-    },
-
-    // TODO: Migrate to RemoteFile type
     reportsData: {
         type: [{
             sku: String,
@@ -105,45 +114,15 @@ var DriverSchema = new Schema({
             key: String
         }],
         default: []
-    },
-
-    summaryReport: {
-        type: Schema.ObjectId,
-        ref: 'BackgroundReport'
-    },
-
-    profile: [
-        {
-            listId: {
-                type: Schema.ObjectId
-            },
-            responses: [{id: String, value: String}],
-            questions: [{id: String, description: String, answer: String}]
-        }
-    ],
-
-    isActive: {
-        type: Boolean,
-        default: true
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false
-    },
-
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    modified: {
-        type: Date,
-        default: Date.now
     }
-}, {toJSON: {virtuals: true}});
+});
+
+DriverSchema.statics.fields = {
+    social: [UserSchema.statics.fields.social, 'handle', 'licenses', 'about', 'experience', 'interests'].join(' ')
+};
 
 DriverSchema.methods.updateReportURL = function (sku, url) {
-    var i = _.findIndex(this.reportsData, {sku: sku});
+    var i = _.findIndex(this.reportsData, { sku: sku });
 
     if (i !== -1) {
         this.reportsData[i].url = url;
@@ -193,7 +172,7 @@ DriverSchema.pre('save', function (next) {
 
 DriverSchema.pre('init', function (next, data) {
 
-    if (!!data.resume && !_.find(data.reportsData, {sku: 'resume'})) {
+    if (!!data.resume && !_.find(data.reportsData, { sku: 'resume' })) {
         data.reportsData = data.reportsData || [];
         console.log('Migrating Resume to Documents Array: %j in migration', data.reportsData);
         data.resume.sku = 'resume';
@@ -264,5 +243,6 @@ function translateTimes(doc) {
 
 }
 
+log.debug({ func: 'register' }, 'Registering `Driver` with mongoose');
 
 mongoose.model('Driver', DriverSchema);
