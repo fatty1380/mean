@@ -16,18 +16,6 @@ module.exports = function (app) {
         .put(users.requiresLogin, drivers.setExperience)
         .get(users.requiresLogin, drivers.getExperience);
 
-        /**
-         * Lockbox Stuff
-         * This will replace the existing "resume" and "reportSku" crap
-         */
-    app.route('/api/profiles/:userId/documents')
-        .get(function(req, res) { return res.status(500).send({message:'Not implemented'})
-        .post(function(req, res) { return res.status(500).send({message:'Not implemented'});
-    
-    app.route('/api/profiles/:userId/documents/:docId')
-        .get(function(req, res) { return res.status(500).send({message:'Not implemented'})
-        .delete(function(req, res) { return res.status(500).send({message:'Not implemented'})
-
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
 

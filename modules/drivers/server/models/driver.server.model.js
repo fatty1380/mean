@@ -63,10 +63,10 @@ var DriverSchema = UserSchema.extend({
         type: String,
         default: null
     },
-    
+
     props: {
         type: Schema.Types.Mixed,
-        default: { 
+        default: {
             'started': null,
             truck: null,
             trailer: [],
@@ -121,25 +121,15 @@ DriverSchema.statics.fields = {
     social: [UserSchema.statics.fields.social, 'handle', 'licenses', 'about', 'experience', 'interests'].join(' ')
 };
 
-DriverSchema.methods.updateReportURL = function (sku, url) {
-    var i = _.findIndex(this.reportsData, { sku: sku });
-
-    if (i !== -1) {
-        this.reportsData[i].url = url;
-        this.reportsData[i].expires = moment().add(15, 'm').toDate();
-        console.log('[DS.updateReportURL] updated reportsData[%d] to %j', i, this.reportsData[i]);
-
-        this.markModified('reportsData');
-    }
-};
-
 DriverSchema.virtual('reports')
     .get(function () {
         return _.indexBy(this.reportsData, 'sku');
     });
 
 DriverSchema.pre('save', function (next) {
-    this.modified = Date.now();
+    if (!!this.isModified()) {
+        this.modified = Date.now();
+    }
 
     next();
 });

@@ -5,11 +5,23 @@ module.exports = function(app) {
 	var documentsPolicy = require('../policies/documents.server.policy');
 
 	// Documents Routes
-	app.route('/api/documents').all()
-		.get(documents.list).all(documentsPolicy.isAllowed)
+	app.route('/api/documents')
+		.all()
+		.get(documents.list)
+		.all(documentsPolicy.isAllowed)
 		.post(documents.create);
+		
+	app.route('/api/profiles/:userId/documents')
+		.all(documentsPolicy.isAllowed)
+		.get(documents.list);
 
-	app.route('/api/documents/:documentId').all(documentsPolicy.isAllowed)
+	app.route('/api/profiles/:userId/documents/:docType')
+		.get(function (req, res) {
+			return res.status(500).send({ message: 'Not implemented' });
+		});
+   
+	app.route('/api/documents/:documentId')
+		.all(documentsPolicy.isAllowed)
 		.get(documents.read)
 		.put(documents.update)
 		.delete(documents.delete);
