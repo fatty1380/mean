@@ -1,7 +1,7 @@
 <ion-view class="lockbox lockbox-share">
     <div class="header compact-size">
         <ion-header-bar>
-            <button class="button button-clear" ng-click="vm.modal.close('lockboxShare')">Cancel</button>
+            <button class="button button-clear" ng-click="vm.modal.close(vm.modalName)">Cancel</button>
             <h1 class="title">My Lockbox</h1>
             <button class="button button-clear">Add Docs</button>
         </ion-header-bar>
@@ -27,7 +27,7 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button button-block secondary" ui-sref="account.lockbox.recipient"><i class="ico ico-share"></i>Share</button>
+            <button class="button button-block secondary" ng-click="vm.modal.show('lockboxShareRecipient')"><i class="ico ico-share"></i>Share</button>
         </div>
     </ion-footer-bar>
 </ion-view>

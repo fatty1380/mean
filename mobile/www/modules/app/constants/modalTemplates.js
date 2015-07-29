@@ -6,7 +6,11 @@
         .constant('modalTemplates', {
             lockboxShare: {
                 template: 'modules/account/child_modules/lockbox/templates/lockbox-share.html',
-                logic: 'lockboxShareService'
+                service: 'lockboxShareService'
+            },
+            lockboxShareRecipient: {
+                template: 'modules/account/child_modules/lockbox/templates/lockbox-share-recipient.html',
+                service: 'lockboxShareRecipientService'
             }
         });
 })();

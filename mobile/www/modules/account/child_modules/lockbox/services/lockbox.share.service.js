@@ -31,7 +31,7 @@
     lockboxShareService.$inject = [];
 
     angular
-        .module(AppConfig.appModuleName)
+        .module('lockbox')
         .service('lockboxShareService', lockboxShareService);
 
 })();
