@@ -16,7 +16,7 @@
                     <i class="ico ico-documentimage{{doc.sku}}"></i>
                     <p><strong>{{ doc.name }}</strong></p>
                     <p>{{ doc.created }}</p>
-                    <button class="button button-small">View</button>
+                    <button class="button button-small" ng-click="vm.viewDoc(doc)">View</button>
                     <div class="item-divider"></div>
                 </li>
             </ul>
@@ -26,4 +26,10 @@
             Share
         </button>
     </ion-pane>
+
+
 </ion-view>
+
+
+
+
