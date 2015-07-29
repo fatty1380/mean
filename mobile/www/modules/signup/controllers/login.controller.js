@@ -37,7 +37,8 @@
                         tokenService.set('access_token', response.message.data.access_token);
                         tokenService.set('refresh_token', response.message.data.refresh_token);
                         tokenService.set('token_type', response.message.data.token_type);
-                        $location.path("account/profile");
+                        //$location.path("account/profile");
+                        $state.go('account.profile')
                         vm.error = "";
                     }else{
                         vm.error = response.message.data.error_description || "error";

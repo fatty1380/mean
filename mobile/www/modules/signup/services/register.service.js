@@ -85,8 +85,8 @@
 
         function requestApi(apiUrl, method, data, needSerialize) {
             console.log("  ");
-            console.log("  requestApi");
-            console.log(apiUrl, method, data, !!needSerialize);
+            console.log("requestApi: [%s] %s: serialize: %s - %o", method, apiUrl, !!needSerialize, data);
+            
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
 
             return $http ({

@@ -63,7 +63,7 @@
                .then(function (response) {
                     $ionicLoading.hide();
                     if(response.success) {
-                        $state.go("account/profile");
+                        $state.go("account.profile");
                     }else{
                        // $location.path("signin/signup");
                         vm.showPopup(JSON.stringify(response));
