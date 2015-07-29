@@ -1,8 +1,10 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ( $ionicPopup, $ionicActionSheet ) {
+    function lockboxCtrl ( $ionicPopup, $ionicActionSheet, modalService) {
         var vm = this;
+
+        vm.modal = modalService;
 
         vm.docs = [
             {
@@ -61,7 +63,7 @@
                     return true;
                 }
             });
-        }
+        };
 
         function takePicture(){
             console.log('takePicture');
@@ -71,7 +73,7 @@
         }
     }
 
-    lockboxCtrl.$inject = ['$ionicPopup','$ionicActionSheet'];
+    lockboxCtrl.$inject = ['$ionicPopup','$ionicActionSheet', 'modalService'];
 
     angular
         .module('lockbox')
