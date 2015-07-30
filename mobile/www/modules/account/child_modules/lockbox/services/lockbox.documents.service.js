@@ -20,7 +20,7 @@
                 sku: 'bg',
                 name: 'multirule.pdf',
                 created: '2015-07-11 10:33:05',
-                url: 'http://www.arb.ca.gov/msprog/onrdiesel/documents/multirule.pdf',
+                url: 'http://www.mazdausa.com/MusaWeb/musa2/pdf/brochures/2016/2016_Mazda_CX5_Brochure.pdf',
                 expires: null,
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232'

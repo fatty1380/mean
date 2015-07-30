@@ -4,17 +4,23 @@
         <h1 class="title">Preview</h1>
     </ion-header-bar>
 
-    <ion-pane ng-if="vm.currentDoc.sku == 'mvr'" style="
-            background: url({{ image }}) 100% 100% no-repeat;
-            height: inherit;
-            width: inherit;
-            margin: auto;
-            background-size: cover;">
-    </ion-pane>
-
     <ion-content id="pdf-view-content">
-        <div ng-if="vm.currentDoc.sku == 'bg'">
-            <pdfviewer src="{{ trustSrc(pdfURL.src) }}"  scale="{{scale}}" pages-to-show="{{pages}}" on-page-load='pageLoaded(page,total)' id="viewer" load-progress='loadProgress(loaded, total, state)'></pdfviewer>
+        <ion-pane class="image-container" ng-if="vm.currentDoc.sku == 'mvr'">
+            <div style="background: url({{ image }}) 100% 100% no-repeat;
+                        margin: auto;
+                        background-size: cover;">
+            </div>
+        </ion-pane>
+        <div class="pdf-container" ng-if="vm.currentDoc.sku == 'bg'">
+            <pdfviewer
+                    src="{{ trustSrc(pdfURL.src) }}"
+                    scale="{{scale}}"
+                    pages-to-show="{{pages}}"
+                    on-page-load='pageLoaded(page,total)'
+                    id="viewer"
+                    height="100%"
+                    load-progress='loadProgress(loaded, total, state)'>
+            </pdfviewer>
         </div>
     </ion-content>
 
