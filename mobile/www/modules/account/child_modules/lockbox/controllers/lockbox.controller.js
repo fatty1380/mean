@@ -1,8 +1,11 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, pdf, $sce ,$ionicLoading) {
+    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, pdf, $sce ,$ionicLoading, lockboxDocuments) {
         var vm = this;
+
+        vm.lockboxDocuments = lockboxDocuments;
+        vm.addDocsPopup = lockboxDocuments.addDocsPopup;
 
         $scope.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
@@ -40,7 +43,7 @@
             }
         };
 
-        vm.docs = [
+       /* vm.docs = [
             {
                 id: '1234abcd5678efab90123',
                 sku: 'mvr',
@@ -71,7 +74,7 @@
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232'
             }
-        ];
+        ];*/
 
         $ionicModal.fromTemplateUrl('modules/account/child_modules/lockbox/templates/modal-document.html', {
             scope: $scope,
@@ -93,6 +96,7 @@
         vm.viewDoc = function(doc) {
             console.log(" ");
             console.log("viewDoc()");
+            console.log(vm.lockboxDocuments);
             console.log(doc);
             vm.currentDoc = doc;
             $scope.modal.show();
@@ -130,9 +134,10 @@
         function orderReports(){
             console.log('orderReports');
         }
+
     }
 
-    lockboxCtrl.$inject = [ '$ionicActionSheet', '$ionicModal', '$scope' ,'PDFViewerService', '$sce', '$ionicLoading'];
+    lockboxCtrl.$inject = [ '$ionicActionSheet', '$ionicModal', '$scope' ,'PDFViewerService', '$sce', '$ionicLoading', 'lockboxDocuments'];
 
     angular
         .module('lockbox', [ 'ngPDFViewer' ])

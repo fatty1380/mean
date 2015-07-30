@@ -297,49 +297,6 @@
   }
 }
 
-/**
-    Share Profile Page 1
-**/
-.profile-screen{
-  .content-top {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    font-size: 14px;
-    line-height: 17px;
-    text-align: center;
-    height: 64px;
-    padding: 14px 20px;
-    color: $tab-text;
-
-    .button {
-      @include rounded-corner(5px);
-      margin: 0;
-      border-width: 1px;
-      font-size: 14px;
-      min-height: 32px;
-      line-height: 32px;
-    }
-  }
-
-  .profile-share-form{
-    height: 100%;
-
-    .item-input{
-      padding: 5px 15px;
-      border-width: 1px 0 0;
-      input{
-        padding-right: 0;
-      }
-      textarea{
-        background: none;
-        padding: 8px 0 0;
-      }
-    }
-  }
-}
-
 // edit screen
 .edit-fields-list{
   .item{

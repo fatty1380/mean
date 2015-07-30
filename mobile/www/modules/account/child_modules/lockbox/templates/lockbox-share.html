@@ -3,7 +3,7 @@
         <ion-header-bar>
             <button class="button button-clear" ui-sref="account.lockbox">Cancel</button>
             <h1 class="title">My Lockbox</h1>
-            <button class="button button-clear">Add Docs</button>
+            <button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>
         </ion-header-bar>
         <div class="bar bar-subheader">
             <h3 class="title">Your lockbox will contain all your secure documents.</h3>
@@ -12,24 +12,25 @@
     <ion-pane class="has-footer">
         <ion-scroll>
             <ul class="list document-list">
-                <li class="item item-checkbox" ng-repeat="document in vm.documents">
+                <li class="item item-checkbox" ng-repeat="doc in vm.lockboxDocuments.docs">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="document.checked">
                     </label>
                     <div class="item-content">
-                        <div class="document">
-                            <strong>{{document.name}}</strong>
-                            <span>{{document.date}}</span>
-                        </div>
+                        <strong>{{doc.name}}</strong>
+                        <span>{{doc.created}}</span>
                     </div>
-                    <a class="button button-small">View</a>
+                    <button class="button button-small">View</button>
                 </li>
             </ul>
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button button-block secondary"><i class="ico ico-share"></i>Share</button>
+            <button class="button button-block secondary" ui-sref="account.lockbox.recipient"><i class="ico ico-share"></i>Share</button>
         </div>
+        <!--<div class="button-bar action-buttons">-->
+            <!--<button class="button button-block secondary" ng-click="vm.modal.show('lockboxShareRecipient')"><i class="ico ico-share"></i>Share</button>-->
+        <!--</div>-->
     </ion-footer-bar>
 </ion-view>

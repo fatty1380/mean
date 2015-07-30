@@ -10,14 +10,15 @@
         </div>
     </div>
     <ion-pane class="pane content-pane">
-        <ion-scroll class="documents-list">
-            <ul class="list">
-                <li class="item item-checkbox" ng-repeat="doc in vm.docs">
+        <ion-scroll>
+            <ul class="list document-list">
+                <li class="item" ng-repeat="doc in vm.lockboxDocuments.docs">
                     <i class="ico ico-documentimage{{doc.sku}}"></i>
-                    <p><strong>{{ doc.name }}</strong></p>
-                    <p>{{ doc.created }}</p>
+                    <div class="item-content">
+                        <strong>{{ doc.name }}</strong>
+                        <span>{{ doc.created }}</span>
+                    </div>
                     <button class="button button-small" ng-click="vm.viewDoc(doc)">View</button>
-                    <div class="item-divider"></div>
                 </li>
             </ul>
         </ion-scroll>
@@ -25,11 +26,5 @@
             <i class="ico ico-share"></i>
             Share
         </button>
-
     </ion-pane>
-
 </ion-view>
-
-
-
-

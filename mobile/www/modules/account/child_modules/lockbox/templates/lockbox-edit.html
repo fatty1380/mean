@@ -11,15 +11,15 @@
     <ion-pane class="has-footer">
         <ion-scroll>
             <ul class="list document-list">
-                <li class="item item-checkbox" ng-repeat="document in vm.documents">
+                <li class="item item-checkbox" ng-repeat="doc in vm.lockboxDocuments.docs">
                     <label class="checkbox">
-                        <input type="checkbox" ng-model="document.checked">
+                        <input type="checkbox" ng-model="doc.checked">
                     </label>
                     <div class="item-content">
-                        <strong>{{document.name}}</strong>
-                        <span>{{document.date}}</span>
+                        <strong>{{doc.name}}</strong>
+                        <span>{{doc.created}}</span>
                     </div>
-                    <a class="button button-small">View</a>
+                    <button class="button button-small">View</button>
                 </li>
             </ul>
         </ion-scroll>
