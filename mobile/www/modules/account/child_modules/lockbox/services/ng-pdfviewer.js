@@ -99,7 +99,7 @@ angular.module('ngPDFViewer',[]).
 					$scope.pdfDoc.getPage(num).then(function(page) {
 						//set scale 1, get pdf width and then scale to fit
 						var viewportTest = page.getViewport(1);
-						var modalWidth = angular.element(document.getElementById('modal-content'))[0].clientWidth - 1;
+						var modalWidth = angular.element(document.getElementById('pdf-view-content'))[0].clientWidth - 1;
 						var viewport = page.getViewport(modalWidth/viewportTest.width);
 						var ctx = canvas.getContext('2d');
 

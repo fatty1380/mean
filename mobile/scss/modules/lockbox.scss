@@ -129,14 +129,17 @@
 
 }
 
-
-.scroll {
-  img{
-   /* margin: auto;
-    width:100%;
-    height:100%;*/
-  /*  background: no-repeat center center fixed;*/
-    background-size: contain;
+.preview{
+  background-color: transparent;
+  #pdf-view-content{
+    background-color: white;
   }
-}
+  .bar{
+    background-color: transparent;
+  }
 
+  .title{
+    color:white;
+  }
+
+}
