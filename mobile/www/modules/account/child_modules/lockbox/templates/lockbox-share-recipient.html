@@ -1,20 +1,21 @@
 <ion-view class="lockbox lockbox-share">
     <div class="header compact-size">
+        <ion-nav-bar>
+            <ion-nav-back-button>Back</ion-nav-back-button>
+        </ion-nav-bar>
         <ion-header-bar>
-            <button class="button button-clear" ui-sref="account.lockbox">Cancel</button>
             <h1 class="title">My Lockbox</h1>
-            <button class="button button-clear">Add Docs</button>
         </ion-header-bar>
         <div class="bar bar-subheader">
             <h3 class="title">Your lockbox will contain all your secure documents.</h3>
         </div>
     </div>
-    <ion-pane class="has-footer">
+    <ion-pane class="has-footer has-title">
+        <div class="content-top">
+            <button class="button button-block">Choose from Contact List</button>
+        </div>
         <ion-scroll>
-            <div class="content-top">
-                <button class="button button-block">Choose from Contact List</button>
-            </div>
-            <div class="list profile-share-form">
+            <div class="list share-form">
                 <label class="item item-input">
                     <input type="text" placeholder="Phone Number">
                 </label>
@@ -29,7 +30,8 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button button-block secondary"><i class="ico ico-share"></i>Share</button>
+            <button class="button secondary" ui-sref="account.lockbox">Cancel</button>
+            <button class="button primary">Share</button>
         </div>
     </ion-footer-bar>
 </ion-view>

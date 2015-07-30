@@ -24,8 +24,7 @@
             // creating modal and passing scope
             $ionicModal
                 .fromTemplateUrl(modalObject.template, {
-                    scope: scope,
-                    animation: 'slide-in'
+                    scope: scope
                 })
                 .then(function (modal) {
                     service[modalName] = modal;

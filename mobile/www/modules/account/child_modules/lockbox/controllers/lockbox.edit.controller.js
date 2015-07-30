@@ -1,40 +1,23 @@
 (function() {
     'use strict';
 
-    function LockboxEditCtrl($scope, $ionicPopup) {
+    function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments) {
         var vm = this;
 
-        vm.documents = [
-            {
-                name: 'Document',
-                date: '3/17/2015',
-                checked: false
-            },
-            {
-                name: 'Document',
-                date: '3/13/2015',
-                checked: false
-            },
-            {
-                name: 'Document',
-                date: '3/12/2015',
-                checked: false
-            },
-            {
-                name: 'Document',
-                date: '3/11/2015',
-                checked: false
-            }
-        ];
+        vm.lockboxDocuments = lockboxDocuments;
+
+        for(var i = 0; i < vm.lockboxDocuments.docs.length; i++){
+            vm.lockboxDocuments.docs[i].checked = false;
+        }
 
         vm.unselectedDocuments = null;
         vm.deleteDisabled = true;
         vm.renameDisabled = true;
 
         $scope.$watch(function () {
-            return vm.documents.filter(vm.getUnselectedItems).length;
+            return vm.lockboxDocuments.docs.filter(vm.getUnselectedItems).length;
         }, function (currentUnselectedLength) {
-            var totalLength = vm.documents.length;
+            var totalLength = vm.lockboxDocuments.docs.length;
             vm.deleteDisabled = (currentUnselectedLength === totalLength);
             vm.renameDisabled = (totalLength - currentUnselectedLength !== 1);
         });
@@ -48,7 +31,7 @@
             vm.index = null;
             vm.name = '';
 
-            vm.documents.filter(function (object, index) {
+            vm.lockboxDocuments.docs.filter(function (object, index) {
                 if(object.checked) vm.index = index;
                 return object.checked;
             });
@@ -78,13 +61,13 @@
             });
 
             renamePopup.then(function(res) {
-                if(res) vm.documents[vm.index].name = res;
+                if(res) vm.lockboxDocuments.docs[vm.index].name = res;
             });
         };
 
         vm.showConfirm = function() {
-            vm.unselectedDocuments = vm.documents.filter(vm.getUnselectedItems);
-            if(vm.unselectedDocuments.length !== vm.documents.length){
+            vm.unselectedDocuments = vm.lockboxDocuments.docs.filter(vm.getUnselectedItems);
+            if(vm.unselectedDocuments.length !== vm.lockboxDocuments.docs.length){
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Delete Items',
                     cancelType: 'button-small',
@@ -93,14 +76,14 @@
                 });
                 confirmPopup.then(function(res) {
                     if(res) {
-                        vm.documents = vm.unselectedDocuments;
+                        vm.lockboxDocuments.docs = vm.unselectedDocuments;
                     }
                 });
             }
         };
     }
 
-    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup'];
+    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments'];
 
     angular
         .module('account')
