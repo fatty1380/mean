@@ -1,8 +1,61 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope ) {
+    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, pdf ) {
         var vm = this;
+
+       // $scope.pdfUrl = 'http://www.arb.ca.gov/msprog/onrdiesel/documents/multirule.pdf';
+       /* $scope.pdfUrl = 'relativity.pdf';
+        $scope.pdfName = 'Relativity: The Special and General Theory by Albert Einstein';
+        $scope.scroll = 1;
+        $scope.loading = 'load';
+
+        $scope.onError = function(error) {
+            console.log(error);
+        }
+
+        $scope.onLoad = function() {
+            $scope.loading = '';
+        }
+
+        $scope.onProgress = function(progress) {
+            console.log(progress);
+        }
+
+        $scope.pageLoaded = function(curPage, totalPages) {
+            console.log(curPage,totalPages );
+
+            $scope.currentPage = curPage;
+            $scope.totalPages = totalPages;
+        };*/
+
+
+
+
+        $scope.pdfURL = "http://www.internationaltransportforum.org/jtrc/infrastructure/heavyveh/TrucksSum.pdf";
+        $scope.scale = .5;
+        $scope.pages = 0;
+        $scope.instance = pdf.Instance("viewer");
+        $scope.nextPage = function() {
+            $scope.instance.nextPage();
+        };
+        $scope.prevPage = function() {
+            $scope.instance.prevPage();
+        };
+        $scope.gotoPage = function(page) {
+            $scope.instance.gotoPage(page);
+        };
+        $scope.setScale = function(v) {
+            $scope.instance.setScale(v);
+        };
+        $scope.pageLoaded = function(curPage, totalPages) {
+            console.log('pageLoaded ',curPage, totalPages);
+            $scope.currentPage = curPage;
+            $scope.totalPages = totalPages;
+        };
+        $scope.loadProgress = function(loaded, total, state) {
+            //console.log('loadProgress =', loaded, 'total =', total, 'state =', state);
+        };
 
 
 
@@ -12,7 +65,7 @@
                 sku: 'mvr',
                 name: 'Motor Vehicle Report',
                 created: '2015-07-11 10:33:05',
-                url: 'http://someurl/somedocument.pdf',
+                url: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Scania_R470_topline.JPG',
                 expires: null,
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232'
@@ -38,8 +91,6 @@
                 key: 'kajifpaiueh13232'
             }
         ];
-       // vm.modal = $ionicModal.fromTemplate('<div class="modal"><header class="bar bar-header bar-positive"> <h1 class="title">I\'m A Modal</h1><div class="button button-clear" ng-click="vm.modal.hide()"><span class="icon ion-close"></span></div></header><content has-header="true" padding="true"><p>This is a modal</p></content><footer class="bar bar-footer bar-positive"><h1 class="title">Footer</h1></footer></div>', {
-        //$scope.modal = $ionicModal.fromTemplateUrl('modules/account/child_modules/lockbox/controllers/modal.html', {
 
         $ionicModal.fromTemplateUrl('modules/account/child_modules/lockbox/templates/modal-document.html', {
             scope: $scope,
@@ -55,6 +106,14 @@
 
             vm.currentDoc = doc;
             $scope.modal.show();
+
+        //    $scope.pdfUrl = 'http://www.arb.ca.gov/msprog/onrdiesel/documents/multirule.pdf';
+        }
+
+
+        $scope.getNavStyle = function(scroll) {
+            if(scroll > 100) return 'pdf-controls fixed';
+            else return 'pdf-controls';
         }
 
         vm.addDocsPopup = function() {
@@ -91,10 +150,10 @@
         }
     }
 
-    lockboxCtrl.$inject = [ '$ionicActionSheet','$ionicModal',  '$scope' ];
+    lockboxCtrl.$inject = [ '$ionicActionSheet', '$ionicModal', '$scope' ,'PDFViewerService'];
 
     angular
-        .module('lockbox')
+        .module('lockbox', [ 'ngPDFViewer' ])
         .controller('lockboxCtrl', lockboxCtrl);
 
 })();

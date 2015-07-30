@@ -5,13 +5,34 @@
         <h1 class="title">Preview</h1>
     </ion-header-bar>
 
-    <ion-pane class="image" style="
-        background: url({{ vm.currentDoc.url }}) 100% 100% no-repeat;
-        height: inherit;
-        width: inherit;
-        margin: auto;
-        background-size: cover;" >
+  <!--  <ion-pane  style="
+            background: url({{ vm.currentDoc.url }}) 100% 100% no-repeat;
+            height: inherit;
+            width: inherit;
+            margin: auto;
+            background-size: cover;">
+
+        <pdfviewer ng-if="vm.currentDoc.sku == 'bg'" src="http://www.arb.ca.gov/msprog/onrdiesel/documents/multirule.pdf"  id="viewer"></pdfviewer>
+    </ion-pane>-->
+
+
+   <!-- <ion-pane ng-if="vm.currentDoc.sku == 'ev'" style="
+            background: url({{ vm.currentDoc.url }}) 100% 100% no-repeat;
+            height: inherit;
+            width: inherit;
+            margin: auto;
+            background-size: cover;">
     </ion-pane>
+-->
+
+
+<!--ng-if="vm.currentDoc.sku == 'bg'"-->
+    <ion-content >
+      <!--  <pdfviewer src="http://www.arb.ca.gov/msprog/onrdiesel/documents/multirule.pdf"  id="viewer"></pdfviewer>-->
+
+        <!--<ng-pdf template-url="modules/account/child_modules/lockbox/templates/viewer.html" canvasid="pdf-canvas" page=1 ></ng-pdf>
+-->
+    </ion-content>
 
     <ion-footer-bar class="bar bar-footer bar-dark">
         <h1 class="title">{{ vm.currentDoc.name }}</h1>
