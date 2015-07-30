@@ -8,7 +8,7 @@
 
 angular.module('ngPDFViewer',[]).
 	directive('pdfviewer', [ '$log', '$q', function($log, $q) {
-		var _pageToShow = 1;
+		var _pageToShow = 3;
 		var canvas = [];
 		var instance_id = null;
 
@@ -42,8 +42,15 @@ angular.module('ngPDFViewer',[]).
 					}
 				};
 
+				$scope.reRender = function(){
+					console.log("------   reRender   -----");
+					$scope.forceReRender = true;
+				};
+
+
 				$scope.renderDocument = function(){
 					$log.debug("Render Document");
+
 					angular.forEach(canvas, function(c,index){
 						if (index==0)
 							$scope.renderInProgress=true;
@@ -64,7 +71,6 @@ angular.module('ngPDFViewer',[]).
 					var deferred = $q.defer();
 					PDFJS.getDocument(path, null, null, $scope.documentProgress).then(function(_pdfDoc) {
 						$log.debug("Document read");
-
 						$scope.pdfDoc = _pdfDoc;
 						if ($scope.loadProgress) {
 							$scope.loadProgress({state: "finished", loaded: 0, total: 0});
@@ -91,7 +97,10 @@ angular.module('ngPDFViewer',[]).
 						return;
 					}
 					$scope.pdfDoc.getPage(num).then(function(page) {
-						var viewport = page.getViewport($scope.scale);
+						//set scale 1, get pdf width and then scale to fit
+						var viewportTest = page.getViewport(1);
+						var modalWidth = angular.element(document.getElementById('modal-content'))[0].clientWidth - 1;
+						var viewport = page.getViewport(modalWidth/viewportTest.width);
 						var ctx = canvas.getContext('2d');
 
 						canvas.height = viewport.height;
@@ -121,8 +130,15 @@ angular.module('ngPDFViewer',[]).
 					if (id !== instance_id) {
 						return;
 					}
-
 					$scope.setScale(scale);
+					$scope.renderDocument();
+				});
+
+				$scope.$on('pdfviewer.reRender', function(evt, id) {
+					if (id !== instance_id) {
+						return;
+					}
+					$scope.setScale(1);
 					$scope.renderDocument();
 				});
 
@@ -130,7 +146,6 @@ angular.module('ngPDFViewer',[]).
 					if (id !== instance_id) {
 						return;
 					}
-
 					if ($scope.pageNum < $scope.pdfDoc.numPages) {
 						$scope.pageNum++;
 						$scope.renderDocument();
@@ -141,7 +156,6 @@ angular.module('ngPDFViewer',[]).
 					if (id !== instance_id) {
 						return;
 					}
-
 					if ($scope.pageNum > 1) {
 						$scope.pageNum--;
 						$scope.renderDocument();
@@ -152,7 +166,6 @@ angular.module('ngPDFViewer',[]).
 					if (id !== instance_id) {
 						return;
 					}
-
 					if (page >= 1 && page <= $scope.pdfDoc.numPages) {
 						$scope.pageNum = page;
 						$scope.renderDocument();
@@ -160,7 +173,6 @@ angular.module('ngPDFViewer',[]).
 				});
 			} ],
 			link: function(scope, iElement, iAttr) {
-
 				instance_id = iAttr.id;
 
 				createCanvas = function(iElement, count){
@@ -186,6 +198,14 @@ angular.module('ngPDFViewer',[]).
 					$log.debug('src attribute changed, new value is <' + v + '>');
 					if (v !== undefined && v !== null && v !== '') {
 						scope.pageNum = 1;
+
+						//clear canvases
+						if (canvas.length){
+							for (var i=0; i<canvas.length; i++){
+								angular.element(canvas[i]).remove();
+							}
+						}
+
 						scope.loadPDF(scope.src).then(function (pdfDoc){
 							$log.debug('PDF Loaded');
 							scope.pagesToShow = scope.pagesToShow==0?scope.pdfDoc.numPages : scope.pagesToShow;
@@ -250,6 +270,9 @@ angular.module('ngPDFViewer',[]).
 				},
 				setScale: function(scale) {
 					$rootScope.$broadcast('pdfviewer.setScale', instance_id, scale);
+				},
+				reRender: function(scale) {
+					$rootScope.$broadcast('pdfviewer.reRender', instance_id);
 				}
 			};
 		};

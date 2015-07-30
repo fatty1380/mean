@@ -16,7 +16,7 @@
     </ion-pane>-->
 
 
-   <!-- <ion-pane ng-if="vm.currentDoc.sku == 'ev'" style="
+   <!-- <ion-pane ng-if="vm.currentDoc.sku == 'mvr'" style="
             background: url({{ vm.currentDoc.url }}) 100% 100% no-repeat;
             height: inherit;
             width: inherit;
@@ -24,15 +24,37 @@
             background-size: cover;">
     </ion-pane>
 -->
-
-
 <!--ng-if="vm.currentDoc.sku == 'bg'"-->
-    <ion-content >
-      <!--  <pdfviewer src="http://www.arb.ca.gov/msprog/onrdiesel/documents/multirule.pdf"  id="viewer"></pdfviewer>-->
 
-        <!--<ng-pdf template-url="modules/account/child_modules/lockbox/templates/viewer.html" canvasid="pdf-canvas" page=1 ></ng-pdf>
--->
+
+    <!--  <pdfviewer src="http://www.arb.ca.gov/msprog/onrdiesel/documents/multirule.pdf"  id="viewer"></pdfviewer>-->
+    <!--<ng-pdf template-url="modules/account/child_modules/lockbox/templates/viewer.html" canvasid="pdf-canvas" page=1 ></ng-pdf>-->
+    <!-- <progress max="100" value="{{loadingProgress}}"> </progress>
+     <div class="btn-group">
+         <button class="btn" data-ng-click="gotoPage(1)">|&lt;</button>
+         <button class="btn" data-ng-click="prevPage()">&lt;</button>
+         <button class="btn" data-ng-click="nextPage()">&gt;</button>
+         <button class="btn" data-ng-click="gotoPage(totalPages)">&gt;|</button>
+         <button class="btn" data-ng-click="setScale(1.8)">ZOOM</button>
+         <button class="btn" data-ng-click="setScale(0.6)">ZOOM out</button>
+         <input type="text" data-ng-model="pages"/>
+     </div>-->
+
+    <ion-pane ng-if="vm.currentDoc.sku == 'mvr'" style="
+            background: url({{ image }}) 100% 100% no-repeat;
+            height: inherit;
+            width: inherit;
+            margin: auto;
+            background-size: cover;">
+    </ion-pane>
+
+
+    <ion-content id="modal-content">
+        <div ng-if="vm.currentDoc.sku == 'bg'">
+            <pdfviewer src="{{ trustSrc(pdfURL.src) }}"  scale="{{scale}}" pages-to-show="{{pages}}" on-page-load='pageLoaded(page,total)' id="viewer" load-progress='loadProgress(loaded, total, state)'></pdfviewer>
+        </div>
     </ion-content>
+
 
     <ion-footer-bar class="bar bar-footer bar-dark">
         <h1 class="title">{{ vm.currentDoc.name }}</h1>

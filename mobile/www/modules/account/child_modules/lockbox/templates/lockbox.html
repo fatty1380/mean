@@ -20,36 +20,13 @@
                     <div class="item-divider"></div>
                 </li>
             </ul>
-
-            <!--<ng-pdf template-url="modules/account/child_modules/lockbox/templates/viewer.html" canvasid="pdf-canvas" ></ng-pdf>-->
-
-
-           <!-- <pdfviewer src="relativity.pdf"  id="viewer"></pdfviewer>-->
-            <div class="btn-group">
-                <button class="btn" data-ng-click="gotoPage(1)">|&lt;</button>
-                <button class="btn" data-ng-click="prevPage()">&lt;</button>
-                <button class="btn" data-ng-click="nextPage()">&gt;</button>
-                <button class="btn" data-ng-click="gotoPage(totalPages)">&gt;|</button>
-                <button class="btn" data-ng-click="setScale(1.8)">ZOOM</button>
-                <input type="text" data-ng-model="pages"/>
-            </div>
-
-
-            <pdfviewer src="http://www.internationaltransportforum.org/jtrc/infrastructure/heavyveh/TrucksSum.pdf" scale="{{scale}}" pages-to-show="{{pages}}" on-page-load='pageLoaded(page,total)' id="viewer" load-progress='loadProgress(loaded, total, state)'></pdfviewer>
-
-
         </ion-scroll>
         <button class="button content-button" ui-sref="account.lockbox.share">
             <i class="ico ico-share"></i>
             Share
         </button>
 
-
     </ion-pane>
-
-
-
-
 
 </ion-view>
 
