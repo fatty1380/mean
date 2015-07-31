@@ -9,7 +9,7 @@
 
         $scope.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
-        }
+        };
 
         $scope.scale = 1;
         $scope.pages = 10;

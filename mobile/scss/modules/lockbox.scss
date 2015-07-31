@@ -133,9 +133,27 @@
 /* lockbox modal preview */
 .preview{
   background-color: transparent;
+
   #pdf-view-content{
     background-color: white;
+
+    &.ionic-scroll{height: auto;}
+
+    .image-container{
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      width: auto;
+      height: auto;
+
+      div{
+        height: 100%;
+        width: 100%;
+      }
+    }
   }
+
   .bar{
     background-color: transparent;
 
