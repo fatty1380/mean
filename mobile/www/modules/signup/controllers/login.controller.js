@@ -7,8 +7,8 @@
         vm.error = "";
 
         vm.user = {
-            email: 'markov.flash@gmail.com',
-            password: 'sergey83mark'
+            email: 'test@test.test',
+            password: 'testtest'
         };
 
         vm.initForm = function (scope) {
