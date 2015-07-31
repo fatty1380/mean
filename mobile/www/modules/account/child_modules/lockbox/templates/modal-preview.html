@@ -19,7 +19,8 @@
                     on-page-load='pageLoaded(page,total)'
                     id="viewer"
                     height="100%"
-                    load-progress='loadProgress(loaded, total, state)'>
+                    load-progress='loadProgress(loaded, total, state)'
+                    on-pdf-event='onPdfEvent(type)'>
             </pdfviewer>
         </div>
     </ion-content>

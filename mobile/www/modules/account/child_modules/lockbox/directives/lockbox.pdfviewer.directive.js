@@ -8,7 +8,7 @@
 
 angular.module('pdf',[]).
 	directive('pdfviewer', [ '$log', '$q', function($log, $q) {
-		var _pageToShow = 1;
+		var _pageToShow = 0;
 		var canvas = [];
 		var instance_id = null;
 
@@ -18,13 +18,14 @@ angular.module('pdf',[]).
 			scope: {
 				onPageLoad: '&',
 				loadProgress: '&',
+				onPdfEvent: '&',
 				src: '@',
 				pagesToShow: '@',
 				scale: '@',
 				id: '='
 			},
 			controller: [ '$scope', function($scope) {
-				$scope.pageNum = 1;
+				$scope.pageNum = 0;
 				$scope.pdfDoc = null;
 				$scope.renderInProgress = false;
 				$scope.forceReRender = true;
@@ -67,6 +68,7 @@ angular.module('pdf',[]).
 
 				$scope.loadPDF = function(path) {
 					$log.debug("loadPDF <"+ path+">");
+					$scope.onPdfEvent({type:'loadStart'});
 
 					var deferred = $q.defer();
 					PDFJS.getDocument(path, null, null, $scope.documentProgress).then(function(_pdfDoc) {
@@ -78,6 +80,7 @@ angular.module('pdf',[]).
 						deferred.resolve($scope.pdfDoc);
 					}, function(message, exception) {
 						$log.debug("PDF load error: " + message + " <" + exception + "> ");
+						scope.onPdfEvent({type:'loadError'});
 						deferred.reject(message);
 						if ($scope.loadProgress) {
 							$scope.loadProgress({state: "error", loaded: 0, total: 0});
@@ -208,6 +211,7 @@ angular.module('pdf',[]).
 
 						scope.loadPDF(scope.src).then(function (pdfDoc){
 							$log.debug('PDF Loaded');
+							scope.onPdfEvent({type:'loadComplete'});
 							scope.pagesToShow = scope.pagesToShow==0?scope.pdfDoc.numPages : scope.pagesToShow;
 							createCanvas(iElement,scope.pagesToShow);
 							scope.renderDocument();

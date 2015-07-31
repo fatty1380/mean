@@ -12,7 +12,7 @@
         };
 
         $scope.scale = 1;
-        $scope.pages = 10;
+        $scope.pages = 1;
         $scope.instance = PDFViewerService.Instance("viewer");
         $scope.nextPage = function() {
             $scope.instance.nextPage();
@@ -29,8 +29,29 @@
         $scope.reRender = function() {
             $scope.instance.reRender();
         };
+
+        $scope.onPdfEvent = function(type){
+            console.log("   **** "+type+"  ****");
+            switch(type){
+                case "loadStart":
+                    $ionicLoading.show({
+                        template: 'PDF Loading. Please Wait.'
+                    })
+                    break;
+                case 'loadComplete':
+                    $ionicLoading.hide();
+                    break;
+                case 'loadError':
+                    $ionicLoading.hide();
+                    break;
+                default:
+                    $ionicLoading.hide();
+                    break;
+            }
+        };
+
         $scope.pageLoaded = function(curPage, totalPages) {
-            //console.log('pageLoaded ',curPage, totalPages);
+            console.log('pageLoaded ',curPage, totalPages);
             $scope.currentPage = curPage;
             $scope.totalPages = totalPages;
         };
@@ -67,6 +88,10 @@
             console.log(doc);
             vm.currentDoc = doc;
             $scope.modal.show();
+
+           /* $ionicLoading.show({
+                template: 'Loading...'
+            })*/
         }
 
         vm.addDocsPopup = function() {
