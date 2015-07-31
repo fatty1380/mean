@@ -1,32 +1,17 @@
-<ion-view class="signup-section">
-
-    <div class="header compact-size">
-        <ion-header-bar align-title="center" class="bar-stable">
-            <h1 class="title">Pick Contacts</h1>
-        </ion-header-bar>
-    </div>
-
-    <ion-content>
-        <div class="list">
-            <a class="item item-thumbnail-left" ng-repeat="contact in vm.data.selectedContacts">
-                <h2>{{contact.displayName}}</h2>
-                <p ng-if="contact.emails.length > 0">{{ contact.emails[0].value }}</p>
-                <p ng-if="contact.phones.length > 0">{{ contact.phones[0].value }}</p>
-            </a>
-
+<ion-view class="signup-section home">
+    <ion-pane>
+        <div class="home-content">
+            <i class="ico ico-outsetlogo"></i>
+            <h3>Take control of your driving career</h3>
         </div>
-        <h4 class="padding" ng-if="contact.phones.length > 0">Total: {{contact.phones.length}} </h4>
-    </ion-content>
+    </ion-pane>
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary submit" ng-disabled="vm.form.mainForm.$invalid"  ui-sref="signup/register">Sign Up</button>
         </div>
-
         <div class="button-bar action-buttons">
             <button class="button primary submit" ng-disabled="vm.form.mainForm.$invalid"  ui-sref="signup/login">Login</button>
-            <button class="button" ng-click="vm.pickContact()">Contacts</button>
         </div>
     </ion-footer-bar>
-
 </ion-view>
