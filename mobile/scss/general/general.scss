@@ -8,7 +8,6 @@ body{
 .ionic-scroll,
 .ionic-scroll .scroll{height: 100%;}
 
-
 /** HEADER STYLES **/
 .header{
   background-image: linear-gradient(-180deg, $tab-selected 0%, $gradient-bottom 100%);
@@ -136,21 +135,25 @@ body{
 // document list
 .document-list{
   border-bottom: 1px solid #D2D2D2;
+
   .item{
     border-top: 1px solid #D2D2D2;
-    padding-left: 52px;
+    padding-left: 62px;
     padding-right: 100px;
+
+    .ico{
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      margin-top: -20px;
+    }
 
     .item-content{
       text-overflow: initial;
       white-space: normal;
 
       strong,
-      span{
-        display: block;
-        font-weight: normal;
-        line-height: 16px;
-      }
+      span{display: block;}
     }
 
     .checkbox{
@@ -164,7 +167,7 @@ body{
         position: absolute;
         top: 50%;
         margin-top: -10px;
-        left: 16px;
+        left: 21px;
       }
     }
 
@@ -180,6 +183,55 @@ body{
 }
 
 
+.content-top {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  height: 64px;
+  padding: 14px 20px;
+  color: $tab-text;
+
+  .button {
+    @include rounded-corner(5px);
+    margin: 0;
+    border-width: 1px;
+    font-size: 14px;
+    min-height: 32px;
+    line-height: 32px;
+  }
+}
+
+
+.share-form{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .item-input{
+    padding: 5px 15px;
+    border-width: 1px 0 0;
+    border-color: #D2D2D2;
+
+    &:last-child{
+      height: 100%;
+      align-items: stretch;
+    }
+
+    input{
+      padding-right: 0;
+    }
+
+    textarea{
+      background: none;
+      padding: 8px 0 0;
+      resize: none;
+    }
+  }
+}
 
 
 .popup-container{

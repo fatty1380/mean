@@ -79,6 +79,14 @@
                         }
                     }
                 })
+                .state('account.lockbox.recipient', {
+                    url: '/share/recipient',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share-recipient.html'
+                        }
+                    }
+                })
                 .state('account.activity', {
                     url: '/activity',
                     views: {

@@ -3,21 +3,22 @@
         <ion-header-bar align-title="center">
             <button class="button button-clear" ui-sref="account.lockbox.edit">Edit</button>
             <h1 class="title">Lockbox</h1>
-            <button class="button button-clear" ng-click="vm.continueToProfile(false)">Add Docs</button>
+            <button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>
         </ion-header-bar>
         <div class="bar bar-subheader">
             <h3 class="title">Your lockbox will contain all your secure documents.</h3>
         </div>
     </div>
     <ion-pane class="pane content-pane">
-        <ion-scroll class="documents-list">
-            <ul class="list">
-                <li class="item item-checkbox" ng-repeat="doc in vm.docs">
-                    <i class="{{doc.icon}}"></i>
-                    <p>{{ doc.name }}</p>
-                    <p>{{ doc.date }}</p>
-                    <button class="button button-small">View</button>
-                    <div class="item-divider"></div>
+        <ion-scroll>
+            <ul class="list document-list">
+                <li class="item" ng-repeat="doc in vm.lockboxDocuments.docs">
+                    <i class="ico ico-documentimage{{doc.sku}}"></i>
+                    <div class="item-content">
+                        <strong>{{ doc.name }}</strong>
+                        <span>{{ doc.created }}</span>
+                    </div>
+                    <button class="button button-small" ng-click="vm.viewDoc(doc)">View</button>
                 </li>
             </ul>
         </ion-scroll>
