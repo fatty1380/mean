@@ -99,7 +99,8 @@
                     url: '/messages',
                     views: {
                         'messages': {
-                            templateUrl: 'modules/account/child_modules/messages/templates/messages.html'
+                            templateUrl: 'modules/account/child_modules/messages/templates/messages.html',
+                            controller: 'messagesCtrl as vm'
                         }
                     }
                 })

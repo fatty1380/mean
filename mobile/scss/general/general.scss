@@ -81,27 +81,30 @@ body{
   height: 44px;
   letter-spacing: 0.82px;
 
-  .button{
-    font-weight: bold;
-
-    &.primary{
-      color: $modal-primary-text;
-      background-color: $modal-primary-bg;
-    }
-
-    &.secondary{
-      color: $modal-secondary-text;
-      background-color: $modal-secondary-bg;
-    }
-
-    &.button-block{
-      margin-top: 0;
-      margin-bottom: 0;
+  &.button-bar{
+    .button{
+      font-weight: bold;
       border-width: 1px 0 0;
 
-      .ico{
-        vertical-align: middle;
-        margin-right: 10px;
+      &.primary{
+        color: $modal-primary-text;
+        background-color: $modal-primary-bg;
+      }
+
+      &.secondary{
+        color: $modal-secondary-text;
+        background-color: $modal-secondary-bg;
+      }
+
+      &.button-block{
+        margin-top: 0;
+        margin-bottom: 0;
+        border-width: 1px 0 0;
+
+        .ico{
+          vertical-align: middle;
+          margin-right: 10px;
+        }
       }
     }
   }
