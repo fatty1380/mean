@@ -6,9 +6,9 @@
  * MIT license
  */
 
-angular.module('ngPDFViewer',[]).
+angular.module('pdf',[]).
 	directive('pdfviewer', [ '$log', '$q', function($log, $q) {
-		var _pageToShow = 3;
+		var _pageToShow = 1;
 		var canvas = [];
 		var instance_id = null;
 
