@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, pdf, $sce, $ionicLoading, lockboxDocuments) {
+    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, PDFViewerService, $sce ,$ionicLoading, lockboxDocuments) {
         var vm = this;
 
         vm.lockboxDocuments = lockboxDocuments;
@@ -13,7 +13,7 @@
 
         $scope.scale = 1;
         $scope.pages = 10;
-        $scope.instance = pdf.Instance("viewer");
+        $scope.instance = PDFViewerService.Instance("viewer");
         $scope.nextPage = function() {
             $scope.instance.nextPage();
         };
@@ -43,7 +43,7 @@
             }
         };
 
-        $ionicModal.fromTemplateUrl('modules/account/child_modules/lockbox/templates/modal-document.html', {
+        $ionicModal.fromTemplateUrl('modules/account/child_modules/lockbox/templates/modal-preview.html', {
             scope: $scope,
             animation: 'slide-in-up'
         }).then(function(modal) {
@@ -67,7 +67,40 @@
             console.log(doc);
             vm.currentDoc = doc;
             $scope.modal.show();
-        };
+        }
+
+        vm.addDocsPopup = function() {
+            $ionicActionSheet.show({
+                buttons: [
+                    { text: 'Take a Picture' },
+                    { text: 'Order Reports' }
+                ],
+                titleText: '<span class="title">Add documents</span>',
+                cancelText: 'Cancel',
+                cssClass: 'social-actionsheet',
+                cancel: function() {
+                    console.log("Cancel");
+                },
+                buttonClicked: function(index) {
+                    switch(index){
+                        case 0:
+                            takePicture();
+                            break;
+                        case 1:
+                            orderReports();
+                            break;
+                    }
+                    return true;
+                }
+            });
+        }
+
+        function takePicture(){
+            console.log('takePicture');
+        }
+        function orderReports(){
+            console.log('orderReports');
+        }
 
     }
 

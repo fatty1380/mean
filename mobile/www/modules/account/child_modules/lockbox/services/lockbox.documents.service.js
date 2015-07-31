@@ -20,7 +20,7 @@
                 sku: 'bg',
                 name: 'multirule.pdf',
                 created: '2015-07-11 10:33:05',
-                url: 'http://www.mazdausa.com/MusaWeb/musa2/pdf/brochures/2016/2016_Mazda_CX5_Brochure.pdf',
+                url: 'http://www.epa.gov/otaq/consumer/420f08027.pdf',
                 expires: null,
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232'

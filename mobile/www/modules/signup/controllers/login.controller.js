@@ -1,15 +1,17 @@
-(function() {
+(function () {
     'use strict';
 
-    function loginCtrl ($scope, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
+    function loginCtrl($scope, $state, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
         var vm = this;
 
+        vm.error = "";
+
         vm.user = {
-            email: 'markov.flash@gmail.com',
-            password: 'sergey83mark'
+            email: 'test@test.test',
+            password: 'testtest'
         };
 
-        vm.initForm= function(scope){
+        vm.initForm = function (scope) {
             vm.form = scope;
         }
 
@@ -17,8 +19,10 @@
          * @description
          * Sign In
          */
+        vm.signIn = function () {
 
-        vm.signIn = function(){
+            console.log("signIn()");
+
             $ionicLoading.show({
                 template: 'please wait'
             });
@@ -29,46 +33,38 @@
                 .then(function (response) {
                     $ionicLoading.hide();
 
-                    if(response.success) {
+                    if (response.success) {
                         tokenService.set('access_token', response.message.data.access_token);
                         tokenService.set('refresh_token', response.message.data.refresh_token);
                         tokenService.set('token_type', response.message.data.token_type);
-                        $location.path("account/profile");
-                    }else{
-                        vm.showPopup(JSON.stringify(response));
+                        //$location.path("account/profile");
+                        $state.go('account.profile')
+                        vm.error = "";
+                    } else {
+                        vm.error = response.message.data.error_description || "error";
                     }
                 });
         }
 
-
-        vm.showPopup = function (response) {
-            var alertPopup = $ionicPopup.alert({
-                title:  "title",
-                template: response
-            });
-            alertPopup.then(function(res) {
-            });
-        }
-
-        $scope.$on( '$ionicView.afterEnter', function () {
+        $scope.$on('$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
-                window.cordova.plugins.Keyboard.disableScroll( true );
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                window.cordova.plugins.Keyboard.disableScroll(true);
             }
         });
-        $scope.$on( '$ionicView.beforeLeave', function () {
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
+        $scope.$on('$ionicView.beforeLeave', function () {
+            if (window.cordova && window.cordova.plugins.Keyboard) {
                 // return to keyboard default scroll state
-                window.cordova.plugins.Keyboard.disableScroll( false );
+                window.cordova.plugins.Keyboard.disableScroll(false);
             }
         });
     }
 
-    loginCtrl.$inject = ['$scope', '$location', 'registerService', '$ionicPopup', '$ionicLoading' , 'tokenService'];
+    loginCtrl.$inject = ['$scope', '$state', '$location', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
 
     angular
         .module('signup')
-        .controller('loginCtrl', loginCtrl );
+        .controller('loginCtrl', loginCtrl);
 })();
 
 

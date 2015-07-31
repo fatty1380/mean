@@ -46,7 +46,9 @@ exports.userByID = function(req, res, next, id) {
 /**
  * Require login routing middleware
  */
-exports.requiresLogin = function(req, res, next) {
+exports.requiresLogin = function (req, res, next) {
+    req.log.debug({func: 'requiresLogin', body: req.body, head: req.headers}, 'Initializing Authorization Function with Roles');
+
     if (!req.isAuthenticated()) {
         req.log.warn({func: 'requiresLogin'}, '401: not logged in');
         return res.status(401).send({
@@ -64,6 +66,8 @@ exports.requiresLogin = function(req, res, next) {
  */
 exports.hasAuthorization = function(roles) {
     var _this = this;
+    
+    roles = roles || ['admin'];
 
     log.debug({func: 'hasAuthorization', roles: roles}, 'Initializing Authorization Function with Roles');
 

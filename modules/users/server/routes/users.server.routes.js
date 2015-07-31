@@ -1,6 +1,8 @@
 (function() {
     'use strict';
     
+    var passport = require('passport');
+    
     /**
      * Users Routes
      * @module users
@@ -15,7 +17,8 @@
          * @apiName GetMyUser
          * @apiGroup Users
          */
-        app.route('/api/users/me').get(users.me);
+        app.route('/api/users/me')
+            .get(users.me);
         /**
          * @api {put} /users Update the logged in user
          * @apiName GetAllUsers

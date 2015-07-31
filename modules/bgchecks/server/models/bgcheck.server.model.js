@@ -223,7 +223,7 @@ BackgroundReportSchema.methods.updateStatus = function () {
     var allComplete = !_.isEmpty(latest);
 
     _.each(latest, function (status) {
-        log.debug({func: 'updateStatus'}, 'evaluating status value %o', status);
+        log.debug({func: 'updateStatus'}, 'evaluating status value %j', status);
         if (allComplete && (!status || status !== 'COMPLETED')) {
             log.debug({func: 'updateStatus'}, 'status is `%s` - marking incomplete', status);
             allComplete = false;

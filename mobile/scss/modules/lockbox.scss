@@ -129,6 +129,8 @@
 
 }
 
+
+/* lockbox modal preview */
 .preview{
   background-color: transparent;
 
@@ -154,6 +156,14 @@
 
   .bar{
     background-color: transparent;
+
+    .preview-cancel-button {
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 44px;
+      color: white;
+      border: 0;
+    }
   }
 
   .title{

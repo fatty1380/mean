@@ -53,7 +53,10 @@
                             });
                     } else {
                         $ionicLoading.hide();
-                        vm.showPopup(response.title, response.message.data.message);
+                        
+                        var message = response.message.data && response.message.data.message || 'Unable to Register at this time. Please try again later';
+                        
+                        vm.showPopup(response.title || 'Sorry', message);
                     }
                 });
         };
