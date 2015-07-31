@@ -67,7 +67,7 @@
             console.log(doc);
             vm.currentDoc = doc;
             $scope.modal.show();
-        }
+        };
 
         vm.addDocsPopup = function() {
             $ionicActionSheet.show({
@@ -93,7 +93,7 @@
                     return true;
                 }
             });
-        }
+        };
 
         function takePicture(){
             console.log('takePicture');

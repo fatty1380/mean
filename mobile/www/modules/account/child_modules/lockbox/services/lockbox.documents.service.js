@@ -40,12 +40,12 @@
         vm.addDocsPopup = function() {
             $ionicActionSheet.show({
                 buttons: [
-                    { text: 'Take a Picture' },
-                    { text: 'Order Reports' }
+                    {text: 'Take a Picture'},
+                    {text: 'Order Reports'}
                 ],
                 titleText: '<span class="title">Add documents</span>',
                 cancelText: 'Cancel',
-                cssClass: 'social-actionsheet',
+                cssClass: 'document-actionsheet',
                 cancel: function() {
                     console.log("Cancel");
                 },
