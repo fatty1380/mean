@@ -34,7 +34,7 @@
             };
 
         return {
-            getUsersReviews: getUserReviews,
+            getUserReviews: getUserReviews,
             getReviewsByUserID: getReviewsByUserID,
             postReviewForProfile: postReviewByUserID,
             getReviewByID: getReviewByID,

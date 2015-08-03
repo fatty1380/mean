@@ -1,9 +1,20 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl(registerService) {
+    function ProfileCtrl(registerService, reviewService) {
         var vm = this;
         vm.profileData = {};
+        vm.reviews = [];
+        vm.getReviews = function () {
+            reviewService
+                .getUserReviews()
+                .then(function (reviews) {
+                    console.log(reviews);
+                    vm.reviews = reviews;
+                })
+        };
+        vm.getReviews();
+
         vm.endorsementsMap = {
             T : {
                 title: 'Double/Triple Trailer',
@@ -86,7 +97,7 @@
         })();
     }
 
-    ProfileCtrl.$inject = ['registerService'];
+    ProfileCtrl.$inject = ['registerService', 'reviewService'];
 
     angular
         .module('account')
