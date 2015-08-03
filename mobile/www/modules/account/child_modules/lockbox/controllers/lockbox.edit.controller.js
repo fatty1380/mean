@@ -27,14 +27,19 @@
             return !object.checked;
         };
 
-        vm.rename = function () {
-            vm.index = null;
-            vm.name = '';
+        vm.rename = function (selectedIndex) {
+            vm.index = selectedIndex;
 
-            vm.lockboxDocuments.docs.filter(function (object, index) {
-                if(object.checked) vm.index = index;
-                return object.checked;
-            });
+            if (vm.index === null || vm.index === undefined) {
+                vm.lockboxDocuments.docs.filter(function (object, index) {
+                    if (object.checked) {
+                        index = index;
+                    }
+                    return object.checked;
+                });
+            }
+            
+            vm.name = vm.lockboxDocuments.docs[vm.index].name;
 
             var renamePopup = $ionicPopup.show({
                 template: '<input type="text" class="rename-popup" ng-model="vm.name">',
@@ -61,7 +66,11 @@
             });
 
             renamePopup.then(function(res) {
-                if(res) vm.lockboxDocuments.docs[vm.index].name = res;
+                if(res) {
+                    vm.lockboxDocuments.docs[vm.index].name = res;
+                }
+                
+                vm.index = null;
             });
         };
 
