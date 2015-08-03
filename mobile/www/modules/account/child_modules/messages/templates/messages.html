@@ -1,12 +1,27 @@
-<ion-view>
-    <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="edit()">Edit</button>
-        <h1 class="title">Messages</h1>
-        <button class="button button-clear">
-            <i class="ico ico-settingsicon ico-text-top"></i>
+<ion-view class="lockbox">
+    <div class="header min-size">
+        <ion-header-bar align-title="center">
+            <h1 class="title">Messages</h1>
+        </ion-header-bar>
+    </div>
+    <ion-pane class="pane content-pane">
+        <ion-scroll>
+            <ul class="list message-list">
+                <li class="item" ng-repeat="message in vm.messageService.messages">
+                    <div class="ico ico-avatar"></div>
+                    <div class="item-content">
+                        <div class="message">
+                            <strong>{{message.user}}</strong>
+                            <span>{{message.content}}</span>
+                        </div>
+                        <span class="created"><i class="ico ico-timesmall"></i>{{message.created}}</span>
+                    </div>
+                </li>
+            </ul>
+        </ion-scroll>
+        <button class="button content-button">
+            <i class="ico ico-share"></i>
+            Share
         </button>
-    </ion-header-bar>
-    <ion-content>
-        <h2>messages content</h2>
-    </ion-content>
+    </ion-pane>
 </ion-view>

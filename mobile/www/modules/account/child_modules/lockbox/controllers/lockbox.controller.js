@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, PDFViewerService, $sce ,$ionicLoading, lockboxDocuments) {
+    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, PDFViewerService, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup) {
         var vm = this;
 
         vm.lockboxDocuments = lockboxDocuments;
@@ -24,6 +24,11 @@
                     break;
                 case 'loadError':
                     $ionicLoading.hide();
+
+                   $ionicPopup.alert({
+                        title: type,
+                        template: 'Please, try later.'
+                    });
                     break;
                 default:
                     $ionicLoading.hide();
@@ -64,7 +69,7 @@
         }
     }
 
-    lockboxCtrl.$inject = [ '$ionicActionSheet', '$ionicModal', '$scope' ,'PDFViewerService', '$sce', '$ionicLoading', 'lockboxDocuments'];
+    lockboxCtrl.$inject = [ '$ionicActionSheet', '$ionicModal', '$scope' ,'PDFViewerService', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup'];
 
     angular
         .module('lockbox', [ 'pdf' ])

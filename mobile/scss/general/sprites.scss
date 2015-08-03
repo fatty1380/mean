@@ -310,21 +310,19 @@
   }
 }
 
-@media
-  (-webkit-min-device-pixel-ratio: 2),
-  (min-resolution: 192dpi){
-      .ico {
-        background-image: url('../img/sprite2x.png');
-      }
-  }
 
-@media
-  (-webkit-min-device-pixel-ratio: 3),
-  (min-resolution: 401dpi){
-    .ico {
-      background-image: url('../img/sprite3x.png');
-    }
+/* ----------- iPhone 4, 4s, 5, 5S, 6 ----------- */
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 667px)
+and (-webkit-min-device-pixel-ratio: 2) {
+  .ico {background-image: url('../img/sprite2x.png');}
 }
 
-
-
+/* ----------- iPhone 6+ ----------- */
+@media only screen
+and (min-device-width: 414px)
+and (max-device-width: 736px)
+and (-webkit-min-device-pixel-ratio: 3) {
+  .ico {background-image: url('../img/sprite3x.png');}
+}

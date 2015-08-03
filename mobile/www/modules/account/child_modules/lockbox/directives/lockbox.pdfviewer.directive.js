@@ -80,7 +80,7 @@ angular.module('pdf',[]).
 						deferred.resolve($scope.pdfDoc);
 					}, function(message, exception) {
 						$log.debug("PDF load error: " + message + " <" + exception + "> ");
-						scope.onPdfEvent({type:'loadError'});
+						$scope.onPdfEvent({type:'loadError'});
 						deferred.reject(message);
 						if ($scope.loadProgress) {
 							$scope.loadProgress({state: "error", loaded: 0, total: 0});
