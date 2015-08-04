@@ -139,11 +139,12 @@ exports.documentByID = function(req, res, next, id) { Document.findById(id).popu
  * Driver Migration: True
  * This has been updated to handle the new combined user/driver object.
  */
-function uploadResume(req, res) {
+exports.uploadResume = function uploadResume(req, res) {
+    req.log.warn({ func: 'uploadResume' }, 'This function is Deprecated');
 	return exports.create(req.res);
 }
 
-function refreshResume(req, res) {
+exports.refreshResume = function refreshResume(req, res) {
     req.log.debug('[DriverCtrl.refreshResume] Start');
 
     req.params.reportSku = 'resume';
@@ -161,7 +162,7 @@ function refreshResume(req, res) {
  * if it is private and has not expired, it will return that URL. Otherwise, it
  * will make a request to get a new secure signed URL.
  */
-function refresh(req, res) {
+exports.refreshReport = function refresh(req, res) {
 
     req.log.debug({func: 'refresh'}, 'Start');
     var user = req.user;

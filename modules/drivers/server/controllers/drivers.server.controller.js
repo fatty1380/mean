@@ -17,6 +17,8 @@ var mongoose = require('mongoose'),
 
 var props = require('./drivers.properties.server.controller'),
     exp = require('./drivers.experience.server.controller');
+    
+var docs = require(path.resolve('./modules/documents/server/controllers/documents.server.controller'));
 
 var
     Driver = mongoose.model('Driver'),
@@ -30,9 +32,9 @@ _.extend(exports, {
     create: errorHandler.notAvailable, //create,
     read: read,
     update: update,
-    uploadResume: uploadResume,
-    refreshResume: refreshResume,
-    refreshReport: refreshReport,
+    uploadResume: docs.uploadResume,
+    refreshResume: docs.refreshResume,
+    refreshReport: docs.refreshReport,
     getProfileFormAnswers: getProfileFormAnswers,
     createProfileFormAnswers: createProfileFormAnswers,
     updateProfileFormAnswers: updateProfileFormAnswers,
