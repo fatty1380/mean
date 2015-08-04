@@ -6,13 +6,14 @@
 
         vm.lockboxDocuments = lockboxDocuments;
         vm.addDocsPopup = lockboxDocuments.addDocsPopup;
+        vm.currentDoc = "";
 
         vm.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
         };
 
         vm.onPdfEvent = function(type){
-            console.log("   **** "+type+"  ****");
+            console.log("   **** "+type+" ****");
             switch(type){
                 case "loadStart":
                     $ionicLoading.show({
@@ -37,8 +38,6 @@
         };
 
         vm.loadProgress = function(loaded, total, state) {
-            //console.log('loadProgress =', loaded, 'total =', total, 'state =', state);
-            //console.log('loadProgress = ',Math.ceil(loaded/total* 100) +" %");
             var progress = Math.ceil(loaded/total* 100);
             if(progress <= 100){
                 $scope.loadingProgress = Math.ceil(loaded/total * 100);
@@ -53,13 +52,17 @@
         });
 
         $scope.$on('modal.shown', function() {
-            console.log('modal.shown');
-            $scope.pdfURL = {src:vm.currentDoc.url};
-            $scope.image =  vm.currentDoc.url;
+            if(vm.currentDoc.sku == 'mvr' ){
+                $scope.image =  vm.currentDoc.url;
+            }else if(vm.currentDoc.sku == 'bg'){
+                $scope.pdfURL = {src:vm.currentDoc.url};
+            }
         });
 
         $scope.$on('modal.hidden', function() {
             $scope.image  = "";
+            vm.currentDoc = "";
+            $scope.pdfURL = {src:""}
         });
 
         vm.viewDoc = function(doc) {
