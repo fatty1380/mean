@@ -8,7 +8,8 @@
             props:{
                 truck:"",
                 trailer:"",
-                started:""
+                started:"",
+                avatar:""
             }
         };
 

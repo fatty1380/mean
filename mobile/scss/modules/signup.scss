@@ -471,8 +471,10 @@ $but-height: 90px;
   .pane{background: none;}
 
   .round-avatar{
-    border-radius: 40px;
+    border-radius: 50px;
     border: 2px solid white;
+    width: 75px;
+    height: 75px;
   }
 
   input::-webkit-input-placeholder{
