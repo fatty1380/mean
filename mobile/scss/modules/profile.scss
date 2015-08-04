@@ -3,7 +3,7 @@
   left: 15px;
   right: 15px;
   top:65px;
-  height:104px;
+  height:84px;
   text-align: center;
   z-index: 2;
 
@@ -92,12 +92,13 @@
       height: 69px;
       background: $ribbon-bg;
       text-transform: uppercase;
-      padding: 20px 0;
+      padding: 0;
       color: $secondary-text-action;
 
       .tab-item{
         font-weight: bold;
         font-size: 13px;
+        padding: 20px 0;
         line-height: 30px;
         color: #999;
 

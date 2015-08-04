@@ -38,9 +38,9 @@
             {
                 id: '1234abcd5678efab9011211',
                 sku: 'bg',
-                name: 'TrucksSum.pdf',
+                name: 'Lift-truck training',
                 created: '2015-08-11 10:23:05',
-                url: 'TrucksSum.pdf',
+                url: 'http://www.hse.gov.uk/pubns/indg462.pdf',
                 expires: null,
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232'

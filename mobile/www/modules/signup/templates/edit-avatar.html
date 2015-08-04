@@ -1,0 +1,19 @@
+<ion-modal-view class="edit-avatar">
+
+    <ion-header-bar class="bar-positive">
+        <h1 class="title">Edit Avatar</h1>
+    </ion-header-bar>
+
+    <ion-pane>
+        <div class="cropArea">
+            <img-crop image="vm.rawImage" result-image="vm.croppedImage" result-image-size="75" ></img-crop>
+        </div>
+    </ion-pane>
+
+    <ion-footer-bar class="bar bar-footer">
+        <div class="button-bar action-buttons">
+            <button class="button secondary submit" ng-click="modalHide()">Ok</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>

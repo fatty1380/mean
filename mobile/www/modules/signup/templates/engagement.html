@@ -11,9 +11,10 @@
         </div>
     </div>
     <ion-pane class="has-footer">
-        <div class="avatar-wrapper" ng-click="avatarShot()">
-            <div class="avatar">
-                <i class="ico ico-cameraicon ico-middle" ></i>
+        <div class="avatar-wrapper" >
+            <div class="avatar" ng-click="vm.avatarShot()">
+                <i ng-if="!vm.finalImage" class="ico ico-cameraicon ico-middle" ></i>
+                <img ng-if="vm.finalImage" class="round-avatar" ng-src="{{ vm.finalImage }}" />
             </div>
         </div>
 
