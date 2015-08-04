@@ -19,7 +19,8 @@
         }));
 
         it('set form', function() {
-            var form = {testKey: "testValue"}
+            var form = {testKey: "testValue"};
+
             registerCtrl.initForm(form);
             expect(registerCtrl.form).toEqual(form);
         });
