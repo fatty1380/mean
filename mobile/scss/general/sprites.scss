@@ -1,5 +1,5 @@
 .ico {
-  background-image: url('../img/sprite.png');
+  background-image: url('../img/sprite3x.png');
   display: inline-block;
   vertical-align: top;
   pointer-events: none;
@@ -310,19 +310,3 @@
   }
 }
 
-
-/* ----------- iPhone 4, 4s, 5, 5S, 6 ----------- */
-@media only screen
-and (min-device-width: 320px)
-and (max-device-width: 667px)
-and (-webkit-min-device-pixel-ratio: 2) {
-  .ico {background-image: url('../img/sprite2x.png');}
-}
-
-/* ----------- iPhone 6+ ----------- */
-@media only screen
-and (min-device-width: 414px)
-and (max-device-width: 736px)
-and (-webkit-min-device-pixel-ratio: 3) {
-  .ico {background-image: url('../img/sprite3x.png');}
-}
