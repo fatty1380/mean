@@ -14,6 +14,7 @@ $content-body-text: #9b9b9b;
 $secondary-text-action: rgba(255, 255, 255, 0.6);
 $white: #ffffff;
 $tab-text: #807b84;
+$danger: #B13E3E;
 
 /** Context specific variables **/
 $modal-primary-bg: $badge-green;
@@ -35,11 +36,11 @@ $signup-entry-value-text: $white;
 
 $light:                           #fff !default;
 $stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
+$positive:                        $badge-green !default; //#387ef5 !default;
 $calm:                            #11c1f3 !default;
 $balanced:                        #33cd5f !default;
 $energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
+$assertive:                       $danger !default; // #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 
