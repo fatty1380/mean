@@ -8,13 +8,13 @@
             getReviewsByUserID = function (id) {
                 if (!id) return;
 
-                var url = settings.profile + id + '/reviews';
+                var url = settings.profiles + id + '/reviews';
                 return $http.get(url);
             },
             postReviewByUserID = function (id, review) {
                 if (!id) return;
 
-                var url = settings.profile + id + '/reviews';
+                var url = settings.profiles + id + '/reviews';
                 return $http.post(url, review);
             },
             getReviewByID = function (id) {

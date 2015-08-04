@@ -5,14 +5,38 @@
         var vm = this;
         vm.profileData = {};
         vm.reviews = [];
+
         vm.getReviews = function () {
             reviewService
                 .getUserReviews()
-                .then(function (reviews) {
-                    console.log(reviews);
-                    vm.reviews = reviews;
+                .then(function (response) {
+                    console.log('Reviews List', response);
+                    vm.reviews = response.data;
                 })
         };
+
+        //var sampleReview = {
+        //    user: '55b27b1893e595310272f1d0',
+        //    reviewer: null,
+        //    name: 'Anna S',
+        //    email: 'Anna@gmail.com',
+        //    title: 'On Time!',
+        //    text: 'Have been working together for more then 7 years now!',
+        //    rating: 4,
+        //    created: '2014-12-04T00:59:41.249Z',
+        //    modified: '2015-01-06T00:59:41.249Z'
+        //};
+        //
+        //vm.postReview = function (id, review) {
+        //    reviewService
+        //        .postReviewForProfile(id, review)
+        //        .then(function (response) {
+        //            console.log('posted response', response);
+        //        })
+        //};
+
+        //vm.postReview('55b27b1893e595310272f1d0', sampleReview);
+
         vm.getReviews();
 
         vm.endorsementsMap = {
