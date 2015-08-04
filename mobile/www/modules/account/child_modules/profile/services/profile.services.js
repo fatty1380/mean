@@ -1,13 +1,12 @@
 (function () {
     'use strict';
 
-    var profileService = function ($http, registerService ) {
+    var profileService = function ($http, registerService, settings) {
         var profileData = {},
-            url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/',
             profilesList = [],
             getProfileByID = function (id) {
-                if(id) url += id;
-                return $http.get(url);
+                if(!id) return;
+                return $http.get(settings.profile + id);
             },
             getMyProfile = function () {
                 return registerService.me()
@@ -26,7 +25,7 @@
         }
     };
 
-    profileService.$inject = ['$http', 'registerService'];
+    profileService.$inject = ['$http', 'registerService', 'settings'];
 
     angular
         .module('profile')

@@ -26,7 +26,7 @@
             expect(trailersCtrl.trailers.length).toBeGreaterThan(0);
         });
 
-        it('should put data', function() {
+        it('should put data', function(settings) {
             var dataProps = {
                 handle: "handle",
                 props:{
@@ -35,8 +35,8 @@
                     started: "some date"
                 }
             };
-            var url = "http://outset-d.elasticbeanstalk.com/api/users";
-            $httpBackend.expect('PUT', url)
+
+            $httpBackend.expect('PUT', settings.users)
                 .respond(200, {});
 
             registerService.updateUser(dataProps)

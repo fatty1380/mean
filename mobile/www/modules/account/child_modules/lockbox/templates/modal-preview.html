@@ -1,6 +1,6 @@
 <ion-modal-view class="preview">
     <ion-header-bar class="">
-        <button class="button button-clear button-primary preview-cancel-button" ng-click="modal.hide()">Cancel</button>
+        <button class="button button-clear button-primary preview-cancel-button" ng-click="modal.hide()">Close</button>
         <h1 class="title">Preview</h1>
     </ion-header-bar>
 
@@ -13,13 +13,14 @@
         </ion-pane>
         <div class="pdf-container" ng-if="vm.currentDoc.sku == 'bg'">
             <pdfviewer
-                    src="{{ trustSrc(pdfURL.src) }}"
+                    src="{{ vm.trustSrc(pdfURL.src) }}"
                     scale="{{scale}}"
                     pages-to-show="{{pages}}"
-                    on-page-load='pageLoaded(page,total)'
+                    on-page-load='vm.pageLoaded(page,total)'
                     id="viewer"
                     height="100%"
-                    load-progress='loadProgress(loaded, total, state)'>
+                    load-progress='vm.loadProgress(loaded, total, state)'
+                    on-pdf-event='vm.onPdfEvent(type)'>
             </pdfviewer>
         </div>
     </ion-content>

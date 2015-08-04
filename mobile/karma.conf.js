@@ -18,18 +18,25 @@ module.exports = function(config) {
       "www/libs/ionic/js/ionic.bundle.js",
       'node_modules/angular-mocks/angular-mocks.js',
       'www/modules/app/*.js',
+      'www/modules/app/constants/settings.js',
 
       'www/modules/account/account.module.js',
       'www/modules/account/child_modules/profile/controllers/profile.controller.js',
       'www/modules/account/child_modules/profile/profile.module.js',
       'www/modules/account/child_modules/profile/services/profile.services.js',
+      'www/modules/account/child_modules/profile/services/profile.reviews.service.js',
+
+      'www/modules/account/child_modules/lockbox/lockbox.module.js',
+      'www/modules/account/child_modules/lockbox/controllers/*.js',
+      'www/modules/account/child_modules/lockbox/services/*.js',
+      'www/modules/account/child_modules/lockbox/directives/*.js',
 
       'www/modules/signup/signup.modules.js',
       'www/modules/signup/controllers/*.js',
       'www/modules/signup/services/*.js',
 
       'tests/**/*.js',
-      'tests/**/**/*.js'
+      'tests/!**!/!**/!*.js'
     ],
 
 

@@ -1,9 +1,7 @@
 (function () {
     'use strict';
 
-    function registerService ($http) {
-        // var baseUrl = 'http://outset-shadow.elasticbeanstalk.com/api/auth/signup';
-        var baseUrl = 'http://outset-d.elasticbeanstalk.com/';
+    function registerService ($http, settings) {
         var service = {};
         var dataProps = {
             handle:"",
@@ -18,7 +16,7 @@
             grant_type: 'password',
             client_id: 'mobile_v0_1',
             client_secret: 'shenanigans'
-        }
+        };
 
         service.registerUser = registerUser;
         service.signIn = signIn;
@@ -36,19 +34,19 @@
         function registerUser (data) {
             if (!data) return;
            // return requestApi("api/auth/signup" , "post", data)
-            return requestApi("oauth/signup" , "post", data)
+            return requestApi(settings.signup , "post", data)
                 .then(handleSuccess, handleError);
         }
 
         function updateUser (data) {
             if (!data) return;
-            return requestApi("api/users" , "put", data, true)
+            return requestApi(settings.users , "put", data, true)
                 .then(handleSuccess, handleError);
         }
 
         function updateUserProps (data) {
             if (!data) return;
-            return requestApi("api/users/me/props" , "put", data, true)
+            return requestApi(settings.usersProps, "put", data, true)
                 .then(handleSuccess, handleError);
         }
 
@@ -58,28 +56,28 @@
             data.grant_type = signinData.grant_type;
             data.client_id = signinData.client_id;
             data.client_secret = signinData.client_secret;
-            return  requestApi("oauth/token/" , "post", data )
+            return requestApi(settings.token, "post", data )
                 .then(handleSuccess, handleError);
         }
 
         function signOut (data) {
             if (!data) return;
-            return  requestApi("api/auth/signout" , "get" )
+            return  requestApi(settings.signout , "get" )
                 .then(handleSuccess, handleError);
         }
 
         function me () {
-            return  requestApi("api/users/me" , "get" )
+            return  requestApi(settings.usersProfile, "get" )
                 .then(handleSuccess, handleError);
         }
 
         function getProfiles () {
-            return  requestApi("api/profiles" , "get" )
+            return  requestApi(settings.profiles , "get" )
                 .then(handleSuccess, handleError);
         }
 
         function getProfilesID (profileId) {
-            return  requestApi("api/profiles/"+profileId , "get" )
+            return  requestApi(settings.profiles + profileId , "get" )
                 .then(handleSuccess, handleError);
         }
 
@@ -90,7 +88,7 @@
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
 
             return $http ({
-                url: baseUrl + apiUrl,
+                url: apiUrl,
                 method: method,
                 data: !needSerialize ? serializeData(data) : data
             })
@@ -129,12 +127,14 @@
                 ;
             return( source );
         }
-    };
+    }
+
+    registerService.$inject = ['$http', 'settings'];
 
     angular
         .module('signup')
         .factory('registerService', registerService);
-    registerService.$inject = ['$http'];
+
 })();
 
 

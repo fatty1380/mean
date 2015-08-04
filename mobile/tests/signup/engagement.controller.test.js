@@ -19,7 +19,8 @@
         }));
 
         it('set form', function() {
-            var form = {testKey: "testValue"}
+            var form = {testKey: "testValue"};
+
             engagementCtrl.initEngagementForm(form);
             expect(engagementCtrl.form).toEqual(form);
         });
