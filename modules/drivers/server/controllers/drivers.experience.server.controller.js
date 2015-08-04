@@ -1,12 +1,11 @@
 'use strict';
 var _ = require('lodash');
 
-exports.getExperience = function getExperience(req, res) {
+exports.read = function getExperience(req, res) {
     req.log.debug({ module: 'drivers', func: 'getExperience' }, 'Loading Experience');
 
     if (!!req.profile) {
         req.log.debug({ module: 'drivers', func: 'getExperience', current: req.profile.experience, body: req.body }, 'Returning props from req.profile');
-
         return res.json(req.profile.experience);
     }
 
@@ -18,43 +17,65 @@ exports.getExperience = function getExperience(req, res) {
     return res.status(404);
 };
 
-exports.addExperience = function addExperience(req, res) {
+exports.create = function addExperience(req, res) {
     req.log.debug({ module: 'drivers', func: 'addExperience', current: req.user.experience, body: req.body }, 'Start');
 
     req.user.experience.push(req.body);
-
-    return req.user.save()
+    
+    return saveParent(req, res, 'addExperience')
         .then(function (user) {
-            req.log.debug({ module: 'drivers', func: 'addExperience', result: user.experience }, 'Result');
-
             req.user = user;
 
             res.json(req.user.experience);
-        }, function (err) {
-            req.log.error({ module: 'drivers', func: 'addExperience', error: err }, 'unable to add Experience for driver user');
-            return res.send(400, {
-                message: 'Unable to save changes at this time. Please try again later',
-                error: err.stack
-            });
         });
 };
 
-exports.setExperience = function setExperience(req, res) {
+/**
+ * setExperience
+ * @description Updates an existing experience item with the contents of the body
+ */
+exports.update = function setExperience(req, res) {
     if (!req.experience) {
         return req.status(404).send({ message: 'Experience Item not found' });
     }
 
     req.experience = _.extend(req.experience, req.body);
-
-    return req.experience.save()
-        .then(function (experience) {
-            req.log.debug({ module: 'drivers', func: 'setExperience', result: experience }, 'Result');
-
-            req.experience = experience;
+    
+    
+    return saveParent(req, res, 'setExperience')
+        .then(function (user) {
+            req.experience = user.experience;
 
             res.json(req.experience);
+        });
+}
+
+/**
+ * deleteExperience
+ * @description Removes an existing experience item from the user's obejct.
+ */
+exports.remove = function deleteExperience(req, res) {
+    if (!req.experience) {
+        return req.status(404).send({ message: 'Experience Item not found' });
+    }
+    
+    req.experience.remove();
+    
+    return saveParent(req, res, 'deleteExperience')
+        .then(function (user) {
+            req.experience = user.experience;
+
+            res.json(req.experience);
+        });
+}
+
+function saveParent(req, res, func) {
+    return req.user.save()
+        .then(function (user) {
+            req.log.debug({ module: 'drivers', func: func, result: user.experience }, 'Result');
+            return user;
         }, function (err) {
-            req.log.error({ module: 'drivers', func: 'setExperience', error: err }, 'unable to update Experience for driver user');
+            req.log.error({ module: 'drivers', func: func, error: err }, 'unable to Save updated user object');
             return res.send(400, {
                 message: 'Unable to save changes at this time. Please try again later',
                 error: err.stack

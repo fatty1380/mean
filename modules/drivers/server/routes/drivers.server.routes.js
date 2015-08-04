@@ -16,7 +16,8 @@ module.exports = function (app) {
          .get(users.requiresLogin, drivers.getExperience);
          
      app.route('/api/users/me/experience/:experienceId')
-         .put(users.requiresLogin, drivers.setExperience);
+         .put(users.requiresLogin, drivers.setExperience)
+         .delete(users.requiresLogin, drivers.removeExperience);
 
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
