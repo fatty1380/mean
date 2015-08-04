@@ -46,6 +46,7 @@ _.extend(exports, {
     getProps: props.getProperties,
 
     getExperience: exp.getExperience,
+    addExperience: exp.addExperience,
     setExperience: exp.setExperience
 });
 

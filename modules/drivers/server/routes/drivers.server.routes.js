@@ -9,11 +9,14 @@ module.exports = function (app) {
      */
      app.route('/api/users/me/props')
          .put(users.requiresLogin, drivers.setProps)
-        .get(users.requiresLogin, drivers.getProps);
+         .get(users.requiresLogin, drivers.getProps);
         
      app.route('/api/users/me/experience')
-         .put(users.requiresLogin, drivers.setExperience)
-        .get(users.requiresLogin, drivers.getExperience);
+         .post(users.requiresLogin, drivers.addExperience)
+         .get(users.requiresLogin, drivers.getExperience);
+         
+     app.route('/api/users/me/experience/:experienceId')
+         .put(users.requiresLogin, drivers.setExperience);
 
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
@@ -23,19 +26,23 @@ module.exports = function (app) {
         .post(users.requiresLogin, drivers.create);
 
     // Setup routes for getting a User's driver profile
+    // @deprecated
     app.route('/api/users/:userId/driver')
         .get(drivers.driverByUserID, drivers.read);
 
+    // @deprecated
     app.route('/api/drivers/:driverId')
         .get(drivers.read)
         .put(users.requiresLogin, drivers.hasAuthorization, drivers.update)
         .delete(users.requiresLogin, drivers.hasAuthorization, drivers.delete);
 
 
+    // @deprecated
     app.route('/api/drivers/:driverId/resume')
         .post(users.requiresLogin, drivers.hasAuthorization, drivers.uploadResume)
         .get(users.requiresLogin, drivers.refreshResume);
 
+    // @deprecated - see 'lockbox' api
     app.route('/api/drivers/:driverId/report/:reportSku')
         .get(users.requiresLogin, drivers.refreshReport);
 
