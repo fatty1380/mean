@@ -1,19 +1,67 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl(registerService, reviewService) {
+    function ProfileCtrl(registerService, reviewService, experienceService) {
         var vm = this;
         vm.profileData = {};
         vm.reviews = [];
+        vm.experience = [];
+
         vm.getReviews = function () {
             reviewService
                 .getUserReviews()
-                .then(function (reviews) {
-                    console.log(reviews);
-                    vm.reviews = reviews;
+                .then(function (response) {
+                    console.log('Reviews List', response);
+                    vm.reviews = response.data;
                 })
         };
+        vm.getExperience = function () {
+            experienceService
+                .getUserExperience()
+                .then(function (response) {
+                    console.log('Experience List', response);
+                    vm.experience = response.data;
+                })
+        };
+        vm.postReview = function (id, review) {
+            reviewService
+                .postReviewForProfile(id, review)
+                .then(function (response) {
+                    console.log('posted response', response);
+                })
+        };
+        vm.postExperience = function (experience) {
+            experienceService
+                .postUserExperience(experience)
+                .then(function (response) {
+                    console.log('posted experience', response);
+                })
+        };
+
+        //var sampleReview = {
+        //    user: '55b27b1893e595310272f1d0',
+        //    reviewer: null,
+        //    name: 'Anna S',
+        //    email: 'Anna@gmail.com',
+        //    title: 'On Time!',
+        //    text: 'Have been working together for more then 7 years now!',
+        //    rating: 4,
+        //    created: '2014-12-04T00:59:41.249Z',
+        //    modified: '2015-01-06T00:59:41.249Z'
+        //};
+        //
+
+        //var experienceSample = {
+        //    title: 'Aston Martin Driving Experience',
+        //    description: 'Ever fancied yourself as the next James Bond? Why not have a go at a Trackdays.co.uk Aston Martin Driving Experience at one of our many venues across the UK?',
+        //    startDate: '2007-09-18',
+        //    endDate: '2008-02-12',
+        //    location: 'San Francisco, CA'
+        //};
+        //vm.postExperience(experienceSample);
+
         vm.getReviews();
+        vm.getExperience();
 
         vm.endorsementsMap = {
             T : {
@@ -41,51 +89,7 @@
                 ico: 'ico-tankhazardousactive'
             }
         };
-        // experience array data example. Rendering this till the user object will contain needed data
-        vm.experience = [
-            {
-                title: 'Diamond Dan\'s  truck lines',
-                description: 'Long Haul OTR Driver hauling Box Freight in West 11. Primrily dealing with HazMat materials hauling over high mountain passes',
-                startDate : '2007-12-03',
-                endDate : '2014-11-06',
-                location : 'Seattle, WA'
-            },
-            {
-                title: 'Justdrive freight haulers',
-                description: 'Short Haul, Long Haul, Box, Auto, Double, Triples and Tanks. I did it all.',
-                startDate : '2007-12-03',
-                endDate : '2014-11-06',
-                location : 'Seattle, WA'
-            },
-            {
-                title: 'local courier services',
-                description: 'Etiam porta sem malesuada magna mollis eusimod. Maecenas sed diam eget risus varius blandit sit amet non magna.',
-                startDate : '2007-12-03',
-                endDate : '2014-11-06',
-                location : 'Seattle, WA'
-            },
-            {
-                title: 'Diamond Dan\'s  truck lines',
-                description: 'Long Haul OTR Driver hauling Box Freight in West 11. Primrily dealing with HazMat materials hauling over high mountain passes',
-                startDate : '2007-12-03',
-                endDate : '2014-11-06',
-                location : 'Seattle, WA'
-            },
-            {
-                title: 'Justdrive freight haulers',
-                description: 'Short Haul, Long Haul, Box, Auto, Double, Triples and Tanks. I did it all.',
-                startDate : '2007-12-03',
-                endDate : '2014-11-06',
-                location : 'Seattle, WA'
-            },
-            {
-                title: 'local courier services',
-                description: 'Etiam porta sem malesuada magna mollis eusimod. Maecenas sed diam eget risus varius blandit sit amet non magna.',
-                startDate : '2007-12-03',
-                endDate : '2014-11-06',
-                location : 'Seattle, WA'
-            }
-        ];
+
         vm.me = (function(){
             registerService.me()
                 .then(function (response) {
@@ -97,7 +101,7 @@
         })();
     }
 
-    ProfileCtrl.$inject = ['registerService', 'reviewService'];
+    ProfileCtrl.$inject = ['registerService', 'reviewService', 'experienceService'];
 
     angular
         .module('account')

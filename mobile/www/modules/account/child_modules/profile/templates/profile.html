@@ -20,15 +20,15 @@
             <ion-tab title="REVIEWS">
                 <ion-scroll class="reviews-list">
                     <ion-list>
-                        <ion-item>
+                        <ion-item ng-repeat="review in vm.reviews">
                             <div class="ico ico-avatar"></div>
                             <div class="review">
                                 <div class="top">
-                                    <div class="ratings" data-mark="4"></div>
-                                    <div class="time"><i class="ico ico-timesmall"></i> 2 Months ago</div>
+                                    <div class="ratings" data-mark="{{review.rating}}"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> {{review.created | date : 'mediumDate'}}</div>
                                 </div>
-                                <strong class="title">Username - Company Name</strong>
-                                <div class="message">Etiam porta sem malesuada magna mollis eusimod. Etiam porta sem malesuada magna mollis eusimod.</div>
+                                <strong class="title">{{review.name}} - {{review.title}}</strong>
+                                <div class="message">{{review.text}}</div>
                                 <div class="button-holder">
                                     <button class="button button-small">Reply</button>
                                 </div>

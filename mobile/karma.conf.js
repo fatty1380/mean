@@ -36,7 +36,7 @@ module.exports = function(config) {
       'www/modules/signup/services/*.js',
 
       'tests/**/*.js',
-      'tests/!**!/!**/!*.js'
+      'tests/**/**/*.js'
     ],
 
 
@@ -83,4 +83,4 @@ module.exports = function(config) {
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false
   })
-}
+};
