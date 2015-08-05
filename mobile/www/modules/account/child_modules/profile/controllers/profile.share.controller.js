@@ -1,8 +1,9 @@
 (function() {
     'use strict';
 
-    function ProfileShareCtrl() {
+    function ProfileShareCtrl(profileData) {
         var vm = this;
+        vm.profileData = profileData;
 
         vm.documents = [
             {
@@ -29,7 +30,7 @@
 
     }
 
-    ProfileShareCtrl.$inject = [];
+    ProfileShareCtrl.$inject = ['profileData'];
 
     angular
         .module('account')

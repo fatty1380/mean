@@ -9,6 +9,7 @@
                 truck:"",
                 trailer:"",
                 started:"",
+                freight:"computers",
                 avatar:""
             }
         };

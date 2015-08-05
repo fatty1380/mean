@@ -1,57 +1,95 @@
 (function () {
     'use strict';
 
+    var getProfileData  = function (registerService) {
+        return registerService
+            .me()
+            .then(function (response) {
+                if(response.success) {
+                    return response.message.data;
+                }
+            });
+    };
+
+
+
     angular
         .module('account')
         .config(['$stateProvider', function ($stateProvider) {
+
             $stateProvider
+
                 .state('account', {
                     url: '/account',
                     abstract: true,
                     templateUrl: 'modules/account/templates/account.html'
                 })
+
                 .state('account.profile', {
                     url: '/profile',
                     views: {
                         'profile': {
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                            controller: 'ProfileCtrl as vm'
+                            controller: 'ProfileCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
                         }
                     }
                 })
+
                 .state('account.profile.share', {
                     url: '/share',
                     views:{
                         '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share.html'
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share.html',
+                            controller: 'ProfileShareCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
                         }
                     }
                 })
+
                 .state('account.profile.share.content', {
                     url: '/content',
                     views:{
                         '@':{
                             templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html',
-                            controller: 'ProfileShareCtrl as vm'
+                            controller: 'ProfileShareCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
                         }
                     }
                 })
+
                 .state('account.profile.request', {
                     url: '/request',
                     views: {
                         '@': {
-                            templateUrl: 'modules/account/child_modules/profile/templates/request-review.html'
+                            templateUrl: 'modules/account/child_modules/profile/templates/request-review.html',
+                            controller: 'ProfileRequestReviewCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
                         }
                     }
                 })
+
                 .state('account.profile.edit', {
                     url: '/edit',
                     views:{
                         '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/profile-edit.html'
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-edit.html',
+                            controller: 'ProfileEditCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
                         }
                     }
                 })
+
                 .state('account.lockbox', {
                     url: '/lockbox',
                     views: {
@@ -61,6 +99,7 @@
                         }
                     }
                 })
+
                 .state('account.lockbox.share', {
                     url: '/share',
                     views:{
@@ -70,6 +109,7 @@
                         }
                     }
                 })
+
                 .state('account.lockbox.edit', {
                     url: '/edit',
                     views:{
@@ -79,6 +119,7 @@
                         }
                     }
                 })
+
                 .state('account.lockbox.recipient', {
                     url: '/share/recipient',
                     views:{
@@ -87,6 +128,7 @@
                         }
                     }
                 })
+
                 .state('account.activity', {
                     url: '/activity',
                     views: {
@@ -95,6 +137,7 @@
                         }
                     }
                 })
+
                 .state('account.messages', {
                     url: '/messages',
                     views: {

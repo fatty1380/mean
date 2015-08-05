@@ -1,9 +1,9 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl(registerService, reviewService, experienceService) {
+    function ProfileCtrl(reviewService, experienceService, profileData) {
         var vm = this;
-        vm.profileData = {};
+        vm.profileData = profileData;
         vm.reviews = [];
         vm.experience = [];
 
@@ -89,19 +89,19 @@
                 ico: 'ico-tankhazardousactive'
             }
         };
-
-        vm.me = (function(){
-            registerService.me()
-                .then(function (response) {
-                    if(response.success) {
-                        vm.profileData = response.message.data;
-                        console.log('-=-=-=-=-=-=-=-=-=-=-=-=- USER  OBJECT -=-=-=-=-=-=-=-=-=-=-=-=-', vm.profileData);
-                    }
-                });
-        })();
+        //
+        //vm.me = (function(){
+        //    registerService.me()
+        //        .then(function (response) {
+        //            if(response.success) {
+        //                vm.profileData = response.message.data;
+        //                console.log('-=-=-=-=-=-=-=-=-=-=-=-=- USER  OBJECT -=-=-=-=-=-=-=-=-=-=-=-=-', vm.profileData);
+        //            }
+        //        });
+        //})();
     }
 
-    ProfileCtrl.$inject = ['registerService', 'reviewService', 'experienceService'];
+    ProfileCtrl.$inject = ['reviewService', 'experienceService', 'profileData'];
 
     angular
         .module('account')

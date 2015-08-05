@@ -4,7 +4,9 @@
             <h1 class="title">Edit Profile Page</h1>
         </ion-header-bar>
         <div class="profile-visual compact">
-            <div class="photo"><img src="assets/img/profile-photo.jpg" alt=""/></div>
+            <div class="photo">
+                <img ng-if="vm.profileData.props.avatar" src="{{vm.profileData.props.avatar}}" alt=""/>
+            </div>
             <div class="text">
                 <strong>Trucker Handle</strong>
                 <em>Driver</em>

@@ -8,7 +8,9 @@
             </button>
         </ion-header-bar>
         <div class="profile-visual">
-            <div class="photo"><img src="assets/img/profile-photo.jpg" alt=""/></div>
+            <div class="photo">
+                <img ng-if="vm.profileData.props.avatar" src="{{vm.profileData.props.avatar}}" alt=""/>
+            </div>
             <div class="contacts-amount">
                 <span class="ico ico-avatar ico-middle"></span>
                 <strong>{{vm.profileData.friends.length}}</strong>
