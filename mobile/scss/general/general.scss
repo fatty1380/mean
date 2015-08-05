@@ -22,30 +22,30 @@ body{
   z-index: 2;
 
   /** full size header and content pane **/
-  &.full-size{height: 180px;}
+  &.full-size{height: 200px;}
   &.full-size ~ .pane{
-    top: 180px;
+    top: 200px;
     height: auto;
   }
 
   /** mid-size size header and content pane **/
-  &.mid-size{height: 150px;}
+  &.mid-size{height: 170px;}
   &.mid-size ~ .pane{
-    top: 150px;
+    top: 170px;
     height: auto;
   }
 
   /** compact size header and content pane **/
-  &.compact-size{height: 120px;}
+  &.compact-size{height: 140px;}
   &.compact-size ~ .pane{
-    top: 120px;
+    top: 140px;
     height: auto;
   }
 
   /** min size header and content pane **/
-  &.min-size{height: 44px;}
+  &.min-size{height: 64px;}
   &.min-size ~ .pane{
-    top: 44px;
+    top: 64px;
     height: auto;
   }
 

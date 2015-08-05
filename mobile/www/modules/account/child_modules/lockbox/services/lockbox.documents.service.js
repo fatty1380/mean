@@ -20,7 +20,7 @@
                 sku: 'bg',
                 name: 'multirule.pdf',
                 created: '2015-07-11 10:33:05',
-                url: 'http://www.epa.gov/otaq/consumer/420f08027.pdf',
+                url: '420f08027.pdf',
                 expires: null,
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232'
@@ -30,7 +30,7 @@
                 sku: 'bg',
                 name: 'TeachText.pdf',
                 created: '2015-07-11 10:33:05',
-                url: 'http://genesismission.jpl.nasa.gov/educate/scimodule/UnderElem/UnderElem_pdf/TeachText.pdf',
+                url: 'TeachText.pdf',
                 expires: null,
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232222'
@@ -40,7 +40,7 @@
                 sku: 'bg',
                 name: 'Lift-truck training',
                 created: '2015-08-11 10:23:05',
-                url: 'http://www.hse.gov.uk/pubns/indg462.pdf',
+                url: 'indg462.pdf',
                 expires: null,
                 bucket: 'outset-dev',
                 key: 'kajifpaiueh13232'

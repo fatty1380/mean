@@ -26,7 +26,8 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
     "cordova-plugin-camera",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    "cordova-plugin-keyboard"
   ],
   "cordovaPlatforms": [
     "ios",
