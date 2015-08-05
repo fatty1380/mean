@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var engagementCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading, cameraService, $ionicModal, $ionicActionSheet, $base64) {
+    var engagementCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading, cameraService, $ionicModal, $ionicActionSheet) {
 
         var vm = this;
         vm.handle = "";
@@ -68,7 +68,6 @@
 
 
         var takePhoto = function(type){
-
             //for test
            // $scope.modal.show();
 
@@ -86,8 +85,10 @@
             };
             cameraService.getPicture(options).then(function(imageData) {
                 if(imageData) {
-                    $scope.modal.show();
-                    vm.rawImage="data:image/jpeg;base64," + imageData;
+                    $scope.modal.show().then(function(){
+                        vm.rawImage="data:image/jpeg;base64," + imageData;
+                    });
+
                 }
             }, function(err) {
                 console.log("ERROR! "+err);
@@ -96,8 +97,9 @@
         }
 
         $scope.modalHide = function(){
-            $scope.modal.hide();
-            vm.finalImage = vm.croppedImage;
+            $scope.modal.hide().then(function(){
+                vm.finalImage = vm.croppedImage;
+            })
         }
 
         vm.continueToLicense = function() {
@@ -108,7 +110,7 @@
         }
     };
 
-    engagementCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'cameraService', '$ionicModal', '$ionicActionSheet', '$base64' ];
+    engagementCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'cameraService', '$ionicModal', '$ionicActionSheet' ];
 
     angular
         .module('signup')
