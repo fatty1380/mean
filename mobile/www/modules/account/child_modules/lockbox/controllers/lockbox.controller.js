@@ -51,25 +51,27 @@
             $scope.modal = modal;
         });
 
-        $scope.$on('modal.shown', function() {
-            if(vm.currentDoc.sku == 'mvr' ){
-                $scope.image =  vm.currentDoc.url;
-            }else if(vm.currentDoc.sku == 'bg'){
-                $scope.pdfURL = {src:vm.currentDoc.url};
-            }
-        });
 
-        $scope.$on('modal.hidden', function() {
-            $scope.image  = "";
-            vm.currentDoc = "";
-            $scope.pdfURL = {src:""}
-        });
-
-        vm.viewDoc = function(doc) {
-            console.log(doc);
+        vm.openPreview = function(doc) {
             vm.currentDoc = doc;
-            $scope.modal.show();
+            $scope.modal.show().then(function(){
+                console.log("anima end");
+                if(vm.currentDoc.sku == 'mvr' ){
+                    $scope.image =  vm.currentDoc.url;
+                }else if(vm.currentDoc.sku == 'bg'){
+                    $scope.pdfURL = {src:vm.currentDoc.url};
+                }
+            });
         }
+
+        vm.hidePreview = function() {
+            $scope.modal.hide().then(function(){
+                $scope.image  = "";
+                vm.currentDoc = "";
+                $scope.pdfURL = {src:""}
+            });
+        }
+
     }
 
     lockboxCtrl.$inject = [ '$ionicActionSheet', '$ionicModal', '$scope' ,'PDFViewerService', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup'];
