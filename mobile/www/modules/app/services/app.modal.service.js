@@ -35,14 +35,14 @@
         this.show = function (modalName) {
             var modal = this[modalName];
 
-            if(modal) modal.show();
+            if(modal) return modal.show();
             else this.create(modalName);
         };
 
         this.close = function (modalName) {
             var modal = this[modalName];
 
-            if(modal) modal.hide();
+            if(modal) return modal.hide();
         };
 
     };

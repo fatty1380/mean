@@ -135,6 +135,11 @@
 /* lockbox modal preview */
 .preview{
   background-color: transparent;
+  top: 5%;
+  right: 2%;
+  bottom: 5%;
+  left: 2%;
+  width: 96%;
 
   #pdf-view-content{
     background-color: white;
