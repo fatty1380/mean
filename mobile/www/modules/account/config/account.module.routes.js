@@ -124,7 +124,8 @@
                     url: '/share/recipient',
                     views:{
                         '@':{
-                            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share-recipient.html'
+                            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share-recipient.html',
+                            controller: 'LockboxShareRecipientCtrl as vm'
                         }
                     }
                 })

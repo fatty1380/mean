@@ -12,26 +12,33 @@
     </div>
     <ion-pane class="has-footer has-title">
         <div class="content-top">
-            <button class="button button-block">Choose from Contact List</button>
+            <button class="button button-block" ng-click="vm.pickContact()">Choose from Contact List</button>
         </div>
-        <ion-scroll>
-            <div class="list share-form">
-                <label class="item item-input">
-                    <input type="text" placeholder="Phone Number">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Email Address">
-                </label>
-                <label class="item item-input">
-                    <textarea placeholder="Enter message"></textarea>
-                </label>
+
+        <div class="list contacts">
+            <div class="item contact"  ng-repeat="contact in vm.selectedContacts">
+                {{ contact.displayName }}
+                <i class="icon assertive ion-close-circled" ng-click="vm.deleteContact(contact)"></i>
             </div>
-        </ion-scroll>
+        </div>
+
+        <div class="list share-form">
+            <label class="item item-input">
+                <input type="text" placeholder="Phone Number">
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Email Address">
+            </label>
+            <label class="item item-input">
+                <textarea placeholder="Enter message"></textarea>
+            </label>
+        </div>
+
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ui-sref="account.lockbox">Cancel</button>
-            <button class="button primary">Share</button>
+            <button class="button primary" ng-click="vm.share()">Share</button>
         </div>
     </ion-footer-bar>
 </ion-view>
