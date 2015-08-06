@@ -10,8 +10,8 @@
             console.log(' share() ');
         }
 
-       // vm.selectedContacts = [];
-        vm.selectedContacts = [{displayName:"Petya"},{displayName:"John"},{displayName:"Maria"},{displayName:"Nick"}];
+        vm.selectedContacts = [];
+        //vm.selectedContacts = [{displayName:"Petya"},{displayName:"John"},{displayName:"Maria"},{displayName:"Nick"}];
 
         vm.pickContact = function() {
             console.log("pickContact()  ");
