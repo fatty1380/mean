@@ -1,7 +1,7 @@
 <ion-view class="profile-screen">
     <div class="header mid-size">
         <ion-header-bar align-title="center">
-            <button class="button button-clear" ui-sref="account.profile.edit">Edit</button>
+            <button class="button button-clear" ng-click="vm.showModal('profileEdit')">Edit</button>
             <h1 class="title" ng-bind="vm.profileData.displayName">Profile</h1>
             <button class="button button-clear">
                 <i class="ico ico-settingsicon ico-text-top"></i>

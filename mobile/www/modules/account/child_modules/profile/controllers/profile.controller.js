@@ -1,11 +1,20 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl(reviewService, experienceService, profileData) {
+    function ProfileCtrl(reviewService, experienceService, profileData, modalService) {
         var vm = this;
         vm.profileData = profileData;
         vm.reviews = [];
         vm.experience = [];
+
+
+        vm.showModal = function (modalName) {
+            modalService.show(modalName);
+        };
+
+        vm.closeModal = function (modalName) {
+            modalService.close(modalName);
+        };
 
         vm.getReviews = function () {
             reviewService
@@ -101,7 +110,7 @@
         //})();
     }
 
-    ProfileCtrl.$inject = ['reviewService', 'experienceService', 'profileData'];
+    ProfileCtrl.$inject = ['reviewService', 'experienceService', 'profileData', 'modalService'];
 
     angular
         .module('account')
