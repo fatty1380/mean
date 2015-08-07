@@ -15,6 +15,14 @@
             profileEdit: {
                 template: 'modules/account/child_modules/profile/templates/profile-edit.html',
                 service: 'profileEditService'
+            },
+            profileShare: {
+                template: 'modules/account/child_modules/profile/templates/profile-share.html',
+                service: 'profileShareService'
+            },
+            profileRequest: {
+                template: 'modules/account/child_modules/profile/templates/profile-request.html',
+                service: 'profileRequestService'
             }
         });
 })();

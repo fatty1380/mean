@@ -1,17 +1,6 @@
 (function () {
     'use strict';
 
-    var getProfileData  = function (registerService) {
-        return registerService
-            .me()
-            .then(function (response) {
-                if(response.success) {
-                    return response.message.data;
-                }
-            });
-    };
-
-
 
     angular
         .module('account')
@@ -30,10 +19,7 @@
                     views: {
                         'profile': {
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                            controller: 'ProfileCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
+                            controller: 'ProfileCtrl as vm'
                         }
                     }
                 })
@@ -43,10 +29,7 @@
                     views:{
                         '@':{
                             templateUrl: 'modules/account/child_modules/profile/templates/profile-share.html',
-                            controller: 'ProfileShareCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
+                            controller: 'ProfileShareCtrl as vm'
                         }
                     }
                 })
@@ -56,10 +39,7 @@
                     views:{
                         '@':{
                             templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html',
-                            controller: 'ProfileShareCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
+                            controller: 'ProfileShareCtrl as vm'
                         }
                     }
                 })
@@ -69,10 +49,7 @@
                     views: {
                         '@': {
                             templateUrl: 'modules/account/child_modules/profile/templates/request-review.html',
-                            controller: 'ProfileRequestReviewCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
+                            controller: 'ProfileRequestReviewCtrl as vm'
                         }
                     }
                 })
@@ -82,10 +59,7 @@
                     views:{
                         '@':{
                             templateUrl: 'modules/account/child_modules/profile/templates/profile-edit.html',
-                            controller: 'ProfileEditCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
+                            controller: 'ProfileEditCtrl as vm'
                         }
                     }
                 })

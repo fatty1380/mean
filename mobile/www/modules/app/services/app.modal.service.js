@@ -3,6 +3,8 @@
 
     var modalService = function ($ionicModal, $rootScope, $injector, modalTemplates) {
 
+        var currentModalName;
+
         this.create = function (modalName) {
             var service = this,
                 scope = $rootScope.$new(),
@@ -36,14 +38,22 @@
         this.show = function (modalName) {
             var modal = this[modalName];
 
+            currentModalName = modalName;
+
             if(modal) return modal.show();
             else this.create(modalName);
         };
 
         this.close = function (modalName) {
-            var modal = this[modalName];
-
-            if(modal) return modal.hide();
+            if(modalName) {
+                var modal = this[modalName];
+                if(modal) return modal.hide();
+            }else {
+                var currentModal = this[currentModalName];
+                if(currentModal){
+                    return currentModal.hide()
+                }
+            }
         };
 
     };
