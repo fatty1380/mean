@@ -74,6 +74,21 @@ body{
       }
     }
   }
+
+  .bar-subheader{
+    top:50%;
+    margin-top: 10px;
+
+    h3{
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 19px;
+      white-space: normal;
+      margin: 0 20px;
+      text-overflow: initial;
+      color: #fff;
+    }
+  }
 }
 
 /** Action Buttons **/
@@ -234,6 +249,7 @@ body{
       background: none;
       padding: 8px 0 0;
       resize: none;
+      vertical-align: top;
     }
   }
 }

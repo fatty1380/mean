@@ -1,7 +1,7 @@
 <ion-view class="lockbox">
     <div class="header compact-size">
         <ion-header-bar align-title="center">
-            <button class="button button-clear" ui-sref="account.lockbox.edit">Edit</button>
+            <button class="button button-clear" ng-click="vm.showModal('lockboxEdit')">Edit</button>
             <h1 class="title">My Lockbox</h1>
             <button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>
         </ion-header-bar>
@@ -22,7 +22,7 @@
                 </li>
             </ul>
         </ion-scroll>
-        <button class="button content-button" ui-sref="account.lockbox.share">
+        <button class="button content-button" ng-click="vm.showModal('lockboxShare')">
             <i class="ico ico-share"></i>
             Share
         </button>
