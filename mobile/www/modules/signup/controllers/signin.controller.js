@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function signinCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService) {
+    function signinCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService, userService) {
         var vm = this;
 
         vm.user = {
@@ -33,7 +33,6 @@
                         tokenService.set('access_token', response.message.data.access_token);
                         tokenService.set('refresh_token', response.message.data.refresh_token);
                         tokenService.set('token_type', response.message.data.token_type);
-                        $state.go('account.profile');
                     } else {
                         vm.showPopup(JSON.stringify(response));
                     }
@@ -295,7 +294,7 @@
         });
     }
 
-    signinCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
+    signinCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService', 'userService'];
 
     angular
         .module('signup')

@@ -38,7 +38,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button" ui-sref="account.profile.request"><i class="ico ico-request-review"></i>Request Review</button>
+                <button class="button content-button" ng-click="vm.modal.show('profileRequest')"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
             <ion-tab title="PROFILE">
                 <ion-scroll class="profile-list">
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </ion-scroll>
-                <button class="button content-button" ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ng-click="vm.modal.show('profileShare')"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
             <ion-tab title="EXPERIENCE">
                 <ion-scroll class="experience-list">
@@ -87,7 +87,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button"  ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ng-click="vm.modal.show('profileShare')"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
         </ion-tabs>
     </ion-pane>

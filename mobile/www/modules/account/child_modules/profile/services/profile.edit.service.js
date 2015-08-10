@@ -1,13 +1,20 @@
 (function() {
     'use strict';
 
-    function profileEditService() {
+    function profileEditService(userService, modalService) {
         var vm = this;
 
+        vm.modal = modalService;
+
+        vm.profileData = userService.profileData;
+
+        vm.close = function () {
+
+        }
 
     }
 
-    profileEditService.$inject = [];
+    profileEditService.$inject = ['userService', 'modalService'];
 
     angular
         .module('profile')
