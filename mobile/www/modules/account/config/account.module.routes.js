@@ -129,21 +129,22 @@
                 //    }
                 //})
 
-                .state('account.activity', {
-                    url: '/activity',
-                    views: {
-                        'activity': {
-                            templateUrl: 'modules/account/child_modules/activity/templates/activity.html'
-                        }
-                    }
-                })
-
                 .state('account.messages', {
                     url: '/messages',
                     views: {
                         'messages': {
                             templateUrl: 'modules/account/child_modules/messages/templates/messages.html',
                             controller: 'messagesCtrl as vm'
+                        }
+                    }
+                })
+
+                .state('account.activity', {
+                    url: '/activity',
+                    views: {
+                        'activity': {
+                            templateUrl: 'modules/account/child_modules/activity/templates/activity.html',
+                            controller: 'ActivityCtrl as vm'
                         }
                     }
                 })

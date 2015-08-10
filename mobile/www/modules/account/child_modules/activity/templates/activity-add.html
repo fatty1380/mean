@@ -1,0 +1,50 @@
+<ion-modal-view class="activity">
+    <div class="header min-size">
+        <ion-header-bar align-title="center">
+            <button class="button button-clear" ng-click="vm.close('activityAdd')">Close</button>
+            <h1 class="title">Add Activity</h1>
+        </ion-header-bar>
+    </div>
+    <ion-pane class="pane has-footer add-activity-pane">
+        <ion-scroll>
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label">Name:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Where:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">When:</span>
+                    <input type="text">
+                </label>
+
+                <div class="map"></div>
+
+                <label class="item item-input">
+                    <span class="input-label">Description:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Distance Driven:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Distance Since Last Post:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Freight Hauled:</span>
+                    <input type="text">
+                </label>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button primary">Save</button>
+        </div>
+    </ion-footer-bar>
+</ion-modal-view>

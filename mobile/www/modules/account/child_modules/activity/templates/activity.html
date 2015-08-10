@@ -1,12 +1,37 @@
-<ion-view>
-    <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="edit()">Edit</button>
-        <h1 class="title">Activity</h1>
-        <button class="button button-clear">
-            <i class="ico ico-settingsicon ico-text-top"></i>
+<ion-view class="activity">
+    <div class="header min-size">
+        <ion-header-bar align-title="center">
+            <button class="button button-clear">My Logs</button>
+            <h1 class="title">Activity</h1>
+            <button class="button button-clear">Add Friends</button>
+        </ion-header-bar>
+    </div>
+    <ion-pane class="pane content-pane button-padding-top button-padding-bottom">
+        <button class="button button-positive content-top-button">
+            3 new Updates
+            <i class="ico ico-checkmarkwhite "></i>
         </button>
-    </ion-header-bar>
-    <ion-content>
-        <h2>activity content</h2>
-    </ion-content>
+
+        <ion-scroll>
+            <ion-list ng-repeat="entry in vm.feed">
+                <ion-item class="item">
+                    <div class="ico ico-avatar"></div>
+                    <div class="activity-item" ng-click='vm.showModal("activityDetails", entry)'>
+                        <div class="top">
+                            <div class="time"><i class="ico ico-timesmall"></i>{{ entry.date }}</div>
+                            <div class="message">{{ entry.message }}</div>
+                        </div>
+                        <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled }}</strong>
+                        <i class="ico ico-likessmall"></i><strong class="title">{{ entry.likes }}</strong>
+                    </div>
+                </ion-item>
+                <div class="map"></div>
+            </ion-list>
+        </ion-scroll>
+
+        <button class="button content-button" ng-click='vm.showModal("activityAdd")'>
+            <i class="ico ico-share"></i>
+            Add Activity
+        </button>
+    </ion-pane>
 </ion-view>

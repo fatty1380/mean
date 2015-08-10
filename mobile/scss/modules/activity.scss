@@ -1,0 +1,103 @@
+.activity {
+
+
+  .button-padding-top{
+    padding-top: 44px;
+  }
+
+  .button-padding-bottom{
+    padding-bottom: 44px;
+  }
+
+  .content-pane {
+    bottom: 69px;
+
+    .content-top-button {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      font-size: 14px;
+      min-height: 44px;
+      border-width: 1px 0 0;
+      text-align: left;
+
+      .ico{
+        float: right;
+        margin: 15px 10px 0 0;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .map{
+    background-color: #c3cdff;
+    height:200px;
+  }
+
+  .item{
+    margin-bottom: 2px;
+    padding:16px 16px 0px 16px;
+
+    > .ico{
+      float: left;
+      margin-right: 15px;
+    }
+
+    .activity-item{
+      overflow: hidden;
+
+      .ico {
+        margin: 1px;
+      }
+
+      .top{
+        padding: 5px 0;
+        overflow: hidden;
+        height: auto;
+
+        .time{
+          float: right;
+        }
+      }
+
+      .title{
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0 10px 5px 5px;
+      }
+      .message{
+        margin: 0 0 5px;
+        display: block;
+        display: -webkit-box;
+        overflow: hidden;
+        white-space: normal;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+      }
+    }
+  }
+
+
+  /* add activity */
+  .add-activity-pane {
+    .item {
+      margin:0;
+      padding: 10px;
+      border-top: 1px solid #D2D2D2;
+
+      .input-label {
+        width:auto;
+        font-weight:bold;
+        color: inherit;
+      }
+      input {
+        font-size:16px;
+        color: $content-body-text;
+      }
+    }
+  }
+
+}

@@ -34,6 +34,7 @@
         };
 
         this.show = function (modalName) {
+
             var modal = this[modalName];
 
             if(modal) return modal.show();
