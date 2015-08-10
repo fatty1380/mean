@@ -16,7 +16,9 @@ ngHtml2Js = require('gulp-ng-html2js'),
 argv = require('yargs').argv,
 wrap = require('gulp-wrap'),
 concat = require('gulp-concat'),
-shell = require('gulp-shell')	;
+shell = require('gulp-shell');
+
+var mongoose = require('mongoose');
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {
@@ -152,7 +154,9 @@ gulp.task('mongoose', function (done) {
 });
 
 // Mocha tests task
-gulp.task('mocha', function () {
+gulp.task('mocha', function (done) {
+	var error;
+	
     return gulp.src(testAssets.tests.server)
         .pipe(plugins.mocha({
 		reporter: 'spec',
