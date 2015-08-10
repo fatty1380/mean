@@ -138,6 +138,39 @@ describe('Driver CRUD tests', function () {
 				});
 		});
 		
+		it('should be able to set an arbitrary property in props', function () {
+			_test = this.test;
+			var endpoint = '/api/users/me/props';
+
+			var data = {
+				'shenanigans': 'tomfoolery'
+			};
+
+			log.debug({
+				test: _test.title,
+				data: data
+			}, 'Sending JSON data to %s', endpoint);
+
+			return agent.put(endpoint)
+				.send(data)
+				.expect(200)
+				.then(function (response) {
+					log.debug({
+						test: _test.title,
+						body: response.body,
+						err: response.error
+					}, 'Got Response from %s', endpoint);
+
+					_.each(_.keys(data), function (key) {
+						var val = response.body[key];
+
+						_.isEqual(val, data[key]).should.be.true;
+					});
+
+				});
+
+		});
+		
 		
 
     });
