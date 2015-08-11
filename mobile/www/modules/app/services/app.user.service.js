@@ -20,7 +20,6 @@
         vm.updateUserData = function (dataProps) {
             return registerService.updateUser(dataProps)
             .then(function(data){
-                console.log("update!!!",data.message.data);
                 vm.profileData = data.message.data;
                 return vm.profileData;
             });
