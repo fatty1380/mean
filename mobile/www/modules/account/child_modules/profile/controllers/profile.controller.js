@@ -1,11 +1,41 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl(reviewService, experienceService, profileData) {
+    function ProfileCtrl(reviewService, experienceService, userService, modalService) {
         var vm = this;
-        vm.profileData = profileData;
+
+        vm.modal = modalService;
+        vm.profileData = userService.getUserData();
+
+
+        // THIS IS NEEDED ONLY FOR DEVELOPMENT
+        // Function below is needed only for cases,
+        // when you are loading state skipping the login stage.
+        // For example directly loading profile state,
+        // IN THE REGULAR APP WORKFLOW userService will already contain
+        // all needed profile data.
+
+        (function () {
+            var userPromise = userService.getUserData();
+            if(userPromise.then){
+                userPromise.then(function (data) {
+                    vm.profileData = data;
+                })
+            }
+        })();
+
+
         vm.reviews = [];
         vm.experience = [];
+
+
+        vm.showModal = function (modalName) {
+            modalService.show(modalName);
+        };
+
+        vm.closeModal = function (modalName) {
+            modalService.close(modalName);
+        };
 
         vm.getReviews = function () {
             reviewService
@@ -101,7 +131,7 @@
         //})();
     }
 
-    ProfileCtrl.$inject = ['reviewService', 'experienceService', 'profileData'];
+    ProfileCtrl.$inject = ['reviewService', 'experienceService', 'userService', 'modalService'];
 
     angular
         .module('account')

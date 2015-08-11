@@ -8,9 +8,21 @@
                 template: 'modules/account/child_modules/lockbox/templates/lockbox-share.html',
                 service: 'lockboxShareService'
             },
-            lockboxShareRecipient: {
-                template: 'modules/account/child_modules/lockbox/templates/lockbox-share-recipient.html',
-                service: 'lockboxShareRecipientService'
+            lockboxEdit: {
+                template: 'modules/account/child_modules/lockbox/templates/lockbox-edit.html',
+                service: 'lockboxEditService'
+            },
+            profileEdit: {
+                template: 'modules/account/child_modules/profile/templates/profile-edit.html',
+                service: 'profileEditService'
+            },
+            profileShare: {
+                template: 'modules/account/child_modules/profile/templates/profile-share.html',
+                service: 'profileShareService'
+            },
+            profileRequest: {
+                template: 'modules/account/child_modules/profile/templates/profile-request.html',
+                service: 'profileRequestService'
             }
         });
 })();

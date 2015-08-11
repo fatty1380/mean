@@ -1,12 +1,21 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ( $ionicActionSheet, $ionicModal, $scope, PDFViewerService, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup) {
+    function lockboxCtrl ($ionicModal, $scope, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup, modalService) {
         var vm = this;
 
         vm.lockboxDocuments = lockboxDocuments;
         vm.addDocsPopup = lockboxDocuments.addDocsPopup;
         vm.currentDoc = "";
+
+
+        vm.showModal = function (modalName) {
+            modalService.show(modalName);
+        };
+
+        vm.closeModal = function (modalName) {
+            modalService.close(modalName);
+        };
 
         vm.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
@@ -18,7 +27,7 @@
                 case "loadStart":
                     $ionicLoading.show({
                         template: 'PDF Loading. Please Wait.'
-                    })
+                    });
                     break;
                 case 'loadComplete':
                     $ionicLoading.hide();
@@ -62,7 +71,7 @@
                     $scope.pdfURL = {src:vm.currentDoc.url};
                 }
             });
-        }
+        };
 
         vm.hidePreview = function() {
             $scope.modal.hide().then(function(){
@@ -74,7 +83,7 @@
 
     }
 
-    lockboxCtrl.$inject = [ '$ionicActionSheet', '$ionicModal', '$scope' ,'PDFViewerService', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup'];
+    lockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'modalService'];
 
     angular
         .module('lockbox', [ 'pdf' ])

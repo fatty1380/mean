@@ -3,22 +3,6 @@
   .bar{
     background:none
   }
-  .bar{
-    &.bar-subheader{
-      top:50%;
-      margin-top: 10px;
-
-      h3{
-        font-weight: normal;
-        font-size: 15px;
-        line-height: 19px;
-        white-space: normal;
-        margin: 0 20px;
-        text-overflow: initial;
-        color: #fff;
-      }
-    }
-  }
 
   .content-pane {
     bottom: 69px;
@@ -156,6 +140,11 @@
 /* lockbox modal preview */
 .preview{
   background-color: transparent;
+  top: 5%;
+  right: 2%;
+  bottom: 5%;
+  left: 2%;
+  width: 96%;
 
   #pdf-view-content{
     background-color: white;
