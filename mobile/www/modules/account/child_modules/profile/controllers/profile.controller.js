@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl($scope, reviewService, experienceService, userService, modalService, $ionicModal, $ionicActionSheet, registerService, cameraService) {
+    function ProfileCtrl($scope, reviewService, experienceService, userService, modalService, cameraService) {
         var vm = this;
 
         vm.modal = modalService;
@@ -113,10 +113,9 @@
         vm.closeModal = function (modalName) {
             modalService.close(modalName);
         };
-
     }
 
-    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'modalService', '$ionicModal', '$ionicActionSheet', 'registerService', 'cameraService'];
+    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'modalService', 'cameraService'];
 
     angular
         .module('account')

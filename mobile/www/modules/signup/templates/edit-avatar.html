@@ -7,14 +7,14 @@
     <ion-pane>
         <ion-scroll>
             <div class="cropArea">
-                <img-crop image="vm.modal.rawImage" result-image="vm.modal.croppedImage" result-image-size="100" ></img-crop>
+                <img-crop image="vm.rawImage" result-image="vm.croppedImage" result-image-size="100" ></img-crop>
             </div>
         </ion-scroll>
     </ion-pane>
 
     <ion-footer-bar class="bar bar-footer">
         <div class="button-bar action-buttons">
-            <button class="button secondary submit" ng-click="vm.closeModal()">Ok</button>
+            <button class="button secondary submit" ng-click="vm.updateAvatar()">Ok</button>
         </div>
     </ion-footer-bar>
 

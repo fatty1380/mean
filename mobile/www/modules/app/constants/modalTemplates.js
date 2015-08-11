@@ -26,7 +26,7 @@
             },
             avatarEdit: {
                 template: 'modules/signup/templates/edit-avatar.html',
-                service: 'cameraService'
+                service: 'profileAvatarService'
             }
         });
 })();
