@@ -51,6 +51,26 @@
                     }
                 })
 
+                .state('account.profile.friends', {
+                    url: '/friends',
+                    views: {
+                        '@': {
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-friends.html',
+                            controller: 'FriendsCtrl as vm'
+                        }
+                    }
+                })
+
+                .state('account.profile.add.friends', {
+                    url: '/addFriends',
+                    views: {
+                        '@': {
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-friends-add.html',
+                            controller: 'AddFriendsCtrl as vm'
+                        }
+                    }
+                })
+
                 .state('account.profile.share.content', {
                     url: '/content',
                     views:{
@@ -147,6 +167,8 @@
                         }
                     }
                 })
+
+
         }])
 
 })();

@@ -23,6 +23,10 @@
             profileRequest: {
                 template: 'modules/account/child_modules/profile/templates/profile-request.html',
                 service: 'profileRequestService'
+            },
+            avatarEdit: {
+                template: 'modules/signup/templates/edit-avatar.html',
+                service: 'profileAvatarService'
             }
         });
 })();

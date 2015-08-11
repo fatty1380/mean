@@ -13,7 +13,8 @@
             </div>
         </div>
     </div>
-    <ion-pane class="has-footer">
+    <ion-pane class="has-footer edit-pane">
+
         <ion-scroll>
             <div class="list edit-fields-list">
                 <label class="item item-input">
@@ -39,6 +40,10 @@
                 </label>
             </div>
         </ion-scroll>
+        <button class="button content-button" ng-click="vm.logout()">
+            <i class="ico ico-share"></i>
+           Log Out
+        </button>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">

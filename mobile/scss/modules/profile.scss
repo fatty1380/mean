@@ -308,3 +308,84 @@
   }
 }
 
+
+
+.friends-screen {
+
+  .friends-pane {
+    padding-bottom: 44px;
+
+    input {
+      height: 40px;
+      width: 100%;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 14px;
+      color: white;
+    }
+
+    input::-webkit-input-placeholder {
+      color:white
+    }
+
+    .icon {
+      font-size: 24px;
+      padding-right: 14px;
+    }
+
+    .friends-list {
+
+      .item {
+
+        border-top: 1px solid #ddd;
+
+        .item-content {
+          padding: 5px 0 0 10px;
+          display: inline-block;
+        }
+
+        .button-small {
+          position: absolute;
+          top: 50%;
+          right: 15px;
+          margin-top: -15px;
+          padding: 0 20px;
+        }
+
+        > .ico{
+          float: left;
+        }
+
+      }
+
+      .item-divider {
+        background-color: #2D729B;
+        color: white;
+
+        .button-small {
+          display:none;
+        }
+
+        .item-content {
+          padding: 0;
+        }
+
+        .ico {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .search-bar {
+    background-color: #76a2bd;
+  }
+
+}
+
+
+.edit-pane{
+  padding-bottom: 42px;
+}
+
+
