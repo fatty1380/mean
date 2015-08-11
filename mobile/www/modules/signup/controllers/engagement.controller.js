@@ -102,10 +102,21 @@
             })
         }
 
+
+        vm.createStartedDateObject = function (started) {
+            if(!started) return '';
+            var startedArray = started.split('-');
+
+            return new Date(startedArray[0], startedArray[1]);
+        };
+
         vm.continueToLicense = function() {
-            registerService.dataProps.props.started = vm.started;
+            registerService.dataProps.props.started = vm.createStartedDateObject(vm.started);
             registerService.dataProps.props.avatar = vm.finalImage;
             registerService.dataProps.handle = vm.handle;
+            registerService.dataProps.props.company = 'Apple';
+            registerService.dataProps.props.freight = 'computers';
+            registerService.dataProps.props.truck = 'volvo';
             $state.go('signup/license');
         }
     };

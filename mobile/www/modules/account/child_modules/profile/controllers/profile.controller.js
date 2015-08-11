@@ -19,6 +19,7 @@
             var userPromise = userService.getUserData();
             if(userPromise.then){
                 userPromise.then(function (data) {
+                    console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
                     vm.profileData = data;
                 })
             }
@@ -41,7 +42,6 @@
             reviewService
                 .getUserReviews()
                 .then(function (response) {
-                    console.log('Reviews List', response);
                     vm.reviews = response.data;
                 })
         };
@@ -49,23 +49,16 @@
             experienceService
                 .getUserExperience()
                 .then(function (response) {
-                    console.log('Experience List', response);
                     vm.experience = response.data;
                 })
         };
         vm.postReview = function (id, review) {
             reviewService
                 .postReviewForProfile(id, review)
-                .then(function (response) {
-                    console.log('posted response', response);
-                })
         };
         vm.postExperience = function (experience) {
             experienceService
                 .postUserExperience(experience)
-                .then(function (response) {
-                    console.log('posted experience', response);
-                })
         };
 
         //var sampleReview = {
