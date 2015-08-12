@@ -35,6 +35,10 @@
             avatarEdit: {
                 template: 'modules/signup/templates/edit-avatar.html',
                 service: 'profileAvatarService'
+            },
+            addFriends: {
+                template: 'modules/account/child_modules/profile/templates/profile-friends-add.html',
+                service: 'addFriendsService'
             }
         });
 })();
