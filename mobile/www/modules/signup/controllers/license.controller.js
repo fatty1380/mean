@@ -1,11 +1,16 @@
 (function () {
     'use strict';
 
-    var licenseCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading) {
+    angular
+        .module('signup')
+        .controller('LicenseCtrl', LicenseCtrl);
+
+    LicenseCtrl.$inject = [ '$state', 'registerService', '$ionicLoading'];
+
+    function LicenseCtrl($state, registerService, $ionicLoading) {
+
         var vm = this;
-
         vm.class = null;
-
         vm.endorsement = {
             T: false,
             P: false,
@@ -14,16 +19,15 @@
             H: false,
             X: false
         }
+        vm.continueToTrucks = continueToTrucks;
 
-        vm.continueToTrucks = function() {
-            console.log(" ");
-
-            var obj = {};
-            obj.license = {};
-            obj.license.class = vm.class;
-            obj.license.endorsements = getEndorsementKeys(vm.endorsement);
-
-            console.log(obj);
+        function continueToTrucks() {
+            var obj = {
+               license: {
+                  class: vm.class,
+                  endorsements: getEndorsementKeys(vm.endorsement)
+               }
+            }
 
             $ionicLoading.show({
                 template: 'please wait'
@@ -44,7 +48,7 @@
                 });
         }
 
-        var getEndorsementKeys = function (obj) {
+        function getEndorsementKeys(obj) {
             var keys = [];
             for (var i in obj) {
                 if (obj.hasOwnProperty(i)) {
@@ -56,10 +60,4 @@
             return keys;
         }
     }
-
-    licenseCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading'];
-
-    angular
-        .module('signup')
-        .controller('licenseCtrl', licenseCtrl);
 })();

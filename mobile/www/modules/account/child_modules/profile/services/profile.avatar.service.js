@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    function profileAvatarService(userService, modalService, $ionicLoading) {
+    function profileAvatarService(userService, modalService, $ionicLoading, registerService) {
         var vm = this;
 
         vm.modal = modalService;
@@ -18,12 +18,9 @@
             });
 
             vm.finalImage = vm.croppedImage;
-            var dataProps = {
-                props:{
-                    avatar: vm.finalImage
-                }
-            };
-            var userPromise = userService.updateUserData(dataProps);
+            registerService.setProps('avatar',vm.finalImage);
+
+            var userPromise = userService.updateUserData(registerService.getDataProps());
             if(userPromise.then){
                 userPromise.then(function (profileData) {
                     $ionicLoading.hide();
@@ -41,7 +38,7 @@
         }
     }
 
-    profileAvatarService.$inject = ['userService', 'modalService', '$ionicLoading'];
+    profileAvatarService.$inject = ['userService', 'modalService', '$ionicLoading', 'registerService'];
 
     angular
         .module('profile')

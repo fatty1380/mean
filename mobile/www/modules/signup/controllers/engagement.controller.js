@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    var engagementCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading, cameraService, $ionicModal, $ionicActionSheet, userService, profileAvatarService) {
+    angular
+        .module('signup')
+        .controller('EngagementCtrl', EngagementCtrl)
+
+    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'profileAvatarService' ];
+
+    function EngagementCtrl ($scope, $state, registerService, cameraService, userService, profileAvatarService) {
 
         var vm = this;
         vm.handle = "";
@@ -9,8 +15,18 @@
         vm.company = "Default Company";
         vm.camera = cameraService;
 
-        vm.initEngagementForm = function(scope){
+        vm.initEngagementForm = initEngagementForm;
+        vm.continueToLicense = continueToLicense;
+
+        function initEngagementForm(scope) {
             vm.form = scope;
+        }
+
+        function continueToLicense() {
+            registerService.setProps('started', vm.started);
+            registerService.setProps('avatar', profileAvatarService.finalImage);
+            registerService.setDataProps('handle' , vm.handle);
+            $state.go('signup/license');
         }
 
         $scope.$on('$ionicView.afterEnter', function () {
@@ -31,18 +47,6 @@
         function () {
             vm.profileData = userService.profileData;
         }, true);
-
-        vm.continueToLicense = function() {
-            registerService.dataProps.props.started = vm.started;
-            registerService.dataProps.props.avatar = profileAvatarService.finalImage;
-            registerService.dataProps.handle = vm.handle;
-            $state.go('signup/license');
-        }
     };
 
-    engagementCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'cameraService', '$ionicModal', '$ionicActionSheet', 'userService', 'profileAvatarService' ];
-
-    angular
-        .module('signup')
-        .controller('engagementCtrl', engagementCtrl)
 })();
