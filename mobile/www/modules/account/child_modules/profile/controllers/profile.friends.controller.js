@@ -6,6 +6,7 @@
 
         vm.contacts = friendsService.allList;
         vm.friends = friendsService.friends;
+        vm.users = friendsService.users;
         vm.searchText = "";
 
         vm.searchHandler = function () {
