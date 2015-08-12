@@ -13,9 +13,6 @@
         var pickContact = function() {
             var deferred = $q.defer();
             if(navigator && navigator.contacts) {
-
-                console.log(navigator.contacts);
-
                 navigator.contacts.pickContact(function(contact){
                     deferred.resolve( formatContact(contact) );
                 });

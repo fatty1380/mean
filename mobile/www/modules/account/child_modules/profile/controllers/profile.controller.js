@@ -1,11 +1,12 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl(reviewService, experienceService, userService, modalService) {
+    function ProfileCtrl($scope, reviewService, experienceService, userService, modalService, cameraService) {
         var vm = this;
 
         vm.modal = modalService;
         vm.profileData = userService.getUserData();
+        vm.camera = cameraService;
 
 
         // THIS IS NEEDED ONLY FOR DEVELOPMENT
@@ -17,7 +18,7 @@
 
         (function () {
             var userPromise = userService.getUserData();
-            if(userPromise.then){
+            if (userPromise.then) {
                 userPromise.then(function (data) {
                     console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
                     vm.profileData = data;
@@ -25,10 +26,8 @@
             }
         })();
 
-
         vm.reviews = [];
         vm.experience = [];
-
 
         vm.showModal = function (modalName) {
             modalService.show(modalName);
@@ -61,70 +60,55 @@
                 .postUserExperience(experience)
         };
 
-        //var sampleReview = {
-        //    user: '55b27b1893e595310272f1d0',
-        //    reviewer: null,
-        //    name: 'Anna S',
-        //    email: 'Anna@gmail.com',
-        //    title: 'On Time!',
-        //    text: 'Have been working together for more then 7 years now!',
-        //    rating: 4,
-        //    created: '2014-12-04T00:59:41.249Z',
-        //    modified: '2015-01-06T00:59:41.249Z'
-        //};
-        //
-
-        //var experienceSample = {
-        //    title: 'Aston Martin Driving Experience',
-        //    description: 'Ever fancied yourself as the next James Bond? Why not have a go at a Trackdays.co.uk Aston Martin Driving Experience at one of our many venues across the UK?',
-        //    startDate: '2007-09-18',
-        //    endDate: '2008-02-12',
-        //    location: 'San Francisco, CA'
-        //};
-        //vm.postExperience(experienceSample);
-
         vm.getReviews();
         vm.getExperience();
 
         vm.endorsementsMap = {
-            T : {
+            T: {
                 title: 'Double/Triple Trailer',
                 ico: 'ico-doubletraileractive'
             },
-            P : {
+            P: {
                 title: 'Passenger Vehicle',
                 ico: 'ico-passengeractive'
             },
-            S : {
+            S: {
                 title: 'School Bus',
                 ico: 'ico-doubletraileractive'
             },
-            N : {
+            N: {
                 title: 'Tank Truck',
                 ico: 'ico-tankvehicleactive'
             },
-            H : {
+            H: {
                 title: 'Hazardous Materials',
                 ico: 'ico-hazardousmaterialsactive'
             },
-            X : {
+            X: {
                 title: 'Tank + Hazardous',
                 ico: 'ico-tankhazardousactive'
             }
         };
-        //
-        //vm.me = (function(){
-        //    registerService.me()
-        //        .then(function (response) {
-        //            if(response.success) {
-        //                vm.profileData = response.message.data;
-        //                console.log('-=-=-=-=-=-=-=-=-=-=-=-=- USER  OBJECT -=-=-=-=-=-=-=-=-=-=-=-=-', vm.profileData);
-        //            }
-        //        });
-        //})();
+
+        //update avatar after change data
+        $scope.$watch(function () {
+            return userService.profileData;
+        },
+        function () {
+            vm.profileData = userService.profileData;
+        }, true);
+
+
+        vm.showModal = function (modalName) {
+            modalService.show(modalName);
+        };
+
+        vm.closeModal = function (modalName) {
+            modalService.close(modalName);
+        };
     }
 
-    ProfileCtrl.$inject = ['reviewService', 'experienceService', 'userService', 'modalService'];
+    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'modalService', 'cameraService'];
 
     angular
         .module('account')

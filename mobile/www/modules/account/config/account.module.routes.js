@@ -1,6 +1,17 @@
 (function () {
     'use strict';
 
+    var getProfileData  = function (registerService) {
+        return registerService
+            .me()
+            .then(function (response) {
+                if(response.success) {
+                    return response.message.data;
+                }
+            });
+    };
+
+
 
     angular
         .module('account')
@@ -19,7 +30,33 @@
                     views: {
                         'profile': {
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                            controller: 'ProfileCtrl as vm'
+                            controller: 'ProfileCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
+                        }
+                    }
+                })
+
+                .state('account.profile.share', {
+                    url: '/share',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share.html',
+                            controller: 'ProfileShareCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
+                        }
+                    }
+                })
+
+                .state('account.profile.friends', {
+                    url: '/friends',
+                    views: {
+                        '@': {
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-friends.html',
+                            controller: 'FriendsCtrl as vm'
                         }
                     }
                 })
