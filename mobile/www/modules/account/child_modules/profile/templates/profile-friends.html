@@ -1,6 +1,9 @@
 <ion-view class="friends-screen">
 
     <div class="header min-size">
+        <ion-nav-bar>
+            <ion-nav-back-button>Back</ion-nav-back-button>
+        </ion-nav-bar>
         <ion-header-bar>
             <h1 class="title">Friends</h1>
         </ion-header-bar>
@@ -14,21 +17,38 @@
 
         <ion-scroll delegate-handle="main-content-scroll">
             <ul class="list friends-list">
-                <li class="item" ng-repeat="contact in vm.friends | filter:vm.searchText" ng-class="{'item-divider': contact.isDivider}">
+                <li class="item item-divider">Your Friends</li>
+                <li class="item" ng-repeat="contact in contacts = (vm.friends | filter:vm.searchText)">
                     <i class="ico ico-avatar" ></i>
                     <div class="item-content">
                         {{contact.displayName}}{{contact.text}}
                     </div>
-                   <button ng-if="vm.searchText.length>0" class="button button-small list-button">Select</button>
+                   <button ng-if="vm.searchText.length>0" class="button button-small list-button">Add</button>
+                </li>
+                <li ng-if="!contacts.length" class="no-matches">
+                    <div class="item-content">NO MATCHES</div>
+                </li>
+            </ul>
+            <ul class="list friends-list" ng-if="!contacts.length">
+                <li class="item item-divider">Outset Users</li>
+                <li class="item" ng-repeat="user in users = (vm.users | filter:vm.searchText)">
+                    <i class="ico ico-avatar" ></i>
+                    <div class="item-content">
+                        <strong>{{user.userName}}</strong>
+                        {{user.displayName}}
+                    </div>
+                   <button ng-if="vm.searchText.length>0" class="button button-small list-button">Add</button>
+                </li>
+                <li ng-if="!users.length" class="no-matches">
+                    <div class="item-content">NO MATCHES</div>
                 </li>
             </ul>
         </ion-scroll>
     </ion-pane>
 
     <ion-footer-bar>
-        <div class="button-bar action-buttons">
-            <button class="button secondary" ui-sref="account.profile">Cancel</button>
-            <button class="button primary" ui-sref="account.profile.add.friends">Add Friends</button>
+        <div class="button-bar">
+            <button class="button block-button">Invite Friends</button>
         </div>
     </ion-footer-bar>
 

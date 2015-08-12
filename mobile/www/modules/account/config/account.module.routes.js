@@ -44,7 +44,7 @@
                     }
                 })
 
-                .state('account.profile.add.friends', {
+                .state('account.profile.friends.add', {
                     url: '/addFriends',
                     views: {
                         '@': {

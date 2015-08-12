@@ -333,6 +333,10 @@
       padding-right: 14px;
     }
 
+    .list{
+      margin-bottom: 0;
+    }
+
     .friends-list {
 
       .item {
@@ -340,8 +344,13 @@
         border-top: 1px solid #ddd;
 
         .item-content {
-          padding: 5px 0 0 10px;
           display: inline-block;
+          vertical-align: middle;
+
+          strong{
+            display: block;
+            color: #ff8000;
+          }
         }
 
         .button-small {
@@ -353,9 +362,18 @@
         }
 
         > .ico{
-          float: left;
+          margin-right: 5px;
+          vertical-align: middle;
         }
 
+      }
+
+      .no-matches{
+
+        .item-content{
+          text-align: center;
+          padding: 20px 0;
+        }
       }
 
       .item-divider {
