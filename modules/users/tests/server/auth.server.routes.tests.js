@@ -129,10 +129,10 @@ describe('Auth Routes tests', function () {
 
             it('should return my user object', function () {
                 var _test = this.test;
-                var endpoint = '/api/users/me?access_token=' + token.access_token;
+                var endpoint = '/api/users/me';
 
                 return agent.get(endpoint)
-                //.set({access_token: token.access_token})
+                .set({'x-access_token': token.access_token})
                     .expect(200)
                     .then(function (response) {
                         log.debug({
@@ -149,10 +149,10 @@ describe('Auth Routes tests', function () {
 
             it('should return a list of profiles', function () {
                 var _test = this.test;
-                var endpoint = '/api/profiles?access_token=' + token.access_token;
+                var endpoint = '/api/profiles';
 
                 return agent.get(endpoint)
-                //.set({access_token: token.access_token})
+                .set({'x-access_token': token.access_token})
                     .expect(200)
                     .then(function (response) {
                         log.debug({
@@ -167,10 +167,10 @@ describe('Auth Routes tests', function () {
 
             it('should return a profile object', function () {
                 var _test = this.test;
-                var endpoint = '/api/profiles/' + user.id + '?access_token=' + token.access_token;
+                var endpoint = '/api/profiles/' + user.id + '';
 
                 return agent.get(endpoint)
-                //.set({access_token: token.access_token})
+                .set({'x-access_token': token.access_token})
                     .expect(200)
                     .then(function (response) {
                         log.debug({
@@ -188,7 +188,7 @@ describe('Auth Routes tests', function () {
 
             it('should allow me to update my user', function () {
                 var _test = this.test;
-                var endpoint = '/api/users?access_token=' + token.access_token;
+                var endpoint = '/api/users';
 
                 var data = {
                     'handle': 'gearjammer',
@@ -196,7 +196,7 @@ describe('Auth Routes tests', function () {
                 };
 
                 return agent.put(endpoint)
-                //.set({access_token: token.access_token})
+                .set({'x-access_token': token.access_token})
                     .send(data)
                     .expect(200)
                     .then(function (response) {
