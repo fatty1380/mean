@@ -69,7 +69,9 @@ exports.feedItemIsAllowed = function (req, res, next) {
 	
 	req.log.debug({ item: req.feedItem, user: req.user, itemUser: req.feedItem.user }, 'checking user permissions');
 	
-	if(!!req.feedItem && !!req.user && req.user._id.equals(req.feedItem.user)) {
+	var feedUserId = req.feedItem.user && req.feedItem.user.id || req.feedItem.user;
+	
+	if(!!req.feedItem && !!req.user && req.user._id.equals(feedUserId)) {
 		req.log.debug('Feed Item user equals request user');
 		return next();
 	}

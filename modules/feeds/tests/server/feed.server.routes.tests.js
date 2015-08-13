@@ -255,7 +255,7 @@ describe('Feed CRUD tests', function () {
 
 		it('should not be able to get a list of Feeds', function () {
 
-			return request(app).get('/api/feeds')
+			return agent.get('/api/feeds')
 				.expect(404)
 				.then(
 				function (res) {
@@ -271,7 +271,7 @@ describe('Feed CRUD tests', function () {
 		});
 
 		it('should not be able to get _My Feed_', function () {
-			return request(app).get('/api/feed')
+			return agent.get('/api/feed')
 				.expect(404)
 				.then(
 				function (res) {
@@ -287,7 +287,7 @@ describe('Feed CRUD tests', function () {
 		});
 
 		it('should not be able to get an arbitrary Feed instance', function () {
-			return request(app).get('/api/feeds/' + feed._id)
+			return agent.get('/api/feeds/' + feed._id)
 				.expect(404)
 				.then(
 				function (res) {
@@ -324,13 +324,16 @@ describe('Feed CRUD tests', function () {
 				// Re-Login to get 'admin' role
 				credentials = stubs.getAdminCredentials();
 				log.debug({ creds: credentials, adminUser: adminUser }, 'Logging in with credentials');
-				return stubs.agentLogin(agent, credentials);
+				return stubs.agentLogin(agent, credentials).then(function (s) {
+					log.debug({func: 'admin:beforeEach', success: s},'logged into app with admin credentials');
+				});
 			});
 
 		});
 
 		it('should be able to get a list of Feeds if an admin', function () {
-			return request(app).get('/api/feeds')
+			return
+			agent.get('/api/feeds')
 				.expect(200)
 				.then(
 				function (res) {

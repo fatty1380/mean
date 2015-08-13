@@ -1,23 +1,31 @@
 'use strict';
 
 var should = require('should'),
-	request = require('supertest'),
+	Q = require('q'),
+	request = require('supertest-as-promised')(Q.Promise),
 	path = require('path'),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	Review = mongoose.model('Review'),
-	express = require(path.resolve('./config/lib/express'));
+	express = require(path.resolve('./config/lib/express')),
+	stubs = require(path.resolve('./config/lib/test.stubs')),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'tests',
+        file: 'feed.server.routes'
+    });
 
+var mongoose = require('mongoose'),
+	User = mongoose.model('User'),
+	Review = mongoose.model('Review');
+	
 /**
  * Globals
  */
-var app, agent, credentials, user, review;
+var app, agent, credentials, user, target, review;
 
 /**
  * Review routes tests
  */
 describe('Review CRUD tests', function () {
 	before(function (done) {
+		log.debug({ func: 'beforeAll' }, 'Setup Base');
 		// Get application
 		app = express.init(mongoose);
 		agent = request.agent(app);
@@ -25,32 +33,26 @@ describe('Review CRUD tests', function () {
 		done();
 	});
 
-	beforeEach(function (done) {
-		// Create user credentials
-		credentials = {
-			username: 'username',
-			password: 'password'
-		};
+	beforeEach(function () {
+		log.debug({ func: 'beforeEach' }, 'Setup');
 
-		// Create a new user
-		user = new User({
-			firstName: 'Full',
-			lastName: 'Name',
-			displayName: 'Full Name',
-			email: 'test@test.com',
-			username: credentials.username,
-			password: credentials.password,
-			provider: 'local'
-		});
+        user = new User(stubs.user);
+		target = new User(stubs.getUser());
+        credentials = stubs.getCredentials(user);
 
-		// Save a user to the test db and create new Review
-		user.save(function () {
-			review = {
-				name: 'Review Name'
-			};
-
-			done();
-		});
+		// Save a user to the test db and create new Feed
+		//return Q.all([user.save(), feed.save()]).then(
+		return Q.all([user.save(), target.save()]).then(
+			function () {
+				review = {
+					user: target,
+					name: user.firstName,
+					email: user.email,
+					title: 'This is a Review',
+					text: 'I bet you think this review is about you',
+					rating: 5
+				};
+			});
 	});
 	
 	/**
@@ -69,42 +71,38 @@ describe('Review CRUD tests', function () {
 	 */
 
 	it('should be able to save Review instance if logged in', function (done) {
-		agent.post('/api/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function (signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) { done(signinErr); }
+		stubs.agentLogin(agent, credentials).then(function () {
 
-				// Get the userId
-				var userId = user.id;
+			log.debug({ func: 'save' }, 'Setup');
+			// Get the userId
+			var userId = user.id;
 
-				// Save a new Review
-				agent.post('/api/reviews')
-					.send(review)
-					.expect(200)
-					.end(function (reviewSaveErr, reviewSaveRes) {
-						// Handle Review save error
-						if (reviewSaveErr) { done(reviewSaveErr); }
+			// Save a new Review
+			agent.post('/api/reviews')
+				.send(review)
+				.expect(200)
+				.end(function (reviewSaveErr, reviewSaveRes) {
+					// Handle Review save error
+					if (reviewSaveErr) { done(reviewSaveErr); }
 
-						// Get a list of Reviews
-						agent.get('/api/reviews')
-							.end(function (reviewsGetErr, reviewsGetRes) {
-								// Handle Review save error
-								if (reviewsGetErr) { done(reviewsGetErr); }
+					// Get a list of Reviews
+					agent.get('/api/reviews')
+						.end(function (reviewsGetErr, reviewsGetRes) {
+							// Handle Review save error
+							if (reviewsGetErr) { done(reviewsGetErr); }
 
-								// Get Reviews list
-								var reviews = reviewsGetRes.body;
+							// Get Reviews list
+							var reviews = reviewsGetRes.body;
 
-								// Set assertions
-								(reviews[0].user._id).should.equal(userId);
-								(reviews[0].name).should.match('Review Name');
+							// Set assertions
+							(reviews[0].user._id).should.equal(userId);
+							(reviews[0].name).should.match('Review Name');
 
-								// Call the assertion callback
-								done();
-							});
-					});
-			});
+							// Call the assertion callback
+							done();
+						});
+				});
+		});
 	});
 
 	it('should not be able to save Review instance if not logged in', function (done) {
