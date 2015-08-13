@@ -86,6 +86,10 @@ var FeedItemSchema = new Schema({
 		}],
 		default: []
 	},
+	likes: {
+		type: Schema.ObjectId,
+		ref: 'User'
+	},
 	isPublic: {
 		type: Boolean,
 		default: false,
@@ -115,15 +119,13 @@ mongoose.model('FeedItem', FeedItemSchema);
 
 
 var GeoJsonSchema = new Schema({
-	location: {
 		type: {
 			type: String,
 			enum: ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'],
 			default: 'Point'
 		},
-		coordinates: [Number]
+		coordinates: [Number],
 		// Alt, nested coordinates: [{type: [Number]}] per http://stackoverflow.com/a/15570602/609021
-	},
 
 	created: {
 		type: Date,

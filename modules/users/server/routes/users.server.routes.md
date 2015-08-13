@@ -226,3 +226,101 @@ Logs the user out of the app
 + Response 200 
 
         The user is redirected to the welcome page
+
+# -------------------------------------------------------------
+
+# group Activity Feed
+
+## Feed [GET /api/feed]
+Each user has a single Activity Feed which contains a list of every posted activity from all of their friends. Because of a Read/Write bias, it is important to keep all items being displayed to a user in one place in the DB, rather than reaching out to dozens of places in the database and processing. This adds a "Write Tax" when a user posts a new activity to their friends, but this is much less common action than reading the feed.
+
+## Feed (object)
++ user: 24D1617HEX574196 (reference, string)
++ items: [(Feed Item)] (required, array[Feed Item])
++ activity: [(Feed Item)] (required, array[Feed Item])
++ created: 2015-07-12T01:34:43.000Z (required, string)
++ modified: 2015-07-12T01:34:43.000Z (required, string)
+
+# Activity Feed Item
+The Activity Feed item represents an individual checkin made by a user and broadcast to thier friends. Feed items may also be posted by companies, but the object itself will be unchanged.
+
+## Feed Item (object)
++ title: Great drive today! (required, string)
++ message: This is more information than I usually add, but it would be great if you could see this (optional, string)
++ location: { type: 'Point', coordinates: [34.123, 48.982] } (optional, GeoJSON)
++ user: 24D1617HEX574196 (reference, string)
++ comments: [{message: 'Love it!', user: 24DigitHexId}] (optional, object)
++ likes: [24D1617HEX574196, 24D1617HEX574196] (optional, array[User Base])
++ created: 2015-07-12T01:34:43.000Z (required, string)
++ modified: 2015-07-12T01:34:43.000Z (required, string)
+
+## GeoJSON (object)
++ type: Point (optional, String)
++ coordinates: [34.123, 48.982] (required, array[Number])
++ created: 2015-07-12T01:34:43.000Z (required, string)
++ modified: 2015-07-12T01:34:43.000Z (required, string)
+
+    + Body
+        {
+            type: 'Point',
+            coordinates: [34.123, 48.982],
+            created: '2015-07-12T01:34:43.000Z',
+            modified: '2015-07-12T01:34:43.000Z'
+        }
+        
+## Message Schema
+Currently, the concept of a message is wrapped up in a Driver-Company connection, which is no longer the way we want to approach this. The schema will remain the same, but the existing access to it and rights surrounding who you can message will be changed.
+
+## API Routes
+API Routes are currently in progress, but will be handled very similarly to other user APIs.
+
+### Messages (Message Body) [GET /api/user/messages]
+** DRAFT DRAFT DRAFT **
+
+## Message (object)
++ sender: 24D1617HEX574196 (reference, string)
+    - A reference to the user who sent the message
++ text: Hey man! can you hear me? (required, string)
+    - The text of the message being sent
++ status: 'sent' (optional, string(enum['draft', 'sent', 'read']))
++ created: 2015-07-12T01:34:43.000Z (required, string)
++ modified: 2015-07-12T01:34:43.000Z (required, string)
+ 
+### Sample Object
+    + Body
+        {
+            sender: '55a453104cec3d4a40d4bf9c',
+            text: 'Hey Bob, have you seen the news today?',
+            status: 'sent',
+            created: '2015-07-12T01:34:43.000Z',
+            modified: '2015-07-12T01:34:43.000Z'
+        }
+
+## Company Base
+There are additional fields, but I am including those fileds which are most important to the mobile app and profile at this time.
+
++ name: Big Joe's Trucks (required, string)
++ zipCode: 83340 (optional, string)
++ locations: [{ 123 fake street ... }] (optional, array[Address Base])
++ about: At Joe's trucks, we believe in you ... (optional, string)
+    - A string which may contain rudimentary HTML formatting containing information about the company
++ phone: 650-123-4567 (optional, String)
++ profileImageURL: https://server/profile.jpg (optional, String)
+
+### Sample Object
+    {
+        name: 'Big Joe\'s Trucks',
+        zipCode: '83340',
+        locations: [{ type: 'main', streetAddresses: ['123 Fake Street'], city: 'Seattle', state: 'WA', zipCode: '98104'}],
+        about: 'This is a bunch of text about how aweseome we are!',
+        phone: '650-555-3535'
+    }
+
+Notes: Look in the "Companies" collection in the main `outset-dev` database for more examples.
+
++ Companies [GET /api/companies]
+should return a list of all companies
+
+## Address Base
+
+

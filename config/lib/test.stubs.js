@@ -165,6 +165,22 @@ function token(agent, credentials, client) {
         .expect(200);
 }
 
+function tokenRequest(agent, endpoint) {
+    if (!agent) {
+        return Q.reject('No agent supplied for request')
+    }
+   
+    return agent.get(endpoint).use(bearer);
+} 
+// re-implement the .get and .post helpers if you feel they're important..
+
+function bearer ( request ){
+    // "config" is a global var where token and other stuff resides
+    if ( config.token ) {
+        request.set( 'Authorization', 'Bearer ' + config.token );
+    }
+}
+
 function cleanTables(tables) {
     var promises = _.map(tables, function (table) {
         if (_.isString(table)) {

@@ -23,9 +23,6 @@ var
     License = mongoose.model('License'),
     Schedule = mongoose.model('Schedule');
 
-
-log.error({ props: _.keys(props) }, 'AVAILABLE PROPERTY FUNCTIONS');
-
 _.extend(exports, {
     create: errorHandler.notAvailable, //create,
     read: read,
