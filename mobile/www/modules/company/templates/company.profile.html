@@ -1,0 +1,90 @@
+<ion-view>
+    <div class="header mid-size">
+        <ion-header-bar align-title="center">
+            <h1 class="title" ng-bind="vm.companyData.name">Profile</h1>
+        </ion-header-bar>
+        <div class="profile-visual">
+            <div class="photo" ng-click="vm.camera.showActionSheet()">
+                <img ng-if="vm.profileData.props.avatar" src="{{vm.profileData.props.avatar}}" alt=""/>
+            </div>
+            <div class="contacts-amount" ui-sref="account.profile.friends">
+                <span class="ico ico-avatar ico-middle"></span>
+                <strong>{{vm.profileData.friends.length}}</strong>
+            </div>
+        </div>
+    </div>
+    <ion-pane class="profile-pane">
+        <ion-tabs class="profile-tabs tabs-top">
+            <ion-tab title="REVIEWS">
+                <ion-scroll class="reviews-list">
+                    <ion-list>
+                        <ion-item ng-repeat="review in vm.reviews">
+                            <div class="ico ico-avatar"></div>
+                            <div class="review">
+                                <div class="top">
+                                    <div class="ratings" data-mark="{{review.rating}}"></div>
+                                    <div class="time"><i class="ico ico-timesmall"></i> {{review.created | date : 'mediumDate'}}</div>
+                                </div>
+                                <strong class="title">{{review.name}} - {{review.title}}</strong>
+                                <div class="message">{{review.text}}</div>
+                                <div class="button-holder">
+                                    <button class="button button-small">Reply</button>
+                                </div>
+                            </div>
+                        </ion-item>
+                    </ion-list>
+                </ion-scroll>
+                <button class="button content-button" ng-click="vm.modal.show('profileRequest')"><i class="ico ico-request-review"></i>Request Review</button>
+            </ion-tab>
+            <ion-tab title="PROFILE">
+                <ion-scroll class="profile-list">
+                    <div class="list">
+                        <div class="item">
+                            CUURENT JOB TITLE:
+                            <span class="item-note">{{vm.profileData._type}}</span>
+                        </div>
+                        <div class="item">
+                            TYPE OF TRUCK:
+                            <span class="item-note">{{vm.profileData.props.truck}}</span>
+                        </div>
+                        <div class="item item-divider"></div>
+                        <div class="item">
+                            COMPANY
+                            <span class="item-note">{{vm.profileData.company || vm.profileData.props.company}}</span>
+                        </div>
+                        <div class="item">
+                            DRIVING SINCE
+                            <span class="item-note">{{vm.profileData.props.started | date : 'MMMM yyyy'}}</span>
+                        </div>
+                        <div class="item" ng-if="vm.profileData.props.freight">
+                            <span class="ico ico-freight"></span>
+                            FREIGHT:
+                            <span class="item-note">{{vm.profileData.props.freight}}</span>
+                        </div>
+                        <div class="item endorsements-row">
+                            ENDORSEMENTS:
+                            <ul class="endorsements-list">
+                                <li ng-repeat="endorsement in vm.profileData.license.endorsements">
+                                    <i class="ico icon {{ vm.endorsementsMap[endorsement].ico}}"></i>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </ion-scroll>
+                <button class="button content-button" ng-click="vm.modal.show('profileShare')"><i class="ico ico-share"></i>Share</button>
+            </ion-tab>
+            <ion-tab title="EXPERIENCE">
+                <ion-scroll class="experience-list">
+                    <ion-list>
+                        <ion-item class="item" ng-repeat="job in vm.experience">
+                            <strong>{{job.title}}</strong>
+                            <p>{{job.description}}</p>
+                            <em><i class="ico ico-timesmall"></i>{{job.startDate | date : MMM : yyyy}} -  {{job.endDate | date : MMM : yyyy}}</em>
+                        </ion-item>
+                    </ion-list>
+                </ion-scroll>
+                <button class="button content-button" ng-click="vm.modal.show('profileShare')"><i class="ico ico-share"></i>Share</button>
+            </ion-tab>
+        </ion-tabs>
+    </ion-pane>
+</ion-view>
