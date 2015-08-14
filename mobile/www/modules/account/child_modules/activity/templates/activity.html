@@ -12,22 +12,37 @@
             <i class="ico ico-checkmarkwhite "></i>
         </button>
 
-        <ion-scroll>
+        <div class="map">
+            <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" events="map.events" >
+                <ui-gmap-marker idkey="map.id"  coords="map.markerCoords" ></ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
+
+       <!-- <ion-scroll>
+
             <ion-list ng-repeat="entry in vm.feed">
-                <ion-item class="item">
+                  <ion-item class="item">
                     <div class="ico ico-avatar"></div>
                     <div class="activity-item" ng-click='vm.showModal("activityDetails", entry)'>
                         <div class="top">
-                            <div class="time"><i class="ico ico-timesmall"></i>{{ entry.date }}</div>
+                            <div class="time"><i class="ico ico-timesmall"></i>{{ entry.created }}</div>
                             <div class="message">{{ entry.message }}</div>
                         </div>
                         <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled }}</strong>
-                        <i class="ico ico-likessmall"></i><strong class="title">{{ entry.likes }}</strong>
+                        <i class="ico ico-likessmall"></i><strong class="title">{{ entry.likes.length }} likes</strong>
                     </div>
                 </ion-item>
-                <div class="map"></div>
+                <div class="map">
+                <static-gmap
+                            size="400x200"
+                            sensor="true"
+                            zoom="12"
+                            markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates }} }">
+                    </static-gmap>
+                </div>
+
             </ion-list>
-        </ion-scroll>
+        </ion-scroll>-->
 
         <button class="button content-button" ng-click='vm.showModal("activityAdd")'>
             <i class="ico ico-share"></i>

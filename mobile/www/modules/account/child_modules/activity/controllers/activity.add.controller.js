@@ -1,12 +1,11 @@
 (function() {
-    'use strict';
-
-    function ActivityAddCtrl() {
-    }
-
-    ActivityAddCtrl.$inject = [];
+    'use strict'
 
     angular
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
+
+    ActivityAddCtrl.$inject = [];
+
+    function ActivityAddCtrl() {}
 })();

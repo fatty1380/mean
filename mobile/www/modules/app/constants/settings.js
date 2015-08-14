@@ -16,6 +16,7 @@
     settings.profiles = settings.api + 'profiles/';
     settings.reviews = settings.api + 'reviews/';
     settings.experience = settings.api + 'experience/';
+    settings.feed = settings.api + 'feed/';
 
 
     // endpoints
