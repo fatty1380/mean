@@ -77,13 +77,7 @@ var FeedItemSchema = new Schema({
 		ref: 'User'
 	},
 	comments: {
-		type: [{
-			message: String,
-			user: {
-				type: Schema.ObjectId,
-				ref: 'User'
-			}
-		}],
+		type: ['Message'],
 		default: []
 	},
 	likes: {
