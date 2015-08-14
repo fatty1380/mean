@@ -22,8 +22,7 @@
             {name:'Refrigerator Trailer', checked:false},
             {name:'Refrigerator Tank', checked:false},
             {name:'Sidelifter', checked:false},
-            {name:'Tank', checked:false},
-            {name:'Other...', checked:false}
+            {name:'Tank', checked:false}
         ];
 
         vm.addTrailer = function() {
