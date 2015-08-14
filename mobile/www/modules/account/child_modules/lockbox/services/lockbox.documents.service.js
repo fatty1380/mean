@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    var lockboxDocuments = function ($ionicActionSheet, $http, settings) {
+    angular
+        .module('lockbox')
+        .service('lockboxDocuments', lockboxDocuments);
+
+    lockboxDocuments.$inject = ['$ionicActionSheet', '$http', 'settings'];
+
+    function lockboxDocuments ($ionicActionSheet, $http, settings) {
 
         function getDocuments() {
             return $http.get(settings.documents)
@@ -44,12 +50,6 @@
             getDocuments: getDocuments,
             addDocsPopup: addDocsPopup
         }
-    };
-
-    lockboxDocuments.$inject = ['$ionicActionSheet', '$http', 'settings'];
-
-    angular
-        .module('lockbox')
-        .service('lockboxDocuments', lockboxDocuments);
+    }
 
 })();

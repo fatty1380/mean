@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    var activityService = function () {
+    angular
+        .module('activity')
+        .service('activityService', activityService);
+
+    activityService.$inject = [];
+
+    function activityService () {
         var vm = this;
 
         vm.feed = [
@@ -24,12 +30,6 @@
                 likes: '2 likes'
             }
         ]
+    }
 
-    };
-
-    activityService.$inject = [];
-
-    angular
-        .module('activity')
-        .service('activityService', activityService);
 })();

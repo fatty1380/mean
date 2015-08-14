@@ -1,68 +1,91 @@
 (function () {
     'use strict';
 
-    var modalService = function ($ionicModal, $rootScope, $injector, modalTemplates) {
-
-        var currentModalName;
-
-        this.create = function (modalName) {
-            var service = this,
-                scope = $rootScope.$new(),
-                modalObject = modalTemplates[modalName],
-                modalService = modalObject && modalObject.service;
-
-            //injecting modal logic and saving in the vm
-            scope.vm = $injector.get(modalService);
-
-            // saving this service in order to be able to call common methods
-            scope.vm.modal = this;
-            scope.vm.modalName = modalName;
-
-            // removing modal on scope destroy to get rid of memory leeks
-            scope.$on('$destroy', function() {
-                scope.vm.modal[modalName].remove();
-            });
-
-            // creating modal and passing scope
-            $ionicModal
-                .fromTemplateUrl(modalObject.template, {
-                    scope: scope,
-                    animation: 'none'
-                })
-                .then(function (modal) {
-                    service[modalName] = modal;
-                    service[modalName].show();
-                });
-        };
-
-        this.show = function (modalName) {
-
-            var modal = this[modalName];
-
-            currentModalName = modalName;
-
-            if(modal) return modal.show();
-            else this.create(modalName);
-        };
-
-        this.close = function (modalName) {
-            if(modalName) {
-                var modal = this[modalName];
-                if(modal) return modal.hide();
-            }else {
-                var currentModal = this[currentModalName];
-                if(currentModal){
-                    return currentModal.hide()
-                }
-            }
-        };
-
-    };
-
-    modalService.$inject = ['$ionicModal', '$rootScope', '$injector', 'modalTemplates'];
-
     angular
         .module(AppConfig.appModuleName)
-        .service('modalService', modalService);
+        .factory('modalService', modalService);
+
+    modalService.$inject = ['$ionicModal', '$rootScope', '$q', '$controller'];
+
+    function modalService($ionicModal, $rootScope, $q, $controller) {
+
+        function show(templateUrl, controller, parameters) {
+            var deferred = $q.defer(),
+                ctrlInstance,
+                modalScope = $rootScope.$new(),
+                thisScopeId = modalScope.$id;
+
+            $ionicModal.fromTemplateUrl(templateUrl, {
+                scope: modalScope,
+                animation: 'none'
+            }).then(function (modal) {
+                modalScope.modal = modal;
+                modalScope.openModal = function () {
+                    modalScope.modal.show();
+                };
+                modalScope.closeModal = function (result) {
+                    deferred.resolve(result);
+                    modalScope.modal.hide();
+                };
+                modalScope.$on('modal.hidden', function (thisModal) {
+                    if (thisModal.currentScope) {
+                        var modalScopeId = thisModal.currentScope.$id;
+                        if (thisScopeId === modalScopeId) {
+                            deferred.resolve(null);
+                            _cleanup(thisModal.currentScope);
+                        }
+                    }
+                });
+
+                // Invoke the controller
+                var locals = { '$scope': modalScope, 'parameters': parameters},
+                    ctrlEval = _evalController(controller);
+
+                ctrlInstance = $controller(controller, locals);
+
+                if (ctrlEval.isControllerAs) {
+                    ctrlInstance.openModal = modalScope.openModal;
+                    ctrlInstance.closeModal = modalScope.closeModal;
+                }
+
+                modalScope.modal.show();
+
+            }, function (err) {
+                deferred.reject(err);
+            });
+
+            return deferred.promise;
+        }
+
+        function _cleanup(scope) {
+            scope.$destroy();
+            if (scope.modal) {
+                scope.modal.remove();
+            }
+        }
+
+        function _evalController(ctrlName) {
+            var result = {
+                isControllerAs: false,
+                controllerName: '',
+                propName: ''
+            };
+            var fragments = (ctrlName || '').trim().split(/\s+/);
+            result.isControllerAs = fragments.length === 3 && (fragments[1] || '').toLowerCase() === 'as';
+            if (result.isControllerAs) {
+                result.controllerName = fragments[0];
+                result.propName = fragments[2];
+            } else {
+                result.controllerName = ctrlName;
+            }
+
+            return result;
+        }
+
+        return {
+            show: show
+        }
+
+    }
 
 })();

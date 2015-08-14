@@ -16,23 +16,23 @@
             <ion-list ng-repeat="entry in vm.feed">
                 <ion-item class="item">
                     <div class="ico ico-avatar"></div>
-                    <div class="activity-item" ng-click='vm.showModal("activityDetails", entry)'>
+                    <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
                         <div class="top">
                             <div class="time"><i class="ico ico-timesmall"></i>{{ entry.date }}</div>
                             <div class="message">{{ entry.message }}</div>
                         </div>
                         <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled }}</strong>
                         <i class="ico ico-likessmall"></i><strong class="title">{{ entry.likes }}</strong>
-                        <div class="button-holder" style="padding: 0 0 10px;">
-                            <a class="button button-block button-small" href="">Show Company Profile</a>
-                        </div>
+                    </div>
+                    <div class="button-holder" style="padding: 0 0 10px;">
+                        <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>
                     </div>
                 </ion-item>
                 <div class="map"></div>
             </ion-list>
         </ion-scroll>
 
-        <button class="button content-button" ng-click='vm.showModal("activityAdd")'>
+        <button class="button content-button" ng-click='vm.showAddActivityModal()'>
             <i class="ico ico-share"></i>
             Add Activity
         </button>

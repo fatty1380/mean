@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    var messageService = function () {
+    angular
+        .module('messages')
+        .service('messageService', messageService);
+
+    messageService.$inject = [];
+
+    function messageService () {
         var vm  = this;
 
         vm.messages = [
@@ -36,12 +42,6 @@
                 created: 'on Monday'
             }
         ]
-    };
-
-    messageService.$inject = [];
-
-    angular
-        .module('messages')
-        .service('messageService', messageService);
+    }
 
 })();

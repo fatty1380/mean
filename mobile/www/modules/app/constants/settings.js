@@ -5,7 +5,6 @@
 
     settings.baseUrl = 'http://outset-d.elasticbeanstalk.com/';
 
-
     // controllers
     settings.oauth = settings.baseUrl + 'oauth/';
     settings.api = settings.baseUrl + 'api/';
@@ -18,12 +17,10 @@
     settings.experience = settings.api + 'experience/';
     settings.documents = settings.api + 'documents/';
 
-
     // endpoints
     settings.signup = settings.oauth + 'signup/';
     settings.token = settings.oauth + 'token/';
     settings.signout = settings.auth + 'signout/';
-
 
     settings.usersProfile = settings.users + 'me/';
     settings.usersExperience = settings.usersProfile + 'experience/';

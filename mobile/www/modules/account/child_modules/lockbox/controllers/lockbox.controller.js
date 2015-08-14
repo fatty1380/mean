@@ -1,19 +1,39 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ($ionicModal, $scope, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup, modalService) {
+    angular
+        .module('lockbox', [ 'pdf' ])
+        .controller('lockboxCtrl', lockboxCtrl);
+
+    lockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'lockboxModalsService'];
+
+    function lockboxCtrl ($ionicModal, $scope, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup, lockboxModalsService) {
         var vm = this;
 
         vm.addDocsPopup = lockboxDocuments.addDocsPopup;
         vm.currentDoc = null;
         vm.documents = [];
 
-        vm.showModal = function (modalName) {
-            modalService.show(modalName);
+        vm.showEditModal = function (parameters) {
+            lockboxModalsService
+                .showLockboxEditModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
         };
 
-        vm.closeModal = function (modalName) {
-            modalService.close(modalName);
+        vm.showShareModal = function (parameters) {
+            lockboxModalsService
+                .showLockboxShareModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
         };
 
         vm.trustSrc = function(src) {
@@ -133,11 +153,5 @@
         }
 
     }
-
-    lockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'modalService'];
-
-    angular
-        .module('lockbox', [ 'pdf' ])
-        .controller('lockboxCtrl', lockboxCtrl);
 
 })();

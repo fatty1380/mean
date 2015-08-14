@@ -1,26 +1,37 @@
 (function() {
     'use strict';
 
-    function ActivityCtrl(modalService, activityService, activityDetailsService) {
+    angular
+        .module('activity')
+        .controller('ActivityCtrl', ActivityCtrl);
+
+    ActivityCtrl.$inject = ['activityModalsService','activityService'];
+
+    function ActivityCtrl(activityModalsService, activityService) {
         var vm = this;
 
         vm.feed = activityService.feed;
 
-        vm.showModal = function (modalName, entry) {
-            if(entry){
-                activityDetailsService.entry = entry;
-            }
-            modalService.show(modalName);
+        vm.showAddActivityModal = function () {
+            activityModalsService
+                .showAddActivityModal()
+                .then(function (res) {
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                })
         };
 
-        vm.closeModal = function (modalName) {
-            modalService.close(modalName);
+        vm.showActivityDetailsModal = function (entry) {
+            activityModalsService
+                .showActivityDetailsModal({entry: entry})
+                .then(function (res) {
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                })
         };
+
     }
 
-    ActivityCtrl.$inject = ['modalService','activityService', 'activityDetailsService'];
-
-    angular
-        .module('activity')
-        .controller('ActivityCtrl', ActivityCtrl);
 })();

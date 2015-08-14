@@ -1,17 +1,18 @@
 (function () {
     'use strict';
 
-    var activityAddService = function (modalService) {
+    angular
+        .module('activity')
+        .service('activityAddService', activityAddService);
+
+    activityAddService.$inject = ['modalService'];
+
+    function activityAddService (modalService) {
         var vm = this;
 
         vm.close = function(name){
             modalService.close(name);
         }
-    };
+    }
 
-    activityAddService.$inject = ['modalService'];
-
-    angular
-        .module('activity')
-        .service('activityAddService', activityAddService);
 })();

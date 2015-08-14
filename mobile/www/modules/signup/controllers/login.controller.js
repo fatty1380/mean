@@ -7,7 +7,7 @@
         vm.error = "";
 
         vm.user = {
-            email: 'test@test.test',
+            email: 'rykov.serge@gmail.com',
             password: 'testtest'
         };
 

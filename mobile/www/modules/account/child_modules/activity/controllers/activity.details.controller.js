@@ -1,14 +1,19 @@
 (function() {
     'use strict';
 
-    function ActivityDetailsCtrl(activityDetailsService) {
-        var vm = this;
-        vm.entry = activityDetailsService.entry;
-    }
-
-    ActivityDetailsCtrl.$inject = ['activityDetailsService'];
-
     angular
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
+
+    ActivityDetailsCtrl.$inject = ['$scope', 'parameters'];
+
+    function ActivityDetailsCtrl($scope, parameters) {
+        var vm = this;
+        vm.entry = parameters.entry;
+
+        vm.close = function () {
+            $scope.closeModal(vm.entry);
+        }
+    }
+
 })();

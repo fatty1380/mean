@@ -1,18 +1,17 @@
 (function () {
     'use strict';
 
-    var messagesCtrl = function (messageService) {
+    angular
+        .module('messages')
+        .controller('messagesCtrl', messagesCtrl);
+
+    messagesCtrl.$inject = ['messageService'];
+
+    function messagesCtrl (messageService) {
         var vm  = this;
 
         vm.messageService = messageService;
 
-
-    };
-
-    messagesCtrl.$inject = ['messageService'];
-
-    angular
-        .module('messages')
-        .controller('messagesCtrl', messagesCtrl);
+    }
 
 })();

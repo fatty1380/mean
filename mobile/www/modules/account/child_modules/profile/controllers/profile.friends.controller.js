@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    angular
+        .module('account')
+        .controller('FriendsCtrl', FriendsCtrl);
+
+    FriendsCtrl.$inject = ['friendsService','$ionicScrollDelegate'];
+
     function FriendsCtrl(friendsService, $ionicScrollDelegate) {
         var vm = this;
 
@@ -16,11 +22,5 @@
             $ionicScrollDelegate.$getByHandle('main-content-scroll').scrollTop();
         };
     }
-
-    FriendsCtrl.$inject = ['friendsService','$ionicScrollDelegate'];
-
-    angular
-        .module('account')
-        .controller('FriendsCtrl', FriendsCtrl);
 
 })();

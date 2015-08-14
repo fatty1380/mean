@@ -1,13 +1,50 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl($scope, reviewService, experienceService, userService, modalService, cameraService) {
+    angular
+        .module('account')
+        .controller('ProfileCtrl', ProfileCtrl);
+
+    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService'];
+
+    function ProfileCtrl($scope, reviewService, experienceService, userService, profileModalsService, cameraService) {
         var vm = this;
 
-        vm.modal = modalService;
         vm.profileData = userService.getUserData();
         vm.camera = cameraService;
 
+        vm.showEditModal = function (parameters) {
+            profileModalsService
+                .showProfileEditModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
+        };
+
+        vm.showShareModal = function (parameters) {
+            profileModalsService
+                .showProfileShareModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
+        };
+
+        vm.showRequestReviewModal = function (parameters) {
+            profileModalsService
+                .showRequestReviewModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
+        };
 
         // THIS IS NEEDED ONLY FOR DEVELOPMENT
         // Function below is needed only for cases,
@@ -28,14 +65,6 @@
 
         vm.reviews = [];
         vm.experience = [];
-
-        vm.showModal = function (modalName) {
-            modalService.show(modalName);
-        };
-
-        vm.closeModal = function (modalName) {
-            modalService.close(modalName);
-        };
 
         vm.getReviews = function () {
             reviewService
@@ -108,10 +137,5 @@
         };
     }
 
-    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'modalService', 'cameraService'];
-
-    angular
-        .module('account')
-        .controller('ProfileCtrl', ProfileCtrl);
 
 })();
