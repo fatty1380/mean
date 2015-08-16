@@ -62,11 +62,22 @@ Returns a list of all user profiles (admin only).
 
 ## Driver Attrs (object)
 + handle: Gearjammer (optional, string)
-+ licenses: [(object)] (optional, array[object])
++ license: { class: A endorsements: [H T] state: CA } (optional, License Attrs)
 + about: This is a note about me (optional, string)
 + experience: [] (optional, array)
 + interests: [] (optional, array)
 + reportsData: object (optional, array[object])
+
+## License Attrs (object)
++ class: A (optional, enum)
+    + A (string)
+    + B (string)
+    + C (string)
+    + D (string)
++ endorsements: [H,T] (optional, array[string])
++ state: CA (optional, string)
+    
+    
 
 ## Driver Base (User Base)(Driver Attrs)
 
@@ -95,6 +106,16 @@ show the additional fields available to a "Driver" as opposed to a regular
     + id (string) - Driver ID
 
 + Response 200 (application/json)
+
+    + Attributes (Driver)
+    
+## Update logged in Driver [PUT /api/users]
+
++ Attributes (Driver Base)
+    
++ Response 200 
+
+    Plus all standard User attributes
 
     + Attributes (Driver)
 
@@ -142,6 +163,74 @@ The USERS API serves as the root for acting and updating users. These methods op
 + Response 200 (application/json)
 
             { message: 'Password changed successfully' }
+            
+# group Company
+There are additional fields, but I am including those fileds which are most important to the mobile app and profile at this time.
+
+Notes: Look in the "Companies" collection in the main `outset-dev` database for more examples.
+
+## List Companies [GET /api/companies]
+
++ Response 200 (application/json)
+
+    + Attributes array(Company Schema)
+
+    + Body
+    
+            [{
+                name: 'Big Joe\'s Trucks',
+                zipCode: '83340',
+                locations: [{ type: 'main', streetAddresses: ['123 Fake Street'], city: 'Seattle', state: 'WA', zipCode: '98104'}],
+                about: 'This is a bunch of text about how aweseome we are!',
+                phone: '650-555-3535'
+            }]
+            
+## Load Company [GET /api/companies/{companyId}]
+
++ Parameters
+
+    + companyId (string)
+    
++ Response 200 (application/json)
+
+    + Attributes (Company Schema)
+    
+    + Body 
+    
+            {
+                name: 'Big Joe\'s Trucks',
+                zipCode: '83340',
+                locations: [{ type: 'main', streetAddresses: ['123 Fake Street'], city: 'Seattle', state: 'WA', zipCode: '98104'}],
+                about: 'This is a bunch of text about how aweseome we are!',
+                phone: '650-555-3535'
+            }
+
+# Data Structures
+
+## Company Schema (object)
++ name: `Big Joe's Trucks` (required, string)
++ zipCode: `83340` (optional, string)
++ locations: `[{type: 'main', streetAddresses: [123 fake street], city: 'SF', state: 'CA' }]` (optional, array[Address Schema])
++ about: At Joe's trucks, we believe in you ... (optional, string)
+    A string which may contain rudimentary HTML formatting containing information about the company
++ phone: 650-123-4567 (optional, String)
++ profileImageURL: https://server/profile.jpg (optional, string)
+
+## Address Schema (object)
++ type main (optional, enum[string])
+    + Default: `main`
+    + Members
+        + `main`
+        + `home`
+        + `business`
+        + `billing`
+        + `other`
++ typeOther 'shipping' (optional, string)
+    + Default: null
++ streetAddresses ['123 Fake St'] (optional, array[string])
++ city (optional, string)
++ state (optional, string)
++ zipCode (optional, string)
 
 # group Authentication
 
@@ -154,8 +243,8 @@ These API Methods deal with user Authentication in the app - sign-in, sign-up, f
     + email: user@domain.com (required, string) - The user's email address
     + password: somewhere (required, string) - ID of the Choice in form of an integer
     + firstName: Daniel (required, string) - ID of the Choice in form of an integer
-    + lastName: Driver (required, string) - ID of the Choice in form of an integer
-    + type: driver (required, enum) - Driver or owner user type.
+    + lastName: Driverman (required, string) - ID of the Choice in form of an integer
+    + type: driver (optional, enum) - 'driver' or 'owner' user type, driver by default.
 
 
 + Response 200 (application/json)
@@ -226,37 +315,94 @@ Logs the user out of the app
 + Response 200 
 
         The user is redirected to the welcome page
-
-# -------------------------------------------------------------
-
+        
+        
 # group Activity Feed
 
-## Feed [GET /api/feed]
+## Feed [/api/feed]
 Each user has a single Activity Feed which contains a list of every posted activity from all of their friends. Because of a Read/Write bias, it is important to keep all items being displayed to a user in one place in the DB, rather than reaching out to dozens of places in the database and processing. This adds a "Write Tax" when a user posts a new activity to their friends, but this is much less common action than reading the feed.
 
-## Feed (object)
-+ user: 24D1617HEX574196 (reference, string)
-+ items: [(Feed Item)] (required, array[Feed Item])
-+ activity: [(Feed Item)] (required, array[Feed Item])
++ Attributes (Feed Schema)
+
+## Get My Feed [GET /api/feed]
+
++ Response 200 (application/json)
+
+    + Attributes (Feed Schema)
+    
+## Post Item to My Feed [POST /api/feed]
+
++ Attributes (Feed Item)
+
++ Response 200 (application/json)
+
+    + Attributes (Feed Item)
+    
+## Load Specific Feed Item [GET /api/feed/:feedItemId]
+
++ Parameters
+    + feedItemId (string) - The 24-Digit Hex ID for the specific Feed item to load
+    
++ Response 200 (application/json)
+
+    + Attributes (Feed Item)
+    
+## Update Feed Item [PUT /api/feed/:feedItemId]
+
++ Parameters
+    + feedItemId (string) - The 24-Digit Hex ID for the specific Feed item to load
+
++ Attributes (Feed Item)
+    
++ Response 200 (application/json)
+
+    + Attributes (Feed Item)
+    
+## Comment on Feed Item [POST /api/feed/:feedItemId/comments]
+
++ Parameters
+    + feedItemId (string) - The 24-Digit Hex ID for the specific Feed item to load
+
++ Attributes
+
+    + comment: 'That was amazing' (required, string)
+    
++ Response 200 (application/json)
+
+    + Attributes array[Message Schema]
+        
+    + Body
+    
+            [{
+                text: 'That sure was great!',
+                sender: '55a453104cec3d4a40d4bf9c',
+                status: 
+                created: '2015-07-14T00:08:48.866Z'
+            }]
+
+# Data Structures     
+
+## Feed Schema(object)
++ user: 24D1617HEX574196 (required, string)
++ items: [{title: 'They had a great drive today'}] (required, array[Feed Item])
++ activity: [{title: 'I had a great drive today'}] (required, array[Feed Item])
 + created: 2015-07-12T01:34:43.000Z (required, string)
 + modified: 2015-07-12T01:34:43.000Z (required, string)
 
-# Activity Feed Item
-The Activity Feed item represents an individual checkin made by a user and broadcast to thier friends. Feed items may also be posted by companies, but the object itself will be unchanged.
-
 ## Feed Item (object)
+
 + title: Great drive today! (required, string)
 + message: This is more information than I usually add, but it would be great if you could see this (optional, string)
-+ location: { type: 'Point', coordinates: [34.123, 48.982] } (optional, GeoJSON)
-+ user: 24D1617HEX574196 (reference, string)
-+ comments: [{message: 'Love it!', user: 24DigitHexId}] (optional, object)
++ location: { 'type': 'Point', 'coordinates': [34.123, 48.982] } (optional, GeoJSON)
++ user: 24D1617HEX574196 (required, string)
++ comments: [{message: 'Love it!', user: 24DigitHexId}] (optional, array[Message Schema])
 + likes: [24D1617HEX574196, 24D1617HEX574196] (optional, array[User Base])
 + created: 2015-07-12T01:34:43.000Z (required, string)
 + modified: 2015-07-12T01:34:43.000Z (required, string)
 
 ## GeoJSON (object)
-+ type: Point (optional, String)
-+ coordinates: [34.123, 48.982] (required, array[Number])
++ type: Point (optional, string)
++ coordinates: [34.123, 48.982] (required, array[number])
 + created: 2015-07-12T01:34:43.000Z (required, string)
 + modified: 2015-07-12T01:34:43.000Z (required, string)
 
@@ -267,60 +413,35 @@ The Activity Feed item represents an individual checkin made by a user and broad
             created: '2015-07-12T01:34:43.000Z',
             modified: '2015-07-12T01:34:43.000Z'
         }
-        
-## Message Schema
-Currently, the concept of a message is wrapped up in a Driver-Company connection, which is no longer the way we want to approach this. The schema will remain the same, but the existing access to it and rights surrounding who you can message will be changed.
 
-## API Routes
-API Routes are currently in progress, but will be handled very similarly to other user APIs.
+# group Messages
 
-### Messages (Message Body) [GET /api/user/messages]
-** DRAFT DRAFT DRAFT **
+**DRAFT DRAFT DRAFT DRAFT DRAFT**
 
-## Message (object)
-+ sender: 24D1617HEX574196 (reference, string)
-    - A reference to the user who sent the message
+The previous version of "Messages" was wrapped up in the process of a Driver applying to a Job. Since these concepts are outside the scope of the current mobile app development, and are no longer consistent with our focus of building out a professional social network of truckers, the Messages will be split out into their own api.
+
+## Get Message [GET /api/messages/:messageId]
+
++ Parameters
+    + messageId (string) - The 24-Digit Hex ID for the specific message to load
+    
++ Response 200 (application/json)
+
+    + Attributes (Message Schema)
+
+
+# Data Structures  
+
+## Message Schema (object)
++ sender: 24D1617HEX574196 (optional, string)
+    A reference to the user who sent the message. This will be inferred if not supplied
 + text: Hey man! can you hear me? (required, string)
-    - The text of the message being sent
-+ status: 'sent' (optional, string(enum['draft', 'sent', 'read']))
+    The text of the message being sent
++ status: 'sent' (optional, enum[string])
+    + Default: `draft`
+    + Members
+        + `draft`
+        + `sent`
+        + `read`
 + created: 2015-07-12T01:34:43.000Z (required, string)
 + modified: 2015-07-12T01:34:43.000Z (required, string)
- 
-### Sample Object
-    + Body
-        {
-            sender: '55a453104cec3d4a40d4bf9c',
-            text: 'Hey Bob, have you seen the news today?',
-            status: 'sent',
-            created: '2015-07-12T01:34:43.000Z',
-            modified: '2015-07-12T01:34:43.000Z'
-        }
-
-## Company Base
-There are additional fields, but I am including those fileds which are most important to the mobile app and profile at this time.
-
-+ name: Big Joe's Trucks (required, string)
-+ zipCode: 83340 (optional, string)
-+ locations: [{ 123 fake street ... }] (optional, array[Address Base])
-+ about: At Joe's trucks, we believe in you ... (optional, string)
-    - A string which may contain rudimentary HTML formatting containing information about the company
-+ phone: 650-123-4567 (optional, String)
-+ profileImageURL: https://server/profile.jpg (optional, String)
-
-### Sample Object
-    {
-        name: 'Big Joe\'s Trucks',
-        zipCode: '83340',
-        locations: [{ type: 'main', streetAddresses: ['123 Fake Street'], city: 'Seattle', state: 'WA', zipCode: '98104'}],
-        about: 'This is a bunch of text about how aweseome we are!',
-        phone: '650-555-3535'
-    }
-
-Notes: Look in the "Companies" collection in the main `outset-dev` database for more examples.
-
-+ Companies [GET /api/companies]
-should return a list of all companies
-
-## Address Base
-
-
