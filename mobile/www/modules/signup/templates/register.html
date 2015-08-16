@@ -1,8 +1,8 @@
 <ion-view class="signup-section">
     <div class="header full-size">
-        <ion-nav-bar>
-            <ion-nav-back-button>Back</ion-nav-back-button>
-        </ion-nav-bar>
+        <div class="buttons">
+            <button class="button button-clear" ui-sref="signup/home">Back</button>
+        </div>
         <ion-header-bar align-title="center" class="bar-stable">
             <h1 class="title">Create Account</h1>
         </ion-header-bar>
@@ -12,21 +12,23 @@
     </div>
     <ion-pane class="has-footer">
         <ion-scroll>
-            <form name="mainForm" id="mainForm" class="list sign-up signup-form" ng-init="vm.initForm(this)" ng-submit="vm.continueToEngagement()" novalidate >
+            <form name="mainForm" id="mainForm" class="list sign-up signup-form" ng-init="vm.initForm(this)" ng-submit="vm.continueToEngagement()"
+            novalidate>
                 <label class="item item-input">
                     <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" required>
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Last Name"  ng-model="vm.user.lastName" required>
+                    <input type="text" placeholder="Last Name" ng-model="vm.user.lastName" required>
                 </label>
                 <label class="item item-input">
                     <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" required>
                 </label>
                 <label class="item item-input">
-                    <input type="password" placeholder="Password" ng-model="vm.user.password"  required>
+                    <input type="password" placeholder="Password" ng-model="vm.user.password" required>
                 </label>
                 <label class="item item-input item-ass">
-                    <input  name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" compare-to="vm.user.password" required  >
+                    <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" compare-to="vm.user.password"
+                    required>
                 </label>
                 <input style="position:absolute; left:9999px" type="submit" />
             </form>
@@ -34,7 +36,7 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary submit" ng-disabled="vm.form.mainForm.$invalid"  ng-click="vm.continueToEngagement()">Create Account</button>
+            <button class="button secondary submit" ng-disabled="vm.form.mainForm.$invalid" ng-click="vm.continueToEngagement()">Create Account</button>
         </div>
     </ion-footer-bar>
 </ion-view>
