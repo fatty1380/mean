@@ -34,15 +34,15 @@
                 userPromise.then(function (profileData) {
                     $ionicLoading.hide();
                     vm.profileData = profileData;
-                    vm.modal.close("avatarEdit");
+                    vm.modal.close('avatarEdit');
                 });
             }
         }
 
         vm.setImage = function (img) {
-            vm.modal.show("avatarEdit");
+            vm.modal.show('avatarEdit');
             if(img) {
-                vm.rawImage = "data:image/jpeg;base64," + img;
+                vm.rawImage = 'data:image/jpeg;base64,' + img;
             }
         }
     }
