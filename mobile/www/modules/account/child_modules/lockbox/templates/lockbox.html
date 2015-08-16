@@ -19,7 +19,7 @@
 
         <ion-scroll>
             <ul class="list document-list" ng-if="vm.documents.length>0">
-                <li class="item" ng-repeat="doc in vm.documents">
+                <li class="item" ng-repeat="doc in vm.documents track by $index">
                     <i class="ico ico-documentimage{{doc.sku}}"></i>
                     <div class="item-content">
                         <strong>{{ doc.name }}</strong>
