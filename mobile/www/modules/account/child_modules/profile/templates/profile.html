@@ -19,7 +19,7 @@
     </div>
     <ion-pane class="profile-pane">
         <ion-tabs class="profile-tabs tabs-top">
-            <ion-tab title="REVIEWS">
+            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews">
                 <ion-scroll class="reviews-list">
                     <ion-list>
                         <ion-item ng-repeat="review in vm.reviews track by $index">
@@ -37,7 +37,7 @@
                 </ion-scroll>
                 <button class="button content-button" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
-            <ion-tab title="PROFILE">
+            <ion-tab title="PROFILE" ui-sref="account.profile">
                 <ion-scroll class="profile-list">
                     <div class="list">
                         <div class="item" ng-if="!!vm.profileData.props.title">
@@ -82,7 +82,7 @@
                 </ion-scroll>
                 <button class="button content-button" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
-            <ion-tab title="EXPERIENCE">
+            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience">
                 <ion-scroll class="experience-list">
                     <ion-list>
                         <ion-item class="item" ng-repeat="job in vm.experience">
