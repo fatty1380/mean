@@ -27,7 +27,6 @@
 
     settings.usersProps = settings.usersProfile + 'props/';
 
-
     angular
         .module(AppConfig.appModuleName)
         .constant('settings', settings);
