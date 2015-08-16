@@ -40,22 +40,30 @@
             <ion-tab title="PROFILE">
                 <ion-scroll class="profile-list">
                     <div class="list">
-                        <div class="item">
+                        <div class="item" ng-if="!!vm.profileData.props.title">
                             CUURENT JOB TITLE:
-                            <span class="item-note">{{vm.profileData._type}}</span>
+                            <span class="item-note">{{vm.profileData.props.title}}</span>
                         </div>
                         <div class="item">
-                            TYPE OF TRUCK:
+                            TRUCK:
                             <span class="item-note">{{vm.profileData.props.truck}}</span>
+                        </div>
+                        <div class="item">
+                            TRAILER:
+                            <span class="item-note">
+                                <span ng-repeat="trailer in vm.profileData.props.trailer">
+                                    {{trailer}}<span ng-if="!$last">, </span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="item">
+                            DRIVING SINCE:
+                            <span class="item-note">{{vm.profileData.props.started | date : 'MMMM yyyy'}}</span>
                         </div>
                         <div class="item item-divider"></div>
                         <div class="item">
-                            COMPANY
+                            COMPANY:
                             <span class="item-note">{{vm.profileData.company || vm.profileData.props.company}}</span>
-                        </div>
-                        <div class="item">
-                            DRIVING SINCE
-                            <span class="item-note">{{vm.profileData.props.started | date : 'MMMM yyyy'}}</span>
                         </div>
                         <div class="item" ng-if="vm.profileData.props.freight">
                             <span class="ico ico-freight"></span>
