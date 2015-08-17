@@ -7,7 +7,20 @@
     }
 
     .item-content{
-      padding: 5px 0 0 10px;
+      padding: 0 0 0 10px;
+
+      .top{
+        overflow: hidden;
+        padding: 0 0 4px;
+
+        strong{
+          float: left;
+        }
+
+        .created{
+          float: right;
+        }
+      }
 
       .message{
         span{white-space: normal;}
@@ -15,7 +28,6 @@
 
       .created{
         display: block;
-        padding-top: 3px;
 
         .ico{
           vertical-align: middle;

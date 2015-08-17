@@ -5,43 +5,23 @@
         .module('messages')
         .service('messageService', messageService);
 
-    messageService.$inject = [];
+    messageService.$inject = ['$http', 'settings'];
 
-    function messageService () {
-        var vm  = this;
+    function messageService ($http, settings) {
 
-        vm.messages = [
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            }
-        ]
+        return {
+            getMessages : getMessages,
+            createMessage: createMessage
+        };
+
+        function getMessages() {
+            return $http.get(settings.messages);
+        }
+
+        function createMessage(message) {
+            return $http.post(settings.messages, message);
+        }
+
     }
 
 })();

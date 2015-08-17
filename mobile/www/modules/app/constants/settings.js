@@ -16,6 +16,7 @@
     settings.reviews = settings.api + 'reviews/';
     settings.experience = settings.api + 'experience/';
     settings.documents = settings.api + 'documents/';
+    settings.messages = settings.api + 'messages/';
 
     // endpoints
     settings.signup = settings.oauth + 'signup/';
