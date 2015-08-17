@@ -1,13 +1,7 @@
 (function () {
     'use strict';
 
-    angular
-        .module('profile')
-        .factory('friendsService', friendsService);
-
-    friendsService.$inject = ['$http', 'settings'];
-
-    function friendsService($http, settings) {
+    var friendsService = function ($http, settings) {
 
         var friends = [
             {
@@ -180,6 +174,11 @@
             allList : allList
         };
 
-    }
+    };
 
+    friendsService.$inject = ['$http', 'settings'];
+
+    angular
+        .module('profile')
+        .factory('friendsService', friendsService);
 })();

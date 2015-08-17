@@ -6,45 +6,32 @@
         </ion-header-bar>
     </div>
     <ion-pane class="pane has-footer add-activity-pane">
+        <!--{{vm}}-->
         <ion-scroll>
-            <div class="list">
+             <div class="list">
                 <label class="item item-input">
-                    <span class="input-label">Name:</span>
-                    <input type="text">
+                    <span class="input-label">Title:</span>
+                    <input type="text" ng-model="vm.activity.title">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Message:</span>
+                    <input type="text" ng-model="vm.activity.message">
                 </label>
                 <label class="item item-input">
                     <span class="input-label">Where:</span>
-                    <input type="text">
+                    <input type="text" ng-model="vm.where" >
                 </label>
-                <label class="item item-input">
-                    <span class="input-label">When:</span>
-                    <input type="text">
-                </label>
-
-                <div class="map"></div>
-
-                <label class="item item-input">
-                    <span class="input-label">Description:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Distance Driven:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Distance Since Last Post:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Freight Hauled:</span>
-                    <input type="text">
-                </label>
+                 <label class="item item-input">
+                     <span class="input-label">When:</span>
+                     <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();" >
+                 </label>
+                <div id="map" data-tap-disabled="true"></div>
             </div>
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary">Save</button>
+            <button class="button primary" ng-click="vm.saveFeed()">Save</button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>

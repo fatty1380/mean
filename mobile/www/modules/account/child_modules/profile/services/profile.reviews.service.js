@@ -1,13 +1,7 @@
 (function () {
     'use strict';
 
-    angular
-        .module('profile')
-        .factory('reviewService', reviewService);
-
-    reviewService.$inject = ['$http', 'settings'];
-
-    function reviewService ($http, settings) {
+    var reviewService = function ($http, settings) {
         var getUserReviews = function () {
                 return $http.get(settings.reviews)
             },
@@ -49,4 +43,9 @@
         }
     };
 
+    reviewService.$inject = ['$http', 'settings'];
+
+    angular
+        .module('profile')
+        .factory('reviewService', reviewService);
 })();

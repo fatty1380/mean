@@ -1,12 +1,6 @@
 (function() {
     'use strict';
 
-    angular
-        .module('profile')
-        .service('profileAvatarService', profileAvatarService);
-
-    profileAvatarService.$inject = ['userService', 'modalService', '$ionicLoading'];
-
     function profileAvatarService(userService, modalService, $ionicLoading) {
         var vm = this;
 
@@ -43,5 +37,11 @@
             }
         }
     }
+
+    profileAvatarService.$inject = ['userService', 'modalService', '$ionicLoading'];
+
+    angular
+        .module('profile')
+        .service('profileAvatarService', profileAvatarService);
 
 })();

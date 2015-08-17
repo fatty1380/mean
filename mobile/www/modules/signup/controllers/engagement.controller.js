@@ -49,7 +49,7 @@
             return new Date(startedArray[0], startedArray[1]);
         };
 
-        vm.continueToLicense = function() {
+        function continueToLicense() {
             registerService.dataProps.props.started = vm.createStartedDateObject(vm.started);
             registerService.dataProps.props.avatar = profileAvatarService.finalImage;
             registerService.dataProps.handle = vm.handle;

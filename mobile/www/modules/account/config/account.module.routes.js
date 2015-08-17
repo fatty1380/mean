@@ -51,12 +51,41 @@
                     }
                 })
 
-                .state('account.profile.friends', {
-                    url: '/friends',
+                .state('account.profile.share.content', {
+                    url: '/content',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html',
+                            controller: 'ProfileShareCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
+                        }
+                    }
+                })
+
+                .state('account.profile.request', {
+                    url: '/request',
                     views: {
                         '@': {
-                            templateUrl: 'modules/account/child_modules/profile/templates/profile-friends.html',
-                            controller: 'FriendsCtrl as vm'
+                            templateUrl: 'modules/account/child_modules/profile/templates/request-review.html',
+                            controller: 'ProfileRequestReviewCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
+                        }
+                    }
+                })
+
+                .state('account.profile.edit', {
+                    url: '/edit',
+                    views:{
+                        '@':{
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-edit.html',
+                            controller: 'ProfileEditCtrl as vm',
+                            resolve: {
+                                profileData: getProfileData
+                            }
                         }
                     }
                 })
@@ -70,6 +99,35 @@
                         }
                     }
                 })
+
+                //.state('account.lockbox.share', {
+                //    url: '/share',
+                //    views:{
+                //        '@':{
+                //            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share.html',
+                //            controller: 'LockboxShareCtrl as vm'
+                //        }
+                //    }
+                //})
+
+                //.state('account.lockbox.edit', {
+                //    url: '/edit',
+                //    views:{
+                //        '@':{
+                //            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-edit.html',
+                //            controller: 'LockboxEditCtrl as vm'
+                //        }
+                //    }
+                //})
+
+                //.state('account.lockbox.recipient', {
+                //    url: '/share/recipient',
+                //    views:{
+                //        '@':{
+                //            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share-recipient.html'
+                //        }
+                //    }
+                //})
 
                 .state('account.messages', {
                     url: '/messages',

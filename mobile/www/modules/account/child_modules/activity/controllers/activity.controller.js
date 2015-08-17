@@ -5,12 +5,20 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['activityModalsService','activityService'];
+    ActivityCtrl.$inject = ['activityModalsService','activityService', '$ionicLoading'];
 
-    function ActivityCtrl(activityModalsService, activityService) {
+    function ActivityCtrl(activityModalsService, activityService, $ionicLoading) {
         var vm = this;
 
-        vm.feed = activityService.feed;
+        $ionicLoading.show({
+            template: 'loading feed'
+        });
+
+        activityService.feed().then(function(result) {
+            $ionicLoading.hide();
+            vm.feed = result;
+            console.log(vm.feed);
+        });
 
         vm.showAddActivityModal = function () {
             activityModalsService
@@ -31,7 +39,5 @@
                     console.log(err);
                 })
         };
-
     }
-
 })();
