@@ -11,7 +11,6 @@
         var vm = this;
         var feed = [];
 
-
         var FEED = [
             {
                 user: '55a8c832f58ef0900b7ca14c',//test@test.test
@@ -21,7 +20,7 @@
                 likes: ['some value', 'some value','some value'],
                 location: {
                     type: 'Point',
-                    coordinates: [39.904903, -75.230039]
+                    coordinates: [39.904903, -71.230039]
                 }
             },
             {
@@ -45,29 +44,55 @@
                 likes: ['some value', 'some value', 'some value' ,'some value' ,'some value'],
                 location: {
                     type: 'Point',
-                    coordinates: [39.123111, -78.982111],
+                    coordinates: [34.123111, -72.982111],
                     created: '2015-07-12T01:34:43.000Z',
                     modified: '2015-07-12T01:34:43.000Z'
                 }
             }
         ];
 
+        function serialize(obj, prefix) {
+            var str = [];
+            for(var p in obj) {
+                if (obj.hasOwnProperty(p)) {
+                    var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+                    str.push(typeof v == "object" ?
+                        serialize(v, k) :
+                    encodeURIComponent(k) + "=" + encodeURIComponent(v));
+                }
+            }
+            return str.join("&");
+        }
 
         function getFeed() {
             return  $http.get(settings.feed)
                 .then(function (response) {
                     feed = response.activity;
-
                     console.log(response);
-                    return feed;
+                    return FEED;
                 }, function (response) {
+                    console.log(response);
                    // feed = FEED;
                     return FEED;
                 });
         }
 
+        function postFeed(data) {
+            $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
+            return  $http.post(settings.feed,serialize(data))
+                .then(function (response) {
+                    console.log(response);
+                    return response.data;
+                }, function (response) {
+                    console.log(response);
+                    // feed = FEED;
+                    return FEED;
+                });
+        }
+
         return {
-            feed: getFeed
+            feed: getFeed,
+            postFeed: postFeed
         }
     }
 

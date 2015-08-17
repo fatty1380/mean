@@ -14,11 +14,11 @@
 
 
         <!-- activity -->
-       <!-- <ion-scroll>
+        <ion-scroll>
             <ion-list ng-repeat="entry in vm.feed">
                   <ion-item class="item">
                     <div class="ico ico-avatar"></div>
-                    <div class="activity-item" ng-click='vm.showModal("activityDetails", entry)'>
+                    <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
                         <div class="top">
                             <div class="time"><i class="ico ico-timesmall"></i>{{ entry.created }}</div>
                             <div class="message">{{ entry.message }}</div>
@@ -37,11 +37,11 @@
                 </div>
 
             </ion-list>
-        </ion-scroll>-->
+        </ion-scroll>
 
 
         <!-- add -->
-        <p>where: {{vm.where}}</p>
+        <!--<p>where: {{vm.where}}</p>
         <p>loc: {{vm.loc}}</p>
 
         <ion-scroll>
@@ -66,7 +66,7 @@
                 <div id="map" data-tap-disabled="true"></div>
 
             </div>
-        </ion-scroll>
+        </ion-scroll>-->
 
         <button class="button content-button" ng-click='vm.showAddActivityModal()'>
             <i class="ico ico-share"></i>
