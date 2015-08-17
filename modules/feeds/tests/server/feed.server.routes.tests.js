@@ -30,8 +30,8 @@ describe('Feed CRUD tests', function () {
 	before(function (done) {
 		log.debug({ func: 'beforeAll' }, 'Setup Base');
 		// Get application
-		app = express.init(mongoose).http;
-		agent = request.agent(app);
+		app = express.init(mongoose);
+		agent = request.agent(app.http);
 
 		done();
 	});
