@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    angular
+        .module('account')
+        .controller('AddFriendsCtrl', AddFriendsCtrl);
+
+    AddFriendsCtrl.$inject = ['friendsService','$ionicScrollDelegate'];
+
     function AddFriendsCtrl(friendsService, $ionicScrollDelegate) {
         var vm = this;
 
@@ -9,11 +15,5 @@
         vm.searchText = "";
 
     }
-
-    AddFriendsCtrl.$inject = ['friendsService','$ionicScrollDelegate'];
-
-    angular
-        .module('account')
-        .controller('AddFriendsCtrl', AddFriendsCtrl);
 
 })();
