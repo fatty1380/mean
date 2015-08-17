@@ -138,6 +138,8 @@ describe('Message CRUD tests', function () {
 					// Set assertions
 					(messages[0].sender._id).should.equal(userId);
 					(messages[0].text).should.match('This is a Message!');
+					(messages[0].sender).should.not.have.property('password');
+					(messages[0].sender).should.not.have.property('salt');
 				});
 		});
 
