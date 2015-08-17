@@ -8,10 +8,10 @@
             </button>
         </ion-header-bar>
         <div class="profile-visual">
-            <div class="photo">
+            <div class="photo" ng-click="vm.camera.showActionSheet()">
                 <img ng-if="vm.profileData.props.avatar" src="{{vm.profileData.props.avatar}}" alt=""/>
             </div>
-            <div class="contacts-amount">
+            <div class="contacts-amount" ui-sref="account.profile.friends">
                 <span class="ico ico-avatar ico-middle"></span>
                 <strong>{{vm.profileData.friends.length}}</strong>
             </div>
@@ -38,7 +38,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button" ui-sref="account.profile.request"><i class="ico ico-request-review"></i>Request Review</button>
+                <button class="button content-button" ng-click="vm.modal.show('profileRequest')"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
             <ion-tab title="PROFILE">
                 <ion-scroll class="profile-list">
@@ -57,8 +57,8 @@
                             <span class="item-note">{{vm.profileData.company || vm.profileData.props.company}}</span>
                         </div>
                         <div class="item">
-                            YEARS WORKED
-                            <span class="item-note">{{vm.profileData.props.started}}</span>
+                            DRIVING SINCE
+                            <span class="item-note">{{vm.profileData.props.started | date : 'MMMM yyyy'}}</span>
                         </div>
                         <div class="item" ng-if="vm.profileData.props.freight">
                             <span class="ico ico-freight"></span>
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </ion-scroll>
-                <button class="button content-button" ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ng-click="vm.modal.show('profileShare')"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
             <ion-tab title="EXPERIENCE">
                 <ion-scroll class="experience-list">
@@ -87,7 +87,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button"  ui-sref="account.profile.share"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ng-click="vm.modal.show('profileShare')"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
         </ion-tabs>
     </ion-pane>

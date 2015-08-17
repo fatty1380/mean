@@ -1,0 +1,53 @@
+<ion-modal-view class="friends-screen">
+
+    <div class="header min-size">
+        <ion-header-bar>
+            <h1 class="title">Add Friends</h1>
+        </ion-header-bar>
+    </div>
+
+    <ion-pane class="has-footer friends-pane">
+        <div class="item item-input search-bar">
+            <i class="icon light ion-ios-search-strong"></i>
+            <input type="text" placeholder="Search for Friends" ng-model="vm.searchText" ng-change="vm.searchHandler()">
+        </div>
+
+        <ion-scroll delegate-handle="main-content-scroll">
+            <ul class="list friends-list">
+                <li class="item item-divider">Your Friends</li>
+                <li class="item" ng-repeat="contact in contacts = (vm.friends | filter:vm.searchText)">
+                    <i class="ico ico-avatar" ></i>
+                    <div class="item-content">
+                        {{contact.displayName}}{{contact.text}}
+                    </div>
+                    <button ng-if="vm.searchText.length>0" class="button button-small list-button">Select</button>
+                </li>
+                <li ng-if="!contacts.length" class="no-matches">
+                    <div class="item-content">NO MATCHES</div>
+                </li>
+            </ul>
+            <ul class="list friends-list" ng-if="!contacts.length">
+                <li class="item item-divider">Outset Users</li>
+                <li class="item" ng-repeat="user in users = (vm.users | filter:vm.searchText)">
+                    <i class="ico ico-avatar" ></i>
+                    <div class="item-content">
+                        <strong>{{user.userName}}</strong>
+                        {{user.displayName}}
+                    </div>
+                    <button ng-if="vm.searchText.length>0" class="button button-small list-button">Select</button>
+                </li>
+                <li ng-if="!users.length" class="no-matches">
+                    <div class="item-content">NO MATCHES</div>
+                </li>
+            </ul>
+        </ion-scroll>
+    </ion-pane>
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary" ng-click="vm.modal.close()">Cancel</button>
+            <button class="button primary">Add Friends</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>

@@ -62,8 +62,7 @@
                 .then(handleSuccess, handleError);
         }
 
-        function signOut (data) {
-            if (!data) return;
+        function signOut () {
             return  requestApi(settings.signout , "get" )
                 .then(handleSuccess, handleError);
         }
