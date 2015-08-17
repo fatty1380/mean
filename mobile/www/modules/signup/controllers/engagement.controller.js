@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    var engagementCtrl = function ($scope, $state, registerService, $ionicPopup, $ionicLoading, cameraService, $ionicModal, $ionicActionSheet, userService, profileAvatarService) {
+    angular
+        .module('signup')
+        .controller('EngagementCtrl', EngagementCtrl)
+
+    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'profileAvatarService' ];
+
+    function EngagementCtrl ($scope, $state, registerService, cameraService, userService, profileAvatarService) {
 
         var vm = this;
         vm.handle = "";
@@ -9,7 +15,10 @@
         vm.company = "Default Company";
         vm.camera = cameraService;
 
-        vm.initEngagementForm = function(scope){
+        vm.initEngagementForm = initEngagementForm;
+        vm.continueToLicense = continueToLicense;
+
+        function initEngagementForm(scope) {
             vm.form = scope;
         }
 
@@ -51,9 +60,4 @@
         }
     };
 
-    engagementCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'cameraService', '$ionicModal', '$ionicActionSheet', 'userService', 'profileAvatarService' ];
-
-    angular
-        .module('signup')
-        .controller('engagementCtrl', engagementCtrl)
 })();

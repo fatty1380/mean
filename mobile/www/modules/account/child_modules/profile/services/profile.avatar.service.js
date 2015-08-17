@@ -24,12 +24,9 @@
             });
 
             vm.finalImage = vm.croppedImage;
-            var dataProps = {
-                props:{
-                    avatar: vm.finalImage
-                }
-            };
-            var userPromise = userService.updateUserData(dataProps);
+            registerService.setProps('avatar',vm.finalImage);
+
+            var userPromise = userService.updateUserData(registerService.getDataProps());
             if(userPromise.then){
                 userPromise.then(function (profileData) {
                     $ionicLoading.hide();
