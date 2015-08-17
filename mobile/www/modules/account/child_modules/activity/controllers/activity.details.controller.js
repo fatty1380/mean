@@ -5,10 +5,15 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['activityDetailsService'];
+    ActivityDetailsCtrl.$inject = ['$scope', 'parameters'];
 
-    function ActivityDetailsCtrl(activityDetailsService) {
+    function ActivityDetailsCtrl($scope, parameters) {
         var vm = this;
-        vm.entry = activityDetailsService.entry;
+        vm.entry = parameters.entry;
+
+        vm.close = function () {
+            $scope.closeModal(vm.entry);
+        }
     }
+
 })();

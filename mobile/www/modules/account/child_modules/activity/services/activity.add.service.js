@@ -1,3 +1,4 @@
+/*
 (function () {
     'use strict';
 
@@ -27,7 +28,7 @@
            events: {
                click: function (map, eventName, originalEventArgs) {
                    console.log(originalEventArgs);
-                 /*  var e = originalEventArgs[0];
+                 /!*  var e = originalEventArgs[0];
                    var lat = e.latLng.lat(), lon = e.latLng.lng();
                    var marker = {
                        id: Date.now(),
@@ -38,7 +39,7 @@
                    };
                    $scope.map.markers.push(marker);
                    console.log($scope.map.markers);
-                   $scope.$apply();*/
+                   $scope.$apply();*!/
                }
            },
           center : { latitude: 39.904903, longitude: -75.230039 },
@@ -49,7 +50,7 @@
            events: {
                click: function (map, eventName, originalEventArgs) {
                    console.log(originalEventArgs);
-                   /*  var e = originalEventArgs[0];
+                   /!*  var e = originalEventArgs[0];
                     var lat = e.latLng.lat(), lon = e.latLng.lng();
                     var marker = {
                     id: Date.now(),
@@ -60,7 +61,7 @@
                     };
                     $scope.map.markers.push(marker);
                     console.log($scope.map.markers);
-                    $scope.$apply();*/
+                    $scope.$apply();*!/
                }
            },
            center : { latitude: 39.904903, longitude: -75.230039 },
@@ -76,3 +77,4 @@
         }
     };
 })();
+*/

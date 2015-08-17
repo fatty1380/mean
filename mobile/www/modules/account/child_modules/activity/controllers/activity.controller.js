@@ -5,6 +5,75 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
+    ActivityCtrl.$inject = ['activityModalsService','activityService', '$ionicLoading'];
+
+    function ActivityCtrl(activityModalsService, activityService, $ionicLoading) {
+        var vm = this;
+
+        //vm.feed = activityService.feed;
+
+        $ionicLoading.show({
+            template: 'loading feed'
+        });
+
+        activityService.feed().then(function(result) {
+            $ionicLoading.hide();
+            vm.feed = result;
+            console.log(vm.feed);
+        });
+
+        var latLng = new google.maps.LatLng(39.904903, -75.230039);
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 3,
+            center: latLng,
+            draggable:true,
+            sensor: true,
+            zoomControl:true,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+        var marker = new google.maps.Marker({
+            position: latLng,
+            title: 'Point A',
+            map: map,
+            draggable: true
+        });
+
+
+        vm.showAddActivityModal = function () {
+            activityModalsService
+                .showAddActivityModal()
+                .then(function (res) {
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                })
+        };
+
+        vm.showActivityDetailsModal = function (entry) {
+            activityModalsService
+                .showActivityDetailsModal({entry: entry})
+                .then(function (res) {
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                })
+        };
+
+    }
+
+})();
+
+
+
+
+/*
+(function() {
+    'use strict';
+
+    angular
+        .module('activity')
+        .controller('ActivityCtrl', ActivityCtrl);
+
     ActivityCtrl.$inject = ['modalService','activityService', 'activityDetailsService', '$ionicLoading', '$scope', '$compile'];
 
     function ActivityCtrl(modalService, activityService, activityDetailsService, $ionicLoading, $scope, $compile) {
@@ -103,3 +172,4 @@
         }
     }
 })();
+*/
