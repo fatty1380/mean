@@ -12,14 +12,9 @@
             <i class="ico ico-checkmarkwhite "></i>
         </button>
 
-        <div class="map">
-            <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" events="map.events" >
-                <ui-gmap-marker idkey="map.id"  coords="map.markerCoords" ></ui-gmap-marker>
-            </ui-gmap-google-map>
-        </div>
 
+        <!-- activity -->
        <!-- <ion-scroll>
-
             <ion-list ng-repeat="entry in vm.feed">
                   <ion-item class="item">
                     <div class="ico ico-avatar"></div>
@@ -43,6 +38,47 @@
 
             </ion-list>
         </ion-scroll>-->
+
+
+        <!-- add -->
+        <p>where: {{vm.where}}</p>
+        <p>loc: {{vm.loc}}</p>
+
+        <ion-scroll>
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label">Title:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Message:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Where:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">When:</span>
+                    <input type="text" >
+                </label>
+
+                <div id="map" data-tap-disabled="true"></div>
+
+<!--                <label class="item item-input">
+                    <span class="input-label">Distance Driven:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Distance Since Last Post:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Freight Hauled:</span>
+                    <input type="text">
+                </label>-->
+            </div>
+        </ion-scroll>
 
         <button class="button content-button" ng-click='vm.showModal("activityAdd")'>
             <i class="ico ico-share"></i>

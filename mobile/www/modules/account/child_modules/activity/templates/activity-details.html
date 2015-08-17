@@ -20,13 +20,10 @@
                 </div>
             </ion-item>
             <div class="map">
-                <ui-gmap-google-map center='vm.center' zoom='vm.entry.zoom' >
-                    <ui-gmap-marker idkey="vm.entry.id"  coords="vm.markerCoords"></ui-gmap-marker>
-                </ui-gmap-google-map>
+                 <div id="map"  data-tap-disabled="true"></div>
             </div>
+
             <strong>Distance since last check in</strong>
-<!--            {{vm.entry.location}}
-            {{vm.center}}-->
 
         </ion-scroll>
     </ion-pane>

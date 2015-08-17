@@ -21,11 +21,7 @@
                     <input type="text">
                 </label>
 
-                <div class="map">
-                    <ui-gmap-google-map center='vm.map.center' zoom='vm.entry.zoom' draggable="true" events="vm.map.events" >
-                        <ui-gmap-marker idkey="vm.entry.id"  coords="vm.map.markerCoords" ></ui-gmap-marker>
-                    </ui-gmap-google-map>
-                </div>
+                <div id="map" data-tap-disabled="true"></div>
 
                 <label class="item item-input">
                     <span class="input-label">Description:</span>
