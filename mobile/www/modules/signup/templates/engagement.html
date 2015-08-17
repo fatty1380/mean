@@ -12,9 +12,9 @@
     </div>
     <ion-pane class="has-footer">
         <div class="avatar-wrapper" >
-            <div class="avatar" ng-click="vm.camera.showActionSheet()">
-                <i ng-if="!vm.profileData.props.avatar" class="ico ico-cameraicon ico-middle" ></i>
-                <img ng-if="vm.profileData.props.avatar" class="round-avatar" ng-src="{{ vm.profileData.props.avatar }}" />
+            <div class="avatar" ng-click="vm.avatarShot()">
+                <i ng-if="!vm.finalImage" class="ico ico-cameraicon ico-middle" ></i>
+                <img ng-if="vm.finalImage" class="round-avatar" ng-src="{{ vm.finalImage }}" />
             </div>
         </div>
 

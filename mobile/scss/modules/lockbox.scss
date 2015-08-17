@@ -3,6 +3,22 @@
   .bar{
     background:none
   }
+  .bar{
+    &.bar-subheader{
+      top:50%;
+      margin-top: 10px;
+
+      h3{
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 19px;
+        white-space: normal;
+        margin: 0 20px;
+        text-overflow: initial;
+        color: #fff;
+      }
+    }
+  }
 
   .content-pane {
     bottom: 69px;
@@ -113,27 +129,6 @@
     font-size: 18px;
   }
 
-}
-
-/* lockbox recipient */
-.lockbox-share {
-
-  .contacts {
-    margin:0 10px 10px;
-
-    .contact {
-      display: inline-block;
-      border: 1px solid #CBC7CE;
-      border-radius: 20px;
-      margin: 5px;
-      padding: 6px;
-      font-size: 12px;
-
-      i {
-        padding: 6px;
-      }
-    }
-  }
 }
 
 

@@ -1,19 +1,19 @@
 (function () {
     'use strict';
 
-    function loginCtrl($scope, $state, registerService, $ionicLoading, tokenService, userService) {
+    function loginCtrl($scope, $state, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
         var vm = this;
 
         vm.error = "";
 
         vm.user = {
-            email: 'test@test.test',
+            email: 'rykov.serge@gmail.com',
             password: 'testtest'
         };
 
         vm.initForm = function (scope) {
             vm.form = scope;
-        };
+        }
 
         /**
          * @description
@@ -37,20 +37,14 @@
                         tokenService.set('access_token', response.message.data.access_token);
                         tokenService.set('refresh_token', response.message.data.refresh_token);
                         tokenService.set('token_type', response.message.data.token_type);
-
-                        registerService
-                            .me()
-                            .then(function (profileData) {
-                                userService.profileData = profileData.message.data;
-                                $state.go('account.profile');
-                            });
-
+                        //$location.path("account/profile");
+                        $state.go('account.profile')
                         vm.error = "";
                     } else {
                         vm.error = response.message.data.error_description || "error";
                     }
                 });
-        };
+        }
 
         $scope.$on('$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
@@ -66,7 +60,7 @@
         });
     }
 
-    loginCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', 'tokenService', 'userService'];
+    loginCtrl.$inject = ['$scope', '$state', '$location', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
 
     angular
         .module('signup')

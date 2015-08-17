@@ -4,8 +4,6 @@
     var lockboxEditService = function ($rootScope, $ionicPopup, lockboxDocuments, modalService) {
         var vm = this;
 
-        vm.modal = modalService;
-
         vm.lockboxDocuments = lockboxDocuments;
 
         for(var i = 0; i < vm.lockboxDocuments.docs.length; i++){
@@ -16,6 +14,10 @@
         vm.deleteDisabled = true;
         vm.renameDisabled = true;
 
+
+        vm.close = function (modalName) {
+            modalService.close(modalName)
+        };
 
         $rootScope.$watch(function () {
             return vm.lockboxDocuments.docs.filter(vm.getUnselectedItems).length;

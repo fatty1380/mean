@@ -16,7 +16,6 @@
     settings.profiles = settings.api + 'profiles/';
     settings.reviews = settings.api + 'reviews/';
     settings.experience = settings.api + 'experience/';
-    settings.documents = settings.api + 'documents/';
     settings.feed = settings.api + 'feed/';
 
 

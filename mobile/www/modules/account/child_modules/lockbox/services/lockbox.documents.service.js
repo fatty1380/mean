@@ -1,13 +1,53 @@
 (function () {
     'use strict';
 
-    var lockboxDocuments = function ($ionicActionSheet, $http, settings) {
+    var lockboxDocuments = function ($ionicActionSheet) {
+        var vm = this;
 
-        function getDocuments() {
-            return $http.get(settings.documents)
-        }
+        vm.docs = [
+            {
+                id: '1234abcd5678efab90123',
+                sku: 'mvr',
+                name: 'Forest',
+                created: '2015-07-11 10:33:05',
+                url: 'http://www.freeoboi.ru/images/558811701.jpg',
+                expires: null,
+                bucket: 'outset-dev',
+                key: 'kajifpaiueh13232'
+            },
+            {
+                id: '1234abcd5678efab9011212',
+                sku: 'bg',
+                name: 'multirule.pdf',
+                created: '2015-07-11 10:33:05',
+                url: '420f08027.pdf',
+                expires: null,
+                bucket: 'outset-dev',
+                key: 'kajifpaiueh13232'
+            },
+            {
+                id: '1234abcd5678efab9011212',
+                sku: 'bg',
+                name: 'TeachText.pdf',
+                created: '2015-07-11 10:33:05',
+                url: 'TeachText.pdf',
+                expires: null,
+                bucket: 'outset-dev',
+                key: 'kajifpaiueh13232222'
+            },
+            {
+                id: '1234abcd5678efab9011211',
+                sku: 'bg',
+                name: 'Lift-truck training',
+                created: '2015-08-11 10:23:05',
+                url: 'indg462.pdf',
+                expires: null,
+                bucket: 'outset-dev',
+                key: 'kajifpaiueh13232'
+            }
+        ];
 
-        function addDocsPopup() {
+        vm.addDocsPopup = function() {
             $ionicActionSheet.show({
                 buttons: [
                     {text: 'Take a Picture'},
@@ -40,13 +80,10 @@
             console.log('orderReports');
         }
 
-        return {
-            getDocuments: getDocuments,
-            addDocsPopup: addDocsPopup
-        }
     };
 
-    lockboxDocuments.$inject = ['$ionicActionSheet', '$http', 'settings'];
+
+    lockboxDocuments.$inject = ['$ionicActionSheet'];
 
     angular
         .module('lockbox')
