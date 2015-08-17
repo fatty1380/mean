@@ -5,6 +5,16 @@
  * @license   The MIT License {@link http://opensource.org/licenses/MIT}
  */
 (function () {
+
+    angular
+        .module('signup')
+        .factory('AuthenticationInterceptor', AuthenticationInterceptor)
+        .config(function ($httpProvider) {
+            $httpProvider.interceptors.push('AuthenticationInterceptor');
+        });
+
+    AuthenticationInterceptor.$inject = ['$q', '$location', 'tokenService'];
+
     'use strict';
     /**
      * @description
@@ -28,20 +38,10 @@
             responseError: function (rejection) {
                 // revoke client authentication if 401 is received
                 if (rejection != null && rejection.status === 401 && !!tokenService.get()) {
-                    //tokenService.remove();
                     $location.path('/');
                 }
                 return $q.reject(rejection);
             }
         };
     }
-
-    AuthenticationInterceptor.$inject = ['$q', '$location', 'tokenService'];
-
-    angular
-        .module('signup')
-        .factory('AuthenticationInterceptor', AuthenticationInterceptor)
-        .config(function ($httpProvider) {
-            $httpProvider.interceptors.push('AuthenticationInterceptor');
-        });
 })();

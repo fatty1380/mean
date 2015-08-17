@@ -1,50 +1,60 @@
 (function () {
     'use strict';
 
-    function loginCtrl($scope, $state, $location, registerService, $ionicPopup, $ionicLoading, tokenService) {
+    angular
+        .module('signup')
+        .controller('LoginCtrl', LoginCtrl);
+
+    LoginCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', 'tokenService', 'userService'];
+
+    function LoginCtrl($scope, $state, registerService, $ionicLoading, tokenService, userService) {
         var vm = this;
 
-        vm.error = "";
-
+        vm.error = '';
         vm.user = {
             email: 'rykov.serge@gmail.com',
             password: 'testtest'
         };
 
-        vm.initForm = function (scope) {
+        vm.initForm = initForm;
+        vm.signIn = signIn;
+
+        function initForm(scope) {
             vm.form = scope;
-        }
+        };
 
         /**
          * @description
          * Sign In
          */
-        vm.signIn = function () {
-
-            console.log("signIn()");
-
+        function signIn() {
             $ionicLoading.show({
                 template: 'please wait'
             });
-
-            tokenService.set('access_token', "");
+            tokenService.set('access_token', '');
 
             registerService.signIn(vm.user)
                 .then(function (response) {
                     $ionicLoading.hide();
-
+                    var data = response.message.data;
                     if (response.success) {
-                        tokenService.set('access_token', response.message.data.access_token);
-                        tokenService.set('refresh_token', response.message.data.refresh_token);
-                        tokenService.set('token_type', response.message.data.token_type);
-                        //$location.path("account/profile");
-                        $state.go('account.profile')
-                        vm.error = "";
+                        tokenService.set('access_token', data.access_token);
+                        tokenService.set('refresh_token',data.refresh_token);
+                        tokenService.set('token_type', data.token_type);
+
+                        registerService
+                            .me()
+                            .then(function (profileData) {
+                                userService.profileData = profileData.message.data;
+                                $state.go('account.profile');
+                            });
+
+                        vm.error = '';
                     } else {
-                        vm.error = response.message.data.error_description || "error";
+                        vm.error = data.error_description || "error";
                     }
                 });
-        }
+        };
 
         $scope.$on('$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
@@ -59,12 +69,6 @@
             }
         });
     }
-
-    loginCtrl.$inject = ['$scope', '$state', '$location', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
-
-    angular
-        .module('signup')
-        .controller('loginCtrl', loginCtrl);
 })();
 
 

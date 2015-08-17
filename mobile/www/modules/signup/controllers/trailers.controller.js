@@ -1,12 +1,16 @@
 (function () {
     'use strict';
 
-    var trailersCtrl = function ($scope, $state, registerService, $ionicLoading, $ionicPopup) {
+    angular
+        .module('signup')
+        .controller('TrailersCtrl', TrailersCtrl)
+
+    TrailersCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', '$ionicPopup'];
+
+    function TrailersCtrl($scope, $state, registerService, $ionicLoading, $ionicPopup) {
         var vm = this;
-
         vm.newTrailer = "";
-
-        vm.trailers = [
+        var TRAILERS = [
             {name:'Box', checked:false},
             {name:'Car Carrier', checked:false},
             {name:'Curtain Sider', checked:false} ,
@@ -26,7 +30,11 @@
             {name:'Other...', checked:false}
         ];
 
-        vm.addTrailer = function() {
+        vm.addTrailer = addTrailer;
+        vm.continueToProfile = continueToProfile;
+        vm.trailers = getTrailers()
+
+        function addTrailer() {
             $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer" autofocus>',
                 title: 'Please enter a trailer type',
@@ -55,24 +63,23 @@
             });
         };
 
-        vm.continueToProfile = function(isSave) {
+        function continueToProfile(isSave) {
             if(isSave){
-                registerService.dataProps.props.trailer = getNameKeys(vm.trailers);
+                registerService.setProps('trailer', getNameKeys(vm.trailers));
             }
 
-           registerService.updateUser(registerService.dataProps)
-               .then(function (response) {
-                    $ionicLoading.hide();
-                    if(response.success) {
-                        $state.go("account.profile");
-                    }else{
-                       // $location.path("signin/signup");
-                        vm.showPopup(JSON.stringify(response));
-                    }
-                });
+           registerService.updateUser(registerService.getDataProps())
+           .then(function (response) {
+                $ionicLoading.hide();
+                if(response.success) {
+                    $state.go("account.profile");
+                }else{
+                    showPopup(JSON.stringify(response));
+                }
+            });
         };
 
-        var getNameKeys = function (obj) {
+        function getNameKeys(obj) {
             var keys = [];
             for (var i in obj) {
                 if (obj.hasOwnProperty(i)) {
@@ -84,21 +91,16 @@
             return keys;
         };
 
-        vm.showPopup = function (response) {
-            console.log(response);
+        function showPopup(response) {
             var alertPopup = $ionicPopup.alert({
                 title: response.title || "title",
                 template: response || "no message"
             });
-            alertPopup.then(function (res) {
-            });
+            alertPopup.then(function (res) {});
+        }
+
+        function getTrailers() {
+            return TRAILERS;
         }
     };
-
-    trailersCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', '$ionicPopup'];
-
-    angular
-        .module('signup')
-        .controller('trailersCtrl', trailersCtrl)
-
 })();

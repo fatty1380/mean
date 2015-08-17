@@ -1,7 +1,12 @@
 (function () {
 
-    function tokenService($window) {
+    angular
+        .module('signup')
+        .factory('tokenService', tokenService);
 
+    tokenService.$inject = ['$window'];
+
+    function tokenService($window) {
         return {
             set: function(key, value) {
                 $window.localStorage[key] = value;
@@ -11,10 +16,4 @@
             }
         }
     }
-
-    tokenService.$inject = ['$window'];
-
-    angular
-        .module('signup')
-        .factory('tokenService', tokenService);
 })();

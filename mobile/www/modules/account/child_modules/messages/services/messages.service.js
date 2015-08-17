@@ -1,47 +1,27 @@
 (function () {
     'use strict';
 
-    var messageService = function () {
-        var vm  = this;
-
-        vm.messages = [
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            },
-            {
-                user: 'Username',
-                content: 'Etiam porta sem malesuade',
-                created: 'on Monday'
-            }
-        ]
-    };
-
-    messageService.$inject = [];
-
     angular
         .module('messages')
         .service('messageService', messageService);
+
+    messageService.$inject = ['$http', 'settings'];
+
+    function messageService ($http, settings) {
+
+        return {
+            getMessages : getMessages,
+            createMessage: createMessage
+        };
+
+        function getMessages() {
+            return $http.get(settings.messages);
+        }
+
+        function createMessage(message) {
+            return $http.post(settings.messages, message);
+        }
+
+    }
 
 })();
