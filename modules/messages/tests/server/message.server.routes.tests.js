@@ -1,23 +1,31 @@
 'use strict';
 
 var should = require('should'),
-	request = require('supertest'),
+	Q = require('q'),
+	_ = require('lodash'),
+	request = require('supertest-as-promised')(Q.Promise),
 	path = require('path'),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	Message = mongoose.model('Message'),
-	express = require(path.resolve('./config/lib/express'));
+	express = require(path.resolve('./config/lib/express')),
+	stubs = require(path.resolve('./config/lib/test.stubs')),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'tests',
+        file: 'message.server.routes'
+    });
 
+var mongoose = require('mongoose'),
+	User = mongoose.model('User'),
+	Message = mongoose.model('Message');
+	
 /**
  * Globals
  */
-var app, agent, credentials, user, message;
+var app, agent, credentials, user, recipient, message, _test;
 
 /**
  * Message routes tests
  */
-describe('Message CRUD tests', function() {
-	before(function(done) {
+describe('Message CRUD tests', function () {
+	before(function (done) {
 		// Get application
 		app = express.init(mongoose);
 		agent = request.agent(app.http);
@@ -25,254 +33,278 @@ describe('Message CRUD tests', function() {
 		done();
 	});
 
-	beforeEach(function(done) {
+	beforeEach(function () {
+		_test = this.test;
+		
 		// Create user credentials
-		credentials = {
-			username: 'username',
-			password: 'password'
-		};
+		user = new User(stubs.user);
+        credentials = stubs.getCredentials(user);
 
-		// Create a new user
-		user = new User({
-			firstName: 'Full',
-			lastName: 'Name',
-			displayName: 'Full Name',
-			email: 'test@test.com',
-			username: credentials.username,
-			password: credentials.password,
-			provider: 'local'
-		});
-
+		recipient = new User(stubs.getUser());
+		
 		// Save a user to the test db and create new Message
-		user.save(function() {
-			message = {
-				name: 'Message Name'
-			};
+		return Q.all([user.save(), recipient.save()])
+			.then(
+				function (success) {
+					log.info({ test: _test.title, func: 'beforeEach', success: success }, 'Saved User & Recipient to DB');
+					
+					user = success[0];
+					recipient = success[1];
+					
+					message = {
+						sender: user,
+						recipient: recipient,
+						text: 'This is a Message!'
+					};
+				});
+	});
 
-			done();
+	describe('When logged in', function () {
+		var userId, recipId;
+
+		beforeEach(function () {
+			return stubs.agentLogin(agent, credentials)
+				.then(function (response) {
+					
+					// Save the userId
+					userId = user.id;
+					recipId = recipient.id;
+				});
 		});
-	});
+		
+		afterEach(function () {
+			return stubs.agentLogout(agent);
+		});
 
-	it('should be able to save Message instance if logged in', function(done) {
-		agent.post('/api/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
+		it('should be able to save a basic message', function () {
+			
+			// Save a new Message
+			return agent.post('/api/messages')
+				.send(message)
+				.expect(200)
+				.then(function (messageSaveRes) {
 
-				// Get the userId
-				var userId = user.id;
+					log.info({ test: _test.title, response: messageSaveRes }, 'Posted Message');
 
-				// Save a new Message
-				agent.post('/api/messages')
-					.send(message)
-					.expect(200)
-					.end(function(messageSaveErr, messageSaveRes) {
-						// Handle Message save error
-						if (messageSaveErr) done(messageSaveErr);
-
-						// Get a list of Messages
-						agent.get('/api/messages')
-							.end(function(messagesGetErr, messagesGetRes) {
-								// Handle Message save error
-								if (messagesGetErr) done(messagesGetErr);
-
-								// Get Messages list
-								var messages = messagesGetRes.body;
-
-								// Set assertions
-								(messages[0].user._id).should.equal(userId);
-								(messages[0].name).should.match('Message Name');
-
-								// Call the assertion callback
-								done();
-							});
-					});
-			});
-	});
-
-	it('should not be able to save Message instance if not logged in', function(done) {
-		agent.post('/api/messages')
-			.send(message)
-			.expect(403)
-			.end(function(messageSaveErr, messageSaveRes) {
-				// Call the assertion callback
-				done(messageSaveErr);
-			});
-	});
-
-	it('should not be able to save Message instance if no name is provided', function(done) {
-		// Invalidate name field
-		message.name = '';
-
-		agent.post('/api/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
-
-				// Get the userId
-				var userId = user.id;
-
-				// Save a new Message
-				agent.post('/api/messages')
-					.send(message)
-					.expect(400)
-					.end(function(messageSaveErr, messageSaveRes) {
-						// Set message assertion
-						(messageSaveRes.body.message).should.match('Please fill Message name');
+					messageSaveRes.should.have.property('body');
+					messageSaveRes.body.should.have.property('sender');
+					messageSaveRes.body.should.have.property('recipient');
+					messageSaveRes.body.should.have.property('status');
 						
-						// Handle Message save error
-						done(messageSaveErr);
-					});
-			});
-	});
+					// Get a list of Messages
+					return agent.get('/api/messages');
+				})
+				.then(function (messagesGetRes) {
 
-	it('should be able to update Message instance if signed in', function(done) {
-		agent.post('/api/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
+					log.info({ test: _test.title, response: messagesGetRes.body, keys: _.keys(messagesGetRes.body) }, 'Got Messages');
 
-				// Get the userId
-				var userId = user.id;
-
-				// Save a new Message
-				agent.post('/api/messages')
-					.send(message)
-					.expect(200)
-					.end(function(messageSaveErr, messageSaveRes) {
-						// Handle Message save error
-						if (messageSaveErr) done(messageSaveErr);
-
-						// Update Message name
-						message.name = 'WHY YOU GOTTA BE SO MEAN?';
-
-						// Update existing Message
-						agent.put('/api/messages/' + messageSaveRes.body._id)
-							.send(message)
-							.expect(200)
-							.end(function(messageUpdateErr, messageUpdateRes) {
-								// Handle Message update error
-								if (messageUpdateErr) done(messageUpdateErr);
-
-								// Set assertions
-								(messageUpdateRes.body._id).should.equal(messageSaveRes.body._id);
-								(messageUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
-
-								// Call the assertion callback
-								done();
-							});
-					});
-			});
-	});
-
-	it('should be able to get a list of Messages if not signed in', function(done) {
-		// Create new Message model instance
-		var messageObj = new Message(message);
-
-		// Save the Message
-		messageObj.save(function() {
-			// Request Messages
-			request(app).get('/api/messages')
-				.end(function(req, res) {
-					// Set assertion
-					res.body.should.be.an.Array.with.lengthOf(1);
-
-					// Call the assertion callback
-					done();
-				});
-
-		});
-	});
-
-
-	it('should be able to get a single Message if not signed in', function(done) {
-		// Create new Message model instance
-		var messageObj = new Message(message);
-
-		// Save the Message
-		messageObj.save(function() {
-			request(app).get('/api/messages/' + messageObj._id)
-				.end(function(req, res) {
-					// Set assertion
-					res.body.should.be.an.Object.with.property('name', message.name);
-
-					// Call the assertion callback
-					done();
+					// Get Messages list
+					var messages = messagesGetRes.body;
+					
+					// Set assertions
+					(messages[0].sender._id).should.equal(userId);
+					(messages[0].text).should.match('This is a Message!');
 				});
 		});
+
+		it('should get a list of chats grouped by other party', function () {
+						// Save a new Message
+			return agent.post('/api/messages')
+				.send(message)
+				.expect(200)
+				.then(function (messageSaveRes) {
+
+					log.info({ test: _test.title, response: messageSaveRes }, 'Posted Message');
+
+					messageSaveRes.should.have.property('body');
+					messageSaveRes.body.should.have.property('sender');
+					messageSaveRes.body.should.have.property('recipient');
+					messageSaveRes.body.should.have.property('status');
+						
+					// Get a list of Messages
+					return agent.get('/api/messages?grouped=true');
+				})
+				.then(function (messagesGetRes) {
+
+					log.info({ test: _test.title, response: messagesGetRes.body}, 'Got Messages');
+
+					// Get Messages list
+					var groups = messagesGetRes.body;
+					
+					groups.should.have.length(1);
+					
+					var messages = groups[0];
+					
+					// Set assertions
+					(messages[0].sender._id).should.equal(userId);
+					(messages[0].text).should.match('This is a Message!');
+				});
+		});
+
+		it('should be able to update Message instance', function (done) {
+		
+			// Save a new Message
+			agent.post('/api/messages')
+				.send(message)
+				.expect(200)
+				.end(function (messageSaveErr, messageSaveRes) {
+					// Handle Message save error
+					if (messageSaveErr) done(messageSaveErr);
+
+					// Update Message name
+					message.text = 'WHY YOU GOTTA BE SO MEAN?';
+
+					// Update existing Message
+					agent.put('/api/messages/' + messageSaveRes.body._id)
+						.send(message)
+						.expect(200)
+						.end(function (messageUpdateErr, messageUpdateRes) {
+							// Handle Message update error
+							if (messageUpdateErr) done(messageUpdateErr);
+
+							// Set assertions
+							(messageUpdateRes.body._id).should.equal(messageSaveRes.body._id);
+							(messageUpdateRes.body.text).should.match('WHY YOU GOTTA BE SO MEAN?');
+
+							// Call the assertion callback
+							done();
+						});
+				});
+		});
+
+		it('should be able to delete Message instance', function (done) {
+		
+
+			// Save a new Message
+			agent.post('/api/messages')
+				.send(message)
+				.expect(200)
+				.end(function (messageSaveErr, messageSaveRes) {
+					// Handle Message save error
+					if (messageSaveErr) done(messageSaveErr);
+
+					// Delete existing Message
+					agent.delete('/api/messages/' + messageSaveRes.body._id)
+						.send(message)
+						.expect(200)
+						.end(function (messageDeleteErr, messageDeleteRes) {
+							// Handle Message error error
+							if (messageDeleteErr) done(messageDeleteErr);
+
+							// Set assertions
+							(messageDeleteRes.body._id).should.equal(messageSaveRes.body._id);
+
+							// Call the assertion callback
+							done();
+						});
+				});
+		});
+
+		it('should not be able to save Message instance if no message text is provided', function (done) {
+			// Invalidate name field
+			message.text = '';
+
+		
+			// Save a new Message
+			agent.post('/api/messages')
+				.send(message)
+				.expect(400)
+				.end(function (messageSaveErr, messageSaveRes) {
+					// Set message assertion
+					(messageSaveRes.body.message).should.match('Please enter a message');
+						
+					// Handle Message save error
+					done(messageSaveErr);
+				});
+		});
 	});
 
-	it('should be able to delete Message instance if signed in', function(done) {
-		agent.post('/api/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function(signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) done(signinErr);
 
-				// Get the userId
-				var userId = user.id;
 
-				// Save a new Message
-				agent.post('/api/messages')
-					.send(message)
-					.expect(200)
-					.end(function(messageSaveErr, messageSaveRes) {
-						// Handle Message save error
-						if (messageSaveErr) done(messageSaveErr);
 
-						// Delete existing Message
-						agent.delete('/api/messages/' + messageSaveRes.body._id)
-							.send(message)
-							.expect(200)
-							.end(function(messageDeleteErr, messageDeleteRes) {
-								// Handle Message error error
-								if (messageDeleteErr) done(messageDeleteErr);
 
-								// Set assertions
-								(messageDeleteRes.body._id).should.equal(messageSaveRes.body._id);
+	describe('when not signed in,', function () {
+		it('should not be able to get a list of Messages', function (done) {
+			// Create new Message model instance
+			var messageObj = new Message(message);
 
-								// Call the assertion callback
-								done();
-							});
+			// Save the Message
+			messageObj.save(function () {
+				// Request Messages
+				agent.get('/api/messages')
+					.expect(401)
+					.end(function (req, res) {
+						// Set assertion
+						res.should.have.property('error');
+
+						// Call the assertion callback
+						done();
+					});
+
+			});
+		});
+
+		it('should not be able to save Message instance', function (done) {
+			agent.post('/api/messages')
+				.send(message)
+				.expect(403)
+				.end(function (messageSaveErr, messageSaveRes) {
+					// Call the assertion callback
+					done(messageSaveErr);
+				});
+		});
+
+
+		it('should not be able to get a single Message', function (done) {
+			// Create new Message model instance
+			var messageObj = new Message(message);
+
+			// Save the Message
+			messageObj.save(function () {
+				agent.get('/api/messages/' + messageObj._id)
+					.expect(401)
+					.end(function (req, res) {
+						log.debug({ resBody: res.body, error: res.error, req: req })
+						// Set assertion
+						
+						// Call the assertion callback
+						done();
 					});
 			});
-	});
-
-	it('should not be able to delete Message instance if not signed in', function(done) {
-		// Set Message user 
-		message.user = user;
-
-		// Create new Message model instance
-		var messageObj = new Message(message);
-
-		// Save the Message
-		messageObj.save(function() {
-			// Try deleting Message
-			request(app).delete('/api/messages/' + messageObj._id)
-			.expect(403)
-			.end(function(messageDeleteErr, messageDeleteRes) {
-				// Set message assertion
-				(messageDeleteRes.body.message).should.match('User is not authorized');
-
-				// Handle Message error error
-				done(messageDeleteErr);
-			});
-
 		});
-	});
 
-	afterEach(function(done) {
-		User.remove().exec(function(){
-			Message.remove().exec(function(){
-				done();
+		it('should not be able to delete Message instance', function (done) {
+			// Set Message user 
+			message.user = user;
+
+			// Create new Message model instance
+			var messageObj = new Message(message);
+
+			// Save the Message
+			messageObj.save(function () {
+				// Try deleting Message
+				agent.delete('/api/messages/' + messageObj._id)
+					.expect(403)
+					.end(function (messageDeleteErr, messageDeleteRes) {
+						// Set message assertion
+						(messageDeleteRes.body.message).should.match('User is not authorized');
+
+						// Handle Message error error
+						done(messageDeleteErr);
+					});
+
 			});
 		});
+
+	});
+
+
+
+
+
+
+
+	afterEach(function () {
+		return stubs.cleanTables([User, Message]);
 	});
 });

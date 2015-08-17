@@ -32,6 +32,7 @@ exports.getJob = getJob;
 exports.getApplication = getApplication;
 
 exports.agentLogin = login;
+exports.agentLogout = signout;
 exports.getToken = token;
 
 exports.credentials = {
@@ -149,6 +150,12 @@ function login(agent, credentials) {
             log.error({ error: signinErr }, 'Error logging into app');
             return Q.reject(signinErr);
         });
+}
+
+function signout(agent) {
+    log.debug('Logging out');
+    
+    return agent.get('/api/auth/signout');
 }
 
 function token(agent, credentials, client) {

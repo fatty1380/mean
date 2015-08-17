@@ -62,16 +62,22 @@ mongoose.model('Mailbox', MailboxSchema);
 var MessageSchema = new Schema({
     sender: {
         type: Schema.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: 'Message must have a Sender'
+    },
+    recipient: {
+        type: Schema.ObjectId,
+        ref: 'User',
+        required: 'Please select a recipient'
     },
     text: {
         type: String,
-        default: ''
+        required: 'Please enter a message'
     },
     status: {
         type: String,
         enum: ['draft', 'sent', 'read', 'deleted', 'ignored'],
-        default: 'draft'
+        default: 'sent'
     },
     created: {
         type: Date,
