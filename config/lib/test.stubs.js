@@ -32,6 +32,7 @@ exports.getJob = getJob;
 exports.getApplication = getApplication;
 
 exports.agentLogin = login;
+exports.agentLogout = signout;
 exports.getToken = token;
 
 exports.credentials = {
@@ -151,6 +152,12 @@ function login(agent, credentials) {
         });
 }
 
+function signout(agent) {
+    log.debug('Logging out');
+    
+    return agent.get('/api/auth/signout');
+}
+
 function token(agent, credentials, client) {
     var endpoint = '/oauth/token';
 
@@ -163,6 +170,22 @@ function token(agent, credentials, client) {
     return agent.post(endpoint)
         .send(payload)
         .expect(200);
+}
+
+function tokenRequest(agent, endpoint) {
+    if (!agent) {
+        return Q.reject('No agent supplied for request')
+    }
+   
+    return agent.get(endpoint).use(bearer);
+} 
+// re-implement the .get and .post helpers if you feel they're important..
+
+function bearer ( request ){
+    // "config" is a global var where token and other stuff resides
+    if ( config.token ) {
+        request.set( 'Authorization', 'Bearer ' + config.token );
+    }
 }
 
 function cleanTables(tables) {

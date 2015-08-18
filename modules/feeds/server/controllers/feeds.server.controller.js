@@ -142,7 +142,8 @@ function read(req, res) {
  * List of Feeds
  */
 function list(req, res) {
-	Feed.find().sort('-created').populate('user', 'displayName')
+	Feed.find().sort('-created')
+		.populate('user', 'displayName')
 		.exec(function (err, feeds) {
 		if (err) {
 			return res.status(400).send({
@@ -161,7 +162,9 @@ function list(req, res) {
 function feedByID(req, res, next, id) {
 	req.log.debug({ func: 'feedByid', id: id }, 'Looking up Feed by ID');
 
-	Feed.findById(id).populate('user', 'displayName').exec(function (err, feed) {
+	Feed.findById(id)
+		.populate('items')
+		.exec(function (err, feed) {
 		if (err) {return next(err);}
 		if (!feed) {return next(new Error('Failed to load Feed ' + id));}
 		req.feed = feed;

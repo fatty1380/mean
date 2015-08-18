@@ -84,7 +84,8 @@ function checkFriendStatus(req, res, next) {
         return res.json({ status: 'me' });
     }
 
-    req.log.debug({ myFriends: me.friends, theirFriends: them.friends }, 'searching for friend intersection');
+    req.log.debug({ myFriends: me.friends, theirFriends: them.friends },
+        'searching for friend intersection');
 
     var mySide = _.find(me.friends, them._id);
     var theirSide = _.find(them.friends, me._id);
@@ -153,7 +154,8 @@ function createRequest(req, res, next) {
     if (!!req.profile && !req.user.isAdmin) {
         return res.status(403).send({ message: 'Cannot add friends for other users' });
     }
-
+    
+    // Setup variables for search
     var me = !!req.profile ? req.profile.id : req.user.id;
     var them = req.param('friendId');
 
@@ -171,6 +173,7 @@ function createRequest(req, res, next) {
         message: req.body.message || ''
     });
 
+    // Insert
     var u1 = User.where({ '_id': { '$in': [me, them] } })
         .update(
         { '$push': { 'requests': { '_id': request } } },
@@ -188,10 +191,10 @@ function createRequest(req, res, next) {
 function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
 
-    // var statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
-    // statuses = statuses.length > 1 ? { $in: statuses } : statuses;
+    var statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
+    statuses = statuses.length > 1 ? { $in: statuses } : statuses;
 
-    req.log.debug({ func: 'listRequests', query: req.query }, 'Executing find');
+    req.log.debug({ func: 'listRequests', query: req.query, statuses: statuses }, 'Executing find');
 
     var orQuery = [];
 
@@ -204,10 +207,9 @@ function listRequests(req, res) {
     }
 
 
-    Request.find({ status: { $ne: 'rejected' } })
+    Request.find({ 'to': req.user.id, 'status': statuses })
         .or(orQuery)
         .sort('created').exec()
-    //return Request.find({ 'to': req.user.id, 'status': statuses }).exec()
         .then(
         function (requests) {
             if (!requests) {

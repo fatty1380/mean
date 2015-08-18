@@ -41,6 +41,6 @@ module.exports = function (app, db) {
 	log.debug({ func: 'exports' }, 'Setting Session Auth');
 	app.use(passport.session());
     
+	// Disable JWT Auth temporarily
     app.use('/api', passport.authenticate('bearer', { session: false }));
-    //app.use('/api', passport.authenticate('bearer'));
 };
