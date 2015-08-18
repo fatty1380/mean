@@ -10,9 +10,24 @@
     function LockboxShareCtrl($scope, lockboxDocuments) {
         var vm = this;
 
-        vm.lockboxDocuments = lockboxDocuments.getDocuments();
-        vm.addDocsPopup = lockboxDocuments.addDocsPopup;
-        vm.shareStep = 1;
+        init();
+
+
+        function init() {
+            vm.documents = [];
+            vm.addDocsPopup = lockboxDocuments.addDocsPopup;
+            vm.shareStep = 1;
+            getDocs();
+        }
+
+        function getDocs () {
+            lockboxDocuments
+                .getDocuments()
+                .then(function (response) {
+                    console.log('Documents List', response);
+                    vm.documents = response.data instanceof Array ? response.data : lockboxDocuments.getStubDocuments();
+                });
+        }
 
         vm.cancel = function () {
             var self = this;
