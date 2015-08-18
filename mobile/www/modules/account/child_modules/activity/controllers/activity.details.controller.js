@@ -5,15 +5,15 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['$scope', 'parameters', '$timeout'];
+    ActivityDetailsCtrl.$inject = ['$scope', 'parameters'];
 
-    function ActivityDetailsCtrl($scope, parameters, $timeout) {
+    function ActivityDetailsCtrl($scope, parameters) {
+        angular.element(document).ready(initialize);
+
         var vm = this;
         vm.entry = parameters.entry;
 
-        //@TODO fix timeout to event
-        $timeout( function(){
-
+        function initialize() {
             console.log(vm.entry);
             console.log(vm.entry.location);
 
@@ -24,7 +24,7 @@
                 draggable:true,
                 sensor: true,
                 zoomControl:true,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAPпше
             });
             var marker = new google.maps.Marker({
                 position: latLng,
@@ -58,7 +58,7 @@
                     }
                 });
             }
-        }, 1500);
+        }
 
         vm.close = function () {
             $scope.closeModal(vm.entry);

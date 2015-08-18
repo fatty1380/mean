@@ -5,11 +5,12 @@
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope','$timeout', 'activityService', '$ionicLoading'];
+    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading'];
 
-    function ActivityAddCtrl($scope, $timeout, activityService, $ionicLoading) {
+    function ActivityAddCtrl($scope, activityService, $ionicLoading) {
+        angular.element(document).ready(initialize);
+
         var vm = this;
-
         vm.activity = {
             title : '',
             message : '',
@@ -33,8 +34,7 @@
             });
         }
 
-        //@TODO fix timeout to event
-        $timeout( function(){
+        function initialize() {
             var latLng = new google.maps.LatLng(39.904903, -75.230039);
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 3,
@@ -77,7 +77,7 @@
                     }
                 });
             }
-        }, 1500);
+        }
 
         vm.close = function () {
             $scope.closeModal(null);
