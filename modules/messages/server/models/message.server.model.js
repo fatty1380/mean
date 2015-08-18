@@ -89,6 +89,37 @@ var MessageSchema = new Schema({
     }
 });
 
+var ChatSchema = new Schema({
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+        required: 'Please define a user'
+    },
+    recipientName: {
+        type: String,
+        required: 'Please select a recipient'
+    },
+    recipient: {
+        type: Schema.ObjectId,
+        ref: 'User'
+    },
+    lastMessage: {
+        type: Schema.Types.Mixed
+    },
+    messages: {
+        type: ['Message']
+    }
+}, { toJSON: { virtuals: true } })
+
+ChatSchema.pre('save', function () {
+    if (!this.recipientName && !!this.recipient && this.isModified('recipient')) {
+        this.recipientName = this.recipient.displayName;
+    }
+})
+
+mongoose.model('Chat', ChatSchema);
+
+
 var RequestMessageSchema = new Schema({
     from: {
         type: Schema.ObjectId,

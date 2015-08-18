@@ -77,6 +77,7 @@ describe('Message CRUD tests', function () {
 		});
 
 		it('should be able to save a basic message', function () {
+			_test = this.test;
 			
 			// Save a new Message
 			return agent.post('/api/messages')
@@ -100,6 +101,24 @@ describe('Message CRUD tests', function () {
 
 					// Get Messages list
 					var messages = messagesGetRes.body;
+
+					messages.should.be.instanceof(Array).and.have.length(1);
+					
+					// Set assertions
+					(messages[0].sender._id).should.equal(userId);
+					(messages[0]).should.have.property('direction', 'outbound');
+					(messages[0].text).should.match('This is a Message!');
+
+					return agent.get('/api/users/' + recipId + '/messages');
+					// If this is failing, check route in messages.server.routes.js for permission restrictions
+				})
+				.then(function (messagesGetRes) {
+					log.info({ test: _test.title, response: messagesGetRes.body}, 'Got Recipient\'s Messages');
+
+					// Get Messages list
+					var messages = messagesGetRes.body;
+
+					messages.should.be.instanceof(Array).and.have.length(1);
 					
 					// Set assertions
 					(messages[0].sender._id).should.equal(userId);
@@ -108,6 +127,7 @@ describe('Message CRUD tests', function () {
 		});
 
 		it('should get a list of chats grouped by other party', function () {
+			_test = this.test;
 						// Save a new Message
 			return agent.post('/api/messages')
 				.send(message)
@@ -133,10 +153,19 @@ describe('Message CRUD tests', function () {
 					
 					groups.should.have.length(1);
 					
-					var messages = groups[0];
+					var chat = groups[0];
+					
+					chat.should.have.property('recipientName', recipient.displayName);
+					chat.should.have.property('recipient');
+					chat.should.have.property('messages');
+					chat.should.have.property('lastMessage');
+					
+					
+					var messages = chat.messages;
 					
 					// Set assertions
 					(messages[0].sender._id).should.equal(userId);
+					(messages[0]).should.have.property('direction', 'outbound');
 					(messages[0].text).should.match('This is a Message!');
 					(messages[0].sender).should.not.have.property('password');
 					(messages[0].sender).should.not.have.property('salt');
@@ -144,6 +173,7 @@ describe('Message CRUD tests', function () {
 		});
 
 		it('should be able to update Message instance', function (done) {
+			_test = this.test;
 		
 			// Save a new Message
 			agent.post('/api/messages')
@@ -175,7 +205,7 @@ describe('Message CRUD tests', function () {
 		});
 
 		it('should be able to delete Message instance', function (done) {
-		
+			_test = this.test;
 
 			// Save a new Message
 			agent.post('/api/messages')
@@ -203,10 +233,11 @@ describe('Message CRUD tests', function () {
 		});
 
 		it('should not be able to save Message instance if no message text is provided', function (done) {
+			_test = this.test;
+			
 			// Invalidate name field
 			message.text = '';
 
-		
 			// Save a new Message
 			agent.post('/api/messages')
 				.send(message)
@@ -227,6 +258,8 @@ describe('Message CRUD tests', function () {
 
 	describe('when not signed in,', function () {
 		it('should not be able to get a list of Messages', function (done) {
+			_test = this.test;
+			
 			// Create new Message model instance
 			var messageObj = new Message(message);
 
@@ -247,6 +280,8 @@ describe('Message CRUD tests', function () {
 		});
 
 		it('should not be able to save Message instance', function (done) {
+			_test = this.test;
+			
 			agent.post('/api/messages')
 				.send(message)
 				.expect(403)
@@ -258,6 +293,8 @@ describe('Message CRUD tests', function () {
 
 
 		it('should not be able to get a single Message', function (done) {
+			_test = this.test;
+			
 			// Create new Message model instance
 			var messageObj = new Message(message);
 
@@ -276,6 +313,8 @@ describe('Message CRUD tests', function () {
 		});
 
 		it('should not be able to delete Message instance', function (done) {
+			_test = this.test;
+			
 			// Set Message user 
 			message.user = user;
 

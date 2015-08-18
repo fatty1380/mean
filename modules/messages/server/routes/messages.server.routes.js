@@ -16,6 +16,11 @@ module.exports = function(app) {
 		.get(messages.read)
 		.put(messages.update)
 		.delete(messages.delete);
+	
+	// TODO: Properly Secure this route
+	app.route('/api/users/:userId/messages')
+		.all(messagesPolicy.isAllowed)
+		.get(messages.messageList);
 
 	// Finish by binding the Message middleware
 	app.param('messageId', messages.messageByID);
