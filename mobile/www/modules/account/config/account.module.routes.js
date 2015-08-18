@@ -3,15 +3,13 @@
 
     angular
         .module('account')
-        .config(['$stateProvider', function ($stateProvider) {
+        .config(accountModuleRouting)
 
-            $stateProvider
+    accountModuleRouting.$inject = ['$stateProvider'];
 
-                .state('account', {
-                    url: '/account',
-                    abstract: true,
-                    templateUrl: 'modules/account/templates/account.html'
-                })
+    function accountModuleRouting($stateProvider) {
+
+        $stateProvider
 
                 .state('account.profile', {
                     url: '/profile',
@@ -38,7 +36,7 @@
                     views: {
                         'lockbox': {
                             templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
-                            controller: 'lockboxCtrl as vm'
+                            controller: 'LockboxCtrl as vm'
                         }
                     }
                 })
@@ -48,7 +46,7 @@
                     views: {
                         'messages': {
                             templateUrl: 'modules/account/child_modules/messages/templates/messages.html',
-                            controller: 'messagesCtrl as vm'
+                            controller: 'MessagesCtrl as vm'
                         }
                     }
                 })
@@ -62,6 +60,6 @@
                         }
                     }
                 })
-        }])
+        }
 
 })();

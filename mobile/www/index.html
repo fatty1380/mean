@@ -3,9 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-   <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://maps.googleapis.com/ https://maps.gstatic.com/ https://mts0.googleapis.com/ 'unsafe-inline' 'unsafe-eval'">-->
-    <meta http-equiv="Content-Security-Policy" content="default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
-
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
     <title>Outset</title>
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
@@ -15,9 +13,6 @@
 
     <!-- libs -->
     <script src="libs/ionic/js/ionic.bundle.js"></script>
-    <script src='libs/angular-google-staticmaps/angular-google-staticmaps.js'></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1fUj13JDJpKxczSfAHzGSuk8ARoenrk&sensor=true"></script>
-
     <script src="cordova.js"></script>
     <!-- app -->
     <script src="modules/app/app.config.js"></script>
@@ -27,13 +22,14 @@
     <script src="modules/app/services/app.modal.service.js"></script>
     <script src="modules/app/services/app.user.service.js"></script>
     <script src="modules/app/services/app.camera.service.js"></script>
-    <script src="modules/app/services/app.contacts.service.js"></script>
 
     <!-- app constants -->
     <script src="modules/app/constants/userData.js"></script>
     <script src="modules/app/constants/settings.js"></script>
     <script src="modules/app/constants/modalTemplates.js"></script>
+
     <!-- modules -->
+
 
     <script src="modules/signup/signup.modules.js"></script>
     <script src="modules/signup/config/signup.modules.routes.js"></script>
@@ -44,7 +40,6 @@
     <script src="modules/signup/controllers/engagement.controller.js"></script>
     <script src="modules/signup/controllers/license.controller.js"></script>
     <script src="modules/signup/controllers/register.controller.js"></script>
-    <script src="modules/signup/controllers/signin.controller.js"></script>
     <script src="modules/signup/controllers/trailers.controller.js"></script>
     <script src="modules/signup/controllers/trucks.controller.js"></script>
     <script src="modules/signup/controllers/login.controller.js"></script>
@@ -52,7 +47,6 @@
     <script src="modules/signup/services/register.service.js"></script>
     <script src="modules/signup/services/token.service.js"></script>
     <script src="modules/signup/services/interceptor.service.js"></script>
-
 
     <!-- account -->
     <script src="modules/account/account.module.js"></script>
@@ -75,18 +69,28 @@
     <script src="modules/account/child_modules/profile/services/profile.friends.service.js"></script>
     <script src="modules/account/child_modules/profile/services/profile.avatar.service.js"></script>
 
+    <!-- company -->
+    <script src="modules/account/child_modules/company/company.module.js"></script>
+    <script src="modules/account/child_modules/company/config/company.module.routes.js"></script>
+
+    <script src="modules/account/child_modules/company/controllers/company.controller.js"></script>
 
     <!-- lockbox -->
     <script src="modules/account/child_modules/lockbox/lockbox.module.js"></script>
     <script src="modules/account/child_modules/lockbox/controllers/lockbox.controller.js"></script>
     <script src="modules/account/child_modules/lockbox/controllers/lockbox.share.controller.js"></script>
     <script src="modules/account/child_modules/lockbox/controllers/lockbox.edit.controller.js"></script>
+    <script src="modules/account/child_modules/lockbox/controllers/lockbox.share.recipient.controller.js"></script>
+    
     <script src="modules/account/child_modules/lockbox/services/lockbox.documents.service.js"></script>
     <script src="modules/account/child_modules/lockbox/services/lockbox.modals.service.js"></script>
     <script src="modules/account/child_modules/lockbox/directives/lockbox.pdfviewer.directive.js"></script>
+    <script src="modules/account/child_modules/lockbox/services/lockbox.contacts.service.js"></script>
 
 
+    <!-- messages -->
     <script src="modules/account/child_modules/messages/messages.module.js"></script>
+
     <script src="modules/account/child_modules/messages/controllers/messages.controller.js"></script>
     <script src="modules/account/child_modules/messages/controllers/message.new.controller.js"></script>
 
@@ -103,8 +107,6 @@
     <script src="modules/account/child_modules/activity/controllers/activity.add.controller.js"></script>
     <script src="modules/account/child_modules/activity/controllers/activity.details.controller.js"></script>
     <script src="modules/account/child_modules/activity/services/activity.service.js"></script>
-    <script src="modules/account/child_modules/activity/services/activity.add.service.js"></script>
-    <script src="modules/account/child_modules/activity/services/activity.details.service.js"></script>
     <script src="modules/account/child_modules/activity/services/activity.modals.service.js"></script>
 
     <!-- constants -->
