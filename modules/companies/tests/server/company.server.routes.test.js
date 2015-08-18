@@ -8,7 +8,7 @@ var should = require('should'),
 	stubs = require(path.resolve('./config/lib/test.stubs')),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'tests',
-        file: 'feed.server.routes'
+        file: 'company.server.routes'
     });
 
 var mongoose = require('mongoose'),
@@ -36,14 +36,12 @@ describe('Company CRUD tests', function () {
 	beforeEach(function () {
 		log.debug({ func: 'beforeEach' }, 'Setup');
 
-        user = new User(stubs.user);
+        user = new User(stubs.owner);
         credentials = stubs.getCredentials(user);
-		
-		owner = new User(stubs.owner);
 
 		// Save a user to the test db and create new Feed
 		//return Q.all([user.save(), feed.save()]).then(
-		return Q.all([user.save(), owner.save(), target.save()]).then(
+		return Q.all([user.save()]).then(
 			function () {
 				company = stubs.getCompany(owner);
 			});
@@ -53,45 +51,65 @@ describe('Company CRUD tests', function () {
 	 * End Stubs
 	 */
 
-	it('should be able to save Company instance if logged in', function (done) {
-		stubs.agentLogin(agent, credentials).then(function () {
+	it('should be able to save Company instance if logged in', function () {
+		var _test = this.test;
+		log.debug({ func: 'save', test: _test.title }, 'Preparing to login');
+		
+		// Save initial values for comparison
+		var userId = user.id;
+		var companyName = company.name;
 
-			log.debug({ func: 'save' }, 'Setup');
-			// Get the userId
-			var userId = user.id;
+		return stubs.agentLogin(agent, credentials)
+			.then(function () {
+				log.debug({ func: 'save', test: _test.title }, 'Setup');
 
-			// Save a new Company
-			agent.post('/api/companies')
-				.send(company)
-				.expect(200)
-				.end(function (companySaveErr, companySaveRes) {
-					// Handle Company save error
-					if (companySaveErr) { done(companySaveErr); }
+				// Save a new Company
+				return agent.post('/api/companies')
+					.send(company)
+					.expect(200);
+			})
+			.then(function (companySaveRes) {
 
-					// Get a list of Companies
-					agent.get('/api/companies')
-						.end(function (companiesGetErr, companiesGetRes) {
-							// Handle Company save error
-							if (companiesGetErr) { done(companiesGetErr); }
+				log.debug({ test: _test.title }, 'Save Company Request finished Processing')
+				log.debug({ test: _test.title, companies: companySaveRes.body }, 'Save Company Request finished Processing')
 
-							// Get Companies list
-							var companies = companiesGetRes.body;
+				log.debug({ test: _test.title, companies: companySaveRes.body }, 'Saved Company to Server')
 
-							// Set assertions
-							(companies[0].user._id).should.equal(userId);
-							(companies[0].name).should.match('My Company Name');
 
-							// Call the assertion callback
-							done();
-						});
+				// Get a list of Companies
+				return agent.get('/api/companies')
+			},
+				function (companySaveErr) {
+					return Q.reject(companySaveErr);
+				})
+			.then(function (companiesGetRes) {
+				// Get Companies list
+				var companies = companiesGetRes.body;
+				log.debug({ test: _test.title, companies: companies }, 'Got Company list from Server')
+
+				var firstCompany = companies[0];
+				
+				log.debug({ test: _test.title, company: firstCompany, ownerId: firstCompany.owner._id, userId: userId }, 'Examining first result in list')
+
+				// Set assertions
+				firstCompany.should.have.property('owner')
+				firstCompany.owner.should.have.property('_id', userId);
+				
+				firstCompany.should.have.property('name', companyName);
+
+				firstCompany.should.have.property('id');
+
+				return companies;
+			},
+				function (companiesGetErr) {
+					return Q.reject(companiesGetErr);
 				});
-		});
 	});
 
 	it('should not be able to save Company instance if not logged in', function (done) {
 		agent.post('/api/companies')
 			.send(company)
-			.expect(403)
+			.expect(401)
 			.end(function (companySaveErr, companySaveRes) {
 				// Call the assertion callback
 				done(companySaveErr);
@@ -118,7 +136,7 @@ describe('Company CRUD tests', function () {
 					.expect(400)
 					.end(function (companySaveErr, companySaveRes) {
 						// Set message assertion
-						(companySaveRes.body.message).should.match('Please fill Company name');
+						(companySaveRes.body.message).should.match('Please fill in your Company\'s name');
 						
 						// Handle Company save error
 						done(companySaveErr);
@@ -174,7 +192,7 @@ describe('Company CRUD tests', function () {
 		// Save the Review
 		companyObj.save(function () {
 			// Request Companies
-			request(app).get('/api/companies')
+			request(app.http).get('/api/companies')
 				.end(function (req, res) {
 					// Set assertion
 					res.body.should.be.an.Array.with.lengthOf(1);
@@ -193,7 +211,7 @@ describe('Company CRUD tests', function () {
 
 		// Save the Review
 		companyObj.save(function () {
-			request(app).get('/api/companies/' + companyObj._id)
+			request(app.http).get('/api/companies/' + companyObj._id)
 				.end(function (req, res) {
 					// Set assertion
 					res.body.should.be.an.Object.with.property('name', company.name);
@@ -251,11 +269,11 @@ describe('Company CRUD tests', function () {
 		// Save the Review
 		companyObj.save(function () {
 			// Try deleting Review
-			request(app).delete('/api/companies/' + companyObj._id)
-				.expect(403)
+			request(app.http).delete('/api/companies/' + companyObj._id)
+				.expect(401)
 				.end(function (companyDeleteErr, companyDeleteRes) {
 					// Set message assertion
-					(companyDeleteRes.body.message).should.match('User is not authorized');
+					(companyDeleteRes.body.message).should.match('User is not logged in');
 
 					// Handle Company error error
 					done(companyDeleteErr);
