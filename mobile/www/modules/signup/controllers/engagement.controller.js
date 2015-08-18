@@ -5,9 +5,9 @@
         .module('signup')
         .controller('EngagementCtrl', EngagementCtrl)
 
-    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'profileAvatarService' ];
+    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'avatarService' ];
 
-    function EngagementCtrl ($scope, $state, registerService, cameraService, userService, profileAvatarService) {
+    function EngagementCtrl ($scope, $state, registerService, cameraService, userService, avatarService) {
 
         var vm = this;
         vm.handle = "";
@@ -51,7 +51,7 @@
 
         function continueToLicense() {
             registerService.setProps('started',vm.createStartedDateObject(vm.started));
-            registerService.setProps('avatar', profileAvatarService.finalImage);
+            registerService.setProps('avatar', avatarService.getImage());
             registerService.setProps('company', 'Apple');
             registerService.setProps('freight', 'computers');
             registerService.setProps('truck', 'volvo');

@@ -4,14 +4,9 @@
         .module(AppConfig.appModuleName)
         .factory('cameraService', cameraService);
 
-    cameraService.$inject = ['$q', '$ionicActionSheet', 'modalService', 'userService', 'profileAvatarService'];
+    cameraService.$inject = ['$q', '$ionicActionSheet', 'avatarModalsService'];
 
-    function cameraService( $q, $ionicActionSheet, modalService, userService, profileAvatarService) {
-
-        var vm = this;
-        vm.modal = modalService;
-        vm.profileData = userService.profileData;
-
+    function cameraService( $q, $ionicActionSheet, avatarModalsService) {
         function getPicture(type) {
 
             var q = $q.defer();
@@ -71,7 +66,7 @@
         function takePhoto(type) {
             getPicture(type)
             .then(function(imageData) {
-                profileAvatarService.setImage(imageData);
+                 avatarModalsService.showEditModal(imageData);
             });
         }
 
