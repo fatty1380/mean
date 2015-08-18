@@ -1,0 +1,33 @@
+<ion-view class="company-screen">
+    <div class="header mid-size">
+        <ion-header-bar align-title="center">
+            <ion-nav-bar>
+                <ion-nav-back-button>Back</ion-nav-back-button>
+            </ion-nav-bar>
+            <h1 class="title" ng-bind="vm.companyData.name"></h1>
+        </ion-header-bar>
+        <div class="profile-visual">
+            <div class="photo">
+                <img ng-if="vm.companyData.avatar" src="{{vm.companyData.avatar}}" alt=""/>
+            </div>
+        </div>
+    </div>
+    <ion-pane class="has-title has-footer">
+        <div class="content-top">
+            <strong class="title">DESCRIPTION</strong>
+        </div>
+        <ion-scroll>
+            <ion-list class="news-list">
+                <ion-item ng-repeat="post in vm.companyData.news">
+                    <strong>{{post.title}}</strong>
+                    <div>{{post.text}}</div>
+                </ion-item>
+            </ion-list>
+        </ion-scroll>
+    </ion-pane>
+    <ion-footer-bar>
+        <div class="button-bar">
+            <button class="button block-button">Follow</button>
+        </div>
+    </ion-footer-bar>
+</ion-view>

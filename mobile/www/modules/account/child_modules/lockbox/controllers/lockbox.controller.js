@@ -3,11 +3,11 @@
 
     angular
         .module('lockbox', [ 'pdf' ])
-        .controller('lockboxCtrl', lockboxCtrl);
+        .controller('LockboxCtrl', LockboxCtrl);
 
-    lockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'lockboxModalsService'];
+    LockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'lockboxModalsService'];
 
-    function lockboxCtrl ($ionicModal, $scope, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup, lockboxModalsService) {
+    function LockboxCtrl ($ionicModal, $scope, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup, lockboxModalsService) {
         var vm = this;
 
         vm.addDocsPopup = lockboxDocuments.addDocsPopup;

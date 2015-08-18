@@ -11,14 +11,20 @@
 
         $stateProvider
 
+                .state('account', {
+                    url: '/account',
+                    abstract: true,
+                    templateUrl: 'modules/account/templates/account.html'
+                })
+
                 .state('account.profile', {
                     url: '/profile',
                     views: {
                         'profile': {
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
                             controller: 'ProfileCtrl as vm'
-                            }
                         }
+                    }
                 })
 
                 .state('account.profile.friends', {
