@@ -22,7 +22,7 @@ var mongoose = require('mongoose'),
 var app, agent, credentials, user, _test;
 
 
-describe.skip('User Connections & Social', function () {
+describe('User Connections & Social', function () {
     before(function (done) {
         // Get application
         app = express.init(mongoose).http;
@@ -180,13 +180,34 @@ describe.skip('User Connections & Social', function () {
                         body: response.body,
                         err: response.error
                     }, 'Got Response from %s', endpoint);
+                    
                     var friends = response.body;
 
-                    log.debug({ test: _test.title, endpoint: endpoint, u1: u1.id, u2: u2.id, user: user.id }, 'Logging user IDs before failure');
+                    log.debug({ 
+                        test: _test.title, 
+                        endpoint: endpoint, 
+                        u1: u1.id,
+                        u2: u2.id, 
+                        user: user.id },
+                        'Logging Relevant User IDs');
 
                     friends.should.have.property('length', 1);
                     friends[0].should.have.property('id', user.id);
+                    friends[0].should.have.property('handle');
                     friends[0].should.have.property('displayName');
+                    friends[0].should.have.property('profileImageURL');
+
+                    friends[0].should.have.property('friends')
+                        .and.be.instanceof(Array)
+                        .and.containEql(u1.id)
+                        .and.have.length(1);
+
+                    friends[0].should.not.have.property('email');
+                    friends[0].should.not.have.property('phone');
+                    friends[0].should.not.have.property('provider');
+                    friends[0].should.not.have.property('username');
+                    friends[0].should.not.have.property('password');
+                    friends[0].should.not.have.property('salt');
                 });
         });
 
@@ -348,7 +369,7 @@ describe.skip('User Connections & Social', function () {
 
     afterEach(function () {
 
-        return stubs.signout(agent)
+        return stubs.agentLogout(agent)
             .then(function () {
                 log.trace('Logged out of app');
                 return stubs.cleanTables([User, RequestMessage]);
