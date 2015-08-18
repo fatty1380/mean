@@ -59,5 +59,5 @@
             $state.go('signup/license');
         }
     };
-
+    
 })();
