@@ -1,5 +1,11 @@
 (function () {
 
+    angular
+        .module(AppConfig.appModuleName)
+        .factory('cameraService', cameraService);
+
+    cameraService.$inject = ['$q', '$ionicActionSheet', 'modalService', 'userService', 'profileAvatarService'];
+
     function cameraService( $q, $ionicActionSheet, modalService, userService, profileAvatarService) {
 
         var vm = this;
@@ -73,10 +79,4 @@
             showActionSheet: showActionSheet
         }
     }
-
-    cameraService.$inject = ['$q', '$ionicActionSheet', 'modalService', 'userService', 'profileAvatarService'];
-
-    angular
-        .module(AppConfig.appModuleName)
-        .factory('cameraService', cameraService);
 })();

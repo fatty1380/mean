@@ -5,7 +5,7 @@
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" src="{{vm.profileData.props.avatar}}" alt=""/>
+                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
             </div>
             <div class="text">
                 <strong>Trucker Handle</strong>
@@ -13,7 +13,8 @@
             </div>
         </div>
     </div>
-    <ion-pane class="has-footer">
+    <ion-pane class="has-footer edit-pane">
+
         <ion-scroll>
             <div class="list edit-fields-list">
                 <label class="item item-input">
@@ -39,10 +40,14 @@
                 </label>
             </div>
         </ion-scroll>
+        <button class="button content-button" ng-click="vm.logout()">
+            <i class="ico ico-share"></i>
+           Log Out
+        </button>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary" ui-sref="account.profile">Cancel</button>
+            <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary">Save</button>
         </div>
     </ion-footer-bar>

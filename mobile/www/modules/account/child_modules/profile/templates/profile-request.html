@@ -5,7 +5,7 @@
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" src="{{vm.profileData.props.avatar}}" alt=""/>
+                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
             </div>
             <div class="text">
                 <strong>Trucker Handle</strong>
@@ -33,7 +33,7 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary" ng-click="vm.modal.close()">Cancel</button>
+            <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary">Share</button>
         </div>
     </ion-footer-bar>

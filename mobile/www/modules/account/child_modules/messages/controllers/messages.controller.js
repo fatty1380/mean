@@ -3,11 +3,11 @@
 
     angular
         .module('messages')
-        .controller('messagesCtrl', messagesCtrl);
+        .controller('MessagesCtrl', MessagesCtrl);
 
-    messagesCtrl.$inject = ['messageService', 'messageModalsService'];
+    MessagesCtrl.$inject = ['messageService', 'messageModalsService'];
 
-    function messagesCtrl (messageService, messageModalsService) {
+    function MessagesCtrl (messageService, messageModalsService) {
 
         var vm  = this;
         vm.messages = [];

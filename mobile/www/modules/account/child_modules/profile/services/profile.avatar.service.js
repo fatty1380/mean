@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    angular
+        .module('profile')
+        .service('profileAvatarService', profileAvatarService);
+
+    profileAvatarService.$inject = ['userService', 'modalService', '$ionicLoading'];
+
     function profileAvatarService(userService, modalService, $ionicLoading) {
         var vm = this;
 
@@ -18,30 +24,27 @@
             });
 
             vm.finalImage = vm.croppedImage;
-            registerService.setProps('avatar',vm.finalImage);
-
-            var userPromise = userService.updateUserData(registerService.getDataProps());
+            var dataProps = {
+                props:{
+                    avatar: vm.finalImage
+                }
+            };
+            var userPromise = userService.updateUserData(dataProps);
             if(userPromise.then){
                 userPromise.then(function (profileData) {
                     $ionicLoading.hide();
                     vm.profileData = profileData;
-                    vm.modal.close("avatarEdit");
+                    vm.modal.close('avatarEdit');
                 });
             }
         }
 
         vm.setImage = function (img) {
-            vm.modal.show("avatarEdit");
+            vm.modal.show('avatarEdit');
             if(img) {
-                vm.rawImage = "data:image/jpeg;base64," + img;
+                vm.rawImage = 'data:image/jpeg;base64,' + img;
             }
         }
     }
-
-    profileAvatarService.$inject = ['userService', 'modalService', '$ionicLoading'];
-
-    angular
-        .module('profile')
-        .service('profileAvatarService', profileAvatarService);
 
 })();

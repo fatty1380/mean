@@ -1,9 +1,9 @@
 <ion-view class="signup-section">
     <div class="header mini-size">
-        <ion-nav-bar>
-            <ion-nav-back-button>Back</ion-nav-back-button>
-        </ion-nav-bar>
         <ion-header-bar align-title="center" class="bar-stable">
+            <div class="buttons">
+                <button class="button button-clear" ui-sref="signup/home">Back</button>
+            </div>
             <h1 class="title">Login</h1>
         </ion-header-bar>
     </div>
@@ -11,7 +11,8 @@
         <div class="login-content">
             <i class="ico ico-outsetlogo"></i>
             <h3>Log into your Outset account</h3>
-            <form name="mainLoginForm" id="mainLoginForm" class="list signup-form" ng-submit="vm.signIn()"  ng-init="vm.initForm(this)" novalidate >
+            <form name="mainLoginForm" id="mainLoginForm" class="list signup-form" ng-submit="vm.signIn()" ng-init="vm.initForm(this)"
+            novalidate>
                 <label class="item item-input">
                     <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" required>
                 </label>
@@ -25,8 +26,7 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary"   ng-click="vm.signIn()">Login</button>
+            <button class="button primary" ng-click="vm.signIn()">Login</button>
         </div>
     </ion-footer-bar>
 </ion-view>
-

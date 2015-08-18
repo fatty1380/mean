@@ -1,23 +1,15 @@
 (function () {
     'use strict';
 
-    var getProfileData  = function (registerService) {
-        return registerService
-            .me()
-            .then(function (response) {
-                if(response.success) {
-                    return response.message.data;
-                }
-            });
-    };
-
-
-
     angular
         .module('account')
-        .config(['$stateProvider', function ($stateProvider) {
+        .config(accountModuleRouting)
 
-            $stateProvider
+    accountModuleRouting.$inject = ['$stateProvider'];
+
+    function accountModuleRouting($stateProvider) {
+
+        $stateProvider
 
                 .state('account', {
                     url: '/account',
@@ -30,62 +22,17 @@
                     views: {
                         'profile': {
                             templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                            controller: 'ProfileCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
+                            controller: 'ProfileCtrl as vm'
                         }
                     }
                 })
 
-                .state('account.profile.share', {
-                    url: '/share',
-                    views:{
-                        '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share.html',
-                            controller: 'ProfileShareCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
-                        }
-                    }
-                })
-
-                .state('account.profile.share.content', {
-                    url: '/content',
-                    views:{
-                        '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/profile-share-contents.html',
-                            controller: 'ProfileShareCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
-                        }
-                    }
-                })
-
-                .state('account.profile.request', {
-                    url: '/request',
+                .state('account.profile.friends', {
+                    url: '/friends',
                     views: {
                         '@': {
-                            templateUrl: 'modules/account/child_modules/profile/templates/request-review.html',
-                            controller: 'ProfileRequestReviewCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
-                        }
-                    }
-                })
-
-                .state('account.profile.edit', {
-                    url: '/edit',
-                    views:{
-                        '@':{
-                            templateUrl: 'modules/account/child_modules/profile/templates/profile-edit.html',
-                            controller: 'ProfileEditCtrl as vm',
-                            resolve: {
-                                profileData: getProfileData
-                            }
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-friends.html',
+                            controller: 'FriendsCtrl as vm'
                         }
                     }
                 })
@@ -95,46 +42,17 @@
                     views: {
                         'lockbox': {
                             templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
-                            controller: 'lockboxCtrl as vm'
+                            controller: 'LockboxCtrl as vm'
                         }
                     }
                 })
-
-                //.state('account.lockbox.share', {
-                //    url: '/share',
-                //    views:{
-                //        '@':{
-                //            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share.html',
-                //            controller: 'LockboxShareCtrl as vm'
-                //        }
-                //    }
-                //})
-
-                //.state('account.lockbox.edit', {
-                //    url: '/edit',
-                //    views:{
-                //        '@':{
-                //            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-edit.html',
-                //            controller: 'LockboxEditCtrl as vm'
-                //        }
-                //    }
-                //})
-
-                //.state('account.lockbox.recipient', {
-                //    url: '/share/recipient',
-                //    views:{
-                //        '@':{
-                //            templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox-share-recipient.html'
-                //        }
-                //    }
-                //})
 
                 .state('account.messages', {
                     url: '/messages',
                     views: {
                         'messages': {
                             templateUrl: 'modules/account/child_modules/messages/templates/messages.html',
-                            controller: 'messagesCtrl as vm'
+                            controller: 'MessagesCtrl as vm'
                         }
                     }
                 })
@@ -148,6 +66,6 @@
                         }
                     }
                 })
-        }])
+        }
 
 })();

@@ -1,16 +1,18 @@
 (function() {
     'use strict';
 
-    function ProfileRequestReviewCtrl(profileData) {
-        var vm = this;
-        vm.profileData = profileData;
-
-    }
-
-    ProfileRequestReviewCtrl.$inject = ['profileData'];
-
     angular
         .module('account')
         .controller('ProfileRequestReviewCtrl', ProfileRequestReviewCtrl);
 
+    ProfileRequestReviewCtrl.$inject = ['$scope', 'userService'];
+
+    function ProfileRequestReviewCtrl($scope, userService) {
+        var vm = this;
+        vm.profileData = userService.profileData;
+
+        vm.cancel = function(){
+            $scope.closeModal(null);
+        }
+    }
 })();

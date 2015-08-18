@@ -1,10 +1,22 @@
 (function() {
     'use strict';
 
+    angular
+        .module('account')
+        .controller('LockboxEditCtrl', LockboxEditCtrl);
+
+    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments'];
+
     function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments) {
         var vm = this;
 
-        vm.lockboxDocuments = lockboxDocuments;
+        vm.lockboxDocuments = lockboxDocuments.getDocuments();
+
+        vm.cancel = function () {
+            $scope.closeModal();
+        };
+
+        if(!vm.lockboxDocuments.docs) return;
 
         for(var i = 0; i < vm.lockboxDocuments.docs.length; i++){
             vm.lockboxDocuments.docs[i].checked = false;
@@ -91,11 +103,5 @@
             }
         };
     }
-
-    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments'];
-
-    angular
-        .module('account')
-        .controller('LockboxEditCtrl', LockboxEditCtrl);
 
 })();

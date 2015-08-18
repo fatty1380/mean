@@ -1,8 +1,5 @@
 <ion-view class="signup-section">
     <div class="header mid-size">
-        <ion-nav-bar>
-            <ion-nav-back-button>Back</ion-nav-back-button>
-        </ion-nav-bar>
         <ion-header-bar align-title="center" class="bar-stable">
             <h1 class="title">Create Account</h1>
         </ion-header-bar>
@@ -12,9 +9,9 @@
     </div>
     <ion-pane class="has-footer">
         <div class="avatar-wrapper" >
-            <div class="avatar" ng-click="vm.avatarShot()">
-                <i ng-if="!vm.finalImage" class="ico ico-cameraicon ico-middle" ></i>
-                <img ng-if="vm.finalImage" class="round-avatar" ng-src="{{ vm.finalImage }}" />
+            <div class="avatar" ng-click="vm.camera.showActionSheet()">
+                <i ng-if="!vm.profileData.props.avatar" class="ico ico-cameraicon ico-middle" ></i>
+                <img ng-if="vm.profileData.props.avatar" class="round-avatar" ng-src="{{ vm.profileData.props.avatar }}" />
             </div>
         </div>
 

@@ -23,6 +23,10 @@
             activityDetails: {
                 template: 'modules/account/child_modules/activity/templates/activity-details.html',
                 service: 'activityDetailsService'
+            },
+            avatarEdit: {
+                template: 'modules/signup/templates/edit-avatar.html',
+                service: 'profileAvatarService'
             }
         });
 })();

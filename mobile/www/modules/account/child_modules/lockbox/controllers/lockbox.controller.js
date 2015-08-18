@@ -1,27 +1,58 @@
 (function() {
     'use strict';
 
-    function lockboxCtrl ($ionicModal, $scope, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup, modalService) {
+    angular
+        .module('lockbox', [ 'pdf' ])
+        .controller('LockboxCtrl', LockboxCtrl);
+
+    LockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'lockboxModalsService'];
+
+    function LockboxCtrl ($ionicModal, $scope, $sce ,$ionicLoading, lockboxDocuments, $ionicPopup, lockboxModalsService) {
         var vm = this;
 
-        vm.lockboxDocuments = lockboxDocuments;
         vm.addDocsPopup = lockboxDocuments.addDocsPopup;
-        vm.currentDoc = "";
+        vm.currentDoc = null;
+        vm.documents = [];
 
-
-        vm.showModal = function (modalName) {
-            modalService.show(modalName);
+        vm.showEditModal = function (parameters) {
+            lockboxModalsService
+                .showLockboxEditModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
         };
 
-        vm.closeModal = function (modalName) {
-            modalService.close(modalName);
+        vm.showShareModal = function (parameters) {
+            lockboxModalsService
+                .showLockboxShareModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
         };
 
         vm.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
         };
 
-        vm.onPdfEvent = function(type){
+        function getDocs () {
+            lockboxDocuments
+                .getDocuments()
+                .then(function (response) {
+                    console.log('Documents List', response);
+                    
+                    vm.documents = response.data instanceof Array ? response.data : lockboxDocuments.getStubDocuments();
+                })
+        };
+
+        getDocs();
+
+        vm.onPdfEvent = function(type) {
             console.log("   **** "+type+" ****");
             switch(type){
                 case "loadStart":
@@ -64,10 +95,9 @@
         vm.openPreview = function(doc) {
             vm.currentDoc = doc;
             $scope.modal.show().then(function(){
-                console.log("anima end");
-                if(vm.currentDoc.sku == 'mvr' ){
+                if(vm.currentDoc.sku === 'mvr' ){
                     $scope.image =  vm.currentDoc.url;
-                }else if(vm.currentDoc.sku == 'bg'){
+                }else if(vm.currentDoc.sku === 'bg'){
                     $scope.pdfURL = {src:vm.currentDoc.url};
                 }
             });
@@ -82,11 +112,5 @@
         }
 
     }
-
-    lockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'modalService'];
-
-    angular
-        .module('lockbox', [ 'pdf' ])
-        .controller('lockboxCtrl', lockboxCtrl);
 
 })();

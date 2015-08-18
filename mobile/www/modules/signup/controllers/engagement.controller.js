@@ -49,15 +49,15 @@
             return new Date(startedArray[0], startedArray[1]);
         };
 
-        vm.continueToLicense = function() {
-            registerService.dataProps.props.started = vm.createStartedDateObject(vm.started);
-            registerService.dataProps.props.avatar = profileAvatarService.finalImage;
-            registerService.dataProps.handle = vm.handle;
-            registerService.dataProps.props.company = 'Apple';
-            registerService.dataProps.props.freight = 'computers';
-            registerService.dataProps.props.truck = 'volvo';
+        function continueToLicense() {
+            registerService.setProps('started',vm.createStartedDateObject(vm.started));
+            registerService.setProps('avatar', profileAvatarService.finalImage);
+            registerService.setProps('company', 'Apple');
+            registerService.setProps('freight', 'computers');
+            registerService.setProps('truck', 'volvo');
+            registerService.setDataProps('handle' , vm.handle);
             $state.go('signup/license');
         }
     };
-
+    
 })();

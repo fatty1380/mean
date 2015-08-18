@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    var experienceService = function ($http, settings) {
+    angular
+        .module('profile')
+        .factory('experienceService', experienceService);
+
+    experienceService.$inject = ['$http', 'settings'];
+
+    function experienceService ($http, settings) {
         var getUserExperience = function () {
                 return $http.get(settings.usersExperience)
             },
@@ -20,11 +26,6 @@
             postUserExperience: postUserExperience,
             updateUserExperience: updateUserExperience
         }
-    };
+    }
 
-    experienceService.$inject = ['$http', 'settings'];
-
-    angular
-        .module('profile')
-        .factory('experienceService', experienceService);
 })();

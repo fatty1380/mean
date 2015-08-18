@@ -1,5 +1,11 @@
 (function () {
 
+    angular
+        .module(AppConfig.appModuleName)
+        .factory('contactsService', contactsService);
+
+    contactsService.$inject = ['$q'];
+
     function contactsService($q) {
 
         var formatContact = function(contact) {
@@ -27,12 +33,5 @@
         return {
             pickContact : pickContact
         };
-
     }
-
-    contactsService.$inject = ['$q'];
-
-    angular
-        .module('signup')
-        .factory('contactsService', contactsService);
 })();
