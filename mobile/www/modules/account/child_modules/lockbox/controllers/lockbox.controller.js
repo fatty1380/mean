@@ -48,7 +48,7 @@
                     
                     vm.documents = response.data instanceof Array ? response.data : lockboxDocuments.getStubDocuments();
                 })
-        };
+        }
 
         getDocs();
 
