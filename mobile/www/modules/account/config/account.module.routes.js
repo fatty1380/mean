@@ -37,6 +37,16 @@
                     }
                 })
 
+                .state('account.profile.friends.manual', {
+                    url: '/manual',
+                    views: {
+                        '@': {
+                            templateUrl: 'modules/account/child_modules/profile/templates/profile-friends-manual-add.html',
+                            controller: 'ManualFriendsAddCtrl as vm'
+                        }
+                    }
+                })
+
                 .state('account.lockbox', {
                     url: '/lockbox',
                     views: {

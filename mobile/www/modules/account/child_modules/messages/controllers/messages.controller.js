@@ -22,7 +22,7 @@
                 },
                 function (err) {
                     console.log(err);
-                })
+                });
         };
 
         function getMessages () {

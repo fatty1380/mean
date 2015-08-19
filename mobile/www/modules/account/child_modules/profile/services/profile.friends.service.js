@@ -9,6 +9,42 @@
 
     function friendsService($http, settings) {
 
+        //TODO: rework methods to use o
+
+        function getAllFriendsForLoggedUser() {
+            return $http.get(settings.friends);
+        }
+
+        function getFriendsForSpecificUser(id) {
+            if(!id) return;
+
+            return $http.get(settings.users + id + '/friends');
+        }
+
+        function getFriendStatus(id) {
+            if(!id) return;
+
+            return $http.get(settings.friends + id);
+        }
+
+        function getRequestsList() {
+            return $http.get(settings.requests);
+        }
+
+        function createRequest(id) {
+            return $http.post(settings.requests);
+        }
+
+        function loadRequest(id) {
+            if(!id) return;
+            return $http.get(settings.requests + id);
+        }
+
+        function updateRequest(id) {
+            if(!id) return;
+            return $http.put(settings.requests + id);
+        }
+
         var friends = [
             {
                 "displayName"   : "some friend1",
@@ -177,7 +213,14 @@
             contacts : contacts,
             friends : friends,
             users : users,
-            allList : allList
+            allList : allList,
+            getFriendsForSpecificUser: getFriendsForSpecificUser,
+            getAllFriendsForLoggedUser: getAllFriendsForLoggedUser,
+            getFriendStatus: getFriendStatus,
+            getRequestsList: getRequestsList,
+            createRequest: createRequest,
+            loadRequest: loadRequest,
+            updateRequest: updateRequest
         };
 
     }
