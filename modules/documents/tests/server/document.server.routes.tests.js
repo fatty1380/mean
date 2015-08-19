@@ -1,17 +1,42 @@
 'use strict';
 
 var should = require('should'),
-	request = require('supertest'),
-	path = require('path'),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
-	Document = mongoose.model('Document'),
-	express = require(path.resolve('./config/lib/express'));
+    _ = require('lodash'),
+    Q = require('q'),
+    path = require('path'),
+	fs = require('fs'),
+    stubs = require(path.resolve('./config/lib/test.stubs')),
+    express = require(path.resolve('./config/lib/express')),
+    request = require('supertest-as-promised')(Q.Promise),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'user',
+        file: 'document.server.routes.test'
+    });
 
+var mongoose = require('mongoose'),
+	User = mongoose.model('User'),
+	Document = mongoose.model('Document');
+	
 /**
  * Globals
  */
 var app, agent, credentials, user, document;
+
+
+/**
+ * What should I be able to do with a documents API?
+ * 
+ * should be able to load all of _my_ documents
+ * should be able to upload a new PDF document
+ * should be able to upload a new Base64 Encoded Document
+ * should be able to replace an existing document
+ * should be able to rename an existing document
+ * should be able to remove an existing document
+ * 
+ * should be able to grant access to an existing document
+ * should not be able to access a document when not authenticated
+ * should not be able to access a document unless access has been granted
+ */
 
 /**
  * Document routes tests
@@ -19,7 +44,7 @@ var app, agent, credentials, user, document;
 describe('Document CRUD tests', function() {
 	before(function(done) {
 		// Get application
-		app = express.init(mongoose);
+		app = express.init(mongoose).http;
 		agent = request.agent(app);
 
 		done();
