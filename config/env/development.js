@@ -15,7 +15,10 @@ module.exports = {
         }
     },
     logs: {
-        access: process.env.LOG_ACCESS_PATH || './log/'
+        access: process.env.LOG_ACCESS_PATH || './log/',
+        stdout: {
+            level: 'debug'
+        }
     },
     https: {
         enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,

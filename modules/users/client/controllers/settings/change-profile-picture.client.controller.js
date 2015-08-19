@@ -1,5 +1,10 @@
 (function () {
     'use strict';
+    
+    angular.module('users')
+        .controller('ChangeProfilePictureController', ProfilePictureController);
+
+    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs', '$scope'];
 
     function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs, $scope) {
         var vm = this;
@@ -346,9 +351,4 @@
 
     }
 
-    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs', '$scope'];
-
-
-    angular.module('users')
-        .controller('ChangeProfilePictureController', ProfilePictureController);
 })();

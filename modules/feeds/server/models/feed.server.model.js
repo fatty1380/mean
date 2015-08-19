@@ -4,7 +4,12 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+	Schema = mongoose.Schema,
+	path = require('path'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'feed',
+        file: 'server.model'
+    });
 
 /**
  * Feed Schema
@@ -41,14 +46,16 @@ var FeedSchema = new Schema({
 FeedSchema.index({ user: 'hashed' });
 
 FeedSchema.pre('save', function (next) {
-    if (this.isModified()) {
+	if (this.isModified()) {
         this.modified = Date.now();
     }
 	
 	if(this.isNew) {
-		this._id = this.user._id;
+		this._id = this.user && this.user._id || this.user;
 	}
 	
+	log.debug({ func: 'pre-save', new: this.isNew, mod: this.isModified(), doc: this }, 'logging doc status');
+    
     next();
 });
 
