@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope','$timeout', 'activityService', '$ionicLoading'];
+    ActivityAddCtrl.$inject = ['$scope','$timeout', 'activityService', '$ionicLoading', '$document'];
 
-    function ActivityAddCtrl($scope, $timeout, activityService, $ionicLoading) {
+    function ActivityAddCtrl($scope, $timeout, activityService, $ionicLoading, $document) {
         var vm = this;
 
         vm.activity = {

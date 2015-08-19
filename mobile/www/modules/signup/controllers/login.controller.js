@@ -12,8 +12,8 @@
 
         vm.error = '';
         vm.user = {
-            email: 'markov.flash@gmail.com',
-            password: 'sergey83mark'
+            email: 'rykov.serge@gmail.com',
+            password: 'testtest'
         };
 
         vm.initForm = initForm;
@@ -21,7 +21,7 @@
 
         function initForm(scope) {
             vm.form = scope;
-        };
+        }
 
         /**
          * @description
@@ -54,7 +54,7 @@
                         vm.error = data.error_description || "error";
                     }
                 });
-        };
+        }
 
         $scope.$on('$ionicView.afterEnter', function () {
             // Handle iOS-specific issue with jumpy viewport when interacting with input fields.

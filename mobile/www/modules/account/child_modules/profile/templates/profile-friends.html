@@ -1,10 +1,8 @@
 <ion-view class="friends-screen">
 
     <div class="header min-size">
-        <ion-nav-bar>
-            <ion-nav-back-button>Back</ion-nav-back-button>
-        </ion-nav-bar>
         <ion-header-bar>
+            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
             <h1 class="title">Friends</h1>
         </ion-header-bar>
     </div>
@@ -23,7 +21,6 @@
                     <div class="item-content">
                         {{contact.displayName}}{{contact.text}}
                     </div>
-                   <button ng-if="vm.searchText.length>0" class="button button-small list-button">Add</button>
                 </li>
                 <li ng-if="!contacts.length" class="no-matches">
                     <div class="item-content">NO MATCHES</div>
@@ -43,6 +40,12 @@
                     <div class="item-content">NO MATCHES</div>
                 </li>
             </ul>
+            <div class="button-holder text-center" ng-if="!contacts.length">
+                <a class="button button-clear manual-add" ui-sref="account.profile.friends.manual">
+                    <i class="icon ion-ios-plus-outline"></i>
+                    Add by Mobile Phone or Email
+                </a>
+            </div>
         </ion-scroll>
     </ion-pane>
 
