@@ -391,10 +391,10 @@ $but-height: 90px;
       text-align: center;
       pointer-events: none;
       left:0;
-      top: 35px;
       color:$dark;
       font-size: 22px;
       height:$but-height;
+      padding-top:35px;
 
     }
 
@@ -410,7 +410,7 @@ $but-height: 90px;
 
     .item-content{
       i{
-        top: 35px;
+        top: 40px;
         left: 35px;
       }
 
