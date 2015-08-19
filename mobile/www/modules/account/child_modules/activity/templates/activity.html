@@ -32,7 +32,7 @@
                         <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>
                     </div>
                 </ion-item>
-                <div class="map">
+                <div class="map" ng-if="!!entry.location.coordinates">
                 <static-gmap
                             size="400x200"
                             sensor="true"
