@@ -29,14 +29,15 @@
             });
             activityService.postFeed(vm.activity).then(function(result) {
                 $ionicLoading.hide();
-                vm.close('activityAdd');
+                console.log(result);
+                vm.close(result._id);
             });
         }
 
         function initialize() {
             var latLng = new google.maps.LatLng(39.904903, -75.230039);
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 3,
+                zoom: 8,
                 center: latLng,
                 draggable:true,
                 sensor: true,
@@ -86,8 +87,8 @@
             }
         }
 
-        vm.close = function () {
-            $scope.closeModal(null);
+        vm.close = function (str) {
+            $scope.closeModal(str);
         }
     }
 })();

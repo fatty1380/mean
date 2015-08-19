@@ -20,7 +20,7 @@
                     <div class="ico ico-avatar"></div>
                     <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
                         <div class="top">
-                            <div class="time"><i class="ico ico-timesmall"></i>{{ entry.created }}</div>
+                            <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created | date:'mediumDate'}}</div>
                             <div class="message"><strong>{{entry.user}}</strong> {{ entry.message }}</div>
                         </div>
                         <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled }}</strong>
@@ -30,11 +30,11 @@
                         <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>
                     </div>
                 </ion-item>
-                <div class="map">
                 <static-gmap
+                            ng-if="entry.location.coordinates"
                             size="400x200"
                             sensor="true"
-                            zoom="12"
+                            zoom="8"
                             markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates }} }">
                     </static-gmap>
                 </div>

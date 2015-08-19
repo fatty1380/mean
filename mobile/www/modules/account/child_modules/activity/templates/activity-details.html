@@ -13,7 +13,7 @@
                 <div class="activity-item" >
                     <div class="top">
 
-                        <div class="time"><i class="ico ico-timesmall"></i>{{ vm.entry.created }}</div>
+                        <div class="time" ng-if="vm.entry.created"><i class="ico ico-timesmall"></i>{{vm.entry.created | date:'mediumDate'}}</div>
                         <div class="message"><strong>{{vm.entry.user}}</strong> {{ vm.entry.title }}</div>
                         <div class="message">{{ vm.entry.message }}</div>
                     </div>
@@ -21,8 +21,8 @@
                     <i class="ico ico-likessmall"></i><strong class="title">{{ vm.entry.likes.length }} likes</strong>
                 </div>
             </ion-item>
-            <div class="map">
-                 <div id="map"  data-tap-disabled="true"></div>
+            <div class="map" ng-if="vm.entry.location.coordinates">
+                 <div id="map" data-tap-disabled="true"></div>
             </div>
 
             <div class="comments">
