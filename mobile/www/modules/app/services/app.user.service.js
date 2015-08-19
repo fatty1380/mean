@@ -11,12 +11,20 @@
         var vm = this;
 
         vm.profileData = {};
+        
+        vm.signOut = function () {
+            return registerService.signOut().then(
+                function (success) {
+                    vm.profileData = {};
+                }
+            )
+        }
 
         vm.getUserData = function () {
             if (!vm.profileData.id) {
                 return registerService.me()
                     .then(function (profileData) {
-                        vm.profileData = profileData.message.data;
+                        vm.profileData = profileData.success ? profileData.message.data : null;
                         return vm.profileData;
                     });
             }

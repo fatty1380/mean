@@ -31,7 +31,7 @@
         }
 
         vm.logout = function () {
-            registerService
+            userService
                 .signOut()
                 .then(function (data) {
                     tokenService.set('access_token', '');
