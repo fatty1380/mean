@@ -11,7 +11,21 @@
         var vm = this;
 
         vm.profileData = userService.profileData;
-        vm.lockboxDocuments = lockboxDocuments.getDocuments();
+        vm.documents = lockboxDocuments.getDocuments();
+
+
+        function getDocs () {
+            lockboxDocuments
+                .getDocuments()
+                .then(function (response) {
+                    console.log('Documents List', response);
+
+                    vm.documents = response.data instanceof Array && response.data.length ? response.data : lockboxDocuments.getStubDocuments();
+                })
+        }
+
+        getDocs();
+
         vm.shareStep = 1;
 
         vm.close = function () {

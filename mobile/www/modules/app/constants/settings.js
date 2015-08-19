@@ -18,6 +18,8 @@
     settings.documents = settings.api + 'documents/';
     settings.messages = settings.api + 'messages/';
     settings.feed = settings.api + 'feed/';
+    settings.friends = settings.api + 'friends/';
+    settings.requests = settings.api + 'requests/';
 
     // endpoints
     settings.signup = settings.oauth + 'signup/';
