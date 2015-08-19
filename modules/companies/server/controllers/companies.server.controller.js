@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-fs           = require('fs'),
 Q            = require('q'),
 path         = require('path'),
 errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
@@ -57,7 +56,7 @@ exports.create = function (req, res) {
 
     req.log.debug('create', 'Creating company for owner: [%s]: %s', ownerId, company._id);
 
-    company.owner = mongoose.Types.ObjectId(ownerId);
+    company.owner = new mongoose.Types.ObjectId(ownerId);
     company.agents = [];
 
     req.log.debug('create', 'now saving company w owner [%s], %s', company.owner, company._id);

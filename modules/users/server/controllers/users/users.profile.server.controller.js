@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 var _            = require('lodash'),
-    fs           = require('fs'),
     path         = require('path'),
     fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),

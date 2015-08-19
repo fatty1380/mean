@@ -9,7 +9,7 @@ var should = require('should'),
     request = require('supertest-as-promised')(Q.Promise),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'user',
-        file: 'user.server.routes.test'
+        file: 'user.connections.server.routes.test'
     });
 
 var mongoose = require('mongoose'),

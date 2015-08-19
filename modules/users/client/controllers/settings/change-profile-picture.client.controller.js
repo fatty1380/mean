@@ -4,7 +4,7 @@
     function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs, $scope) {
         var vm = this;
 
-        vm.initializeVariables = function() {
+        vm.initializeVariables = function () {
             vm.autoUpload = !!vm.autoUpload;
             vm.autoCrop = !!vm.autoCrop;
             vm.isEditing = false;
@@ -24,7 +24,7 @@
 
             vm.hasFile = !!vm.modelPath ? !!(vm.model[vm.modelPath]) : !!vm.model;
 
-            if(!!vm.modelPath && vm.hasFile) {
+            if (!!vm.modelPath && vm.hasFile) {
                 vm.uploadBtnText = 'Select New File ...';
             }
         };
@@ -50,7 +50,7 @@
         };
 
         function activate() {
-            if(vm.allowBlank && !vm.model) {
+            if (vm.allowBlank && !vm.model) {
                 $log.debug('[ChangeProfilePictureCtrl] Initialized blank model');
                 vm.model = {};
             }
@@ -106,11 +106,11 @@
                             } else {
                                 vm.newFile = fileReaderEvent.target.result;
                             }
-                            if(vm.autoUpload) {
+                            if (vm.autoUpload) {
                                 vm.uploadProfilePicture();
                             }
 
-                            if(vm.autoCrop) {
+                            if (vm.autoCrop) {
                                 vm.isCropping = true;
                             }
 
@@ -124,7 +124,7 @@
             vm.uploader.onSuccessItem = function (fileItem, response, status, headers) {
 
                 // Populate model object
-                if(!!vm.modelPath) {
+                if (!!vm.modelPath) {
                     vm.model[vm.modelPath] = response;
                 }
                 else {
@@ -160,12 +160,12 @@
                 vm.error = response.message;
             };
 
-            $scope.$watch(function() {
-                if(vm.mode.toLowerCase()==='resume') {
+            $scope.$watch(function () {
+                if (vm.mode.toLowerCase() === 'resume') {
                     return vm.modelId;
                 }
                 return vm.model;
-            }, function(newVal, oldVal) {
+            }, function (newVal, oldVal) {
                 vm.updateUploadUrl();
             });
 
@@ -173,7 +173,7 @@
             $log.debug('[PictureUploader] Successfuly initialized Picture Uploader');
         }
 
-        vm.resetVariables = function() {
+        vm.resetVariables = function () {
 
             var filter;
 
@@ -217,20 +217,20 @@
             return filter;
         };
 
-        vm.updateUploadUrl = function() {
-            if(!vm.uploader) {
+        vm.updateUploadUrl = function () {
+            if (!vm.uploader) {
                 return false;
             }
 
             vm.resetVariables();
 
-            if(vm.uploader.url !== vm.uploadUrl) {
+            if (vm.uploader.url !== vm.uploadUrl) {
                 debugger;
                 vm.uploader.url = vm.uploadUrl;
             }
         };
 
-        vm.initializeUploader = function() {
+        vm.initializeUploader = function () {
             var filter;
 
             if (!!vm.mode) {
@@ -250,7 +250,7 @@
             vm.uploader.filters.push(filter);
         };
 
-        vm.reactivateUploader = function() {
+        vm.reactivateUploader = function () {
             $timeout(function () {
                 vm.uploader.destroy();
                 vm.initializeVariables();
@@ -264,16 +264,16 @@
 
 
         vm.startCrop = function () {
-            if(!vm.uploader || !vm.uploader.queue.length){
+            if (!vm.uploader || !vm.uploader.queue.length) {
                 vm.newImage = vm.imageURL;
             }
             vm.isCropping = true;
         };
 
-        vm.cancelCrop = function() {
+        vm.cancelCrop = function () {
             vm.isCropping = false;
 
-            if(vm.autoCrop) {
+            if (vm.autoCrop) {
                 vm.uploadProfilePicture();
             }
         };
@@ -281,7 +281,7 @@
         function saveCrop() {
             vm.useCropped = true;
 
-            if(vm.autoCrop) {
+            if (vm.autoCrop) {
                 vm.uploadProfilePicture();
             } else {
                 vm.isCropping = false;
@@ -331,7 +331,7 @@
         function cancelUpload() {
             vm.uploader.clearQueue();
 
-            if(!!vm.model) {
+            if (!!vm.model) {
                 vm.imageURL = vm.model.profileImageURL;
             }
             vm.success = vm.error = null;
