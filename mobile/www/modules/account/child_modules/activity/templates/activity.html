@@ -6,9 +6,11 @@
             <button class="button button-clear">Add Friends</button>
         </ion-header-bar>
     </div>
-    <ion-pane class="pane content-pane button-padding-top button-padding-bottom">
-        <button class="button button-positive content-top-button">
-            3 new Updates
+    <ion-pane class="pane content-pane button-padding-bottom"
+        ng-class="{' button-padding-top': !!vm.newActivities}">
+        <button class="button button-positive content-top-button"
+            ng-show="!!vm.newActivities">
+            {{vm.newActivities} new Updates
             <i class="ico ico-checkmarkwhite "></i>
         </button>
 

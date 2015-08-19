@@ -12,6 +12,10 @@
         vm.feed = [];
         var num = 0;
         var ids = [];
+        
+        // Initialize Update Logic
+        vm.newActivities = 0;
+        vm.lastUpdate = Date.now();
 
         $ionicLoading.show({
             template: 'loading feed'
