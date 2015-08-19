@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    angular
+        .module('account')
+        .controller('LockboxShareRecipientCtrl', LockboxShareRecipientCtrl);
+
+    LockboxShareRecipientCtrl.$inject = ['lockboxDocuments', 'contactsService'];
+
     function LockboxShareRecipientCtrl(lockboxDocuments, contactsService) {
         var vm = this;
 
@@ -39,11 +45,5 @@
             }
         }
     }
-
-    LockboxShareRecipientCtrl.$inject = ['lockboxDocuments', 'contactsService'];
-
-    angular
-        .module('account')
-        .controller('LockboxShareRecipientCtrl', LockboxShareRecipientCtrl);
 
 })();

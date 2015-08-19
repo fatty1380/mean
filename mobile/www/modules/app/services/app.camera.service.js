@@ -1,11 +1,12 @@
 (function () {
 
-    function cameraService( $q, $ionicActionSheet, modalService, userService, profileAvatarService) {
+    angular
+        .module(AppConfig.appModuleName)
+        .factory('cameraService', cameraService);
 
-        var vm = this;
-        vm.modal = modalService;
-        vm.profileData = userService.profileData;
+    cameraService.$inject = ['$q', '$ionicActionSheet', 'avatarModalsService'];
 
+    function cameraService( $q, $ionicActionSheet, avatarModalsService) {
         function getPicture(type) {
 
             var q = $q.defer();
@@ -65,7 +66,7 @@
         function takePhoto(type) {
             getPicture(type)
             .then(function(imageData) {
-                profileAvatarService.setImage(imageData);
+                 avatarModalsService.showEditModal(imageData);
             });
         }
 
@@ -73,10 +74,4 @@
             showActionSheet: showActionSheet
         }
     }
-
-    cameraService.$inject = ['$q', '$ionicActionSheet', 'modalService', 'userService', 'profileAvatarService'];
-
-    angular
-        .module(AppConfig.appModuleName)
-        .factory('cameraService', cameraService);
 })();

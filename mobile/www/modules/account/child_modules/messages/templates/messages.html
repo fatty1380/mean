@@ -7,21 +7,23 @@
     <ion-pane class="content-pane">
         <ion-scroll>
             <ul class="list message-list">
-                <li class="item" ng-repeat="message in vm.messageService.messages">
+                <li class="item" ng-repeat="message in vm.messages">
                     <div class="ico ico-avatar"></div>
                     <div class="item-content">
-                        <div class="message">
-                            <strong>{{message.user}}</strong>
-                            <span>{{message.content}}</span>
+                        <div class="top">
+                            <strong>{{message.sender.displayName}}</strong>
+                            <span class="created"><i class="ico ico-timesmall"></i>{{message.created | date:'mediumDate'}}</span>
                         </div>
-                        <span class="created"><i class="ico ico-timesmall"></i>{{message.created}}</span>
+                        <div class="message">
+                            <span>{{message.text}}</span>
+                        </div>
                     </div>
                 </li>
             </ul>
         </ion-scroll>
-        <button class="button content-button">
+        <button class="button content-button" ng-click="vm.showNewMassageModal()">
             <i class="ico ico-share"></i>
-            Share
+            New Message
         </button>
     </ion-pane>
 </ion-view>

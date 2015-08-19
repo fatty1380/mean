@@ -1,7 +1,13 @@
 (function () {
     'use strict';
 
-    var userService  = function (registerService) {
+    angular
+        .module(AppConfig.appModuleName)
+        .service('userService', userService);
+
+    userService.$inject = ['registerService'];
+
+    function userService(registerService) {
         var vm = this;
 
         vm.profileData = {};
@@ -19,18 +25,12 @@
 
         vm.updateUserData = function (dataProps) {
             return registerService.updateUser(dataProps)
-            .then(function(data){
-                vm.profileData = data.message.data;
-                return vm.profileData;
-            });
+                .then(function(data){
+                    vm.profileData = data.message.data;
+                    return vm.profileData;
+                });
             return vm.profileData;
         };
 
     };
-
-    userService.$inject = ['registerService'];
-
-    angular
-        .module(AppConfig.appModuleName)
-        .service('userService', userService);
 })();

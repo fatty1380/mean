@@ -1,13 +1,50 @@
 (function() {
     'use strict';
 
-    function ProfileCtrl($scope, reviewService, experienceService, userService, modalService, cameraService) {
+    angular
+        .module('account')
+        .controller('ProfileCtrl', ProfileCtrl);
+
+    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService'];
+
+    function ProfileCtrl($scope, reviewService, experienceService, userService, profileModalsService, cameraService) {
         var vm = this;
 
-        vm.modal = modalService;
         vm.profileData = userService.getUserData();
         vm.camera = cameraService;
 
+        vm.showEditModal = function (parameters) {
+            profileModalsService
+                .showProfileEditModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
+        };
+
+        vm.showShareModal = function (parameters) {
+            profileModalsService
+                .showProfileShareModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
+        };
+
+        vm.showRequestReviewModal = function (parameters) {
+            profileModalsService
+                .showRequestReviewModal(parameters)
+                .then(function (result) {
+                    console.log(result);
+                },
+                function (err) {
+                    console.log(err);
+                })
+        };
 
         // THIS IS NEEDED ONLY FOR DEVELOPMENT
         // Function below is needed only for cases,
@@ -20,6 +57,7 @@
             var userPromise = userService.getUserData();
             if (userPromise.then) {
                 userPromise.then(function (data) {
+                    console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
                     vm.profileData = data;
                 })
             }
@@ -28,19 +66,10 @@
         vm.reviews = [];
         vm.experience = [];
 
-        vm.showModal = function (modalName) {
-            modalService.show(modalName);
-        };
-
-        vm.closeModal = function (modalName) {
-            modalService.close(modalName);
-        };
-
         vm.getReviews = function () {
             reviewService
                 .getUserReviews()
                 .then(function (response) {
-                    console.log('Reviews List', response);
                     vm.reviews = response.data;
                 })
         };
@@ -48,23 +77,16 @@
             experienceService
                 .getUserExperience()
                 .then(function (response) {
-                    console.log('Experience List', response);
                     vm.experience = response.data;
                 })
         };
         vm.postReview = function (id, review) {
             reviewService
                 .postReviewForProfile(id, review)
-                .then(function (response) {
-                    console.log('posted response', response);
-                })
         };
         vm.postExperience = function (experience) {
             experienceService
                 .postUserExperience(experience)
-                .then(function (response) {
-                    console.log('posted experience', response);
-                })
         };
 
         vm.getReviews();
@@ -105,20 +127,7 @@
             vm.profileData = userService.profileData;
         }, true);
 
-
-        vm.showModal = function (modalName) {
-            modalService.show(modalName);
-        };
-
-        vm.closeModal = function (modalName) {
-            modalService.close(modalName);
-        };
     }
 
-    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'modalService', 'cameraService'];
-
-    angular
-        .module('account')
-        .controller('ProfileCtrl', ProfileCtrl);
 
 })();

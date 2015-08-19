@@ -1,12 +1,79 @@
-<ion-view>
-    <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="edit()">Edit</button>
-        <h1 class="title">Activity</h1>
-        <button class="button button-clear">
-            <i class="ico ico-settingsicon ico-text-top"></i>
+<ion-view class="activity">
+    <div class="header min-size">
+        <ion-header-bar align-title="center">
+            <button class="button button-clear">My Logs</button>
+            <h1 class="title">Activity</h1>
+            <button class="button button-clear">Add Friends</button>
+        </ion-header-bar>
+    </div>
+    <ion-pane class="pane content-pane button-padding-top button-padding-bottom">
+        <button class="button button-positive content-top-button">
+            3 new Updates
+            <i class="ico ico-checkmarkwhite "></i>
         </button>
-    </ion-header-bar>
-    <ion-content>
-        <h2>activity content</h2>
-    </ion-content>
+
+
+        <!-- activity -->
+        <ion-scroll>
+            <ion-list ng-repeat="entry in vm.feed">
+                  <ion-item class="item">
+                    <div class="ico ico-avatar"></div>
+                    <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
+                        <div class="top">
+                            <div class="time"><i class="ico ico-timesmall"></i>{{ entry.created }}</div>
+                            <div class="message">{{ entry.message }}</div>
+                        </div>
+                        <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled }}</strong>
+                        <i class="ico ico-likessmall"></i><strong class="title">{{ entry.likes.length }} likes</strong>
+                    </div>
+                    <div class="button-holder" style="padding: 0 0 10px;">
+                        <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>
+                    </div>
+                </ion-item>
+                <div class="map">
+                <static-gmap
+                            size="400x200"
+                            sensor="true"
+                            zoom="12"
+                            markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates }} }">
+                    </static-gmap>
+                </div>
+
+            </ion-list>
+        </ion-scroll>
+
+
+        <!-- add -->
+        <!--<p>where: {{vm.where}}</p>
+        <p>loc: {{vm.loc}}</p>
+
+        <ion-scroll>
+            <div class="list">
+                <label class="item item-input">
+                    <span class="input-label">Title:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Message:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Where:</span>
+                    <input type="text">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">When:</span>
+                    <input type="text" >
+                </label>
+
+                <div id="map" data-tap-disabled="true"></div>
+
+            </div>
+        </ion-scroll>-->
+
+        <button class="button content-button" ng-click='vm.showAddActivityModal()'>
+            <i class="ico ico-share"></i>
+            Add Activity
+        </button>
+    </ion-pane>
 </ion-view>

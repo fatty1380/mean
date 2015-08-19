@@ -1,11 +1,18 @@
 (function() {
     'use strict';
 
+    angular
+        .module('account')
+        .controller('FriendsCtrl', FriendsCtrl);
+
+    FriendsCtrl.$inject = ['friendsService','$ionicScrollDelegate'];
+
     function FriendsCtrl(friendsService, $ionicScrollDelegate) {
         var vm = this;
 
         vm.contacts = friendsService.allList;
         vm.friends = friendsService.friends;
+        vm.users = friendsService.users;
         vm.searchText = "";
 
         vm.searchHandler = function () {
@@ -15,11 +22,5 @@
             $ionicScrollDelegate.$getByHandle('main-content-scroll').scrollTop();
         };
     }
-
-    FriendsCtrl.$inject = ['friendsService','$ionicScrollDelegate'];
-
-    angular
-        .module('account')
-        .controller('FriendsCtrl', FriendsCtrl);
 
 })();

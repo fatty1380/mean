@@ -1,7 +1,7 @@
 <ion-modal-view class="lockbox lockbox-edit">
     <div class="header compact-size">
         <ion-header-bar>
-            <button class="button button-clear" ng-click="vm.modal.close()">Cancel</button>
+            <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
             <h1 class="title">My Lockbox</h1>
         </ion-header-bar>
         <div class="bar bar-subheader">
@@ -11,7 +11,7 @@
     <ion-pane class="has-footer">
         <ion-scroll>
             <ul class="list document-list">
-                <li class="item item-checkbox" ng-repeat="doc in vm.lockboxDocuments.docs">
+                <li class="item item-checkbox" ng-repeat="doc in vm.documents">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="doc.checked">
                     </label>

@@ -12,8 +12,8 @@
 
         vm.error = '';
         vm.user = {
-            email: 'test@test.test',
-            password: 'testtest'
+            email: 'markov.flash@gmail.com',
+            password: 'sergey83mark'
         };
 
         vm.initForm = initForm;

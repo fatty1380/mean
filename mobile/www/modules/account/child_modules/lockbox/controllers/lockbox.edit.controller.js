@@ -1,23 +1,50 @@
 (function() {
     'use strict';
 
+    angular
+        .module('account')
+        .controller('LockboxEditCtrl', LockboxEditCtrl);
+
+    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments'];
+
     function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments) {
         var vm = this;
 
-        vm.lockboxDocuments = lockboxDocuments;
+        init();
 
-        for(var i = 0; i < vm.lockboxDocuments.docs.length; i++){
-            vm.lockboxDocuments.docs[i].checked = false;
+        if(!vm.documents) return;
+
+        function init() {
+            vm.documents = [];
+            vm.unselectedDocuments = null;
+            vm.deleteDisabled = true;
+            vm.renameDisabled = true;
+
+            getDocs();
         }
 
-        vm.unselectedDocuments = null;
-        vm.deleteDisabled = true;
-        vm.renameDisabled = true;
+        function getDocs () {
+            lockboxDocuments
+                .getDocuments()
+                .then(function (response) {
+                    console.log('Documents List', response);
+
+                    vm.documents = response.data instanceof Array ? response.data : lockboxDocuments.getStubDocuments();
+
+                    for(var i = 0; i < vm.documents.length; i++){
+                        vm.documents[i].checked = false;
+                    }
+                })
+        }
+
+        vm.cancel = function () {
+            $scope.closeModal();
+        };
 
         $scope.$watch(function () {
-            return vm.lockboxDocuments.docs.filter(vm.getUnselectedItems).length;
+            return vm.documents.filter(vm.getUnselectedItems).length;
         }, function (currentUnselectedLength) {
-            var totalLength = vm.lockboxDocuments.docs.length;
+            var totalLength = vm.documents.length;
             vm.deleteDisabled = (currentUnselectedLength === totalLength);
             vm.renameDisabled = (totalLength - currentUnselectedLength !== 1);
         });
@@ -31,7 +58,7 @@
             vm.index = selectedIndex;
 
             if (vm.index === null || vm.index === undefined) {
-                vm.lockboxDocuments.docs.filter(function (object, index) {
+                vm.documents.filter(function (object, index) {
                     if (object.checked) {
                         index = index;
                     }
@@ -39,7 +66,7 @@
                 });
             }
             
-            vm.name = vm.lockboxDocuments.docs[vm.index].name;
+            vm.name = vm.documents[vm.index].name;
 
             var renamePopup = $ionicPopup.show({
                 template: '<input type="text" class="rename-popup" ng-model="vm.name">',
@@ -67,7 +94,7 @@
 
             renamePopup.then(function(res) {
                 if(res) {
-                    vm.lockboxDocuments.docs[vm.index].name = res;
+                    vm.documents[vm.index].name = res;
                 }
                 
                 vm.index = null;
@@ -75,8 +102,8 @@
         };
 
         vm.showConfirm = function() {
-            vm.unselectedDocuments = vm.lockboxDocuments.docs.filter(vm.getUnselectedItems);
-            if(vm.unselectedDocuments.length !== vm.lockboxDocuments.docs.length){
+            vm.unselectedDocuments = vm.documents.filter(vm.getUnselectedItems);
+            if(vm.unselectedDocuments.length !== vm.documents.length){
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Delete Items',
                     cancelType: 'button-small',
@@ -85,17 +112,11 @@
                 });
                 confirmPopup.then(function(res) {
                     if(res) {
-                        vm.lockboxDocuments.docs = vm.unselectedDocuments;
+                        vm.documents = vm.unselectedDocuments;
                     }
                 });
             }
         };
     }
-
-    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments'];
-
-    angular
-        .module('account')
-        .controller('LockboxEditCtrl', LockboxEditCtrl);
 
 })();

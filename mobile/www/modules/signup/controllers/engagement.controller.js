@@ -5,9 +5,9 @@
         .module('signup')
         .controller('EngagementCtrl', EngagementCtrl)
 
-    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'profileAvatarService' ];
+    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'avatarService' ];
 
-    function EngagementCtrl ($scope, $state, registerService, cameraService, userService, profileAvatarService) {
+    function EngagementCtrl ($scope, $state, registerService, cameraService, userService, avatarService) {
 
         var vm = this;
         vm.handle = "";
@@ -20,13 +20,6 @@
 
         function initEngagementForm(scope) {
             vm.form = scope;
-        }
-
-        function continueToLicense() {
-            registerService.setProps('started', vm.started);
-            registerService.setProps('avatar', profileAvatarService.finalImage);
-            registerService.setDataProps('handle' , vm.handle);
-            $state.go('signup/license');
         }
 
         $scope.$on('$ionicView.afterEnter', function () {
@@ -47,6 +40,24 @@
         function () {
             vm.profileData = userService.profileData;
         }, true);
-    };
 
+
+        vm.createStartedDateObject = function (started) {
+            if(!started) return '';
+            var startedArray = started.split('-');
+
+            return new Date(startedArray[0], startedArray[1]);
+        };
+
+        function continueToLicense() {
+            registerService.setProps('started',vm.createStartedDateObject(vm.started));
+            registerService.setProps('avatar', avatarService.getImage());
+            registerService.setProps('company', 'Apple');
+            registerService.setProps('freight', 'computers');
+            registerService.setProps('truck', 'volvo');
+            registerService.setDataProps('handle' , vm.handle);
+            $state.go('signup/license');
+        }
+    };
+    
 })();
