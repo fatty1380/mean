@@ -5,21 +5,19 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['$scope', 'parameters', '$timeout'];
+    ActivityDetailsCtrl.$inject = ['$scope', 'parameters'];
 
-    function ActivityDetailsCtrl($scope, parameters, $timeout) {
+    function ActivityDetailsCtrl($scope, parameters) {
+        angular.element(document).ready(initialize);
+
         var vm = this;
         vm.entry = parameters.entry;
 
-        //@TODO fix timeout to event
-        $timeout( function(){
-
-            console.log(vm.entry);
-            console.log(vm.entry.location);
+        function initialize() {
 
             var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
             var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 3,
+                zoom: 8,
                 center: latLng,
                 draggable:true,
                 sensor: true,
@@ -33,23 +31,20 @@
                 draggable: false
             });
 
-            google.maps.event.addDomListener(map, 'click', function(e) {
-                var latlng = { lat: e.latLng.G, lng: e.latLng.K };
-                getPlaceName(latlng);
-                vm.loc = latlng;
-                console.log(vm.loc);
-            });
+            setMarkerInfo(latLng);
 
-            function getPlaceName(latlng) {
+            function setMarkerInfo(latlng) {
                 if(!geocoder){
                     var geocoder = new google.maps.Geocoder;
                 }
                 geocoder.geocode({'location': latlng}, function(results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
+                        console.log(results);
                         if (results[1]) {
-                            marker.setPosition(latlng);
-                            vm.loc = latlng;
-                            vm.where = results[1].formatted_address;
+                            marker.info = new google.maps.InfoWindow({
+                                content:  results[1].formatted_address
+                            });
+                            marker.info.open(map, marker);
                         } else {
                             window.alert('No results found');
                         }
@@ -58,7 +53,7 @@
                     }
                 });
             }
-        }, 1500);
+        }
 
         vm.close = function () {
             $scope.closeModal(vm.entry);

@@ -12,7 +12,9 @@
                 <div class="ico ico-avatar"></div>
                 <div class="activity-item" >
                     <div class="top">
+
                         <div class="time"><i class="ico ico-timesmall"></i>{{ vm.entry.created }}</div>
+                        <div class="message"><strong>{{vm.entry.user}}</strong> {{ vm.entry.title }}</div>
                         <div class="message">{{ vm.entry.message }}</div>
                     </div>
                     <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ vm.entry.milesTraveled }}</strong>
@@ -23,7 +25,12 @@
                  <div id="map"  data-tap-disabled="true"></div>
             </div>
 
-            <strong>Distance since last check in</strong>
+            <div class="comments">
+                <strong>Distance since last check in:</strong> no data
+            </div>
+            <div class="comments">
+                <strong>Comments:</strong> {{ vm.entry.comments.length }} comments
+            </div>
 
         </ion-scroll>
     </ion-pane>

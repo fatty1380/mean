@@ -34,7 +34,6 @@
   }
 
   .map{
-    background-color: #c3cdff;
     height:200px;
   }
 
@@ -83,6 +82,11 @@
     }
   }
 
+  .comments{
+    padding:10px 15px;
+    font-size: 14px;
+  }
+
 
   /* add activity */
   .add-activity-pane {
@@ -98,6 +102,8 @@
       }
       input {
         font-size:16px;
+        line-height: 20px;
+        padding:0;
         color: $content-body-text;
       }
     }

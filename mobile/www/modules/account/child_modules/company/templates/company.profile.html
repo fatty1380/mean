@@ -1,9 +1,7 @@
 <ion-view class="company-screen">
     <div class="header mid-size">
         <ion-header-bar align-title="center">
-            <ion-nav-bar>
-                <ion-nav-back-button>Back</ion-nav-back-button>
-            </ion-nav-bar>
+            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
             <h1 class="title" ng-bind="vm.companyData.name"></h1>
         </ion-header-bar>
         <div class="profile-visual">

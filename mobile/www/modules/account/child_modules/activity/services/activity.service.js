@@ -67,15 +67,41 @@
         function getFeed() {
             return  $http.get(settings.feed)
                 .then(function (response) {
-                    feed = response.activity;
-                    console.log(response);
-                    return FEED;
+                    feed = response.data.activity;
+                   // console.log(feed);
+                    return feed;
                 }, function (response) {
-                    console.log(response);
+                    //console.log(response);
                    // feed = FEED;
-                    return FEED;
+                    return feed;
                 });
         }
+
+        function getFeedById(id) {
+            return  $http.get(settings.feed + id)
+                .then(function (response) {
+                    console.log(response.data);
+                    return response.data;
+                }, function (response) {
+                    console.log(response);
+                    // feed = FEED;
+                    return response;
+                });
+        }
+
+        function getAllFeed() {
+             return  $http.get(settings.feed)
+                .then(function (response) {
+                    feed = response.activity;
+                    console.log(response);
+
+                }, function (response) {
+                    console.log(response);
+                    // feed = FEED;
+                    return feed;
+                });
+        }
+
 
         function postFeed(data) {
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
@@ -92,7 +118,9 @@
 
         return {
             feed: getFeed,
-            postFeed: postFeed
+            postFeed: postFeed,
+            getAllFeed: getAllFeed,
+            getFeedById: getFeedById
         }
     }
 
