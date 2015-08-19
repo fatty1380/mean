@@ -47,22 +47,22 @@
 
         var friends = [
             {
-                "displayName"   : "some friend1",
+                "displayName"   : "Brock Sampson",
                 "emails"        : "",
                 "phones"        : ""
             },
             {
-                "displayName"   : "some friend1",
+                "displayName"   : "Dr. Thaddeous Venture",
                 "emails"        : "",
                 "phones"        : ""
             },
             {
-                "displayName"   : "some friend1",
+                "displayName"   : "Hank Venture",
                 "emails"        : "",
                 "phones"        : ""
             },
             {
-                "displayName"   : "some friend1",
+                "displayName"   : "Dean Venture",
                 "emails"        : "",
                 "phones"        : ""
             }
