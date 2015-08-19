@@ -18,6 +18,11 @@ exports.create = function(req, res) {
 	var message = new Message(req.body);
 	message.sender = req.user;
 	
+	if (_.isString(message.recipient) && mongoose.Types.ObjectId.isValid(message.recipient)) {
+		req.log.debug({ func: 'create', recipient: message.recipient }, 'Converting recipient ID String to ObjectID');
+		message.recipient = new mongoose.Types.ObjectId(message.recipient);
+	}
+	
 	req.log.debug({ func: 'create', message: message }, 'Writing new Message to DB');
 
 	message.save(function(err) {
@@ -26,7 +31,10 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.json(message);
+			message.execPopulate('recipient')
+				.then(function (success) {
+					res.json(message);
+				});
 		}
 	});
 };
@@ -78,7 +86,8 @@ exports.delete = function(req, res) {
  * List of Messages
  * @deprecated - possibly to be used by admin, but not currently needed.
  */
-exports.list = function(req, res) { Message.find().sort('-created').populate('user', 'displayName').exec(function(err, messages) {
+exports.list = function (req, res) {
+	Message.find().sort('-created').populate('user', 'displayName').exec(function (err, messages) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -95,8 +104,8 @@ exports.messageList = function (req, res) {
 	Message.find()
 		.or([{ sender: id }, { recipient: id }])
 		.sort('-created')
-		.populate('sender', 'displayName')
-		.populate('recipient', 'displayName')
+		.populate('sender', 'displayName id')
+		.populate('recipient', 'displayName id')
 		.exec()
 		.then(function (messages) {
 			req.log.debug({ func: 'messages.list', msgCt: messages.length },
