@@ -68,39 +68,38 @@ describe('Company CRUD tests', function () {
 					.send(company)
 					.expect(200);
 			})
-			.then(function (companySaveRes) {
-
-				log.debug({ test: _test.title }, 'Save Company Request finished Processing')
-				log.debug({ test: _test.title, companies: companySaveRes.body }, 'Save Company Request finished Processing')
-
-				log.debug({ test: _test.title, companies: companySaveRes.body }, 'Saved Company to Server')
+			.then(
+				function (companySaveRes) {
+					log.debug({ test: _test.title, companies: companySaveRes.body }, 'Saved Company to Server')
 
 
-				// Get a list of Companies
-				return agent.get('/api/companies')
-			},
+					// Get a list of Companies
+					return agent.get('/api/companies')
+				},
 				function (companySaveErr) {
 					return Q.reject(companySaveErr);
 				})
-			.then(function (companiesGetRes) {
-				// Get Companies list
-				var companies = companiesGetRes.body;
-				log.debug({ test: _test.title, companies: companies }, 'Got Company list from Server')
+			.then(
+				function (companiesGetRes) {
+					// Get Companies list
+					var companies = companiesGetRes.body;
+					log.debug({ test: _test.title, companies: companies }, 'Got Company list from Server')
 
-				var firstCompany = companies[0];
-				
-				log.debug({ test: _test.title, company: firstCompany, ownerId: firstCompany.owner._id, userId: userId }, 'Examining first result in list')
+					var firstCompany = companies[0];
 
-				// Set assertions
-				firstCompany.should.have.property('owner')
-				firstCompany.owner.should.have.property('_id', userId);
-				
-				firstCompany.should.have.property('name', companyName);
+					log.debug({ test: _test.title, company: firstCompany, ownerId: firstCompany.owner._id, userId: userId }, 'Examining first result in list')
 
-				firstCompany.should.have.property('id');
+					// Set assertions
+					firstCompany.should.have.property('owner')
+					firstCompany.owner.should.have.property('_id', userId);
+					firstCompany.owner.should.have.property('displayName');
 
-				return companies;
-			},
+					firstCompany.should.have.property('name', companyName);
+
+					firstCompany.should.have.property('id');
+
+					return companies;
+				},
 				function (companiesGetErr) {
 					return Q.reject(companiesGetErr);
 				});
