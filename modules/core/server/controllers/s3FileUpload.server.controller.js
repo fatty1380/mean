@@ -30,11 +30,11 @@ if (!!config.services.s3 && config.services.s3.enabled) {
 }
 
 function uploadSummaryPDF(data) {
-    log.trace({func: 'uploadSummaryPDF'}, 'START');
+    log.trace({ func: 'uploadSummaryPDF' }, 'START');
 
     var buffer = (data.content instanceof Buffer) ? data.content : new Buffer(data.content, 'utf-8');
 
-    log.trace({func: 'uploadSummaryPDF', dataContentLength: buffer.toString().length});
+    log.trace({ func: 'uploadSummaryPDF', dataContentLength: buffer.toString().length });
 
     var file = {
         name: data.filename,
@@ -42,15 +42,15 @@ function uploadSummaryPDF(data) {
     };
 
     //return Q(directUpload({file: file}, null, true));
-    var p = directUpload({file: file}, null, true);
+    var p = directUpload({ file: file }, null, true);
 
     return p.then(function (success) {
-            log.debug({func: 'uploadSummaryPDF', result: success}, 'Returning promise');
+        log.debug({ func: 'uploadSummaryPDF', result: success }, 'Returning promise');
 
-            return success;
-        },
+        return success;
+    },
         function (err) {
-            log.error({func: 'uploadSummaryPDF', error: err}, 'Returning promise');
+            log.error({ func: 'uploadSummaryPDF', error: err }, 'Returning promise');
 
             return Q.reject(err);
         });
@@ -67,62 +67,62 @@ function directUpload(files, folder, isSecure) {
         return saveLocally(files, folder);
     }
 
-    log.trace({func: 'directUpload'}, 'Returning promise');
+    log.trace({ func: 'directUpload' }, 'Returning promise');
     return deferred.promise;
 }
 
 function doDirectUpload(files, folder, isSecure, deferred) {
     folder = folder || config.services.s3.folder;
 
-        if (folder.substring(folder.length - 1) === '/') {
-            folder = folder.substring(0, folder.length - 1);
+    if (folder.substring(folder.length - 1) === '/') {
+        folder = folder.substring(0, folder.length - 1);
+    }
+
+    var file = files.file;
+
+    log.debug({ func: 'directUpload' }, 'Uploading file: %s', JSON.stringify(file, function (key, value) {
+        return (key === 'buffer') ? '<BufferLength:' + value.length + '>' : value;
+    }, 2));
+
+    if (file) {
+        var fileName = _.contains(file.path, file.name) ? file.originalname : file && file.name || file.originalname;
+
+        log.debug({ func: 'directUpload' }, 'Attempting S3 Upload for %s to %s', fileName, folder);
+        var params = {
+            Bucket: config.services.s3.s3Options.bucket,
+            Key: folder + '/' + fileName,
+            ACL: 'public-read',
+            Body: file.buffer
+        };
+
+        if (!!file.contentType) {
+            params.ContentType = file.contentType;
+        } else {
+            switch ((file.extension || fileName.slice(-3)).toLowerCase()) {
+                case 'pdf':
+                    params.ContentType = 'application/pdf';
+                    break;
+            }
         }
 
-        var file = files.file;
+        if (!!file.contentEncoding) {
+            params.ContentEncoding = file.contentEncoding;
+        }
 
-        log.debug({func: 'directUpload'}, 'Uploading file: %s', JSON.stringify(file, function (key, value) {
-            return (key === 'buffer') ? '<BufferLength:' + value.length + '>' : value;
+        log.debug({ func: 'directUpload' }, 'Uploading file with params: %s', JSON.stringify(params, function (key, value) {
+            return (key === 'Body') ? '<BufferLength:' + value.length + '>' : value;
         }, 2));
 
-        if (file) {
-            var fileName = _.contains(file.path, file.name) ? file.originalname : file && file.name || file.originalname;
-
-            log.debug({func: 'directUpload'}, 'Attempting S3 Upload for %s to %s', fileName, folder);
-            var params = {
-                Bucket: config.services.s3.s3Options.bucket,
-                Key: folder + '/' + fileName,
-                ACL: 'public-read',
-                Body: file.buffer
-            };
-
-            if (!!file.contentType) {
-                params.ContentType = file.contentType;
-            } else {
-                switch ((file.extension || fileName.slice(-3)).toLowerCase()) {
-                    case 'pdf':
-                        params.ContentType = 'application/pdf';
-                        break;
-                }
-            }
-
-            if (!!file.contentEncoding) {
-                params.ContentEncoding = file.contentEncoding;
-            }
-
-            log.debug({func: 'directUpload'}, 'Uploading file with params: %s', JSON.stringify(params, function (key, value) {
-                return (key === 'Body') ? '<BufferLength:' + value.length + '>' : value;
-            }, 2));
-
-            var uploader = initializeUploader(params, isSecure, deferred);
+        var uploader = initializeUploader(params, isSecure, deferred);
 
 
-            log.debug({func: 'directUpload'}, 'Event Handlers in place');
+        log.debug({ func: 'directUpload' }, 'Event Handlers in place');
 
-            uploader.send();
-        } else {
-            debugger;
-            deferred.reject('No file present in request');
-        }
+        uploader.send();
+    } else {
+        debugger;
+        deferred.reject('No file present in request');
+    }
 }
 
 function initializeUploader(params, isSecure, deferred) {
@@ -181,9 +181,9 @@ function initializeUploader(params, isSecure, deferred) {
 
             deferred.reject(response);
         });
-        
+
     log.debug({ func: 'initializeUploader' }, 'Uploader Initialized and Events Registered');
-        
+
     return uploader;
 
 }
@@ -287,7 +287,7 @@ function saveFile(files, folder) {
                     });
             }
         }
-    );
+        );
 
     return deferred.promise;
 }
@@ -322,7 +322,7 @@ function saveLocally(files, folder) {
                 return deferred.resolve(url);
             }
         }
-    );
+        );
 
     return deferred.promise;
 }
