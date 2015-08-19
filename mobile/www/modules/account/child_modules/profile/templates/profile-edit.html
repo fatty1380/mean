@@ -8,8 +8,8 @@
                 <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
             </div>
             <div class="text">
-                <strong>Trucker Handle</strong>
-                <em>Driver</em>
+                <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+                <em ng-bind="vm.profileData.props.company"></em>
             </div>
         </div>
     </div>
@@ -26,8 +26,8 @@
                     <input type="text" ng-model="vm.profileData.lastName" placeholder="Last Name">
                 </label>
                 <label class="item item-input item-floating-label">
-                    <span class="input-label">Category</span>
-                    <input type="text" ng-model="vm.profileData.props" placeholder="Category">
+                    <span class="input-label">Handle</span>
+                    <input type="text" ng-model="vm.profileData.handle" placeholder="Handle">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Phone Number</span>
@@ -51,6 +51,10 @@
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Driving Since</span>
                     <input type="text" ng-model="vm.profileData.props.started" placeholder="Driving Since" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Driving For</span>
+                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Driving For">
                 </label>
                 <button class="button button-clear button-block icon-left ion-log-out" ng-click="vm.logout()">
                     Log Out
