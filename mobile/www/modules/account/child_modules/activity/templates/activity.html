@@ -21,7 +21,7 @@
                     <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
                         <div class="top">
                             <div class="time"><i class="ico ico-timesmall"></i>{{ entry.created }}</div>
-                            <div class="message">{{ entry.message }}</div>
+                            <div class="message"><strong>{{entry.user}}</strong> {{ entry.message }}</div>
                         </div>
                         <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled }}</strong>
                         <i class="ico ico-likessmall"></i><strong class="title">{{ entry.likes.length }} likes</strong>

@@ -9,16 +9,45 @@
 
     function ActivityCtrl(activityModalsService, activityService, $ionicLoading) {
         var vm = this;
+        vm.feed = [];
+        var num = 0;
+        var ids = [];
 
         $ionicLoading.show({
             template: 'loading feed'
         });
 
         activityService.feed().then(function(result) {
-            $ionicLoading.hide();
-            vm.feed = result;
-            console.log(vm.feed);
+            ids = result;
+            loadNextFeedItem(num);
         });
+
+        function loadNextFeedItem(num) {
+            activityService.getFeedById(ids[num]).then(function(result) {
+                console.log(result);
+                var entry = {
+                    user: result.user.displayName,
+                    created: result.location[0].created,
+                    message: result.message,
+                    title: result.title,
+                    milesTraveled: '300 miles',
+                    comments: result.comments,
+                    likes: ['some value', 'some value','some value'],
+                    location: {
+                        type: result.location[0].type,
+                        coordinates: result.location[0].coordinates
+                    }
+                };
+                vm.feed.push(entry);
+
+                if( num < ids.length - 1 ){
+                    num++;
+                    loadNextFeedItem(num);
+                }else{
+                    $ionicLoading.hide();
+                }
+            });
+        }
 
         vm.showAddActivityModal = function () {
             activityModalsService
