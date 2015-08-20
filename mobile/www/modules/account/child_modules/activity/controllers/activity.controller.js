@@ -59,6 +59,16 @@
                 })
         };
 
+        vm.showAddFriendsModal = function () {
+            activityModalsService
+                .showAddFriendsModal()
+                .then(function (res) {
+                    console.log(res);
+                }, function (err) {
+                    console.log(err);
+                })
+        };
+
         vm.showActivityDetailsModal = function (entry) {
             activityModalsService
                 .showActivityDetailsModal({entry: entry})
