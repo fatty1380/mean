@@ -13,15 +13,16 @@
         var num = 0;
         var ids = [];
 
-        loadFeed();
+        initialize();
 
-        function loadFeed() {
+        function initialize() {
             num = 0;
             ids = [];
             vm.feed = [];
             $ionicLoading.show({
                 template: 'loading feed'
             });
+            //get all feed ids
             activityService.feed().then(function(result) {
                 ids = result;
                 loadItems(num);
@@ -30,15 +31,14 @@
 
         function loadItems(num) {
             activityService.getFeedById(ids[num]).then(function(result) {
-               // console.log(result);
                 var entry = {
                     user: result.user.displayName,
                     created: result.location[0].created,
                     message: result.message,
                     title: result.title,
-                    milesTraveled: '300 miles',
+                    milesTraveled: '300 miles',//hardcoded
                     comments: result.comments,
-                    likes: ['some value', 'some value','some value'],
+                    likes: ['some value', 'some value','some value'],//hardcoded
                     location: {
                         type: result.location[0].type,
                         coordinates: result.location[0].coordinates
