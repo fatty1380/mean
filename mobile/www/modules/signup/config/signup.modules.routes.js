@@ -54,5 +54,23 @@
                     templateUrl: 'modules/signup/templates/trailers.html',
                     controller: 'TrailersCtrl as vm'
                 })
+
+                .state('signup/friends', {
+                    url: '/signup/friends',
+                    templateUrl: 'modules/signup/templates/friends.html',
+                    controller: 'SignupFriendsCtrl as vm'
+                })
+
+                .state('signup/friends/contacts', {
+                    url: '/contacts',
+                    templateUrl: 'modules/signup/templates/add-friends-from-contacts.html',
+                    controller: 'AddContactFriendsCtrl as vm'
+                })
+
+                .state('signup/friends/manually', {
+                    url: '/manually',
+                    templateUrl: 'modules/signup/templates/add-friend-manually.html',
+                    controller: 'AddFriendManuallyCtrl as vm'
+                })
         }])
 })();

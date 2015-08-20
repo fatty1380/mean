@@ -1,0 +1,47 @@
+<ion-view class="friends-screen">
+
+    <div class="header min-size">
+        <ion-header-bar>
+            <ion-nav-bar>
+                <ion-nav-back-button>Back</ion-nav-back-button>
+            </ion-nav-bar>
+            <h1 class="title">Friends</h1>
+            <button class="button button-clear">Edit</button>
+        </ion-header-bar>
+    </div>
+
+    <ion-pane class="has-footer friends-pane">
+        <div class="item item-input search-bar">
+            <i class="icon light ion-ios-search-strong"></i>
+            <input type="text" placeholder="Search for Friends" ng-model="vm.searchText" ng-change="vm.searchHandler()">
+        </div>
+
+        <ion-scroll delegate-handle="main-content-scroll">
+            <ul class="list friends-list">
+                <li class="item item-divider">Your Friends</li>
+                <li class="item" ng-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
+                    <i class="ico ico-avatar" ></i>
+                    <div class="item-content">
+                        {{contact.displayName}}
+                    </div>
+                </li>
+                <li ng-if="!contacts.length" class="no-matches">
+                    <div class="item-content">NO MATCHES</div>
+                </li>
+            </ul>
+            <div class="button-holder text-center" ng-if="!contacts.length">
+                <a class="button button-clear manual-add" ui-sref="account.profile.friends.manual">
+                    <i class="icon ion-ios-plus-outline"></i>
+                    Add by Mobile Phone or Email
+                </a>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+
+    <ion-footer-bar>
+        <div class="button-bar">
+            <button class="button block-button">Send Invitations</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-view>

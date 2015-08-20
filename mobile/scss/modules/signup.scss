@@ -617,10 +617,32 @@ $but-height: 90px;
       }
     }
   }
-
-
 }
 
 
-
-
+.friends-block{
+  .scroll{
+    padding: 0 30px;
+  }
+  .description{
+    color: #fff;
+    display: block;
+    font-size: 13px;
+    padding-bottom: 50px;
+    text-align: center;
+  }
+  .choose-contacts-button{
+    background: #3eaeb1;
+    color: #fff;
+    margin: 0 0 20px;
+    padding: 5px 0;
+    font-size: 15px;
+    -webkit-border-radius: 26px;
+    -moz-border-radius: 26px;
+    border-radius: 26px;
+    border: 2px solid #fff;
+  }
+  .enter-manually-button{
+    color: #fff;
+  }
+}

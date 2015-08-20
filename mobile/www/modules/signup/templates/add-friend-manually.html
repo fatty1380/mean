@@ -1,0 +1,30 @@
+<ion-view class="signup-section">
+        <div class="header mid-size">
+            <ion-nav-bar>
+                <ion-nav-back-button>Back</ion-nav-back-button>
+            </ion-nav-bar>
+            <ion-header-bar align-title="center" class="bar-stable">
+                <h1 class="title">Sign In</h1>
+            </ion-header-bar>
+        </div>
+        <ion-pane class="has-footer">
+            <ion-scroll>
+                <form name="mainSignInForm" id="mainSignInForm" class="list signup-form" ng-submit="vm.continue()"  ng-init="vm.initForm(this)" novalidate >
+
+                    <label class="item item-input">
+                        <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" required>
+                    </label>
+                    <label class="item item-input">
+                        <input type="password" placeholder="Password" ng-model="vm.user.password"  required>
+                    </label>
+                </form>
+            </ion-scroll>
+        </ion-pane>
+        <ion-footer-bar>
+            <div class="button-bar action-buttons">
+                <button class="button secondary" ng-click="vm.continueRegister()">Create Account</button>
+                <button class="button primary"  ng-click="vm.signIn()">Sign In</button>
+            </div>
+        </ion-footer-bar>
+</ion-view>
+
