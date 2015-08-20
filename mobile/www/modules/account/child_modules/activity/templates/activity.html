@@ -6,9 +6,11 @@
             <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
         </ion-header-bar>
     </div>
-    <ion-pane class="pane content-pane button-padding-top button-padding-bottom">
-        <button class="button button-positive content-top-button">
-            3 new Updates
+    <ion-pane class="pane content-pane button-padding-bottom"
+        ng-class="{' button-padding-top': !!vm.newActivities}">
+        <button class="button button-positive content-top-button"
+            ng-show="!!vm.newActivities">
+            {{vm.newActivities} new Updates
             <i class="ico ico-checkmarkwhite "></i>
         </button>
 
@@ -30,7 +32,7 @@
                         <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>
                     </div>
                 </ion-item>
-                <div class="map">
+                <div class="map" ng-if="!!entry.location.coordinates">
                 <static-gmap
                             size="400x200"
                             sensor="true"

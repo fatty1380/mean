@@ -1,15 +1,15 @@
 <ion-modal-view class="profile-screen">
     <div class="header mid-size">
         <ion-header-bar>
-            <h1 class="title">Edit Profile Page</h1>
+            <h1 class="title">Edit Profile</h1>
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
+                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
             </div>
             <div class="text">
-                <strong>Trucker Handle</strong>
-                <em>Driver</em>
+                <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+                <em ng-bind="vm.profileData.props.company"></em>
             </div>
         </div>
     </div>
@@ -17,38 +17,55 @@
 
         <ion-scroll>
             <div class="list edit-fields-list">
-                <label class="item item-input">
-                    <input type="text" placeholder="First Name">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">First Name</span>
+                    <input type="text" ng-model="vm.profileData.firstName" placeholder="First Name">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Last Name</span>
+                    <input type="text" ng-model="vm.profileData.lastName" placeholder="Last Name">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Handle</span>
+                    <input type="text" ng-model="vm.profileData.handle" placeholder="Handle">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Phone Number</span>
+                    <input type="text" ng-model="vm.profileData.phone" placeholder="Phone Number">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Email Address</span>
+                    <input type="text" ng-model="vm.profileData.email" placeholder="Email Address">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Truck Type</span>
+                    <input type="text" ng-model="vm.profileData.props.truck" placeholder="Truck Type">
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Last Name">
+                    <span class="input-label">Trailer Types</span>
+                    <input ng-repeat="trailer in vm.profileData.props.trailer" type="text" ng-model="trailer" placeholder="Trailer Types">
+                    </span>
+                    <br/>
+                    <button class="button button-clear button-block" ng-click="vm.profileData.props.trailer.push('');">add</button>
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Category">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Driving Since</span>
+                    <input type="text" ng-model="vm.profileData.props.started" placeholder="Driving Since" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Phone Number">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Driving For</span>
+                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Driving For">
                 </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Email Address">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Truck Type">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Years of Experience">
-                </label>
+                <button class="button button-clear button-block icon-left ion-log-out" ng-click="vm.logout()">
+                    Log Out
+                </button>
             </div>
         </ion-scroll>
-        <button class="button content-button" ng-click="vm.logout()">
-            <i class="ico ico-share"></i>
-           Log Out
-        </button>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary" ng-click="vm.close()">Cancel</button>
-            <button class="button primary">Save</button>
+            <button class="button secondary" nav-direction="exit" ng-click="vm.cancel()">Cancel</button>
+            <button class="button primary" ng-click="vm.save()">Save</button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>
