@@ -12,13 +12,6 @@
                     controller: 'HomeCtrl as vm'
                 })
 
-
-                .state('signup/signin', {
-                    url: '/signup/signin',
-                    templateUrl: 'modules/signup/templates/signin.html',
-                    controller: 'signinCtrl as vm'
-                })
-
                 .state('signup/login', {
                     url: '/signup/login',
                     templateUrl: 'modules/signup/templates/login.html',
