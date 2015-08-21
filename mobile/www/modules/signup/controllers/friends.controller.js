@@ -16,7 +16,7 @@
         vm.skip = skip;
 
         function chooseContacts () {
-            $state.go('signup.contacts');
+            $state.go('signup-friends-contacts');
         }
 
         function skip() {
@@ -24,7 +24,7 @@
         }
 
         function addManualy() {
-            $state.go('signup.manually');
+            $state.go('signup-friends-manually');
         }
 
     }

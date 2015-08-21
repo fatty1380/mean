@@ -9,7 +9,7 @@
 
     function TrailersCtrl($scope, $state, registerService, $ionicLoading, $ionicPopup) {
         var vm = this;
-        vm.newTrailer = "";
+        vm.newTrailer = '';
         var TRAILERS = [
             {name:'Box', checked:false},
             {name:'Car Carrier', checked:false},
@@ -43,7 +43,7 @@
                     {
                         text: 'Cancel',
                         onTap: function (e) {
-                            vm.newTrailer = "";
+                            vm.newTrailer = '';
                         }
                     },
                     {
@@ -54,7 +54,7 @@
                                 e.preventDefault();
                             } else {
                                 vm.trailers.push({name:vm.newTrailer, checked:true});
-                                vm.newTrailer = "";
+                                vm.newTrailer = '';
                                 return vm.newTrailer;
                             }
                         }
@@ -64,7 +64,7 @@
         }
 
         function continueToAddFriends() {
-            $state.go("signup.friends");
+            $state.go('signup-friends');
         }
 
         function continueToProfile(isSave) {
@@ -76,7 +76,7 @@
            .then(function (response) {
                 $ionicLoading.hide();
                 if(response.success) {
-                    $state.go("account.profile");
+                    $state.go('account.profile');
                 }else{
                     showPopup(JSON.stringify(response));
                 }
@@ -97,8 +97,8 @@
 
         function showPopup(response) {
             var alertPopup = $ionicPopup.alert({
-                title: response.title || "title",
-                template: response || "no message"
+                title: response.title || 'title',
+                template: response || 'no message'
             });
             alertPopup.then(function (res) {});
         }

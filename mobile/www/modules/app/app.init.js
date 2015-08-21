@@ -6,7 +6,8 @@
         .module(AppConfig.appModuleName, AppConfig.appModuleDependencies)
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                $urlRouterProvider.otherwise("signup/home");
+                console.warn('unknown route or url: ' + location.hash);
+                $urlRouterProvider.otherwise('home');
             }
         ])
 

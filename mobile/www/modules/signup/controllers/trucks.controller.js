@@ -59,7 +59,7 @@
             if (isSave) {
                 registerService.setProps('truck', vm.currentTruck);
             }
-            $state.go("signup.trailers");
+            $state.go('signup-trailers');
         }
 
         function getTrucks() {

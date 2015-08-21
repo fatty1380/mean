@@ -22,6 +22,7 @@
 
             return userService.updateUserData(vm.profileData)
                 .then(function (success) {
+                    debugger;
                     vm.closeModal(success);
                 })
                 .catch(function (error) {
@@ -39,7 +40,7 @@
 
                     vm.cancel();
 
-                    $state.go('signup.login');
+                    $state.go('login');
                 })
         }
     }

@@ -14,7 +14,7 @@
         vm.cancel = cancel;
 
         function invite() {
-            $state.go('signup.contacts');
+            $state.go('signup-friends-contacts');
         }
 
         function cancel() {

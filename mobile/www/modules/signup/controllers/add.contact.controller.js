@@ -15,7 +15,7 @@
         vm.sendInvitations = sendInvitations;
 
         function sendInvitations() {
-            $state.go('signup.welcome')
+            $state.go('signup-welcome')
         }
 
         function chooseContacts() {

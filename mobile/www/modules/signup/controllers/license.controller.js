@@ -41,9 +41,9 @@
                     console.log("license response update user : ", response);
 
                     if (response.success) {
-                        $state.go('signup.trucks');
+                        $state.go('signup-trucks');
                     } else {
-                        $state.go('signup.login');
+                        $state.go('login');
                     }
                 });
         }
