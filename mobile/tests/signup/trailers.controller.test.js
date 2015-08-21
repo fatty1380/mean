@@ -17,7 +17,7 @@
 
         beforeEach(inject(function($rootScope, $controller){
             var scope = $rootScope.$new();
-            trailersCtrl = $controller('trailersCtrl', {
+            trailersCtrl = $controller('TrailersCtrl', {
                 $scope: scope
             });
         }));

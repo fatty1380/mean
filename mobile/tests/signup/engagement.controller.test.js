@@ -13,7 +13,7 @@
 
         beforeEach(inject(function($rootScope, $controller){
             var scope = $rootScope.$new();
-            engagementCtrl = $controller('engagementCtrl', {
+            engagementCtrl = $controller('EngagementCtrl', {
                 $scope: scope
             });
         }));

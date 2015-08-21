@@ -10,46 +10,49 @@
     function ActivityCtrl(activityModalsService, activityService, $ionicLoading) {
         var vm = this;
         vm.feed = [];
-        var num = 0;
-        var ids = [];
-        
+
         // Initialize Update Logic
         vm.newActivities = 0;
         vm.lastUpdate = Date.now();
 
-        $ionicLoading.show({
-            template: 'loading feed'
-        });
+        initialize();
 
-        activityService.feed().then(function(result) {
-            ids = result;
-            loadNextFeedItem(num);
-        });
+        function initialize() {
+            vm.feed = [];
+            $ionicLoading.show({
+                template: 'loading feed'
+            });
+            //get all feed
+            activityService.getFeed().then(function(result) {
+                $ionicLoading.hide();
+                console.log("getFeed() ",result);
+                vm.feed = result;
+            });
+        }
 
-        function loadNextFeedItem(num) {
-            activityService.getFeedById(ids[num]).then(function(result) {
-                console.log(result);
+        function updateSavedFeed(id) {
+            $ionicLoading.show({
+                template: 'update feed'
+            });
+            activityService.getFeedById(id).then(function(result) {
+
+                var loc = !!result.location[0] ? {
+                    type: result.location[0].type,
+                    coordinates: result.location[0].coordinates
+                } : null;
+                
                 var entry = {
                     user: result.user.displayName,
-                    created: result.location[0].created,
+                    created: result.created,
                     message: result.message,
                     title: result.title,
-                    milesTraveled: '300 miles',
                     comments: result.comments,
-                    likes: ['some value', 'some value','some value'],
-                    location: {
-                        type: result.location[0].type,
-                        coordinates: result.location[0].coordinates
-                    }
+                    milesTraveled: '300 miles',
+                    likes: ['some value', 'some value'],
+                    location: loc
                 };
-                vm.feed.push(entry);
-
-                if( num < ids.length - 1 ){
-                    num++;
-                    loadNextFeedItem(num);
-                }else{
-                    $ionicLoading.hide();
-                }
+                vm.feed.unshift(entry);
+                $ionicLoading.hide();
             });
         }
 
@@ -57,19 +60,11 @@
             activityModalsService
                 .showAddActivityModal()
                 .then(function (res) {
-                    console.log(res);
+                    if(res){
+                        updateSavedFeed(res);
+                    }
                 }, function (err) {
-                    console.log(err);
-                })
-        };
-
-        vm.showAddFriendsModal = function () {
-            activityModalsService
-                .showAddFriendsModal()
-                .then(function (res) {
-                    console.log(res);
-                }, function (err) {
-                    console.log(err);
+                    activityService.showPopup("Modal failed", "Please try later");
                 })
         };
 
@@ -77,9 +72,8 @@
             activityModalsService
                 .showActivityDetailsModal({entry: entry})
                 .then(function (res) {
-                    console.log(res);
                 }, function (err) {
-                    console.log(err);
+                    activityService.showPopup("Modal failed", "Please try later");
                 })
         };
     }

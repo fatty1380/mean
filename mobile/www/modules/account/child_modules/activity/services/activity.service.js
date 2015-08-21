@@ -3,53 +3,112 @@
 
     angular
         .module('activity')
-        .service('activityService', activityService);
+        .service('activityService', activityService );
 
-    activityService.$inject = ['settings','$http'];
+    activityService.$inject = ['settings','$http', '$q', '$ionicPopup'];
 
-    function activityService(settings, $http) {
-        var vm = this;
+    function activityService(settings, $http, $q, $ionicPopup) {
         var feed = [];
+        var num = 0;
+        var ids = [];
 
-        var FEED = [
-            {
-                user: '55a8c832f58ef0900b7ca14c',//test@test.test
-                created: '12-05-2010',
-                message: 'James has checked in the San Francisco at the Flying Jay',
-                milesTraveled: '300 miles',
-                likes: ['some value', 'some value','some value'],
-                location: {
-                    type: 'Point',
-                    coordinates: [39.904903, -71.230039]
-                }
-            },
-            {
-                user: '55a5317e4cec3d4a40d4bfa9', //markov
-                created: '19-01-2013',
-                message: 'Some text about checked in place.',
-                milesTraveled: '12 miles',
-                likes: ['some value', 'some value', 'some value' ,'some value' ,'some value'],
-                location: {
-                    type: 'Point',
-                    coordinates: [39.644489, -75.725896],
-                    created: '2015-07-12T01:34:43.000Z',
-                    modified: '2015-07-12T01:34:43.000Z'
-                }
-            },
-            {
-                user: 'sssss',
-                created: '25-05-1929',
-                message: 'Some text about checked in place. 150 miles!',
-                milesTraveled: '150 miles',
-                likes: ['some value', 'some value', 'some value' ,'some value' ,'some value'],
-                location: {
-                    type: 'Point',
-                    coordinates: [34.123111, -72.982111],
-                    created: '2015-07-12T01:34:43.000Z',
-                    modified: '2015-07-12T01:34:43.000Z'
-                }
-            }
-        ];
+        //load all feed ids, then load all posts by id and return all feed
+        function getFeed() {
+            return  $http.get(settings.feed)
+                .then(function (response) {
+                    ids = response.data.activity;
+                    return $q(function(resolve, reject) {
+                        loadItems(num);
+                        function loadItems(num) {
+                             getFeedById(ids[num]).then(function(result) {
+                                var entry = {
+                                    user: result.user.displayName,
+                                    created: result.location[0].created,
+                                    message: result.message,
+                                    title: result.title,
+                                    comments: result.comments,
+                                    milesTraveled: '300 miles',//hardcoded
+                                    likes: ['some value', 'some value','some value'],//hardcoded
+                                    location: {
+                                        type: result.location[0].type,
+                                        coordinates: result.location[0].coordinates
+                                    }
+                                };
+                                feed.unshift(entry);
+                                if( num < ids.length - 1 ){
+                                    num++;
+                                    loadItems(num);
+                                }else{
+                                    resolve(feed);
+                                }
+                            });
+                        }
+                    });
+                }, function (response) {
+                    showPopup("Error", response);
+                    return response;
+                });
+        }
+
+        //return activity by id
+        function getFeedById(id) {
+            return  $http.get(settings.feed + id)
+                .then(function (response) {
+                    return response.data;
+                }, function (response) {
+                    showPopup("Error", response);
+                    return response;
+                });
+        }
+
+        function postFeed(data) {
+            $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
+            return  $http.post(settings.feed,serialize(data))
+                .then(function (response) {
+                    return response.data;
+                }, function (response) {
+                    showPopup("Error", response);
+                    return response;
+                });
+        }
+
+        function getDistanceBetween(start, finish) {
+            var service = new google.maps.DistanceMatrixService;
+            return $q(function(resolve, reject) {
+                service.getDistanceMatrix({
+                    origins: [start],
+                    destinations: [finish],
+                    travelMode: google.maps.TravelMode.DRIVING,
+                    unitSystem: google.maps.UnitSystem.METRIC,
+                    avoidHighways: false,
+                    avoidTolls: false
+                }, function(response, status) {
+                    if (status !== google.maps.DistanceMatrixStatus.OK) {
+                        activityService.showPopup('Google maps failed', status);
+                        reject("error");
+                    } else {
+
+                        if(response.rows[0].elements[0].distance){
+                            resolve(response.rows[0].elements[0].distance.value/1000);
+                        }else{
+                            resolve(null);
+                        }
+                    }
+                })
+            })
+        }
+
+        function getLastFeed() {
+            //last post at array startpoint
+            return feed[0];
+        }
+
+        function showPopup(title, text) {
+            $ionicPopup.alert({
+                title: title || "title",
+                template: text || "no message"
+            });
+        };
 
         function serialize(obj, prefix) {
             var str = [];
@@ -64,65 +123,13 @@
             return str.join("&");
         }
 
-        function getFeed() {
-            return  $http.get(settings.feed)
-                .then(function (response) {
-                    feed = response.data.activity;
-                   // console.log(feed);
-                    return feed;
-                }, function (response) {
-                    //console.log(response);
-                   // feed = FEED;
-                    return feed;
-                });
-        }
-
-        function getFeedById(id) {
-            return  $http.get(settings.feed + id)
-                .then(function (response) {
-                    console.log(response.data);
-                    return response.data;
-                }, function (response) {
-                    console.log(response);
-                    // feed = FEED;
-                    return response;
-                });
-        }
-
-        function getAllFeed() {
-             return  $http.get(settings.feed)
-                .then(function (response) {
-                    feed = response.activity;
-                    console.log(response);
-
-                }, function (response) {
-                    console.log(response);
-                    // feed = FEED;
-                    return feed;
-                });
-        }
-
-
-        function postFeed(data) {
-            $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
-            return  $http.post(settings.feed,serialize(data))
-                .then(function (response) {
-                    console.log(response);
-                    return response.data;
-                }, function (response) {
-                    console.log(response);
-                    // feed = FEED;
-                    return FEED;
-                });
-        }
-
         return {
-            feed: getFeed,
+            getFeed: getFeed,
             postFeed: postFeed,
-            getAllFeed: getAllFeed,
-            getFeedById: getFeedById
+            getFeedById: getFeedById,
+            getLastFeed: getLastFeed,
+            getDistanceBetween: getDistanceBetween,
+            showPopup: showPopup
         }
     }
-
-
 })();

@@ -1,36 +1,51 @@
 <ion-modal-view class="activity">
     <div class="header min-size">
         <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="vm.close('activityAdd')">Close</button>
+            <button class="button button-clear" ng-click="vm.close()">Close</button>
             <h1 class="title">Add Activity</h1>
         </ion-header-bar>
     </div>
     <ion-pane class="pane has-footer add-activity-pane">
-        <ion-scroll>
+
+
+
+    <ion-scroll>
+
              <div class="list">
                 <label class="item item-input">
                     <span class="input-label">Title:</span>
                     <input type="text" ng-model="vm.activity.title" placeholder="Enter Activity Title">
                 </label>
+                 <label class="item item-input">
+                     <span class="input-label">Where:</span>
+                     <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
+                 </label>
                 <label class="item item-input">
                     <span class="input-label">Message:</span>
                     <input type="text" ng-model="vm.activity.message" placeholder="Enter Activity Message">
                 </label>
-                <label class="item item-input">
-                    <span class="input-label">Where:</span>
-                    <input type="text" ng-model="vm.where"  placeholder="Enter Name of Stop">
-                </label>
                  <label class="item item-input">
                      <span class="input-label">When:</span>
-                     <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();"   placeholder="Enter When You Stop" >
+                     <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='date';this.setAttribute('onfocus','');this.blur();this.focus();"   placeholder="Enter When You Stop" >
                  </label>
+
                 <div id="map" data-tap-disabled="true"></div>
+
+                <!-- <pre>{{vm.where | json}}</pre>-->
+
+                 <label class="item item-input">
+                     <span class="input-label">Distance Since Last Post:</span>
+                     <input type="text" ng-model="vm.distanceSinceLastPost"  placeholder="Distance in km" >
+                 </label>
             </div>
         </ion-scroll>
+
+
+
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-click="vm.saveFeed()">Save</button>
+            <button class="button primary" ng-disabled="!vm.activity.title" ng-click="vm.saveFeed()">Save</button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>

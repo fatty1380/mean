@@ -27,6 +27,7 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
     "cordova-plugin-camera",
+    "cordova-plugin-geolocation",
     "com.ionic.keyboard",
     "cordova-plugin-keyboard"
   ],
