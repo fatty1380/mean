@@ -3,12 +3,14 @@
         <ion-header-bar align-title="center">
             <button class="button button-clear">My Logs</button>
             <h1 class="title">Activity</h1>
-            <button class="button button-clear">Add Friends</button>
+            <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
         </ion-header-bar>
     </div>
-    <ion-pane class="pane content-pane button-padding-top button-padding-bottom">
-        <button class="button button-positive content-top-button">
-            3 new Updates
+    <ion-pane class="pane content-pane button-padding-bottom"
+        ng-class="{' button-padding-top': !!vm.newActivities}">
+        <button class="button button-positive content-top-button"
+            ng-show="!!vm.newActivities">
+            {{vm.newActivities} new Updates
             <i class="ico ico-checkmarkwhite "></i>
         </button>
         <!-- activity -->
@@ -30,7 +32,7 @@
                     </div>
                 </ion-item>
                 <static-gmap
-                            ng-if="entry.location.coordinates"
+                            ng-if="!!entry.location.coordinates"
                             size="400x200"
                             sensor="true"
                             zoom="8"

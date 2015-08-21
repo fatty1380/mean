@@ -37,7 +37,8 @@
                     registerService.signIn({ email: response.message.data.email, password: vm.user.password })
                         .then(function (signInresponse) {
                             $ionicLoading.hide();
-                            if(signInresponse.success) {
+                            if (signInresponse.success) {
+                                // TODO: Move tokenService actions into registerService
                                 tokenService.set('access_token', signInresponse.message.data.access_token);
                                 tokenService.set('refresh_token', signInresponse.message.data.refresh_token);
                                 tokenService.set('token_type', signInresponse.message.data.token_type);

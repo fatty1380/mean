@@ -11,6 +11,10 @@
         var vm = this;
         vm.feed = [];
 
+        // Initialize Update Logic
+        vm.newActivities = 0;
+        vm.lastUpdate = Date.now();
+
         initialize();
 
         function initialize() {
@@ -31,18 +35,21 @@
                 template: 'update feed'
             });
             activityService.getFeedById(id).then(function(result) {
+
+                var loc = !!result.location[0] ? {
+                    type: result.location[0].type,
+                    coordinates: result.location[0].coordinates
+                } : null;
+                
                 var entry = {
                     user: result.user.displayName,
-                    created: result.location[0].created,
+                    created: result.created,
                     message: result.message,
                     title: result.title,
                     comments: result.comments,
                     milesTraveled: '300 miles',
                     likes: ['some value', 'some value'],
-                    location: {
-                        type: result.location[0].type,
-                        coordinates: result.location[0].coordinates
-                    }
+                    location: loc
                 };
                 vm.feed.unshift(entry);
                 $ionicLoading.hide();

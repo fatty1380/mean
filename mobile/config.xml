@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<widget id="com.joinoutset.mobile" version="0.2.2" android-versionCode="0001" ios-CFBundleVersion="0001" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.joinoutset.mobile" version="0.3.5" android-versionCode="0005" ios-CFBundleVersion="0005" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>outset</name>
   <description>
-        Mobile tools for truckers
+        Mobile tools for Truckers
     </description>
   <author email="api@joinoutset.com" href="https://www.joinoutset.com/">
       Outset Team

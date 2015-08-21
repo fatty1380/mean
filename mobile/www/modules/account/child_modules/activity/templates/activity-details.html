@@ -21,7 +21,7 @@
                     <i class="ico ico-likessmall"></i><strong class="title">{{ vm.entry.likes.length }} likes</strong>
                 </div>
             </ion-item>
-            <div class="map" ng-if="vm.entry.location.coordinates">
+            <div class="map" ng-if="!!vm.entry.location.coordinates">
                  <div id="map" data-tap-disabled="true"></div>
             </div>
 
