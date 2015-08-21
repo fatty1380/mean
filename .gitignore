@@ -50,7 +50,6 @@ typings/**/*.d.ts
 mobile/node_modules/
 mobile/platforms/
 mobile/plugins/
-mobile/www/lib/
 mobile/www/assets/css/
+mobile/www/lib/
 .idea
-mobile/www/lib
