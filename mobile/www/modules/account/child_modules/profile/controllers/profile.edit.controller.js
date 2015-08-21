@@ -40,7 +40,7 @@
 
                     vm.cancel();
 
-                    $state.go('signup/login');
+                    $state.go('login');
                 })
         }
     }

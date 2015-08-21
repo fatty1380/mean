@@ -31,5 +31,5 @@
 
     angular
         .module('signup')
-        .factory('contactsService', contactsService);
+        .factory('contactsService1', contactsService);
 })();

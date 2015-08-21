@@ -1,0 +1,24 @@
+<ion-view class="signup-section">
+    <div class="header compact-size">
+        <ion-nav-bar>
+            <ion-nav-back-button>Back</ion-nav-back-button>
+        </ion-nav-bar>
+        <ion-header-bar align-title="center" class="bar-stable">
+            <h1 class="title">Add Friends</h1>
+            <a class="button button-clear">Skip</a>
+        </ion-header-bar>
+        <div class="bar bar-subheader">
+            <h3 class="title">Add Friends and Grow your Convoy!</h3>
+        </div>
+    </div>
+    <ion-pane class="friends-block">
+        <ion-scroll>
+            <span class="description">Send Invites to the 5 best drivers you know to help us grow your network of Professional Truck Drivers in the USA</span>
+            <div class="button-holder text-center">
+                <button class="button button-block choose-contacts-button" ng-click="vm.chooseContacts()">Choose from Contacts</button>
+                <button class="button button-clear enter-manually-button" ng-click="vm.addManualy();">Enter Manually</button>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+</ion-view>
+
