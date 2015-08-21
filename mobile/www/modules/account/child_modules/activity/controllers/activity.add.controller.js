@@ -5,13 +5,18 @@
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading', '$cordovaGeolocation'];
+    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading', '$cordovaGeolocation', '$q'];
 
-    function ActivityAddCtrl($scope, activityService, $ionicLoading, $cordovaGeolocation) {
-        angular.element(document).ready(getCurrentPosition);
-
-        var latLng = new google.maps.LatLng(39.904903, -75.230039);
+    function ActivityAddCtrl($scope, activityService, $ionicLoading, $cordovaGeolocation, $q) {
+        angular.element(document).ready(
+            getCurrentPosition
+        );
         var vm = this;
+        var latLng = null;
+        var map = null;
+        var marker = null;
+        var infoWindow = null;
+
         vm.activity = {
             title : '',
             message : '',
@@ -22,18 +27,54 @@
             }
         }
 
+        vm.distanceSinceLastPost = '';
         vm.saveFeed = saveFeed;
 
+        $scope.$watch('vm.where', function() {
+            console.log('$watch ',vm.where);
+            if(vm.where) {
+                setMarkerPosition();
+            }
+        }, true);
+
+        //set coordinat
+        function setMarkerPosition() {
+            console.log('setMarkerPosition()');
+            var position = null;
+            var location = new google.maps.LatLng(vm.where.geometry.location.G, vm.where.geometry.location.K);
+
+            console.log('position',position);
+            console.log('vm.loc',vm.loc);
+
+            if(vm.loc){
+                position = vm.loc;
+            }else{
+                position = location;
+            }
+
+            marker.setPosition(position);
+            infoWindow.setContent(vm.where.formatted_address)
+            infoWindow.open(map, marker);
+            setDistanceFromLastPost(position);
+            vm.loc = null;
+        }
+
+        function setDistanceFromLastPost(position) {
+            console.log('setDistanceFromLastPost()');
+            var lastCoord = activityService.getLastFeed().location.coordinates;
+            if(lastCoord) {
+                var startPos = new google.maps.LatLng(lastCoord[0], lastCoord[1]);
+                var endPos = position;
+                activityService.getDistanceBetween(startPos, endPos)
+                    .then(function(result) {
+                        vm.distanceSinceLastPost = result + " km";
+                    });
+            }
+        }
 
         function getCurrentPosition() {
-
-            var startPos = new google.maps.LatLng(36.163765, -86.775366);
-            var endPos = new google.maps.LatLng(41.873410, -87.642694);
-
-            getDistanceBetween(startPos, endPos);
-
+            console.log('getCurrentPosition()');
             var posOptions = {timeout: 10000, enableHighAccuracy: false};
-
             $cordovaGeolocation
                 .getCurrentPosition(posOptions)
                 .then(function (position) {
@@ -41,36 +82,12 @@
                     var long = position.coords.longitude;
 
                     latLng = new google.maps.LatLng(lat, long);
-                    initialize();
-
-                    console.log(position);
-
+                    initMap();
                 }, function(err) {
-                    console.log('err',err);
+                    activityService.showPopup('Geocoder failed', err);
                 });
         }
 
-        function getDistanceBetween(start, finish) {
-            var service = new google.maps.DistanceMatrixService;
-            service.getDistanceMatrix({
-                origins: [start],
-                destinations: [finish],
-                travelMode: google.maps.TravelMode.DRIVING,
-                unitSystem: google.maps.UnitSystem.METRIC,
-                avoidHighways: false,
-                avoidTolls: false
-            }, function(response, status) {
-                if (status !== google.maps.DistanceMatrixStatus.OK) {
-                    alert('Error was: ' + status);
-                } else {
-                    var originList = response.originAddresses;
-                    var destinationList = response.destinationAddresses;
-
-                    console.log("response ",response);
-                    console.log(" meters ",response.rows[0].elements[0].distance.value);
-                }
-            })
-        }
 
         function saveFeed() {
             $ionicLoading.show({
@@ -83,9 +100,9 @@
             });
         }
 
-        function initialize() {
-
-            var map = new google.maps.Map(document.getElementById('map'), {
+        function initMap() {
+            console.log('initMap()');
+            map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 8,
                 center: latLng,
                 draggable:true,
@@ -93,7 +110,7 @@
                 zoomControl:true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
-            var marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
                 position: latLng,
                 title: 'Point A',
                 map: map,
@@ -102,40 +119,38 @@
 
             google.maps.event.addDomListener(map, 'click', function(e) {
                 var latlng = { lat: e.latLng.G, lng: e.latLng.K };
+                console.log('click',latlng);
                 getPlaceName(latlng);
                 vm.loc = latlng;
                 vm.activity.location.coordinates = [e.latLng.G, e.latLng.K];
             });
 
-           var infoWindow = new google.maps.InfoWindow({
+           infoWindow = new google.maps.InfoWindow({
                 content:  ''
             });
 
             getPlaceName(latLng);
+        }
 
-            function getPlaceName(latlng) {
-                if(!geocoder){
-                    var geocoder = new google.maps.Geocoder;
-                }
-                geocoder.geocode({'location': latlng}, function(results, status) {
-                    if (status === google.maps.GeocoderStatus.OK) {
-                        if (results[1]) {
-                            marker.setPosition(latlng);
-                            vm.loc = latlng;
-                            vm.where = results[1].formatted_address;
-
-                            infoWindow.setContent(results[1].formatted_address)
-                            infoWindow.open(map, marker);
-
-                            $scope.$digest();
-                        } else {
-                            window.alert('No results found');
-                        }
-                    } else {
-                        window.alert('Geocoder failed due to: ' + status);
-                    }
-                });
+        function getPlaceName(latlng) {
+            console.log('getPlaceName()');
+            if(!geocoder){
+                var geocoder = new google.maps.Geocoder;
             }
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                      //  vm.loc = latlng;
+                        vm.where = results[1];
+                        console.log(vm.where);
+                         $scope.$digest();
+                    } else {
+                        activityService.showPopup('Geocoder failed', 'No results found');
+                    }
+                } else {
+                    activityService.showPopup('Geocoder failed', status);
+                }
+            });
         }
 
         vm.close = function (str) {

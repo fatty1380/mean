@@ -11,9 +11,8 @@
             3 new Updates
             <i class="ico ico-checkmarkwhite "></i>
         </button>
-
-
         <!-- activity -->
+
         <ion-scroll>
             <ion-list ng-repeat="entry in vm.feed">
                   <ion-item class="item">
@@ -41,35 +40,6 @@
 
             </ion-list>
         </ion-scroll>
-
-
-        <!-- add -->
-        <!--<p>where: {{vm.where}}</p>
-        <p>loc: {{vm.loc}}</p>
-
-        <ion-scroll>
-            <div class="list">
-                <label class="item item-input">
-                    <span class="input-label">Title:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Message:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Where:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">When:</span>
-                    <input type="text" >
-                </label>
-
-                <div id="map" data-tap-disabled="true"></div>
-
-            </div>
-        </ion-scroll>-->
 
         <button class="button content-button" ng-click='vm.showAddActivityModal()'>
             <i class="ico ico-share"></i>

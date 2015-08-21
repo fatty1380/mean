@@ -6,27 +6,42 @@
         </ion-header-bar>
     </div>
     <ion-pane class="pane has-footer add-activity-pane">
-        <ion-scroll>
+
+
+
+    <ion-scroll>
+
              <div class="list">
                 <label class="item item-input">
                     <span class="input-label">Title:</span>
                     <input type="text" ng-model="vm.activity.title" placeholder="Enter Activity Title">
                 </label>
+                 <label class="item item-input">
+                     <span class="input-label">Where:</span>
+                     <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
+                 </label>
                 <label class="item item-input">
                     <span class="input-label">Message:</span>
                     <input type="text" ng-model="vm.activity.message" placeholder="Enter Activity Message">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Where:</span>
-                    <input type="text" ng-model="vm.where"  placeholder="Enter Name of Stop">
                 </label>
                  <label class="item item-input">
                      <span class="input-label">When:</span>
                      <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='date';this.setAttribute('onfocus','');this.blur();this.focus();"   placeholder="Enter When You Stop" >
                  </label>
+
                 <div id="map" data-tap-disabled="true"></div>
+
+                <!-- <pre>{{vm.where | json}}</pre>-->
+
+                 <label class="item item-input">
+                     <span class="input-label">Distance Since Last Post:</span>
+                     <input type="text" ng-model="vm.distanceSinceLastPost"  placeholder="Distance in km" >
+                 </label>
             </div>
         </ion-scroll>
+
+
+
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">

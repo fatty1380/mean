@@ -10,47 +10,19 @@
     function ActivityCtrl(activityModalsService, activityService, $ionicLoading) {
         var vm = this;
         vm.feed = [];
-        var num = 0;
-        var ids = [];
 
         initialize();
 
         function initialize() {
-            num = 0;
-            ids = [];
             vm.feed = [];
             $ionicLoading.show({
                 template: 'loading feed'
             });
-            //get all feed ids
-            activityService.feed().then(function(result) {
-                ids = result;
-                loadItems(num);
-            });
-        }
-
-        function loadItems(num) {
-            activityService.getFeedById(ids[num]).then(function(result) {
-                var entry = {
-                    user: result.user.displayName,
-                    created: result.location[0].created,
-                    message: result.message,
-                    title: result.title,
-                    milesTraveled: '300 miles',//hardcoded
-                    comments: result.comments,
-                    likes: ['some value', 'some value','some value'],//hardcoded
-                    location: {
-                        type: result.location[0].type,
-                        coordinates: result.location[0].coordinates
-                    }
-                };
-                vm.feed.unshift(entry);
-                if( num < ids.length - 1 ){
-                    num++;
-                    loadItems(num);
-                }else{
-                    $ionicLoading.hide();
-                }
+            //get all feed
+            activityService.getFeed().then(function(result) {
+                $ionicLoading.hide();
+                console.log("getFeed() ",result);
+                vm.feed = result;
             });
         }
 
@@ -64,8 +36,8 @@
                     created: result.location[0].created,
                     message: result.message,
                     title: result.title,
-                    milesTraveled: '300 miles',
                     comments: result.comments,
+                    milesTraveled: '300 miles',
                     likes: ['some value', 'some value'],
                     location: {
                         type: result.location[0].type,
@@ -81,14 +53,11 @@
             activityModalsService
                 .showAddActivityModal()
                 .then(function (res) {
-                    console.log(res);
                     if(res){
-                        console.log('update feed!');
                         updateSavedFeed(res);
                     }
                 }, function (err) {
-                    console.log(err);
-                    console.log('error!!');
+                    activityService.showPopup("Modal failed", "Please try later");
                 })
         };
 
@@ -96,9 +65,8 @@
             activityModalsService
                 .showActivityDetailsModal({entry: entry})
                 .then(function (res) {
-                    console.log(res);
                 }, function (err) {
-                    console.log(err);
+                    activityService.showPopup("Modal failed", "Please try later");
                 })
         };
     }
