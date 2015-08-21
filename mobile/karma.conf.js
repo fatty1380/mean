@@ -18,22 +18,30 @@ module.exports = function(config) {
       "www/lib/ionic/js/ionic.bundle.js",
       'node_modules/angular-mocks/angular-mocks.js',
       'www/modules/app/*.js',
-      'www/modules/app/constants/settings.js',
+      'www/modules/app/constants/*.js',
+      'www/modules/app/services/*.js',
+      
+      'modules/avatar/avatar.module.js',
+      'modules/avatar/services/*.js',
+      'modules/avatar/controllers/*.js',
+      
+      'www/lib/angular-google-staticmaps/angular-google-staticmaps.js',
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1fUj13JDJpKxczSfAHzGSuk8ARoenrk&sensor=true',
 
       'www/modules/account/account.module.js',
-      'www/modules/account/child_modules/profile/controllers/profile.controller.js',
-      'www/modules/account/child_modules/profile/profile.module.js',
-      'www/modules/account/child_modules/profile/services/profile.services.js',
-      'www/modules/account/child_modules/profile/services/profile.reviews.service.js',
 
-      'www/modules/account/child_modules/lockbox/lockbox.module.js',
-      'www/modules/account/child_modules/lockbox/controllers/*.js',
-      'www/modules/account/child_modules/lockbox/services/*.js',
-      'www/modules/account/child_modules/lockbox/directives/*.js',
+      'www/modules/account/child_modules/profile/profile.module.js',
+      'www/modules/account/child_modules/profile/controllers/*.js',
+      'www/modules/account/child_modules/profile/services/*.js',
 
       'www/modules/signup/signup.modules.js',
       'www/modules/signup/controllers/*.js',
       'www/modules/signup/services/*.js',
+      
+      'www/modules/account/child_modules/lockbox/lockbox.module.js',
+      'www/modules/account/child_modules/lockbox/controllers/*.js',
+      'www/modules/account/child_modules/lockbox/services/*.js',
+      'www/modules/account/child_modules/lockbox/directives/*.js',
 
       'tests/**/*.js',
       'tests/**/**/*.js'

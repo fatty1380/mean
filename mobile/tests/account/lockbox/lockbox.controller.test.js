@@ -15,7 +15,7 @@
 
         beforeEach(inject(function($rootScope, $controller){
             var scope = $rootScope.$new();
-            lockboxCtrl = $controller('lockboxCtrl', {
+            lockboxCtrl = $controller('LockboxCtrl', {
                 $scope: scope
             });
         }));
