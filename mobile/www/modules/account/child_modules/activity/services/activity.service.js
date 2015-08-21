@@ -18,9 +18,14 @@
                 .then(function (response) {
                     ids = response.data.activity;
                     return $q(function(resolve, reject) {
-                        loadItems(num);
+                        if(ids.length > 0) {
+                            loadItems(num);
+                        }else{
+                            reject("no feed");
+                        }
                         function loadItems(num) {
                              getFeedById(ids[num]).then(function(result) {
+                                 console.log(result);
                                 var entry = {
                                     user: result.user.displayName,
                                     created: result.location[0].created,
