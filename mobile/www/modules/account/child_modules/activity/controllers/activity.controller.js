@@ -29,18 +29,21 @@
         function loadNextFeedItem(num) {
             activityService.getFeedById(ids[num]).then(function(result) {
                 console.log(result);
+                
+                var loc = !!result.location[0] ? {
+                    type: result.location[0].type,
+                    coordinates: result.location[0].coordinates
+                } : null;
+                
                 var entry = {
                     user: result.user.displayName,
-                    created: result.location[0].created,
+                    created: result.created,
                     message: result.message,
                     title: result.title,
                     milesTraveled: '300 miles',
                     comments: result.comments,
                     likes: ['some value', 'some value','some value'],
-                    location: {
-                        type: result.location[0].type,
-                        coordinates: result.location[0].coordinates
-                    }
+                    location: loc
                 };
                 vm.feed.push(entry);
 
