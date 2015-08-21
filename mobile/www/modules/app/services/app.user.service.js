@@ -21,7 +21,8 @@
         }
 
         vm.getUserData = function () {
-            if (!vm.profileData.id) {
+            console.log(vm.profileData);
+            if (vm.profileData === null || !vm.profileData.id) {
                 return registerService.me()
                     .then(function (profileData) {
                         vm.profileData = profileData.success ? profileData.message.data : null;

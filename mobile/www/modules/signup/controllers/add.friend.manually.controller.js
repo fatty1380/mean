@@ -9,6 +9,18 @@
 
     function AddFriendManuallyCtrl($state) {
         var vm = this;
+
+        vm.invite = invite;
+        vm.cancel = cancel;
+
+        function invite() {
+            $state.go('signup.contacts');
+        }
+
+        function cancel() {
+            //$state.go('signup.friends');
+        }
+
     }
 
 })();

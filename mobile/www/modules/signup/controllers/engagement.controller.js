@@ -56,7 +56,7 @@
             registerService.setProps('freight', 'computers');
             registerService.setProps('truck', 'volvo');
             registerService.setDataProps('handle' , vm.handle);
-            $state.go('signup/license');
+            $state.go('signup.license');
         }
     };
     

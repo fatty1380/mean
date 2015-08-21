@@ -64,7 +64,7 @@
         }
 
         function continueToAddFriends() {
-            $state.go("signup/friends");
+            $state.go("signup.friends");
         }
 
         function continueToProfile(isSave) {

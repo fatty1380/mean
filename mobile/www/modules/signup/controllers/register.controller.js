@@ -41,7 +41,7 @@
                                 tokenService.set('access_token', signInresponse.message.data.access_token);
                                 tokenService.set('refresh_token', signInresponse.message.data.refresh_token);
                                 tokenService.set('token_type', signInresponse.message.data.token_type);
-                                $state.go('signup/engagement');
+                                $state.go('signup.engagement');
                             } else {
                                 showPopup(signInresponse.title, signInresponse.message.data.error_description);
                             }

@@ -5,8 +5,8 @@
             <ion-nav-bar>
                 <ion-nav-back-button>Back</ion-nav-back-button>
             </ion-nav-bar>
-            <h1 class="title">Friends</h1>
-            <button class="button button-clear">Edit</button>
+            <h1 class="title">Add Friends</h1>
+            <button class="button button-clear">Skip</button>
         </ion-header-bar>
     </div>
 
@@ -17,20 +17,16 @@
         </div>
 
         <ion-scroll delegate-handle="main-content-scroll">
-            <ul class="list friends-list">
-                <li class="item item-divider">Your Friends</li>
-                <li class="item" ng-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
-                    <i class="ico ico-avatar" ></i>
-                    <div class="item-content">
-                        {{contact.displayName}}
-                    </div>
-                </li>
-                <li ng-if="!contacts.length" class="no-matches">
-                    <div class="item-content">NO MATCHES</div>
-                </li>
-            </ul>
-            <div class="button-holder text-center" ng-if="!contacts.length">
-                <a class="button button-clear manual-add" ui-sref="account.profile.friends.manual">
+            <div class="list friends-list">
+                <strong class="item item-divider">Your Friends</strong>
+                <ion-checkbox
+                    ng-model="contact.checked"
+                    ng-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
+                    {{contact.name.formatted}}
+                </ion-checkbox>
+            </div>
+            <div class="button-holder text-center">
+                <a class="button button-block button-clear manual-add" ui-sref="signup.manually">
                     <i class="icon ion-ios-plus-outline"></i>
                     Add by Mobile Phone or Email
                 </a>
@@ -40,7 +36,7 @@
 
     <ion-footer-bar>
         <div class="button-bar">
-            <button class="button block-button">Send Invitations</button>
+            <button class="button block-button" ng-click="vm.sendInvitations();">Send Invitations</button>
         </div>
     </ion-footer-bar>
 

@@ -12,13 +12,17 @@
 
         vm.contacts = [];
 
-        console.log(contactsService);
+        vm.sendInvitations = sendInvitations;
+
+        function sendInvitations() {
+            $state.go('signup.welcome')
+        }
 
         function chooseContacts() {
             vm.json = contactsService
                 .find()
                 .then(function (data) {
-                    console.log(data);
+                    console.log('DATDATA', data);
                     vm.contacts = data;
                 }, function (err) {
                     console.log(err);
