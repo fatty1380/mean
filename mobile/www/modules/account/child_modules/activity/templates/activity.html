@@ -13,16 +13,15 @@
             {{vm.newActivities} new Updates
             <i class="ico ico-checkmarkwhite "></i>
         </button>
-
-
         <!-- activity -->
+
         <ion-scroll>
             <ion-list ng-repeat="entry in vm.feed">
                   <ion-item class="item">
                     <div class="ico ico-avatar"></div>
                     <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
                         <div class="top">
-                            <div class="time"><i class="ico ico-timesmall"></i>{{ entry.created }}</div>
+                            <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created | date:'mediumDate'}}</div>
                             <div class="message"><strong>{{entry.user}}</strong> {{ entry.message }}</div>
                         </div>
                         <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled }}</strong>
@@ -32,46 +31,17 @@
                         <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>
                     </div>
                 </ion-item>
-                <div class="map" ng-if="!!entry.location.coordinates">
                 <static-gmap
+                            ng-if="!!entry.location.coordinates"
                             size="400x200"
                             sensor="true"
-                            zoom="12"
+                            zoom="8"
                             markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates }} }">
                     </static-gmap>
                 </div>
 
             </ion-list>
         </ion-scroll>
-
-
-        <!-- add -->
-        <!--<p>where: {{vm.where}}</p>
-        <p>loc: {{vm.loc}}</p>
-
-        <ion-scroll>
-            <div class="list">
-                <label class="item item-input">
-                    <span class="input-label">Title:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Message:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Where:</span>
-                    <input type="text">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">When:</span>
-                    <input type="text" >
-                </label>
-
-                <div id="map" data-tap-disabled="true"></div>
-
-            </div>
-        </ion-scroll>-->
 
         <button class="button content-button" ng-click='vm.showAddActivityModal()'>
             <i class="ico ico-share"></i>

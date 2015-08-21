@@ -5,60 +5,59 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['$scope', 'parameters'];
+    ActivityDetailsCtrl.$inject = ['$scope', 'parameters', 'activityService'];
 
-    function ActivityDetailsCtrl($scope, parameters) {
+    function ActivityDetailsCtrl($scope, parameters, activityService) {
         angular.element(document).ready(initialize);
 
         var vm = this;
+        var map = null;
+        var marker = null;
+
         vm.entry = parameters.entry;
 
         function initialize() {
-            if (!!vm.entry.location.coordinates) {
+            if(vm.entry.location.coordinates) {
                 var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
-                var map = new google.maps.Map(document.getElementById('map'), {
+                map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 8,
                     center: latLng,
-                    draggable: true,
+                    draggable:true,
                     sensor: true,
-                    zoomControl: true,
+                    zoomControl:true,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 });
-                var marker = new google.maps.Marker({
+                marker = new google.maps.Marker({
                     position: latLng,
-                    title: 'Point A',
                     map: map,
                     draggable: false
                 });
-
-                setMarkerInfo(latLng, marker);
+                setMarkerInfo(latLng);
             }
         }
-        
-        function setMarkerInfo(latlng, marker) {
-            if (!geocoder) {
+
+        function setMarkerInfo(latlng) {
+            if(!geocoder){
                 var geocoder = new google.maps.Geocoder;
             }
-            geocoder.geocode({ 'location': latlng }, function (results, status) {
+            geocoder.geocode({'location': latlng}, function(results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     console.log(results);
                     if (results[1]) {
                         marker.info = new google.maps.InfoWindow({
-                            content: results[1].formatted_address
+                            content:  results[1].formatted_address
                         });
                         marker.info.open(map, marker);
                     } else {
-                        window.alert('No results found');
+                        activityService.showPopup("Geocoder error", 'No results found');
                     }
                 } else {
-                    window.alert('Geocoder failed due to: ' + status);
+                    activityService.showPopup("Geocoder error", status);
                 }
             });
         }
-
-        vm.close = function close() {
-            vm.closeModal(vm.entry);
+        vm.close = function () {
+            $scope.closeModal(vm.entry);
         }
     }
-
 })();
