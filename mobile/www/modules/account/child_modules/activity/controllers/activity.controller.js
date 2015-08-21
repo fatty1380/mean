@@ -27,6 +27,9 @@
                 $ionicLoading.hide();
                 console.log("getFeed() ",result);
                 vm.feed = result;
+            }, function(reason) {
+                $ionicLoading.hide();
+                vm.feed = [];
             });
         }
 
