@@ -31,6 +31,7 @@
         return {
             request: function (config) {
                 if (config.url.substring(0, 4) == "http") {
+                    config.headers = config.headers || {};
                     config.headers.Authorization = tokenService.get('token_type') + " " + tokenService.get('access_token');
                 }
                 return config;
