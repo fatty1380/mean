@@ -14,7 +14,7 @@
         vm.entry = parameters.entry;
 
         function initialize() {
-            if (!!vm.entry.location.coordinates) {
+            if (!!vm.entry.location && !!vm.entry.location.coordinates) {
                 var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
                 var map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 8,
