@@ -89,7 +89,7 @@
 
             },
             createConnection: function (application) {
-                var RSRC = $resource('/api/applications/:applicationId/connect', {
+                var RSRC = $resource('api/applications/:applicationId/connect', {
                     applicationId: '@_id'
                 }, {
                     get: {

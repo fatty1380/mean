@@ -122,12 +122,14 @@ function generateTokens(data, done) {
 
 	log.debug({ func: 'generateTokens', accessToken: token }, 'Saving Access token');
     token.save(function (err) {
+		
     	if (err) {
-			log.error({ func: 'generatTokens', cb: 'token.save' }, 'Failed to save token', err);
+			log.error({ func: 'generateTokens', cb: 'token.save' }, 'Failed to save token', err);
     		return done(err); 
-    	}
+		}
+		
 	log.debug({ func: 'generateTokens' }, 'Saved token!');
-		log.debug({ func: 'generateTokens', done: done.toString() }, 'Returning Tokens!');
+		log.debug({ func: 'generateTokens', token: token, tokenVal: tokenValue, refresh: refreshTokenValue }, 'Returning Tokens!');
     	done(null, tokenValue, refreshTokenValue, { 
     		'expires_in': config.security.tokenLife 
     	});

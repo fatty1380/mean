@@ -22,7 +22,7 @@
                 $log.debug('assigning email to username');
                 credentials.username = credentials.email;
 
-                $http.post('/api/auth/signup', credentials)
+                $http.post('api/auth/signup', credentials)
                     .success(function (response) {
 
                     $log.debug('Successfully created %o USER Profile', response.type);

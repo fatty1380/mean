@@ -1,7 +1,7 @@
 (function () {
-	'use strict';
+    'use strict';
 
-	function LoginController($http, $state, $modalInstance, $log, Authentication, srefRedirect) {
+    function LoginController($http, $state, $modalInstance, $log, Authentication, srefRedirect, AuthService) {
         var vm = this;
         vm.auth = Authentication;
         vm.srefRedirect = srefRedirect;
@@ -12,12 +12,14 @@
 
             var credentials = vm.credentials || this.credentials;
 
-            $http.post('/api/auth/signin', credentials)
-                .success(function (response) {
-                    // If successful we assign the response to the global user model
-                    vm.auth.user = response;
+            AuthService.login(credentials)
+                .then(function success(response) {
+                    debugger;
 
-                    $log.debug('Successfully logged in');
+                    if (!vm.auth.user) {
+                        debugger;
+                        vm.auth.user = response;
+                    }
 
                     if (!!$modalInstance && _.isFunction($modalInstance.close)) {
                         $modalInstance.close('success');
@@ -32,16 +34,18 @@
                         $state.go('home');
                     }
 
-                    Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
-                }).error(function (response) {
-                    console.error(response.message);
+                    if (vm.auth.isLoggedIn()) {
+                        Raygun.setUser(vm.auth.user.id, false, vm.auth.user.email, vm.auth.user.displayName);
+                    }
+                }).catch(function error(response) {
+                    console.error(response.message || response);
                     vm.error = response.message;
                 });
         };
     }
 
-    LoginController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect'];
-	
+    LoginController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect', 'LoginService'];
+
     angular.module('users')
         .controller('LoginController', LoginController);
 })();

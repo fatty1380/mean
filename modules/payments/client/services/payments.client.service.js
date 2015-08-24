@@ -8,7 +8,7 @@
 
         _this.data = {
             getToken: function () {
-                var rsrc = $resource('/api/payments/token', {}, {
+                var rsrc = $resource('api/payments/token', {}, {
                     get: {
                         method: 'GET',
                         isArray: false
@@ -18,7 +18,7 @@
                 return rsrc.get();
             },
             Nonce: function() {
-                return $resource('/api/reports/types/:sku/create', {
+                return $resource('api/reports/types/:sku/create', {
                     sku: '@sku',
                     nonce: '@nonce',
                     price: '@price',
@@ -29,7 +29,7 @@
                     }
                 });
             },
-            Subscription:  $resource('/api/companies/:companyId/subscription', {
+            Subscription:  $resource('api/companies/:companyId/subscription', {
                     planId: '@planId',
                     promoCode: '@promoCode',
                     nonce: '@nonce',
@@ -40,7 +40,7 @@
                         method: 'POST'
                     }
                 }),
-            Plans: $resource('/api/companies/subscriptions/:planId',{
+            Plans: $resource('api/companies/subscriptions/:planId',{
                     planId: '@planId',
                     promoCode: '@promoCode'
                 }, {
