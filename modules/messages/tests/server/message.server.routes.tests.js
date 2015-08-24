@@ -186,7 +186,7 @@ describe('Message CRUD tests', function () {
 					messageSaveRes.body.should.have.property('status', 'sent');
 						
 					// Get a list of Messages
-					return agent.get('/api/messages?grouped=true');
+					return agent.get('/api/chats');
 				})
 				.then(function (messagesGetRes) {
 

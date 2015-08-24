@@ -25,19 +25,28 @@ exports.create = function(req, res) {
 	
 	req.log.debug({ func: 'create', message: message }, 'Writing new Message to DB');
 
+	saveMessage(req, res, message);
+};
+
+function saveMessage(req, res, message) {
+	
 	message.save(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
-			message.execPopulate('recipient')
+		} else if(_.isString(message.recipient)) {
+			return message.execPopulate('recipient')
 				.then(function (success) {
+					res.json(success);
+				}, function reject(error) {
 					res.json(message);
 				});
+		} else {
+			return res.json(message);
 		}
 	});
-};
+}
 
 /**
  * Show the current Message
@@ -54,15 +63,17 @@ exports.update = function(req, res) {
 
 	message = _.extend(message , req.body);
 
-	message.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.json(message);
-		}
-	});
+	// message.save(function(err) {
+	// 	if (err) {
+	// 		return res.status(400).send({
+	// 			message: errorHandler.getErrorMessage(err)
+	// 		});
+	// 	} else {
+	// 		res.json(message);
+	// 	}
+	// });
+	
+	saveMessage(req, res, message);
 };
 
 /**
@@ -98,37 +109,22 @@ exports.list = function (req, res) {
 	});
 };
 
+/**
+ * Message List
+ * Returns a list of messages to or from the logged in user, ordered newest first
+ * 
+ * @query grouped (Boolean) If true, will group the messages by the other user. Same as chatList function
+ */
 exports.messageList = function (req, res) {
-	var id = !!req.profile && req.profile._id || req.user._id;
 	
-	Message.find()
-		.or([{ sender: id }, { recipient: id }])
-		.sort('-created')
-		.populate('sender', 'displayName id')
-		.populate('recipient', 'displayName id')
-		.exec()
-		.then(function (messages) {
-			req.log.debug({ func: 'messages.list', msgCt: messages.length },
-				'Loaded %d Messages for %s', messages.length, req.user.id);
+	findAndProcessMessages(req, res).then(function(messages) {
+			req.messages = messages;
 				
 			var grouped = req.query['grouped'];
 			req.log.debug({ func: 'messageList', params: req.query, grouped: grouped });
 			
-			req.messages = _.map(messages, function (ogMessage) {
-				var message = ogMessage.toObject();
-				req.log.debug({ user: req.user.id, sender: message.sender, recipient: message.recipient }, 'Sender Recipient Comparison');
-				message.direction = id.equals(message.sender._id) ? 'outbound' : 'inbound';
-				req.log.debug({ direction: message.direction }, 'Message Direction');
-				message.party = id.equals(message.sender._id) ? message.recipient : message.sender;
-				req.log.debug({ party: message.party }, 'Message Party');
-				
-				return message;
-			});
-			
-			req.log.debug({ messages: req.messages }, 'Request party?');
-				
 			if (!!grouped) {
-				return exports.listChats(req, res);
+				return groupChatsBySender(req, res);
 			}
 			
 			res.json(req.messages);
@@ -142,7 +138,75 @@ exports.messageList = function (req, res) {
 		});
 };
 
-exports.listChats = function (req, res) {
+function findAndProcessMessages(req, res) {
+	var id = !!req.profile && req.profile._id || req.user._id;
+	
+	var partyQuery = req.partyQuery || [{ 'sender': id }, { 'recipient': id }];
+	
+	return Message.find()
+		.or(partyQuery)
+		.sort('-created')
+		.populate('sender', 'displayName id')
+		.populate('recipient', 'displayName id')
+		.exec()
+		.then(function (messages) {
+			req.log.debug({ func: 'messages.list', msgCt: messages.length },
+				'Loaded %d Messages for %s', messages.length, req.user.id);
+
+			messages = _.map(messages, function (ogMessage) {
+				var message = ogMessage.toObject();
+				message.direction = id.equals(message.sender._id) ? 'outbound' : 'inbound';
+				message.party = id.equals(message.sender._id) ? message.recipient : message.sender;
+
+				return message;
+			});
+
+			req.log.debug({ messages: messages }, 'Request party?');
+
+			return messages;
+		});
+}
+
+exports.chatList = function (req, res) {
+	findAndProcessMessages(req, res).then(
+		function (messages) {
+			req.messages = messages;
+			
+			return groupChatsBySender(req, res);
+		},
+		function (err) {
+			req.log.error({ func: 'messages.chatList', error: err }, 'Failed to load messages');
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+
+		});
+};
+
+exports.chatListMessages = function (req, res, next) {
+	
+	var id = req.user.id,
+		partyId = req.profile.id;
+		
+	req.partyQuery = [{ 'sender': id, 'recipient': partyId }, { 'sender': partyId, 'recipient': id }];
+	
+	next();
+};
+
+exports.createByChat = function (req, res, next) {
+	
+	var text = _.isString(req.body) ? req.body : req.body.text;
+	
+	var chatMessage = new Message({
+		sender: req.user,
+		recipient: req.profile,
+		text: text
+	});
+	
+	saveMessage(req, res, chatMessage);
+};
+
+function groupChatsBySender(req, res) {
 	var chats = _.groupBy(req.messages, function (message) {
 		return message.party.displayName;
 	});
@@ -155,12 +219,13 @@ exports.listChats = function (req, res) {
 		var newest = chats[c][0];
 		
 		return new Chat({
+			id: newest.party.id,
 			user: req.profile || req.user,
 			recipientName: c,
 			recipient: newest.party, 
 			messages: chats[c], 
 			lastMessage: newest})
-	})
+	});
 	
 	req.log.debug({ func: 'messages.list', chats: req.chats },
 		'Loaded %d Distinct Chats for %s', _.keys(req.chats).length, req.user.id);
