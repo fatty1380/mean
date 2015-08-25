@@ -83,6 +83,13 @@ var FeedItemSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
+    props: {
+        type: Schema.Types.Mixed,
+        default: { 
+            'freight': null,
+			'slMiles': null
+        }
+    },
 	comments: {
 		type: ['Message'],
 		default: []
