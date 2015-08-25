@@ -114,6 +114,8 @@ module.exports = {
     sessionCollection: 'sessions',
     
     security: {
+        enableSession: true,
+        enableJWT: true,
         tokenLife: 1000 * 3600 * 24 * 30
     },
 

@@ -38,9 +38,14 @@ module.exports = function (app, db) {
 	log.debug({ func: 'exports' }, 'Initializing Passport');
 	app.use(passport.initialize());
 
-	log.debug({ func: 'exports' }, 'Setting Session Auth');
-	app.use(passport.session());
+	if (!!config.security.enableSession) {
+		log.debug({ func: 'exports' }, 'Setting Session Auth');
+		app.use(passport.session());
+	}
     
-	// Disable JWT Auth temporarily
-    app.use('/api', passport.authenticate('bearer', { session: false }));
+	if (!!config.security.enableJWT) {
+		// Comment to Disable JWT Auth temporarily
+		log.debug({ func: 'exports' }, 'Setting JWT Bearer Auth');
+		app.use('/api', passport.authenticate('bearer', { session: false }));
+	}
 };
