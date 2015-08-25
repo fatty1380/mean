@@ -11,12 +11,35 @@
         <div class="content-top">
             <button class="button button-block">Choose from Contact List</button>
         </div>
-        <ion-scroll>
+        <!--<ion-scroll>
             <div class="list share-form">
                 <label class="item item-input">
                     <textarea placeholder="Enter message" ng-model="vm.message"></textarea>
                 </label>
             </div>
+        </ion-scroll>-->
+
+        <ion-scroll>
+            <ul class="list message-list">
+                <li class="item" ng-repeat="message in vm.messages">
+                    <div class="ico ico-avatar" ng-class="message.direction===('outbound') ? 'avatar-left' : 'avatar-right'"></div>
+                    <div class="item-content">
+
+                        <div class="message">
+                            <span>{{message.text}}</span>
+                        </div>
+                        <div class="top">
+                            <span ><i class="ico ico-timesmall"></i>{{message.created | date:'mediumDate'}}</span>
+                        </div>
+                    </div>
+                </li>
+
+                <div class="list share-form">
+                    <label class="item item-input">
+                        <textarea placeholder="Enter message" ng-model="vm.message"></textarea>
+                    </label>
+                </div>
+            </ul>
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>

@@ -11,6 +11,7 @@
 
         return {
             getMessages : getMessages,
+            getChats : getChats,
             createMessage: createMessage
         };
 
@@ -18,8 +19,12 @@
             return $http.get(settings.messages);
         }
 
+        function getChats() {
+            return $http.get(settings.chats);
+        }
+
         function createMessage(message) {
-            return $http.post(settings.messages, message);
+            return $http.post(settings.chats, message);
         }
 
     }

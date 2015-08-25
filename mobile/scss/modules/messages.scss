@@ -2,8 +2,15 @@
   .item{
     border-top: 1px solid #ddd;
 
-    > .ico{
+   /* > .ico{
       float: left;
+    }*/
+
+    .avatar-left{
+      float:left;
+    }
+    .avatar-right{
+      float:right;
     }
 
     .item-content{
@@ -11,7 +18,7 @@
 
       .top{
         overflow: hidden;
-        padding: 0 0 4px;
+        padding: 5px 0 4px;
 
         strong{
           float: left;
