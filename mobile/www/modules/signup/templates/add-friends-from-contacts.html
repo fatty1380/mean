@@ -22,7 +22,7 @@
                 <ion-checkbox
                     ng-model="contact.checked"
                     ng-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
-                    {{contact.name.formatted}}
+                    {{contact.displayName}}
                 </ion-checkbox>
             </div>
             <div class="button-holder text-center">

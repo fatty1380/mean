@@ -393,8 +393,9 @@ $but-height: 90px;
       left:0;
       color:$dark;
       font-size: 22px;
+      line-height: 26px;
       height:$but-height;
-      padding-top:35px;
+      padding-top:32px;
     }
 
     .center-text {
@@ -413,11 +414,12 @@ $but-height: 90px;
 
     .item-content{
       i{
-        top: 40px;
+        top: 50%;
+        margin-top: -10px;
         left: 35px;
       }
 
-      top: -28px;
+      top: -20px;
       height: $but-height;
     }
 

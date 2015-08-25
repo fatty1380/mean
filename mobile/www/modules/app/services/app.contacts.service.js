@@ -4,17 +4,25 @@
         .module(AppConfig.appModuleName)
         .factory('contactsService', contactsService);
 
-    contactsService.$inject = ['$q'];
+    contactsService.$inject = ['$q', '$filter'];
 
-    function contactsService($q) {
+    function contactsService($q, $filter) {
 
-        var formatContact = function(contact) {
-            return {
-                "displayName"   : contact.name.formatted || contact.name.givenName + " " + contact.name.familyName || "Person",
-                "emails"        : contact.emails || [],
-                "phones"        : contact.phoneNumbers || []
-            };
-        };
+        var contacts = [];
+
+        function addNewContact(contact) {
+            if(contact && (contact.phones || contact.emails)){
+                contacts.push(contact)
+            }
+        }
+
+        function setContacts(deviceContacts) {
+            if(deviceContacts && deviceContacts.length){
+                var filter = $filter('getContacts');
+
+                contacts = filter(deviceContacts);
+            }
+        }
 
         function save(contact) {
             var q = $q.defer();
@@ -74,7 +82,7 @@
 
             if(navigator && navigator.contacts) {
                 navigator.contacts.pickContact(function(contact){
-                    q.resolve( formatContact(contact) );
+                    q.resolve(contact);
                 });
             } else {
                 q.reject("No contacts in desktop browser");
@@ -84,6 +92,9 @@
         }
 
         return {
+            contacts: contacts,
+            setContacts: setContacts,
+            addNewContact: addNewContact,
             save: save,
             clone: clone,
             remove: remove,
