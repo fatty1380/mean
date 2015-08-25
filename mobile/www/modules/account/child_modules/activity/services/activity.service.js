@@ -12,7 +12,10 @@
         var num = 0;
         var ids = [];
 
-        //load all feed ids, then load all posts by id and return all feed
+        /**
+         * @desc Get all feed, then load all posts by ids
+         * @returns {Promise} promise with all feed items
+         */
         function getFeed() {
             return  $http.get(settings.feed)
                 .then(function (response) {
@@ -55,7 +58,11 @@
                 });
         }
 
-        //return activity by id
+        /**
+         * @desc Get feed by id
+         * @param {Number} id - feed id
+         * @returns {Promise} promise feed data
+         */
         function getFeedById(id) {
             return  $http.get(settings.feed + id)
                 .then(function (response) {
@@ -77,6 +84,12 @@
                 });
         }
 
+        /**
+         * @desc Calculate distance between 2 points by road
+         * @param {Object} start - start coordinates
+         * @param {Object} finish - finish coordinates
+         * @returns {Promise} promise with distance in km
+         */
         function getDistanceBetween(start, finish) {
             var service = new google.maps.DistanceMatrixService;
             return $q(function(resolve, reject) {
@@ -103,8 +116,42 @@
             })
         }
 
+
+        /**
+         * @desc Geocoded position name by coordinates
+         * @param {Object} latlng - coordinates
+         * @returns {Promise} promise with formatted address
+         */
+        function getPlaceName(latlng) {
+            console.log('getPlaceName()');
+            if(!geocoder){
+                var geocoder = new google.maps.Geocoder;
+            }
+            return $q(function(resolve, reject) {
+                geocoder.geocode({'location': latlng}, function(results, status) {
+                    if (status === google.maps.GeocoderStatus.OK) {
+                        if (results[1]) {
+                            /*marker.info = new google.maps.InfoWindow({
+                             content:  results[1].formatted_address
+                             });*/
+                            resolve(results[1]);
+                        } else {
+                            activityService.showPopup('Geocoder failed', 'No results found');
+                            reject("Geocoder failed");
+                        }
+                    } else {
+                        activityService.showPopup('Geocoder failed', status);
+                        reject("Geocoder failed");
+                    }
+                });
+            });
+        }
+
+        /**
+         * @desc last item of array
+         * @returns {Promise} promise lst item
+         */
         function getLastFeed() {
-            //last post at array startpoint
             return feed[0];
         }
 
@@ -134,7 +181,8 @@
             getFeedById: getFeedById,
             getLastFeed: getLastFeed,
             getDistanceBetween: getDistanceBetween,
-            showPopup: showPopup
+            showPopup: showPopup,
+            getPlaceName: getPlaceName
         }
     }
 })();

@@ -33,6 +33,10 @@
             });
         }
 
+        /**
+         * @desc update feed item
+         * @param {Number} id - feed id
+         */
         function updateSavedFeed(id) {
             $ionicLoading.show({
                 template: 'update feed'
