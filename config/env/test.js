@@ -17,6 +17,9 @@ module.exports = {
 			baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo.everifile.com/renovo',
 			username: process.env.EVERIFILE_USERNAME || 'api@joinoutset.com',
 			password: process.env.EVERIFILE_PASS || 'fax7^kaY'
+			// baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo-api-test.everifile.com/renovo',
+			// username: process.env.EVERIFILE_USERNAME || 'api@dswheels.com',
+			// password: process.env.EVERIFILE_PASS || 'Test#123'
 		},
 		braintree: {
 			MerchantId: process.env.BRAINTREE_MERCHANT_ID || '9thy557h7r7t5x95',
