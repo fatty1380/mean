@@ -14,7 +14,7 @@
             $scope.askForPasswordReset = function () {
                 $scope.success = $scope.error = null;
 
-                $http.post('/api/auth/forgot', $scope.credentials).success(function (response) {
+                $http.post('api/auth/forgot', $scope.credentials).success(function (response) {
                     // Show user success message and clear form
                     $scope.credentials = null;
                     $scope.ct = 5;
@@ -48,7 +48,7 @@
             $scope.resetUserPassword = function () {
                 $scope.success = $scope.error = null;
 
-                $http.post('/api/auth/reset/' + $stateParams.token, $scope.passwordDetails)
+                $http.post('api/auth/reset/' + $stateParams.token, $scope.passwordDetails)
                     .success(
                     function (response) {
                         // If successful show success message and clear form

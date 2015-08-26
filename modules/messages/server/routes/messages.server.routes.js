@@ -10,6 +10,15 @@ module.exports = function(app) {
 		//.get(messages.chatList)
 		.get(messages.messageList)
 		.post(messages.create);
+		
+	app.route('/api/chats')
+		.all(messagesPolicy.isAllowed)
+		.get(messages.chatList);
+		
+	app.route('/api/chats/:userId')
+		.all(messagesPolicy.isAllowed)
+		.get(messages.chatListMessages, messages.chatList)
+		.put(messages.createByChat);
 
 	app.route('/api/messages/:messageId')
 		.all(messagesPolicy.isAllowed)

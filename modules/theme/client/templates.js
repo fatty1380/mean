@@ -2150,6 +2150,18 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '            </a>\n' +
   '        </div>\n' +
   '    </div>\n' +
+  '    \n' +
+  '    <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
+  '        <div class="center-block full-width">\n' +
+  '            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
+  '                 class="img-thumbnail user-profile-picture img-responsive">\n' +
+  '            <br data-ng-if="vm.showPicEdit"/>\n' +
+  '            <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.showPicEdit"\n' +
+  '               ui-sref="{{vm.editPicSref || \'.\'}}">edit\n' +
+  '                <i class="fa fa-pencil-square-o"></i>\n' +
+  '            </a>\n' +
+  '        </div>\n' +
+  '    </div>\n' +
   '\n' +
   '    <div class="profile-info {{!!vm.pictureUrl ? \'col-sm-8\' : \'col-sm-12\'}}">\n' +
   '        <button ng-if="vm.showBackBtn" class="btn btn-oset-primary pull-left mgn-right"\n' +

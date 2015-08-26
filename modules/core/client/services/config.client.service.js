@@ -7,14 +7,14 @@
 
         return {
             getStates: function () {
-                var rsrc = $resource('api/config/states');
+                var rsrc = $resource('config/states');
                 return rsrc.query();
             },
             getCountries: function () {
                 return this.get('countries');
             },
             getBaseSchedule: function () {
-                var rsrc = $resource('api/config/baseSchedule');
+                var rsrc = $resource('config/baseSchedule');
                 return rsrc.query();
             },
             getMonths: function () {
@@ -30,7 +30,7 @@
                 return months;
             },
             get: function (config) {
-                var rsrc = $resource('api/config/' + config);
+                var rsrc = $resource('config/' + config);
                 var d = $q.defer();
                 rsrc.get().$promise.then(
                     function (resp) {
@@ -55,7 +55,7 @@
                 });
             },
             getAsync: function (config) {
-                var rsrc = $resource('api/config/' + config);
+                var rsrc = $resource('config/' + config);
 
                 return rsrc.get().$promise.then(
                     function (success) {
@@ -72,13 +72,13 @@
                     );
             },
             getReports: function () {
-                var rsrc = $resource('api/config/reports');
+                var rsrc = $resource('config/reports');
                 return rsrc.get();
             },
             getFaqs: function (myfilter) {
                 var d = $q.defer();
                 if (!faqs) {
-                    var rsrc = $resource('api/config/faqs');
+                    var rsrc = $resource('config/faqs');
                     rsrc.query().$promise.then(function (resp) {
                         $log.debug('faq response: %o', resp);
                         var filter = myfilter || {};
@@ -107,7 +107,7 @@
                     return options;
                 }
 
-                var rsrc = $resource('api/config/options');
+                var rsrc = $resource('config/options');
 
                 return rsrc.get().$promise.then(function (response) {
                     options = response;
@@ -116,7 +116,7 @@
             },
             getModuleConfig: function (userType, moduleName) {
                 if (!modules) {
-                    var rsrc = $resource('api/config/modules');
+                    var rsrc = $resource('config/modules');
 
                     return rsrc.get().$promise
                         .then(function (resp) {

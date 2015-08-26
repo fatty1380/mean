@@ -16,6 +16,7 @@ var config = require('../config'),
     methodOverride = require('method-override'),
     cookieParser = require('cookie-parser'),
     helmet = require('helmet'),
+    cors = require('cors'),
     passport = require('passport'),
     flash = require('connect-flash'),
     consolidate = require('consolidate'),
@@ -142,21 +143,24 @@ module.exports.initMiddleware = function (app) {
     }
 
     if (process.env.NODE_ENV === 'development') {
-        log.info({ func: 'initMiddleware' }, 'Configuring CORS Specific headers and OPTIONS for development only');
-        app.use(function (req, res, next) {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        
+        app.use(cors());
+        
+        // log.info({ func: 'initMiddleware' }, 'Configuring CORS Specific headers and OPTIONS for development only');
+        // app.use(function (req, res, next) {
+        //     res.header('Access-Control-Allow-Origin', '*');
+        //     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
        
-            // intercept OPTIONS method
-            if ('OPTIONS' === req.method) {
-                log.trace('Intercepted OPTIONS method');
-                res.send(200);
-            }
-            else {
-                next();
-            }
-        });
-    }
+        //     // intercept OPTIONS method
+        //     if ('OPTIONS' === req.method) {
+        //         log.trace('Intercepted OPTIONS method');
+        //         res.send(200);
+        //     }
+        //     else {
+        //         next();
+        //     }
+        // });
+    } 
     
     /// JWT???
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));

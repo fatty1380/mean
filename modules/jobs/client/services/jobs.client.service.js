@@ -26,7 +26,7 @@
             },
             listByCompany: function (query) {
                 // Maintain this method because it populates the applications
-                var rsrc = $resource('/api/companies/:id/jobs/applications', {
+                var rsrc = $resource('api/companies/:id/jobs/applications', {
                     id: '@_id'
                 }, {});
 

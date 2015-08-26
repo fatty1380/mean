@@ -372,6 +372,7 @@ module.exports = function (grunt) {
     // Run the project tests
     grunt.registerTask('test', ['env:test', 'mongoose', 'mochaTest', 'karma:unit']);
     grunt.registerTask('test:server', ['env:test', 'mongoose', 'mochaTest']);
+    grunt.registerTask('test:integration', ['env:test', 'mongoose', 'mochaTest:integration']);
     grunt.registerTask('test:routes', ['env:test', 'mongoose', 'mochaTest:routes']);
     grunt.registerTask('test:model', ['env:test', 'mongoose', 'mochaTest:model']);
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);

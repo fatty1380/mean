@@ -125,11 +125,11 @@ exports.oauthCallback = function (strategy) {
     return function (req, res, next) {
         passport.authenticate(strategy, function (err, user, redirectURL) {
             if (err || !user) {
-                return res.redirect('/signin');
+                return res.redirect('/');
             }
             req.login(user, function (err) {
                 if (err) {
-                    return res.redirect('/signin');
+                    return res.redirect('/');
                 }
 
                 return res.redirect(redirectURL || '/');

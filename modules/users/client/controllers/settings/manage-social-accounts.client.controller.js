@@ -24,7 +24,7 @@
             $scope.removeUserSocialAccount = function (provider) {
                 $scope.success = $scope.error = null;
 
-                $http.delete('/api/users/accounts', {
+                $http.delete('api/users/accounts', {
                     params: {
                         provider: provider
                     }

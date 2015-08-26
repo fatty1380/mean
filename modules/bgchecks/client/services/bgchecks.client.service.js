@@ -37,14 +37,14 @@ var reportFactory = function ($resource, $q, $state, $log, DocAccess) {
     }
 
     _this.data = {
-        Types: $resource('/api/reports/types', {}, {
+        Types: $resource('api/reports/types', {}, {
             list: {
                 method: 'GET',
                 isArray: true
             }
         }),
         get: function (sku) {
-            var retVal = $resource('/api/reports/types/:sku', {
+            var retVal = $resource('api/reports/types/:sku', {
                 sku: '@sku'
             });
 
@@ -78,7 +78,7 @@ var applicantFactory = function ($resource) {
     var _this = this;
 
     _this.data = {
-        ByUser: $resource('/api/users/:userId/driver/applicant', {
+        ByUser: $resource('api/users/:userId/driver/applicant', {
             userId: '@userId',
             reportSource: '@reportSource'
 
@@ -89,7 +89,7 @@ var applicantFactory = function ($resource) {
             }
         }),
         FromForm: function(data, userId) {
-            var Applicant = $resource('/api/users/:userId/driver/applicant', {
+            var Applicant = $resource('api/users/:userId/driver/applicant', {
                 userId: '@userId',
                 reportSource: '@reportSource'
 
@@ -103,19 +103,19 @@ var applicantFactory = function ($resource) {
             return new Applicant({userId: userId, reportSource: data});
         },
         ListAll: function (query) {
-            var retVal = $resource('/api/reports/applicants');
+            var retVal = $resource('api/reports/applicants');
 
             return retVal.query().$promise;
         },
         getByUser: function(userId) {
-            var rsrc = $resource('/api/users/:userId/driver/applicant', {
+            var rsrc = $resource('api/users/:userId/driver/applicant', {
                 userId: '@userId'
             });
 
             return rsrc.get({'userId':userId}).$promise;
         },
         get: function (query) {
-            var retVal = $resource('/api/reports/applicants/:applicantId', {
+            var retVal = $resource('api/reports/applicants/:applicantId', {
                 applicantId: '@applicantId'
             });
 

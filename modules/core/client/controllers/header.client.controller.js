@@ -55,6 +55,10 @@
                 //vm.navbarClass = 'navbar-default';
             }
         }
+        
+        vm.logout = function logout() {
+            Authentication.logout();
+        }
     }
 
 

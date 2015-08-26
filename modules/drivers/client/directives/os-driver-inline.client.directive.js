@@ -38,7 +38,8 @@
                 var vm = scope.vm;
 
                 vm.driver = vm.driver || vm.profile.driver;
-                vm.pictureUrl = vm.profile.profileImageURL;
+                debugger;
+                vm.pictureUrl = vm.profile.props && vm.profile.props.avatar || vm.profile.profileImageURL;
                 vm.subTitle = vm.profile.type;
 
                 vm.canEdit = _.isUndefined(vm.canEdit) ? false : vm.canEdit;

@@ -9,7 +9,7 @@
             $scope.changeUserPassword = function () {
                 $scope.success = $scope.error = null;
 
-                $http.post('/api/users/password', $scope.passwordDetails).success(function (response) {
+                $http.post('api/users/password', $scope.passwordDetails).success(function (response) {
                     // If successful show success message and clear form
                     $scope.success = 'Password successfully changed.';
                     $scope.passwordDetails = null;

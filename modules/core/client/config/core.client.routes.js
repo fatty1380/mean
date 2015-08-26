@@ -92,7 +92,8 @@
                     return Authentication.user;
                 }],
                 driver: ['user', 'Drivers', function resolveDriver(user, Drivers) {
-                    return !!user.driver ? Drivers.get(user.driver) : null;
+                    debugger;
+                    return user; // !!user.driver ? Drivers.get(user.driver) : null;
                 }],
                 company: ['user', 'Companies', function resolveCompany(user, Companies) {
                     return !!user.company ? Companies.get(user.company) : null;
@@ -134,7 +135,7 @@
             state('home', {
             url: '/home',
             controller: ['$state', 'Authentication', '$timeout', function ($state, auth, $timeout) {
-                debugger;
+                
                 $timeout(function () {
                     if (!auth.user) {
                         $state.go('intro.owner');
