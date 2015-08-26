@@ -15,6 +15,7 @@
 
         function invite() {
             var contact = {
+                checked: true,
                 displayName: vm.displayName,
                 phones: [{value: vm.phone }],
                 emails: [{value: vm.email }]

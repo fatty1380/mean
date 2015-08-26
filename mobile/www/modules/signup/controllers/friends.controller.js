@@ -8,18 +8,17 @@
     SignupFriendsCtrl.$inject = ['$state'];
 
     function SignupFriendsCtrl($state) {
-        console.log('132312312');
         var vm = this;
 
         vm.chooseContacts = chooseContacts;
         vm.addManualy = addManualy;
-        vm.skip = skip;
+        vm.skipToProfile = skipToProfile;
 
         function chooseContacts () {
             $state.go('signup-friends-contacts');
         }
 
-        function skip() {
+        function skipToProfile() {
             $state.go('account.profile');
         }
 

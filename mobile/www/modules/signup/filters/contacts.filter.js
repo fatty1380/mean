@@ -10,7 +10,6 @@
             var contacts = [],
                 contact, formattedContact, i;
 
-            console.log('not-formatted', allContacts);
             for(i = 0; i < allContacts.length; i++){
                 contact = allContacts[i];
                 if (contact.phoneNumbers || contact.phoneNumbers){

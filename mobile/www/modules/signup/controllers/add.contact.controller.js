@@ -5,37 +5,46 @@
         .module('signup')
         .controller('AddContactFriendsCtrl', AddContactFriendsCtrl);
 
-    AddContactFriendsCtrl.$inject = ['$state', '$ionicLoading', 'contactsService', '$filter'];
+    AddContactFriendsCtrl.$inject = ['$state', '$ionicPopup', '$ionicLoading', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl($state, $ionicLoading, contacts,  contactsService, $filter) {
+    function AddContactFriendsCtrl($state, $ionicPopup, $ionicLoading, contactsService, $filter) {
         var vm = this;
 
-        vm.contacts = contactsService.contacts;
+        $ionicLoading.hide();
 
-        console.log('RESOLVED CONTACTS', contacts);
+        vm.contacts = contactsService.getContactList();
 
         vm.sendInvitations = sendInvitations;
+        vm.skipToProfile = skipToProfile;
 
-        function sendInvitations() {
-            //$state.go('signup-welcome')
+        function skipToProfile() {
+            $state.go('account.profile');
         }
 
-        //function chooseContacts() {
-        //    $ionicLoading.show({template: 'Loading contacts...'});
-        //    var filter = $filter('getContacts');
-        //
-        //    vm.json = contactsService
-        //        .find()
-        //        .then(function (data) {
-        //            console.log('DATDATA', data);
-        //            vm.contacts = filter(data);
-        //            console.log('FILTERED DATA', vm.contacts);
-        //            $ionicLoading.hide();
-        //        }, function (err) {
-        //            console.log(err);
-        //        });
-        //}
-        //chooseContacts();
+        function sendInvitations() {
+            var filter = $filter('getSelectedContacts'),
+                selectedContacts = filter(vm.contacts);
+
+            var names = [];
+
+            for(var i = 0; i < selectedContacts.length; i ++){
+                names.push(selectedContacts[i].displayName);
+            }
+
+            var template = names.join(',');
+            var confirm = $ionicPopup.confirm({
+                title: 'Invite selected contacts?',
+                template: template
+            });
+
+            confirm.then(function(res) {
+                if(res) {
+                    $state.go('signup-welcome');
+                } else {
+                    console.log('friends are not invited');
+                }
+            });
+        }
 
     }
 })();

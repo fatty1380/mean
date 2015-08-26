@@ -6,7 +6,7 @@
                 <ion-nav-back-button>Back</ion-nav-back-button>
             </ion-nav-bar>
             <h1 class="title">Add Friends</h1>
-            <button class="button button-clear">Skip</button>
+            <a class="button button-clear" ng-click="vm.skipToProfile();">Skip</a>
         </ion-header-bar>
     </div>
 
@@ -33,7 +33,6 @@
             </div>
         </ion-scroll>
     </ion-pane>
-
     <ion-footer-bar>
         <div class="button-bar">
             <button class="button block-button" ng-click="vm.sendInvitations();">Send Invitations</button>

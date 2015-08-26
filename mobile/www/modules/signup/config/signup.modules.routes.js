@@ -59,14 +59,12 @@
                     templateUrl: 'modules/signup/templates/add-friends-from-contacts.html',
                     controller: 'AddContactFriendsCtrl as vm',
                     resolve: {
-                        contacts: function (contactsService) {
-                            if(contactsService.contacts.length) return;
-                            contactsService.find().then(function (data) {
-                                contactsService.setContacts(data);
-                                return contactsService.contacts;
-                            }, function (err) {
-                                console.log('Error loading getting device contacts', err);
-                            });
+                        contacts: function (contactsService, $ionicLoading) {
+                            var contacts = contactsService.getContactList();
+                            if(!contacts.length){
+                                $ionicLoading.show({template: 'Loading Contacts....'});
+                                return contactsService.getContacts();
+                            }
                         }
                     }
                 })

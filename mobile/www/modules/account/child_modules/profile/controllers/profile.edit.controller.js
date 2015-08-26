@@ -13,7 +13,6 @@
         vm.profileData = userService.profileData;
 
         vm.cancel = function () {
-            debugger;
             vm.closeModal(null);
         };
 

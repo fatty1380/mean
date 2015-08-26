@@ -16,12 +16,18 @@
             }
         }
 
-        function setContacts(deviceContacts) {
-            if(deviceContacts && deviceContacts.length){
-                var filter = $filter('getContacts');
+        function getContactList() {
+            return contacts;
+        }
 
-                contacts = filter(deviceContacts);
-            }
+
+        function getContacts() {
+            var filter = $filter('getContacts');
+
+            return find().then(function (data) {
+                contacts = filter(data);
+                return contacts;
+            });
         }
 
         function save(contact) {
@@ -93,7 +99,8 @@
 
         return {
             contacts: contacts,
-            setContacts: setContacts,
+            getContactList: getContactList,
+            getContacts: getContacts,
             addNewContact: addNewContact,
             save: save,
             clone: clone,
