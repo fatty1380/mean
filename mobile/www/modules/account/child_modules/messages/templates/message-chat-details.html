@@ -1,51 +1,48 @@
 <ion-modal-view class="new-message-modal">
-    <div class="header compact-size">
-        <ion-header-bar>
-            <h1 class="title">New Message</h1>
-        </ion-header-bar>
-        <div class="bar bar-subheader">
-            <h3 class="title">Write message, select the recipient and click Create.</h3>
-        </div>
-    </div>
-    <ion-pane class="content-pane has-title has-footer">
-        <div class="content-top">
-            <button class="button button-block">Choose from Contact List</button>
-        </div>
-        <!--<ion-scroll>
-            <div class="list share-form">
-                <label class="item item-input">
-                    <textarea placeholder="Enter message" ng-model="vm.message"></textarea>
-                </label>
+    <div class="header min-size">
+        <ion-header-bar align-title="center">
+            <div class="buttons">
+                <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ng-click="vm.close()"></button>
             </div>
-        </ion-scroll>-->
-
-        <ion-scroll>
+            <h1 class="title">{{vm.recipientName}}</h1>
+        </ion-header-bar>
+    </div>
+    <ion-pane>
+        <ion-scroll delegate-handle="mainScroll">
             <ul class="list message-list">
                 <li class="item" ng-repeat="message in vm.messages">
+                   <!-- <img class="avatar" ng-if="vm.profileData.props.avatar&&message.direction===('outbound')" ng-src="{{vm.profileData.props.avatar}}" ng-class="message.direction===('outbound') ? 'avatar-left' : 'avatar-right'" alt=""/>-->
                     <div class="ico ico-avatar" ng-class="message.direction===('outbound') ? 'avatar-left' : 'avatar-right'"></div>
                     <div class="item-content">
-
                         <div class="message">
                             <span>{{message.text}}</span>
                         </div>
                         <div class="top">
-                            <span ><i class="ico ico-timesmall"></i>{{message.created | date:'mediumDate'}}</span>
+                            <span>
+                                <i class="ico ico-timesmall"></i>{{message.created | date:'mediumTime'}}
+                            </span>
                         </div>
                     </div>
                 </li>
 
-                <div class="list share-form">
-                    <label class="item item-input">
-                        <textarea placeholder="Enter message" ng-model="vm.message"></textarea>
+                <div class="list item item-input-inset">
+                    <label class="item-input-wrapper">
+                        <textarea placeholder="message" ng-model="vm.message"></textarea>
                     </label>
+                    <button class="button button-positive" ng-click="vm.createMessage()">
+                        Send
+                    </button>
                 </div>
+
             </ul>
         </ion-scroll>
+
     </ion-pane>
-    <ion-footer-bar>
-        <div class="button-bar action-buttons">
+
+    <!-- <ion-footer-bar>
+       <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary" ng-click="vm.createMessage()">Create</button>
         </div>
-    </ion-footer-bar>
+    </ion-footer-bar>-->
 </ion-modal-view>

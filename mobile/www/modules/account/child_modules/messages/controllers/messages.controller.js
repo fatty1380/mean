@@ -5,9 +5,9 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['messageService', 'messageModalsService'];
+    MessagesCtrl.$inject = ['messageService', 'messageModalsService', '$ionicLoading', 'userService'];
 
-    function MessagesCtrl (messageService, messageModalsService) {
+    function MessagesCtrl (messageService, messageModalsService, $ionicLoading, userService) {
 
         var vm  = this;
         vm.messages = [];
@@ -18,45 +18,54 @@
         getChats();
 
 
-        function openChatDetails(messages) {
-            console.log('openChatDetails() ',messages);
-            showChatDetailsModal(messages);
+        //get my avatar
+       /* var userData = userService.getUserData();
+        if(userData.then) {
+            userData.then(function(data){
+                console.log('vm.profileData ',data);
+                vm.profileData = data;
+            }, function(){
+                console.log("userService error");
+            });
+        }else{
+            vm.profileData =  userData;
+        }*/
+
+        function loadProfileAvatars() {
+
+        }
+
+        function openChatDetails(object) {
+            console.log('openChatDetails() ',object.recipientName);
+            showChatDetailsModal(object);
         }
 
         function showChatDetailsModal(parameters) {
             messageModalsService
                 .showNewMassageModal(parameters)
                 .then(function () {
-                    //getMessages();
+                    getChats();
                 },
                 function (err) {
                     console.log(err);
                 });
         };
 
-       /* function getMessages () {
-            messageService
-                .getMessages()
-                .then(function (res) {
-                    console.log('GET MESSAGES SUCCESS ----- >>>', res);
-                    vm.messages = res.data;
-                }, function (err) {
-                    console.log('GET MESSAGES ERROR ----- >>>', err);
-                });
-        }*/
-
         function getChats () {
+            $ionicLoading.show({
+                template: 'loading chats'
+            });
             messageService
                 .getChats()
                 .then(function (res) {
+                    $ionicLoading.hide();
                     console.log('GET CHATS SUCCESS ----- >>>', res);
                     vm.chats = res.data;
+                    loadProfileAvatars();
                 }, function (err) {
+                    $ionicLoading.hide();
                     console.log('GET CHATS ERROR ----- >>>', err);
                 });
         }
-
-
     }
-
 })();
