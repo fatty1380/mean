@@ -157,7 +157,7 @@ function createRequest(req, res, next) {
     
     // Setup variables for search
     var me = !!req.profile ? req.profile.id : req.user.id;
-    var them = req.param('friendId');
+    var them = req.body.to || req.query.friendId || req.body.friendId;
 
     req.log.debug({ func: 'createRequest', body: req.body, friend: them }, 'Adding friend with POSTed body content');
 
@@ -170,7 +170,7 @@ function createRequest(req, res, next) {
         requestType: Request.reqTypes.friendRequest,
         from: me,
         to: them,
-        message: req.body.message || ''
+        text: req.body.text || ''
     });
 
     // Insert
@@ -231,7 +231,7 @@ function getRequest(req, res, next) {
 
 function updateRequest(req, res, next) {
 
-    var action = req.param('action');
+    var action = req.body.action || req.query.action;
     req.log.debug({ func: 'updateRequest', action: action }, 'Updating request based on action: `%s`', action);
 
     if (action === 'accept') {

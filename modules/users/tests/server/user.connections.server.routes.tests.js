@@ -51,7 +51,7 @@ describe('User Connections & Social', function () {
             r1 = new RequestMessage({
                 from: u1,
                 to: user,
-                message: 'Yes man - be my buddy',
+                text: 'Yes man - be my buddy',
                 status: 'accepted'
             });
             user.requests.push(r1);
@@ -61,7 +61,7 @@ describe('User Connections & Social', function () {
             r2 = new RequestMessage({
                 from: u2,
                 to: user,
-                message: 'Yo! Will you join my convoy?'
+                text: 'Yo! Will you join my convoy?'
             });
             user.requests.push(r2);
             u2.requests.push(r2);
@@ -211,7 +211,32 @@ describe('User Connections & Social', function () {
                 });
         });
 
-        it('should return no friends for u2');
+        it('should return no friends for u2', function () {
+            _test = this.test;
+
+            var endpoint = '/api/users/' + u2.id + '/friends';
+            return agent.get(endpoint)
+                .expect(200)
+                .then(function (response) {
+                    log.debug({
+                        test: _test.title,
+                        body: response.body,
+                        err: response.error
+                    }, 'Got Response from %s', endpoint);
+                    
+                    var friends = response.body;
+
+                    log.debug({ 
+                        test: _test.title, 
+                        endpoint: endpoint, 
+                        u1: u1.id,
+                        u2: u2.id, 
+                        user: user.id },
+                        'Logging Relevant User IDs');
+
+                    friends.should.have.property('length', 0);
+                });
+        });
 
         it('should return a list of pending friend requests', function () {
             _test = this.test;
@@ -260,7 +285,7 @@ describe('User Connections & Social', function () {
             _test = this.test;
 
             var endpoint = '/api/requests';
-            var postData = { friendId: u3.id };
+            var postData = { to: u3.id, text: 'hello there!' };
 
             return agent.post(endpoint)
                 .send(postData)
@@ -270,7 +295,7 @@ describe('User Connections & Social', function () {
 
                     log.debug({ url: endpoint, test: _test.title, body: response.body, code: response.status }, 'Got friends result');
 
-                    friendRequest.should.have.property('message');
+                    friendRequest.should.have.property('text', postData.text);
                     friendRequest.should.have.property('from', user.id);
                     friendRequest.should.have.property('to', u3.id);
                     friendRequest.should.have.property('status', 'new');

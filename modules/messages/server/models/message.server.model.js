@@ -121,7 +121,7 @@ ChatSchema.pre('save', function () {
 
 mongoose.model('Chat', ChatSchema);
 
-
+// TODO: Combine with "Message" schema
 var RequestMessageSchema = new Schema({
     from: {
         type: Schema.ObjectId,
@@ -130,6 +130,9 @@ var RequestMessageSchema = new Schema({
     to: {
         type: Schema.ObjectId,
         ref: 'User'
+    },
+    inviteContactInfo: {
+        type: Schema.Types.Mixed
     },
     status: {
         type: String,
@@ -141,7 +144,7 @@ var RequestMessageSchema = new Schema({
         enum: ['friendRequest'],
         default: 'friendRequest'
     },
-    message: {
+    text: {
         type: String,
         default: ''
     },
