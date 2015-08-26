@@ -29,6 +29,12 @@ exports.invokeRolesPolicies = function() {
 		}, {
 			resources: '/api/messages/:messageId',
 			permissions: ['get']
+		},{
+			resources: '/api/chat',
+			permissions: ['get']
+		},{
+			resources: '/api/chat/:userId',
+			permissions: ['get', 'put']
 		}]
 	}]);
 };
