@@ -29,8 +29,12 @@
                 <div id="map" data-tap-disabled="true"></div>
 
                 <label class="item item-input">
-                    <span class="input-label">Distance Since Last Post:</span>
-                    <input type="text" ng-model="vm.distanceSinceLastPost"  placeholder="Distance in km" >
+                    <span class="input-label">Distance Since Last Post (km):</span>
+                    <input type="text" ng-model="vm.activity.props.slMiles" placeholder="Distance in km" readonly>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Freight Hauled:</span>
+                    <input type="text" ng-model="vm.activity.props.freight" placeholder="" >
                 </label>
             </div>
         </ion-scroll>
