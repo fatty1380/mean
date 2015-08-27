@@ -3,9 +3,9 @@
 
     angular
         .module('activity')
-        .service('activityService', activityService );
+        .service('activityService', activityService);
 
-    activityService.$inject = ['settings','$http', '$q', '$ionicPopup'];
+    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup'];
 
     function activityService(settings, $http, $q, $ionicPopup) {
         var feed = [];
@@ -17,16 +17,20 @@
          * @returns {Promise} promise with all feed items
          */
         function getFeed() {
-            return  $http.get(settings.feed)
+            return $http.get(settings.feed)
                 .then(function (response) {
                     ids = response.data.activity;
                     return $q(function (resolve, reject) {
                         if (ids.length > 0) {
                             return resolve(populateActivityFeed(response.data));
                             loadItems(num);
-                        }else{
+                        } else {
                             reject("no feed");
                         }
+
+
+                        return;
+
                         function loadItems(num) {
                             getFeedById(ids[num]).then(function (result) {
                                 console.log(result);
@@ -49,16 +53,17 @@
                                         type: result.location[0].type,
                                         coordinates: result.location[0].coordinates
                                     }
-                                };
+                                }
                                 feed.unshift(entry);
-                                if( num < ids.length - 1 ){
+                                if (num < ids.length - 1) {
                                     num++;
                                     loadItems(num);
-                                }else{
+                                } else {
                                     resolve(feed);
                                 }
                             });
                         }
+
                     });
                 }, function (response) {
                     showPopup("Error", response);
@@ -103,7 +108,7 @@
          * @returns {Promise} promise feed data
          */
         function getFeedById(id) {
-            return  $http.get(settings.feed + id)
+            return $http.get(settings.feed + id)
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
@@ -113,9 +118,11 @@
         }
 
         function postFeed(data) {
+            console.log('Posting new feed item', data);
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
-            return  $http.post(settings.feed,serialize(data))
+            return $http.post(settings.feed, serialize(data))
                 .then(function (response) {
+                    console.log('Posted new feed item', response.data);
                     return response.data;
                 }, function (response) {
                     showPopup("Error", response);
@@ -131,7 +138,7 @@
          */
         function getDistanceBetween(start, finish) {
             var service = new google.maps.DistanceMatrixService;
-            return $q(function(resolve, reject) {
+            return $q(function (resolve, reject) {
                 service.getDistanceMatrix({
                     origins: [start],
                     destinations: [finish],
@@ -139,15 +146,15 @@
                     unitSystem: google.maps.UnitSystem.METRIC,
                     avoidHighways: false,
                     avoidTolls: false
-                }, function(response, status) {
+                }, function (response, status) {
                     if (status !== google.maps.DistanceMatrixStatus.OK) {
                         activityService.showPopup('Google maps failed', status);
                         reject("error");
                     } else {
 
-                        if(response.rows[0].elements[0].distance){
-                            resolve(response.rows[0].elements[0].distance.value/1000);
-                        }else{
+                        if (response.rows[0].elements[0].distance) {
+                            resolve(response.rows[0].elements[0].distance.value / 1000);
+                        } else {
                             resolve(null);
                         }
                     }
@@ -163,11 +170,12 @@
          */
         function getPlaceName(latlng) {
             console.log('getPlaceName()');
-            if(!geocoder){
+            if (!geocoder) {
                 var geocoder = new google.maps.Geocoder;
             }
-            return $q(function(resolve, reject) {
-                geocoder.geocode({'location': latlng}, function(results, status) {
+
+            return $q(function (resolve, reject) {
+                geocoder.geocode({ 'location': latlng }, function (results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
                         if (results[1]) {
                             /*marker.info = new google.maps.InfoWindow({
@@ -205,12 +213,12 @@
 
         function serialize(obj, prefix) {
             var str = [];
-            for(var p in obj) {
+            for (var p in obj) {
                 if (obj.hasOwnProperty(p)) {
                     var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
                     str.push(typeof v == "object" ?
                         serialize(v, k) :
-                    encodeURIComponent(k) + "=" + encodeURIComponent(v));
+                        encodeURIComponent(k) + "=" + encodeURIComponent(v));
                 }
             }
             return str.join("&");

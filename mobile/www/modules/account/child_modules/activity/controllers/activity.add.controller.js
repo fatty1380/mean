@@ -1,16 +1,16 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading', '$cordovaGeolocation', '$q'];
+    ActivityAddCtrl.$inject = ['$scope', 'activityService', '$ionicLoading', '$cordovaGeolocation', '$q'];
 
     function ActivityAddCtrl($scope, activityService, $ionicLoading, $cordovaGeolocation, $q) {
         angular.element(document).ready(
             getCurrentPosition
-        );
+            );
 
         var vm = this;
         var myCoordinates = null;
@@ -20,11 +20,11 @@
         var infoWindow = null;
 
         vm.activity = {
-            title : '',
-            message : '',
-            location : {
+            title: '',
+            message: '',
+            location: {
                 type: 'Point',
-                coordinates:[],
+                coordinates: [],
                 created: ''
             }
         }
@@ -32,8 +32,8 @@
         vm.distanceSinceLastPost = '';
         vm.saveFeed = saveFeed;
 
-        $scope.$watch('vm.where', function() {
-            if(vm.where) {
+        $scope.$watch('vm.where', function () {
+            if (vm.where) {
                 setMarkerPosition();
             }
         }, true);
@@ -43,15 +43,15 @@
          */
         function getCurrentPosition() {
             console.log('getCurrentPosition()');
-            var posOptions = {timeout: 10000, enableHighAccuracy: false};
+            var posOptions = { timeout: 10000, enableHighAccuracy: false };
             $cordovaGeolocation
                 .getCurrentPosition(posOptions)
                 .then(function (position) {
-                    var lat  = position.coords.latitude;
+                    var lat = position.coords.latitude;
                     var long = position.coords.longitude;
                     myCoordinates = new google.maps.LatLng(lat, long);
                     initMap();
-                }, function(err) {
+                }, function (err) {
                     activityService.showPopup('Geocoder failed', err);
                 });
         }
@@ -64,9 +64,9 @@
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 8,
                 center: myCoordinates,
-                draggable:true,
+                draggable: true,
                 sensor: true,
-                zoomControl:true,
+                zoomControl: true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
             marker = new google.maps.Marker({
@@ -76,11 +76,11 @@
                 draggable: false
             });
 
-            google.maps.event.addDomListener(map, 'click', function(e) {
+            google.maps.event.addDomListener(map, 'click', function (e) {
                 var latlng = { lat: e.latLng.G, lng: e.latLng.K };
-                console.log('click',latlng);
+                console.log('click', latlng);
                 activityService.getPlaceName(latlng)
-                    .then(function(result) {
+                    .then(function (result) {
                         vm.where = result;
                     });
 
@@ -89,12 +89,12 @@
             });
 
             infoWindow = new google.maps.InfoWindow({
-                content:  ''
+                content: ''
             });
 
             //get location name after init
             activityService.getPlaceName(myCoordinates)
-                .then(function(result) {
+                .then(function (result) {
                     vm.where = result;
                 });
         }
@@ -106,9 +106,9 @@
             console.log('setMarkerPosition()');
             var position = null;
             var location = new google.maps.LatLng(vm.where.geometry.location.G, vm.where.geometry.location.K);
-            if(clickCoordinates){
+            if (clickCoordinates) {
                 position = clickCoordinates;
-            }else{
+            } else {
                 position = location;
             }
             marker.setPosition(position);
@@ -123,14 +123,14 @@
          * @param {Object} position - current coordinates
          */
         function setDistanceFromLastPost(position) {
-              console.log('setDistanceFromLastPost()');
+            console.log('setDistanceFromLastPost()');
             var lastCoord = activityService.getLastFeed();
             console.log('Last Coordinates', lastCoord);
             if (lastCoord && lastCoord.location && lastCoord.location.coordinates) {
                 var startPos = new google.maps.LatLng(lastCoord.location.coordinates[0], lastCoord.location.coordinates[1]);
                 var endPos = position;
                 activityService.getDistanceBetween(startPos, endPos)
-                    .then(function(result) {
+                    .then(function (result) {
                         vm.distanceSinceLastPost = result + " km";
                     });
             }
