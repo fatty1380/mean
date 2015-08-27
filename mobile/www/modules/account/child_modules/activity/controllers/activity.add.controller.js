@@ -26,11 +26,14 @@
                 type: 'Point',
                 coordinates:[],
                 created: ''
+            },
+            props:{
+                freight: '',
+                slMiles: ''
             }
         }
-
-        vm.distanceSinceLastPost = '';
         vm.saveFeed = saveFeed;
+        vm.close = close;
 
         $scope.$watch('vm.where', function() {
             if(vm.where) {
@@ -43,15 +46,21 @@
          */
         function getCurrentPosition() {
             console.log('getCurrentPosition()');
+            $ionicLoading.show({
+                template: 'geocoding position'
+            });
             var posOptions = {timeout: 10000, enableHighAccuracy: false};
             $cordovaGeolocation
                 .getCurrentPosition(posOptions)
                 .then(function (position) {
+                    $ionicLoading.hide();
                     var lat  = position.coords.latitude;
                     var long = position.coords.longitude;
                     myCoordinates = new google.maps.LatLng(lat, long);
+                    vm.activity.location.coordinates = [lat, long];
                     initMap();
                 }, function(err) {
+                    $ionicLoading.hide();
                     activityService.showPopup('Geocoder failed', err);
                 });
         }
@@ -85,7 +94,6 @@
                     });
 
                 clickCoordinates = latlng;
-                vm.activity.location.coordinates = [e.latLng.G, e.latLng.K];
             });
 
             infoWindow = new google.maps.InfoWindow({
@@ -104,13 +112,15 @@
          */
         function setMarkerPosition() {
             console.log('setMarkerPosition()');
-            var position = null;
-            var location = new google.maps.LatLng(vm.where.geometry.location.G, vm.where.geometry.location.K);
-            if(clickCoordinates){
-                position = clickCoordinates;
-            }else{
-                position = location;
-            }
+            var location = { lat:  vm.where.geometry.location.G, lng: vm.where.geometry.location.K };
+
+            //click coordinates more accurate than geocoded by place coordinates
+            var position = (clickCoordinates) ? clickCoordinates : location ;
+
+            console.log('position ', position);
+
+            vm.activity.location.coordinates = [position.lat, position.lng];
+
             marker.setPosition(position);
             infoWindow.setContent(vm.where.formatted_address)
             infoWindow.open(map, marker);
@@ -119,33 +129,36 @@
         }
 
         /**
-         * @desc calulate distance from last post and set to vm.distanceSinceLastPost
+         * @desc calulate distance from last post and set to vm.activity.props.slMiles
          * @param {Object} position - current coordinates
          */
         function setDistanceFromLastPost(position) {
-              console.log('setDistanceFromLastPost()');
+            console.log('setDistanceFromLastPost()');
             var lastCoord = activityService.getLastFeed();
+            console.log('lastCoord ',lastCoord);
             if(lastCoord) {
-                var startPos = new google.maps.LatLng(lastCoord.location.coordinates[0], lastCoord.location.coordinates[1]);
-                var endPos = position;
+                var startPos = new google.maps.LatLng(lastCoord.location[0].coordinates[0], lastCoord.location[0].coordinates[1]);
+                var endPos =  new google.maps.LatLng(position.lat, position.lng);
                 activityService.getDistanceBetween(startPos, endPos)
                     .then(function(result) {
-                        vm.distanceSinceLastPost = result + " km";
+                        vm.activity.props.slMiles = result;
                     });
             }
         }
 
         function saveFeed() {
+            console.log('vm.activity ',vm.activity.location.coordinates);
             $ionicLoading.show({
                 template: 'post feed'
             });
             activityService.postFeed(vm.activity).then(function(result) {
                 $ionicLoading.hide();
+                console.log(result);
                 vm.close(result._id);
             });
         }
 
-        vm.close = function (str) {
+        function close(str) {
             $scope.closeModal(str);
         }
     }

@@ -11,8 +11,8 @@
         var templateUrl, controller, params;
 
         function showNewMassageModal (parameters) {
-            templateUrl = 'modules/account/child_modules/messages/templates/message-new.html';
-            controller = 'MessageNewCtrl as vm';
+            templateUrl = 'modules/account/child_modules/messages/templates/message-chat-details.html';
+            controller = 'MessageChatDetailsCtrl as vm';
             params = parameters || {};
 
             return modalService
