@@ -129,12 +129,14 @@ mongoose.model('FeedItem', FeedItemSchema);
 var GeoJsonSchema = new Schema({
 		type: {
 			type: String,
-			enum: ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'],
+			enum: ['Point', 'LineString'], //, 'MultiPoint', 'MultiLineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'],
 			default: 'Point'
 		},
 		coordinates: [Number],
 		// Alt, nested coordinates: [{type: [Number]}] per http://stackoverflow.com/a/15570602/609021
 
+		placeId: String,
+		placeName: String,
 	created: {
 		type: Date,
 		default: Date.now
