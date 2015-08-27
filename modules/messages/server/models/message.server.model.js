@@ -104,10 +104,12 @@ var ChatSchema = new Schema({
         ref: 'User'
     },
     lastMessage: {
-        type: Schema.Types.Mixed
+        type: Schema.Types.Mixed,
+        default: null
     },
     messages: {
-        type: ['Message']
+        type: ['Message'],
+        default: []
     }
 }, { toJSON: { virtuals: true } })
 
@@ -127,7 +129,11 @@ var RequestMessageSchema = new Schema({
     },
     to: {
         type: Schema.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        default: null
+    },
+    contactInfo: {
+        type: Schema.Types.Mixed
     },
     inviteContactInfo: {
         type: Schema.Types.Mixed
@@ -162,3 +168,12 @@ RequestMessageSchema.statics.reqTypes = {
 
 mongoose.model('Message', MessageSchema);
 mongoose.model('RequestMessage', RequestMessageSchema);
+
+var sampleContactInfo =
+    {
+        emails: [{ work: 'pat@work.com', isPreferred: true }],
+        phone: [{ mobile: '123-456-7675', isPreferred: true }],
+        firstName: 'Pat',
+        lastName: 'Smith',
+        displayName: 'Pat Smith'
+    }

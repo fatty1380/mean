@@ -17,7 +17,7 @@ module.exports = function(app) {
 		
 	app.route('/api/chats/:userId')
 		.all(messagesPolicy.isAllowed)
-		.get(messages.chatListMessages, messages.chatList)
+		.get(messages.chatListMessages, messages.chatRead)
 		.put(messages.createByChat);
 
 	app.route('/api/messages/:messageId')
@@ -26,10 +26,9 @@ module.exports = function(app) {
 		.put(messages.update)
 		.delete(messages.delete);
 	
-	// TODO: Properly Secure this route
-	app.route('/api/users/:userId/messages')
-		.all(messagesPolicy.isAllowed)
-		.get(messages.messageList);
+	// app.route('/api/users/:userId/messages')
+	// 	.all(messagesPolicy.isAllowed)
+	// 	.get(messages.messageList);
 
 	// Finish by binding the Message middleware
 	app.param('messageId', messages.messageByID);

@@ -48,7 +48,10 @@ describe('Feed CRUD tests', function () {
 			function () {
 				feedItem = {
 					title: 'Title',
-					message: 'This is my message'
+					message: 'This is my message',
+					location: {
+						coordinates: [37.4422623, -122.143102]
+					}
 				};
 			});
 	});
@@ -71,17 +74,17 @@ describe('Feed CRUD tests', function () {
 				.expect(200)
 				.then(function (feedsGetRes) {
 
-				// Get Feeds list
-				var feed = feedsGetRes.body;
+					// Get Feeds list
+					var feed = feedsGetRes.body;
 
-				log.trace({ test: _test.title, feed: feed }, 'Got Feed from Body');
+					log.trace({ test: _test.title, feed: feed }, 'Got Feed from Body');
             
-				// Set assertions
-				(feed.user._id).should.equal(userId);
+					// Set assertions
+					(feed.user._id).should.equal(userId);
 
-				feed.should.have.property('items');
-				feed.should.have.property('activity');
-			});
+					feed.should.have.property('items');
+					feed.should.have.property('activity');
+				});
 		});
 
 		describe.skip('should create a new feed if no feed already exists', function () {
@@ -103,36 +106,47 @@ describe('Feed CRUD tests', function () {
 				.send(feedItem)
 				.expect(200)
 				.then(
-				function (feedItemSaveRes) {
-					var itemResult = feedItemSaveRes.body;
-					log.debug({ test: _test.title, body: feedItemSaveRes.body }, 'Setup');
+					function (feedItemSaveRes) {
+						var itemResult = feedItemSaveRes.body;
+						log.debug({ test: _test.title, body: feedItemSaveRes.body }, 'Setup');
 
-					should.exist(itemResult);
+						should.exist(itemResult);
 
-					log.debug({ test: _test.title, feedItem: itemResult });
+						log.debug({ test: _test.title, feedItem: itemResult });
 
-					itemResult.should.have.property('title');
-					itemResult.should.have.property('message');
-					itemResult.should.have.property('location');
-					itemResult.should.have.property('user');
-					itemResult.should.have.property('isPublic', false);
+						verifyFeedProperties(itemResult);
+
+						itemResult.should.have.property('title');
+						itemResult.should.have.property('message');
+						itemResult.should.have.property('location');
+						itemResult.should.have.property('user');
+						itemResult.should.have.property('props');
+						itemResult.should.have.property('isPublic', false);
+
+						itemResult.props.should.have.property('slMiles');
+						itemResult.props.should.have.property('freight');
 				
-					// Get a list of Feeds
-					return agent.get('/api/feed').expect(200);
-				}).then(
-				function (feedsGetRes) {
-					// Get Feeds list
-					var feedRes = feedsGetRes.body;
+						// Get a list of Feeds
+						return agent.get('/api/feed').expect(200);
+					}).then(
+						function (feedsGetRes) {
+							// Get Feeds list
+							var feedRes = feedsGetRes.body;
 
-					log.debug({ test: _test.title, feed: feedRes });
+							log.debug({ test: _test.title, feed: feedRes });
 
-					feedRes.should.have.property('activity').and.be.an.Array.with.length(1);
+							feedRes.should.have.property('activity').and.be.an.Array.with.length(1);
 
-					// Set assertions
-					feedRes.should.have.property('id', userId);
-					feedRes.should.have.property('user');
+							// Set assertions
+							feedRes.should.have.property('id', userId);
+							feedRes.should.have.property('user');
 
-					feedRes.user.should.equal(userId);
+							feedRes.user.should.equal(userId);
+
+							return agent.get('/api/feed/' + feedRes.activity[0]);
+						})
+				.then(function success(feedItemResponse) {
+					verifyFeedProperties(feedItemResponse.body);
 				});
 		});
 
@@ -147,19 +161,21 @@ describe('Feed CRUD tests', function () {
 				.send(feedItem)
 				.expect(200)
 				.then(
-				function (feedItemSaveRes) {
-					// Update Feed name
-					feedItem = feedItemSaveRes.body;
+					function (feedItemSaveRes) {
+						// Update Feed name
+						feedItem = feedItemSaveRes.body;
 
-					// Update existing Feed
-					return agent.get('/api/feed/' + feedItemSaveRes.body._id)
-						.expect(200);
-				})
+						// Update existing Feed
+						return agent.get('/api/feed/' + feedItemSaveRes.body._id)
+							.expect(200);
+					})
 				.then(
-				function (feedItemGetResponse) {
-					// Set assertions
-					(feedItemGetResponse.body._id).should.equal(feedItem._id);
-				});
+					function (feedItemGetResponse) {
+						// Set assertions
+						(feedItemGetResponse.body._id).should.equal(feedItem._id);
+						
+						verifyFeedProperties(feedItemGetResponse.body);
+					});
 		});
 
 		it('should be able to update an existing feed item', function () {
@@ -173,22 +189,22 @@ describe('Feed CRUD tests', function () {
 				.send(feedItem)
 				.expect(200)
 				.then(
-				function (feedItemSaveRes) {
-					// Update Feed name
-					feedItem.title = 'WHY YOU GOTTA BE SO MEAN?';
-					savedItemResult = feedItemSaveRes.body;
+					function (feedItemSaveRes) {
+						// Update Feed name
+						feedItem.title = 'WHY YOU GOTTA BE SO MEAN?';
+						savedItemResult = feedItemSaveRes.body;
 
-					// Update existing Feed
-					return agent.put('/api/feed/' + feedItemSaveRes.body._id)
-						.send(feedItem)
-						.expect(200);
-				})
+						// Update existing Feed
+						return agent.put('/api/feed/' + feedItemSaveRes.body._id)
+							.send(feedItem)
+							.expect(200);
+					})
 				.then(
-				function (feedUpdateRes) {
-					// Set assertions
-					(feedUpdateRes.body._id).should.equal(savedItemResult._id);
-					(feedUpdateRes.body.title).should.match('WHY YOU GOTTA BE SO MEAN?');
-				});
+					function (feedUpdateRes) {
+						// Set assertions
+						(feedUpdateRes.body._id).should.equal(savedItemResult._id);
+						(feedUpdateRes.body.title).should.match('WHY YOU GOTTA BE SO MEAN?');
+					});
 		});
 
 		it('should not be able to save Feed Item if no title is provided', function () {
@@ -202,12 +218,12 @@ describe('Feed CRUD tests', function () {
 				.send(feedItem)
 				.expect(400)
 				.then(function (feedSaveRes) {
-				// Set message assertion
-				(feedSaveRes.body.message).should.match('Please fill in Title');
-			})
+					// Set message assertion
+					(feedSaveRes.body.message).should.match('Please fill in Title');
+				})
 				.catch(function (feedSaveErr) {
-				return Q.reject(feedSaveErr);
-			});
+					return Q.reject(feedSaveErr);
+				});
 		});
 
 		it.skip('should be able to delete Feed Item instance', function (done) {
@@ -218,25 +234,25 @@ describe('Feed CRUD tests', function () {
 				.send(feedItem)
 				.expect(200)
 				.end(function (feedSaveErr, feedSaveRes) {
-				// Handle Feed save error
-				if (feedSaveErr) {return done(feedSaveErr);}
+					// Handle Feed save error
+					if (feedSaveErr) { return done(feedSaveErr); }
 
-				// Delete existing Feed
-				agent.delete('/api/feed/' + feedSaveRes.body._id)
-					.expect(200)
-					.end(function (feedDeleteErr, feedDeleteRes) {
-					// Handle Feed error error
-					if (feedDeleteErr) {return done(feedDeleteErr);}
+					// Delete existing Feed
+					agent.delete('/api/feed/' + feedSaveRes.body._id)
+						.expect(200)
+						.end(function (feedDeleteErr, feedDeleteRes) {
+							// Handle Feed error error
+							if (feedDeleteErr) { return done(feedDeleteErr); }
 
-					should.exist(feedDeleteRes.body);
+							should.exist(feedDeleteRes.body);
 
-					// Set assertions
-					feedDeleteRes.body.should.have.property('_id', feedSaveRes.body._id);
+							// Set assertions
+							feedDeleteRes.body.should.have.property('_id', feedSaveRes.body._id);
 
-					// Call the assertion callback
-					done();
+							// Call the assertion callback
+							done();
+						});
 				});
-			});
 		});
 
 	});
@@ -258,45 +274,45 @@ describe('Feed CRUD tests', function () {
 			return agent.get('/api/feeds')
 				.expect(404)
 				.then(
-				function (res) {
-					log.trace({ test: _test.title, body: res.body, error: res.error });
-					// Set assertion
-					(_.isEmpty(res.body)).should.be.true;
-					res.error.should.have.property('status', 404);
-				},
-				function (err) {
-					log.error({ test: _test.title, error: err }, 'Errored');
-					should.not.exist(err);
-				});
+					function (res) {
+						log.trace({ test: _test.title, body: res.body, error: res.error });
+						// Set assertion
+						(_.isEmpty(res.body)).should.be.true;
+						res.error.should.have.property('status', 404);
+					},
+					function (err) {
+						log.error({ test: _test.title, error: err }, 'Errored');
+						should.not.exist(err);
+					});
 		});
 
 		it('should not be able to get _My Feed_', function () {
 			return agent.get('/api/feed')
 				.expect(404)
 				.then(
-				function (res) {
-					log.trace({ test: _test.title, body: res.body, error: res.error });
-					// Set assertion
-					(_.isEmpty(res.body)).should.be.true;
-					res.error.should.have.property('status', 404);
-				},
-				function (err) {
-					log.error({ test: _test.title, error: err }, 'Errored');
-					should.not.exist(err);
-				});
+					function (res) {
+						log.trace({ test: _test.title, body: res.body, error: res.error });
+						// Set assertion
+						(_.isEmpty(res.body)).should.be.true;
+						res.error.should.have.property('status', 404);
+					},
+					function (err) {
+						log.error({ test: _test.title, error: err }, 'Errored');
+						should.not.exist(err);
+					});
 		});
 
 		it('should not be able to get an arbitrary Feed instance', function () {
 			return agent.get('/api/feeds/' + feed._id)
 				.expect(404)
 				.then(
-				function (res) {
-					(_.isEmpty(res.body)).should.be.true;
-					res.error.should.have.property('status', 404);
-				},
-				function (err) {
-					should.not.exist(err);
-				});
+					function (res) {
+						(_.isEmpty(res.body)).should.be.true;
+						res.error.should.have.property('status', 404);
+					},
+					function (err) {
+						should.not.exist(err);
+					});
 		});
 	});
 
@@ -316,18 +332,18 @@ describe('Feed CRUD tests', function () {
 				}));
 			})
 				.then(function (results) {
-				log.debug('Initialized %d users\' feeds', results.length);
+					log.debug('Initialized %d users\' feeds', results.length);
 
-				return stubs.populateAdminUser();
-			})
+					return stubs.populateAdminUser();
+				})
 				.then(function (adminUser) {
-				// Re-Login to get 'admin' role
-				credentials = stubs.getAdminCredentials();
-				log.debug({ creds: credentials, adminUser: adminUser }, 'Logging in with credentials');
-				return stubs.agentLogin(agent, credentials).then(function (s) {
-					log.debug({func: 'admin:beforeEach', success: s},'logged into app with admin credentials');
+					// Re-Login to get 'admin' role
+					credentials = stubs.getAdminCredentials();
+					log.debug({ creds: credentials, adminUser: adminUser }, 'Logging in with credentials');
+					return stubs.agentLogin(agent, credentials).then(function (s) {
+						log.debug({ func: 'admin:beforeEach', success: s }, 'logged into app with admin credentials');
+					});
 				});
-			});
 
 		});
 
@@ -336,10 +352,10 @@ describe('Feed CRUD tests', function () {
 			agent.get('/api/feeds')
 				.expect(200)
 				.then(
-				function (res) {
-					log.debug({ test: _test.title, body: res.body }, 'Got results from Feed Listing call');
-					res.body.should.be.an.Array.with.lengthOf(1);
-				});
+					function (res) {
+						log.debug({ test: _test.title, body: res.body }, 'Got results from Feed Listing call');
+						res.body.should.be.an.Array.with.lengthOf(1);
+					});
 		});
 	});
 
@@ -348,17 +364,17 @@ describe('Feed CRUD tests', function () {
 		log.debug({ func: 'afterEach' }, 'Cleanup');
 		return stubs.cleanTables([User, Feed, FeedItem])
 			.then(function (res) {
-			if (_.find(_.values(res), { ok: 0 })) {
-				log.error({ func: 'afterEach', userRes: res[0], feedRes: res[1], feedItemRes: res[2] }, 'Results from cleanup');
-			}
-			return res;
-		});
+				if (_.find(_.values(res), { ok: 0 })) {
+					log.error({ func: 'afterEach', userRes: res[0], feedRes: res[1], feedItemRes: res[2] }, 'Results from cleanup');
+				}
+				return res;
+			});
 	});
 
 	afterEach(function (done) {
 		log.debug({ func: 'afterEach' }, 'Signing Out of API');
-		agent.get('/api/auth/signout').expect(302).then(function(signoutRes) {
-			log.debug({signoutRes: signoutRes}, 'signed out of app');
+		agent.get('/api/auth/signout').expect(302).then(function (signoutRes) {
+			log.debug({ signoutRes: signoutRes }, 'signed out of app');
 			done();
 		});
 	});
@@ -368,14 +384,32 @@ describe('Feed CRUD tests', function () {
 		log.debug({ func: 'afterAll' }, 'FINAL Cleanup');
 		return stubs.cleanTables([User, Feed, FeedItem])
 			.then(function (res) {
-			if (!!_.find(_.values(res), { ok: 1 })) {
-				log.error({ func: 'afterAll', userRes: res[0], feedRes: res[1], feedItemRes: res[2] }, 'Results from final cleanup');
-			}
+				if (!!_.find(_.values(res), { ok: 1 })) {
+					log.error({ func: 'afterAll', userRes: res[0], feedRes: res[1], feedItemRes: res[2] }, 'Results from final cleanup');
+				}
 
-			return res;
-		});
+				return res;
+			});
 	});
 
 });
 
+function verifyFeedProperties(feedItem) {
+
+	feedItem.should.have.property('created');
+	feedItem.should.have.property('title');
+	feedItem.should.have.property('message');
+	feedItem.should.have.property('location').and.have.length(1);
+	feedItem.should.have.property('user');
+	feedItem.should.have.property('props');
+	feedItem.should.have.property('isPublic', false);
+
+	feedItem.props.should.have.property('slMiles');
+	feedItem.props.should.have.property('freight');
+	
+	feedItem.location[0].should.have.property('coordinates').and.have.length(2);
+	feedItem.location[0].should.have.property('type', 'Point');
+	feedItem.location[0].should.have.property('created');
+	
+}
 

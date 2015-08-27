@@ -5,16 +5,17 @@
  */
 var _ = require('lodash'),
 	path = require('path'),
-	mongoose = require('mongoose'),
-	Feed = mongoose.model('Feed'),
-	FeedItem = mongoose.model('FeedItem'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'feed',
         file: 'server.controller'
     }),
 	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-
+var mongoose = require('mongoose'),
+	Feed = mongoose.model('Feed'),
+	FeedItem = mongoose.model('FeedItem'),
+	GeoJson = mongoose.model('GeoJson');
+	
 exports.postItem = postItem;
 exports.updateItem = updateItem;
 exports.deleteItem = deleteItem;
@@ -33,6 +34,8 @@ exports.feedItemByID = feedItemByID;
 function postItem(req, res) {
 	var item = new FeedItem(req.body);
 	item.user = req.user;
+	
+	item.location = !_.isEmpty(req.body.location) ? new GeoJson(req.body.location) : null;
 
 	req.log.info({ item: item, func: 'postItem' }, 'Saving Item');
 

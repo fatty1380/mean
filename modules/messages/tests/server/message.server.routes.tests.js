@@ -47,10 +47,10 @@ describe('Message CRUD tests', function () {
 			.then(
 				function (success) {
 					log.info({ test: _test.title, func: 'beforeEach', success: success }, 'Saved User & Recipient to DB');
-					
+
 					user = success[0];
 					recipient = success[1];
-					
+
 					message = {
 						sender: user,
 						recipient: recipient,
@@ -71,7 +71,7 @@ describe('Message CRUD tests', function () {
 					recipId = recipient.id;
 				});
 		});
-		
+
 		afterEach(function () {
 			return stubs.agentLogout(agent);
 		});
@@ -108,27 +108,27 @@ describe('Message CRUD tests', function () {
 					(messages[0].sender._id).should.equal(userId);
 					(messages[0]).should.have.property('direction', 'outbound');
 					(messages[0].text).should.match('This is a Message!');
-					
+
 					(messages[0].sender).should.have.property('_id');
 					(messages[0].recipient).should.have.property('_id');
 
-					return agent.get('/api/users/' + recipId + '/messages');
-					// If this is failing, check route in messages.server.routes.js for permission restrictions
-				})
-				.then(function (messagesGetRes) {
-					log.info({ test: _test.title, response: messagesGetRes.body}, 'Got Recipient\'s Messages');
+					// 	return agent.get('/api/users/' + recipId + '/messages');
+					// 	// If this is failing, check route in messages.server.routes.js for permission restrictions
+					// })
+					// .then(function (messagesGetRes) {
+					// 	log.info({ test: _test.title, response: messagesGetRes.body }, 'Got Recipient\'s Messages');
 
-					// Get Messages list
-					var messages = messagesGetRes.body;
+					// 	// Get Messages list
+					// 	var messages = messagesGetRes.body;
 
-					messages.should.be.instanceof(Array).and.have.length(1);
+					// 	messages.should.be.instanceof(Array).and.have.length(1);
 					
-					// Set assertions
-					(messages[0].sender._id).should.equal(userId);
-					(messages[0].text).should.match('This is a Message!');
+					// 	// Set assertions
+					// 	(messages[0].sender._id).should.equal(userId);
+					// 	(messages[0].text).should.match('This is a Message!');
 				});
 		});
-		
+
 		it('should be able to save a message with a ObjectID String for recipient', function () {
 			_test = this.test;
 
@@ -163,7 +163,7 @@ describe('Message CRUD tests', function () {
 					(messages[0].sender._id).should.equal(userId);
 					(messages[0]).should.have.property('direction', 'outbound');
 					(messages[0].text).should.match('This is a Message!');
-					
+
 					(messages[0].sender).should.have.property('_id');
 					(messages[0].recipient).should.have.property('_id');
 
@@ -172,39 +172,36 @@ describe('Message CRUD tests', function () {
 
 		it('should get a list of chats grouped by other party', function () {
 			_test = this.test;
-						// Save a new Message
+			// Save a new Message
 			return agent.post('/api/messages')
 				.send(message)
 				.expect(200)
 				.then(function (messageSaveRes) {
 
 					log.info({ test: _test.title, response: messageSaveRes }, 'Posted Message');
-
-					messageSaveRes.should.have.property('body');
-					messageSaveRes.body.should.have.property('sender');
-					messageSaveRes.body.should.have.property('recipient');
-					messageSaveRes.body.should.have.property('status', 'sent');
+					
+					var savedResult = messageSaveRes.body;
+					
+					savedResult.should.have.property('sender');
+					savedResult.should.have.property('recipient');
+					savedResult.should.have.property('status', 'sent');
 						
 					// Get a list of Messages
 					return agent.get('/api/chats');
 				})
 				.then(function (messagesGetRes) {
 
-					log.info({ test: _test.title, response: messagesGetRes.body}, 'Got Messages');
+					log.info({ test: _test.title, response: messagesGetRes.body }, 'Got Messages');
 
 					// Get Messages list
 					var groups = messagesGetRes.body;
-					
+
 					groups.should.have.length(1);
-					
+
 					var chat = groups[0];
-					
-					chat.should.have.property('recipientName', recipient.displayName);
-					chat.should.have.property('recipient');
-					chat.should.have.property('messages');
-					chat.should.have.property('lastMessage');
-					
-					
+
+					verifyChatProperties(chat, recipient);
+
 					var messages = chat.messages;
 					
 					// Set assertions
@@ -213,6 +210,21 @@ describe('Message CRUD tests', function () {
 					(messages[0].text).should.match('This is a Message!');
 					(messages[0].sender).should.not.have.property('password');
 					(messages[0].sender).should.not.have.property('salt');
+
+					return agent.get('/api/chats/' + chat.recipient);
+				})
+				.then(function (chatGetRes) {
+					var chat = chatGetRes.body;
+
+					verifyChatProperties(chat, recipient);
+				});
+		});
+
+		it('should get an empty Chat stub when no messages have been written', function () {
+			return agent.get('/api/chats/' + recipient.id)
+				.then(function (chatGetRes) {
+					var chat = chatGetRes.body;
+					verifyChatProperties(chat, recipient);
 				});
 		});
 
@@ -325,7 +337,7 @@ describe('Message CRUD tests', function () {
 
 		it('should not be able to save Message instance', function (done) {
 			_test = this.test;
-			
+
 			agent.post('/api/messages')
 				.send(message)
 				.expect(403)
@@ -393,3 +405,16 @@ describe('Message CRUD tests', function () {
 		return stubs.cleanTables([User, Message]);
 	});
 });
+
+function verifyChatProperties(chat, recipient) {
+
+	chat.should.have.property('recipientName');
+	chat.should.have.property('recipient');
+	chat.should.have.property('messages');
+	chat.should.have.property('lastMessage');
+
+	if (!!recipient) {
+
+		chat.should.have.property('recipientName', recipient.displayName);
+	}
+}

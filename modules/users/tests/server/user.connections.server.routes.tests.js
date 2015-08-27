@@ -301,6 +301,33 @@ describe('User Connections & Social', function () {
                     friendRequest.should.have.property('status', 'new');
                 });
         });
+        
+        it('should allow me to make a friend request of a non-outset user', function () {
+            _test = this.test;
+            
+            var endpoint = '/api/requests';
+            var contactInfo = {
+                displayName: 'Calamity Jane',
+                email: 'c.jane@deadwoodpost.com',
+                phones: [{ main: '123-456-7689' }]
+            };
+            var postData = { contactInfo: contactInfo, text: 'hello there!' };
+
+            return agent.post(endpoint)
+                .send(postData)
+                .expect(200)
+                .then(function (response) {
+                    var friendRequest = response.body;
+
+                    log.debug({ url: endpoint, test: _test.title, body: response.body, code: response.status }, 'Got friends result');
+
+                    friendRequest.should.have.property('text', postData.text);
+                    friendRequest.should.have.property('from', user.id);
+                    friendRequest.should.have.property('to', null);
+                    friendRequest.should.have.property('contactInfo', contactInfo);
+                    friendRequest.should.have.property('status', 'new');
+                });
+        })
 
         it('should allow me to load a specific friend request', function () {
             _test = this.test;
