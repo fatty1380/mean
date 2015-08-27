@@ -1,16 +1,16 @@
-(function () {
+(function() {
     'use strict';
 
     angular
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope', 'activityService', '$ionicLoading', '$cordovaGeolocation', '$q'];
+    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading', '$cordovaGeolocation', '$q'];
 
     function ActivityAddCtrl($scope, activityService, $ionicLoading, $cordovaGeolocation, $q) {
         angular.element(document).ready(
             getCurrentPosition
-            );
+        );
 
         var vm = this;
         var myCoordinates = null;
@@ -20,20 +20,23 @@
         var infoWindow = null;
 
         vm.activity = {
-            title: '',
-            message: '',
-            location: {
+            title : '',
+            message : '',
+            location : {
                 type: 'Point',
-                coordinates: [],
+                coordinates:[],
                 created: ''
+            },
+            props:{
+                freight: '',
+                slMiles: ''
             }
         }
+        vm.saveFeed = saveItemToFeed;
+        vm.close = close;
 
-        vm.distanceSinceLastPost = '';
-        vm.saveFeed = saveFeed;
-
-        $scope.$watch('vm.where', function () {
-            if (vm.where) {
+        $scope.$watch('vm.where', function() {
+            if(vm.where) {
                 setMarkerPosition();
             }
         }, true);
@@ -43,15 +46,21 @@
          */
         function getCurrentPosition() {
             console.log('getCurrentPosition()');
-            var posOptions = { timeout: 10000, enableHighAccuracy: false };
+            $ionicLoading.show({
+                template: 'geocoding position'
+            });
+            var posOptions = {timeout: 10000, enableHighAccuracy: false};
             $cordovaGeolocation
                 .getCurrentPosition(posOptions)
                 .then(function (position) {
-                    var lat = position.coords.latitude;
+                    $ionicLoading.hide();
+                    var lat  = position.coords.latitude;
                     var long = position.coords.longitude;
                     myCoordinates = new google.maps.LatLng(lat, long);
+                    vm.activity.location.coordinates = [lat, long];
                     initMap();
-                }, function (err) {
+                }, function(err) {
+                    $ionicLoading.hide();
                     activityService.showPopup('Geocoder failed', err);
                 });
         }
@@ -64,9 +73,9 @@
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 8,
                 center: myCoordinates,
-                draggable: true,
+                draggable:true,
                 sensor: true,
-                zoomControl: true,
+                zoomControl:true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
             marker = new google.maps.Marker({
@@ -76,25 +85,24 @@
                 draggable: false
             });
 
-            google.maps.event.addDomListener(map, 'click', function (e) {
+            google.maps.event.addDomListener(map, 'click', function(e) {
                 var latlng = { lat: e.latLng.G, lng: e.latLng.K };
-                console.log('click', latlng);
+                console.log('click',latlng);
                 activityService.getPlaceName(latlng)
-                    .then(function (result) {
+                    .then(function(result) {
                         vm.where = result;
                     });
 
                 clickCoordinates = latlng;
-                vm.activity.location.coordinates = [e.latLng.G, e.latLng.K];
             });
 
             infoWindow = new google.maps.InfoWindow({
-                content: ''
+                content:  ''
             });
 
             //get location name after init
             activityService.getPlaceName(myCoordinates)
-                .then(function (result) {
+                .then(function(result) {
                     vm.where = result;
                 });
         }
@@ -104,13 +112,15 @@
          */
         function setMarkerPosition() {
             console.log('setMarkerPosition()');
-            var position = null;
-            var location = new google.maps.LatLng(vm.where.geometry.location.G, vm.where.geometry.location.K);
-            if (clickCoordinates) {
-                position = clickCoordinates;
-            } else {
-                position = location;
-            }
+            var location = { lat:  vm.where.geometry.location.G, lng: vm.where.geometry.location.K };
+
+            //click coordinates more accurate than geocoded by place coordinates
+            var position = (clickCoordinates) ? clickCoordinates : location ;
+
+            console.log('position ', position);
+
+            vm.activity.location.coordinates = [position.lat, position.lng];
+
             marker.setPosition(position);
             infoWindow.setContent(vm.where.formatted_address)
             infoWindow.open(map, marker);
@@ -119,44 +129,38 @@
         }
 
         /**
-         * @desc calulate distance from last post and set to vm.distanceSinceLastPost
+         * @desc calulate distance from last post and set to vm.activity.props.slMiles
          * @param {Object} position - current coordinates
          */
         function setDistanceFromLastPost(position) {
             console.log('setDistanceFromLastPost()');
-            var lastCoord = activityService.getLastFeed();
-            console.log('Last Coordinates', lastCoord);
-            if (lastCoord && lastCoord.location && lastCoord.location.coordinates) {
-                var startPos = new google.maps.LatLng(lastCoord.location.coordinates[0], lastCoord.location.coordinates[1]);
-                var endPos = position;
+            var lastActivity = activityService.getLastFeedActivity();
+            console.log('lastCoord ',lastActivity);
+            if(activityService.hasCoordinates(lastActivity)) {
+                var startPos = new google.maps.LatLng(lastActivity.location.coordinates[0], lastActivity.location.coordinates[1]);
+                var endPos =  new google.maps.LatLng(position.lat, position.lng);
                 activityService.getDistanceBetween(startPos, endPos)
-                    .then(function (result) {
-                        vm.distanceSinceLastPost = result + " km";
+                    .then(function(result) {
+                        vm.activity.props.slMiles = result;
                     });
             }
         }
 
-        function saveFeed() {
+        function saveItemToFeed() {
+            console.log('vm.activity ',vm.activity.location.coordinates);
             $ionicLoading.show({
                 template: 'post feed'
             });
-
-            vm.activity.props = {
-                slMiles: vm.distanceSinceLastPost
-            };
-
-            vm.activity.location = {
-                coordinates: [vm.where.geometry.location.lat(), vm.where.geometry.location.lng()]
-            }
-
-            return activityService.postFeed(vm.activity)
-                .then(function (result) {
-                    $ionicLoading.hide();
-                    vm.close(result._id);
-                });
+            
+            activityService.postActivityToFeed(vm.activity).then(
+				function(result) {
+            	    $ionicLoading.hide();
+            	    console.log(result);
+            	    vm.close(result._id);
+            });
         }
 
-        vm.close = function (str) {
+        function close(str) {
             $scope.closeModal(str);
         }
     }

@@ -16,9 +16,10 @@
 
         vm.distanceSinceLastPost = 'no data';
         vm.entry = parameters.entry;
+        vm.close = close;
 
         function initMap() {
-            if (vm.entry.location.coordinates) {
+            if (activityService.hasCoordinates(vm.entry)) {
                 var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
                 map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 8,
@@ -36,19 +37,19 @@
 
                 activityService.getPlaceName(latLng).then(
                     function (result) {
-                        console.log(result);
-                        var infoWindow = new google.maps.InfoWindow({
-                            content: result.formatted_address
-                        });
-                        infoWindow.setContent(result.formatted_address);
-                        infoWindow.open(map, marker);
-                    }, function () {
-                        console.log('getPlaceName error');
+                    console.log(result);
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: result.formatted_address
                     });
+                    infoWindow.setContent(result.formatted_address);
+                    infoWindow.open(map, marker);
+                }, function () {
+                    console.log('getPlaceName error');
+                });
             }
         }
 
-        vm.close = function () {
+        function close() {
             $scope.closeModal(vm.entry);
         }
     }

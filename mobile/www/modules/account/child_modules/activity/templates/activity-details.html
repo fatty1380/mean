@@ -13,23 +13,33 @@
                 <div class="activity-item" >
                     <div class="top">
                         <div class="time" ng-if="vm.entry.created"><i class="ico ico-timesmall"></i>{{vm.entry.created | date:'mediumDate'}}</div>
-                        <div class="message"><strong>{{vm.entry.user}}</strong> {{ vm.entry.title }}</div>
+                        <div class="message"><strong>{{vm.entry.user.displayName}}</strong> {{ vm.entry.title }}</div>
                         <div class="message">{{ vm.entry.message }}</div>
                     </div>
-                    <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ vm.entry.milesTraveled }}</strong>
-                    <i class="ico ico-likessmall"></i><strong class="title">{{ vm.entry.likes.length }} likes</strong>
+                    <span ng-if="!!vm.entry.milesTraveled">
+                        <i class="ico ico-milestraveledsmall"></i>
+                        <strong class="title">{{ vm.entry.milesTraveled}}</strong>
+                    </span>
+                    <span ng-if="!!vm.entry.likes">
+                        <i class="ico ico-likessmall"></i>
+                        <strong class="title">{{ vm.entry.likes.length }} likes</strong>
+                    </span>
                 </div>
             </ion-item>
+
             <div class="map" ng-if="!!vm.entry.location.coordinates">
                  <div id="map" data-tap-disabled="true"></div>
             </div>
 
-            <div class="comments">
-                <strong>Distance since last check in:</strong> {{vm.distanceSinceLastPost}}
+            <div class="item-detail">
+                <strong>Distance since last check in:</strong> <span ng-if="!!vm.entry.props.slMiles">{{vm.entry.props.slMiles}} km</span>
             </div>
-            <div class="comments">
-                <strong>Comments:</strong> {{ vm.entry.comments.length }} comments
+            <div class="item-detail">
+                <strong>Freight hauled:</strong> <span>{{vm.entry.props.freight}}</span>
             </div>
+            <!--<div class="item-detail" ng-if="!!vm.entry.comments">
+                <strong>Comments:</strong> <span>{{ vm.entry.comments.length }} comments</span>
+            </div>-->
 
         </ion-scroll>
     </ion-pane>

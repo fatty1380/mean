@@ -8,6 +8,18 @@
     activityService.$inject = ['settings', '$http', '$q', '$ionicPopup'];
 
     function activityService(settings, $http, $q, $ionicPopup) {
+
+        var service = {
+            getFeed: getFeed,
+            postActivityToFeed: postFeed,
+            getFeedActivityById: getFeedActivityById,
+            getLastFeedActivity: getLastFeedActivity,
+            getDistanceBetween: getDistanceBetween,
+            showPopup: showPopup,
+            getPlaceName: getPlaceName,
+            hasCoordinates: hasCoordinates
+        };
+
         var feed = [];
         var num = 0;
         var ids = [];
@@ -22,46 +34,10 @@
                     ids = response.data.activity;
                     return $q(function (resolve, reject) {
                         if (ids.length > 0) {
-                            return resolve(populateActivityFeed(response.data));
-                            loadItems(num);
+                            return resolve(populateActivityFeed(response.data.activity));
+                            //resolve(loadItems(num));
                         } else {
                             reject("no feed");
-                        }
-
-
-                        return;
-
-                        function loadItems(num) {
-                            getFeedById(ids[num]).then(function (result) {
-                                console.log(result);
-                                // var entry = {
-                                //     user: result.user.displayName,
-                                //     //created: result.location[0].created,
-                                //     message: result.message,
-                                //     title: result.title,
-                                //     comments: result.comments,
-                                //     //milesTraveled: '300 miles',//hardcoded
-                                //     //likes: ['some value', 'some value', 'some value']//hardcoded
-                                //     props: result.props
-                                // };
-
-                                var entry = result;
-
-                                console.log('Deciding on adding location: ', result.location);
-                                if (!!result.location && !!result.location[0]) {
-                                    entry.location = {
-                                        type: result.location[0].type,
-                                        coordinates: result.location[0].coordinates
-                                    }
-                                }
-                                feed.unshift(entry);
-                                if (num < ids.length - 1) {
-                                    num++;
-                                    loadItems(num);
-                                } else {
-                                    resolve(feed);
-                                }
-                            });
                         }
 
                     });
@@ -72,33 +48,65 @@
 
         }
 
-        function populateActivityFeed(rawFeed) {
+        function loadItems(num) {
+            getFeedActivityById(ids[num]).then(function (result) {
+                console.log('Pushing Activity to Feed: ', result);
 
-            var activities = rawFeed.activity.reverse();
-            
-            var start = 0;
-            var count = undefined;
-            
-            var promises = activities.slice(start, count).map(function (value, index) {
-                return getFeedById(value).then(function (feedItem) {
-                    if (!!feedItem.location && !!feedItem.location[0]) {
-                        feedItem.location = {
-                            type: feedItem.location[0].type,
-                            coordinates: feedItem.location[0].coordinates
-                        }
-                    }
+                feed.unshift(result);
 
-                    activities[start + index] = feedItem;
-                    
-                    return feedItem;
-                })
+                if (num < ids.length - 1) {
+                    num++;
+                    loadItems(num);
+                } else {
+                    return feed;
+                }
             });
+        }
+
+        /**
+         * Populate Activity Feed
+         * @param rawFeedActivities - An array of FeedActivity IDs. Differnet from the local var 'feed'
+         * @param start - Integer representing at which index to start population (default: 0)
+         * @param count - Integer representing how many items to populate (default: all)
+         * 
+         * @description This method will map over the IDs in teh activity array of the 
+         */
+        function populateActivityFeed(rawFeedActivities, start, count) {
+
+            feed = rawFeedActivities.reverse();
+
+            console.log('Iterating over %d feed IDs to populate', feed.length, feed);
+
+
+            start = start || 0;
+            count = count || undefined;
+
+            /**
+             * Look at feed IDs `start` to `start+count` and 
+             */
+           
+            var promises = feed.slice(start, count)
+                .map(function (value, index) {
+                    // TODO: Ensure that value is string, not object
+                    return getFeedActivityById(value).then(
+                        function (feedItem) {
+                            if (hasCoordinates(feedItem)) {
+                                feedItem.location = {
+                                    type: feedItem.location.type,
+                                    coordinates: feedItem.location.coordinates
+                                }
+                            }
+
+                            feed[start + index] = feedItem;
+
+                            return feedItem;
+                        })
+                });
 
             return $q.all(promises).then(function (results) {
-                console.log(results);
-                console.log(activities);
-                
-                return activities;
+                console.log('Resolved %d feed activities to populated feed', results.length, feed);
+
+                return feed;
             })
         }
 
@@ -107,7 +115,7 @@
          * @param {Number} id - feed id
          * @returns {Promise} promise feed data
          */
-        function getFeedById(id) {
+        function getFeedActivityById(id) {
             return $http.get(settings.feed + id)
                 .then(function (response) {
                     return response.data;
@@ -118,11 +126,10 @@
         }
 
         function postFeed(data) {
-            console.log('Posting new feed item', data);
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
+
             return $http.post(settings.feed, serialize(data))
                 .then(function (response) {
-                    console.log('Posted new feed item', response.data);
                     return response.data;
                 }, function (response) {
                     showPopup("Error", response);
@@ -162,7 +169,6 @@
             })
         }
 
-
         /**
          * @desc Geocoded position name by coordinates
          * @param {Object} latlng - coordinates
@@ -195,12 +201,16 @@
                 });
             });
         }
+        
+        function hasCoordinates(activity) {
+            return (!!activity.location && !!activity.location.coordinates && !!activity.location.coordinates.length);
+        }
 
         /**
          * @desc last item of array
          * @returns {Promise} promise lst item
          */
-        function getLastFeed() {
+        function getLastFeedActivity() {
             return feed[0];
         }
 
@@ -224,14 +234,6 @@
             return str.join("&");
         }
 
-        return {
-            getFeed: getFeed,
-            postFeed: postFeed,
-            getFeedById: getFeedById,
-            getLastFeed: getLastFeed,
-            getDistanceBetween: getDistanceBetween,
-            showPopup: showPopup,
-            getPlaceName: getPlaceName
-        }
+        return service;
     }
 })();

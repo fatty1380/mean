@@ -11,9 +11,8 @@
         <button class="button button-positive content-top-button"
                 ng-show="!!vm.newActivities">
             {{vm.newActivities}} new Updates
-            <i class="ico ico-checkmarkwhite "></i>
+            <i class="ico ico-checkmarkwhite"></i>
         </button>
-        <!-- activity -->
 
         <ion-scroll>
             <ion-list ng-repeat="entry in vm.feed">
@@ -24,12 +23,17 @@
                             <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created |
                                 date:'mediumDate'}}
                             </div>
-                            <div class="message"><strong>{{entry.user.displayName}}</strong></div>
+                            <div class="message"><strong>{{entry.user.displayName}}</strong> {{ entry.title }}</div>
                             <div class="message body">{{ entry.message }}</div>
                         </div>
-                        <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled
-                        }}</strong>
-                        <i class="ico ico-likessmall"></i><strong class="title">{{ entry.likes.length }} likes</strong>
+                        <span ng-if="!!entry.milesTraveled">
+                            <i class="ico ico-milestraveledsmall"></i>
+                            <strong class="title">{{entry.milesTraveled}}</strong>
+                        </span>
+                        <span ng-if="!!entry.likes">
+                            <i class="ico ico-likessmall"></i>
+                            <strong class="title">{{entry.likes.length}} likes</strong>
+                        </span>
                     </div>
                     <div class="button-holder" style="padding: 0 0 10px;">
                         <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>

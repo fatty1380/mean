@@ -15,6 +15,9 @@
         vm.newActivities = 0;
         vm.lastUpdate = Date.now();
 
+        vm.showAddActivityModal = showAddActivityModal;
+        vm.showActivityDetailsModal = showActivityDetailsModal;
+
         initialize();
 
         function initialize() {
@@ -37,45 +40,49 @@
          * @desc update feed item
          * @param {Number} id - feed id
          */
-        function updateSavedFeed(id) {
+        function refreshFeedActivityById(id) {
             $ionicLoading.show({
                 template: 'update feed'
             });
-            activityService.getFeedById(id).then(function(result) {
+            activityService.getFeedActivityById(id).then(function(result) {
 
-                var loc = !!result.location[0] ? {
-                    type: result.location[0].type,
-                    coordinates: result.location[0].coordinates
+                result.location = activityService.hasCoordinates(result) ? {
+                    type: result.location.type || result.location.coordinates.length > 1 ? 'LineString' : 'Point',
+                    coordinates: result.location.coordinates
                 } : null;
                 
-                var entry = {
-                    user: result.user.displayName,
-                    created: result.created,
-                    message: result.message,
-                    title: result.title,
-                    comments: result.comments,
-                    milesTraveled: '300 miles',
-                    likes: ['some value', 'some value'],
-                    location: loc
-                };
-                vm.feed.unshift(entry);
+                // var entry = {
+                //     user: result.user.displayName,
+                //     created: result.created,
+                //     message: result.message,
+                //     title: result.title,
+                //     comments: result.comments,
+                //     milesTraveled: '300 miles',
+                //     likes: ['some value', 'some value'],
+                //     location: loc
+                // };
+                // vm.feed.unshift(entry);
+                
+                vm.feed.unshift(result);
+                
                 $ionicLoading.hide();
             });
         }
 
-        vm.showAddActivityModal = function () {
+        function showAddActivityModal() {
             activityModalsService
                 .showAddActivityModal()
                 .then(function (res) {
-                    if(res){
-                        updateSavedFeed(res);
+                    if (res) {
+                        // TODO: Determine if the extra trip to the server is required
+                        refreshFeedActivityById(res);
                     }
                 }, function (err) {
                     activityService.showPopup("Modal failed", "Please try later");
                 })
         };
 
-        vm.showActivityDetailsModal = function (entry) {
+        function showActivityDetailsModal(entry) {
             activityModalsService
                 .showActivityDetailsModal({entry: entry})
                 .then(function (res) {

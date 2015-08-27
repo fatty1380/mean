@@ -30,7 +30,11 @@
 
                 <label class="item item-input">
                     <span class="input-label">Distance Since Last Post:</span>
-                    <input type="text" ng-model="vm.distanceSinceLastPost"  placeholder="Distance in km" >
+                    <input type="text" ng-model="vm.activity.props.slMiles" readonly>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Freight Hauled:</span>
+                    <input type="text" ng-model="vm.activity.props.freight" placeholder="" >
                 </label>
             </div>
         </ion-scroll>
