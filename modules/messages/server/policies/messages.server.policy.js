@@ -20,6 +20,10 @@ exports.invokeRolesPolicies = function() {
 		}, {
 			resources: '/api/messages/:messageId',
 			permissions: '*'
+			},
+		{
+			resources: '/api/users/:userId/messages',
+			permissions: '*'
 		}]
 	}, {
 		roles: ['user'],
@@ -30,10 +34,10 @@ exports.invokeRolesPolicies = function() {
 			resources: '/api/messages/:messageId',
 			permissions: ['get']
 		},{
-			resources: '/api/chat',
+			resources: '/api/chats',
 			permissions: ['get']
 		},{
-			resources: '/api/chat/:userId',
+			resources: '/api/chats/:userId',
 			permissions: ['get', 'put']
 		}]
 	}]);

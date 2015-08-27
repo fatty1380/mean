@@ -104,10 +104,12 @@ var ChatSchema = new Schema({
         ref: 'User'
     },
     lastMessage: {
-        type: Schema.Types.Mixed
+        type: Schema.Types.Mixed,
+        default: null
     },
     messages: {
-        type: ['Message']
+        type: ['Message'],
+        default: []
     }
 }, { toJSON: { virtuals: true } })
 

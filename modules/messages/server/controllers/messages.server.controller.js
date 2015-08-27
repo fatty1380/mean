@@ -124,7 +124,9 @@ exports.messageList = function (req, res) {
 			req.log.debug({ func: 'messageList', params: req.query, grouped: grouped });
 			
 			if (!!grouped) {
-				return groupChatsBySender(req, res);
+				groupChatsBySender(req, res);
+				
+				return res.json(req.chats);
 			}
 			
 			res.json(req.messages);
@@ -139,7 +141,9 @@ exports.messageList = function (req, res) {
 };
 
 function findAndProcessMessages(req, res) {
-	var id = !!req.profile && req.profile._id || req.user._id;
+	var id = req.user._id;
+	
+	//var id = !!req.profile && req.profile._id || req.user._id;
 	
 	var partyQuery = req.partyQuery || [{ 'sender': id }, { 'recipient': id }];
 	
@@ -172,7 +176,8 @@ exports.chatList = function (req, res) {
 		function (messages) {
 			req.messages = messages;
 			
-			return groupChatsBySender(req, res);
+			groupChatsBySender(req, res);
+			return res.json(req.chats);
 		},
 		function (err) {
 			req.log.error({ func: 'messages.chatList', error: err }, 'Failed to load messages');
@@ -183,6 +188,42 @@ exports.chatList = function (req, res) {
 		});
 };
 
+exports.chatRead = function (req, res) {
+	findAndProcessMessages(req, res).then(
+		function (messages) {
+			req.messages = messages;
+			
+			groupChatsBySender(req, res);
+			
+			req.log.info({ func: 'messages.chatRead', chats: req.chats }, 'Looking at grouped chats');
+			
+			if (!!req.chats && !!req.chats.length) {
+				return res.json(req.chats[0]);
+			}
+			
+			req.log.info({ func: 'messages.chatRead' }, 'No Existing chat for user, returning stub');
+			var chat = new Chat({
+				user: req.user,
+				recipient: req.profile,
+				recipientName: req.profile.displayName
+			})
+			
+			return res.json(chat);
+			
+		},
+		function (err) {
+			req.log.error({ func: 'messages.chatRead', error: err }, 'Failed to load messages');
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+
+		});
+}
+
+/**
+ * Chat : List Messages
+ * 
+ */
 exports.chatListMessages = function (req, res, next) {
 	
 	var id = req.user.id,
@@ -230,7 +271,7 @@ function groupChatsBySender(req, res) {
 	req.log.debug({ func: 'messages.list', chats: req.chats },
 		'Loaded %d Distinct Chats for %s', _.keys(req.chats).length, req.user.id);
 	
-	return res.json(req.chats);
+	return req.chats;
 }
 
 /**
