@@ -20,24 +20,32 @@
             return  $http.get(settings.feed)
                 .then(function (response) {
                     ids = response.data.activity;
-                    return $q(function(resolve, reject) {
-                        if(ids.length > 0) {
+                    return $q(function (resolve, reject) {
+                        if (ids.length > 0) {
+                            return resolve(populateActivityFeed(response.data));
                             loadItems(num);
                         }else{
                             reject("no feed");
                         }
                         function loadItems(num) {
-                             getFeedById(ids[num]).then(function(result) {
-                                 console.log(result);
-                                var entry = {
-                                    user: result.user.displayName,
-                                    created: result.location[0].created,
-                                    message: result.message,
-                                    title: result.title,
-                                    comments: result.comments,
-                                    milesTraveled: '300 miles',//hardcoded
-                                    likes: ['some value', 'some value','some value'],//hardcoded
-                                    location: {
+                            getFeedById(ids[num]).then(function (result) {
+                                console.log(result);
+                                // var entry = {
+                                //     user: result.user.displayName,
+                                //     //created: result.location[0].created,
+                                //     message: result.message,
+                                //     title: result.title,
+                                //     comments: result.comments,
+                                //     //milesTraveled: '300 miles',//hardcoded
+                                //     //likes: ['some value', 'some value', 'some value']//hardcoded
+                                //     props: result.props
+                                // };
+
+                                var entry = result;
+
+                                console.log('Deciding on adding location: ', result.location);
+                                if (!!result.location && !!result.location[0]) {
+                                    entry.location = {
                                         type: result.location[0].type,
                                         coordinates: result.location[0].coordinates
                                     }
@@ -56,6 +64,37 @@
                     showPopup("Error", response);
                     return response;
                 });
+
+        }
+
+        function populateActivityFeed(rawFeed) {
+
+            var activities = rawFeed.activity.reverse();
+            
+            var start = 0;
+            var count = undefined;
+            
+            var promises = activities.slice(start, count).map(function (value, index) {
+                return getFeedById(value).then(function (feedItem) {
+                    if (!!feedItem.location && !!feedItem.location[0]) {
+                        feedItem.location = {
+                            type: feedItem.location[0].type,
+                            coordinates: feedItem.location[0].coordinates
+                        }
+                    }
+
+                    activities[start + index] = feedItem;
+                    
+                    return feedItem;
+                })
+            });
+
+            return $q.all(promises).then(function (results) {
+                console.log(results);
+                console.log(activities);
+                
+                return activities;
+            })
         }
 
         /**
@@ -135,12 +174,14 @@
                              content:  results[1].formatted_address
                              });*/
                             resolve(results[1]);
+                        } else if (results[0]) {
+                            resolve(results[0]);
                         } else {
-                            activityService.showPopup('Geocoder failed', 'No results found');
+                            showPopup('Geocoder failed', 'No results found');
                             reject("Geocoder failed");
                         }
                     } else {
-                        activityService.showPopup('Geocoder failed', status);
+                        showPopup('Geocoder failed', status);
                         reject("Geocoder failed");
                     }
                 });

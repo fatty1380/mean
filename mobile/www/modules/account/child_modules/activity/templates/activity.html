@@ -24,7 +24,8 @@
                             <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created |
                                 date:'mediumDate'}}
                             </div>
-                            <div class="message"><strong>{{entry.user}}</strong> {{ entry.message }}</div>
+                            <div class="message"><strong>{{entry.user.displayName}}</strong></div>
+                            <div class="message body">{{ entry.message }}</div>
                         </div>
                         <i class="ico ico-milestraveledsmall"></i><strong class="title">{{ entry.milesTraveled
                         }}</strong>

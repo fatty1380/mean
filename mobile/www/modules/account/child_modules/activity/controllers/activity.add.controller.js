@@ -125,7 +125,8 @@
         function setDistanceFromLastPost(position) {
               console.log('setDistanceFromLastPost()');
             var lastCoord = activityService.getLastFeed();
-            if(lastCoord) {
+            console.log('Last Coordinates', lastCoord);
+            if (lastCoord && lastCoord.location && lastCoord.location.coordinates) {
                 var startPos = new google.maps.LatLng(lastCoord.location.coordinates[0], lastCoord.location.coordinates[1]);
                 var endPos = position;
                 activityService.getDistanceBetween(startPos, endPos)
@@ -139,10 +140,20 @@
             $ionicLoading.show({
                 template: 'post feed'
             });
-            activityService.postFeed(vm.activity).then(function(result) {
-                $ionicLoading.hide();
-                vm.close(result._id);
-            });
+
+            vm.activity.props = {
+                slMiles: vm.distanceSinceLastPost
+            };
+
+            vm.activity.location = {
+                coordinates: [vm.where.geometry.location.lat(), vm.where.geometry.location.lng()]
+            }
+
+            return activityService.postFeed(vm.activity)
+                .then(function (result) {
+                    $ionicLoading.hide();
+                    vm.close(result._id);
+                });
         }
 
         vm.close = function (str) {
