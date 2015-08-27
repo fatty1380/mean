@@ -29,20 +29,18 @@
                         function loadItems(num) {
                              getFeedById(ids[num]).then(function(result) {
                                  console.log(result);
-                                var entry = {
+                               /* var entry = {
                                     user: result.user.displayName,
                                     created: result.location[0].created,
                                     message: result.message,
                                     title: result.title,
                                     comments: result.comments,
+                                    props: result.props,
                                     milesTraveled: '300 miles',//hardcoded
                                     likes: ['some value', 'some value','some value'],//hardcoded
-                                    location: {
-                                        type: result.location[0].type,
-                                        coordinates: result.location[0].coordinates
-                                    }
-                                };
-                                feed.unshift(entry);
+                                    location: result.location
+                                };*/
+                                feed.unshift(result);
                                 if( num < ids.length - 1 ){
                                     num++;
                                     loadItems(num);
@@ -116,7 +114,6 @@
             })
         }
 
-
         /**
          * @desc Geocoded position name by coordinates
          * @param {Object} latlng - coordinates
@@ -136,11 +133,11 @@
                              });*/
                             resolve(results[1]);
                         } else {
-                            activityService.showPopup('Geocoder failed', 'No results found');
+                            showPopup('Geocoder failed', 'No results found');
                             reject("Geocoder failed");
                         }
                     } else {
-                        activityService.showPopup('Geocoder failed', status);
+                        showPopup('Geocoder failed', status);
                         reject("Geocoder failed");
                     }
                 });
