@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	path = require('path'),
+	_ = require('lodash'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'feed',
         file: 'server.model'
@@ -23,16 +24,16 @@ var FeedSchema = new Schema({
 	},
 	// Stores activity from other users
 	items: {
-		type: [{type: Schema.ObjectId, ref: 'FeedItem'}],
+		type: [{ type: Schema.ObjectId, ref: 'FeedItem' }],
 		default: []
 	},
 	// Stores the user's activty
 	activity: {
-		type: [{type: Schema.ObjectId, ref: 'FeedItem'}],
+		type: [{ type: Schema.ObjectId, ref: 'FeedItem' }],
 		//type: ['FeedItem'],
 		default: []
 	},
-	
+
 	created: {
 		type: Date,
 		default: Date.now
@@ -41,7 +42,7 @@ var FeedSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-}, {toJSON: {virtuals:true}});
+}, { toJSON: { virtuals: true } });
 
 FeedSchema.index({ user: 'hashed' });
 
@@ -49,13 +50,13 @@ FeedSchema.pre('save', function (next) {
 	if (this.isModified()) {
         this.modified = Date.now();
     }
-	
-	if(this.isNew) {
+
+	if (this.isNew) {
 		this._id = this.user && this.user._id || this.user;
 	}
-	
+
 	log.debug({ func: 'pre-save', new: this.isNew, mod: this.isModified(), doc: this }, 'logging doc status');
-    
+
     next();
 });
 
@@ -75,7 +76,7 @@ var FeedItemSchema = new Schema({
 		default: '',
 		trim: true
 	},
-	location: {
+	_location: {
 		type: ['GeoJson'],
 		default: null
 	},
@@ -85,7 +86,7 @@ var FeedItemSchema = new Schema({
 	},
     props: {
         type: Schema.Types.Mixed,
-        default: { 
+        default: {
             'freight': null,
 			'slMiles': null
         }
@@ -111,9 +112,20 @@ var FeedItemSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-});
+}, { toJSON: { virtuals: true } });
+
+FeedItemSchema.virtual('location')
+	.get(function () {
+		console.log('----------------------------- YO! Returning `location`', this);
+		return _.isEmpty(this._location) ? null : this._location[0];
+	})
+	.set(function (value) {
+		console.log({ func: 'FeedItem.location.set', value: value }, 'Setting value into _location');
+		this._location = [value];
+	});
 
 FeedItemSchema.pre('save', function (next) {
+	console.log({ func: 'pre-save', doc: this }, 'Checking Migrated Feed Item for Modifications');
     if (this.isModified()) {
         this.modified = Date.now();
     }
@@ -127,16 +139,16 @@ mongoose.model('FeedItem', FeedItemSchema);
 
 
 var GeoJsonSchema = new Schema({
-		type: {
-			type: String,
-			enum: ['Point', 'LineString'], //, 'MultiPoint', 'MultiLineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'],
-			default: 'Point'
-		},
-		coordinates: [Number],
-		// Alt, nested coordinates: [{type: [Number]}] per http://stackoverflow.com/a/15570602/609021
+	type: {
+		type: String,
+		enum: ['Point', 'LineString'], //, 'MultiPoint', 'MultiLineString', 'Polygon', 'MultiPolygon', 'GeometryCollection'],
+		default: 'Point'
+	},
+	coordinates: [Number],
+	// Alt, nested coordinates: [{type: [Number]}] per http://stackoverflow.com/a/15570602/609021
 
-		placeId: String,
-		placeName: String,
+	placeId: String,
+	placeName: String,
 	created: {
 		type: Date,
 		default: Date.now

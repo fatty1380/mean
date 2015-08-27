@@ -115,16 +115,6 @@ describe('Feed CRUD tests', function () {
 						log.debug({ test: _test.title, feedItem: itemResult });
 
 						verifyFeedProperties(itemResult);
-
-						itemResult.should.have.property('title');
-						itemResult.should.have.property('message');
-						itemResult.should.have.property('location');
-						itemResult.should.have.property('user');
-						itemResult.should.have.property('props');
-						itemResult.should.have.property('isPublic', false);
-
-						itemResult.props.should.have.property('slMiles');
-						itemResult.props.should.have.property('freight');
 				
 						// Get a list of Feeds
 						return agent.get('/api/feed').expect(200);
@@ -399,7 +389,7 @@ function verifyFeedProperties(feedItem) {
 	feedItem.should.have.property('created');
 	feedItem.should.have.property('title');
 	feedItem.should.have.property('message');
-	feedItem.should.have.property('location').and.have.length(1);
+	feedItem.should.have.property('location');
 	feedItem.should.have.property('user');
 	feedItem.should.have.property('props');
 	feedItem.should.have.property('isPublic', false);
@@ -407,9 +397,8 @@ function verifyFeedProperties(feedItem) {
 	feedItem.props.should.have.property('slMiles');
 	feedItem.props.should.have.property('freight');
 	
-	feedItem.location[0].should.have.property('coordinates').and.have.length(2);
-	feedItem.location[0].should.have.property('type', 'Point');
-	feedItem.location[0].should.have.property('created');
+	feedItem.location.should.have.property('coordinates').and.have.length(2);
+	feedItem.location.should.have.property('type', 'Point');
+	feedItem.location.should.have.property('created');
 	
 }
-

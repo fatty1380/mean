@@ -15,7 +15,7 @@ var mongoose = require('mongoose'),
 	Feed = mongoose.model('Feed'),
 	FeedItem = mongoose.model('FeedItem'),
 	GeoJson = mongoose.model('GeoJson');
-	
+
 exports.postItem = postItem;
 exports.updateItem = updateItem;
 exports.deleteItem = deleteItem;
@@ -28,13 +28,39 @@ exports.feedByID = feedByID;
 exports.myFeed = myFeed;
 exports.feedItemByID = feedItemByID;
 
+(function migrate() {
+				log.error({ func: 'migrate' }, 'Evaluating Migration');
+
+	FeedItem.collection.insert({
+		title: 'Title',
+		message: 'this is a special message from the controller',
+		location: [{
+			coordinates: [37.4422623, -122.143102]
+		}]
+				}, {}, function () {
+				})
+
+	FeedItem.collection.update({ location: { $exists: true } },
+		{ $rename: { 'location': '_location' } },
+		{ multi: true },
+		function (err, rawResponse) {
+			if (!!err) {
+				log.error({ func: 'migrate', rawResponse: rawResponse, error: err }, 'Migration failed with error');
+			}
+
+			if (rawResponse.nModified > 0) {
+				log.info({ func: 'migrate', rawResponse: rawResponse }, 'Completed Migration');
+			}
+		});
+})();
+
 /**
  * Create a Feed Item
  */
 function postItem(req, res) {
 	var item = new FeedItem(req.body);
 	item.user = req.user;
-	
+
 	item.location = !_.isEmpty(req.body.location) ? new GeoJson(req.body.location) : null;
 
 	req.log.info({ item: item, func: 'postItem' }, 'Saving Item');
@@ -45,22 +71,25 @@ function postItem(req, res) {
 
 	req.log.info({ feed: feed, func: 'postItem' }, '... to Feed');
 
-	item.save().then(
-		function (item) {
-			return feed.save();
-		}).then(
-		function (feed) {
-			req.log.info({ result: feed, item: item, func: 'postItem' }, 'Feed Saved with Result');
-			res.json(item);
+	item.save()
+		.then(
+			function (item) {
+				return feed.save();
+			})
+		.then(
+			function (feed) {
+				req.log.info({ result: feed, item: item, func: 'postItem' }, 'Feed Saved with Result');
+				res.json(item);
 
-			return crossPost(req.user, item);
-		}).then(null,
-		function (err) {
-			req.log.error({ error: err, item: item }, 'failed to save item');
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
+				return crossPost(req.user, item);
+			})
+		.then(null,
+			function (err) {
+				req.log.error({ error: err, item: item }, 'failed to save item');
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
 			});
-		});
 }
 
 /**
@@ -73,14 +102,14 @@ function updateItem(req, res) {
 
 	feedItem.save().then(function (feedItem) {
 		req.feedItem = feedItem;
-		res.jsonp(feedItem);
+		res.json(feedItem);
 	}, function (err) {
-			req.log.error({ error: err, item: feedItem }, 'failed to save item');
+		req.log.error({ error: err, item: feedItem }, 'failed to save item');
 
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
 		});
+	});
 }
 
 /**
@@ -95,7 +124,7 @@ function deleteItem(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(feed);
+			res.json(feed);
 		}
 	});
 }
@@ -107,14 +136,14 @@ function listItems(req, res) {
 	FeedItem.find().sort('-created')
 		.populate('user', 'displayName')
 		.exec(function (err, feeds) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(feeds);
-		}
-	});
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.json(feeds);
+			}
+		});
 }
 
 /**
@@ -148,15 +177,15 @@ function list(req, res) {
 	Feed.find().sort('-created')
 		.populate('user', 'displayName')
 		.exec(function (err, feeds) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			req.log.debug({ func: 'list', feeds: feeds }, 'Returning %d feeds', feeds.length);
-			res.json(feeds);
-		}
-	});
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				req.log.debug({ func: 'list', feeds: feeds }, 'Returning %d feeds', feeds.length);
+				res.json(feeds);
+			}
+		});
 }
 
 /**
@@ -168,33 +197,33 @@ function feedByID(req, res, next, id) {
 	Feed.findById(id)
 		.populate('items')
 		.exec(function (err, feed) {
-		if (err) {return next(err);}
-		if (!feed) {return next(new Error('Failed to load Feed ' + id));}
-		req.feed = feed;
-		next();
-	});
+			if (err) { return next(err); }
+			if (!feed) { return next(new Error('Failed to load Feed ' + id)); }
+			req.feed = feed;
+			next();
+		});
 }
 
 function feedItemByID(req, res, next, id) {
 	req.log.debug({ func: 'feedItemByID', id: id }, 'Looking up Feed Item by ID');
 
 	FeedItem.findById(id)
-		.populate({path: 'user', select: 'handle displayName', model: 'User'})
-	.exec().then(
-		function (feedItem) {
-			req.log.debug({ feedItem: feedItem, method: 'feedItemById.FeedItem.findById' }, 'Feed Item result');
+		.populate({ path: 'user', select: 'handle displayName', model: 'User' })
+		.exec().then(
+			function (feedItem) {
+				req.log.debug({ feedItem: feedItem, method: 'feedItemById.FeedItem.findById' }, 'Feed Item result');
 
-			if (!feedItem) {
-				return next(new Error('Failed to load feed Item ' + id));
-			}
+				if (!feedItem) {
+					return next(new Error('Failed to load feed Item ' + id));
+				}
 
-			req.feedItem = feedItem;
-			next();
-		},
-		function (err) {
-			req.log.error({ error: err }, 'Error retrieving feed item %s', id);
-			return next(err);
-		});
+				req.feedItem = feedItem;
+				next();
+			},
+			function (err) {
+				req.log.error({ error: err }, 'Error retrieving feed item %s', id);
+				return next(err);
+			});
 }
 
 function myFeed(req, res, next) {
@@ -206,26 +235,26 @@ function myFeed(req, res, next) {
 	log.debug({ func: 'myFeed', user: req.user.id }, 'Finding Feed for user ...');
 
 	return Feed.findById(req.user._id)
-		.populate({path: 'items', select: 'created user', model: 'FeedItem', options: { sort: {'created': -1}}})
-		//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
+		.populate({ path: 'items', select: 'created user', model: 'FeedItem', options: { sort: { 'created': -1 } } })
+	//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
 		.exec()
 		.then(function (feed) {
-		req.log.debug({ func: 'myFeed', feed: feed });
-		if (!feed) {
-			req.log.debug({ func: 'myFeed' }, '... hmmm, Creating new feed for user');
-			feed = new Feed({ user: req.user });
+			req.log.debug({ func: 'myFeed', feed: feed });
+			if (!feed) {
+				req.log.debug({ func: 'myFeed' }, '... hmmm, Creating new feed for user');
+				feed = new Feed({ user: req.user });
 
-			return feed.save();
-		} else {
-			log.debug({ func: 'myFeed', feed: feed }, '... Found it!');
-			return feed;
-		}
-	})
+				return feed.save();
+			} else {
+				log.debug({ func: 'myFeed', feed: feed }, '... Found it!');
+				return feed;
+			}
+		})
 		.then(function (feed) {
-		log.debug({ func: 'myFeed' }, 'Returning Feed %s', feed.id);
-		req.feed = feed;
-		next();
-	}, function (err) {
+			log.debug({ func: 'myFeed' }, 'Returning Feed %s', feed.id);
+			req.feed = feed;
+			next();
+		}, function (err) {
 			req.log.error({ func: 'myFeed', error: err });
 			return next(err);
 		});
@@ -237,19 +266,19 @@ function myFeed(req, res, next) {
  * Fan out on write 'cross-post' implementation method
  */
 function crossPost(user, item) {
-		log.debug({ func: 'crossPost', friends: _.uniq(user.friends, 'id') }, 'initializing cross post');
-		_.map(_.uniq(user.friends, 'id'), function (friend) {
-		
+	log.debug({ func: 'crossPost', friends: _.uniq(user.friends, 'id') }, 'initializing cross post');
+	_.map(_.uniq(user.friends, 'id'), function (friend) {
+
 		log.debug({ func: 'crossPost', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
 		Feed.findById(friend).then(
 			function (theirFeed) {
-				log.debug({ func: 'crossPost', feed: theirFeed}, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
+				log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
 				theirFeed.items.push(item);
 
 				return theirFeed.save();
 			}).then(
-			function (success) {
-				log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
-			});
+				function (success) {
+					log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
+				});
 	});
 }

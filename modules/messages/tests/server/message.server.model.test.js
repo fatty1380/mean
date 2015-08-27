@@ -29,8 +29,7 @@ describe('Message Model Unit Tests:', function() {
 
 		user.save(function() { 
 			message = new Message({
-				// Add model fields
-				// ...
+				sender: user
 			});
 
 			done();
