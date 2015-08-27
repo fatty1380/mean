@@ -162,10 +162,6 @@ function createRequest(req, res, next) {
     }
 
     var me = !!req.profile ? req.profile.id : req.user.id;
-<<<<<<< HEAD
-    var them = req.body.to || req.query.friendId || req.body.friendId;
-=======
->>>>>>> develop
 
     req.log.debug({ func: 'createRequest', body: req.body, friend: req.body.to }, 'Adding friend with POSTed body content');
 
@@ -174,19 +170,10 @@ function createRequest(req, res, next) {
         return res.status(400).send({ message: 'No Friend Specified in Request' });
     }
 
-<<<<<<< HEAD
-    var request = new Request({
-        requestType: Request.reqTypes.friendRequest,
-        from: me,
-        to: them,
-        text: req.body.text || ''
-    });
-=======
     delete req.body.status
 
     var request = new Request(req.body)
     request.from = req.user._id;
->>>>>>> develop
 
     // Insert
     var u1 = User.where({ '_id': { '$in': [me, req.body.to] } })
@@ -197,7 +184,7 @@ function createRequest(req, res, next) {
 
     return Q.all([request.save(), u1.exec()])
         .then(function (results) {
-            req.log.error({ func: 'createRequest', friendRequest: results[0], users: results[1] });
+        req.log.debug({ func: 'createRequest', friendRequest: results[0], users: results[1] });
 
             return res.json(results[0]);
         });
