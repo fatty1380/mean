@@ -45,12 +45,39 @@
                 .getDocuments()
                 .then(function (response) {
                     console.log('Documents List', response);
-
                     vm.documents = response.data instanceof Array && response.data.length ? response.data : lockboxDocuments.getStubDocuments();
-                })
+                },function(response){
+                    console.log('Documents !!!', response);
+                    vm.documents = lockboxDocuments.getStubDocuments();
+                });
         }
 
         getDocs();
+
+        vm.onImageEvent = function(type) {
+            console.log("   **** onImageEvent  "+type+" ****");
+            switch(type){
+                case "loadStart":
+                    $ionicLoading.show({
+                        template: 'Image Loading. Please Wait.'
+                    });
+                    break;
+                case 'loadComplete':
+                    $ionicLoading.hide();
+                    break;
+                case 'loadError':
+                    $ionicLoading.hide();
+                    $ionicPopup.alert({
+                        title: type,
+                        template: 'Please, try later.'
+                    });
+                    break;
+                default:
+                    $ionicLoading.hide();
+                    break;
+            }
+        };
+
 
         vm.onPdfEvent = function(type) {
             console.log("   **** "+type+" ****");
@@ -96,7 +123,7 @@
             vm.currentDoc = doc;
             $scope.modal.show().then(function(){
                 if(vm.currentDoc.sku === 'mvr' ){
-                    $scope.image =  vm.currentDoc.url;
+                    $scope.image = vm.currentDoc.url;
                 }else if(vm.currentDoc.sku === 'bg'){
                     $scope.pdfURL = {src:vm.currentDoc.url};
                 }
@@ -110,7 +137,5 @@
                 $scope.pdfURL = {src:""}
             });
         }
-
     }
-
 })();
