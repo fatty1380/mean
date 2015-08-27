@@ -1,5 +1,11 @@
 (function () {
 
+    angular
+        .module('signup')
+        .factory('contactsService', contactsService);
+
+    contactsService.$inject = ['$q'];
+
     function contactsService($q) {
 
         var formatContact = function(contact) {
@@ -27,9 +33,4 @@
 
     }
 
-    contactsService.$inject = ['$q'];
-
-    angular
-        .module('signup')
-        .factory('contactsService', contactsService);
 })();
