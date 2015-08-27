@@ -101,44 +101,44 @@ function checkFriendStatus(req, res, next) {
     Request.find({ status: { $ne: 'rejected' } })
         .or([{ to: them._id, from: me._id }, { to: me._id, from: them._id }])
         .sort('created').exec().then(
-        function (requests) {
+            function (requests) {
 
-            var myRequest = _.find(requests, { to: them._id });
-            var theirRequest = _.find(requests, { from: them._id });
+                var myRequest = _.find(requests, { to: them._id });
+                var theirRequest = _.find(requests, { from: them._id });
 
-            req.log.debug({ them: them._id, requests: requests, myRequests: myRequest, theirRequest: theirRequest }, 'searching for requests intersection');
+                req.log.debug({ them: them._id, requests: requests, myRequests: myRequest, theirRequest: theirRequest }, 'searching for requests intersection');
 
-            var status = 'none';
-            var request = null;
+                var status = 'none';
+                var request = null;
 
-            if (!!myRequest) {
-                status = (function (status) {
-                    switch (status) {
-                        case 'new': return 'sent';
-                        case 'accepted': return 'friends';
-                        default: return 'none';
-                    }
-                })(myRequest.status);
+                if (!!myRequest) {
+                    status = (function (status) {
+                        switch (status) {
+                            case 'new': return 'sent';
+                            case 'accepted': return 'friends';
+                            default: return 'none';
+                        }
+                    })(myRequest.status);
 
-                request = myRequest;
+                    request = myRequest;
 
-                req.log.debug({ status: status }, 'Found myRequest status');
-            }
-            else if (!!theirRequest) {
-                status = (function (status) {
-                    switch (status) {
-                        case 'new': return 'pending';
-                        case 'accepted': return 'friends';
-                        default: return 'none';
-                    }
-                })(theirRequest.status);
+                    req.log.debug({ status: status }, 'Found myRequest status');
+                }
+                else if (!!theirRequest) {
+                    status = (function (status) {
+                        switch (status) {
+                            case 'new': return 'pending';
+                            case 'accepted': return 'friends';
+                            default: return 'none';
+                        }
+                    })(theirRequest.status);
 
-                request = theirRequest;
-                req.log.debug({ status: status }, 'Found theirRequest status');
-            }
+                    request = theirRequest;
+                    req.log.debug({ status: status }, 'Found theirRequest status');
+                }
 
-            return res.json({ status: status, request: request });
-        });
+                return res.json({ status: status, request: request });
+            });
 }
 
 /**
@@ -156,36 +156,38 @@ function createRequest(req, res, next) {
     }
     
     // Setup variables for search
+    if (!req.user.isAdmin && (!_.isEmpty(req.profile) && !req.profile.id.equals(req.user.id))) {
+        req.log.error({ func: 'createRequest' }, 'Cannot make requests for other users if not admin');
+        return res.status(401).send({ message: 'Sorry, but you cannot add friends for other users' });
+    }
+
     var me = !!req.profile ? req.profile.id : req.user.id;
-    var them = req.body.to || req.query.friendId || req.body.friendId;
 
-    req.log.debug({ func: 'createRequest', body: req.body, friend: them }, 'Adding friend with POSTed body content');
+    req.log.debug({ func: 'createRequest', body: req.body, friend: req.body.to }, 'Adding friend with POSTed body content');
 
-    if (_.isEmpty(them)) {
+    if (_.isEmpty(req.body.to) && _.isEmpty(req.body.contactInfo)) {
         req.log.error({ func: 'createRequest' }, 'No Friend Parameter present in request');
         return res.status(400).send({ message: 'No Friend Specified in Request' });
     }
 
-    var request = new Request({
-        requestType: Request.reqTypes.friendRequest,
-        from: me,
-        to: them,
-        text: req.body.text || ''
-    });
+    delete req.body.status
+
+    var request = new Request(req.body)
+    request.from = req.user._id;
 
     // Insert
-    var u1 = User.where({ '_id': { '$in': [me, them] } })
+    var u1 = User.where({ '_id': { '$in': [me, req.body.to] } })
         .update(
-        { '$push': { 'requests': { '_id': request } } },
-        { 'new': true, 'upsert': true }
-        );
+            { '$push': { 'requests': { '_id': request } } },
+            { 'new': true, 'upsert': true }
+            );
 
     return Q.all([request.save(), u1.exec()])
         .then(function (results) {
-        req.log.debug({ func: 'createRequest', friendRequest: results[0], users: results[1] });
+            req.log.error({ func: 'createRequest', friendRequest: results[0], users: results[1] });
 
-        return res.json(results[0]);
-    });
+            return res.json(results[0]);
+        });
 }
 
 function listRequests(req, res) {
@@ -211,18 +213,18 @@ function listRequests(req, res) {
         .or(orQuery)
         .sort('created').exec()
         .then(
-        function (requests) {
-            if (!requests) {
-                requests = [];
-            }
+            function (requests) {
+                if (!requests) {
+                    requests = [];
+                }
 
-            req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
-            return res.json(requests);
-        },
-        function (err) {
-            req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
+                req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
+                return res.json(requests);
+            },
+            function (err) {
+                req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
 
-        });
+            });
 }
 
 function getRequest(req, res, next) {
@@ -312,18 +314,18 @@ function requestById(req, res, next, id) {
     Request.findById(id)
     //.populate('from', 'displayName')
         .exec().then(
-        function (request) {
-            if (_.isEmpty(request)) {
-                req.log.debug({ func: 'requestById' }, 'No Valid request found');
-                return res.status(404).send('No request found');
-            }
+            function (request) {
+                if (_.isEmpty(request)) {
+                    req.log.debug({ func: 'requestById' }, 'No Valid request found');
+                    return res.status(404).send('No request found');
+                }
 
-            req.log.debug({ func: 'requestById', request: request }, 'Found request between %s and %s with status %s', request.from, request.to, request.status);
-            req.request = request;
+                req.log.debug({ func: 'requestById', request: request }, 'Found request between %s and %s with status %s', request.from, request.to, request.status);
+                req.request = request;
 
-            next();
-        }, function (err) {
-            req.log.error({ func: 'requestById', error: err }, 'Unable to find request due to error');
-            next(err);
-        });
+                next();
+            }, function (err) {
+                req.log.error({ func: 'requestById', error: err }, 'Unable to find request due to error');
+                next(err);
+            });
 }
