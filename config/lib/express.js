@@ -144,7 +144,6 @@ module.exports.initMiddleware = function (app) {
 
     if (process.env.NODE_ENV === 'development') {
         
-        app.use(cors());
         
         // log.info({ func: 'initMiddleware' }, 'Configuring CORS Specific headers and OPTIONS for development only');
         // app.use(function (req, res, next) {
@@ -161,6 +160,9 @@ module.exports.initMiddleware = function (app) {
         //     }
         // });
     } 
+    
+    log.trace({ func: 'initLocalVariables' }, 'Enabling CORS for Mobile Application');
+    app.use(cors());
     
     /// JWT???
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));
