@@ -22,6 +22,7 @@ module.exports = {
                 'public/lib/angular-ui-utils/ui-utils.js',
                 'public/lib/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
                 'public/lib/angular-file-upload/angular-file-upload.js',
+                'public/lib/ng-file-upload/ng-file-upload.js',
                 'public/lib/autofill-event/src/autofill-event.js', /// Needed?
                 'public/lib/ngmap/build/scripts/ng-map.js',
                 'public/lib/lodash/lodash.js',
