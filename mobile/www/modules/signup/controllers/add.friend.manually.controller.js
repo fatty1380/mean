@@ -5,15 +5,24 @@
         .module('signup')
         .controller('AddFriendManuallyCtrl', AddFriendManuallyCtrl);
 
-    AddFriendManuallyCtrl.$inject = ['$state'];
+    AddFriendManuallyCtrl.$inject = ['$state', 'contactsService'];
 
-    function AddFriendManuallyCtrl($state) {
+    function AddFriendManuallyCtrl($state, contactsService) {
         var vm = this;
 
         vm.invite = invite;
         vm.cancel = cancel;
 
         function invite() {
+            var contact = {
+                checked: true,
+                displayName: vm.displayName,
+                phones: [{value: vm.phone }],
+                emails: [{value: vm.email }]
+            };
+
+            contactsService.setContacts(contact);
+
             $state.go('signup-friends-contacts');
         }
 

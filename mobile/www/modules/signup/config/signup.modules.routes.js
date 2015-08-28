@@ -57,7 +57,22 @@
                 .state('signup-friends-contacts', {
                     url: '/signup/contacts',
                     templateUrl: 'modules/signup/templates/add-friends-from-contacts.html',
-                    controller: 'AddContactFriendsCtrl as vm'
+                    controller: 'AddContactFriendsCtrl as vm',
+                    params: {
+                        resolveContacts: false
+                    },
+                    resolve: {
+                        contacts: function ($stateParams, contactsService, $ionicLoading) {
+                            var resolveContacts = $stateParams.resolveContacts;
+                            if(resolveContacts){
+                                var contacts = contactsService.getContacts();
+                                if(!contacts.length){
+                                    $ionicLoading.show({template: 'Loading Contacts....'});
+                                    return contactsService.retrieveContacts();
+                                }
+                            }
+                        }
+                    }
                 })
 
                 .state('signup-friends-manually', {
@@ -71,5 +86,5 @@
                     templateUrl: 'modules/signup/templates/welcome.html',
                     controller: 'WelcomeCtrl as vm'
                 })
-        }])
+        }]);
 })();

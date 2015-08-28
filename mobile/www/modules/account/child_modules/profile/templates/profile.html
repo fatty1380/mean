@@ -11,7 +11,7 @@
             <div class="photo" ng-click="vm.camera.showActionSheet()">
                 <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
             </div>
-            <div class="contacts-amount" ui-sref="account.profile.friends">
+            <div class="contacts-amount" ng-click="vm.showFriends();">
                 <span class="ico ico-avatar ico-middle"></span>
                 <strong>{{vm.profileData.friends.length}}</strong>
             </div>

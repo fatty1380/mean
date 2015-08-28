@@ -1,11 +1,9 @@
 <ion-view class="signup-section">
     <div class="header compact-size">
-        <ion-nav-bar>
-            <ion-nav-back-button>Back</ion-nav-back-button>
-        </ion-nav-bar>
         <ion-header-bar align-title="center" class="bar-stable">
+            <button class="button button-clear" ng-click="$ionicGoBack();">Back</button>
             <h1 class="title">Add Friends</h1>
-            <a class="button button-clear">Skip</a>
+            <button class="button button-clear" ng-click="vm.skipToProfile();">Skip</button>
         </ion-header-bar>
         <div class="bar bar-subheader">
             <h3 class="title">Add Friends and Grow your Convoy!</h3>

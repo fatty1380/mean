@@ -6,7 +6,7 @@
                 <ion-nav-back-button>Back</ion-nav-back-button>
             </ion-nav-bar>
             <h1 class="title">Add Friends</h1>
-            <button class="button button-clear">Skip</button>
+            <a class="button button-clear" ng-click="vm.skipToProfile();">Skip</a>
         </ion-header-bar>
     </div>
 
@@ -18,11 +18,11 @@
 
         <ion-scroll delegate-handle="main-content-scroll">
             <div class="list friends-list">
-                <strong class="item item-divider">Your Friends</strong>
+                <div class="title">Your Friends</div>
                 <ion-checkbox
                     ng-model="contact.checked"
                     ng-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
-                    {{contact.name.formatted}}
+                    {{contact.displayName}}
                 </ion-checkbox>
             </div>
             <div class="button-holder text-center">
@@ -33,7 +33,6 @@
             </div>
         </ion-scroll>
     </ion-pane>
-
     <ion-footer-bar>
         <div class="button-bar">
             <button class="button block-button" ng-click="vm.sendInvitations();">Send Invitations</button>

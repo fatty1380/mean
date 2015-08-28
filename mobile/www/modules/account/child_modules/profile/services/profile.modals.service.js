@@ -37,10 +37,20 @@
                 .show(templateUrl, controller, params)
         }
 
+        function showAddFriendsModal (parameters) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-friends-add.html';
+            controller = 'AddFriendsCtrl as vm';
+            params = parameters || {};
+
+            return modalService
+                .show(templateUrl, controller, params)
+        }
+
         return {
             showProfileEditModal: showProfileEditModal,
             showProfileShareModal: showProfileShareModal,
-            showRequestReviewModal: showRequestReviewModal
+            showRequestReviewModal: showRequestReviewModal,
+            showAddFriendsModal: showAddFriendsModal
         };
 
     }
