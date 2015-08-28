@@ -42,16 +42,19 @@
             return !!service.user && service.user.isAdmin;
         }
         
+        var $http;
+        
         function getUser() {
             if (!_.isEmpty($window.user)) {
                 return $q.resolve($window.user);
             }
             
             if (!TokenFactory.isEmpty() && TokenFactory.isValid()) {
+                $http = $http || $injector.get('$http');
                 return $http.get('api/users/me').then(
                     function success(response) {
                         console.log('Got `me` Response: ', response);
-                        AuthenticationService.user = response.data;
+                        service.user = response.data;
                         return response;
                     },
                     function error(response) {

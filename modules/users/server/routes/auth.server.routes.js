@@ -23,16 +23,12 @@ module.exports = function (app) {
 	app.route('/oauth/token').post(oauth2.token);
 	
 	app.route('/oauth/signup').post(users.signup);
-
-	/* Setting up the users password api */
-	app.route('/api/auth/forgot').post(users.forgot);
-	app.route('/api/auth/reset/:token').get(users.validateResetToken);
-	app.route('/api/auth/reset/:token').post(users.reset);
-
-	/* Setting up the users authentication api */
-	app.route('/api/auth/signup').post(users.signup);
-	app.route('/api/auth/signin').post(users.signin);
-	app.route('/api/auth/signout').get(users.signout);
+	
+	
+	/* Setting up the users password resetting api */
+	app.route('/auth/forgot').post(users.forgot);
+	app.route('/auth/reset/:token').get(users.validateResetToken);
+	app.route('/auth/reset/:token').post(users.reset);
 	
 	/**
 	 * Third Party API Routes
@@ -69,4 +65,18 @@ module.exports = function (app) {
 	/** Setting the github oauth routes */
 	app.route('/api/auth/github').get(passport.authenticate('github'));
 	app.route('/api/auth/github/callback').get(users.oauthCallback('github'));
+	
+	//------------------------------------------------------------------
+	//  Deprecated
+	//------------------------------------------------------------------
+
+	/* Setting up the users password api */
+	app.route('/api/auth/forgot').post(users.forgot);
+	app.route('/api/auth/reset/:token').get(users.validateResetToken);
+	app.route('/api/auth/reset/:token').post(users.reset);
+
+	/* Setting up the users authentication api */
+	app.route('/api/auth/signup').post(users.signup);
+	app.route('/api/auth/signin').post(users.signin);
+	app.route('/api/auth/signout').get(users.signout);
 };

@@ -61,7 +61,6 @@
                 if (_.isObject(driver.user) && !!driver.user._id) {
                     deferred.resolve(driver);
                 } else {
-                    debugger;
 
                     var RSRC = $resource('api/profiles/:userId',
                         { userId: '@userId' });
