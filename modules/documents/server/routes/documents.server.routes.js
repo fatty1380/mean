@@ -14,11 +14,16 @@ module.exports = function(app) {
 	app.route('/api/profiles/:userId/documents')
 		.all(documentsPolicy.isAllowed)
 		.get(documents.list);
+		
+	app.route('/api/profiles/:userId/documents/:documentId')
+		.all(documentsPolicy.isAllowed)
+		.get(documents.read);
 
-	app.route('/api/profiles/:userId/documents/:docType')
-		.get(function (req, res) {
-			return res.status(500).send({ message: 'Not implemented' });
-		});
+	// TODO: Refactor Existing routes which used this to use query params
+	// app.route('/api/profiles/:userId/documents/:docType')
+	// 	.get(function (req, res) {
+	// 		return res.status(500).send({ message: 'Not implemented' });
+	// 	});
    
 	app.route('/api/documents/:documentId')
 		.all(documentsPolicy.isAllowed)
