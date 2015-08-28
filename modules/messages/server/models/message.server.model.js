@@ -77,6 +77,7 @@ var MessageSchema = new Schema({
     status: {
         type: String,
         enum: ['draft', 'sent', 'read', 'deleted', 'ignored'],
+        //enum: ['new', 'accepted', 'rejected'],
         default: 'sent'
     },
     created: {
@@ -122,6 +123,14 @@ ChatSchema.pre('save', function () {
 mongoose.model('Chat', ChatSchema);
 
 // TODO: Combine with "Message" schema
+// var sampleContactInfo =
+// {
+//     emails: [{ work: 'pat@work.com', isPreferred: true }],
+//     phone: [{ mobile: '123-456-7675', isPreferred: true }],
+//     firstName: 'Pat',
+//     lastName: 'Smith',
+//     displayName: 'Pat Smith'
+// }
 var RequestMessageSchema = new Schema({
     from: {
         type: Schema.ObjectId,
@@ -168,12 +177,3 @@ RequestMessageSchema.statics.reqTypes = {
 
 mongoose.model('Message', MessageSchema);
 mongoose.model('RequestMessage', RequestMessageSchema);
-
-var sampleContactInfo =
-    {
-        emails: [{ work: 'pat@work.com', isPreferred: true }],
-        phone: [{ mobile: '123-456-7675', isPreferred: true }],
-        firstName: 'Pat',
-        lastName: 'Smith',
-        displayName: 'Pat Smith'
-    }

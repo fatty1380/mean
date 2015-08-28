@@ -247,7 +247,7 @@ function updateRequest(req, res, next) {
             });
     }
 
-    if (action === 'deny') {
+    if (action === 'reject') {
         exports.rejectRequest(req, res, next);
         return;
     }

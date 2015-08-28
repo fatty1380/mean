@@ -121,7 +121,7 @@ describe('User CRUD tests', function () {
 
     afterEach(function () {
 
-        return stubs.signout(agent)
+        return stubs.agentLogout(agent)
             .then(function () {
                 log.trace('Logged out of app');
                 return stubs.cleanTables([User, RequestMessage]);

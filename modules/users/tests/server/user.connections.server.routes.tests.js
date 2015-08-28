@@ -286,6 +286,31 @@ describe('User Connections & Social', function () {
 
             var endpoint = '/api/requests';
             var postData = { to: u3.id, text: 'hello there!' };
+            
+            log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
+
+            return agent.post(endpoint)
+                .send(postData)
+                .expect(200)
+                .then(function (response) {
+                    var friendRequest = response.body;
+
+                    log.debug({ url: endpoint, test: _test.title, body: response.body, code: response.status }, 'Got friends result');
+
+                    friendRequest.should.have.property('text', postData.text);
+                    friendRequest.should.have.property('from', user.id);
+                    friendRequest.should.have.property('to', u3.id);
+                    friendRequest.should.have.property('status', 'new');
+                });
+        });
+
+        it('should allow me to include my own ID in the request', function () {
+            _test = this.test;
+
+            var endpoint = '/api/requests';
+            var postData = { from: user.id, to: u3.id, text: 'hello there!' };
+            
+            log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
 
             return agent.post(endpoint)
                 .send(postData)
@@ -312,6 +337,8 @@ describe('User Connections & Social', function () {
                 phones: [{ main: '123-456-7689' }]
             };
             var postData = { contactInfo: contactInfo, text: 'hello there!' };
+            
+            log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
 
             return agent.post(endpoint)
                 .send(postData)
@@ -408,12 +435,80 @@ describe('User Connections & Social', function () {
                         });
         });
         it('should allow the user to reject a friend request', function () {
-            var endpoint = '/api/';
+            var endpoint = '/api/';_test = this.test;
+
+            var endpoint = '/api/requests/' + r2.id;
+
+            return agent.put(endpoint)
+                .send({ action: 'reject' })
+                .expect(200)
+                .then(
+                    function (response) {
+                        log.debug({
+                            test: _test.title,
+                            section: 'test put',
+                            body: response.body,
+                            err: response.error
+                        }, 'Got Response from %s', endpoint);
+
+                        response.body.should.have.property('status', 'rejected');
+
+                        return agent.get('/api/friends');
+                    }).then(
+                        function (response) {
+                            log.debug({
+                                test: _test.title,
+                                section: 'verify added',
+                                body: response.body,
+                                err: response.error
+                            }, 'Got Response from %s', endpoint);
+
+                            var friends = response.body;
+                            should.exist(friends);
+                            friends.should.not.be.empty;
+
+                            var notFriend = _.find(friends, { id: u2.id });
+                            should.not.exist(notFriend);
+                        });
         });
         it('should allow the user to remove an existing friend', function () {
-            var endpoint = '/api/';
+            var endpoint = '/api/friends/' + u1.id;
+            
+            return agent.delete(endpoint)
+                .expect(200)
+                .then(
+                    function (response) {
+                        log.debug({
+                            test: _test.title,
+                            section: 'test delete',
+                            body: response.body,
+                            err: response.error
+                        }, 'Got Response from %s', endpoint);
+
+                        response.body.should.have.property('status', 'rejected');
+
+                        return agent.get('/api/friends');
+                    }).then(
+                        function (response) {
+                            log.debug({
+                                test: _test.title,
+                                section: 'verify added',
+                                body: response.body,
+                                err: response.error
+                            }, 'Got Response from %s', endpoint);
+
+                            var friends = response.body;
+                            should.exist(friends);
+                            friends.should.not.be.empty;
+
+                            var oldFriend = _.find(friends, { id: u1.id });
+                            should.not.exist(oldFriend);
+                        });
         });
-        it('should prevent re-sending of a deleted friend request?', function () {
+        
+        /// Maybe this is best handled on the server side, silently?
+        /// TODO: Determine how this use case should be handled
+        it('should prevent re-sending of a deleted friend request? Maybe?', function () {
             var endpoint = '/api/';
         });
     });
