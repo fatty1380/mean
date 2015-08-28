@@ -5,28 +5,9 @@
         .module('account')
         .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl)
 
-        .factory('clockService', function($interval){
-            var clock = null;
-            var service = {
-                startClock: function(fn){
-                    if(clock === null){
-                        clock = $interval(fn, 5000);
-                    }
-                },
-                stopClock: function(){
-                    if(clock !== null){
-                        $interval.cancel(clock);
-                        clock = null;
-                    }
-                }
-            };
+    MessageChatDetailsCtrl.$inject = ['$scope', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService'];
 
-            return service;
-        });
-
-    MessageChatDetailsCtrl.$inject = ['$scope', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'clockService'];
-
-    function MessageChatDetailsCtrl($scope, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, clockService) {
+    function MessageChatDetailsCtrl($scope, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService) {
         var vm = this;
         vm.message = '';
         vm.messages = parameters.messages.reverse();
@@ -41,7 +22,7 @@
         /**
          *  updating messages in chat, emulating socket
          * */
-        clockService.startClock(function() {
+        utilsService.startClock(function() {
             messageService.getChatByUserId(parameters.recipient)
                 .then(function(response) {
                     console.log(response.data.messages.length,' - ',vm.messages.length);
@@ -51,12 +32,10 @@
                         console.log('messages updated: ', vm.messages.length);
                         scrollToBottom();
                     }
-                   // $timeout(updateMessages, 5000);
                 },function() {
                     console.log('messages update error ', vm.messages.length);
-                   // $timeout(updateMessages, 5000);
                 });
-        });
+        }, 5000);
 
         function scrollToBottom() {
             $timeout(function(){
@@ -73,7 +52,7 @@
         }
 
         function close() {
-            clockService.stopClock();
+            utilsService.stopClock();
             $scope.closeModal(null);
         };
 

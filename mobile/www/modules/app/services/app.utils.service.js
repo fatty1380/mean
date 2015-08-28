@@ -5,7 +5,10 @@
         .module(AppConfig.appModuleName)
         .service('utilsService', utilsService);
 
-    function utilsService() {
+    utilsService.$inject = ['$interval'];
+
+    function utilsService($interval) {
+        var clock = null;
 
         /**
          * @desc returns serialized data
@@ -32,8 +35,30 @@
                 ;
             return( source );
         }
+
+        /**
+         * @desc start interval
+         * */
+        function startClock(fn, time){
+            if(clock === null){
+                clock = $interval(fn, time);
+            }
+        }
+
+        /**
+         * @desc stop interval
+         * */
+        function stopClock(){
+            if(clock !== null){
+                $interval.cancel(clock);
+                clock = null;
+            }
+        }
+
         return {
-            serialize : serialize
+            serialize : serialize,
+            startClock : startClock,
+            stopClock : stopClock
         };
     };
 })();
