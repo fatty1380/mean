@@ -5,10 +5,7 @@
         // mock app module
         beforeEach(module(AppConfig.appModuleName));
 
-        // test module to contain profileService
-        it('should contain a profileService', inject(function (profileService) {
-            expect(profileService).toBeDefined();
-        }));
+
 
         // test module to contain reviewService
         it('should contain a reviewService', inject(function (reviewService) {
@@ -39,13 +36,14 @@
             expect(reviewService.deleteReviewByID).toBeDefined();
         }));
 
-        // check if service contains getProfileById Method
-        it('should contain method getProfile', inject(function (profileService) {
-            expect(profileService.getProfile).toBeDefined();
+        // test module to contain friendsService
+        it('should contain a friendsService', inject(function (friendsService) {
+            expect(friendsService).toBeDefined();
         }));
 
-        it('getProfile should return a promise', inject(function (profileService) {
-            expect(profileService.getProfile('55a6600d2944b0bd1536414e').then).toBeDefined();
+        // check if service contains contacts object
+        it('should contain method contacts object', inject(function (friendsService) {
+            expect(friendsService.contacts).toBeDefined();
         }));
 
     });

@@ -15,6 +15,9 @@
         vm.newActivities = 0;
         vm.lastUpdate = Date.now();
 
+        vm.showAddActivityModal = showAddActivityModal;
+        vm.showActivityDetailsModal = showActivityDetailsModal;
+
         initialize();
 
         function initialize() {
@@ -33,6 +36,10 @@
             });
         }
 
+        /**
+         * @desc update feed item
+         * @param {Number} id - feed id
+         */
         function updateSavedFeed(id) {
             $ionicLoading.show({
                 template: 'update feed'
@@ -59,7 +66,7 @@
             });
         }
 
-        vm.showAddActivityModal = function () {
+        function showAddActivityModal() {
             activityModalsService
                 .showAddActivityModal()
                 .then(function (res) {
@@ -71,7 +78,7 @@
                 })
         };
 
-        vm.showActivityDetailsModal = function (entry) {
+       function showActivityDetailsModal(entry) {
             activityModalsService
                 .showActivityDetailsModal({entry: entry})
                 .then(function (res) {
