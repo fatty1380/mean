@@ -30,10 +30,13 @@
         beforeEach(module(AppConfig.appModuleName));
 
         // Create
-        beforeEach(inject(function($controller, _$httpBackend_) {
-            $httpBackend = _$httpBackend_;
+        beforeEach(inject(function($controller, _$httpBackend_, $rootScope) {
+            //$httpBackend = _$httpBackend_;
             // Initialize the ProfileCtrl controller.
-            ProfileCtrl = $controller('ProfileCtrl', {});
+            var scope = $rootScope.$new();
+            ProfileCtrl = $controller('ProfileCtrl', {
+                $scope: scope
+            });
         }));
 
 
@@ -111,11 +114,12 @@
         //});
 
         it('should contain endorsements map', function() {
-            //var endorsementsMap = ProfileCtrl.endorsementsMap;
+            var endorsementsMap = ProfileCtrl.endorsementsMap;
+            expect(endorsementsMap).toBeDefined();
+        });
 
-            console.log('!!!!!!!!!!!!!!!!!!!!', ProfileCtrl);
-
-            //endorsementsMap.toBeDefined()
+        it('profileData should return promise', function() {
+            expect(ProfileCtrl.profileData.then).toBeTruthy();
         });
     });
 }());

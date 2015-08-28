@@ -12,8 +12,8 @@
         }));
 
         // test module to contain lockboxDocuments
-        it('should contain a docs array', inject(function (lockboxDocuments) {
-            expect(lockboxDocuments.docs.length).toBeTruthy();
+        it('should return promise', inject(function (lockboxDocuments) {
+            expect(lockboxDocuments.getDocuments().then).toBeTruthy();
         }));
 
         // test module to contain addDocsPopup method

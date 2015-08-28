@@ -17,16 +17,18 @@ module.exports = function(config) {
     files: [
       "www/lib/ionic/js/ionic.bundle.js",
       'node_modules/angular-mocks/angular-mocks.js',
+
       'www/modules/app/*.js',
       'www/modules/app/constants/*.js',
       'www/modules/app/services/*.js',
       
-      'modules/avatar/avatar.module.js',
-      'modules/avatar/services/*.js',
-      'modules/avatar/controllers/*.js',
-      
+      'www/modules/avatar/avatar.module.js',
+      'www/modules/avatar/services/*.js',
+      'www/modules/avatar/controllers/*.js',
+
       'www/lib/angular-google-staticmaps/angular-google-staticmaps.js',
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1fUj13JDJpKxczSfAHzGSuk8ARoenrk&sensor=true',
+      'www/lib/ngCordova/dist/ng-cordova.js',
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1fUj13JDJpKxczSfAHzGSuk8ARoenrk&sensor=true&libraries=geometry,places',
 
       'www/modules/account/account.module.js',
 
@@ -34,8 +36,14 @@ module.exports = function(config) {
       'www/modules/account/child_modules/profile/controllers/*.js',
       'www/modules/account/child_modules/profile/services/*.js',
 
+      'www/modules/account/child_modules/activity/activity.module.js',
+      'www/modules/account/child_modules/activity/directives/*.js',
+      'www/modules/account/child_modules/activity/controllers/*.js',
+      'www/modules/account/child_modules/activity/services/*.js',
+
       'www/modules/signup/signup.modules.js',
       'www/modules/signup/controllers/*.js',
+      'www/modules/signup/directives/*.js',
       'www/modules/signup/services/*.js',
       
       'www/modules/account/child_modules/lockbox/lockbox.module.js',
@@ -44,7 +52,7 @@ module.exports = function(config) {
       'www/modules/account/child_modules/lockbox/directives/*.js',
 
       'tests/**/*.js',
-      'tests/**/**/*.js'
+      'tests/!**!/!**!/!*.js'
     ],
 
 

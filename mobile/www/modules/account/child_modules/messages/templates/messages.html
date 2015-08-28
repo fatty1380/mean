@@ -7,15 +7,15 @@
     <ion-pane class="content-pane">
         <ion-scroll>
             <ul class="list message-list">
-                <li class="item" ng-repeat="message in vm.messages">
-                    <div class="ico ico-avatar"></div>
+                <li class="item" ng-repeat="chat in vm.chats" ng-click="vm.openChatDetails(chat)">
+                    <div class="ico ico-avatar avatar-left"></div>
                     <div class="item-content">
                         <div class="top">
-                            <strong>{{message.sender.displayName}}</strong>
-                            <span class="created"><i class="ico ico-timesmall"></i>{{message.created | date:'mediumDate'}}</span>
+                            <p>{{chat.recipientName}}</p>
+                            <span class="created"><i class="ico ico-timesmall"></i>{{chat.lastMessage.created | date:'mediumDate'}}</span>
                         </div>
                         <div class="message">
-                            <span>{{message.text}}</span>
+                            <span>{{chat.lastMessage.text}}</span>
                         </div>
                     </div>
                 </li>

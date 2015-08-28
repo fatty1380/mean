@@ -2,8 +2,8 @@
 
 (function() {
 
-    describe('LockboxCtrl ', function() {
-        var LockboxCtrl,
+    describe('ActivityCtrl ', function() {
+        var ActivityCtrl,
             httpBackend;
 
         beforeEach(module(AppConfig.appModuleName));
@@ -15,13 +15,14 @@
 
         beforeEach(inject(function($rootScope, $controller){
             var scope = $rootScope.$new();
-            LockboxCtrl = $controller('LockboxCtrl', {
+            ActivityCtrl = $controller('ActivityCtrl', {
                 $scope: scope
             });
         }));
 
         it('is defined', function() {
-            expect(LockboxCtrl).toBeDefined();
+            expect(ActivityCtrl).toBeDefined();
         });
+
     });
 }());
