@@ -17,7 +17,7 @@
     settings.experience = settings.api + 'experience/';
     settings.documents = settings.api + 'documents/';
     settings.messages = settings.api + 'messages/';
-    settings.chats = settings.api + 'messages?grouped=true';
+    settings.chats = settings.api + 'chats/';
     settings.feed = settings.api + 'feed/';
     settings.friends = settings.api + 'friends/';
     settings.requests = settings.api + 'requests/';
