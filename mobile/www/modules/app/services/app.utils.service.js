@@ -13,27 +13,17 @@
         /**
          * @desc returns serialized data
         * */
-        function serialize( data ) {
-            if ( ! angular.isObject( data ) ) {
-                return( ( data == null ) ? "" : data.toString() );
-            }
-            var buffer = [];
-            for ( var name in data ) {
-                if ( ! data.hasOwnProperty( name ) ) {
-                    continue;
+        function serialize(obj, prefix) {
+            var str = [];
+            for (var p in obj) {
+                if (obj.hasOwnProperty(p)) {
+                    var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+                    str.push(typeof v == "object" ?
+                        serialize(v, k) :
+                    encodeURIComponent(k) + "=" + encodeURIComponent(v));
                 }
-                var value = data[ name ];
-                buffer.push(
-                    encodeURIComponent( name ) +
-                    "=" +
-                    encodeURIComponent( ( value == null ) ? "" : value )
-                );
             }
-            var source = buffer
-                    .join( "&" )
-                    .replace( /%20/g, "+" )
-                ;
-            return( source );
+            return str.join("&");
         }
 
         /**

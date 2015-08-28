@@ -5,15 +5,16 @@
         .module('activity')
         .service('activityService', activityService);
 
-    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup'];
+    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', 'utilsService'];
 
-    function activityService(settings, $http, $q, $ionicPopup) {
+    function activityService(settings, $http, $q, $ionicPopup, utilsService) {
 
         var service = {
             getFeed: getFeed,
             postActivityToFeed: postFeed,
             getFeedActivityById: getFeedActivityById,
             getLastFeedActivity: getLastFeedActivity,
+            getFeedIds: getFeedIds,
             getDistanceBetween: getDistanceBetween,
             showPopup: showPopup,
             getPlaceName: getPlaceName,
@@ -21,7 +22,6 @@
         };
 
         var feed = [];
-        var num = 0;
         var ids = [];
 
         /**
@@ -35,25 +35,20 @@
                     return $q(function (resolve, reject) {
                         if (ids.length > 0) {
                             return resolve(populateActivityFeed(response.data.activity));
-                            //resolve(loadItems(num));
                         } else {
                             reject("no feed");
                         }
-
                     });
                 }, function (response) {
                     showPopup("Error", response);
                     return response;
                 });
-
         }
 
         function loadItems(num) {
             getFeedActivityById(ids[num]).then(function (result) {
                 console.log('Pushing Activity to Feed: ', result);
-
                 feed.unshift(result);
-
                 if (num < ids.length - 1) {
                     num++;
                     loadItems(num);
@@ -72,19 +67,14 @@
          * @description This method will map over the IDs in teh activity array of the 
          */
         function populateActivityFeed(rawFeedActivities, start, count) {
-
             feed = rawFeedActivities.reverse();
-
             console.log('Iterating over %d feed IDs to populate', feed.length, feed);
-
-
             start = start || 0;
             count = count || undefined;
 
             /**
              * Look at feed IDs `start` to `start+count` and 
              */
-           
             var promises = feed.slice(start, count)
                 .map(function (value, index) {
                     // TODO: Ensure that value is string, not object
@@ -96,16 +86,12 @@
                                     coordinates: feedItem.location.coordinates
                                 }
                             }
-
                             feed[start + index] = feedItem;
-
                             return feedItem;
                         })
                 });
-
             return $q.all(promises).then(function (results) {
                 console.log('Resolved %d feed activities to populated feed', results.length, feed);
-
                 return feed;
             })
         }
@@ -125,10 +111,20 @@
                 });
         }
 
+        function getFeedIds() {
+            return $http.get(settings.feed)
+                .then(function (response) {
+                    console.log(response);
+                    return response.data;
+                }, function (response) {
+                    showPopup("Error", response);
+                    return response;
+                });
+        }
+
         function postFeed(data) {
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
-
-            return $http.post(settings.feed, serialize(data))
+            return $http.post(settings.feed, utilsService.serialize(data))
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
@@ -220,20 +216,6 @@
                 template: text || "no message"
             });
         };
-
-        function serialize(obj, prefix) {
-            var str = [];
-            for (var p in obj) {
-                if (obj.hasOwnProperty(p)) {
-                    var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-                    str.push(typeof v == "object" ?
-                        serialize(v, k) :
-                        encodeURIComponent(k) + "=" + encodeURIComponent(v));
-                }
-            }
-            return str.join("&");
-        }
-
         return service;
     }
 })();

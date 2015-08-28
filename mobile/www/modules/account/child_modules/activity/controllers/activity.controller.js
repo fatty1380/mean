@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['activityModalsService','activityService', '$ionicLoading'];
+    ActivityCtrl.$inject = ['$scope', 'activityModalsService','activityService', '$ionicLoading', 'utilsService'];
 
-    function ActivityCtrl(activityModalsService, activityService, $ionicLoading) {
+    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService) {
         var vm = this;
         vm.feed = [];
 
@@ -17,23 +17,62 @@
 
         vm.showAddActivityModal = showAddActivityModal;
         vm.showActivityDetailsModal = showActivityDetailsModal;
+        vm.updateWithNewActivities = updateWithNewActivities;
 
-        initialize();
+        /**
+         * try to initialize if have no feed
+         * */
+        $scope.$on('$ionicView.enter', function() {
+            if(vm.feed.length > 0) {
+                startCheckNewActivities();
+            }else{
+                initialize();
+            }
+        });
+
+        /**
+         * turn off interval before leave view
+        * */
+        $scope.$on('$ionicView.beforeLeave', function() {
+            stopCheckNewActivities();
+        });
 
         function initialize() {
             vm.feed = [];
             $ionicLoading.show({
                 template: 'loading feed'
             });
+
             //get all feed
             activityService.getFeed().then(function(result) {
                 $ionicLoading.hide();
                 console.log("getFeed() ",result);
                 vm.feed = result;
-            }, function(reason) {
+                startCheckNewActivities();
+            }, function() {
                 $ionicLoading.hide();
                 vm.feed = [];
             });
+        }
+
+        function startCheckNewActivities() {
+            utilsService.startClock(function() {
+                activityService.getFeedIds().then(function(result) {
+                    console.log(result.activity.length,' -- ',vm.feed.length);
+                    if(result.activity.length > vm.feed.length){
+                        vm.newActivities = result.activity.length - vm.feed.length;
+                    }
+                }, function() {
+                });
+            }, 5000);
+        }
+
+        function stopCheckNewActivities() {
+            utilsService.stopClock();
+        }
+
+        function updateWithNewActivities() {
+            initialize();
         }
 
         /**
@@ -45,34 +84,21 @@
                 template: 'update feed'
             });
             activityService.getFeedActivityById(id).then(function(result) {
-
                 result.location = activityService.hasCoordinates(result) ? {
                     type: result.location.type || result.location.coordinates.length > 1 ? 'LineString' : 'Point',
                     coordinates: result.location.coordinates
                 } : null;
-                
-                // var entry = {
-                //     user: result.user.displayName,
-                //     created: result.created,
-                //     message: result.message,
-                //     title: result.title,
-                //     comments: result.comments,
-                //     milesTraveled: '300 miles',
-                //     likes: ['some value', 'some value'],
-                //     location: loc
-                // };
-                // vm.feed.unshift(entry);
-                
                 vm.feed.unshift(result);
-                
                 $ionicLoading.hide();
             });
         }
 
         function showAddActivityModal() {
+            stopCheckNewActivities();
             activityModalsService
                 .showAddActivityModal()
                 .then(function (res) {
+                    startCheckNewActivities();
                     if (res) {
                         // TODO: Determine if the extra trip to the server is required
                         refreshFeedActivityById(res);
@@ -83,9 +109,11 @@
         };
 
         function showActivityDetailsModal(entry) {
+            stopCheckNewActivities();
             activityModalsService
                 .showActivityDetailsModal({entry: entry})
                 .then(function (res) {
+                    startCheckNewActivities();
                 }, function (err) {
                     activityService.showPopup("Modal failed", "Please try later");
                 })

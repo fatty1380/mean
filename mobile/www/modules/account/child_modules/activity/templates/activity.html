@@ -9,7 +9,7 @@
     <ion-pane class="pane content-pane button-padding-bottom"
               ng-class="{' button-padding-top': !!vm.newActivities}">
         <button class="button button-positive content-top-button"
-                ng-show="!!vm.newActivities">
+                ng-show="!!vm.newActivities" ng-click="vm.updateWithNewActivities()">
             {{vm.newActivities}} new Updates
             <i class="ico ico-checkmarkwhite"></i>
         </button>
