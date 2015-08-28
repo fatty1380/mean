@@ -1,10 +1,10 @@
 <os-profile-header model="vm.user" driver="vm.driver" can-edit="vm.canEdit"></os-profile-header>
 
 <div>
-    <div class="panel panel-oset">
+    <div class="panel panel-oset" tooltip="{{vm.user | prettyPrint}}">
         <div class="panel-header">Profile</div>
         <div class="panel-body">
-        <pre>{{vm.user | prettyPrint }}</pre>
+            <h3>Panel Body goes Here
         </div>
     </div>
     

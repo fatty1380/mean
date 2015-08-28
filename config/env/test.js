@@ -40,6 +40,11 @@ module.exports = {
 			writePath: './modules/users/client/img/profile/uploads/'
 		}
 	},
+    security: {
+        enableSession: true,
+        enableJWT: false,
+        tokenLife: 1000 * 3600 * 24 * 30
+    },
     logs: {
         access: '', //process.env.LOG_ACCESS_PATH || './log/',
         stdout: {
