@@ -18,7 +18,7 @@
 
         <ion-scroll delegate-handle="main-content-scroll">
             <div class="list friends-list">
-                <strong class="item item-divider">Your Friends</strong>
+                <div class="title">Your Friends</div>
                 <ion-checkbox
                     ng-model="contact.checked"
                     ng-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">

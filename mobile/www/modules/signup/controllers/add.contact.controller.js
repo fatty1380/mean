@@ -12,7 +12,7 @@
 
         $ionicLoading.hide();
 
-        vm.contacts = contactsService.getContactList();
+        vm.contacts = contactsService.getContacts();
 
         vm.sendInvitations = sendInvitations;
         vm.skipToProfile = skipToProfile;

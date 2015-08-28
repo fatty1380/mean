@@ -3,9 +3,9 @@
 
     angular
         .module('signup')
-        .filter('getContacts', getContacts);
+        .filter('emptyContactsFilter', emptyContactsFilter);
 
-    function getContacts() {
+    function emptyContactsFilter() {
         return function (allContacts) {
             var contacts = [],
                 contact, formattedContact, i;

@@ -10,23 +10,26 @@
 
         var contacts = [];
 
-        function addNewContact(contact) {
-            if(contact && (contact.phones || contact.emails)){
-                contacts.push(contact)
-            }
-        }
-
-        function getContactList() {
+        function getContacts() {
             return contacts;
         }
 
+        function setContacts(contact) {
+            if(angular.isArray(contact)){
+                contacts.concat(contact);
+            }else{
+                if(contact && (contact.phones || contact.emails)){
+                    contacts.push(contact)
+                }
+            }
+            return contacts;
+        }
 
-        function getContacts() {
-            var filter = $filter('getContacts');
+        function retrieveContacts() {
+            var filter = $filter('emptyContactsFilter');
 
             return find().then(function (data) {
                 contacts = filter(data);
-                return contacts;
             });
         }
 
@@ -69,8 +72,7 @@
                     },function (err) {
                         q.reject(err);
                     });
-                }
-                else {
+                } else {
                     navigator.contacts.find(fields, function (results) {
                         q.resolve(results);
                     }, function (err) {
@@ -98,10 +100,9 @@
         }
 
         return {
-            contacts: contacts,
-            getContactList: getContactList,
             getContacts: getContacts,
-            addNewContact: addNewContact,
+            retrieveContacts: retrieveContacts,
+            setContacts: setContacts,
             save: save,
             clone: clone,
             remove: remove,

@@ -5,17 +5,28 @@
         .module('signup')
         .controller('SignupFriendsCtrl', SignupFriendsCtrl);
 
-    SignupFriendsCtrl.$inject = ['$state'];
+    SignupFriendsCtrl.$inject = ['$state', '$rootScope'];
 
-    function SignupFriendsCtrl($state) {
+    function SignupFriendsCtrl($state, $rootScope) {
         var vm = this;
 
         vm.chooseContacts = chooseContacts;
         vm.addManualy = addManualy;
         vm.skipToProfile = skipToProfile;
 
-        function chooseContacts () {
+        $rootScope.$on('$stateChangeError', handleStateChangeError);
+
+        function handleStateChangeError (event, toState, toParams, fromState, fromParams, error) {
+            console.log('event -->', event);
+            console.log('toState -->', toState);
+            console.log('fromState -->', fromState);
+            console.log('error -->', error);
+
             $state.go('signup-friends-contacts');
+        }
+
+        function chooseContacts () {
+            $state.go('signup-friends-contacts', {resolveContacts: true});
         }
 
         function skipToProfile() {
@@ -23,7 +34,7 @@
         }
 
         function addManualy() {
-            $state.go('signup-friends-manually');
+            $state.go('signup-friends-contacts');
         }
 
     }

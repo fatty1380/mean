@@ -21,8 +21,7 @@
                 emails: [{value: vm.email }]
             };
 
-            console.log('invite new Contact --- >>>', contact);
-            contactsService.addNewContact(contact);
+            contactsService.setContacts(contact);
 
             $state.go('signup-friends-contacts');
         }

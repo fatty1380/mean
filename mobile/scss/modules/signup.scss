@@ -653,7 +653,6 @@ $but-height: 90px;
     .manual-add{
       margin-top: 0;
       color: $content-body-text;
-      border-top: 1px solid #D2D2D2;
       font-size: 13px;
 
       .icon{
@@ -662,9 +661,7 @@ $but-height: 90px;
     }
 
     .friends-list {
-
       .item {
-
         border-top: 1px solid #ddd;
 
         .item-content {
@@ -683,6 +680,11 @@ $but-height: 90px;
           right: 15px;
           margin-top: -15px;
           padding: 0 20px;
+
+          &.selected{
+            background: green;
+            color: #fff;
+          }
         }
 
         > .ico{
@@ -691,35 +693,28 @@ $but-height: 90px;
         }
 
       }
+    }
 
-      .no-matches{
-
-        .item-content{
-          text-align: center;
-          padding: 20px 0;
-        }
-      }
-
-      .item-divider {
-        background-color: #2D729B;
-        color: white;
-
-        .button-small {
-          display:none;
-        }
-
-        .item-content {
-          padding: 0;
-        }
-
-        .ico {
-          display: none;
-        }
+    .no-matches{
+      .item-content{
+        text-align: center;
+        padding: 20px 0;
       }
     }
+
+    .title {
+      background-color: #2D729B;
+      color: white;
+      padding: 10px 16px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .no-friends{
+      padding: 10px 20px;
+    }
+
   }
-
-
 }
 
 
