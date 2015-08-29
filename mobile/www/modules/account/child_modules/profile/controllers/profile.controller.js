@@ -38,7 +38,7 @@
                 },
                 function (err) {
                     console.log(err);
-                })
+                });
         };
 
         vm.showRequestReviewModal = function (parameters) {

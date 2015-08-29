@@ -22,7 +22,7 @@
         }
 
         function sendInvitations() {
-            var filter = $filter('getSelectedContacts'),
+            var filter = $filter('getChecked'),
                 selectedContacts = filter(vm.contacts);
 
             var names = [];

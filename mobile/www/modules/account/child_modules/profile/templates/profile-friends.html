@@ -15,7 +15,7 @@
 
         <ion-scroll delegate-handle="main-content-scroll">
             <div class="title">Your Friends</div>
-            <ul class="list friends-list" ng-if="vm.friends.length">
+            <ul class="list friends-list user-friends-list" ng-if="vm.friends.length">
                 <li class="item" ng-repeat="contact in contacts = (vm.friends | filter:vm.searchText)">
                     <i class="ico ico-avatar" ></i>
                     <div class="item-content">
