@@ -683,7 +683,7 @@ $but-height: 90px;
           min-width: 100px;
 
           &.selected{
-            background: green;
+            background: #37afb2;
             color: #fff;
           }
         }
@@ -694,6 +694,11 @@ $but-height: 90px;
         }
 
       }
+    }
+
+    &.user-friends-list .item .button{
+      color: #31999c;
+      background: #31999c;
     }
 
     .no-matches{
