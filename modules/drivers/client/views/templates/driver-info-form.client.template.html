@@ -8,7 +8,7 @@
             </p>
 
             <div class="panel panel-default pad-vert">
-                <os-edit-license model="vm.driver.license"
+                <os-edit-license model="vm.profile.license"
                                  form-name="licenseForm"
                                  mode="minimal"></os-edit-license>
             </div>
@@ -23,8 +23,8 @@
             </p>
 
             <div class="panel panel-default pad-vert text-center">
-                <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>
-                <input type="hidden" name="interests" ng-model="vm.driver.interests"/>
+                <oset-categories model="vm.profile.interests" mode="edit"></oset-categories>
+                <input type="hidden" name="interests" ng-model="vm.profile.interests"/>
             </div>
         </div>
     </div>
@@ -36,8 +36,8 @@
         <p class="info col-sm-12">
             Add information about past Experience to help employers know more about you and your
             background.
-            <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"
-                    ng-click="vm.driver.experience = [];"
+            <button type="button" class="btn btn-oset-link" ng-show="vm.profile.experience.length === 1"
+                    ng-click="vm.profile.experience = [];"
                     event-focus="click" event-focus-id="introText">
                 skip
             </button>
@@ -46,7 +46,7 @@
         <!--What are you interested in -->
         <div class="form-group">
             <div class="col-sm-12">
-                <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>
+                <oset-experience-list list="vm.profile.experience" can-edit="true"></oset-experience-list>
             </div>
         </div>
 
@@ -63,14 +63,14 @@
         <div class="form-group"
              ng-class="{'has-error': vm.form.introText.$invalid && (vm.form.$submitted || vm.form.introText.$touched)}">
             <div class="col-sm-12">
-                <div class="info pad-btm" ng-show="!vm.driver.about && !vm.introTextError">
+                <div class="info pad-btm" ng-show="!vm.profile.about && !vm.introTextError">
                     Please introduce yourself in a few sentences. This will serve as the template for your job
                     application cover letter.
                 </div>
                 <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">
                     {{vm.introTextError}}
                 </div>
-                <textarea os-html-edit type="text" data-ng-model="vm.driver.about"
+                <textarea os-html-edit type="text" data-ng-model="vm.profile.about"
                           name="introText" id="introText" class="editor-md"
                           placeholder="Please introduce yourself to the employer here"
                           ng-required="true"></textarea>

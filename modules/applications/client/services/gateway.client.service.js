@@ -57,7 +57,7 @@
                             .then(function (userResponse) {
                                 _this.promises.profile.resolve(userResponse);
 
-                                return (_this.models.user = userResponse);
+                                return (_this.models.profile = userResponse);
                             });
                     }
                 });
@@ -79,7 +79,7 @@
                 //         return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
                 //             .then(function (response) {
                 //                 $log.debug('[Gateway] Resolving `Driver` to %o', response);
-                //                 _this.models.driver = response || new Drivers.ById({ user: _this.models.user });
+                //                 _this.models.driver = response || new Drivers.ById({ user: _this.models.profile });
                 //                 _this.promises.driver.resolve(_this.models.driver);
                 //             }
                 //                 );
