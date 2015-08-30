@@ -19,7 +19,7 @@
                 <span class="subtitle" data-ng-bind-html="vm.subTitle">&nbsp;</span>
 
                 <div class="licenses">
-                    <oset-license-inline model="vm.driver.licenses[0]" show-endorsements="true"></oset-license-inline>
+                    <oset-license-inline model="vm.profile.license" show-endorsements="true"></oset-license-inline>
                 </div>
             </div>
 
@@ -40,7 +40,7 @@
                 <div class="icons icon-group pull-right text-right">
                     <button type="button" class="btn btn-oset-link"
                             ng-if="!!vm.canEdit"
-                            ui-sref="drivers.edit({driverId:vm.driver.id})">
+                            ui-sref="drivers.edit({driverId:vm.profile.id})">
                         <i class="fa fa-2x fa-edit"></i>
                     </button>
                     

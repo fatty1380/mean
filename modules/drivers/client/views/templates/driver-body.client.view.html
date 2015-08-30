@@ -1,7 +1,7 @@
-<os-profile-header model="vm.user" driver="vm.driver" can-edit="vm.canEdit"></os-profile-header>
+<os-profile-header model="vm.profile" driver="vm.driver" can-edit="vm.canEdit"></os-profile-header>
 
 <div>
-    <div class="panel panel-oset" tooltip="{{vm.user | prettyPrint}}">
+    <div class="panel panel-oset" tooltip="{{vm.profile | prettyPrint}}">
         <div class="panel-header">Profile</div>
         <div class="panel-body">
             <h3>Panel Body goes Here
@@ -11,7 +11,7 @@
     <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
 
     <div class="panel panel-oset" data-ng-if="!vm.canEdit && (!vm.driver || !vm.driver.about)">
-        <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
+        <p> {{vm.profile.displayName}} has not yet created their driver profile, but check back again
             soon!</p>
     </div>
 

@@ -287,7 +287,7 @@ UserSchema.methods.loadFriends = function () {
 };
 
 UserSchema.statics.fields = {
-    social: ['firstName', 'lastName', 'friends', 'profileImageURL', 'handle', 'displayName'].join(' ')
+    social: ['firstName', 'lastName', 'friends', 'profileImageURL', 'handle', 'displayName', 'created'].join(' ')
 };
 
 /**

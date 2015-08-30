@@ -10,7 +10,6 @@
                 <h3 class="post-title" ui-sref="jobs.view({jobId: vm.job._id})">{{vm.job.name}}</h3>
 
                 <div class="row"
-                     ng-init="user = vm.application.user; driver = user.driver; license = driver.licenses[0]"
                      ui-sref="applications.view({'applicationId': vm.application._id})"
                      ng-class="{'disabled': vm.application.disabled}">
 

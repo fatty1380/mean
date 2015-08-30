@@ -2,19 +2,28 @@
     <os-page-header title="All Drivers"> </os-page-header>
     <div class="list-group">
         <div data-ng-repeat="driver in vm.drivers">
-            <a data-ng-href="drivers/{{driver._id}}" class="list-group-item container-fluid">
-                <div class="row">
+            <div class="list-group-item container-fluid">
+                <a data-ng-href="drivers/{{driver._id}}" class="row">
+                    <div class="col-sm-1 hidden-xs">
+                        <img class="img-responsive" ng-src="{{driver.profileImageURL || driver.props.avatar}}" alt="">
+                    </div>
                     <div class="col-sm-4 col-md-3 col-lg-2">
-                        <h4>{{driver.user.displayName}}<br>
-                            <em><small>Joined: {{driver.user.created | amDateFormat : 'L'}}</small></em></h4>
+                        <h4>
+                            {{driver.displayName}}<br>
+                        <em><small>Joined: {{driver.created | amDateFormat : 'L'}}</small></em></h4>
                     </div>
                     <div class="col-sm-8 col-md-6">
                         <os-driver-inline model="driver"></os-driver-inline>
                     </div>
-                </div>
+                </a>
 
-            </a>
+                <div class="row">
+                    <button type="button" ng-click="driver.showDetails = !driver.showDetails">View Object</button>
+                    <pre ng-show="!!driver.showDetails">{{driver | prettyPrint }}</pre>
+                </div>
+            </div>
         </div>
+      
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="vm.drivers.length > 0">
         No Drivers yet, why don't you <a data-ui-sref="drivers.create">create one</a>?

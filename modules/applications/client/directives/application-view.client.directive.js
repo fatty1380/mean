@@ -3,9 +3,9 @@
 
     var text = {
         pre: {
-            about    : 'the applicant\'s full <strong>about me</strong> section will be available once you are connected',
+            about: 'the applicant\'s full <strong>about me</strong> section will be available once you are connected',
             messaging: {
-                owner : 'once you have connected, you will be able to converse with the Applicant to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right employee.',
+                owner: 'once you have connected, you will be able to converse with the Applicant to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right employee.',
                 driver: 'once you have connected, you will be able to converse with the Employer to ask and answer questions, coordinate a telephone or in-person interview, or anything else to help you find the right job.'
             }
         }
@@ -14,14 +14,14 @@
     function ViewApplicantDirective() {
         var ddo;
         ddo = {
-            templateUrl     : '/modules/applications/views/templates/applicant-details.client.template.html',
-            restrict        : 'E',
-            scope           : {
-                application      : '=',
+            templateUrl: '/modules/applications/views/templates/applicant-details.client.template.html',
+            restrict: 'E',
+            scope: {
+                application: '=',
                 scrollToMessageFn: '&?'
             },
-            controller      : 'ViewApplicantController',
-            controllerAs    : 'vm',
+            controller: 'ViewApplicantController',
+            controllerAs: 'vm',
             bindToController: true
         };
 
@@ -29,7 +29,7 @@
     }
 
     function ApplicationSummaryController(auth, Applications, Drivers, Reports, $q, $log, toastr) {
-        var vm  = this;
+        var vm = this;
         vm.text = text;
 
         vm.user = auth.user;
@@ -49,7 +49,7 @@
                 deferred.resolve(vm.application);
 
             } else if (vm.job && vm.profile) {
-                Applications.ById.query({job: vm.job._id, user: vm.profile._id})
+                Applications.ById.query({ job: vm.job._id, user: vm.profile._id })
                     .$promise.then(function (success) {
                         $log.debug('Got application(s) for driver: ', success);
 
@@ -80,41 +80,29 @@
 
         vm.setLocalProperties = function (application) {
             vm.application = application;
-
+            vm.applicant = !!application && application.user || vm.applicant;
+            
             vm.ownerId = vm.job && (vm.job.user._id || vm.job.user);
 
             if (!_.isEmpty(vm.application)) {
-                var messages   = vm.application.messages;
+                var messages = vm.application.messages;
                 vm.lastMessage = !!messages && !!messages.length ? messages[0] : null;
 
                 vm.showNewBtn = vm.job && vm.job.company !== vm.user.company;
             }
 
-            vm.profile = !!application && application.user || vm.profile;
-
-
-            var deferred = $q.defer();
-
-            if (!!vm.profile.driver && !_.isString(vm.profile.driver)) {
-                deferred.resolve(vm.profile.driver);
-            }
-            else {
-                Drivers.getByUser(vm.profile._id).then(function (driver) {
-                    deferred.resolve(driver);
-                });
-            }
-
-            deferred.promise.then(function(driver) {
-                vm.profile.driver = vm.driver = driver;
-
-                vm.license = !!vm.driver.licenses && vm.driver.licenses.length ? vm.driver.licenses[0] : null;
-
+            if (!_.isEmpty(vm.applicant)) {
                 vm.experienceText = (
-                    !!vm.driver && !!vm.driver.experience && vm.driver.experience.length ?
+                    !!vm.applicant.experience && vm.applicant.experience.length ?
                         'The applicant\'s experience will be available once connected' :
                         'You can discuss past job experience once you have connected'
-                );
-            });
+                    );
+            }
+            
+            
+            // 1. elim 'vm.driver' -> applicant
+            // 2. elim 'vm.license'
+            // 3. refactor vm.applicant.interests
         };
 
 
@@ -124,7 +112,7 @@
     function ApplicationSummaryDirective() {
         var ddo;
         ddo = {
-            templateUrl     : function (elem, attrs) {
+            templateUrl: function (elem, attrs) {
                 switch (attrs.displayMode || 'normal') {
                     case 'details':
                         return '/modules/applications/views/templates/applicant-details.client.template.html';
@@ -136,21 +124,21 @@
                         return '/modules/applications/views/templates/applicant-normal.client.template.html';
                 }
             },
-            restrict        : 'E',
-            scope           : {
-                displayMode      : '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
-                job              : '=?',
-                profile          : '=?',
-                index            : '=?',
-                text             : '=?',
+            restrict: 'E',
+            scope: {
+                displayMode: '@?', // 'minimal', 'inline', 'table', 'normal', 'mine'
+                job: '=?',
+                profile: '=?',
+                index: '=?',
+                text: '=?',
                 scrollToMessageFn: '&?'
             },
-            controller      : 'ApplicationSummaryController',
-            controllerAs    : 'vm',
+            controller: 'ApplicationSummaryController',
+            controllerAs: 'vm',
             bindToController: true,
-            require         : 'ngModel',
+            require: 'ngModel',
 
-            link            : function (scope, element, attrs, ngModel) {
+            link: function (scope, element, attrs, ngModel) {
                 if (!!ngModel) {
                     scope.$watch(function () {
                         return ngModel.$modelValue;
@@ -181,8 +169,8 @@
 
         vm.initialize = function () {
             if (!!vm.application) {
-                vm.profile = vm.application.user;
-                vm.job     = vm.job || vm.application.job;
+                vm.applicant = vm.application.user;
+                vm.job = vm.job || vm.application.job;
 
                 if (_.isEmpty(vm.job)) {
                     debugger;
@@ -219,12 +207,12 @@
             if (!!vm.visibleId && vm.visibleTab === tabName) {
                 vm.visibleId = vm.visibleTab = null;
             } else {
-                vm.visibleId  = itemId;
+                vm.visibleId = itemId;
                 vm.visibleTab = tabName;
             }
 
-            $state.transitionTo($state.current, {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
-            $location.search({'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+            $state.transitionTo($state.current, { 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
+            $location.search({ 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
         };
 
         vm.checkMessages = function () {
@@ -232,7 +220,7 @@
                 .then(function (applicationResponse) {
                     vm.application = applicationResponse;
 
-                    if(vm.application.isActive) {
+                    if (vm.application.isActive) {
                         vm.job.newMessages += vm.application.newMessages || 0;
                     }
                 })
@@ -249,20 +237,20 @@
         vm.setApplicationStatus = function (application, status, $event) {
             $event.stopPropagation();
 
-            var app = Applications.setStatus(application._id, status);
+            var app = Applications.setStatus(application.id, status);
 
             app.then(function (success) {
                 $log.debug('[setApplicationStatus] %s', success);
-                _.extend(application,success);
+                _.extend(application, success);
             }, function (reject) {
                 debugger;
                 $log.warn('[setApplicationStatus] %s', reject);
             });
 
             application.status = status;
-            application.isNew  = application.isConnected = false;
+            application.isNew = application.isConnected = false;
             application.isRejected = true;
-            application.disabled   = true;
+            application.disabled = true;
         };
 
         vm.initialize();
@@ -271,7 +259,7 @@
     function ApplicationListItemDirective() {
         var ddo;
         ddo = {
-            templateUrl     : function (elem, attrs) {
+            templateUrl: function (elem, attrs) {
                 if (!!attrs.job) {
                     return '/modules/applications/views/templates/owner-list-item.client.template.html';
                 }
@@ -279,18 +267,18 @@
                     return '/modules/applications/views/templates/driver-list-item.client.template.html';
                 }
             },
-            restrict        : 'E',
-            scope           : {
-                userType   : '@', // user-type
+            restrict: 'E',
+            scope: {
+                userType: '@', // user-type
                 application: '=?',
-                job        : '=?',
-                visibleApp : '=?',
-                visibleId  : '=?',
-                visibleTab : '=?',
-                filter : '&'
+                job: '=?',
+                visibleApp: '=?',
+                visibleId: '=?',
+                visibleTab: '=?',
+                filter: '&'
             },
-            controller      : 'ApplicationListItemController',
-            controllerAs    : 'vm',
+            controller: 'ApplicationListItemController',
+            controllerAs: 'vm',
             bindToController: true
         };
 
@@ -312,29 +300,29 @@
             if (!!vm.visibleId && vm.visibleTab === tabName) {
                 vm.visibleId = vm.visibleTab = null;
             } else {
-                vm.visibleId  = itemId;
+                vm.visibleId = itemId;
                 vm.visibleTab = tabName;
             }
 
-            $state.transitionTo($state.current, {'itemId': vm.visibleId, 'tabName': vm.visibleTab});
-            $location.search({'itemId': vm.visibleId, 'tabName': vm.visibleTab});
+            $state.transitionTo($state.current, { 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
+            $location.search({ 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
         };
 
         vm.filters = {
-            status   : {'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false},
-            negStatus: {'rejected': false, 'expired': false}
+            status: { 'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false },
+            negStatus: { 'rejected': false, 'expired': false }
         };
 
         vm.sorting = {
             applicants: ['statusIndex', '-created'],
-            messaging : ['!messages.length', '-lastMessage.created'], //'-lastMessage.created',
-            documents : ['-!!user.driver.resume', '-user.driver.resume.created', '-user.driver.reports.length']
+            messaging: ['!messages.length', '-lastMessage.created'], //'-lastMessage.created',
+            documents: ['-!!user.driver.resume', '-user.driver.resume.created', '-user.driver.reports.length']
         };
 
         vm.defaultFiltering = {
             applicants: {},
-            messaging : {'status': {'connected': true}},
-            documents : {'status': {'connected': true}}
+            messaging: { 'status': { 'connected': true } },
+            documents: { 'status': { 'connected': true } }
         };
 
         vm.reverseSort = false;
@@ -344,7 +332,7 @@
             var filterKey = (key || 'all').toLowerCase();
 
             if (filterKey === 'all') {
-                vm.filters[category] = {all: true};
+                vm.filters[category] = { all: true };
                 return;
             }
 
@@ -399,7 +387,7 @@
         };
 
         vm.getActiveApplicationCount = function (applications) {
-            return _.where(applications || vm.job.applications, {isActive: true}).length;
+            return _.where(applications || vm.job.applications, { isActive: true }).length;
         };
 
         vm.setApplicationStatus = function (application, status, $event) {
@@ -409,44 +397,44 @@
 
             app.then(function (success) {
                 $log.debug('[setApplicationStatus] %s', success);
-                _.extend(application,success);
+                _.extend(application, success);
             }, function (reject) {
                 debugger;
                 $log.warn('[setApplicationStatus] %s', reject);
             });
 
             application.status = status;
-            application.isNew  = application.isConnected = false;
+            application.isNew = application.isConnected = false;
             application.isRejected = true;
-            application.disabled   = true;
+            application.disabled = true;
         };
     }
 
     function ApplicationJobListItemDirective() {
         var ddo;
         ddo = {
-            templateUrl     : function (elem, attrs) {
+            templateUrl: function (elem, attrs) {
                 return '/modules/applications/views/templates/owner-job-list-item.client.template.html';
 
             },
-            restrict        : 'E',
-            scope           : {
-                userType   : '@', // user-type
+            restrict: 'E',
+            scope: {
+                userType: '@', // user-type
                 application: '=?',
-                job        : '=?',
-                visibleId  : '=',
-                visibleTab : '='
+                job: '=?',
+                visibleId: '=',
+                visibleTab: '='
             },
-            controller      : 'ApplicationJobListItemController',
-            controllerAs    : 'vm',
+            controller: 'ApplicationJobListItemController',
+            controllerAs: 'vm',
             bindToController: true
         };
 
         return ddo;
     }
 
-    ApplicationSummaryController.$inject     = ['Authentication', 'Applications', 'Drivers', 'Reports', '$q', '$log', 'toastr'];
-    ApplicationListItemController.$inject    = ['Authentication', 'Applications', '$log', '$state', '$location'];
+    ApplicationSummaryController.$inject = ['Authentication', 'Applications', 'Drivers', 'Reports', '$q', '$log', 'toastr'];
+    ApplicationListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
     ApplicationJobListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
 
     angular.module('applications')

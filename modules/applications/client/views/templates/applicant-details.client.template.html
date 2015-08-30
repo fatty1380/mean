@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-sm-12">
             <dl class="dl-horizontal">
-                <dt><img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive center-block"></dt>
+                <dt><img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive center-block"></dt>
                 <dd>
                     <span class="strong">Cover Letter:</span>
 
@@ -11,7 +11,7 @@
                 </dd>
                 <dt>About:</dt>
                 <dd ng-show="vm.application.canViewDocs">
-                    <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>
+                    <p class="panel panel-default letter" data-ng-bind-html="vm.applicant.about"></p>
                 </dd>
                 <dd ng-hide="vm.application.canViewDocs">
                     <em class="text-muted" ng-bind-html="vm.text.pre.about"> </em>
@@ -49,26 +49,26 @@
 
                 <dt>License:</dt>
                 <dd>
-                    <oset-license-inline model="vm.license" show-endorsements="false"></oset-license-inline>
+                    <oset-license-inline model="vm.applicant.license" show-endorsements="false"></oset-license-inline>
                 </dd>
 
-                <dt ng-if="!!vm.license.endorsements.length">Endorsements</dt>
-                <dd ng-if="!!vm.license.endorsements.length">
-                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>
+                <dt ng-if="!!vm.applicant.license.endorsements.length">Endorsements</dt>
+                <dd ng-if="!!vm.applicant.license.endorsements.length">
+                    <oset-list-endorsements model="vm.applicant.license.endorsements"></oset-list-endorsements>
                 </dd>
 
                 <dt ng-if="vm.debug">raw</dt>
                 <dd ng-if="vm.debug">
-                    <pre>{{vm.driver.reports | prettyPrint}}</pre>
+                    <pre>{{vm.applicant.reports | prettyPrint}}</pre>
                 </dd>
 
                 <dt>Documents:</dt>
 
-                <oset-document-list driver="vm.driver" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>
+                <oset-document-list model="vm.applicant" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>
 
                 <dt>Interests:</dt>
                 <dd class="label-list">
-                    <div ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
+                    <div ng-repeat="interest in visibleInterests = (vm.applicant.interests | filter: {value: true})"
                           class="label label-primary mgn-right">{{interest.key}}&nbsp;</div></span>
 
                     <span ng-show="!visibleInterests.length">
@@ -79,8 +79,8 @@
                 <dt ng-init="vm.expCt=4" ng-class="{'pad-top':vm.application.canViewDocs}">
                     Experience:
                     <br ng-show="vm.application.canViewDocs"/>
-                    <span ng-show="vm.application.canViewDocs && vm.driver.experience.length"
-                          ng-switch="!vm.expCt && !!vm.driver.experience.length">
+                    <span ng-show="vm.application.canViewDocs && vm.applicant.experience.length"
+                          ng-switch="!vm.expCt && !!vm.applicant.experience.length">
                         <button type="button" class="btn btn-oset-link"
                                 ng-click="vm.expCt = 0;" ng-switch-when="false">
                             hide
@@ -92,8 +92,8 @@
                     </span>
                 </dt>
                 <dd ng-show="vm.application.canViewDocs">
-                        <p class="text-center" ng-hide="!!vm.driver.experience.length">None Added</p>
-                        <oset-experience-list ng-show="!!vm.driver.experience.length" list="vm.driver.experience"
+                        <p class="text-center" ng-hide="!!vm.applicant.experience.length">None Added</p>
+                        <oset-experience-list ng-show="!!vm.applicant.experience.length" list="vm.applicant.experience"
                                               view-only="true" max-ct="vm.expCt">
                         </oset-experience-list>
                 </dd>

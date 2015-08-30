@@ -118,7 +118,7 @@ var DriverSchema = UserSchema.extend({
 });
 
 DriverSchema.statics.fields = {
-    social: [UserSchema.statics.fields.social, 'handle', 'licenses', 'about', 'experience', 'interests'].join(' ')
+    social: [UserSchema.statics.fields.social, 'handle', 'props', 'license', 'about', 'experience', 'interests'].join(' ')
 };
 
 DriverSchema.methods.updateReportURL = function (sku, url) {

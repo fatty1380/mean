@@ -17,8 +17,8 @@
         vm.action = $state.current.name.replace('drivers.', '');
         vm.driver = _.defaults(driver || {}, {
             experience: [],
-            licenses: [{}],
             interests: [],
+            license: {},
             profile: {responses: [], questions: []}
         });
 

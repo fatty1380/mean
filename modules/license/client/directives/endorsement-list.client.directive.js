@@ -1,12 +1,12 @@
 (function () {
     'use strict';
 
-    var template = '<span><span ng-repeat="(name, val) in vm.endorsements" ' +
-        'ng-init="description = vm.getEndorsementName(name)" ' +
-        'ng-if="val"' +
+    var template = '<span><span ng-repeat="key in vm.endorsements" ' +
+        'ng-init="description = vm.getEndorsementName(key)" ' +
+        'ng-if="key"' +
         'class="endorsement label label-success" ' +
         'tooltip-popup-delay="750" ' +
-        'tooltip="{{description}}">{{name}}&nbsp;</span>' +
+        'tooltip="{{description}}">{{key}}</span>' +
         '<span ng-if="!vm.filteredEndorsements.length">None</span></span>';
 
     function EndorsementDisplayDirective() {
@@ -37,7 +37,7 @@
                 vm.getEndorsementName = function (key) {
                     var name = _.find(vm.endorsementBase, {key: key});
 
-                    return name.description;
+                    return !_.isEmpty(name) ? name.description : key;
                 };
             },
             controllerAs: 'vm',
