@@ -40,7 +40,7 @@
                 vm.driver = vm.driver || vm.profile.driver;
                 debugger;
                 vm.pictureUrl = vm.profile.props && vm.profile.props.avatar || vm.profile.profileImageURL;
-                vm.subTitle = vm.profile.type;
+                vm.subTitle = vm.profile.handle || vm.profile.type;
 
                 vm.canEdit = _.isUndefined(vm.canEdit) ? false : vm.canEdit;
                 vm.editSref = 'settings.profile';

@@ -1,7 +1,10 @@
 (function () {
     'use strict';
+    
+    angular.module('drivers').controller('DriverEditController', DriverEditController);
 
     // Drivers controller
+    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig', '$document', 'Applications'];
     function DriverEditController($state, $log, Drivers, Authentication, driver, AppConfig, $document, Applications) {
         var vm = this;
 
@@ -151,8 +154,6 @@
 
     }
 
-    DriverEditController.$inject = ['$state', '$log', 'Drivers', 'Authentication', 'driver', 'AppConfig', '$document', 'Applications'];
-
-    angular.module('drivers').controller('DriverEditController', DriverEditController);
+    
 })
 ();

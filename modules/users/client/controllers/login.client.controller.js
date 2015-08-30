@@ -1,14 +1,14 @@
 (function () {
     'use strict';
 
-    function LoginController($http, $state, $modalInstance, $log, Authentication, srefRedirect, AuthService) {
+    function LoginController($state, $modalInstance, $log, Authentication, srefRedirect, AuthService) {
         var vm = this;
         vm.auth = Authentication;
         vm.srefRedirect = srefRedirect;
 
         vm.credentials = {};
 
-        vm.signin = function () {
+        vm.signin = function signin() {
 
             var credentials = vm.credentials || this.credentials;
 
@@ -44,7 +44,7 @@
         };
     }
 
-    LoginController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect', 'LoginService'];
+    LoginController.$inject = ['$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect', 'LoginService'];
 
     angular.module('users')
         .controller('LoginController', LoginController);

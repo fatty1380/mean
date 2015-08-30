@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    osDebugInfoCtrl.$inject = ['$scope', '$rootScope', '$location', '$state', '$log', 'Authentication', 'AppConfig'];
     function osDebugInfoCtrl($scope, $rootScope, $location, $state, $log, Auth, AppConfig) {
 
         $scope.debugInfo = [];
@@ -50,8 +51,6 @@
             $log.info('not enabling os-debug-info');
         }
     }
-
-    osDebugInfoCtrl.$inject = ['$scope', '$rootScope', '$location', '$state', '$log', 'Authentication', 'AppConfig'];
 
     angular.module('core')
         .directive('osDebugInfo', [
