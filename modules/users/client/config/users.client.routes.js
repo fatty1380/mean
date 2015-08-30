@@ -103,10 +103,10 @@
                     views           : {
                         'content': {
                             templateUrl        : '/modules/drivers/views/templates/driver-body.client.view.html',
-                            controller      : ['user', 'driver', function (user, driver) {
+                            controller      : ['user', 'profile', function (user, profile) {
                                 var vm    = this;
                                 vm.user   = user;
-                                vm.driver = driver;
+                                vm.profile = profile;
                             }],
                             controllerAs    : 'vm',
                             bindToController: true
