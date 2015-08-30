@@ -49,62 +49,7 @@
                     templateUrl: '/modules/core/views/headline-bg.client.view.html'
                 }).
 
-            state('profile-base', {
-                abstract: true,
-                views: {
-                    '': {
-                        templateUrl: '/modules/core/views/profile-base.client.template.html'
-                    },
-                    'content@profile-base': {
-                        template: '<h1 class="text-center">CONTENT</h1>'
-                    },
-                    'sidebar@profile-base': {
-                        templateUrl: '/modules/drivers/views/templates/my-driver-sidebar.client.view.html',
-                        controller: ['user', 'profile', 'Friends', function (user, profile, Friends) {
-                            var vm = this;
-                            vm.user = user;
-                            vm.profile = profile;
-                            vm.friends = null;
-
-                            initialize();
-                                
-                            ////////////////////////////////////
-                                
-                            function initialize() {
-                                var friendOne = _.first(vm.user.friends);
-
-                                if (_.isString(friendOne)) {
-                                    Friends.query({ user: vm.user.id }).then(
-                                        function (results) {
-                                            vm.friends = results;
-                                        });
-                                } else {
-                                    vm.friends = vm.user.friends;
-                                }
-                            }
-
-                        }],
-                        controllerAs: 'vm',
-                        bindToController: true
-                    }
-                },
-                resolve: {
-                    user: ['Authentication', '$stateParams', function resolveUser(Authentication, $stateParams) {
-                        $stateParams.userId = $stateParams.userId || Authentication.isLoggedIn() && Authentication.user.id || '';
-                        return Authentication.user;
-                    }],
-                    profile: ['user', '$stateParams', 'Profiles', function resolveProfile(user, $stateParams, Profiles) {
-                        if (!_.isEmpty($stateParams.userId) && !!user && $stateParams.userId != user.id) {
-                            return Profiles.load($stateParams.userId);
-                        }
-
-                        return user;
-                    }],
-                    company: ['user', 'Companies', function resolveCompany(user, Companies) {
-                        return !!user.company ? Companies.get(user.company) : null;
-                    }]
-                }
-            }).
+            
             
         // Landing Page 'Intro' States
 
