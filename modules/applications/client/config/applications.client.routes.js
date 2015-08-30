@@ -301,11 +301,11 @@
                 controller      : '',
                 controllerAs    : 'vm',
                 bindToController: true,
-                resolve         : {
-                    driver: ['gateway', function (gateway) {
-                        return gateway.driver;
-                    }]
-                }
+                // resolve         : {
+                //     driver: ['gateway', function (gateway) {
+                //         return gateway.driver;
+                //     }]
+                // }
             }).
 
             state('gateway.documents', {
@@ -314,11 +314,11 @@
                 controller      : '',
                 controllerAs    : 'vm',
                 bindToController: true,
-                resolve         : {
-                    driver: ['gateway', function (gateway) {
-                        return gateway.driver;
-                    }]
-                }
+                // resolve         : {
+                //     driver: ['gateway', function (gateway) {
+                //         return gateway.driver;
+                //     }]
+                // }
             }).
 
             state('gateway.reports', {
@@ -381,7 +381,7 @@
                 resolve         : {
                     requirements: ['gateway', '$q', function (gateway, $q) {
                         var gw = gateway;
-                        return $q.all([gw.user, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function (result) {
+                        return $q.all([gw.profile, gw.release, gw.company, gw.applicantGateway, gw.application]).then(function (result) {
 
                         });
                     }]

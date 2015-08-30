@@ -30,7 +30,7 @@
         vm.methods.init = function () {
             debugger;
 
-            vm.gateway.user.then(function (user) {
+            vm.gateway.profile.then(function (user) {
                 vm.user = user;
             });
             vm.gateway.report.then(function (reportResponse) {

@@ -1,14 +1,14 @@
 (function () {
     'use strict';
 
-    function GatewayService(Authentication, Profiles, Drivers, Jobs, Companies, Reports, Applicants, Applications, $state, $log, $q) {
+    function GatewayService(Authentication, Profiles, Jobs, Companies, Reports, Applicants, Applications, $state, $log, $q) {
 
         var Gateway, gatewayInstance;
 
         Gateway = (function () {
             function Gateway() {
 
-                this.initialize = function (job, user) {
+                this.initialize = function (job, profile) {
 
                     if (this.initialized) {
                         $log.warn('Gateway Service was previously initialized with job `%s`', this.models.job && this.models.job._id);
@@ -16,10 +16,10 @@
 
                     this.reset();
 
-                    if (!!user) {
-                        this.user = user;
+                    if (!!profile) {
+                        this.profile = profile;
                     } else if (!!Authentication.isLoggedIn()) {
-                        this.user = Authentication.user;
+                        this.profile = Authentication.user;
                     }
 
                     this.job = job;
@@ -38,56 +38,53 @@
                  *  Object Properties
                  *************************************************************************/
 
-                Object.defineProperty(this, 'user', {
+                Object.defineProperty(this, 'profile', {
                     enumerable: true,
                     get: function () {
                         var _this = this;
-                        if (!_this.promises.user && !!Authentication.user) {
-                            _this.promises.user = $q.defer();
-                            $log.debug('[gw.user.get] Init User');
-                            _this.user = Authentication.user;
+                        if (!_this.promises.profile && !!Authentication.user) {
+                            _this.promises.profile = $q.defer();
+                            $log.debug('[gw.profile.get] Init User');
+                            _this.profile = Authentication.user;
                         }
-                        return (_this.promises.user = _this.promises.user || $q.defer()).promise;
+                        return (_this.promises.profile = _this.promises.profile || $q.defer()).promise;
                     },
                     set: function (val) {
                         var _this = this;
                         $log.debug('[Gateway] Setting `User` to %o', val);
-                        _this.promises.user = _this.promises.user || $q.defer();
+                        _this.promises.profile = _this.promises.profile || $q.defer();
                         return (!!val && _.isString(val) ? Profiles.load(val) : $q.when(val))
                             .then(function (userResponse) {
-                                _this.promises.user.resolve(userResponse);
+                                _this.promises.profile.resolve(userResponse);
 
                                 return (_this.models.user = userResponse);
-                            })
-                            .then(function (user) {
-                                _this.driver = _.isEmpty(user) ? null : user.driver;
                             });
                     }
                 });
 
-                Object.defineProperty(this, 'driver', {
-                    enumerable: true,
-                    get: function () {
-                        var _this = this;
-                        if (!_this.promises.driver) {
-                            _this.promises.driver = $q.defer();
-                            $log.debug('[Gateway] Initializing Load of Driver');
-                        }
-                        return (_this.promises.driver = _this.promises.driver || $q.defer()).promise;
-                    },
-                    set: function (val) {
-                        var _this = this;
+                // Object.defineProperty(this, 'driver', {
+                //     enumerable: true,
+                //     get: function () {
+                //         var _this = this;
+                //         if (!_this.promises.driver) {
+                //             _this.promises.driver = $q.defer();
+                //             $log.debug('[Gateway] Initializing Load of Driver');
+                //         }
+                //         return (_this.promises.driver = _this.promises.driver || $q.defer()).promise;
+                //     },
+                //     set: function (val) {
+                //         var _this = this;
 
-                        _this.promises.driver = _this.promises.driver || $q.defer();
-                        return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
-                            .then(function (response) {
-                                $log.debug('[Gateway] Resolving `Driver` to %o', response);
-                                _this.models.driver = response || new Drivers.ById({ user: _this.models.user });
-                                _this.promises.driver.resolve(_this.models.driver);
-                            }
-                                );
-                    }
-                });
+                //         _this.promises.driver = _this.promises.driver || $q.defer();
+                //         return (!!val && _.isString(val) ? Drivers.get(val) : $q.when(val))
+                //             .then(function (response) {
+                //                 $log.debug('[Gateway] Resolving `Driver` to %o', response);
+                //                 _this.models.driver = response || new Drivers.ById({ user: _this.models.user });
+                //                 _this.promises.driver.resolve(_this.models.driver);
+                //             }
+                //                 );
+                //     }
+                // });
 
                 Object.defineProperty(this, 'job', {
                     enumerable: true,
@@ -187,7 +184,7 @@
 
                         _this.promises.report = _this.promises.report || $q.defer();
                         if (_this.models.sku !== val) {
-                            _this.user
+                            _this.profile
                                 .then(function (userResponse) {
                                     $log.debug('[Gateway] User loaded, now retrieving Report Definition info');
                                     return (!!val && _.isString(val) ? Reports.get(val) : $q.when(val));
@@ -237,7 +234,7 @@
                             $log.debug('[Gateway] Initializing Load of Job Application');
 
                             _this.promises.application = $q.defer();
-                            $q.all({ job: _this.job, user: _this.user })
+                            $q.all({ job: _this.job, user: _this.profile })
                                 .then(function (values) {
                                     return Applications.ById.query({
                                         job: values.job._id,
@@ -254,11 +251,11 @@
 
                                     _this.promises.application.resolve(_this.models.application);
 
-                                    return _this.driver;
+                                    return _this.profile;
                                 })
-                                .then(function (driver) {
+                                .then(function (profile) {
                                     if (_.isEmpty(_this.models.application.introduction)) {
-                                        _this.models.application.introduction = driver.about;
+                                        _this.models.application.introduction = profile.about;
                                     }
                                 })
                                 .catch(function (err) {
@@ -268,15 +265,13 @@
                                         isDraft: true
                                     };
 
-                                    _this.driver.then(function (driver) {
-                                        _this.models.application.introduction = driver.about;
+                                    _this.profile.then(function (profile) {
+                                        _this.models.application.introduction = profile.about;
+                                        _this.models.application.userId = profile.id;
                                     });
 
                                     _this.job.then(function (jobResponse) {
                                         _this.models.application.jobId = jobResponse._id;
-                                    });
-                                    _this.user.then(function (userResponse) {
-                                        _this.models.application.userId = userResponse._id;
                                     });
 
                                     _this.promises.application.resolve(_this.models.application);
@@ -382,7 +377,7 @@
         return Gateway;
     }
 
-    GatewayService.$inject = ['Authentication', 'Profiles', 'Drivers', 'Jobs', 'Companies', 'Reports', 'Applicants', 'Applications', '$state', '$log', '$q'];
+    GatewayService.$inject = ['Authentication', 'Profiles', 'Jobs', 'Companies', 'Reports', 'Applicants', 'Applications', '$state', '$log', '$q'];
 
     angular.module('applications')
         .service('Gateway', GatewayService);

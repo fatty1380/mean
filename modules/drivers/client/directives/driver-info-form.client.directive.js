@@ -1,7 +1,12 @@
 (function () {
     'use strict';
 
-    function DriverInfoFormCtrl($log, $q, $document, Drivers, auth) {
+    angular.module('drivers')
+        .controller('DriverInfoFormController', DriverInfoFormCtrl)
+        .directive('driverInfoForm', DriverInfoFormDirective);
+        
+    DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Authentication'];
+    function DriverInfoFormCtrl($log, $q, $document, auth) {
         var vm = this;
 
         vm.text = _.defaults(vm.text || {}, {
@@ -32,29 +37,18 @@
 
         vm.methods = _.defaults({
             submit: function () {
-                var method;
+                if (_.isEmpty(vm.profile._id)) {
+                    vm.error = 'User is not logged in';
+                    vm.loading = false;
 
-                if (_.isEmpty(vm.driver._id)) {
-                    vm.driver = new Drivers.ById(vm.driver);
-                    return vm.driver.$save()
-                        .then(function (updatedDriver) {
-                            $log.debug('Successfully created DRIVER with details');
-
-                            return (vm.gateway.driver = updatedDriver);
-                        })
-                        .catch(function (errorResponse) {
-                            vm.error = errorResponse.data && errorResponse.data.message || 'Unable to create driver';
-                            vm.loading = false;
-
-                            return $q.reject(vm.error);
-                        });
+                    return $q.reject(vm.error);
                 }
                 else {
-                    return vm.driver.$update()
-                        .then(function (updatedDriver) {
-                            $log.debug('Successfully updated DRIVER with details');
+                    return vm.profile.$update()
+                        .then(function (updatedProfile) {
+                            $log.debug('Successfully updated Driver Profile with details');
 
-                            return (vm.gateway.driver = updatedDriver);
+                            return (vm.gateway.profile = updatedProfile);
                         })
                         .catch(function (errorResponse) {
                             vm.error = errorResponse.data && errorResponse.data.message || 'Unable to update driver';
@@ -117,19 +111,19 @@
             if (vm.form.experienceForm && vm.form.experienceForm.$pristine) {
 
                 console.log('Experience untouched ...');
-                if (vm.driver.experience[0] && vm.driver.experience[0].isFresh) {
+                if (vm.profile.experience[0] && vm.profile.experience[0].isFresh) {
                     console.log('nuked experience');
                     debugger;
-                    vm.driver.experience.pop();
+                    vm.profile.experience.pop();
                 }
-                debugger;
+                debugger;v
 
                 //vm.form.experienceForm.$setValidity('vm.form.experienceForm', true);
                 //vm.form.experienceForm.$rollbackViewValue();
 
             }
 
-            var strippedString = vm.driver.about && vm.driver.about.replace(/(<([^>]+)>)/ig, '') || '';
+            var strippedString = vm.profile.about && vm.profile.about.replace(/(<([^>]+)>)/ig, '') || '';
             if (strippedString.length <= 0) {
                 debugger;
                 vm.introTextError = 'Please add a message to the employer before continuing';
@@ -159,28 +153,26 @@
             return true;
         };
 
-        if(_.isFunction(vm.methods.init)) {
+        if (_.isFunction(vm.methods.init)) {
             vm.methods.init();
         }
     }
 
-    DriverInfoFormCtrl.$inject = ['$log', '$q', '$document', 'Drivers', 'Authentication'];
-
+    DriverInfoFormDirective.$inject = ['Drivers'];
     function DriverInfoFormDirective(Drivers) {
         return {
-            templateUrl: function(elem, attrs) {
-                switch(attrs.displayMode || 'full') {
+            templateUrl: function (elem, attrs) {
+                switch (attrs.displayMode || 'full') {
                     case 'min': return '/modules/drivers/views/templates/driver-info-form.client.template.html';
                     default: return '/modules/drivers/views/templates/driver-edit-form.client.template.html';
                 }
 
-            } ,
+            },
             restrict: 'E',
             require: ['^form'],
             scope: {
                 gateway: '=',
                 user: '=?',
-                driver: '=?model',
                 text: '=?',
                 methods: '=',
                 displayMode: '=?'
@@ -189,15 +181,8 @@
                 scope.vm.form = ctrls[0];
 
                 if (!!scope.vm.gateway) {
-                    scope.vm.gateway.user.then(function (userResponse) {
-                        scope.vm.user = userResponse;
-                    });
-
-                    scope.vm.gateway.driver.then(function (driverResponse) {
-                        if (!_.isEmpty(scope.vm.driver)) {
-                            debugger;
-                        }
-                        scope.vm.driver = _.merge(driverResponse, Drivers.default);
+                    scope.vm.gateway.profile.then(function (userResponse) {
+                        scope.vm.profile = _.merge(userResponse, Drivers.default);
                     });
                 }
             },
@@ -207,9 +192,5 @@
         };
     }
 
-    DriverInfoFormDirective.$inject = ['Drivers'];
 
-    angular.module('drivers')
-        .controller('DriverInfoFormController', DriverInfoFormCtrl)
-        .directive('driverInfoForm', DriverInfoFormDirective);
 })();
