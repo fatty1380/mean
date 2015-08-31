@@ -70,9 +70,8 @@
         vm.extraText = vm.job && vm.job.text || null;
         vm.currentStep = !!type ? 1 : 0;
 
-        vm.user = vm.auth.user || {profileImageURL: ''};
+        vm.applicant = vm.auth.user || {profileImageURL: ''};
         vm.credentials = {type: type};
-        vm.driver = vm.user.driver || {};
         vm.application = {};
 
         vm.validateForm = function () {
@@ -130,7 +129,7 @@
                     return formMethods.submit();
                 })
                 .then(function (success) {
-                    vm.user = success;
+                    vm.applicant = success;
                     vm.currentStep++;
                 })
                 .catch(function (error) {
@@ -143,14 +142,6 @@
 
         vm.createDriver = function() {
 
-            if (!vm.driver._id) {
-                vm.error = vm.error || 'please create a new user before continuing';
-
-                vm.currentStep = 1;
-
-                return false;
-            }
-
             vm.loading = true;
             var formMethods = vm['subform' + vm.currentStep + 'Methods'];
 
@@ -161,9 +152,9 @@
                 })
                 .then(function (success) {
                     debugger;
-                    vm.driver = vm.user.driver = success;
+                    vm.applicant = success;
 
-                    vm.application.message = vm.driver.about;
+                    vm.application.message = vm.applicant.about;
                     vm.currentStep++;
                 })
                 .catch(function (error) {
@@ -177,8 +168,8 @@
         vm.userPicUploaded = function (fileItem, response) {
             // Populate user object
             debugger;
-            vm.user = response;
-            vm.imageURL = vm.user.profileImageURL;
+            vm.applicant = response;
+            vm.imageURL = vm.applicant.profileImageURL;
 
             Authentication.user.profileImageURL = response.profileImageURL;
         };

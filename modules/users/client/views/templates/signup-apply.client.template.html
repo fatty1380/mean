@@ -30,7 +30,7 @@
 
             <section class="row" ng-show="vm.currentStep === 2">
 
-                <driver-info-form ng-form="vm.subForm2" model="vm.driver" text="vm.about"
+                <driver-info-form ng-form="vm.subForm2" model="vm.applicant" text="vm.about"
                                   class="col-sm-12" methods="vm.subform2Methods">
                 </driver-info-form>
 
@@ -43,13 +43,13 @@
 
                     <div class="col-sm-6">
                         <div class="text-center control-label">Profile Picture</div>
-                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"
+                        <os-picture-uploader model="vm.applicant" mode="user" success-callback="vm.userPicUploaded"
                                              auto-crop="true"
                                              title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>
                     </div>
                     <div class="col-sm-6">
                         <oset-file-upload mode="resume"
-                                          model="vm.driver.reports['resume']" model-id="vm.driver._id"
+                                          model="vm.applicant.reports['resume']" model-id="vm.applicant._id"
                                           title="Resume Upload" auto-upload="true"></oset-file-upload>
                     </div>
                 </div>

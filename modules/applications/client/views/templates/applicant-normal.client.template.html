@@ -6,32 +6,38 @@
                 License
             </div>
             <div class="col-md-9 col-lg-10 col-xs-12 inline-content">
-                <oset-license-inline model="vm.license" show-endorsements="true"></oset-license-inline>
+                <oset-license-inline model="vm.applicant.license" show-endorsements="true"></oset-license-inline>
             </div>
-
+            
+            </div>
+            <div class="row">
 
             <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">
                 Documents
             </div>
             <div class="col-md-9 col-lg-10 col-xs-12 inline-content">
-                <oset-document-list driver="vm.driver" application="vm.application"
-                                    doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>
+                <oset-document-list model="vm.applicant" application="vm.application" doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>
             </div>
 
+            </div>
+            <div class="row">
 
             <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">
                 Interests
             </div>
             <div class="col-md-9 col-lg-10 col-xs-12 inline-content label-list">
 
-            <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"
-                  class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>
+                <span ng-repeat="interest in visibleInterests = (vm.applicant.interests | filter: {value: true})" class="label label-primary mgn-right">
+                    {{interest.key}}&nbsp;
+                </span>
 
-            <span ng-hide="!!visibleInterests.length">
-                <em class="small text-muted" ng-hide="!!vm.license">none entered</em>
-            </span>
+                <div ng-hide="!!visibleInterests.length">
+                    <em class="small text-muted" ng-hide="!!vm.applicant.license">none entered</em>
+                </div>
             </div>
 
+            </div>
+            <div class="row">
 
             <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">
                 Messages
@@ -50,11 +56,11 @@
                     </a>
                 </span>
                 <span ng-hide="!!vm.application.isConnected">
-                        <em class="text-muted" ng-if="vm.profile.type === 'owner'">
+                        <em class="text-muted" ng-if="vm.applicant.isOwner">
                             once connected, you will be able to exchange messages with
                             the applicant
                         </em>
-                        <em class="text-muted" ng-if="vm.profile.type === 'driver'">
+                        <em class="text-muted" ng-if="vm.applicant.isDriver">
                             once connected, you will be able to exchange messages with
                             the employer
                         </em>

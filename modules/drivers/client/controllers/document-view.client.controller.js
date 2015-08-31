@@ -1,7 +1,9 @@
 (function () {
     'use strict';
 
+
     // Drivers controller
+    DocumentViewController.$inject = ['$state', '$log', '$stateParams', '$window', '$sce', 'Authentication', 'Drivers', 'DocAccess', 'driver'];
     function DocumentViewController($state, $log, $stateParams, $window, $sce, auth, Drivers, DocAccess, driver) {
         var vm = this;
 
@@ -63,8 +65,7 @@
 
     }
 
-    DocumentViewController.$inject = ['$state', '$log', '$stateParams', '$window', '$sce', 'Authentication', 'Drivers', 'DocAccess', 'driver'];
-
+    
 
     function PdfViewDirective() {
         return {

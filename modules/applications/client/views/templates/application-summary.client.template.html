@@ -21,7 +21,7 @@
         <div data-ng-if="vm.displayMode === 'compact'" class="row">
             <dl class="dl-horizontal">
                 <dt>Applicant:</dt>
-                <dd>{{vm.application.user.displayName}}</dd>
+                <dd>{{vm.applicant.displayName}}</dd>
                 <dt>Job:</dt>
                 <dd>{{vm.application.job.name || 'UNKNOWN'}}
                     <span class="label label-info">{{vm.application.status}}</span>
@@ -33,7 +33,7 @@
 
         <tr data-ng-if="vm.displayMode === 'table'" class="row">
 
-                <td>{{vm.application.user.displayName}}</td>
+                <td>{{vm.applicant.displayName}}</td>
                 <td>
                     <os-application-status-badge ng-model="vm.application"></os-application-status-badge>
                 </td>
@@ -48,7 +48,7 @@
                         <span class="label label-info">{{vm.application.status}}</span>
                     </dd>
                     <dt>Applicant:</dt>
-                    <dd>{{vm.application.user.displayName}}</dd>
+                    <dd>{{vm.applicant.displayName}}</dd>
                     <dt>Applied On:</dt>
                     <dd>{{vm.application.created | date:'short'}}</dd>
                 </dl>

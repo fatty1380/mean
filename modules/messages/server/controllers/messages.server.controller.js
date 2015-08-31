@@ -205,6 +205,7 @@ exports.chatRead = function (req, res) {
 			var chat = new Chat({
 				user: req.user,
 				recipient: req.profile,
+				profileImageURL: !!req.profile && req.profile.profileImageURL || null,
 				recipientName: req.profile.displayName
 			})
 			
@@ -257,13 +258,14 @@ function groupChatsBySender(req, res) {
 	req.chats = _.map(_.keys(chats), function (c) {
 		req.log.debug({ chatGroup: c, group: c.displayName, chats: chats[c] }, 'Examining Chat Group');
 		
-		var newest = chats[c][0];
+		var newest = _.first(chats[c]);
 		
 		return new Chat({
 			id: newest.party.id,
 			user: req.profile || req.user,
 			recipientName: c,
 			recipient: newest.party, 
+			profileImageURL: !!newest.party && newest.party.profileImageURL || null,
 			messages: chats[c], 
 			lastMessage: newest})
 	});

@@ -1,6 +1,14 @@
-(function() {
+(function () {
     'use strict';
 
+
+
+    angular
+        .module('drivers')
+        .directive('osDriverInline', OsDriverInlineView)
+        .directive('osProfileHeader', OsProfileHeader);
+
+    OsDriverInlineView.$inject = [];
     function OsDriverInlineView() {
         return {
             priority: 0,
@@ -9,15 +17,13 @@
             transclude: true,
             restrict: 'E',
             scope: {
-                driver: '=model',
-                profile: '=?',
+                profile: '=model',
                 application: '=?'
             },
-            controller: ['$q', 'Profiles', function($q, Profiles) {
+            controller: ['$q', 'Profiles', function ($q, Profiles) {
                 var vm = this;
 
-                vm.profile = vm.profile || Profiles.getUserForDriver(vm.driver);
-                vm.license = !!vm.driver.licenses && vm.driver.licenses.length ? vm.driver.licenses[0] : null;
+                vm.applicant = vm.profile;
             }],
             controllerAs: 'vm',
             bindToController: true
@@ -28,19 +34,17 @@
         return {
             templateUrl: '/modules/drivers/views/templates/driver-badge.client.template.html',
             restrict: 'E',
-            scope : {
+            scope: {
                 profile: '=model',
-                driver: '=?',
-                pictureEditFn : '&?',
+                pictureEditFn: '&?',
                 canEdit: '=?'
             },
-            link: function(scope, elem, attrs) {
+            link: function (scope, elem, attrs) {
                 var vm = scope.vm;
 
-                vm.driver = vm.driver || vm.profile.driver;
                 debugger;
                 vm.pictureUrl = vm.profile.props && vm.profile.props.avatar || vm.profile.profileImageURL;
-                vm.subTitle = vm.profile.type;
+                vm.subTitle = vm.profile.handle || vm.profile.type;
 
                 vm.canEdit = _.isUndefined(vm.canEdit) ? false : vm.canEdit;
                 vm.editSref = 'settings.profile';
@@ -52,9 +56,8 @@
                 };
 
             },
-            controller: function() {
+            controller: function () {
                 var vm = this;
-                vm.unknown = 'is this thing on?';
             },
             controllerAs: 'vm',
             bindToController: true
@@ -62,11 +65,4 @@
     }
 
 
-
-    OsDriverInlineView.$inject = [];
-
-    angular
-        .module('drivers')
-        .directive('osDriverInline', OsDriverInlineView)
-    .directive('osProfileHeader', OsProfileHeader);
 })();

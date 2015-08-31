@@ -1,32 +1,34 @@
 (function () {
     'use strict';
 
+    handleBadRoute.$inject = ['$injector', '$location'];
     function handleBadRoute($injector, $location) {
         console.log('Unknown URL pattern: %s', $location.url());
+        $location.path('/home');
+        
+        // $injector.invoke(['Authentication', '$log', '$state', function (auth, $log, $state) {
+        //     if (!auth.isLoggedIn()) {
+        //         $location.path('/');
+        //     }
+        //     else {
+        //         switch (auth.user.type) {
+        //             case 'driver':
+        //                 $log.debug('[Route.Otherwise] Re-Routing to driver\'s profile page');
+        //                 $state.go('users.view');
+        //                 $location.path('/home');
+        //                 break;
+        //             case 'owner':
+        //                 $log.debug('[Route.Otherwise] Re-Routing to the user\'s company home');
+        //                 $state.go('companies.home');
+        //                 $location.path('/home');
+        //                 break;
+        //             default:
+        //                 $log.warn('[Route.Otherwise] Unknown Destination');
+        //                 $location.path('/');
+        //         }
+        //     }
 
-        $injector.invoke(['Authentication', '$log', '$state', function (auth, $log, $state) {
-            if (!auth.isLoggedIn()) {
-                $location.path('/');
-            }
-            else {
-                switch (auth.user.type) {
-                    case 'driver':
-                        $log.debug('[Route.Otherwise] Re-Routing to driver\'s profile page');
-                        $state.go('users.view');
-                        $location.path('/home');
-                        break;
-                    case 'owner':
-                        $log.debug('[Route.Otherwise] Re-Routing to the user\'s company home');
-                        $state.go('companies.home');
-                        $location.path('/home');
-                        break;
-                    default:
-                        $log.warn('[Route.Otherwise] Unknown Destination');
-                        $location.path('/');
-                }
-            }
-
-        }]);
+        // }]);
     }
 
     function config($stateProvider, $urlRouterProvider) {
@@ -47,59 +49,7 @@
                     templateUrl: '/modules/core/views/headline-bg.client.view.html'
                 }).
 
-            state('profile-base', {
-                abstract: true,
-                views: {
-                    '': {
-                        templateUrl: '/modules/core/views/profile-base.client.template.html'
-                    },
-                    'content@profile-base': {
-                        template: '<h1 class="text-center">CONTENT</h1>'
-                    },
-                    'sidebar@profile-base': {
-                        templateUrl: '/modules/drivers/views/templates/my-driver-sidebar.client.view.html',
-                        controller: ['user', 'driver', 'Friends', function (user, driver, Friends) {
-                            var vm = this;
-                            vm.user = user;
-                            vm.driver = driver;
-                            vm.friends = null;
-
-                            initialize();
-                                
-                            ////////////////////////////////////
-                                
-                            function initialize() {
-                                var friendOne = _.first(vm.user.friends);
-
-                                if (_.isString(friendOne)) {
-                                    Friends.query({ user: vm.user.id }).then(
-                                        function (results) {
-                                            vm.friends = results;
-                                        });
-                                } else {
-                                    vm.friends = vm.user.friends;
-                                }
-                            }
-
-                        }],
-                        controllerAs: 'vm',
-                        bindToController: true
-                    }
-                },
-                resolve: {
-                    user: ['Authentication', '$stateParams', function resolveUser(Authentication, $stateParams) {
-                        $stateParams.userId = $stateParams.userId || Authentication.isLoggedIn() && Authentication.user.id || '';
-                        return Authentication.user;
-                    }],
-                    driver: ['user', 'Drivers', function resolveDriver(user, Drivers) {
-                        debugger;
-                        return user; // !!user.driver ? Drivers.get(user.driver) : null;
-                    }],
-                    company: ['user', 'Companies', function resolveCompany(user, Companies) {
-                        return !!user.company ? Companies.get(user.company) : null;
-                    }]
-                }
-            }).
+            
             
         // Landing Page 'Intro' States
 
@@ -134,15 +84,16 @@
 
             state('home', {
                 url: '/home',
-                controller: ['$state', 'Authentication', '$timeout', function ($state, auth, $timeout) {
-                    auth.getUser.then(
+                controller: ['$state', 'LoginService', function ($state, LoginService) {
+                    LoginService.getUser().then(
                         function success(user) {
+                            
                             console.log('Success in looking up user, redirecting', user);
-                            if (auth.user.isDriver) {
-                                //$state.go('drivers.home');
-                                $state.go('feed.list', { userId: auth.user.id });
+                            if (user.isDriver) {
+                                //$state.go('drivers.home', {}, { reload: true });
+                                $state.go('feed.list', { userId: user.id });
                             }
-                            else if (auth.user.isOwner) {
+                            else if (user.isOwner) {
                                 $state.go('companies.home');
                             } else {
                                 $state.go('intro');
@@ -164,7 +115,6 @@
             });
     }
 
-    handleBadRoute.$inject = ['$injector', '$location', '$state', 'Authentication', '$log'];
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
 
     // Setting up route

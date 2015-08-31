@@ -27,12 +27,22 @@ var app, agent, credentials, user, _test;
 
 var client;
 
+var jwtConfig, config;
+
 
 describe('Auth Routes tests', function () {
     before(function () {
         // Get application
+        
+        log.error({ func: 'before' }, 'Enabling JWT Auth');
+        
+        config = require(path.resolve('./config/config'));
+        jwtConfig = config.security.enableJWT;
+        config.security.enableJWT = true;
+        
         app = express.init(mongoose).http;
         agent = request.agent(app);
+
 
         client = new ClientApp({ name: 'TestCase', clientId: 'tc_01', clientSecret: 'shenanigans' });
 
@@ -132,7 +142,7 @@ describe('Auth Routes tests', function () {
                 var endpoint = '/api/users/me';
 
                 return agent.get(endpoint)
-                .set({'x-access_token': token.access_token})
+                    .set({ 'x-access_token': token.access_token })
                     .expect(200)
                     .then(function (response) {
                         log.debug({
@@ -152,7 +162,7 @@ describe('Auth Routes tests', function () {
                 var endpoint = '/api/profiles';
 
                 return agent.get(endpoint)
-                .set({'x-access_token': token.access_token})
+                    .set({ 'x-access_token': token.access_token })
                     .expect(200)
                     .then(function (response) {
                         log.debug({
@@ -170,7 +180,7 @@ describe('Auth Routes tests', function () {
                 var endpoint = '/api/profiles/' + user.id + '';
 
                 return agent.get(endpoint)
-                .set({'x-access_token': token.access_token})
+                    .set({ 'x-access_token': token.access_token })
                     .expect(200)
                     .then(function (response) {
                         log.debug({
@@ -196,7 +206,7 @@ describe('Auth Routes tests', function () {
                 };
 
                 return agent.put(endpoint)
-                .set({'x-access_token': token.access_token})
+                    .set({ 'x-access_token': token.access_token })
                     .send(data)
                     .expect(200)
                     .then(function (response) {
@@ -224,6 +234,7 @@ describe('Auth Routes tests', function () {
     });
 
     after(function () {
+        config.security.enableJWT = jwtConfig;
         return stubs.cleanTables([ClientApp]);
     });
 });

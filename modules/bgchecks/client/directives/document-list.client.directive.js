@@ -7,9 +7,9 @@
         vm.showDocument = function (doc, $event) {
             $event.stopPropagation();
 
-            var file = vm.driver.reports[doc];
+            var file = vm.profile.reports[doc];
 
-            Reports.openReport(vm.application, vm.driver, file)
+            Reports.openReport(vm.application, vm.profile, file)
                 .catch(function (error) {
                     vm.error = error;
                     toastr.error(error, {
@@ -35,7 +35,7 @@
             } ,
             restrict: 'E',
             scope: {
-                driver: '=',
+                profile: '=model',
                 application: '=',
                 docAccess: '=?',
                 displayMode: '='

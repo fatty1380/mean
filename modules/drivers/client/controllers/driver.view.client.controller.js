@@ -1,7 +1,10 @@
 (function () {
     'use strict';
+    
+    angular.module('drivers').controller('DriverViewController', DriverViewController);
 
     // Drivers controller
+    DriverViewController.$inject = ['$state', '$log', '$stateParams', 'Authentication', 'Drivers', 'Profiles', 'AppConfig', 'driver'];
     function DriverViewController($state, $log, $stateParams, Authentication, Drivers, Profiles, AppConfig, driver) {
         var vm = this;
 
@@ -108,8 +111,4 @@
         };
 
     }
-
-    DriverViewController.$inject = ['$state', '$log', '$stateParams', 'Authentication', 'Drivers', 'Profiles', 'AppConfig', 'driver'];
-
-    angular.module('drivers').controller('DriverViewController', DriverViewController);
 })();

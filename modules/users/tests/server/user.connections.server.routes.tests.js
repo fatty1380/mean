@@ -99,9 +99,24 @@ describe('User Connections & Social', function () {
                         err: response.error
                     }, 'Got Response from %s', endpoint);
                     var friends = response.body;
-
+                    
                     friends.should.have.property('length', 1);
                     friends[0].should.have.property('id', u1.id);
+                    friends[0].should.have.property('handle');
+                    friends[0].should.have.property('displayName');
+                    friends[0].should.have.property('profileImageURL');
+
+                    friends[0].should.have.property('friends')
+                        .and.be.instanceof(Array)
+                        .and.containEql(user.id)
+                        .and.have.length(1);
+
+                    friends[0].should.not.have.property('email');
+                    friends[0].should.not.have.property('phone');
+                    friends[0].should.not.have.property('provider');
+                    friends[0].should.not.have.property('username');
+                    friends[0].should.not.have.property('password');
+                    friends[0].should.not.have.property('salt');
                 });
         });
 

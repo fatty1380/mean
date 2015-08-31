@@ -312,13 +312,13 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '        <div class="col-sm-6">\n' +
   '            <div class="text-center control-label">Profile Picture</div>\n' +
-  '            <os-picture-uploader model="vm.gw.models.user" mode="user"\n' +
+  '            <os-picture-uploader model="vm.gw.models.profile" mode="user"\n' +
   '                                 auto-crop="true" allow-blank="true"\n' +
   '                                 title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
   '        </div>\n' +
   '        <div class="col-sm-6">\n' +
   '            <oset-file-upload mode="resume" allow-blank="true" model-path="resume"\n' +
-  '                              model="vm.gw.models.driver"\n' +
+  '                              model="vm.gw.models.profile"\n' +
   '                              title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -327,7 +327,6 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '');
  $templateCache.put('/modules/applications/views/form/driver-info.client.template.html',
   '<section class="workflow-stage-form">\n' +
-  '    <!--model="vm.gw.driver" user="vm.gw.user"-->\n' +
   '    <driver-info-form ng-form="vm.driverInfoForm" gateway="vm.gw" display-mode="min"\n' +
   '                      text="vm.about" class="col-sm-12" methods="vm.subformMethods">\n' +
   '    </driver-info-form>\n' +
@@ -384,7 +383,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '');
  $templateCache.put('/modules/applications/views/form/user-info.client.template.html',
   '<section class="workflow-stage-form">\n' +
-  '    <user-signup-form ng-form="vm.subForm1" model="vm.gw.models.user" gateway="vm.gw" methods="vm.subformMethods"></user-signup-form>\n' +
+  '    <user-signup-form ng-form="vm.subForm1" model="vm.gw.models.profile" gateway="vm.gw" methods="vm.subformMethods"></user-signup-form>\n' +
   '</section>\n' +
   '');
  $templateCache.put('/modules/applications/views/templates/applicant-details.client.template.html',
@@ -393,7 +392,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '    <div class="row">\n' +
   '        <div class="col-sm-12">\n' +
   '            <dl class="dl-horizontal">\n' +
-  '                <dt><img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive center-block"></dt>\n' +
+  '                <dt><img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive center-block"></dt>\n' +
   '                <dd>\n' +
   '                    <span class="strong">Cover Letter:</span>\n' +
   '\n' +
@@ -401,7 +400,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                </dd>\n' +
   '                <dt>About:</dt>\n' +
   '                <dd ng-show="vm.application.canViewDocs">\n' +
-  '                    <p class="panel panel-default letter" data-ng-bind-html="vm.driver.about"></p>\n' +
+  '                    <p class="panel panel-default letter" data-ng-bind-html="vm.applicant.about"></p>\n' +
   '                </dd>\n' +
   '                <dd ng-hide="vm.application.canViewDocs">\n' +
   '                    <em class="text-muted" ng-bind-html="vm.text.pre.about"> </em>\n' +
@@ -439,26 +438,26 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '                <dt>License:</dt>\n' +
   '                <dd>\n' +
-  '                    <oset-license-inline model="vm.license" show-endorsements="false"></oset-license-inline>\n' +
+  '                    <oset-license-inline model="vm.applicant.license" show-endorsements="false"></oset-license-inline>\n' +
   '                </dd>\n' +
   '\n' +
-  '                <dt ng-if="!!vm.license.endorsements.length">Endorsements</dt>\n' +
-  '                <dd ng-if="!!vm.license.endorsements.length">\n' +
-  '                    <oset-list-endorsements model="vm.license.endorsements"></oset-list-endorsements>\n' +
+  '                <dt ng-if="!!vm.applicant.license.endorsements.length">Endorsements</dt>\n' +
+  '                <dd ng-if="!!vm.applicant.license.endorsements.length">\n' +
+  '                    <oset-list-endorsements model="vm.applicant.license.endorsements"></oset-list-endorsements>\n' +
   '                </dd>\n' +
   '\n' +
   '                <dt ng-if="vm.debug">raw</dt>\n' +
   '                <dd ng-if="vm.debug">\n' +
-  '                    <pre>{{vm.driver.reports | prettyPrint}}</pre>\n' +
+  '                    <pre>{{vm.applicant.reports | prettyPrint}}</pre>\n' +
   '                </dd>\n' +
   '\n' +
   '                <dt>Documents:</dt>\n' +
   '\n' +
-  '                <oset-document-list driver="vm.driver" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
+  '                <oset-document-list model="vm.applicant" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
   '\n' +
   '                <dt>Interests:</dt>\n' +
   '                <dd class="label-list">\n' +
-  '                    <div ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
+  '                    <div ng-repeat="interest in visibleInterests = (vm.applicant.interests | filter: {value: true})"\n' +
   '                          class="label label-primary mgn-right">{{interest.key}}&nbsp;</div></span>\n' +
   '\n' +
   '                    <span ng-show="!visibleInterests.length">\n' +
@@ -469,8 +468,8 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                <dt ng-init="vm.expCt=4" ng-class="{\'pad-top\':vm.application.canViewDocs}">\n' +
   '                    Experience:\n' +
   '                    <br ng-show="vm.application.canViewDocs"/>\n' +
-  '                    <span ng-show="vm.application.canViewDocs && vm.driver.experience.length"\n' +
-  '                          ng-switch="!vm.expCt && !!vm.driver.experience.length">\n' +
+  '                    <span ng-show="vm.application.canViewDocs && vm.applicant.experience.length"\n' +
+  '                          ng-switch="!vm.expCt && !!vm.applicant.experience.length">\n' +
   '                        <button type="button" class="btn btn-oset-link"\n' +
   '                                ng-click="vm.expCt = 0;" ng-switch-when="false">\n' +
   '                            hide\n' +
@@ -482,8 +481,8 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                    </span>\n' +
   '                </dt>\n' +
   '                <dd ng-show="vm.application.canViewDocs">\n' +
-  '                        <p class="text-center" ng-hide="!!vm.driver.experience.length">None Added</p>\n' +
-  '                        <oset-experience-list ng-show="!!vm.driver.experience.length" list="vm.driver.experience"\n' +
+  '                        <p class="text-center" ng-hide="!!vm.applicant.experience.length">None Added</p>\n' +
+  '                        <oset-experience-list ng-show="!!vm.applicant.experience.length" list="vm.applicant.experience"\n' +
   '                                              view-only="true" max-ct="vm.expCt">\n' +
   '                        </oset-experience-list>\n' +
   '                </dd>\n' +
@@ -506,32 +505,38 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                License\n' +
   '            </div>\n' +
   '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
-  '                <oset-license-inline model="vm.license" show-endorsements="true"></oset-license-inline>\n' +
+  '                <oset-license-inline model="vm.applicant.license" show-endorsements="true"></oset-license-inline>\n' +
   '            </div>\n' +
-  '\n' +
+  '            \n' +
+  '            </div>\n' +
+  '            <div class="row">\n' +
   '\n' +
   '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
   '                Documents\n' +
   '            </div>\n' +
   '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
-  '                <oset-document-list driver="vm.driver" application="vm.application"\n' +
-  '                                    doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
+  '                <oset-document-list model="vm.applicant" application="vm.application" doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
   '            </div>\n' +
   '\n' +
+  '            </div>\n' +
+  '            <div class="row">\n' +
   '\n' +
   '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
   '                Interests\n' +
   '            </div>\n' +
   '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content label-list">\n' +
   '\n' +
-  '            <span ng-repeat="interest in visibleInterests = (vm.driver.interests | filter: {value: true})"\n' +
-  '                  class="label label-primary mgn-right">{{interest.key}}&nbsp;</span>\n' +
+  '                <span ng-repeat="interest in visibleInterests = (vm.applicant.interests | filter: {value: true})" class="label label-primary mgn-right">\n' +
+  '                    {{interest.key}}&nbsp;\n' +
+  '                </span>\n' +
   '\n' +
-  '            <span ng-hide="!!visibleInterests.length">\n' +
-  '                <em class="small text-muted" ng-hide="!!vm.license">none entered</em>\n' +
-  '            </span>\n' +
+  '                <div ng-hide="!!visibleInterests.length">\n' +
+  '                    <em class="small text-muted" ng-hide="!!vm.applicant.license">none entered</em>\n' +
+  '                </div>\n' +
   '            </div>\n' +
   '\n' +
+  '            </div>\n' +
+  '            <div class="row">\n' +
   '\n' +
   '            <div class="col-md-3 col-lg-2 hidden-sm hidden-xs inline-label">\n' +
   '                Messages\n' +
@@ -550,11 +555,11 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                    </a>\n' +
   '                </span>\n' +
   '                <span ng-hide="!!vm.application.isConnected">\n' +
-  '                        <em class="text-muted" ng-if="vm.profile.type === \'owner\'">\n' +
+  '                        <em class="text-muted" ng-if="vm.applicant.isOwner">\n' +
   '                            once connected, you will be able to exchange messages with\n' +
   '                            the applicant\n' +
   '                        </em>\n' +
-  '                        <em class="text-muted" ng-if="vm.profile.type === \'driver\'">\n' +
+  '                        <em class="text-muted" ng-if="vm.applicant.isDriver">\n' +
   '                            once connected, you will be able to exchange messages with\n' +
   '                            the employer\n' +
   '                        </em>\n' +
@@ -564,8 +569,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '    </div>\n' +
   '\n' +
   '\n' +
-  '</section>\n' +
-  '');
+  '</section>');
  $templateCache.put('/modules/applications/views/templates/application-questionnaire-form.client.template.html',
   '<section class="form-data">\n' +
   '\n' +
@@ -614,7 +618,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        <div data-ng-if="vm.displayMode === \'compact\'" class="row">\n' +
   '            <dl class="dl-horizontal">\n' +
   '                <dt>Applicant:</dt>\n' +
-  '                <dd>{{vm.application.user.displayName}}</dd>\n' +
+  '                <dd>{{vm.applicant.displayName}}</dd>\n' +
   '                <dt>Job:</dt>\n' +
   '                <dd>{{vm.application.job.name || \'UNKNOWN\'}}\n' +
   '                    <span class="label label-info">{{vm.application.status}}</span>\n' +
@@ -626,7 +630,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '        <tr data-ng-if="vm.displayMode === \'table\'" class="row">\n' +
   '\n' +
-  '                <td>{{vm.application.user.displayName}}</td>\n' +
+  '                <td>{{vm.applicant.displayName}}</td>\n' +
   '                <td>\n' +
   '                    <os-application-status-badge ng-model="vm.application"></os-application-status-badge>\n' +
   '                </td>\n' +
@@ -641,7 +645,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                        <span class="label label-info">{{vm.application.status}}</span>\n' +
   '                    </dd>\n' +
   '                    <dt>Applicant:</dt>\n' +
-  '                    <dd>{{vm.application.user.displayName}}</dd>\n' +
+  '                    <dd>{{vm.applicant.displayName}}</dd>\n' +
   '                    <dt>Applied On:</dt>\n' +
   '                    <dd>{{vm.application.created | date:\'short\'}}</dd>\n' +
   '                </dl>\n' +
@@ -873,7 +877,6 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                <h3 class="post-title" ui-sref="jobs.view({jobId: vm.job._id})">{{vm.job.name}}</h3>\n' +
   '\n' +
   '                <div class="row"\n' +
-  '                     ng-init="user = vm.application.user; driver = user.driver; license = driver.licenses[0]"\n' +
   '                     ui-sref="applications.view({\'applicationId\': vm.application._id})"\n' +
   '                     ng-class="{\'disabled\': vm.application.disabled}">\n' +
   '\n' +
@@ -1224,7 +1227,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '        <div class="row">\n' +
   '            <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">\n' +
-  '                <img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive">\n' +
+  '                <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive">\n' +
   '            </div>\n' +
   '\n' +
   '            <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">\n' +
@@ -1254,7 +1257,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '                <div ng-show="vm.visibleTab === \'documents\'">\n' +
   '                    <pre ng-if="vm.debug">{{vm.application.user.driver.reports}}</pre>\n' +
-  '                    <oset-document-list driver="vm.application.user.driver" application="vm.application" display-mode="full"\n' +
+  '                    <oset-document-list model="vm.application.user.driver" application="vm.application" display-mode="full"\n' +
   '                                        doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
   '                </div>\n' +
   '\n' +
@@ -2100,6 +2103,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                        <span class="icon pull-right"><i class="fa fa-users"></i></span></div>\n' +
   '                </a>\n' +
   '            </div>\n' +
+  '            <os-profile-header model="vm.profile" can-edit="vm.canEdit"></os-profile-header>\n' +
   '            <div ui-view="content"></div>\n' +
   '        </div>\n' +
   '\n' +
@@ -3913,7 +3917,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                <span class="subtitle" data-ng-bind-html="vm.subTitle">&nbsp;</span>\n' +
   '\n' +
   '                <div class="licenses">\n' +
-  '                    <oset-license-inline model="vm.driver.licenses[0]" show-endorsements="true"></oset-license-inline>\n' +
+  '                    <oset-license-inline model="vm.profile.license" show-endorsements="true"></oset-license-inline>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '\n' +
@@ -3934,7 +3938,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                <div class="icons icon-group pull-right text-right">\n' +
   '                    <button type="button" class="btn btn-oset-link"\n' +
   '                            ng-if="!!vm.canEdit"\n' +
-  '                            ui-sref="drivers.edit({driverId:vm.driver.id})">\n' +
+  '                            ui-sref="drivers.edit({driverId:vm.profile.id})">\n' +
   '                        <i class="fa fa-2x fa-edit"></i>\n' +
   '                    </button>\n' +
   '                    \n' +
@@ -3979,7 +3983,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '    </h3>\n' +
   '\n' +
   '    <div class="well">\n' +
-  '        <os-edit-license model="vm.driver.licenses[0]" form-name="licenseForm"></os-edit-license>\n' +
+  '        <os-edit-license model="vm.driver.license" form-name="licenseForm"></os-edit-license>\n' +
   '    </div>\n' +
   '\n' +
   '    <!-- Driver\'s Experience Breakdown -->\n' +
@@ -4088,7 +4092,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '            </p>\n' +
   '\n' +
   '            <div class="panel panel-default pad-vert">\n' +
-  '                <os-edit-license model="vm.driver.licenses[0]"\n' +
+  '                <os-edit-license model="vm.profile.license"\n' +
   '                                 form-name="licenseForm"\n' +
   '                                 mode="minimal"></os-edit-license>\n' +
   '            </div>\n' +
@@ -4103,8 +4107,8 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '            </p>\n' +
   '\n' +
   '            <div class="panel panel-default pad-vert text-center">\n' +
-  '                <oset-categories model="vm.driver.interests" mode="edit"></oset-categories>\n' +
-  '                <input type="hidden" name="interests" ng-model="vm.driver.interests"/>\n' +
+  '                <oset-categories model="vm.profile.interests" mode="edit"></oset-categories>\n' +
+  '                <input type="hidden" name="interests" ng-model="vm.profile.interests"/>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
@@ -4116,8 +4120,8 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        <p class="info col-sm-12">\n' +
   '            Add information about past Experience to help employers know more about you and your\n' +
   '            background.\n' +
-  '            <button type="button" class="btn btn-oset-link" ng-show="vm.driver.experience.length === 1"\n' +
-  '                    ng-click="vm.driver.experience = [];"\n' +
+  '            <button type="button" class="btn btn-oset-link" ng-show="vm.profile.experience.length === 1"\n' +
+  '                    ng-click="vm.profile.experience = [];"\n' +
   '                    event-focus="click" event-focus-id="introText">\n' +
   '                skip\n' +
   '            </button>\n' +
@@ -4126,7 +4130,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        <!--What are you interested in -->\n' +
   '        <div class="form-group">\n' +
   '            <div class="col-sm-12">\n' +
-  '                <oset-experience-list list="vm.driver.experience" can-edit="true"></oset-experience-list>\n' +
+  '                <oset-experience-list list="vm.profile.experience" can-edit="true"></oset-experience-list>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +
@@ -4143,14 +4147,14 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        <div class="form-group"\n' +
   '             ng-class="{\'has-error\': vm.form.introText.$invalid && (vm.form.$submitted || vm.form.introText.$touched)}">\n' +
   '            <div class="col-sm-12">\n' +
-  '                <div class="info pad-btm" ng-show="!vm.driver.about && !vm.introTextError">\n' +
+  '                <div class="info pad-btm" ng-show="!vm.profile.about && !vm.introTextError">\n' +
   '                    Please introduce yourself in a few sentences. This will serve as the template for your job\n' +
   '                    application cover letter.\n' +
   '                </div>\n' +
   '                <div class="text-center text-danger pad-btm" ng-show="vm.introTextError">\n' +
   '                    {{vm.introTextError}}\n' +
   '                </div>\n' +
-  '                <textarea os-html-edit type="text" data-ng-model="vm.driver.about"\n' +
+  '                <textarea os-html-edit type="text" data-ng-model="vm.profile.about"\n' +
   '                          name="introText" id="introText" class="editor-md"\n' +
   '                          placeholder="Please introduce yourself to the employer here"\n' +
   '                          ng-required="true"></textarea>\n' +
@@ -4178,7 +4182,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        </div>\n' +
   '\n' +
   '        <div class="panel-body">\n' +
-  '            <oset-document-list driver="vm.driver" display-mode="inline"></oset-document-list>\n' +
+  '            <oset-document-list model="vm.driver" display-mode="inline"></oset-document-list>\n' +
   '        </div>\n' +
   '\n' +
   '        <div id="portfolio-carousel" class="carousel" data-ride="carousel">\n' +
@@ -4870,16 +4874,16 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '');
  $templateCache.put('/modules/license/views/license-inline.client.template.html',
   '<div>\n' +
-  '    <span ng-show="!!vm.license" class="license">\n' +
+  '    <span ng-show="!!vm.hasLicense" class="license">\n' +
   '        <p>\n' +
-  '            <span class="license-icon"></span> &nbsp;{{vm.license.state.name}}\n' +
-  '            <span ng-show="vm.license.type">\n' +
-  '                <span ng-if="vm.license.rating"> Class {{vm.license.rating | uppercase }}</span>\n' +
-  '                {{vm.license.type === \'Standard\' ? \'\' : vm.license.type}}\n' +
+  '            <span ng-if="!!(vm.license.state || vm.license.class)">\n' +
+  '                {{vm.license.state}}\n' +
+  '                <span ng-if="vm.license.class"> Class {{vm.license.class | uppercase }}</span>\n' +
+  '                {{!vm.license.class ? \'\' : vm.license.type || \'Commercial\'}}\n' +
+  '                 Driver License\n' +
   '            </span>\n' +
-  '            Driver License\n' +
   '            <span class="endorsements" ng-if="!!vm.showEndorsements">\n' +
-  '                <br/>\n' +
+  '             <br ng-if="!!(vm.license.state || vm.license.class)"/>\n' +
   '                <small class="strong">Endorsements: </small>\n' +
   '                <oset-list-endorsements ng-if="!!vm.showEndorsements"\n' +
   '                                    model="vm.license.endorsements"></oset-list-endorsements>\n' +
@@ -4887,7 +4891,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        </p>\n' +
   '    </span>\n' +
   '\n' +
-  '    <em class="small text-muted" ng-hide="!!vm.license">no license on file</em>\n' +
+  '    <em class="small text-muted" ng-hide="!!vm.hasLicense">no license on file</em>\n' +
   '</div>\n' +
   '');
  $templateCache.put('/modules/license/views/license.client.template.html',
@@ -5487,7 +5491,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '            <section class="row" ng-show="vm.currentStep === 2">\n' +
   '\n' +
-  '                <driver-info-form ng-form="vm.subForm2" model="vm.driver" text="vm.about"\n' +
+  '                <driver-info-form ng-form="vm.subForm2" model="vm.applicant" text="vm.about"\n' +
   '                                  class="col-sm-12" methods="vm.subform2Methods">\n' +
   '                </driver-info-form>\n' +
   '\n' +
@@ -5500,13 +5504,13 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '                    <div class="col-sm-6">\n' +
   '                        <div class="text-center control-label">Profile Picture</div>\n' +
-  '                        <os-picture-uploader model="vm.user" mode="user" success-callback="vm.userPicUploaded"\n' +
+  '                        <os-picture-uploader model="vm.applicant" mode="user" success-callback="vm.userPicUploaded"\n' +
   '                                             auto-crop="true"\n' +
   '                                             title="Profile Picture" is-editing="vm.picIsEditing"></os-picture-uploader>\n' +
   '                    </div>\n' +
   '                    <div class="col-sm-6">\n' +
   '                        <oset-file-upload mode="resume"\n' +
-  '                                          model="vm.driver.reports[\'resume\']" model-id="vm.driver._id"\n' +
+  '                                          model="vm.applicant.reports[\'resume\']" model-id="vm.applicant._id"\n' +
   '                                          title="Resume Upload" auto-upload="true"></oset-file-upload>\n' +
   '                    </div>\n' +
   '                </div>\n' +

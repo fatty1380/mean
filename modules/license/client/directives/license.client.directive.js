@@ -93,8 +93,15 @@
                 showEndorsements: '=?'
             },
             controller: function() {
-                var vm=this;
+                var vm = this;
                 vm.showEndorsements = !!vm.showEndorsements;
+                
+                _.forOwn(vm.license, function (value, key) {
+                    if (!_.isEmpty(value)) {
+                        vm.hasLicense = true;
+                        return false;
+                    };
+                });
             },
             controllerAs: 'vm',
             bindToController: true

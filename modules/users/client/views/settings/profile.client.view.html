@@ -48,24 +48,24 @@
     </section>
     <div class="text-muted text-center" ng-if="!vm.company._id">No Company Profile for User</div>
 
-    <h2 class="text-center">DRIVER Directives ({{vm.driver._id}})
+    <h2 class="text-center">DRIVER Directives ({{vm.profile._id}})
     <span class="pull-right" ng-click="vm.showDrModel = !vm.showDrModel">
             <small><i class="fa" ng-class="{'fa-caret-right': !vm.showDrModel, 'fa-caret-down': !!vm.showDrModel}"></i> {{!!vm.showDrModel ? 'Hide' : 'Show'}} Model</small>
         </span>
     </h2><hr/>
-    <section ng-if="!!vm.driver._id">
+    <section ng-if="!!vm.profile._id">
 
 
 
         <div class="row" ng-show="vm.showDrModel">
-            <pre class="col-sm-12">{{vm.driver | prettyPrint}}</pre>
+            <pre class="col-sm-12">{{vm.profile | prettyPrint}}</pre>
         </div>
 
         <h3>os-driver-inline</h3>
 
         <div class="row panel panel-default">
             <div class="col-sm-12">
-                <os-driver-inline model="vm.driver"></os-driver-inline>
+                <os-driver-inline model="vm.profile"></os-driver-inline>
             </div>
         </div>
 
@@ -73,7 +73,7 @@
 
         <div class="row panel panel-default">
             <div class="col-sm-12">
-                <os-driver-view model="vm.driver"></os-driver-view>
+                <os-driver-view model="vm.profile"></os-driver-view>
             </div>
         </div>
 
@@ -89,11 +89,11 @@
 
         <div class="row panel panel-default">
             <div class="col-sm-12">
-                <oset-experience-list list="vm.driver.experience" can-edit="vm.expCanEdit" view-only="vm.expViewOnly"
+                <oset-experience-list list="vm.profile.experience" can-edit="vm.expCanEdit" view-only="vm.expViewOnly"
                                       max-ct="vm.maxExperienceCt"></oset-experience-list>
             </div>
         </div>
 
     </section>
-    <div class="text-muted text-center" ng-if="!vm.driver._id">No Driver Profile for User</div>
+    <div class="text-muted text-center" ng-if="!vm.profile._id">No Driver Profile for User</div>
 </section>

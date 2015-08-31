@@ -22,17 +22,17 @@
                     </a>
             </div>
 
-            <os-profile-header model="vm.user" driver="vm.driver" can-edit="vm.canEdit"></os-profile-header>
+            <os-profile-header model="vm.profile" can-edit="vm.canEdit"></os-profile-header>
 
             <div>
-                <os-driver-view data-ng-if="vm.driver && vm.driver.about" model="vm.driver"></os-driver-view>
+                <os-driver-view data-ng-if="vm.profile && vm.profile.about" model="vm.profile"></os-driver-view>
 
-                <div class="panel panel-oset" data-ng-if="!vm.canEdit && (!vm.driver || !vm.driver.about)">
-                    <p> {{vm.user.displayName}} has not yet created their driver profile, but check back again
+                <div class="panel panel-oset" data-ng-if="!vm.canEdit && (!vm.profile || !vm.profile.about)">
+                    <p> {{vm.profile.displayName}} has not yet created their driver profile, but check back again
                         soon!</p>
                 </div>
 
-                <div class="panel panel-oset" data-ng-show="vm.canEdit && (!vm.driver || !vm.driver.about)">
+                <div class="panel panel-oset" data-ng-show="vm.canEdit && (!vm.profile || !vm.profile.about)">
                     <div class="content-container-inner">
                         <h3 class="text-center no-margin">Time to Create Your Driver Profile</h3>
 
@@ -70,13 +70,13 @@
               </div>
             </div>
             <div class="check-wrapper">
-                <os-bg-check-summary user="vm.user"></os-bg-check-summary>
+                <os-bg-check-summary user="vm.profile"></os-bg-check-summary>
             </div>
 
             <div class="panel panel-oset">
                 <div class="map-wrapper">
                     <!--<img src="modules/drivers/img/map.png">-->
-                    <os-map-location addresses="vm.driver.user.addresses"></os-map-location>
+                    <os-map-location addresses="vm.profile.user.addresses"></os-map-location>
                 </div>
             </div>
             <div class="panel panel-oset">
@@ -210,13 +210,13 @@
                 </div>
             </div>
 
-            <div class="panel panel-oset" ng-if="vm.driver.user._id === vm.auth.user._id">
+            <div class="panel panel-oset" ng-if="vm.profile.user._id === vm.auth.user._id">
                 <div class="panel-heading text-center">
-                    <h3 class="no-mgn" ng-hide="vm.driver.reports['resume']">Add your Resume</h3>
+                    <h3 class="no-mgn" ng-hide="vm.profile.reports['resume']">Add your Resume</h3>
 
-                    <h3 class="no-mgn" ng-show="vm.driver.reports['resume']">Your Resume</h3>
+                    <h3 class="no-mgn" ng-show="vm.profile.reports['resume']">Your Resume</h3>
                 </div>
-                <div class="panel-body no-pad-top" ng-hide="!!vm.driver.reports['resume']">
+                <div class="panel-body no-pad-top" ng-hide="!!vm.profile.reports['resume']">
                     <p class="text-center">
 
                     <div class="report-badges uploader pull-right text-center">
@@ -231,10 +231,10 @@
 
 
                     <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
-                                      model="vm.driver.reports['resume']" model-id="vm.driver._id"
+                                      model="vm.profile.reports['resume']" model-id="vm.profile._id"
                                       allow-blank="true"></oset-file-upload>
                 </div>
-                <div class="panel-body no-pad-top" ng-show="!!vm.driver.reports['resume']">
+                <div class="panel-body no-pad-top" ng-show="!!vm.profile.reports['resume']">
                     <p class="text-center">
 
                     <div class="report-badges uploader pull-right text-center">
@@ -251,7 +251,7 @@
                         <div class="btn-group" role="group">
 
                             <oset-file-upload mode="resume" hide-icon="true" auto-upload="true"
-                                              model="vm.driver.reports['resume']" model-id="vm.driver._id"
+                                              model="vm.profile.reports['resume']" model-id="vm.profile._id"
                                               upload-btn-class="btn-link" upload-btn-text="update"
                                               allow-blank="true"></oset-file-upload>
                         </div>

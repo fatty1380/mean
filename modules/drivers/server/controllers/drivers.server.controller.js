@@ -62,8 +62,8 @@ function create(req, res) {
     driver.user = req.user;
     driver.licenses = req.body.licenses;
 
-    if (driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
-        driver.licenses[0].rating = null;
+    if (driver.license && driver.license.type !== 'Commercial') {
+        driver.license.rating = null;
     }
 
     // Schedule is disabled
@@ -119,8 +119,8 @@ function update(req, res) {
 
     driver = _.extend(driver, req.body);
 
-    if (driver.licenses[0] && driver.licenses[0].type !== 'Commercial') {
-        driver.licenses[0].rating = null;
+    if (driver.license && driver.license.type !== 'Commercial') {
+        driver.license.rating = null;
     }
 
     driver.save(function (err) {

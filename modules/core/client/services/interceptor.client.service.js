@@ -39,7 +39,6 @@
                 return config;
             },
             responseError: function (rejection) {
-                debugger;
                 // revoke client authentication if 401 is received
                 if (rejection != null && rejection.status === 401 && !!TokenFactory.get()) {
                     $location.path('/');

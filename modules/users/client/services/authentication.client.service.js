@@ -6,34 +6,23 @@
     
     angular
         .module('users')
-        .factory('TokenFactory', AuthTokenFactory);
+        .factory('Authentication', AuthenticationService)
+        .factory('TokenFactory', AuthTokenFactory)
+        .factory('LoginService', LoginService);
 
-    angular
-        .module('users')
-        .factory('Authentication', AuthenticationService);
+    AuthenticationService.$inject = ['TokenFactory', '$window', '$q'];
 
-    angular
-        .module('users')
-        .factory('LoginService', AuthService);
-
-    AuthenticationService.$inject = ['TokenFactory', '$window', '$injector', '$q'];
-
-    function AuthenticationService(TokenFactory, $window, $injector, $q) {
+    function AuthenticationService(TokenFactory, $window, $q) {
         var service = {
             user: $window.user,
             isLoggedIn: isLoggedIn,
             isAdmin: isAdmin
         };
-        
-        Object.defineProperty(service, 'getUser', {
-            get: getUser,
-            set: function (newValue) { $window.user = newValue; },
-            enumerable: true
-        });
 
         return service;
         
         // Service Method Implementations
+        
         function isLoggedIn() {
             return !_.isEmpty(service.user) && !!TokenFactory.isValid();
         }
@@ -42,44 +31,14 @@
             return !!service.user && service.user.isAdmin;
         }
         
-        var $http;
-        
-        function getUser() {
-            if (!_.isEmpty($window.user)) {
-                return $q.resolve($window.user);
-            }
-            
-            if (!TokenFactory.isEmpty() && TokenFactory.isValid()) {
-                $http = $http || $injector.get('$http');
-                return $http.get('api/users/me').then(
-                    function success(response) {
-                        console.log('Got `me` Response: ', response);
-                        service.user = response.data;
-                        return response;
-                    },
-                    function error(response) {
-                        console.error('Got error Response: ', response);
-                        $q.reject(response);
-                    });
-            } 
-            else {
-                return $q.reject();
-            }
-            
-            
-        }
-        
-        var $http;
-        
-        
-        // Server Interaction Methods
-        
-        
     }
     
-    AuthService.$inject = ['$http', 'TokenFactory'];
-    function AuthService($http, TokenFactory) {
+    LoginService.$inject = ['$http', 'TokenFactory', '$window', '$q', 'Authentication'];
+    function LoginService($http, TokenFactory, $window, $q, auth) {
+        getUser();
+        
         return {
+            getUser: getUser,
             login: login,
             logout: logout
         };
@@ -109,6 +68,31 @@
         function logout() {
             TokenFactory.clear();
             return ($window.user = null);
+        }
+        
+        function getUser() {
+            if (!_.isEmpty(auth.user)) {
+                return $q.when(auth.user);
+            }
+            
+            if (!TokenFactory.isEmpty() && TokenFactory.isValid()) {
+                // $http = $http || $injector.get('$http');
+                return $http.get('api/users/me').then(
+                    function success(response) {
+                        console.log('Got `me` Response: ', response);
+                        auth.user = response.data;
+                        return auth.user;
+                    },
+                    function error(err) {
+                        console.error('Got error Response: ', err);
+                        $q.reject(err);
+                    });
+            } 
+            else {
+                return $q.reject();
+            }
+            
+            
         }
     }
 

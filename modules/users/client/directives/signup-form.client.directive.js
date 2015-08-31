@@ -21,7 +21,7 @@
                         
                         if (!!vm.gateway) {
                             $log.debug('Setting Gateway User Object');
-                            vm.gateway.user = success;
+                            vm.gateway.profile = success;
                         }
                     });
             },

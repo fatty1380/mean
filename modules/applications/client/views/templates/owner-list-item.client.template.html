@@ -20,7 +20,7 @@
 
         <div class="row">
             <div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 center-block">
-                <img ng-src="{{vm.profile.profileImageURL}}" class="img-responsive">
+                <img ng-src="{{vm.applicant.profileImageURL}}" class="img-responsive">
             </div>
 
             <div class="col-lg-9 col-md-10 col-sm-9 col-xs-8">
@@ -50,7 +50,7 @@
 
                 <div ng-show="vm.visibleTab === 'documents'">
                     <pre ng-if="vm.debug">{{vm.application.user.driver.reports}}</pre>
-                    <oset-document-list driver="vm.application.user.driver" application="vm.application" display-mode="full"
+                    <oset-document-list model="vm.application.user.driver" application="vm.application" display-mode="full"
                                         doc-access="vm.application.canViewDocs"></oset-document-list>
                 </div>
 
