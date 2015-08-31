@@ -13,7 +13,6 @@
         vm.profileData = userService.profileData;
 
         vm.cancel = function () {
-            debugger;
             vm.closeModal(null);
         };
 
@@ -40,7 +39,7 @@
 
                     vm.cancel();
 
-                    $state.go('signup/login');
+                    $state.go('login');
                 })
         }
     }

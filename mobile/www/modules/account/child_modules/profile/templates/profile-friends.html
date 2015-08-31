@@ -14,19 +14,35 @@
         </div>
 
         <ion-scroll delegate-handle="main-content-scroll">
-            <ul class="list friends-list">
-                <li class="item item-divider">Your Friends</li>
+            <div class="title">Your Friends</div>
+            <ul class="list friends-list" ng-if="vm.friends.length">
                 <li class="item" ng-repeat="contact in contacts = (vm.friends | filter:vm.searchText)">
                     <i class="ico ico-avatar" ></i>
                     <div class="item-content">
                         {{contact.displayName}}{{contact.text}}
                     </div>
-                </li>
-                <li ng-if="!contacts.length" class="no-matches">
-                    <div class="item-content">NO MATCHES</div>
+                    <button class="button button-small list-button">Message</button>
                 </li>
             </ul>
-            <ul class="list friends-list" ng-if="!contacts.length">
+            <div ng-if="vm.friends.length && !contacts.length" class="no-matches">
+                <div class="item-content">NO MATCHES</div>
+            </div>
+
+            <div class="no-friends" ng-if="!vm.friends.length">
+                <p>Start with the 5 best drivers you know and help grow your personal network of professional truck drivers.</p>
+                <p>Select from your drevice contacts or manually by Mobile Phone or Email</p>
+
+                <button class="button button-block button-small" ng-click="vm.addFriends()">Choose from Contact List</button>
+
+                <div class="button-holder text-center" ng-if="!contacts.length">
+                    <a class="button button-clear manual-add" ng-click="vm.addFriends()">
+                        <i class="icon ion-ios-plus-outline"></i>
+                        Add by Mobile Phone or Email
+                    </a>
+                </div>
+            </div>
+
+            <ul class="list friends-list" ng-if="vm.users.length && !contacts.length">
                 <li class="item item-divider">Outset Users</li>
                 <li class="item" ng-repeat="user in users = (vm.users | filter:vm.searchText)">
                     <i class="ico ico-avatar" ></i>
@@ -40,12 +56,7 @@
                     <div class="item-content">NO MATCHES</div>
                 </li>
             </ul>
-            <div class="button-holder text-center" ng-if="!contacts.length">
-                <a class="button button-clear manual-add" ui-sref="account.profile.friends.manual">
-                    <i class="icon ion-ios-plus-outline"></i>
-                    Add by Mobile Phone or Email
-                </a>
-            </div>
+
         </ion-scroll>
     </ion-pane>
 

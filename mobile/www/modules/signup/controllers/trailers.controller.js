@@ -31,7 +31,8 @@
 
         vm.addTrailer = addTrailer;
         vm.continueToProfile = continueToProfile;
-        vm.trailers = getTrailers()
+        vm.continueToAddFriends = continueToAddFriends;
+        vm.trailers = getTrailers();
 
         function addTrailer() {
             $ionicPopup.show({
@@ -60,7 +61,11 @@
                     }
                 ]
             });
-        };
+        }
+
+        function continueToAddFriends() {
+            $state.go('signup-friends');
+        }
 
         function continueToProfile(isSave) {
             if(isSave){
