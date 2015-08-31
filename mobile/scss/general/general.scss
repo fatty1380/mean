@@ -8,6 +8,9 @@ body{
 .ionic-scroll,
 .ionic-scroll .scroll{height: 100%;}
 
+textarea{
+  -webkit-writing-mode: vertical-lr;
+}
 
 
 /** HEADER STYLES **/
@@ -51,12 +54,10 @@ body{
     height: auto;
   }
 
-  & ~ .pane.has-title{padding-top: 64px;}
-  & ~ .pane.has-footer{bottom: 44px;}
-
   .bar-header{
     padding: 0 5px;
     background: none;
+    border: 0;
     color: $secondary-text-action;
 
     .title{
@@ -80,6 +81,7 @@ body{
   .bar-subheader{
     top:50%;
     background-color: transparent;
+    border: 0;
     margin-top: 10px;
 
     h3{
@@ -92,6 +94,12 @@ body{
       color: #fff;
     }
   }
+}
+
+.pane.has-title{padding-top: 64px;}
+.pane.has-footer{
+  bottom: 44px;
+  height: auto;
 }
 
 /** Action Buttons **/
