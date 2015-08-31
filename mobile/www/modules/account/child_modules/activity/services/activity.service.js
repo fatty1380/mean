@@ -137,7 +137,7 @@
          * @desc Calculate distance between 2 points by road
          * @param {Object} start - start coordinates
          * @param {Object} finish - finish coordinates
-         * @returns {Promise} promise with distance in km
+         * @returns {Promise} promise with distance in miles
          */
         function getDistanceBetween(start, finish) {
             var service = new google.maps.DistanceMatrixService;
@@ -156,7 +156,8 @@
                     } else {
 
                         if (response.rows[0].elements[0].distance) {
-                            resolve(response.rows[0].elements[0].distance.value / 1000);
+                            resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(2) );//miles
+                            //resolve(response.rows[0].elements[0].distance.value / 1000);// km
                         } else {
                             resolve(null);
                         }
