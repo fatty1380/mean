@@ -3,11 +3,11 @@
 
     angular
         .module('account')
-        .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl);
+        .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl)
 
-    MessageChatDetailsCtrl.$inject = ['$scope', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading'];
+    MessageChatDetailsCtrl.$inject = ['$scope', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService'];
 
-    function MessageChatDetailsCtrl($scope, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading) {
+    function MessageChatDetailsCtrl($scope, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService) {
         var vm = this;
         vm.message = '';
         vm.messages = parameters.messages.reverse();
@@ -19,11 +19,23 @@
 
         scrollToBottom();
 
-       /* (function tick() {
-            $scope.data = Data.query(function(){
-                $timeout(tick, 1000);
-            });
-        })();*/
+        /**
+         *  updating messages in chat, emulating socket
+         * */
+        utilsService.startClock(function() {
+            messageService.getChatByUserId(parameters.recipient)
+                .then(function(response) {
+                    console.log(response.data.messages.length,' - ',vm.messages.length);
+                    var messages = response.data.messages;
+                    if(messages && messages.length > vm.messages.length) {
+                        vm.messages = messages.reverse();
+                        console.log('messages updated: ', vm.messages.length);
+                        scrollToBottom();
+                    }
+                },function() {
+                    console.log('messages update error ', vm.messages.length);
+                });
+        }, 5000);
 
         function scrollToBottom() {
             $timeout(function(){
@@ -40,6 +52,7 @@
         }
 
         function close() {
+            utilsService.stopClock();
             $scope.closeModal(null);
         };
 
@@ -50,9 +63,11 @@
                 text: vm.message,
                 recipient: parameters.recipient
                 //recipient: "55b27b1893e595310272f1d0"  //Sergey Rykov
-               // recipient: "55a8c832f58ef0900b7ca14c"  //test@test
+                //recipient: "55a8c832f58ef0900b7ca14c"  //test@test
                // recipient: "55a5317e4cec3d4a40d4bfa9"  //markov.flash
             };
+
+            console.log('createMessage ',messageObj);
 
             $ionicLoading.show({
                 template: 'sending message'

@@ -1,0 +1,41 @@
+(function () {
+    'use strict';
+
+    angular
+        .module('signup')
+        .controller('SignupFriendsCtrl', SignupFriendsCtrl);
+
+    SignupFriendsCtrl.$inject = ['$state', '$rootScope'];
+
+    function SignupFriendsCtrl($state, $rootScope) {
+        var vm = this;
+
+        vm.chooseContacts = chooseContacts;
+        vm.addManualy = addManualy;
+        vm.skipToProfile = skipToProfile;
+
+        $rootScope.$on('$stateChangeError', handleStateChangeError);
+
+        function handleStateChangeError (event, toState, toParams, fromState, fromParams, error) {
+            console.log('event -->', event);
+            console.log('toState -->', toState);
+            console.log('fromState -->', fromState);
+            console.log('error -->', error);
+
+            $state.go('signup-friends-contacts');
+        }
+
+        function chooseContacts () {
+            $state.go('signup-friends-contacts', {resolveContacts: true});
+        }
+
+        function skipToProfile() {
+            $state.go('account.profile');
+        }
+
+        function addManualy() {
+            $state.go('signup-friends-contacts');
+        }
+
+    }
+})();

@@ -18,7 +18,9 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.0",
     "phantomjs": "^1.9.17",
-    "shelljs": "^0.3.0"
+    "shelljs": "^0.3.0",
+    "xcode": "^0.8.0",
+    "xml2js": "^0.4.10"
   },
   "cordovaPlugins": [
     "cordova-plugin-device",

@@ -5,13 +5,19 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$scope', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService'];
+    ProfileCtrl.$inject = ['$scope', '$state', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService'];
 
-    function ProfileCtrl($scope, reviewService, experienceService, userService, profileModalsService, cameraService) {
+    function ProfileCtrl($scope, $state, reviewService, experienceService, userService, profileModalsService, cameraService) {
         var vm = this;
 
         vm.profileData = userService.getUserData();
         vm.camera = cameraService;
+
+        vm.showFriends = showFriends;
+
+        function showFriends() {
+            $state.go('account.profile.friends');
+        }
 
         vm.showEditModal = function (parameters) {
             profileModalsService

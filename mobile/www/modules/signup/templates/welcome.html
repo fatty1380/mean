@@ -1,0 +1,15 @@
+<ion-view class="welcome-screen">
+    <ion-pane class="pane has-footer">
+        <ion-scroll>
+            <div class="welcome">
+                <h3>Welcome</h3>
+                <p>{{vm.welcomeText}}</p>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button primary" ng-click="vm.continueToProfile();">Continue</button>
+        </div>
+    </ion-footer-bar>
+</ion-view>
