@@ -14,7 +14,7 @@
                         <span class="input-label">Title:</span>
                         <input type="text" ng-model="vm.activity.title" placeholder="Enter Activity Title">
                     </label>
-                    <label class="item item-input">
+                    <label class="item item-input" ng-if="!!vm.mapIsVisible">
                         <span class="input-label">Where:</span>
                         <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
                     </label>
@@ -27,7 +27,7 @@
                         <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='date';this.setAttribute('onfocus','');this.blur();this.focus();"   placeholder="Enter When You Stop" >
                     </label>
 
-                    <div id="map" data-tap-disabled="true"></div>
+                    <div id="map" data-tap-disabled="true" ng-if="!!vm.mapIsVisible"></div>
 
                     <label class="item item-input">
                         <span class="input-label">Distance Since Last Post:</span>

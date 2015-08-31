@@ -34,6 +34,7 @@
         }
         vm.saveItemToFeed = saveItemToFeed;
         vm.close = close;
+        vm.mapIsVisible = true;
 
         $scope.$watch('vm.where', function() {
             if(vm.where) {
@@ -49,9 +50,9 @@
             console.log('getCurrentPosition()');
 
             $ionicPlatform.ready(function() {
-                console.log('!!!!!!   $ionicPlatform');
                 $ionicLoading.show({
-                    template: 'geocoding position'
+                    template: 'geocoding position',
+                    duration: 5000
                 });
                 var posOptions = {timeout: 10000, enableHighAccuracy: false};
                 $cordovaGeolocation
@@ -69,9 +70,8 @@
                         console.log("*** error ***");
                         console.log(err);
                         $ionicLoading.hide();
-                        console.log($ionicLoading);
                         activityService.showPopup('Geocoder failed', err);
-                        initMap();
+                        vm.mapIsVisible = false;
                     });
             });
         }
@@ -95,6 +95,8 @@
                 map: map,
                 draggable: false
             });
+
+            vm.mapIsVisible = true;
 
             google.maps.event.addDomListener(map, 'click', function(e) {
                 var latlng = { lat: e.latLng.G, lng: e.latLng.K };
