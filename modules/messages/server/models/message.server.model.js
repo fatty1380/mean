@@ -103,6 +103,10 @@ var ChatSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'User'
     },
+    profileImageURL: {
+        type: String,
+        default: null
+    },
     lastMessage: {
         type: Schema.Types.Mixed,
         default: null

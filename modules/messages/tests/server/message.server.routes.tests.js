@@ -412,6 +412,8 @@ function verifyChatProperties(chat, recipient) {
 	chat.should.have.property('recipient');
 	chat.should.have.property('messages');
 	chat.should.have.property('lastMessage');
+	
+	chat.should.have.property('profileImageURL');
 
 	if (!!recipient) {
 
