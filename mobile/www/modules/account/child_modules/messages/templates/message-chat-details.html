@@ -7,7 +7,7 @@
             <h1 class="title">{{vm.recipientName}}</h1>
         </ion-header-bar>
     </div>
-    <ion-pane>
+    <ion-pane class="has-footer">
         <ion-scroll delegate-handle="mainScroll">
             <ul class="list message-list">
                 <li class="item" ng-repeat="message in vm.messages">
@@ -24,25 +24,15 @@
                         </div>
                     </div>
                 </li>
-
-                <div class="list item item-input-inset">
-                    <label class="item-input-wrapper">
-                        <textarea placeholder="message" ng-model="vm.message"></textarea>
-                    </label>
-                    <button class="button button-positive" ng-click="vm.createMessage()">
-                        Send
-                    </button>
-                </div>
-
             </ul>
         </ion-scroll>
-
     </ion-pane>
 
-    <!-- <ion-footer-bar>
-       <div class="button-bar action-buttons">
-            <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary" ng-click="vm.createMessage()">Create</button>
-        </div>
-    </ion-footer-bar>-->
+    <ion-footer-bar class="bar bar-footer">
+        <label class="item-input-wrapper">
+            <textarea placeholder="message" ng-model="vm.message"></textarea>
+        </label>
+        <button class="button button-positive" ng-click="vm.createMessage()">Send</button>
+    </ion-footer-bar>
+
 </ion-modal-view>
