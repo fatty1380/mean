@@ -72,7 +72,7 @@
         
         function getUser() {
             if (!_.isEmpty(auth.user)) {
-                return $q.resolve(auth.user);
+                return $q.when(auth.user);
             }
             
             if (!TokenFactory.isEmpty() && TokenFactory.isValid()) {
