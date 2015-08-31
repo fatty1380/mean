@@ -9,7 +9,7 @@
     <ion-pane class="pane content-pane button-padding-bottom"
               ng-class="{' button-padding-top': !!vm.newActivities}">
         <button class="button button-positive content-top-button"
-                ng-show="!!vm.newActivities">
+                ng-show="!!vm.newActivities" ng-click="vm.updateWithNewActivities()">
             {{vm.newActivities}} new Updates
             <i class="ico ico-checkmarkwhite"></i>
         </button>
@@ -24,6 +24,7 @@
                                 date:'mediumDate'}}
                             </div>
                             <div class="message"><strong>{{entry.user.displayName}}</strong> {{ entry.title }}</div>
+                            <div class="message body">{{ entry.message }}</div>
                         </div>
                         <span ng-if="!!entry.milesTraveled">
                             <i class="ico ico-milestraveledsmall"></i>
@@ -39,11 +40,11 @@
                     </div>
                 </ion-item>
                 <static-gmap
-                        ng-if="!!entry.location[0].coordinates"
+                        ng-if="!!entry.location.coordinates"
                         size="400x200"
                         sensor="true"
                         zoom="8"
-                        markers="{ color: 'red', label: '', coords: {{ entry.location[0].coordinates }} }">
+                        markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates }} }">
                 </static-gmap>
                 </div>
 

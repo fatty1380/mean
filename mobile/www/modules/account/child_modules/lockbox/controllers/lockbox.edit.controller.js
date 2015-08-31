@@ -9,6 +9,10 @@
 
     function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments) {
         var vm = this;
+        vm.cancel = cancel;
+        vm.getUnselectedItems = getUnselectedItems;
+        vm.rename = rename;
+        vm.showConfirm = showConfirm;
 
         init();
 
@@ -34,14 +38,14 @@
                     for(var i = 0; i < vm.documents.length; i++){
                         vm.documents[i].checked = false;
                     }
-                })
+                });
         }
 
-        vm.cancel = function () {
+        function cancel() {
             $scope.closeModal();
         };
 
-        $scope.$watch(function () {
+        $scope.$watch(function() {
             return vm.documents.filter(vm.getUnselectedItems).length;
         }, function (currentUnselectedLength) {
             var totalLength = vm.documents.length;
@@ -49,12 +53,12 @@
             vm.renameDisabled = (totalLength - currentUnselectedLength !== 1);
         });
 
-        vm.getUnselectedItems = function (object) {
+       function getUnselectedItems(object) {
             if(!object || !object.hasOwnProperty('checked')) return;
             return !object.checked;
         };
 
-        vm.rename = function (selectedIndex) {
+        function rename(selectedIndex) {
             vm.index = selectedIndex;
 
             if (vm.index === null || vm.index === undefined) {
@@ -96,12 +100,11 @@
                 if(res) {
                     vm.documents[vm.index].name = res;
                 }
-                
                 vm.index = null;
             });
         };
 
-        vm.showConfirm = function() {
+        function showConfirm() {
             vm.unselectedDocuments = vm.documents.filter(vm.getUnselectedItems);
             if(vm.unselectedDocuments.length !== vm.documents.length){
                 var confirmPopup = $ionicPopup.confirm({
@@ -118,5 +121,4 @@
             }
         };
     }
-
 })();

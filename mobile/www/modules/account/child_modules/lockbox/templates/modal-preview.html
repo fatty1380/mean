@@ -6,10 +6,7 @@
 
     <ion-content id="pdf-view-content">
         <ion-pane class="image-container" ng-if="vm.currentDoc.sku == 'mvr'">
-            <div style="background: url({{ image }}) 100% 100% no-repeat;
-                        margin: auto;
-                        background-size: cover;">
-            </div>
+            <div src="{{vm.trustSrc(image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
         </ion-pane>
         <div class="pdf-container" ng-if="vm.currentDoc.sku == 'bg'">
             <pdfviewer

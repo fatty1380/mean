@@ -19,8 +19,8 @@
         vm.close = close;
 
         function initMap() {
-            if (vm.entry.location[0].coordinates) {
-                var latLng = new google.maps.LatLng(vm.entry.location[0].coordinates[0], vm.entry.location[0].coordinates[1]);
+            if (activityService.hasCoordinates(vm.entry)) {
+                var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
                 map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 8,
                     center: latLng,
@@ -35,7 +35,8 @@
                     draggable: false
                 });
 
-                activityService.getPlaceName(latLng).then(function (result) {
+                activityService.getPlaceName(latLng).then(
+                    function (result) {
                     console.log(result);
                     var infoWindow = new google.maps.InfoWindow({
                         content: result.formatted_address

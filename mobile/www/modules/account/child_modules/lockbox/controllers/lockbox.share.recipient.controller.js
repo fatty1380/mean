@@ -11,19 +11,17 @@
         var vm = this;
 
         vm.lockboxDocuments = lockboxDocuments;
-
-        vm.share = function () {
-            console.log(' share() ');
-        }
+        vm.pickContact = pickContact;
+        vm.deleteContact = deleteContact;
+        vm.share = share;
 
         vm.selectedContacts = [];
-        //vm.selectedContacts = [{displayName:"Petya"},{displayName:"John"},{displayName:"Maria"},{displayName:"Nick"}];
 
-        vm.pickContact = function() {
+        function pickContact() {
             console.log("pickContact()  ");
             contactsService.pickContact().then(
                 function(contact) {
-                    function isUnique(element, index, array){
+                    function isUnique(element){
                         return element.displayName != contact.displayName;
                     }
                     if( vm.selectedContacts.every(isUnique)){
@@ -36,7 +34,7 @@
             );
         }
 
-        vm.deleteContact = function (contact) {
+        function deleteContact(contact) {
             for(var i=0; i<vm.selectedContacts.length; i++){
                 if(vm.selectedContacts[i].displayName === contact.displayName){
                     vm.selectedContacts.splice(i,1);
@@ -44,6 +42,9 @@
                 }
             }
         }
-    }
 
+        function share() {
+            console.log(' share() ');
+        }
+    }
 })();

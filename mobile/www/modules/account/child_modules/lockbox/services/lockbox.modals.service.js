@@ -32,7 +32,5 @@
             showLockboxEditModal: showLockboxEditModal,
             showLockboxShareModal: showLockboxShareModal
         };
-
     }
-
 })();

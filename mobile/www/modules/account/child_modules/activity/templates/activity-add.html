@@ -7,42 +7,45 @@
     </div>
     <ion-pane class="pane has-footer add-activity-pane">
         <ion-scroll>
+            <form name="mainForm" id="mainForm" class="" ng-init="vm.initForm(this)" ng-submit="vm.saveItemToFeed()"
+                  novalidate>
+                <div class="list">
+                    <label class="item item-input">
+                        <span class="input-label">Title:</span>
+                        <input type="text" ng-model="vm.activity.title" placeholder="Enter Activity Title">
+                    </label>
+                    <label class="item item-input" ng-if="!!vm.mapIsVisible">
+                        <span class="input-label">Where:</span>
+                        <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Message:</span>
+                        <input type="text" ng-model="vm.activity.message" placeholder="Enter Activity Message">
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">When:</span>
+                        <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='date';this.setAttribute('onfocus','');this.blur();this.focus();"   placeholder="Enter When You Stop" >
+                    </label>
 
-            <div class="list">
-                <label class="item item-input">
-                    <span class="input-label">Title:</span>
-                    <input type="text" ng-model="vm.activity.title" placeholder="Enter Activity Title">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Where:</span>
-                    <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Message:</span>
-                    <input type="text" ng-model="vm.activity.message" placeholder="Enter Activity Message">
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">When:</span>
-                    <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='date';this.setAttribute('onfocus','');this.blur();this.focus();"   placeholder="Enter When You Stop" >
-                </label>
+                    <div id="map" data-tap-disabled="true" ng-if="!!vm.mapIsVisible"></div>
 
-                <div id="map" data-tap-disabled="true"></div>
-
-                <label class="item item-input">
-                    <span class="input-label">Distance Since Last Post (km):</span>
-                    <input type="text" ng-model="vm.activity.props.slMiles" placeholder="Distance in km" readonly>
-                </label>
-                <label class="item item-input">
-                    <span class="input-label">Freight Hauled:</span>
-                    <input type="text" ng-model="vm.activity.props.freight" placeholder="" >
-                </label>
-            </div>
+                    <label class="item item-input">
+                        <span class="input-label">Distance Since Last Post:</span>
+                        <input type="text" ng-model="vm.activity.props.slMiles" readonly>
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Freight Hauled:</span>
+                        <input type="text" ng-model="vm.activity.props.freight" placeholder="" >
+                    </label>
+                </div>
+                <input style="position:absolute; left:9999px" type="submit" />
+            </form>
         </ion-scroll>
 
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-disabled="!vm.activity.title" ng-click="vm.saveFeed()">Save</button>
+            <button class="button primary" ng-disabled="!vm.activity.title" ng-click="vm.saveItemToFeed()">Save</button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>

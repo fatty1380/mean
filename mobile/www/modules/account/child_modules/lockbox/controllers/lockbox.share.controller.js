@@ -9,9 +9,9 @@
 
     function LockboxShareCtrl($scope, lockboxDocuments) {
         var vm = this;
+        vm.cancel = cancel;
 
         init();
-
 
         function init() {
             vm.documents = [];
@@ -20,7 +20,7 @@
             getDocs();
         }
 
-        function getDocs () {
+        function getDocs() {
             lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
@@ -29,13 +29,10 @@
                 });
         }
 
-        vm.cancel = function () {
+        function cancel() {
             var self = this;
-
             $scope.closeModal(null);
-
             self.shareStep = 1;
         }
     }
-
 })();
