@@ -694,11 +694,11 @@ $but-height: 90px;
         }
 
       }
-    }
 
-    &.user-friends-list .item .button{
-      color: #31999c;
-      background: #31999c;
+      &.user-friends-list .item .button{
+        color: #31999c;
+        border-color: #31999c;
+      }
     }
 
     .no-matches{

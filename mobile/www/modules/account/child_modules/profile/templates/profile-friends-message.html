@@ -1,0 +1,28 @@
+<ion-modal-view>
+    <div class="header compact-size">
+        <ion-header-bar align-title="center">
+            <ion-nav-bar>
+                <ion-nav-back-button>Back</ion-nav-back-button>
+            </ion-nav-bar>
+            <h1 class="title">Send message to a friend</h1>
+        </ion-header-bar>
+        <div class="bar bar-subheader">
+            <h3 class="title">Please enter message you want to send to your friend</h3>
+        </div>
+    </div>
+    <ion-pane class="pane has-footer content-pane">
+        <ion-scroll>
+            <div class="list share-form">
+                <label class="item item-input">
+                    <textarea placeholder="Enter message" ng-model="vm.message"></textarea>
+                </label>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary" ng-click="vm.close();">Cancel</button>
+            <button class="button primary" ng-click="vm.createMessage();">Send</button>
+        </div>
+    </ion-footer-bar>
+</ion-modal-view>

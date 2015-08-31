@@ -46,11 +46,21 @@
                 .show(templateUrl, controller, params)
         }
 
+        function showMessageFriendModal (parameters) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-friends-message.html';
+            controller = 'ProfileFriendMessageCtrl as vm';
+            params = parameters || {};
+
+            return modalService
+                .show(templateUrl, controller, params)
+        }
+
         return {
             showProfileEditModal: showProfileEditModal,
             showProfileShareModal: showProfileShareModal,
             showRequestReviewModal: showRequestReviewModal,
-            showAddFriendsModal: showAddFriendsModal
+            showAddFriendsModal: showAddFriendsModal,
+            showMessageFriendModal: showMessageFriendModal
         };
 
     }

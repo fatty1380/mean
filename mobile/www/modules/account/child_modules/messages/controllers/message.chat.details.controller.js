@@ -54,7 +54,7 @@
         function close() {
             utilsService.stopClock();
             $scope.closeModal(null);
-        };
+        }
 
         function createMessage() {
             if(!vm.message) return;

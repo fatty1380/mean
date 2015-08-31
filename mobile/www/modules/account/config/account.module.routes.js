@@ -35,10 +35,10 @@
                         controller: 'FriendsCtrl as vm',
                         resolve: {
                             friends: function (friendsService) {
-                                friendsService
+                                return friendsService
                                     .retrieveFriends()
                                     .then(function (response) {
-                                        friendsService.setFriends(response.data);
+                                       return response.data;
                                     });
                             }
                         }

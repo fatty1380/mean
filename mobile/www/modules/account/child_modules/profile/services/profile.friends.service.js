@@ -25,6 +25,7 @@
         }
 
         function setFriends(userFriends) {
+            console.warn(' userFriends --->>>', userFriends);
             friends = userFriends;
 
             return friends;
@@ -55,9 +56,9 @@
             return $http.get(settings.friends + id);
         }
 
-        function updateRequest(id) {
+        function updateRequest(id, data) {
             if(!id) return;
-            return $http.put(settings.requests + id);
+            return $http.put(settings.requests + id, data);
         }
 
         return {

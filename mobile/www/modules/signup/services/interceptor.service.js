@@ -38,8 +38,9 @@
             },
             responseError: function (rejection) {
                 // revoke client authentication if 401 is received
-                if (rejection != null && rejection.status === 401 && !!tokenService.get()) {
-                    $location.path('/');
+                if (rejection != null && rejection.status === 401) {
+                    console.warn('  eqweqe --->>>');
+                    return $location.path('/home');
                 }
                 return $q.reject(rejection);
             }

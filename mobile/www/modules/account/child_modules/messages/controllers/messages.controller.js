@@ -49,7 +49,7 @@
                 function (err) {
                     console.log(err);
                 });
-        };
+        }
 
         function getChats () {
             $ionicLoading.show({
