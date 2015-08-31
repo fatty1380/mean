@@ -10,6 +10,9 @@
                 $urlRouterProvider.otherwise('home');
             }
         ])
+        .config(['$ionicConfigProvider', function ($ionicConfigProvider) {
+            $ionicConfigProvider.tabs.position('bottom');
+        }])
 
         .run(function($ionicPlatform) {
             $ionicPlatform.ready(function() {
