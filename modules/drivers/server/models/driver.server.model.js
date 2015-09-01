@@ -63,10 +63,11 @@ var DriverSchema = UserSchema.extend({
         type: String,
         default: null
     },
-    
+
+    // Remember to use markModified('props')
     props: {
         type: Schema.Types.Mixed,
-        default: { 
+        default: {
             'started': null,
             truck: null,
             trailer: [],
@@ -139,7 +140,7 @@ DriverSchema.virtual('reports')
     });
 
 DriverSchema.pre('save', function (next) {
-    this.modified = Date.now();
+        this.modified = Date.now();
 
     next();
 });
