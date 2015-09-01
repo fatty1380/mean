@@ -2,6 +2,9 @@
 
     'use strict';
 
+    /**
+     * These routes are covered by tests in `user.search.server.routes.tests.js`
+     */
     module.exports = function(app) {
         // User Routes
         var users = require('../controllers/users.server.controller');
