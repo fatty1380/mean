@@ -21,7 +21,7 @@ var mongoose = require('mongoose'),
  */
 var app, agent, credentials, user, _test;
 
-describe.skip('User SEARCH tests', function () {
+describe('User SEARCH tests', function () {
     before(function () {
         // Get application
         app = express.init(mongoose).http;
@@ -96,6 +96,21 @@ describe.skip('User SEARCH tests', function () {
                 _.first(results, function (result) {
                     result.should.have.property('firstName', 'hugh');
                     result.should.have.property('lastName', 'burke');
+                });
+            });
+    });
+    it('should be able to find users by handle', function () {
+        var endpoint = '/api/profiles/search';
+
+        return agent.get(endpoint)
+            .expect(200)
+            .query({ text: 'silverdog' })
+            .then(function (response) {
+                var results = response.body;
+                results.should.have.property('length').and.be.greaterThan(0);
+
+                _.first(results, function (result) {
+                    result.should.have.property('handle', 'silverdog');
                 });
             });
     });
