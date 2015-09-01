@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['$scope', 'parameters', 'activityService'];
+    ActivityDetailsCtrl.$inject = ['parameters', 'activityService'];
 
-    function ActivityDetailsCtrl($scope, parameters, activityService) {
+    function ActivityDetailsCtrl(parameters, activityService) {
         angular.element(document).ready(initMap);
 
         var vm = this;
@@ -37,7 +37,6 @@
 
                 activityService.getPlaceName(latLng).then(
                     function (result) {
-                    console.log(result);
                     var infoWindow = new google.maps.InfoWindow({
                         content: result.formatted_address
                     });
@@ -50,7 +49,7 @@
         }
 
         function close() {
-            $scope.closeModal(vm.entry);
+            vm.closeModal(vm.entry);
         }
     }
 })();
