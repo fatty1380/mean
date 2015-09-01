@@ -124,9 +124,19 @@ Object.defineProperty(_log, 'logger', {
         if(_.isEmpty(_logger)) {
             var opts = {
                 name       : 'outset',
-                streams : [],
+                streams: [
+                    config.logs.stdout,
+                    {
+                        type: 'rotating-file',
+                        level: 'error',
+                        path: config.logs.access + 'outset-error.log',
+                        period: '1d',
+                        keep: 90
+                    }
+                ],
                 serializers: {
-                    req: reqSerializer //bunyan.stdSerializers.req
+                    req: reqSerializer, //bunyan.stdSerializers.req
+                    err: bunyan.stdSerializers.err
                 }};
 
             if(config.utils.isDevMode()) {

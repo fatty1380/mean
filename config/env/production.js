@@ -62,7 +62,14 @@ module.exports = {
         }
     },
     logs: {
-        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/'
+        access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/',
+        stdout: {
+            type: 'rotating-file',
+            level: 'debug',
+            path: (process.env.LOG_ACCESS_PATH || '/var/log/nodejs/') + 'outset-debug.log',
+            period: '6h',
+            keep: 28
+        }
     },
     services: {
         everifile: {
