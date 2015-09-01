@@ -64,6 +64,7 @@ var DriverSchema = UserSchema.extend({
         default: null
     },
 
+    // Remember to use markModified('props')
     props: {
         type: Schema.Types.Mixed,
         default: {

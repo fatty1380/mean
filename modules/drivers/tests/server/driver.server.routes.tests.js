@@ -59,7 +59,7 @@ describe('Driver CRUD tests', function () {
 						test: _test.title,
 						body: response.body,
 						err: response.error
-					}, 'Got Response from %s', endpoint);
+					}, 'Got Response from  GET %s', endpoint);
 
 					response.body.should.have.property('id', user.id);
 				});
@@ -72,8 +72,15 @@ describe('Driver CRUD tests', function () {
 				'class': 'A',
 				'endorsements': ['H'],
 				'state': 'CA'
+			},
+			'props': {
+				'started': 1989,
+				'truck': 'Kenworth',
+				'trailers': ['Box Trailer', 'Curtain Side']
 			}
 		};
+		
+		log.debug({ func: 'init', attrs: attrs, keys: _.keys(attrs) },'Test init for attributes');
 
 		_.each(_.keys(attrs), function (key) {
 			it('should be able to set the driver\'s ' + key, function () {
@@ -94,9 +101,10 @@ describe('Driver CRUD tests', function () {
 					.then(function (response) {
 						log.debug({
 							test: _test.title,
+							data: data,
 							body: response.body,
 							err: response.error
-						}, 'Got Response from %s', endpoint);
+						}, 'Got Response from PUT %s', endpoint);
 
 						response.body.should.have.property(key, attrs[key]);
 
@@ -142,11 +150,13 @@ describe('Driver CRUD tests', function () {
 
 					should.exist(me);
 					me.should.have.property('props');
-					
+
 					_.each(_.keys(data), function (key) {
 						var val = me.props[key];
 
-						_.isEqual(val, data[key]).should.be.true;
+						me.props.should.have.property(key, data[key]);
+
+						//_.isEqual(val, data[key]).should.be.true;
 					});
 				});
 		});
@@ -172,7 +182,7 @@ describe('Driver CRUD tests', function () {
 						test: _test.title,
 						body: response.body,
 						err: response.error
-					}, 'Got Response from %s', endpoint);
+					}, 'Got Response from PUT %s', endpoint);
 
 					_.each(_.keys(data), function (key) {
 						var val = response.body[key];
@@ -180,15 +190,36 @@ describe('Driver CRUD tests', function () {
 						_.isEqual(val, data[key]).should.be.true;
 					});
 
-					return agent.get('/api/users/me');
+					return agent.get(endpoint = '/api/users/me');
 
 				})
 				.then(function success(response) {
+					log.debug({
+						test: _test.title,
+						body: response.body,
+						err: response.error
+					}, 'Got Response from GET %s', endpoint);
+
 					var me = response.body;
 
 					should.exist(me);
 					me.should.have.property('props');
 					me.props.should.have.property('shenanigans', 'tomfoolery');
+
+					return agent.get(endpoint = '/api/users/me/props');
+
+				})
+				.then(function success(response) {
+					log.debug({
+						test: _test.title,
+						body: response.body,
+						err: response.error
+					}, 'Got Response from GET %s', endpoint);
+
+					var myProps = response.body;
+
+					should.exist(myProps);
+					myProps.should.have.property('shenanigans', 'tomfoolery');
 				});
 
 		});
