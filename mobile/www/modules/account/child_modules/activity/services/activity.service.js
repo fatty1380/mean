@@ -36,11 +36,11 @@
                         if (ids.length > 0) {
                             return resolve(populateActivityFeed(response.data.activity));
                         } else {
-                            reject("no feed");
+                            reject('no feed');
                         }
                     });
                 }, function (response) {
-                    showPopup("Error", response);
+                    showPopup('Error', response);
                     return response;
                 });
         }
@@ -123,12 +123,12 @@
         }
 
         function postFeed(data) {
-            $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
+            $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
             return $http.post(settings.feed, utilsService.serialize(data))
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
-                    showPopup("Error", response);
+                    showPopup('Error', response);
                     return response;
                 });
         }
@@ -152,7 +152,7 @@
                 }, function (response, status) {
                     if (status !== google.maps.DistanceMatrixStatus.OK) {
                         activityService.showPopup('Google maps failed', status);
-                        reject("error");
+                        reject('error');
                     } else {
 
                         if (response.rows[0].elements[0].distance) {
@@ -189,11 +189,11 @@
                             resolve(results[0]);
                         } else {
                             showPopup('Geocoder failed', 'No results found');
-                            reject("Geocoder failed");
+                            reject('Geocoder failed');
                         }
                     } else {
                         showPopup('Geocoder failed', status);
-                        reject("Geocoder failed");
+                        reject('Geocoder failed');
                     }
                 });
             });
@@ -213,8 +213,8 @@
 
         function showPopup(title, text) {
             $ionicPopup.alert({
-                title: title || "title",
-                template: text || "no message"
+                title: title || 'title',
+                template: text || 'no message'
             });
         };
         return service;

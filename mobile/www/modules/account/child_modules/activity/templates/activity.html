@@ -6,10 +6,8 @@
             <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
         </ion-header-bar>
     </div>
-    <ion-pane class="pane content-pane button-padding-bottom"
-              ng-class="{' button-padding-top': !!vm.newActivities}">
-        <button class="button button-positive content-top-button"
-                ng-show="!!vm.newActivities" ng-click="vm.updateWithNewActivities()">
+    <ion-pane class="pane content-pane button-padding-bottom" ng-class="{' button-padding-top': !!vm.newActivities}">
+        <button class="button button-positive content-top-button" ng-show="!!vm.newActivities" ng-click="vm.updateWithNewActivities()">
             {{vm.newActivities}} new Updates
             <i class="ico ico-checkmarkwhite"></i>
         </button>
@@ -20,10 +18,15 @@
                     <div class="ico ico-avatar"></div>
                     <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
                         <div class="top">
-                            <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created |
-                                date:'mediumDate'}}
+                            <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created | date:'mediumDate'}}
                             </div>
-                            <div class="message"><strong>{{entry.user.displayName}}</strong> {{ entry.title }}</div>
+                            <div class="message">
+                                <a class="user-link" ng-click="$event.stopPropagation()" 
+                                    ui-sref="account.profile.user({userId: entry.user.id})">
+                                    <strong>{{entry.user.displayName}}</strong>
+                                </a>
+                                {{ entry.title }}
+                            </div>
                             <div class="message body">{{ entry.message }}</div>
                         </div>
                         <span ng-if="!!entry.milesTraveled">
@@ -35,16 +38,17 @@
                             <strong class="title">{{entry.likes.length}} likes</strong>
                         </span>
                     </div>
-                    <div class="button-holder" style="padding: 0 0 10px;">
-                        <a class="button button-block button-small" ui-sref="company">Show Company Profile</a>
+                    <div class="button-holder" style="padding: 0 0 10px;" ng-if="!!entry.company">
+                        <a class="button button-block button-small" ui-sref="company({companyId: entry.company.id || entry.company})">
+                            Show Company Profile
+                        </a>
                     </div>
                 </ion-item>
-                <static-gmap
-                        ng-if="!!entry.location.coordinates"
+                <static-gmap ng-if="!!entry.location.coordinates"
                         size="400x200"
                         sensor="true"
                         zoom="8"
-                        markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates }} }">
+                        markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates || [] }} }">
                 </static-gmap>
                 </div>
 
@@ -52,8 +56,7 @@
         </ion-scroll>
 
         <button class="button content-button" ng-click='vm.showAddActivityModal()'>
-            <i class="ico ico-share"></i>
-            Add Activity
+            <i class="ico ico-share"></i> Add Activity
         </button>
     </ion-pane>
 </ion-view>

@@ -5,9 +5,9 @@
         .module('avatar')
         .controller('AvatarEditCtrl', AvatarEditCtrl);
 
-    AvatarEditCtrl.$inject = ['$scope', 'parameters', 'userService', '$ionicLoading', 'avatarService'];
+    AvatarEditCtrl.$inject = ['parameters', 'userService', '$ionicLoading', 'avatarService'];
 
-    function AvatarEditCtrl($scope, parameters, userService, $ionicLoading, avatarService) {
+    function AvatarEditCtrl(parameters, userService, $ionicLoading, avatarService) {
         var vm = this;
 
         vm.profileData = userService.profileData;
@@ -34,11 +34,19 @@
 
             var propsUpdatePromise = userService.updateUserProps(dataProps);
             if (propsUpdatePromise.then) {
-                propsUpdatePromise.then(function (profileDataProps) {
-                    $ionicLoading.hide();
+                propsUpdatePromise.then(function success(profileDataProps) {
                     vm.profileData.props = profileDataProps;
-                    $scope.closeModal(null);
-                });
+                    vm.profileData.props.changed = true;
+                    
+                    // Only return the 'Avatar' property, since this is the 
+                    // avatar edit controller.
+                    vm.closeModal(profileDataProps.avatar);
+                    $ionicLoading.hide();
+                })
+                    .catch(function reject(err) {
+                        console.error('Unable to save props', err);
+                        
+                    });
             }
         }
     }

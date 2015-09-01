@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "www/lib/ionic/js/ionic.bundle.js",
+      "www/lib/ionic/release/js/ionic.bundle.js",
       'node_modules/angular-mocks/angular-mocks.js',
 
       'www/modules/app/*.js',

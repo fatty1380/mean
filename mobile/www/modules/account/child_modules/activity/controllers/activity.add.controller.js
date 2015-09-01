@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading', '$cordovaGeolocation', '$ionicPlatform'];
+    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading', '$ionicPlatform'];
 
-    function ActivityAddCtrl($scope, activityService, $ionicLoading, $cordovaGeolocation, $ionicPlatform) {
+    function ActivityAddCtrl($scope, activityService, $ionicLoading, $ionicPlatform) {
         angular.element(document).ready(
             getCurrentPosition
         );
@@ -46,19 +46,16 @@
          * @desc geocode current position
          */
         function getCurrentPosition() {
-            console.log(' ');
-            console.log('getCurrentPosition()');
+            if(navigator.geolocation) {
+                $ionicPlatform.ready(function() {
+                    $ionicLoading.show({
+                        template: 'geocoding position',
+                        duration: 10000
+                    });
+                    var posOptions = {timeout: 10000, enableHighAccuracy: false};
 
-            $ionicPlatform.ready(function() {
-                $ionicLoading.show({
-                    template: 'geocoding position',
-                    duration: 5000
-                });
-                var posOptions = {timeout: 10000, enableHighAccuracy: false};
-                $cordovaGeolocation
-                    .getCurrentPosition(posOptions)
-                    .then(function (position) {
-                        console.log("*** sucess ***");
+                    var onSuccess = function(position) {
+                        console.log('*** sucess ***');
                         $ionicLoading.hide();
                         var lat = position.coords.latitude;
                         var long = position.coords.longitude;
@@ -66,21 +63,28 @@
                         vm.activity.location.coordinates = [lat, long];
                         console.log($ionicLoading);
                         initMap();
-                    }, function (err) {
-                        console.log("*** error ***");
-                        console.log(err);
+                    };
+                    function onError(error) {
+                        console.log('*** error ***');
                         $ionicLoading.hide();
-                        activityService.showPopup('Geocoder failed', err);
-                        vm.mapIsVisible = false;
-                    });
-            });
+                        //show only 1 error message
+                        if(vm.mapIsVisible) {
+                            $ionicLoading.show({
+                                template: 'Geocoder failed </br>'+error.message ,
+                                duration: 4000
+                            });
+                            vm.mapIsVisible = false;
+                        }
+                    }
+                    navigator.geolocation.getCurrentPosition(onSuccess, onError, posOptions);
+                });
+            }
         }
 
         /**
          * @desc initialize map
          */
         function initMap() {
-            console.log('initMap()');
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 8,
                 center: myCoordinates,
@@ -100,12 +104,10 @@
 
             google.maps.event.addDomListener(map, 'click', function(e) {
                 var latlng = { lat: e.latLng.G, lng: e.latLng.K };
-                console.log('click',latlng);
                 activityService.getPlaceName(latlng)
                     .then(function(result) {
                         vm.where = result;
                     });
-
                 clickCoordinates = latlng;
             });
 
@@ -124,9 +126,7 @@
          * @desc set marker position
          */
         function setMarkerPosition() {
-            console.log('setMarkerPosition()');
             var location = { lat:  vm.where.geometry.location.G, lng: vm.where.geometry.location.K };
-
             //click coordinates more accurate than geocoded by place coordinates
             var position = (clickCoordinates) ? clickCoordinates : location ;
             vm.activity.location.coordinates = [position.lat, position.lng];
@@ -142,9 +142,7 @@
          * @param {Object} position - current coordinates
          */
         function setDistanceFromLastPost(position) {
-            console.log('setDistanceFromLastPost()');
             var lastActivity = activityService.getLastFeedActivity();
-            console.log('lastCoord ',lastActivity);
             if(activityService.hasCoordinates(lastActivity)) {
                 var startPos = new google.maps.LatLng(lastActivity.location.coordinates[0], lastActivity.location.coordinates[1]);
                 var endPos =  new google.maps.LatLng(position.lat, position.lng);
@@ -156,11 +154,9 @@
         }
 
         function saveItemToFeed() {
-            console.log('vm.activity ',vm.activity.location.coordinates);
             $ionicLoading.show({
                 template: 'post feed'
             });
-            
             activityService.postActivityToFeed(vm.activity).then(
 				function(result) {
             	    $ionicLoading.hide();
@@ -170,7 +166,7 @@
         }
 
         function close(str) {
-            $scope.closeModal(str);
+            vm.closeModal(str);
         }
     }
 })();
