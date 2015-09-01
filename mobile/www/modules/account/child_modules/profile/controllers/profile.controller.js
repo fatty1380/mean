@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$scope', '$state', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$state', 'reviewService', 'experienceService', 'userService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($scope, $state, reviewService, experienceService, userService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
 
         if (!$state.is('account.profile')) {
@@ -177,13 +177,6 @@
             }
         };
 
-        //update avatar after change data
-        $scope.$watch(function () {
-            return userService.profileData;
-        },
-            function () {
-                vm.profileData = userService.profileData;
-            }, true);
 
     }
 

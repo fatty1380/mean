@@ -5,9 +5,9 @@
         .module('avatar')
         .controller('AvatarEditCtrl', AvatarEditCtrl);
 
-    AvatarEditCtrl.$inject = ['$scope', 'parameters', 'userService', '$ionicLoading', 'avatarService'];
+    AvatarEditCtrl.$inject = ['parameters', 'userService', '$ionicLoading', 'avatarService'];
 
-    function AvatarEditCtrl($scope, parameters, userService, $ionicLoading, avatarService) {
+    function AvatarEditCtrl(parameters, userService, $ionicLoading, avatarService) {
         var vm = this;
 
         vm.profileData = userService.profileData;
@@ -37,7 +37,7 @@
                 propsUpdatePromise.then(function (profileDataProps) {
                     $ionicLoading.hide();
                     vm.profileData.props = profileDataProps;
-                    $scope.closeModal(null);
+                    vm.closeModal(null);
                 });
             }
         }
