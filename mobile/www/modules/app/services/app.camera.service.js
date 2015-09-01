@@ -7,21 +7,21 @@
     cameraService.$inject = ['$q', '$ionicActionSheet', 'avatarModalsService'];
 
     function cameraService($q, $ionicActionSheet, avatarModalsService) {
-        
+
         var source = {
             CAMERA: 1,
             PHOTOS: 0
         }
-        
+
         return {
             showActionSheet: showActionSheet
         }
-        
-        
+
+
         function getPicture(type) {
 
             var q = $q.defer();
-            if(!navigator.camera){
+            if (!navigator.camera) {
                 console.log("******* Not a device. Using fake image *********");
                 q.resolve(null);
                 return q.promise;
@@ -35,7 +35,7 @@
                 encodingType: Camera.EncodingType.JPEG,
                 targetWidth: 500,
                 targetHeight: 1000,
-                correctOrientation:true,
+                correctOrientation: true,
                 popoverOptions: CameraPopoverOptions,
                 saveToPhotoAlbum: false
             };
