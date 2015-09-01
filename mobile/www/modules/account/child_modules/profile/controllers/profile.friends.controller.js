@@ -24,12 +24,6 @@
         vm.getRequests = getRequests;
         vm.addFriend = addFriend;
 
-        init();
-
-        function init() {
-            friendsService.setFriends(vm.friends);
-        }
-
         function showRequestsModal() {
             friendsService.
                 getRequestsList()

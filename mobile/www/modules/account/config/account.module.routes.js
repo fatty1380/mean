@@ -75,6 +75,7 @@
                                 return friendsService
                                     .retrieveFriends()
                                     .then(function (response) {
+                                        friendsService.setFriends(response.data);
                                        return response.data;
                                     });
                             }
