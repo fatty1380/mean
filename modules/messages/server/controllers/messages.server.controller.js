@@ -143,6 +143,8 @@ exports.messageList = function (req, res) {
 function findAndProcessMessages(req, res) {
 	var id = req.user._id;
 	
+	req.log.info({ func: 'findAndProcessMessages', id: id }, 'Start');
+	
 	//var id = !!req.profile && req.profile._id || req.user._id;
 	
 	var partyQuery = req.partyQuery || [{ 'sender': id }, { 'recipient': id }];
@@ -172,6 +174,8 @@ function findAndProcessMessages(req, res) {
 }
 
 exports.chatList = function (req, res) {
+	req.log.debug({ func: 'chatList' }, 'Start');
+	
 	findAndProcessMessages(req, res).then(
 		function (messages) {
 			req.messages = messages;
@@ -189,6 +193,8 @@ exports.chatList = function (req, res) {
 };
 
 exports.chatRead = function (req, res) {
+	req.log.debug({ func: 'chatRead' }, 'Start');
+	
 	findAndProcessMessages(req, res).then(
 		function (messages) {
 			req.messages = messages;
@@ -226,6 +232,7 @@ exports.chatRead = function (req, res) {
  * 
  */
 exports.chatListMessages = function (req, res, next) {
+	req.log.debug({ func: 'chatListMessages' }, 'Start');
 	
 	var id = req.user.id,
 		partyId = req.profile.id;
