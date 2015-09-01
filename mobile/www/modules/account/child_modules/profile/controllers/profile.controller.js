@@ -41,19 +41,8 @@
              */
             vm.showEditAvatar = function (parameters) {
                 vm.camera.showActionSheet()
-                    .then(function success(result) {
-                        debugger;
-                        
-                        // TODO: Look at `result` and update profileData
-                        
-                        // //update avatar after change data
-                        // $scope.$watch(function () {
-                        //     return userService.profileData;
-                        // },
-                        //     function () {
-                        //         vm.profileData = userService.profileData;
-                        //     }, true);
-
+                    .then(function success(newImageResponse) {
+                        vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
                     })
                     .catch(function reject(err) {
                         debugger;
