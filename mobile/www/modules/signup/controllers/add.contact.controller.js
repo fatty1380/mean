@@ -5,9 +5,9 @@
         .module('signup')
         .controller('AddContactFriendsCtrl', AddContactFriendsCtrl);
 
-    AddContactFriendsCtrl.$inject = ['$state', '$ionicPopup', '$ionicLoading', 'contactsService', '$filter'];
+    AddContactFriendsCtrl.$inject = ['$state', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl($state, $ionicPopup, $ionicLoading, contactsService, $filter) {
+    function AddContactFriendsCtrl($state, $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
         var vm = this;
 
         $ionicLoading.hide();
@@ -39,6 +39,25 @@
 
             confirm.then(function(res) {
                 if(res) {
+                    for(var i = 0; i < selectedContacts.length; i++){
+                        console.warn('selectedContacts --->>>', selectedContacts);
+                        var hasHashKey = selectedContacts[i].$$hashKey;
+                        if(hasHashKey){
+                            delete selectedContacts[i].$$hashKey;
+                        }
+
+                        var postData = {contactInfo: selectedContacts[i], text: 'hello there!'},
+                            serializedData = utilsService.serialize(postData);
+
+                            $http
+                                .post(settings.requests, serializedData)
+                                .then(function (resp) {
+                                    console.warn(' resp --->>>', resp);
+                                }, function (err) {
+                                    console.warn(' err --->>>', err);
+                                });
+
+                    }
                     $state.go('signup-welcome');
                 } else {
                     console.log('friends are not invited');

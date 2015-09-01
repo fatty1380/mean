@@ -10,25 +10,30 @@
         <ion-scroll>
             <ion-item class="item">
                 <div class="ico ico-avatar"></div>
-                <div class="activity-item" >
+                <div class="activity-item">
                     <div class="top">
                         <div class="time" ng-if="vm.entry.created"><i class="ico ico-timesmall"></i>{{vm.entry.created | date:'mediumDate'}}</div>
-                        <div class="message"><strong>{{vm.entry.user.displayName}}</strong> {{ vm.entry.title }}</div>
-                        <div class="message">{{ vm.entry.message }}</div>
-                    </div>
-                    <span ng-if="!!vm.entry.milesTraveled">
+                        <div class="message">
+                            <a class="user-link" ng-click="$event.stopPropagation()" 
+                                ui-sref="account.profile.user({userId: entry.user.id})">
+                                <strong>{{vm.entry.user.displayName}}</strong>
+                            </a>
+                            {{ vm.entry.title }}
+                            <div class="message">{{ vm.entry.message }}</div>
+                        </div>
+                        <span ng-if="!!vm.entry.milesTraveled">
                         <i class="ico ico-milestraveledsmall"></i>
                         <strong class="title">{{ vm.entry.milesTraveled}}</strong>
                     </span>
-                    <span ng-if="!!vm.entry.likes">
+                        <span ng-if="!!vm.entry.likes">
                         <i class="ico ico-likessmall"></i>
                         <strong class="title">{{ vm.entry.likes.length }} likes</strong>
                     </span>
-                </div>
+                    </div>
             </ion-item>
 
             <div class="map" ng-if="!!vm.entry.location.coordinates">
-                 <div id="map" data-tap-disabled="true"></div>
+                <div id="map" data-tap-disabled="true"></div>
             </div>
 
             <div class="item-detail">

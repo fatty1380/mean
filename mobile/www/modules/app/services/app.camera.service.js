@@ -6,11 +6,22 @@
 
     cameraService.$inject = ['$q', '$ionicActionSheet', 'avatarModalsService'];
 
-    function cameraService( $q, $ionicActionSheet, avatarModalsService) {
+    function cameraService($q, $ionicActionSheet, avatarModalsService) {
+
+        var source = {
+            CAMERA: 1,
+            PHOTOS: 0
+        }
+
+        return {
+            showActionSheet: showActionSheet
+        }
+
+
         function getPicture(type) {
 
             var q = $q.defer();
-            if(!navigator.camera){
+            if (!navigator.camera) {
                 console.log("******* Not a device. Using fake image *********");
                 q.resolve(null);
                 return q.promise;
@@ -24,20 +35,27 @@
                 encodingType: Camera.EncodingType.JPEG,
                 targetWidth: 500,
                 targetHeight: 1000,
-                correctOrientation:true,
+                correctOrientation: true,
                 popoverOptions: CameraPopoverOptions,
                 saveToPhotoAlbum: false
             };
 
-            navigator.camera.getPicture(function(result) {
-                q.resolve(result);
-            }, function(err) {
-                q.reject(err);
-            }, options);
+            navigator.camera.getPicture(options)
+                .then(function success(getPictureResult) {
+                    q.resolve(getPictureResult);
+                })
+                .catch(function reject(getPictureError) {
+                    console.error('camera.getPicture] Error', getPictureError);
+                    q.reject(getPictureError);
+                });
+
             return q.promise;
         }
 
         function showActionSheet() {
+            
+            var deferred = $q.defer();
+            
             $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take a photo from camera' },
@@ -45,33 +63,37 @@
                 ],
                 titleText: 'Choose your photo',
                 cancelText: 'Cancel',
-                cancel: function() {
+                cancel: function () {
+                    deferred.reject({ error: false, status: 'cancelled', message: 'Action Sheet Cancelled' });
                 },
-                buttonClicked: function(index) {
-                    switch (index){
+                buttonClicked: function (index) {
+                    switch (index) {
                         case 0:
                             console.log("Take a photo");
-                            takePhoto(1);
+                            deferred.resolve(takePhoto(source.CAMERA));
                             break;
                         case 1:
                             console.log("Take photo from album");
-                            takePhoto(0);
+                            deferred.resolve(takePhoto(source.PHOTOS));
                             break;
                     }
                     return true;
                 }
             });
+            
+            return deferred.promise;
         }
 
         function takePhoto(type) {
-            getPicture(type)
-            .then(function(imageData) {
-                 avatarModalsService.showEditModal(imageData);
-            });
-        }
+            return getPicture(type)
+                .then(function success(imageData) {
+                    return avatarModalsService.showEditModal(imageData);
+                })
+                .then(function avatarModalSuccess(response) {
+                    debugger;
 
-        return {
-            showActionSheet: showActionSheet
+                    return response;
+                });;
         }
     }
 })();

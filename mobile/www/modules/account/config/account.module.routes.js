@@ -14,7 +14,13 @@
             .state('account', {
                 url: '/account',
                 abstract: true,
-                templateUrl: 'modules/account/templates/account.html'
+                templateUrl: 'modules/account/templates/account.html',
+                resolve: {
+                    user: function resolveLoggedInUser(userService) {
+                        return userService.getUserData();
+                    },
+                    profile: function () { return null }
+                }
             })
 
             .state('account.profile', {
@@ -23,6 +29,37 @@
                     'profile': {
                         templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
                         controller: 'ProfileCtrl as vm'
+                    }
+                }
+            })
+
+            .state('account.profile.user', {
+                url: '/:userId',
+                views: {
+                    'profile@account': {
+                        templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
+                        controller: 'ProfileCtrl as vm'
+                    }
+                },
+                resolve: {
+                    profile: function resolveUserProfile($stateParams, registerService, userService) {
+                        
+                        if (!!$stateParams.userId) {
+                            return registerService.getProfilesID($stateParams.userId)
+                                .then(function success(response) {
+                                    if (response.success) {
+                                        return response.message.data;
+                                    }
+                                    debugger;
+                                    return null;
+                                })
+                                .catch(function reject(error) {
+                                    debugger;
+                                    return null;
+                                });
+                        }
+
+                        return userService.getUserData();
                     }
                 }
             })
@@ -85,6 +122,6 @@
                     }
                 }
             })
-        }
+    }
 
 })();

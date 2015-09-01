@@ -1,56 +1,121 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$scope', '$state', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService'];
+    ProfileCtrl.$inject = ['$state', 'reviewService', 'experienceService', 'userService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($scope, $state, reviewService, experienceService, userService, profileModalsService, cameraService) {
+    function ProfileCtrl($state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
 
-        vm.profileData = userService.getUserData();
+        if (!$state.is('account.profile')) {
+            console.log('Loading $state: `%s`', $state.current.name);
+        }
+
+        vm.profileData = profile || user;
+        vm.user = user;
         vm.camera = cameraService;
 
         vm.showFriends = showFriends;
 
         function showFriends() {
+            console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends');
         }
+        
+        if (!$state.is('account.profile')) {
+            if (vm.profileData.isFriend || vm.profileData.friends.indexOf(user.id) !== -1) {
+                vm.friendStatus = 1;
+            }
+            else if (vm.profileData.id === vm.user.id) {
+                vm.friendStatus = -1;
+            }
+            else {
+                vm.friendStatus = 0;
+            }
+            
+            vm.doFriendAction = function doFriendAction(parameters) {
+                switch (vm.friendStatus) {
+                    case 0: alert('click ok to add ' + vm.profileData.displayName + ' to your convoy');
+                        break;
+                    case 1: alert('The convoy is strong with ' + vm.profileData.displayName);
+                        break;
+                    case -1: alert('this is you');
+                        break;
+                }
+            }
+        }
 
-        vm.showEditModal = function (parameters) {
-            profileModalsService
-                .showProfileEditModal(parameters)
-                .then(function (result) {
-                    console.log(result);
-                },
-                function (err) {
-                    console.log(err);
-                })
-        };
+        if ($state.is('account.profile')) { // TODO: Restore this || vm.profileData.id === vm.user.id) {
 
-        vm.showShareModal = function (parameters) {
-            profileModalsService
-                .showProfileShareModal(parameters)
-                .then(function (result) {
-                    console.log(result);
-                },
-                function (err) {
-                    console.log(err);
-                });
-        };
+            /**
+             * showUserSettings
+             * ----------------
+             * Placeholder for showing app settings
+             */
+            vm.showUserSettings = null;
 
-        vm.showRequestReviewModal = function (parameters) {
-            profileModalsService
-                .showRequestReviewModal(parameters)
-                .then(function (result) {
-                    console.log(result);
-                },
-                function (err) {
-                    console.log(err);
-                })
-        };
+            /**
+             * showEditAvatar
+             * --------------
+             * Opens an action sheet which leads to either taking
+             * a photo, or selecting from device photos.
+             */
+            vm.showEditAvatar = function (parameters) {
+                vm.camera.showActionSheet()
+                    .then(function success(newImageResponse) {
+                        vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
+                    })
+                    .catch(function reject(err) {
+                        debugger;
+                    });
+            }
+
+            /**
+             * showEditModal
+             * -------------
+             * Shows the "Edit User" modal screen to allow 
+             * editing of user's name, properties, etc
+             */
+            vm.showEditModal = function (parameters) {
+                profileModalsService
+                    .showProfileEditModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                    },
+                        function (err) {
+                            console.log(err);
+                        })
+            };
+
+            vm.showShareModal = function (parameters) {
+                profileModalsService
+                    .showProfileShareModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                    },
+                        function (err) {
+                            console.log(err);
+                        })
+            };
+
+            vm.showRequestReviewModal = function (parameters) {
+                profileModalsService
+                    .showRequestReviewModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                    },
+                        function (err) {
+                            console.log(err);
+                        })
+            };
+        }
+        
+        // This functionality has been moved to the "resolve"
+        // attribute for 'userProfile' on the account.profile
+        // and account.profile.user states.
 
         // THIS IS NEEDED ONLY FOR DEVELOPMENT
         // Function below is needed only for cases,
@@ -59,15 +124,15 @@
         // IN THE REGULAR APP WORKFLOW userService will already contain
         // all needed profile data.
 
-        (function () {
-            var userPromise = userService.getUserData();
-            if (userPromise.then) {
-                userPromise.then(function (data) {
-                    console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
-                    vm.profileData = data;
-                })
-            }
-        })();
+        // (function () {
+        //     var userPromise = userService.getUserData();
+        //     if (userPromise.then) {
+        //         userPromise.then(function (data) {
+        //             console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
+        //             vm.profileData = data;
+        //         })
+        //     }
+        // })();
 
         vm.reviews = [];
         vm.experience = [];
@@ -125,13 +190,6 @@
             }
         };
 
-        //update avatar after change data
-        $scope.$watch(function () {
-            return userService.profileData;
-        },
-        function () {
-            vm.profileData = userService.profileData;
-        }, true);
 
     }
 
