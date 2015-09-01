@@ -10,6 +10,12 @@
             <button class="button button-clear" ng-if="!!vm.showUserSettings" ng-click="vm.showUserSettings()" >
                 <i class="ico ico-settingsicon ico-text-top"></i>
             </button>
+            <button class="button button-clear" ng-if="!!vm.doFriendAction" 
+                ng-click="vm.doFriendAction()" >
+                <span ng-if="vm.friendStatus === -1"><i class="ion-plus"></i> Add</span>
+                <span ng-if="vm.friendStatus === 0">in convoy</span>
+                <span ng-if="vm.friendStatus === -1"></span>
+            </button>
         </ion-header-bar>
         <div class="profile-visual">
             <div class="photo" ng-click="vm.showEditAvatar()">

@@ -21,10 +21,34 @@
         vm.showFriends = showFriends;
 
         function showFriends() {
+            console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends');
         }
+        
+        if (!$state.is('account.profile')) {
+            if (vm.profileData.isFriend || vm.profileData.friends.indexOf(user.id) !== -1) {
+                vm.friendStatus = 1;
+            }
+            else if (vm.profileData.id === vm.user.id) {
+                vm.friendStatus = -1;
+            }
+            else {
+                vm.friendStatus = 0;
+            }
+            
+            vm.doFriendAction = function doFriendAction(parameters) {
+                switch (vm.friendStatus) {
+                    case 0: alert('click ok to add ' + vm.profileData.displayName + ' to your convoy');
+                        break;
+                    case 1: alert('The convoy is strong with ' + vm.profileData.displayName);
+                        break;
+                    case -1: alert('this is you');
+                        break;
+                }
+            }
+        }
 
-        if ($state.is('account.profile') || vm.profileData.id === vm.user.id) {
+        if ($state.is('account.profile')) { // TODO: Restore this || vm.profileData.id === vm.user.id) {
 
             /**
              * showUserSettings
