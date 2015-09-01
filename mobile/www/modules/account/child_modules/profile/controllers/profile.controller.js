@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -19,15 +19,25 @@
             $state.go('account.profile.friends');
         }
 
+        vm.showEditAvatar = function (parameters) {
+            vm.camera.showActionSheet()
+                .then(function success(result) {
+                    debugger;
+                })
+                .catch(function reject(err) {
+                    debugger;
+                });
+        }
+
         vm.showEditModal = function (parameters) {
             profileModalsService
                 .showProfileEditModal(parameters)
                 .then(function (result) {
                     console.log(result);
                 },
-                function (err) {
-                    console.log(err);
-                })
+                    function (err) {
+                        console.log(err);
+                    })
         };
 
         vm.showShareModal = function (parameters) {
@@ -36,9 +46,9 @@
                 .then(function (result) {
                     console.log(result);
                 },
-                function (err) {
-                    console.log(err);
-                })
+                    function (err) {
+                        console.log(err);
+                    })
         };
 
         vm.showRequestReviewModal = function (parameters) {
@@ -47,9 +57,9 @@
                 .then(function (result) {
                     console.log(result);
                 },
-                function (err) {
-                    console.log(err);
-                })
+                    function (err) {
+                        console.log(err);
+                    })
         };
 
         // THIS IS NEEDED ONLY FOR DEVELOPMENT
@@ -129,9 +139,9 @@
         $scope.$watch(function () {
             return userService.profileData;
         },
-        function () {
-            vm.profileData = userService.profileData;
-        }, true);
+            function () {
+                vm.profileData = userService.profileData;
+            }, true);
 
     }
 

@@ -6,7 +6,18 @@
 
     cameraService.$inject = ['$q', '$ionicActionSheet', 'avatarModalsService'];
 
-    function cameraService( $q, $ionicActionSheet, avatarModalsService) {
+    function cameraService($q, $ionicActionSheet, avatarModalsService) {
+        
+        var source = {
+            CAMERA: 1,
+            PHOTOS: 0
+        }
+        
+        return {
+            showActionSheet: showActionSheet
+        }
+        
+        
         function getPicture(type) {
 
             var q = $q.defer();
@@ -51,11 +62,11 @@
                     switch (index){
                         case 0:
                             console.log("Take a photo");
-                            takePhoto(1);
+                            takePhoto(source.CAMERA);
                             break;
                         case 1:
                             console.log("Take photo from album");
-                            takePhoto(0);
+                            takePhoto(source.PHOTOS);
                             break;
                     }
                     return true;
@@ -68,10 +79,6 @@
             .then(function(imageData) {
                  avatarModalsService.showEditModal(imageData);
             });
-        }
-
-        return {
-            showActionSheet: showActionSheet
         }
     }
 })();
