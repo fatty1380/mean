@@ -48,16 +48,17 @@
         function getCurrentPosition() {
             console.log(' ');
             console.log('getCurrentPosition()');
+            console.log(navigator.geolocation);
 
-            $ionicPlatform.ready(function() {
-                $ionicLoading.show({
-                    template: 'geocoding position',
-                    duration: 5000
-                });
-                var posOptions = {timeout: 10000, enableHighAccuracy: false};
-                $cordovaGeolocation
-                    .getCurrentPosition(posOptions)
-                    .then(function (position) {
+            if(navigator.geolocation) {
+                $ionicPlatform.ready(function() {
+                    $ionicLoading.show({
+                        template: 'geocoding position',
+                        duration: 10000
+                    });
+                    var posOptions = {timeout: 10000, enableHighAccuracy: false};
+
+                    var onSuccess = function(position) {
                         console.log("*** sucess ***");
                         $ionicLoading.hide();
                         var lat = position.coords.latitude;
@@ -66,14 +67,24 @@
                         vm.activity.location.coordinates = [lat, long];
                         console.log($ionicLoading);
                         initMap();
-                    }, function (err) {
+                    };
+                    function onError(error) {
                         console.log("*** error ***");
-                        console.log(err);
+                        console.log(error);
                         $ionicLoading.hide();
-                        activityService.showPopup('Geocoder failed', err);
-                        vm.mapIsVisible = false;
-                    });
-            });
+
+                        //show only 1 error message
+                        if(vm.mapIsVisible) {
+                            $ionicLoading.show({
+                                template: 'Geocoder failed </br>'+error.message ,
+                                duration: 4000
+                            });
+                            vm.mapIsVisible = false;
+                        }
+                    }
+                    navigator.geolocation.getCurrentPosition(onSuccess, onError, posOptions);
+                });
+            }
         }
 
         /**
