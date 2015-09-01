@@ -35,7 +35,7 @@
                 },function() {
                     console.log('messages update error ', vm.messages.length);
                 });
-        }, 5000);
+        }, 15000);
 
         function scrollToBottom() {
             $timeout(function(){
