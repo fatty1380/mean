@@ -5,9 +5,9 @@
         .module(AppConfig.appModuleName)
         .service('userService', userService);
 
-    userService.$inject = ['registerService'];
+    userService.$inject = ['registerService', '$q'];
 
-    function userService(registerService) {
+    function userService(registerService, $q) {
         var vm = this;
 
         vm.profileData = {};
@@ -28,7 +28,7 @@
                         return vm.profileData;
                     });
             }
-            return vm.profileData;
+            return $q.when(vm.profileData);
         }
 
         vm.updateUserData = function (dataProps) {
@@ -37,7 +37,7 @@
                     vm.profileData = data.message.data;
                     return vm.profileData;
                 });
-            return vm.profileData;
+            //return vm.profileData;
         };
 
         /**

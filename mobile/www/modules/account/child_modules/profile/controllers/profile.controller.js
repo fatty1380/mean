@@ -5,12 +5,17 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$scope', '$state', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService'];
+    ProfileCtrl.$inject = ['$scope', '$state', 'reviewService', 'experienceService', 'userService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($scope, $state, reviewService, experienceService, userService, profileModalsService, cameraService) {
+    function ProfileCtrl($scope, $state, reviewService, experienceService, userService, profileModalsService, cameraService, user, profile) {
         var vm = this;
 
-        vm.profileData = userService.getUserData();
+        if (!$state.is('account.profile')) {
+            console.log('Loading $state: `%s`', $state.current.name);
+        }
+
+        vm.profileData = profile || user;
+        vm.user = user;
         vm.camera = cameraService;
 
         vm.showFriends = showFriends;
@@ -19,48 +24,85 @@
             $state.go('account.profile.friends');
         }
 
-        vm.showEditAvatar = function (parameters) {
-            vm.camera.showActionSheet()
-                .then(function success(result) {
-                    debugger;
-                })
-                .catch(function reject(err) {
-                    debugger;
-                });
+        if ($state.is('account.profile') || vm.profileData.id === vm.user.id) {
+
+            /**
+             * showUserSettings
+             * ----------------
+             * Placeholder for showing app settings
+             */
+            vm.showUserSettings = null;
+
+            /**
+             * showEditAvatar
+             * --------------
+             * Opens an action sheet which leads to either taking
+             * a photo, or selecting from device photos.
+             */
+            vm.showEditAvatar = function (parameters) {
+                vm.camera.showActionSheet()
+                    .then(function success(result) {
+                        debugger;
+                        
+                        // TODO: Look at `result` and update profileData
+                        
+                        // //update avatar after change data
+                        // $scope.$watch(function () {
+                        //     return userService.profileData;
+                        // },
+                        //     function () {
+                        //         vm.profileData = userService.profileData;
+                        //     }, true);
+
+                    })
+                    .catch(function reject(err) {
+                        debugger;
+                    });
+            }
+
+            /**
+             * showEditModal
+             * -------------
+             * Shows the "Edit User" modal screen to allow 
+             * editing of user's name, properties, etc
+             */
+            vm.showEditModal = function (parameters) {
+                profileModalsService
+                    .showProfileEditModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                    },
+                        function (err) {
+                            console.log(err);
+                        })
+            };
+
+            vm.showShareModal = function (parameters) {
+                profileModalsService
+                    .showProfileShareModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                    },
+                        function (err) {
+                            console.log(err);
+                        })
+            };
+
+            vm.showRequestReviewModal = function (parameters) {
+                profileModalsService
+                    .showRequestReviewModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                    },
+                        function (err) {
+                            console.log(err);
+                        })
+            };
         }
-
-        vm.showEditModal = function (parameters) {
-            profileModalsService
-                .showProfileEditModal(parameters)
-                .then(function (result) {
-                    console.log(result);
-                },
-                    function (err) {
-                        console.log(err);
-                    })
-        };
-
-        vm.showShareModal = function (parameters) {
-            profileModalsService
-                .showProfileShareModal(parameters)
-                .then(function (result) {
-                    console.log(result);
-                },
-                    function (err) {
-                        console.log(err);
-                    })
-        };
-
-        vm.showRequestReviewModal = function (parameters) {
-            profileModalsService
-                .showRequestReviewModal(parameters)
-                .then(function (result) {
-                    console.log(result);
-                },
-                    function (err) {
-                        console.log(err);
-                    })
-        };
+        
+        // This functionality has been moved to the "resolve"
+        // attribute for 'userProfile' on the account.profile
+        // and account.profile.user states.
 
         // THIS IS NEEDED ONLY FOR DEVELOPMENT
         // Function below is needed only for cases,
@@ -69,15 +111,15 @@
         // IN THE REGULAR APP WORKFLOW userService will already contain
         // all needed profile data.
 
-        (function () {
-            var userPromise = userService.getUserData();
-            if (userPromise.then) {
-                userPromise.then(function (data) {
-                    console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
-                    vm.profileData = data;
-                })
-            }
-        })();
+        // (function () {
+        //     var userPromise = userService.getUserData();
+        //     if (userPromise.then) {
+        //         userPromise.then(function (data) {
+        //             console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
+        //             vm.profileData = data;
+        //         })
+        //     }
+        // })();
 
         vm.reviews = [];
         vm.experience = [];

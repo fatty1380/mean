@@ -1,14 +1,18 @@
 <ion-view class="profile-screen">
     <div class="header mid-size">
         <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="vm.showEditModal()">Edit</button>
+            <button class="button button-clear" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">Edit</button>
+            <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile">
+                <i class="ion-ios-arrow-back"></i>
+                <span class="ico ico-avatar ico-middle"></span>
+            </button>
             <h1 class="title" ng-bind="vm.profileData.displayName">Profile</h1>
-            <button class="button button-clear">
+            <button class="button button-clear" ng-if="!!vm.showUserSettings" ng-click="vm.showUserSettings()" >
                 <i class="ico ico-settingsicon ico-text-top"></i>
             </button>
         </ion-header-bar>
         <div class="profile-visual">
-            <div class="photo" ng-click="vm.camera.showActionSheet()">
+            <div class="photo" ng-click="vm.showEditAvatar">
                 <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
             </div>
             <div class="contacts-amount" ng-click="vm.showFriends();">
@@ -35,7 +39,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
+                <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
             <ion-tab title="PROFILE" ui-sref="account.profile">
                 <ion-scroll class="profile-list">
@@ -80,7 +84,7 @@
                         </div>
                     </div>
                 </ion-scroll>
-                <button class="button content-button" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
             <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience">
                 <ion-scroll class="experience-list">
@@ -92,7 +96,7 @@
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
         </ion-tabs>
     </ion-pane>
