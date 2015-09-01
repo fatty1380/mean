@@ -13,6 +13,7 @@
             for(i = 0; i < allContacts.length; i++){
                 contact = allContacts[i];
                 if (contact.checked){
+                    delete contact.checked;
                     contacts.push(contact);
                 }
             }

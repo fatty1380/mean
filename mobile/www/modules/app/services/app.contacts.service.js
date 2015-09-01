@@ -30,6 +30,7 @@
 
             return find().then(function (data) {
                 contacts = filter(data);
+                console.warn('filtered contacts --->>>', contacts);
             });
         }
 
