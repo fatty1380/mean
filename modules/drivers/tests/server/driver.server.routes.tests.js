@@ -111,7 +111,7 @@ describe('Driver CRUD tests', function () {
 			var data = {
 				'started': 1989,
 				'truck': 'Kenworth',
-				'trailers': ['Box Trailer', 'Curatin Side']
+				'trailers': ['Box Trailer', 'Curtain Side']
 			};
 
 			log.debug({
@@ -131,13 +131,26 @@ describe('Driver CRUD tests', function () {
 
 					_.each(_.keys(data), function (key) {
 						var val = response.body[key];
-						
+
 						_.isEqual(val, data[key]).should.be.true;
 					});
+					return agent.get('/api/users/me');
 
+				})
+				.then(function success(response) {
+					var me = response.body;
+
+					should.exist(me);
+					me.should.have.property('props');
+					
+					_.each(_.keys(data), function (key) {
+						var val = me.props[key];
+
+						_.isEqual(val, data[key]).should.be.true;
+					});
 				});
 		});
-		
+
 		it('should be able to set an arbitrary property in props', function () {
 			_test = this.test;
 			var endpoint = '/api/users/me/props';
@@ -167,11 +180,20 @@ describe('Driver CRUD tests', function () {
 						_.isEqual(val, data[key]).should.be.true;
 					});
 
+					return agent.get('/api/users/me');
+
+				})
+				.then(function success(response) {
+					var me = response.body;
+
+					should.exist(me);
+					me.should.have.property('props');
+					me.props.should.have.property('shenanigans', 'tomfoolery');
 				});
 
 		});
-		
-		
+
+
 
     });
 

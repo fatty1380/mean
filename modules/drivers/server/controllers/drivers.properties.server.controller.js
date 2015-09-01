@@ -19,15 +19,17 @@ exports.getProperties = function getProperties(req, res) {
 };
 
 exports.setProperties = function setProperties(req, res) {
-    req.log.debug({ module: 'drivers', func: 'setProperties', current: req.user.props, body: req.body }, 'Start');
+    req.log.error({ module: 'drivers', func: 'setProperties', current: req.user.props, body: req.body }, 'Start');
 
-    req.user.props = _.extend(req.user.props, req.body);
+    var user = _.extend(req.user.props, req.body);
+    req.log.error({ module: 'drivers', func: 'setProperties', extended: user.props }, 'Result');
 
-    return req.user.save()
+    return user.save()
         .then(function (user) {
-            req.log.debug({ module: 'drivers', func: 'setProperties', result: user.props }, 'Result');
+            req.log.error({ module: 'drivers', func: 'setProperties', result: user.props, user: user }, 'Result');
 
             req.user = user;
+            req.log.error({ module: 'drivers', func: 'setProperties', reqUser: req.user }, 'Result');
 
             res.json(req.user.props);
         }, function (err) {
