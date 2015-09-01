@@ -178,7 +178,8 @@ UserSchema.index({
     firstName: 'text',
     lastName: 'text',
     username: 'text',
-    email: 'text'
+    email: 'text',
+    handle: 'text'
 });
 
 // UserSchema.pre('init', function (next, data) {
