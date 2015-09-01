@@ -1,0 +1,29 @@
+<ion-modal-view class="friends-screen">
+
+    <div class="header min-size">
+        <ion-header-bar>
+            <h1 class="title">Friend Requests</h1>
+        </ion-header-bar>
+    </div>
+
+    <ion-pane class="has-footer">
+        <ion-scroll delegate-handle="main-content-scroll">
+            <ion-list class="request-list">
+                <ion-item ng-repeat="request in vm.requests track by $index">
+                    <div class="top"><strong>{{request.from}}</strong></div>
+                    <div class="button-bar">
+                        <a class="button button-assertive button-small" ng-click="vm.handleRequest(request, 'reject')">Reject</a>
+                        <a class="button button-balanced button-small" ng-click="vm.handleRequest(request, 'accept')">Accept</a>
+                    </div>
+                </ion-item>
+            </ion-list>
+        </ion-scroll>
+    </ion-pane>
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button button-block secondary" ng-click="vm.cancel();">Cancel</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>

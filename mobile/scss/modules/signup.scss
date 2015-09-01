@@ -667,6 +667,7 @@ $but-height: 90px;
         .item-content {
           display: inline-block;
           vertical-align: middle;
+          text-transform: capitalize;
 
           strong{
             display: block;

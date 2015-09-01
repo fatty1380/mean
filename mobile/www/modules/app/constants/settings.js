@@ -26,6 +26,7 @@
     settings.signup = settings.oauth + 'signup/';
     settings.token = settings.oauth + 'token/';
     settings.signout = settings.auth + 'signout/';
+    settings.search = settings.profiles + 'search/';
 
     settings.usersProfile = settings.users + 'me/';
     settings.usersExperience = settings.usersProfile + 'experience/';
