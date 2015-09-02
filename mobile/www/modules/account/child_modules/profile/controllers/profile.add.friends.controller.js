@@ -5,9 +5,9 @@
         .module('account')
         .controller('AddFriendsCtrl', AddFriendsCtrl);
 
-    AddFriendsCtrl.$inject = ['$scope', 'friendsService', 'contactsService', '$filter', 'parameters'];
+    AddFriendsCtrl.$inject = ['$scope', 'friendsService', 'utilsService', '$filter', 'parameters', '$http', 'settings', '$ionicLoading'];
 
-    function AddFriendsCtrl($scope, friendsService, contactsService, $filter, parameters) {
+    function AddFriendsCtrl($scope, friendsService, utilsService, $filter, parameters, $http, settings, $ionicLoading) {
         var vm = this;
 
         vm.contacts = parameters;
@@ -41,6 +41,25 @@
                 friends = filter(vm.contacts);
 
             console.warn('invite friends --->>>', friends);
+
+            //for(var i = 0; i < friends.length; i++){
+            //    if(friends[i].checked) delete friends[i].checked;
+            //    if(friends[i].$$hashKey) delete friends[i].$$hashKey;
+            //
+            //    var postData = {contactInfo: friends[i], text: 'hello there!'},
+            //        serializedData = utilsService.serialize(postData);
+            //
+            //    $http
+            //        .post(settings.requests, serializedData)
+            //        .then(function (resp) {
+            //            console.warn(' resp --->>>', resp);
+            //            $ionicLoading.show({template: 'Invitations are successfully sent', duration: '1500'});
+            //        }, function (err) {
+            //            console.warn(' err --->>>', err);
+            //        });
+            //
+            //}
+
 
         }
 
