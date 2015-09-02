@@ -17,9 +17,7 @@
             showActionSheet: showActionSheet
         }
 
-
         function getPicture(type) {
-
             var q = $q.defer();
             if (!navigator.camera) {
                 console.log("******* Not a device. Using fake image *********");
@@ -40,22 +38,18 @@
                 saveToPhotoAlbum: false
             };
 
-            navigator.camera.getPicture(options)
-                .then(function success(getPictureResult) {
-                    q.resolve(getPictureResult);
-                })
-                .catch(function reject(getPictureError) {
-                    console.error('camera.getPicture] Error', getPictureError);
-                    q.reject(getPictureError);
-                });
-
+            navigator.camera.getPicture(onSuccess, onFail, options);
+            function onSuccess(getPictureResult) {
+                q.resolve(getPictureResult);
+            }
+            function onFail(getPictureError) {
+                q.reject(getPictureError);
+            }
             return q.promise;
         }
 
         function showActionSheet() {
-            
             var deferred = $q.defer();
-            
             $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take a photo from camera' },
@@ -80,7 +74,6 @@
                     return true;
                 }
             });
-            
             return deferred.promise;
         }
 
@@ -91,9 +84,8 @@
                 })
                 .then(function avatarModalSuccess(response) {
                     debugger;
-
                     return response;
-                });;
+                });
         }
     }
 })();
