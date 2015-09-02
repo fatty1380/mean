@@ -9,6 +9,21 @@
 
     function friendsService($http, settings) {
 
+        return {
+            getFriends: getFriends,
+            getUsers: getUsers,
+            setFriends: setFriends,
+            friends : friends,
+            users : users,
+            getFriendsForSpecificUser: getFriendsForSpecificUser,
+            retrieveFriends: retrieveFriends,
+            getFriendStatus: getFriendStatus,
+            getRequestsList: getRequestsList,
+            createRequest: createRequest,
+            loadRequest: loadRequest,
+            updateRequest: updateRequest
+        };
+
         var friends = [],
             users = [];
 
@@ -60,21 +75,6 @@
             if(!id) return;
             return $http.put(settings.requests + id, data);
         }
-
-        return {
-            getFriends: getFriends,
-            getUsers: getUsers,
-            setFriends: setFriends,
-            friends : friends,
-            users : users,
-            getFriendsForSpecificUser: getFriendsForSpecificUser,
-            retrieveFriends: retrieveFriends,
-            getFriendStatus: getFriendStatus,
-            getRequestsList: getRequestsList,
-            createRequest: createRequest,
-            loadRequest: loadRequest,
-            updateRequest: updateRequest
-        };
 
     }
 
