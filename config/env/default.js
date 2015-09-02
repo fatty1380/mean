@@ -60,7 +60,11 @@ module.exports = {
         access: process.env.LOG_ACCESS_PATH || './log/',
         stdout: {
             level: 'error'
-        }
+        },
+        streams: [{
+            level: 'error',
+            path: (process.env.LOG_ACCESS_PATH || './log/') + 'error.log'
+        }]
     },
 	mailer: {
         toOverride: false,
