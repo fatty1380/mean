@@ -162,7 +162,16 @@ module.exports.initMiddleware = function (app) {
     } 
     
     log.trace({ func: 'initLocalVariables' }, 'Enabling CORS for Mobile Application');
-    app.use(cors());
+
+    var whitelist = config.security.cors.whitelist || [];
+    var corsOptions = !!whitelist.length ? {
+        origin: function (origin, callback) {
+            var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+            callback(null, originIsWhitelisted);
+        }
+    } : {};
+
+    app.use(cors(corsOptions));
     
     /// JWT???
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));

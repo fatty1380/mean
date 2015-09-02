@@ -120,7 +120,10 @@ module.exports = {
     security: {
         enableSession: true,
         enableJWT: true,
-        tokenLife: 1000 * 3600 * 24 * 30
+        tokenLife: 1000 * 3600 * 24 * 30,
+        cors: {
+            whitelist: ['http://localhost:3000', 'http://localhost:8100']
+        }
     },
 
     facebook: {
