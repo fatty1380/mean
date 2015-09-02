@@ -53,6 +53,7 @@
                                 .post(settings.requests, serializedData)
                                 .then(function (resp) {
                                     console.warn(' resp --->>>', resp);
+                                    $ionicLoading.show({template: 'Invitations are successfully sent', duration: '1500'});
                                 }, function (err) {
                                     console.warn(' err --->>>', err);
                                 });

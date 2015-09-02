@@ -1,4 +1,4 @@
-<ion-view class="friends-screen">
+<ion-view class="friends-screen" cache-view="false">
 
     <div class="header min-size">
         <ion-header-bar>
@@ -42,7 +42,6 @@
                     </a>
                 </div>
             </div>
-
             <div class="title" ng-if="vm.searchText.length >= 2">Outset Users</div>
             <ul class="list friends-list" ng-if="vm.users.length && !contacts.length">
                 <li class="item" ng-repeat="user in vm.users">
@@ -62,7 +61,7 @@
 
     <ion-footer-bar>
         <div class="button-bar">
-            <button class="button block-button">Invite Friends</button>
+            <button class="button block-button" ng-click="vm.addFriends()">Invite Friends</button>
         </div>
     </ion-footer-bar>
 

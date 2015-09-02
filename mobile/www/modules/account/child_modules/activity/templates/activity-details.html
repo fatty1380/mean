@@ -24,12 +24,13 @@
                         <span ng-if="!!vm.entry.milesTraveled">
                         <i class="ico ico-milestraveledsmall"></i>
                         <strong class="title">{{ vm.entry.milesTraveled}}</strong>
-                    </span>
-                        <span ng-if="!!vm.entry.likes">
-                        <i class="ico ico-likessmall"></i>
-                        <strong class="title">{{ vm.entry.likes.length }} likes</strong>
-                    </span>
+                        </span>
+                            <span ng-if="!!vm.entry.likes">
+                            <i class="ico ico-likessmall"></i>
+                            <strong class="title">{{ vm.entry.likes.length }} likes</strong>
+                        </span>
                     </div>
+                </div>
             </ion-item>
 
             <div class="map" ng-if="!!vm.entry.location.coordinates">
@@ -45,7 +46,6 @@
             <!--<div class="item-detail" ng-if="!!vm.entry.comments">
                 <strong>Comments:</strong> <span>{{ vm.entry.comments.length }} comments</span>
             </div>-->
-
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
