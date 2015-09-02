@@ -161,11 +161,12 @@ module.exports.initMiddleware = function (app) {
         // });
     } 
     
-    log.trace({ func: 'initLocalVariables' }, 'Enabling CORS for Mobile Application');
+    log.info({ func: 'initLocalVariables', options: config.security.cors }, 'Enabling CORS for Mobile Application');
 
     var whitelist = config.security.cors.whitelist || [];
     var corsOptions = !!whitelist.length ? {
         origin: function (origin, callback) {
+            log.debug({ func: 'corsOptions', origin: origin, whitelist: whitelist }, 'evaluating origin for CORS validity')
             var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
             callback(null, originIsWhitelisted);
         }
