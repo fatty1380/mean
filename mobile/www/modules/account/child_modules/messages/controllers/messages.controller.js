@@ -5,9 +5,9 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['messageService', 'messageModalsService', '$ionicLoading', 'userService'];
+    MessagesCtrl.$inject = ['messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
 
-    function MessagesCtrl (messageService, messageModalsService, $ionicLoading, userService) {
+    function MessagesCtrl (messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
 
         var vm  = this;
         vm.messages = [];
@@ -15,6 +15,11 @@
 
         vm.openChatDetails = openChatDetails;
 
+        if (!!recipientChat) {
+            console.log('Initializing MessagesCtrl with Specific Chat', recipientChat);
+            
+            showChatDetailsModal(recipientChat);
+        }
         getChats();
 
 

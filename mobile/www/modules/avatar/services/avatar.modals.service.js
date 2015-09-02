@@ -8,15 +8,14 @@
     avatarModalsService.$inject = ['modalService'];
 
     function avatarModalsService (modalService) {
-        var templateUrl, controller;
+        var templateUrl, controller, params;
 
         function showEditModal (parameters) {
             templateUrl = 'modules/avatar/templates/edit-avatar.html';
             controller = 'AvatarEditCtrl as vm';
-            parameters = parameters || {};
-
+            params = parameters || {};
             return modalService
-                .show(templateUrl, controller, parameters)
+                .show(templateUrl, controller, params)
         }
         return {
             showEditModal: showEditModal

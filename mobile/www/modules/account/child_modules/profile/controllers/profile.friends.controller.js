@@ -23,6 +23,7 @@
         vm.showRequestsModal = showRequestsModal;
         vm.getRequests = getRequests;
         vm.addFriend = addFriend;
+        vm.viewUser = viewUser;
 
         function showRequestsModal() {
             friendsService.
@@ -36,6 +37,11 @@
                             console.warn('err --->>>', err);
                         });
                 });
+        }
+        
+        function viewUser(user, e) {
+            console.log('Routing to User Profile Page for `%s`', user.displayName)
+            $state.go('account.profile.user', { userId: user.id });
         }
 
         function addFriend(friend) {
@@ -121,14 +127,19 @@
                 //})
         }
 
-        function messageFriend(friend) {
-            profileModalsService
-                .showMessageFriendModal(friend)
-                .then(function (resp) {
-                    console.warn('resp --->>>', resp);
-                }, function (err) {
-                    console.warn('err --->>>', err);
-                });
+        function messageFriend(friend, e) {
+            e.stopPropagation();
+            
+            /// TODO: Configure this properly
+            $state.go('account.messages', {recipientId: friend.id});
+            
+            // profileModalsService
+            //     .showMessageFriendModal(friend)
+            //     .then(function (resp) {
+            //         console.warn('resp --->>>', resp);
+            //     }, function (err) {
+            //         console.warn('err --->>>', err);
+            //     });
         }
 
         function addFriends() {

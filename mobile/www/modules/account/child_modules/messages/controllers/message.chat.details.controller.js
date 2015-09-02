@@ -5,14 +5,16 @@
         .module('account')
         .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl)
 
-    MessageChatDetailsCtrl.$inject = ['messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService'];
+    MessageChatDetailsCtrl.$inject = ['$state', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService'];
 
-    function MessageChatDetailsCtrl(messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService) {
+    function MessageChatDetailsCtrl($state, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService) {
         var vm = this;
         vm.message = '';
-        vm.messages = parameters.messages.reverse();
+        vm.messages = (parameters.messages || []).reverse();
         vm.recipientName = parameters.recipientName;
         vm.profileData = null;
+        
+        vm.recipientId = parameters.recipient.id || parameters.recipient;
 
         vm.close  = close;
         vm.createMessage  = createMessage;
@@ -25,8 +27,8 @@
         utilsService.startClock(function() {
             messageService.getChatByUserId(parameters.recipient)
                 .then(function(response) {
-                    console.log(response.data.messages.length,' - ',vm.messages.length);
-                    var messages = response.data.messages;
+                    console.log(response.messages.length,' - ',vm.messages.length);
+                    var messages = response.messages;
                     if(messages && messages.length > vm.messages.length) {
                         vm.messages = messages.reverse();
                         console.log('messages updated: ', vm.messages.length);
@@ -52,6 +54,8 @@
         }
 
         function close() {
+            //$state.go('.', { recipientId: undefined })
+            $state.transitionTo($state.current.name, { recipientId: null }, { reload: false });
             utilsService.stopClock();
             vm.closeModal(null);
         }
@@ -86,6 +90,12 @@
                     $ionicLoading.hide();
                     console.log('MESSAGES WASN\'T CREATED ERROR ----- >>>', err);
                 });
+        }
+        
+        // TODO : Move to common method
+        function viewUser(e) {
+            console.log('Routing to User Profile Page for `%s`', vm.recipientName);
+            $state.go('account.profile.user', { userId: vm.recipientId });
         }
     }
 })();

@@ -17,12 +17,16 @@
         <ion-scroll delegate-handle="main-content-scroll">
             <div class="title">Your Friends</div>
             <ul class="list friends-list user-friends-list">
-                <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)">
+                <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)"
+                    ng-click="vm.viewUser(friend, $event)">
                     <i class="ico ico-avatar" ></i>
                     <div class="item-content">
                         {{friend.displayName}}{{friend.text}}
                     </div>
-                    <button class="button button-small list-button" ng-click="vm.messageFriend(friend);">Message</button>
+                    <button class="button button-small list-button" 
+                        ng-click="vm.messageFriend(friend, $event);">
+                        Message
+                    </button>
                 </li>
             </ul>
             <div ng-if="vm.friends.length && !friends.length" class="no-matches">

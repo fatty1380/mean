@@ -9,9 +9,6 @@
     "pdfjs-dist": "~1.1.343"
   },
   "resolutions": {
-    "ionic": "~1.1.0",
-    "angular": "1.4.3",
-    "angular-sanitize": "1.4.3",
-    "angular-animate": "1.4.3"
+    "angular": "1.4.3"
   }
 }

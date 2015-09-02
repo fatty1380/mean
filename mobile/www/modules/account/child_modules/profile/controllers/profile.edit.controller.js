@@ -21,7 +21,6 @@
 
             return userService.updateUserData(vm.profileData)
                 .then(function (success) {
-                    debugger;
                     vm.closeModal(success);
                 })
                 .catch(function (error) {
