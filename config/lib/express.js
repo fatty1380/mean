@@ -146,19 +146,7 @@ module.exports.initMiddleware = function (app) {
         
         
         // log.info({ func: 'initMiddleware' }, 'Configuring CORS Specific headers and OPTIONS for development only');
-        // app.use(function (req, res, next) {
-        //     res.header('Access-Control-Allow-Origin', '*');
-        //     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-       
-        //     // intercept OPTIONS method
-        //     if ('OPTIONS' === req.method) {
-        //         log.trace('Intercepted OPTIONS method');
-        //         res.send(200);
-        //     }
-        //     else {
-        //         next();
-        //     }
-        // });
+        // app.use();
     } 
     
     log.info({ func: 'initLocalVariables', options: config.security.cors }, 'Enabling CORS for Mobile Application');
@@ -166,13 +154,29 @@ module.exports.initMiddleware = function (app) {
     var whitelist = config.security.cors.whitelist || [];
     var corsOptions = !!whitelist.length ? {
         origin: function (origin, callback) {
-            log.debug({ func: 'corsOptions', origin: origin, whitelist: whitelist }, 'evaluating origin for CORS validity')
             var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+            log.debug({ func: 'corsOptions', origin: origin, whitelist: whitelist, isValid: originIsWhitelisted }, 'evaluating origin for CORS validity');
             callback(null, originIsWhitelisted);
         }
     } : {};
 
     app.use(cors(corsOptions));
+    
+    function fullCorsHandler(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    
+        // intercept OPTIONS method
+        if ('OPTIONS' === req.method) {
+            log.trace('Intercepted OPTIONS method');
+            res.send(200);
+        }
+        else {
+            next();
+        }
+    }
+        
+    app.use(fullCorsHandler);
     
     /// JWT???
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));

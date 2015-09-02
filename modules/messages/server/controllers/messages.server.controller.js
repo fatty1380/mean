@@ -121,7 +121,7 @@ exports.messageList = function (req, res) {
 			req.messages = messages;
 				
 			var grouped = req.query['grouped'];
-			req.log.debug({ func: 'messageList', params: req.query, grouped: grouped });
+			req.log.debug({ module:'messages', func: 'messageList', params: req.query, grouped: grouped });
 			
 			if (!!grouped) {
 				groupChatsBySender(req, res);
@@ -143,7 +143,7 @@ exports.messageList = function (req, res) {
 function findAndProcessMessages(req, res) {
 	var id = req.user._id;
 	
-	req.log.info({ func: 'findAndProcessMessages', id: id }, 'Start');
+	req.log.info({ module:'messages', func: 'findAndProcessMessages', id: id, user: req.user }, 'Start');
 	
 	//var id = !!req.profile && req.profile._id || req.user._id;
 	
@@ -151,13 +151,17 @@ function findAndProcessMessages(req, res) {
 	
 	return Message.find()
 		.or(partyQuery)
+		.and([{ 'recipient': { $ne: null }, 'sender': { $ne: null }}])
 		.sort('-created')
 		.populate('sender', 'displayName id')
 		.populate('recipient', 'displayName id')
 		.exec()
 		.then(function (messages) {
-			req.log.debug({ func: 'messages.list', msgCt: messages.length },
-				'Loaded %d Messages for %s', messages.length, req.user.id);
+			if (!messages || !messages.length) {
+				req.log.warn({ func: 'messages.list' }, 'No messages loaded');
+			}
+
+			req.log.info({ func: 'messages.list' }, 'Loaded %d Messages for %s', messages.length, req.user.id);
 
 			messages = _.map(messages, function (ogMessage) {
 				var message = ogMessage.toObject();
@@ -178,9 +182,14 @@ exports.chatList = function (req, res) {
 	
 	findAndProcessMessages(req, res).then(
 		function (messages) {
+			req.log.debug({ func: 'chatList', messageCt: messages.length }, 'Messages have been processed');
 			req.messages = messages;
 			
+			
+			req.log.debug({ func: 'chatList' }, 'gruping by sender');
 			groupChatsBySender(req, res);
+			
+			req.log.debug({ func: 'chatList', chats: req.chats }, 'Got grouped chats');
 			return res.json(req.chats);
 		},
 		function (err) {
@@ -256,6 +265,7 @@ exports.createByChat = function (req, res, next) {
 };
 
 function groupChatsBySender(req, res) {
+	req.log.debug({ messages: req.messages }, 'grouping messages into chats');
 	var chats = _.groupBy(req.messages, function (message) {
 		return message.party.displayName;
 	});
