@@ -85,7 +85,7 @@
                     },
                     function error(err) {
                         console.error('Got error Response: ', err);
-                        $q.reject(err);
+                        return $q.reject(err);
                     });
             } 
             else {
