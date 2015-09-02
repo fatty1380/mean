@@ -21,7 +21,12 @@
         }
 
         function getChatByUserId(userId) {
-            return $http.get(settings.chats + userId);
+            return $http.get(settings.chats + userId)
+                .then(function success(response) {
+                    if (!!response.data) {
+                        return response.data;
+                    }
+                });
         }
 
         function getChats() {

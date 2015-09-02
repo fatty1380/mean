@@ -106,11 +106,26 @@
 
             .state('account.messages', {
                 url: '/messages',
+                params: {
+                    recipientId: {
+                        default: null
+                    }
+                },
                 views: {
                     'messages': {
                         templateUrl: 'modules/account/child_modules/messages/templates/messages.html',
                         controller: 'MessagesCtrl as vm'
                     }
+                },
+                resolve: {
+                    recipientChat: ['$stateParams', 'messageService', function ($stateParams, messageService) {
+                        if (typeof $stateParams.recipientId !== 'string' || !$stateParams.recipientId) {
+                            return null;
+                        }
+                        
+                        console.log('Looking up chat for recipient ID `%s`', $stateParams.recipientId)
+                        return messageService.getChatByUserId($stateParams.recipientId);
+                    }]
                 }
             })
 
