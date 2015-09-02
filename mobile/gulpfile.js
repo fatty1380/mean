@@ -7,6 +7,8 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var karma = require('karma').server;
+var plugin = require('gulp-cordova-plugin');
+var packageJSON = require('./package.json');
 
 var paths = {
   sass: ['scss/styles.scss', 'scss/**/*.scss'],
@@ -61,4 +63,11 @@ gulp.task('test', function(done) {
     }, function() {
         done();
     });
+});
+
+
+gulp.task('plugins', function() {
+  var plugins = packageJSON.cordovaPlugins;
+  return gulp.src('./plugins')
+      .pipe(plugin(plugins));
 });
