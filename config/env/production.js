@@ -25,17 +25,17 @@ module.exports = {
     options: {
         debug: false,
         login: true,
-       signup: true,
-       showAuth: false
+        signup: true,
+        showAuth: false
     },
     modules: {
         driver: {
-            jobs : {
+            jobs: {
                 list: true,
                 view: true,
                 create: true
             },
-            applications : {
+            applications: {
                 list: true,
                 view: true,
                 create: true
@@ -45,18 +45,18 @@ module.exports = {
             }
         },
         owner: {
-            jobs : {
+            jobs: {
                 list: true,
                 view: true,
                 create: true
             },
-            applications : {
+            applications: {
                 list: true,
                 view: true,
                 create: true
             },
-            company : {
-                create : true,
+            company: {
+                create: true,
                 edit: true
             }
         }
@@ -64,12 +64,23 @@ module.exports = {
     logs: {
         access: process.env.LOG_ACCESS_PATH || '/var/log/nodejs/',
         stdout: {
-            type: 'rotating-file',
-            level: 'debug',
-            path: (process.env.LOG_ACCESS_PATH || '/var/log/nodejs/') + 'outset-debug.log',
-            period: '6h',
-            keep: 28
-        }
+            level: 'debug'
+        },
+        streams: [
+            {
+                type: 'rotating-file',
+                level: 'error',
+                path: (process.env.LOG_ACCESS_PATH || '/var/log/nodejs/') + 'outset-error.log',
+                period: '1d',
+                keep: 90
+            }, {
+                type: 'rotating-file',
+                level: 'debug',
+                path: (process.env.LOG_ACCESS_PATH || '/var/log/nodejs/') + 'outset-debug.log',
+                period: '6h',
+                keep: 28
+            }
+        ]
     },
     services: {
         everifile: {
