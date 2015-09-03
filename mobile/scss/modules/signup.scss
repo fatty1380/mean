@@ -117,13 +117,13 @@ ion-content {
       background: none;
     }
     .category-a:checked ~ .item-content i{
-      background-position: -746px -714px;
+      background-position: -746px 0px;
     }
     .category-b:checked ~ .item-content i{
-      background-position: -946px -913px;
+      background-position: -946px 0px;
     }
     .category-c:checked ~ .item-content i{
-      background-position: -1146px -1112px;
+      background-position: -1146px 0px;
     }
 
     .item-content{
@@ -201,8 +201,8 @@ ion-content {
        display: inline-block;
        vertical-align: top;
        pointer-events: none;
-       -webkit-background-size: 2399px 2269px;
-       background-size: 2399px 2269px;
+       -webkit-background-size: (7197/3)+px (351)/3+px;
+       background-size: (7197/3)+px (351)/3+px;
        border-color: transparent;
        border:0;
     }
@@ -221,8 +221,8 @@ ion-content {
       display: inline-block;
       vertical-align: top;
       pointer-events: none;
-      -webkit-background-size: 2399px 2269px;
-      background-size: 2399px 2269px;
+      -webkit-background-size: (7197/3)+px (351)/3+px;
+      background-size: (7197/3)+px (351)/3+px;
 
       border-color: transparent;
       border:0;
@@ -238,10 +238,10 @@ ion-content {
 
     .checkbox {
       input:checked:before, input:checked + .checkbox-icon:before {
-        background-position: -498px -466px;
+        background-position: -498px -0px;
       }
       input:before, .checkbox-icon:before {
-        background-position: -560px -528px;
+        background-position: -560px -0px;
       }
     }
   }
@@ -250,10 +250,10 @@ ion-content {
 
     .checkbox {
       input:checked:before, input:checked + .checkbox-icon:before {
-        background-position: -1630px -1483px;
+        background-position: -1630px -0px;
       }
       input:before, .checkbox-icon:before {
-        background-position: -1692px -1545px;
+        background-position: -1692px -0px;
       }
     }
   }
@@ -261,10 +261,10 @@ ion-content {
   .endorsement-c{
     .checkbox {
       input:checked:before, input:checked + .checkbox-icon:before {
-        background-position: -2264px -2133px;
+        background-position: -2264px -0px;
       }
       input:before, .checkbox-icon:before {
-        background-position: -2326px -2195px;
+        background-position: -2326px -0px;
       }
     }
   }
@@ -272,10 +272,10 @@ ion-content {
   .endorsement-d{
     .checkbox {
       input:checked:before, input:checked + .checkbox-icon:before {
-        background-position: -622px -590px;
+        background-position: -622px -0px;
       }
       input:before, .checkbox-icon:before {
-        background-position: -684px -652px;
+        background-position: -684px -0px;
       }
     }
   }
@@ -284,10 +284,10 @@ ion-content {
 
     .checkbox {
       input:checked:before, input:checked + .checkbox-icon:before {
-        background-position: -2140px -2009px;
+        background-position: -2140px -0px;
       }
       input:before, .checkbox-icon:before {
-        background-position: -2202px -2071px;
+        background-position: -2202px -0px;
       }
     }
   }
@@ -466,7 +466,7 @@ $but-height: 90px;
 
 
 .signup-section{
-  background: url("../img/welcomeBackground@3x.png") 0 0 no-repeat ;
+  background: url("../img/welcomeBackground@3x.jpg") 0 0 no-repeat ;
   -webkit-background-size: cover;
   background-size: cover;
 
@@ -736,7 +736,7 @@ $but-height: 90px;
     padding-bottom: 50px;
     text-align: center;
   }
-  .choose-contacts-button{
+  .choose-contacts-button {
     background: #3eaeb1;
     color: #fff;
     margin: 0 0 20px;
@@ -747,7 +747,7 @@ $but-height: 90px;
     border-radius: 26px;
     border: 2px solid #fff;
   }
-  .enter-manually-button{
+  .enter-manually-button {
     color: #fff;
   }
 }
