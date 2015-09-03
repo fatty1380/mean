@@ -33,19 +33,19 @@
 
         function registerUser (data) {
             if (!data) return;
-            return requestApi(settings.signup , "post", data)
+            return requestApi(settings.signup , 'post', data)
                 .then(handleSuccess, handleError);
         }
 
         function updateUser (data) {
             if (!data) return;
-            return requestApi(settings.users , "put", data, true)
+            return requestApi(settings.users , 'put', data, true)
                 .then(handleSuccess, handleError);
         }
 
         function updateUserProps (data) {
             if (!data) return;
-            return requestApi(settings.usersProps, "put", data, true)
+            return requestApi(settings.usersProps, 'put', data, true)
                 .then(handleSuccess, handleError);
         }
 
@@ -62,22 +62,22 @@
             data.grant_type = signinData.grant_type;
             data.client_id = signinData.client_id;
             data.client_secret = signinData.client_secret;
-            return requestApi(settings.token, "post", data )
+            return requestApi(settings.token, 'post', data )
                 .then(handleSuccess, handleError);
         }
 
         function signOut() {
-            return  requestApi(settings.signout , "get" )
+            return  requestApi(settings.signout , 'get' )
                 .then(handleSuccess, handleError);
         }
 
         function me() {
-            return  requestApi(settings.usersProfile, "get" )
+            return  requestApi(settings.usersProfile, 'get' )
                 .then(handleSuccess, handleError);
         }
 
         function getProfiles() {
-            return  requestApi(settings.profiles , "get" )
+            return  requestApi(settings.profiles , 'get' )
                 .then(handleSuccess, handleError);
         }
 
@@ -87,7 +87,7 @@
         }
 
         function requestApi(apiUrl, method, data, needSerialize) {
-            $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
+            $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
             return $http ({
                 url: apiUrl,
                 method: method,
@@ -119,7 +119,7 @@
 
         function serializeData( data ) {
             if ( ! angular.isObject( data ) ) {
-                return( ( data == null ) ? "" : data.toString() );
+                return( ( data == null ) ? '' : data.toString() );
             }
             var buffer = [];
             for ( var name in data ) {
@@ -129,13 +129,13 @@
                 var value = data[ name ];
                 buffer.push(
                     encodeURIComponent( name ) +
-                    "=" +
-                    encodeURIComponent( ( value == null ) ? "" : value )
+                    '=' +
+                    encodeURIComponent( ( value == null ) ? '' : value )
                 );
             }
             var source = buffer
-                    .join( "&" )
-                    .replace( /%20/g, "+" )
+                    .join( '&' )
+                    .replace( /%20/g, '+' )
                 ;
             return( source );
         }
