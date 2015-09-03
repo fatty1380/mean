@@ -163,7 +163,7 @@ describe('Feed CRUD tests', function () {
 					function (feedItemGetResponse) {
 						// Set assertions
 						(feedItemGetResponse.body._id).should.equal(feedItem._id);
-						
+
 						verifyFeedProperties(feedItemGetResponse.body);
 					});
 		});
@@ -203,24 +203,40 @@ describe('Feed CRUD tests', function () {
 			var userId = user.id;
 			var savedItemResult;
 
+			var feedItemId;
+
 			// Save a new Feed
 			return agent.post('/api/feed')
 				.send(feedItem)
 				.expect(200)
 				.then(
-				function (feedItemSaveRes) {
+					function (feedItemSaveRes) {
+
+						feedItemId = feedItemSaveRes.body.id;
 						
 						// Liek teh item
-						return agent.post('/api/feed/' + feedItemSaveRes.body._id + '/likes')
+						return agent.post('/api/feed/' + feedItemId + '/likes')
 							.expect(200);
 					})
 				.then(
 					function (feedLikeRes) {
 						// Set assertions
 						feedLikeRes.body.should.be.Array.with.length(1);
-						
+
 						var likes = feedLikeRes.body;
-						
+
+						likes.should.containEql(userId);
+
+						return agent.post('/api/feed/' + feedItemId + '/likes')
+							.expect(200);
+					})
+				.then(
+					function (feedLikeRes) {
+						// Set assertions
+						feedLikeRes.body.should.be.Array.with.length(1, 'Should not be able to like the same item twice');
+
+						var likes = feedLikeRes.body;
+
 						likes.should.containEql(userId);
 					});
 		});
@@ -424,9 +440,9 @@ function verifyFeedProperties(feedItem) {
 
 	feedItem.props.should.have.property('slMiles');
 	feedItem.props.should.have.property('freight');
-	
+
 	feedItem.location.should.have.property('coordinates').and.have.length(2);
 	feedItem.location.should.have.property('type', 'Point');
 	feedItem.location.should.have.property('created');
-	
+
 }

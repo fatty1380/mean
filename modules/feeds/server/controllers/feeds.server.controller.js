@@ -178,7 +178,10 @@ function addLike(req, res) {
 
 	req.log.debug({ func: 'addLike', file: 'feeds.server.controller', likes: req.feedItem.likes, id: req.user.id }, 'Pushing ID to Likes Array');
 
-	if (_.contains(req.feedItem.likes, _id)) {
+
+	if (req.feedItem.likes.some(function (like) {
+		return like.equals(req.user.id);
+	})) {
 		req.log.debug({ func: 'addLike', file: 'feeds.server.controller', likes: req.feedItem.likes, id: req.user.id }, 'User has already liked this item');
 
 		return res.json(req.feedItem.likes);
