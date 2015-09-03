@@ -22,7 +22,7 @@
         };
 
         var feed = [];
-        var ids = [];
+        var items = [];
 
         /**
          * @desc Get all feed, then load all posts by ids
@@ -31,10 +31,10 @@
         function getFeed() {
             return $http.get(settings.feed)
                 .then(function (response) {
-                    ids = response.data.activity;
+                    items = response.data.items;
                     return $q(function (resolve, reject) {
-                        if (ids.length > 0) {
-                            return resolve(populateActivityFeed(response.data.activity));
+                        if (items.length > 0) {
+                            return resolve(populateActivityFeed(items));
                         } else {
                             reject('no feed');
                         }
@@ -46,10 +46,11 @@
         }
 
         function loadItems(num) {
-            getFeedActivityById(ids[num]).then(function (result) {
+            var itemId = items[num].id;
+            getFeedActivityById(itemId).then(function (result) {
                 console.log('Pushing Activity to Feed: ', result);
                 feed.unshift(result);
-                if (num < ids.length - 1) {
+                if (num < items.length - 1) {
                     num++;
                     loadItems(num);
                 } else {
@@ -60,14 +61,15 @@
 
         /**
          * Populate Activity Feed
-         * @param rawFeedActivities - An array of FeedActivity IDs. Differnet from the local var 'feed'
+         * @param rawFeedActivities - An array of FeedActivity Objects. Differnet from the local var 'feed'
          * @param start - Integer representing at which index to start population (default: 0)
          * @param count - Integer representing how many items to populate (default: all)
          * 
          * @description This method will map over the IDs in teh activity array of the 
          */
         function populateActivityFeed(rawFeedActivities, start, count) {
-            feed = rawFeedActivities.reverse();
+           // feed = rawFeedActivities.reverse();
+            feed = rawFeedActivities;
             console.log('Iterating over %d feed IDs to populate', feed.length, feed);
             start = start || 0;
             count = count || undefined;
@@ -75,10 +77,13 @@
             /**
              * Look at feed IDs `start` to `start+count` and 
              */
+
+            console.log('feed ',feed);
+
             var promises = feed.slice(start, count)
                 .map(function (value, index) {
                     // TODO: Ensure that value is string, not object
-                    return getFeedActivityById(value).then(
+                    return getFeedActivityById(value.id).then(
                         function (feedItem) {
                             if (hasCoordinates(feedItem)) {
                                 feedItem.location = {

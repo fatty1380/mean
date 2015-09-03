@@ -18,6 +18,7 @@
         vm.showAddActivityModal = showAddActivityModal;
         vm.showActivityDetailsModal = showActivityDetailsModal;
         vm.updateWithNewActivities = updateWithNewActivities;
+        vm.likeActivity = likeActivity;
 
         /**
          * try to initialize if have no feed
@@ -55,12 +56,18 @@
             });
         }
 
+        function likeActivity(id) {
+            console.log('likeActivity() ', id);
+        }
+
         function startCheckNewActivities() {
             utilsService.startClock(function() {
                 activityService.getFeedIds().then(function(result) {
-                    console.log(result.activity.length,' -- ',vm.feed.length);
-                    if(result.activity.length > vm.feed.length){
-                        vm.newActivities = result.activity.length - vm.feed.length;
+                    console.log(result.items.length,' -- ',vm.feed.length);
+                    if(result.items.length > vm.feed.length){
+                        vm.newActivities = result.items.length - vm.feed.length;
+                    }else{
+                        vm.newActivities = 0;
                     }
                 }, function() {
                 });
@@ -71,6 +78,10 @@
             utilsService.stopClock();
         }
 
+
+       /**
+        *  @TODO update only new items
+       */
         function updateWithNewActivities() {
             initialize();
         }
