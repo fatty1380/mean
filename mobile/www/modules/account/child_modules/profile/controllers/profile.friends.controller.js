@@ -17,7 +17,6 @@
         vm.addManually = addManually;
         vm.addFriends = addFriends;
         vm.getOutsetUsers = getOutsetUsers;
-        //vm.initFriends = initFriends;
         vm.messageFriend = messageFriend;
         vm.searchHandler = searchHandler;
         vm.showRequestsModal = showRequestsModal;
@@ -26,13 +25,19 @@
         vm.viewUser = viewUser;
 
         function showRequestsModal() {
-            friendsService.
-                getRequestsList()
+            friendsService
+                .getRequestsList()
                 .then(function (requests) {
                     profileModalsService
                         .showFriendRequestModal(requests.data)
-                        .then(function (resp) {
-                            console.warn('resp --->>>', resp);
+                        .then(function (updateFriends) {
+                            if(updateFriends){
+                                friendsService
+                                    .retrieveFriends()
+                                    .then(function (updatedFriends) {
+                                        vm.friends = updatedFriends.data;
+                                    });
+                            }
                         }, function (err) {
                             console.warn('err --->>>', err);
                         });
@@ -63,15 +68,6 @@
                             .show({template:template, duration: 2000});
 
                     }
-
-                    //var r = {id: createdRequestResp.data.id};
-                    //
-                    //friendsService
-                    //    .loadRequest(r)
-                    //    .then(function (loadingRequest) {
-                    //        console.warn(' loadingRequest --->>>', loadingRequest);
-                    //
-                    //    })
                 });
         }
 
@@ -149,11 +145,8 @@
                 contactsService
                     .retrieveContacts()
                     .then(function (resp) {
-
                         console.warn('contacts profile resp --->>>', resp);
-
-                        contacts = contactsService.getContacts();
-                        showAddFriendsModal(contacts);
+                        showAddFriendsModal(resp.data);
                     });
             }else{
                 showAddFriendsModal(contacts);

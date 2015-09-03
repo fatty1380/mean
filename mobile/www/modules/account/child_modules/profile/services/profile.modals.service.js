@@ -10,13 +10,22 @@
     function profileModalsService (modalService) {
         var templateUrl, controller, params;
 
+        return {
+            showProfileEditModal: showProfileEditModal,
+            showProfileShareModal: showProfileShareModal,
+            showRequestReviewModal: showRequestReviewModal,
+            showAddFriendsModal: showAddFriendsModal,
+            showMessageFriendModal: showMessageFriendModal,
+            showFriendRequestModal: showFriendRequestModal
+        };
+
         function showProfileEditModal (parameters) {
             templateUrl = 'modules/account/child_modules/profile/templates/profile-edit.html';
             controller = 'ProfileEditCtrl as vm';
             params = parameters || {};
 
             return modalService
-                .show(templateUrl, controller, params)
+                .show(templateUrl, controller, params);
         }
 
         function showProfileShareModal (parameters) {
@@ -25,7 +34,7 @@
             params = parameters || {};
 
             return modalService
-                .show(templateUrl, controller, params)
+                .show(templateUrl, controller, params);
         }
 
         function showRequestReviewModal (parameters) {
@@ -34,7 +43,7 @@
             params = parameters || {};
 
             return modalService
-                .show(templateUrl, controller, params)
+                .show(templateUrl, controller, params);
         }
 
         function showAddFriendsModal (parameters) {
@@ -43,7 +52,7 @@
             params = parameters || {};
 
             return modalService
-                .show(templateUrl, controller, params)
+                .show(templateUrl, controller, params);
         }
 
         function showMessageFriendModal (parameters) {
@@ -52,7 +61,7 @@
             params = parameters || {};
 
             return modalService
-                .show(templateUrl, controller, params)
+                .show(templateUrl, controller, params);
         }
 
         function showFriendRequestModal (parameters) {
@@ -63,15 +72,6 @@
             return modalService
                 .show(templateUrl, controller, params);
         }
-
-        return {
-            showProfileEditModal: showProfileEditModal,
-            showProfileShareModal: showProfileShareModal,
-            showRequestReviewModal: showRequestReviewModal,
-            showAddFriendsModal: showAddFriendsModal,
-            showMessageFriendModal: showMessageFriendModal,
-            showFriendRequestModal: showFriendRequestModal
-        };
 
     }
 
