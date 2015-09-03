@@ -8,6 +8,7 @@
     friendsService.$inject = ['$http', 'settings'];
 
     function friendsService($http, settings) {
+        var friends = [], users = [];
 
         return {
             getFriends: getFriends,
@@ -23,9 +24,6 @@
             loadRequest: loadRequest,
             updateRequest: updateRequest
         };
-
-        var friends = [],
-            users = [];
 
         function getFriends() {
             return friends;
