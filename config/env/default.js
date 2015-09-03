@@ -122,7 +122,7 @@ module.exports = {
         enableJWT: true,
         tokenLife: 1000 * 3600 * 24 * 30,
         cors: {
-            whitelist: ['localhost:*']
+            whitelist: ['localhost:*', '10.0.1.15:8100']
         }
     },
 
