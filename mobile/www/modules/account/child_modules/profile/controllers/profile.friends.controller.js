@@ -145,11 +145,8 @@
                 contactsService
                     .retrieveContacts()
                     .then(function (resp) {
-
                         console.warn('contacts profile resp --->>>', resp);
-
-                        contacts = contactsService.getContacts();
-                        showAddFriendsModal(contacts);
+                        showAddFriendsModal(resp.data);
                     });
             }else{
                 showAddFriendsModal(contacts);

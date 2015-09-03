@@ -12,7 +12,12 @@
 
             for(i = 0; i < itemsToFilter.length; i++){
                 item = itemsToFilter[i];
+
                 if (item.checked){
+
+                    if(item.$$hashKey) delete item.$$hashKey;
+                    if(item.checked) delete item.checked;
+
                     filteredItems.push(item);
                 }
             }

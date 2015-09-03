@@ -2,10 +2,10 @@
     'use strict';
 
     angular
-        .module('signup')
-        .filter('emptyContactsFilter', emptyContactsFilter);
+        .module(AppConfig.appModuleName)
+        .filter('contactsFilter', contactsFilter);
 
-    function emptyContactsFilter() {
+    function contactsFilter() {
         return function (allContacts) {
             var contacts = [],
                 contact, formattedContact, i,
@@ -26,7 +26,6 @@
                         "phones": phones
                     };
                     console.warn('filter formattedContact --->>>', formattedContact);
-
                     contacts.push(formattedContact);
                 }
             }
@@ -38,10 +37,11 @@
             function getPhoneNumbers(phones) {
                 if (!phones || !phones.length) return [];
 
-                var formattedPhone = {},
+                var formattedPhone,
                     phoneArray = [];
 
                 for(var j = 0; j < phones.length; j++){
+                    formattedPhone = {};
                     formattedPhone[phones[j].type] = phones[j].value;
                     phoneArray.push(formattedPhone);
                 }
