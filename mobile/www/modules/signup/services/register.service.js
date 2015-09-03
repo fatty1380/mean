@@ -24,7 +24,7 @@
             updateUser: updateUser,
             updateUserProps: updateUserProps,
             getProfiles: getProfiles,
-            getProfilesID: getProfilesID,
+            getProfileById: getProfileById,
             getDataProps: getDataProps,
             setDataProps: setDataProps,
             setProps: setProps
@@ -81,8 +81,8 @@
                 .then(handleSuccess, handleError);
         }
 
-        function getProfilesID(profileId) {
-            return  requestApi(settings.profiles + profileId , "get" )
+        function getProfileById(profileId) {
+            return  requestApi(settings.profiles + profileId , 'get' )
                 .then(handleSuccess, handleError);
         }
 
