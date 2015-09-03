@@ -21,15 +21,14 @@
 
             friendsService
                 .updateRequest(request.id, data)
-                .then(function (updatingRequest) {
+                .then(function () {
                     if(index >= 0) vm.requests.splice(index);
-                    console.warn(' updatingRequest --->>>', updatingRequest);
                 });
         }
 
 
         function cancel() {
-            $scope.closeModal(null);
+            $scope.closeModal(true);
         }
 
     }

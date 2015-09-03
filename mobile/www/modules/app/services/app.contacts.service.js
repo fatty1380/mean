@@ -8,7 +8,8 @@
 
     function contactsService($q, $filter) {
 
-        var contacts = [];
+        var contacts = [],
+            filter = $filter('contactsFilter');
 
         function getContacts() {
             return contacts;
@@ -26,11 +27,9 @@
         }
 
         function retrieveContacts() {
-            var filter = $filter('emptyContactsFilter');
-
             return find().then(function (data) {
                 contacts = filter(data);
-                console.warn('filtered contacts --->>>', contacts);
+                console.warn(' getContacts() --->>>', getContacts());
             });
         }
 
