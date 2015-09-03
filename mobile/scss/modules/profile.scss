@@ -286,14 +286,14 @@
     .ico{
       width: 31px;
       height: 31px;
-      -webkit-background-size: 1200px 1135px;
-      background-size: 1200px 1135px;
+      -webkit-background-size: (7197/6)+px (351)/6+px;
+      background-size: (7197/6)+px (351)/6+px;
 
-      &.ico-doubletraileractive{background-position: -249px -233px;}
-      &.ico-passengeractive{background-position: -815px -742px;}
-      &.ico-tankvehicleactive{background-position: -1132px -1067px;}
-      &.ico-hazardousmaterialsactive{background-position: -311px -295px;}
-      &.ico-tankhazardousactive{background-position: -1070px -503px;}
+      &.ico-doubletraileractive{background-position: -249px -0px;}
+      &.ico-passengeractive{background-position: -815px -0px;}
+      &.ico-tankvehicleactive{background-position: -1132px -0px;}
+      &.ico-hazardousmaterialsactive{background-position: -311px -0px;}
+      &.ico-tankhazardousactive{background-position: -1070px -0px;}
     }
   }
 }
