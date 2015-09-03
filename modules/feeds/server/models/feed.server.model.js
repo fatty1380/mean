@@ -96,8 +96,11 @@ var FeedItemSchema = new Schema({
 		default: []
 	},
 	likes: {
-		type: Schema.ObjectId,
-		ref: 'User'
+		type: [{
+			type: Schema.ObjectId,
+			ref: 'User'
+		}],
+		default: []
 	},
 	isPublic: {
 		type: Boolean,
@@ -116,16 +119,16 @@ var FeedItemSchema = new Schema({
 
 FeedItemSchema.virtual('location')
 	.get(function () {
-		console.log('----------------------------- YO! Returning `location`', this);
+		log.trace({ func: 'virtual.location', value: this._location }, 'YO! Returning `location` (first item in array)');
 		return _.isEmpty(this._location) ? null : this._location[0];
 	})
 	.set(function (value) {
-		console.log({ func: 'FeedItem.location.set', value: value }, 'Setting value into _location');
+		log.debug({ func: 'FeedItem.location.set', value: value }, 'Setting value into _location');
 		this._location = [value];
 	});
 
 FeedItemSchema.pre('save', function (next) {
-	console.log({ func: 'pre-save', doc: this }, 'Checking Migrated Feed Item for Modifications');
+	log.debug({ func: 'pre-save', doc: this }, 'Checking Migrated Feed Item for Modifications');
     if (this.isModified()) {
         this.modified = Date.now();
     }

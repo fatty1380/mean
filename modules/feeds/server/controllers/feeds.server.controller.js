@@ -28,6 +28,10 @@ exports.feedByID = feedByID;
 exports.myFeed = myFeed;
 exports.feedItemByID = feedItemByID;
 
+exports.addLike = addLike;
+exports.getLikes = getLikes;
+exports.removeLike = delLike;
+
 (function migrate() {
 				log.error({ func: 'migrate' }, 'Evaluating Migration');
 
@@ -162,6 +166,63 @@ function addComment(req, res, next) {
 }
 
 // *** END Comments *** //
+
+/** Likes : Start */
+
+function addLike(req, res) {
+	if (_.isEmpty(req.feedItem)) {
+		return res.status(404).send({ message: 'no feed activity specified' });
+	}
+
+	var _id = req.user._id;
+
+	req.log.debug({ func: 'addLike', file: 'feeds.server.controller', likes: req.feedItem.likes, id: req.user.id }, 'Pushing ID to Likes Array');
+
+	if (_.contains(req.feedItem.likes, _id)) {
+		req.log.debug({ func: 'addLike', file: 'feeds.server.controller', likes: req.feedItem.likes, id: req.user.id }, 'User has already liked this item');
+
+		return res.json(req.feedItem.likes);
+	}
+	req.feedItem.likes.push(_id);
+
+	req.feedItem.save()
+		.then(function success(result) {
+			req.log.error({ result: result, likes: result.likes, func: 'addLike', file: 'feeds.server.controller' }, 'Added like to likes array');
+
+			return res.json(result.likes);
+
+		}, function reject(err) {
+			req.log.error({ err: err, func: 'addLike', file: 'feeds.server.controller' }, 'Failed to add Like');
+
+			return res.status(400).send({ message: 'Unable to like this item' });
+		})
+}
+
+function getLikes(req, res) {
+	if (_.isEmpty(req.feedItem)) {
+		return res.status(404).send({ message: 'no feed activity specified' });
+	}
+
+	return res.json(req.feedItem.likes);
+}
+
+function delLike(req, res) {
+	if (_.isEmpty(req.feedItem)) {
+		return res.status(404).send({ message: 'no feed activity specified' });
+	}
+
+	_.remove(req.feedItem.likes, function (like) {
+
+		req.log.debug({ func: 'deleteLike', file: 'feeds.server.controller', like: like, id: req.user.id }, 'Looking to remove Likes');
+
+		if (like.equals(req.user.id) || like.id.equals(req.user.id)) {
+			return true;
+		}
+
+		return false;
+	});
+
+}
 
 /**
  * Show the current Feed

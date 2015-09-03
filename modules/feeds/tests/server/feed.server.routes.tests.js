@@ -197,6 +197,34 @@ describe('Feed CRUD tests', function () {
 					});
 		});
 
+		it('should be able to `like` a feed item', function () {
+			
+			// Get the userId
+			var userId = user.id;
+			var savedItemResult;
+
+			// Save a new Feed
+			return agent.post('/api/feed')
+				.send(feedItem)
+				.expect(200)
+				.then(
+				function (feedItemSaveRes) {
+						
+						// Liek teh item
+						return agent.post('/api/feed/' + feedItemSaveRes.body._id + '/likes')
+							.expect(200);
+					})
+				.then(
+					function (feedLikeRes) {
+						// Set assertions
+						feedLikeRes.body.should.be.Array.with.length(1);
+						
+						var likes = feedLikeRes.body;
+						
+						likes.should.containEql(userId);
+					});
+		});
+
 		it('should not be able to save Feed Item if no title is provided', function () {
 			// Invalidate name field
 			feedItem.title = '';

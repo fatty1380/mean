@@ -59,8 +59,14 @@ module.exports = function(app) {
 	 * TODO: Need to figure out how to properly check comment rights
 	 */
 	app.route('/api/feed/:feedItemId/comments')
-		.all(feedsPolicy.isAllowed)
+		.all(feedsPolicy.feedItemIsAllowed)
 		.post(feeds.addComment);
+		
+	app.route('/api/feed/:feedItemId/likes')
+		.all(feedsPolicy.feedItemIsAllowed)
+		.post(feeds.addLike)
+		.get(feeds.getLikes)
+		.delete(feeds.removeLike);
 
 	// Finish by binding the Feed middleware
 	app.param('feedId', feeds.feedByID);
