@@ -11,13 +11,13 @@
         <div class="login-content">
             <i class="ico ico-outsetlogo"></i>
             <h3>Log into your Outset account</h3>
-            <form name="mainLoginForm" id="mainLoginForm" class="list signup-form" ng-submit="vm.signIn()" ng-init="vm.initForm(this)"
+            <form name="mainLoginForm" id="mainLoginForm" class="list signup-form" ng-submit="vm.submitForm()" ng-init="vm.initForm(this)"
             novalidate>
                 <label class="item item-input">
-                    <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" required>
+                    <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" required>
                 </label>
                 <label class="item item-input">
-                    <input type="password" placeholder="Password" ng-model="vm.user.password" required>
+                    <input type="password" placeholder="Password" ng-model="vm.user.password" ng-focus="vm.lastElementFocused = true" required>
                 </label>
                 <input style="position:absolute; left:9999px" type="submit" />
             </form>

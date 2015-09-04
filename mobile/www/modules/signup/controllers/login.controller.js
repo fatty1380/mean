@@ -9,6 +9,7 @@
 
     function LoginCtrl($scope, $state, registerService, $ionicLoading, tokenService, userService) {
         var vm = this;
+        vm.lastElementFocused = false;
 
         vm.error = '';
         vm.user = {
@@ -18,9 +19,19 @@
 
         vm.initForm = initForm;
         vm.signIn = signIn;
+        vm.submitForm = submitForm;
 
         function initForm(scope) {
             vm.form = scope;
+        }
+
+        /**
+         * @description Submit form if last field in focus
+        */
+        function submitForm() {
+            if(vm.lastElementFocused) {
+                signIn();
+            }
         }
 
         /**
@@ -34,26 +45,26 @@
             tokenService.set('access_token', '');
 
             registerService.signIn(vm.user)
-                .then(function (response) {
-                    $ionicLoading.hide();
-                    var data = response.message.data;
-                    if (response.success) {
-                        tokenService.set('access_token', data.access_token);
-                        tokenService.set('refresh_token',data.refresh_token);
-                        tokenService.set('token_type', data.token_type);
+            .then(function (response) {
+                $ionicLoading.hide();
+                var data = response.message.data;
+                if (response.success) {
+                    tokenService.set('access_token', data.access_token);
+                    tokenService.set('refresh_token',data.refresh_token);
+                    tokenService.set('token_type', data.token_type);
 
-                        registerService
-                            .me()
-                            .then(function (profileData) {
-                                userService.profileData = profileData.message.data;
-                                $state.go('account.profile');
-                            });
+                    registerService
+                        .me()
+                        .then(function (profileData) {
+                            userService.profileData = profileData.message.data;
+                            $state.go('account.profile');
+                        });
 
-                        vm.error = '';
-                    } else {
-                        vm.error = data.error_description || "error";
-                    }
-                });
+                    vm.error = '';
+                } else {
+                    vm.error = data.error_description || "error";
+                }
+            });
         }
 
         $scope.$on('$ionicView.afterEnter', function () {
