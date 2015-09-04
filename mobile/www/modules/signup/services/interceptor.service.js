@@ -33,7 +33,6 @@
                 if (config.url.substring(0, 4) == "http") {
                     config.headers = config.headers || {};
                     config.headers.Authorization = tokenService.get('token_type') + " " + tokenService.get('access_token');
-                    console.log('Interceptor] Added headers to request: %j', config.headers);
                 }
                 return config;
             },
