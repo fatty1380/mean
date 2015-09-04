@@ -13,7 +13,7 @@
             getFeed: getFeed,
             postActivityToFeed: postFeed,
             getFeedActivityById: getFeedActivityById,
-            getLastFeedActivity: getLastFeedActivity,
+            getLastActivityWithCoord: getLastActivityWithCoord,
             getFeedIds: getFeedIds,
             likeActivity: likeActivity,
             getDistanceBetween: getDistanceBetween,
@@ -166,7 +166,6 @@
                         activityService.showPopup('Google maps failed', status);
                         reject('error');
                     } else {
-
                         if (response.rows[0].elements[0].distance) {
                             resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(2) );//miles
                             //resolve(response.rows[0].elements[0].distance.value / 1000);// km
@@ -216,11 +215,16 @@
         }
 
         /**
-         * @desc last item of array
-         * @returns {Promise} promise lst item
+         * @desc get last item of array with coordinates
+         * @returns {Object} last item
          */
-        function getLastFeedActivity() {
-            return feed[0];
+        function getLastActivityWithCoord() {
+            for(var i = 0; i < feed.length; i++) {
+                if(hasCoordinates(feed[i])) {
+                    return feed[i];
+                }
+            }
+            return null;
         }
 
         function showPopup(title, text) {

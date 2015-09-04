@@ -31,7 +31,7 @@
 
                     <label class="item item-input">
                         <span class="input-label">Distance Since Last Post:</span>
-                        <input type="text" ng-model="vm.activity.props.slMiles" readonly>
+                        <input type="text" ng-if="!!vm.activity.props.slMiles" value="{{vm.activity.props.slMiles}} miles" readonly>
                     </label>
                     <label class="item item-input">
                         <span class="input-label">Freight Hauled:</span>

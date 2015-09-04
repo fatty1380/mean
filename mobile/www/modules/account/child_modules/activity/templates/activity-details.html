@@ -25,7 +25,7 @@
                         <i class="ico ico-milestraveledsmall"></i>
                         <strong class="title">{{ vm.entry.milesTraveled}}</strong>
                         </span>
-                            <span ng-if="!!vm.entry.likes">
+                        <span ng-if="!!vm.entry.likes" ng-click="vm.likeActivity()">
                             <i class="ico ico-likessmall"></i>
                             <strong class="title">{{ vm.entry.likes.length }} likes</strong>
                         </span>
