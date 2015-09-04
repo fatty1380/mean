@@ -20,9 +20,9 @@
         }
 
         function invite() {
-            contactsService.addContact(vm.contact)
+            return contactsService.addContact(vm.contact)
                 .then(function () {
-                    $state.go('signup-friends-contacts');
+                    return $state.go('signup-friends-contacts');
                 });
         }
 
