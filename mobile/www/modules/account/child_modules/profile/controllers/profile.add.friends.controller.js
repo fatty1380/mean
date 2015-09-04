@@ -14,14 +14,13 @@
         vm.contacts = parameters;
 
         vm.cancel = cancel;
-        vm.addFriends = addFriends;
+        vm.showAddFriendsModal = addFriends;
         vm.showFriendManualAddModal = showFriendManualAddModal;
 
         function showFriendManualAddModal() {
             profileModalsService
                 .showFriendManualAddModal()
                 .then(function (contact) {
-                    console.warn(' contact --->>>', contact);
                     vm.contacts.push(contact);
                     contactsService.setContacts(vm.contacts);
                 }, function (err) {

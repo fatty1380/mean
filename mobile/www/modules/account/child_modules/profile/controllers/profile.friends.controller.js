@@ -5,22 +5,22 @@
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
 
-    FriendsCtrl.$inject = ['$state','$ionicLoading', '$timeout', 'outsetUsersService', 'utilsService', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
+    FriendsCtrl.$inject = ['$state','$ionicLoading', 'contacts', 'outsetUsersService', 'utilsService', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
 
-    function FriendsCtrl($state, $ionicLoading, $timeout,  outsetUsersService, utilsService, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
+    function FriendsCtrl($state, $ionicLoading, contacts,  outsetUsersService, utilsService, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
         var vm = this;
 
         vm.friends = friends;
+        vm.contacts = contacts;
         vm.users = [];
         vm.searchText = "";
 
         vm.addManually = addManually;
-        vm.addFriends = addFriends;
+        vm.showAddFriendsModal = showAddFriendsModal;
         vm.getOutsetUsers = getOutsetUsers;
         vm.messageFriend = messageFriend;
         vm.searchHandler = searchHandler;
         vm.showRequestsModal = showRequestsModal;
-        vm.getRequests = getRequests;
         vm.addFriend = addFriend;
         vm.viewUser = viewUser;
 
@@ -71,95 +71,16 @@
                 });
         }
 
-        function initFriends() {
-            //var f = ['55b27b1893e595310272f1d0'];
-            //
-            //for (var i = 0; i < f.length; i++){
-            //    var fo  =  {
-            //        to: f[i],
-            //        text: 'Hi!'
-            //    };
-            //
-            //    friendsService
-            //        .createRequest(fo)
-            //        .then(function (createdRequestResp) {
-            //            console.warn(' createdRequestResp --->>>', createdRequestResp);
-            //
-            //            var r = {id: createdRequestResp.data.id};
-            //
-            //            friendsService
-            //                .loadRequest(r)
-            //                .then(function (loadingRequest) {
-            //                    console.warn(' loadingRequest --->>>', loadingRequest);
-            //
-            //                    //var s = { action: 'accept' };
-            //
-            //                    //friendsService
-            //                    //    .updateRequest(createdRequestResp.data.id, s)
-            //                    //    .then(function (updatingRequest) {
-            //                    //        console.warn(' updatingRequest --->>>', updatingRequest);
-            //                    //
-            //                    //    })
-            //                })
-            //        });
-            //}
-        }
-
-        function getRequests() {
-            //return friendsService.getRequestsList()
-            //    .then(function (requestList) {
-            //        console.warn(' requestList --->>>', requestList);
-
-                    //var s = { action: 'accept' };
-                    //for(var i = 0; i < requestList.data.length; i++){
-                    //
-                    //    friendsService
-                    //        .updateRequest(requestList.data[i].id, s)
-                    //        .then(function (updatingRequest) {
-                    //            console.warn(' updatingRequest --->>>', updatingRequest);
-                    //
-                    //        })
-                    //}
-                //})
-        }
-
         function messageFriend(friend, e) {
             e.stopPropagation();
             
             /// TODO: Configure this properly
             $state.go('account.messages', {recipientId: friend.id});
-            
-            // profileModalsService
-            //     .showMessageFriendModal(friend)
-            //     .then(function (resp) {
-            //         console.warn('resp --->>>', resp);
-            //     }, function (err) {
-            //         console.warn('err --->>>', err);
-            //     });
         }
 
-        function addFriends() {
-            var contacts = contactsService.getContacts();
-
-            if(!contacts.length){
-                $ionicLoading.show({
-                    template: 'Loading contacts...'
-                });
-                contactsService
-                    .retrieveContacts()
-                    .then(function (resp) {
-                        console.warn('contacts profile resp --->>>', resp);
-                        $ionicLoading.hide();
-                        showAddFriendsModal(resp.data);
-                    });
-            }else{
-                showAddFriendsModal(contacts);
-            }
-        }
-
-        function showAddFriendsModal(contacts) {
+        function showAddFriendsModal() {
             profileModalsService
-                .showAddFriendsModal(contacts)
+                .showAddFriendsModal(vm.contacts)
                 .then(function (resp) {
                     console.warn('resp --->>>', resp);
                 }, function (err) {
