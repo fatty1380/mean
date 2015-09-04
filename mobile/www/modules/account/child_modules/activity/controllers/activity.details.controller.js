@@ -17,6 +17,7 @@
         vm.distanceSinceLastPost = 'no data';
         vm.entry = parameters.entry;
         vm.close = close;
+        vm.likeActivity = likeActivity;
 
         function initMap() {
             if (activityService.hasCoordinates(vm.entry)) {
@@ -46,6 +47,16 @@
                     console.log('getPlaceName error');
                 });
             }
+        }
+
+        function likeActivity() {
+            console.log('likeActivity() ', vm.entry.id);
+            activityService.likeActivity(vm.entry.id).then(function(result) {
+                //update like in feed
+                vm.entry.likes = result.data || [];
+            },function(resp) {
+                console.log(resp);
+            });
         }
 
         function close() {

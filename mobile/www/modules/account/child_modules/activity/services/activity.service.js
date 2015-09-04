@@ -15,6 +15,7 @@
             getFeedActivityById: getFeedActivityById,
             getLastFeedActivity: getLastFeedActivity,
             getFeedIds: getFeedIds,
+            likeActivity: likeActivity,
             getDistanceBetween: getDistanceBetween,
             showPopup: showPopup,
             getPlaceName: getPlaceName,
@@ -40,7 +41,7 @@
                         }
                     });
                 }, function (response) {
-                    showPopup('Error', response);
+                    showPopup('Error', response.message);
                     return response;
                 });
         }
@@ -68,7 +69,6 @@
          * @description This method will map over the IDs in teh activity array of the 
          */
         function populateActivityFeed(rawFeedActivities, start, count) {
-           // feed = rawFeedActivities.reverse();
             feed = rawFeedActivities;
             console.log('Iterating over %d feed IDs to populate', feed.length, feed);
             start = start || 0;
@@ -77,9 +77,6 @@
             /**
              * Look at feed IDs `start` to `start+count` and 
              */
-
-            console.log('feed ',feed);
-
             var promises = feed.slice(start, count)
                 .map(function (value, index) {
                     // TODO: Ensure that value is string, not object
@@ -111,7 +108,7 @@
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
-                    showPopup("Error", response);
+                    showPopup(response.statusText, response.data.message);
                     return response;
                 });
         }
@@ -119,10 +116,9 @@
         function getFeedIds() {
             return $http.get(settings.feed)
                 .then(function (response) {
-                    console.log(response);
                     return response.data;
                 }, function (response) {
-                    showPopup("Error", response);
+                    showPopup(response.statusText, response.data.message);
                     return response;
                 });
         }
@@ -133,7 +129,18 @@
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
-                    showPopup('Error', response);
+                    showPopup(response.statusText, response.data.message);
+                    return response;
+                });
+        }
+
+        function likeActivity(id) {
+            return $http.post(settings.feed + id + '/likes', null)
+                .then(function (response) {
+                    return response;
+                }, function (response) {
+                    console.log(response);
+                    showPopup(response.statusText, response.data.message);
                     return response;
                 });
         }
