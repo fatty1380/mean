@@ -1,18 +1,26 @@
 <ion-modal-view class="edit-avatar">
 
-    <ion-header-bar class="bar-positive">
-        <h1 class="title">Edit Avatar</h1>
-    </ion-header-bar>
+    <div class="header min-size">
+        <ion-header-bar align-title="center" class="bar-stable">
+            <div class="buttons">
+                <button class="button button-clear" ng-click="vm.close(false)">cancel</button>
+            </div>
+            <h1 class="title">Edit Profile Picture</h1>
+        </ion-header-bar>
+        <div class="bar bar-subheader">
+            <h3 class="title">Crop your image using the controls below</h3>
+        </div>
+    </div>
 
-    <ion-pane>
+    <ion-pane class="has-footer crop-pane">
         <div class="cropArea">
-            <img-crop image="vm.rawImage" result-image="vm.croppedImage" result-image-size="85" ></img-crop>
+            <img-crop image="vm.rawImage" result-image="vm.croppedImage" result-image-size="85"></img-crop>
         </div>
     </ion-pane>
 
     <ion-footer-bar class="bar bar-footer">
         <div class="button-bar action-buttons">
-            <button class="button secondary submit" ng-click="vm.close()">Ok</button>
+            <button class="button primary submit" ng-click="vm.close(true)">Save</button>
         </div>
     </ion-footer-bar>
 
