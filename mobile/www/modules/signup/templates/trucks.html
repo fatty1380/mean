@@ -16,7 +16,7 @@
     <ion-pane class="has-footer">
         <ion-scroll>
             <div class="list select-truck">
-                <label class="item item-radio"  ng-repeat="truck in vm.trucks"  >
+                <label class="item item-radio"  ng-repeat="truck in vm.trucks" ng-class="{'active': vm.currentTruck === truck.name}" >
                     <input type="radio" name="trucks"  ng-model="vm.currentTruck" value="{{truck.name}}">
                     <div class="item-content">
                         <p>{{ truck.name }}</p>

@@ -16,7 +16,8 @@
     <ion-pane class="has-footer">
         <ion-scroll>
             <ul class="list select-trailer">
-                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers">
+                <li class="item item-checkbox" ng-repeat="trailer in vm.trailers"
+                    ng-class="{'active': !!trailer.checked}">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="trailer.checked">
                         <div class="item-content">

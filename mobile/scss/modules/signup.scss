@@ -99,52 +99,10 @@ ion-content {
 .license {
   margin: auto;
   width: 275px;
-
-  .item-radio{
+  
+  
+  .oset-cb-item {
     background-color:transparent;
-
-   .category-a,
-   .category-b,
-   .category-c,
-   .category-a:checked ~ .item-content i,
-   .category-b:checked ~ .item-content i,
-   .category-c:checked ~ .item-content i{
-      width: 118px;
-      height: 117px;
-    }
-
-    input:checked ~ .item-content{
-      background: none;
-    }
-    .category-a:checked ~ .item-content i{
-      background-position: -746px 0px;
-    }
-    .category-b:checked ~ .item-content i{
-      background-position: -946px 0px;
-    }
-    .category-c:checked ~ .item-content i{
-      background-position: -1146px 0px;
-    }
-
-    .item-content{
-      background: none;
-      padding: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin: -41px 0 0 -41px;
-    }
-
-    input:checked ~ .item-content{
-      position: static;
-      left: auto;
-      top:auto;
-      margin: 0;
-    }
-  }
-
-
-  .item{
     width: 118px;
     height: 118px;
     display: inline-block;
@@ -152,9 +110,34 @@ ion-content {
     margin: 2px -17px;
     font-size: 0;
     line-height: 0;
-    /*margin:2px -25px;*/
+      
+    .item-content {
+      background: none;
+      position: static;
+      left: auto;
+      top:auto;
+      margin: 0;
+      padding: 14px;
+    }
+      
+    &.active {
+      z-index: 100;
+      
+      &.category-a .item-content i{
+        background-position: -746px 0px;
+      }
+      &.category-b .item-content i{
+        background-position: -946px 0px;
+      }
+      &.category-c .item-content i{
+        background-position: -1146px 0px;
+      }
+      
+      .item-content {
+        padding: 0;
+      }
+    }     
   }
-
 }
 
 .checkbox-icon:before{
