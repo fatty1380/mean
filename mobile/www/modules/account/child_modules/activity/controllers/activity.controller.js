@@ -1,11 +1,11 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$scope', 'activityModalsService','activityService', '$ionicLoading', 'utilsService'];
+    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService'];
 
     function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService) {
         var vm = this;
@@ -18,14 +18,15 @@
         vm.showAddActivityModal = showAddActivityModal;
         vm.showActivityDetailsModal = showActivityDetailsModal;
         vm.updateWithNewActivities = updateWithNewActivities;
+        vm.refresh = refresh;
 
         /**
          * try to initialize if have no feed
          * */
-        $scope.$on('$ionicView.enter', function() {
-            if(vm.feed.length > 0) {
+        $scope.$on('$ionicView.enter', function () {
+            if (vm.feed.length > 0) {
                 startCheckNewActivities();
-            }else{
+            } else {
                 initialize();
             }
         });
@@ -33,7 +34,7 @@
         /**
          * turn off interval before leave view
         * */
-        $scope.$on('$ionicView.beforeLeave', function() {
+        $scope.$on('$ionicView.beforeLeave', function () {
             stopCheckNewActivities();
         });
 
@@ -44,25 +45,25 @@
             });
 
             //get all feed
-            activityService.getFeed().then(function(result) {
+            return activityService.getFeed().then(function (result) {
                 $ionicLoading.hide();
-                console.log("getFeed() ",result);
+                console.log("getFeed() ", result);
                 vm.feed = result;
                 startCheckNewActivities();
-            }, function() {
+            }, function () {
                 $ionicLoading.hide();
                 vm.feed = [];
             });
         }
 
         function startCheckNewActivities() {
-            utilsService.startClock(function() {
-                activityService.getFeedIds().then(function(result) {
-                    console.log(result.activity.length,' -- ',vm.feed.length);
-                    if(result.activity.length > vm.feed.length){
+            utilsService.startClock(function () {
+                activityService.getFeedIds().then(function (result) {
+                    console.log(result.activity.length, ' -- ', vm.feed.length);
+                    if (result.activity.length > vm.feed.length) {
                         vm.newActivities = result.activity.length - vm.feed.length;
                     }
-                }, function() {
+                }, function (resp) {
                 });
             }, 15000);
         }
@@ -75,6 +76,14 @@
             initialize();
         }
 
+        function refresh() {
+            initialize()
+                .finally(function () {
+                    // Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+        }
+
         /**
          * @desc update feed item
          * @param {Number} id - feed id
@@ -83,7 +92,7 @@
             $ionicLoading.show({
                 template: 'update feed'
             });
-            activityService.getFeedActivityById(id).then(function(result) {
+            activityService.getFeedActivityById(id).then(function (result) {
                 result.location = activityService.hasCoordinates(result) ? {
                     type: result.location.type || result.location.coordinates.length > 1 ? 'LineString' : 'Point',
                     coordinates: result.location.coordinates
@@ -111,7 +120,7 @@
         function showActivityDetailsModal(entry) {
             stopCheckNewActivities();
             activityModalsService
-                .showActivityDetailsModal({entry: entry})
+                .showActivityDetailsModal({ entry: entry })
                 .then(function (res) {
                     startCheckNewActivities();
                 }, function (err) {

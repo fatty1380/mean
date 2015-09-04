@@ -38,8 +38,8 @@
   }
 
   .item{
-    margin-bottom: 2px;
-    padding:16px 16px 0px 16px;
+    //margin-bottom: 2px;
+    padding:$item-padding;
 
     > .ico{
       float: left;
@@ -79,6 +79,12 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
       }
+    }
+    
+    .static-map {
+      position: relative;
+      left: -$item-padding;
+      bottom: -$item-padding + (-4px);
     }
   }
 
