@@ -5,6 +5,7 @@
  */
 var _ = require('lodash'),
 	path = require('path'),
+	Q = require('q'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'feed',
         file: 'server.controller'
@@ -69,11 +70,12 @@ function postItem(req, res) {
 
 	req.log.info({ item: item, func: 'postItem' }, 'Saving Item');
 
+
 	var feed = req.feed;
 	feed.activity.push(item);
 	feed.items.push(item);
 
-	req.log.info({ feed: feed, func: 'postItem' }, '... to Feed');
+	req.log.info({ feed: feed, func: 'postItem', sync: req.query.sync }, '... to Feed');
 
 	item.save()
 		.then(
@@ -83,10 +85,22 @@ function postItem(req, res) {
 		.then(
 			function (feed) {
 				req.log.info({ result: feed, item: item, func: 'postItem' }, 'Feed Saved with Result');
-				res.json(item);
+
+				if (!req.query.sync) {
+					req.log.debug({ result: feed, item: item, func: 'postItem' }, 'Async Cross Post - returning');
+					res.json(item);
+				}
 
 				return crossPost(req.user, item);
 			})
+		.then(function (crossPostResult) {
+			req.log.debug({ crossPost: crossPostResult, item: item, func: 'postItem' }, 'Finished Cross Post');
+
+			if (!!req.query.sync) {
+				req.log.debug({ item: item, func: 'postItem' }, 'Sync Cross Post - returning');
+				return res.json(item);
+			}
+		})
 		.then(null,
 			function (err) {
 				req.log.error({ error: err, item: item }, 'failed to save item');
@@ -298,24 +312,9 @@ function myFeed(req, res, next) {
 
 	log.debug({ func: 'myFeed', user: req.user.id }, 'Finding Feed for user ...');
 
-	return Feed.findById(req.user._id)
-		.populate({ path: 'items', select: 'created user', model: 'FeedItem', options: { sort: { 'created': -1 } } })
-	//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
-		.exec()
+	return getOrCreateFeed(req.user._id, req.log)
 		.then(function (feed) {
-			req.log.debug({ func: 'myFeed', feed: feed });
-			if (!feed) {
-				req.log.debug({ func: 'myFeed' }, '... hmmm, Creating new feed for user');
-				feed = new Feed({ user: req.user });
-
-				return feed.save();
-			} else {
-				log.debug({ func: 'myFeed', feed: feed }, '... Found it!');
-				return feed;
-			}
-		})
-		.then(function (feed) {
-			log.debug({ func: 'myFeed' }, 'Returning Feed %s', feed.id);
+			log.debug({ func: 'myFeed' }, 'Returning Feed id:%s', feed.id);
 			req.feed = feed;
 			next();
 		}, function (err) {
@@ -324,17 +323,37 @@ function myFeed(req, res, next) {
 		});
 }
 
+function getOrCreateFeed(userId, log) {
+	return Feed.findById(userId)
+	//	.populate({ path: 'items', model: 'FeedItem', options: { sort: { 'created': -1 } } })
+	//		.populate({ path: 'items', select: 'created user', model: 'FeedItem', options: { sort: { 'created': -1 } } })
+	//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
+		.exec()
+		.then(function (feed) {
+			log.debug({ func: 'getOrCreateFeed', feed: feed });
+			if (!feed) {
+				log.debug({ func: 'getOrCreateFeed' }, '... hmmm, Creating new feed for user');
+				feed = new Feed({ user: userId });
+
+				return feed.save();
+			} else {
+				log.debug({ func: 'getOrCreateFeed', feed: feed }, '... Found it!');
+				return feed;
+			}
+		})
+}
+
 /** Private Method implementations ____________________________________________________________________ */
 
 /**
  * Fan out on write 'cross-post' implementation method
  */
 function crossPost(user, item) {
-	log.debug({ func: 'crossPost', friends: _.uniq(user.friends, 'id') }, 'initializing cross post');
-	_.map(_.uniq(user.friends, 'id'), function (friend) {
+	log.debug({ func: 'crossPost', friends: _.uniq(user.friends) }, 'initializing cross post');
+	return Q.all(_.map(user.friends, function (friend) {
 
 		log.debug({ func: 'crossPost', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
-		Feed.findById(friend).then(
+		return getOrCreateFeed(friend, log).then(
 			function (theirFeed) {
 				log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
 				theirFeed.items.push(item);
@@ -343,6 +362,8 @@ function crossPost(user, item) {
 			}).then(
 				function (success) {
 					log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
+
+					return success;
 				});
-	});
+	}));
 }

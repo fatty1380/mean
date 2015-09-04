@@ -23,6 +23,8 @@ var mongoose = require('mongoose'),
  */
 var app, agent, credentials, user, feedItem;
 
+var _test;
+
 /**
  * Feed routes tests
  */
@@ -37,7 +39,9 @@ describe('Feed CRUD tests', function () {
 	});
 
 	beforeEach(function () {
-		log.debug({ func: 'beforeEach' }, 'Setup');
+		_test = this.currentTest;
+
+		log.debug({ func: this.test.title, test: _test.title }, 'Setup');
 		// Create user and credentials
         user = new User(stubs.user);
         credentials = stubs.getCredentials(user);
@@ -57,11 +61,10 @@ describe('Feed CRUD tests', function () {
 	});
 
 	describe('for Logged In users', function () {
-		var _test;
 
 		beforeEach(function () {
 			_test = this.currentTest;
-			log.debug({ func: 'beforeEach', test: _test.title }, 'Setup');
+			log.debug({ func: this.test.title, test: _test.title }, 'Setup');
 			return stubs.agentLogin(agent, credentials);
 		});
 
@@ -80,7 +83,7 @@ describe('Feed CRUD tests', function () {
 					log.trace({ test: _test.title, feed: feed }, 'Got Feed from Body');
             
 					// Set assertions
-					(feed.user._id).should.equal(userId);
+					(feed.id).should.equal(userId);
 
 					feed.should.have.property('items');
 					feed.should.have.property('activity');
@@ -146,7 +149,7 @@ describe('Feed CRUD tests', function () {
 			var userId = user.id;
 			var savedItemResult;
 
-			// Save a new Feed
+			// Save a new Feed Item
 			return agent.post('/api/feed')
 				.send(feedItem)
 				.expect(200)
@@ -287,6 +290,50 @@ describe('Feed CRUD tests', function () {
 							done();
 						});
 				});
+		});
+
+		describe('When cross posting amongst friends', function () {
+			var friend;
+			beforeEach(function () {
+				friend = new User(stubs.getUser());
+				user.friends.push(friend._id);
+				friend.friends.push(user._id);
+
+				return Q.all([friend.save(), user.save()]).then(
+					function (results) {
+						log.debug({ func: 'test.crossPost init', user: results[1], friend: results[0] });
+
+						results[0].should.have.property('friends').with.length(1);
+						results[1].should.have.property('friends').with.length(1);
+					});
+			});
+
+			it('should post into a friend\'s activity feed (items)', function () {
+				log.debug({ test: _test.title, feedItem: feedItem }, 'Posting Feed Item');
+
+				return agent.post('/api/feed?sync=true')
+					.send(feedItem)
+					.expect(200)
+					.then(function (feedSaveRes) {
+						feedItem = feedSaveRes.body;
+						log.debug({ test: _test.title, feedItem: feedItem }, 'Loggi8ng in as othe user');
+						return stubs.agentLogin(agent, stubs.getCredentials(friend));
+					})
+					.then(function (resp) {
+						log.debug({ test: _test.title, resp: resp }, 'Logged in');
+						return agent.get('/api/feed');
+					})
+					.then(function (friendFeedResponse) {
+
+						log.debug({ test: _test.title, response: friendFeedResponse }, 'Logged in');
+						var feed = friendFeedResponse.body;
+
+						feed.should.have.property('activity').and.have.length(0);
+						feed.should.have.property('items').and.have.length(1);
+
+					});
+			});
+
 		});
 
 	});
