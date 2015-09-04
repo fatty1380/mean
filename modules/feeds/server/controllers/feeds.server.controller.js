@@ -36,15 +36,6 @@ exports.removeLike = delLike;
 (function migrate() {
 				log.error({ func: 'migrate' }, 'Evaluating Migration');
 
-	FeedItem.collection.insert({
-		title: 'Title',
-		message: 'this is a special message from the controller',
-		location: [{
-			coordinates: [37.4422623, -122.143102]
-		}]
-				}, {}, function () {
-				})
-
 	FeedItem.collection.update({ location: { $exists: true } },
 		{ $rename: { 'location': '_location' } },
 		{ multi: true },
@@ -53,8 +44,8 @@ exports.removeLike = delLike;
 				log.error({ func: 'migrate', rawResponse: rawResponse, error: err }, 'Migration failed with error');
 			}
 
-			if (rawResponse.nModified > 0) {
-				log.info({ func: 'migrate', rawResponse: rawResponse }, 'Completed Migration');
+			if (!!rawResponse && rawResponse.nModified > 0) {
+				log.always({ func: 'migrate', rawResponse: rawResponse }, 'Completed Migration of Old Feed Items to new');
 			}
 		});
 })();
