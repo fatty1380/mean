@@ -46,7 +46,7 @@
         }
 
         function loadItems(num) {
-            var itemId = items[num].id;
+            var itemId = items[num];
             getFeedActivityById(itemId).then(function (result) {
                 console.log('Pushing Activity to Feed: ', result);
                 feed.unshift(result);
@@ -83,7 +83,7 @@
             var promises = feed.slice(start, count)
                 .map(function (value, index) {
                     // TODO: Ensure that value is string, not object
-                    return getFeedActivityById(value.id).then(
+                    return getFeedActivityById(value).then(
                         function (feedItem) {
                             if (hasCoordinates(feedItem)) {
                                 feedItem.location = {

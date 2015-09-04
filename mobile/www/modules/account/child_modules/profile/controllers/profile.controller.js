@@ -71,7 +71,7 @@
                     .catch(function reject(err) {
                         debugger;
                     });
-            }
+            };
 
             /**
              * showEditModal

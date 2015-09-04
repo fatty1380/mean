@@ -13,16 +13,16 @@
         </button>
 
         <ion-scroll>
-            <ion-list ng-repeat="entry in vm.feed">
-                <ion-item class="item">
+            <ion-refresher pulling-text="pull to refresh ..." on-refresh="vm.refresh()"></ion-refresher>
+            <ion-list>
+                <ion-item ng-repeat="entry in vm.feed" class="card item" ng-show="!!entry.id">
                     <div class="ico ico-avatar"></div>
                     <div class="activity-item">
                         <div class="top" ng-click='vm.showActivityDetailsModal(entry)'>
                             <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created | date:'mediumDate'}}
                             </div>
                             <div class="message">
-                                <a class="user-link" ng-click="$event.stopPropagation()" 
-                                    ui-sref="account.profile.user({userId: entry.user.id})">
+                                <a class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile.user({userId: entry.user.id})">
                                     <strong>{{entry.user.displayName}}</strong>
                                 </a>
                                 {{ entry.title }}
@@ -43,14 +43,9 @@
                             Show Company Profile
                         </a>
                     </div>
+                    <static-gmap ng-if="!!entry.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="8" markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates || [] }} }">
+                    </static-gmap>
                 </ion-item>
-                <static-gmap ng-if="!!entry.location.coordinates"
-                        size="400x200"
-                        sensor="true"
-                        zoom="8"
-                        markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates || [] }} }">
-                </static-gmap>
-                </div>
 
             </ion-list>
         </ion-scroll>

@@ -9,20 +9,32 @@
 
     function RegisterCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService) {
         var vm = this;
+        vm.lastElementFocused = false;
+
         vm.user = {
-            firstName: "test",
-            lastName: "test",
-            email: "test@test.test",
-            password: "testtest",
-            confirmPassword: "testtest"
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
         };
 
         vm.initForm = initForm;
         vm.continueToEngagement = continueToEngagement;
+        vm.submitForm = submitForm;
 
         function initForm(scope) {
             vm.form = scope;
         };
+
+        /**
+         * @description Submit form if last field in focus
+         */
+        function submitForm() {
+            if(vm.lastElementFocused) {
+                continueToEngagement();
+            }
+        }
 
         function continueToEngagement() {
             $ionicLoading.show({

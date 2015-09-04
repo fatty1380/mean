@@ -81,10 +81,6 @@
             return getPicture(type)
                 .then(function success(imageData) {
                     return avatarModalsService.showEditModal(imageData);
-                })
-                .then(function avatarModalSuccess(response) {
-                    debugger;
-                    return response;
                 });
         }
     }
