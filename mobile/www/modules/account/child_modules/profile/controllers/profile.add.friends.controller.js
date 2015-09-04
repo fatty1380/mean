@@ -5,34 +5,28 @@
         .module('account')
         .controller('AddFriendsCtrl', AddFriendsCtrl);
 
-    AddFriendsCtrl.$inject = ['$q', '$scope', 'friendsService', 'utilsService', '$filter', 'parameters', '$http', 'settings', '$ionicLoading'];
+    AddFriendsCtrl.$inject = ['$q', 'profileModalsService', '$scope', 'contactsService', 'utilsService', '$filter', 'parameters', '$http', 'settings', '$ionicLoading'];
 
-    function AddFriendsCtrl($q, $scope, friendsService, utilsService, $filter, parameters, $http, settings, $ionicLoading) {
+    function AddFriendsCtrl($q, profileModalsService, $scope, contactsService, utilsService, $filter, parameters, $http, settings, $ionicLoading) {
         var vm = this;
 
         vm.searchText = "";
         vm.contacts = parameters;
-        vm.friends = friendsService.friends;
-        vm.users = friendsService.users;
 
-        vm.selectContact = selectContact;
         vm.cancel = cancel;
         vm.addFriends = addFriends;
+        vm.showFriendManualAddModal = showFriendManualAddModal;
 
-        function selectContact(contact, $event) {
-
-            contact.checked = !contact.checked;
-
-            var element = $event.toElement,
-                classList = element.classList;
-
-            if(!classList.contains('selected')){
-                $event.toElement.classList.add('selected');
-                $event.toElement.textContent = 'Selected';
-            } else {
-                $event.toElement.classList.remove('selected');
-                $event.toElement.textContent = 'Invite';
-            }
+        function showFriendManualAddModal() {
+            profileModalsService
+                .showFriendManualAddModal()
+                .then(function (contact) {
+                    console.warn(' contact --->>>', contact);
+                    vm.contacts.push(contact);
+                    contactsService.setContacts(vm.contacts);
+                }, function (err) {
+                    console.warn('err --->>>', err);
+                });
         }
 
         function addFriends() {

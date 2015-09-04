@@ -1,37 +1,34 @@
-<ion-view>
+<ion-modal-view>
     <div class="header compact-size">
         <ion-header-bar align-title="center">
             <ion-nav-bar>
                 <ion-nav-back-button>Back</ion-nav-back-button>
             </ion-nav-bar>
-            <h1 class="title">Add Friends</h1>
+            <h1 class="title">Manually Add Friend</h1>
         </ion-header-bar>
         <div class="bar bar-subheader">
-            <h3 class="title">Please enter a Mobile Phone NUmber or Email Address below.</h3>
+            <h3 class="title">Please enter a Mobile Phone Number or Email Address below.</h3>
         </div>
     </div>
     <ion-pane class="pane has-footer content-pane">
         <ion-scroll>
             <div class="list share-form">
                 <label class="item item-input">
-                    <input type="text" placeholder="Phone Number">
+                    <input type="text" placeholder="Phone Number" ng-model="vm.phone">
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Email Address">
+                    <input type="text" placeholder="Email Address" ng-model="vm.email">
                 </label>
                 <label class="item item-input">
-                    <input type="text" placeholder="Name">
-                </label>
-                <label class="item item-input">
-                    <textarea placeholder="Enter message"></textarea>
+                    <input type="text" placeholder="Name" ng-model="vm.displayName">
                 </label>
             </div>
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary" ui-sref="account.profile">Cancel</button>
-            <button class="button primary">Invite</button>
+            <button class="button secondary" ng-click="vm.closeModal();">Cancel</button>
+            <button class="button primary" ng-click="vm.addFriend();">Add</button>
         </div>
     </ion-footer-bar>
-</ion-view>
+</ion-modal-view>

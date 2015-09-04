@@ -16,7 +16,8 @@
             showRequestReviewModal: showRequestReviewModal,
             showAddFriendsModal: showAddFriendsModal,
             showMessageFriendModal: showMessageFriendModal,
-            showFriendRequestModal: showFriendRequestModal
+            showFriendRequestModal: showFriendRequestModal,
+            showFriendManualAddModal: showFriendManualAddModal
         };
 
         function showProfileEditModal (parameters) {
@@ -67,6 +68,15 @@
         function showFriendRequestModal (parameters) {
             templateUrl = 'modules/account/child_modules/profile/templates/profile-friend-requests.html';
             controller = 'ProfileFriendRequestCtrl as vm';
+            params = parameters || {};
+
+            return modalService
+                .show(templateUrl, controller, params);
+        }
+
+        function showFriendManualAddModal (parameters) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-friends-manual-add.html';
+            controller = 'ManualFriendsAddCtrl as vm';
             params = parameters || {};
 
             return modalService

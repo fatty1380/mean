@@ -21,7 +21,7 @@
                 emails: [{value: vm.email }]
             };
 
-            contactsService.setContacts(contact);
+            contactsService.addContacts(contact);
 
             $state.go('signup-friends-contacts');
         }

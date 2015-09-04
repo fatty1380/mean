@@ -15,7 +15,14 @@
             return contacts;
         }
 
-        function setContacts(contact) {
+        function setContacts(newContacts) {
+            if(newContacts) {
+                contacts = newContacts;
+            }
+            return contacts;
+        }
+
+        function addContacts(contact) {
             if(angular.isArray(contact)){
                 contacts.concat(contact);
             }else{
@@ -102,6 +109,7 @@
         return {
             getContacts: getContacts,
             retrieveContacts: retrieveContacts,
+            addContacts: addContacts,
             setContacts: setContacts,
             save: save,
             clone: clone,

@@ -142,10 +142,14 @@
             var contacts = contactsService.getContacts();
 
             if(!contacts.length){
+                $ionicLoading.show({
+                    template: 'Loading contacts...'
+                });
                 contactsService
                     .retrieveContacts()
                     .then(function (resp) {
                         console.warn('contacts profile resp --->>>', resp);
+                        $ionicLoading.hide();
                         showAddFriendsModal(resp.data);
                     });
             }else{
