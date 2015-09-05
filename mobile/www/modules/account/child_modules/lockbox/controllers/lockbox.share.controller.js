@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -10,18 +10,20 @@
     function LockboxShareCtrl($scope, lockboxDocuments) {
         var vm = this;
         vm.cancel = cancel;
+        vm.share = share;
 
+        console.log('[LockboxShare] Ctrl Load');
         init();
 
         function init() {
             vm.documents = [];
-            vm.addDocsPopup = lockboxDocuments.addDocsPopup;
+            vm.contact = {};
             vm.shareStep = 1;
-            getDocs();
+            return getDocs();
         }
 
         function getDocs() {
-            lockboxDocuments
+            return lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
                     console.log('Documents List', response);
@@ -31,8 +33,16 @@
 
         function cancel() {
             var self = this;
-            $scope.closeModal(null);
+            vm.closeModal(null);
             self.shareStep = 1;
+        }
+
+        function share() {
+            if (vm.shareStep < 2) {
+                return;
+            }
+
+
         }
     }
 })();

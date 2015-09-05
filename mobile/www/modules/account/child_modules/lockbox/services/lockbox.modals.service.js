@@ -7,25 +7,29 @@
 
     lockboxModalsService.$inject = ['modalService'];
 
-    function lockboxModalsService (modalService) {
-        var templateUrl, controller, params;
+    function lockboxModalsService(modalService) {
+        var templateUrl, controller, params,
+            defaultOptions = { animation: 'slide-in-up' };
 
-        function showLockboxEditModal (parameters) {
+        function showLockboxEditModal(parameters, options) {
             templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-edit.html';
             controller = 'LockboxEditCtrl as vm';
             params = parameters || {};
+            options = angular.extend({}, defaultOptions, options);
 
             return modalService
-                .show(templateUrl, controller, params);
+                .show(templateUrl, controller, params, options);
         }
 
-        function showLockboxShareModal (parameters) {
+        function showLockboxShareModal(parameters, options) {
             templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-share.html';
             controller = 'LockboxShareCtrl as vm';
             params = parameters || {};
+            options = angular.extend({}, defaultOptions, options);
+            debugger;
 
             return modalService
-                .show(templateUrl, controller, params);
+                .show(templateUrl, controller, params, options);
         }
 
         return {
