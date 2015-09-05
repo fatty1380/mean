@@ -200,7 +200,7 @@ describe('Feed CRUD tests', function () {
 					});
 		});
 
-		it('should be able to `like` a feed item', function () {
+		it('should not be able to `like` your own feed item', function () {
 			
 			// Get the userId
 			var userId = user.id;
@@ -211,7 +211,7 @@ describe('Feed CRUD tests', function () {
 			// Save a new Feed
 			return agent.post('/api/feed')
 				.send(feedItem)
-				.expect(200)
+				.expect(403)
 				.then(
 					function (feedItemSaveRes) {
 
@@ -293,36 +293,34 @@ describe('Feed CRUD tests', function () {
 		});
 
 		describe('When cross posting amongst friends', function () {
-			var friend;
+			var friend, notFriend;
 			beforeEach(function () {
 				friend = new User(stubs.getUser());
+				notFriend = new User(stubs.getUser());
 				user.friends.push(friend._id);
 				friend.friends.push(user._id);
 
-				return Q.all([friend.save(), user.save()]).then(
-					function (results) {
+				return Q.all([friend.save(), user.save(), notFriend.save()])
+					.then(function (results) {
 						log.debug({ func: 'test.crossPost init', user: results[1], friend: results[0] });
 
 						results[0].should.have.property('friends').with.length(1);
 						results[1].should.have.property('friends').with.length(1);
+
+						return agent.post('/api/feed?sync=true').send(feedItem);
+					})
+					.then(function (feedSaveRes) {
+						feedItem = feedSaveRes.body;
+
+						return stubs.agentLogin(agent, stubs.getCredentials(friend));
 					});
 			});
 
 			it('should post into a friend\'s activity feed (items)', function () {
 				log.debug({ test: _test.title, feedItem: feedItem }, 'Posting Feed Item');
 
-				return agent.post('/api/feed?sync=true')
-					.send(feedItem)
+				return agent.get('/api/feed')
 					.expect(200)
-					.then(function (feedSaveRes) {
-						feedItem = feedSaveRes.body;
-						log.debug({ test: _test.title, feedItem: feedItem }, 'Loggi8ng in as othe user');
-						return stubs.agentLogin(agent, stubs.getCredentials(friend));
-					})
-					.then(function (resp) {
-						log.debug({ test: _test.title, resp: resp }, 'Logged in');
-						return agent.get('/api/feed');
-					})
 					.then(function (friendFeedResponse) {
 
 						log.debug({ test: _test.title, response: friendFeedResponse }, 'Logged in');
@@ -330,8 +328,45 @@ describe('Feed CRUD tests', function () {
 
 						feed.should.have.property('activity').and.have.length(0);
 						feed.should.have.property('items').and.have.length(1);
-
 					});
+			});
+
+			it('should allow you to like a friend\'s activity feed item', function () {
+				
+				// Ensure that the "Friend" can like "Your" feed item
+				return agent.post('/api/feed/' + feedItem.id + '/likes')
+					.expect(200).then(
+						function (feedLikeRes) {
+							// Set assertions
+							feedLikeRes.body.should.be.Array.with.length(1);
+
+							var likes = feedLikeRes.body;
+
+							likes.should.containEql(friend.id);
+
+							return feedLikeRes;
+						})
+					.then(
+						function (feedLikeRes) {
+							// Set assertions
+							feedLikeRes.body.should.be.Array.with.length(1, 'Should not be able to like the same item twice');
+
+							var likes = feedLikeRes.body;
+
+							likes.should.containEql(friend.id);
+						});
+
+			});
+
+			it('should not allow you to like a non-friend\'s activity feed item', function () {
+								
+				// Ensure that the "Friend" can like "Your" feed item
+				return stubs.agentLogin(agent, stubs.getCredentials(notFriend))
+					.then(function () {
+						return agent.post('/api/feed/' + feedItem.id + '/likes')
+							.expect(403);
+					});
+
 			});
 
 		});

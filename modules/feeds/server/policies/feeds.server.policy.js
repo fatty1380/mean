@@ -43,7 +43,15 @@ exports.invokeRolesPolicies = function () {
 			}, {
 					resources: '/api/feed/:feedItemId',
 					permissions: ['get']
-				}]
+				},
+			{
+				resources: '/api/feed/:feedItemId/likes',
+				permissions: ['get', 'post', 'delete']
+			},
+			{
+				resources: '/api/feed/:feedItemId/comments',
+				permissions: ['get', 'post', 'delete']
+			}]
 		}, {
 			roles: ['guest'],
 			allows: []
