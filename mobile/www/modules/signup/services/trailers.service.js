@@ -3,13 +3,11 @@
 
     angular
         .module('signup')
-        .controller('TrailersCtrl', TrailersCtrl)
+        .factory('trailerService', trailerService);
 
-    TrailersCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', '$ionicPopup'];
+    trailerService.$inject = ['$q', '$ionicPopup', '$rootScope'];
 
-    function TrailersCtrl($scope, $state, registerService, $ionicLoading, $ionicPopup) {
-        var vm = this;
-        vm.newTrailer = '';
+    function trailerService ($q, $ionicPopup, $rootScope) {
         var TRAILERS = [
             {name:'Box', checked:false},
             {name:'Car Carrier', checked:false},
@@ -29,16 +27,19 @@
             {name:'Tank', checked:false}
         ];
 
-        vm.addTrailer = addTrailer;
-        vm.continueToProfile = continueToProfile;
-        vm.continueToAddFriends = continueToAddFriends;
-        vm.trailers = getTrailers();
+        function getTrailers () {
+            var deferred = $q.defer();
+
+            if(TRAILERS.length) deferred.resolve(TRAILERS);
+
+            return deferred.promise;
+        }
 
         function addTrailer() {
             $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer" autofocus>',
                 title: 'Please enter a trailer type',
-                scope: $scope,
+                scope: $rootScope.new(),
                 buttons: [
                     {
                         text: 'Cancel',
@@ -53,7 +54,7 @@
                             if (!vm.newTrailer) {
                                 e.preventDefault();
                             } else {
-                                vm.trailers.push({name:vm.newTrailer, checked:true});
+                                TRAILERS.push({name:vm.newTrailer, checked:true});
                                 vm.newTrailer = '';
                                 return vm.newTrailer;
                             }
@@ -63,48 +64,16 @@
             });
         }
 
-        function continueToAddFriends() {
-            $state.go('signup-friends');
-        }
 
-        function continueToProfile(isSave) {
-            if(isSave){
-                registerService.setProps('trailer', getNameKeys(vm.trailers));
-            }
 
-           registerService.updateUser(registerService.getDataProps())
-           .then(function (response) {
-                $ionicLoading.hide();
-                if(response.success) {
-                    $state.go('account.profile');
-                }else{
-                    showPopup(JSON.stringify(response));
-                }
-            });
-        }
+        return {
+            getTrailers: getTrailers,
+            addTrailer: addTrailer
+        };
 
-        function getNameKeys(obj) {
-            var keys = [];
-            for (var i in obj) {
-                if (obj.hasOwnProperty(i)) {
-                    if (obj[i].checked) {
-                        keys.push(obj[i].name);
-                    }
-                }
-            }
-            return keys;
-        }
 
-        function showPopup(response) {
-            var alertPopup = $ionicPopup.alert({
-                title: response.title || 'title',
-                template: response || 'no message'
-            });
-            alertPopup.then(function (res) {});
-        }
-
-        function getTrailers() {
-            return TRAILERS;
-        }
-    };
+    }
+    
 })();
+
+

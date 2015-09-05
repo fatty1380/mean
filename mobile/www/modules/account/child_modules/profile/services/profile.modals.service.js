@@ -17,7 +17,9 @@
             showAddFriendsModal: showAddFriendsModal,
             showMessageFriendModal: showMessageFriendModal,
             showFriendRequestModal: showFriendRequestModal,
-            showFriendManualAddModal: showFriendManualAddModal
+            showFriendManualAddModal: showFriendManualAddModal,
+            showProfileEditTrailersModal: showProfileEditTrailersModal,
+            showProfileEditTrucksModal: showProfileEditTrucksModal
         };
 
         function showProfileEditModal (parameters) {
@@ -77,6 +79,24 @@
         function showFriendManualAddModal (parameters) {
             templateUrl = 'modules/account/child_modules/profile/templates/profile-friends-manual-add.html';
             controller = 'ManualFriendsAddCtrl as vm';
+            params = parameters || {};
+
+            return modalService
+                .show(templateUrl, controller, params);
+        }
+
+        function showProfileEditTrailersModal (parameters) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-edit-trailers.html';
+            controller = 'ProfileEditTrailersCtrl as vm';
+            params = parameters || {};
+
+            return modalService
+                .show(templateUrl, controller, params);
+        }
+
+        function showProfileEditTrucksModal (parameters) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-edit-trucks.html';
+            controller = 'ProfileEditTrucksCtrl as vm';
             params = parameters || {};
 
             return modalService

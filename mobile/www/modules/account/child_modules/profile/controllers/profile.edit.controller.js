@@ -5,18 +5,46 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['$scope', '$state', 'userService', 'registerService', 'tokenService'];
+    ProfileEditCtrl.$inject = ['$scope', '$state', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
 
-    function ProfileEditCtrl($scope, $state, userService, registerService, tokenService) {
+    function ProfileEditCtrl($scope, $state, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
         
         vm.profileData = userService.profileData;
 
-        vm.cancel = function () {
-            vm.closeModal(null);
-        };
+        vm.cancel = cancel;
+        vm.save = save;
+        vm.logout = logout;
+        vm.showProfileEditTrailersModal = showProfileEditTrailersModal;
+        vm.showProfileEditTrucksModal = showProfileEditTrucksModal;
 
-        vm.save = function () {
+        function showProfileEditTrailersModal () {
+            trailerService
+                .getTrailers()
+                .then(function (trailers) {
+                    console.warn(' trailers --->>>', trailers);
+                    profileModalsService
+                        .showProfileEditTrailersModal({trailers: trailers})
+                        .then(function (modalserviceResponse) {
+                            console.warn(' vm.profileData --->>>', vm.profileData);
+                            console.warn(' modalserviceResponse --->>>', modalserviceResponse);
+                        })
+                });
+        }
+
+        function showProfileEditTrucksModal () {
+            profileModalsService
+                .showProfileEditTrucksModal()
+                .then(function () {
+
+                })
+        }
+
+        function cancel () {
+            vm.closeModal(null);
+        }
+
+        function save () {
             console.log('Saving user data: ', vm.profileData);
 
             return userService.updateUserData(vm.profileData)
@@ -28,7 +56,7 @@
                 })
         }
 
-        vm.logout = function () {
+        function logout () {
             userService
                 .signOut()
                 .then(function (data) {

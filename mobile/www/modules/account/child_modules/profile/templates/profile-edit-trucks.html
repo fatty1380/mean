@@ -1,4 +1,4 @@
-<ion-modal-view class="profile-screen">
+<ion-modal-view class="signup-section">
     <div class="header mid-size">
         <ion-header-bar>
             <h1 class="title">Edit Profile</h1>
@@ -41,13 +41,13 @@
                     <span class="input-label">Truck Type</span>
                     <input type="text" ng-model="vm.profileData.props.truck" placeholder="Truck Type">
                 </label>
-                <div class="item">
+                <label class="item item-input">
                     <span class="input-label">Trailer Types</span>
-                    <button class="button button-clear button-block" ng-click="vm.showProfileEditTrailersModal();">add</button>
-                    <div>
-                        <span ng-repeat="trailer in vm.profileData.props.trailer">{{trailer.name}}</span>
-                    </div>
-                </div>
+                    <input ng-repeat="trailer in vm.profileData.props.trailer" type="text" ng-model="trailer" placeholder="Trailer Types">
+                    </span>
+                    <br/>
+                    <button class="button button-clear button-block" ng-click="vm.profileData.props.trailer.push('');">add</button>
+                </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Driving Since</span>
                     <input type="text" ng-model="vm.profileData.props.started" placeholder="Driving Since" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
