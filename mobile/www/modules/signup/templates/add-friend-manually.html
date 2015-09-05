@@ -13,15 +13,7 @@
     <ion-pane class="pane has-footer content-pane">
         <ion-scroll>
             <div class="list share-form">
-                <label class="item item-input">
-                    <input type="text" placeholder="Phone Number" ng-model="vm.phone">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Email Address" ng-model="vm.email">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Name" ng-model="vm.displayName">
-                </label>
+                <oset-manual-contact model="vm.contact" ></oset-manual-contact>
             </div>
         </ion-scroll>
     </ion-pane>
