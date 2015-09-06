@@ -597,6 +597,10 @@ $but-height: 90px;
 /* edit avatar */
 .edit-avatar {
 
+  ion-pane {
+    background-color: $gradient-bottom;
+  }
+
   .cropArea {
     overflow: hidden;
     width:100%;

@@ -1,16 +1,16 @@
 <ion-modal-view class="preview">
     <ion-header-bar class="">
-        <button class="button button-clear button-primary preview-cancel-button" ng-click="vm.hidePreview()">Close</button>
+        <button class="button button-clear button-primary preview-cancel-button" ng-click="vm.closeModal(null)">Close</button>
         <h1 class="title">Preview</h1>
     </ion-header-bar>
 
     <ion-content id="pdf-view-content">
-        <ion-pane class="image-container" ng-if="vm.currentDoc.sku == 'mvr'">
-            <div src="{{vm.trustSrc(image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
+        <ion-pane class="image-container" ng-if="!!vm.image">
+            <div src="{{vm.trustSrc(vm.image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
         </ion-pane>
-        <div class="pdf-container" ng-if="vm.currentDoc.sku == 'bg'">
+        <div class="pdf-container" ng-if="!!vm.pdfURL.src">
             <pdfviewer
-                    src="{{ vm.trustSrc(pdfURL.src) }}"
+                    src="{{ vm.trustSrc(vm.pdfURL.src) }}"
                     scale="{{scale}}"
                     pages-to-show="{{pages}}"
                     on-page-load='vm.pageLoaded(page,total)'
@@ -23,7 +23,7 @@
     </ion-content>
 
     <ion-footer-bar class="">
-        <h1 class="title">{{ vm.currentDoc.name }}</h1>
+        <h1 class="title">{{ vm.document.name }}</h1>
     </ion-footer-bar>
 
 </ion-modal-view>

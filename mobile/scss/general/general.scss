@@ -98,13 +98,13 @@ textarea{
 
 .pane.has-title{padding-top: 64px;}
 .pane.has-footer{
-  bottom: 44px;
+  bottom: $bar-footer-height;
   height: auto;
 }
 
 /** Action Buttons **/
 .action-buttons{
-  height: 44px;
+  height: $bar-footer-height;
   letter-spacing: 0.82px;
 
   &.button-bar{

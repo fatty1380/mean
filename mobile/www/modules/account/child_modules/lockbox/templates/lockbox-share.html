@@ -2,11 +2,12 @@
     <div class="header compact-size">
         <ion-header-bar>
             <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
-            <h1 class="title">My Lockbox</h1>
-            <button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>
+            <h1 class="title">Share Profile</h1>
+            <!--<button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>-->
+            <button class="button button-clear" ng-click="vm.shareStep = 2;">skip</button>
         </ion-header-bar>
         <div class="bar bar-subheader">
-            <h3 class="title">Your lockbox will contain all your secure documents.</h3>
+            <h3 class="title">Select which documents you would like to share along with the information saved in your profile</h3>
         </div>
     </div>
     <ion-pane class="has-footer">
@@ -58,7 +59,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary">Share</button>
+            <button class="button primary" ng-click="vm.share()">Share</button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>

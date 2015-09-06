@@ -45,7 +45,7 @@
                     profile: function resolveUserProfile($stateParams, registerService, userService) {
                         
                         if (!!$stateParams.userId) {
-                            return registerService.getProfilesID($stateParams.userId)
+                            return registerService.getProfileById($stateParams.userId)
                                 .then(function success(response) {
                                     if (response.success) {
                                         return response.message.data;

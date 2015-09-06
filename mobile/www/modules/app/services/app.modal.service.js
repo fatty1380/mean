@@ -9,15 +9,31 @@
 
     function modalService($ionicModal, $rootScope, $q, $controller) {
 
-        function show(templateUrl, controller, parameters) {
+        return {
+            show: show
+        }
+
+        function show(templateUrl, controller, parameters, options) {
             var deferred = $q.defer(),
                 ctrlInstance,
                 modalScope = $rootScope.$new(),
-                thisScopeId = modalScope.$id;
+                thisScopeId = modalScope.$id,
+                defaultOptions = {
+                    animation: 'none',
+                    focusFirstInput: false,
+                    backdropClickToClose: true,
+                    hardwareBackButtonClose: true,
+                    modalCallback: null
+                };
+
+            options = angular.extend({}, defaultOptions, options);
 
             $ionicModal.fromTemplateUrl(templateUrl, {
                 scope: modalScope,
-                animation: 'none'
+                animation: options.animation,
+                focusFirstInput: options.focusFirstInput,
+                backdropClickToClose: options.backdropClickToClose,
+                hardwareBackButtonClose: options.hardwareBackButtonClose
             }).then(function (modal) {
                 modalScope.modal = modal;
                 modalScope.openModal = function () {
@@ -38,7 +54,7 @@
                 });
 
                 // Invoke the controller
-                var locals = { '$scope': modalScope, 'parameters': parameters},
+                var locals = { '$scope': modalScope, 'parameters': parameters },
                     ctrlEval = _evalController(controller);
 
                 ctrlInstance = $controller(controller, locals);
@@ -48,7 +64,14 @@
                     ctrlInstance.closeModal = modalScope.closeModal;
                 }
 
-                modalScope.modal.show();
+                modalScope.modal.show()
+                    .then(function () {
+                        modalScope.$broadcast('modal.afterShow', modalScope.modal);
+                    });
+
+                if (angular.isFunction(options.modalCallback)) {
+                    options.modalCallback(modal);
+                }
 
             }, function (err) {
                 deferred.reject(err);
@@ -80,10 +103,6 @@
             }
 
             return result;
-        }
-
-        return {
-            show: show
         }
 
     }
