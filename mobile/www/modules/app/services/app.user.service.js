@@ -18,7 +18,7 @@
                     vm.profileData = {};
                 }
             )
-        }
+        };
 
         vm.getUserData = function () {
             if (!vm.profileData || !vm.profileData.id) {
@@ -29,7 +29,7 @@
                     });
             }
             return $q.when(vm.profileData);
-        }
+        };
 
         vm.updateUserData = function (dataProps) {
             return registerService.updateUser(dataProps)

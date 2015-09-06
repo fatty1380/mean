@@ -5,41 +5,26 @@
         .module('account')
         .controller('ProfileEditTrucksCtrl', ProfileEditTrucksCtrl);
 
-    ProfileEditTrucksCtrl.$inject = ['$scope', '$state', 'userService', 'registerService', 'tokenService'];
+    ProfileEditTrucksCtrl.$inject = ['$scope', 'parameters', 'registerService'];
 
-    function ProfileEditTrucksCtrl($scope, $state, userService, registerService, tokenService) {
+    function ProfileEditTrucksCtrl($scope, parameters, registerService) {
         var vm = this;
-        
-        vm.profileData = userService.profileData;
 
-        vm.cancel = function () {
-            vm.closeModal(null);
-        };
+        vm.newTruck = '';
+        vm.trucks = parameters.trucks;
 
-        vm.save = function () {
-            console.log('Saving user data: ', vm.profileData);
+        vm.cancel = cancel;
+        vm.save = save;
 
-            return userService.updateUserData(vm.profileData)
-                .then(function (success) {
-                    vm.closeModal(success);
-                })
-                .catch(function (error) {
-                    console.error('Unable to save user data: ', error);
-                })
-        };
+        function cancel (truck) {
+            $scope.closeModal(truck);
+        }
 
-        vm.logout = function () {
-            userService
-                .signOut()
-                .then(function (data) {
-                    tokenService.set('access_token', '');
-                    tokenService.set('refresh_token', '');
-                    tokenService.set('token_type', '');
+        function save () {
+            registerService.setProps('truck', vm.newTruck);
+            registerService.updateUser(registerService.getDataProps());
 
-                    vm.cancel();
-
-                    $state.go('login');
-                })
+            cancel(vm.newTruck);
         }
     }
 

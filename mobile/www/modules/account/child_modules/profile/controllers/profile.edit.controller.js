@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['$scope', '$state', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
+    ProfileEditCtrl.$inject = ['truckService', '$state', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
 
-    function ProfileEditCtrl($scope, $state, userService, profileModalsService, trailerService, tokenService) {
+    function ProfileEditCtrl(truckService, $state, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
         
         vm.profileData = userService.profileData;
@@ -17,27 +17,41 @@
         vm.logout = logout;
         vm.showProfileEditTrailersModal = showProfileEditTrailersModal;
         vm.showProfileEditTrucksModal = showProfileEditTrucksModal;
+        vm.updateTrailers = updateTrailers;
+        vm.updateTrucks = updateTrucks;
+
+        function updateTrailers (trailers) {
+            if(!trailers) return;
+            vm.profileData.props.trailer = trailers;
+        }
+
+        function updateTrucks (truck) {
+            if(!truck) return;
+            vm.profileData.props.truck = truck;
+        }
 
         function showProfileEditTrailersModal () {
             trailerService
                 .getTrailers()
                 .then(function (trailers) {
-                    console.warn(' trailers --->>>', trailers);
                     profileModalsService
                         .showProfileEditTrailersModal({trailers: trailers})
-                        .then(function (modalserviceResponse) {
-                            console.warn(' vm.profileData --->>>', vm.profileData);
-                            console.warn(' modalserviceResponse --->>>', modalserviceResponse);
-                        })
+                        .then(function (trailers) {
+                            vm.updateTrailers(trailers);
+                        });
                 });
         }
 
         function showProfileEditTrucksModal () {
-            profileModalsService
-                .showProfileEditTrucksModal()
-                .then(function () {
-
-                })
+            truckService
+                .getTrucks()
+                .then(function (trucks) {
+                    profileModalsService
+                        .showProfileEditTrucksModal({trucks: trucks})
+                        .then(function (trucks) {
+                            vm.updateTrucks(trucks);
+                        });
+                });
         }
 
         function cancel () {

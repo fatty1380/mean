@@ -17,15 +17,16 @@
         vm.save = save;
 
 
-        function cancel () {
-            $scope.closeModal();
+        function cancel (trailers) {
+            $scope.closeModal(trailers);
         }
 
         function save () {
-            registerService.setProps('trailer', getNameKeys(vm.trailers));
+            var trailers = getNameKeys(vm.trailers);
+            registerService.setProps('trailer', trailers);
             registerService.updateUser(registerService.getDataProps());
 
-            cancel();
+            cancel(trailers);
         }
 
         function getNameKeys(obj) {
