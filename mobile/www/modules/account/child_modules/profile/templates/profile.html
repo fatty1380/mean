@@ -107,6 +107,9 @@
                             </em>
                         </ion-item>
                     </ion-list>
+                    <ion-item ng-if="vm.experience.length === 0" class="item center">
+                        <strong>No Experience</strong>
+                    </ion-item>
                 </ion-scroll>
                 <button class="button content-button" ng-click="vm.showAddExperienceModal()"><i class="ico ico-share"></i>Add Experience</button>
             </ion-tab>
