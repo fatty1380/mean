@@ -105,6 +105,8 @@
 
             if(length >= 2){
                 getOutsetUsers(vm.searchText);
+            }else{
+                vm.users = [];
             }
 
             $ionicScrollDelegate.$getByHandle('main-content-scroll').scrollTop();

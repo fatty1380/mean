@@ -81,10 +81,5 @@
                     controller: 'AddFriendManuallyCtrl as vm'
                 })
 
-                .state('signup-welcome', {
-                    url: '/signup/welcome',
-                    templateUrl: 'modules/signup/templates/welcome.html',
-                    controller: 'WelcomeCtrl as vm'
-                })
         }]);
 })();
