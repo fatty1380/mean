@@ -1,0 +1,43 @@
+<ion-modal-view class="">
+
+    <div class="header min-size">
+        <ion-header-bar>
+            <h1 class="title">Edit Experience</h1>
+        </ion-header-bar>
+    </div>
+
+    <ion-pane class="has-footer ">
+        <ion-scroll>
+            <div class="list edit-fields-list">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Title</span>
+                    <input type="text" ng-model="vm.experience.title" placeholder="Title">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Description</span>
+                    <input type="text" ng-model="vm.experience.description" placeholder="Description">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Start Date</span>
+                    <input type="text" ng-model="vm.experience.startDate" placeholder="Start Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">End Date</span>
+                    <input type="text" ng-model="vm.experience.endDate" placeholder="End Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Location</span>
+                    <input type="text" ng-model="vm.experience.location" placeholder="Location">
+                </label>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary" ng-click="vm.cancel();">Cancel</button>
+            <button class="button primary" ng-disabled="!vm.experience.title" ng-click="vm.saveExperience()">Save</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>
