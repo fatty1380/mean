@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.joinoutset.mobile" version="0.5.0" android-versionCode="0009" ios-CFBundleVersion="0009" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.joinoutset.mobile" version="0.5.0" android-versionCode="0014" ios-CFBundleVersion="0014" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>outset</name>
   <description>
         Mobile tools for Truckers

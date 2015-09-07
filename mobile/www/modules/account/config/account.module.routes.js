@@ -78,6 +78,18 @@
                                         friendsService.setFriends(response.data);
                                        return response.data;
                                     });
+                            },
+                            contacts: function (contactsService, $filter) {
+                                return contactsService
+                                    .find()
+                                    .then(function (response) {
+                                        var filter = $filter('contactsFilter'),
+                                            contacts = filter(response);
+
+                                        contactsService.setContacts(contacts);
+
+                                        return contacts;
+                                    });
                             }
                         }
                     }

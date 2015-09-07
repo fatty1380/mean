@@ -13,17 +13,17 @@
         vm.invite = invite;
         vm.cancel = cancel;
 
+        init();
+
+        function init() {
+            vm.contact = {};
+        }
+
         function invite() {
-            var contact = {
-                checked: true,
-                displayName: vm.displayName,
-                phones: [{value: vm.phone }],
-                emails: [{value: vm.email }]
-            };
-
-            contactsService.setContacts(contact);
-
-            $state.go('signup-friends-contacts');
+            return contactsService.addContact(vm.contact)
+                .then(function () {
+                    return $state.go('signup-friends-contacts');
+                });
         }
 
         function cancel() {

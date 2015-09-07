@@ -37,10 +37,10 @@
                 <p>Start with the 5 best drivers you know and help grow your personal network of professional truck drivers.</p>
                 <p>Select from your drevice contacts or manually by Mobile Phone or Email</p>
 
-                <button class="button button-block button-small" ng-click="vm.addFriends()">Choose from Contact List</button>
+                <button class="button button-block button-small" ng-click="vm.showAddFriendsModal()">Choose from Contact List</button>
 
                 <div class="button-holder text-center" ng-if="!contacts.length">
-                    <a class="button button-clear manual-add" ng-click="vm.addFriends()">
+                    <a class="button button-clear manual-add" ng-click="vm.showAddFriendsModal()">
                         <i class="icon ion-ios-plus-outline"></i>
                         Add by Mobile Phone or Email
                     </a>
@@ -65,7 +65,7 @@
 
     <ion-footer-bar>
         <div class="button-bar">
-            <button class="button block-button" ng-click="vm.addFriends()">Invite Friends</button>
+            <button class="button block-button" ng-click="vm.showAddFriendsModal()">Invite Friends</button>
         </div>
     </ion-footer-bar>
 

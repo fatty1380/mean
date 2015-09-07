@@ -31,11 +31,11 @@
                 names.push(selectedContacts[i].displayName);
             }
 
-            var template = names.join(',');
-            var confirm = $ionicPopup.confirm({
-                title: 'Invite selected contacts?',
-                template: template
-            });
+            var template = names.join(','),
+                confirm = $ionicPopup.confirm({
+                    title: 'Invite selected contacts?',
+                    template: template
+                });
 
             confirm.then(function(res) {
                 if(res) {

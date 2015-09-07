@@ -308,6 +308,9 @@
         color: #333;
       }
     }
+    .holder{
+      overflow: hidden;
+    }
   }
 }
 
@@ -322,4 +325,42 @@
 //  padding-bottom: 42px;
 //}
 
+.edit-profile-types{
+  .top{
+    overflow: hidden;
+    padding-bottom: 5px;
 
+    .input-label{
+      display: block;
+      float: left;
+    }
+    button{
+      float: right;
+      border-width: 1px;
+    }
+  }
+
+  input{
+    background: none;
+  }
+
+  .selected-trailers{
+    white-space: normal;
+
+    li{
+      display: inline-block;
+      padding-right: 4px;
+      padding-left: 5px;
+      border-right:  1px solid #ddd;
+
+      &:first-child{
+        padding-left: 0;
+      }
+
+      &:last-child{
+        border: 0;
+        padding-right: 0;
+      }
+    }
+  }
+}
