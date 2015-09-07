@@ -17,7 +17,7 @@
             updateUserExperience = function (id, experience) {
                 if(!id) return;
 
-                var url = settings.experience + id;
+                var url = settings.usersExperience + id;
                 return $http.put(url, experience);
             };
 
