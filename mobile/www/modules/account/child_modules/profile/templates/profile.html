@@ -95,14 +95,20 @@
             <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience">
                 <ion-scroll class="experience-list">
                     <ion-list>
-                        <ion-item class="item" ng-repeat="job in vm.experience">
+                        <ion-item class="item" ng-repeat="job in vm.experience" ng-click="vm.showEditExperienceModal(job)">
                             <strong>{{job.title}}</strong>
-                            <p>{{job.description}}</p>
-                            <em><i class="ico ico-timesmall"></i>{{job.startDate | date : MMM : yyyy}} -  {{job.endDate | date : MMM : yyyy}}</em>
+                            <p ng-if="!!job.description">{{job.description}}</p>
+                            <p ng-if="!!job.location">{{job.location}}</p>
+                            <em  ng-if="!!job.startDate || job.endDate">
+                                <i class="ico ico-timesmall"></i>
+                                <span ng-if="!!job.startDate">{{job.startDate | date : MMM : yyyy}}</span>
+                                <span ng-if="!!job.startDate && job.endDate">-</span>
+                                <span ng-if="!!job.endDate">{{job.endDate | date : MMM : yyyy}}</span>
+                            </em>
                         </ion-item>
                     </ion-list>
                 </ion-scroll>
-                <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
+                <button class="button content-button" ng-click="vm.showAddExperienceModal()"><i class="ico ico-share"></i>Add Experience</button>
             </ion-tab>
         </ion-tabs>
     </ion-pane>
