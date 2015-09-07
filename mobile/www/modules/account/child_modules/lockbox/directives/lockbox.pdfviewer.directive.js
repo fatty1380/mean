@@ -178,7 +178,7 @@ angular.module('pdf',[]).
 			link: function(scope, iElement, iAttr) {
 				instance_id = iAttr.id;
 
-				createCanvas = function(iElement, count){
+				var createCanvas = function(iElement, count){
 					canvas = iElement.find('canvas');
 
 					if (canvas.length>count){
@@ -211,10 +211,10 @@ angular.module('pdf',[]).
 
 						scope.loadPDF(scope.src).then(function (pdfDoc){
 							$log.debug('PDF Loaded');
-							scope.onPdfEvent({type:'loadComplete'});
 							scope.pagesToShow = scope.pagesToShow==0?scope.pdfDoc.numPages : scope.pagesToShow;
 							createCanvas(iElement,scope.pagesToShow);
 							scope.renderDocument();
+							scope.onPdfEvent({type:'loadComplete'});
 
 						}, function(meg){
 							$log.debug(meg);
@@ -240,7 +240,10 @@ angular.module('pdf',[]).
 					//SKIP if rendering is in progress or document not loaded
 					if(scope.pdfDoc==null || scope.renderInProgress || !angular.isNumber(parseInt(v)))
 						return;
-					$scope.forceReRender = true;
+						
+					console.log('PDF: Changed `$scope` to `scope`. Confirm Functionality');
+					
+					scope.forceReRender = true;
 					$log.debug('scale attribute changed, new value is <' + v + ">");
 					scope.renderDocument();
 				});
