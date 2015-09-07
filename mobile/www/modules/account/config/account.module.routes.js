@@ -100,6 +100,10 @@
                                         contactsService.setContacts(contacts);
 
                                         return contacts;
+                                    })
+                                    .catch(function reject(err) {
+                                        console.error('Unable to resolve Contacts: ', err);
+                                        return [];
                                     });
                             }
                         }
