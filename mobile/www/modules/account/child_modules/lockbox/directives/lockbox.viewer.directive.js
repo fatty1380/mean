@@ -122,7 +122,7 @@
             switch (type) {
                 case "loadStart":
                     $ionicLoading.show({
-                        template: 'PDF Loading {{vm.loadingProgress}}. Please Wait.'
+                        template: 'PDF Loading. Please Wait.'
                     });
                     break;
                 case 'loadComplete':
