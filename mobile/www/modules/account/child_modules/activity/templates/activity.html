@@ -17,8 +17,8 @@
             <ion-list>
                 <ion-item ng-repeat="entry in vm.feed" class="card item" ng-show="!!entry.id">
                     <div class="ico ico-avatar"></div>
-                    <div class="activity-item" ng-click='vm.showActivityDetailsModal(entry)'>
-                        <div class="top">
+                    <div class="activity-item">
+                        <div class="top" ng-click='vm.showActivityDetailsModal(entry)'>
                             <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created | date:'mediumDate'}}
                             </div>
                             <div class="message">
@@ -33,8 +33,8 @@
                             <i class="ico ico-milestraveledsmall"></i>
                             <strong class="title">{{entry.milesTraveled}}</strong>
                         </span>
-                        <span ng-if="!!entry.likes">
-                            <i class="ico ico-likessmall"></i>
+                        <span ng-if="!!entry.likes" ng-click="vm.likeActivity(entry.id)">
+                            <i class="ico ico-likessmall" ></i>
                             <strong class="title">{{entry.likes.length}} likes</strong>
                         </span>
                     </div>

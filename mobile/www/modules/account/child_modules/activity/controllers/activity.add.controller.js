@@ -32,6 +32,7 @@
                 slMiles: ''
             }
         }
+
         vm.saveItemToFeed = saveItemToFeed;
         vm.close = close;
         vm.mapIsVisible = true;
@@ -142,8 +143,8 @@
          * @param {Object} position - current coordinates
          */
         function setDistanceFromLastPost(position) {
-            var lastActivity = activityService.getLastFeedActivity();
-            if(activityService.hasCoordinates(lastActivity)) {
+            var lastActivity = activityService.getLastActivityWithCoord();
+            if(lastActivity) {
                 var startPos = new google.maps.LatLng(lastActivity.location.coordinates[0], lastActivity.location.coordinates[1]);
                 var endPos =  new google.maps.LatLng(position.lat, position.lng);
                 activityService.getDistanceBetween(startPos, endPos)

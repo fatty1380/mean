@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService'];
+    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings'];
 
-    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService) {
+    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService, settings) {
         var vm = this;
         vm.feed = [];
 
@@ -18,6 +18,7 @@
         vm.showAddActivityModal = showAddActivityModal;
         vm.showActivityDetailsModal = showActivityDetailsModal;
         vm.updateWithNewActivities = updateWithNewActivities;
+        vm.likeActivity = likeActivity;
         vm.refresh = refresh;
 
         /**
@@ -56,22 +57,46 @@
             });
         }
 
+        /**
+         * @param {Number} id - feed id
+         */
+        function likeActivity(id) {
+            console.log('likeActivity() ', id);
+            activityService.likeActivity(id).then(function(result) {
+                console.log(result);
+                //update like in feed
+                for(var i = 0; i < vm.feed.length; i++) {
+                    if(vm.feed[i].id === id) {
+                        vm.feed[i].likes = result.data || [];
+                        break;
+                    }
+                }
+            },function(resp) {
+                console.log(resp);
+            });
+        }
+
         function startCheckNewActivities() {
-            utilsService.startClock(function () {
-                activityService.getFeedIds().then(function (result) {
-                    console.log(result.activity.length, ' -- ', vm.feed.length);
-                    if (result.activity.length > vm.feed.length) {
-                        vm.newActivities = result.activity.length - vm.feed.length;
+            utilsService.startClock(function() {
+                activityService.getFeedIds().then(function(result) {
+                    //console.log(result.items.length,' -- ',vm.feed.length);
+                    if(result.items.length > vm.feed.length){
+                        vm.newActivities = result.items.length - vm.feed.length;
+                    }else{
+                        vm.newActivities = 0;
                     }
                 }, function (resp) {
                 });
-            }, 15000);
+            }, settings.activityTimeout);
         }
 
         function stopCheckNewActivities() {
             utilsService.stopClock();
         }
 
+       /**
+        *  @TODO update only new items
+       */
         function updateWithNewActivities() {
             initialize();
         }

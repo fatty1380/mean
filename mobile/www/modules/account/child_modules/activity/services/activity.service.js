@@ -13,8 +13,9 @@
             getFeed: getFeed,
             postActivityToFeed: postFeed,
             getFeedActivityById: getFeedActivityById,
-            getLastFeedActivity: getLastFeedActivity,
+            getLastActivityWithCoord: getLastActivityWithCoord,
             getFeedIds: getFeedIds,
+            likeActivity: likeActivity,
             getDistanceBetween: getDistanceBetween,
             showPopup: showPopup,
             getPlaceName: getPlaceName,
@@ -22,7 +23,7 @@
         };
 
         var feed = [];
-        var ids = [];
+        var items = [];
 
         /**
          * @desc Get all feed, then load all posts by ids
@@ -31,25 +32,26 @@
         function getFeed() {
             return $http.get(settings.feed)
                 .then(function (response) {
-                    ids = response.data.activity;
+                    items = response.data.items;
                     return $q(function (resolve, reject) {
-                        if (ids.length > 0) {
-                            return resolve(populateActivityFeed(response.data.activity));
+                        if (items.length > 0) {
+                            return resolve(populateActivityFeed(items));
                         } else {
                             reject('no feed');
                         }
                     });
                 }, function (response) {
-                    showPopup('Error', response);
+                    showPopup('Error', response.message);
                     return response;
                 });
         }
 
         function loadItems(num) {
-            getFeedActivityById(ids[num]).then(function (result) {
+            var itemId = items[num];
+            getFeedActivityById(itemId).then(function (result) {
                 console.log('Pushing Activity to Feed: ', result);
                 feed.unshift(result);
-                if (num < ids.length - 1) {
+                if (num < items.length - 1) {
                     num++;
                     loadItems(num);
                 } else {
@@ -60,14 +62,14 @@
 
         /**
          * Populate Activity Feed
-         * @param rawFeedActivities - An array of FeedActivity IDs. Differnet from the local var 'feed'
+         * @param rawFeedActivities - An array of FeedActivity Objects. Differnet from the local var 'feed'
          * @param start - Integer representing at which index to start population (default: 0)
          * @param count - Integer representing how many items to populate (default: all)
          * 
          * @description This method will map over the IDs in teh activity array of the 
          */
         function populateActivityFeed(rawFeedActivities, start, count) {
-            feed = rawFeedActivities.reverse();
+            feed = rawFeedActivities;
             console.log('Iterating over %d feed IDs to populate', feed.length, feed);
             start = start || 0;
             count = count || undefined;
@@ -106,7 +108,7 @@
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
-                    showPopup("Error", response);
+                    showPopup(response.statusText, response.data.message);
                     return response;
                 });
         }
@@ -114,10 +116,9 @@
         function getFeedIds() {
             return $http.get(settings.feed)
                 .then(function (response) {
-                    console.log(response);
                     return response.data;
                 }, function (response) {
-                    showPopup("Error", response);
+                    showPopup(response.statusText, response.data.message);
                     return response;
                 });
         }
@@ -128,7 +129,18 @@
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
-                    showPopup('Error', response);
+                    showPopup(response.statusText, response.data.message);
+                    return response;
+                });
+        }
+
+        function likeActivity(id) {
+            return $http.post(settings.feed + id + '/likes', null)
+                .then(function (response) {
+                    return response;
+                }, function (response) {
+                    console.log(response);
+                    showPopup(response.statusText, response.data.message);
                     return response;
                 });
         }
@@ -154,7 +166,6 @@
                         activityService.showPopup('Google maps failed', status);
                         reject('error');
                     } else {
-
                         if (response.rows[0].elements[0].distance) {
                             resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(2) );//miles
                             //resolve(response.rows[0].elements[0].distance.value / 1000);// km
@@ -204,11 +215,16 @@
         }
 
         /**
-         * @desc last item of array
-         * @returns {Promise} promise lst item
+         * @desc get last item of array with coordinates
+         * @returns {Object} last item
          */
-        function getLastFeedActivity() {
-            return feed[0];
+        function getLastActivityWithCoord() {
+            for(var i = 0; i < feed.length; i++) {
+                if(hasCoordinates(feed[i])) {
+                    return feed[i];
+                }
+            }
+            return null;
         }
 
         function showPopup(title, text) {

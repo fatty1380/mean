@@ -85,9 +85,9 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
             };
 
             vm.showShareModal = function (parameters) {
@@ -96,9 +96,9 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
             };
 
             vm.showRequestReviewModal = function (parameters) {
@@ -107,9 +107,33 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
+            };
+
+            vm.showAddExperienceModal = function (parameters) {
+                profileModalsService
+                    .showAddExperienceModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                        vm.getExperience();
+                    },
+                    function (err) {
+                        console.log(err);
+                    })
+            };
+
+            vm.showEditExperienceModal = function (parameters) {
+                profileModalsService
+                    .showEditExperienceModal(parameters)
+                    .then(function (result) {
+                        console.log(result);
+                        vm.getExperience();
+                    },
+                    function (err) {
+                        console.log(err);
+                    })
             };
         }
         
@@ -155,10 +179,10 @@
             reviewService
                 .postReviewForProfile(id, review)
         };
-        vm.postExperience = function (experience) {
+        /*vm.postExperience = function (experience) {
             experienceService
                 .postUserExperience(experience)
-        };
+        };*/
 
         vm.getReviews();
         vm.getExperience();

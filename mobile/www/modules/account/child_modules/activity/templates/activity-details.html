@@ -3,7 +3,7 @@
         <ion-header-bar align-title="center">
             <button class="button button-clear" ng-click="vm.close('activityDetails')">Close</button>
             <h1 class="title">Activity Details</h1>
-            <button class="button button-clear">Like Post</button>
+            <button class="button button-clear" ng-click="vm.likeActivity()">Like Post</button>
         </ion-header-bar>
     </div>
     <ion-pane class="pane has-footer">
@@ -25,7 +25,7 @@
                         <i class="ico ico-milestraveledsmall"></i>
                         <strong class="title">{{ vm.entry.milesTraveled}}</strong>
                         </span>
-                            <span ng-if="!!vm.entry.likes">
+                        <span ng-if="!!vm.entry.likes" ng-click="vm.likeActivity()">
                             <i class="ico ico-likessmall"></i>
                             <strong class="title">{{ vm.entry.likes.length }} likes</strong>
                         </span>

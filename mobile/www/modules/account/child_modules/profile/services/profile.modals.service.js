@@ -19,7 +19,9 @@
             showFriendRequestModal: showFriendRequestModal,
             showFriendManualAddModal: showFriendManualAddModal,
             showProfileEditTrailersModal: showProfileEditTrailersModal,
-            showProfileEditTrucksModal: showProfileEditTrucksModal
+            showProfileEditTrucksModal: showProfileEditTrucksModal,
+            showAddExperienceModal: showAddExperienceModal,
+            showEditExperienceModal: showEditExperienceModal
         };
 
         function showProfileEditModal (parameters) {
@@ -103,6 +105,20 @@
                 .show(templateUrl, controller, params);
         }
 
-    }
+        function showAddExperienceModal (parameters) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-experience-add.html';
+            controller = 'ProfileAddExperienceCtrl as vm';
+            params = parameters || {};
+            return modalService
+                .show(templateUrl, controller, params);
+        }
 
+        function showEditExperienceModal (parameters) {
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-experience-edit.html';
+            controller = 'ProfileEditExperienceCtrl as vm';
+            params = parameters || {};
+            return modalService
+                .show(templateUrl, controller, params);
+        }
+    }
 })();
