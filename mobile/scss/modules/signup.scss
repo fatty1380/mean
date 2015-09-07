@@ -772,6 +772,7 @@ $but-height: 90px;
 }
 
 .welcome-screen{
+  opacity: 0.8;
 
   .pane,
   .view{
@@ -784,7 +785,7 @@ $but-height: 90px;
     text-align: center;
     color: #fff;
     height: 300px;
-    margin-top: -150px;
+    margin-top: -163px;
     position: absolute;
     top: 50%;
     left: 0;

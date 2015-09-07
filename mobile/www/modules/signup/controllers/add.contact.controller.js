@@ -5,9 +5,9 @@
         .module('signup')
         .controller('AddContactFriendsCtrl', AddContactFriendsCtrl);
 
-    AddContactFriendsCtrl.$inject = ['$state', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
+    AddContactFriendsCtrl.$inject = ['$state', 'welcomeService', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl($state, $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
+    function AddContactFriendsCtrl($state, welcomeService,  registerService,  $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
         var vm = this;
 
         $ionicLoading.hide();
@@ -18,7 +18,15 @@
         vm.skipToProfile = skipToProfile;
 
         function skipToProfile() {
-            $state.go('account.profile');
+            registerService.updateUser(registerService.getDataProps())
+                .then(function (response) {
+                    if(response.success) {
+                        welcomeService.welcomeUser = true;
+                        $state.go("account.profile");
+                    }
+                }, function (err) {
+                    $state.go("account.profile");
+                });
         }
 
         function sendInvitations() {
@@ -37,17 +45,18 @@
                     template: template
                 });
 
-            confirm.then(function(res) {
-                if(res) {
-                    for(var i = 0; i < selectedContacts.length; i++){
-                        console.warn('selectedContacts --->>>', selectedContacts);
-                        var hasHashKey = selectedContacts[i].$$hashKey;
-                        if(hasHashKey){
-                            delete selectedContacts[i].$$hashKey;
-                        }
+            if(selectedContacts.length){
+                confirm.then(function(res) {
+                    if(res) {
+                        for(var i = 0; i < selectedContacts.length; i++){
+                            console.warn('selectedContacts --->>>', selectedContacts);
+                            var hasHashKey = selectedContacts[i].$$hashKey;
+                            if(hasHashKey){
+                                delete selectedContacts[i].$$hashKey;
+                            }
 
-                        var postData = {contactInfo: selectedContacts[i], text: 'hello there!'},
-                            serializedData = utilsService.serialize(postData);
+                            var postData = {contactInfo: selectedContacts[i], text: 'hello there!'},
+                                serializedData = utilsService.serialize(postData);
 
                             $http
                                 .post(settings.requests, serializedData)
@@ -58,12 +67,19 @@
                                     console.warn(' err --->>>', err);
                                 });
 
+                        }
+                        registerService.updateUser(registerService.getDataProps())
+                            .then(function (response) {
+                                if(response.success) {
+                                    welcomeService.welcomeUser = true;
+                                    $state.go("account.profile");
+                                }
+                            });
+                    } else {
+                        console.log('friends are not invited');
                     }
-                    $state.go('signup-welcome');
-                } else {
-                    console.log('friends are not invited');
-                }
-            });
+                });
+            }
         }
 
     }

@@ -5,9 +5,9 @@
         .module('signup')
         .controller('SignupFriendsCtrl', SignupFriendsCtrl);
 
-    SignupFriendsCtrl.$inject = ['$state', '$rootScope'];
+    SignupFriendsCtrl.$inject = ['$state', '$rootScope', 'welcomeService', 'registerService'];
 
-    function SignupFriendsCtrl($state, $rootScope) {
+    function SignupFriendsCtrl($state, $rootScope, welcomeService, registerService) {
         var vm = this;
 
         vm.chooseContacts = chooseContacts;
@@ -30,7 +30,15 @@
         }
 
         function skipToProfile() {
-            $state.go('account.profile');
+            registerService.updateUser(registerService.getDataProps())
+                .then(function (response) {
+                    if(response.success) {
+                        welcomeService.welcomeUser = true;
+                        $state.go("account.profile");
+                    }
+                }, function (err) {
+                    $state.go("account.profile");
+                });
         }
 
         function addManualy() {
