@@ -20,6 +20,10 @@ exports.read = function getExperience(req, res) {
 exports.create = function addExperience(req, res) {
     req.log.debug({ module: 'drivers', func: 'addExperience', current: req.user.experience, body: req.body }, 'Start');
 
+    if (!_.isArray(req.user.experience)) {
+        req.user.experience = [];
+    }
+
     req.user.experience.push(req.body);
 
     return saveParent(req, res, 'addExperience')
