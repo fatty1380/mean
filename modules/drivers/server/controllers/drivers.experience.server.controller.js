@@ -34,7 +34,7 @@ exports.create = function addExperience(req, res) {
  */
 exports.update = function setExperience(req, res) {
     if (!req.experience) {
-        return req.status(404).send({ message: 'Experience Item not found' });
+        return res.status(404).send({ message: 'Experience Item not found' });
     }
 
     req.experience = _.extend(req.experience, req.body);
@@ -52,7 +52,7 @@ exports.update = function setExperience(req, res) {
  */
 exports.remove = function deleteExperience(req, res) {
     if (!req.experience) {
-        return req.status(404).send({ message: 'Experience Item not found' });
+        return res.status(404).send({ message: 'Experience Item not found' });
     }
 
     req.experience.remove();

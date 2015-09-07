@@ -340,7 +340,7 @@ function CheckApplicantReportStatus(req, res, next) {
                     // }
 
                     if (reportStatus.applicant.id !== req.applicant.remoteId) {
-                        return req.status(500).send({
+                        return res.status(500).send({
                             message: 'Mismatched or missing remote applicant'
                         });
                     }
