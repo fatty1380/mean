@@ -5,12 +5,13 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['truckService', '$state', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
+    ProfileEditCtrl.$inject = ['truckService', '$state', '$filter', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
 
-    function ProfileEditCtrl(truckService, $state, userService, profileModalsService, trailerService, tokenService) {
+    function ProfileEditCtrl(truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
         
         vm.profileData = userService.profileData;
+        vm.started = getFormattedDate(vm.profileData.props.started);
 
         vm.cancel = cancel;
         vm.save = save;
@@ -54,11 +55,22 @@
                 });
         }
 
+        function getFormattedDate (date) {
+            return $filter('date')(date, 'MMMM yyyy');
+        }
+
+        function updateStartedDate(started) {
+            if(!started) return '';
+            vm.profileData.props.started =  new Date('"' + started + '"');
+        }
+
         function cancel () {
             vm.closeModal(null);
         }
 
         function save () {
+            updateStartedDate(vm.started);
+
             console.log('Saving user data: ', vm.profileData);
 
             return userService.updateUserData(vm.profileData)
