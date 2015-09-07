@@ -37,6 +37,28 @@
             expect(activityService.getPlaceName({}).then).toBeDefined();
         }));
 
+        it('hasCoordinates should return TRUE', inject(function (activityService) {
+            var activity =  {
+                location: {
+                    coordinates: ['1', '2']
+                }
+            };
+            expect(activityService.hasCoordinates(activity)).toBeTrue();
+        }));
+
+        it('hasCoordinates should return FALSE', inject(function (activityService) {
+            var activity =  {
+                location: {
+                    coordinates: ''
+                }
+            };
+            expect(activityService.hasCoordinates(activity)).toBeFalse();
+        }));
+
+        it('getLastActivityWithCoord() with no feed should return NULL', inject(function (activityService) {
+            expect(activityService.getLastActivityWithCoord()).toBeNull();
+        }));
+
     });
 })();
 
