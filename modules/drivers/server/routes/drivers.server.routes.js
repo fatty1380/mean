@@ -19,6 +19,10 @@ module.exports = function (app) {
      app.route('/api/users/me/experience/:experienceId')
          .put(users.requiresLogin, drivers.setExperience)
          .delete(users.requiresLogin, drivers.removeExperience);
+         
+         
+    // Finish by binding the Driver middleware
+    app.param('experienceId', drivers.experienceById);
 
     // Drivers Routes
     app.route('/api/drivers/create').post(users.requiresLogin, drivers.create);
