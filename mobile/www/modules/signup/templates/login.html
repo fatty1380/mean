@@ -13,12 +13,18 @@
             <h3>Log into your Outset account</h3>
             <form name="mainLoginForm" id="mainLoginForm" class="list signup-form" ng-submit="vm.submitForm()" ng-init="vm.initForm(this)"
             novalidate>
-                <label class="item item-input">
-                    <input type="email" name="email" placeholder="Email" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" required>
-                </label>
-                <label class="item item-input">
-                    <input type="password" placeholder="Password" ng-model="vm.user.password" ng-focus="vm.lastElementFocused = true" required>
-                </label>
+                <div class="form-row">
+                    <label class="item item-input">
+                        <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" required>
+                    </label>
+                    <i class="icon ion-backspace-outline" ng-if="vm.user.email && vm.user.email.length" ng-click="vm.user.email = ''"></i>
+                </div>
+                <div class="form-row">
+                    <label class="item item-input">
+                        <input type="password" placeholder="Password" ng-model="vm.user.password" ng-focus="vm.lastElementFocused = true" required>
+                    </label>
+                    <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
+                </div>
                 <input style="position:absolute; left:9999px" type="submit" />
             </form>
             <h4>{{vm.error}}</h4>

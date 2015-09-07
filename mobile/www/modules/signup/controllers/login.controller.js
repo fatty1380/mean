@@ -25,6 +25,9 @@
             vm.form = scope;
         }
 
+        vm.echange = function () {
+            console.warn(' vm.user --->>>', vm.user.email);
+        }
         /**
          * @description Submit form if last field in focus
         */

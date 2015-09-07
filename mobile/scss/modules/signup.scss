@@ -19,6 +19,22 @@ ion-content {
 }
 
 .signup-form{
+
+  .form-row{
+    position: relative;
+
+    .icon{
+      margin-right: 5px;
+      font-size: 20px;
+      color: #fff;
+      position: absolute;
+      top: 50%;
+      right: 5px;
+      margin-top: -10px;
+      z-index: 3;
+    }
+  }
+
   .item {
     padding:0;
     border: 0;
@@ -38,7 +54,6 @@ ion-content {
       line-height: 20px;
     }
   }
-
 
   .ng-dirty.ng-invalid {
     border-left: 5px solid red;
