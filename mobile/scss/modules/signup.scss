@@ -585,9 +585,9 @@ $but-height: 90px;
 .login-content{
   position: absolute;
   width: 100%;
-  top: 50%;
+  bottom: 50%;
   height: 210px;
-  margin-top: -125px;
+  // margin-top: -125px;
   i{
     display: block;
     margin: auto;
