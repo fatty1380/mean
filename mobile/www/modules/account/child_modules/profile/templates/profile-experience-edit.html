@@ -2,7 +2,7 @@
 
     <div class="header min-size">
         <ion-header-bar>
-            <h1 class="title">Edit Experience</h1>
+            <h1 class="title">{{vm.stateAction}} Experience</h1>
         </ion-header-bar>
     </div>
 
@@ -10,8 +10,8 @@
         <ion-scroll>
             <div class="list edit-fields-list">
                 <label class="item item-input item-floating-label">
-                    <span class="input-label">Title</span>
-                    <input type="text" ng-model="vm.experience.title" placeholder="Title">
+                    <span class="input-label">Job Title</span>
+                    <input type="text" ng-model="vm.experience.title" placeholder="Title" required>
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Description</span>

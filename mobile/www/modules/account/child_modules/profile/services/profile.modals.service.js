@@ -107,8 +107,8 @@
         }
 
         function showAddExperienceModal (parameters) {
-            templateUrl = 'modules/account/child_modules/profile/templates/profile-experience-add.html';
             controller = 'ProfileAddExperienceCtrl as vm';
+            templateUrl = 'modules/account/child_modules/profile/templates/profile-experience-edit.html';
             params = parameters || {};
             return modalService
                 .show(templateUrl, controller, params);
