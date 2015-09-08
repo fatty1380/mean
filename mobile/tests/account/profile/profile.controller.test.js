@@ -7,119 +7,78 @@
         var ProfileCtrl,
             $httpBackend;
 
-        // The $resource service augments the response object with methods for updating and deleting the resource.
-        // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
-        // the responses exactly. To solve the problem, we define a new toEqualData Jasmine matcher.
-        // When the toEqualData matcher compares two objects, it takes only object properties into
-        // account and ignores methods.
-        beforeEach(function() {
-            jasmine.addMatchers({
-                toEqualData: function(util, customEqualityTesters) {
-                    return {
-                        compare: function(actual, expected) {
-                            return {
-                                pass: angular.equals(actual, expected)
-                            };
-                        }
-                    };
-                }
-            });
-        });
+        var testUser = {
+            __v: 0,
+            _id: "55a5317e4cec3d4a40d4bfa9",
+            addresses: [],
+            company: null,
+            created: "2015-07-14T15:57:50.097Z",
+            displayName: "sergey markov",
+            driver: "55a5317e4cec3d4a40d4bfaa",
+            email: "markov.flash@gmail.com",
+            firstName: "sergey",
+            friends: [],
+            handle: "some handle",
+            id: "55a5317e4cec3d4a40d4bfa9",
+            isAdmin: false,
+            isDriver: false,
+            isOwner: false,
+            lastName: "markov",
+            modified: "2015-09-07T14:00:45.994Z",
+            oldPass: false,
+            password: "IS/7ky+J7Zu+oc2y8RzOXQzXYcqZmNT3qU45ekmIBCrj3TnCDdbcliYWkYjrJnoc+03JDHAyyQ86rQVFQtjjiw==",
+            phone: "",
+            profileImageURL: "modules/users/img/profile/default.png",
+            provider: "local",
+            requests:[],
+            roles: ['user'],
+            salt: "URfgM0ouhG+nJoSisgQTAw==",
+            shortName: "sergeym",
+            type: "driver",
+            username: "markov.flash@gmail.com"
+        }
 
         // Then we can start by loading the main application module
         beforeEach(module(AppConfig.appModuleName));
 
+        beforeEach(inject(function($injector) {
+            var $controller = $injector.get('$controller');
+            $httpBackend = $injector.get('$httpBackend');
+        }));
+
         // Create
-        beforeEach(inject(function($controller, _$httpBackend_, $rootScope) {
-            //$httpBackend = _$httpBackend_;
+        beforeEach(inject(function($rootScope, $controller ) {
             // Initialize the ProfileCtrl controller.
             var scope = $rootScope.$new();
             ProfileCtrl = $controller('ProfileCtrl', {
-                $scope: scope
+                $scope: scope,
+                user: testUser,
+                profile: ''
             });
         }));
 
-
-        //it('should get and set Profile Data for selected user ', function() {
-        //    // Create sample article using the Articles service
-        //    var profileSample = {
-        //        "_id": "55a6600d2944b0bd1536414e",
-        //        "modified": "2015-07-15T13:28:45.741Z",
-        //        "displayName": "Serge Rykov",
-        //        "username": "s.rykov@mobidev.biz",
-        //        "provider": "local",
-        //        "__v": 0,
-        //        "requests": [],
-        //        "friends": [],
-        //        "addresses": [],
-        //        "company": null,
-        //        "driver": "55a6600d2944b0bd1536414f",
-        //        "phone": "",
-        //        "email": "s.rykov@mobidev.biz",
-        //        "type": "driver",
-        //        "created": "2015-07-15T13:28:45.702Z",
-        //        "roles": [
-        //            "user"
-        //        ],
-        //        "oldPass": false,
-        //        "handle": null,
-        //        "profileImageURL": "modules/users/img/profile/default.png",
-        //        "lastName": "Rykov",
-        //        "firstName": "Serge",
-        //        "isOwner": false,
-        //        "isDriver": true,
-        //        "isAdmin": false,
-        //        "shortName": "SergeR",
-        //        "id": "55a6600d2944b0bd1536414e"
-        //    },
-        //    url = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/55a6600d2944b0bd1536414e';
-        //
-        //
-        //    $httpBackend.whenGET(url).respond(profileSample);
-        //
-        //    //expect a get request to "/api/profiles/"
-        //    $httpBackend.expectGET(url);
-        //
-        //    // Run controller functionality
-        //    ProfileCtrl.getProfile();
-        //
-        //    $httpBackend.flush();
-        //
-        //    // Test scope value
-        //    expect(ProfileCtrl.profileData).toEqualData(profileSample);
-        //});
-
-        //it('should get and set Profile Data for selected user ', function() {
-        //    var ids = ['55a6600d2944b0bd1536414e', '55a6600d2944b0bd1536414e'],
-        //        profilesEndPoint = 'http://outset-shadow.elasticbeanstalk.com/api/profiles/',
-        //        url;
-        //
-        //    // loop through the ids
-        //    for(var i = 0; i < ids.length; i++){
-        //        url = profilesEndPoint + ids[i];
-        //
-        //        $httpBackend.whenGET(url).respond({id: ids[i]});
-        //
-        //        //expect a get request to "/api/profiles/"
-        //        $httpBackend.expectGET(url);
-        //
-        //        // Run controller functionality
-        //        ProfileCtrl.me();
-        //
-        //        $httpBackend.flush();
-        //
-        //        expect(ProfileCtrl.profileData.id).toBe(ids[i]);
-        //    }
-        //
-        //});
-
-        it('should contain endorsements map', function() {
-            var endorsementsMap = ProfileCtrl.endorsementsMap;
-            expect(endorsementsMap).toBeDefined();
+       it('should contain endorsements map', function() {
+            expect(ProfileCtrl).toBeDefined();
         });
 
-        it('profileData should return promise', function() {
-            expect(ProfileCtrl.profileData.then).toBeTruthy();
+        it('should contain method showFriends()', function() {
+            expect(ProfileCtrl.showFriends).toBeFunction();
+        });
+
+        it('should contain method getReviews()', function() {
+            expect(ProfileCtrl.getReviews).toBeFunction();
+        });
+
+        it('should contain method getExperience()', function() {
+            expect(ProfileCtrl.getExperience).toBeFunction();
+        });
+
+        it('should contain array reviews', function() {
+            expect(ProfileCtrl.reviews).toBeArray();
+        });
+
+        it('should contain array experience', function() {
+            expect(ProfileCtrl.experience).toBeArray();
         });
     });
 }());

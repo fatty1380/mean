@@ -41,9 +41,10 @@
             expect(friendsService).toBeDefined();
         }));
 
-        // check if service contains contacts object
-        it('should contain method contacts object', inject(function (friendsService) {
-            expect(friendsService.contacts).toBeDefined();
+        // check if service getFriends() returns empty array
+        it('should contain method getFriends()', inject(function (friendsService) {
+            var arr = friendsService.getFriends();
+            expect(arr).toBeEmptyArray();
         }));
 
     });

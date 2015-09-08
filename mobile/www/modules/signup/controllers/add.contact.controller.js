@@ -5,9 +5,9 @@
         .module('signup')
         .controller('AddContactFriendsCtrl', AddContactFriendsCtrl);
 
-    AddContactFriendsCtrl.$inject = ['$state', 'welcomeService', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
+    AddContactFriendsCtrl.$inject = ['$state', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl($state, welcomeService,  registerService,  $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
+    function AddContactFriendsCtrl($state,  registerService,  $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
         var vm = this;
 
         $ionicLoading.hide();
@@ -21,7 +21,6 @@
             registerService.updateUser(registerService.getDataProps())
                 .then(function (response) {
                     if(response.success) {
-                        welcomeService.welcomeUser = true;
                         $state.go("account.profile");
                     }
                 }, function (err) {
@@ -71,7 +70,6 @@
                         registerService.updateUser(registerService.getDataProps())
                             .then(function (response) {
                                 if(response.success) {
-                                    welcomeService.welcomeUser = true;
                                     $state.go("account.profile");
                                 }
                             });
