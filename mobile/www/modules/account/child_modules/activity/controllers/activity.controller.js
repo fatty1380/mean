@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings'];
+    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService, settings) {
+    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -40,30 +40,37 @@
         });
 
         function initialize() {
-            vm.feed = [];
-            $ionicLoading.show({
-                template: 'loading feed'
-            });
-
-            //get all feed
-            return activityService.getFeed().then(function (result) {
-                $ionicLoading.hide();
-                console.log("getFeed() ", result);
-                vm.feed = result;
-                startCheckNewActivities();
-            }, function () {
-                $ionicLoading.hide();
+            //show welcome screen for new user
+            if(welcomeService.welcomeActivity) {
+                activityModalsService
+                    .showWelcomeModal()
+                    .then(function () {
+                        welcomeService.welcomeActivity = false;
+                        initialize();
+                    });
+            } else {
                 vm.feed = [];
-            });
+                $ionicLoading.show({
+                    template: 'loading feed'
+                });
+                //get all feed
+                return activityService.getFeed().then(function (result) {
+                    $ionicLoading.hide();
+                    console.log("getFeed() ", result);
+                    vm.feed = result;
+                    startCheckNewActivities();
+                }, function () {
+                    $ionicLoading.hide();
+                    vm.feed = [];
+                });
+            }
         }
 
         /**
          * @param {Number} id - feed id
          */
         function likeActivity(id) {
-            console.log('likeActivity() ', id);
             activityService.likeActivity(id).then(function(result) {
-                console.log(result);
                 //update like in feed
                 for(var i = 0; i < vm.feed.length; i++) {
                     if(vm.feed[i].id === id) {
@@ -79,7 +86,6 @@
         function startCheckNewActivities() {
             utilsService.startClock(function() {
                 activityService.getFeedIds().then(function(result) {
-                    //console.log(result.items.length,' -- ',vm.feed.length);
                     if(result.items.length > vm.feed.length){
                         vm.newActivities = result.items.length - vm.feed.length;
                     }else{
@@ -152,5 +158,6 @@
                     activityService.showPopup("Modal failed", "Please try later");
                 })
         };
+
     }
 })();

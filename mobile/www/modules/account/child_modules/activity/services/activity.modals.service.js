@@ -17,7 +17,6 @@
             return modalService
                 .show(templateUrl, controller, params);
         }
-
         function showActivityDetailsModal (parameters) {
             templateUrl = 'modules/account/child_modules/activity/templates/activity-details.html';
             controller = 'ActivityDetailsCtrl as vm';
@@ -25,9 +24,9 @@
             return modalService
                 .show(templateUrl, controller, params);
         }
-        function showAddFriendsModal (parameters) {
-            templateUrl = 'modules/account/child_modules/profile/templates/profile-friends-add.html';
-            controller = 'AddFriendsCtrl as vm';
+        function showWelcomeModal (parameters) {
+            templateUrl = 'modules/account/child_modules/activity/templates/activity-welcome.html';
+            controller = 'ActivityWelcomeCtrl as vm';
             params = parameters || {};
             return modalService
                 .show(templateUrl, controller, params);
@@ -36,7 +35,7 @@
         return {
             showAddActivityModal: showAddActivityModal,
             showActivityDetailsModal: showActivityDetailsModal,
-            showAddFriendsModal: showAddFriendsModal
+            showWelcomeModal: showWelcomeModal
         };
     }
 })();

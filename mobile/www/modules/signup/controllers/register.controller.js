@@ -5,9 +5,9 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService'];
+    RegisterCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService', 'welcomeService'];
 
-    function RegisterCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService) {
+    function RegisterCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService, welcomeService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -54,6 +54,10 @@
                                 tokenService.set('access_token', signInresponse.message.data.access_token);
                                 tokenService.set('refresh_token', signInresponse.message.data.refresh_token);
                                 tokenService.set('token_type', signInresponse.message.data.token_type);
+
+                                //set fields to show welcome screens for new user
+                                welcomeService.welcomeUser = true;
+                                welcomeService.welcomeActivity = true;
 
                                 $state.go('signup-engagement');
                             } else {
