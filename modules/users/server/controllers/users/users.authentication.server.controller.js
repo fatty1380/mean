@@ -101,7 +101,7 @@ exports.signin = function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         req.log.debug({ func: 'signin', err: err, user: user, info: info }, '[Auth.Ctrl] Passport Auth Complete');
         if (err || !user) {
-            req.log.error(info, err);
+            req.log.error({ func: 'signin', info: info, err: err }, 'Login Failed');
             res.status(400).send(info);
         } else {
             login(req, res, user);

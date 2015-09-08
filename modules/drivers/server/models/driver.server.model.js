@@ -45,7 +45,7 @@ var DriverSchema = UserSchema.extend({
     license: {
         class: {
             type: String,
-            enum: ['A', 'B', 'C', 'D', null],
+            enum: ['A', 'B', 'C', 'D', '', null],
             default: null
         },
         endorsements: {
@@ -76,25 +76,28 @@ var DriverSchema = UserSchema.extend({
         }
     },
 
-    experience: [{
-        title: {
-            type: String
-        },
-        description: {
-            type: String
-        },
-        startDate: {      // YYYY-MM-DD
-            type: String,
-            default: null
-        },
-        endDate: {        // YYYY-MM-DD
-            type: String,
-            default: null
-        },
-        location: {
-            type: String
-        }
-    }],
+    experience: {
+        type: [{
+            title: {
+                type: String
+            },
+            description: {
+                type: String
+            },
+            startDate: {      // YYYY-MM-DD
+                type: String,
+                default: null
+            },
+            endDate: {        // YYYY-MM-DD
+                type: String,
+                default: null
+            },
+            location: {
+                type: String
+            }
+        }],
+        default: []
+    },
 
     interests: {
         type: [{

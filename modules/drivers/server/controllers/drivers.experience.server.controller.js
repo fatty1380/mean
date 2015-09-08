@@ -74,7 +74,7 @@ function saveParent(req, res, func) {
             return user;
         }, function (err) {
             req.log.error({ module: 'drivers', func: func, error: err }, 'unable to Save updated user object');
-            return res.send(400, {
+            return res.status(400).send({
                 message: 'Unable to save changes at this time. Please try again later',
                 error: err.stack
             });
