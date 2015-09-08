@@ -14,8 +14,6 @@ exports.listRequests = listRequests;
 exports.getRequest = getRequest;
 exports.createRequest = createRequest;
 exports.updateRequest = updateRequest;
-exports.acceptRequest = acceptRequest;
-exports.rejectRequest = rejectRequest; 
 
 /** Middleware */
 exports.requestById = requestById; 
@@ -237,7 +235,7 @@ function updateRequest(req, res, next) {
     req.log.debug({ func: 'updateRequest', action: action }, 'Updating request based on action: `%s`', action);
 
     if (action === 'accept') {
-        return exports.acceptRequest(req, res, next).then(
+        return acceptRequest(req, res, next).then(
             function (success) {
                 res.json(req.request);
             },
@@ -248,8 +246,14 @@ function updateRequest(req, res, next) {
     }
 
     if (action === 'reject') {
-        exports.rejectRequest(req, res, next);
-        return;
+        return rejectRequest(req, res, next).then(
+            function success(result) {
+                res.json(req.request);
+            },
+            function reject(err) {
+                req.log.error({ func: 'rejectRequest', error: err }, 'Unable to reject friend');
+                next(err);
+            });
     }
 
     req.log.warn({ func: 'updateRequest', action: action }, 'Unknown Action specified: `%s`', action);
@@ -295,11 +299,24 @@ function acceptRequest(req, res, next) {
             req.log.debug({ func: 'acceptRequest', request: request, u1: u1, u2: u2 }, 'Response from saving');
 
             req.request = request;
+            
+            return request;
         });
 }
 
 function rejectRequest(req, res, next) {
-    next(new Error('not implemented'));
+    var request = req.request;
+    var user = req.profile || req.user;
+
+    if (!req.user.isAdmin && (!!req.profile || !req.user._id.equals(request.to))) {
+        return Q.reject({ statusCode: 403, message: 'Cannot accept friends for other users' });
+    }
+    
+    request.status = 'rejected';
+    return request.save().then(function success(result) {
+        req.request = result;
+        return result;
+    });
 }
 
 function removeFriend(req, res, next) {
