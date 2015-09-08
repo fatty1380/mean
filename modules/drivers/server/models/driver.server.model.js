@@ -139,6 +139,15 @@ DriverSchema.pre('save', function (next) {
 });
 
 DriverSchema.pre('save', function (next) {
+    if (!!this.isModified('props')
+        && !!this.props.avatar && this.props.avatar !== this.profileImageURL) {
+        this.profileImageURL = this.props.avatar;
+    }
+
+    next();
+});
+
+DriverSchema.pre('save', function (next) {
     if (this.isModified('experience')) {
 
         _.map(this.experience, function (exp) {
@@ -158,6 +167,15 @@ DriverSchema.pre('save', function (next) {
 
     if (!_.isEqual(this.reportsData, _.values(this.reports))) {
         this.reportsData = _.values(this.reports);
+    }
+
+    next();
+});
+
+
+DriverSchema.pre('init', function (next, data) {
+    if (data.props && !!data.props.avatar && data.props.avatar !== data.profileImageURL) {
+        data.profileImageURL = data.props.avatar;
     }
 
     next();
