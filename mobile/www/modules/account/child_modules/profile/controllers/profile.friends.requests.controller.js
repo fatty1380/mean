@@ -5,15 +5,17 @@
         .module('account')
         .controller('ProfileFriendRequestCtrl', ProfileFriendRequestCtrl);
 
-    ProfileFriendRequestCtrl.$inject = ['$scope', 'friendsService', 'parameters'];
+    ProfileFriendRequestCtrl.$inject = ['$scope', 'friendsService', 'parameters', 'registerService'];
 
-    function ProfileFriendRequestCtrl($scope, friendsService, parameters) {
+    function ProfileFriendRequestCtrl($scope, friendsService, parameters, registerService) {
         var vm = this;
 
         vm.requests = parameters || [];
 
         vm.cancel = cancel;
         vm.handleRequest = handleRequest;
+        vm.getAvatar = getAvatar;
+        vm.extendWithUserObject = extendWithUserObject;
 
         function handleRequest(request, action) {
             var data = { action: action},
@@ -26,9 +28,35 @@
                 });
         }
 
+        function extendWithUserObject (request) {
+            var index = vm.requests.indexOf(request);
+            
+            registerService
+                .getProfileById(request.from)
+                .then(function (response) {
+                    var userData = response.message.data;
+                    userData.profileImageURL = getAvatar(userData);
+
+                    vm.requests[index].user =  userData;
+                });
+
+        }
 
         function cancel() {
             $scope.closeModal(true);
+        }
+
+        function getAvatar(friend) {
+            var avatar = friend.profileImageURL || friend.props && friend.props.avatar;
+
+            if (!avatar || avatar === 'modules/users/img/profile/default.png'
+                || !!~avatar.indexOf('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4')) {
+                return (friend.avatar = null);
+            }
+
+            friend.avatar = avatar;
+
+            return avatar;
         }
 
     }

@@ -726,6 +726,18 @@ $but-height: 90px;
 
       }
 
+      &.request-list .item .button{
+        min-width: 50px;
+
+        &.button-clear{
+          border-width: 0;
+          color: #d2d2d2;
+          right: 105px;
+          min-width: 30px;
+          padding: 0;
+        }
+      }
+
       &.user-friends-list .item .button{
         color: #31999c;
         border-color: #31999c;

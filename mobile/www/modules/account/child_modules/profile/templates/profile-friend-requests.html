@@ -6,17 +6,29 @@
         </ion-header-bar>
     </div>
 
-    <ion-pane class="has-footer">
+    <ion-pane class="has-footer friends-pane">
         <ion-scroll delegate-handle="main-content-scroll">
-            <ion-list class="request-list">
-                <ion-item ng-repeat="request in vm.requests track by $index">
-                    <div class="top"><strong>{{request.from}}</strong></div>
-                    <div class="button-bar">
-                        <a class="button button-assertive button-small" ng-click="vm.handleRequest(request, 'reject')">Reject</a>
-                        <a class="button button-balanced button-small" ng-click="vm.handleRequest(request, 'accept')">Accept</a>
+            <ul class="list friends-list user-friends-list request-list">
+                <li class="item" ng-repeat="request in vm.requests track by $index" ng-init="vm.extendWithUserObject(request)">
+                    <img ng-if="!!(request.user.profileImageURL)" ng-src="{{request.user.profileImageURL}}" />
+                    <i ng-if="!(request.user.profileImageURL)" class="ico ico-avatar"></i>
+                    <div class="item-content">
+                        <strong>{{request.user.handle}}</strong>
+                        {{request.user.firstName}} {{request.user.lastName}}
                     </div>
-                </ion-item>
-            </ion-list>
+                    <button class="button button-small button-clear"
+                            ng-click="vm.handleRequest(request, 'reject')">
+                        <i class="icon ion-close-round"></i>
+                    </button>
+                    <button class="button button-small list-button"
+                            ng-click="vm.handleRequest(request, 'accept')">
+                        Accept
+                    </button>
+                </li>
+                <li ng-if="!vm.requests || !vm.requests.length" class="no-matches">
+                    <div class="item-content">No Requests</div>
+                </li>
+            </ul>
         </ion-scroll>
     </ion-pane>
 
