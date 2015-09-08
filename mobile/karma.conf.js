@@ -17,6 +17,7 @@ module.exports = function(config) {
     files: [
       "www/lib/ionic/release/js/ionic.bundle.js",
       'node_modules/angular-mocks/angular-mocks.js',
+      'node_modules/jasmine-expect/dist/jasmine-matchers.js',
 
       'www/modules/app/*.js',
       'www/modules/app/constants/*.js',
@@ -50,6 +51,10 @@ module.exports = function(config) {
       'www/modules/account/child_modules/lockbox/controllers/*.js',
       'www/modules/account/child_modules/lockbox/services/*.js',
       'www/modules/account/child_modules/lockbox/directives/*.js',
+
+      'www/modules/account/child_modules/messages/messages.module.js',
+      'www/modules/account/child_modules/messages/controllers/*.js',
+      'www/modules/account/child_modules/messages/services/*.js',
 
       'tests/**/*.js',
       'tests/!**!/!**!/!*.js'

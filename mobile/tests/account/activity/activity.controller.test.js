@@ -13,7 +13,7 @@
             httpBackend = $injector.get('$httpBackend');
         }));
 
-        beforeEach(inject(function($rootScope, $controller){
+        beforeEach(inject(function($rootScope, $controller) {
             var scope = $rootScope.$new();
             ActivityCtrl = $controller('ActivityCtrl', {
                 $scope: scope
@@ -22,6 +22,14 @@
 
         it('is defined', function() {
             expect(ActivityCtrl).toBeDefined();
+        });
+
+        it('is lastUpdate defined', function() {
+            expect(ActivityCtrl.lastUpdate).toBeDefined();
+        });
+
+        it('is newActivities === 0', function() {
+            expect(ActivityCtrl.newActivities).toBe(0);
         });
 
     });

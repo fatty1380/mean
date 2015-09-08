@@ -5,9 +5,9 @@
         .module('account')
         .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl)
 
-    MessageChatDetailsCtrl.$inject = ['$state', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService'];
+    MessageChatDetailsCtrl.$inject = ['$state', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService', 'settings'];
 
-    function MessageChatDetailsCtrl($state, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService) {
+    function MessageChatDetailsCtrl($state, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService, settings) {
         var vm = this;
         vm.message = '';
         vm.messages = (parameters.messages || []).reverse();
@@ -37,7 +37,7 @@
                 },function() {
                     console.log('messages update error ', vm.messages.length);
                 });
-        }, 15000);
+        }, settings.messagesTimeout);
 
         function scrollToBottom() {
             $timeout(function(){
