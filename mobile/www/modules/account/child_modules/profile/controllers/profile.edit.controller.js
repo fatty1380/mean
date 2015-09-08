@@ -60,8 +60,8 @@
                 });
         }
 
-        function getFormattedDate (date) {
-            return $filter('date')(date, 'MMMM yyyy');
+        function getFormattedDate(date) {
+            return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
         }
 
         function updateStartedDate(started) {
@@ -73,8 +73,8 @@
             vm.closeModal(null);
         }
 
-        function save () {
-            updateStartedDate(vm.started);
+        function save() {
+            vm.profileData.props.started = vm.started;
 
             console.log('Saving user data: ', vm.profileData);
 
