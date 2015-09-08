@@ -142,7 +142,7 @@ describe('User SEARCH tests', function () {
 
                 _.first(results, function (result) {
                     result.should.have.property('username');
-                    /silverdog/i.test(result.username).should.be.true();
+                    (/silverdog/i).test(result.username).should.be.true();
                 });
             });
     });

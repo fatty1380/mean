@@ -31,7 +31,7 @@ describe('Feed Model Unit Tests:', function () {
 			password: 'password'
 		});
 
-		user.save(function () {
+		user.save(function() { 
 			feed = new Feed({
 				name: 'Feed Name',
 				user: user
@@ -41,7 +41,7 @@ describe('Feed Model Unit Tests:', function () {
 		});
 	});
 
-	describe('Method Save', function () {
+	describe('Method Save', function() {
 		it('should be able to save without problems', function () {
 			return feed.save().then(function success(result) {
 				result.should.have.property('id', user.id);
@@ -112,14 +112,14 @@ describe('Feed Model Unit Tests:', function () {
 		// })
 	})
 
-	afterEach(function (done) {
+	afterEach(function(done) { 
 		FeedItem.remove().exec(function () {
-			Feed.remove().exec(function () {
-				User.remove().exec(function () {
-					done();
-				});
-			});
+		Feed.remove().exec(function(){
+			User.remove().exec(function(){
+				done();
+			});	
 		});
 	});
+});
 
 });

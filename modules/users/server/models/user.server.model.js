@@ -173,7 +173,13 @@ var UserSchema = new Schema({
 }, { collection: 'users', discriminatorKey: '_type', 'toJSON': { virtuals: true } });
 
 
-
+/**
+ * Create a text index on the User Schema.
+ * This index is used for $text queries (eg: users.profile.server.controller:search())
+ * 
+ * NOTE: If Adding a new field, the existing index must be removed prior to the new
+ * index being created.
+ */
 UserSchema.index({
     firstName: 'text',
     lastName: 'text',
