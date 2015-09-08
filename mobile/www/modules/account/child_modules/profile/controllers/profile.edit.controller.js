@@ -11,7 +11,7 @@
         var vm = this;
         
         vm.profileData = userService.profileData;
-        vm.started = getFormattedDate(vm.profileData.props.started);
+        vm.started = getFormattedDate(vm.profileData.props  && vm.profileData.props.started);
 
         vm.cancel = cancel;
         vm.save = save;
