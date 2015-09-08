@@ -15,7 +15,7 @@
             novalidate>
                 <div class="form-row">
                     <label class="item item-input">
-                        <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" required>
+                        <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" debounce required>
                     </label>
                     <i class="icon ion-backspace-outline" ng-if="vm.user.email && vm.user.email.length" ng-click="vm.user.email = ''"></i>
                 </div>
