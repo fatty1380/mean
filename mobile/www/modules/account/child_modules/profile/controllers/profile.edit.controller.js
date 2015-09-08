@@ -10,6 +10,10 @@
     function ProfileEditCtrl(truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
         
+        if (!vm.profileData) {
+            return $state.go('home');
+        }
+        
         vm.profileData = userService.profileData;
         vm.profileData.props = vm.profileData.props || {};
         vm.started = getFormattedDate(vm.profileData.props.started);
