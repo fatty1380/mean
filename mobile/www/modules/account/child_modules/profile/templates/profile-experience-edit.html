@@ -15,20 +15,27 @@
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Description</span>
-                    <input type="text" ng-model="vm.experience.description" placeholder="Description">
+                    <textarea type="text" ng-model="vm.experience.description" placeholder="Description"></textarea>
                 </label>
                 <label class="item item-input item-floating-label">
-                    <span class="input-label">Start Date</span>
-                    <input type="text" ng-model="vm.experience.startDate" placeholder="Start Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                    <span class="input-label">Location/Region</span>
+                    <input type="text" ng-model="vm.experience.location" placeholder="Location/Region">
                 </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">End Date</span>
-                    <input type="text" ng-model="vm.experience.endDate" placeholder="End Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Location</span>
-                    <input type="text" ng-model="vm.experience.location" placeholder="Location">
-                </label>
+                
+                <div class="row">
+                    <div class="col">
+                        <label class="item item-input item-floating-label">
+                            <span class="input-label">Start Date</span>
+                            <input type="text" ng-model="vm.experience.startDate" placeholder="Start Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                        </label>
+                    </div>
+                    <div class="col">
+                        <label class="item item-input item-floating-label">
+                            <span class="input-label">End Date</span>
+                            <input type="text" ng-model="vm.experience.endDate" placeholder="End Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                        </label>
+                    </div>
+                </div>
             </div>
         </ion-scroll>
     </ion-pane>
