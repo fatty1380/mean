@@ -9,7 +9,27 @@
                 .state('home', {
                     url: '/home',
                     templateUrl: 'modules/signup/templates/home.html',
-                    controller: 'HomeCtrl as vm'
+                    controller: 'HomeCtrl as vm',
+                    resolve: {
+                        /**
+                         * @desc check user logged in
+                        */
+                        check: function($q, userService, $state, tokenService, registerService) {
+                            var defer = $q.defer();
+                            if(tokenService.get('access_token')) {
+                                 registerService.me()
+                                    .then(function (resp) {
+                                         defer.resolve();
+                                         if(resp.message.data) {
+                                             $state.go('account.profile');
+                                         }
+                                    });
+                            }else{
+                                defer.resolve();
+                            }
+                            return defer.promise;
+                        }
+                    }
                 })
 
                 .state('login', {
