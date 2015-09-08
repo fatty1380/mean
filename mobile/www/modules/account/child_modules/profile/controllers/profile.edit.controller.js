@@ -64,16 +64,12 @@
             return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
         }
 
-        function updateStartedDate(started) {
-            if(!started) return '';
-            vm.profileData.props.started =  new Date('"' + started + '"');
-        }
-
         function cancel () {
             vm.closeModal(null);
         }
 
         function save() {
+            // Update the started date
             vm.profileData.props.started = vm.started;
 
             console.log('Saving user data: ', vm.profileData);
