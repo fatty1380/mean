@@ -9,13 +9,11 @@
 
     function welcomeService () {
         var welcomeUser = false;
+        var welcomeActivity = false;
 
         return {
-            welcomeUser: welcomeUser
+            welcomeUser: welcomeUser,
+            welcomeActivity: welcomeActivity
         }
-
     }
-
 })();
-
-
