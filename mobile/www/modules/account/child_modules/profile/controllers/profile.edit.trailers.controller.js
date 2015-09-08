@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileEditTrailersCtrl', ProfileEditTrailersCtrl);
 
-    ProfileEditTrailersCtrl.$inject = ['$scope', 'parameters', 'registerService'];
+    ProfileEditTrailersCtrl.$inject = ['$scope', 'parameters', 'registerService', 'trailerService'];
 
-    function ProfileEditTrailersCtrl($scope, parameters, registerService) {
+    function ProfileEditTrailersCtrl($scope, parameters, registerService, trailerService) {
         var vm = this;
 
         vm.newTrailer = '';
@@ -15,6 +15,7 @@
 
         vm.cancel = cancel;
         vm.save = save;
+        vm.addTrailer = trailerService.addTrailer;
 
 
         function cancel (trailers) {

@@ -26,26 +26,29 @@
         }
 
         function addTruck() {
+            var scope = $rootScope.$new();
+            scope.vm = {};
+
             $ionicPopup.show({
-                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTruck" autofocus>',
-                title: 'Please enter a trailer type',
-                scope: $rootScope.new(),
+                template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.truck" autofocus>',
+                title: 'Please enter a truck type',
+                scope: scope,
                 buttons: [
                     {
                         text: 'Cancel',
                         onTap: function (e) {
-                            vm.newTruck = '';
+                            scope.vm.truck = '';
                         }
                     },
                     {
                         text: 'Save',
                         type: 'button-positive',
                         onTap: function(e) {
-                            if (!vm.newTruck) {
+                            if (!scope.vm.truck) {
                                 e.preventDefault();
                             } else {
-                                TRUCKS.push({name:vm.newTruck, checked:true, logoClass: ''});
-                                vm.newTruck = '';
+                                TRUCKS.push({name:scope.vm.truck, checked:true, logoClass: ''});
+                                scope.vm.truck = '';
                                 return TRUCKS;
                             }
                         }

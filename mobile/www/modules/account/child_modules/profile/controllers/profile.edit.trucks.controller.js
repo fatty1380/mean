@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileEditTrucksCtrl', ProfileEditTrucksCtrl);
 
-    ProfileEditTrucksCtrl.$inject = ['$scope', 'parameters', 'registerService'];
+    ProfileEditTrucksCtrl.$inject = ['$scope', 'parameters', 'registerService', 'truckService'];
 
-    function ProfileEditTrucksCtrl($scope, parameters, registerService) {
+    function ProfileEditTrucksCtrl($scope, parameters, registerService, truckService) {
         var vm = this;
 
         vm.newTruck = '';
@@ -15,6 +15,7 @@
 
         vm.cancel = cancel;
         vm.save = save;
+        vm.addTruck = truckService.addTruck;
 
         function cancel (truck) {
             $scope.closeModal(truck);

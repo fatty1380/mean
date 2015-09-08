@@ -36,27 +36,31 @@
         }
 
         function addTrailer() {
+            var scope = $rootScope.$new();
+            scope.vm = {};
+
             $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.newTrailer" autofocus>',
                 title: 'Please enter a trailer type',
-                scope: $rootScope.new(),
+                scope: scope,
                 buttons: [
                     {
                         text: 'Cancel',
                         onTap: function (e) {
-                            vm.newTrailer = '';
+                            scope.vm.newTrailer = '';
                         }
                     },
                     {
                         text: 'Save',
                         type: 'button-positive',
                         onTap: function(e) {
-                            if (!vm.newTrailer) {
+                            if (!scope.vm.newTrailer) {
                                 e.preventDefault();
                             } else {
-                                TRAILERS.push({name:vm.newTrailer, checked:true});
-                                vm.newTrailer = '';
-                                return vm.newTrailer;
+                                TRAILERS.push({name:scope.vm.newTrailer, checked:true});
+                                scope.vm.newTrailer = '';
+
+                                return TRAILERS;
                             }
                         }
                     }
@@ -64,16 +68,12 @@
             });
         }
 
-
-
         return {
             getTrailers: getTrailers,
             addTrailer: addTrailer
         };
 
-
     }
-    
 })();
 
 
