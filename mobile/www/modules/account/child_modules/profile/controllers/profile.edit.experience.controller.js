@@ -9,6 +9,8 @@
 
     function ProfileEditExperienceCtrl($q, experienceService, parameters) {
         var vm = this;
+        
+        vm.stateAction = 'Edit';
 
         console.log(parameters);
 
@@ -28,7 +30,7 @@
                 console.warn('success --->>>', resp);
                 cancel();
             }, function (err) {
-                console.warn('err --->>>', err);
+                console.error('err --->>>', err);
             });
         }
 

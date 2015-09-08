@@ -9,6 +9,8 @@
 
     function ProfileAddExperienceCtrl($q, experienceService) {
         var vm = this;
+        
+        vm.stateAction = 'Add'
 
         vm.experience = {
             title: '',

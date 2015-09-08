@@ -5,9 +5,9 @@
         .module('signup')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', 'tokenService', 'userService'];
+    LoginCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'focusService'];
 
-    function LoginCtrl($scope, $state, registerService, $ionicLoading, tokenService, userService) {
+    function LoginCtrl($scope, $state, registerService, $ionicLoading, tokenService, userService, focusService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -27,7 +27,7 @@
 
         vm.echange = function () {
             console.warn(' vm.user --->>>', vm.user.email);
-        }
+        };
         /**
          * @description Submit form if last field in focus
         */
@@ -66,8 +66,14 @@
                     vm.error = '';
                 } else {
                     vm.error = data.error_description || "error";
+                    selectInputValue('password');
                 }
             });
+        }
+
+        function selectInputValue (id) {
+            var password = document.getElementById(id);
+            password.setSelectionRange(0, password.value.length);
         }
 
         $scope.$on('$ionicView.afterEnter', function () {

@@ -15,13 +15,13 @@
             novalidate>
                 <div class="form-row">
                     <label class="item item-input">
-                        <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" required>
+                        <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" debounce required>
                     </label>
                     <i class="icon ion-backspace-outline" ng-if="vm.user.email && vm.user.email.length" ng-click="vm.user.email = ''"></i>
                 </div>
                 <div class="form-row">
                     <label class="item item-input">
-                        <input type="password" placeholder="Password" ng-model="vm.user.password" ng-focus="vm.lastElementFocused = true" required>
+                        <input id="password" type="password" placeholder="Password" ng-model="vm.user.password" ng-focus="vm.lastElementFocused = true" required>
                     </label>
                     <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
                 </div>
@@ -32,7 +32,7 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-click="vm.signIn()">Login</button>
+            <button class="button primary" ng-click="vm.signIn();" event-focus="click" event-focus-id="password">Login</button>
         </div>
     </ion-footer-bar>
 </ion-view>

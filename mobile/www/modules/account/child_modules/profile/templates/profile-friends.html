@@ -18,8 +18,9 @@
             <div class="title" ng-if="vm.friends.length">Your Friends</div>
             <ul class="list friends-list user-friends-list" ng-if="vm.friends.length">
                 <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)"
-                    ng-click="vm.viewUser(friend, $event)">
-                    <i class="ico ico-avatar" ></i>
+                    ng-click="vm.viewUser(friend, $event)" ng-init="vm.getAvatar(friend)">
+                    <img ng-if="!!(friend.avatar)" ng-src="{{friend.avatar}}" />
+                    <i ng-if="!(friend.avatar)" class="ico ico-avatar"></i>
                     <div class="item-content">
                         {{friend.displayName}}{{friend.text}}
                     </div>
