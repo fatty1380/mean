@@ -36,6 +36,14 @@ module.exports = function (app) {
     app.route('/api/users/:userId([0-9a-fA-F]{24})/companies')
         //.get(companies.companiesByUserID);
         .get(companies.companyByUserID, companies.read);
+        
+        /**
+         * New Company Routes : Social
+         */
+    app.route('/api/companies/' + companyIdString + '/follow')
+        .all(users.requiresLogin)
+        .post(companies.follow)
+        .delete(companies.unfollow);
 
     // Finish by binding the Company middleware
     app.param('companyId', companies.companyByID);

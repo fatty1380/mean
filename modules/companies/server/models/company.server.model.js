@@ -102,6 +102,19 @@ var CompanySchema = new Schema({
             default: null//'preEmployment'
         }
     },
+    
+    /**
+     * "Social" and Feed additions
+     */
+
+    followers: {
+        type: [{
+            type: Schema.ObjectId,
+            ref: 'User'
+        }],
+        default: []
+    },
+     
 
     created: {
         type: Date,

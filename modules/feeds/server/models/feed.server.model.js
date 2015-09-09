@@ -22,6 +22,11 @@ var FeedSchema = new Schema({
 		required: 'Feeds must be associated with a user',
 		unique: true
 	},
+	company: {
+		type: Schema.ObjectId,
+		ref: 'Company',
+		unique: true
+	},
 	// Stores activity from other users
 	items: {
 		type: [{ type: Schema.ObjectId, ref: 'FeedItem' }],
@@ -52,7 +57,11 @@ FeedSchema.pre('save', function (next) {
     }
 
 	if (this.isNew) {
-		this._id = this.user && this.user._id || this.user;
+		if (!!this.company) {
+			this._id = this.company._id || this.company;
+		} else {
+			this._id = this.user && this.user._id || this.user;
+		}
 	}
 
 	log.debug({ func: 'pre-save', new: this.isNew, mod: this.isModified(), doc: this }, 'logging doc status');
@@ -83,6 +92,10 @@ var FeedItemSchema = new Schema({
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
+	},
+	company: {
+		type: Schema.ObjectId,
+		ref: 'Company'
 	},
     props: {
         type: Schema.Types.Mixed,

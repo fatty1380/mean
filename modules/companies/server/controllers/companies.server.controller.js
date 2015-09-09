@@ -29,6 +29,8 @@ exports.companiesByUserID = companiesByUserID;
 exports.companyByUserID = companyByUserID; 
 exports.companyByID = companyByID; 
 exports.hasAuthorization = hasAuthorization; 
+exports.follow = follow;
+exports.unfollow = unfollow;
 
 /**
  * Subscription Logic
@@ -360,13 +362,59 @@ function hasAuthorization (req, res, next) {
 };
 
 /**
+ * Follow & Social Logic
  */
+function follow(req, res) {
     if (!req.company) {
+        return res.status(404);
     }
+    var followerCt = req.company.followers.length;
+    
+    if (_.contains(req.company.followers)) {
+        return res.status(304).json(req.company);
     }
-    if (!req.company) {
-    }
+     
+    req.company.followers.push(req.user._id);
+    
+    req.company.save().then(
+        function success(company) {
+            req.log.debug({ func: 'company.unfollow', result: company }, 'Saved Follower #%d to Company (had %d followers)', company.followers.length, followerCt);
+
+            return res.json(company);
+        },
+        function reject(err) {
+            req.log.error({ err: err, func: 'company.unfollow' }, 'Failed to save company with new follower');
+            
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         });
+}
+ 
+function unfollow(req, res) {
+    if (!req.company) {
+        return res.status(404);
+    }
+    var followerCt = req.company.followers.length;
+    
+    if (!_.contains(req.company.followers)) {
+        return res.status(304).json(req.company);
+    }
+     
+    req.company.followers.pull(req.user._id);
+    
+    req.company.save().then(
+        function success(company) {
+            req.log.debug({ func: 'company.unfollow', result: company }, 'Removed Follower #%d to Company (had %d followers)', company.followers.length, followerCt);
+
+            return res.json(company);
+        },
+        function reject(err) {
+            req.log.error({ err: err, func: 'company.unfollow' }, 'Failed to save company with new follower');
+            
+            return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
+        });
+ }
+ 
+ 
 
 
 
