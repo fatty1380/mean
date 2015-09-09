@@ -66,7 +66,7 @@
             vm.showEditAvatar = function (parameters) {
                 vm.camera.showActionSheet()
                     .then(function success(newImageResponse) {
-                        vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
+                        vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
                     })
                     .catch(function reject(err) {
                         debugger;

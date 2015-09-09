@@ -5,7 +5,7 @@
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
+                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
             </div>
             <div class="text">
                 <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
@@ -58,8 +58,12 @@
                     <input type="text" ng-model="vm.started" placeholder="Driving Since" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                 </label>
                 <label class="item item-input item-floating-label">
-                    <span class="input-label">Driving For</span>
-                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Driving For">
+                    <span class="input-label">Employer</span>
+                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Employer">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Miles per Year</span>
+                    <input type="number" ng-model="vm.profileData.props.miles" placeholder="Miles per Year">
                 </label>
                 <button class="button button-clear button-block icon-left ion-log-out" ng-click="vm.logout()">
                     Log Out

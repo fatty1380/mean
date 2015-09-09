@@ -15,7 +15,8 @@
 			template: contactTemplate,
 			restrict: 'E',
 			scope: {
-				contact: '=model'
+				contact: '=model',
+				message: '=?'
 			},
 			controller: AddContactDirectiveCtrl,
 			controllerAs: 'vm',
@@ -27,7 +28,7 @@
 		// Inject controller as 'vm' for consistency
 		function link(scope, el, attr, vm) {
 			// Set defaults in case vm.contact is not properly initialized
-			angular.extend(vm.contact, {
+			vm.contact = angular.extend(vm.contact || {}, {
 				checked: true,
 				displayName: null,
 				phones: [],
@@ -55,7 +56,10 @@
 		'	</label>',
 		'	<label class="item item-input">',
 		'		<input type="text" placeholder="Name" ng-model="vm.contact.displayName">',
-		'	</label>'
+		'	</label>',
+		'   <label class="item item-input" ng-if="!!vm.message">',
+        '       <textarea placeholder="Enter message" class="" rows="10"></textarea>',
+        '   <hr></label>'
 	].join('');
 
 })();

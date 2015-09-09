@@ -10,6 +10,10 @@
     function ProfileEditCtrl(truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
 
+        if (!userService.profileData) {
+            return $state.go('home');
+        }
+        
         vm.profileData = userService.profileData;
         vm.profileData.props = vm.profileData.props || {};
         vm.started = getFormattedDate(vm.profileData.props.started);
@@ -21,10 +25,6 @@
         vm.showProfileEditTrucksModal = showProfileEditTrucksModal;
         vm.updateTrailers = updateTrailers;
         vm.updateTrucks = updateTrucks;
-
-        if (!vm.profileData) {
-            return $state.go('home');
-        }
 
         function updateTrailers (trailers) {
             if(!trailers) return;
@@ -60,21 +60,17 @@
                 });
         }
 
-        function getFormattedDate (date) {
-            return $filter('date')(date, 'MMMM yyyy');
-        }
-
-        function updateStartedDate(started) {
-            if(!started) return '';
-            vm.profileData.props.started =  new Date('"' + started + '"');
+        function getFormattedDate(date) {
+            return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
         }
 
         function cancel () {
             vm.closeModal(null);
         }
 
-        function save () {
-            updateStartedDate(vm.started);
+        function save() {
+            // Update the started date
+            vm.profileData.props.started = vm.started;
 
             console.log('Saving user data: ', vm.profileData);
 

@@ -5,11 +5,11 @@
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
+                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt=""/>
             </div>
             <div class="text">
-                <strong>Trucker Handle</strong>
-                <em>Driver</em>
+                <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+                <em ng-bind="vm.profileData.props.company"></em>
             </div>
         </div>
     </div>
@@ -19,17 +19,14 @@
         </div>
         <ion-scroll>
             <div class="list share-form">
-                <oset-manual-contact model="vm.contact" ></oset-manual-contact>
-                <label class="item item-input">
-                    <textarea placeholder="Enter message"></textarea>
-                </label>
+                <oset-manual-contact model="vm.contact" message="true"></oset-manual-contact>
             </div>
         </ion-scroll>
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary">Share</button>
+            <button class="button primary">Send</button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>

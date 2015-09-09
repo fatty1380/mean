@@ -68,7 +68,7 @@
                         </div>
                         <div class="item">
                             DRIVING SINCE:
-                            <span class="item-note">{{vm.profileData.props.started | date : 'MMMM yyyy'}}</span>
+                            <span class="item-note">{{vm.profileData.props.started | monthDate | date : 'MMMM, yyyy'}}</span>
                         </div>
                         <div class="item item-divider"></div>
                         <div class="item">
@@ -100,9 +100,9 @@
                             <p ng-if="!!job.location">{{job.location}}</p>
                             <em ng-if="!!job.startDate || job.endDate">
                                 <i class="ico ico-timesmall"></i>
-                                <span ng-if="!!job.startDate">{{job.startDate | date : MMM : yyyy}}</span>
+                                <span ng-if="!!job.startDate">{{job.startDate | monthDate | date : 'MMMM, yyyy'}}</span>
                                 <span ng-if="!!job.startDate && job.endDate">-</span>
-                                <span ng-if="!!job.endDate">{{job.endDate | date : MMM : yyyy}}</span>
+                                <span ng-if="!!job.endDate">{{job.endDate | monthDate | date : 'MMMM, yyyy'}}</span>
                             </em>
                         </ion-item>
                     </ion-list>

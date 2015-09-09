@@ -10,6 +10,7 @@
     function ProfileRequestReviewCtrl($scope, userService) {
         var vm = this;
         vm.profileData = userService.profileData;
+        vm.contact = {};
 
         vm.cancel = function(){
             $scope.closeModal(null);
