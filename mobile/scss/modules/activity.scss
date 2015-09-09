@@ -37,6 +37,11 @@
     height:200px;
   }
 
+  .comment {
+    margin: 0 10px;
+    border-top: 1px solid #D2D2D2;
+  }
+
   .item{
     //margin-bottom: 2px;
     padding:$item-padding;
@@ -120,6 +125,26 @@
       }
     }
   }
+  .bar-footer {
+
+    .item-input-wrapper {
+      background: none;
+
+      textarea {
+        width: 100%;
+        height: 45px;
+        font-size: 12px;
+        background-color: transparent;
+        resize: none;
+        padding: 5px 20px 5px 5px;
+      }
+    }
+
+    .button-positive {
+      border: 0;
+      padding: 0 40px;
+    }
+  }
 
 }
 
@@ -139,6 +164,4 @@
     cursor: text;
   }
 }
-
-
 

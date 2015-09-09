@@ -15,6 +15,7 @@
             getFeedActivityById: getFeedActivityById,
             getLastActivityWithCoord: getLastActivityWithCoord,
             getFeedIds: getFeedIds,
+            postComment: postComment,
             likeActivity: likeActivity,
             getDistanceBetween: getDistanceBetween,
             showPopup: showPopup,
@@ -129,6 +130,17 @@
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
+                    showPopup(response.statusText, response.data.message);
+                    return response;
+                });
+        }
+
+        function postComment(id, data) {
+            return $http.post(settings.feed + id + '/comments', utilsService.serialize(data))
+                .then(function (response) {
+                    return response;
+                }, function (response) {
+                    console.log(response);
                     showPopup(response.statusText, response.data.message);
                     return response;
                 });
