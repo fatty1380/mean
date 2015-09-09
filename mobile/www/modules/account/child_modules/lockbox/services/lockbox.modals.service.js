@@ -26,7 +26,6 @@
             controller = 'LockboxShareCtrl as vm';
             params = parameters || {};
             options = angular.extend({}, defaultOptions, options);
-            debugger;
 
             return modalService
                 .show(templateUrl, controller, params, options);

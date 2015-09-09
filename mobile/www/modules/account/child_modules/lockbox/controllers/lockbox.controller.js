@@ -5,18 +5,18 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$ionicModal', '$scope', '$sce', '$ionicLoading', 'lockboxDocuments', '$ionicPopup', 'lockboxModalsService'];
+    LockboxCtrl.$inject = ['lockboxDocuments', 'lockboxModalsService'];
 
-    function LockboxCtrl($ionicModal, $scope, $sce, $ionicLoading, lockboxDocuments, $ionicPopup, lockboxModalsService) {
+    function LockboxCtrl( lockboxDocuments,  lockboxModalsService) {
         var vm = this;
 
+        vm.currentDoc = null;
+        vm.documents = [];
 
         vm.addDocsPopup = lockboxDocuments.addDocsPopup;
         vm.showEditModal = showEditModal;
         vm.showShareModal = showShareModal;
 
-        vm.currentDoc = null;
-        vm.documents = [];
 
         activate();
         
@@ -51,7 +51,6 @@
         };
 
         function showShareModal(parameters) {
-            debugger;
             lockboxModalsService.showLockboxShareModal(parameters)
                 .then(
                     function (result) {
@@ -60,6 +59,6 @@
                     function (err) {
                         console.log(err);
                     })
-        };
+        }
     }
 })();
