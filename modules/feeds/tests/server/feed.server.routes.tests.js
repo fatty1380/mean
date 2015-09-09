@@ -90,7 +90,7 @@ describe('Feed CRUD tests', function () {
 				});
 		});
 
-		describe.skip('should create a new feed if no feed already exists', function () {
+		describe('should create a new feed if no feed already exists', function () {
 			beforeEach(function () {
 				return Feed.remove().exec();
 			});
@@ -291,6 +291,8 @@ describe('Feed CRUD tests', function () {
 						});
 				});
 		});
+		
+		describe('When dealing with Company posts');
 
 		describe('When cross posting amongst friends', function () {
 			var friend, notFriend;

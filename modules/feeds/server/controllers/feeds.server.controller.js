@@ -342,20 +342,24 @@ function getOrCreateFeed(userId, log) {
  */
 function crossPost(user, item) {
 	log.debug({ func: 'crossPost', friends: _.uniq(user.friends) }, 'initializing cross post');
-	return Q.all(_.map(user.friends, function (friend) {
+	return Q.all(_.map(user.friends, postItemToFriend, this));
+}
 
-		log.debug({ func: 'crossPost', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
-		return getOrCreateFeed(friend, log).then(
-			function (theirFeed) {
-				log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
-				theirFeed.items.push(item);
+function postItemToFriend(friend) {
+	var item = this.item;
 
-				return theirFeed.save();
-			}).then(
-				function (success) {
-					log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
+	log.debug({ func: 'crossPost', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
 
-					return success;
-				});
-	}));
+	return getOrCreateFeed(friend, log).then(
+		function (theirFeed) {
+			log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
+			theirFeed.items.push(item);
+
+			return theirFeed.save();
+		}).then(
+			function (success) {
+				log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
+
+				return success;
+			});
 }
