@@ -89,6 +89,9 @@ var FeedItemSchema = new Schema({
 		type: ['GeoJson'],
 		default: null
 	},
+	_imageURL: {
+		type: 'String',
+	},
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
@@ -140,6 +143,16 @@ FeedItemSchema.virtual('location')
 		this._location = [value];
 	});
 
+FeedItemSchema.virtual('imageURL')
+	.get(function () {
+		log.trace({ func: 'virtual.imageURL.get', value: this._imageURL }, 'Returning _imageURL');
+		return this._imageURL;
+	})
+	.set(function (value) {
+		log.debug({ func: 'FeedItem.imageURL.set', value: value }, 'Setting value into _imageURL');
+		this._imageURL = value;
+	});
+	
 FeedItemSchema.pre('save', function (next) {
 	log.debug({ func: 'pre-save', doc: this }, 'Checking Migrated Feed Item for Modifications');
     if (this.isModified()) {
