@@ -6,23 +6,24 @@ module.exports = function (app) {
         braintree = require(path.resolve('./modules/payments/server/controllers/braintree.server.controller')),
         companies = require(path.resolve('./modules/companies/server/controllers/companies.server.controller'));
 
+    var companyIdString = ':companyId([0-9a-fA-F]{24})';
     // Companies Routes
     app.route('/api/companies')
         .get(companies.list)
         .post(users.requiresLogin, companies.create);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})')
+    app.route('/api/companies/' + companyIdString)
         .get(companies.read)
         .put(users.requiresLogin, companies.hasAuthorization, companies.update)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})/drivers')
+    app.route('/api/companies/' + companyIdString + '/drivers')
         .get(companies.listDrivers);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})/picture')
+    app.route('/api/companies/' + companyIdString + '/picture')
         .post(companies.changeProfilePicture);
 
-    app.route('/api/companies/:companyId([0-9a-fA-F]{24})/subscription')
+    app.route('/api/companies/' + companyIdString + '/subscription')
         .get(companies.getSubscription)
         .post(companies.createSubscription, braintree.findOrCreateCustomer, braintree.postSubscription, companies.saveSubscription);
 

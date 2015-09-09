@@ -4,26 +4,51 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-Q            = require('q'),
-path         = require('path'),
-errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
-constants    = require(path.resolve('./modules/core/server/models/outset.constants')),
-Company      = mongoose.model('Company'),
-Subscription = mongoose.model('Subscription'),
-Gateway = mongoose.model('Gateway'),
-_            = require('lodash'),
-log          = require(path.resolve('./config/lib/logger')).child({
-    src : { file: 'companies.server.controller', module: 'companies'}
-});
+    Q = require('q'),
+    path = require('path'),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+    fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
+    constants = require(path.resolve('./modules/core/server/models/outset.constants')),
+    Company = mongoose.model('Company'),
+    Gateway = mongoose.model('Gateway'),
+    _ = require('lodash'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        src: { file: 'companies.server.controller', module: 'companies' }
+    });
+
+var subs = require('./subscriptions.server.controller');
+
+exports.create = create; 
+exports.read = read; 
+exports.update = update; 
+exports.changeProfilePicture = changeProfilePicture; 
+exports.delete = deleteCompany; 
+exports.list = list; 
+exports.listDrivers = listDrivers; 
+exports.companiesByUserID = companiesByUserID; 
+exports.companyByUserID = companyByUserID; 
+exports.companyByID = companyByID; 
+exports.hasAuthorization = hasAuthorization; 
+
+/**
+ * Subscription Logic
+ * The Subscriptions Module exports the following 3 methods:
+ * 
+ *     - getSubscription;
+ *     - createSubscription;
+ *     - saveSubscription; 
+ * 
+ * which are added to this module via the extension of the 'exports' object
+ */
+_.extend(exports, subs);
 
 /**
  * "Instance" Methods
  */
 
 var executeQuery = function (req, res) {
-    req.log.debug('START', {req: req, reqId: req.id, src: {func: 'executeQuery'}});
-    req.log.debug({msg: 'START', req: req, reqId: req.id, src: {func: 'executeQuery'}});
+    req.log.debug('START', { req: req, reqId: req.id, src: { func: 'executeQuery' } });
+    req.log.debug({ msg: 'START', req: req, reqId: req.id, src: { func: 'executeQuery' } });
 
 
     var query = req.query || {};
@@ -49,7 +74,7 @@ var executeQuery = function (req, res) {
 /**
  * Create a Company
  */
-exports.create = function (req, res) {
+function create (req, res) {
 
     var company = new Company(req.body);
     var ownerId = req.body.ownerId || req.user._id;
@@ -79,8 +104,8 @@ exports.create = function (req, res) {
 /**
  * Show the current Company
  */
-exports.read = function (req, res) {
-    req.log.debug({req: req, msg: 'START', src: {func: 'read'}});
+function read (req, res) {
+    req.log.debug({ req: req, msg: 'START', src: { func: 'read' } });
 
     if (!req.company) {
         req.log.debug('[CompaniesCtrl.read] No Company available in request');
@@ -97,12 +122,12 @@ exports.read = function (req, res) {
 /**
  * Update a Company
  */
-exports.update = function (req, res) {
+function update (req, res) {
     req.log.debug('[CompaniesCtrl.update] Start');
 
     var company = req.company;
 
-    req.log.debug('update', 'Updating company from body', {body: req.body});
+    req.log.debug('update', 'Updating company from body', { body: req.body });
 
     company = _.extend(company, req.body);
     company.locations = req.body.locations || [];
@@ -126,25 +151,25 @@ exports.update = function (req, res) {
     //
     //        return company.save();
     //    })
-        company.save()
+    company.save()
         .then(function (company) {
-            req.log.debug('update', 'Successfully updated Company', {company: company});
+            req.log.debug('update', 'Successfully updated Company', { company: company });
             res.json(company);
         },
-        function (err) {
-            req.log.error('update', 'Error saving Company', err);
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err),
-                error: err
+            function (err) {
+                req.log.error('update', 'Error saving Company', err);
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err),
+                    error: err
+                });
             });
-        });
 };
 
 
 /**
  * Update profile picture
  */
-exports.changeProfilePicture = function (req, res) {
+function changeProfilePicture (req, res) {
     req.log.debug('[CompaniesCtrl.changeProfilePicture] Start');
     var company = req.company;
     var user = req.user;
@@ -179,21 +204,21 @@ exports.changeProfilePicture = function (req, res) {
 
             req.company.profileImageURL = successURL;
 
-            return exports.update(req, res);
+            return update(req, res);
 
         }, function (error) {
-            req.log.error('changeProfilePicture', 'Failed to save file to cloud', {error: error});
+            req.log.error('changeProfilePicture', 'Failed to save file to cloud', { error: error });
             return res.status(400).send({
                 message: 'Unable to save Company Profile Picture. Please try again later'
             });
         }
-    );
+        );
 };
 
 /**
- * Delete an Company
+ * deleteCompany an Company
  */
-exports.delete = function (req, res) {
+function deleteCompany (req, res) {
     req.log.debug('[CompaniesCtrl.delete] Start');
 
     var company = req.company;
@@ -212,7 +237,7 @@ exports.delete = function (req, res) {
 /**
  * List of Companies
  */
-exports.list = function (req, res) {
+function list (req, res) {
     req.log.debug('[CompaniesCtrl.list] Start');
 
     req.sort = '-created';
@@ -220,7 +245,7 @@ exports.list = function (req, res) {
     executeQuery(req, res);
 };
 
-exports.listDrivers = function (req, res) {
+function listDrivers (req, res) {
     req.log.debug('[CompaniesCtrl.listDrivers] Start');
 
     req.log.debug('NOT IMPLEMENTED');
@@ -231,22 +256,22 @@ exports.listDrivers = function (req, res) {
     }]);
 };
 
-exports.companiesByUserID = function (req, res) {
-    req.log.debug({func: 'companiesByUserID'}, 'Start');
+function companiesByUserID (req, res) {
+    req.log.debug({ func: 'companiesByUserID' }, 'Start');
 
 
     req.query = {
         owner: req.params.userId
     };
 
-    req.log.debug({func: 'companiesByUserID', query: req.query}, 'Searching for companies based on parameterId');
+    req.log.debug({ func: 'companiesByUserID', query: req.query }, 'Searching for companies based on parameterId');
 
     executeQuery(req, res);
 };
 
-exports.companyByUserID = function (req, res, next) {
+function companyByUserID (req, res, next) {
 
-    req.log.debug({func: 'companyByUserID', params: req.params}, 'Start');
+    req.log.debug({ func: 'companyByUserID', params: req.params }, 'Start');
 
 
     req.query = {
@@ -258,18 +283,18 @@ exports.companyByUserID = function (req, res, next) {
         .populate('subscription')
         .exec(function (err, company) {
             if (err) {
-                req.log.error({error: err, query: req.query, func: 'companyByUserId'}, 'Error Querying for company');
+                req.log.error({ error: err, query: req.query, func: 'companyByUserId' }, 'Error Querying for company');
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             } else if (!!company) {
-                req.log.debug({func: 'companyByUserId', companyId: company.id}, 'Found Company for id:%s', company._id);
+                req.log.debug({ func: 'companyByUserId', companyId: company.id }, 'Found Company for id:%s', company._id);
                 req.company = company;
                 //res.json(company);
 
                 return next();
             } else {
-                req.log.info({func: 'companyByUserId'}, 'No company available for user');
+                req.log.info({ func: 'companyByUserId' }, 'No company available for user');
                 next();
             }
         });
@@ -278,15 +303,15 @@ exports.companyByUserID = function (req, res, next) {
 /**
  * Company middleware
  */
-exports.companyByID = function (req, res, next, id) {
+function companyByID (req, res, next, id) {
     if (/([0-9a-f]{24})$/i.test(id)) {
-        req.log.debug({companyId: id}, 'Querying for company with id %s', id);
+        req.log.debug({ companyId: id }, 'Querying for company with id %s', id);
 
         Company
             .findById(id)
             .populate('owner', 'displayName')
             .populate('subscription')
-            //.populate('gateway')
+        //.populate('gateway')
             .exec(function (err, company) {
                 if (err) {
                     req.log.error(err, 'companyById', 'Unable to find company');
@@ -304,12 +329,12 @@ exports.companyByID = function (req, res, next, id) {
                 //    }
                 //}
 
-                req.log.trace({company: company}, 'Found company: %s', company && company.id);
+                req.log.trace({ company: company }, 'Found company: %s', company && company.id);
                 req.company = company;
                 next();
             });
     } else {
-        req.log.trace({companyId: id}, '`%s` is not a valid companyId', id);
+        req.log.trace({ companyId: id }, '`%s` is not a valid companyId', id);
         next();
     }
 };
@@ -317,131 +342,33 @@ exports.companyByID = function (req, res, next, id) {
 /**
  * Company authorization middleware
  */
-exports.hasAuthorization = function (req, res, next) {
-    req.log.trace('hasAuthorization', 'Start', {company: req.company, user: req.user});
-    req.log.debug('hasAuthorization', 'Start', {company: req.company.owner._id, user: req.user._id});
+function hasAuthorization (req, res, next) {
+    req.log.trace('hasAuthorization', 'Start', { company: req.company, user: req.user });
+    req.log.debug('hasAuthorization', 'Start', { company: req.company.owner._id, user: req.user._id });
 
     if (req.user.equals(req.company.owner)) {
         next();
     }
     else if (req.user.isAdmin) {
-        req.log.info({company: {id: req.company.id, user: req.user._id}}, 'COmpany being edited by admin `%s`', req.user.username);
+        req.log.info({ company: { id: req.company.id, user: req.user._id } }, 'COmpany being edited by admin `%s`', req.user.username);
         next();
     }
     else {
-        req.log.debug({company: {id: req.company.id, owner: req.company.owner}}, 'Owner != User :(: %j vs %j', req.company.owner, req.user);
+        req.log.debug({ company: { id: req.company.id, owner: req.company.owner } }, 'Owner != User :(: %j vs %j', req.company.owner, req.user);
         return res.status(403).send('User is not authorized');
     }
 };
 
-
 /**
- * Subscription Logic
  */
-exports.getSubscription = function (req, res) {
     if (!req.company) {
-        var msg = 'No Company found for id `' + req.companyId + '`';
-        req.log.info({companyId: req.companyId}, msg);
-        return res.status(404).send(msg);
     }
-
-    var subscription = req.company.subscription;
-
-    if (!!subscription && subscription instanceof mongoose.Types.ObjectId) {
-        Subscription.findById(subscription.id)
-            .exec(function (err, subscription) {
-                if (err) {
-                    var msg = errorHandler.getErrorMessage(err);
-                    req.log.error(err, 'Failed to load subscription due to `%s`', msg);
-                    return res.status(401).send({message: msg});
-                }
-
-                req.log.trace({subcription: subscription}, 'Returning Subscription %s', subscription.id);
-                return res.json(subscription);
-            });
-    } else {
-        return res.json(subscription);
     }
-};
-
-exports.createSubscription = function (req, res, next) {
-
     if (!req.company) {
-        var msg = 'No Company found for id `' + req.companyId + '`';
-        req.log.info({companyId: req.companyId}, msg);
-        return res.status(400).send(msg);
     }
-
-    /**
-     * Query Parameters - Possible
-     * ---------------------------
-     * planId: The Braintree planId specified in the order
-     * promoCode: The Braintree promo-code
-     * nonce: The Braintree payment nonce used to transfer payment info securely
-     * price: The price shown on the client, for verification
-     * companyId: The company ordering the subscription
-     */
-
-    req.planId = req.query.planId;
-    req.promoCode = req.query.promoCode;
-    req.price = req.query.price;
-
-
-    req.log.debug('[CreateSubscription] Looking up subscription for planId: %s', req.planId);
-    req.subscriptionType = _.find(constants.subscriptionPackages.packages, {'planId': req.planId});
-
-    next();
-};
-
-exports.saveSubscription = function (req, res) {
-    if (!!req.paymentResult && req.paymentResult.success) {
-
-        var subscription = req.paymentResult.subscription;
-
-        var sub = new Subscription({
-            name: req.planDetails.name,
-            sku: req.planDetails.id,
-            used: 0,
-            available: req.subscriptionType.jobCt,
-            renews: new Date(subscription.billingPeriodEndDate),
-            status: subscription.status.toLowerCase(),
-            remoteSubscriptionId: subscription.id,
-            company: req.company
         });
 
-        req.log.debug('[CompanySubscription] Creating new subscription: %j', sub);
 
-        sub.save(function (err, newSub) {
-            if (err) {
-                req.log.debug('[CompanySubscription.sub] error saving subscription information: ', err);
-                return res.status(400).send({
-                    message: errorHandler.getErrorMessage(err),
-                    error: err
-                });
-            }
 
-            req.log.debug('[Subscription] Successfully saved subscription with id `%s`!', newSub.id);
 
-            req.log.debug('[CompanySubscription] Saving sub to company `%s`: %j', req.company.id, req.company);
-
-            Company.findOneAndUpdate({_id: req.company.id}, {'subscription': newSub._id}, {new: true}, function (err, updatedCo) {
-                if (err) {
-                    req.log.debug('[CompanySubscription.co] error saving subscription information: ', err);
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err),
-                        error: err
-                    });
-                } else {
-                    req.log.debug('[CompanySubscription.co] Successfully created subscription to company `%s`!', updatedCo.id);
-                    res.json(sub);
-                }
-            });
-        });
-    } else {
-        res.status(400).send({
-            message: 'Unable to create subscription on server',
-            serverData: req.paymentResult
-        });
-    }
-};
 
