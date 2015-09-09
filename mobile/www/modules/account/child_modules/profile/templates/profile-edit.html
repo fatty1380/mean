@@ -5,7 +5,7 @@
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
+                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
             </div>
             <div class="text">
                 <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>

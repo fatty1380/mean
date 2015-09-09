@@ -5,11 +5,11 @@
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
+                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt=""/>
             </div>
             <div class="text">
-                <strong>Trucker Handle</strong>
-                <em>Driver</em>
+                <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+                <em ng-bind="vm.profileData.props.company"></em>
             </div>
         </div>
     </div>
@@ -46,11 +46,11 @@
         </ion-header-bar>
         <div class="profile-visual compact">
             <div class="photo">
-                <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt=""/>
+                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt=""/>
             </div>
             <div class="text">
-                <strong>Trucker Handle</strong>
-                <em>Driver</em>
+                <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+                <em ng-bind="vm.profileData.props.company"></em>
             </div>
         </div>
     </div>
