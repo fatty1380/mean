@@ -278,6 +278,7 @@ function feedItemByID(req, res, next, id) {
 
 	FeedItem.findById(id)
 		.populate({ path: 'user', select: 'handle displayName', model: 'User' })
+		.populate({ path: 'company', select: 'name profileImageURL', model: 'Company' })
 		.exec().then(
 			function (feedItem) {
 				req.log.debug({ feedItem: feedItem, method: 'feedItemById.FeedItem.findById' }, 'Feed Item result');
