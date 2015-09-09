@@ -61,9 +61,7 @@
 
             requestObj.requestType = 'shareRequest';
 
-            console.warn(' vm.contact --->>>', vm.contact);
             requestObj.contactInfo = getModifiedContactInfo(vm.contact);
-            console.warn(' vm.contact --->>>', vm.contact);
             requestObj.text = vm.contact.message || '';
             requestObj.contents = {
                 documents: vm.docsToShare
