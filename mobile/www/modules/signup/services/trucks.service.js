@@ -29,7 +29,7 @@
             var scope = $rootScope.$new();
             scope.vm = {};
 
-            $ionicPopup.show({
+            return $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.truck" autofocus>',
                 title: 'Please enter a truck type',
                 scope: scope,
@@ -47,9 +47,7 @@
                             if (!scope.vm.truck) {
                                 e.preventDefault();
                             } else {
-                                TRUCKS.push({name:scope.vm.truck, checked:true, logoClass: ''});
-                                scope.vm.truck = '';
-                                return TRUCKS;
+                                return {name:scope.vm.truck, logoClass: ''};
                             }
                         }
                     }
