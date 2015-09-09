@@ -190,12 +190,18 @@ function createRequest(req, res, next) {
 
 function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
+    
+    var mainQuery = { 'to': req.user.id };
 
     var statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
-    statuses = statuses.length > 1 ? { $in: statuses } : statuses;
-
-    req.log.debug({ func: 'listRequests', query: req.query, statuses: statuses }, 'Executing find');
-
+    mainQuery.status = statuses.length > 1 ? { $in: statuses } : statuses[0];
+    
+    if (req.query.requestType !== 'all') {
+        var types = req.query.requestType || ['friendRequest'];
+        
+        mainQuery.requestType = types.length > 1 ? { $in: types } : types[0];
+    }
+    
     var orQuery = [];
 
     if (!!req.query && !!req.query.userId) {
@@ -206,23 +212,29 @@ function listRequests(req, res) {
         orQuery.push({ from: req.user.id });
     }
 
+    req.log.debug({ func: 'listRequests', query: req.query, statuses: statuses, types: types, mainQuery: mainQuery, orQuery: orQuery }, 'Executing find');
 
-    Request.find({ 'to': req.user.id, 'status': statuses })
-        .or(orQuery)
-        .sort('created').exec()
-        .then(
-            function (requests) {
-                if (!requests) {
-                    requests = [];
-                }
+    Request.find().exec()
+        .then(function (reqs) {
+            req.log.debug({ func: 'listRequests', allRequests: reqs }, 'Listing all requests for debugging');
 
-                req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
-                return res.json(requests);
-            },
-            function (err) {
-                req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
+            return Request.find(mainQuery)
+                .or(orQuery)
+                .sort('created').exec()
+                .then(
+                    function (requests) {
+                        if (!requests) {
+                            requests = [];
+                        }
 
-            });
+                        req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
+                        return res.json(requests);
+                    },
+                    function (err) {
+                        req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
+
+                    });
+        });
 }
 
 function getRequest(req, res, next) {
