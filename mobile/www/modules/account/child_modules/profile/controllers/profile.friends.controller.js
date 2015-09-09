@@ -5,13 +5,12 @@
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
 
-    FriendsCtrl.$inject = ['$state','$ionicLoading', 'contacts', 'outsetUsersService', 'utilsService', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
+    FriendsCtrl.$inject = ['$state', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
 
-    function FriendsCtrl($state, $ionicLoading, contacts,  outsetUsersService, utilsService, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
+    function FriendsCtrl($state, $filter, $ionicLoading, outsetUsersService, utilsService, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
         var vm = this;
 
         vm.friends = friends;
-        vm.contacts = contacts;
         vm.users = [];
         vm.searchText = "";
 
@@ -81,12 +80,25 @@
         }
 
         function showAddFriendsModal() {
-            profileModalsService
-                .showAddFriendsModal(vm.contacts)
-                .then(function (resp) {
-                    console.warn('resp --->>>', resp);
-                }, function (err) {
-                    console.warn('err --->>>', err);
+            contactsService
+                .find()
+                .then(function (response) {
+                    var filter = $filter('contactsFilter'),
+                        contacts = filter(response);
+
+                    contactsService.setContacts(contacts);
+
+                    profileModalsService
+                        .showAddFriendsModal(contacts)
+                        .then(function (resp) {
+                            console.warn('resp --->>>', resp);
+                        }, function (err) {
+                            console.warn('err --->>>', err);
+                        });
+                })
+                .catch(function reject(err) {
+                    console.error('Unable to resolve Contacts: ', err);
+                    return [];
                 });
         }
 

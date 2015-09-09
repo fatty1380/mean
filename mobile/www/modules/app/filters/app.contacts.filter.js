@@ -25,7 +25,6 @@
                         "emails": emails,
                         "phones": phones
                     };
-                    console.warn('filter formattedContact --->>>', formattedContact);
                     contacts.push(formattedContact);
                 }
             }
@@ -49,7 +48,6 @@
                 return phoneArray;
             }
 
-            console.warn('FINAL contacts --->>>', contacts);
             return contacts;
         }
     }
