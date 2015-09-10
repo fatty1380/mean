@@ -61,9 +61,19 @@
         {
             id: '1234abcd5678efab90123',
             sku: 'mvr',
-            name: 'Forest',
+            name: 'Motor Vehicle Report',
             created: '2015-07-11 10:33:05',
-            url: 'http://www.freeoboi.ru/images/558811701.jpg',
+            url: 'driving-record-1.gif',
+            expires: null,
+            bucket: 'outset-dev',
+            key: 'kajifpaiueh13232'
+        },
+        {
+            id: '1234abcd5678efab9011212',
+            sku: 'cdl',
+            name: 'Driver License',
+            created: '2015-07-11 10:33:05',
+            url: 'cdl.png',
             expires: null,
             bucket: 'outset-dev',
             key: 'kajifpaiueh13232'
@@ -71,32 +81,12 @@
         {
             id: '1234abcd5678efab9011212',
             sku: 'bg',
-            name: 'multirule.pdf',
+            name: 'Background Report',
             created: '2015-07-11 10:33:05',
-            url: '420f08027.pdf',
-            expires: null,
-            bucket: 'outset-dev',
-            key: 'kajifpaiueh13232'
-        },
-        {
-            id: '1234abcd5678efab9011212',
-            sku: 'bg',
-            name: 'TeachText.pdf',
-            created: '2015-07-11 10:33:05',
-            url: 'TeachText.pdf',
+            url: 'sample_credit_report.pdf',
             expires: null,
             bucket: 'outset-dev',
             key: 'kajifpaiueh13232222'
-        },
-        {
-            id: '1234abcd5678efab9011211',
-            sku: 'bg',
-            name: 'Lift-truck training',
-            created: '2015-08-11 10:23:05',
-            url: 'indg462.pdf',
-            expires: null,
-            bucket: 'outset-dev',
-            key: 'kajifpaiueh13232'
         }
     ];
 

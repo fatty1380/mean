@@ -52,7 +52,6 @@
         }
 
         function showDocument(document) {
-            debugger;
             return DocPreview.show('modules/account/child_modules/lockbox/templates/modal-preview.html', 'DocumentModalCtrl as vm', document)
         }
     }
@@ -73,14 +72,15 @@
         vm.loadProgress = loadProgress;
 
         console.log('Modal Visible for %s', vm.document.sku);
-                
-        // TODO: Create logical opening of preview, not this :()
-        if (vm.document.sku === 'mvr') {
-            vm.image = vm.document.url;
-        } else if (vm.document.sku === 'bg') {
+        
+        var docURL = vm.document.url;
+        
+        if (docURL.indexOf('.pdf') > 0) {
             vm.pdfURL = { src: vm.document.url };
+        } else {
+            vm.image = vm.document.url;
         }
-
+                
         console.log('Modal Visible for PDF: %s IMG: %o', vm.pdfURL, vm.image);
 
         console.log('[DocumentModalCtrl] for document: %o', vm.document);
