@@ -1,43 +1,61 @@
-<ion-view class="company-screen view-section compact-size">
+<ion-view class="company-screen view-section compact-size" cache-view="false">
 
     <div class="bar bar-header bar-calm" align-title="center">
-        <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-        <button class="button button-clear" ng-click="$ionicGoBack()">Follow</button>
+        <button class="button button-clear" ui-sref="account.activity">Back</button>
+        <button class="button button-clear" ng-click="vm.follow()">Follow</button>
     </div>
 
-    <div class="bar bar-brand">
-        <h3><img class="brand-img" ng-if="vm.companyData.profileImageURL" ng-src="{{vm.companyData.profileImageURL}}" alt="" /></h3>
+    <div class="bar bar-subheader bar-brand">
+        <h3><img class="brand-img" ng-if="vm.company.profileImageURL" ng-src="{{vm.company.profileImageURL}}" alt="" /></h3>
     </div>
 
-    <ion-content class="pane profile-pane has-header">
+    <ion-content class="pane profile-pane has-subheader">
         <ion-tabs class="profile-tabs tabs-top">
             <ion-tab title="FEED" ui-sref="company.feed">
                 <ion-scroll>
-                    <ion-refresher pulling-text="pull to refresh ..." on-refresh="vm.refresh()"></ion-refresher>
-                    <ion-list>
+                    <ion-list class="activity">
                         <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
                     </ion-list>
                 </ion-scroll>
             </ion-tab>
             <ion-tab title="JOBS" ui-sref="company.jobs">
                 <ion-scroll class="jobs-list">
-                    <ion-list>
+                    <ion-list class="activity">
                         <ion-item ng-repeat="job in vm.jobs track by $index" class="card item">
-                            <div class="job activity-item">
-                                <div class="top">
-                                    <div class="time"><i class="ico ico-timesmall"></i> {{job.created | date : 'mediumDate'}}</div>
+                            <div class="activity-item top">
+                                <a class="user-link">
+                                    <strong ng-if="!!job.title">{{ job.title }} </strong>
+                                    <strong class="title">{{job.location.placeName}}</strong>
+                                </a>
+
+                                <div class="time" ng-if="job.created">
+                                    <i class="ico ico-timesmall"></i> {{job.created | date:'mediumDate'}}
                                 </div>
-                                <div class="message">
-                                    <strong>{{ job.title }}</strong>
-                                </div>
-                                <strong class="title">{{job.location.place}}</strong>
-                                <div class="message"><span ng-bind-html="job.message"></span></div>
+
+                                <p class="message">
+                                    <span ng-bind-html="job.message"></span>
+                                </p>
+
+
                             </div>
                             <static-gmap ng-if="!!job.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{ color: 'red', label: '', coords: {{ job.location.coordinates || [] }} }">
                             </static-gmap>
-                            <button class="button button-block button-positive">
-                                Apply!
-                            </button>
+                            <div class="activity-item bottom">
+                                <div class="clearfix">
+                                    <div class="likes" ng-if="!!job.likes" ng-click="vm.likeActivity(job.id)">
+                                        <i class="ico ico-likessmall"></i>
+                                        <strong>{{job.likes.length}} like{{job.likes.length != 1 ? 's' : ''}}</strong>
+                                    </div>
+                                    <div class="comments" ng-if="!!job.comments">
+                                        <i class="ion ion-chatboxes"></i>
+                                        <strong>{{job.comments.length}} comments</strong>
+                                    </div>
+                                </div>
+
+                                <button class="button button-block button-positive" ng-click="vm.apply(job)">
+                                    Apply!
+                                </button>
+                            </div>
                         </ion-item>
                     </ion-list>
                 </ion-scroll>

@@ -5,25 +5,54 @@
         .module('company')
         .controller('CompanyCtrl', CompanyCtrl);
 
-    CompanyCtrl.$inject = ['company', 'activityService', '$ionicLoading'];
-    function CompanyCtrl(company, activityService, $ionicLoading) {
+    CompanyCtrl.$inject = ['company', 'activityService', '$ionicLoading', '$ionicPopup'];
+    function CompanyCtrl(company, activityService, $ionicLoading, $ionicPopup) {
         var vm = this;
-
+        vm.apply = apply;
+        vm.follow = follow;
+        
         function initialize() {
-            vm.companyData = angular.extend(defaultCompany, company);
+            vm.company = angular.extend(defaultCompany, company);
             vm.jobs = jobs;
-            vm.feed = [];
+            vm.feed = defaultFeed;
 
-            return activityService.getCompanyFeed(company.id).then(
-                function (result) {
-                    $ionicLoading.hide();
-                    console.log('getFeed() ', result);
-                    vm.feed = result;
-                }, function () {
-                    $ionicLoading.hide();
-                    vm.feed = defaultCompany.feed;
-                });
+            // activityService.getCompanyFeed(company.id).then(
+            //     function (result) {
+            //         $ionicLoading.hide();
+            //         console.log('getFeed() ', result);
+            //         vm.feed = result;
+            //     }, function () {
+            //         $ionicLoading.hide();
+            //         vm.feed = defaultFeed;
+            //     });
+                
+            $ionicLoading.hide();
         }
+        
+        function goBack() {
+             //ng-click="$ionicGoBack()"
+        }
+        
+        function follow() {
+            $ionicLoading.show({
+                template: '<i class="icon ion-checkmark"></i><br>Following',
+                duration: 2000
+            })
+        }
+
+		function apply() {
+			var applyPopup = $ionicPopup.confirm({
+				title: 'Send Application',
+				template: 'This will send your profile to ' + (vm.company.name || 'the employer') + ' for review. Continue?'
+			});
+			applyPopup.then(function (res) {
+				if (res) {
+					console.log('You are sure');
+				} else {
+					console.log('You are not sure');
+				}
+			});
+		}
 
         initialize();
     }
@@ -72,34 +101,73 @@
 
         }];
 
+
     var defaultCompany = {
         name: 'Company Name',
-        feed: [
-            {
-                title: 'The best infrastructure!',
-                message: 'Core-Mark is the leader in fresh, in part, because of our investment in our fleet. Check out the cool technology inside our iconic trucks!',
-                imageURL: 'https://scontent.fsnc1-1.fna.fbcdn.net/hphotos-xpa1/v/t1.0-9/11949485_991785164177088_8981821029263707945_n.png?oh=b2e610f7cabfac29015d155ad4fc8706&oe=56A4A8F4'
-            },
-            {
-                title: 'Company News Title',
-                message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
-            },
-            {
-                title: 'Company News Title',
-                message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
-            },
-            {
-                title: 'Company News Title',
-                message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
-            },
-            {
-                title: 'Company News Title',
-                message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
-            },
-            {
-                title: 'Company News Title',
-                message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
-            }
-        ]
+        
     }
+    
+    var defaultFeed = [
+        {
+            id: '11',
+            user: {displayName: 'Core-Mark International'},
+            company: defaultCompany,
+            created: '2015-09-09T18:52:23.030Z',
+            likes: [],
+            comments: [],
+            title: 'The best infrastructure!',
+            message: 'Core-Mark is the leader in fresh, in part, because of our investment in our fleet. Check out the cool technology inside our iconic trucks!',
+            imageURL: 'https://scontent.fsnc1-1.fna.fbcdn.net/hphotos-xpa1/v/t1.0-9/11949485_991785164177088_8981821029263707945_n.png?oh=b2e610f7cabfac29015d155ad4fc8706&oe=56A4A8F4'
+        },
+        {
+            id: '12',
+            user: {displayName: 'Core-Mark International'},
+            company: defaultCompany,
+            created: '2015-09-04T18:52:23.030Z',
+            likes: [],
+            comments: [],
+            title: 'Company News Title',
+            message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
+        },
+        {
+            id: '13',
+            user: {displayName: 'Core-Mark International'},
+            company: defaultCompany,
+            created: '2015-08-31T18:52:23.030Z',
+            likes: [],
+            comments: [],
+            title: 'Company News Title',
+            message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
+        },
+        {
+            id: '14',
+            user: {displayName: 'Core-Mark International'},
+            company: defaultCompany,
+            created: '2015-08-24T18:52:23.030Z',
+            likes: [],
+            comments: [],
+            title: 'Company News Title',
+            message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
+        },
+        {
+            id: '15',
+            user: {displayName: 'Core-Mark International'},
+            company: defaultCompany,
+            created: '2015-08-21T18:52:23.030Z',
+            likes: [],
+            comments: [],
+            title: 'Company News Title',
+            message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
+        },
+        {
+            id: '16',
+            user: {displayName: 'Core-Mark International'},
+            company: defaultCompany,
+            created: '2015-08-19T18:52:23.030Z',
+            likes: [],
+            comments: [],
+            title: 'Company News Title',
+            message: 'Etiam porta sem malesuada magna mollis euismod. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam quirs risus egen urna mollis ornare vel eu leo.'
+        }
+    ];
 })();

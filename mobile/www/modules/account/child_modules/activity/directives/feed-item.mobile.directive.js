@@ -34,15 +34,16 @@
 			
 			if (!!vm.entry.company) {
 				vm.avatar = vm.entry.company.profileImageURL;
+				vm.username = vm.entry.company.name;
 			} else if(!!vm.entry.user) {
 				vm.username = vm.entry.user.handle || vm.entry.user.displayName;
-				vm.avatar = vm.entry.user.profileImageURL;
+				vm.avatar = 'modules/users/img/profile/default.png' != vm.entry.user.profileImageURL ? vm.entry.user.profileImageURL : vm.entry.user.props.avatar;
 			} 
 		}
 	}
 
-	FeedItemCtrl.$inject = ['activityService', 'activityModalsService'];
-	function FeedItemCtrl(activityService, activityModalsService) {
+	FeedItemCtrl.$inject = ['activityService', 'activityModalsService', '$state'];
+	function FeedItemCtrl(activityService, activityModalsService, $state) {
 		var vm = this;
 
 		vm.likeActivity = likeActivity;
@@ -66,6 +67,9 @@
         }
 
 		function showDetailsModal(entry) {
+			if (!!entry.company && entry.company.id) {
+				return $state.go('company', { companyId: entry.company.id });
+			}
             //stopCheckNewActivities();
             activityModalsService
                 .showActivityDetailsModal({ entry: entry })

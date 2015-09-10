@@ -7,8 +7,10 @@
   .bar {
     h3 {
       width: 100%;
+      text-align: center;
     }
     img.brand-img {
+      top: -20px;
       max-height: 100%;
       max-width: 100%;
       position: relative;
@@ -19,6 +21,20 @@
   .news-list{
     div{
       white-space: normal;
+    }
+  }
+  
+  .profile-tabs {
+    bottom: 0;
+    
+    .tab-content {
+      padding-bottom: 0;
+    }
+  }
+  
+  .card.item {
+    .activity-item ~ .company-link {
+      display: none;
     }
   }
   
