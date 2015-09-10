@@ -5,17 +5,10 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['parameters', 'activityService'];
+    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', 'activityModalsService', '$timeout', '$ionicScrollDelegate'];
 
-    function ActivityDetailsCtrl(parameters, activityService) {
+    function ActivityDetailsCtrl(parameters, activityService, activityModalsService, $timeout, $ionicScrollDelegate) {
         angular.element(document).ready(initMap);
-
-        var COMMENTS = [
-            {sender:{displayName:'Joe'}, text:'some text sdf sd f klsdjfklsdj f sdj flkjsdlfkjsldk fkljsdlf jklsdjkj kj dk jkdj k', created:'12/2014'},
-            {sender:{displayName:'Peter'}, text:'some text sss dfd', created:'12/2015'},
-            {sender:{displayName:'Greg'}, text:'some text s', created:'11/2014'},
-            {sender:{displayName:'Trevor'}, text:'some text', created:'12/2015'}
-        ];
 
         var vm = this;
         var map = null;
@@ -24,12 +17,12 @@
         vm.distanceSinceLastPost = 'no data';
         vm.isInputVisible = false;
         vm.entry = parameters.entry;
+        vm.comments = parameters.entry.comments;
         vm.close = close;
         vm.likeActivity = likeActivity;
         vm.showInputs = showInputs;
         vm.createComment = createComment;
-
-        vm.comments = COMMENTS;
+        vm.editComment = editComment;
 
         function initMap() {
             if (activityService.hasCoordinates(vm.entry)) {
@@ -61,6 +54,20 @@
             }
         }
 
+        function scrollToBottom() {
+            $timeout(function(){
+                getDelegate('mainScroll').scrollBottom();
+            }, 100);
+        }
+
+        //fix for scrollDelegate in modals
+        function getDelegate(name){
+            var instances = $ionicScrollDelegate.$getByHandle(name)._instances;
+            return instances.filter(function(element) {
+                return (element['$$delegateHandle'] == name);
+            })[0];
+        }
+
         function createComment() {
             console.log('vm.entry ',vm.entry);
             console.log('vm.message ',vm.message);
@@ -75,9 +82,21 @@
             activityService.postComment(vm.entry.id, data).then(
                 function (result) {
                     console.log('result ',result);
+                    if(result.data){
+                        vm.comments = result.data;
+                        scrollToBottom();
+                    }
                 }, function (resp) {
                     console.log(resp);
                 });
+        }
+
+        function editComment(message) {
+            console.log(vm.entry.user.id+' --- '+message.sender);
+            //you can edit only your own comments
+            if(vm.entry.user.id === message.sender) {
+                showActivityCommentEditModal(message);
+            }
         }
 
         function showInputs() {
@@ -93,6 +112,15 @@
                 console.log(resp);
             });
         }
+
+        function showActivityCommentEditModal(entry) {
+            activityModalsService
+                .showCommentEditModal({ entry: entry })
+                .then(function (res) {
+                }, function (err) {
+                    activityService.showPopup("Modal failed", "Please try later");
+                })
+        };
 
         function close() {
             vm.closeModal(vm.entry);

@@ -7,7 +7,7 @@
         </ion-header-bar>
     </div>
     <ion-pane class="pane has-footer">
-        <ion-scroll>
+        <ion-scroll delegate-handle="mainScroll">
             <ion-item class="item">
                 <div class="ico ico-avatar"></div>
                 <div class="activity-item">
@@ -48,7 +48,7 @@
                 <strong>Comments:</strong>
             </div>
 
-            <div class="item comment" ng-repeat="message in vm.comments">
+            <div class="item comment" ng-repeat="message in vm.comments" ng-click="vm.editComment(message)">
                <a>{{message.sender.displayName}}</a> {{message.text}} at {{message.created | date : 'short'}}
             </div>
         </ion-scroll>

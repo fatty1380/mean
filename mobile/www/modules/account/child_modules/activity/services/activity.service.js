@@ -16,6 +16,7 @@
             getLastActivityWithCoord: getLastActivityWithCoord,
             getFeedIds: getFeedIds,
             postComment: postComment,
+            getComments: getComments,
             likeActivity: likeActivity,
             getDistanceBetween: getDistanceBetween,
             showPopup: showPopup,
@@ -141,6 +142,16 @@
                     return response;
                 }, function (response) {
                     console.log(response);
+                    showPopup(response.statusText, response.data.message);
+                    return response;
+                });
+        }
+
+        function getComments() {
+            return $http.get(settings.feed)
+                .then(function (response) {
+                    return response.data;
+                }, function (response) {
                     showPopup(response.statusText, response.data.message);
                     return response;
                 });
