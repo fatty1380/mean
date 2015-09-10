@@ -60,7 +60,8 @@ module.exports = function(app) {
 	 */
 	app.route('/api/feed/:feedItemId/comments')
 		.all(feedsPolicy.feedItemIsAllowed)
-		.post(feeds.addComment);
+		.post(feeds.addComment)
+		.get(feeds.getComments);
 		
 	app.route('/api/feed/:feedItemId/likes')
 		.all(feedsPolicy.feedItemIsAllowed)

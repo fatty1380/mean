@@ -200,6 +200,35 @@ describe('Feed CRUD tests', function () {
 					});
 		});
 
+
+		it('should allow you to comment on your own activity feed item', function () {
+			var message = { text: 'Wow! Thats really cool.' };
+				
+			// Save a new Feed
+			return agent.post('/api/feed')
+				.send(feedItem)
+				.expect(200).then(function success(feedItemRes) {
+					feedItem = feedItemRes.body;
+					
+					// Ensure that the "Friend" can comment on "Your" feed item
+					return agent.post('/api/feed/' + feedItem.id + '/comments')
+						.send(message)
+						.expect(200);
+				}).then(
+					function (feedCommentRes) {
+						// Set assertions
+						feedCommentRes.body.should.be.Array.with.length(1);
+
+						var comments = feedCommentRes.body;
+
+						comments[0].should.have.property('text', message.text);
+						comments[0].should.have.property('sender');
+
+						return feedCommentRes;
+					});
+
+		});
+
 		it('should not be able to `like` your own feed item', function () {
 			
 			// Get the userId
@@ -301,7 +330,7 @@ describe('Feed CRUD tests', function () {
 			var friend, notFriend;
 
 			beforeEach(function () {
-			log.debug({ test: _test.title, func: 'test.crossPost init' }, 'BeforeEach START');
+				log.debug({ test: _test.title, func: 'test.crossPost init' }, 'BeforeEach START');
 				friend = new User(stubs.getUser());
 				notFriend = new User(stubs.getUser());
 				user.friends.push(friend._id);
@@ -353,15 +382,6 @@ describe('Feed CRUD tests', function () {
 							likes.should.containEql(friend.id);
 
 							return feedLikeRes;
-						})
-					.then(
-						function (feedLikeRes) {
-							// Set assertions
-							feedLikeRes.body.should.be.Array.with.length(1, 'Should not be able to like the same item twice');
-
-							var likes = feedLikeRes.body;
-
-							likes.should.containEql(friend.id);
 						});
 
 			});
@@ -373,6 +393,36 @@ describe('Feed CRUD tests', function () {
 					.then(function () {
 						return agent.post('/api/feed/' + feedItem.id + '/likes')
 							.expect(403);
+					});
+
+			});
+
+
+
+			it('should allow you to comment on a friend\'s activity feed item', function () {
+				var message = { text: 'Wow! Thats really cool.' };
+				
+				// Ensure that the "Friend" can comment on "Your" feed item
+				return agent.post('/api/feed/' + feedItem.id + '/comments')
+					.send(message)
+					.expect(200).then(
+						function (feedCommentRes) {
+							// Set assertions
+							feedCommentRes.body.should.be.Array.with.length(1);
+
+							var comments = feedCommentRes.body;
+
+							comments[0].should.have.property('text', message.text);
+							comments[0].should.have.property('sender');
+
+							return agent.get('/api/feed/' + feedItem.id + '/comments');
+						})
+					.then(function (feedCommentsRes) {
+						var comments = feedCommentsRes.body;
+
+						comments.should.be.Array.with.length(1);
+						comments[0].should.have.property('text', message.text);
+						comments[0].should.have.property('sender');
 					});
 
 			});
@@ -527,7 +577,7 @@ function verifyFeedProperties(feedItem) {
 	feedItem.should.have.property('user');
 	feedItem.should.have.property('props');
 	feedItem.should.have.property('isPublic', false);
-	
+
 	feedItem.should.have.property('user');
 	feedItem.user.should.have.property('handle');
 	feedItem.user.should.have.property('displayName');

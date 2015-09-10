@@ -15,14 +15,14 @@ var _ = require('lodash'),
 var mongoose = require('mongoose'),
 	Feed = mongoose.model('Feed'),
 	FeedItem = mongoose.model('FeedItem'),
-	GeoJson = mongoose.model('GeoJson');
+	GeoJson = mongoose.model('GeoJson'),
+	Message = mongoose.model('Message');
 
 exports.postItem = postItem;
 exports.updateItem = updateItem;
 exports.deleteItem = deleteItem;
 exports.listItems = listItems;
 exports.readItem = readItem;
-exports.addComment = addComment;
 exports.read = read;
 exports.list = list;
 exports.feedByID = feedByID;
@@ -30,6 +30,9 @@ exports.myFeed = myFeed;
 exports.feedItemByID = feedItemByID;
 
 exports.getOrCreateFeed = getOrCreateFeed;
+
+exports.addComment = addComment;
+exports.getComments = getComments;
 
 exports.addLike = addLike;
 exports.getLikes = getLikes;
@@ -169,7 +172,31 @@ function readItem(req, res) {
 // *** START Comments *** //
 
 function addComment(req, res, next) {
-	return next(new Error('not implemented exception'));
+	var comment = new Message(req.body);
+	comment.sender = req.user;
+	
+	req.feedItem.comments.push(comment);
+	
+	
+	req.feedItem.save()
+		.then(function success(result) {
+			req.log.error({ result: result, comments: result.comments, func: 'addComment', file: 'feeds.server.controller' }, 'Added comment to comments array');
+			
+			return res.json(result.comments);
+
+		}, function reject(err) {
+			req.log.error({ err: err, func: 'addComment', file: 'feeds.server.controller' }, 'Failed to add comment');
+
+			return res.status(400).send({ message: 'Unable to comment on this item' });
+		})
+}
+
+function getComments(req, res, next) {
+	if (_.isEmpty(req.feedItem)) {
+		return res.status(404).send({ message: 'no feed activity specified' });
+	}
+	
+	res.json(req.feedItem.comments);
 }
 
 // *** END Comments *** //
