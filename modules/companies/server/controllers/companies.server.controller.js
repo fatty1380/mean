@@ -9,13 +9,16 @@ var mongoose = require('mongoose'),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
     fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     constants = require(path.resolve('./modules/core/server/models/outset.constants')),
-    Company = mongoose.model('Company'),
-    Gateway = mongoose.model('Gateway'),
+    feedCtrl = require(path.resolve('./modules/feeds/server/controllers/feeds.server.controller')),
     _ = require('lodash'),
     log = require(path.resolve('./config/lib/logger')).child({
         src: { file: 'companies.server.controller', module: 'companies' }
     });
 
+var Company = mongoose.model('Company'),
+    Gateway = mongoose.model('Gateway'),
+    Feed = mongoose.model('Feed');
+    
 var subs = require('./subscriptions.server.controller');
 
 exports.create = create; 
@@ -31,6 +34,7 @@ exports.companyByID = companyByID;
 exports.hasAuthorization = hasAuthorization; 
 exports.follow = follow;
 exports.unfollow = unfollow;
+exports.getFeed = getFeed;
 
 /**
  * Subscription Logic
@@ -414,7 +418,33 @@ function unfollow(req, res) {
         });
  }
  
- 
+function getFeed(req, res, next) {
+    if (!req.company) {
+        return res.status(404).send({ message: 'Company not Found' });
+    }
+    
+    feedCtrl.getOrCreateFeed(req.log, req.user, req.company).then(
+        function success(feed) {
+            req.log.debug({ func: 'company.getFeed', feed: feed }, 'Returning Feed for %s', req.company.name);
+            return res.json(feed);
+        },
+        function reject(err) {
+            req.log.error({ func: 'company.getFeed', err: err }, 'Failed to get feed');
+            res.status(400).send({ message: 'Unable to load feed for '+ req.company.name });
+        }
+        );
+    
+    
+    
+     Feed.findById(id)
+		.populate('items')
+		.exec(function (err, feed) {
+			if (err) { return next(err); }
+			if (!feed) { return next(new Error('Failed to load Feed ' + id)); }
+			
+            res.json(feed);
+		});
+ }
 
 
 

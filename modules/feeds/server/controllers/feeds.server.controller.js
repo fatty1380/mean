@@ -29,6 +29,8 @@ exports.feedByID = feedByID;
 exports.myFeed = myFeed;
 exports.feedItemByID = feedItemByID;
 
+exports.getOrCreateFeed = getOrCreateFeed;
+
 exports.addLike = addLike;
 exports.getLikes = getLikes;
 exports.removeLike = delLike;

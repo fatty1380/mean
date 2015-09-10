@@ -24,8 +24,7 @@ var FeedSchema = new Schema({
 	},
 	company: {
 		type: Schema.ObjectId,
-		ref: 'Company',
-		unique: true
+		ref: 'Company'
 	},
 	// Stores activity from other users
 	items: {

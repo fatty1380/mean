@@ -17,6 +17,9 @@ module.exports = function (app) {
         .put(users.requiresLogin, companies.hasAuthorization, companies.update)
         .delete(users.requiresLogin, companies.hasAuthorization, companies.delete);
 
+    app.route('/api/companies/' + companyIdString + '/feed')
+        .get(companies.getFeed);
+
     app.route('/api/companies/' + companyIdString + '/drivers')
         .get(companies.listDrivers);
 
