@@ -1,22 +1,21 @@
-<ion-view class="lockbox">
-    <div class="header compact-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="vm.showEditModal()">Edit</button>
-            <h1 class="title">My Lockbox</h1>
-            <button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>
-        </ion-header-bar>
-        <div class="bar bar-subheader">
-            <h3 class="title">Your lockbox will contain all your secure documents.</h3>
-        </div>
-    </div>
-    <ion-pane class="pane content-pane">
+<ion-view class="lockbox view-section compact-size">
 
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="vm.showEditModal()">Edit</button>
+        <h1 class="title">My Lockbox</h1>
+        <button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>
+    </ion-header-bar>
+
+    <div class="bar bar-subheader">
+        <h3 class="title">Your lockbox will contain all your secure documents.</h3>
+    </div>
+
+    <ion-pane class="pane content-pane">
         <div class="item" ng-if="!vm.documents.length>0">
             <div class="item-content">
                 <strong>No documents</strong>
             </div>
         </div>
-
         <ion-scroll>
             <ul class="list document-list" ng-if="vm.documents.length>0">
                 <li class="item" ng-repeat="doc in vm.documents track by $index">
@@ -34,4 +33,5 @@
             Share
         </button>
     </ion-pane>
+
 </ion-view>

@@ -1,15 +1,16 @@
-<ion-view class="company-screen">
-    <div class="header mid-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-            <h1 class="title" ng-bind="vm.companyData.name"></h1>
-        </ion-header-bar>
-        <div class="profile-visual">
-            <div class="photo">
-                <img ng-if="vm.companyData.profileImageURL" ng-src="{{vm.companyData.profileImageURL}}" alt=""/>
-            </div>
+<ion-view class="company-screen view-section mid-size">
+
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
+        <h1 class="title" ng-bind="vm.companyData.name"></h1>
+    </ion-header-bar>
+
+    <div class="profile-visual">
+        <div class="photo">
+            <img ng-if="vm.companyData.profileImageURL" ng-src="{{vm.companyData.profileImageURL}}" alt=""/>
         </div>
     </div>
+
     <ion-pane class="has-title has-footer">
         <div class="content-top">
             <strong class="title">DESCRIPTION</strong>
@@ -23,9 +24,11 @@
             </ion-list>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar">
             <button class="button block-button">Follow</button>
         </div>
     </ion-footer-bar>
+
 </ion-view>
