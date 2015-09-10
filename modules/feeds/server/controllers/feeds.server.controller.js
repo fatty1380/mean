@@ -314,7 +314,7 @@ function feedItemByID(req, res, next, id) {
 	req.log.debug({ func: 'feedItemByID', id: id }, 'Looking up Feed Item by ID');
 
 	FeedItem.findById(id)
-		.populate({ path: 'user', select: 'handle displayName profileImageURL', model: 'User' })
+		.populate({ path: 'user', select: 'handle displayName profileImageURL props', model: 'User' })
 		.populate({ path: 'company', select: 'name profileImageURL', model: 'Company' })
 		.exec().then(
 			function (feedItem) {
