@@ -16,9 +16,7 @@
         vm.lastUpdate = Date.now();
 
         vm.showAddActivityModal = showAddActivityModal;
-        vm.showActivityDetailsModal = showActivityDetailsModal;
         vm.updateWithNewActivities = updateWithNewActivities;
-        vm.likeActivity = likeActivity;
         vm.refresh = refresh;
 
         /**
@@ -40,8 +38,9 @@
         });
 
         function initialize() {
+            vm.feed = [];
             //show welcome screen for new user
-            if(welcomeService.welcomeActivity) {
+            if (welcomeService.welcomeActivity) {
                 activityModalsService
                     .showWelcomeModal()
                     .then(function () {
@@ -49,46 +48,29 @@
                         initialize();
                     });
             } else {
-                vm.feed = [];
                 $ionicLoading.show({
                     template: 'loading feed'
                 });
-                //get all feed
-                return activityService.getFeed().then(function (result) {
-                    $ionicLoading.hide();
-                    console.log("getFeed() ", result);
-                    vm.feed = result;
-                    startCheckNewActivities();
-                }, function () {
-                    $ionicLoading.hide();
-                    vm.feed = [];
-                });
             }
-        }
-
-        /**
-         * @param {Number} id - feed id
-         */
-        function likeActivity(id) {
-            activityService.likeActivity(id).then(function(result) {
-                //update like in feed
-                for(var i = 0; i < vm.feed.length; i++) {
-                    if(vm.feed[i].id === id) {
-                        vm.feed[i].likes = result.data || [];
-                        break;
-                    }
-                }
-            },function(resp) {
-                console.log(resp);
+                
+            //get all feed
+            return activityService.getFeed().then(function (result) {
+                $ionicLoading.hide();
+                console.log("getFeed() ", result);
+                vm.feed = result;
+                startCheckNewActivities();
+            }, function () {
+                $ionicLoading.hide();
+                vm.feed = [];
             });
         }
 
         function startCheckNewActivities() {
-            utilsService.startClock(function() {
-                activityService.getFeedIds().then(function(result) {
-                    if(result.items.length > vm.feed.length){
+            utilsService.startClock(function () {
+                activityService.getFeedIds().then(function (result) {
+                    if (result.items.length > vm.feed.length) {
                         vm.newActivities = result.items.length - vm.feed.length;
-                    }else{
+                    } else {
                         vm.newActivities = 0;
                     }
                 }, function (resp) {
@@ -100,9 +82,9 @@
             utilsService.stopClock();
         }
 
-       /**
-        *  @TODO update only new items
-       */
+        /**
+         *  @TODO update only new items
+        */
         function updateWithNewActivities() {
             initialize();
         }
@@ -148,16 +130,7 @@
                 })
         };
 
-        function showActivityDetailsModal(entry) {
-            stopCheckNewActivities();
-            activityModalsService
-                .showActivityDetailsModal({ entry: entry })
-                .then(function (res) {
-                    startCheckNewActivities();
-                }, function (err) {
-                    activityService.showPopup("Modal failed", "Please try later");
-                })
-        };
+
 
     }
 })();

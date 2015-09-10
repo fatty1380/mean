@@ -11,6 +11,7 @@
 
         var service = {
             getFeed: getFeed,
+            getCompanyFeed: getCompanyFeed,
             postActivityToFeed: postFeed,
             getFeedActivityById: getFeedActivityById,
             getLastActivityWithCoord: getLastActivityWithCoord,
@@ -33,35 +34,34 @@
          */
         function getFeed() {
             return $http.get(settings.feed)
-                .then(function (response) {
-                    items = response.data.items;
-                    return $q(function (resolve, reject) {
-                        if (items.length > 0) {
-                            return resolve(populateActivityFeed(items));
-                        } else {
-                            reject('no feed');
-                        }
-                    });
-                }, function (response) {
-                    showPopup('Error', response.message);
-                    return response;
-                });
+                .then(feedRequestSuccess, feedRequestError);
         }
 
-        function loadItems(num) {
-            var itemId = items[num];
-            getFeedActivityById(itemId).then(function (result) {
-                console.log('Pushing Activity to Feed: ', result);
-                feed.unshift(result);
-                if (num < items.length - 1) {
-                    num++;
-                    loadItems(num);
+        function getCompanyFeed(company) {
+            var id = !!company && company.id || company;
+
+            return $http.get(settings.companies + id + '/feed').then(
+                feedRequestSuccess,
+                feedRequestError
+                );
+        }
+
+        function feedRequestSuccess(response) {
+            items = response.data.items || [];
+            return $q(function (resolve, reject) {
+                if (items.length > 0) {
+                    return resolve(populateActivityFeed(items));
                 } else {
-                    return feed;
+                    reject('no feed');
                 }
             });
         }
 
+        function feedRequestError(response) {
+            showPopup('Error', response.message);
+            return response;
+        }
+        
         /**
          * Populate Activity Feed
          * @param rawFeedActivities - An array of FeedActivity Objects. Differnet from the local var 'feed'
@@ -94,9 +94,18 @@
                             return feedItem;
                         })
                 });
+
             return $q.all(promises).then(function (results) {
                 console.log('Resolved %d feed activities to populated feed', results.length, feed);
-                return feed;
+                var sorted = feed.sort(function (a, b) {
+                    var x = Date.parse(b.created) - Date.parse(a.created);
+                    var y = x > 0 ? 1 : x < 0 ? -1 : 0;
+                    var word = y == 1 ? 'after' : 'before';
+                    console.log('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
+                    return y
+                });
+
+                return sorted;
             })
         }
 
@@ -190,7 +199,7 @@
                         reject('error');
                     } else {
                         if (response.rows[0].elements[0].distance) {
-                            resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(2) );//miles
+                            resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(2));//miles
                             //resolve(response.rows[0].elements[0].distance.value / 1000);// km
                         } else {
                             resolve(null);
@@ -232,7 +241,7 @@
                 });
             });
         }
-        
+
         function hasCoordinates(activity) {
             return (!!activity.location && !!activity.location.coordinates && !!activity.location.coordinates.length);
         }
@@ -242,8 +251,8 @@
          * @returns {Object} last item
          */
         function getLastActivityWithCoord() {
-            for(var i = 0; i < feed.length; i++) {
-                if(hasCoordinates(feed[i])) {
+            for (var i = 0; i < feed.length; i++) {
+                if (hasCoordinates(feed[i])) {
                     return feed[i];
                 }
             }

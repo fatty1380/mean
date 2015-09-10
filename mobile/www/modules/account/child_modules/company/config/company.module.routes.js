@@ -7,13 +7,30 @@
 
     companyModuleConfig.$inject = ['$stateProvider'];
 
-    function companyModuleConfig ($stateProvider) {
+    function companyModuleConfig($stateProvider) {
 
         $stateProvider
             .state('company', {
-                url: '/company',
+                url: '/company/:companyId',
                 templateUrl: 'modules/account/child_modules/company/templates/company.profile.html',
-                controller: 'CompanyCtrl as vm'
+                controller: 'CompanyCtrl as vm',
+                resolve: {
+                    company: ['$stateParams', '$http', '$ionicLoading', 'settings',
+                        function ($stateParams, $http, $ionicLoading, settings) {
+                        $ionicLoading.show({ template: 'Loading', duration: 10000 });
+                        return $http.get(settings.companies + $stateParams.companyId)
+                            .then(
+                                function success(result) {
+                                    console.log('COmpany Result: ', result);
+                                    return result.data;
+                                },
+                                function reject(err) {
+                                    debugger;
+                                    console.error('Company result failed', err);
+                                    return {};
+                                });
+                    }]
+                }
             })
 
     }

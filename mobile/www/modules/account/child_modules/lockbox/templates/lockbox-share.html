@@ -15,7 +15,7 @@
             <ul class="list document-list">
                 <li class="item item-checkbox" ng-repeat="doc in vm.documents">
                     <label class="checkbox">
-                        <input type="checkbox" ng-model="document.checked">
+                        <input type="checkbox" ng-model="doc.checked">
                     </label>
                     <div class="item-content">
                         <strong>{{doc.name}}</strong>
@@ -28,7 +28,7 @@
     </ion-pane>
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button button-block secondary" ng-click="vm.shareStep = 2;">
+            <button class="button button-block secondary" ng-click="vm.addDocumentsToShare();">
                 <i class="ico ico-share"></i>Share
             </button>
         </div>
@@ -59,7 +59,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary" ng-click="vm.share()">Share</button>
+            <button class="button primary" ng-click="vm.shareDocuments()">Share</button>
         </div>
     </ion-footer-bar>
 </ion-modal-view>

@@ -21,7 +21,7 @@
 			controller: AddContactDirectiveCtrl,
 			controllerAs: 'vm',
 			bindToController: true
-		}
+		};
 
 		return directive;
 
@@ -42,9 +42,6 @@
 	function AddContactDirectiveCtrl() {
 		var vm = this;
 
-
-
-
 	}
 
 	var contactTemplate = [
@@ -58,7 +55,7 @@
 		'		<input type="text" placeholder="Name" ng-model="vm.contact.displayName">',
 		'	</label>',
 		'   <label class="item item-input" ng-if="!!vm.message">',
-        '       <textarea placeholder="Enter message" class="" rows="10"></textarea>',
+        '       <textarea placeholder="Enter message" class="" rows="10" ng-model="vm.contact.message"></textarea>',
         '   <hr></label>'
 	].join('');
 
