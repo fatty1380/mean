@@ -430,21 +430,9 @@ function getFeed(req, res, next) {
         },
         function reject(err) {
             req.log.error({ func: 'company.getFeed', err: err }, 'Failed to get feed');
-            res.status(400).send({ message: 'Unable to load feed for '+ req.company.name });
-        }
-        );
-    
-    
-    
-     Feed.findById(id)
-		.populate('items')
-		.exec(function (err, feed) {
-			if (err) { return next(err); }
-			if (!feed) { return next(new Error('Failed to load Feed ' + id)); }
-			
-            res.json(feed);
-		});
- }
+            res.status(400).send({ message: 'Unable to load feed for ' + req.company.name });
+        });
+}
 
 
 
