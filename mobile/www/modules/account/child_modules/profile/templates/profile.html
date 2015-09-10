@@ -51,36 +51,40 @@
                 <ion-scroll class="profile-list">
                     <div class="list">
                         <div class="item" ng-if="!!vm.profileData.props.title">
-                            CUURENT JOB TITLE:
+                            <span class="item-label">CURENT JOB TITLE:</span>
                             <span class="item-note">{{vm.profileData.props.title}}</span>
                         </div>
                         <div class="item">
-                            TRUCK:
-                            <span class="item-note">{{vm.profileData.props.truck}}</span>
+                            <span class="item-label">TRUCK:</span>
+                            <span class="item-note"><div class="logo">
+                                <div class="{{ vm.profileData.props.truck.toLowerCase() }}-logo"></div>
+                            </div></span>
+                            
+
                         </div>
                         <div class="item">
-                            TRAILER:
+                            <span class="item-label">TRAILER:</span>
                             <span class="item-note">
                                 <span ng-repeat="trailer in vm.profileData.props.trailer">
                                     {{trailer}}<span ng-if="!$last">, </span>
                             </span>
                             </span>
                         </div>
-                        <div class="item">
-                            DRIVING SINCE:
+                        <div class="item" ng-if="!!vm.profileData.props.started">
+                            <span class="item-label">DRIVING SINCE:</span>
                             <span class="item-note">{{vm.profileData.props.started | monthDate | date : 'MMMM, yyyy'}}</span>
                         </div>
                         <div class="item item-divider"></div>
-                        <div class="item">
-                            COMPANY:
-                            <span class="item-note">{{vm.profileData.company || vm.profileData.props.company}}</span>
+                        <div class="item" ng-if="!!vm.profileData.props.company">
+                            <span class="item-label">DRIVING FOR:</span>
+                            <span class="item-note">{{vm.profileData.props.company}}</span>
                         </div>
                         <div class="item" ng-if="vm.profileData.props.freight">
-                            <span class="ico ico-freight"></span> FREIGHT:
+                            <span class="item-label"><span class="ico ico-freight"></span> FREIGHT:</span>
                             <span class="item-note">{{vm.profileData.props.freight}}</span>
                         </div>
                         <div class="item endorsements-row">
-                            ENDORSEMENTS:
+                            <span class="item-label">ENDORSEMENTS:</span>
                             <ul class="endorsements-list">
                                 <li ng-repeat="endorsement in vm.profileData.license.endorsements">
                                     <i class="ico icon {{ vm.endorsementsMap[endorsement].ico}}"></i>

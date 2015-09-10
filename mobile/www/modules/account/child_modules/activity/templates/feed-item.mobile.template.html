@@ -1,5 +1,4 @@
-<ion-item class="card item" ng-show="!!vm.entry.id" 
-	ng-click='vm.showActivityDetailsModal(vm.entry)'>
+<ion-item class="card item" ng-show="!!vm.entry.id" ng-click='vm.showActivityDetailsModal(vm.entry)'>
 
 	<div class="activity-item top">
 		<!--<div class="ico ico-avatar"></div>-->
@@ -30,9 +29,7 @@
 		</a>
 	</div>-->
 
-	<static-gmap ng-if="!!vm.entry.location.coordinates" 
-		class="static-map" size="400x200" sensor="true" zoom="14" 
-		markers="{{vm.markers}}">
+	<static-gmap ng-if="!!vm.entry.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{{vm.markers}}">
 	</static-gmap>
 
 	<div class="activity-item bottom">
@@ -50,6 +47,11 @@
 				<strong>{{vm.entry.comments.length}} comments</strong>
 			</div>
 		</div>
+
+		<button ng-if="!!vm.isJob" class="button button-block button-calm" ng-click="$event.stopPropagation(); vm.apply(vm.entry)">
+			Apply!
+		</button>
 	</div>
+
 
 </ion-item>

@@ -8,7 +8,6 @@
     CompanyCtrl.$inject = ['company', 'activityService', '$ionicLoading', '$ionicPopup'];
     function CompanyCtrl(company, activityService, $ionicLoading, $ionicPopup) {
         var vm = this;
-        vm.apply = apply;
         vm.follow = follow;
         
         function initialize() {
@@ -40,24 +39,11 @@
             })
         }
 
-		function apply() {
-			var applyPopup = $ionicPopup.confirm({
-				title: 'Send Application',
-				template: 'This will send your profile to ' + (vm.company.name || 'the employer') + ' for review. Continue?'
-			});
-			applyPopup.then(function (res) {
-				if (res) {
-					console.log('You are sure');
-				} else {
-					console.log('You are not sure');
-				}
-			});
-		}
-
         initialize();
     }
 
     var jobs = [{
+        'company': { name: 'Core-Mark'},
         '_type': 'job',
         'id': 'sampleJob#2',
         'user': '55a8c832f58ef0900b7ca14c',
@@ -81,6 +67,7 @@
 
     },
         {
+        'company': { name: 'Core-Mark'},
         '_type': 'job',
             'id': 'sampleJob#2',
             'user': '55d76f65fa4aad2e1d66d58e',

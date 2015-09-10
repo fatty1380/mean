@@ -229,12 +229,21 @@
       min-height: 0;
       background: #D2D2D2;
     }
+    
+    .item-label{
+      font-weight: bold;
+      color: $gradient-bottom;
+    }
 
     .item-note{
       width: 40%;
       text-align: right;
       color: $content-body-text;
       white-space: normal;
+      
+      .logo > div {
+        
+      }
     }
   }
 }
