@@ -18,20 +18,20 @@ var mongoose = require('mongoose'),
 var Company = mongoose.model('Company'),
     Gateway = mongoose.model('Gateway'),
     Feed = mongoose.model('Feed');
-    
+
 var subs = require('./subscriptions.server.controller');
 
-exports.create = create; 
-exports.read = read; 
-exports.update = update; 
-exports.changeProfilePicture = changeProfilePicture; 
-exports.delete = deleteCompany; 
-exports.list = list; 
-exports.listDrivers = listDrivers; 
-exports.companiesByUserID = companiesByUserID; 
-exports.companyByUserID = companyByUserID; 
-exports.companyByID = companyByID; 
-exports.hasAuthorization = hasAuthorization; 
+exports.create = create;
+exports.read = read;
+exports.update = update;
+exports.changeProfilePicture = changeProfilePicture;
+exports.delete = deleteCompany;
+exports.list = list;
+exports.listDrivers = listDrivers;
+exports.companiesByUserID = companiesByUserID;
+exports.companyByUserID = companyByUserID;
+exports.companyByID = companyByID;
+exports.hasAuthorization = hasAuthorization;
 exports.follow = follow;
 exports.unfollow = unfollow;
 exports.getFeed = getFeed;
@@ -80,7 +80,7 @@ var executeQuery = function (req, res) {
 /**
  * Create a Company
  */
-function create (req, res) {
+function create(req, res) {
 
     var company = new Company(req.body);
     var ownerId = req.body.ownerId || req.user._id;
@@ -110,7 +110,7 @@ function create (req, res) {
 /**
  * Show the current Company
  */
-function read (req, res) {
+function read(req, res) {
     req.log.debug({ req: req, msg: 'START', src: { func: 'read' } });
 
     if (!req.company) {
@@ -128,7 +128,7 @@ function read (req, res) {
 /**
  * Update a Company
  */
-function update (req, res) {
+function update(req, res) {
     req.log.debug('[CompaniesCtrl.update] Start');
 
     var company = req.company;
@@ -175,7 +175,7 @@ function update (req, res) {
 /**
  * Update profile picture
  */
-function changeProfilePicture (req, res) {
+function changeProfilePicture(req, res) {
     req.log.debug('[CompaniesCtrl.changeProfilePicture] Start');
     var company = req.company;
     var user = req.user;
@@ -224,7 +224,7 @@ function changeProfilePicture (req, res) {
 /**
  * deleteCompany an Company
  */
-function deleteCompany (req, res) {
+function deleteCompany(req, res) {
     req.log.debug('[CompaniesCtrl.delete] Start');
 
     var company = req.company;
@@ -243,7 +243,7 @@ function deleteCompany (req, res) {
 /**
  * List of Companies
  */
-function list (req, res) {
+function list(req, res) {
     req.log.debug('[CompaniesCtrl.list] Start');
 
     req.sort = '-created';
@@ -251,7 +251,7 @@ function list (req, res) {
     executeQuery(req, res);
 };
 
-function listDrivers (req, res) {
+function listDrivers(req, res) {
     req.log.debug('[CompaniesCtrl.listDrivers] Start');
 
     req.log.debug('NOT IMPLEMENTED');
@@ -262,7 +262,7 @@ function listDrivers (req, res) {
     }]);
 };
 
-function companiesByUserID (req, res) {
+function companiesByUserID(req, res) {
     req.log.debug({ func: 'companiesByUserID' }, 'Start');
 
 
@@ -275,7 +275,7 @@ function companiesByUserID (req, res) {
     executeQuery(req, res);
 };
 
-function companyByUserID (req, res, next) {
+function companyByUserID(req, res, next) {
 
     req.log.debug({ func: 'companyByUserID', params: req.params }, 'Start');
 
@@ -309,7 +309,7 @@ function companyByUserID (req, res, next) {
 /**
  * Company middleware
  */
-function companyByID (req, res, next, id) {
+function companyByID(req, res, next, id) {
     if (/([0-9a-f]{24})$/i.test(id)) {
         req.log.debug({ companyId: id }, 'Querying for company with id %s', id);
 
@@ -348,7 +348,7 @@ function companyByID (req, res, next, id) {
 /**
  * Company authorization middleware
  */
-function hasAuthorization (req, res, next) {
+function hasAuthorization(req, res, next) {
     req.log.trace('hasAuthorization', 'Start', { company: req.company, user: req.user });
     req.log.debug('hasAuthorization', 'Start', { company: req.company.owner._id, user: req.user._id });
 
@@ -373,13 +373,13 @@ function follow(req, res) {
         return res.status(404);
     }
     var followerCt = req.company.followers.length;
-    
+
     if (_.contains(req.company.followers)) {
         return res.status(304).json(req.company);
     }
-     
+
     req.company.followers.push(req.user._id);
-    
+
     req.company.save().then(
         function success(company) {
             req.log.debug({ func: 'company.unfollow', result: company }, 'Saved Follower #%d to Company (had %d followers)', company.followers.length, followerCt);
@@ -388,23 +388,23 @@ function follow(req, res) {
         },
         function reject(err) {
             req.log.error({ err: err, func: 'company.unfollow' }, 'Failed to save company with new follower');
-            
+
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         });
 }
- 
+
 function unfollow(req, res) {
     if (!req.company) {
         return res.status(404);
     }
     var followerCt = req.company.followers.length;
-    
+
     if (!_.contains(req.company.followers)) {
         return res.status(304).json(req.company);
     }
-     
+
     req.company.followers.pull(req.user._id);
-    
+
     req.company.save().then(
         function success(company) {
             req.log.debug({ func: 'company.unfollow', result: company }, 'Removed Follower #%d to Company (had %d followers)', company.followers.length, followerCt);
@@ -413,16 +413,16 @@ function unfollow(req, res) {
         },
         function reject(err) {
             req.log.error({ err: err, func: 'company.unfollow' }, 'Failed to save company with new follower');
-            
+
             return res.status(400).send({ message: errorHandler.getErrorMessage(err) });
         });
- }
- 
+}
+
 function getFeed(req, res, next) {
     if (!req.company) {
         return res.status(404).send({ message: 'Company not Found' });
     }
-    
+
     feedCtrl.getOrCreateFeed(req.log, req.user, req.company).then(
         function success(feed) {
             req.log.debug({ func: 'company.getFeed', feed: feed }, 'Returning Feed for %s', req.company.name);
