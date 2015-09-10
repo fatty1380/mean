@@ -14,10 +14,24 @@
         // Initialize Update Logic
         vm.newActivities = 0;
         vm.lastUpdate = Date.now();
+        vm.feedData = null;
 
         vm.showAddActivityModal = showAddActivityModal;
+        vm.changeFeedSource = changeFeedSource;
         vm.updateWithNewActivities = updateWithNewActivities;
         vm.refresh = refresh;
+
+        updateFeedData();
+
+        function changeFeedSource() {
+            activityService.changeFeedSource();
+            updateFeedData();
+            initialize();
+        }
+
+        function updateFeedData() {
+            vm.feedData = activityService.getFeedData();
+        }
 
         /**
          * try to initialize if have no feed
@@ -49,7 +63,7 @@
                     });
             } else {
                 $ionicLoading.show({
-                    template: 'loading feed'
+                    template: vm.feedData.loadingText
                 });
             }
                 
@@ -67,9 +81,9 @@
 
         function startCheckNewActivities() {
             utilsService.startClock(function () {
-                activityService.getFeedIds().then(function (result) {
-                    if (result.items.length > vm.feed.length) {
-                        vm.newActivities = result.items.length - vm.feed.length;
+                activityService.getFeedIds().then(function (feed) {
+                    if (feed.length > vm.feed.length) {
+                        vm.newActivities = feed.length - vm.feed.length;
                     } else {
                         vm.newActivities = 0;
                     }
@@ -115,6 +129,14 @@
             });
         }
 
+
+        function showFeed() {
+            console.log(' ');
+            console.log('showFeed() ');
+        }
+
+
+
         function showAddActivityModal() {
             stopCheckNewActivities();
             activityModalsService
@@ -129,8 +151,5 @@
                     activityService.showPopup("Modal failed", "Please try later");
                 })
         };
-
-
-
     }
 })();
