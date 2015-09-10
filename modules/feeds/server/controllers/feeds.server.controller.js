@@ -180,6 +180,14 @@ function addLike(req, res) {
 	if (_.isEmpty(req.feedItem)) {
 		return res.status(404).send({ message: 'no feed activity specified' });
 	}
+	
+	if (req.user._id.equals(req.feedItem.user.id)) {
+		return res.status(403).send({ message: 'You have already liked your own post' });
+	}
+	
+	// if (!req.feedItem.isPublic && !_.contains(req.user.friends, req.feedItem.user)) {
+	// 	return res.status(403).send({ message: 'You cannot like a private post' });
+	// }
 
 	var _id = req.user._id;
 
@@ -279,7 +287,7 @@ function feedItemByID(req, res, next, id) {
 	req.log.debug({ func: 'feedItemByID', id: id }, 'Looking up Feed Item by ID');
 
 	FeedItem.findById(id)
-		.populate({ path: 'user', select: 'handle displayName', model: 'User' })
+		.populate({ path: 'user', select: 'handle displayName profileImageURL', model: 'User' })
 		.populate({ path: 'company', select: 'name profileImageURL', model: 'Company' })
 		.exec().then(
 			function (feedItem) {
@@ -344,24 +352,46 @@ function getOrCreateFeed(userId, log) {
  */
 function crossPost(user, item) {
 	log.debug({ func: 'crossPost', friends: _.uniq(user.friends) }, 'initializing cross post');
-	return Q.all(_.map(user.friends, postItemToFriend, this));
+	return Q.all(_.map(user.friends, function (friend) {
+
+		log.debug({ func: 'crossPost', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
+		return getOrCreateFeed(friend, log).then(
+			function (theirFeed) {
+				log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
+				theirFeed.items.push(item);
+
+				return theirFeed.save();
+			}).then(
+				function (success) {
+					log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
+
+					return success;
+				});
+	}));
 }
 
-function postItemToFriend(friend) {
-	var item = this.item;
+// function crossPost(user, item) {
+// 	log.debug({ func: 'crossPost', friends: _.uniq(user.friends), item: item, this: this }, 'initializing cross post');
 
-	log.debug({ func: 'crossPost', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
+// 	return Q.all(_.map(user.friends, function(friend, index, scope) {
+// 		log.error({ func: 'crossPost', scope:scope}, 'logging scope');
+// 		log.error({ func: 'crossPost1', item: item}, 'logging scope');
+// 		log.error({ func: 'crossPost2', this: this }, 'logging scope');
+// 		log.debug({ func: 'crossPost4', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
 
-	return getOrCreateFeed(friend, log).then(
-		function (theirFeed) {
-			log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
-			theirFeed.items.push(item);
+// 		var item = this.item;
+		
+// 		return getOrCreateFeed(log, friend).then(
+// 			function (theirFeed) {
+// 				log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
+// 				theirFeed.items.push(item);
 
-			return theirFeed.save();
-		}).then(
-			function (success) {
-				log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
+// 				return theirFeed.save();
+// 			}).then(
+// 				function (success) {
+// 					log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
 
-				return success;
-			});
-}
+// 					return success;
+// 				});
+// 	}, { user: user, item: item }));
+// }

@@ -299,15 +299,18 @@ describe('Feed CRUD tests', function () {
 
 		describe('When cross posting amongst friends', function () {
 			var friend, notFriend;
+
 			beforeEach(function () {
+			log.debug({ test: _test.title, func: 'test.crossPost init' }, 'BeforeEach START');
 				friend = new User(stubs.getUser());
 				notFriend = new User(stubs.getUser());
 				user.friends.push(friend._id);
 				friend.friends.push(user._id);
 
+				log.debug({ test: _test.title, func: 'test.crossPost init' }, 'Initialized before each stuff');
 				return Q.all([friend.save(), user.save(), notFriend.save()])
 					.then(function (results) {
-						log.debug({ func: 'test.crossPost init', user: results[1], friend: results[0] });
+						log.debug({ test: _test.title, func: 'test.crossPost init', user: results[1], friend: results[0] });
 
 						results[0].should.have.property('friends').with.length(1);
 						results[1].should.have.property('friends').with.length(1);
@@ -524,6 +527,12 @@ function verifyFeedProperties(feedItem) {
 	feedItem.should.have.property('user');
 	feedItem.should.have.property('props');
 	feedItem.should.have.property('isPublic', false);
+	
+	feedItem.should.have.property('user');
+	feedItem.user.should.have.property('handle');
+	feedItem.user.should.have.property('displayName');
+	feedItem.user.should.have.property('profileImageURL');
+	feedItem.user.should.have.property('id');
 
 	feedItem.props.should.have.property('slMiles');
 	feedItem.props.should.have.property('freight');
