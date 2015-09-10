@@ -37,7 +37,7 @@ $signup-entry-value-text: $white;
 $light:                           #fff !default;
 $stable:                          #f8f8f8 !default;
 $positive:                        $badge-green !default; //#387ef5 !default;
-$calm:                            #11c1f3 !default;
+$calm:                            $tab-selected !default; //#11c1f3 !default;
 $balanced:                        #33cd5f !default;
 $energized:                       #ffc900 !default;
 $assertive:                       $danger !default; // #ef473a !default;
@@ -257,6 +257,7 @@ $bar-default-text:                $bar-light-text !default;
 $bar-default-border:              $bar-light-border !default;
 $bar-default-active-bg:           $bar-light-active-bg !default;
 $bar-default-active-border:       $bar-light-active-border !default;
+
 
 
 // Tabs

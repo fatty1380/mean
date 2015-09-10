@@ -21,11 +21,13 @@
     settings.feed = settings.api + 'feed/';
     settings.friends = settings.api + 'friends/';
     settings.requests = settings.api + 'requests/';
+    settings.companies = settings.api + 'companies/';
 
     // endpoints
     settings.signup = settings.oauth + 'signup/';
     settings.token = settings.oauth + 'token/';
     settings.signout = settings.auth + 'signout/';
+    
     settings.search = settings.profiles + 'search/';
     settings.usersProfile = settings.users + 'me/';
     settings.usersExperience = settings.usersProfile + 'experience/';
