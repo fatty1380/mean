@@ -26,6 +26,8 @@ textarea{
   top: 0;
   right: 0;
   z-index: 2;
+  
+  height: $bar-height;
 
   /** full size header and content pane **/
   &.full-size{height: 200px;}

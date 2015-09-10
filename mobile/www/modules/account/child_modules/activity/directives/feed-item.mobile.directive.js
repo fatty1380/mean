@@ -34,7 +34,7 @@
 			
 			if (!!vm.entry.company) {
 				vm.avatar = vm.entry.company.profileImageURL;
-			} else {
+			} else if(!!vm.entry.user) {
 				vm.username = vm.entry.user.handle || vm.entry.user.displayName;
 				vm.avatar = vm.entry.user.profileImageURL;
 			} 

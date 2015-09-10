@@ -1,12 +1,42 @@
 .company-screen{
 
-  .content-top{
+  .content-top {
     background-color: $ribbon-bg;
+  }
+  
+  .bar {
+    img.brand-img {
+      max-height: 100%;
+      max-width: 100%;
+      position: relative;
+      align-content: center;
+    }
   }
 
   .news-list{
     div{
       white-space: normal;
+    }
+  }
+  
+  .company-about {
+    .item {
+      padding: $item-padding;
+      
+      h3 {
+        font-size: 1.4em;
+        line-height: 1.5em;
+        text-align: center;
+      }
+      
+      p {
+        font-size: 1.2em;
+        line-height: 1.2em;
+        overflow: visible;
+        white-space: normal;
+        text-align: justify;
+        padding: $item-padding 0;
+      }
     }
   }
 }

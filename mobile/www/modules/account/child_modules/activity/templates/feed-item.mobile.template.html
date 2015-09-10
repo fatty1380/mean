@@ -21,7 +21,9 @@
 	<img ng-if="vm.entry.imageURL" ng-src="{{vm.entry.imageURL}}" class="static-pic">
 
 	<div class="button-holder" ng-if="!!vm.entry.company">
-		<a class="button button-block button-small" ui-sref="company({companyId: vm.entry.company.id || vm.entry.company})">
+		<a class="button button-block button-small" 
+			ui-sref="company({companyId: vm.entry.company.id || vm.entry.company})"
+			ng-click="$event.stopPropagation()">
 			Show Company Profile
 		</a>
 	</div>
