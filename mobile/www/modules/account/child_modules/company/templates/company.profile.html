@@ -15,48 +15,15 @@
                 <ion-scroll>
                     <ion-list class="activity">
                         <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
+                        <br>
                     </ion-list>
                 </ion-scroll>
             </ion-tab>
             <ion-tab title="JOBS" ui-sref="company.jobs">
                 <ion-scroll class="jobs-list">
                     <ion-list class="activity">
-                        <ion-item ng-repeat="job in vm.jobs track by $index" class="card item">
-                            <div class="activity-item top">
-                                <a class="user-link">
-                                    <strong ng-if="!!job.title">{{ job.title }} </strong>
-                                    <strong class="title">{{job.location.placeName}}</strong>
-                                </a>
-
-                                <div class="time" ng-if="job.created">
-                                    <i class="ico ico-timesmall"></i> {{job.created | date:'mediumDate'}}
-                                </div>
-
-                                <p class="message">
-                                    <span ng-bind-html="job.message"></span>
-                                </p>
-
-
-                            </div>
-                            <static-gmap ng-if="!!job.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{ color: 'red', label: '', coords: {{ job.location.coordinates || [] }} }">
-                            </static-gmap>
-                            <div class="activity-item bottom">
-                                <div class="clearfix">
-                                    <div class="likes" ng-if="!!job.likes" ng-click="vm.likeActivity(job.id)">
-                                        <i class="ico ico-likessmall"></i>
-                                        <strong>{{job.likes.length}} like{{job.likes.length != 1 ? 's' : ''}}</strong>
-                                    </div>
-                                    <div class="comments" ng-if="!!job.comments">
-                                        <i class="ion ion-chatboxes"></i>
-                                        <strong>{{job.comments.length}} comments</strong>
-                                    </div>
-                                </div>
-
-                                <button class="button button-block button-positive" ng-click="vm.apply(job)">
-                                    Apply!
-                                </button>
-                            </div>
-                        </ion-item>
+                        <oset-feed-item ng-repeat="entry in vm.jobs" model="entry"></oset-feed-item>
+                        <br>
                     </ion-list>
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
@@ -120,6 +87,7 @@
                                 and is recognized as one of the largest and most valued marketers of fresh and broad-like
                                 supply solutions.</p>
                         </ion-item>
+                        <br>
                     </ion-list>
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>

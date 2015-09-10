@@ -32,12 +32,17 @@
 				};
 			}
 			
-			if (!!vm.entry.company) {
+			if (vm.entry._type === 'job') {
+				vm.username = vm.entry.title;
+			}
+			else if (!!vm.entry.company) {
 				vm.avatar = vm.entry.company.profileImageURL;
 				vm.username = vm.entry.company.name;
+				vm.title = vm.entry.title;
 			} else if(!!vm.entry.user) {
 				vm.username = vm.entry.user.handle || vm.entry.user.displayName;
 				vm.avatar = 'modules/users/img/profile/default.png' != vm.entry.user.profileImageURL ? vm.entry.user.profileImageURL : vm.entry.user.props.avatar;
+				vm.title = vm.entry.title;
 			} 
 		}
 	}
