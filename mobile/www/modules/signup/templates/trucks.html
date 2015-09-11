@@ -1,22 +1,21 @@
-<ion-view class="signup-section">
+<ion-view class="signup-section view-section compact-size">
 
-    <div class="header compact-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-            <h1 class="title">Create Account</h1>
-            <button class="button button-clear" ng-click="vm.continueToTrailers(false)">
-                Skip
-            </button>
-        </ion-header-bar>
-        <div class="bar bar-subheader" >
-            <h3 class="title">Choose Your Truck Make</h3>
-        </div>
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
+        <h1 class="title">Create Account</h1>
+        <button class="button button-clear" ng-click="vm.continueToTrailers(false)">
+            Skip
+        </button>
+    </ion-header-bar>
+
+    <div class="bar bar-subheader" >
+        <h3 class="title">Choose Your Truck Make</h3>
     </div>
 
     <ion-pane class="has-footer">
         <ion-scroll>
             <div class="list select-truck">
-                <label class="item item-radio"  ng-repeat="truck in vm.trucks"  >
+                <label class="item item-radio"  ng-repeat="truck in vm.trucks">
                     <input type="radio" name="trucks"  ng-model="vm.currentTruck" value="{{truck.name}}">
                     <div class="item-content">
                         <p>{{ truck.name }}</p>
@@ -25,20 +24,20 @@
                         </div>
                     </div>
                 </label>
-
                 <label class="item item-radio" ng-click="vm.addTruck()">
                     <div class="item-content button-other">
                         <p class="center-text">Other</p>
                     </div>
                 </label>
-
             </div>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <!--  -->
             <button class="button secondary"  ng-click="vm.continueToTrailers(true)" type="submit">Continue</button>
         </div>
     </ion-footer-bar>
+
 </ion-view>

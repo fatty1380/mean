@@ -1,12 +1,12 @@
-<ion-modal-view class="activity">
-    <div class="header min-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="vm.close('activityDetails')">Close</button>
-            <h1 class="title">Activity Details</h1>
-            <button class="button button-clear" ng-click="vm.likeActivity()">Like Post</button>
-        </ion-header-bar>
-    </div>
-    <ion-pane class="pane has-footer">
+<ion-modal-view class="activity view-section min-size">
+
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="vm.close('activityDetails')">Close</button>
+        <h1 class="title">Activity Details</h1>
+        <button class="button button-clear" ng-click="vm.likeActivity()">Like Post</button>
+    </ion-header-bar>
+
+    <ion-pane class="pane has-footer details-activity-pane">
         <ion-scroll delegate-handle="mainScroll">
             <ion-item class="item">
                 <div class="ico ico-avatar"></div>

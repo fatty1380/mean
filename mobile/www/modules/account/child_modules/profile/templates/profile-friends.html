@@ -1,12 +1,10 @@
-<ion-view class="friends-screen" cache-view="false">
+<ion-view class="friends-screen view-section min-size" cache-view="false">
 
-    <div class="header min-size">
-        <ion-header-bar>
-            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-            <h1 class="title">Friends</h1>
-            <button class="button button-clear" ng-click="vm.showRequestsModal();">Requests</button>
-        </ion-header-bar>
-    </div>
+    <ion-header-bar>
+        <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
+        <h1 class="title">Friends</h1>
+        <button class="button button-clear" ng-click="vm.showRequestsModal();">Requests</button>
+    </ion-header-bar>
 
     <ion-pane class="has-footer friends-pane">
         <div class="item item-input search-bar">
@@ -15,6 +13,7 @@
         </div>
 
         <ion-scroll delegate-handle="main-content-scroll">
+            <!-- Friends -->
             <div class="title" ng-if="vm.friends.length">Your Friends</div>
             <ul class="list friends-list user-friends-list" ng-if="vm.friends.length">
                 <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)"
@@ -34,6 +33,7 @@
                 </li>
             </ul>
 
+            <!-- No friends -->
             <div class="no-friends" ng-if="!vm.searchText && !vm.friends.length">
                 <p>Start with the 5 best drivers you know and help grow your personal network of professional truck drivers.</p>
                 <p>Select from your drevice contacts or manually by Mobile Phone or Email</p>
@@ -47,6 +47,8 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Outset users -->
             <div class="title" ng-if="vm.searchText.length >= 1">Outset Users</div>
             <ul class="list friends-list" ng-if="vm.users.length && !contacts.length && vm.searchText.length >= 2">
                 <li class="item" ng-repeat="user in vm.users">
@@ -61,6 +63,7 @@
             <div ng-if="vm.searchText.length >= 1 && !vm.users.length" class="no-matches">
                 <div class="item-content">No Users Found. Please, try to edit your search query.</div>
             </div>
+
         </ion-scroll>
     </ion-pane>
 

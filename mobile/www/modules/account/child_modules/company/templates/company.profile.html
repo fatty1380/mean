@@ -1,43 +1,29 @@
-<ion-view class="company-screen">
-    <div class="header compact-size">
-        <div class="bar bar-header bar-calm" align-title="center">
-            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-            <button class="button button-clear" ng-click="$ionicGoBack()">Follow</button>
-        </div>
-        <div class="bar bar-brand">
-        <h3><img class="brand-img" ng-if="vm.companyData.profileImageURL" ng-src="{{vm.companyData.profileImageURL}}" alt="" /></h3>
-        </div>
+<ion-view class="company-screen view-section compact-size" cache-view="false">
+
+    <div class="bar bar-header bar-calm" align-title="center">
+        <button class="button button-clear" ui-sref="account.activity">Back</button>
+        <button class="button button-clear" ng-click="vm.follow()">Follow</button>
     </div>
-    <ion-content class="pane profile-pane has-header">
+
+    <div class="bar bar-subheader bar-brand">
+        <h3><img class="brand-img" ng-if="vm.company.profileImageURL" ng-src="{{vm.company.profileImageURL}}" alt="" /></h3>
+    </div>
+
+    <ion-content class="pane profile-pane has-subheader">
         <ion-tabs class="profile-tabs tabs-top">
             <ion-tab title="FEED" ui-sref="company.feed">
                 <ion-scroll>
-                    <ion-refresher pulling-text="pull to refresh ..." on-refresh="vm.refresh()"></ion-refresher>
-                    <ion-list>
+                    <ion-list class="activity">
                         <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
+                        <br>
                     </ion-list>
                 </ion-scroll>
             </ion-tab>
             <ion-tab title="JOBS" ui-sref="company.jobs">
                 <ion-scroll class="jobs-list">
-                    <ion-list>
-                        <ion-item ng-repeat="job in vm.jobs track by $index" class="card item">
-                            <div class="job activity-item">
-                                <div class="top">
-                                    <div class="time"><i class="ico ico-timesmall"></i> {{job.created | date : 'mediumDate'}}</div>
-                                </div>
-                                <div class="message">
-                                    <strong>{{ job.title }}</strong>
-                                </div>
-                                <strong class="title">{{job.location.place}}</strong>
-                                <div class="message"><span ng-bind-html="job.message"></span></div>
-                            </div>
-                            <static-gmap ng-if="!!job.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{ color: 'red', label: '', coords: {{ job.location.coordinates || [] }} }">
-                            </static-gmap>
-                            <button class="button button-block button-positive">
-                                Apply!
-                            </button>
-                        </ion-item>
+                    <ion-list class="activity">
+                        <oset-feed-item ng-repeat="entry in vm.jobs" model="entry"></oset-feed-item>
+                        <br>
                     </ion-list>
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
@@ -101,11 +87,12 @@
                                 and is recognized as one of the largest and most valued marketers of fresh and broad-like
                                 supply solutions.</p>
                         </ion-item>
+                        <br>
                     </ion-list>
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
-
         </ion-tabs>
     </ion-content>
+
 </ion-view>

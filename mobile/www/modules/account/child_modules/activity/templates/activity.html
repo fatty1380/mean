@@ -1,11 +1,11 @@
-<ion-view class="activity">
-    <div class="header min-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click='vm.changeFeedSource()'>{{vm.feedData.buttonName}}</button>
-            <h1 class="title">Activity</h1>
-            <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
-        </ion-header-bar>
-    </div>
+<ion-view class="activity view-section min-size">
+    
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click='vm.changeFeedSource()'>{{vm.feedData.buttonName}}</button>
+        <h1 class="title">Activity</h1>
+        <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
+    </ion-header-bar>
+    
     <ion-pane class="pane content-pane button-padding-bottom" ng-class="{' button-padding-top': !!vm.newActivities}">
         <button class="button button-positive content-top-button" ng-show="!!vm.newActivities" ng-click="vm.updateWithNewActivities()">
             {{vm.newActivities}} new Updates

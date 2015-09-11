@@ -74,7 +74,7 @@
                 .then(function (response) {
                     showSuccessPopup(response);
                 });
-            
+
             function getModifiedContactInfo (contactInfo) {
                 if(!contactInfo) return;
 

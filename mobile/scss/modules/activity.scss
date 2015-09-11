@@ -157,11 +157,17 @@
       }
     }
   }
-  .bar-footer {
 
+  /* details activity */
+  .details-activity-pane {
+    .item {
+      padding: 10px;
+    }
+  }
+
+  .bar-footer {
     .item-input-wrapper {
       background: none;
-
       textarea {
         width: 100%;
         height: 45px;
