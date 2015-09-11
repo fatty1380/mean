@@ -22,7 +22,6 @@
         vm.likeActivity = likeActivity;
         vm.showInputs = showInputs;
         vm.createComment = createComment;
-        vm.editComment = editComment;
 
         function initMap() {
             if (activityService.hasCoordinates(vm.entry)) {
@@ -69,9 +68,6 @@
         }
 
         function createComment() {
-            console.log('vm.entry ',vm.entry);
-            console.log('vm.message ',vm.message);
-
             var data = {
                 text: vm.message
             };
@@ -91,20 +87,11 @@
                 });
         }
 
-        function editComment(message) {
-            console.log(vm.entry.user.id+' --- '+message.sender);
-            //you can edit only your own comments
-            if(vm.entry.user.id === message.sender) {
-                showActivityCommentEditModal(message);
-            }
-        }
-
         function showInputs() {
             vm.isInputVisible = true;
         }
 
         function likeActivity() {
-            console.log('likeActivity() ', vm.entry.id);
             activityService.likeActivity(vm.entry.id).then(function(result) {
                 //update like in feed
                 vm.entry.likes = result.data || [];
@@ -112,15 +99,6 @@
                 console.log(resp);
             });
         }
-
-        function showActivityCommentEditModal(entry) {
-            activityModalsService
-                .showCommentEditModal({ entry: entry })
-                .then(function (res) {
-                }, function (err) {
-                    activityService.showPopup("Modal failed", "Please try later");
-                })
-        };
 
         function close() {
             vm.closeModal(vm.entry);

@@ -31,19 +31,11 @@
             return modalService
                 .show(templateUrl, controller, params);
         }
-        function showCommentEditModal (parameters) {
-            templateUrl = 'modules/account/child_modules/activity/templates/activity-comment-edit.html';
-            controller = 'ActivityCommentEditCtrl as vm';
-            params = parameters || {};
-            return modalService
-                .show(templateUrl, controller, params);
-        }
 
         return {
             showAddActivityModal: showAddActivityModal,
             showActivityDetailsModal: showActivityDetailsModal,
-            showWelcomeModal: showWelcomeModal,
-            showCommentEditModal: showCommentEditModal
+            showWelcomeModal: showWelcomeModal
         };
     }
 })();

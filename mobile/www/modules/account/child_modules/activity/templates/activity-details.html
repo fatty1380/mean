@@ -48,7 +48,7 @@
                 <strong>Comments:</strong>
             </div>
 
-            <div class="item comment" ng-repeat="message in vm.comments" ng-click="vm.editComment(message)">
+            <div class="item comment" ng-repeat="message in vm.comments">
                <a>{{message.sender.displayName}}</a> {{message.text}} at {{message.created | date : 'short'}}
             </div>
         </ion-scroll>

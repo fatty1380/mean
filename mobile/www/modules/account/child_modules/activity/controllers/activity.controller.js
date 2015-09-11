@@ -129,14 +129,6 @@
             });
         }
 
-
-        function showFeed() {
-            console.log(' ');
-            console.log('showFeed() ');
-        }
-
-
-
         function showAddActivityModal() {
             stopCheckNewActivities();
             activityModalsService
