@@ -80,16 +80,22 @@
         }
 
         function startCheckNewActivities() {
-            utilsService.startClock(function () {
-                activityService.getFeedIds().then(function (feed) {
-                    if (feed.length > vm.feed.length) {
-                        vm.newActivities = feed.length - vm.feed.length;
-                    } else {
-                        vm.newActivities = 0;
-                    }
-                }, function (resp) {
-                });
-            }, settings.activityTimeout);
+            console.log(vm.feedData);
+            //update if we have feed list from fiends
+                utilsService.startClock(function () {
+                    activityService.getFeedIds().then(function (feed) {
+                        console.log(feed.length,vm.feed.length);
+                        if(vm.feedData.feedSource === 'items') {
+                            if (feed.length > vm.feed.length) {
+                                vm.newActivities = feed.length - vm.feed.length;
+                            } else {
+                                vm.newActivities = 0;
+                            }
+                        }
+                    }, function (resp) {
+                    });
+                }, settings.activityTimeout);
+
         }
 
         function stopCheckNewActivities() {
@@ -100,6 +106,7 @@
          *  @TODO update only new items
         */
         function updateWithNewActivities() {
+            stopCheckNewActivities();
             initialize();
         }
 
