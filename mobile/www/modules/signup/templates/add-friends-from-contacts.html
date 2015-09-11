@@ -1,21 +1,18 @@
-<ion-view class="friends-screen">
+<ion-view class="friends-screen view-section min-size">
 
-    <div class="header min-size">
-        <ion-header-bar>
-            <ion-nav-bar>
-                <ion-nav-back-button>Back</ion-nav-back-button>
-            </ion-nav-bar>
-            <h1 class="title">Add Friends</h1>
-            <a class="button button-clear" ng-click="vm.skipToProfile();">Skip</a>
-        </ion-header-bar>
-    </div>
+    <ion-header-bar>
+        <ion-nav-bar>
+            <ion-nav-back-button>Back</ion-nav-back-button>
+        </ion-nav-bar>
+        <h1 class="title">Add Friends</h1>
+        <a class="button button-clear" ng-click="vm.skipToProfile();">Skip</a>
+    </ion-header-bar>
 
     <ion-pane class="has-footer friends-pane">
         <div class="item item-input search-bar">
             <i class="icon light ion-ios-search-strong"></i>
             <input type="text" placeholder="Search for Friends" ng-model="vm.searchText" ng-change="vm.searchHandler()">
         </div>
-
         <ion-scroll delegate-handle="main-content-scroll">
             <div class="list friends-list">
                 <div class="title">Your Friends</div>
@@ -33,6 +30,7 @@
             </div>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar">
             <button class="button block-button" ng-click="vm.sendInvitations();">Send Invitations</button>

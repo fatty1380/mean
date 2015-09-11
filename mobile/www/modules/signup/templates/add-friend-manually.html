@@ -1,15 +1,16 @@
-<ion-view>
-    <div class="header compact-size">
-        <ion-header-bar align-title="center">
-            <ion-nav-bar>
-                <ion-nav-back-button>Back</ion-nav-back-button>
-            </ion-nav-bar>
-            <h1 class="title">Add Friends</h1>
-        </ion-header-bar>
-        <div class="bar bar-subheader">
-            <h3 class="title">Please enter a Mobile Phone Number or Email Address below.</h3>
-        </div>
+<ion-view class="view-section compact-size">
+
+    <ion-header-bar align-title="center">
+        <ion-nav-bar>
+            <ion-nav-back-button>Back</ion-nav-back-button>
+        </ion-nav-bar>
+        <h1 class="title">Add Friends</h1>
+    </ion-header-bar>
+
+    <div class="bar bar-subheader">
+        <h3 class="title">Please enter a Mobile Phone Number or Email Address below.</h3>
     </div>
+
     <ion-pane class="pane has-footer content-pane">
         <ion-scroll>
             <div class="list share-form">
@@ -17,10 +18,12 @@
             </div>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="$ionicGoBack()">Cancel</button>
             <button class="button primary" ng-click="vm.invite();">Invite</button>
         </div>
     </ion-footer-bar>
+
 </ion-view>

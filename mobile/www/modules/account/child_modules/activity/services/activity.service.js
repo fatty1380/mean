@@ -80,8 +80,9 @@
         }
 
         function feedRequestError(response) {
-            showPopup('Error', response.message);
-            return response;
+            //showPopup('Error', response.message);
+            console.error('Unable to load Feed', response.data)
+            return [];
         }
         
         /**
@@ -253,11 +254,11 @@
                         } else if (results[0]) {
                             resolve(results[0]);
                         } else {
-                            showPopup('Geocoder failed', 'No results found');
+                            //showPopup('Geocoder failed', 'No results found');
                             reject('Geocoder failed');
                         }
                     } else {
-                        showPopup('Geocoder failed', status);
+                        //showPopup('Geocoder failed', status);
                         reject('Geocoder failed');
                     }
                 });

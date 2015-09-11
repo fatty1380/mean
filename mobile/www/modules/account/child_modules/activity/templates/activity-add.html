@@ -1,10 +1,10 @@
-<ion-modal-view class="activity">
-    <div class="header min-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="vm.close()">Close</button>
-            <h1 class="title">Add Activity</h1>
-        </ion-header-bar>
-    </div>
+<ion-modal-view class="activity view-section min-size">
+
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="vm.close()">Close</button>
+        <h1 class="title">Add Activity</h1>
+    </ion-header-bar>
+
     <ion-pane class="pane has-footer add-activity-pane">
         <ion-scroll>
             <form name="mainForm" id="mainForm" class="" ng-init="vm.initForm(this)" ng-submit="vm.saveItemToFeed()"
@@ -41,11 +41,12 @@
                 <input style="position:absolute; left:9999px" type="submit" />
             </form>
         </ion-scroll>
-
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button primary" ng-disabled="!vm.activity.title" ng-click="vm.saveItemToFeed()">Save</button>
         </div>
     </ion-footer-bar>
+
 </ion-modal-view>

@@ -1,20 +1,20 @@
-<ion-modal-view class="profile-screen">
-    <div class="header mid-size">
-        <ion-header-bar>
-            <h1 class="title">Edit Profile</h1>
-        </ion-header-bar>
-        <div class="profile-visual compact">
-            <div class="photo">
-                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
-            </div>
-            <div class="text">
-                <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
-                <em ng-bind="vm.profileData.props.company"></em>
-            </div>
+<ion-modal-view class="profile-screen view-section mid-size">
+
+    <ion-header-bar>
+        <h1 class="title">Edit Profile</h1>
+    </ion-header-bar>
+
+    <div class="profile-visual compact">
+        <div class="photo">
+            <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
+        </div>
+        <div class="text">
+            <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+            <em ng-bind="vm.profileData.props.company"></em>
         </div>
     </div>
-    <ion-pane class="has-footer edit-pane">
 
+    <ion-pane class="has-footer edit-pane">
         <ion-scroll>
             <div class="list edit-fields-list">
                 <label class="item item-input item-floating-label">
@@ -71,10 +71,12 @@
             </div>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" nav-direction="exit" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary" ng-click="vm.save()">Save</button>
         </div>
     </ion-footer-bar>
+
 </ion-modal-view>

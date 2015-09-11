@@ -1,14 +1,13 @@
-<ion-view class="signup-section">
-    <div class="header min-size">
+<ion-view class="signup-section view-section min-size">
+
+    <ion-header-bar align-title="center" class="bar-stable">
         <ion-nav-bar>
             <ion-nav-back-button>Back</ion-nav-back-button>
         </ion-nav-bar>
-        <ion-header-bar align-title="center" class="bar-stable">
-            <h1 class="title">Create Account</h1>
-        </ion-header-bar>
-    </div>
-    <ion-pane class="has-footer license-content">
+        <h1 class="title">Create Account</h1>
+    </ion-header-bar>
 
+    <ion-pane class="has-footer license-content">
         <ion-scroll>
             <h4>Select your license</h4>
             <div class="list license">
@@ -69,9 +68,11 @@
             </ul>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary submit" ng-click="vm.continueToTrucks()" >Continue</button>
         </div>
     </ion-footer-bar>
+
 </ion-view>
