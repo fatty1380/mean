@@ -6,6 +6,7 @@
     </ion-header-bar>
 
     <ion-pane class="pane has-footer add-activity-pane">
+        {{vm.where}}
         <ion-scroll>
             <form name="mainForm" id="mainForm" class="" ng-init="vm.initForm(this)" ng-submit="vm.saveItemToFeed()"
                   novalidate>

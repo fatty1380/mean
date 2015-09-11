@@ -23,6 +23,8 @@
             title : '',
             message : '',
             location : {
+                placeName: '',
+                placeId: '',
                 type: 'Point',
                 coordinates: [],
                 created: ''
@@ -39,6 +41,8 @@
 
         $scope.$watch('vm.where', function() {
             if(vm.where) {
+                vm.activity.location.placeName = vm.where.formatted_address;
+                vm.activity.location.placeId = vm.where.place_id;
                 setMarkerPosition();
             }
         }, true);
