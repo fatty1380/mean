@@ -147,31 +147,6 @@ DriverSchema.pre('save', function (next) {
     next();
 });
 
-DriverSchema.pre('save', function (next) {
-    if (this.isModified('experience')) {
-
-        _.map(this.experience, function (exp) {
-            if (!!exp._doc.time) {
-                exp._doc.time = undefined;
-            }
-
-            return exp;
-        });
-
-    }
-
-    if (!!this.resume) {
-        console.log('PRE Save Resume still here! aargh ===========================================P');
-        this.resume = undefined;
-    }
-
-    if (!_.isEqual(this.reportsData, _.values(this.reports))) {
-        this.reportsData = _.values(this.reports);
-    }
-
-    next();
-});
-
 
 DriverSchema.pre('init', function (next, data) {
     if (data.props && !!data.props.avatar && data.props.avatar !== data.profileImageURL) {

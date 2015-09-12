@@ -20,10 +20,11 @@ var mongoose = require('mongoose'),
  */
 var app, agent, credentials, user, target, review;
 
+var _test;
 /**
  * Review routes tests
  */
-describe.skip('Review CRUD tests', function () {
+describe('Review CRUD tests', function () {
 	before(function (done) {
 		log.debug({ func: 'beforeAll' }, 'Setup Base');
 		// Get application
@@ -45,7 +46,7 @@ describe.skip('Review CRUD tests', function () {
 		return Q.all([user.save(), target.save()]).then(
 			function () {
 				review = {
-					user: target,
+					to: target,
 					name: user.firstName,
 					email: user.email,
 					title: 'This is a Review',
@@ -65,14 +66,41 @@ describe.skip('Review CRUD tests', function () {
 	 * 	should be able to get a list of reviews for a specific user
 	 * 		/api/profiles/:userId/reviews
 	 */
-	 
-	/**
-	 * End Stubs
-	 */
 
-	it('should be able to save Review instance if logged in', function (done) {
-		stubs.agentLogin(agent, credentials).then(function () {
+	describe('when logged in', function () {
+		
+		beforeEach(function () {
+			return stubs.agentLogin(agent, credentials);
+		})
 
+		it('should allow me to query for specific request type: `reviewRequest`', function () {
+			_test = this.test;
+
+			return agent.post('/api/reviews')
+				.send(review)
+				.then(function () {
+					var endpoint = '/api/requests?requestType=reviewRequest';
+
+			return agent.get(endpoint)
+				.expect(200)
+				.query({ status: ['new', 'accepted'] })
+				})
+			
+				.then(function (response) {
+					log.debug({
+						test: _test.title,
+						body: response.body,
+						err: response.error
+					}, 'Got Response from %s', endpoint);
+
+					response.body.should.have.length(1);
+
+					return response.body;
+				});
+		});
+	})
+
+	 it('should be able to save Review instance if logged in', function (done) {
 			log.debug({ func: 'save' }, 'Setup');
 			// Get the userId
 			var userId = user.id;
@@ -86,7 +114,7 @@ describe.skip('Review CRUD tests', function () {
 					if (reviewSaveErr) { done(reviewSaveErr); }
 
 					// Get a list of Reviews
-					agent.get('/api/reviews')
+					return agent.get('/api/reviews')
 						.end(function (reviewsGetErr, reviewsGetRes) {
 							// Handle Review save error
 							if (reviewsGetErr) { done(reviewsGetErr); }
@@ -102,8 +130,10 @@ describe.skip('Review CRUD tests', function () {
 							done();
 						});
 				});
-		});
 	});
+	/**
+	 * End Stubs
+	 */
 
 	it('should not be able to save Review instance if not logged in', function (done) {
 		agent.post('/api/reviews')
@@ -114,6 +144,8 @@ describe.skip('Review CRUD tests', function () {
 				done(reviewSaveErr);
 			});
 	});
+
+	
 
 	it('should not be able to save Review instance if no name is provided', function (done) {
 		// Invalidate name field

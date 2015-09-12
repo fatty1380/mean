@@ -295,6 +295,27 @@ describe('User Connections & Social', function () {
                     return response.body;
                 });
         });
+        
+        it('should allow me to query for specific request type: `friendRequest`', function () {
+            _test = this.test;
+
+            var endpoint = '/api/requests?requestType=friendRequest';
+
+            return agent.get(endpoint)
+                .expect(200)
+                .query({ status: ['new', 'accepted'] })
+                .then(function (response) {
+                    log.debug({
+                        test: _test.title,
+                        body: response.body,
+                        err: response.error
+                    }, 'Got Response from %s', endpoint);
+
+                    response.body.should.have.length(2);
+
+                    return response.body;
+                });
+        });
 
         it('should allow me to make a friend request and get that request back', function () {
             _test = this.test;
