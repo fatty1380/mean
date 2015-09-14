@@ -36,13 +36,10 @@
             function getPhoneNumbers(phones) {
                 if (!phones || !phones.length) return [];
 
-                var formattedPhone,
-                    phoneArray = [];
+                var phoneArray = [];
 
                 for(var j = 0; j < phones.length; j++){
-                    formattedPhone = {};
-                    formattedPhone[phones[j].type] = phones[j].value;
-                    phoneArray.push(formattedPhone);
+                    phoneArray.push(phones[j].value);
                 }
 
                 return phoneArray;

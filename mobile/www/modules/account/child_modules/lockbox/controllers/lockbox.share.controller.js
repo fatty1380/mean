@@ -5,16 +5,18 @@
         .module('account')
         .controller('LockboxShareCtrl', LockboxShareCtrl);
 
-    LockboxShareCtrl.$inject = ['$filter', '$ionicPopup', 'lockboxDocuments', 'requestService', 'utilsService'];
+    LockboxShareCtrl.$inject = ['$filter', '$ionicPopup', 'contactsService', 'lockboxModalsService', 'lockboxDocuments', 'requestService', 'utilsService'];
 
-    function LockboxShareCtrl($filter, $ionicPopup ,lockboxDocuments, requestService, utilsService) {
+    function LockboxShareCtrl($filter, $ionicPopup, contactsService,  lockboxModalsService, lockboxDocuments, requestService, utilsService) {
+
         var vm = this;
+        vm.selectedContact = {};
 
         vm.cancel = cancel;
         vm.addDocumentsToShare = addDocumentsToShare;
         vm.shareDocuments = shareDocuments;
+        vm.showContactsModal = showContactsModal;
 
-        console.log('[LockboxShare] Ctrl Load');
         init();
 
         function init() {
@@ -22,6 +24,18 @@
             vm.contact = {};
             vm.shareStep = 1;
             return getDocs();
+        }
+
+        function showContactsModal () {
+            contactsService
+                .retrieveContacts()
+                .then(function () {
+                    lockboxModalsService
+                        .showLockboxShareContactModal()
+                        .then(function (selectedContact) {
+                            vm.contact = selectedContact;
+                        });
+                });
         }
 
         function getDocs() {
@@ -95,7 +109,11 @@
                 config.title = 'Success!';
                 config.template = displayName ? 'Your profile has been shared with ' + displayName : 'Your profile has been shared';
 
-                $ionicPopup.alert(config)
+                var popup = $ionicPopup.alert(config);
+
+                popup.then(function () {
+                    vm.cancel();
+                });
             }
         }
 
