@@ -24,8 +24,11 @@
             })
 
             .state('account.profile', {
-                url: '/profile',
+                url: '/profile/:userId',
+                abstract: true,
                 views: {
+                    
+                    
                     'profile': {
                         templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
                         controller: 'ProfileCtrl as vm',
@@ -41,20 +44,10 @@
                             }
                         }
                     }
-                }
-            })
-
-            .state('account.profile.user', {
-                url: '/:userId',
-                views: {
-                    'profile@account': {
-                        templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                        controller: 'ProfileCtrl as vm'
-                    }
                 },
                 resolve: {
                     profile: function resolveUserProfile($stateParams, registerService, userService) {
-                        
+
                         if (!!$stateParams.userId) {
                             return registerService.getProfileById($stateParams.userId)
                                 .then(function success(response) {
@@ -71,8 +64,48 @@
                         }
 
                         return userService.getUserData();
+                    },
+                    welcome: function (welcomeService, profileModalsService) {
+                        if (welcomeService.welcomeUser) {
+                            profileModalsService
+                                .showWelcomeModal()
+                                .then(function () {
+                                    welcomeService.welcomeUser = false;
+                                });
+                        }
                     }
                 }
+            })
+
+            .state('account.profile.user', {
+                url: '',
+                views: {
+                    'profile@account': {
+                        templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
+                        controller: 'ProfileCtrl as vm'
+                    }
+                },
+                // resolve: {
+                //     profile: function resolveUserProfile($stateParams, registerService, userService) {
+                        
+                //         if (!!$stateParams.userId) {
+                //             return registerService.getProfileById($stateParams.userId)
+                //                 .then(function success(response) {
+                //                     if (response.success) {
+                //                         return response.message.data;
+                //                     }
+                //                     debugger;
+                //                     return null;
+                //                 })
+                //                 .catch(function reject(error) {
+                //                     debugger;
+                //                     return null;
+                //                 });
+                //         }
+
+                //         return userService.getUserData();
+                //     }
+                // }
             })
 
             .state('account.profile.friends', {

@@ -2,7 +2,7 @@
 
     <ion-header-bar align-title="center">
         <button class="button button-clear" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">Edit</button>
-        <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile">
+        <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile.user">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatar ico-middle"></span>
         </button>
@@ -29,7 +29,8 @@
 
     <ion-pane class="profile-pane">
         <ion-tabs class="profile-tabs tabs-top">
-            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews">
+            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews"
+        on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="reviews-list">
                     <ion-list>
                         <ion-item ng-repeat="review in vm.reviews track by $index">
@@ -47,7 +48,8 @@
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
-            <ion-tab title="PROFILE" ui-sref="account.profile">
+            <ion-tab title="PROFILE" ui-sref="account.profile.user"
+        on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="profile-list">
                     <div class="list">
                         <div class="item" ng-if="!!vm.profileData.props.title">
@@ -95,7 +97,8 @@
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
-            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience">
+            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience"
+        on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="experience-list">
                     <ion-list>
                         <ion-item class="item" ng-repeat="job in vm.experience" ng-click="vm.showEditExperienceModal(job)">

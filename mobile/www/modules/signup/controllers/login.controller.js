@@ -51,7 +51,7 @@
             .then(function (response) {
                 $ionicLoading.hide();
                 var data = response.message.data;
-                if (response.success) {
+                if (response.success && !!data) {
                     tokenService.set('access_token', data.access_token);
                     tokenService.set('refresh_token',data.refresh_token);
                     tokenService.set('token_type', data.token_type);
@@ -60,12 +60,12 @@
                         .me()
                         .then(function (profileData) {
                             userService.profileData = profileData.message.data;
-                            $state.go('account.profile');
+                            $state.go('account.profile.user');
                         });
 
                     vm.error = '';
                 } else {
-                    vm.error = data.error_description || "error";
+                    vm.error = !!data && data.error_description || "error";
                     selectInputValue('password');
                 }
             });
