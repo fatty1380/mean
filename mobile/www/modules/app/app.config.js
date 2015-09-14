@@ -8,12 +8,14 @@ var AppConfig = (function () {
             angular.module(moduleName, dependencies || []);
             // Add the module to the AngularJS configuration file
             angular.module(appModuleName).requires.push(moduleName);
-        };
+        },
+        debug = true;
 
     return {
         appModuleName: appModuleName,
         appModuleDependencies: appModuleDependencies,
-        registerModule: registerModule
+        registerModule: registerModule,
+        debug: debug
     };
 })();
 
