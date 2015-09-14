@@ -8,7 +8,7 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
         [
             'ngSanitize', 'ngAnimate', 'ngResource', 'ngMessages',
             'ui.router', 'ui.bootstrap', 'ui.utils',
-            'angularFileUpload', 'ngFileUpload', 'ngMap', 'toastr',
+            'angularFileUpload', 'ngMap', 'toastr',
             'ngImgCrop', 'duScroll', 'angularMoment',
             'ngSignaturePad'
         ];
