@@ -16,15 +16,39 @@
             getFeedActivityById: getFeedActivityById,
             getLastActivityWithCoord: getLastActivityWithCoord,
             getFeedIds: getFeedIds,
+            postComment: postComment,
+            getComments: getComments,
             likeActivity: likeActivity,
             getDistanceBetween: getDistanceBetween,
             showPopup: showPopup,
             getPlaceName: getPlaceName,
-            hasCoordinates: hasCoordinates
+            hasCoordinates: hasCoordinates,
+            changeFeedSource: changeFeedSource,
+            getFeedData: getFeedData
         };
 
         var feed = [];
         var items = [];
+
+        var feedSource = 'items';
+        var feedData = {
+            activity: {
+                buttonName: 'All Logs',
+                loadingText: 'loading my feed.</br>Please Wait.'
+            },
+            items: {
+                buttonName: 'My Logs',
+                loadingText: 'loading all feed.</br>Please Wait.'
+            }
+        }
+
+        function changeFeedSource() {
+            feedSource = (feedSource === 'activity') ? 'items' : 'activity';
+        }
+
+        function getFeedData() {
+           return feedData[feedSource];
+        }
 
         /**
          * @desc Get all feed, then load all posts by ids
@@ -37,7 +61,6 @@
 
         function getCompanyFeed(company) {
             var id = !!company && company.id || company;
-
             return $http.get(settings.companies + id + '/feed').then(
                 feedRequestSuccess,
                 feedRequestError
@@ -45,7 +68,8 @@
         }
 
         function feedRequestSuccess(response) {
-            items = response.data.items || [];
+            //items = response.data.items || [];
+            items = response.data[feedSource] || [];
             return $q(function (resolve, reject) {
                 if (items.length > 0) {
                     return resolve(populateActivityFeed(items));
@@ -126,7 +150,7 @@
         function getFeedIds() {
             return $http.get(settings.feed)
                 .then(function (response) {
-                    return response.data;
+                    return response.data[feedSource];
                 }, function (response) {
                     showPopup(response.statusText, response.data.message);
                     return response;
@@ -136,6 +160,27 @@
         function postFeed(data) {
             $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
             return $http.post(settings.feed, utilsService.serialize(data))
+                .then(function (response) {
+                    return response.data;
+                }, function (response) {
+                    showPopup(response.statusText, response.data.message);
+                    return response;
+                });
+        }
+
+        function postComment(id, data) {
+            return $http.post(settings.feed + id + '/comments', utilsService.serialize(data))
+                .then(function (response) {
+                    return response;
+                }, function (response) {
+                    console.log(response);
+                    showPopup(response.statusText, response.data.message);
+                    return response;
+                });
+        }
+
+        function getComments() {
+            return $http.get(settings.feed)
                 .then(function (response) {
                     return response.data;
                 }, function (response) {

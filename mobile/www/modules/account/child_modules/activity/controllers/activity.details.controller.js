@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['parameters', 'activityService'];
+    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', 'activityModalsService', '$timeout', '$ionicScrollDelegate'];
 
-    function ActivityDetailsCtrl(parameters, activityService) {
+    function ActivityDetailsCtrl(parameters, activityService, activityModalsService, $timeout, $ionicScrollDelegate) {
         angular.element(document).ready(initMap);
 
         var vm = this;
@@ -15,9 +15,13 @@
         var marker = null;
 
         vm.distanceSinceLastPost = 'no data';
+        vm.isInputVisible = false;
         vm.entry = parameters.entry;
+        vm.comments = parameters.entry.comments;
         vm.close = close;
         vm.likeActivity = likeActivity;
+        vm.showInputs = showInputs;
+        vm.createComment = createComment;
 
         function initMap() {
             if (activityService.hasCoordinates(vm.entry)) {
@@ -49,8 +53,45 @@
             }
         }
 
+        function scrollToBottom() {
+            $timeout(function(){
+                getDelegate('mainScroll').scrollBottom();
+            }, 100);
+        }
+
+        //fix for scrollDelegate in modals
+        function getDelegate(name){
+            var instances = $ionicScrollDelegate.$getByHandle(name)._instances;
+            return instances.filter(function(element) {
+                return (element['$$delegateHandle'] == name);
+            })[0];
+        }
+
+        function createComment() {
+            var data = {
+                text: vm.message
+            };
+
+            vm.message = '';
+            vm.isInputVisible = false;
+
+            activityService.postComment(vm.entry.id, data).then(
+                function (result) {
+                    console.log('result ',result);
+                    if(result.data){
+                        vm.comments = result.data;
+                        scrollToBottom();
+                    }
+                }, function (resp) {
+                    console.log(resp);
+                });
+        }
+
+        function showInputs() {
+            vm.isInputVisible = true;
+        }
+
         function likeActivity() {
-            console.log('likeActivity() ', vm.entry.id);
             activityService.likeActivity(vm.entry.id).then(function(result) {
                 //update like in feed
                 vm.entry.likes = result.data || [];
