@@ -6,7 +6,7 @@
         <button class="button button-clear" ng-click="vm.likeActivity()">Like Post</button>
     </ion-header-bar>
 
-    <ion-pane class="pane has-footer">
+    <ion-pane class="pane has-footer details-activity-pane">
         <ion-scroll delegate-handle="mainScroll">
             <ion-item class="item">
                 <div class="ico ico-avatar"></div>
@@ -40,7 +40,6 @@
             <div class="item-detail">
                 <strong>Distance since last check in:</strong> <span ng-if="!!vm.entry.props.slMiles">{{vm.entry.props.slMiles}} miles</span>
             </div>
-
             <div class="item-detail">
                 <strong>Freight hauled:</strong> <span>{{vm.entry.props.freight}}</span>
             </div>
@@ -67,4 +66,5 @@
         </label>
         <button class="button button-positive" ng-click="vm.createComment()">Send</button>
     </ion-footer-bar>
+
 </ion-modal-view>

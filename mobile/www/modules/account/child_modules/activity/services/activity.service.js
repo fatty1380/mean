@@ -5,9 +5,9 @@
         .module('activity')
         .service('activityService', activityService);
 
-    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', 'utilsService'];
+    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', 'utilsService', 'userService'];
 
-    function activityService(settings, $http, $q, $ionicPopup, utilsService) {
+    function activityService(settings, $http, $q, $ionicPopup, utilsService, userService) {
 
         var service = {
             getFeed: getFeed,
@@ -16,6 +16,7 @@
             getFeedActivityById: getFeedActivityById,
             getLastActivityWithCoord: getLastActivityWithCoord,
             getFeedIds: getFeedIds,
+            getMyFeedIds: getMyFeedIds,
             postComment: postComment,
             getComments: getComments,
             likeActivity: likeActivity,
@@ -29,14 +30,17 @@
 
         var feed = [];
         var items = [];
+        var activityItems = []; //my posts
 
         var feedSource = 'items';
         var feedData = {
             activity: {
+                feedSource: 'activity',
                 buttonName: 'All Logs',
                 loadingText: 'loading my feed.</br>Please Wait.'
             },
             items: {
+                feedSource: 'items',
                 buttonName: 'My Logs',
                 loadingText: 'loading all feed.</br>Please Wait.'
             }
@@ -68,8 +72,10 @@
         }
 
         function feedRequestSuccess(response) {
+            console.log(response);
             //items = response.data.items || [];
             items = response.data[feedSource] || [];
+            activityItems =  response.data.activity || [];
             return $q(function (resolve, reject) {
                 if (items.length > 0) {
                     return resolve(populateActivityFeed(items));
@@ -151,6 +157,16 @@
             return $http.get(settings.feed)
                 .then(function (response) {
                     return response.data[feedSource];
+                }, function (response) {
+                    showPopup(response.statusText, response.data.message);
+                    return response;
+                });
+        }
+
+        function getMyFeedIds() {
+            return $http.get(settings.feed)
+                .then(function (response) {
+                    return response.data.activity;
                 }, function (response) {
                     showPopup(response.statusText, response.data.message);
                     return response;
@@ -275,8 +291,10 @@
          */
         function getLastActivityWithCoord() {
             for (var i = 0; i < feed.length; i++) {
-                if (hasCoordinates(feed[i])) {
-                    return feed[i];
+                if(feed[i].user.id === userService.profileData.id) {
+                    if (hasCoordinates(feed[i])) {
+                        return feed[i];
+                    }
                 }
             }
             return null;
