@@ -34,7 +34,9 @@
                         $ionicLoading.show({template: 'Success! Your request has been sent', duration: '1500'});
                     }
                 }, function(resp) {
-                    console.log(resp);
+                    if(resp.data) {
+                        $ionicLoading.show({template: resp.data.message, duration: '1500'});
+                    }
                 });
         }
 
