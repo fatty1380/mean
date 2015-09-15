@@ -27,6 +27,7 @@ var _ = require('lodash'),
     User = mongoose.model('User'),
     Request = mongoose.model('RequestMessage'),
     path = require('path'),
+    messenger = require(path.resolve('./modules/emailer/server/controllers/messenger.server.controller')),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users',
         file: 'Authorization.Controller'
@@ -168,9 +169,9 @@ function createRequest(req, res, next) {
         return res.status(400).send({ message: 'No Friend Specified in Request' });
     }
 
-    delete req.body.status
+    delete req.body.status;
 
-    var request = new Request(req.body)
+    var request = new Request(req.body);
     request.from = req.user._id;
 
     // Insert
@@ -178,7 +179,12 @@ function createRequest(req, res, next) {
         .update(
             { '$push': { 'requests': { '_id': request } } },
             { 'new': true, 'upsert': true }
-            );
+        );
+        
+    var u2;
+    if (_.isEmpty(req.body.to) && !_.isEmpty(req.body.contactInfo)) {
+        u2 = messenger.sendMessage({to: req.body.contactInfo.phones})
+    }
 
     return Q.all([request.save(), u1.exec()])
         .then(function (results) {

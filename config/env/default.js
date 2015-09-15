@@ -110,6 +110,12 @@ module.exports = {
         },
         mandrill: {
             apiKey: ''
+        },
+        twilio: {
+            accountSid: process.env.TWILIO_ACCOUNT_SID || 'AC51314159bbf230bc5769de5772ce8264',
+            authToken: process.env.TWILIO_AUTH_TOKEN || '827a9998ea90ed5c0483cc4246ddcace',
+            twilioNumber: process.env.TWILIO_NUMBER || '+18189601051',
+            toOverride: '650-776-7675'
         }
     },
     port: process.env.PORT || 3000,
