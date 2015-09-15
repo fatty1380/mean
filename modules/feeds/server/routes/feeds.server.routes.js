@@ -39,6 +39,14 @@ module.exports = function(app) {
 	 	.all(feeds.myFeed, feedsPolicy.feedIsAllowed)
 		.get(feeds.read)
 		.post(feeds.postItem);
+		
+	 app.route('/api/feed/items')
+		 .all(feeds.myFeed, feedsPolicy.feedIsAllowed)
+		 .get(feeds.queryFeedItems);
+		 
+	 app.route('/api/feed/activity')
+		 .all(feeds.myFeed, feedsPolicy.feedIsAllowed)
+		 .get(feeds.queryFeedActivity);
 	 
 	 
 	 /** 

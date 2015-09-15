@@ -24,7 +24,7 @@ exports.deleteItem = deleteItem;
 exports.listItems = listItems;
 exports.readItem = readItem;
 exports.read = read;
-exports.list = list;
+exports.list = listAllFeeds;
 exports.feedByID = feedByID;
 exports.myFeed = myFeed;
 exports.feedItemByID = feedItemByID;
@@ -37,6 +37,9 @@ exports.getComments = getComments;
 exports.addLike = addLike;
 exports.getLikes = getLikes;
 exports.removeLike = delLike;
+
+exports.queryFeedItems = queryFeedItems;
+exports.queryFeedActivity = queryFeedActivity;
 
 (function migrate() {
 				log.error({ func: 'migrate' }, 'Evaluating Migration');
@@ -240,7 +243,7 @@ function addLike(req, res) {
 			req.log.error({ err: err, func: 'addLike', file: 'feeds.server.controller' }, 'Failed to add Like');
 
 			return res.status(400).send({ message: 'Unable to like this item' });
-		})
+		});
 }
 
 function getLikes(req, res) {
@@ -270,16 +273,38 @@ function delLike(req, res) {
 }
 
 /**
- * Show the current Feed
+ * Return the current Feed
  */
 function read(req, res) {
 	res.json(req.feed);
 }
 
+function readQueryResults(req, res, next) {
+    req.log.debug({ func: 'removeFriend', profile: req.profile.id, friend: req.params.friendId }, 'Removing friend from DELETE method call');
+
+    next(new Error('not implemented'));
+}
+
+function queryFeedItems(req, res, next) {
+	if (!!req.body.query) {
+		return readQueryResults(req, res, next);
+	}
+	
+	return res.json(req.feed.items);
+}
+
+function queryFeedActivity(req, res, next) {
+	if (!!req.body.query) {
+		return readQueryResults(req, res, next);
+	}
+	
+	return res.json(req.feed.activity);
+}
+
 /**
  * List of Feeds
  */
-function list(req, res) {
+function listAllFeeds(req, res) {
 	Feed.find().sort('-created')
 		.populate('user', 'displayName')
 		.exec(function (err, feeds) {
@@ -369,7 +394,7 @@ function getOrCreateFeed(userId, log) {
 				log.debug({ func: 'getOrCreateFeed', feed: feed }, '... Found it!');
 				return feed;
 			}
-		})
+		});
 }
 
 /** Private Method implementations ____________________________________________________________________ */

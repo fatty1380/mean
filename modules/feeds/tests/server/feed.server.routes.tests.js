@@ -548,7 +548,7 @@ describe('Feed CRUD tests', function () {
 	afterEach(function (done) {
 		log.debug({ func: 'afterEach' }, 'Signing Out of API');
 		agent.get('/api/auth/signout').expect(302).then(function (signoutRes) {
-			log.debug({ signoutRes: signoutRes }, 'signed out of app');
+			log.trace({ signoutRes: signoutRes }, 'signed out of app');
 			done();
 		});
 	});
