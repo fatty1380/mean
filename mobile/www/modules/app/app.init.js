@@ -14,12 +14,17 @@
             $ionicConfigProvider.tabs.position('bottom');
         }])
 
-        .run(function($ionicPlatform) {
-            $ionicPlatform.ready(function() {
-                if(window.cordova && window.cordova.plugins.Keyboard) {
+        .config(['$compileProvider', function ($compileProvider) {
+            // disable debug info
+            $compileProvider.debugInfoEnabled(AppConfig.debug);
+        }])
+
+        .run(function ($ionicPlatform) {
+            $ionicPlatform.ready(function () {
+                if (window.cordova && window.cordova.plugins.Keyboard) {
                     cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
                 }
-                if(window.StatusBar) {
+                if (window.StatusBar) {
                     StatusBar.styleDefault();
                 }
             });
