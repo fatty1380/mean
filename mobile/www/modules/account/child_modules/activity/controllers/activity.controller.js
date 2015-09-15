@@ -50,6 +50,9 @@
         $scope.$on('$ionicView.beforeLeave', function () {
             stopCheckNewActivities();
         });
+        $scope.$on('$ionicView.unloaded', function () {
+            stopCheckNewActivities();
+        });
 
         function initialize() {
             vm.feed = [];
@@ -81,6 +84,7 @@
 
         function startCheckNewActivities() {
             utilsService.startClock(function () {
+                console.log('   **** clock activity ****');
                 activityService.getFeedIds().then(function (feed) {
                     if (feed.length > vm.feed.length) {
                         vm.newActivities = feed.length - vm.feed.length;
