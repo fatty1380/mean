@@ -5,9 +5,9 @@
         .module('activity')
         .service('activityService', activityService);
 
-    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', 'utilsService'];
+    activityService.$inject = ['settings', '$http', '$q', '$ionicPopup', 'utilsService', 'userService'];
 
-    function activityService(settings, $http, $q, $ionicPopup, utilsService) {
+    function activityService(settings, $http, $q, $ionicPopup, utilsService, userService) {
 
         var service = {
             getFeed: getFeed,
@@ -291,8 +291,10 @@
          */
         function getLastActivityWithCoord() {
             for (var i = 0; i < feed.length; i++) {
-                if (hasCoordinates(feed[i])) {
-                    return feed[i];
+                if(feed[i].user.id === userService.profileData.id) {
+                    if (hasCoordinates(feed[i])) {
+                        return feed[i];
+                    }
                 }
             }
             return null;
