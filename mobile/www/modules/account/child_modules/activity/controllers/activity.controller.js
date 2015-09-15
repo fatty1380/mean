@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($scope, $state, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -20,6 +20,7 @@
         vm.changeFeedSource = changeFeedSource;
         vm.updateWithNewActivities = updateWithNewActivities;
         vm.refresh = refresh;
+        vm.addFriends = addFriends;
 
         updateFeedData();
 
@@ -27,6 +28,10 @@
             activityService.changeFeedSource();
             updateFeedData();
             initialize();
+        }
+
+        function addFriends () {
+            $state.go('account.profile.friends');
         }
 
         function updateFeedData() {
