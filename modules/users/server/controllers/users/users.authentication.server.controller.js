@@ -82,7 +82,7 @@ exports.signup = function (req, res) {
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', results.user);
             }
             else {
-                req.log.debug('[SIGNPU] - Creating new User of type `%s` ... what to do?', req.body.type);
+                req.log.warn('[SIGNPU] - Creating new User of type `%s` ... what to do?', req.body.type);
             }
         })
         .catch(function (err) {
@@ -96,10 +96,10 @@ exports.signup = function (req, res) {
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
-    req.log.debug('[Auth.Ctrl] signin()');
+    req.log.trace('[Auth.Ctrl] signin()');
 
     passport.authenticate('local', function (err, user, info) {
-        req.log.debug({ func: 'signin', err: err, user: user, info: info }, '[Auth.Ctrl] Passport Auth Complete');
+        req.log.trace({ func: 'signin', err: err, user: user, info: info }, '[Auth.Ctrl] Passport Auth Complete');
         if (err || !user) {
             req.log.error({ func: 'signin', info: info, err: err }, 'Login Failed');
             res.status(400).send(info);

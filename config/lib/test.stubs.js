@@ -137,12 +137,12 @@ function getOwner() {
  */
 
 function login(agent, credentials) {
-    log.debug({ creds: credentials }, 'Logging in with credentials');
+    log.trace({ creds: credentials }, 'Logging in with credentials');
     return agent.post('/api/auth/signin')
         .send(credentials)
         .expect(200)
         .then(function (signinRes, alt) {
-            log.debug({ signinRes: signinRes, alt: alt, cookie: signinRes.headers['set-cookie'] }, 'Client Login Successful');
+            log.trace({ signinRes: signinRes, alt: alt, cookie: signinRes.headers['set-cookie'] }, 'Client Login Successful');
 
             return signinRes;
         })
@@ -153,7 +153,7 @@ function login(agent, credentials) {
 }
 
 function signout(agent) {
-    log.debug('Logging out');
+    log.trace('Logging out');
     
     return agent.get('/api/auth/signout');
 }

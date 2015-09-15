@@ -139,8 +139,9 @@ DriverSchema.pre('save', function (next) {
 });
 
 DriverSchema.pre('save', function (next) {
-    if (!!this.isModified('props')
-        && !!this.props.avatar && this.props.avatar !== this.profileImageURL) {
+    if (!!this.isModified('props') &&
+        !!this.props.avatar &&
+        this.props.avatar !== this.profileImageURL) {
         this.profileImageURL = this.props.avatar;
     }
 
@@ -149,7 +150,9 @@ DriverSchema.pre('save', function (next) {
 
 
 DriverSchema.pre('init', function (next, data) {
-    if (data.props && !!data.props.avatar && data.props.avatar !== data.profileImageURL) {
+    if (data.props &&
+        !!data.props.avatar &&
+        data.props.avatar !== data.profileImageURL) {
         data.profileImageURL = data.props.avatar;
     }
 

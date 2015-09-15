@@ -116,13 +116,13 @@ var ChatSchema = new Schema({
         type: ['Message'],
         default: []
     }
-}, { toJSON: { virtuals: true } })
+}, { toJSON: { virtuals: true } });
 
 ChatSchema.pre('save', function () {
     if (!this.recipientName && !!this.recipient && this.isModified('recipient')) {
         this.recipientName = this.recipient.displayName;
     }
-})
+});
 
 mongoose.model('Chat', ChatSchema);
 
