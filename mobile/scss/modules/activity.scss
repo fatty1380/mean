@@ -58,7 +58,10 @@
       .ico {
         margin: 1px;
       }
-      
+
+      .last-location,
+      .current-location{white-space: normal;}
+
       a.user-link {
         text-decoration: none;
         text-transform: capitalize;
