@@ -80,7 +80,7 @@
                 })
                 .catch(function (error) {
                     console.error('Unable to save user data: ', error);
-                })
+                });
         }
 
         function logout () {
