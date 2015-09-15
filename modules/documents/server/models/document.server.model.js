@@ -14,6 +14,7 @@ var DocumentSchema = new Schema({
 
 	sku: String,
 	name: String,
+	isSecure: Boolean,
 	url: String,
 	expires: Date,
 	bucket: String,
