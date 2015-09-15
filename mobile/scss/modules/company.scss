@@ -1,12 +1,61 @@
 .company-screen{
 
-  .content-top{
+  .content-top {
     background-color: $ribbon-bg;
+  }
+  
+  .bar {
+    h3 {
+      width: 100%;
+      text-align: center;
+    }
+    img.brand-img {
+      top: -20px;
+      max-height: 100%;
+      max-width: 100%;
+      position: relative;
+      align-content: center;
+    }
   }
 
   .news-list{
     div{
       white-space: normal;
+    }
+  }
+  
+  .profile-tabs {
+    bottom: 0;
+    
+    .tab-content {
+      padding-bottom: 0;
+    }
+  }
+  
+  .card.item {
+    .activity-item ~ .company-link {
+      display: none;
+    }
+  }
+  
+  .company-about {
+    .item {
+      padding: $item-padding;
+      
+      h3 {
+        font-size: 1.4em;
+        line-height: 1.5em;
+        text-align: center;
+      }
+      
+      p {
+        font-size: 1.2em;
+        line-height: 1.2em;
+        overflow: visible;
+        white-space: normal;
+        text-align: justify;
+        padding: $item-padding 0;
+      }
     }
   }
 }

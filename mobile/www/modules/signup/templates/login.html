@@ -1,12 +1,12 @@
-<ion-view class="signup-section">
-    <div class="header mini-size">
-        <ion-header-bar align-title="center" class="bar-stable">
-            <div class="buttons">
-                <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ui-sref="home"></button>
-            </div>
-            <h1 class="title">Login</h1>
-        </ion-header-bar>
-    </div>
+<ion-view class="signup-section view-section min-size">
+
+    <ion-header-bar align-title="center" class="bar-stable">
+        <div class="buttons">
+            <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ui-sref="home"></button>
+        </div>
+        <h1 class="title">Login</h1>
+    </ion-header-bar>
+
     <ion-pane>
         <div class="login-content">
             <i class="ico ico-outsetlogo"></i>
@@ -30,9 +30,11 @@
             <h4>{{vm.error}}</h4>
         </div>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button primary" ng-click="vm.signIn();" event-focus="click" event-focus-id="password">Login</button>
         </div>
     </ion-footer-bar>
+
 </ion-view>

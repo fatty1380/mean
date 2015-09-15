@@ -1,55 +1,22 @@
-<ion-view class="activity">
-    <div class="header min-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear">My Logs</button>
-            <h1 class="title">Activity</h1>
-            <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
-        </ion-header-bar>
-    </div>
+<ion-view class="activity view-section min-size">
+
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click='vm.changeFeedSource()'>{{vm.feedData.buttonName}}</button>
+        <h1 class="title">Activity</h1>
+        <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
+    </ion-header-bar>
+
     <ion-pane class="pane content-pane button-padding-bottom" ng-class="{' button-padding-top': !!vm.newActivities}">
         <button class="button button-positive content-top-button" ng-show="!!vm.newActivities" ng-click="vm.updateWithNewActivities()">
             {{vm.newActivities}} new Updates
             <i class="ico ico-checkmarkwhite"></i>
         </button>
-
         <ion-scroll>
             <ion-refresher pulling-text="pull to refresh ..." on-refresh="vm.refresh()"></ion-refresher>
             <ion-list>
-                <ion-item ng-repeat="entry in vm.feed" class="card item" ng-show="!!entry.id">
-                    <div class="ico ico-avatar"></div>
-                    <div class="activity-item">
-                        <div class="top" ng-click='vm.showActivityDetailsModal(entry)'>
-                            <div class="time" ng-if="entry.created"><i class="ico ico-timesmall"></i>{{entry.created | date:'mediumDate'}}
-                            </div>
-                            <div class="message">
-                                <a class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile.user({userId: entry.user.id})">
-                                    <strong>{{entry.user.displayName}}</strong>
-                                </a>
-                                {{ entry.title }}
-                            </div>
-                            <div class="message body">{{ entry.message }}</div>
-                        </div>
-                        <span ng-if="!!entry.milesTraveled">
-                            <i class="ico ico-milestraveledsmall"></i>
-                            <strong class="title">{{entry.milesTraveled}}</strong>
-                        </span>
-                        <span ng-if="!!entry.likes" ng-click="vm.likeActivity(entry.id)">
-                            <i class="ico ico-likessmall" ></i>
-                            <strong class="title">{{entry.likes.length}} likes</strong>
-                        </span>
-                    </div>
-                    <div class="button-holder" style="padding: 0 0 10px;" ng-if="!!entry.company">
-                        <a class="button button-block button-small" ui-sref="company({companyId: entry.company.id || entry.company})">
-                            Show Company Profile
-                        </a>
-                    </div>
-                    <static-gmap ng-if="!!entry.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{ color: 'red', label: '', coords: {{ entry.location.coordinates || [] }} }">
-                    </static-gmap>
-                </ion-item>
-
+                <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
             </ion-list>
         </ion-scroll>
-
         <button class="button content-button" ng-click='vm.showAddActivityModal()'>
             <i class="ico ico-share"></i> Add Activity
         </button>

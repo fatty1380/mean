@@ -1,31 +1,98 @@
-<ion-view class="company-screen">
-    <div class="header mid-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-            <h1 class="title" ng-bind="vm.companyData.name"></h1>
-        </ion-header-bar>
-        <div class="profile-visual">
-            <div class="photo">
-                <img ng-if="vm.companyData.profileImageURL" ng-src="{{vm.companyData.profileImageURL}}" alt=""/>
-            </div>
-        </div>
+<ion-view class="company-screen view-section compact-size" cache-view="false">
+
+    <div class="bar bar-header bar-calm" align-title="center">
+        <button class="button button-clear" ui-sref="account.activity">Back</button>
+        <button class="button button-clear" ng-click="vm.follow()">Follow</button>
     </div>
-    <ion-pane class="has-title has-footer">
-        <div class="content-top">
-            <strong class="title">DESCRIPTION</strong>
-        </div>
-        <ion-scroll>
-            <ion-list class="news-list">
-                <ion-item ng-repeat="post in vm.companyData.news">
-                    <strong>{{post.title}}</strong>
-                    <div>{{post.text}}</div>
-                </ion-item>
-            </ion-list>
-        </ion-scroll>
-    </ion-pane>
-    <ion-footer-bar>
-        <div class="button-bar">
-            <button class="button block-button">Follow</button>
-        </div>
-    </ion-footer-bar>
+
+    <div class="bar bar-subheader bar-brand">
+        <h3><img class="brand-img" ng-if="vm.company.profileImageURL" ng-src="{{vm.company.profileImageURL}}" alt="" /></h3>
+    </div>
+
+    <ion-content class="pane profile-pane has-subheader">
+        <ion-tabs class="profile-tabs tabs-top">
+            <ion-tab title="FEED" ui-sref="company.feed">
+                <ion-scroll>
+                    <ion-list class="activity">
+                        <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
+                        <br>
+                    </ion-list>
+                </ion-scroll>
+            </ion-tab>
+            <ion-tab title="JOBS" ui-sref="company.jobs">
+                <ion-scroll class="jobs-list">
+                    <ion-list class="activity">
+                        <oset-feed-item ng-repeat="entry in vm.jobs" model="entry"></oset-feed-item>
+                        <br>
+                    </ion-list>
+                </ion-scroll>
+                <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
+            </ion-tab>
+            <ion-tab title="ABOUT" ui-sref="company.about">
+                <ion-scroll class="company-about">
+                    <ion-list>
+                        <ion-item class="card">
+                            <p>Core-Mark is one of the largest broad-line, full-service marketers and distributors of packaged
+                                consumer products in North America. We’ve been around for well over 100 years, and with 29
+                                divisions across the U.S. and Canada supporting over 35,000 customer retail stores, we aren’t
+                                going anywhere anytime soon. In fact, we’re growing—and that’s where you come in! </p>
+                        </ion-item>
+                        <ion-item class="card">
+                            <h3>A Career at Core-Mark</h3>
+                            <p>As a large, well-established company, we’re proud to offer exceptional job stability and benefits
+                                to help our employees stay healthy, balance work and their personal lives and meet their
+                                long-term financial goals. In addition to steady hours and competitive pay, our drivers also
+                                get:
+                            </p>
+                            <ul class="list">
+                                <li class="item">Generous medical, dental & vision coverage</li>
+                                <li class="item">401(k) retirement savings with employer matching and immediate vesting</li>
+                                <li class="item">Tuition reimbursement</li>
+                                <li class="item">Flexible work scheduling</li>
+                                <li class="item">Home most nights (with the exception of overnight drivers)</li>
+                            </ul>
+                            <p>Many of our drivers have been with us for as long as 10 to 30 years. And why not? We offer a
+                                positive work environment with a family feel, as well as state-of-the-art equipment and vehicles
+                                (complete with AC) and opportunities to grow within the company. Unlike many other organizations,
+                                we don’t require drivers to do any merchandizing work, and they get to enjoy most nights
+                                at home, not on the road. </p>
+                        </ion-item>
+                        <ion-item class="card">
+                            <h3>How You'll Contribute</h3>
+                            <p>While much of the role involves driving, you’ll be first and foremost the face of our brand.
+                                You’ll be the primary point of contact for our customers, many of whom are Fortune 500 companies.
+                                And the loyalty and trust that evolve from the strong business relationships you build will
+                                create a huge value add for them—and our company. So if you love people and have a passion
+                                for customer service, read on.</p>
+                            <p>With the variety of duties you’ll perform from day to day, you’ll constantly be on the go and
+                                never bored. You’ll deliver products safely and on time to multiple stops daily. Additional
+                                responsibilities will include offloading work, such as stacking and sorting delivered goods
+                                and pickups as needed, as well as:</p>
+                            <ul class="list">
+                                <li class="item">Pre- and post-shift equipment/vehicle checks</li>
+                                <li class="item">Checking load inventories against invoices for accuracy</li>
+                                <li class="item">Unloading via ramp and hand dolly</li>
+                                <li class="item">Securing empty pallets and totes in the truck</li>
+                                <li class="item">Maintaining the cleanliness of your truck</li>
+                                <li class="item">Returning equipment following use </li>
+                            </ul>
+                        </ion-item>
+                        <ion-item class="card">
+                            <h3>ABOUT CORE-MARK (Nasdaq CORE)</h3>
+                            <p>Established over 125 years ago, Core-Mark is a Fortune 400 company that continues to grow, with
+                                more than $10 billion in sales, 29 divisions and 35,000 customer locations across the United
+                                States and Canada. Core-Mark is a leading distributor of fresh food and consumer packaged
+                                goods to convenience stores, drug stores, liquor stores, grocers, specialty shops and independent
+                                retailers. Core-Mark offers a full range of products, marketing programs and technology solutions;
+                                and is recognized as one of the largest and most valued marketers of fresh and broad-like
+                                supply solutions.</p>
+                        </ion-item>
+                        <br>
+                    </ion-list>
+                </ion-scroll>
+                <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
+            </ion-tab>
+        </ion-tabs>
+    </ion-content>
+
 </ion-view>

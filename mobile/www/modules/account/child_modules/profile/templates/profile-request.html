@@ -1,18 +1,19 @@
-<ion-modal-view>
-    <div class="header mid-size">
-        <ion-header-bar>
-            <h1 class="title">Request Profile Review</h1>
-        </ion-header-bar>
-        <div class="profile-visual compact">
-            <div class="photo">
-                <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt=""/>
-            </div>
-            <div class="text">
-                <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
-                <em ng-bind="vm.profileData.props.company"></em>
-            </div>
+<ion-modal-view class="view-section mid-size">
+
+    <ion-header-bar>
+        <h1 class="title">Request Profile Review</h1>
+    </ion-header-bar>
+
+    <div class="profile-visual compact">
+        <div class="photo">
+            <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt=""/>
+        </div>
+        <div class="text">
+            <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+            <em ng-bind="vm.profileData.props.company"></em>
         </div>
     </div>
+
     <ion-pane class="content-pane has-title has-footer">
         <div class="content-top">
             <button class="button button-block">Choose from Contact List</button>
@@ -27,10 +28,12 @@
             </div>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary" ng-click="vm.sendRequest()">Send</button>
         </div>
     </ion-footer-bar>
+
 </ion-modal-view>

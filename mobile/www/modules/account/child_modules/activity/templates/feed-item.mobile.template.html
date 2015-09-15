@@ -1,0 +1,57 @@
+<ion-item class="card item" ng-show="!!vm.entry.id" ng-click='vm.showActivityDetailsModal(vm.entry)'>
+
+	<div class="activity-item top">
+		<!--<div class="ico ico-avatar"></div>-->
+		<!--<img ng-if="!!vm.avatar" ng-src="{{vm.avatar}}" />-->
+		<img ng-if="!!vm.avatar" class="avatar" ng-src="{{vm.avatar}}" />
+		<div class="time" ng-if="vm.entry.created">
+			<i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
+		</div>
+
+		<a ng-if="!!vm.username" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile.user({userId: vm.entry.user.id})">
+			<strong>{{vm.username}}</strong>
+		</a>
+		<div ng-if="vm.entry.location.placeName">{{vm.entry.location.placeName}}</div>
+
+
+		<p class="message">
+			<strong ng-if="!!vm.title">{{ vm.title }} </strong>{{vm.entry.message}}
+		</p>
+	</div>
+
+	<img ng-if="vm.entry.imageURL" ng-src="{{vm.entry.imageURL}}" class="static-pic">
+
+	<!--<div class="button-holder company-link" ng-if="!!vm.entry.company">
+		<a class="button button-block button-small" 
+			ui-sref="company({companyId: vm.entry.company.id || vm.entry.company})"
+			ng-click="$event.stopPropagation()">
+			Show Company Profile
+		</a>
+	</div>-->
+
+	<static-gmap ng-if="!!vm.entry.location.coordinates" class="static-map" size="400x200" sensor="true" zoom="14" markers="{{vm.markers}}">
+	</static-gmap>
+
+	<div class="activity-item bottom">
+		<div class="clearfix">
+			<div class="miles" ng-if="!!vm.entry.props.slMiles">
+				<i class="ico ico-milestraveledsmall"></i>
+				<strong>{{vm.entry.props.slMiles}} miles</strong>
+			</div>
+			<div class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity(vm.entry.id)">
+				<i class="ico ico-likessmall"></i>
+				<strong>{{vm.entry.likes.length}} like{{vm.entry.likes.length != 1 ? 's' : ''}}</strong>
+			</div>
+			<div class="comments" ng-if="!!vm.entry.comments">
+				<i class="ion ion-chatboxes"></i>
+				<strong>{{vm.entry.comments.length}} comments</strong>
+			</div>
+		</div>
+
+		<button ng-if="!!vm.isJob" class="button button-block button-calm" ng-click="$event.stopPropagation(); vm.apply(vm.entry)">
+			Apply!
+		</button>
+	</div>
+
+
+</ion-item>

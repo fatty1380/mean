@@ -1,13 +1,13 @@
-<ion-modal-view class="activity">
-    <div class="header min-size">
-        <ion-header-bar align-title="center">
-            <button class="button button-clear" ng-click="vm.close('activityDetails')">Close</button>
-            <h1 class="title">Activity Details</h1>
-            <button class="button button-clear" ng-click="vm.likeActivity()">Like Post</button>
-        </ion-header-bar>
-    </div>
+<ion-modal-view class="activity view-section min-size">
+
+    <ion-header-bar align-title="center">
+        <button class="button button-clear" ng-click="vm.close('activityDetails')">Close</button>
+        <h1 class="title">Activity Details</h1>
+        <button class="button button-clear" ng-click="vm.likeActivity()">Like Post</button>
+    </ion-header-bar>
+
     <ion-pane class="pane has-footer">
-        <ion-scroll>
+        <ion-scroll delegate-handle="mainScroll">
             <ion-item class="item">
                 <div class="ico ico-avatar"></div>
                 <div class="activity-item">
@@ -40,17 +40,31 @@
             <div class="item-detail">
                 <strong>Distance since last check in:</strong> <span ng-if="!!vm.entry.props.slMiles">{{vm.entry.props.slMiles}} miles</span>
             </div>
+
             <div class="item-detail">
                 <strong>Freight hauled:</strong> <span>{{vm.entry.props.freight}}</span>
             </div>
-            <!--<div class="item-detail" ng-if="!!vm.entry.comments">
-                <strong>Comments:</strong> <span>{{ vm.entry.comments.length }} comments</span>
-            </div>-->
+
+            <div class="item-detail ">
+                <strong>Comments:</strong>
+            </div>
+
+            <div class="item comment" ng-repeat="message in vm.comments">
+               <a>{{message.sender.displayName}}</a> {{message.text}} at {{message.created | date : 'short'}}
+            </div>
         </ion-scroll>
     </ion-pane>
-    <ion-footer-bar>
+
+    <ion-footer-bar ng-if="!vm.isInputVisible">
         <div class="button-bar action-buttons">
-            <button class="button primary">Send a Message</button>
+            <button class="button icon ion-ios-plus-outline primary" ng-click="vm.showInputs()"> comment</button>
         </div>
+    </ion-footer-bar>
+
+    <ion-footer-bar ng-if="vm.isInputVisible">
+        <label class="item-input-wrapper">
+            <textarea placeholder="message" ng-model="vm.message"></textarea>
+        </label>
+        <button class="button button-positive" ng-click="vm.createComment()">Send</button>
     </ion-footer-bar>
 </ion-modal-view>

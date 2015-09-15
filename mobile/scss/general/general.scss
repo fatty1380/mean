@@ -5,52 +5,26 @@ body{
   margin-bottom: 5px;
 }
 
-.ionic-scroll,
-.ionic-scroll .scroll{height: 100%;}
-
-textarea{
-  background-color: transparent;
-  max-height: 100%;
-}
-
-
-/** HEADER STYLES **/
-.header{
+.view-section{
   background-image: linear-gradient(-180deg, $tab-selected 0%, $gradient-bottom 100%);
   background-repeat: repeat-x;
-  font: 14px Helvetica Neue, Helvetica, Arial;
-  color: $white;
-  overflow: visible;
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  z-index: 2;
 
-  /** full size header and content pane **/
-  &.full-size{height: 200px;}
-  &.full-size ~ .pane{
+  &.full-size > .pane{
     top: 200px;
     height: auto;
   }
 
-  /** mid-size size header and content pane **/
-  &.mid-size{height: 170px;}
-  &.mid-size ~ .pane{
+  &.mid-size > .pane{
     top: 170px;
     height: auto;
   }
 
-  /** compact size header and content pane **/
-  &.compact-size{height: 140px;}
-  &.compact-size ~ .pane{
-    top: 140px;
+  &.compact-size > .pane{
+    top: 130px;
     height: auto;
   }
 
-  /** min size header and content pane **/
-  &.min-size{height: 64px;}
-  &.min-size ~ .pane{
+  &.min-size > .pane{
     top: 64px;
     height: auto;
   }
@@ -59,6 +33,7 @@ textarea{
     padding: 0 5px;
     background: none;
     border: 0;
+    font: 14px Helvetica Neue, Helvetica, Arial;
     color: $secondary-text-action;
 
     .title{
@@ -67,10 +42,15 @@ textarea{
       text-transform: capitalize;
       color: $white;
     }
+
     .button{
       color: $secondary-text-action;
       font-size: 14px;
       font-weight: bold;
+
+      &:first-child,
+      &:last-child{top:11px;}
+
       &.back-button{
         i{
           display: none;
@@ -80,28 +60,38 @@ textarea{
   }
 
   .bar-subheader{
-    top:50%;
     background:none;
     border: 0;
-    margin-top: 10px;
 
     h3{
       font-weight: normal;
       font-size: 15px;
       line-height: 19px;
       white-space: normal;
-      margin: 0 20px;
+      padding: 0 20px;
+      margin: 0;
       text-overflow: initial;
       color: #fff;
     }
   }
 }
 
+
 .pane.has-title{padding-top: 64px;}
 .pane.has-footer{
   bottom: $bar-footer-height;
   height: auto;
 }
+
+.ionic-scroll,
+.ionic-scroll .scroll{height: 100%;}
+
+
+textarea{
+  background-color: transparent;
+  max-height: 100%;
+}
+
 
 /** Action Buttons **/
 .action-buttons{

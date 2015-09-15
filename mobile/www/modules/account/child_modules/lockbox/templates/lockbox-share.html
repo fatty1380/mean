@@ -1,21 +1,23 @@
-<ion-modal-view class="lockbox lockbox-share" ng-if="vm.shareStep === 1">
-    <div class="header compact-size">
-        <ion-header-bar>
-            <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
-            <h1 class="title">Share Profile</h1>
-            <!--<button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>-->
-            <button class="button button-clear" ng-click="vm.shareStep = 2;">skip</button>
-        </ion-header-bar>
-        <div class="bar bar-subheader">
-            <h3 class="title">Select which documents you would like to share along with the information saved in your profile</h3>
-        </div>
+<!-- Modal step #1 -->
+<ion-modal-view class="lockbox lockbox-share view-section compact-size" ng-if="vm.shareStep === 1">
+
+    <ion-header-bar>
+        <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
+        <h1 class="title">Share Profile</h1>
+        <!--<button class="button button-clear" ng-click="vm.addDocsPopup()">Add Docs</button>-->
+        <button class="button button-clear" ng-click="vm.shareStep = 2;">skip</button>
+    </ion-header-bar>
+
+    <div class="bar bar-subheader">
+        <h3 class="title">Select which documents you would like to share along with the information saved in your profile</h3>
     </div>
+
     <ion-pane class="has-footer">
         <ion-scroll>
             <ul class="list document-list">
                 <li class="item item-checkbox" ng-repeat="doc in vm.documents">
                     <label class="checkbox">
-                        <input type="checkbox" ng-model="document.checked">
+                        <input type="checkbox" ng-model="doc.checked">
                     </label>
                     <div class="item-content">
                         <strong>{{doc.name}}</strong>
@@ -26,29 +28,32 @@
             </ul>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button button-block secondary" ng-click="vm.shareStep = 2;">
+            <button class="button button-block secondary" ng-click="vm.addDocumentsToShare();">
                 <i class="ico ico-share"></i>Share
             </button>
         </div>
     </ion-footer-bar>
+
 </ion-modal-view>
 
+<!-- Modal step #2 -->
+<ion-modal-view class="lockbox lockbox-share view-section compact-size" ng-if="vm.shareStep === 2">
 
-<ion-modal-view class="lockbox lockbox-share" ng-if="vm.shareStep === 2">
-    <div class="header compact-size">
-        <ion-header-bar>
-            <button class="button button-clear" ng-click="vm.shareStep = 1;">Back</button>
-            <h1 class="title">My Lockbox</h1>
-        </ion-header-bar>
-        <div class="bar bar-subheader">
-            <h3 class="title">Your lockbox will contain all your secure documents.</h3>
-        </div>
+    <ion-header-bar>
+        <button class="button button-clear" ng-click="vm.shareStep = 1;">Back</button>
+        <h1 class="title">My Lockbox</h1>
+    </ion-header-bar>
+
+    <div class="bar bar-subheader">
+        <h3 class="title">Your lockbox will contain all your secure documents.</h3>
     </div>
+
     <ion-pane class="has-footer has-title">
         <div class="content-top">
-            <button class="button button-block">Choose from Contact List</button>
+            <button class="button button-block" ng-click="vm.showContactsModal();">Choose from Contact List</button>
         </div>
         <ion-scroll>
             <div class="list share-form">
@@ -56,10 +61,12 @@
             </div>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary" ng-click="vm.share()">Share</button>
+            <button class="button primary" ng-click="vm.shareDocuments()">Share</button>
         </div>
     </ion-footer-bar>
+
 </ion-modal-view>

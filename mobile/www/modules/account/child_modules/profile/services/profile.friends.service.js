@@ -38,7 +38,6 @@
         }
 
         function setFriends(userFriends) {
-            console.warn(' userFriends --->>>', userFriends);
             friends = userFriends;
 
             return friends;

@@ -1,19 +1,18 @@
-<ion-modal-view class="signup-section">
-    <div class="header min-size">
-        <ion-header-bar>
-            <h1 class="title">Profile | Edit Truck</h1>
-        </ion-header-bar>
-    </div>
-    <ion-pane class="has-footer edit-pane">
+<ion-modal-view class="signup-section view-section min-size">
 
+    <ion-header-bar>
+        <h1 class="title">Profile | Edit Truck</h1>
+    </ion-header-bar>
+
+    <ion-pane class="has-footer edit-pane">
         <ion-scroll>
             <div class="list select-truck">
-                <label class="item item-radio"  ng-repeat="truck in vm.trucks">
-                    <input type="radio" name="trucks" ng-model="vm.newTruck" value="{{truck.name}}">
+                <label class="item item-radio" ng-repeat="truck in vm.trucks">
+                    <input type="radio" name="trucks" ng-model="vm.currentTruck"  value="{{truck.name}}">
                     <div class="item-content">
                         <p>{{ truck.name }}</p>
                         <div class="logo">
-                            <div class="{{ truck.logoClass }}" ></div>
+                            <div class="{{ truck.logoClass }}"></div>
                         </div>
                     </div>
                 </label>
@@ -25,10 +24,12 @@
             </div>
         </ion-scroll>
     </ion-pane>
+
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" nav-direction="exit" ng-click="vm.cancel()">Cancel</button>
             <button class="button primary" ng-click="vm.save()">Save</button>
         </div>
     </ion-footer-bar>
+
 </ion-modal-view>

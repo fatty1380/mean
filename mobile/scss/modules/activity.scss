@@ -37,9 +37,15 @@
     height:200px;
   }
 
+  .comment {
+    margin: 0 10px;
+    border-top: 1px solid #D2D2D2;
+  }
+
   .item{
     //margin-bottom: 2px;
-    padding:$item-padding;
+    //padding:$item-padding/2 $item-padding;
+    padding: 0;
 
     > .ico{
       float: left;
@@ -52,13 +58,38 @@
       .ico {
         margin: 1px;
       }
+      
+      a.user-link {
+        text-decoration: none;
+        text-transform: capitalize;
+            color: #ff8000;
+          }
+      
+      .avatar {
+        margin-right: 5px;
+          vertical-align: top;
+          //position: absolute;
+          top: 50%;
+          left: 15px;
+          max-width: 32px;
+          max-height: 32px;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+      }
 
-      .top{
-        padding: 5px 0;
+      &.top, &.bottom {
+        padding: $item-padding/2 $item-padding;
         overflow: hidden;
         height: auto;
 
         .time{
+          float: right;
+        }
+        .miles, .likes {
+          float: left;
+        }
+        .comments {
           float: right;
         }
       }
@@ -69,22 +100,28 @@
         text-overflow: ellipsis;
         padding: 0 10px 5px 5px;
       }
+      
       .message{
-        margin: 0 0 5px;
+        margin: 4px 0 5px;
         display: block;
         display: -webkit-box;
         overflow: hidden;
         white-space: normal;
         text-overflow: ellipsis;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 10;
       }
+    }
+    
+    .static-pic {
+      position: relative;
+      width: 100%;
     }
     
     .static-map {
       position: relative;
       left: -$item-padding;
-      bottom: -$item-padding + (-4px);
+      //bottom: -$item-padding + (-4px);
     }
   }
 
@@ -120,6 +157,26 @@
       }
     }
   }
+  .bar-footer {
+
+    .item-input-wrapper {
+      background: none;
+
+      textarea {
+        width: 100%;
+        height: 45px;
+        font-size: 12px;
+        background-color: transparent;
+        resize: none;
+        padding: 5px 20px 5px 5px;
+      }
+    }
+
+    .button-positive {
+      border: 0;
+      padding: 0 40px;
+    }
+  }
 
 }
 
@@ -139,6 +196,4 @@
     cursor: text;
   }
 }
-
-
 
