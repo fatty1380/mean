@@ -522,31 +522,37 @@ $but-height: 90px;
 
 .logo{
   .freightliner-logo{
+    @extend %text-indent;
     background-image:url("../img/freightliner_logo.png");
     width: 102px;
     height: 72px;
   }
   .kenworth-logo{
+    @extend %text-indent;
     background-image:url("../img/kenworth_logo.png");
     width: 102px;
     height: 72px;
   }
   .international-logo{
+    @extend %text-indent;
     background-image:url("../img/international_logo.png");
     width: 102px;
     height: 72px;
   }
   .mack-logo{
+    @extend %text-indent;
     background-image:url("../img/mack_logo.png");
     width: 102px;
     height: 72px;
   }
   .peterbilt-logo{
+    @extend %text-indent;
     background-image:url("../img/peterbilt_logo.png");
     width: 102px;
     height: 72px;
   }
   .volvo-logo{
+    @extend %text-indent;
     background-image:url("../img/volvo_logo.png");
     width: 102px;
     height: 72px;

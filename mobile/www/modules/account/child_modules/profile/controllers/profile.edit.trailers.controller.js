@@ -5,18 +5,39 @@
         .module('account')
         .controller('ProfileEditTrailersCtrl', ProfileEditTrailersCtrl);
 
-    ProfileEditTrailersCtrl.$inject = ['$scope', 'parameters', 'registerService', 'trailerService'];
+    ProfileEditTrailersCtrl.$inject = ['$scope', 'parameters', 'registerService', 'trailerService', 'userService'];
 
-    function ProfileEditTrailersCtrl($scope, parameters, registerService, trailerService) {
+    function ProfileEditTrailersCtrl($scope, parameters, registerService, trailerService, userService) {
         var vm = this;
 
         vm.newTrailer = '';
-        vm.trailers = parameters.trailers;
+        vm.trailers = getTrailers();
 
         vm.cancel = cancel;
         vm.save = save;
         vm.addTrailer = trailerService.addTrailer;
 
+        function getTrailers () {
+            var trailers = parameters.trailers,
+                props = userService.profileData && userService.profileData.props,
+                selectedTrailers = props && props.trailer || [],
+                trailerNames;
+
+            if(!selectedTrailers.length) return trailers;
+
+            trailerNames = trailers.map(function (trailer) {
+                return trailer.name;
+            });
+
+            for (var i = 0; i < selectedTrailers.length; i++) {
+                var trailer = selectedTrailers[i],
+                    trailerExists =  trailerNames.indexOf(trailer) >= 0;
+
+                if(!trailerExists) trailers.push({name: trailer, checked: true});
+            }
+
+            return trailers;
+        }
 
         function cancel (trailers) {
             $scope.closeModal(trailers);
