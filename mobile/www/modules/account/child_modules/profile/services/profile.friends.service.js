@@ -16,7 +16,7 @@
             setFriends: setFriends,
             friends : friends,
             users : users,
-            getFriendsForSpecificUser: getFriendsForSpecificUser,
+            loadFriends: loadFriends,
             retrieveFriends: retrieveFriends,
             getFriendStatus: getFriendStatus,
             getRequestsList: getRequestsList,
@@ -29,24 +29,36 @@
             return friends;
         }
 
-        function getUsers() {
-            return users;
-        }
-
-        function retrieveFriends() {
-            return $http.get(settings.friends);
-        }
-
         function setFriends(userFriends) {
             friends = userFriends;
 
             return friends;
         }
 
-        function getFriendsForSpecificUser(id) {
-            if(!id) return;
+        function getUsers() {
+            return users;
+        }
 
-            return $http.get(settings.users + id + '/friends');
+        function retrieveFriends() {
+            return $http.get(settings.friends).then(
+                function success(response) {
+                    setFriends(response.data);
+                    
+                    return response.data;
+                });
+        }
+
+        function loadFriends(id) {
+            if (!id) {
+                return retrieveFriends();
+            }
+
+            return $http.get(settings.users + id + '/friends').then(
+                function success(response) {
+                    setFriends(response.data);
+                    
+                    return response.data;
+                });
         }
 
         function getFriendStatus(id) {

@@ -9,8 +9,8 @@
 
     function ProfileCtrl($state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
-
-            console.log('Loading $state: `%s`', $state.current.name);
+        
+        console.log('Loading $state: `%s`', $state.current.name);
 
         vm.profileData = profile || user;
         vm.user = user;

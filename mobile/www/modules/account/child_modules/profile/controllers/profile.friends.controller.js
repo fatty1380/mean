@@ -5,9 +5,9 @@
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
 
-    FriendsCtrl.$inject = ['$state', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
+    FriendsCtrl.$inject = ['$state', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'profile', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
 
-    function FriendsCtrl($state, $filter, $ionicLoading, outsetUsersService, utilsService, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
+    function FriendsCtrl($state, $filter, $ionicLoading, outsetUsersService, utilsService, profile, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
         var vm = this;
 
         vm.friends = friends;
@@ -25,6 +25,25 @@
         vm.exitState = exitState;
         
         vm.getAvatar = getAvatar;
+        
+        initialize();
+        
+        ////////////////////////
+        
+        function initialize() {
+            vm.canEdit = !profile;
+            vm.profile = profile;
+            
+            if (vm.canEdit) {
+                vm.title = 'Friends';
+                vm.yourFriendsTitle = 'Your Friends';
+            }
+            else {
+                vm.title = vm.profile.displayName;
+                vm.yourFriendsTitle = 'Friends';
+                
+            }
+        }
         
         function exitState() {
             // TODO: try $state.go('^') ... which will return to parent state
