@@ -94,8 +94,9 @@
                     .showProfileEditModal(parameters)
                     .then(
                         function (result) {
-                        console.log(result);
-                        vm.profileData = result;
+                            if(!!result){
+                                vm.profileData = result;
+                            }
                     },
                     function (err) {
                         console.log(err);
