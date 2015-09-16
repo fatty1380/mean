@@ -46,7 +46,8 @@
         }
         
         function exitState() {
-            // TODO: try $state.go('^') ... which will return to parent state
+            // TODO: try $state.go('^') ... which will return to parent state, but actually won't
+            //       work because parent state (account.profile) is abstract :|
             return $state.go('account.profile.user');
             //$ionicGoBack()
         }

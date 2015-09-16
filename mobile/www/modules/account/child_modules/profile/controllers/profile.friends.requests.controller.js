@@ -1,6 +1,12 @@
 (function() {
     'use strict';
 
+    /**
+     * Profile : Friend Request Controller
+     * HTML: ./modules/account/child_modules/profile/templates/profile-friend-requests.html
+     * Modal: profileModalService.showFriendRequestModal
+     * Parameters: Array of request IDs
+     */
     angular
         .module('account')
         .controller('ProfileFriendRequestCtrl', ProfileFriendRequestCtrl);
