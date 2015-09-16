@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$state', 'reviewService', 'experienceService', 'userService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$rootScope','$state', 'reviewService', 'experienceService', 'userService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, $state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
 
         if (!$state.is('account.profile')) {
@@ -17,11 +17,17 @@
         vm.profileData = profile || user;
         vm.user = user;
         vm.camera = cameraService;
-
         vm.showFriends = showFriends;
 
+        $rootScope.$on("clear", function () {
+            console.log('ProfileCtrl my event occurred');
+            vm.profileData = profile || user;
+            vm.user = user;
+            vm.friendStatus = 0;
+        });
+
         function showFriends() {
-            console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
+            //console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends');
         }
         
@@ -214,9 +220,5 @@
                 ico: 'ico-tankhazardousactive'
             }
         };
-
-
     }
-
-
 })();

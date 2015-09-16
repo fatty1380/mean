@@ -107,7 +107,6 @@
 
             .state('account.lockbox', {
                 url: '/lockbox',
-                cache: false,
                 views: {
                     'lockbox': {
                         templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
@@ -118,7 +117,6 @@
 
             .state('account.messages', {
                 url: '/messages',
-                cache: false,
                 params: {
                     recipientId: {
                         default: null
@@ -144,7 +142,6 @@
 
             .state('account.activity', {
                 url: '/activity',
-                cache: false,
                 views: {
                     'activity': {
                         templateUrl: 'modules/account/child_modules/activity/templates/activity.html',

@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['truckService', '$state', '$filter', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
+    ProfileEditCtrl.$inject = ['$rootScope', 'truckService', '$state', '$filter', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
 
-    function ProfileEditCtrl(truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
+    function ProfileEditCtrl($rootScope, truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
 
         if (!userService.profileData) {
@@ -92,6 +92,9 @@
                     tokenService.set('token_type', '');
 
                     vm.cancel();
+
+                    //clear controllers data
+                    $rootScope.$broadcast("clear");
 
                     $state.go('login');
                 })

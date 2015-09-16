@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$rootScope', '$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($rootScope, $scope, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -21,7 +21,24 @@
         vm.updateWithNewActivities = updateWithNewActivities;
         vm.refresh = refresh;
 
-        updateFeedData();
+        /**
+         * try to initialize if have no feed
+         * */
+        $scope.$on('$ionicView.enter', function () {
+            if (vm.feed.length > 0) {
+                startCheckNewActivities();
+            } else {
+                updateFeedData();
+                initialize();
+            }
+        });
+
+        $rootScope.$on("clear", function () {
+            console.log('ActivityCtrl clear');
+            vm.feed = [];
+            vm.newActivities = 0;
+            vm.lastUpdate = Date.now();
+        });
 
         function changeFeedSource() {
             activityService.changeFeedSource();
@@ -32,17 +49,6 @@
         function updateFeedData() {
             vm.feedData = activityService.getFeedData();
         }
-
-        /**
-         * try to initialize if have no feed
-         * */
-        $scope.$on('$ionicView.enter', function () {
-            if (vm.feed.length > 0) {
-                startCheckNewActivities();
-            } else {
-                initialize();
-            }
-        });
 
         /**
          * turn off interval before leave view
@@ -65,9 +71,12 @@
                         initialize();
                     });
             } else {
-                $ionicLoading.show({
-                    template: vm.feedData.loadingText
-                });
+                console.log(vm.feedData);
+                if(vm.feedData){
+                    $ionicLoading.show({
+                        template: vm.feedData.loadingText
+                    });
+                }
             }
                 
             //get all feed

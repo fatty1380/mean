@@ -5,9 +5,9 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
+    MessagesCtrl.$inject = ['$rootScope', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
 
-    function MessagesCtrl (messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
+    function MessagesCtrl ($rootScope, $scope, messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
 
         var vm  = this;
         vm.messages = [];
@@ -15,12 +15,21 @@
 
         vm.openChatDetails = openChatDetails;
 
+        $rootScope.$on("clear", function () {
+            console.log('MessagesCtrl clear');
+            vm.messages = [];
+            vm.chats = [];
+        });
+
+        $scope.$on('$ionicView.enter', function () {
+            getChats();
+        });
+
         if (!!recipientChat) {
             console.log('Initializing MessagesCtrl with Specific Chat', recipientChat);
-            
             showChatDetailsModal(recipientChat);
         }
-        getChats();
+        //getChats();
 
 
         //get my avatar
