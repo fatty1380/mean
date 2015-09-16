@@ -1,5 +1,9 @@
 (function () {
     'use strict';
+    
+    /**
+     * Part of Signup Flow
+     */
 
     angular
         .module('signup')

@@ -11,11 +11,33 @@
         var vm = this;
 
         vm.searchText = "";
-        vm.contacts = parameters;
+        vm.contacts = []; 
 
         vm.cancel = cancel;
         vm.showAddFriendsModal = addFriends;
         vm.showFriendManualAddModal = showFriendManualAddModal;
+        
+        initialize(parameters);
+        
+        ///////////////////////////////////////////////////////
+        
+        function initialize(parameters) {
+            $q.when(parameters,
+                function success(contacts) {
+                    console.error('marging %d Contacts', contacts.length);
+                    return angular.merge(vm.contacts, contacts);
+                },
+                function reject(err) {
+                    console.error('Failed to Load Contacts', err);
+                },
+                function progress(status) {
+                    console.log('Loading Contacts: %o', status);
+                })
+                .finally(function end() {
+                    console.error('loaded %d Contacts', vm.contacts.length);
+                    $ionicLoading.hide();
+                })
+        }
 
         function showFriendManualAddModal() {
             profileModalsService
