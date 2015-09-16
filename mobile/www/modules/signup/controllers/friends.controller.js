@@ -33,10 +33,10 @@
             registerService.updateUser(registerService.getDataProps())
                 .then(function (response) {
                     if(response.success) {
-                        $state.go("account.profile");
+                        $state.go('account.profile.user');
                     }
                 }, function (err) {
-                    $state.go("account.profile");
+                    $state.go('account.profile.user');
                 });
         }
 

@@ -63,7 +63,7 @@
             sku: 'mvr',
             name: 'Motor Vehicle Report',
             created: '2015-07-11 10:33:05',
-            url: 'driving-record-1.gif',
+            url: 'assets/lockbox/driving-record-1.gif',
             expires: null,
             bucket: 'outset-dev',
             key: 'kajifpaiueh13232'
@@ -73,7 +73,7 @@
             sku: 'cdl',
             name: 'Driver License',
             created: '2015-07-11 10:33:05',
-            url: 'cdl.png',
+            url: 'assets/lockbox/cdl.png',
             expires: null,
             bucket: 'outset-dev',
             key: 'kajifpaiueh13232'
@@ -83,7 +83,7 @@
             sku: 'bg',
             name: 'Background Report',
             created: '2015-07-11 10:33:05',
-            url: 'sample_credit_report.pdf',
+            url: 'assets/lockbox/sample_credit_report.pdf',
             expires: null,
             bucket: 'outset-dev',
             key: 'kajifpaiueh13232222'

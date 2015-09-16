@@ -4,7 +4,7 @@
         <ion-nav-bar>
             <ion-nav-back-button>Back</ion-nav-back-button>
         </ion-nav-bar>
-        <h1 class="title">Manually Add Friend</h1>
+        <h1 class="title">Add Friend</h1>
     </ion-header-bar>
 
     <div class="bar bar-subheader">
@@ -14,15 +14,7 @@
     <ion-pane class="pane has-footer content-pane">
         <ion-scroll>
             <div class="list share-form">
-                <label class="item item-input">
-                    <input type="text" placeholder="Phone Number" ng-model="vm.phone">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Email Address" ng-model="vm.email">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Name" ng-model="vm.displayName">
-                </label>
+                <oset-manual-contact model="vm.contact" message="false"></oset-manual-contact>
             </div>
         </ion-scroll>
     </ion-pane>
@@ -30,7 +22,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.closeModal();">Cancel</button>
-            <button class="button primary" ng-click="vm.addFriend();">Add</button>
+            <button class="button primary" ng-disabled="!(!!vm.contact.phone || !!vm.contact.email)" ng-click="vm.addFriend();">Add</button>
         </div>
     </ion-footer-bar>
 

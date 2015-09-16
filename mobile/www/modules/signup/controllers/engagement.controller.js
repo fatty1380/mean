@@ -52,9 +52,9 @@
         function continueToLicense() {
             registerService.setProps('started',vm.createStartedDateObject(vm.started));
             registerService.setProps('avatar', avatarService.getImage());
-            registerService.setProps('company', 'Apple');
-            registerService.setProps('freight', 'computers');
-            registerService.setProps('truck', 'volvo');
+            registerService.setProps('company', '');
+            registerService.setProps('freight', '');
+            registerService.setProps('truck', '');
             registerService.setDataProps('handle' , vm.handle);
 
             $state.go('signup-license');

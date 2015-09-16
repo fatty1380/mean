@@ -76,7 +76,7 @@
            .then(function (response) {
                 $ionicLoading.hide();
                 if(response.success) {
-                    $state.go('account.profile');
+                    $state.go('account.profile.user');
                 }else{
                     showPopup(JSON.stringify(response));
                 }

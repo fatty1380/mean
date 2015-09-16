@@ -1,8 +1,9 @@
 <ion-view class="profile-screen view-section mid-size" cache-view="false">
 
+    <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
         <button class="button button-clear" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">Edit</button>
-        <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile">
+        <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile.user({userId: null})">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatar ico-middle"></span>
         </button>
@@ -17,6 +18,7 @@
         </button>
     </ion-header-bar>
 
+    
     <div class="profile-visual">
         <div class="photo" ng-click="vm.showEditAvatar()">
             <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
@@ -26,10 +28,13 @@
             <strong>{{vm.profileData.friends.length}}</strong>
         </div>
     </div>
+    <!--Profile Main Heading END-->
 
+    <!--Profile Main Body START-->
     <ion-pane class="profile-pane">
         <ion-tabs class="profile-tabs tabs-top">
-            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews">
+            <ion-tab title="REVIEWS" ui-sref="account.profile.reviews"
+        on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="reviews-list">
                     <ion-list>
                         <ion-item ng-repeat="review in vm.reviews track by $index">
@@ -47,7 +52,8 @@
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
-            <ion-tab title="PROFILE" ui-sref="account.profile">
+            <ion-tab title="PROFILE" ui-sref="account.profile.user"
+        on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="profile-list">
                     <div class="list">
                         <div class="item" ng-if="!!vm.profileData.props.title">
@@ -95,7 +101,8 @@
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-share"></i>Share</button>
             </ion-tab>
-            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience">
+            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience"
+        on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="experience-list">
                     <ion-list>
                         <ion-item class="item" ng-repeat="job in vm.experience" ng-click="vm.showEditExperienceModal(job)">

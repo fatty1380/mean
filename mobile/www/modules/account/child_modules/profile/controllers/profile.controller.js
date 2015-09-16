@@ -9,14 +9,15 @@
 
     function ProfileCtrl($rootScope, $state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
-
-        if (!$state.is('account.profile')) {
-            console.log('Loading $state: `%s`', $state.current.name);
-        }
+        
+        console.log('Loading $state: `%s`', $state.current.name);
 
         vm.profileData = profile || user;
         vm.user = user;
         vm.camera = cameraService;
+
+        vm.canEdit = vm.profileData.id === vm.user.id;
+
         vm.showFriends = showFriends;
 
         $rootScope.$on("clear", function () {
@@ -27,11 +28,11 @@
         });
 
         function showFriends() {
-            //console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
+            console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends');
         }
         
-        if (!$state.is('account.profile')) {
+        if (!vm.canEdit) {
             if (vm.profileData.isFriend || vm.profileData.friends.indexOf(user.id) !== -1) {
                 vm.friendStatus = 1;
             }
@@ -54,7 +55,7 @@
             }
         }
 
-        if ($state.is('account.profile')) { // TODO: Restore this || vm.profileData.id === vm.user.id) {
+        if (vm.canEdit) { // TODO: Restore this || vm.profileData.id === vm.user.id) {
 
             /**
              * showUserSettings
@@ -71,6 +72,9 @@
              */
             vm.showEditAvatar = function (parameters) {
                 vm.camera.showActionSheet()
+                    .then(function success(rawImageResponse) {
+                        return avatarService.showEditModal(rawImageResponse);
+                    })
                     .then(function success(newImageResponse) {
                         vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
                     })
@@ -88,7 +92,8 @@
             vm.showEditModal = function (parameters) {
                 profileModalsService
                     .showProfileEditModal(parameters)
-                    .then(function (result) {
+                    .then(
+                        function (result) {
                         console.log(result);
                         vm.profileData = result;
                     },
