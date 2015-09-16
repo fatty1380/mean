@@ -58,18 +58,18 @@
                         </div>
                         <div class="item">
                             <span class="item-label">TRUCK:</span>
-                            <span class="item-note"><div class="logo">
-                                <div class="{{ vm.profileData.props.truck.toLowerCase() }}-logo"></div>
-                            </div></span>
-                            
-
+                            <span class="item-note">
+                                <div class="logo">
+                                    <div class="{{ vm.profileData.props.truck.toLowerCase() }}-logo">{{vm.profileData.props.truck}}</div>
+                                </div>
+                            </span>
                         </div>
                         <div class="item">
                             <span class="item-label">TRAILER:</span>
                             <span class="item-note">
                                 <span ng-repeat="trailer in vm.profileData.props.trailer">
                                     {{trailer}}<span ng-if="!$last">, </span>
-                            </span>
+                                </span>
                             </span>
                         </div>
                         <div class="item" ng-if="!!vm.profileData.props.started">

@@ -22,8 +22,15 @@
         vm.showRequestsModal = showRequestsModal;
         vm.addFriend = addFriend;
         vm.viewUser = viewUser;
+        vm.exitState = exitState;
         
         vm.getAvatar = getAvatar;
+        
+        function exitState() {
+            // TODO: try $state.go('^') ... which will return to parent state
+            return $state.go('account.profile.user');
+            //$ionicGoBack()
+        }
 
         function showRequestsModal() {
             friendsService
@@ -80,6 +87,8 @@
         }
 
         function showAddFriendsModal() {
+            $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading Contacts ... ', duration: 20000 });
+
             contactsService
                 .find()
                 .then(function (response) {
@@ -98,16 +107,29 @@
                 })
                 .catch(function reject(err) {
                     console.error('Unable to resolve Contacts: ', err);
-                    return [];
+                    
+                    return addManually();
                 });
         }
 
         function addManually() {
-            $state.go('account.profile.friends.manual')
+           return profileModalsService
+                .showFriendManualAddModal()
+                .then(function success(result) {
+                    console.log('Manual Add Friend Rusult: ', result);
+                    return result;
+                })
+                .catch(function failure(err) {
+                    console.error('Add Friend Results failed', err);
+                    return null;
+                })
+                .finally(function done() {
+                    $ionicLoading.hide();
+                })
         }
 
         function getOutsetUsers(query) {
-            outsetUsersService
+           return outsetUsersService
                 .search(query)
                 .then(function (response) {
                     vm.users = response.data;

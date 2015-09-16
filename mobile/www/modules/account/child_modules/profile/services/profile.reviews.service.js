@@ -39,13 +39,19 @@
                 return $http.delete(settings.reviews + id)
             };
 
+            //
+            function createRequest(data) {
+                return $http.post(settings.requests, data)
+            }
+
         return {
             getUserReviews: getUserReviews,
             getReviewsByUserID: getReviewsByUserID,
             postReviewForProfile: postReviewByUserID,
             getReviewByID: getReviewByID,
             updateReviewByID: updateReviewByID,
-            deleteReviewByID: deleteReviewByID
+            deleteReviewByID: deleteReviewByID,
+            createRequest: createRequest
         }
     };
 

@@ -10,7 +10,6 @@
     function accountModuleRouting($stateProvider) {
 
         $stateProvider
-
             .state('account', {
                 url: '/account',
                 abstract: true,
@@ -47,7 +46,7 @@
                 },
                 resolve: {
                     profile: function resolveUserProfile($stateParams, registerService, userService) {
-
+                        
                         if (!!$stateParams.userId) {
                             return registerService.getProfileById($stateParams.userId)
                                 .then(function success(response) {
@@ -72,8 +71,8 @@
                                 .then(function () {
                                     welcomeService.welcomeUser = false;
                                 });
-                        }
                     }
+                }
                 }
             })
 
@@ -124,16 +123,6 @@
                                     });
                             }
                         }
-                    }
-                }
-            })
-
-            .state('account.profile.friends.manual', {
-                url: '/manual',
-                views: {
-                    '@': {
-                        templateUrl: 'modules/account/child_modules/profile/templates/profile-friends-manual-add.html',
-                        controller: 'ManualFriendsAddCtrl as vm'
                     }
                 }
             })

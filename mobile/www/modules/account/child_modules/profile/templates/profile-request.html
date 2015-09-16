@@ -20,7 +20,10 @@
         </div>
         <ion-scroll>
             <div class="list share-form">
-                <oset-manual-contact model="vm.contact" message="true"></oset-manual-contact>
+                <oset-manual-contact model="vm.contact" message="false"></oset-manual-contact>
+                <label class="item item-input">
+                    <textarea placeholder="Enter message" class="" rows="10" ng-model="vm.message"></textarea>
+                </label>
             </div>
         </ion-scroll>
     </ion-pane>
@@ -28,7 +31,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary">Send</button>
+            <button class="button primary" ng-click="vm.sendRequest()">Send</button>
         </div>
     </ion-footer-bar>
 

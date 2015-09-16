@@ -31,6 +31,7 @@
     left: 0;
     top: 50%;
     margin-top: -13px;
+    color: #fff;
 
     strong{
       vertical-align: middle;
@@ -241,9 +242,7 @@
       color: $content-body-text;
       white-space: normal;
       
-      .logo > div {
-        
-      }
+      .logo > div {margin-right: 0;}
     }
   }
 }

@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($scope, $state, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -20,6 +20,7 @@
         vm.changeFeedSource = changeFeedSource;
         vm.updateWithNewActivities = updateWithNewActivities;
         vm.refresh = refresh;
+        vm.addFriends = addFriends;
 
         updateFeedData();
 
@@ -27,6 +28,10 @@
             activityService.changeFeedSource();
             updateFeedData();
             initialize();
+        }
+
+        function addFriends () {
+            $state.go('account.profile.friends');
         }
 
         function updateFeedData() {
@@ -48,6 +53,9 @@
          * turn off interval before leave view
         * */
         $scope.$on('$ionicView.beforeLeave', function () {
+            stopCheckNewActivities();
+        });
+        $scope.$on('$ionicView.unloaded', function () {
             stopCheckNewActivities();
         });
 
@@ -80,16 +88,22 @@
         }
 
         function startCheckNewActivities() {
-            utilsService.startClock(function () {
-                activityService.getFeedIds().then(function (feed) {
-                    if (feed.length > vm.feed.length) {
-                        vm.newActivities = feed.length - vm.feed.length;
-                    } else {
-                        vm.newActivities = 0;
-                    }
-                }, function (resp) {
-                });
-            }, settings.activityTimeout);
+            console.log(vm.feedData);
+            //update if we have feed list from fiends
+                utilsService.startClock(function () {
+                    activityService.getFeedIds().then(function (feed) {
+                        console.log(feed.length,vm.feed.length);
+                        if(vm.feedData.feedSource === 'items') {
+                            if (feed.length > vm.feed.length) {
+                                vm.newActivities = feed.length - vm.feed.length;
+                            } else {
+                                vm.newActivities = 0;
+                            }
+                        }
+                    }, function (resp) {
+                    });
+                }, settings.activityTimeout);
+
         }
 
         function stopCheckNewActivities() {
@@ -100,6 +114,7 @@
          *  @TODO update only new items
         */
         function updateWithNewActivities() {
+            stopCheckNewActivities();
             initialize();
         }
 

@@ -10,7 +10,7 @@
     function ProfileCtrl($state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
 
-        console.log('Loading $state: `%s`', $state.current.name);
+            console.log('Loading $state: `%s`', $state.current.name);
 
         vm.profileData = profile || user;
         vm.user = user;
@@ -24,7 +24,7 @@
             console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends');
         }
-
+        
         if (!vm.canEdit) {
             if (vm.profileData.isFriend || vm.profileData.friends.indexOf(user.id) !== -1) {
                 vm.friendStatus = 1;
@@ -35,7 +35,7 @@
             else {
                 vm.friendStatus = 0;
             }
-
+            
             vm.doFriendAction = function doFriendAction(parameters) {
                 switch (vm.friendStatus) {
                     case 0: alert('click ok to add ' + vm.profileData.displayName + ' to your convoy');
@@ -87,11 +87,12 @@
                     .showProfileEditModal(parameters)
                     .then(
                         function (result) {
-                            console.log(result);
-                        },
-                        function (err) {
-                            console.log(err);
-                        })
+                        console.log(result);
+                        vm.profileData = result;
+                    },
+                    function (err) {
+                        console.log(err);
+                    })
             };
 
             vm.showShareModal = function (parameters) {
@@ -100,9 +101,9 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
             };
 
             vm.showRequestReviewModal = function (parameters) {
@@ -111,9 +112,9 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
             };
 
             vm.showAddExperienceModal = function (parameters) {
@@ -123,9 +124,9 @@
                         console.log(result);
                         vm.getExperience();
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
             };
 
             vm.showEditExperienceModal = function (parameters) {
@@ -135,9 +136,9 @@
                         console.log(result);
                         vm.getExperience();
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
             };
         }
         

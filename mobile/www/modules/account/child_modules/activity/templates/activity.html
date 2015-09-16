@@ -1,22 +1,24 @@
 <ion-view class="activity view-section min-size">
-
+    
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click='vm.changeFeedSource()'>{{vm.feedData.buttonName}}</button>
+        <button class="button button-clear" ng-click='vm.changeFeedSource()' ng-bind="vm.feedData.buttonName">Add logs</button>
         <h1 class="title">Activity</h1>
-        <button class="button button-clear" ng-click="vm.showAddFriendsModal()">Add Friends</button>
+        <button class="button button-clear" ng-click="vm.addFriends()">Add Friends</button>
     </ion-header-bar>
-
+    
     <ion-pane class="pane content-pane button-padding-bottom" ng-class="{' button-padding-top': !!vm.newActivities}">
         <button class="button button-positive content-top-button" ng-show="!!vm.newActivities" ng-click="vm.updateWithNewActivities()">
             {{vm.newActivities}} new Updates
             <i class="ico ico-checkmarkwhite"></i>
         </button>
+
         <ion-scroll>
             <ion-refresher pulling-text="pull to refresh ..." on-refresh="vm.refresh()"></ion-refresher>
             <ion-list>
                 <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
             </ion-list>
         </ion-scroll>
+
         <button class="button content-button" ng-click='vm.showAddActivityModal()'>
             <i class="ico ico-share"></i> Add Activity
         </button>

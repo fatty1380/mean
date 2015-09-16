@@ -25,13 +25,13 @@
             var trucks = parameters.trucks,
                 props = userService.profileData && userService.profileData.props,
                 selectedTruck = props && props.truck || '',
-                names = [];
+                names;
 
             if(!selectedTruck) return trucks;
 
-            for(var i = 0; i < trucks.length; i++){
-                names.push(trucks[i].name);
-            }
+            names = trucks.map(function (truck) {
+                return truck.name;
+            });
 
             if(names.indexOf(selectedTruck) < 0){
                 trucks.push({name: selectedTruck, logoClass: ''});

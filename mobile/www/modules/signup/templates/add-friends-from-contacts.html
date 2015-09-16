@@ -17,8 +17,8 @@
             <div class="list friends-list">
                 <div class="title">Your Friends</div>
                 <ion-checkbox
-                    ng-model="contact.checked"
-                    ng-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
+                    collection-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)"
+                    ng-model="contact.checked">
                     {{contact.displayName}}
                 </ion-checkbox>
             </div>
