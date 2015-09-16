@@ -33,10 +33,10 @@
 
 	var contactTemplate = [
 		'	<label class="item item-input">',
-		'		<input type="tel" placeholder="Phone Number" ng-model="vm.contact.phone">',
+		'		<input type="tel" placeholder="Phone Number" ng-model="vm.contact.phones[0]">',
 		'	</label>',
 		'	<label class="item item-input">',
-		'		<input type="email" placeholder="Email Address" ng-model="vm.contact.email">',
+		'		<input type="email	" placeholder="Email Address" ng-model="vm.contact.emails">',
 		'	</label>',
 		'	<label class="item item-input">',
 		'		<input type="text" placeholder="Name" ng-model="vm.contact.displayName">',

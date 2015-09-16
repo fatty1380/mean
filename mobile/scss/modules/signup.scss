@@ -490,8 +490,6 @@ $but-height: 90px;
 
   .bar{
     &.bar-subheader{
-      top:120px;
-
       h3{
         font-weight: normal;
         color: #fff;
@@ -499,6 +497,13 @@ $but-height: 90px;
       }
     }
   }
+
+  &.full-size{
+    .bar .bar-subheader{
+      top:120px;
+    }
+  }
+
 }
 .trailers-bg{
   background-image:url("../img/trailersBg.png");

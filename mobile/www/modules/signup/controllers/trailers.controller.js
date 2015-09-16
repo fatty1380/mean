@@ -64,6 +64,7 @@
         }
 
         function continueToAddFriends() {
+            registerService.setProps('trailer', getNameKeys(vm.trailers));
             $state.go('signup-friends');
         }
 

@@ -16,7 +16,7 @@
         vm.user = user;
         vm.camera = cameraService;
 
-        vm.canEdit = vm.profileData.id === vm.user.id;
+        vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
         vm.showFriends = showFriends;
 
