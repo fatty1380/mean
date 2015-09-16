@@ -22,7 +22,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="$ionicGoBack()">Cancel</button>
-            <button class="button primary" ng-click="vm.invite();">Invite</button>
+            <button class="button primary" ng-disabled="!(!!vm.contact.phone || !!vm.contact.email)"  ng-click="vm.invite();">Invite</button>
         </div>
     </ion-footer-bar>
 

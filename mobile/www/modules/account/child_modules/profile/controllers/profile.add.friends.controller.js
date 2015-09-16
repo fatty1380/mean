@@ -25,7 +25,10 @@
             $q.when(parameters,
                 function success(contacts) {
                     console.error('marging %d Contacts', contacts.length);
-                    return angular.merge(vm.contacts, contacts);
+                    
+                    return contacts.forEach(function (contact) {
+                        vm.contacts.push(contact);
+                    })
                 },
                 function reject(err) {
                     console.error('Failed to Load Contacts', err);
@@ -34,7 +37,6 @@
                     console.log('Loading Contacts: %o', status);
                 })
                 .finally(function end() {
-                    console.error('loaded %d Contacts', vm.contacts.length);
                     $ionicLoading.hide();
                 })
         }

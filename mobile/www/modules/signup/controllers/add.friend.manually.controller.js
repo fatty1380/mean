@@ -2,7 +2,7 @@
     'use strict';
     
     /**
-     * Part of Signup Flow
+     * Part of Signup Flow --> TODO: Replace with Add Friends Modal
      */
 
     angular
@@ -31,7 +31,7 @@
         }
 
         function cancel() {
-            //$state.go('signup.friends');
+            return $state.go('signup-friends-contacts');
         }
 
     }
