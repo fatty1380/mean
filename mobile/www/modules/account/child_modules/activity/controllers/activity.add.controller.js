@@ -23,6 +23,8 @@
             title : '',
             message : '',
             location : {
+                placeName: '',
+                placeId: '',
                 type: 'Point',
                 coordinates: [],
                 created: ''
@@ -39,6 +41,8 @@
 
         $scope.$watch('vm.where', function() {
             if(vm.where) {
+                vm.activity.location.placeName = vm.where.formatted_address;
+                vm.activity.location.placeId = vm.where.place_id;
                 setMarkerPosition();
             }
         }, true);
@@ -104,7 +108,8 @@
             vm.mapIsVisible = true;
 
             google.maps.event.addDomListener(map, 'click', function(e) {
-                var latlng = { lat: e.latLng.G, lng: e.latLng.K };
+                var myLatLng = e.latLng;
+                var latlng = { lat:  myLatLng.lat(), lng: myLatLng.lng() };
                 activityService.getPlaceName(latlng)
                     .then(function(result) {
                         vm.where = result;
@@ -127,7 +132,7 @@
          * @desc set marker position
          */
         function setMarkerPosition() {
-            var location = { lat:  vm.where.geometry.location.G, lng: vm.where.geometry.location.K };
+            var location = { lat:  vm.where.geometry.location.lat(), lng: vm.where.geometry.location.lng() };
             //click coordinates more accurate than geocoded by place coordinates
             var position = (clickCoordinates) ? clickCoordinates : location ;
             vm.activity.location.coordinates = [position.lat, position.lng];

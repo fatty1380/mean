@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$rootScope', '$scope', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($scope, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($rootScope, $scope, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -20,18 +20,7 @@
         vm.changeFeedSource = changeFeedSource;
         vm.updateWithNewActivities = updateWithNewActivities;
         vm.refresh = refresh;
-
-        updateFeedData();
-
-        function changeFeedSource() {
-            activityService.changeFeedSource();
-            updateFeedData();
-            initialize();
-        }
-
-        function updateFeedData() {
-            vm.feedData = activityService.getFeedData();
-        }
+        vm.addFriends = addFriends;
 
         /**
          * try to initialize if have no feed
@@ -40,14 +29,39 @@
             if (vm.feed.length > 0) {
                 startCheckNewActivities();
             } else {
+                updateFeedData();
                 initialize();
             }
         });
+
+        $rootScope.$on("clear", function () {
+            console.log('ActivityCtrl clear');
+            vm.feed = [];
+            vm.newActivities = 0;
+            vm.lastUpdate = Date.now();
+        });
+
+        function changeFeedSource() {
+            activityService.changeFeedSource();
+            updateFeedData();
+            initialize();
+        }
+
+        function addFriends () {
+            $state.go('account.profile.friends');
+        }
+
+        function updateFeedData() {
+            vm.feedData = activityService.getFeedData();
+        }
 
         /**
          * turn off interval before leave view
         * */
         $scope.$on('$ionicView.beforeLeave', function () {
+            stopCheckNewActivities();
+        });
+        $scope.$on('$ionicView.unloaded', function () {
             stopCheckNewActivities();
         });
 
@@ -62,9 +76,12 @@
                         initialize();
                     });
             } else {
-                $ionicLoading.show({
-                    template: vm.feedData.loadingText
-                });
+                console.log(vm.feedData);
+                if(vm.feedData){
+                    $ionicLoading.show({
+                        template: vm.feedData.loadingText
+                    });
+                }
             }
                 
             //get all feed
@@ -80,16 +97,22 @@
         }
 
         function startCheckNewActivities() {
-            utilsService.startClock(function () {
-                activityService.getFeedIds().then(function (feed) {
-                    if (feed.length > vm.feed.length) {
-                        vm.newActivities = feed.length - vm.feed.length;
-                    } else {
-                        vm.newActivities = 0;
-                    }
-                }, function (resp) {
-                });
-            }, settings.activityTimeout);
+            console.log(vm.feedData);
+            //update if we have feed list from fiends
+                utilsService.startClock(function () {
+                    activityService.getFeedIds().then(function (feed) {
+                        console.log(feed.length,vm.feed.length);
+                        if(vm.feedData.feedSource === 'items') {
+                            if (feed.length > vm.feed.length) {
+                                vm.newActivities = feed.length - vm.feed.length;
+                            } else {
+                                vm.newActivities = 0;
+                            }
+                        }
+                    }, function (resp) {
+                    });
+                }, settings.activityTimeout);
+
         }
 
         function stopCheckNewActivities() {
@@ -100,6 +123,7 @@
          *  @TODO update only new items
         */
         function updateWithNewActivities() {
+            stopCheckNewActivities();
             initialize();
         }
 

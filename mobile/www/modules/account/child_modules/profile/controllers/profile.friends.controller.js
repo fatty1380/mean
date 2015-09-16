@@ -5,9 +5,9 @@
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
 
-    FriendsCtrl.$inject = ['$state', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
+    FriendsCtrl.$inject = ['$state', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'profile', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
 
-    function FriendsCtrl($state, $filter, $ionicLoading, outsetUsersService, utilsService, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
+    function FriendsCtrl($state, $filter, $ionicLoading, outsetUsersService, utilsService, profile, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
         var vm = this;
 
         vm.friends = friends;
@@ -22,8 +22,35 @@
         vm.showRequestsModal = showRequestsModal;
         vm.addFriend = addFriend;
         vm.viewUser = viewUser;
+        vm.exitState = exitState;
         
         vm.getAvatar = getAvatar;
+        
+        initialize();
+        
+        ////////////////////////
+        
+        function initialize() {
+            vm.canEdit = !profile;
+            vm.profile = profile;
+            
+            if (vm.canEdit) {
+                vm.title = 'Friends';
+                vm.yourFriendsTitle = 'Your Friends';
+            }
+            else {
+                vm.title = vm.profile.displayName;
+                vm.yourFriendsTitle = 'Friends';
+                
+            }
+        }
+        
+        function exitState() {
+            // TODO: try $state.go('^') ... which will return to parent state, but actually won't
+            //       work because parent state (account.profile) is abstract :|
+            return $state.go('account.profile.user');
+            //$ionicGoBack()
+        }
 
         function showRequestsModal() {
             friendsService
@@ -80,6 +107,8 @@
         }
 
         function showAddFriendsModal() {
+            $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading Contacts ... ', duration: 20000 });
+
             contactsService
                 .find()
                 .then(function (response) {
@@ -98,16 +127,29 @@
                 })
                 .catch(function reject(err) {
                     console.error('Unable to resolve Contacts: ', err);
-                    return [];
+                    
+                    return addManually();
                 });
         }
 
         function addManually() {
-            $state.go('account.profile.friends.manual')
+           return profileModalsService
+                .showFriendManualAddModal()
+                .then(function success(result) {
+                    console.log('Manual Add Friend Rusult: ', result);
+                    return result;
+                })
+                .catch(function failure(err) {
+                    console.error('Add Friend Results failed', err);
+                    return null;
+                })
+                .finally(function done() {
+                    $ionicLoading.hide();
+                })
         }
 
         function getOutsetUsers(query) {
-            outsetUsersService
+           return outsetUsersService
                 .search(query)
                 .then(function (response) {
                     vm.users = response.data;

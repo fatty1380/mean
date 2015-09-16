@@ -21,7 +21,7 @@
                                     .then(function (resp) {
                                          defer.resolve();
                                          if(resp.message.data) {
-                                             $state.go('account.profile');
+                                             $state.go('account.profile.user');
                                          }
                                     });
                             }else{

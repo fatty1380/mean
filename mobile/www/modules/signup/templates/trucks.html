@@ -1,22 +1,22 @@
 <ion-view class="signup-section view-section compact-size">
 
-    <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
-        <h1 class="title">Create Account</h1>
-        <button class="button button-clear" ng-click="vm.continueToTrailers(false)">
-            Skip
-        </button>
-    </ion-header-bar>
+        <ion-header-bar align-title="center">
+            <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
+            <h1 class="title">Create Account</h1>
+            <button class="button button-clear" ng-click="vm.continueToTrailers(false)">
+                Skip
+            </button>
+        </ion-header-bar>
 
-    <div class="bar bar-subheader" >
-        <h3 class="title">Choose Your Truck Make</h3>
-    </div>
+        <div class="bar bar-subheader" >
+            <h3 class="title">Choose Your Truck Make</h3>
+        </div>
 
     <ion-pane class="has-footer">
         <ion-scroll>
             <div class="list select-truck">
-                <label class="item item-radio"  ng-repeat="truck in vm.trucks">
-                    <input type="radio" name="trucks" ng-model="vm.currentTruck" value="{{truck.name}}">
+                <label class="item item-radio"  ng-repeat="truck in vm.trucks" ng-class="{'active': vm.currentTruck === truck.name}" >
+                    <input type="radio" name="trucks"  ng-model="vm.currentTruck" value="{{truck.name}}">
                     <div class="item-content">
                         <p>{{ truck.name }}</p>
                         <div class="logo">

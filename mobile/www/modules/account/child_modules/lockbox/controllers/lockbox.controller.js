@@ -5,9 +5,9 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['lockboxDocuments', 'lockboxModalsService'];
+    LockboxCtrl.$inject = ['$scope', '$rootScope', 'lockboxDocuments', 'lockboxModalsService'];
 
-    function LockboxCtrl( lockboxDocuments,  lockboxModalsService) {
+    function LockboxCtrl( $scope, $rootScope, lockboxDocuments,  lockboxModalsService) {
         var vm = this;
 
         vm.currentDoc = null;
@@ -17,14 +17,17 @@
         vm.showEditModal = showEditModal;
         vm.showShareModal = showShareModal;
 
+        $rootScope.$on("clear", function () {
+            console.log('LockboxCtrl clear');
+            vm.currentDoc = null;
+            vm.documents = [];
+        });
 
-        activate();
+        $scope.$on('$ionicView.enter', function () {
+            getDocs();
+        });
         
         /// Implementation
-        
-        function activate() {
-            getDocs();
-        }
 
         function getDocs() {
             lockboxDocuments.getDocuments()
