@@ -507,11 +507,12 @@ $but-height: 90px;
 
   .bar{
     &.bar-subheader{
-      top:50%;
+      top:120px;
 
       h3{
         font-weight: normal;
         color: #fff;
+        line-height: 63px;
       }
     }
   }

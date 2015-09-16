@@ -10,22 +10,22 @@ body{
   background-repeat: repeat-x;
 
   &.full-size > .pane{
-    top: 200px;
+    top: 220px;
     height: auto;
   }
 
   &.mid-size > .pane{
-    top: 170px;
+    top: 180px;
     height: auto;
   }
 
   &.compact-size > .pane{
-    top: 130px;
+    top: 150px;
     height: auto;
   }
 
   &.min-size > .pane{
-    top: 64px;
+    top: 84px;
     height: auto;
   }
 
@@ -49,7 +49,16 @@ body{
       font-weight: bold;
 
       &:first-child,
-      &:last-child{top:11px;}
+      &:last-child{
+        top:0;
+        max-height: 63px;
+        line-height: 63px;
+        border: 0;
+      }
+      &:first-child:before,
+      &:last-child:before{
+        line-height: 63px;
+      }
 
       &.back-button{
         i{
