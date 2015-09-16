@@ -33,7 +33,16 @@
                 var trailer = selectedTrailers[i],
                     trailerExists =  trailerNames.indexOf(trailer) >= 0;
 
-                if(!trailerExists) trailers.push({name: trailer, checked: true});
+                if(!trailerExists){
+                    trailers.push({name: trailer, checked: true});
+                } else {
+                    for (var j = 0; j < trailers.length; j++) {
+                        var existingTrailer = trailers[j];
+                        if(existingTrailer.name === trailer){
+                            existingTrailer.checked = true;
+                        }
+                    }
+                }
             }
 
             return trailers;

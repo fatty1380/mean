@@ -72,9 +72,9 @@
              */
             vm.showEditAvatar = function (parameters) {
                 vm.camera.showActionSheet()
-                    .then(function success(rawImageResponse) {
-                        return avatarService.showEditModal(rawImageResponse);
-                    })
+                    //.then(function success(rawImageResponse) {
+                    //    return avatarService.showEditModal(rawImageResponse);
+                    //})
                     .then(function success(newImageResponse) {
                         vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
                     })
@@ -94,8 +94,9 @@
                     .showProfileEditModal(parameters)
                     .then(
                         function (result) {
-                        console.log(result);
-                        vm.profileData = result;
+                            if(!!result){
+                                vm.profileData = result;
+                            }
                     },
                     function (err) {
                         console.log(err);
