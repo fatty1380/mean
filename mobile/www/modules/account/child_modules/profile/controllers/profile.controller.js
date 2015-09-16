@@ -16,7 +16,7 @@
         vm.user = user;
         vm.camera = cameraService;
 
-        vm.canEdit = vm.profileData.id === vm.user.id;
+        vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
         vm.showFriends = showFriends;
 
@@ -72,9 +72,9 @@
              */
             vm.showEditAvatar = function (parameters) {
                 vm.camera.showActionSheet()
-                    //.then(function success(rawImageResponse) {
-                    //    return avatarService.showEditModal(rawImageResponse);
-                    //})
+                    .then(function success(rawImageResponse) {
+                        return avatarService.showEditModal(rawImageResponse);
+                    })
                     .then(function success(newImageResponse) {
                         vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
                     })
