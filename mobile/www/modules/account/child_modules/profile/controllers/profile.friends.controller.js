@@ -22,8 +22,15 @@
         vm.showRequestsModal = showRequestsModal;
         vm.addFriend = addFriend;
         vm.viewUser = viewUser;
+        vm.exitState = exitState;
         
         vm.getAvatar = getAvatar;
+        
+        function exitState() {
+            // TODO: try $state.go('^') ... which will return to parent state
+            return $state.go('account.profile.user');
+            //$ionicGoBack()
+        }
 
         function showRequestsModal() {
             friendsService
