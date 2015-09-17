@@ -17,6 +17,7 @@
         vm.recipientId = parameters.recipient.id || parameters.recipient;
 
         vm.close  = close;
+        vm.viewUser  = viewUser;
         vm.createMessage  = createMessage;
 
         scrollToBottom();
@@ -53,13 +54,6 @@
             })[0];
         }
 
-        function close() {
-            //$state.go('.', { recipientId: undefined })
-            $state.transitionTo($state.current.name, { recipientId: null }, { reload: false });
-            utilsService.stopClock();
-            vm.closeModal(null);
-        }
-
         function createMessage() {
             if(!vm.message) return;
 
@@ -91,10 +85,16 @@
                     console.log('MESSAGES WASN\'T CREATED ERROR ----- >>>', err);
                 });
         }
-        
+
+        function close() {
+            utilsService.stopClock();
+            vm.closeModal(null);
+        }
+
         // TODO : Move to common method
-        function viewUser(e) {
+        function viewUser() {
             console.log('Routing to User Profile Page for `%s`', vm.recipientName);
+            close();
             $state.go('account.profile.user', { userId: vm.recipientId });
         }
     }
