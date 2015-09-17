@@ -13,7 +13,8 @@
         vm.messages = [];
         vm.chats = [];
 
-        vm.openChatDetails = openChatDetails;
+        vm.showChatDetailsModal = showChatDetailsModal;
+        vm.getChats = getChats;
 
         $rootScope.$on("clear", function () {
             console.log('MessagesCtrl clear');
@@ -22,14 +23,12 @@
         });
 
         $scope.$on('$ionicView.enter', function () {
-            getChats();
+            if (!!recipientChat) {
+                showChatDetailsModal(recipientChat);
+            }else{
+                getChats();
+            }
         });
-
-        if (!!recipientChat) {
-            console.log('Initializing MessagesCtrl with Specific Chat', recipientChat);
-            showChatDetailsModal(recipientChat);
-        }
-        //getChats();
 
 
         //get my avatar
@@ -49,12 +48,13 @@
 
         }
 
-        function openChatDetails(object) {
-            console.log('openChatDetails() ',object.recipientName);
-            showChatDetailsModal(object);
-        }
+        //function openChatDetails(object) {
+          //  console.log('openChatDetails() ',object);
+           // showChatDetailsModal(object);
+       // }
 
         function showChatDetailsModal(parameters) {
+            console.log('showChatDetailsModal() ',parameters);
             messageModalsService
                 .showNewMassageModal(parameters)
                 .then(function () {

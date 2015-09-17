@@ -19,6 +19,7 @@
         vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
         vm.showFriends = showFriends;
+        vm.openChat = openChat;
 
         $rootScope.$on("clear", function () {
             console.log('ProfileCtrl my event occurred');
@@ -199,6 +200,12 @@
 
         vm.getReviews();
         vm.getExperience();
+
+        function openChat() {
+            if(!vm.canEdit){
+                $state.go('account.messages', { recipientId: vm.profileData.id });
+            }
+        }
 
         vm.endorsementsMap = {
             T: {

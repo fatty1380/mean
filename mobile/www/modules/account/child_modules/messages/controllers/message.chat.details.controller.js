@@ -55,7 +55,7 @@
 
         function close() {
             //$state.go('.', { recipientId: undefined })
-            $state.transitionTo($state.current.name, { recipientId: null }, { reload: false });
+          //  $state.transitionTo($state.current.name, { recipientId: null }, { reload: false });
             utilsService.stopClock();
             vm.closeModal(null);
         }
