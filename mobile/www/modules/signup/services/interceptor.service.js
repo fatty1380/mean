@@ -13,7 +13,7 @@
             $httpProvider.interceptors.push('AuthenticationInterceptor');
         });
 
-    AuthenticationInterceptor.$inject = ['$q', '$location', 'tokenService'];
+    AuthenticationInterceptor.$inject = ['$q', '$location', 'tokenService', 'utilsService'];
 
     'use strict';
     /**
@@ -27,7 +27,7 @@
      * @constructor
      * @ngInject
      */
-    function AuthenticationInterceptor($q, $location, tokenService) {
+    function AuthenticationInterceptor($q, $location, tokenService, utilsService) {
         return {
             request: function (config) {
                 if (config.url.substring(0, 4) == "http") {
@@ -40,6 +40,7 @@
                 // revoke client authentication if 401 is received
                 if (rejection != null && rejection.status === 401) {
                     console.warn('  eqweqe --->>> %o', rejection);
+                    utilsService.stopClock();
                     return $location.path('/home');
                 }
                 return $q.reject(rejection);

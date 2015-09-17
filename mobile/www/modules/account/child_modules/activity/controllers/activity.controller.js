@@ -76,7 +76,6 @@
                         initialize();
                     });
             } else {
-                console.log(vm.feedData);
                 if(vm.feedData){
                     $ionicLoading.show({
                         template: vm.feedData.loadingText
@@ -123,6 +122,7 @@
          *  @TODO update only new items
         */
         function updateWithNewActivities() {
+            vm.newActivities = 0;
             stopCheckNewActivities();
             initialize();
         }
