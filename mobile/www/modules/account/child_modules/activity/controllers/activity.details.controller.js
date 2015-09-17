@@ -27,7 +27,7 @@
             if (activityService.hasCoordinates(vm.entry)) {
                 var latLng = new google.maps.LatLng(vm.entry.location.coordinates[0], vm.entry.location.coordinates[1]);
                 map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 8,
+                    zoom: 12,
                     center: latLng,
                     draggable: true,
                     sensor: true,
