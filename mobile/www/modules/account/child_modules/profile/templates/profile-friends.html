@@ -53,7 +53,7 @@
             <!-- Outset users -->
             <div class="title" ng-if="vm.searchText.length >= 1">Outset Users</div>
             <ul class="list friends-list" ng-if="vm.users.length && !contacts.length && vm.searchText.length >= 2">
-                <li class="item" ng-repeat="user in vm.users">
+                <li class="item" ng-repeat="user in vm.users" ng-click="vm.viewUser(user, $event)">
                     <i class="ico ico-avatar" ></i>
                     <div class="item-content">
                         <strong>{{user.handle}}</strong>
