@@ -12,9 +12,9 @@
             <i class="ico ico-settingsicon ico-text-top"></i>
         </button>
         <button class="button button-clear" ng-if="!!vm.doFriendAction" ng-click="vm.doFriendAction()">
-            <span ng-if="vm.friendStatus === 0"><i class="ion-plus"></i> Add</span>
-            <a ng-if="vm.friendStatus === 1" class="padding-top"><span ng-if="!!vm.friendStatus" class="badge badge-balanced">in convoy</span></a>
-            <span ng-if="vm.friendStatus === -1"></span>
+            <span ng-if="vm.friendStatus === 'none'"><i class="ion-plus"></i> Add</span>
+            <span ng-if="vm.friendStatus === 'sent'" class="badge badge-balanced">invited</span>
+            <span ng-if="vm.friendStatus === 'friends'" class="badge badge-balanced">in convoy</span>
         </button>
     </ion-header-bar>
 

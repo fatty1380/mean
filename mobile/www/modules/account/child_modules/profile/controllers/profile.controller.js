@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope','$state', 'reviewService', 'experienceService', 'userService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$rootScope','$state', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, $state, reviewService, experienceService, userService, avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, $state, reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
         
         console.log('Loading $state: `%s`', $state.current.name);
@@ -20,12 +20,13 @@
 
         vm.showFriends = showFriends;
         vm.openChat = openChat;
+        vm.friendStatus = null;
 
         $rootScope.$on("clear", function () {
             console.log('ProfileCtrl my event occurred');
             vm.profileData = profile || user;
             vm.user = user;
-            vm.friendStatus = 0;
+            vm.friendStatus = null;
         });
 
         function showFriends() {
@@ -34,23 +35,48 @@
         }
         
         if (!vm.canEdit) {
-            if (vm.profileData.isFriend || vm.profileData.friends.indexOf(user.id) !== -1) {
-                vm.friendStatus = 1;
-            }
-            else if (vm.profileData.id === vm.user.id) {
-                vm.friendStatus = -1;
-            }
-            else {
-                vm.friendStatus = 0;
-            }
-            
+
+            friendsService
+                .getFriendStatus(vm.profileData.id)
+                .then(function (response) {
+                    var status = response.data.status;
+                    if(status) vm.friendStatus = status;
+                });
+
+
+            vm.addUserToFriends = function () {
+                var friend = vm.profileData;
+
+                if(!friend) return;
+
+                var requestData = {
+                    to: friend.id,
+                    text: 'Hi there! I want to add you to my friend list!'
+                },
+
+                serializedData = utilsService.serialize(requestData);
+
+                friendsService
+                    .createRequest(serializedData)
+                    .then(function (createdRequestResp) {
+                        if(createdRequestResp.status === 200){
+                            vm.friendStatus = 'sent';
+                            var template = 'You have invited ' + friend.firstName + ' to be friends.';
+                            $ionicLoading
+                                .show({template:template, duration: 2000});
+
+                        }
+                    });
+            };
+
             vm.doFriendAction = function doFriendAction(parameters) {
                 switch (vm.friendStatus) {
-                    case 0: alert('click ok to add ' + vm.profileData.displayName + ' to your convoy');
+                    case 'none':
+                        vm.addUserToFriends();
                         break;
-                    case 1: alert('The convoy is strong with ' + vm.profileData.displayName);
+                    case 'friends': alert('The convoy is strong with ' + vm.profileData.displayName);
                         break;
-                    case -1: alert('this is you');
+                    case 'sent': alert('Already sent the invitation to ' + vm.profileData.displayName);
                         break;
                 }
             }
@@ -150,27 +176,6 @@
                     })
             };
         }
-        
-        // This functionality has been moved to the "resolve"
-        // attribute for 'userProfile' on the account.profile
-        // and account.profile.user states.
-
-        // THIS IS NEEDED ONLY FOR DEVELOPMENT
-        // Function below is needed only for cases,
-        // when you are loading state skipping the login stage.
-        // For example directly loading profile state,
-        // IN THE REGULAR APP WORKFLOW userService will already contain
-        // all needed profile data.
-
-        // (function () {
-        //     var userPromise = userService.getUserData();
-        //     if (userPromise.then) {
-        //         userPromise.then(function (data) {
-        //             console.log('--==--==--=-=-= PROFILE DATA ---=-=-=-=-=-=-=', data);
-        //             vm.profileData = data;
-        //         })
-        //     }
-        // })();
 
         vm.reviews = [];
         vm.experience = [];
