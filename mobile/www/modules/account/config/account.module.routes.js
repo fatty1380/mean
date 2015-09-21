@@ -15,6 +15,7 @@
                 abstract: true,
                 cache: false,
                 templateUrl: 'modules/account/templates/account.html',
+                controller: 'AccountCtrl as vm',
                 resolve: {
                     user: function resolveLoggedInUser(userService) {
                         return userService.getUserData();
