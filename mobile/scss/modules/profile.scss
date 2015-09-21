@@ -371,3 +371,22 @@
     }
   }
 }
+
+
+.profile-activity{
+  .title{
+    display: block;
+    font-size: 14px;
+    line-height: 31px;
+    font-weight: bold;
+    color: #276b93;
+    text-transform: uppercase;
+    padding: 0 20px;
+  }
+
+  .no-feed-items{
+    display: block;
+    padding: 10px 20px 20px;
+    font-size: 14px;
+  }
+}

@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope','$state', '$ionicTabsDelegate', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$rootScope','$state', 'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, $state, $ionicTabsDelegate,  reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, $state, activityService,  reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
         
         console.log('Loading $state: `%s`', $state.current.name);
@@ -37,7 +37,33 @@
         
         if (!vm.canEdit) {
 
+            vm.feed = [];
             vm.experience = vm.profileData.experience;
+            vm.isFriend = vm.profileData.friends.indexOf(vm.user.id) >= 0;
+            vm.feedMessage = vm.isFriend ? 'No feed items' : 'You have to be friends to see user\'s feed';
+
+            if(vm.isFriend){
+                $ionicLoading.show({template: 'Loading ' + vm.profileData.firstName + '\'s Feed...'});
+                activityService
+                    .getFeed().then(function (result) {
+
+                        var sortedItems = [];
+
+                        for (var i = 0; i < result.length; i++) {
+                            var item = result[i],
+                                userID = item.user && item.user.id;
+
+                            if(userID === vm.profileData.id){
+                                sortedItems.push(item);
+                            }
+                        }
+
+                        vm.feed = sortedItems;
+                        $ionicLoading.hide();
+                    }, function (err) {
+                        $ionicLoading.hide();
+                    });
+            }
 
             friendsService
                 .getFriendStatus(vm.profileData.id)
@@ -82,7 +108,7 @@
                     case 'sent': alert('Already sent the invitation to ' + vm.profileData.displayName);
                         break;
                 }
-            }
+            };
         }
 
         if (vm.canEdit) { // TODO: Restore this || vm.profileData.id === vm.user.id) {

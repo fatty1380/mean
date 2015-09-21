@@ -72,6 +72,10 @@
 
     .item-input-wrapper {
       background: none;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      border-radius: 0;
+      border-top: 1px solid #3eaeb1;
 
       textarea {
         width: 100%;
@@ -85,7 +89,11 @@
 
     .button-positive {
       border: 0;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      border-radius: 0;
       padding: 0 40px;
+      margin-left: 0;
     }
   }
 }

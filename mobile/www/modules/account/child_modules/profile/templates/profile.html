@@ -48,7 +48,7 @@
                             </div>
                         </ion-item>
                     </ion-list>
-                    <div class="text-center padding-top"><strong>No reviews yet</strong></div>
+                    <div ng-if="!vm.reviews || !vm.reviews.length" class="no-content">No Reviews yet</div>
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
@@ -98,6 +98,11 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="profile-activity activity" ng-if="vm.feed">
+                        <strong class="title">{{vm.profileData.firstName}}'s feed:</strong>
+                        <oset-feed-item ng-if="vm.feed.length" ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
+                        <div ng-if="!vm.feed.length" class="no-feed-items">{{ vm.feedMessage }}</div>
+                    </div>
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()' > <i class="ico ico-share"></i>Share</button>
                 <button class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()"><i class="ico ico-share"></i>Send Message</button>
@@ -118,9 +123,7 @@
                             </em>
                         </ion-item>
                     </ion-list>
-                    <ion-item ng-if="vm.experience.length === 0" class="item center">
-                        <strong>No Experience</strong>
-                    </ion-item>
+                    <div ng-if="!vm.experience || !vm.experience.length" class="no-content">No Experience</div>
                 </ion-scroll>
                 <button class="button content-button" ng-click="vm.showAddExperienceModal()"><i class="ico ico-share"></i>Add Experience</button>
             </ion-tab>

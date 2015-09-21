@@ -16,6 +16,7 @@
         
         vm.recipientId = parameters.recipient.id || parameters.recipient;
 
+        vm.viewUser = viewUser;
         vm.close  = close;
         vm.createMessage  = createMessage;
 
@@ -66,9 +67,6 @@
             var messageObj = {
                 text: vm.message,
                 recipient: parameters.recipient
-                //recipient: "55b27b1893e595310272f1d0"  //Sergey Rykov
-                //recipient: "55a8c832f58ef0900b7ca14c"  //test@test
-               // recipient: "55a5317e4cec3d4a40d4bfa9"  //markov.flash
             };
 
             console.log('createMessage ',messageObj);
@@ -92,9 +90,9 @@
                 });
         }
         
-        // TODO : Move to common method
         function viewUser(e) {
             console.log('Routing to User Profile Page for `%s`', vm.recipientName);
+            vm.closeModal(null);
             $state.go('account.profile', { userId: vm.recipientId });
         }
     }
