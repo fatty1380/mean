@@ -34,11 +34,11 @@
                 .then(
                     function (response) {
                         console.log('Documents List', response);
-                        vm.documents = response.data instanceof Array && response.data.length ? response.data : lockboxDocuments.getStubDocuments();
+                        vm.documents = response.data instanceof Array && response.data.length ? response.data : [];
                     },
                     function (response) {
                         console.log('Documents !!!', response);
-                        vm.documents = lockboxDocuments.getStubDocuments();
+                        vm.documents = [];
                     });
         }
 

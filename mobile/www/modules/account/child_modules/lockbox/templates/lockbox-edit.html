@@ -23,6 +23,7 @@
                     <button class="button button-small" ng-click="vm.rename($index)">Rename</button>
                 </li>
             </ul>
+            <div ng-if="!vm.documents.length" class="no-content">No documents to edit</div>
         </ion-scroll>
     </ion-pane>
 
