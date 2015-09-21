@@ -49,7 +49,7 @@
         }
 
         function cancel() {
-            $scope.closeModal(true);
+            $scope.closeModal(null);
         }
 
         function getAvatar(friend) {

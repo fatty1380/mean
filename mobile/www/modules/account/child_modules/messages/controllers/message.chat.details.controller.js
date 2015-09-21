@@ -95,7 +95,7 @@
         // TODO : Move to common method
         function viewUser(e) {
             console.log('Routing to User Profile Page for `%s`', vm.recipientName);
-            $state.go('account.profile.user', { userId: vm.recipientId });
+            $state.go('account.profile', { userId: vm.recipientId });
         }
     }
 })();

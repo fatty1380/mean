@@ -13,6 +13,7 @@
             .state('account', {
                 url: '/account',
                 abstract: true,
+                cache: false,
                 templateUrl: 'modules/account/templates/account.html',
                 resolve: {
                     user: function resolveLoggedInUser(userService) {
@@ -24,7 +25,7 @@
 
             .state('account.profile', {
                 url: '/profile/:userId',
-                abstract: true,
+                cache: false,
                 views: {
                     'profile': {
                         templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
@@ -75,16 +76,6 @@
                             }
                         }]
                 }
-            })
-
-            .state('account.profile.user', {
-                url: '',
-                views: {
-                    'profile@account': {
-                        templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
-                        controller: 'ProfileCtrl as vm'
-                    }
-                },
             })
 
             .state('account.profile.friends', {

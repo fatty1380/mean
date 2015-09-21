@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope','$state', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$rootScope','$state', '$ionicTabsDelegate', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, $state, reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, $state, $ionicTabsDelegate,  reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
         
         console.log('Loading $state: `%s`', $state.current.name);
@@ -15,6 +15,7 @@
         vm.profileData = profile || user;
         vm.user = user;
         vm.camera = cameraService;
+        vm.reviews = [];
 
         vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
@@ -35,6 +36,8 @@
         }
         
         if (!vm.canEdit) {
+
+            vm.experience = vm.profileData.experience;
 
             friendsService
                 .getFriendStatus(vm.profileData.id)
@@ -90,6 +93,8 @@
              * Placeholder for showing app settings
              */
             vm.showUserSettings = null;
+
+            vm.experience = vm.user.experience;
 
             /**
              * showEditAvatar
@@ -175,10 +180,23 @@
                         console.log(err);
                     })
             };
+
+            vm.getReviews = function () {
+                reviewService
+                    .getUserReviews()
+                    .then(function (response) {
+                        vm.reviews = response.data;
+                    })
+            };
+            vm.getExperience = function () {
+                experienceService
+                    .getUserExperience()
+                    .then(function (response) {
+                        vm.experience = response.data;
+                    })
+            };
         }
 
-        vm.reviews = [];
-        vm.experience = [];
 
         vm.getReviews = function () {
             reviewService
@@ -187,24 +205,13 @@
                     vm.reviews = response.data;
                 })
         };
-        vm.getExperience = function () {
-            experienceService
-                .getUserExperience()
-                .then(function (response) {
-                    vm.experience = response.data;
-                })
-        };
+
         vm.postReview = function (id, review) {
             reviewService
                 .postReviewForProfile(id, review)
         };
-        /*vm.postExperience = function (experience) {
-            experienceService
-                .postUserExperience(experience)
-        };*/
 
         vm.getReviews();
-        vm.getExperience();
 
         function openChat() {
             if(!vm.canEdit){

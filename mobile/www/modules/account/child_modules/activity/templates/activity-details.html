@@ -15,7 +15,7 @@
                         <div class="time" ng-if="vm.entry.created"><i class="ico ico-timesmall"></i>{{vm.entry.created | date:'mediumDate'}}</div>
                         <div class="message">
                             <a class="user-link" ng-click="$event.stopPropagation()" 
-                                ui-sref="account.profile.user({userId: entry.user.id})">
+                                ui-sref="account.profile({userId: entry.user.id})">
                                 <strong>{{vm.entry.user.displayName}}</strong>
                             </a>
                             {{ vm.entry.title }}

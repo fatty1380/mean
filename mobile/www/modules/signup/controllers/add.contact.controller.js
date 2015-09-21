@@ -21,10 +21,10 @@
             registerService.updateUser(registerService.getDataProps())
                 .then(function (response) {
                     if(response.success) {
-                        $state.go('account.profile.user');
+                        $state.go('account.profile');
                     }
                 }, function (err) {
-                    $state.go('account.profile.user');
+                    $state.go('account.profile');
                 });
         }
 
@@ -70,7 +70,7 @@
                         registerService.updateUser(registerService.getDataProps())
                             .then(function (response) {
                                 if(response.success) {
-                                    $state.go('account.profile.user');
+                                    $state.go('account.profile');
                                 }
                             });
                     } else {

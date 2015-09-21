@@ -46,10 +46,7 @@
         }
         
         function exitState() {
-            // TODO: try $state.go('^') ... which will return to parent state, but actually won't
-            //       work because parent state (account.profile) is abstract :|
-            return $state.go('account.profile.user');
-            //$ionicGoBack()
+            return $state.go('^');
         }
 
         function showRequestsModal() {
@@ -74,7 +71,7 @@
         
         function viewUser(user, e) {
             console.log('Routing to User Profile Page for `%s`', user.displayName)
-            $state.go('account.profile.user', { userId: user.id });
+            $state.go('account.profile', { userId: user.id });
         }
 
         function addFriend(friend) {

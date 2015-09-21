@@ -60,7 +60,7 @@
                         .me()
                         .then(function (profileData) {
                             userService.profileData = profileData.message.data;
-                            $state.go('account.profile.user');
+                            $state.go('account.profile');
                         });
 
                     vm.error = '';
