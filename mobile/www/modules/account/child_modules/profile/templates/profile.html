@@ -24,6 +24,7 @@
         </div>
         <div class="contacts-amount" ng-click="vm.showFriends();">
             <span class="ico ico-avatar ico-middle"></span>
+            <span ng-if="vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
             <strong>{{vm.profileData.friends.length}}</strong>
         </div>
     </div>

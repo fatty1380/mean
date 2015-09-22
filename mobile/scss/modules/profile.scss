@@ -33,6 +33,16 @@
     margin-top: -13px;
     color: #fff;
 
+    .badge{
+      position: absolute;
+      left: -5px;
+      top: -4px;
+      font-size: 10px;
+      min-width: 0;
+      padding: 3px 5px;
+      line-height: 10px;
+    }
+
     strong{
       vertical-align: middle;
     }

@@ -23,8 +23,6 @@
         vm.getAvatar = getAvatar;
         vm.extendWithUserObject = extendWithUserObject;
 
-        updateService.resetUpdates('requests');
-
         function handleRequest(request, action) {
             var data = { action: action},
                 index = vm.requests.indexOf(request);
@@ -32,6 +30,7 @@
             friendsService
                 .updateRequest(request.id, data)
                 .then(function () {
+                    updateService.resetUpdates('requests', vm.requests.length-1);
                     if(index >= 0) vm.requests.splice(index);
                 });
         }

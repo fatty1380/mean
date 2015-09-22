@@ -10,10 +10,7 @@
     function AccountCtrl($rootScope, updateService) {
         var vm = this;
 
-        vm.updates = {
-            messages: 0,
-            activities: 0
-        };
+        vm.updates = updateService.getLastUpdates();
 
         $rootScope.$on('updates-available', function (event, updates) {
             vm.updates = updates;

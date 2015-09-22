@@ -41,14 +41,16 @@
                                                 welcomeService.welcomeUser = false;
                                             });
                                     }
-                                }]
+                                }],
+                            updates: ['updateService', function (updateService) {
+                                return updateService.getLastUpdates();
+                            }]
                         }
                     }
                 },
                 resolve: {
                     profile: ['$stateParams', 'registerService',
                         function resolveUserProfile($stateParams, registerService) {
-
                             if (!!$stateParams.userId) {
                                 return registerService.getProfileById($stateParams.userId)
                                     .then(function success(response) {

@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope','$state', 'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$rootScope', 'updateService', '$state', 'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, $state, activityService,  reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, updateService, $state, activityService,  reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
         
         console.log('Loading $state: `%s`', $state.current.name);
@@ -15,6 +15,7 @@
         vm.profileData = profile || user;
         vm.user = user;
         vm.camera = cameraService;
+        vm.updates = updateService.getLastUpdates();
         vm.reviews = [];
 
         vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
@@ -121,6 +122,10 @@
             vm.showUserSettings = null;
 
             vm.experience = vm.user.experience;
+
+            $rootScope.$on('updates-available', function (event, updates) {
+                vm.updates = updates;
+            });
 
             /**
              * showEditAvatar

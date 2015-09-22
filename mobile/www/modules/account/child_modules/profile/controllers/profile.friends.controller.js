@@ -58,10 +58,10 @@
             friendsService
                 .getRequestsList()
                 .then(function (requests) {
+                    vm.newRequests = requests.data.length;
                     profileModalsService
                         .showFriendRequestModal(requests.data)
                         .then(function (updateFriends) {
-                            vm.newRequests = 0;
                             if(updateFriends){
                                 friendsService
                                     .retrieveFriends()

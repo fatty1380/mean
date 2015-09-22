@@ -90,15 +90,20 @@
         }
 
         function getFriendRequestUpdates (requests) {
-            var latestRequest = getMostRecentItem(requests);
-
-            if(!currentRequest){
-                currentRequest = latestRequest;
-            } else if (currentRequest && currentRequest < latestRequest){
-                updates.requests = getNewElementsAmount(requests, currentRequest);
-                currentRequest = latestRequest;
+            if(!updates.requests && requests.length || (updates.requests != requests.length)) {
                 updateAvailable = true;
             }
+            updates.requests = requests.length;
+
+            //var latestRequest = getMostRecentItem(requests);
+            //
+            //if(!currentRequest){
+            //    currentRequest = latestRequest;
+            //} else if (currentRequest && currentRequest < latestRequest){
+            //    updates.requests = getNewElementsAmount(requests, currentRequest);
+            //    currentRequest = latestRequest;
+            //    updateAvailable = true;
+            //}
         }
 
         function getNewElementsAmount (elements, offset) {
@@ -125,7 +130,6 @@
             return Math.max.apply(this, itemsArray);
         }
 
-
         function getMessagesStatus () {
             return $http.get(settings.messages);
         }
@@ -146,17 +150,18 @@
                 .start(sec);
         }
 
-        function resetUpdates (data) {
+        function resetUpdates (data, value) {
             if(!data) {
                 updates = {
                     messages: 0,
                     activities: 0,
                     requests: 0
                 };
-            } else
-            if(updates[data]){
-                updates[data] = 0;
+            } else if(updates[data]){
+                updates[data] = value || 0;
             }
+            console.warn('after reset updates --->>>', updates);
+            $rootScope.$broadcast('updates-available', updates);
         }
 
         return  {
