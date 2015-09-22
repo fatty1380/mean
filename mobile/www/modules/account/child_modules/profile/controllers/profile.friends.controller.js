@@ -5,9 +5,9 @@
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
 
-    FriendsCtrl.$inject = ['$state', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'profile', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
+    FriendsCtrl.$inject = ['$state', 'updates', '$rootScope', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'profile', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
 
-    function FriendsCtrl($state, $filter, $ionicLoading, outsetUsersService, utilsService, profile, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
+    function FriendsCtrl($state, updates,  $rootScope, $filter, $ionicLoading, outsetUsersService, utilsService, profile, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
         var vm = this;
 
         vm.friends = friends;
@@ -33,7 +33,8 @@
         function initialize() {
             vm.canEdit = !profile;
             vm.profile = profile;
-            
+            vm.newRequests = updates.requests || 0;
+
             if (vm.canEdit) {
                 vm.title = 'Friends';
                 vm.yourFriendsTitle = 'Your Friends';
@@ -41,8 +42,12 @@
             else {
                 vm.title = vm.profile.displayName;
                 vm.yourFriendsTitle = 'Friends';
-                
             }
+
+            $rootScope.$on('updates-available', function (event, updates) {
+                vm.newRequests = updates.requests;
+            });
+
         }
         
         function exitState() {
@@ -56,6 +61,7 @@
                     profileModalsService
                         .showFriendRequestModal(requests.data)
                         .then(function (updateFriends) {
+                            vm.newRequests = 0;
                             if(updateFriends){
                                 friendsService
                                     .retrieveFriends()

@@ -3,7 +3,7 @@
     <ion-header-bar>
         <button class="button button-clear" ng-click="vm.exitState();">Close</button>
         <h1 class="title">{{vm.title}}</h1>
-        <button class="button button-clear" ng-if="vm.canEdit" ng-click="vm.showRequestsModal();">Requests</button>
+        <button class="button button-clear" ng-if="vm.canEdit" ng-click="vm.showRequestsModal();"><span ng-if="vm.newRequests" class="badge badge-assertive">{{vm.newRequests}}</span> Requests</button>
     </ion-header-bar>
 
     <ion-pane class="friends-pane" ng-class="{'has-footer':vm.canEdit}">

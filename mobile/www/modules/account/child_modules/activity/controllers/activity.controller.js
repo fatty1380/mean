@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$rootScope', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$rootScope', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, $scope, $state,  activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($rootScope, updateService, $scope, $state,  activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -83,6 +83,8 @@
                     });
                 }
             }
+
+            updateService.resetUpdates('activities');
                 
             //get all feed
             return activityService.getFeed().then(function (result) {

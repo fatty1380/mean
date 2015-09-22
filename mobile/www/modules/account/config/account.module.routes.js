@@ -91,6 +91,9 @@
                                     .then(function (response) {
                                         return response;
                                     });
+                            }],
+                            updates: ['updateService', function (updateService) {
+                                return updateService.getLastUpdates();
                             }]
                         }
                     }

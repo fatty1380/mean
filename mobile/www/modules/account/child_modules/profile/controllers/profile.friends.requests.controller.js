@@ -11,9 +11,9 @@
         .module('account')
         .controller('ProfileFriendRequestCtrl', ProfileFriendRequestCtrl);
 
-    ProfileFriendRequestCtrl.$inject = ['$scope', 'friendsService', 'parameters', 'registerService'];
+    ProfileFriendRequestCtrl.$inject = ['$scope', 'friendsService', 'parameters', 'registerService', 'updateService'];
 
-    function ProfileFriendRequestCtrl($scope, friendsService, parameters, registerService) {
+    function ProfileFriendRequestCtrl($scope, friendsService, parameters, registerService, updateService) {
         var vm = this;
 
         vm.requests = parameters || [];
@@ -22,6 +22,8 @@
         vm.handleRequest = handleRequest;
         vm.getAvatar = getAvatar;
         vm.extendWithUserObject = extendWithUserObject;
+
+        updateService.resetUpdates('requests');
 
         function handleRequest(request, action) {
             var data = { action: action},

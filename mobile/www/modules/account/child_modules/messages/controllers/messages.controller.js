@@ -5,9 +5,9 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['$rootScope', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
+    MessagesCtrl.$inject = ['$rootScope', 'updateService', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
 
-    function MessagesCtrl ($rootScope, $scope, messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
+    function MessagesCtrl ($rootScope, updateService, $scope, messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
 
         var vm  = this;
         vm.messages = [];
@@ -15,6 +15,10 @@
 
         vm.showChatDetailsModal = showChatDetailsModal;
         vm.getChats = getChats;
+
+
+        updateService.resetUpdates('messages');
+
 
         $rootScope.$on("clear", function () {
             console.log('MessagesCtrl clear');
