@@ -27,6 +27,12 @@
                 if (_.isEmpty(value)) {
                     debugger;
                 }
+                else if (!_.isObject(value)) {
+                    debugger;
+                    $window.user = null;
+                    return;
+                }
+                
                 $window.user = value;
             }
         });

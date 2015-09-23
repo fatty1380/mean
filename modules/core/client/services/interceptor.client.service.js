@@ -32,7 +32,7 @@
     function AuthenticationInterceptor($q, $location, TokenFactory) {
         return {
             request: function (config) {
-                if (_.startsWith(config.url, 'http') || _.startsWith(config.url, 'api')) {
+                if (_.startsWith(config.url, 'http') || _.contains(config.url, 'api/')) {
                     config.headers = config.headers || {};
                     config.headers.Authorization = [TokenFactory.get('token_type'), TokenFactory.get('access_token')].join(' ');
                 }
