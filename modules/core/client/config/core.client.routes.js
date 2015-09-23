@@ -33,7 +33,6 @@
 
     resolveUser.$inject = ['Authentication', 'LoginService'];
     function resolveUser(Authentication, LoginService) {
-        debugger;
         return LoginService.getUser().then(
             function success(user) {
 

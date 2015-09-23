@@ -25,10 +25,12 @@
             },
             set: function (value) {
                 if (_.isEmpty(value)) {
-                    debugger;
+                    //debugger;
+                    $window.user = null;
+                    return;
                 }
                 else if (!_.isObject(value)) {
-                    debugger;
+                    //debugger;
                     $window.user = null;
                     return;
                 }
