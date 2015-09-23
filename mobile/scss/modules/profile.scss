@@ -48,6 +48,15 @@
     }
   }
 
+  .handle{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    line-height: 25px;
+    margin-top: -13px;
+    color: #fff;
+  }
+
   &.compact{
     position: static;
     left: auto;
