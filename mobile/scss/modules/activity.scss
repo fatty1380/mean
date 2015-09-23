@@ -58,9 +58,20 @@
       .ico {
         margin: 1px;
       }
+      
+      .activity-summary {
+        display: inline-block;
+        overflow: hidden;
+      }
 
       .last-location,
-      .current-location{white-space: normal;}
+      .current-location{
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: block;
+          margin-top: 2px;
+      }
 
       a.user-link {
         text-decoration: none;
@@ -91,17 +102,21 @@
         }
         .miles, .likes {
           float: left;
+          padding-right: 4px;
         }
         .comments {
           float: right;
+          padding-left: 4px;
         }
       }
 
       .title{
-        display: inline-block;
+        display: block;
         overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis;
-        padding: 0 10px 5px 5px;
+        font-weight: 500;
+        //padding: 0 10px 5px 5px;
       }
       
       .message{
