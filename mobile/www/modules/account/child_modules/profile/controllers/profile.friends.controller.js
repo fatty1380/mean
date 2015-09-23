@@ -80,7 +80,8 @@
             $state.go('account.profile', { userId: user.id });
         }
 
-        function addFriend(friend) {
+        function addFriend(friend, e) {
+            e.stopPropagation();
             if(!friend) return;
 
             var requestData = {

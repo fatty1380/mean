@@ -59,7 +59,7 @@
                         <strong>{{user.handle}}</strong>
                         {{user.firstName}} {{user.lastName}}
                     </div>
-                   <button ng-if="vm.searchText.length>0" class="button button-small list-button" ng-click="vm.addFriend(user)">Add</button>
+                   <button ng-if="vm.searchText.length>0" class="button button-small list-button" ng-click="vm.addFriend(user, $event)">Add</button>
                 </li>
             </ul>
             <div ng-if="vm.searchText.length >= 1 && !vm.users.length" class="no-matches">
