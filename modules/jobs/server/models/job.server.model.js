@@ -153,7 +153,7 @@ JobSchema.pre('init', function (next, data) {
 });
 
 JobSchema.virtual('payString').get(function () {
-    log.debug('virtual.payString', 'GET', {payRate: this.payRate});
+    log.trace('virtual.payString', 'GET', {payRate: this.payRate});
 
     var retval = '';
 

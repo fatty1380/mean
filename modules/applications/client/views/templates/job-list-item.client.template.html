@@ -93,7 +93,7 @@
                         </div>
                     </div>
 
-                    <div ng-repeat="application in vm.job.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"
+                    <div ng-repeat="application in vm.applications | orderBy:(vm.sorting[vm.visibleTab]):!!vm.reverseSort | filter: vm.defaultFiltering[vm.activeTab] | filter: vm.filterApplications"
                          class="row tab-body-item applicant_item">
                         <pre>{{application.isActive}}</pre>
                         <oset-application-list-item user-type="owner"
