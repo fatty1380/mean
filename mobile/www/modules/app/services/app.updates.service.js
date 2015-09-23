@@ -127,28 +127,27 @@
         }
 
         function getNewElements (elements, offset) {
-            var sortedDates, amount, dates,
+            var sortedElements, modifiedElements,
                 newItems = [];
 
-            dates = elements.map(function (el) {
+            modifiedElements = elements.map(function (el) {
                 var tempObj = {};
+
                 tempObj.time = new Date(el.created).getTime();
                 tempObj.id = el.sender._id;
 
                 return tempObj;
             });
 
-            sortedDates = dates.sort(function (a,b) {
+            sortedElements = modifiedElements.sort(function (a,b) {
                 return b.time - a.time;
             });
 
-            console.warn(' sortedDates --->>>', sortedDates);
+            for(var key in sortedElements){
+                if(sortedElements.hasOwnProperty(key)){
+                    var id = sortedElements[key].id;
 
-            for(var key in sortedDates){
-                if(sortedDates.hasOwnProperty(key)){
-                    var id = sortedDates[key].id;
-
-                    if(sortedDates[key].time === offset) break;
+                    if(sortedElements[key].time === offset) break;
 
                     if(!messageObject.byIds[id]){
                         messageObject.byIds[id] = 1;
@@ -156,7 +155,7 @@
                         messageObject.byIds[id] = messageObject.byIds[id] + 1;
                     }
 
-                    newItems.push(sortedDates[key]);
+                    newItems.push(sortedElements[key]);
                 }
             }
 
@@ -169,12 +168,6 @@
             messageObject.amount = messageObject.newItems.length;
 
             return messageObject;
-
-            //amount = sortedDates.indexOf(offset);
-
-            //obj.total = amount > 0 ? amount : 0;
-
-            //return obj;
         }
 
         //function getNewElementsAmount (elements, offset) {
@@ -201,6 +194,45 @@
             return Math.max.apply(this, datesArray);
         }
 
+        function resetUpdates (data, value) {
+            if(!data) {
+                updates = {
+                    messages: 0,
+                    activities: 0,
+                    requests: 0
+                };
+            } else if(updates[data]){
+                if(data === 'messages'){
+                    updates[data] = resetMessages(value);
+                }else{
+                    updates[data] = value || 0;
+                }
+            }
+            $rootScope.$broadcast('updates-available', updates);
+        }
+
+        function resetMessages (id) {
+            var messages = updates.messages,
+                tempArray = [];
+
+            delete messages.byIds[id];
+
+            for (var i = 0; i < messages.newItems.length; i++) {
+                var item = messages.newItems[i];
+
+                if(item.id != id){
+                    tempArray.push(item);
+                }
+            }
+
+            return {
+                newItems: tempArray,
+                byIds: messages.byIds,
+                amount: tempArray.length
+            }
+
+        }
+
         function getMessagesStatus () {
             return $http.get(settings.messages);
         }
@@ -222,39 +254,7 @@
                 .start(sec);
         }
 
-        function resetUpdates (data, value) {
-            console.info(' --->>> reset Triggered <<<--- ');
-            if(!data) {
-                updates = {
-                    messages: 0,
-                    activities: 0,
-                    requests: 0
-                };
-            } else if(updates[data]){
-                if(data === 'messages'){
-                    delete updates.messages.byIds[value];
-                    var currentItems = updates.messages.newItems,
-                        tempArray = [];
-
-                    for (var i = 0; i < currentItems.length; i++) {
-                        var item = updates.messages.newItems[i];
-
-                        if(item.id != value){
-                            tempArray.push(item);
-                        }
-                    }
-
-                    updates.messages.newItems = tempArray;
-                    updates.messages.amount = tempArray.length;
-
-                }else{
-                    updates[data] = value || 0;
-                }
-            }
-            $rootScope.$broadcast('updates-available', updates);
-        }
-
-        return  {
+        return {
             getLastUpdates: getLastUpdates,
             checkForUpdates: checkForUpdates,
             resetUpdates: resetUpdates
