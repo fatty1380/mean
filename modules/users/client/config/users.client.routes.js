@@ -57,20 +57,22 @@
                         }
                     },
                     resolve: {
-                        user: ['Authentication', 'LoginService', '$stateParams', function resolveUser(Authentication, LoginService, $stateParams) {
+                        user: ['Authentication', 'LoginService', function resolveUser(Authentication, LoginService) {
                             return LoginService.getUser().then(
                                 function success(user) {
+
+                                    if (!Authentication.user) {
+                                        debugger;
+                                        Authentication.user = user;
+                                    }
+
                                     return user;
                                 },
                                 function reject(reason) {
                                     console.error('Unable to load user - not logged in?', reason);
 
                                     return null;
-                                }
-                                )
-
-                            // $stateParams.userId = $stateParams.userId || Authentication.isLoggedIn() && Authentication.user.id || '';
-                            // return Authentication.user;
+                                });
                         }],
                         profile: ['user', '$stateParams', 'Profiles', function resolveProfile(user, $stateParams, Profiles) {
                             if (_.isEmpty($stateParams.userId)) {
@@ -83,11 +85,11 @@
                                 },
                                 function reject(reason) {
                                     console.error('Unable to load profile: ', reason);
-                                    
+
                                     debugger;
-                                    
+
                                     return null;
-                                    
+
                                 });
                         }],
                         company: ['profile', 'Companies', function resolveCompany(profile, Companies) {

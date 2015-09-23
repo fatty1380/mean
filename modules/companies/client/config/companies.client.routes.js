@@ -1,17 +1,22 @@
 (function () {
     'use strict';
+    
+    //Setting up route
+    angular.module('companies').config(config);
 
+    //////////////////////
+    moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
     function moduleConfigResolve(AppConfig, auth) {
         return AppConfig.getModuleConfig(auth.user.type, 'company');
     }
 
-    function companyResolve(Companies, params, auth) {
-
+    //////////////////////
+    companyResolve.$inject = ['user', 'Companies', '$stateParams', 'Authentication'];
+    function companyResolve(user, Companies, params, auth) {
 
         if (!!params.companyId) {
             return Companies.get(params.companyId);
         }
-
 
         var userId;
 
@@ -36,6 +41,8 @@
         });
     }
 
+    //////////////////////
+    resolveSubscription.$inject = ['Payments', '$stateParams', 'Authentication'];
     function resolveSubscription(Payments, params, auth) {
 
         var companyId = params.companyId || auth.user && auth.user.company && (auth.user.company._id || auth.user.company);
@@ -43,29 +50,34 @@
         return Payments.Subscription.get({ companyId: companyId }).$promise;
     }
 
+    //////////////////////
+    resolveSubscriptions.$inject = ['AppConfig'];
     function resolveSubscriptions(config) {
         return config.getAsync('subscriptions');
     }
 
+    //////////////////////
+    resolveSubscriptionDetails.$inject = ['AppConfig', '$stateParams', '$log'];
     function resolveSubscriptionDetails(config, $stateParams, $log) {
         var planId = $stateParams.planId;
 
 
         return config.getAsync('subscriptions').then(
-            function(success) {
-                var details = _.find(success.packages, {'planId': planId});
+            function (success) {
+                var details = _.find(success.packages, { 'planId': planId });
 
-                if(!details) {
+                if (!details) {
                     throw new Error('Subscription Information not found');
                 }
                 return details;
             },
-            function(error) {
+            function (error) {
                 $log.error('Error retreiving available subscription types', error);
-            }
-        );
+            });
     }
 
+    //////////////////////
+    config.$inject = ['$stateProvider'];
     function config($stateProvider) {
         // Companies state routing
         $stateProvider.
@@ -81,7 +93,7 @@
                 url: '/list',
                 templateUrl: '/modules/companies/views/list-companies.client.view.html',
                 parent: 'companies',
-                controller: ['companies', function(companies) {
+                controller: ['companies', function (companies) {
                     var vm = this;
                     vm.companies = companies;
                 }],
@@ -163,28 +175,15 @@
                 parent: 'fixed-opaque',
                 resolve: {
                     report: resolveSubscriptionDetails,
-                    token: ['Payments', function(payments) {
+                    token: ['Payments', function (payments) {
                         return payments.getToken().$promise;
                     }],
                     company: companyResolve,
-                    applicant: function() {return null;}
+                    applicant: function () { return null; }
                 },
                 controller: 'PaymentController',
                 controllerAs: 'vm',
                 bindToController: true
             });
     }
-
-    // Dependency Injection
-    companyResolve.$inject = ['Companies', '$stateParams', 'Authentication'];
-    moduleConfigResolve.$inject = ['AppConfig', 'Authentication'];
-    resolveSubscriptions.$inject = ['AppConfig'];
-    resolveSubscription.$inject = ['Payments', '$stateParams', 'Authentication'];
-    resolveSubscriptionDetails.$inject = ['AppConfig', '$stateParams', '$log'];
-
-    config.$inject = ['$stateProvider'];
-
-    //Setting up route
-    angular.module('companies').config(config);
-})
-    ();
+})();

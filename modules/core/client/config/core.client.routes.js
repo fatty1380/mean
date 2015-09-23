@@ -31,6 +31,26 @@
         // }]);
     }
 
+    resolveUser.$inject = ['Authentication', 'LoginService'];
+    function resolveUser(Authentication, LoginService) {
+        debugger;
+        return LoginService.getUser().then(
+            function success(user) {
+
+                if (!Authentication.user) {
+                    debugger;
+                    Authentication.user = user;
+                }
+
+                return user;
+            },
+            function reject(reason) {
+                console.error('Unable to load user - not logged in?', reason);
+
+                return null;
+            });
+    }
+
     function config($stateProvider, $urlRouterProvider) {
         // Redirect to home view when route not found
         $urlRouterProvider.otherwise(handleBadRoute);
@@ -41,12 +61,18 @@
         // High Level Abstract Parent States
             state('fixed-opaque', {
                 abstract: true,
-                templateUrl: '/modules/core/views/fixed-opaque.client.view.html'
+                templateUrl: '/modules/core/views/fixed-opaque.client.view.html',
+                resolve: {
+                    user: resolveUser
+                }
             }).
             state('headline-bg',
                 {
                     abstract: true,
-                    templateUrl: '/modules/core/views/headline-bg.client.view.html'
+                    templateUrl: '/modules/core/views/headline-bg.client.view.html',
+                    resolve: {
+                        user: resolveUser
+                    }
                 }).
 
             
@@ -84,10 +110,15 @@
 
             state('home', {
                 url: '/home',
-                controller: ['$state', 'LoginService', function ($state, LoginService) {
+                controller: ['$state', 'LoginService', 'Authentication', function ($state, LoginService, Authentication) {
                     LoginService.getUser().then(
                         function success(user) {
-                            
+
+                            if (!Authentication.user) {
+                                debugger;
+                                Authentication.user = user;
+                            }
+
                             console.log('Success in looking up user, redirecting', user);
                             if (user.isDriver) {
                                 //$state.go('drivers.home', {}, { reload: true });
@@ -102,7 +133,7 @@
                         function reject(err) {
                             console.log('No user lookup, redirecting', err);
                             $state.go('intro.owner');
-                        })
+                        });
                 }]
             }).
             

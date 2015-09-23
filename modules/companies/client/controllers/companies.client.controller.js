@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    angular.module('companies').controller('CompaniesController', CompaniesController);
+
+    CompaniesController.$inject = ['$state', 'Authentication', 'company', 'config', 'Jobs'];
+
     // Companies controller
     function CompaniesController($state, auth, company, moduleConfig, Jobs) {
         var vm = this;
@@ -25,7 +29,7 @@
                 vm.canEdit = true;
                 vm.titleText = 'Company Profile';
                 vm.subtitle = 'ADMINISTRATOR MODE';
-            } else {
+            } else if(!!vm.company) {
                 vm.canEdit = false;
                 vm.titleText = vm.company.name;
                 vm.subtitle = 'Welcome to the home of ' + vm.company.name + ' on Outset!';
@@ -37,6 +41,8 @@
                     .catch(function (err) {
                         console.log('job list failed', err);
                     });
+            } else {
+                
             }
             vm.imageURL = vm.company.profileImageURL || vm.imageURL;
 
@@ -66,8 +72,4 @@
 
         activate();
     }
-
-    CompaniesController.$inject = ['$state', 'Authentication', 'company', 'config', 'Jobs'];
-
-    angular.module('companies').controller('CompaniesController', CompaniesController);
 })();
