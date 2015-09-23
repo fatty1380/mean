@@ -5,20 +5,17 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['$rootScope', 'updateService', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
+    MessagesCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
 
-    function MessagesCtrl ($rootScope, updateService, $scope, messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
+    function MessagesCtrl ($rootScope, updates, updateService, $scope, messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
 
         var vm  = this;
         vm.messages = [];
         vm.chats = [];
+        vm.updates = updates || updateService.getLastUpdates();
 
         vm.showChatDetailsModal = showChatDetailsModal;
         vm.getChats = getChats;
-
-
-        updateService.resetUpdates('messages');
-
 
         $rootScope.$on("clear", function () {
             console.log('MessagesCtrl clear');
@@ -27,6 +24,8 @@
         });
 
         $scope.$on('$ionicView.enter', function () {
+            //updateService.resetUpdates('messages');
+
             if (!!recipientChat) {
                 showChatDetailsModal(recipientChat);
             }else{

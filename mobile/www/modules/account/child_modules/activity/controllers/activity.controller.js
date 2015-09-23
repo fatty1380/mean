@@ -26,6 +26,8 @@
          * try to initialize if have no feed
          * */
         $scope.$on('$ionicView.enter', function () {
+            updateService.resetUpdates('activities');
+
             if (vm.feed.length > 0) {
                 startCheckNewActivities();
             } else {
@@ -84,8 +86,6 @@
                 }
             }
 
-            updateService.resetUpdates('activities');
-                
             //get all feed
             return activityService.getFeed().then(function (result) {
                 $ionicLoading.hide();

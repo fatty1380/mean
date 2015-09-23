@@ -18,6 +18,12 @@
                             <span>{{chat.lastMessage.text}}</span>
                         </div>
                     </div>
+                    <div class="new" ng-if="vm.updates.messages.byIds[chat.recipient]">
+                        <div>
+                            <span class="badge badge-assertive">{{vm.updates.messages.byIds[chat.recipient]}}</span>
+                            <strong>NEW</strong>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </ion-scroll>

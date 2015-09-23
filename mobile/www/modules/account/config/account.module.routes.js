@@ -17,9 +17,12 @@
                 templateUrl: 'modules/account/templates/account.html',
                 controller: 'AccountCtrl as vm',
                 resolve: {
-                    user: function resolveLoggedInUser(userService) {
+                    user: ['userService', function (userService) {
                         return userService.getUserData();
-                    },
+                    }],
+                    updates: ['updateService', function (updateService) {
+                        return updateService.getLastUpdates();
+                    }],
                     profile: function () { return null }
                 }
             })

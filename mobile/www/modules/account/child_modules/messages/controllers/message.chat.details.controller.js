@@ -3,11 +3,11 @@
 
     angular
         .module('account')
-        .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl)
+        .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl);
 
-    MessageChatDetailsCtrl.$inject = ['$state', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService', 'settings'];
+    MessageChatDetailsCtrl.$inject = ['$state', '$scope', 'updateService', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService', 'settings'];
 
-    function MessageChatDetailsCtrl($state, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService, settings) {
+    function MessageChatDetailsCtrl($state, $scope, updateService, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService, settings) {
         var vm = this;
         vm.message = '';
         vm.messages = (parameters.messages || []).reverse();
@@ -19,6 +19,8 @@
         vm.viewUser = viewUser;
         vm.close  = close;
         vm.createMessage  = createMessage;
+
+        updateService.resetUpdates('messages', vm.recipientId);
 
         scrollToBottom();
 

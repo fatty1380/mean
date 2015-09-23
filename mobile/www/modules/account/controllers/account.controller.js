@@ -5,9 +5,9 @@
         .module('account')
         .controller('AccountCtrl', AccountCtrl);
 
-    AccountCtrl.$inject = ['$rootScope', 'updateService'];
+    AccountCtrl.$inject = ['$rootScope', 'updateService', 'user'];
 
-    function AccountCtrl($rootScope, updateService) {
+    function AccountCtrl($rootScope, updateService, user) {
         var vm = this;
 
         vm.updates = updateService.getLastUpdates();
@@ -16,7 +16,7 @@
             vm.updates = updates;
         });
 
-        updateService.checkForUpdates(5);
+        updateService.checkForUpdates(5, user);
     }
 
 })();

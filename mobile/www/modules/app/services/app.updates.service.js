@@ -8,8 +8,13 @@
     updateService.$inject = ['$q', '$http', 'settings', 'timerService', '$rootScope'];
 
     function updateService($q, $http, settings, timerService, $rootScope) {
-        var currentMessage, updateAvailable, currentRequest,
+        var currentMessage, updateAvailable, currentRequest, user,
             currentActivity = {},
+            messageObject = {
+                newItems: [],
+                byIds: {},
+                amount: 0
+            },
             updates = {
                 messages: 0,
                 activities: 0,
@@ -61,12 +66,14 @@
         }
 
         function getMessagesUpdates (messages) {
-            var latestMessage = getMostRecentItem(messages);
+            var messagesArray = removeOwnItems(messages),
+                latestMessage = getMostRecentItem(messagesArray);
 
             if(!currentMessage){
                 currentMessage = latestMessage;
             } else if (currentMessage && currentMessage < latestMessage){
-                updates.messages = getNewElementsAmount(messages, currentMessage);
+                updates.messages = getNewElements(messagesArray, currentMessage);
+                console.warn(' updates.messages --->>>', updates.messages);
                 currentMessage = latestMessage;
                 updateAvailable = true;
             }
@@ -106,28 +113,92 @@
             //}
         }
 
-        function getNewElementsAmount (elements, offset) {
-            var sortedDates, amount, dates;
+        function removeOwnItems (items) {
+            var filteredItems = [];
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i],
+                    senderId = item.sender && item.sender._id;
+
+                if(senderId && senderId !== user.id){
+                    filteredItems.push(item);
+                }
+            }
+            return filteredItems;
+        }
+
+        function getNewElements (elements, offset) {
+            var sortedDates, amount, dates,
+                newItems = [];
 
             dates = elements.map(function (el) {
-                return new Date(el.created).getTime();
-            });
-            sortedDates = dates.sort(function (a,b) {
-                return b-a;
-            });
-            amount = sortedDates.indexOf(offset);
+                var tempObj = {};
+                tempObj.time = new Date(el.created).getTime();
+                tempObj.id = el.sender._id;
 
-            return amount > 0 ? amount : 0;
+                return tempObj;
+            });
+
+            sortedDates = dates.sort(function (a,b) {
+                return b.time - a.time;
+            });
+
+            console.warn(' sortedDates --->>>', sortedDates);
+
+            for(var key in sortedDates){
+                if(sortedDates.hasOwnProperty(key)){
+                    var id = sortedDates[key].id;
+
+                    if(sortedDates[key].time === offset) break;
+
+                    if(!messageObject.byIds[id]){
+                        messageObject.byIds[id] = 1;
+                    }else{
+                        messageObject.byIds[id] = messageObject.byIds[id] + 1;
+                    }
+
+                    newItems.push(sortedDates[key]);
+                }
+            }
+
+            if(messageObject.newItems.length){
+                messageObject.newItems = messageObject.newItems.concat(newItems);
+            }else{
+                messageObject.newItems = newItems;
+            }
+
+            messageObject.amount = messageObject.newItems.length;
+
+            return messageObject;
+
+            //amount = sortedDates.indexOf(offset);
+
+            //obj.total = amount > 0 ? amount : 0;
+
+            //return obj;
         }
+
+        //function getNewElementsAmount (elements, offset) {
+        //    var sortedDates, amount, dates;
+        //
+        //    dates = elements.map(function (el) {
+        //        return new Date(el.created).getTime();
+        //    });
+        //    sortedDates = dates.sort(function (a,b) {
+        //        return b-a;
+        //    });
+        //    amount = sortedDates.indexOf(offset);
+        //
+        //    return amount > 0 ? amount : 0;
+        //}
 
         function getMostRecentItem (items) {
             if(!angular.isArray(items)) return;
 
-            var itemsArray = items.map(function (item) {
+            var datesArray = items.map(function (item) {
                 return new Date(item.created).getTime();
             });
 
-            return Math.max.apply(this, itemsArray);
+            return Math.max.apply(this, datesArray);
         }
 
         function getMessagesStatus () {
@@ -145,12 +216,14 @@
             return updates;
         }
 
-        function checkForUpdates(sec) {
+        function checkForUpdates(sec, profileData) {
+            user = profileData;
             return timerService
                 .start(sec);
         }
 
         function resetUpdates (data, value) {
+            console.info(' --->>> reset Triggered <<<--- ');
             if(!data) {
                 updates = {
                     messages: 0,
@@ -158,9 +231,26 @@
                     requests: 0
                 };
             } else if(updates[data]){
-                updates[data] = value || 0;
+                if(data === 'messages'){
+                    delete updates.messages.byIds[value];
+                    var currentItems = updates.messages.newItems,
+                        tempArray = [];
+
+                    for (var i = 0; i < currentItems.length; i++) {
+                        var item = updates.messages.newItems[i];
+
+                        if(item.id != value){
+                            tempArray.push(item);
+                        }
+                    }
+
+                    updates.messages.newItems = tempArray;
+                    updates.messages.amount = tempArray.length;
+
+                }else{
+                    updates[data] = value || 0;
+                }
             }
-            console.warn('after reset updates --->>>', updates);
             $rootScope.$broadcast('updates-available', updates);
         }
 
