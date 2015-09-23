@@ -65,7 +65,13 @@
       }
 
       .last-location,
-      .current-location{white-space: normal;}
+      .current-location{
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: block;
+          margin-top: 2px;
+      }
 
       a.user-link {
         text-decoration: none;
