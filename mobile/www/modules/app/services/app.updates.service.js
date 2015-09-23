@@ -88,7 +88,6 @@
                 currentActivity.date = modifiedDate;
                 currentActivity.amount = amount;
                 currentActivity.ownActivities = ownActivities;
-                console.warn(' first currentActivity --->>>', currentActivity);
             }else{
                 if(modifiedDate > currentActivity.date && amount > currentActivity.amount){
                     if(currentActivity.ownActivities !== activities.activity.length) return;

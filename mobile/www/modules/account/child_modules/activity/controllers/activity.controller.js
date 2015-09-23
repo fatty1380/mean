@@ -5,16 +5,16 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$rootScope', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, updateService, $scope, $state,  activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($rootScope, updates, updateService, $scope, $state,  activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
         // Initialize Update Logic
-        vm.newActivities = 0;
         vm.lastUpdate = Date.now();
         vm.feedData = null;
+        vm.updates = updates;
 
         vm.showAddActivityModal = showAddActivityModal;
         vm.changeFeedSource = changeFeedSource;
@@ -25,12 +25,15 @@
         /**
          * try to initialize if have no feed
          * */
-        $scope.$on('$ionicView.enter', function () {
+
+        $rootScope.$on('updates-available', function (event, updates) {
+            vm.updates = updates;
+        });
+
+         $scope.$on('$ionicView.enter', function () {
             updateService.resetUpdates('activities');
 
-            if (vm.feed.length > 0) {
-                startCheckNewActivities();
-            } else {
+            if (!vm.feed.length){
                 updateFeedData();
                 initialize();
             }
@@ -39,7 +42,6 @@
         $rootScope.$on("clear", function () {
             console.log('ActivityCtrl clear');
             vm.feed = [];
-            vm.newActivities = 0;
             vm.lastUpdate = Date.now();
         });
 
@@ -56,16 +58,6 @@
         function updateFeedData() {
             vm.feedData = activityService.getFeedData();
         }
-
-        /**
-         * turn off interval before leave view
-        * */
-        $scope.$on('$ionicView.beforeLeave', function () {
-            stopCheckNewActivities();
-        });
-        $scope.$on('$ionicView.unloaded', function () {
-            stopCheckNewActivities();
-        });
 
         function initialize() {
             vm.feed = [];
@@ -89,43 +81,21 @@
             //get all feed
             return activityService.getFeed().then(function (result) {
                 $ionicLoading.hide();
-                console.log("getFeed() ", result);
+
                 vm.feed = result;
-                startCheckNewActivities();
+                updateService.resetUpdates('activities');
+                console.log("getFeed() ", result);
+
             }, function () {
                 $ionicLoading.hide();
                 vm.feed = [];
             });
         }
 
-        function startCheckNewActivities() {
-            console.log(vm.feedData);
-            //update if we have feed list from fiends
-                utilsService.startClock(function () {
-                    activityService.getFeedIds().then(function (feed) {
-                        console.log(feed.length,vm.feed.length);
-                        if(vm.feedData.feedSource === 'items') {
-                            if (feed.length > vm.feed.length) {
-                                vm.newActivities = feed.length - vm.feed.length;
-                            } else {
-                                vm.newActivities = 0;
-                            }
-                        }
-                    }, function (resp) {
-                    });
-                }, settings.activityTimeout);
-
-        }
-
-        function stopCheckNewActivities() {
-            utilsService.stopClock();
-        }
-
         /**
          *  @TODO update only new items
         */
         function updateWithNewActivities() {
-            stopCheckNewActivities();
             initialize();
         }
 
@@ -156,11 +126,9 @@
         }
 
         function showAddActivityModal() {
-            stopCheckNewActivities();
             activityModalsService
                 .showAddActivityModal()
                 .then(function (res) {
-                    startCheckNewActivities();
                     if (res) {
                         // TODO: Determine if the extra trip to the server is required
                         refreshFeedActivityById(res);
@@ -168,6 +136,6 @@
                 }, function (err) {
                     activityService.showPopup("Modal failed", "Please try later");
                 })
-        };
+        }
     }
 })();
