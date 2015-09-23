@@ -57,7 +57,7 @@
             getApplicationsForJob: function (job) {
                 var jobId = job.id || job._id || job;
 
-            //debugger;
+                //debugger;
                 return rsrcByJob.query({ jobId: jobId }).$promise;
 
             },
@@ -165,15 +165,10 @@
                     });
             },
             getMaskedDisplayName: function (application) {
-                if (_.isString(application.user)) {
-                    debugger;
-                    application.user = { firstName: 'Applicant', lastName: ' ', displayName: 'Applicant' }
-                }
-                if (!application.connection) {
-                    return application.user.firstName + ' ' + (application.user.lastName || ' ').substring(0, 1);
-                }
 
-                return application.user.displayName;
+                _.extend({ firstName: 'Applicant', lastName: '', displayName: 'Applicant' }, application.user);
+
+                return !!application.connection ? application.user.displayName : application.user.firstName + ' ' + (application.user.lastName && application.user.lastName.substring(0, 1) + '.' || '');
             },
             getQuestions: function () {
                 var qs = {

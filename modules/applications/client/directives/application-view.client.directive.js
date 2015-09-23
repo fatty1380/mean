@@ -170,9 +170,39 @@
 
     //////////////////////////////
         
-    ApplicationListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
+    
     angular.module('applications')
-        .controller('ApplicationListItemController', ApplicationListItemController);
+        .directive('osetApplicationListItem', ApplicationListItemDirective); //<oset-application-list-item ...
+
+    function ApplicationListItemDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: function (elem, attrs) {
+                if (!!attrs.job) {
+                    return '/modules/applications/views/templates/app-list-item-summary.client.template.html';
+                }
+                else {
+                    return '/modules/applications/views/templates/app-list-item-self.client.template.html';
+                }
+            },
+            restrict: 'E',
+            scope: {
+                userType: '@', // user-type
+                application: '=?',
+                job: '=?',
+                visibleApp: '=?',
+                visibleId: '=?',
+                visibleTab: '=?',
+                filter: '&'
+            },
+            controller: ApplicationListItemController,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+    ApplicationListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
 
     function ApplicationListItemController(auth, Applications, $log, $state, $location) {
         var vm = this;
@@ -271,40 +301,6 @@
         };
 
         vm.initialize();
-    }
-    
-    ////////////////////////////////////////
-
-    angular.module('applications')
-        .directive('osetApplicationListItem', ApplicationListItemDirective); //<oset-application-list-item ...
-
-    function ApplicationListItemDirective() {
-        var ddo;
-        ddo = {
-            templateUrl: function (elem, attrs) {
-                if (!!attrs.job) {
-                    return '/modules/applications/views/templates/owner-list-item.client.template.html';
-                }
-                else {
-                    return '/modules/applications/views/templates/driver-list-item.client.template.html';
-                }
-            },
-            restrict: 'E',
-            scope: {
-                userType: '@', // user-type
-                application: '=?',
-                job: '=?',
-                visibleApp: '=?',
-                visibleId: '=?',
-                visibleTab: '=?',
-                filter: '&'
-            },
-            controller: 'ApplicationListItemController',
-            controllerAs: 'vm',
-            bindToController: true
-        };
-
-        return ddo;
     }
 
     ////////////////////////////////////

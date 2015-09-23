@@ -41,10 +41,6 @@
                            ng-click="vm.toggleFilterMine()" btn-checkbox
                            ng-model="vm.filters.mine" name="mine">My Jobs</label>
                     <label class="btn btn-cta-secondary btn-sm"
-                           ng-if="!!vm.user.driver.jobStatuses"
-                           ng-click="vm.toggleFilter('unseen')" btn-checkbox
-                           ng-model="vm.filters.unseen" name="unseen">New</label>
-                    <label class="btn btn-cta-secondary btn-sm"
                            ng-click="vm.toggleFilter('today')" btn-checkbox
                            ng-model="vm.filters.day" name="newest">New Today</label>
                     <label class="btn btn-cta-secondary btn-sm"

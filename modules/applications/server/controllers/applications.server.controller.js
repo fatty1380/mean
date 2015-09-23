@@ -79,7 +79,7 @@ function executeQuery(req, res) {
 
     Application.find(query)
         .sort(sort)
-        .populate('user', 'displayName profileImageURL')
+        .populate('user', 'firstName lastName displayName profileImageURL')
         .populate('company', 'name profileImageURL')
         .populate(populate)
         .exec(function (err, applications) {
