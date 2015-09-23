@@ -19,17 +19,17 @@ var configOptions = {
 
 exports.getConfig = function (req, res, next, varName) {
 
-    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig', keys: _.keys(configOptions) }, 'Looking up config for `%s`', varName);
+    req.log.trace({ file: 'config.server.ctrl', func: 'getConfig', keys: _.keys(configOptions) }, 'Looking up config for `%s`', varName);
 
     var configVal = configOptions[varName.toLowerCase()] || { varName: null };
     
-    req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, 'Did you find what you were looking for? %s', !!configVal ? 'YES' : 'NO');
+    req.log.trace({ file: 'config.server.ctrl', func: 'getConfig' }, 'Did you find what you were looking for? %s', !!configVal ? 'YES' : 'NO');
 
     if (_.isFunction(configVal)) {
-        req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, 'Launching function');
+        req.log.trace({ file: 'config.server.ctrl', func: 'getConfig' }, 'Launching function');
         req.configVal = configVal(req);
     } else if (_.isObject(configVal)) {
-        req.log.debug({ file: 'config.server.ctrl', func: 'getConfig' }, 'returning Object');
+        req.log.trace({ file: 'config.server.ctrl', func: 'getConfig' }, 'returning Object');
         req.configVal = configVal;
     } else {
         return next(new Error('Unknown Configuration Option'));
@@ -68,21 +68,21 @@ exports.validate = function (varName, value) {
 
 function getFAQs(req) {
     var filter = req.query;
-    req.log.debug({ file: 'config.server.ctrl', func: 'getFAQs' }, 'looking up faqs with filter: %j', filter);
+    req.log.trace({ file: 'config.server.ctrl', func: 'getFAQs' }, 'looking up faqs with filter: %j', filter);
     req.configVal = _.filter(constants.faqs, req.query);
-    req.log.debug({ file: 'config.server.ctrl', func: 'getFAQs' }, 'got %d faqs to return', req.configVal.length);
+    req.log.trace({ file: 'config.server.ctrl', func: 'getFAQs' }, 'got %d faqs to return', req.configVal.length);
 }
 function getModulesConfig(req) {
-    req.log.debug({ file: 'config.server.ctrl', func: 'getModulesConfig' }, '[CONFIG] returning module configuration');
+    req.log.trace({ file: 'config.server.ctrl', func: 'getModulesConfig' }, '[CONFIG] returning module configuration');
     return config.modules;
 }
 function getAppOptions(req) {
-    req.log.debug({ file: 'config.server.ctrl', func: 'getAppOptions' }, '[CONFIG] returning app config options');
+    req.log.trace({ file: 'config.server.ctrl', func: 'getAppOptions' }, '[CONFIG] returning app config options');
     return config.options;
 }
 
 function getSubscriptions(req) {
-    req.log.debug({ file: 'config.server.ctrl', func: 'getSubscriptions' }, '[CONFIG] returning company subscription data');
+    req.log.trace({ file: 'config.server.ctrl', func: 'getSubscriptions' }, '[CONFIG] returning company subscription data');
     return constants.subscriptionPackages;
 }
 

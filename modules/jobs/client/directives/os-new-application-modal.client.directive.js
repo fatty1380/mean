@@ -69,7 +69,7 @@
 
         // Bindable Variables ___________________________________________________________
         vm.job = job;
-        vm.application = {message: auth.user.driver && auth.user.driver.about};
+        vm.application = {message: auth.user && auth.user.about};
         vm.placeholders = {
             title: 'Cover Letter for Job Application',
             messageHeading: '',

@@ -13,10 +13,8 @@
                 var vm = scope.vm;
                 if (!!ngModel) {
                     scope.$watch(function () {
-                        debugger;
                         return ngModel.$modelValue;
                     }, function (newValue) {
-                        debugger;
                         vm.labelClass = vm.getLabelClass(newValue);
                         vm.labelText = newValue.statusCat;
                     });

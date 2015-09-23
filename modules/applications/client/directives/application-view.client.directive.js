@@ -28,6 +28,12 @@
         return ddo;
     }
 
+    ///////////////////////////////
+    
+    ApplicationSummaryController.$inject = ['Authentication', 'Applications', 'Drivers', 'Reports', '$q', '$log', 'toastr'];
+    angular.module('applications')
+        .controller('ApplicationSummaryController', ApplicationSummaryController);
+
     function ApplicationSummaryController(auth, Applications, Drivers, Reports, $q, $log, toastr) {
         var vm = this;
         vm.text = text;
@@ -81,7 +87,7 @@
         vm.setLocalProperties = function (application) {
             vm.application = application;
             vm.applicant = !!application && application.user || vm.applicant;
-            
+
             vm.ownerId = vm.job && (vm.job.user._id || vm.job.user);
 
             if (!_.isEmpty(vm.application)) {
@@ -108,6 +114,11 @@
 
         vm.initialize();
     }
+    
+    ///////////////////////////////////////
+    
+    angular.module('applications')
+        .directive('osetApplicationSummary', ApplicationSummaryDirective);
 
     function ApplicationSummaryDirective() {
         var ddo;
@@ -156,6 +167,42 @@
 
         return ddo;
     }
+
+    //////////////////////////////
+        
+    
+    angular.module('applications')
+        .directive('osetApplicationListItem', ApplicationListItemDirective); //<oset-application-list-item ...
+
+    function ApplicationListItemDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: function (elem, attrs) {
+                if (!!attrs.job) {
+                    return '/modules/applications/views/templates/app-list-item-summary.client.template.html';
+                }
+                else {
+                    return '/modules/applications/views/templates/app-list-item-self.client.template.html';
+                }
+            },
+            restrict: 'E',
+            scope: {
+                userType: '@', // user-type
+                application: '=?',
+                job: '=?',
+                visibleApp: '=?',
+                visibleId: '=?',
+                visibleTab: '=?',
+                filter: '&'
+            },
+            controller: ApplicationListItemController,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+        return ddo;
+    }
+    ApplicationListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
 
     function ApplicationListItemController(auth, Applications, $log, $state, $location) {
         var vm = this;
@@ -256,47 +303,101 @@
         vm.initialize();
     }
 
-    function ApplicationListItemDirective() {
+    ////////////////////////////////////
+
+    angular.module('applications')
+        .directive('osetJobListItem', JobItemDirective)
+
+    JobItemDirective.$inject = ['$log'];
+
+    function JobItemDirective($log) {
         var ddo;
         ddo = {
             templateUrl: function (elem, attrs) {
-                if (!!attrs.job) {
-                    return '/modules/applications/views/templates/owner-list-item.client.template.html';
-                }
-                else {
-                    return '/modules/applications/views/templates/driver-list-item.client.template.html';
-                }
+                return '/modules/applications/views/templates/job-list-item.client.template.html';
+
             },
             restrict: 'E',
             scope: {
                 userType: '@', // user-type
                 application: '=?',
                 job: '=?',
-                visibleApp: '=?',
-                visibleId: '=?',
-                visibleTab: '=?',
-                filter: '&'
+                visibleId: '=',
+                visibleTab: '='
             },
-            controller: 'ApplicationListItemController',
+            link: link,
+            controller: JobListItemController,
             controllerAs: 'vm',
             bindToController: true
         };
+
+        function link(scope, elem, attrs, vm) {
+
+            if (!vm.job) {
+                $log.error('[ApplicationJobListItemCtrl] Job is not defined... aborting initialization');
+                return false;
+            }
+
+            vm.loadApplications();
+
+            vm.job.newMessages = 0;
+
+            vm.filters = {
+                status: { 'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false },
+                negStatus: { 'rejected': false, 'expired': false }
+            };
+
+            vm.sorting = {
+                applicants: ['statusIndex', '-created'],
+                messaging: ['!messages.length', '-lastMessage.created'], //'-lastMessage.created',
+                documents: ['-!!user.driver.resume', '-user.driver.resume.created', '-user.driver.reports.length']
+            };
+
+            vm.defaultFiltering = {
+                applicants: {},
+                messaging: { 'status': { 'connected': true } },
+                documents: { 'status': { 'connected': true } }
+            };
+
+            vm.reverseSort = false;
+        }
 
         return ddo;
     }
 
 
-    function ApplicationJobListItemController(auth, Applications, $log, $state, $location) {
+    JobListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location', '$q'];
+
+    function JobListItemController(auth, Applications, $log, $state, $location, $q) {
         var vm = this;
 
-        if (!vm.job) {
-            $log.error('[ApplicationJobListItemCtrl] Job is not defined... aborting initialization');
-            return false;
+        vm.showTab = showTab;
+        vm.toggleFilter = toggleFilter;
+        vm.filterApplications = filterApplications;
+        vm.getActiveApplicationCount = getActiveApplicationCount;
+        vm.setApplicationStatus = setApplicationStatus;
+        vm.loadApplications = loadApplications;
+
+        function loadApplications(applications) {
+            applications = applications || vm.job.applications;
+
+            if (_.isString(_.first(applications))) {
+                vm.loading = true;
+                return Applications.getApplicationsForJob(vm.job).then(
+                    function success(applicationList) {
+                        console.info('JobListItem.loadApplications result: %o for job %o', applicationList, vm.job);
+                        vm.applications = applicationList;
+                    })
+                    .finally(function () {
+                        vm.loading = false;
+                        vm.applications = vm.applications || [];
+                    });
+            };
+
+            vm.applications = applications;
         }
 
-        vm.job.newMessages = 0;
-
-        vm.showTab = function (itemId, tabName) {
+        function showTab(itemId, tabName) {
             if (!!vm.visibleId && vm.visibleTab === tabName) {
                 vm.visibleId = vm.visibleTab = null;
             } else {
@@ -308,26 +409,7 @@
             $location.search({ 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
         };
 
-        vm.filters = {
-            status: { 'all': true, 'reviewed': false, 'unreviewed': false, 'connected': false },
-            negStatus: { 'rejected': false, 'expired': false }
-        };
-
-        vm.sorting = {
-            applicants: ['statusIndex', '-created'],
-            messaging: ['!messages.length', '-lastMessage.created'], //'-lastMessage.created',
-            documents: ['-!!user.driver.resume', '-user.driver.resume.created', '-user.driver.reports.length']
-        };
-
-        vm.defaultFiltering = {
-            applicants: {},
-            messaging: { 'status': { 'connected': true } },
-            documents: { 'status': { 'connected': true } }
-        };
-
-        vm.reverseSort = false;
-
-        vm.toggleFilter = function (category, key, isRadio) {
+        function toggleFilter(category, key, isRadio) {
 
             var filterKey = (key || 'all').toLowerCase();
 
@@ -359,7 +441,7 @@
             }
         };
 
-        vm.filterApplications = function (application) {
+        function filterApplications(application) {
 
             var keys = _.keys(vm.filters);
             for (var i = 0; i < keys.length; i++) {
@@ -386,11 +468,11 @@
             return true;
         };
 
-        vm.getActiveApplicationCount = function (applications) {
+        function getActiveApplicationCount(applications) {
             return _.where(applications || vm.job.applications, { isActive: true }).length;
         };
 
-        vm.setApplicationStatus = function (application, status, $event) {
+        function setApplicationStatus(application, status, $event) {
             $event.stopPropagation();
 
             var app = vm.ApplicationFactory.setStatus(application._id, status);
@@ -409,40 +491,5 @@
             application.disabled = true;
         };
     }
-
-    function ApplicationJobListItemDirective() {
-        var ddo;
-        ddo = {
-            templateUrl: function (elem, attrs) {
-                return '/modules/applications/views/templates/owner-job-list-item.client.template.html';
-
-            },
-            restrict: 'E',
-            scope: {
-                userType: '@', // user-type
-                application: '=?',
-                job: '=?',
-                visibleId: '=',
-                visibleTab: '='
-            },
-            controller: 'ApplicationJobListItemController',
-            controllerAs: 'vm',
-            bindToController: true
-        };
-
-        return ddo;
-    }
-
-    ApplicationSummaryController.$inject = ['Authentication', 'Applications', 'Drivers', 'Reports', '$q', '$log', 'toastr'];
-    ApplicationListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
-    ApplicationJobListItemController.$inject = ['Authentication', 'Applications', '$log', '$state', '$location'];
-
-    angular.module('applications')
-        .controller('ApplicationSummaryController', ApplicationSummaryController)
-        .controller('ApplicationListItemController', ApplicationListItemController)
-        .controller('ApplicationJobListItemController', ApplicationJobListItemController)
-        .directive('osetApplicationSummary', ApplicationSummaryDirective)
-        .directive('osetApplicationJobListItem', ApplicationJobListItemDirective)
-        .directive('osetApplicationListItem', ApplicationListItemDirective); //<oset-application-list-item ...
 
 })();

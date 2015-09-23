@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-//Applications service used to communicate Applications REST endpoints
+    //Applications service used to communicate Applications REST endpoints
 
     /**
      * service.factory('ProductsRest', ['$resource', function ($resource) {
@@ -16,39 +16,50 @@
 
         var _this = this;
 
-        _this._data = {
-            ByJob: $resource('api/jobs/:jobId/applications', {
+        var
+            rsrcByJob = $resource('api/jobs/:jobId/applications', {
                 jobId: '@_id'
             }, {
-                query: {
-                    method: 'GET',
-                    isArray: true
-                },
-                save: {
-                    method: 'POST'
-                }
-            }),
-            ById: $resource('api/applications/:id', {
+                    query: {
+                        method: 'GET',
+                        isArray: true
+                    },
+                    save: {
+                        method: 'POST'
+                    }
+                }),
+            rsrcByID = $resource('api/applications/:id', {
                 id: '@_id'
             }, {
-                update: {
-                    method: 'PUT'
-                },
-                patch: {
-                    method: 'PATCH'
-                }
-            }),
+                    update: {
+                        method: 'PUT'
+                    },
+                    patch: {
+                        method: 'PATCH'
+                    }
+                });
+
+        _this._data = {
+            ByJob: rsrcByJob,
+            ById: rsrcByID,
             setStatus: function (id, status) {
                 debugger;
 
-                var rsrc = new _this._data.ById();
+                var rsrc = new rsrcByID();
 
-                return rsrc.$get({id: id}).then(function(app) {
-                        app.status = status;
+                return rsrc.$get({ id: id }).then(function (app) {
+                    app.status = status;
 
-                        return app.$update();
-                    }
-                );
+                    return app.$update();
+                }
+                    );
+            },
+            getApplicationsForJob: function (job) {
+                var jobId = job.id || job._id || job;
+
+                //debugger;
+                return rsrcByJob.query({ jobId: jobId }).$promise;
+
             },
             getApplication: function (query) {
 
@@ -67,11 +78,11 @@
                 var RSRC = $resource('api/users/:userId/applications', {
                     userId: '@userId'
                 }, {
-                    query: {
-                        method: 'GET',
-                        isArray: true
-                    }
-                });
+                        query: {
+                            method: 'GET',
+                            isArray: true
+                        }
+                    });
 
                 return RSRC.query(query).$promise;
             },
@@ -79,11 +90,11 @@
                 var RSRC = $resource('api/companies/:companyId/applications', {
                     companyId: '@companyId'
                 }, {
-                    query: {
-                        method: 'GET',
-                        isArray: true
-                    }
-                });
+                        query: {
+                            method: 'GET',
+                            isArray: true
+                        }
+                    });
 
                 return RSRC.query(query).$promise;
 
@@ -92,11 +103,11 @@
                 var RSRC = $resource('api/applications/:applicationId/connect', {
                     applicationId: '@_id'
                 }, {
-                    get: {
-                        method: 'POST',
-                        isArray: false
-                    }
-                });
+                        get: {
+                            method: 'POST',
+                            isArray: false
+                        }
+                    });
 
                 return RSRC.get(application).$promise;
             },
@@ -108,13 +119,13 @@
                 var RSRC = $resource('api/applications/:applicationId/messages', {
                     companyId: '@companyId'
                 }, {
-                    query: {
-                        method: 'GET',
-                        isArray: false
-                    }
-                });
+                        query: {
+                            method: 'GET',
+                            isArray: false
+                        }
+                    });
 
-                return RSRC.query({applicationId: applicationId, userId: userId}).$promise;
+                return RSRC.query({ applicationId: applicationId, userId: userId }).$promise;
             },
             checkMessages: function (application, userId) {
                 var applicationId = application._id;
@@ -146,7 +157,7 @@
 
                     }).catch(function (err) {
                         application.messages = [];
-                        application.lastMessage = {created: 100000000000};
+                        application.lastMessage = { created: 100000000000 };
                         application.messageCt = 0;
                         application.newMessages = 0;
                         $log.warn('Error retrieving messages: %o (this needs to be handled)', err);
@@ -154,11 +165,10 @@
                     });
             },
             getMaskedDisplayName: function (application) {
-                if (!application.connection) {
-                    return application.user.firstName + ' ' + application.user.lastName.substring(0, 1);
-                }
 
-                return application.user.displayName;
+                _.extend({ firstName: 'Applicant', lastName: '', displayName: 'Applicant' }, application.user);
+
+                return !!application.connection ? application.user.displayName : application.user.firstName + ' ' + (application.user.lastName && application.user.lastName.substring(0, 1) + '.' || '');
             },
             getQuestions: function () {
                 var qs = {
@@ -195,10 +205,10 @@
                             'name': 'radio',
                             'length': '',
                             'type': 'radio',
-                            'options': [{'label': 'Absolutely Yes', 'value': true}, {
+                            'options': [{ 'label': 'Absolutely Yes', 'value': true }, {
                                 'label': 'Positively No',
                                 'value': false
-                            }, {'label': 'I Dunno', 'value': null}]
+                            }, { 'label': 'I Dunno', 'value': null }]
                         },
                         {
                             'description': 'Can you see this?',
@@ -233,4 +243,4 @@
 
 
 })
-();
+    ();

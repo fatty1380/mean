@@ -1,8 +1,26 @@
 (function () {
     'use strict';
 
-    function ApplicationListController(auth, moduleConfig, applications, Applications, $log, $state, params) {
+    angular.module('applications')
+        .controller('ApplicationListController', ApplicationListController);
+        
+        /**
+         * Resolves: 
+         * applications: List of Applications to display on in the list. Injected via resolve in $stateProvider
+         * 
+         */
+
+    ApplicationListController.$inject = ['applications', 'Authentication', 'config', 'Applications', '$log', '$state', '$stateParams'];
+
+    function ApplicationListController(applications, auth, moduleConfig, Applications, $log, $state, params) {
         var vm = this;
+
+        vm.setAdminCopy = setAdminCopy;
+        vm.setDriverCopy = setDriverCopy;
+        vm.setOwnerCopy = setOwnerCopy;
+        vm.loadApplicationsForJob = loadApplicationsForJob;
+        
+        ///
 
         vm.user = auth.user;
         vm.applications = applications;
@@ -19,41 +37,51 @@
 
         var co = vm.user.company && vm.user.company.id || null;
 
-        Applications.ById.query({ job: vm.params.jobId, company: co }).$promise
-            .then(function (applications) {
-                vm.apps = applications;
+        if (vm.job && vm.job.id === vm.params.jobId) {
+            debugger;
+        }
 
-                vm.newApps = _.where(applications, { 'isUnreviewed': true });
-
-                vm.newMessageCt = _.reduce(applications, function (total, app) {
-                    $log.debug('Reducing Messages for app: %o', app);
-
-                    var last = _.findLastIndex(app.messages, { sender: vm.user.id });
-                    var newCt = app.messages.length - last + 1;
-
-                    $log.debug('Reduced found %d + 1 - %d = %d', last, app.messages.length, newCt);
-
-                    return total + newCt;
-                }, 0);
-            });
+        vm.loadApplicationsForJob(vm.params.jobId, co);
 
         // 0 1 2 3 4 5 : 6
         // m m y y m y : 4 5
         // y y y y y y :-1 0
 
         if ($state.is('applications.all')) {
-            setAdminCopy();
+            vm.setAdminCopy();
         }
         else if (auth.user.type === 'driver') {
-            setDriverCopy();
+            vm.setDriverCopy();
 
         } else if (auth.user.type === 'owner') {
-            setOwnerCopy();
+            vm.setOwnerCopy();
 
         } else {
             vm.bodyCopy = {};
         }
         
+        ///
+        
+        function loadApplicationsForJob(job, company) {
+            Applications.ById.query({ job: vm.params.jobId, company: co }).$promise
+                .then(function (applications) {
+                    vm.apps = applications;
+
+                    vm.newApps = _.where(applications, { 'isUnreviewed': true });
+
+                    vm.newMessageCt = _.reduce(applications, function (total, app) {
+                        $log.debug('Reducing Messages for app: %o', app);
+
+                        var last = _.findLastIndex(app.messages, { sender: vm.user.id });
+                        var newCt = app.messages.length - last + 1;
+
+                        $log.debug('Reduced found %d + 1 - %d = %d', last, app.messages.length, newCt);
+
+                        return total + newCt;
+                    }, 0);
+                });
+        }
+
         function setAdminCopy() {
             vm.jobIds = {};
 
@@ -121,9 +149,5 @@
         }
     }
 
-    ApplicationListController.$inject = ['Authentication', 'config', 'applications', 'Applications', '$log', '$state', '$stateParams'];
-
-    angular.module('applications')
-        .controller('ApplicationListController', ApplicationListController);
 
 })();

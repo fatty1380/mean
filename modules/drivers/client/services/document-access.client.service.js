@@ -8,7 +8,7 @@
             hasAccess: function(driverId, application) {
                 $log.debug('[DocAccess.hasAccess] Looking up access for driver `%s`', driverId);
 
-                if (Auth.user.driver && (Auth.user.driver === driverId || Auth.user.driver._id === driverId)) {
+                if (Auth.user && (Auth.user === driverId || Auth.user.id === driverId)) {
                     return true;
                 }
                 else {
@@ -20,12 +20,12 @@
                 }
             },
             getDriver: function(driverId, application) {
-                $log.debug('[DocAccess.hasAccess] Looking up access for `%s` to driver `%s`', Auth.user._id, driverId);
+                $log.debug('[DocAccess.hasAccess] Looking up access for `%s` to driver `%s`', Auth.user.id, driverId);
 
                 if(this.hasAccess(driverId, application)) {
-                    if (Auth.user.driver && (Auth.user.driver === driverId || Auth.user.driver._id === driverId)) {
+                    if (Auth.user && (Auth.user === driverId || Auth.user.id === driverId)) {
                         $log.debug('[DocAccess.hasAccess] Granting access to their own documents');
-                        return $q.when(Auth.user.driver);
+                        return $q.when(Auth.user);
                     }
                     else {
                         if (!application || !application.canViewDocs) {

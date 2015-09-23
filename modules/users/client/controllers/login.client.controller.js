@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function LoginController($state, $modalInstance, $log, Authentication, srefRedirect, AuthService) {
+    function LoginController($state, $modalInstance, $log, Authentication, srefRedirect, LoginService) {
         var vm = this;
         vm.auth = Authentication;
         vm.srefRedirect = srefRedirect;
@@ -12,7 +12,7 @@
 
             var credentials = vm.credentials || this.credentials;
 
-            AuthService.login(credentials)
+            LoginService.login(credentials)
                 .then(function success(response) {
                     debugger;
 

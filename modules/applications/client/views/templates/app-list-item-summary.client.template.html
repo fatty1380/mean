@@ -49,8 +49,8 @@
                 </dl>
 
                 <div ng-show="vm.visibleTab === 'documents'">
-                    <pre ng-if="vm.debug">{{vm.application.user.driver.reports}}</pre>
-                    <oset-document-list model="vm.application.user.driver" application="vm.application" display-mode="full"
+                    <pre ng-if="vm.debug">{{vm.application.user.reports}}</pre>
+                    <oset-document-list model="vm.application.user" application="vm.application" display-mode="full"
                                         doc-access="vm.application.canViewDocs"></oset-document-list>
                 </div>
 
@@ -82,7 +82,7 @@
                    style="white-space: nowrap"
                    tooltip="{{vm.application.documentText || vm.documentText}}"
                    tooltip-popup-delay="1000"
-                   ui-sref="drivers.documents({driverId: vm.application.user.driver.id})">
+                   ui-sref="drivers.documents({driverId: vm.application.user.id})">
                     Documents
                     <i class="fa fa-file-text fa-lg mgn-left"></i>
                 </a>

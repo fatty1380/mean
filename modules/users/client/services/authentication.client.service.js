@@ -2,7 +2,6 @@
     'use strict';
 
     // Authentication service for user variables
-
     
     angular
         .module('users')
@@ -14,10 +13,29 @@
 
     function AuthenticationService(TokenFactory, $window, $q) {
         var service = {
-            user: $window.user,
+            //user: $window.user,
             isLoggedIn: isLoggedIn,
             isAdmin: isAdmin
         };
+        
+        Object.defineProperty(service, 'user', {
+            enumerable: true,
+            get: function () {
+                return $window.user;
+            },
+            set: function (value) {
+                if (_.isEmpty(value)) {
+                    debugger;
+                }
+                else if (!_.isObject(value)) {
+                    debugger;
+                    $window.user = null;
+                    return;
+                }
+                
+                $window.user = value;
+            }
+        });
 
         return service;
         
