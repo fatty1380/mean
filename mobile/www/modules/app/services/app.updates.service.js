@@ -16,7 +16,7 @@
                 amount: 0
             },
             updates = {
-                messages: 0,
+                messages: messageObject,
                 activities: 0,
                 requests: 0
             };
@@ -81,16 +81,24 @@
 
         function getActivitiesUpdates (activities) {
             var amount = activities.items && activities.items.length || 0,
+                ownActivities = activities.activity && activities.activity.length || 0,
                 modifiedDate = new Date(activities.modified).getTime();
 
             if(!currentActivity.date) {
                 currentActivity.date = modifiedDate;
                 currentActivity.amount = amount;
+                currentActivity.ownActivities = ownActivities;
+                console.warn(' first currentActivity --->>>', currentActivity);
             }else{
                 if(modifiedDate > currentActivity.date && amount > currentActivity.amount){
+                    if(currentActivity.ownActivities !== activities.activity.length) return;
+
                     updates.activities = amount - currentActivity.amount;
+
                     currentActivity.date = modifiedDate;
                     currentActivity.amount = amount;
+                    currentActivity.ownActivities = ownActivities;
+
                     updateAvailable = true;
                 }
             }
@@ -240,6 +248,7 @@
         function getActivityStatus () {
             return $http.get(settings.feed);
         }
+
         function getFriendRequestStatus () {
             return $http.get(settings.requests);
         }
