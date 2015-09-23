@@ -8,16 +8,19 @@
 			<i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
 		</div>
 
-		<a ng-if="!!vm.username" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
-			<strong>{{vm.username}}</strong>
-		</a>
+		<div class="activity-summary">
+			<a ng-if="!!vm.username" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+				<strong>{{vm.username}}</strong>
+			</a>
 
-		<div class="last-location" ng-if="vm.entry._location[0].placeName">Last Location: {{vm.entry._location[0].placeName}}</div>
-
-		<div ng-if="vm.entry.location.placeName">Current Location: {{vm.entry.location.placeName}}</div>
+			<div class="last-location" ng-if="vm.entry.location.placeName || vm.entry._location[0].placeName">
+				<i class="ion-location"></i> {{vm.entry.location.placeName || vm.entry._location[0].placeName}}
+			</div>
+		</div>
 
 		<p class="message">
-			<strong ng-if="!!vm.title">{{ vm.title }} </strong>{{vm.entry.message}}
+			<span class="title" ng-if="!!vm.title">{{ vm.title }} </span>
+			<span class="message" ng-if="!!vm.message">{{vm.entry.message}}</span>
 		</p>
 	</div>
 
@@ -35,18 +38,18 @@
 	</static-gmap>
 
 	<div class="activity-item bottom">
-		<div class="clearfix">
+		<div class="clearfix props">
 			<div class="miles" ng-if="!!vm.entry.props.slMiles">
 				<i class="ico ico-milestraveledsmall"></i>
-				<strong>{{vm.entry.props.slMiles}} miles</strong>
+				<span>{{vm.entry.props.slMiles}} mi</span>
 			</div>
 			<div class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity(vm.entry.id)">
-				<i class="ico ico-likessmall"></i>
-				<strong>{{vm.entry.likes.length}} like{{vm.entry.likes.length != 1 ? 's' : ''}}</strong>
+				<i class="ion-star"></i>
+				<span>{{vm.entry.likes.length}} like{{vm.entry.likes.length != 1 ? 's' : ''}}</span>
 			</div>
 			<div class="comments" ng-if="!!vm.entry.comments">
 				<i class="ion ion-chatboxes"></i>
-				<strong>{{vm.entry.comments.length}} comments</strong>
+				<span>{{vm.entry.comments.length}} comments</span>
 			</div>
 		</div>
 
