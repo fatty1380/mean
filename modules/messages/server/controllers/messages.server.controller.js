@@ -10,11 +10,26 @@ var _ = require('lodash'),
 var mongoose = require('mongoose'),
 	Message = mongoose.model('Message'),
 	Chat = mongoose.model('Chat');
+	
+exports.create = create; 
+exports.read = read; 
+exports.update = update; 
+exports.delete = deleteMsg; 
+exports.list = list; 
+exports.messageList = messageList; 
+exports.chatList = chatList; 
+exports.chatRead = chatRead; 
+exports.chatListMessages = chatListMessages; 
+exports.createByChat = createByChat; 
+exports.messageByID = messageByID; 
 
+/***********************************************************************************************
+ * Message Method Implementation
+ */
 /**
  * Create a Message
  */
-exports.create = function(req, res) {
+function list(req, res) {
 	var message = new Message(req.body);
 	message.sender = req.user;
 	
@@ -26,39 +41,19 @@ exports.create = function(req, res) {
 	req.log.debug({ func: 'create', message: message }, 'Writing new Message to DB');
 
 	saveMessage(req, res, message);
-};
-
-function saveMessage(req, res, message) {
-	
-	message.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else if(_.isString(message.recipient)) {
-			return message.execPopulate('recipient')
-				.then(function (success) {
-					res.json(success);
-				}, function reject(error) {
-					res.json(message);
-				});
-		} else {
-			return res.json(message);
-		}
-	});
 }
 
 /**
  * Show the current Message
  */
-exports.read = function(req, res) {
+function messageList(req, res) {
 	res.json(req.message);
-};
+}
 
 /**
  * Update a Message
  */
-exports.update = function(req, res) {
+function chatList(req, res) {
 	var message = req.message ;
 
 	message = _.extend(message , req.body);
@@ -74,12 +69,12 @@ exports.update = function(req, res) {
 	// });
 	
 	saveMessage(req, res, message);
-};
+}
 
 /**
  * Delete an Message
  */
-exports.delete = function(req, res) {
+function chatRead(req, res) {
 	var message = req.message ;
 
 	message.remove(function(err) {
@@ -91,13 +86,13 @@ exports.delete = function(req, res) {
 			res.json(message);
 		}
 	});
-};
+}
 
 /**
  * List of Messages
  * @deprecated - possibly to be used by admin, but not currently needed.
  */
-exports.list = function (req, res) {
+function chatListMessages (req, res) {
 	Message.find().sort('-created').populate('user', 'displayName').exec(function (err, messages) {
 		if (err) {
 			return res.status(400).send({
@@ -107,7 +102,7 @@ exports.list = function (req, res) {
 			res.json(messages);
 		}
 	});
-};
+}
 
 /**
  * Message List
@@ -115,7 +110,7 @@ exports.list = function (req, res) {
  * 
  * @query grouped (Boolean) If true, will group the messages by the other user. Same as chatList function
  */
-exports.messageList = function (req, res) {
+function createByChat (req, res) {
 	
 	findAndProcessMessages(req, res).then(function(messages) {
 			req.messages = messages;
@@ -138,7 +133,7 @@ exports.messageList = function (req, res) {
 			});
 
 		});
-};
+}
 
 function findAndProcessMessages(req, res) {
 	var id = req.user._id;
@@ -177,7 +172,7 @@ function findAndProcessMessages(req, res) {
 		});
 }
 
-exports.chatList = function (req, res) {
+function messageByID (req, res) {
 	req.log.debug({ func: 'chatList' }, 'Start');
 	
 	findAndProcessMessages(req, res).then(
@@ -199,9 +194,9 @@ exports.chatList = function (req, res) {
 			});
 
 		});
-};
+}
 
-exports.chatRead = function (req, res) {
+function create (req, res) {
 	req.log.debug({ func: 'chatRead' }, 'Start');
 	
 	findAndProcessMessages(req, res).then(
@@ -222,7 +217,7 @@ exports.chatRead = function (req, res) {
 				recipient: req.profile,
 				profileImageURL: !!req.profile && req.profile.profileImageURL || null,
 				recipientName: req.profile.displayName
-			})
+			});
 			
 			return res.json(chat);
 			
@@ -240,7 +235,7 @@ exports.chatRead = function (req, res) {
  * Chat : List Messages
  * 
  */
-exports.chatListMessages = function (req, res, next) {
+function read (req, res, next) {
 	req.log.debug({ func: 'chatListMessages' }, 'Start');
 	
 	var id = req.user.id,
@@ -249,9 +244,9 @@ exports.chatListMessages = function (req, res, next) {
 	req.partyQuery = [{ 'sender': id, 'recipient': partyId }, { 'sender': partyId, 'recipient': id }];
 	
 	next();
-};
+}
 
-exports.createByChat = function (req, res, next) {
+function update (req, res, next) {
 	
 	var text = _.isString(req.body) ? req.body : req.body.text;
 	
@@ -262,7 +257,7 @@ exports.createByChat = function (req, res, next) {
 	});
 	
 	saveMessage(req, res, chatMessage);
-};
+}
 
 function groupChatsBySender(req, res) {
 	req.log.debug({ messages: req.messages }, 'grouping messages into chats');
@@ -284,7 +279,7 @@ function groupChatsBySender(req, res) {
 			recipient: newest.party, 
 			profileImageURL: !!newest.party && newest.party.profileImageURL || null,
 			messages: chats[c], 
-			lastMessage: newest})
+			lastMessage: newest});
 	});
 	
 	req.log.debug({ func: 'messages.list', chats: req.chats },
@@ -293,17 +288,41 @@ function groupChatsBySender(req, res) {
 	return req.chats;
 }
 
-/**
+/***********************************************************************************************
  * Message middleware
  */
-exports.messageByID = function (req, res, next, id) {
+function deleteMsg (req, res, next, id) {
 	Message.findById(id)
 		.populate('sender', 'displayName')
 		.populate('recipient', 'displayName')
 		.exec(function (err, message) {
-		if (err) return next(err);
-		if (! message) return next(new Error('Failed to load Message ' + id));
+		if (err) {return next(err);}
+		if (! message) {return next(new Error('Failed to load Message ' + id));}
 		req.message = message ;
 		next();
 	});
-};
+}
+
+/***********************************************************************************************
+ * Message Instance Methods
+ */
+
+function saveMessage(req, res, message) {
+	
+	message.save(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else if(_.isString(message.recipient)) {
+			return message.execPopulate('recipient')
+				.then(function (success) {
+					res.json(success);
+				}, function reject(error) {
+					res.json(message);
+				});
+		} else {
+			return res.json(message);
+		}
+	});
+}
