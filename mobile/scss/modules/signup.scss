@@ -87,7 +87,6 @@ ion-content {
 
 
 .license-content{
-  padding-top: 50px;
 
   h4{
     color: $white;
@@ -491,6 +490,12 @@ $but-height: 90px;
     }
   }
 
+}
+
+.register-screen{
+  .bar.bar-subheader{
+      h3{line-height: 63px;}
+  }
 }
 .trailers-bg{
   background-image:url("../img/trailersBg.png");
