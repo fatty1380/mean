@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope','activityService', '$ionicLoading', '$ionicPlatform'];
+    ActivityAddCtrl.$inject = ['$scope', 'activityService', '$filter', '$ionicLoading', '$ionicPopup', '$ionicPlatform'];
 
-    function ActivityAddCtrl($scope, activityService, $ionicLoading, $ionicPlatform) {
+    function ActivityAddCtrl($scope, activityService, $filter, $ionicLoading, $ionicPopup, $ionicPlatform) {
         angular.element(document).ready(
             getCurrentPosition
         );
@@ -21,7 +21,7 @@
 
         vm.activity = {
             title : '',
-            message : '',
+            notes : 'Enter notes about your drive',
             location : {
                 placeName: '',
                 placeId: '',
@@ -37,6 +37,7 @@
 
         vm.saveItemToFeed = saveItemToFeed;
         vm.close = close;
+        vm.addNotes= addNotes;
         vm.mapIsVisible = true;
 
         $scope.$watch('vm.where', function() {
@@ -160,6 +161,7 @@
         }
 
         function saveItemToFeed() {
+            vm.activity.location.created = Date.now();
             $ionicLoading.show({
                 template: 'post feed'
             });
@@ -173,6 +175,41 @@
 
         function close(str) {
             vm.closeModal(str);
+        }
+
+        function addNotes () {
+            var notes = vm.activity.notes;
+
+            $scope.data = {};
+
+            if(notes !== 'Enter notes about your drive'){
+                $scope.data.notes = notes;
+            }
+
+            var notesPopup = $ionicPopup.show({
+                template: '<textarea ng-model="data.notes" style="height: 125px; font-size: 16px; line-height: 18px; color: #9b9b9b;" autofocus></textarea>',
+                title: 'Enter notes about your drive',
+                scope: $scope,
+                buttons: [
+                    { text: 'Cancel' },
+                    {
+                        text: '<b>Save</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
+                            if (!$scope.data.notes) {
+                                return 'Enter notes about your drive';
+                            } else {
+                                return $scope.data.notes;
+                            }
+                        }
+                    }
+                ]
+            });
+
+            notesPopup.then(function(res) {
+                if(res) vm.activity.notes = res;
+            });
+
         }
     }
 })();

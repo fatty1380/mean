@@ -43,7 +43,9 @@
             vm.isFriend = vm.profileData.friends.indexOf(vm.user.id) >= 0;
             vm.feedMessage = vm.isFriend ? 'No feed items' : 'You have to be friends to see user\'s feed';
 
-            if(vm.isFriend){
+            if(!vm.isFriend){
+                vm.profileData.displayName = vm.profileData.firstName + ' ' + (vm.profileData.lastName && vm.profileData.lastName[0]);
+            }else{
                 $ionicLoading.show({template: 'Loading ' + vm.profileData.firstName + '\'s Feed...'});
                 activityService
                     .getFeed().then(function (result) {
@@ -276,5 +278,13 @@
                 ico: 'ico-tankhazardousactive'
             }
         };
+        vm.trucksMap = {
+            'Peterbilt': 'ico ico-peterbilt-logo',
+            'International': 'ico ico-international-logo',
+            'Freightliner': 'ico ico-freightliner-logo',
+            'Mack Trucks': 'ico ico-mack-logo',
+            'Kenworth': 'ico ico-kenworth-logo',
+            'Volvo': 'ico ico-volvo-logo'
+        }
     }
 })();

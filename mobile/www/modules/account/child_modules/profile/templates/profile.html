@@ -68,7 +68,8 @@
                             <span class="item-label">TRUCK:</span>
                             <span class="item-note">
                                 <div class="logo">
-                                    <div class="ico ico-{{ vm.profileData.props.truck.toLowerCase() }}-logo">{{vm.profileData.props.truck}}</div>
+                                    <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="{{vm.trucksMap[vm.profileData.props.truck]}}"></i>
+                                    <div ng-if="!vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}}</div>
                                 </div>
                             </span>
                         </div>
