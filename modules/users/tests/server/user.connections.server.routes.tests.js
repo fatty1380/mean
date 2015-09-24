@@ -275,6 +275,7 @@ describe('User Connections & Social', function () {
                     return requests;
                 });
         });
+        
         it('should return a list of all friend requests when queried', function () {
             _test = this.test;
 
@@ -365,7 +366,7 @@ describe('User Connections & Social', function () {
         
         it('should allow me to make a friend request of a non-outset user', function () {
             _test = this.test;
-            
+
             var endpoint = '/api/requests';
             var contactInfo = {
                 displayName: 'Calamity Jane',
@@ -373,7 +374,7 @@ describe('User Connections & Social', function () {
                 phones: [{ main: '123-456-7689' }]
             };
             var postData = { contactInfo: contactInfo, text: 'hello there!' };
-            
+
             log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
 
             return agent.post(endpoint)
@@ -390,7 +391,7 @@ describe('User Connections & Social', function () {
                     friendRequest.should.have.property('contactInfo', contactInfo);
                     friendRequest.should.have.property('status', 'new');
                 });
-        })
+        });
 
         it('should allow me to load a specific friend request', function () {
             _test = this.test;
@@ -470,8 +471,9 @@ describe('User Connections & Social', function () {
 
                         });
         });
+        
         it('should allow the user to reject a friend request', function () {
-            var endpoint = '/api/';_test = this.test;
+            _test = this.test;
 
             var endpoint = '/api/requests/' + r2.id;
 
@@ -501,7 +503,7 @@ describe('User Connections & Social', function () {
 
                             var friends = response.body;
                             should.exist(friends);
-                            friends.should.not.be.empty;
+                            friends.should.not.be.empty();
 
                             var notFriend = _.find(friends, { id: u2.id });
                             should.not.exist(notFriend);
@@ -535,7 +537,7 @@ describe('User Connections & Social', function () {
 
                             var friends = response.body;
                             should.exist(friends);
-                            friends.should.not.be.empty;
+                            friends.should.not.be.empty();
 
                             var oldFriend = _.find(friends, { id: u1.id });
                             should.not.exist(oldFriend);
@@ -544,7 +546,7 @@ describe('User Connections & Social', function () {
         
         /// Maybe this is best handled on the server side, silently?
         /// TODO: Determine how this use case should be handled
-        it('should prevent re-sending of a deleted friend request? Maybe?', function () {
+        it('should prevent re-sending of a deleted/rejected friend request? Maybe?', function () {
             var endpoint = '/api/';
         });
     });

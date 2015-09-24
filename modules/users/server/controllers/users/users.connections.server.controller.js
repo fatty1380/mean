@@ -179,37 +179,49 @@ function createRequest(req, res, next) {
         .update(
             { '$push': { 'requests': { '_id': request } } },
             { 'new': true, 'upsert': true }
-        );
-        
+            );
+
     var u2;
     if (_.isEmpty(req.body.to) && !_.isEmpty(req.body.contactInfo)) {
-        u2 = messenger.sendMessage({to: req.body.contactInfo.phones})
+        u2 = messenger.sendMessage({ to: req.body.contactInfo.phones });
     }
 
     return Q.all([request.save(), u1.exec()])
         .then(function (results) {
-        req.log.debug({ func: 'createRequest', friendRequest: results[0], users: results[1] });
+            req.log.debug({ func: 'createRequest', friendRequest: results[0], users: results[1] });
 
             return res.json(results[0]);
         });
 }
 
+/**
+ * listRequests
+ * Based on query parameters, finds and returns Request Messages to the user.
+ * 
+ * @query status array or single value from 'new', 'accepted', 'rejected'
+ * @query requestType array or single value from 'friendRequest', 'shareRequest', 'reviewRequest'. Defaults to 'friendRequest'
+ * @query userId used to specifiy a request from or to a specific user.
+ * 
+ * @returns res.json(requests) 
+ */
 function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
-    
-    var mainQuery = { 'to': req.user.id };
 
-    var statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
+    var types,
+        mainQuery = { 'to': req.user.id },
+        statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
+
     mainQuery.status = statuses.length > 1 ? { $in: statuses } : statuses[0];
-    
+
     if (req.query.requestType !== 'all') {
-        var types = req.query.requestType || ['friendRequest'];
-        
+        types = req.query.requestType || ['friendRequest'];
+
         mainQuery.requestType = types.length > 1 ? { $in: types } : types[0];
     }
-    
+
     var orQuery = [];
 
+    
     if (!!req.query && !!req.query.userId) {
         orQuery.push({ to: req.user.id, from: req.query.userId });
         orQuery.push({ from: req.user.id, to: req.query.userId });
@@ -220,7 +232,8 @@ function listRequests(req, res) {
 
     req.log.debug({ func: 'listRequests', query: req.query, statuses: statuses, types: types, mainQuery: mainQuery, orQuery: orQuery }, 'Executing find');
 
-    Request.find().exec()
+    Request.find()
+        .exec()
         .then(function (reqs) {
             req.log.debug({ func: 'listRequests', allRequests: reqs }, 'Listing all requests for debugging');
 
@@ -243,6 +256,10 @@ function listRequests(req, res) {
         });
 }
 
+/**
+ * getRequest
+ * Simple method which returns the value loaded into the request value
+ */
 function getRequest(req, res, next) {
     return res.json(req.request);
 }
@@ -317,7 +334,7 @@ function acceptRequest(req, res, next) {
             req.log.debug({ func: 'acceptRequest', request: request, u1: u1, u2: u2 }, 'Response from saving');
 
             req.request = request;
-            
+
             return request;
         });
 }
@@ -329,7 +346,7 @@ function rejectRequest(req, res, next) {
     if (!req.user.isAdmin && (!!req.profile || !req.user._id.equals(request.to))) {
         return Q.reject({ statusCode: 403, message: 'Cannot accept friends for other users' });
     }
-    
+
     request.status = 'rejected';
     return request.save().then(function success(result) {
         req.request = result;
@@ -337,6 +354,10 @@ function rejectRequest(req, res, next) {
     });
 }
 
+/**
+ * removeFriend
+ * 
+ */
 function removeFriend(req, res, next) {
 
     req.log.debug({ func: 'removeFriend', profile: req.profile.id, friend: req.params.friendId }, 'Removing friend from DELETE method call');
@@ -344,10 +365,16 @@ function removeFriend(req, res, next) {
     next(new Error('not implemented'));
 }
 
+/**
+ * requestById
+ * Loads a request by its ID, used as middleware for "RUD" operations on Requests.
+ * 
+ * @param id ID Representing the Request being loaded
+ * 
+ */
 function requestById(req, res, next, id) {
 
     Request.findById(id)
-    //.populate('from', 'displayName')
         .exec().then(
             function (request) {
                 if (_.isEmpty(request)) {

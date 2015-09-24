@@ -90,6 +90,8 @@ var MessageSchema = new Schema({
     }
 });
 
+mongoose.model('Message', MessageSchema);
+
 var ChatSchema = new Schema({
     user: {
         type: Schema.ObjectId,
@@ -204,5 +206,4 @@ RequestMessageSchema.statics.reqTypes = {
     friendRequest : 'friendRequest'
 };
 
-mongoose.model('Message', MessageSchema);
 mongoose.model('RequestMessage', RequestMessageSchema);
