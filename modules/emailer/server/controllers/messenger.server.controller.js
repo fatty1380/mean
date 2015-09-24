@@ -18,7 +18,7 @@ var client = twilio(clientConfig.accountSid, clientConfig.authToken);
 
 var recipientOverrideAddress = config.services.twilio.toOverride;
 
-var messageTemplate = 'Dan has invited you to join TruckerLine. Join the Convoy at www.joinoutset.com';
+var messageTemplate = '${username} has invited you to join TruckerLine. Join the Convoy at www.joinoutset.com';
 
 /**
  * getMessage
@@ -27,7 +27,7 @@ var messageTemplate = 'Dan has invited you to join TruckerLine. Join the Convoy 
  */
 function sendMessageRequest(messageConfig) {
     
-    var body = messageConfig.message || messageConfig.template || messageTemplate;
+    var body = (messageConfig.message || messageConfig.template || messageTemplate).replace('${username}', messageConfig.from.firstName);
 
     var message = {
         to: _.isArray(messageConfig.to) ? _.first(messageConfig.to) : messageConfig.to,

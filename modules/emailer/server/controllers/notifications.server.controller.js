@@ -35,7 +35,8 @@ function sendSMS(req, res) {
 	}
 
 	var messageConfig = {
-		to: contactInfo.phone || contactInfo.phones
+		to: contactInfo.phone || contactInfo.phones,
+		from: req.user
 	};
 
 	messenger.sendMessage(messageConfig).then(
