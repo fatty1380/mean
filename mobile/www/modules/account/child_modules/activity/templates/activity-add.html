@@ -1,7 +1,7 @@
 <ion-modal-view class="activity view-section min-size">
 
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click="vm.close()">Close</button>
+        <button class="button button-clear" ng-click="vm.close()">Cancel</button>
         <h1 class="title">Add Activity</h1>
     </ion-header-bar>
 
@@ -18,21 +18,19 @@
                         <span class="input-label">Where:</span>
                         <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
                     </label>
-                    <label class="item item-input">
-                        <span class="input-label">Message:</span>
-                        <input type="text" ng-model="vm.activity.message" placeholder="Enter Activity Message">
-                    </label>
-                    <label class="item item-input">
-                        <span class="input-label">When:</span>
-                        <input type="text" ng-model="vm.activity.location.created" onfocus="this.type='date';this.setAttribute('onfocus','');this.blur();this.focus();"   placeholder="Enter When You Stop" >
+                    <label class="item item-input" ng-click="vm.addNotes();">
+                        <span class="input-label">Notes:</span>
+                        <div class="notes-holder" ng-bind="vm.activity.notes"></div>
+                        <!--<input type="text" ng-model="vm.activity.notes" placeholder="Enter notes about your drive">-->
                     </label>
 
                     <div id="map" data-tap-disabled="true" ng-if="!!vm.mapIsVisible"></div>
 
-                    <label class="item item-input">
-                        <span class="input-label">Distance Since Last Post:</span>
-                        <input type="text" ng-if="!!vm.activity.props.slMiles" value="{{vm.activity.props.slMiles}} miles" readonly>
-                    </label>
+                    <div class="driven" ng-if="!!vm.activity.props.slMiles">
+                        <i class="ico ico-milestraveledsmall"></i>
+                        <span>{{vm.activity.props.slMiles}} miles</span>
+                    </div>
+
                     <label class="item item-input">
                         <span class="input-label">Freight Hauled:</span>
                         <input type="text" ng-model="vm.activity.props.freight" placeholder="" >
@@ -49,7 +47,7 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-disabled="!vm.activity.title" ng-click="vm.saveItemToFeed()">Save</button>
+            <button class="button primary" ng-disabled="!vm.activity.title" ng-click="vm.saveItemToFeed()">Post Your Drive</button>
         </div>
     </ion-footer-bar>
 
