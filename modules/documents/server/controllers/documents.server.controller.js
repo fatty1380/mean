@@ -6,7 +6,7 @@
 var _ = require('lodash'),
 	path = require('path'),
 	mongoose = require('mongoose'),
-	Document = mongoose.model('Document'),
+	LBDocument = mongoose.model('Document'),
 	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 var fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
@@ -16,17 +16,30 @@ var fileUploader = require(path.resolve('./modules/core/server/controllers/s3Fil
         module: 'documents',
         file: 'controller'
     });
-
+    
+/***************************************************
+ * Exported Methods
+ */
+exports.create = create; 
+exports.read = read; 
+exports.update = update; 
+exports.delete = deleteReport; 
+exports.list = list; 
+exports.documentByID = documentByID; 
+exports.uploadResume = uploadResume; 
+exports.refreshResume = refreshResume; 
+exports.refreshReport = refresh; 
+    
 /**
  * Create a Document
  */
-exports.create = function(req, res) {
+function create(req, res) {
     req.log.debug('[DriverCtrl.uploadResume] Start');
     var user = req.user;
     var sku = req.files.file.sku || 'resume';
 
     if (!user) {
-        return res.status(400).send({
+        return res.status(401).send({
             message: 'User is not signed in'
         });
     }
@@ -37,7 +50,7 @@ exports.create = function(req, res) {
         function (response) {
             req.log.debug('successfully uploaded user resume to %j', response);
 			
-			var document = new Document(response);
+			var document = new LBDocument(response);
 			
 			document.expires = moment().add(15, 'm').toDate();
 
@@ -47,7 +60,7 @@ exports.create = function(req, res) {
                 	res.json(req.document);
 				},
 				function (saveError) {
-					req.log.error({ func: 'create', error: saveError, errorMsg: errorHandler.getErrorMessage(saveError) }, 'unable to save document')
+                    req.log.error({ func: 'create', error: saveError, errorMsg: errorHandler.getErrorMessage(saveError) }, 'unable to save document');
                     return res.status(400).send({
                         message: errorHandler.getErrorMessage(saveError)
                     });
@@ -59,19 +72,21 @@ exports.create = function(req, res) {
                 message: 'Unable to save Driver Resume. Please try again later'
             });
         });
-};
+}
+
+
 
 /**
  * Show the current Document
  */
-exports.read = function(req, res) {
+function read(req, res) {
 	res.jsonp(req.document);
-};
+}
 
 /**
  * Update a Document
  */
-exports.update = function(req, res) {
+function update(req, res) {
 	var document = req.document ;
 
 	document = _.extend(document , req.body);
@@ -85,13 +100,15 @@ exports.update = function(req, res) {
 			res.jsonp(document);
 		}
 	});
-};
+}
 
 /**
  * Delete an Document
  */
-exports.delete = function(req, res) {
-	var document = req.document ;
+function deleteReport(req, res) {
+    var document = req.document;
+    
+    req.log.warn({ func: 'deleteDocument', file: 'documents.server.controller' }, 'Doc Record removed, but S3 storage not affected');
 
 	document.remove(function(err) {
 		if (err) {
@@ -102,12 +119,12 @@ exports.delete = function(req, res) {
 			res.jsonp(document);
 		}
 	});
-};
+}
 
 /**
  * List of Documents
  */
-exports.list = function(req, res) { Document.find().sort('-created').populate('user', 'displayName').exec(function(err, documents) {
+function list(req, res) { LBDocument.find().sort('-created').populate('user', 'displayName').exec(function(err, documents) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -116,18 +133,18 @@ exports.list = function(req, res) { Document.find().sort('-created').populate('u
 			res.jsonp(documents);
 		}
 	});
-};
+}
 
 /**
  * Document middleware
  */
-exports.documentByID = function(req, res, next, id) { Document.findById(id).populate('user', 'displayName').exec(function(err, document) {
-		if (err) return next(err);
-		if (! document) return next(new Error('Failed to load Document ' + id));
+function documentByID(req, res, next, id) { LBDocument.findById(id).populate('user', 'displayName').exec(function(err, document) {
+    if (err) { return next(err);}
+		if (! document) {return next(new Error('Failed to load Document ' + id));}
 		req.document = document ;
 		next();
 	});
-};
+}
 
 
 
@@ -139,17 +156,17 @@ exports.documentByID = function(req, res, next, id) { Document.findById(id).popu
  * Driver Migration: True
  * This has been updated to handle the new combined user/driver object.
  */
-exports.uploadResume = function uploadResume(req, res) {
+function uploadResume(req, res) {
     req.log.warn({ func: 'uploadResume' }, 'This function is Deprecated');
-	return exports.create(req.res);
+    return create(req.res);
 }
 
-exports.refreshResume = function refreshResume(req, res) {
+function refreshResume(req, res) {
     req.log.debug('[DriverCtrl.refreshResume] Start');
 
     req.params.reportSku = 'resume';
 
-    return exports.refreshReport(req, res);
+    return refresh(req, res);
 }
 
 /**
@@ -162,7 +179,7 @@ exports.refreshResume = function refreshResume(req, res) {
  * if it is private and has not expired, it will return that URL. Otherwise, it
  * will make a request to get a new secure signed URL.
  */
-exports.refreshReport = function refresh(req, res) {
+function refresh(req, res) {
 
     req.log.debug({func: 'refresh'}, 'Start');
     var user = req.user;

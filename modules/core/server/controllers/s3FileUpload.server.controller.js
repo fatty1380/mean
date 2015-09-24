@@ -15,7 +15,7 @@ var client, publicURL;
 
 //exports.saveFileToCloud = saveFile;
 exports.saveFileToCloud = directUpload;
-exports.saveContentToCloud = uploadSummaryPDF;
+exports.saveContentToCloud = uploadContentToCloud;
 exports.uploadToS3 = doS3FileUpload;
 exports.getSecureReadURL = getSecureReadURL;
 
@@ -29,12 +29,12 @@ if (!!config.services.s3 && config.services.s3.enabled) {
     log.debug('[s3FileUpload.initClient] s3 is not enabled: %j', config.services.s3);
 }
 
-function uploadSummaryPDF(data) {
-    log.trace({ func: 'uploadSummaryPDF' }, 'START');
+function uploadContentToCloud(data) {
+    log.trace({ func: 'uploadContentToCloud' }, 'START');
 
     var buffer = (data.content instanceof Buffer) ? data.content : new Buffer(data.content, 'utf-8');
 
-    log.trace({ func: 'uploadSummaryPDF', dataContentLength: buffer.toString().length });
+    log.trace({ func: 'uploadContentToCloud', dataContentLength: buffer.toString().length });
 
     var file = {
         name: data.filename,
@@ -45,12 +45,12 @@ function uploadSummaryPDF(data) {
     var p = directUpload({ file: file }, null, true);
 
     return p.then(function (success) {
-        log.debug({ func: 'uploadSummaryPDF', result: success }, 'Returning promise');
+        log.debug({ func: 'uploadContentToCloud', result: success }, 'Returning promise');
 
         return success;
     },
         function (err) {
-            log.error({ func: 'uploadSummaryPDF', error: err }, 'Returning promise');
+            log.error({ func: 'uploadContentToCloud', error: err }, 'Returning promise');
 
             return Q.reject(err);
         });

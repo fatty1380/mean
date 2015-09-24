@@ -6,7 +6,7 @@ module.exports = function(app) {
 
 	// Documents Routes
 	app.route('/api/documents')
-		.all()
+		.all() // TODO: Determine if we need permissions around list :/?
 		.get(documents.list)
 		.all(documentsPolicy.isAllowed)
 		.post(documents.create);
