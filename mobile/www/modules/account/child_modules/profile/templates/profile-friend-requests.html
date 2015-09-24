@@ -9,7 +9,7 @@
             <ul class="list friends-list user-friends-list request-list">
                 <li class="item" ng-repeat="request in vm.requests track by $index" ng-init="vm.extendWithUserObject(request)">
                     <img ng-if="!!(request.user.profileImageURL)" ng-src="{{request.user.profileImageURL}}" />
-                    <i ng-if="!(request.user.profileImageURL)" class="ico ico-avatar"></i>
+                    <i ng-if="!(request.user.profileImageURL)" class="ico ico-avatarsmall"></i>
                     <div class="item-content">
                         <strong>{{request.user.handle}}</strong>
                         {{request.user.firstName}} {{request.user.lastName}}

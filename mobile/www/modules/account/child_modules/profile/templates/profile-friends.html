@@ -19,7 +19,7 @@
                 <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)"
                     ng-click="vm.viewUser(friend, $event)" ng-init="vm.getAvatar(friend)">
                     <img ng-if="!!(friend.avatar)" ng-src="{{friend.avatar}}" />
-                    <i ng-if="!(friend.avatar)" class="ico ico-avatar"></i>
+                    <i ng-if="!(friend.avatar)" class="ico ico-avatarsmall"></i>
                     <div class="item-content">
                         {{friend.displayName}}{{friend.text}}
                     </div>
@@ -54,7 +54,7 @@
             <div class="title" ng-if="vm.searchText.length >= 1">Outset Users</div>
             <ul class="list friends-list" ng-if="vm.users.length && !contacts.length && vm.searchText.length >= 2">
                 <li class="item" ng-repeat="user in vm.users" ng-click="vm.viewUser(user, $event)">
-                    <i class="ico ico-avatar" ></i>
+                    <i class="ico ico-avatarsmall" ></i>
                     <div class="item-content">
                         <strong>{{user.handle}}</strong>
                         {{user.firstName}} {{user.lastName}}

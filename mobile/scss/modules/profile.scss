@@ -318,14 +318,15 @@
     .ico{
       width: 31px;
       height: 31px;
-      -webkit-background-size: (7197/6)+px (351)/6+px;
-      background-size: (7197/6)+px (351)/6+px;
 
-      &.ico-doubletraileractive{background-position: -249px -0px;}
-      &.ico-passengeractive{background-position: -815px -0px;}
-      &.ico-tankvehicleactive{background-position: -1132px -0px;}
-      &.ico-hazardousmaterialsactive{background-position: -311px -0px;}
-      &.ico-tankhazardousactive{background-position: -1070px -0px;}
+      -webkit-background-size: (8994/6)+px (351)/6+px;
+      background-size: (8994/6)+px (351)/6+px;
+
+      &.ico-doubletraileractive{background-position: -239px 0;}
+      &.ico-passengeractive{background-position: -(1867/2)+px -0;}
+      &.ico-tankvehicleactive{background-position: -(2759/2)+px 0;}
+      &.ico-hazardousmaterialsactive{background-position: -(731/2)+px 0;}
+      &.ico-tankhazardousactive{background-position: -1317px 0;}
     }
   }
 }
@@ -409,3 +410,325 @@
     font-size: 14px;
   }
 }
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//&.ico-activityiconactive {
+//  width: 26px;
+//  height: 20px;
+//  background-position: 0 0;
+//}
+//
+//&.ico-activityiconblue {
+//  width: 26px;
+//  height: 20px;
+//  background-position: -26px 0;
+//}
+//
+//&.ico-avatarsmall {
+//  width: 25px;
+//  height: 25px;
+//  background-position: -52px 0;
+//}
+//
+//&.ico-cameraicon {
+//  width: 75px;
+//  height: 75px;
+//  background-position: -77px 0;
+//}
+//
+//&.ico-checkboxselected {
+//  width: 20px;
+//  height: 20px;
+//  background-position: -152px 0;
+//}
+//
+//&.ico-checkmarkwhite {
+//  width: 14px;
+//  height: 10px;
+//  background-position: -172px 0;
+//}
+//
+//&.ico-companyavatar {
+//  width: 116px;
+//  height: 116px;
+//  background-position: -186px 0;
+//}
+//
+//&.ico-documentimage {
+//  width: 44px;
+//  height: 40px;
+//  background-position: -302px 0;
+//}
+//
+//&.ico-documentimagebg {
+//  width: 44px;
+//  height: 40px;
+//  background-position: -346px 0;
+//}
+//
+//&.ico-documentimageev {
+//  width: 44px;
+//  height: 40px;
+//  background-position: -390px 0;
+//}
+//
+//&.ico-documentimagemvr {
+//  width: 44px;
+//  height: 40px;
+//  background-position: -434px 0;
+//}
+//
+//&.ico-doubletraileractive {
+//  width: 62px;
+//  height: 62px;
+//  background-position: -478px 0;
+//}
+//
+//&.ico-doubletrailerinactive {
+//  width: 63px;
+//  height: 63px;
+//  background-position: -540px 0;
+//}
+//
+//&.ico-freightliner-logo {
+//  width: 102px;
+//  height: 72px;
+//  background-position: -603px 0;
+//}
+//
+//&.ico-friends {
+//  width: 26px;
+//  height: 26px;
+//  background-position: -705px 0;
+//}
+//
+//&.ico-hazardousmaterialsactive {
+//  width: 62px;
+//  height: 62px;
+//  background-position: -731px 0;
+//}
+//
+//&.ico-hazardousmaterialsinactive {
+//  width: 62px;
+//  height: 62px;
+//  background-position: -793px 0;
+//}
+//
+//&.ico-international-logo {
+//  width: 102px;
+//  height: 72px;
+//  background-position: -855px 0;
+//}
+//
+//&.ico-kenworth-logo {
+//  width: 102px;
+//  height: 72px;
+//  background-position: -957px 0;
+//}
+//
+//&.ico-licenseaactive {
+//  width: 118px;
+//  height: 118px;
+//  background-position: -1059px 0;
+//}
+//
+//&.ico-licenseainactive {
+//  width: 82px;
+//  height: 82px;
+//  background-position: -1177px 0;
+//}
+//
+//&.ico-licensebactive {
+//  width: 118px;
+//  height: 117px;
+//  background-position: -1259px 0;
+//}
+//
+//&.ico-licensebinactive {
+//  width: 82px;
+//  height: 82px;
+//  background-position: -1377px 0;
+//}
+//
+//&.ico-licensecactive {
+//  width: 118px;
+//  height: 117px;
+//  background-position: -1459px 0;
+//}
+//
+//&.ico-licensecinactive {
+//  width: 82px;
+//  height: 82px;
+//  background-position: -1577px 0;
+//}
+//
+//&.ico-likessmall {
+//  width: 14px;
+//  height: 14px;
+//  background-position: -1659px 0;
+//}
+//
+//&.ico-lockboxiconactive {
+//  width: 18px;
+//  height: 22px;
+//  background-position: -1673px 0;
+//}
+//
+//&.ico-lockboxiconblue {
+//  width: 18px;
+//  height: 22px;
+//  background-position: -1691px 0;
+//}
+//
+//&.ico-mack-logo {
+//  width: 102px;
+//  height: 72px;
+//  background-position: -1709px 0;
+//}
+//
+//&.ico-messagesiconactive {
+//  width: 22px;
+//  height: 21px;
+//  background-position: -1811px 0;
+//}
+//
+//&.ico-messagesiconblue {
+//  width: 22px;
+//  height: 21px;
+//  background-position: -1833px 0;
+//}
+//
+//&.ico-milestraveledsmall {
+//  width: 12px;
+//  height: 12px;
+//  background-position: -1855px 0;
+//}
+//
+//&.ico-passengeractive {
+//  width: 62px;
+//  height: 62px;
+//  background-position: -1867px 0;
+//}
+//
+//&.ico-passengerinactive {
+//  width: 62px;
+//  height: 62px;
+//  background-position: -1929px 0;
+//}
+//
+//&.ico-peterbilt-logo {
+//  width: 102px;
+//  height: 72px;
+//  background-position: -1991px 0;
+//}
+//
+//&.ico-previewimageplaceholder {
+//  width: 69px;
+//  height: 84px;
+//  background-position: -2093px 0;
+//}
+//
+//&.ico-professionalicon {
+//  width: 116px;
+//  height: 116px;
+//  background-position: -2162px 0;
+//}
+//
+//&.ico-profileiconactive {
+//  width: 22px;
+//  height: 22px;
+//  background-position: -2278px 0;
+//}
+//
+//&.ico-profileiconblue {
+//  width: 22px;
+//  height: 22px;
+//  background-position: -2300px 0;
+//}
+//
+//&.ico-radio {
+//  width: 25px;
+//  height: 25px;
+//  background-position: -2322px 0;
+//}
+//
+//&.ico-selectedcheckmark {
+//  width: 14px;
+//  height: 11px;
+//  background-position: -2347px 0;
+//}
+//
+//&.ico-shareiconorange {
+//  width: 18px;
+//  height: 15px;
+//  background-position: -2361px 0;
+//}
+//
+//&.ico-socialicon {
+//  width: 116px;
+//  height: 116px;
+//  background-position: -2379px 0;
+//}
+//
+//&.ico-stardeselected {
+//  width: 12px;
+//  height: 12px;
+//  background-position: -2495px 0;
+//}
+//
+//&.ico-starselected {
+//  width: 11px;
+//  height: 12px;
+//  background-position: -2507px 0;
+//}
+//
+//&.ico-steeringwheel {
+//  width: 116px;
+//  height: 116px;
+//  background-position: -2518px 0;
+//}
+//
+//&.ico-tankhazardousactive {
+//  width: 62px;
+//  height: 62px;
+//  background-position: -2634px 0;
+//}
+//
+//&.ico-tankhazardousinactive {
+//  width: 63px;
+//  height: 62px;
+//  background-position: -2696px 0;
+//}
+//
+//&.ico-tankvehicleactive {
+//  width: 63px;
+//  height: 62px;
+//  background-position: -2759px 0;
+//}
+//
+//&.ico-tankvehicleinactive {
+//  width: 62px;
+//  height: 62px;
+//  background-position: -2822px 0;
+//}
+//
+//&.ico-timesmall {
+//  width: 12px;
+//  height: 12px;
+//  background-position: -2884px 0;
+//}
+//
+//&.ico-volvo-logo {
+//  width: 102px;
+//  height: 72px;
+//  background-position: -2896px 0;
+//}

@@ -14,7 +14,7 @@
             <ul class="list friends-list">
                 <li class="item item-divider">Your Friends</li>
                 <li class="item" ng-repeat="contact in contacts = (vm.friends | filter:vm.searchText)">
-                    <i class="ico ico-avatar" ></i>
+                    <i class="ico ico-avatarsmall" ></i>
                     <div class="item-content">
                         {{contact.displayName}}{{contact.text}}
                     </div>

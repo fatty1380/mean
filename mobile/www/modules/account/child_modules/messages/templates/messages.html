@@ -8,7 +8,7 @@
         <ion-scroll>
             <ul class="list message-list">
                 <li class="item" ng-repeat="chat in vm.chats" ng-click="vm.showChatDetailsModal(chat)">
-                    <div class="ico ico-avatar avatar-left"></div>
+                    <div class="ico ico-avatarsmall avatar-left"></div>
                     <div class="item-content">
                         <div class="top">
                             <p>{{chat.recipientName}}</p>
@@ -28,7 +28,7 @@
             </ul>
         </ion-scroll>
         <button class="button content-button" ng-click="vm.showNewMassageModal()">
-            <i class="ico ico-share"></i>
+            <i class="ico ico-shareiconorange"></i>
             New Message
         </button>
     </ion-pane>

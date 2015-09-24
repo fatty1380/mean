@@ -4,7 +4,7 @@
         <button class="button button-clear" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">Edit</button>
         <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}">
             <i class="ion-ios-arrow-back"></i>
-            <span class="ico ico-avatar ico-middle"></span>
+            <span class="ico ico-avatarsmall ico-middle"></span>
         </button>
         <h1 class="title" ng-bind="vm.profileData.displayName">Profile</h1>
         <button class="button button-clear" ng-if="!!vm.showUserSettings" ng-click="vm.showUserSettings()">
@@ -23,7 +23,7 @@
             <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
         </div>
         <div class="contacts-amount" ng-click="vm.showFriends();">
-            <span class="ico ico-avatar ico-middle"></span>
+            <span class="ico ico-avatarsmall ico-middle"></span>
             <span ng-if="vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
             <strong>{{vm.profileData.friends.length}}</strong>
         </div>
@@ -41,7 +41,7 @@
                 <ion-scroll class="reviews-list">
                     <ion-list>
                         <ion-item ng-repeat="review in vm.reviews track by $index">
-                            <div class="ico ico-avatar"></div>
+                            <div class="ico ico-avatarsmall"></div>
                             <div class="review">
                                 <div class="top">
                                     <div class="ratings" data-mark="{{review.rating}}"></div>
@@ -68,7 +68,7 @@
                             <span class="item-label">TRUCK:</span>
                             <span class="item-note">
                                 <div class="logo">
-                                    <div class="{{ vm.profileData.props.truck.toLowerCase() }}-logo">{{vm.profileData.props.truck}}</div>
+                                    <div class="ico ico-{{ vm.profileData.props.truck.toLowerCase() }}-logo">{{vm.profileData.props.truck}}</div>
                                 </div>
                             </span>
                         </div>
@@ -97,7 +97,7 @@
                             <span class="item-label">ENDORSEMENTS:</span>
                             <ul class="endorsements-list">
                                 <li ng-repeat="endorsement in vm.profileData.license.endorsements">
-                                    <i class="ico icon {{ vm.endorsementsMap[endorsement].ico}}"></i>
+                                    <i class="ico extra-small-size {{ vm.endorsementsMap[endorsement].ico}}"></i>
                                 </li>
                             </ul>
                         </div>
@@ -108,8 +108,8 @@
                         <div ng-if="!vm.feed.length" class="no-feed-items">{{ vm.feedMessage }}</div>
                     </div>
                 </ion-scroll>
-                <button class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()' > <i class="ico ico-share"></i>Share</button>
-                <button class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()"><i class="ico ico-share"></i>Send Message</button>
+                <button class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()' > <i class="ico ico-shareiconorange"></i>Share</button>
+                <button class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()"><i class="ico ico-shareiconorange"></i>Send Message</button>
             </ion-tab>
             <ion-tab title="EXPERIENCE"
         on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
@@ -129,7 +129,7 @@
                     </ion-list>
                     <div ng-if="!vm.experience || !vm.experience.length" class="no-content">No Experience</div>
                 </ion-scroll>
-                <button class="button content-button" ng-click="vm.showAddExperienceModal()"><i class="ico ico-share"></i>Add Experience</button>
+                <button class="button content-button" ng-click="vm.showAddExperienceModal()"><i class="ico ico-shareiconorange"></i>Add Experience</button>
             </ion-tab>
         </ion-tabs>
     </ion-pane>

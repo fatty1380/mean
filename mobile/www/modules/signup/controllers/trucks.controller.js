@@ -9,12 +9,12 @@
     
     function TrucksCtrl($scope, $state, registerService, $ionicPopup ) {
         var TRUCKS = [
-            {name: 'Peterbilt', logoClass: 'peterbilt-logo'},
-            {name: 'International', logoClass: 'international-logo'},
-            {name: 'Freightliner', logoClass: 'freightliner-logo'},
-            {name: 'Mack Trucks', logoClass: 'mack-logo'},
-            {name: 'Kenworth', logoClass: 'kenworth-logo'},
-            {name: 'Volvo', logoClass: 'volvo-logo'}
+            {name: 'Peterbilt', logoClass: 'ico ico-peterbilt-logo'},
+            {name: 'International', logoClass: 'ico ico-international-logo'},
+            {name: 'Freightliner', logoClass: 'ico ico-freightliner-logo'},
+            {name: 'Mack Trucks', logoClass: 'ico ico-mack-logo'},
+            {name: 'Kenworth', logoClass: 'ico ico-kenworth-logo'},
+            {name: 'Volvo', logoClass: 'ico ico-volvo-logo'}
         ];
 
         var vm = this;

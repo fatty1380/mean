@@ -12,7 +12,7 @@
             <ul class="list message-list">
                 <li class="item" ng-repeat="message in vm.messages">
                    <!-- <img class="avatar" ng-if="vm.profileData.props.avatar&&message.direction===('outbound')" ng-src="{{vm.profileData.props.avatar}}" ng-class="message.direction===('outbound') ? 'avatar-left' : 'avatar-right'" alt=""/>-->
-                    <div class="ico ico-avatar" ng-class="message.direction===('outbound') ? 'avatar-right' : 'avatar-left'"></div>
+                    <div class="ico ico-avatarsmall" ng-class="message.direction===('outbound') ? 'avatar-right' : 'avatar-left'"></div>
                     <div class="item-content">
                         <div class="message">
                             <span>{{message.text}}</span>

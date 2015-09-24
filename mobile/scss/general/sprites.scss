@@ -1,31 +1,32 @@
 .ico {
-  background-image: url('../img/sprite3x.png');
+  background-image: url('../img/sprite.png');
   display: inline-block;
   vertical-align: top;
   pointer-events: none;
-  -webkit-background-size: (7197/3)+px (351)/3+px;
-  background-size: (7197/3)+px (351)/3+px;
+  -webkit-background-size: (8994/3)+px (351)/3+px;
+  background-size: (8994/3)+px (351)/3+px;
 
   &.ico-text-top{
     vertical-align: text-top;
   }
+
   &.ico-middle{
     vertical-align: middle;
   }
 
-  &.ico-activityiconblue {
+  &.ico-activityiconactive {
     width: 26px;
     height: 20px;
     background-position: 0 0;
   }
 
-  &.ico-activityiconwhite {
+  &.ico-activityiconblue {
     width: 26px;
     height: 20px;
     background-position: -26px 0;
   }
 
-  &.ico-avatar {
+  &.ico-avatarsmall {
     width: 25px;
     height: 25px;
     background-position: -52px 0;
@@ -37,257 +38,298 @@
     background-position: -77px 0;
   }
 
-  &.ico-checkboxdeselected {
+  &.ico-checkboxselected {
     width: 20px;
     height: 20px;
     background-position: -152px 0;
   }
 
-  &.ico-checkboxselected {
-    width: 20px;
-    height: 20px;
-    background-position: -172px 0;
-  }
-
   &.ico-checkmarkwhite {
     width: 14px;
     height: 10px;
-    background-position: -192px 0;
+    background-position: -172px 0;
   }
 
   &.ico-companyavatar {
     width: 116px;
     height: 116px;
-    background-position: -206px 0;
+    background-position: -186px 0;
   }
 
   &.ico-documentimage {
     width: 44px;
     height: 40px;
-    background-position: -322px 0;
+    background-position: -302px 0;
   }
 
   &.ico-documentimagebg {
     width: 44px;
     height: 40px;
-    background-position: -366px 0;
+    background-position: -346px 0;
   }
 
   &.ico-documentimageev {
     width: 44px;
     height: 40px;
-    background-position: -410px 0;
+    background-position: -390px 0;
   }
 
   &.ico-documentimagemvr {
     width: 44px;
     height: 40px;
-    background-position: -454px 0;
+    background-position: -434px 0;
   }
 
   &.ico-doubletraileractive {
     width: 62px;
     height: 62px;
-    background-position: -498px 0;
+    background-position: -478px 0;
   }
 
   &.ico-doubletrailerinactive {
-    width: 62px;
-    height: 62px;
-    background-position: -560px 0;
+    width: 63px;
+    height: 63px;
+    background-position: -540px 0;
+  }
+
+  &.ico-freightliner-logo {
+    width: 102px;
+    height: 72px;
+    background-position: -603px 0;
+  }
+
+  &.ico-friends {
+    width: 26px;
+    height: 26px;
+    background-position: -705px 0;
   }
 
   &.ico-hazardousmaterialsactive {
     width: 62px;
     height: 62px;
-    background-position: -622px 0;
+    background-position: -731px 0;
   }
 
   &.ico-hazardousmaterialsinactive {
     width: 62px;
     height: 62px;
-    background-position: -684px 0px;
+    background-position: -793px 0;
   }
 
-  &.ico-license-a.ico-active {
+  &.ico-international-logo {
+    width: 102px;
+    height: 72px;
+    background-position: -855px 0;
+  }
+
+  &.ico-kenworth-logo {
+    width: 102px;
+    height: 72px;
+    background-position: -957px 0;
+  }
+
+  &.ico-licenseaactive {
     width: 118px;
-    height: 117px;
-    background-position: -746px 0px;
+    height: 118px;
+    background-position: -1059px 0;
   }
 
-  &.ico-license-a.ico-inactive {
+  &.ico-licenseainactive {
     width: 82px;
     height: 82px;
-    background-position: -864px 0px;
+    background-position: -1177px 0;
   }
 
-  &.ico-license-b.ico-active {
+  &.ico-licensebactive {
     width: 118px;
     height: 117px;
-    background-position: -946px 0px;
+    background-position: -1259px 0;
   }
 
-  &.ico-license-b.ico-inactive {
+  &.ico-licensebinactive {
     width: 82px;
     height: 82px;
-    background-position: -1064px 0px;
+    background-position: -1377px 0;
   }
 
-  &.ico-license-c.ico-active {
+  &.ico-licensecactive {
     width: 118px;
     height: 117px;
-    background-position: -1146px 0px;
+    background-position: -1459px 0;
   }
 
-  &.ico-license-c.ico-inactive {
+  &.ico-licensecinactive {
     width: 82px;
     height: 82px;
-    background-position: -1264px 0px;
+    background-position: -1577px 0;
   }
 
   &.ico-likessmall {
     width: 14px;
     height: 14px;
-    background-position: -1346px 0px;
+    background-position: -1659px 0;
+  }
+
+  &.ico-lockboxiconactive {
+    width: 18px;
+    height: 22px;
+    background-position: -1673px 0;
   }
 
   &.ico-lockboxiconblue {
     width: 18px;
     height: 22px;
-    background-position: -1360px 0px;
+    background-position: -1691px 0;
   }
 
-  &.ico-lockboxiconwhite {
-    width: 18px;
-    height: 22px;
-    background-position: -1378px 0px;
+  &.ico-mack-logo {
+    width: 102px;
+    height: 72px;
+    background-position: -1709px 0;
+  }
+
+  &.ico-messagesiconactive {
+    width: 22px;
+    height: 21px;
+    background-position: -1811px 0;
   }
 
   &.ico-messagesiconblue {
     width: 22px;
     height: 21px;
-    background-position: -1396px 0px;
-  }
-
-  &.ico-messagesiconwhite {
-    width: 22px;
-    height: 21px;
-    background-position: -1418px 0px;
+    background-position: -1833px 0;
   }
 
   &.ico-milestraveledsmall {
     width: 12px;
     height: 12px;
-    background-position: -1440px 0px;
-  }
-
-  &.ico-outsetlogo {
-    width: 178px;
-    height: 60px;
-    background-position: -1452px 0px;
+    background-position: -1855px 0;
   }
 
   &.ico-passengeractive {
     width: 62px;
     height: 62px;
-    background-position: -1630px 0px;
+    background-position: -1867px 0;
   }
 
   &.ico-passengerinactive {
     width: 62px;
     height: 62px;
-    background-position: -1692px 0px;
+    background-position: -1929px 0;
+  }
+
+  &.ico-peterbilt-logo {
+    width: 102px;
+    height: 72px;
+    background-position: -1991px 0;
   }
 
   &.ico-previewimageplaceholder {
     width: 69px;
     height: 84px;
-    background-position: -1754px 0px;
+    background-position: -2093px 0;
   }
 
   &.ico-professionalicon {
     width: 116px;
     height: 116px;
-    background-position: -1823px 0px;
+    background-position: -2162px 0;
+  }
+
+  &.ico-profileiconactive {
+    width: 22px;
+    height: 22px;
+    background-position: -2278px 0;
   }
 
   &.ico-profileiconblue {
     width: 22px;
     height: 22px;
-    background-position: -1939px 0px;
+    background-position: -2300px 0;
   }
 
-  &.ico-profileiconwhite {
-    width: 22px;
-    height: 22px;
-    background-position: -1961px 0px;
+  &.ico-radio {
+    width: 25px;
+    height: 25px;
+    background-position: -2322px 0;
   }
 
-  &.ico-settingsicon {
+  &.ico-selectedcheckmark {
+    width: 14px;
+    height: 11px;
+    background-position: -2347px 0;
+  }
+
+  &.ico-shareiconorange {
     width: 18px;
-    height: 18px;
-    background-position: -1983px 0px;
+    height: 15px;
+    background-position: -2361px 0;
   }
 
   &.ico-socialicon {
     width: 116px;
     height: 116px;
-    background-position: -2001px 0px;
+    background-position: -2379px 0;
   }
 
   &.ico-stardeselected {
     width: 12px;
     height: 12px;
-    background-position: -2117px 0px;
+    background-position: -2495px 0;
   }
 
   &.ico-starselected {
     width: 11px;
     height: 12px;
-    background-position: -2129px 0px;
+    background-position: -2507px 0;
+  }
+
+  &.ico-steeringwheel {
+    width: 116px;
+    height: 116px;
+    background-position: -2518px 0;
   }
 
   &.ico-tankhazardousactive {
     width: 62px;
     height: 62px;
-    background-position: -2140px 0px;
+    background-position: -2634px 0;
   }
 
   &.ico-tankhazardousinactive {
-    width: 62px;
+    width: 63px;
     height: 62px;
-    background-position: -2202px 0px;
+    background-position: -2696px 0;
   }
 
   &.ico-tankvehicleactive {
-    width: 62px;
+    width: 63px;
     height: 62px;
-    background-position: -2264px 0px;
+    background-position: -2759px 0;
   }
 
   &.ico-tankvehicleinactive {
     width: 62px;
     height: 62px;
-    background-position: -2326px 0px;
+    background-position: -2822px 0;
   }
 
   &.ico-timesmall {
-    width: 11px;
+    width: 12px;
     height: 12px;
-    background-position: -2388px 0px;
+    background-position: -2884px 0;
   }
 
-
-
-
-  // temp styles, this would be replaced after proper and full sprite will be generated
-  &.ico-share{
-    width: 18px;
-    height: 15px;
-    background: url('../img/shareIconOrange@2x.png') 0 0 no-repeat;
-    background-size: 18px 15px;
-    -webkit-background-size: 18px 15px;
+  &.ico-volvo-logo {
+    width: 102px;
+    height: 72px;
+    background-position: -2896px 0;
   }
+
+  /*
+   * Additional imgs that aren't in sprite
+   */
+
   &.ico-request-review{
     width: 15px;
     height: 18px;
@@ -296,17 +338,24 @@
     background-size: 15px 18px;
     -webkit-background-size: 15px 18px;
   }
+
   &.ico-freight{
     width: 13px;
     height: 16px;
     vertical-align: bottom;
     background: url('../img/bg-freight.png') 0 0 no-repeat;
   }
-  &.ico-exp-truck{
-    width: 34px;
-    height: 34px;
-    vertical-align: middle;
-    background: url('../img/ico01.png') 0 0 no-repeat;
-  }
 }
 
+/* outset logo */
+
+.app-logo{
+  background-image: url('../img/logo.png');
+  display: inline-block;
+  vertical-align: top;
+  pointer-events: none;
+  width: 178px;
+  height: 60px;
+  -webkit-background-size: 178px 60px;
+  background-size: 178px 60px;
+}
