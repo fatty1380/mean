@@ -11,7 +11,7 @@
                     <input type="radio" name="trucks" ng-model="vm.currentTruck"  value="{{truck.name}}">
                     <div class="item-content">
                         <p>{{ truck.name }}</p>
-                        <div class="logo {{ truck.logoClass }}"></div>
+                        <div ng-if="truck.logoClass" class="logo ico {{ truck.logoClass }}"></div>
                     </div>
                 </label>
                 <label class="item item-radio" ng-click="vm.addTruck()">

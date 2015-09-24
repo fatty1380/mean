@@ -276,5 +276,13 @@
                 ico: 'ico-tankhazardousactive'
             }
         };
+        vm.trucksMap = {
+            'Peterbilt': 'ico ico-peterbilt-logo',
+            'International': 'ico ico-international-logo',
+            'Freightliner': 'ico ico-freightliner-logo',
+            'Mack Trucks': 'ico ico-mack-logo',
+            'Kenworth': 'ico ico-kenworth-logo',
+            'Volvo': 'ico ico-volvo-logo'
+        }
     }
 })();
