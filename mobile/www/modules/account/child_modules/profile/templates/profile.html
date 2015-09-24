@@ -1,7 +1,6 @@
 <ion-view class="profile-screen view-section mid-size" cache-view="false">
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">Edit</button>
         <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatarsmall ico-middle"></span>
@@ -15,6 +14,7 @@
             <span ng-if="vm.friendStatus === 'sent'" class="badge badge-balanced">invited</span>
             <span ng-if="vm.friendStatus === 'friends'" class="badge badge-balanced">in convoy</span>
         </button>
+        <button class="button button-clear" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">Edit</button>
     </ion-header-bar>
 
     
@@ -23,12 +23,12 @@
             <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
         </div>
         <div class="contacts-amount" ng-click="vm.showFriends();">
-            <span class="ico ico-avatarsmall ico-middle"></span>
+            <span class="ico ico-friends ico-middle"></span>
             <span ng-if="vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
             <strong>{{vm.profileData.friends.length}}</strong>
         </div>
         <div class="handle">
-            <strong>{{vm.profileData.handle}}</strong>
+            <strong><i class="ico ico-radio"></i> {{vm.profileData.handle}}</strong>
         </div>
     </div>
     <!--Profile Main Heading END-->

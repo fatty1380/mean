@@ -1,20 +1,20 @@
 .profile-visual{
   position: absolute;
-  left: 15px;
-  right: 15px;
-  top:85px;
-  height:84px;
+  left: 10px;
+  right: 10px;
+  top: 65px;
+  height: 114px;
   text-align: center;
   z-index: 2;
 
   .photo{
     display: inline-block;
     vertical-align: top;
-    width: 104px;
-    height: 104px;
+    width: 124px;
+    height: 124px;
     background: #333 url('../img/bg-profile-default.jpg') 50% no-repeat;
-    -webkit-background-size: 100px 100px;
-    background-size: 100px 100px;
+    -webkit-background-size: 120px 120px;
+    background-size: 120px 120px;
     border: 2px solid #8C8B8B;
     text-align: center;
     @include rounded-corner(100%);
@@ -29,9 +29,20 @@
   .contacts-amount{
     position: absolute;
     left: 0;
-    top: 50%;
-    margin-top: -13px;
+    bottom: 5px;
+    padding-bottom: 15px;
     color: #fff;
+
+    &:after{
+      content: 'Friends';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      font-size: 12px;
+      right: -4px;
+      text-align: center;
+      margin-top: -1px;
+    }
 
     .badge{
       position: absolute;
@@ -51,9 +62,8 @@
   .handle{
     position: absolute;
     right: 0;
-    top: 50%;
+    bottom: 20px;
     line-height: 25px;
-    margin-top: -13px;
     color: #fff;
   }
 

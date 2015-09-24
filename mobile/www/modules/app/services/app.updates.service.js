@@ -41,6 +41,8 @@
         function getUpdates (response) {
             var messages, activities, requests;
 
+            if(!response) return;
+
             for (var i = 0; i < response.length; i++) {
                 var responseObject = response[i],
                     url = responseObject.config.url;
