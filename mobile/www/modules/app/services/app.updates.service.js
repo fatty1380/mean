@@ -45,7 +45,9 @@
 
             for (var i = 0; i < response.length; i++) {
                 var responseObject = response[i],
-                    url = responseObject.config.url;
+                    url = responseObject && responseObject.config && responseObject.config.url;
+
+                if(!url) return;
 
                 if(url.indexOf('messages') >= 0){
                     messages = responseObject.data;
