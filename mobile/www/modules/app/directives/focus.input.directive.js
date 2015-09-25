@@ -2,18 +2,20 @@
     'use strict';
 
     angular.module(AppConfig.appModuleName)
-        .directive('eventFocus', FocusDirective);
+        .directive('focusOn', FocusDirective);
 
-    function FocusDirective(focusService) {
+    function FocusDirective() {
         return function(scope, elem, attr) {
-            elem.on(attr.eventFocus, function() {
-                focusService(attr.eventFocusId);
+            scope.$on('focusOn', function(e, name) {
+                if(name === attr.focusOn) {
+                    elem[0].focus();
+                }
             });
 
             // Removes bound events in the element itself
             // when the scope is destroyed
             scope.$on('$destroy', function() {
-                elem.off(attr.eventFocus);
+                elem.off(attr.focusOn);
             });
         };
     }

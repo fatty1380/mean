@@ -162,9 +162,18 @@
         }
 
         function saveItemToFeed() {
+            if(!vm.activity.title){
+                $ionicPopup.alert({
+                    title: 'Title is empty.',
+                    template: 'Please, enter title before posting an activity.'
+                });
+                return;
+            }
+
             $ionicLoading.show({
                 template: 'post feed'
             });
+
             activityService.postActivityToFeed(vm.activity).then(
 				function(result) {
             	    $ionicLoading.hide();

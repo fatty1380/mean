@@ -30,7 +30,7 @@
 
     <ion-footer-bar class="bar bar-footer">
         <label class="item-input-wrapper message-textarea">
-            <textarea placeholder="Message" ng-model="vm.message"></textarea>
+            <textarea id="message-field" placeholder="Message" ng-model="vm.message" focus-on="send"></textarea>
         </label>
         <button class="button button-positive" ng-click="vm.createMessage()">Send</button>
     </ion-footer-bar>
