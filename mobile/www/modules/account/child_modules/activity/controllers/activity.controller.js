@@ -7,7 +7,7 @@
 
     ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, updates, updateService, $scope, $state,  activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -20,6 +20,7 @@
         vm.changeFeedSource = changeFeedSource;
         vm.updateWithNewActivities = updateWithNewActivities;
         vm.refresh = refresh;
+        vm.loadMore = loadMore;
         vm.addFriends = addFriends;
 
         /**
@@ -30,10 +31,10 @@
             vm.updates = updates;
         });
 
-         $scope.$on('$ionicView.enter', function () {
+        $scope.$on('$ionicView.enter', function () {
             updateService.resetUpdates('activities');
 
-            if (!vm.feed.length){
+            if (!vm.feed.length) {
                 updateFeedData();
                 initialize();
             }
@@ -51,7 +52,7 @@
             initialize();
         }
 
-        function addFriends () {
+        function addFriends() {
             $state.go('account.profile.friends');
         }
 
@@ -71,7 +72,7 @@
                     });
             } else {
                 console.log(vm.feedData);
-                if(vm.feedData){
+                if (vm.feedData) {
                     $ionicLoading.show({
                         template: vm.feedData.loadingText
                     });
@@ -105,6 +106,28 @@
                     // Stop the ion-refresher from spinning
                     $scope.$broadcast('scroll.refreshComplete');
                 });
+        }
+
+        function loadMore() {
+
+            if (vm.feed && vm.feed.length > 2) {
+                console.log('[loadMore] Loading Updates');
+
+                activityService.loadMore()
+                    .then(function success(updates) {
+                        console.log('[loadMore] got Updates: ' + updates);
+                        angular.forEach(updates, function (val, key) {
+                            console.log('[loadMore] Pushing item #' + key);
+                            vm.feed.push(val);
+                        })
+                    })
+                    .finally(function () {
+                        // Stop the ion-refresher from spinning
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });;
+            } else {
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            }
         }
 
         /**

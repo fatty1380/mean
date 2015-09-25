@@ -11,7 +11,7 @@
         var templateUrl, controller, params,
             defaultOptions = { animation: 'slide-in-up' };
 
-        function showLockboxEditModal(parameters, options) {
+        function showEditModal(parameters, options) {
             templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-edit.html';
             controller = 'LockboxEditCtrl as vm';
             params = parameters || {};
@@ -21,7 +21,18 @@
                 .show(templateUrl, controller, params, options);
         }
 
-        function showLockboxShareModal(parameters, options) {
+        
+        function showCreateModal(parameters, options) {
+            templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-create.html';
+            controller = 'LockboxCreateCtrl as vm';
+            params = parameters || {};
+            options = angular.extend({}, defaultOptions, options);
+
+            return modalService
+                .show(templateUrl, controller, params, options);
+        }
+
+        function showShareModal(parameters, options) {
             templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-share.html';
             controller = 'LockboxShareCtrl as vm';
             params = parameters || {};
@@ -31,7 +42,7 @@
                 .show(templateUrl, controller, params, options);
         }
 
-        function showLockboxShareContactModal(parameters, options) {
+        function showShareContactModal(parameters, options) {
             templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-share-contacts.html';
             controller = 'LockboxShareContactsCtrl as vm';
             params = parameters || {};
@@ -42,9 +53,10 @@
         }
 
         return {
-            showLockboxEditModal: showLockboxEditModal,
-            showLockboxShareModal: showLockboxShareModal,
-            showLockboxShareContactModal: showLockboxShareContactModal
+            showCreateModal: showCreateModal,
+            showEditModal: showEditModal,
+            showShareModal: showShareModal,
+            showShareContactModal: showShareContactModal
         };
     }
 })();

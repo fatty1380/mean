@@ -1,3 +1,7 @@
+.button.button-small.button-icon:before {
+  font-size: 26px !important;
+}
+
 .profile-visual{
   position: absolute;
   left: 10px;
@@ -33,16 +37,16 @@
     padding-bottom: 15px;
     color: #fff;
 
-    &:after{
-      content: 'Friends';
-      position: absolute;
-      bottom: 0;
-      left: -2px;
-      font-size: 11px;
-      right: -8px;
-      text-align: center;
-      margin-top: -1px;
-    }
+    // &:after{
+    //   content: 'Friends';
+    //   position: absolute;
+    //   bottom: 0;
+    //   left: -2px;
+    //   font-size: 11px;
+    //   right: -6px;
+    //   text-align: center;
+    //   margin-top: -1px;
+    // }
 
     .badge{
       position: absolute;

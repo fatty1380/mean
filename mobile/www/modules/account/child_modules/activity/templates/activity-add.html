@@ -7,38 +7,51 @@
 
     <ion-pane class="pane has-footer add-activity-pane">
         <ion-scroll>
-            <form name="mainForm" id="mainForm" class="" ng-init="vm.initForm(this)" ng-submit="vm.saveItemToFeed()"
-                  novalidate>
+            <form name="mainForm" id="mainForm" class="" ng-init="vm.initForm(this)" ng-submit="vm.saveItemToFeed()" novalidate>
                 <div class="list">
                     <label class="item item-input">
                         <span class="input-label">Title:</span>
-                        <input type="text" ng-model="vm.activity.title" placeholder="Enter Activity Title">
+                        <input type="text" ng-model="vm.activity.title" placeholder="Name your drive">
                     </label>
+
+                    <div class="row">
+                        <div class="col">
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Freight Hauled:</span>
+                                <input type="text" ng-model="vm.activity.props.freight" placeholder="Freight Hauled">
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Distance Driven:</span>
+                                <input type="text" ng-model="vm.activity.props.distance" placeholder="Distance Driven">
+                            </label>
+                        </div>
+                    </div>
+
+                    <label class="item item-input item-floating-label" ng-click="vm.addNotes();">
+                        <span class="input-label">Notes:</span>
+                        <div class="notes-holder" ng-bind="vm.activity.notes"></div>
+                    </label>
+
                     <label class="item item-input" ng-if="!!vm.mapIsVisible">
                         <span class="input-label">Where:</span>
                         <ion-google-place placeholder="Enter Name of Stop" ng-model="vm.where" />
                     </label>
-                    <label class="item item-input" ng-click="vm.addNotes();">
-                        <span class="input-label">Notes:</span>
-                        <div class="notes-holder" ng-bind="vm.activity.notes"></div>
-                        <!--<input type="text" ng-model="vm.activity.notes" placeholder="Enter notes about your drive">-->
-                    </label>
-
                     <div id="map" data-tap-disabled="true" ng-if="!!vm.mapIsVisible"></div>
 
-                    <div class="driven" ng-if="!!vm.activity.props.slMiles">
-                        <i class="ico ico-milestraveledsmall"></i>
-                        <span>{{vm.activity.props.slMiles}} miles</span>
+                    <div class="activity-item bottom">
+                        <div class="clearfix props">
+                            <div class="driven" ng-if="!!vm.activity.props.slMiles">
+                                <i class="ico ico-milestraveledsmall"></i>
+                                <span class="dist mi">{{vm.activity.props.slMiles}}</span>
+                                <span class="lbl"> since last post</span>
+                            </div>
+                            <div class="time" ng-if="vm.activity.created">
+                                <i class="ico ico-timesmall"></i> {{vm.activity.created | date:'shortTime'}}
+                            </div>
+                        </div>
                     </div>
-
-                    <label class="item item-input">
-                        <span class="input-label">Freight Hauled:</span>
-                        <input type="text" ng-model="vm.activity.props.freight" placeholder="" >
-                    </label>
-                    <label class="item item-input">
-                        <span class="input-label">Distance Driven:</span>
-                        <input type="text" ng-model="vm.activity.props.distance" placeholder="" >
-                    </label>
                 </div>
                 <input style="position:absolute; left:9999px" type="submit" />
             </form>

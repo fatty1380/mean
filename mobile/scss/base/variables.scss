@@ -11,7 +11,7 @@ $tab-selected: #3e86b1;
 $content-bg: #f8f8f8;
 $action-text: #b5b5b5;
 $content-body-text: #9b9b9b;
-$secondary-text-action: rgba(255, 255, 255, 0.6);
+$secondary-text-action: rgba(255, 255, 255, 1.0);
 $white: #ffffff;
 $tab-text: #807b84;
 $danger: #B13E3E;
@@ -627,7 +627,7 @@ $popover-box-shadow-android:      0 2px 6px rgba(0,0,0,0.35) !default;
 // Grids
 // -------------------------------
 
-$grid-padding-width:              10px !default;
+$grid-padding-width:              0px !default;
 $grid-responsive-sm-break:        567px !default;  // smaller than landscape phone
 $grid-responsive-md-break:        767px !default;  // smaller than portrait tablet
 $grid-responsive-lg-break:        1023px !default; // smaller than landscape tablet

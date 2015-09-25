@@ -15,7 +15,6 @@
             showProfileShareModal: showProfileShareModal,
             showRequestReviewModal: showRequestReviewModal,
             showAddFriendsModal: showAddFriendsModal,
-            showMessageFriendModal: showMessageFriendModal,
             showFriendRequestModal: showFriendRequestModal,
             showFriendManualAddModal: showFriendManualAddModal,
             showProfileEditTrailersModal: showProfileEditTrailersModal,
@@ -55,15 +54,6 @@
         function showAddFriendsModal (parameters) {
             templateUrl = 'modules/account/child_modules/profile/templates/profile-friends-add.html';
             controller = 'AddFriendsCtrl as vm';
-            params = parameters || {};
-
-            return modalService
-                .show(templateUrl, controller, params);
-        }
-
-        function showMessageFriendModal (parameters) {
-            templateUrl = 'modules/account/child_modules/profile/templates/profile-friends-message.html';
-            controller = 'ProfileFriendMessageCtrl as vm';
             params = parameters || {};
 
             return modalService

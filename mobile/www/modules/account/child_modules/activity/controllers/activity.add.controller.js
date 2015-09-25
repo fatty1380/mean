@@ -32,7 +32,8 @@
             props:{
                 freight: '',
                 slMiles: ''
-            }
+            },
+            created: Date.now()
         }
 
         vm.saveItemToFeed = saveItemToFeed;
@@ -153,7 +154,7 @@
             if(lastActivity) {
                 var startPos = new google.maps.LatLng(lastActivity.location.coordinates[0], lastActivity.location.coordinates[1]);
                 var endPos =  new google.maps.LatLng(position.lat, position.lng);
-                activityService.getDistanceBetween(startPos, endPos)
+                activityService.getSLDistanceBetween(startPos, endPos)
                     .then(function(result) {
                         vm.activity.props.slMiles = result;
                     });
@@ -161,7 +162,6 @@
         }
 
         function saveItemToFeed() {
-            vm.activity.location.created = Date.now();
             $ionicLoading.show({
                 template: 'post feed'
             });

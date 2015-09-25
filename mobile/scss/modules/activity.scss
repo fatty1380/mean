@@ -97,14 +97,11 @@
         overflow: hidden;
         height: auto;
 
-        .time{
-          float: right;
-        }
-        .miles, .likes {
+        .miles, .likes, .driven {
           float: left;
           padding-right: 4px;
         }
-        .comments {
+        .comments, .time {
           float: right;
           padding-left: 4px;
         }
@@ -179,19 +176,65 @@
         color: $content-body-text;
         line-height: 20px;
       }
-    }
-    .driven{
-      padding: 5px 16px;
-      font-size: 14px;
-      font-weight: bold;
-      background-color: #E6E6E6;
-      color: #6D6D6C;
-
-      i, span{
-        display: inline-block;
-        vertical-align: middle;
+      
+      .notes-holder {
+        padding-bottom: 2*$content-padding;
       }
     }
+    
+      
+    .props {
+        padding: 5px 16px;
+        font-size: 14px;
+        
+        & > * {
+          display: inline-block;
+        }
+        
+        padding: $item-padding/2 $item-padding;
+        overflow: hidden;
+        height: auto;
+
+        .miles, .likes, .driven {
+          float: left;
+          padding-right: 4px;
+        }
+        .comments, .time {
+          float: right;
+          padding-left: 4px;
+        }
+        
+        
+          .dist, .time {
+            font-weight: 400;
+          }
+        
+        .driven {
+          .dist.mi:after {
+            content: 'MI';
+            position: relative;
+            bottom: 0;
+            left: 0.5px;
+          }
+          .lbl, .dist.mi:after  {
+            font-size: 0.6em;
+            text-transform: uppercase;
+          }
+        }
+      }
+      
+    // .driven{
+    //   padding: 5px 16px;
+    //   font-size: 14px;
+    //   font-weight: bold;
+    //   background-color: #E6E6E6;
+    //   color: #6D6D6C;
+
+    //   i, span{
+    //     display: inline-block;
+    //     vertical-align: middle;
+    //   }
+    // }
   }
 
   /* details activity */
