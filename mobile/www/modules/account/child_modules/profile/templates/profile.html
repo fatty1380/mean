@@ -1,8 +1,8 @@
 <ion-view class="profile-screen view-section mid-size" cache-view="false">
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
-        <button class="button button-icon icon ion-compose"></button>
-        <button class="button button-clear" ng-if="!vm.showEditModal" ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}">
+        <button ng-if="!!vm.showEditModal" class="button button-small button-icon icon ion-compose" ng-click="vm.showEditModal()"></button>
+        <button ng-if="!vm.showEditModal" class="button button-clear" ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatarsmall ico-middle"></span>
         </button>
