@@ -10,8 +10,8 @@
             <form name="mainForm" id="mainForm" ng-submit="vm.saveDocument()">
                 <div class="list">
                     
-                    <p class="center">
-                    <img ng-src="{{vm.document.url}}" />
+                    <p style="text-align: center">
+                    <img ng-src="{{vm.trustedSrc}}" />
                         
                     </p>
                     
@@ -22,6 +22,7 @@
                         <input type="text" ng-model="vm.document.name" placeholder="Document Name">
                     </label>
 
+                    <hr>
                     <label class="item item-input item-select">
                         <div class="input-label">
                             Document Type:
@@ -35,6 +36,7 @@
                         <input type="text" ng-model="vm.document.customType" ng-show="vm.document.sku === 'MISC'" placeholder="enter custom type">
                     </label>
 
+                    <hr>
 
                     <div class="row">
                         <div class="col">

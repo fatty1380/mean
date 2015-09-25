@@ -17,14 +17,16 @@
         function init() {
             
             vm.document = {
-                url: $sce.trustAsResourceUrl(!!parameters.image ? 'data:image/jpeg;base64,' + parameters.image : settings.defaultProfileImage),
+                url: !!parameters.image ? 'data:image/jpeg;base64,' + parameters.image : settings.defaultProfileImage,
                 name: '',
                 sku: '',
                 valid: {
                     from: null,
                     until: null
                 }
-            }
+            };
+            
+            vm.trustedSrc = $sce.trustAsResourceUrl(vm.document.url);
         }
 
         function cancel() {

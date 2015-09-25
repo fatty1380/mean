@@ -90,13 +90,18 @@
                     return lockboxModals.showCreateModal({ image: rawImageResponse });
                 })
                 .then(function success(newDocumentResponse) {
-                    return addDocument(newDocumentResponse);
-                })
-                .then(function succes(addedDocument) {
-                    return $http.post(settings.documents, addedDocument);
+                    
+                    if (addDocument(newDocumentResponse)) {
+                        return $http.post(settings.documents, newDocumentResponse);
+                    } else {
+                        return $http.put(settings.documents + newDocumentResponse.id, newDocumentResponse);
+                    }
                 })
                 .catch(function reject(err) {
                     debugger;
+                    console.error('Failed to save new doc: ', err);
+                    
+                    return vm.documents;
                 })
                 .finally(function () {
                     $ionicLoading.hide();
