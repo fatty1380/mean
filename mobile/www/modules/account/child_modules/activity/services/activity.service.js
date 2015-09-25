@@ -26,12 +26,28 @@
             getPlaceName: getPlaceName,
             hasCoordinates: hasCoordinates,
             changeFeedSource: changeFeedSource,
-            getFeedData: getFeedData
+            getFeedData: getFeedData,
+            loadMore: loadMore
         };
+        
+        var vm = this;
 
         var feed = [];
         var items = [];
         var activityItems = []; //my posts
+        
+        Object.defineProperty(vm, 'FEEDER_CONFIG', {
+            enumerable: true,
+            get: function () {
+                return {
+                    start: -1,
+                    loaded: 0,
+                    step: 50
+                };
+            }
+        });
+        
+        var feeder = vm.FEEDER_CONFIG;
 
         var feedSource = 'items';
         var feedData = {
@@ -52,7 +68,7 @@
         }
 
         function getFeedData() {
-           return feedData[feedSource];
+            return feedData[feedSource];
         }
 
         /**
@@ -74,12 +90,14 @@
 
         function feedRequestSuccess(response) {
             console.log(response);
-            //items = response.data.items || [];
-            items = response.data[feedSource] || [];
-            activityItems =  response.data.activity || [];
+
+            feeder = vm.FEEDER_CONFIG;
+
+            items = response.data[feedSource].reverse() || [];
+            activityItems = response.data.activity.reverse() || [];
             return $q(function (resolve, reject) {
                 if (items.length > 0) {
-                    return resolve(populateActivityFeed(items));
+                    return resolve(populateActivityFeed(items, feeder.start, feeder.step));
                 } else {
                     reject('no feed');
                 }
@@ -90,6 +108,12 @@
             //showPopup('Error', response.message);
             console.error('Unable to load Feed', response.data)
             return [];
+        }
+
+        function loadMore() {
+            console.log('[activityService.loadMore] Loading Updates');
+            debugger;
+            return populateActivityFeed(items, feeder.start, feeder.step);
         }
         
         /**
@@ -102,24 +126,39 @@
          */
         function populateActivityFeed(rawFeedActivities, start, count) {
             feed = rawFeedActivities;
-            console.log('Iterating over %d feed IDs to populate', feed.length, feed);
-            start = start || 0;
+            start = start + 1 || 0;
             count = count || undefined;
+
+
+            console.log('Iterating over ' + feed.length + ' feed IDs to populate ' + count + ' from ' + start);
 
             /**
              * Look at feed IDs `start` to `start+count` and 
              */
-            var promises = feed.slice(start, count)
-                .map(function (value, index) {
+            var itemsToResolve = feed.slice(start, count);
+            
+            if (!itemsToResolve || !itemsToResolve.length) {
+                console.log('No more activities');
+                return $q.when([]);
+            }
+            
+            
+            var promises = itemsToResolve.map(function (value, index) {
                     // TODO: Ensure that value is string, not object
                     return getFeedActivityById(value).then(
                         function (feedItem) {
+                            console.log('Loaded Feed item #' + index + '. Feeder: ', feeder);
+                            feeder.loaded++;
+
                             if (hasCoordinates(feedItem)) {
                                 feedItem.location = {
                                     type: feedItem.location.type,
                                     coordinates: feedItem.location.coordinates
                                 }
                             }
+
+                            feeder.start = Math.max(feeder.start, index);
+
                             feed[start + index] = feedItem;
                             return feedItem;
                         })
@@ -128,6 +167,7 @@
             return $q.all(promises).then(function (results) {
                 console.log('Resolved %d feed activities to populated feed', results.length, feed);
                 var sorted = feed.sort(function (a, b) {
+                    if (angular.isString(a) && angular.isString(b)) { return 0; }
                     var x = Date.parse(b.created) - Date.parse(a.created);
                     var y = x > 0 ? 1 : x < 0 ? -1 : 0;
                     var word = y == 1 ? 'after' : 'before';
@@ -135,6 +175,7 @@
                     return y
                 });
 
+                console.log('Sorted %d feed activities to populated feed', results.length, sorted);
                 return sorted;
             })
         }
@@ -257,7 +298,7 @@
          */
         function getSLDistanceBetween(start, finish) {
             var dist = google.maps.geometry.spherical.computeDistanceBetween(start, finish);
-            
+
             return $q.when((dist / 1609.344).toFixed(0));
         }
 
