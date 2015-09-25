@@ -9,7 +9,7 @@
       line-height: 16px;
       font-weight: bold;
       border: solid #D2D2D2;
-      border-width: 1px 1px 0 0;
+      border-width: 1px 0 0 0;
       text-transform: uppercase;
       background-color: $white;
       color: $tab-text;
@@ -19,9 +19,7 @@
       }
 
       &.tab-item-active{
-        color: $white;
         border-left: 0;
-        background-color: $tab-selected
       }
 
       .ico{
