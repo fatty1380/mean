@@ -76,18 +76,18 @@
             password.setSelectionRange(0, password.value.length);
         }
 
-        $scope.$on('$ionicView.afterEnter', function () {
-            // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                window.cordova.plugins.Keyboard.disableScroll(true);
-            }
-        });
-        $scope.$on('$ionicView.beforeLeave', function () {
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                // return to keyboard default scroll state
-                window.cordova.plugins.Keyboard.disableScroll(false);
-            }
-        });
+        //$scope.$on('$ionicView.afterEnter', function () {
+        //    // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
+        //    if (window.cordova && window.cordova.plugins.Keyboard) {
+        //        window.cordova.plugins.Keyboard.disableScroll(true);
+        //    }
+        //});
+        //$scope.$on('$ionicView.beforeLeave', function () {
+        //    if (window.cordova && window.cordova.plugins.Keyboard) {
+        //        // return to keyboard default scroll state
+        //        window.cordova.plugins.Keyboard.disableScroll(false);
+        //    }
+        //});
     }
 })();
 

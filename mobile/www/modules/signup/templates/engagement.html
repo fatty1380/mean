@@ -9,25 +9,23 @@
     </div>
 
     <ion-pane class="has-footer">
-        <ion-scroll>
-            <form name="mainEnagegmentForm" id="mainEnagegmentForm" class="list signup-form" ng-init="vm.initEngagementForm(this)" ng-submit="vm.continueToLicense()" role="form">
-                <label class="item item-input">
-                    <input type="text" placeholder="Handle" ng-model="vm.handle" autofocus>
-                </label>
-                <div class="avatar-wrapper">
+        <form name="mainEnagegmentForm" id="mainEnagegmentForm" class="list signup-form" ng-init="vm.initEngagementForm(this)" ng-submit="vm.continueToLicense()" role="form">
+            <label class="item item-input">
+                <input type="text" placeholder="Handle" ng-model="vm.handle" autofocus>
+            </label>
+            <div class="avatar-wrapper">
                     <div class="avatar" ng-click="vm.showEditAvatar()">
-                        <i ng-if="!vm.profileData.props.avatar" class="ico ico-cameraicon ico-middle" ></i>
-                        <img ng-if="vm.profileData.props.avatar" class="round-avatar" ng-src="{{ vm.profileData.props.avatar }}" />
-                    </div>
+                    <i ng-if="!vm.profileData.props.avatar" class="ico ico-cameraicon ico-middle" ></i>
+                    <img ng-if="vm.profileData.props.avatar" class="round-avatar" ng-src="{{ vm.profileData.props.avatar }}" />
                 </div>
-                <label class="item item-input">
-                    <input type="text" placeholder="Driving Since" ng-model="vm.started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();" >
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="Employer" ng-model="vm.employer">
-                </label>
-            </form>
-        </ion-scroll>
+            </div>
+            <label class="item item-input">
+                <input type="text" placeholder="Driving Since" ng-model="vm.started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();" >
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="Employer" ng-model="vm.employer">
+            </label>
+        </form>
     </ion-pane>
 
     <ion-footer-bar>

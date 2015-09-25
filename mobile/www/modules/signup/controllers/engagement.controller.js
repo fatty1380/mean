@@ -22,16 +22,16 @@
             vm.form = scope;
         }
 
-        $scope.$on('$ionicView.afterEnter', function () {
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                window.cordova.plugins.Keyboard.disableScroll(true);
-            }
-        });
-        $scope.$on('$ionicView.beforeLeave', function () {
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                window.cordova.plugins.Keyboard.disableScroll(false);
-            }
-        });
+        //$scope.$on('$ionicView.afterEnter', function () {
+        //    if (window.cordova && window.cordova.plugins.Keyboard) {
+        //        window.cordova.plugins.Keyboard.disableScroll(true);
+        //    }
+        //});
+        //$scope.$on('$ionicView.beforeLeave', function () {
+        //    if (window.cordova && window.cordova.plugins.Keyboard) {
+        //        window.cordova.plugins.Keyboard.disableScroll(false);
+        //    }
+        //});
 
         //update avatar after change data
         $scope.$watch(function () {

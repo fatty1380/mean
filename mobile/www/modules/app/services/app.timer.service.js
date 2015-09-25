@@ -15,6 +15,14 @@
         vm.counter = null;
         vm.myTimeOut = null;
 
+        $rootScope.$on("clear", function () {
+            $timeout.cancel(vm.myTimeOut);
+            vm.isRunning = false;
+            vm.interval = null;
+            vm.counter = null;
+            vm.myTimeOut = null;
+        });
+
         function onTimeout () {
 
             if(vm.counter ===  0) {
