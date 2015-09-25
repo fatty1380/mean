@@ -13,7 +13,7 @@
         vm.currentDoc = null;
         vm.documents = [];
 
-        vm.addDocsPopup = lockboxDocuments.addDocsPopup;
+        vm.addDocsPopup = addDocs;
         vm.showEditModal = showEditModal;
         vm.showShareModal = showShareModal;
 
@@ -28,6 +28,14 @@
         });
         
         /// Implementation
+        
+        function addDocs() {
+            lockboxDocuments.addDocsPopup().then(
+                function success(docs) {
+                    vm.documents = docs;
+                }
+            )
+        }
 
         function getDocs() {
             lockboxDocuments.getDocuments()

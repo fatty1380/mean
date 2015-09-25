@@ -4,9 +4,9 @@
         .module(AppConfig.appModuleName)
         .factory('cameraService', cameraService);
 
-    cameraService.$inject = ['$q', '$ionicActionSheet', 'avatarModalsService'];
+    cameraService.$inject = ['$q', '$ionicActionSheet'];
 
-    function cameraService($q, $ionicActionSheet, avatarModalsService) {
+    function cameraService($q, $ionicActionSheet) {
 
         var source = {
             CAMERA: 1,
@@ -64,24 +64,17 @@
                     switch (index) {
                         case 0:
                             console.log("Take a photo");
-                            deferred.resolve(takePhoto(source.CAMERA));
+                            deferred.resolve(getPicture(source.CAMERA));
                             break;
                         case 1:
                             console.log("Take photo from album");
-                            deferred.resolve(takePhoto(source.PHOTOS));
+                            deferred.resolve(getPicture(source.PHOTOS));
                             break;
                     }
                     return true;
                 }
             });
             return deferred.promise;
-        }
-
-        function takePhoto(type) {
-            return getPicture(type)
-                .then(function success(imageData) {
-                    return avatarModalsService.showEditModal(imageData);
-                });
         }
     }
 })();

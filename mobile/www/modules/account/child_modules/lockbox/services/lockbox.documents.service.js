@@ -1,16 +1,57 @@
 (function () {
     'use strict';
 
+    angular.module('lockbox').filter('getById', function () {
+        return function (input, id) {
+            var i = 0, len = input.length;
+            for (; i < len; i++) {
+                if (+input[i].id == +id) {
+                    return input[i];
+                }
+            }
+            return null;
+        }
+    });
+
     angular
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$ionicActionSheet', '$http', 'settings'];
+    lockboxDocuments.$inject = ['$ionicActionSheet', '$ionicLoading', '$http', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments ($ionicActionSheet, $http, settings) {
+    function lockboxDocuments($ionicActionSheet, $ionicLoading, $http, settings, cameraService, lockboxModals) {
 
+        var vm = this;
+
+        vm.documents = [];
+
+        function getId(e) { return e.id || e._id; }
+
+        // TODO: Refactor to be "refresh documents"
         function getDocuments() {
-            return $http.get(settings.documents)
+            return $http.get(settings.documents).then(
+                function success(documentListResponse) {
+                    var docs = documentListResponse.data;
+
+                    angular.forEach(docs, function (doc, index) {
+                        addDocument(doc);
+                    });
+
+                    return vm.documents;
+                });
+        }
+
+        function addDocument(doc) {
+            var i = vm.documents.map(getId).indexOf(doc.id);
+
+            if (i !== -1) {
+                vm.documents[i] = doc;
+                return false;
+            }
+            else {
+                vm.documents.push(doc);
+                return true;
+            }
         }
         
         //function getStubDocuments() {
@@ -20,17 +61,17 @@
         function addDocsPopup() {
             $ionicActionSheet.show({
                 buttons: [
-                    {text: 'Take a Picture'},
-                    {text: 'Order Reports'}
+                    { text: 'Take a Picture' },
+                    { text: 'Order Reports' }
                 ],
                 titleText: '<span class="title">Add documents</span>',
                 cancelText: 'Cancel',
                 cssClass: 'document-actionsheet',
-                cancel: function() {
+                cancel: function () {
                     console.log("Cancel");
                 },
-                buttonClicked: function(index) {
-                    switch(index){
+                buttonClicked: function (index) {
+                    switch (index) {
                         case 0:
                             takePicture();
                             break;
@@ -43,10 +84,28 @@
             });
         }
 
-        function takePicture(){
-            console.log('takePicture');
+        function takePicture() {
+            cameraService.showActionSheet()
+                .then(function success(rawImageResponse) {
+                    return lockboxModals.showCreateModal({ image: rawImageResponse });
+                })
+                .then(function success(newDocumentResponse) {
+                    return addDocument(newDocumentResponse);
+                })
+                .then(function succes(addedDocument) {
+                    return $http.post(settings.documents, addedDocument);
+                })
+                .catch(function reject(err) {
+                    debugger;
+                })
+                .finally(function () {
+                    $ionicLoading.hide();
+                    
+                    return vm.documents;
+                });;
+
         }
-        function orderReports(){
+        function orderReports() {
             console.log('orderReports');
         }
 
