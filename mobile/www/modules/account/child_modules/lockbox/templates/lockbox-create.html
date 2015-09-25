@@ -14,13 +14,6 @@
                     <img ng-src="{{vm.trustedSrc}}" />
                         
                     </p>
-                    
-                    <hr>
-                    
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Title:</span>
-                        <input type="text" ng-model="vm.document.name" placeholder="Document Name">
-                    </label>
 
                     <hr>
                     <label class="item item-input item-select">
@@ -33,10 +26,12 @@
                             <option value="REG">Registration</option>
                             <option value="MISC">other ...</option>
                         </select>
-                        <input type="text" ng-model="vm.document.customType" ng-show="vm.document.sku === 'MISC'" placeholder="enter custom type">
                     </label>
-
-                    <hr>
+                    
+                    <label class="item item-input item-floating-label" ng-show="vm.document.sku === 'MISC'">
+                        <span class="input-label">Title:</span>
+                        <input type="text" ng-model="vm.document.name" placeholder="Document Name">
+                    </label>
 
                     <div class="row">
                         <div class="col">
@@ -60,7 +55,8 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-disabled="!vm.document.name" ng-click="vm.saveDocument()"><i classs="icon ion-lock"></i>Store Document</button>
+            <button class="button primary" ng-disabled="!(!!vm.document.sku || (vm.document.sku=='MISC' && !!vm.document.name))" 
+            ng-click="vm.saveDocument()"><i classs="icon ion-lock"></i>Store Document</button>
         </div>
     </ion-footer-bar>
 

@@ -20,8 +20,8 @@
                 .then(function (response) {
                     console.log('Documents List', response);
 
-                    vm.documents = response.data instanceof Array && response.data.length ? response.data : [];
-                })
+                    vm.documents = response instanceof Array && response.length ? response : [];
+                });
         }
 
         getDocs();

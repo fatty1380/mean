@@ -25,7 +25,6 @@
 
         vm.documents = [];
         
-        
         stubDocuments.forEach(function (doc) {
             addDocument(doc);
         })
@@ -41,9 +40,14 @@
                     angular.forEach(docs, function (doc, index) {
                         addDocument(doc);
                     });
-
                     return vm.documents;
-                });
+                }, function fail(result) {
+                    console.error('Error getting docs: ', result);
+                    return vm.documents;
+                })
+                .finally(function () {
+                    return vm.documents;
+                });;
         }
 
         function addDocument(doc) {
@@ -105,14 +109,12 @@
                 .catch(function reject(err) {
                     debugger;
                     console.error('Failed to save new doc: ', err);
-                    
-                    return vm.documents;
                 })
                 .finally(function () {
                     $ionicLoading.hide();
                     
                     return vm.documents;
-                });;
+                });
 
         }
         function orderReports() {
