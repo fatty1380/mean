@@ -15,7 +15,7 @@
                     <input type="text" placeholder="Handle" ng-model="vm.handle" autofocus>
                 </label>
                 <div class="avatar-wrapper">
-                    <div class="avatar" ng-click="vm.camera.showActionSheet()">
+                    <div class="avatar" ng-click="vm.showEditAvatar()">
                         <i ng-if="!vm.profileData.props.avatar" class="ico ico-cameraicon ico-middle" ></i>
                         <img ng-if="vm.profileData.props.avatar" class="round-avatar" ng-src="{{ vm.profileData.props.avatar }}" />
                     </div>

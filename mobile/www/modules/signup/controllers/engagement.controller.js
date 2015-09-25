@@ -5,9 +5,9 @@
         .module('signup')
         .controller('EngagementCtrl', EngagementCtrl)
 
-    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'avatarService' ];
+    EngagementCtrl.$inject = ['$scope', '$state', 'registerService', 'cameraService', 'userService', 'avatarService'];
 
-    function EngagementCtrl ($scope, $state, registerService, cameraService, userService, avatarService) {
+    function EngagementCtrl($scope, $state, registerService, cameraService, userService, avatarService) {
 
         var vm = this;
         vm.handle = "";
@@ -37,28 +37,49 @@
         $scope.$watch(function () {
             return userService.profileData;
         },
-        function () {
-            vm.profileData = userService.profileData;
-        }, true);
+            function () {
+                vm.profileData = userService.profileData;
+            }, true);
 
 
         vm.createStartedDateObject = function (started) {
-            if(!started) return '';
+            if (!started) return '';
             var startedArray = started.split('-');
 
             return new Date(startedArray[0], startedArray[1]);
         };
+        
+        
+
+        /**
+         * showEditAvatar - DUPE FROM profile.controller.js
+         * --------------
+         * Opens an action sheet which leads to either taking
+         * a photo, or selecting from device photos.
+         */
+        vm.showEditAvatar = function (parameters) {
+            vm.camera.showActionSheet()
+                .then(function success(rawImageResponse) {
+                    return avatarService.showEditModal(rawImageResponse);
+                })
+                .then(function success(newImageResponse) {
+                    vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
+                })
+                .catch(function reject(err) {
+                    debugger;
+                });
+        };
 
         function continueToLicense() {
-            registerService.setProps('started',vm.createStartedDateObject(vm.started));
+            registerService.setProps('started', vm.createStartedDateObject(vm.started));
             registerService.setProps('avatar', avatarService.getImage());
             registerService.setProps('company', '');
             registerService.setProps('freight', '');
             registerService.setProps('truck', '');
-            registerService.setDataProps('handle' , vm.handle);
+            registerService.setDataProps('handle', vm.handle);
 
             $state.go('signup-license');
         }
     }
-    
+
 })();
