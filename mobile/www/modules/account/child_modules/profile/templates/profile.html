@@ -17,7 +17,6 @@
         <button class="button button-clear" ng-if="!!vm.showEditModal" ng-click="vm.showEditModal()">Edit</button>
     </ion-header-bar>
 
-    
     <div class="profile-visual">
         <div class="photo" ng-click="vm.showEditAvatar()">
             <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
@@ -69,7 +68,9 @@
                             <span class="item-note">
                                 <div class="logo">
                                     <i ng-if="vm.trucksMap[vm.profileData.props.truck]" class="{{vm.trucksMap[vm.profileData.props.truck]}}"></i>
-                                    <div ng-if="!vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}}</div>
+                                    <div ng-if="!vm.trucksMap[vm.profileData.props.truck]">{{vm.profileData.props.truck}} {{vm.profileData.props.model}}</div>
+                                    <div ng-if="!vm.profileData.props.truck && vm.profileData.props.model">{{vm.profileData.props.model}}</div>
+                                    <span ng-if="vm.trucksMap[vm.profileData.props.truck] && vm.profileData.props.model" class="badge badge-positive" >{{vm.profileData.props.model}}</span>
                                 </div>
                             </span>
                         </div>
@@ -82,7 +83,7 @@
                             </span>
                         </div>
                         <div class="item" ng-if="!!vm.profileData.props.started">
-                            <span class="item-label">DRIVING SINCE:</span>
+                            <span class="item-label">DRIVING SINC3E:</span>
                             <span class="item-note">{{vm.profileData.props.started | monthDate | date : 'MMMM, yyyy'}}</span>
                         </div>
                         <div class="item item-divider"></div>

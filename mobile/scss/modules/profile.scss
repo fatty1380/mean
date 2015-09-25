@@ -39,7 +39,7 @@
       bottom: 0;
       left: -2px;
       font-size: 11px;
-      right: -6px;
+      right: -8px;
       text-align: center;
       margin-top: -1px;
     }
@@ -56,6 +56,7 @@
 
     strong{
       vertical-align: middle;
+      font-size: 13px;
     }
   }
 
@@ -273,7 +274,18 @@
       color: $content-body-text;
       white-space: normal;
       
-      .logo > div {margin-right: 0;}
+      .logo {
+        position: relative;
+
+        > div {
+          margin-right: 0;
+        }
+        .badge{
+          top: auto;
+          bottom: -13px;
+          right: 0;
+        }
+      }
     }
   }
 }
