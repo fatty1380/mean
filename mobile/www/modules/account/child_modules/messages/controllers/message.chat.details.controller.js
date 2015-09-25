@@ -5,9 +5,9 @@
         .module('account')
         .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl);
 
-    MessageChatDetailsCtrl.$inject = ['$state', '$scope', 'updateService', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService', 'settings'];
+    MessageChatDetailsCtrl.$inject = ['$state', 'focus', '$scope', 'updateService', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService', 'settings'];
 
-    function MessageChatDetailsCtrl($state, $scope, updateService, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService, settings) {
+    function MessageChatDetailsCtrl($state, focus, $scope, updateService, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService, settings) {
         var vm = this;
         vm.message = '';
         vm.messages = (parameters.messages || []).reverse();
@@ -64,18 +64,14 @@
         }
 
         function createMessage() {
+            //focus('send');
+
             if(!vm.message) return;
 
             var messageObj = {
                 text: vm.message,
                 recipient: parameters.recipient
             };
-
-            console.log('createMessage ',messageObj);
-
-            $ionicLoading.show({
-                template: 'sending message'
-            });
 
             messageService
                 .createMessage(messageObj)

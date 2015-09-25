@@ -3,11 +3,11 @@
 
     angular
         .module(AppConfig.appModuleName)
-        .factory('focusService', focusService);
+        .factory('focus', focus);
 
-    focusService.$inject = ['$timeout', '$window'];
+    focus.$inject = ['$timeout', '$rootScope'];
 
-    function focusService($timeout, $window) {
+    function focus($timeout, $rootScope) {
 
         return function(id) {
             // timeout makes sure that it is invoked after any other event has been triggered.
@@ -15,9 +15,7 @@
             // inputs elements that are in a disabled state but are enabled when those events
             // are triggered.
             $timeout(function() {
-                var element = $window.document.getElementById(id);
-                if(element)
-                    element.focus();
+                $rootScope.$broadcast('focusOn', id);
             });
         };
     }
