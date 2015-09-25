@@ -2,7 +2,7 @@
 
 var AppConfig = (function () {
     var appModuleName = 'outset',
-        appModuleDependencies = ['ionic', 'ui.router'],
+        appModuleDependencies = ['ionic', 'ui.router', 'ngIOS9UIWebViewPatch'],
         registerModule = function (moduleName, dependencies) {
             // create angular module
             angular.module(moduleName, dependencies || []);
