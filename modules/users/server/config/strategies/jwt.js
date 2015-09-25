@@ -54,9 +54,18 @@ module.exports = function () {
 		function (clientId, clientSecret, done) {
 			log.debug({ strategy: 'client-password', clientId: clientId }, 'Looking up client key for clientId');
 			ClientApp.findOne({ clientId: clientId }, function (err, client) {
-				if (err) { return done(err); }
-				if (!client) { return done(null, false); }
-				if (client.clientSecret !== clientSecret) { return done(null, false); }
+				if (err) {
+					log.error({ strategy: 'client-password', clientId: clientId }, 'Error Looking up client key for clientId');
+					return done(err);
+				}
+				if (!client) {
+					log.debug({ strategy: 'client-password', clientId: clientId }, 'No client key found for clientId');
+					return done(null, false);
+				}
+				if (client.clientSecret !== clientSecret) {
+					log.debug({ strategy: 'client-password', clientId: clientId }, 'Invalid client secret found for clientId');
+					return done(null, false);
+				}
 
 				log.debug({ strategy: 'client-password', clientId: clientId }, 'Found client key for clientId');
 
@@ -76,7 +85,7 @@ module.exports = function () {
 
 				if (Math.round((Date.now() - token.created) / 1000) > config.security.tokenLife) {
 					AccessToken.remove({ token: accessToken }, function (err) {
-						if (err) { return done(err);}
+						if (err) { return done(err); }
 					});
 					return done(null, false, { message: 'Token expired' });
 				}
@@ -95,7 +104,7 @@ module.exports = function () {
 						log.debug({ strategy: 'bearer', user: user.id }, 'Found User');
 
 						return done(null, user, info);
-					},function (err) {
+					}, function (err) {
 						return done(err);
 					});
 			});

@@ -43,7 +43,8 @@ var app, agent, credentials, user, lbDocument;
  */
 describe('Document CRUD tests', function () {
 	before(function (done) {
-		// Get application
+		// Get application - Sometimes it takes more than 2 seconds
+		this.timeout(4000);
 		app = express.init(mongoose).http;
 		agent = request.agent(app);
 

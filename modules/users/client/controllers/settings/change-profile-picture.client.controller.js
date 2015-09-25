@@ -4,9 +4,9 @@
     angular.module('users')
         .controller('ChangeProfilePictureController', ProfilePictureController);
 
-    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs', '$scope'];
+    ProfilePictureController.$inject = ['$timeout', '$window', 'FileUploader', '$log', '$attrs', '$scope', 'TokenFactory'];
 
-    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs, $scope) {
+    function ProfilePictureController($timeout, $window, FileUploader, $log, $attrs, $scope, TokenFactory) {
         var vm = this;
 
         vm.initializeVariables = function () {
@@ -105,7 +105,6 @@
                     fileReader.onload = function (fileReaderEvent) {
                         $timeout(function () {
                             //vm.imageURL = fileReaderEvent.target.result;
-                            debugger;
                             if (vm.hasOwnProperty('imageURL')) {
                                 vm.newImage = fileReaderEvent.target.result;
                             } else {
@@ -247,7 +246,8 @@
             }
 
             vm.uploader = new FileUploader({
-                url: vm.uploadUrl
+                url: vm.uploadUrl,
+                headers: { Authorization : TokenFactory.getAuthTokenHeader() }
             });
 
             // Set file uploader image filter

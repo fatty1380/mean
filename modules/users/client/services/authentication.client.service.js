@@ -127,7 +127,9 @@
             get: get,
             clear: clear,
             isEmpty: isEmpty,
-            isValid: isValid
+            isValid: isValid,
+            getAuthTokenHeader: getAuthToken,
+            getRefreshToken: getRefreshToken
         };
 
         function set(key, value) {
@@ -170,6 +172,14 @@
         
         function isValid() {
             return !isEmpty() && Date.now() < get('token_expires');
+        }
+        
+        function getAuthToken() {
+            return [get('token_type'), get('access_token')].join(' ');
+        }
+        
+        function getRefreshToken() {
+            return 'Refresh ' + get('refresh_token');
         }
     }
 })();

@@ -29,24 +29,24 @@ log.debug({ func: 'init', server: server }, 'Setting up the password');
 server.exchange(oauth2orize.exchange.password(
 	function (client, username, password, scope, done) {
 
-		log.debug({ func: 'lookupByUser' }, 'Searching for user: %s', username);
+		log.debug({ func: 'oauth2.password' }, 'Searching for user: %s', username);
 		
 		var regexSearch = new RegExp('^' + escapeRegExp(username) + '$', 'i');
 
 		User.findOne({ username: { $regex: regexSearch } }, function (err, user) {
 			if (err) { 
-				log.error({ func: 'lookupByUser', err: err }, 'lookup failed due to error');
+				log.error({ func: 'oauth2.password', err: err }, 'lookup failed due to error');
 				return done(err); }
 			if (!user) { 
-				log.info({ func: 'lookupByUser'}, 'lookup failed: no user found');
+				log.info({ func: 'oauth2.password'}, 'lookup failed: no user found');
 				return done(null, false); }
 
 			if (!user.authenticate(password)) {
-				log.debug({ func: 'lookupByUser' }, 'lookup failed: incorrect password');
+				log.debug({ func: 'oauth2.password' }, 'lookup failed: incorrect password');
 				return done(null, false);
 			}
 
-			log.debug({ func: 'lookupByUser', user: user }, 'lookup successful');
+			log.debug({ func: 'oauth2.password', user: user }, 'lookup successful');
 			
 			generateTokens({ userId: user.id, clientId: client.clientId }, done);
 		});
@@ -57,20 +57,24 @@ log.debug({ func: 'init', server: server }, 'Setting up the refreshToken');
 /** 
  * Exchange refreshToken for an access token.
  * */ 
-server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, scope, done) {
+server.exchange(oauth2orize.exchange.refreshToken(
+	function (client, refreshToken, scope, done) {
 
-		log.debug({ func: 'lookupByRefreshToken' }, 'Searching for user');
+	log.debug({ func: 'auth2.refreshToken', clientId: client.clientId }, 'Searching for Valid Refresh Token');
 		
 	RefreshToken.findOne({ token: refreshToken, clientId: client.clientId }, function(err, token) {
 		if (err) { 
+	log.error({ func: 'auth2.refreshToken', err:err }, 'Error Searching for Refresh Token');
 			return done(err); 
 		}
 
 		if (!token) { 
+			log.debug({ func: 'auth2.refreshToken' }, 'No Valid Refresh Token Found');
 			return done(null, false); 
 		}
 
 		User.findById(token.userId, function(err, user) {
+			log.debug({ func: 'auth2.refreshToken' }, 'Found Valid Refresh Token Found');
 			if (err) { return done(err); }
 			if (!user) { return done(null, false); }
 

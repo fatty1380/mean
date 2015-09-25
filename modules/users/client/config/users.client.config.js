@@ -1,12 +1,20 @@
-(function() {
+(function () {
     'use strict';
 
     // Config HTTP Error Handling
     function config($httpProvider) {
         // Set the httpProvider "not authorized" interceptor
-        $httpProvider.interceptors.push(['$q', '$location', 'Authentication',
-            function ($q, $location, Authentication) {
+        $httpProvider.interceptors.push(['$q', '$location', 'Authentication', 'TokenFactory',
+            function ($q, $location, Authentication, TokenFactory) {
                 return {
+                    request: function (config) {
+                        var auth = TokenFactory.get('access_token');
+                        if (!!auth) {
+                            config.headers = config.headers || {};
+                            config.headers.Authorization = TokenFactory.getAuthTokenHeader();
+                        }
+                        return config;
+                    },
                     responseError: function (rejection) {
                         switch (rejection.status) {
                             case 401:
