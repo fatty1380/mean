@@ -19,8 +19,18 @@
                 .show(templateUrl, controller, params)
         }
 
+        function createMewChatModal (parameters) {
+            templateUrl = 'modules/account/child_modules/messages/templates/message-friends.html';
+            controller = 'MessageFriendCtrl as vm';
+            params = parameters || {};
+
+            return modalService
+                .show(templateUrl, controller, params)
+        }
+
         return {
-            showNewMassageModal: showNewMassageModal
+            showNewMassageModal: showNewMassageModal,
+            createMewChatModal: createMewChatModal
         };
 
     }

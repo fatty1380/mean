@@ -5,9 +5,9 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'userService', 'recipientChat'];
+    MessagesCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'friendsService', 'recipientChat'];
 
-    function MessagesCtrl ($rootScope, updates, updateService, $scope, messageService, messageModalsService, $ionicLoading, userService, recipientChat) {
+    function MessagesCtrl ($rootScope, updates, updateService, $scope, messageService, messageModalsService, $ionicLoading, friendsService, recipientChat) {
 
         var vm  = this;
         vm.messages = [];
@@ -15,6 +15,7 @@
         vm.updates = updates || updateService.getLastUpdates();
 
         vm.showChatDetailsModal = showChatDetailsModal;
+        vm.createNewChat = createNewChat;
         vm.getChats = getChats;
 
         $rootScope.$on("clear", function () {
@@ -33,28 +34,24 @@
             }
         });
 
-
-        //get my avatar
-       /* var userData = userService.getUserData();
-        if(userData.then) {
-            userData.then(function(data){
-                console.log('vm.profileData ',data);
-                vm.profileData = data;
-            }, function(){
-                console.log("userService error");
-            });
-        }else{
-            vm.profileData =  userData;
-        }*/
+        function createNewChat () {
+            friendsService
+                .retrieveFriends()
+                .then(function (friends) {
+                    messageModalsService
+                        .createMewChatModal({friends:friends})
+                        .then(function (friend) {
+                            messageService.getChatByUserId(friend.id)
+                                .then(function (details) {
+                                    showChatDetailsModal(details)
+                                });
+                        })
+                });
+        }
 
         function loadProfileAvatars() {
 
         }
-
-        //function openChatDetails(object) {
-          //  console.log('openChatDetails() ',object);
-           // showChatDetailsModal(object);
-       // }
 
         function showChatDetailsModal(parameters) {
             console.log('showChatDetailsModal() ',parameters);
