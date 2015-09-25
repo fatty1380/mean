@@ -21,6 +21,7 @@
             getComments: getComments,
             likeActivity: likeActivity,
             getDistanceBetween: getDistanceBetween,
+            getSLDistanceBetween: getSLDistanceBetween,
             showPopup: showPopup,
             getPlaceName: getPlaceName,
             hasCoordinates: hasCoordinates,
@@ -229,7 +230,7 @@
                     origins: [start],
                     destinations: [finish],
                     travelMode: google.maps.TravelMode.DRIVING,
-                    unitSystem: google.maps.UnitSystem.METRIC,
+                    unitSystem: google.maps.UnitSystem.IMPERIAL,
                     avoidHighways: false,
                     avoidTolls: false
                 }, function (response, status) {
@@ -238,7 +239,7 @@
                         reject('error');
                     } else {
                         if (response.rows[0].elements[0].distance) {
-                            resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(2));//miles
+                            resolve((response.rows[0].elements[0].distance.value / 1609.344).toFixed(0));//miles
                             //resolve(response.rows[0].elements[0].distance.value / 1000);// km
                         } else {
                             resolve(null);
@@ -246,6 +247,18 @@
                     }
                 })
             })
+        }
+
+        /**
+         * @desc Calculate Straight-Line (Crow-flies) distance between 2 points
+         * @param {Object} start - start coordinates
+         * @param {Object} finish - finish coordinates
+         * @returns {Promise} promise with distance in miles
+         */
+        function getSLDistanceBetween(start, finish) {
+            var dist = google.maps.geometry.spherical.computeDistanceBetween(start, finish);
+            
+            return $q.when((dist / 1609.344).toFixed(0));
         }
 
         /**
@@ -291,7 +304,7 @@
          */
         function getLastActivityWithCoord() {
             for (var i = 0; i < feed.length; i++) {
-                if(feed[i].user.id === userService.profileData.id) {
+                if (feed[i].user.id === userService.profileData.id) {
                     if (hasCoordinates(feed[i])) {
                         return feed[i];
                     }
