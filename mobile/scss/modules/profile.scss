@@ -179,32 +179,18 @@
       overflow: hidden;
 
       .top{
-        padding: 5px 0;
+        padding: 3px 0 5px;
         overflow: hidden;
         height: auto;
 
-        .ratings{
-          float: left;
-          height: 12px;
-          width: 72px;
-          background: url('../img/bg-stars.png') 0 0 no-repeat;
-          position: relative;
+        .rating{
+          font-size: 17px;
 
-          &:after{
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width:0;
-            background: url('../img/bg-stars.png') 0 100% no-repeat;
+          li{
+            float: left;
+
+            i{color: #3b9fa1;}
           }
-
-          &[data-mark="1"]:after{width: 20%;}
-          &[data-mark="2"]:after{width: 40%;}
-          &[data-mark="3"]:after{width: 60%;}
-          &[data-mark="4"]:after{width: 80%;}
-          &[data-mark="5"]:after{width: 100%;}
         }
 
         .time{

@@ -345,7 +345,7 @@
          */
         function getLastActivityWithCoord() {
             for (var i = 0; i < feed.length; i++) {
-                if (feed[i].user.id === userService.profileData.id) {
+                if (feed[i].user && feed[i].user.id === userService.profileData.id) {
                     if (hasCoordinates(feed[i])) {
                         return feed[i];
                     }

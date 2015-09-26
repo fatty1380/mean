@@ -9,14 +9,14 @@
 
     function ProfileCtrl($rootScope, updateService, $state, activityService,  reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
-        
+
         console.log('Loading $state: `%s`', $state.current.name);
 
         vm.profileData = profile || user;
         vm.user = user;
         vm.camera = cameraService;
         vm.updates = updateService.getLastUpdates();
-        vm.reviews = [];
+        vm.reviews = [{rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob'}, {rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631}];
 
         vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
@@ -35,7 +35,7 @@
             console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends');
         }
-        
+
         if (!vm.canEdit) {
 
             vm.feed = [];
@@ -151,7 +151,7 @@
             /**
              * showEditModal
              * -------------
-             * Shows the "Edit User" modal screen to allow 
+             * Shows the "Edit User" modal screen to allow
              * editing of user's name, properties, etc
              */
             vm.showEditModal = function (parameters) {
@@ -244,7 +244,7 @@
                 .postReviewForProfile(id, review)
         };
 
-        vm.getReviews();
+        //vm.getReviews();
 
         function openChat() {
             if(!vm.canEdit){

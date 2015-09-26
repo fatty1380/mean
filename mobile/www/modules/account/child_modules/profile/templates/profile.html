@@ -38,11 +38,11 @@
             <ion-tab title="REVIEWS" on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="reviews-list">
                     <ion-list>
-                        <ion-item ng-repeat="review in vm.reviews track by $index">
+                        <ion-item  ng-repeat="review in vm.reviews track by $index">
                             <div class="ico ico-avatarsmall"></div>
                             <div class="review">
                                 <div class="top">
-                                    <div class="ratings" data-mark="{{review.rating}}"></div>
+                                    <rating ng-if="!!review.rating" readonly="true" ng-model="review.rating" max="5"></rating>
                                     <div class="time"><i class="ico ico-timesmall"></i> {{review.created | date : 'mediumDate'}}</div>
                                 </div>
                                 <strong class="title">{{review.name}} - {{review.title}}</strong>
