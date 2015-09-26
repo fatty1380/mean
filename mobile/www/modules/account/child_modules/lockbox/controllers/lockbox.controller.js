@@ -51,7 +51,7 @@
         }
 
         function showEditModal(parameters) {
-            lockboxModalsService.showLockboxEditModal(parameters)
+            lockboxModalsService.showEditModal(parameters)
                 .then(
                     function (result) {
                         console.log(result);
@@ -62,7 +62,7 @@
         };
 
         function showShareModal(parameters) {
-            lockboxModalsService.showLockboxShareModal(parameters)
+            lockboxModalsService.showShareModal(parameters)
                 .then(
                     function (result) {
                         console.log(result);

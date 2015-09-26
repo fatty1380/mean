@@ -31,7 +31,7 @@
                 .retrieveContacts()
                 .then(function () {
                     lockboxModalsService
-                        .showLockboxShareContactModal()
+                        .showShareContactModal()
                         .then(function (selectedContact) {
                             vm.contact = selectedContact;
                         });
