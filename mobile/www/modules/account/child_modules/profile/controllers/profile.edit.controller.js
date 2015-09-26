@@ -72,15 +72,19 @@
             // Update the started date
             vm.profileData.props.started = vm.started;
 
-            console.log('Saving user data: ', vm.profileData);
 
-            return userService.updateUserData(vm.profileData)
-                .then(function (success) {
-                    vm.closeModal(success);
-                })
-                .catch(function (error) {
-                    console.error('Unable to save user data: ', error);
-                });
+            //TODO: implement form validation instead of this + this doesn't saves from crash if email/phone value is invalid
+            if(!!vm.profileData.firstName && !!vm.profileData.lastName && !!vm.profileData.email && !!vm.profileData.phone){
+                console.log('Saving user data: ', vm.profileData);
+
+                return userService.updateUserData(vm.profileData)
+                    .then(function (success) {
+                        vm.closeModal(success);
+                    })
+                    .catch(function (error) {
+                        console.error('Unable to save user data: ', error);
+                    });
+            }
         }
 
         function logout () {
