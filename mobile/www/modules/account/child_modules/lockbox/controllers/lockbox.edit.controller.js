@@ -33,7 +33,7 @@
                 .then(function (response) {
                     console.log('Documents List', response);
 
-                    vm.documents = response.data instanceof Array && response.data.length ? response.data : [];
+                    vm.documents = response instanceof Array && response.length ? response : [];
 
                     for(var i = 0; i < vm.documents.length; i++){
                         vm.documents[i].checked = false;

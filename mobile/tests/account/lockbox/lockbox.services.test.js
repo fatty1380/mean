@@ -16,6 +16,14 @@
             expect(lockboxDocuments.getDocuments().then).toBeTruthy();
         }));
 
+        // test module to contain lockboxDocuments
+        it('should return an array, not data', inject(function (lockboxDocuments) {
+            return lockboxDocuments.getDocuments().then(
+                function (docs) {
+                    expect(docs).toBeArray();
+                });
+        }));
+
         // test module to contain addDocsPopup method
         it('should contain a addDocsPopup', inject(function (lockboxDocuments) {
             expect(lockboxDocuments.addDocsPopup).toBeDefined();
