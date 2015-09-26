@@ -3,7 +3,7 @@
 
     angular
         .module(AppConfig.appModuleName)
-        .factory('focus', focus);
+        .factory('focusService', focus);
 
     focus.$inject = ['$timeout', '$rootScope'];
 
