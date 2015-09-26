@@ -1,7 +1,7 @@
 'use strict';
 
 var AppConfig = (function () {
-    var appModuleName = 'outset',
+    var appModuleName = 'truckerline',
         appModuleDependencies = ['ionic', 'ui.router', 'ngIOS9UIWebViewPatch'],
         registerModule = function (moduleName, dependencies) {
             // create angular module

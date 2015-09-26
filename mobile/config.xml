@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget android-versionCode="0048" id="com.joinoutset.mobile" ios-CFBundleVersion="0048" version="0.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>outset</name>
+<widget android-versionCode="0058" id="com.joinoutset.mobile" ios-CFBundleVersion="0058" version="0.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Truckerline</name>
   <description>
         Mobile tools for Truckers
     </description>
@@ -67,9 +67,9 @@
     <splash src="resources/ios/splash/Default-Portrait~ipad.png" width="768" height="1024"/>
     <splash src="resources/ios/splash/Default@2x~iphone.png" width="640" height="960"/>
     <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
-    <splash src="resources/ios/splash/Default~Landscape~736h.png" width="2208" height="1242"/>
-    <splash src="resources/ios/splash/Default~Landscape@2x~ipad.png" width="2248" height="1536"/>
-    <splash src="resources/ios/splash/Default~Landscape~ipad.png" width="1024" height="768"/>
+    <splash src="resources/ios/splash/Default-Landscape~736h.png" width="2208" height="1242"/>
+    <splash src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2248" height="1536"/>
+    <splash src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" height="768"/>
     <splash src="resources/ios/splash/iPhoneSplash.png" width="640" height="1136"/>
     <splash src="resources/ios/splash/iPhoneSplash@2x.png" width="1280" height="2272"/>
     <splash src="resources/ios/splash/iPhoneSplash@3x.png" width="3840" height="6816"/>
