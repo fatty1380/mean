@@ -352,10 +352,10 @@
 .app-logo{
   background-image: url('../img/logo.png');
   display: inline-block;
-  vertical-align: top;
+  vertical-align: bottom;
   pointer-events: none;
-  width: 178px;
-  height: 60px;
-  -webkit-background-size: 178px 60px;
-  background-size: 178px 60px;
+  width: 160px;
+  height: 176px;
+  -webkit-background-size: 160px 176px;
+  background-size: 160px 176px;
 }
