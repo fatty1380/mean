@@ -2,18 +2,6 @@
 <div class="page-header panel row" data-ng-if="vm.showHeader || vm.includeTransclude"
      ng-class="{'panel panel-default' : !vm.level}"
      ng-mouseenter="vm.hover=true" ng-mouseleave="vm.hover=false">
-
-    <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">
-        <div class="center-block full-width">
-            <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
-                 class="img-thumbnail user-profile-picture img-responsive">
-            <br data-ng-if="vm.showPicEdit"/>
-            <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.showPicEdit"
-               ui-sref="{{vm.editPicSref || '.'}}">edit
-                <i class="fa fa-pencil-square-o"></i>
-            </a>
-        </div>
-    </div>
     
     <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">
         <div class="center-block full-width">
