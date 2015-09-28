@@ -1,13 +1,18 @@
 (function () {
     'use strict';
+    
+    /**
+     * Message Modal : createNewChatModal
+     * Invoked to select a user from a list of user's friends.
+     * @returns the selected friend
+     */
 
     angular
         .module('messages')
         .controller('MessageFriendCtrl', MessageFriendCtrl);
 
-    MessageFriendCtrl.$inject = ['$scope', 'parameters'];
-
-    function MessageFriendCtrl ($scope, parameters) {
+    MessageFriendCtrl.$inject = ['$scope', 'parameters', 'userService'];
+    function MessageFriendCtrl ($scope, parameters, userService) {
         var vm  = this;
         
         vm.friends = parameters.friends;
@@ -19,16 +24,7 @@
         }
 
         function getAvatar(friend) {
-            var avatar = friend.profileImageURL || friend.props && friend.props.avatar;
-
-            if (!avatar || avatar === 'modules/users/img/profile/default.png'
-                || !!~avatar.indexOf('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4')) {
-                return (friend.avatar = null);
-            }
-
-            friend.avatar = avatar;
-
-            return avatar;
+            return userService.getAvatar(friend);
         }
 
     }

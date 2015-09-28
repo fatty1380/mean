@@ -26,6 +26,7 @@
 
         $scope.$on('$ionicView.enter', function () {
             //updateService.resetUpdates('messages');
+            debugger;
 
             if (!!recipientChat) {
                 showChatDetailsModal(recipientChat);
@@ -39,24 +40,25 @@
                 .retrieveFriends()
                 .then(function (friends) {
                     messageModalsService
-                        .createMewChatModal({friends:friends})
+                        .createNewChatModal({friends:friends})
                         .then(function (friend) {
                             messageService.getChatByUserId(friend.id)
-                                .then(function (details) {
-                                    showChatDetailsModal(details)
+                                .then(function (chat) {
+                                    showChatDetailsModal(chat, friend.id)
                                 });
                         })
                 });
         }
 
         function loadProfileAvatars() {
-
+            
         }
 
-        function showChatDetailsModal(parameters) {
-            console.log('showChatDetailsModal() ',parameters);
+        function showChatDetailsModal(chat, recip) {
+            debugger;
+            console.log('showChatDetailsModal() ',chat);
             messageModalsService
-                .showNewMassageModal(parameters)
+                .showNewMessageModal({messages: chat, recipient: recip, })
                 .then(function () {
                     getChats();
                 },

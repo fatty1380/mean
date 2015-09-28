@@ -11,10 +11,10 @@
         var vm = this;
         vm.message = '';
         vm.messages = (parameters.messages || []).reverse();
-        vm.recipientName = parameters.recipientName;
         vm.profileData = null;
         
         vm.recipientId = parameters.recipient.id || parameters.recipient;
+        vm.recipientName = parameters.recipientName || parameters.recipient && parameters.recipient.handle ||  parameters.recipient && parameters.recipient.firstName;
 
         vm.viewUser = viewUser;
         vm.close  = close;

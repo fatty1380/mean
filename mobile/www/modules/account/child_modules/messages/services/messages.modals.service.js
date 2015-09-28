@@ -10,7 +10,7 @@
     function messageModalsService (modalService) {
         var templateUrl, controller, params;
 
-        function showNewMassageModal (parameters) {
+        function showNewMessageModal (parameters) {
             templateUrl = 'modules/account/child_modules/messages/templates/message-chat-details.html';
             controller = 'MessageChatDetailsCtrl as vm';
             params = parameters || {};
@@ -19,7 +19,11 @@
                 .show(templateUrl, controller, params)
         }
 
-        function createMewChatModal (parameters) {
+        /**
+         * createNewChatModal
+         * Opens up a list of the user's friedns, and allows them to select from the list.
+         */
+        function createNewChatModal (parameters) {
             templateUrl = 'modules/account/child_modules/messages/templates/message-friends.html';
             controller = 'MessageFriendCtrl as vm';
             params = parameters || {};
@@ -29,8 +33,8 @@
         }
 
         return {
-            showNewMassageModal: showNewMassageModal,
-            createMewChatModal: createMewChatModal
+            showNewMessageModal: showNewMessageModal,
+            createNewChatModal: createNewChatModal
         };
 
     }
