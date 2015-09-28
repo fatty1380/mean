@@ -293,6 +293,15 @@ textarea{
   }
 }
 
+.toggle-block{
+  .button{
+    &.active{
+      background: #206B89;
+      color: #fff;
+    }
+  }
+}
+
 
 .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) {
   height: 64px;
