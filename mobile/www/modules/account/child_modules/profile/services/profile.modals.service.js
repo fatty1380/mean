@@ -5,9 +5,9 @@
         .module('profile')
         .factory('profileModalsService', profileModalsService);
 
-    profileModalsService.$inject = ['modalService'];
+    profileModalsService.$inject = ['modalService', 'lockboxModalsService'];
 
-    function profileModalsService (modalService) {
+    function profileModalsService (modalService, lockboxModalsService) {
         var templateUrl, controller, params;
 
         return {
@@ -33,13 +33,9 @@
                 .show(templateUrl, controller, params);
         }
 
-        function showProfileShareModal (parameters) {
-            templateUrl = 'modules/account/child_modules/profile/templates/profile-share.html';
-            controller = 'ProfileShareCtrl as vm';
-            params = parameters || {};
+        function showProfileShareModal(parameters, options) {
 
-            return modalService
-                .show(templateUrl, controller, params);
+            return lockboxModalsService.showShareModal(parameters, options);
         }
 
         function showRequestReviewModal (parameters) {
