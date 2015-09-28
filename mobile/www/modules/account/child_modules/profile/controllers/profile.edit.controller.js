@@ -16,9 +16,8 @@
         
         vm.profileData = userService.profileData;
         vm.profileData.props = vm.profileData.props || {};
+        vm.owner = vm.profileData.props.owner;
         vm.started = getFormattedDate(vm.profileData.props.started);
-        vm.proprietaryList = ['Owner', 'Operator'];
-        vm.proprietary = vm.profileData.props.proprietary || '';
 
         vm.cancel = cancel;
         vm.save = save;
@@ -76,7 +75,7 @@
 
             if(form.$valid){
                 // Update the started date
-                if(!!vm.proprietary) vm.profileData.props.proprietary = vm.proprietary;
+                if(vm.owner !== null) vm.profileData.props.owner = vm.owner;
                 vm.profileData.props.started = vm.started;
 
                 console.log('Saving user data: ', vm.profileData);

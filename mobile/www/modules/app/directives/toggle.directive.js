@@ -2,8 +2,8 @@
 	'use strict';
 
 	/**
-	 * @desc Contact Add directive that can be used anywhere across apps to get/gather contact information from the user.
-	 * @example <oset-manual-contact model="vm.contact" />
+	 * @desc Toggle directive that can be used anywhere across apps to get/gather contact information from the user.
+	 * @example <oset-toggle label="Owner Operator" type="button-small" model="vm.owner"></oset-toggle>
 	 */
 	angular.module(AppConfig.appModuleName)
 		.directive('osetToggle', ToggleDirective);
@@ -14,9 +14,9 @@
 			template: contactTemplate,
 			restrict: 'E',
 			scope: {
-				items: '=',
+				label: '@',
 				type: '@',
-				selected: '='
+				selected: '=model'
 			},
 			controller: ToggleDirectiveCtrl,
 			controllerAs: 'vm',
@@ -29,17 +29,20 @@
 	function ToggleDirectiveCtrl() {
 		var vm = this;
 
-		vm.selected = null;
-		vm.select = select;
+		vm.toggle = toggle;
 
-		function select (item) {
-			vm.selected = item;
+		function toggle (value) {
+			vm.selected = value;
 		}
 	}
 
 	var contactTemplate = [
-		'<div class="toggle-block button-bar"> ' +
-		'	<button class="button {{vm.type}}" ng-class="{active: (vm.selected && vm.selected === item)}" ng-repeat="item in vm.items" ng-click="vm.select(item)">{{item}}</button> ' +
+		'<div class="toggle-block"> ' +
+			'<strong ng-if="!!vm.label" class="label">{{vm.label}}</strong>',
+			'<div class="button-bar"> ' +
+			'	<button class="button {{vm.type}}" ng-class="{active: (vm.selected === false)}" ng-click="vm.toggle(false)">No</button>',
+			'	<button class="button {{vm.type}}" ng-class="{active: (vm.selected === true)}" ng-click="vm.toggle(true)">Yes</button>',
+			'</div>',
 		'</div>'
 	].join('');
 
