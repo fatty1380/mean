@@ -34,7 +34,9 @@
         vm.updateUserData = function (dataProps) {
             return registerService.updateUser(dataProps)
                 .then(function (data) {
-                    vm.profileData = data.message.data;
+                    if(data.message.data.id){
+                        vm.profileData = data.message.data;
+                    }
                     return vm.profileData;
                 });
             //return vm.profileData;
@@ -51,6 +53,5 @@
                     return vm.profileData.props;
                 });
         }
-
-    };
+    }
 })();

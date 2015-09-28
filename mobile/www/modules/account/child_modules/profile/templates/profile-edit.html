@@ -1,4 +1,4 @@
-<ion-modal-view class="profile-screen view-section mid-size">
+<ion-modal-view class="profile-screen view-section mid-size" ng-form="editForm">
 
     <ion-header-bar>
         <h1 class="title">Edit Profile</h1>
@@ -16,26 +16,30 @@
 
     <ion-pane class="has-footer edit-pane">
         <ion-scroll>
-            <div class="list edit-fields-list">
-                <label class="item item-input item-floating-label">
+            <div class="list profile-edit-list edit-fields-list">
+                <label class="item item-input item-floating-label" ng-class="{'error': editForm.firstName.$invalid}">
                     <span class="input-label">First Name</span>
-                    <input type="text" ng-model="vm.profileData.firstName" placeholder="First Name">
+                    <span class="error-message" ng-show="editForm.firstName.$error.required">required</span>
+                    <input type="text" ng-model="vm.profileData.firstName" placeholder="First Name" name="firstName" required>
                 </label>
-                <label class="item item-input item-floating-label">
+                <label class="item item-input item-floating-label" ng-class="{'error': editForm.lastName.$invalid}">
                     <span class="input-label">Last Name</span>
-                    <input type="text" ng-model="vm.profileData.lastName" placeholder="Last Name">
+                    <span class="error-message" ng-show="editForm.lastName.$error.required">required</span>
+                    <input type="text" ng-model="vm.profileData.lastName" placeholder="Last Name" name="lastName" required>
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Handle</span>
                     <input type="text" ng-model="vm.profileData.handle" placeholder="Handle">
                 </label>
-                <label class="item item-input item-floating-label">
+                <label class="item item-input item-floating-label" ng-class="{'error': editForm.phone.$invalid}">
                     <span class="input-label">Phone Number</span>
-                    <input type="text" ng-model="vm.profileData.phone" placeholder="Phone Number">
+                    <span class="error-message" ng-show="editForm.phone.$error.required">required</span>
+                    <span class="error-message" ng-show="editForm.phone.$error.pattern">invalid format</span>
+                    <input type="text" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone" required ng-pattern="/(\+?\d{1,2}\s?-?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/">
                 </label>
                 <label class="item item-input item-floating-label">
-                    <span class="input-label">Email Address</span>
-                    <input type="text" ng-model="vm.profileData.email" placeholder="Email Address">
+                    <span class="input-label has-input">Email Address</span>
+                    <div class="email" ng-bind="vm.profileData.email"></div>
                 </label>
                 <div class="item edit-profile-types">
                     <div class="top">
@@ -79,7 +83,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" nav-direction="exit" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary" ng-click="vm.save()">Save</button>
+            <button class="button primary" ng-click="vm.save(editForm, $event)">Save</button>
         </div>
     </ion-footer-bar>
 

@@ -157,15 +157,9 @@
             vm.showEditModal = function (parameters) {
                 profileModalsService
                     .showProfileEditModal(parameters)
-                    .then(
-                        function (result) {
-                            if(!!result){
-                                vm.profileData = result;
-                            }
-                    },
-                    function (err) {
-                        console.log(err);
-                    })
+                    .then(function (result) {
+                        if(!!result) vm.profileData = result;
+                    });
             };
 
             vm.showShareModal = function (parameters) {
