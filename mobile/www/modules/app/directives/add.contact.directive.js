@@ -75,9 +75,9 @@
 	}
 
 	var contactTemplate = [
-		' <div class="list list-inset">',
+		'<div class="list list-inset share-form">',
 		'<pre>{{vm.selectedContact}}</pre>',
-		'   <button class="button button-block" ng-click="vm.pickContact();">Choose from Contacts</button>', 
+		'   <button class="button button-block button-light" ng-click="vm.pickContact();">Choose from Contacts</button>', 
 		'	<label class="item item-input" ng-if="!!vm.showPhone">',
 		'		<span class="input-label">Phone</span>',
 		'		<input type="tel" placeholder="Phone Number" ng-model="vm.contact.phone">',
@@ -93,7 +93,7 @@
 		'   <label class="item item-input item-stacked-label" ng-if="!!vm.showMessage">',
 		'		<span class="input-label">Message</span>',
         '       <textarea placeholder="{{vm.messagePlaceholder}}" class="" rows="10" ng-model="vm.contact.message"></textarea>',
-        '   <hr></label>',
+        '   </label>',
 		'</div>'
 	].join('');
 

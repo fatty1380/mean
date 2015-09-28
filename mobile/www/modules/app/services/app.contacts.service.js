@@ -11,6 +11,18 @@
         var contacts = [],
             filter = $filter('contactsFilter');
 
+        return {
+            getContacts: getContacts,
+            retrieveContacts: retrieveContacts,
+            addContact: addContact,
+            setContacts: setContacts,
+            save: save,
+            clone: clone,
+            remove: remove,
+            find: find,
+            pickContact: pickContact
+        };
+        
         function getContacts() {
             return contacts;
         }
@@ -105,17 +117,5 @@
 
             return q.promise;
         }
-
-        return {
-            getContacts: getContacts,
-            retrieveContacts: retrieveContacts,
-            addContact: addContact,
-            setContacts: setContacts,
-            save: save,
-            clone: clone,
-            remove: remove,
-            find: find,
-            pickContact: pickContact
-        };
     }
 })();
