@@ -42,21 +42,10 @@
                 .show(templateUrl, controller, params, options);
         }
 
-        function showShareContactModal(parameters, options) {
-            templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-share-contacts.html';
-            controller = 'LockboxShareContactsCtrl as vm';
-            params = parameters || {};
-            options = angular.extend({}, defaultOptions, options);
-
-            return modalService
-                .show(templateUrl, controller, params, options);
-        }
-
         return {
             showCreateModal: showCreateModal,
             showEditModal: showEditModal,
-            showShareModal: showShareModal,
-            showShareContactModal: showShareContactModal
+            showShareModal: showShareModal
         };
     }
 })();

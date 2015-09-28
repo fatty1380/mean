@@ -13,9 +13,9 @@
         vm.selectedContact = {};
 
         vm.cancel = cancel;
+        vm.skipDocs = skipDocs;
         vm.addDocumentsToShare = addDocumentsToShare;
         vm.shareDocuments = shareDocuments;
-        vm.showContactsModal = showContactsModal;
 
         init();
 
@@ -24,18 +24,6 @@
             vm.contact = {};
             vm.shareStep = 1;
             return getDocs();
-        }
-
-        function showContactsModal () {
-            contactsService
-                .retrieveContacts()
-                .then(function () {
-                    lockboxModalsService
-                        .showShareContactModal()
-                        .then(function (selectedContact) {
-                            vm.contact = selectedContact;
-                        });
-                });
         }
 
         function getDocs() {
@@ -52,16 +40,20 @@
             vm.closeModal(null);
             self.shareStep = 1;
         }
+        
+        function skipDocs() {
+            return addDocumentsToShare(true);
+        }
 
-        function addDocumentsToShare () {
+        function addDocumentsToShare (skip) {
             var filter = $filter('getChecked'),
                 selectedDocs = filter(vm.documents);
 
-            if(!selectedDocs.length){
-                $ionicPopup.alert({
+            if(!selectedDocs.length && !skip){
+                return $ionicPopup.alert({
                     title: 'Error',
                     template: 'Please select documents you would like to share'
-                })
+                });
             }
 
             vm.docsToShare = selectedDocs;
@@ -75,8 +67,8 @@
 
             requestObj.requestType = 'shareRequest';
 
-            requestObj.contactInfo = getModifiedContactInfo(vm.contact);
             requestObj.text = vm.contact.message || '';
+            requestObj.contactInfo = getModifiedContactInfo(vm.contact);
             requestObj.contents = {
                 documents: vm.docsToShare
             };
@@ -89,17 +81,27 @@
                     showSuccessPopup(response);
                 });
 
-            function getModifiedContactInfo (contactInfo) {
-                if(!contactInfo) return;
+            function getModifiedContactInfo (contact) {
+                if(!contact) return;
 
-                var contact = {};
+                var contactInfo = {};
 
-                angular.copy(contactInfo, contact);
+                angular.copy(contact, contactInfo);
 
-                if(contact.checked) delete contact.checked;
-                if(contact.message) delete contact.message;
+                /**
+                 * TODO: Determine 
+                 */
+                // if(contact.checked) delete contact.checked;
+                // if(contact.message) delete contact.message;
+                
+                if (angular.isDefined(contact.email && (!contact.emails || !contact.emails.length))) {
+                    contactInfo.emails = [{ value: contact.email, type: 'manual' }];
+                }
+                if (angular.isDefined(contact.phone && (!contact.phones || !contact.phones.length))) {
+                    contactInfo.phones = [{ value: contact.phone, type: 'manual' }];
+                }
 
-                return contact;
+                return contactInfo;
             }
 
             function showSuccessPopup () {
