@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['$rootScope', 'truckService', '$state', '$filter', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
+    ProfileEditCtrl.$inject = ['$rootScope', '$ionicPopup', 'truckService', '$state', '$filter', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
 
-    function ProfileEditCtrl($rootScope, truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
+    function ProfileEditCtrl($rootScope, $ionicPopup, truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
 
         if (!userService.profileData) {
@@ -68,22 +68,33 @@
             vm.closeModal(null);
         }
 
-        function save() {
-            // Update the started date
-            vm.profileData.props.started = vm.started;
+        function save(form, e) {
+            e.preventDefault();
 
+            if(form.$valid){
+                // Update the started date
+                vm.profileData.props.started = vm.started;
 
-            //TODO: implement form validation instead of this + this doesn't saves from crash if email/phone value is invalid
-            if(!!vm.profileData.firstName && !!vm.profileData.lastName && !!vm.profileData.email && !!vm.profileData.phone){
                 console.log('Saving user data: ', vm.profileData);
-
                 return userService.updateUserData(vm.profileData)
                     .then(function (success) {
-                        vm.closeModal(success);
-                    })
-                    .catch(function (error) {
-                        console.error('Unable to save user data: ', error);
+                        if(success.id){
+                            vm.closeModal(success);
+                        }else{
+                            $ionicPopup.alert({title: 'Error', template: 'Profile wasn\'t updated'});
+                            vm.closeModal(null);
+                        }
                     });
+            }else{
+                var template = '';
+
+                if(form.$error.required){
+                    template = 'Please, enter all required fields.'
+                }else if (!form.$error.required && form.$error.email){
+                    template = 'Please, enter a valid email.'
+                }
+
+                $ionicPopup.alert({title: 'Error', template: template});
             }
         }
 

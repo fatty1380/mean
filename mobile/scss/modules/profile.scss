@@ -422,3 +422,18 @@
     font-size: 14px;
   }
 }
+
+.profile-edit-list{
+  .item{
+    &.error{
+      background: rgba(195, 113, 113, 0.12);;
+    }
+    .error-message{
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: rgba(119, 6, 6, 0.5);
+      font-weight: bold;
+    }
+  }
+}

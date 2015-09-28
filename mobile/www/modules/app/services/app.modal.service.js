@@ -11,7 +11,7 @@
 
         return {
             show: show
-        }
+        };
 
         function show(templateUrl, controller, parameters, options) {
             var deferred = $q.defer(),
