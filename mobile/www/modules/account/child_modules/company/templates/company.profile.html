@@ -9,13 +9,12 @@
         <h3><img class="brand-img" ng-if="vm.company.profileImageURL" ng-src="{{vm.company.profileImageURL}}" alt="" /></h3>
     </div>
 
-    <ion-content class="pane profile-pane has-subheader">
+    <ion-pane class="pane profile-pane has-subheader">
         <ion-tabs class="profile-tabs tabs-top">
             <ion-tab title="FEED" ui-sref="company.feed">
                 <ion-scroll>
                     <ion-list class="activity">
                         <oset-feed-item ng-repeat="entry in vm.feed" model="entry"></oset-feed-item>
-                        <br>
                     </ion-list>
                 </ion-scroll>
             </ion-tab>
@@ -93,6 +92,6 @@
                 <button class="button content-button" ng-if="!!vm.showShareModal" ng-click="vm.showShareModal()"><i class="ico ico-shareiconorange"></i>Share</button>
             </ion-tab>
         </ion-tabs>
-    </ion-content>
+    </ion-pane>
 
 </ion-view>
