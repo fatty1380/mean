@@ -115,7 +115,7 @@
                 <ion-scroll class="experience-list">
                     <ion-list>
                         <ion-item class="item" ng-repeat="job in vm.experience" ng-click="vm.showEditExperienceModal(job)">
-                            <strong>{{job.title}}</strong>
+                            <strong>{{job.title}} <span class="company" ng-if="!!job.company">, {{job.company}}</span></strong>
                             <p ng-if="!!job.description">{{job.description}}</p>
                             <p ng-if="!!job.location">{{job.location}}</p>
                             <em ng-if="!!job.startDate || job.endDate">

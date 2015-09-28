@@ -300,6 +300,13 @@
 
     strong{
       text-transform: uppercase;
+      font-size: 13px;
+
+      .company{
+        font-style: italic;
+        font-size: 11px;
+        text-transform: capitalize;
+      }
     }
 
     p{
