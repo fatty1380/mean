@@ -293,6 +293,28 @@ textarea{
   }
 }
 
+.toggle-block{
+  border:solid #ddd;
+  padding: 12px 16px;
+  border-width: 1px 0;
+  overflow: hidden;
+
+  .label{
+    display: block;
+    color: #444;
+    font-size: 16px;
+    text-transform: none;
+    font-weight: normal;
+    padding-bottom: 10px;
+  }
+  .button{
+    &.active{
+      background: #206B89;
+      color: #fff;
+    }
+  }
+}
+
 
 .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) {
   height: 64px;

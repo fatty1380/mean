@@ -494,6 +494,36 @@ $but-height: 70px;
     }
   }
 
+  .toggle-block{
+    padding: 10px 30px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.4);
+    margin-bottom: 2px;
+
+    .label{
+      color: #fff;
+      float: left;
+      padding: 0;
+      line-height: 30px;
+      font-weight: bold;
+      font-size: 14px;
+      width: 40%;
+    }
+    .button-bar{
+      float: right;
+      width: 55%;
+
+      .button{
+        color: #0a2421;
+
+        &.active{
+          color: #fff;
+          background: #0a2421;
+        }
+      }
+    }
+  }
+
 }
 
 .register-screen{
