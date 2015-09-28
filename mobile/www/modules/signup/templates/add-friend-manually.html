@@ -13,14 +13,14 @@
 
     <ion-pane class="pane has-footer content-pane">
         <ion-scroll>
-            <oset-manual-contact model="vm.contact" message="false"></oset-manual-contact>
+            <oset-manual-contact model="vm.contact" show-message="false"></oset-manual-contact>
         </ion-scroll>
     </ion-pane>
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="$ionicGoBack()">Cancel</button>
-            <button class="button primary" ng-disabled="!(!!vm.contact.phone || !!vm.contact.email)"  ng-click="vm.invite();">Invite</button>
+            <button class="button primary" ng-disabled="!vm.contact.phone && !vm.contact.email" ng-click="vm.invite();">Invite</button>
         </div>
     </ion-footer-bar>
 

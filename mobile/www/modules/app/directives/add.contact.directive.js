@@ -16,7 +16,8 @@
 			link: link,
 			controller: AddContactDirectiveCtrl,
 			controllerAs: 'vm',
-			bindToController: {
+			bindToController: true,
+			scope: {
 				contact: '=model',
 				showMessage: '=?',
 				showEmail: '=?',
