@@ -14,7 +14,7 @@
             <input type="text" placeholder="Search for Friends" ng-model="vm.searchText" ng-change="vm.searchHandler()">
         </div>
         <ion-scroll delegate-handle="main-content-scroll">
-            <div class="list friends-list">
+            <div class="list friends-list" ng-show="vm.contacts && vm.contacts.length">
                 <div class="title">Your Friends</div>
                 <ion-checkbox
                     collection-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)"

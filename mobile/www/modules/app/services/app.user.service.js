@@ -41,6 +41,19 @@
                 });
             //return vm.profileData;
         };
+        
+        vm.getAvatar = function getAvatar(friend) {
+            var avatar = friend.profileImageURL || friend.props && friend.props.avatar;
+
+            if (!avatar || avatar === 'modules/users/img/profile/default.png'
+                || !!~avatar.indexOf('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4')) {
+                return (friend.avatar = null);
+            }
+
+            friend.avatar = avatar;
+
+            return avatar;
+        }
 
         /**
          * Makes a request to the server to update the user's props array.
