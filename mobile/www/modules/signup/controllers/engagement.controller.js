@@ -13,6 +13,7 @@
         vm.handle = "";
         vm.started = "";
         vm.company = "Default Company";
+        vm.owner = null;
         vm.camera = cameraService;
 
         vm.initEngagementForm = initEngagementForm;
@@ -71,6 +72,9 @@
         };
 
         function continueToLicense() {
+            console.warn(' vm.owner --->>>', vm.owner);
+            return;
+            if(vm.owner !== null) registerService.setProps('owner', vm.owner);
             registerService.setProps('started', vm.createStartedDateObject(vm.started));
             registerService.setProps('avatar', avatarService.getImage());
             registerService.setProps('company', '');

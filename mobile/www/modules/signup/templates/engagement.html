@@ -1,4 +1,4 @@
-<ion-view class="signup-section view-section mid-size">
+<ion-view class="signup-section view-section compact-size">
 
     <ion-header-bar align-title="center" class="bar-stable">
         <h1 class="title">Create Account</h1>
@@ -19,6 +19,7 @@
                     <img ng-if="vm.profileData.props.avatar" class="round-avatar" ng-src="{{ vm.profileData.props.avatar }}" />
                 </div>
             </div>
+            <oset-toggle label="Owner Operator" type="button-small" model="vm.owner"></oset-toggle>
             <label class="item item-input">
                 <input type="text" placeholder="Driving Since" ng-model="vm.started" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();" >
             </label>
