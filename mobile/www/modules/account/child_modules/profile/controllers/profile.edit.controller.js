@@ -70,6 +70,7 @@
 
         function save(form, e) {
             e.preventDefault();
+            console.warn(' form --->>>', form);
 
             if(form.$valid){
                 // Update the started date
@@ -90,8 +91,8 @@
 
                 if(form.$error.required){
                     template = 'Please, enter all required fields.'
-                }else if (!form.$error.required && form.$error.email){
-                    template = 'Please, enter a valid email.'
+                }else if (!form.$error.required && form.$error.pattern){
+                    template = 'Please, enter a valid data.'
                 }
 
                 $ionicPopup.alert({title: 'Error', template: template});
