@@ -40,8 +40,8 @@
 		'<div class="toggle-block"> ' +
 			'<strong ng-if="!!vm.label" class="label">{{vm.label}}</strong>',
 			'<div class="button-bar"> ' +
-			'	<button class="button {{vm.type}}" ng-class="{active: (vm.selected === false)}" ng-click="vm.toggle(false)">No</button>',
-			'	<button class="button {{vm.type}}" ng-class="{active: (vm.selected === true)}" ng-click="vm.toggle(true)">Yes</button>',
+			'	<button class="button {{vm.type}}" ng-class="{active: (vm.selected === false)}" ng-click="vm.toggle(false)" type="button">No</button>',
+			'	<button class="button {{vm.type}}" ng-class="{active: (vm.selected === true)}" ng-click="vm.toggle(true)" type="button">Yes</button>',
 			'</div>',
 		'</div>'
 	].join('');
