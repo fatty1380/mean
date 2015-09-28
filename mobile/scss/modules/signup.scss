@@ -89,7 +89,7 @@ ion-content {
 .license-content{
 
   h4{
-    color: $white;
+    color: $light;
     text-align: center;
     margin-bottom: 15px;
   }
@@ -304,7 +304,8 @@ ion-content {
       background-color: $signup-entry-row-bg;
     }
     input:checked ~ .item-content {
-      background-color: rgba(250,250,250, 1);
+      background-color: $signup-entry-row-active-bg;
+      p {color: $dark; }
     }
   }
 
@@ -313,9 +314,9 @@ ion-content {
     border: 0;
     background: none;
 
-    p{
+    p {
       position:absolute;
-      color: #666;
+      color: $stable;
       font-size: 22px;
       margin-bottom: 2px;
       top: 50%;
@@ -346,7 +347,7 @@ ion-content {
 
 /*  select trailer */
 
-$but-height: 90px;
+$but-height: 70px;
 
 .select-trailer {
   .item-content{
@@ -363,10 +364,16 @@ $but-height: 90px;
     padding:0;
     margin:1px 0 0;
     height:$but-height;
-    background-color:transparent;
+    background: none;
 
     &:first-child{
       margin-top: 0;
+    }
+    
+    &.active {
+      p {
+        color: $dark;
+      }
     }
 
     p{
@@ -376,11 +383,11 @@ $but-height: 90px;
       text-align: center;
       pointer-events: none;
       left:0;
-      color:$dark;
+      color:$stable;
       font-size: 22px;
       line-height: 26px;
       height:$but-height;
-      padding-top:32px;
+      padding-top:$but-height*0.3;
     }
 
     .center-text {
@@ -409,14 +416,11 @@ $but-height: 90px;
     }
 
     input:checked + .item-content{
-      background-color: rgba(255, 255, 255, 0.8);
-     // visibility:visible;
+      background-color: $signup-entry-row-active-bg;
     }
 
     input + .item-content{
       background-color: $signup-entry-row-bg;
-     // background: none;
-     // visibility:hidden;
     }
 
     input:checked + .item-content i{
@@ -561,7 +565,7 @@ $but-height: 90px;
 
   h3{
     font: 14px Helvetica Neue, Helvetica, Arial;
-    color: $white;
+    color: $light;
     font-weight: bold;
     text-align: center;
   }
@@ -582,7 +586,7 @@ $but-height: 90px;
 
   h3{
     font: 14px Helvetica Neue, Helvetica, Arial;
-    color: $white;
+    color: $light;
     font-weight: bold;
     text-align: center;
     margin:20px;

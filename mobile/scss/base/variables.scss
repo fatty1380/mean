@@ -12,24 +12,8 @@ $content-bg: #f8f8f8;
 $action-text: #b5b5b5;
 $content-body-text: #9b9b9b;
 $secondary-text-action: rgba(255, 255, 255, 1.0);
-$white: #ffffff;
 $tab-text: #807b84;
 $danger: #B13E3E;
-
-/** Context specific variables **/
-$modal-primary-bg: $badge-green;
-$modal-primary-text: $white;
-$modal-secondary-bg: $white;
-$modal-secondary-text: #858585;
-
-$signup-entry-row-bg: rgba(255,255,255,0.4);
-$signup-entry-label-text: #EFEFEF;
-$signup-entry-value-text: $white;
-
-
-
-/** Override IONIC variables below **/
-
 
 // Colors
 // -------------------------------
@@ -44,6 +28,16 @@ $assertive:                       $danger !default; // #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 
+/** Outset Context specific variables **/
+$modal-primary-bg: $badge-green;
+$modal-primary-text: $light;
+$modal-secondary-bg: $light;
+$modal-secondary-text: #858585;
+
+$signup-entry-row-bg: rgba(255,255,255,0.4);
+$signup-entry-row-active-bg: rgba(250,250,250, 1);
+$signup-entry-label-text: #EFEFEF;
+$signup-entry-value-text: $light;
 
 // Base
 // -------------------------------
