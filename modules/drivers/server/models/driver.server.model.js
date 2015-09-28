@@ -84,6 +84,9 @@ var DriverSchema = UserSchema.extend({
             description: {
                 type: String
             },
+            company: {
+                type: String
+            },
             startDate: {      // YYYY-MM-DD
                 type: String,
                 default: null
