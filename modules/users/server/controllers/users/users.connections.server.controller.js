@@ -183,7 +183,7 @@ function createRequest(req, res, next) {
 
     var u2;
     if (_.isEmpty(req.body.to) && !_.isEmpty(req.body.contactInfo)) {
-        u2 = messenger.sendMessage({ to: req.body.contactInfo.phoneNumbers });
+        u2 = messenger.sendMessage({ to: req.body.contactInfo.phoneNumbers, from: req.user });
     }
 
     return Q.all([request.save(), u1.exec()])
@@ -221,7 +221,7 @@ function listRequests(req, res) {
 
     var orQuery = [];
 
-    
+
     if (!!req.query && !!req.query.userId) {
         orQuery.push({ to: req.user.id, from: req.query.userId });
         orQuery.push({ from: req.user.id, to: req.query.userId });
@@ -235,25 +235,28 @@ function listRequests(req, res) {
     Request.find()
         .exec()
         .then(function (reqs) {
-            req.log.debug({ func: 'listRequests', allRequests: reqs }, 'Listing all requests for debugging');
+            req.log.trace({ func: 'listRequests', allRequests: reqs }, 'Listing all requests for debugging');
 
-            return Request.find(mainQuery)
-                .or(orQuery)
-                .sort('created').exec()
-                .then(
-                    function (requests) {
-                        if (!requests) {
-                            requests = [];
-                        }
-
-                        req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
-                        return res.json(requests);
-                    },
-                    function (err) {
-                        req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
-
-                    });
         });
+
+    return Request.find(mainQuery)
+        .or(orQuery)
+        .sort('created').exec()
+        .then(
+            function (requests) {
+                if (!requests) {
+                    requests = [];
+                }
+
+                req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
+                return res.json(requests);
+            },
+            function (err) {
+                req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
+
+            });
+
+
 }
 
 /**
