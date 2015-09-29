@@ -89,15 +89,7 @@
                         }
                     });
             }else{
-                var template = '';
-
-                if(form.$error.required){
-                    template = 'Please, enter all required fields.'
-                }else if (!form.$error.required && form.$error.pattern){
-                    template = 'Please, enter a valid data.'
-                }
-
-                $ionicPopup.alert({title: 'Error', template: template});
+                $ionicPopup.alert({title: 'Error', template: 'Please, enter all required fields.'});
             }
         }
 

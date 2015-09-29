@@ -93,8 +93,8 @@
 
             feeder = vm.FEEDER_CONFIG;
 
-            items = response.data[feedSource].reverse() || [];
-            activityItems = response.data.activity.reverse() || [];
+            items = _.uniq(response.data[feedSource].reverse()) || [];
+            activityItems = _.uniq(response.data.activity.reverse()) || [];
             return $q(function (resolve, reject) {
                 if (items.length > 0) {
                     return resolve(populateActivityFeed(items, feeder.start, feeder.step));
@@ -136,32 +136,33 @@
              * Look at feed IDs `start` to `start+count` and 
              */
             var itemsToResolve = feed.slice(start, count);
+            feed = [];
             
             if (!itemsToResolve || !itemsToResolve.length) {
                 console.log('No more activities');
                 return $q.when([]);
             }
-            
-            
+
+
             var promises = itemsToResolve.map(function (value, index) {
-                    // TODO: Ensure that value is string, not object
-                    return getFeedActivityById(value).then(
-                        function (feedItem) {
-                            console.log('Loaded Feed item #' + index + '. Feeder: ', feeder);
-                            feeder.loaded++;
+                if(!angular.isString(value)) return value;
+                return getFeedActivityById(value).then(
+                    function (feedItem) {
+                        console.log('Loaded Feed item #' + index + '. Feeder: ', feeder);
+                        feeder.loaded++;
 
-                            if (hasCoordinates(feedItem)) {
-                                feedItem.location = {
-                                    type: feedItem.location.type,
-                                    coordinates: feedItem.location.coordinates
-                                }
+                        if (hasCoordinates(feedItem)) {
+                            feedItem.location = {
+                                type: feedItem.location.type,
+                                coordinates: feedItem.location.coordinates
                             }
+                        }
 
-                            feeder.start = Math.max(feeder.start, index);
+                        feeder.start = Math.max(feeder.start, index);
 
-                            feed[start + index] = feedItem;
-                            return feedItem;
-                        })
+                        feed[start + index] = feedItem;
+                        return feedItem;
+                    })
                 });
 
             return $q.all(promises).then(function (results) {

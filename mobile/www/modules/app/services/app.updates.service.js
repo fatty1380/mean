@@ -84,8 +84,10 @@
         }
 
         function getActivitiesUpdates (activities) {
-            var amount = activities.items && activities.items.length || 0,
-                ownActivities = activities.activity && activities.activity.length || 0,
+            var uniqueItems = _.uniq(activities.items),
+                uniqueActivities = _.uniq(activities.activity),
+                amount = uniqueItems && uniqueItems.length || 0,
+                ownActivities = uniqueActivities && uniqueActivities.length || 0,
                 modifiedDate = new Date(activities.modified).getTime();
 
             if(!currentActivity.date) {

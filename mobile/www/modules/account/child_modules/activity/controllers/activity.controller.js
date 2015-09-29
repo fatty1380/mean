@@ -83,7 +83,7 @@
             return activityService.getFeed().then(function (result) {
                 $ionicLoading.hide();
 
-                vm.feed = result;
+                vm.feed = _.uniq(result);
                 updateService.resetUpdates('activities');
                 console.log("getFeed() ", result);
 
@@ -124,7 +124,7 @@
                     .finally(function () {
                         // Stop the ion-refresher from spinning
                         $scope.$broadcast('scroll.infiniteScrollComplete');
-                    });;
+                    });
             } else {
                 $scope.$broadcast('scroll.infiniteScrollComplete');
             }
@@ -139,6 +139,7 @@
                 template: 'update feed'
             });
             activityService.getFeedActivityById(id).then(function (result) {
+                console.warn('get feed by id result --->>>', result);
                 result.location = activityService.hasCoordinates(result) ? {
                     type: result.location.type || result.location.coordinates.length > 1 ? 'LineString' : 'Point',
                     coordinates: result.location.coordinates
@@ -152,13 +153,14 @@
             activityModalsService
                 .showAddActivityModal()
                 .then(function (res) {
+                    console.warn(' res --->>>', res);
                     if (res) {
-                        debugger;
-
+                        //debugger;
                         if (angular.isObject(res)) {
                             console.log('Pushing newly created feed item onto the front of the array', res);
+                            console.warn(' vm.feed --->>>', vm.feed.length);
                             vm.feed.unshift(res);
-                            $scope.$apply();
+                            console.warn(' vm.feed --->>>', vm.feed);
                         }
                         else {
                             // TODO: Determine if the extra trip to the server is required

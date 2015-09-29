@@ -26,16 +26,16 @@
 			<span class="message" ng-if="!!vm.message">{{vm.entry.message}}</span>
 		</p>
 
-		<div class="clearfix props">
+		<div class="clearfix props top-props">
 			<div class="right dist driven" ng-if="!vm.entry.props.distance">
 				<i class="ico ico-milestraveledsmall"></i>
 				<span>{{vm.entry.props.distance}}</span>
 			</div>
-			<div class="right" ng-if="!vm.entry.freight">
+			<div class="right freight" ng-if="!vm.entry.freight">
 				<i class="ico ico-freight"></i>
 				<span>{{vm.entry.props.freight}}</span>
 			</div>
-			<div class="right" ng-if="!vm.entry.notes">
+			<div class="right notes" ng-if="!vm.entry.notes">
 				<i class="ion ion-document-text"></i>
 				<span>Notes</span>
 			</div>

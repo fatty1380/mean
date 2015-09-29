@@ -105,20 +105,32 @@
         text-decoration: none;
         text-transform: capitalize;
             color: #ff8000;
-          }
+        }
 
       &.top, &.bottom {
         padding: $item-padding/2 $item-padding;
         overflow: hidden;
         height: auto;
 
-        .miles, .likes, .driven {
+        .miles, .likes, .driven, .left {
           float: left;
           padding-right: 4px;
         }
-        .comments {
+        .comments, .right {
           float: right;
           padding-left: 4px;
+        }
+
+        .top-props{
+          line-height: 18px;
+          margin: 0 -16px;
+          padding: 8px 16px 0;
+          border-top: 1px solid #ddd;
+
+          .notes,
+          .freight{
+            padding-left: 14px;
+          }
         }
       }
 
@@ -132,7 +144,7 @@
       }
       
       .message{
-        margin: 4px 0 5px;
+        margin: 4px 0 9px;
         display: block;
         display: -webkit-box;
         overflow: hidden;
@@ -218,11 +230,10 @@
           float: right;
           padding-left: 4px;
         }
-        
-        
-          .dist, .time {
-            font-weight: 400;
-          }
+
+        .dist, .time {
+          font-weight: 400;
+        }
         
         .driven {
           .dist.mi:after {
@@ -256,6 +267,14 @@
   .details-activity-pane {
     .item {
       padding: 10px;
+
+      .likes{
+        float: left;
+
+        strong{
+          display: inline;
+        }
+      }
     }
   }
 

@@ -51,11 +51,11 @@
                 $ionicLoading.show({ template: 'Loading ' + vm.profileData.firstName + '\'s Feed...' });
                 activityService
                     .getFeed().then(function (result) {
+                        var uniqueResults = _.uniq(result),
+                            sortedItems = [];
 
-                        var sortedItems = [];
-
-                        for (var i = 0; i < result.length; i++) {
-                            var item = result[i],
+                        for (var i = 0; i < uniqueResults.length; i++) {
+                            var item = uniqueResults[i],
                                 userID = item.user && item.user.id;
 
                             if (userID === vm.profileData.id) {
