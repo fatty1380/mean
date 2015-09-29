@@ -20,66 +20,57 @@
   }
 }
 
+// document list
+.document-list{
+  border-bottom: 1px solid #D2D2D2;
 
-.documents-list{
-  height: 100%;
+  .item{
+    border-top: 1px solid #D2D2D2;
+    padding-left: 62px;
+    padding-right: 100px;
+    min-height: 80px;
 
-  .button-small {
-    padding: 2px 4px 1px;
-    min-width: 28px;
-    min-height: 30px;
-    font-size: 12px;
-    line-height: 25px;
-  }
-
-  .button {
-  /*  @include rounded-corner(5px);*/
-    margin: 0;
-    font-size: 14px;
-    min-height: 32px;
-    line-height: 32px;
-
-    position: absolute;
-    right:0;
-    top:0;
-    padding: 0 30px;
-    border-color: #D2D2D2;
-    background-color: #f8f8f8;
-    color: #858585;
-  }
-
-  .list{
-    margin: 0 20px;
-    padding-top: 20px;
-  }
-
-  .item {
-    background: none;
-    padding: 0;
-    border: none;
-
-    i{
-      float:left;
-      margin:0 10px 0 0;
+    .ico{
+      position: absolute;
+      top: 16px;
+      left: 10px;
+      //margin-top: -20px;
     }
 
-    .item-divider {
-      clear: both;
-      padding: 0;
-      height: 1px;
-      margin: 15px 0;
-      min-height:1px;
-      background: #D2D2D2;
-    }
-
-    .item-note {
-      width: 40%;
-      text-align: right;
-      color: $content-body-text;
+    .item-content{
+      text-overflow: initial;
       white-space: normal;
+
+      strong,
+      span{display: block;}
+    }
+
+    .checkbox{
+      left: 0;
+      right: 0;
+      top: 0;
+      margin: 0;
+      bottom: 0;
+
+      input{
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+        left: 21px;
+      }
+    }
+
+    .button{
+      padding: 0 25px;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      margin-top: -15px;
+      z-index: 4;
     }
   }
 }
+
 
 /* action-sheet */
 .action-sheet {
