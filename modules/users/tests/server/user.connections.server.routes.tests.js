@@ -371,7 +371,7 @@ describe('User Connections & Social', function () {
             var contactInfo = {
                 displayName: 'Calamity Jane',
                 email: 'c.jane@deadwoodpost.com',
-                phones: [{ main: '123-456-7689' }]
+                phoneNumbers: [{ main: '123-456-7689' }]
             };
             var postData = { contactInfo: contactInfo, text: 'hello there!' };
 

@@ -30,12 +30,12 @@ function sendSMS(req, res) {
 
 	log.debug({ func: 'sendSMS', body: contactInfo }, 'Send SMS : START');
 
-	if (_.isEmpty(contactInfo.phones) && _.isEmpty(contactInfo.phone)) {
+	if (_.isEmpty(contactInfo.phoneNumbers) && _.isEmpty(contactInfo.phone)) {
 		return res.status(422).send({ message: 'must define phone numbers in request' });
 	}
 
 	var messageConfig = {
-		to: contactInfo.phone || contactInfo.phones,
+		to: contactInfo.phone || contactInfo.phoneNumbers,
 		from: req.user
 	};
 

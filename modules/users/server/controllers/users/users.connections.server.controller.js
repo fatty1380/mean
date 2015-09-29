@@ -183,7 +183,7 @@ function createRequest(req, res, next) {
 
     var u2;
     if (_.isEmpty(req.body.to) && !_.isEmpty(req.body.contactInfo)) {
-        u2 = messenger.sendMessage({ to: req.body.contactInfo.phones });
+        u2 = messenger.sendMessage({ to: req.body.contactInfo.phoneNumbers });
     }
 
     return Q.all([request.save(), u1.exec()])
