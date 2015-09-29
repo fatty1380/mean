@@ -97,8 +97,8 @@
                 if (angular.isDefined(contact.email && (!contact.emails || !contact.emails.length))) {
                     contactInfo.emails = [{ value: contact.email, type: 'manual' }];
                 }
-                if (angular.isDefined(contact.phone && (!contact.phones || !contact.phones.length))) {
-                    contactInfo.phones = [{ value: contact.phone, type: 'manual' }];
+                if (angular.isDefined(contact.phone && (!contact.phoneNumbers || !contact.phoneNumbers.length))) {
+                    contactInfo.phoneNumbers = [{ value: contact.phone, type: 'manual' }];
                 }
 
                 return contactInfo;

@@ -9,13 +9,7 @@
         <ion-scroll>
             <form name="mainForm" id="mainForm" ng-submit="vm.saveDocument()">
                 <div class="list">
-                    
-                    <p style="text-align: center">
-                    <img ng-src="{{vm.trustedSrc}}" />
-                        
-                    </p>
 
-                    <hr>
                     <label class="item item-input item-select">
                         <div class="input-label">
                             Document Type:
@@ -27,13 +21,18 @@
                             <option value="MISC">other ...</option>
                         </select>
                     </label>
-                    
+
                     <label class="item item-input item-floating-label" ng-show="vm.document.sku === 'MISC'">
                         <span class="input-label">Title:</span>
                         <input type="text" ng-model="vm.document.name" placeholder="Document Name">
                     </label>
+                    <p style="text-align: center">
+                        <img ng-src="{{vm.trustedSrc}}" />
+                    </p>
 
-                    <div class="row">
+                    <hr>
+
+                    <!--<div class="row">
                         <div class="col">
                             <label class="item item-input item-floating-label">
                                 <span class="input-label">Valid From:</span>
@@ -46,8 +45,8 @@
                                 <input type="date" ng-model="vm.document.valid.until" placeholder="Valid Until">
                             </label>
                         </div>
-                    </div>
-                    
+                    </div>-->
+
                 </div>
             </form>
         </ion-scroll>

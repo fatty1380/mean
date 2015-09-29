@@ -22,7 +22,7 @@
 				showMessage: '=?',
 				showEmail: '=?',
 				showPhone: '=?',
-				showName: '=?'
+				showName: '=?',
 			}
 		};
 		
@@ -51,8 +51,8 @@
 				.then(function (selectedContact) {
 					debugger;
 					
-					alert(JSON.stringify(selectedContact, null, 2));
-					log.debug('Selected Contact: ', selectedContact);
+					//alert(JSON.stringify(selectedContact, null, 2));
+					console.log('Selected Contact: ', selectedContact);
 					
 					/**
 					 * Contacts returned with teh following schemas:
@@ -67,17 +67,20 @@
 					 * display the number to the users
 					 */
 					
-					vm.contact = selectedContact;
-					vm.contact.displayName = vm.contact.displayName || vm.contact.formatted;
-					vm.contact.email == !!vm.contact.emails.length && vm.contact.emails[0].value;
-					vm.contact.phone == !!vm.contact.phones.length && vm.contact.phones[0].value;
+					vm.contact.emails = selectedContact.emails;
+					vm.contact.phones = selectedContact.phoneNumbers;
+					vm.contact.firstName = selectedContact.name && selectedContact.name.givenName;
+					vm.contact.lastName = selectedContact.name && selectedContact.name.familyName;
+					vm.contact.displayName = selectedContact.displayName || selectedContact.name && selectedContact.name.formatted;
+					
+					vm.contact.email = !!vm.contact.emails && !!vm.contact.emails.length && vm.contact.emails[0].value;
+					vm.contact.phone = !!vm.contact.phones && !!vm.contact.phones.length && vm.contact.phones[0].value;
 			})
 		}
 	}
 
 	var contactTemplate = [
 		'<div class="list list-inset share-form">',
-		'<pre>{{vm.selectedContact}}</pre>',
 		'   <button class="button button-block button-light" ng-click="vm.pickContact();">Choose from Contacts</button>', 
 		'	<label class="item item-input" ng-if="!!vm.showPhone">',
 		'		<span class="input-label">Phone</span>',

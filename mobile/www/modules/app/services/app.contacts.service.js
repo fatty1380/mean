@@ -8,6 +8,7 @@
 
     function contactsService($q, $filter) {
 
+        debugger;
         var contacts = [],
             filter = $filter('contactsFilter');
 
@@ -22,34 +23,58 @@
             find: find,
             pickContact: pickContact
         };
-        
+
         function getContacts() {
             return contacts;
         }
 
         function setContacts(newContacts) {
-            if(newContacts) {
+            if (newContacts) {
                 contacts = newContacts;
             }
             return contacts;
         }
 
+        /**
+         * addContact
+         * Adds a contact to the 'local' service's contacts array. Does **NOT** add to device contacts.
+         */
         function addContact(contact) {
-            if(angular.isArray(contact)){
+            if (angular.isArray(contact)) {
                 contacts.concat(contact);
-            }else{
-                if(contact && (contact.phones || contact.emails)){
+            } else {
+                if (contact && (contact.phones || contact.emails)) {
                     contacts.push(contact)
+                }
+                else if (contact && (contact.phone || contact.email)) {
+                    contact.emails = !!contact.email ? [{ value: contact.email, type: 'manual' }] : [];
+                    contact.phones = !!contact.phone ? [{ value: contact.phone, type: 'manual' }] : [];
+
+                    var pore = (contact.phone || contact.email);
+                    debugger;
+
+                    contact.displayName = contact.displayName || !!pore && pore.value || pore;
+
+                    contact.checked = true;
+
+                    contacts.push(contact);
                 }
             }
             return $q.when(contacts);
         }
 
+
         function retrieveContacts() {
-            return find().then(function (data) {
-                contacts = filter(data);
-                console.warn(' getContacts() --->>>', getContacts());
-            });
+            return find().then(
+                function (data) {
+                    contacts = filter(data);
+                    console.warn(' getContacts() --->>>', getContacts());
+                })
+                .catch(function (err) {
+                    console.log('error retrieving contacts', err);
+
+                    contacts = contacts || [];
+                });
         }
 
         function save(contact) {
@@ -64,7 +89,7 @@
             return q.promise;
         }
 
-        function remove (contact) {
+        function remove(contact) {
             var q = $q.defer();
             var deviceContact = navigator.contacts.create(contact);
 
@@ -76,19 +101,19 @@
             return q.promise;
         }
 
-        function clone (contact) {
+        function clone(contact) {
             var deviceContact = navigator.contacts.create(contact);
             return deviceContact.clone(contact);
         }
 
-        function find (options) {
+        function find(options) {
             var q = $q.defer();
-            if(navigator && navigator.contacts) {
+            if (navigator && navigator.contacts) {
                 var fields = options && options.fields || ['id', 'displayName'];
                 if (options && Object.keys(options).length === 0) {
                     navigator.contacts.find(fields, function (results) {
                         q.resolve(results);
-                    },function (err) {
+                    }, function (err) {
                         q.reject(err);
                     });
                 } else {
@@ -104,11 +129,11 @@
             return q.promise;
         }
 
-        function pickContact () {
+        function pickContact() {
             var q = $q.defer();
 
-            if(navigator && navigator.contacts) {
-                navigator.contacts.pickContact(function(contact){
+            if (navigator && navigator.contacts) {
+                navigator.contacts.pickContact(function (contact) {
                     q.resolve(contact);
                 });
             } else {
