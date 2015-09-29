@@ -7,7 +7,7 @@
 
     ProfileCtrl.$inject = ['$rootScope', 'updateService', '$state', 'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, updateService, $state, activityService,  reviewService, $ionicLoading, experienceService, utilsService, friendsService,  avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, updateService, $state, activityService, reviewService, $ionicLoading, experienceService, utilsService, friendsService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
 
         console.log('Loading $state: `%s`', $state.current.name);
@@ -16,7 +16,9 @@
         vm.user = user;
         vm.camera = cameraService;
         vm.updates = updateService.getLastUpdates();
-        vm.reviews = [{rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob'}, {rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631}];
+        
+        // vm.reviews = [];
+        // [{ rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631 }];
 
         vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
@@ -43,10 +45,10 @@
             vm.isFriend = vm.profileData.friends.indexOf(vm.user.id) >= 0;
             vm.feedMessage = vm.isFriend ? 'No feed items' : 'You have to be friends to see user\'s feed';
 
-            if(!vm.isFriend){
+            if (!vm.isFriend) {
                 vm.profileData.displayName = vm.profileData.firstName + ' ' + (vm.profileData.lastName && vm.profileData.lastName[0]);
-            }else{
-                $ionicLoading.show({template: 'Loading ' + vm.profileData.firstName + '\'s Feed...'});
+            } else {
+                $ionicLoading.show({ template: 'Loading ' + vm.profileData.firstName + '\'s Feed...' });
                 activityService
                     .getFeed().then(function (result) {
 
@@ -56,7 +58,7 @@
                             var item = result[i],
                                 userID = item.user && item.user.id;
 
-                            if(userID === vm.profileData.id){
+                            if (userID === vm.profileData.id) {
                                 sortedItems.push(item);
                             }
                         }
@@ -72,30 +74,30 @@
                 .getFriendStatus(vm.profileData.id)
                 .then(function (response) {
                     var status = response.data.status;
-                    if(status) vm.friendStatus = status;
+                    if (status) vm.friendStatus = status;
                 });
 
 
             vm.addUserToFriends = function () {
                 var friend = vm.profileData;
 
-                if(!friend) return;
+                if (!friend) return;
 
                 var requestData = {
                     to: friend.id,
                     text: 'Hi there! I want to add you to my friend list!'
                 },
 
-                serializedData = utilsService.serialize(requestData);
+                    serializedData = utilsService.serialize(requestData);
 
                 friendsService
                     .createRequest(serializedData)
                     .then(function (createdRequestResp) {
-                        if(createdRequestResp.status === 200){
+                        if (createdRequestResp.status === 200) {
                             vm.friendStatus = 'sent';
                             var template = 'You have invited ' + friend.firstName + ' to be friends.';
                             $ionicLoading
-                                .show({template:template, duration: 2000});
+                                .show({ template: template, duration: 2000 });
 
                         }
                     });
@@ -158,7 +160,7 @@
                 profileModalsService
                     .showProfileEditModal(parameters)
                     .then(function (result) {
-                        if(!!result) vm.profileData = result;
+                        if (!!result) vm.profileData = result;
                     });
             };
 
@@ -168,9 +170,9 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                    function (err) {
-                        console.log(err);
-                    })
+                        function (err) {
+                            console.log(err);
+                        })
             };
 
             vm.showRequestReviewModal = function (parameters) {
@@ -179,9 +181,9 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                    function (err) {
-                        console.log(err);
-                    })
+                        function (err) {
+                            console.log(err);
+                        })
             };
 
             vm.showAddExperienceModal = function (parameters) {
@@ -191,9 +193,9 @@
                         console.log(result);
                         vm.getExperience();
                     },
-                    function (err) {
-                        console.log(err);
-                    })
+                        function (err) {
+                            console.log(err);
+                        })
             };
 
             vm.showEditExperienceModal = function (parameters) {
@@ -203,45 +205,40 @@
                         console.log(result);
                         vm.getExperience();
                     },
-                    function (err) {
-                        console.log(err);
-                    })
-            };
-
-            vm.getReviews = function () {
-                reviewService
-                    .getUserReviews()
-                    .then(function (response) {
-                        vm.reviews = response.data;
-                    })
-            };
-            vm.getExperience = function () {
-                experienceService
-                    .getUserExperience()
-                    .then(function (response) {
-                        vm.experience = response.data;
-                    })
+                        function (err) {
+                            console.log(err);
+                        })
             };
         }
+        // END: vm.canEdit
 
 
         vm.getReviews = function () {
             reviewService
-                .getUserReviews()
+                .getReviewsByUserID(vm.profileData.id)
                 .then(function (response) {
                     vm.reviews = response.data;
                 })
+                .finally(function () {
+                    if (!vm.reviews || !vm.reviews.length) {
+                        console.error('WARNING: Hard Coded User Reviews')
+                        vm.reviews = [{ rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631 }];
+                    }
+                })
         };
 
-        vm.postReview = function (id, review) {
-            reviewService
-                .postReviewForProfile(id, review)
+        vm.getExperience = function () {
+            experienceService
+                .getUserExperience()
+                .then(function (response) {
+                    vm.experience = response.data;
+                })
         };
 
-        //vm.getReviews();
+        vm.getReviews();
 
         function openChat() {
-            if(!vm.canEdit){
+            if (!vm.canEdit) {
                 $state.go('account.messages', { recipientId: vm.profileData.id });
             }
         }
