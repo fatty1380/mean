@@ -43,12 +43,12 @@
             if (angular.isArray(contact)) {
                 contacts.concat(contact);
             } else {
-                if (contact && (contact.phones || contact.emails)) {
+                if (contact && (contact.phoneNumbers || contact.emails)) {
                     contacts.push(contact)
                 }
                 else if (contact && (contact.phone || contact.email)) {
                     contact.emails = !!contact.email ? [{ value: contact.email, type: 'manual' }] : [];
-                    contact.phones = !!contact.phone ? [{ value: contact.phone, type: 'manual' }] : [];
+                    contact.phoneNumbers = !!contact.phone ? [{ value: contact.phone, type: 'manual' }] : [];
 
                     var pore = (contact.phone || contact.email);
                     debugger;

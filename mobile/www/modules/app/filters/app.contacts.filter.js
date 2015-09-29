@@ -1,5 +1,10 @@
 (function () {
     'use strict';
+    
+    /**
+     * contactsFilter
+     * Contact must have at least one email or phone number. This filter ensures that
+     */
 
     angular
         .module(AppConfig.appModuleName)
@@ -9,7 +14,7 @@
         return function (allContacts) {
             var contacts = [],
                 contact, formattedContact, i,
-                displayName, phones, emails, conditions;
+                displayName, phoneNumbers, emails, conditions;
 
             for(i = 0; i < allContacts.length; i++){
                 contact = allContacts[i];
@@ -18,12 +23,12 @@
                 if(conditions){
                     displayName = (contact.name.formatted || contact.name.givenName + " " + contact.name.familyName || "Person").trim();
                     emails = getEmail(contact.emails);
-                    phones = getPhoneNumbers(contact.phoneNumbers);
+                    phoneNumbers = getPhoneNumbers(contact.phoneNumbers);
 
                     formattedContact = {
                         "displayName": displayName,
                         "emails": emails,
-                        "phones": phones
+                        "phoneNumbers": phoneNumbers
                     };
                     contacts.push(formattedContact);
                 }
