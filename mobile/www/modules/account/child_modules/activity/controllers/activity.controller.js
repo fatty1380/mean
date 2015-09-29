@@ -153,8 +153,17 @@
                 .showAddActivityModal()
                 .then(function (res) {
                     if (res) {
-                        // TODO: Determine if the extra trip to the server is required
-                        refreshFeedActivityById(res);
+                        debugger;
+
+                        if (angular.isObject(res)) {
+                            console.log('Pushing newly created feed item onto the front of the array', res);
+                            vm.feed.unshift(res);
+                            $scope.$apply();
+                        }
+                        else {
+                            // TODO: Determine if the extra trip to the server is required
+                            refreshFeedActivityById(res);
+                        }
                     }
                 }, function (err) {
                     activityService.showPopup("Modal failed", "Please try later");

@@ -178,7 +178,7 @@
 				function(result) {
             	    $ionicLoading.hide();
             	    console.log(result);
-            	    vm.close(result._id);
+            	    vm.close(result);
             });
         }
 
