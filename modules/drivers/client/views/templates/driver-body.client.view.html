@@ -4,41 +4,15 @@
     <div class="panel panel-oset" tooltip="{{vm.profile | prettyPrint}}">
         <div class="panel-header">Profile</div>
         <div class="panel-body">
-            <h3>Panel Body goes Here
+            <os-driver-view data-ng-if="vm.profile" model="vm.profile"></os-driver-view>
         </div>
     </div>
     
-    <os-driver-view data-ng-if="vm.profile && vm.profile.about" model="vm.profile"></os-driver-view>
+    
 
-    <div class="panel panel-oset" data-ng-if="!vm.canEdit && (!vm.profile || !vm.profile.about)">
-        <p> {{vm.profile.displayName}} has not yet created their driver profile, but check back again
-            soon!</p>
-    </div>
-
-    <div class="panel panel-oset" data-ng-show="vm.canEdit && (!vm.profile || !vm.profile.about)">
-        <div class="content-container-inner">
-            <h3 class="text-center no-margin">Time to Create Your Driver Profile</h3>
-
-            <div class="about">
-
-                <div class="container-fluid row no-pad-sides">
-                    <p><span class="bigger stronger">Remember:</span>
-                    <ul class="fa-ul">
-                        <li class="pad-bottom" data-ng-repeat="item in vm.text.bulletPoints"><i
-                                class="fa fa-li fa-check text-success fa-lg pad-bottom"></i><span
-                                ng-bind-html="item"></span>
-                        </li>
-                    </ul>
-                    </p>
-                </div>
-
-                <button type="button" class="btn btn-cta btn-cta-primary center-block"
-                        ui-sref="drivers.create"
-                        data-ng-show="vm.canEdit">
-                    Create Your Driver Profile
-                </button>
-
-            </div>
-        </div>
-    </div>
+    <button type="button" class="btn btn-cta btn-cta-primary center-block"
+            ui-sref="drivers.create"
+            data-ng-show="vm.canEdit">
+        Create Your Driver Profile
+    </button>
 </div>

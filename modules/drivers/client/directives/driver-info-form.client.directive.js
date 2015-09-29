@@ -116,7 +116,7 @@
                     debugger;
                     vm.profile.experience.pop();
                 }
-                debugger;v
+                debugger;
 
                 //vm.form.experienceForm.$setValidity('vm.form.experienceForm', true);
                 //vm.form.experienceForm.$rollbackViewValue();
@@ -171,8 +171,8 @@
             restrict: 'E',
             require: ['^form'],
             scope: {
-                gateway: '=',
-                user: '=?',
+                gateway: '=', 
+                user: '=?model',
                 text: '=?',
                 methods: '=',
                 displayMode: '=?'
