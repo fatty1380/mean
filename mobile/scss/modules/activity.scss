@@ -210,11 +210,11 @@
         overflow: hidden;
         height: auto;
 
-        .miles, .likes, .driven {
+        .miles, .likes, .driven, .left {
           float: left;
           padding-right: 4px;
         }
-        .comments, .time {
+        .comments, .time, .right {
           float: right;
           padding-left: 4px;
         }
