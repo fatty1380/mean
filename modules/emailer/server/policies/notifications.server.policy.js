@@ -49,7 +49,7 @@ exports.invokeRolesPolicies = function () {
  */
 exports.isAllowed = function (req, res, next) {
 
-	req.log.debug({ func: 'notifications.policy.isAllowed' },
+	req.log.trace({ func: 'notifications.policy.isAllowed' },
 		'Policy Check : Start');
 			
 	var roles = (req.user) ? req.user.roles : ['guest'];
@@ -62,7 +62,7 @@ exports.isAllowed = function (req, res, next) {
 			return res.status(500).send('Unexpected authorization error');
 		} else {
 			if (isAllowed) {
-				req.log.debug({ func: 'notifications.policy.isAllowed' }, '%s user is allowed!', roles);
+				req.log.trace({ func: 'notifications.policy.isAllowed' }, '%s user is allowed!', roles);
 				// Access granted! Invoke next middleware
 				return next();
 			} else {

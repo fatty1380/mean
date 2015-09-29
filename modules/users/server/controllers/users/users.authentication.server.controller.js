@@ -245,10 +245,10 @@ exports.removeOAuthProvider = function (req, res, next) {
 
 // DRY Simple Login Function
 function login(req, res, user) {
-    req.log.debug({ func: 'login' }, 'Logging in user %s', user.email);
+    req.log.trace({ func: 'login' }, 'Logging in user %s', user.email);
 
     if (!_.isEmpty(user.salt + user.password)) {
-        req.log.debug({ func: 'login' }, 'Cleansing User before returning');
+        req.log.trace({ func: 'login' }, 'Cleansing User before returning');
         user.cleanse();
     }
 
@@ -258,7 +258,7 @@ function login(req, res, user) {
             res.status(400).send(err);
         } 
         else {
-            req.log.info({ func: 'login', user: req.user.email, roles: req.user.roles.join(',') }, 'Login Successful!');
+            req.log.trace({ func: 'login', user: req.user.email, roles: req.user.roles.join(',') }, 'Login Successful!');
 
             res.json(req.user);
         }

@@ -51,7 +51,7 @@ describe('Document CRUD tests', function () {
 		done();
 	});
 
-	beforeEach(function (done) {
+	beforeEach(function(done) {
 		// Create user credentials
 		credentials = {
 			username: 'username',
@@ -70,7 +70,7 @@ describe('Document CRUD tests', function () {
 		});
 
 		// Save a user to the test db and create new Document
-		user.save(function () {
+		user.save(function() {
 			lbDocument = {
 				name: 'Document Name',
 				data: stubs.profileImage64
@@ -80,11 +80,11 @@ describe('Document CRUD tests', function () {
 		});
 	});
 
-	it('should be able to save Document instance if logged in', function (done) {
+	it('should be able to save Document instance if logged in', function(done) {
 		agent.post('/api/auth/signin')
 			.send(credentials)
 			.expect(200)
-			.end(function (signinErr, signinRes) {
+			.end(function(signinErr, signinRes) {
 				// Handle signin error
 				if (signinErr) { done(signinErr); }
 
@@ -95,13 +95,13 @@ describe('Document CRUD tests', function () {
 				agent.post('/api/documents')
 					.send(lbDocument)
 					.expect(200)
-					.end(function (documentSaveErr, documentSaveRes) {
+					.end(function(documentSaveErr, documentSaveRes) {
 						// Handle Document save error
 						if (documentSaveErr) { done(documentSaveErr); }
 
 						// Get a list of Documents
 						agent.get('/api/documents')
-							.end(function (documentsGetErr, documentsGetRes) {
+							.end(function(documentsGetErr, documentsGetRes) {
 								// Handle Document save error
 								if (documentsGetErr) { done(documentsGetErr); }
 
@@ -119,31 +119,31 @@ describe('Document CRUD tests', function () {
 			});
 	});
 
-	it('should not be able to save Document instance if not logged in', function (done) {
+	it('should not be able to save Document instance if not logged in', function(done) {
 		agent.post('/api/documents')
 			.send(lbDocument)
 			.expect(403)
-			.end(function (documentSaveErr, documentSaveRes) {
+			.end(function(documentSaveErr, documentSaveRes) {
 				// Call the assertion callback
 				done(documentSaveErr);
 			});
 	});
 
-	it('should not be able to save Document instance if no name is provided', function (done) {
+	it('should not be able to save Document instance if no name is provided', function(done) {
 		// Invalidate name field
 		lbDocument.name = '';
 
 		agent.post('/api/auth/signin')
 			.send(credentials)
 			.expect(200)
-			.end(function (signinErr, signinRes) {
+			.end(function(signinErr, signinRes) {
 				// Handle signin error
 				if (signinErr) { done(signinErr); }
 				// Save a new Document
 				agent.post('/api/documents')
 					.send(lbDocument)
 					.expect(400)
-					.end(function (documentSaveErr, documentSaveRes) {
+					.end(function(documentSaveErr, documentSaveRes) {
 						// Set message assertion
 						(documentSaveRes.body.message).should.match('Please fill Document name');
 						
@@ -153,11 +153,11 @@ describe('Document CRUD tests', function () {
 			});
 	});
 
-	it('should be able to update Document instance if signed in', function (done) {
+	it('should be able to update Document instance if signed in', function(done) {
 		agent.post('/api/auth/signin')
 			.send(credentials)
 			.expect(200)
-			.end(function (signinErr, signinRes) {
+			.end(function(signinErr, signinRes) {
 				// Handle signin error
 				if (signinErr) { done(signinErr); }
 
@@ -165,7 +165,7 @@ describe('Document CRUD tests', function () {
 				agent.post('/api/documents')
 					.send(lbDocument)
 					.expect(200)
-					.end(function (documentSaveErr, documentSaveRes) {
+					.end(function(documentSaveErr, documentSaveRes) {
 						// Handle Document save error
 						if (documentSaveErr) { done(documentSaveErr); }
 
@@ -176,7 +176,7 @@ describe('Document CRUD tests', function () {
 						agent.put('/api/documents/' + documentSaveRes.body._id)
 							.send(lbDocument)
 							.expect(200)
-							.end(function (documentUpdateErr, documentUpdateRes) {
+							.end(function(documentUpdateErr, documentUpdateRes) {
 								// Handle Document update error
 								if (documentUpdateErr) { done(documentUpdateErr); }
 
@@ -191,15 +191,15 @@ describe('Document CRUD tests', function () {
 			});
 	});
 
-	it('should be able to get a list of Documents if not signed in', function (done) {
+	it('should be able to get a list of Documents if not signed in', function(done) {
 		// Create new Document model instance
 		var documentObj = new LBDocument(lbDocument);
 
 		// Save the Document
-		documentObj.save(function () {
+		documentObj.save(function() {
 			// Request Documents
 			request(app).get('/api/documents')
-				.end(function (req, res) {
+				.end(function(req, res) {
 					// Set assertion
 					res.body.should.be.an.Array.with.lengthOf(1);
 
@@ -211,14 +211,14 @@ describe('Document CRUD tests', function () {
 	});
 
 
-	it('should be able to get a single Document if not signed in', function (done) {
+	it('should be able to get a single Document if not signed in', function(done) {
 		// Create new Document model instance
 		var documentObj = new LBDocument(lbDocument);
 
 		// Save the Document
-		documentObj.save(function () {
+		documentObj.save(function() {
 			request(app).get('/api/documents/' + documentObj._id)
-				.end(function (req, res) {
+				.end(function(req, res) {
 					// Set assertion
 					res.body.should.be.an.Object.with.property('name', lbDocument.name);
 
@@ -228,11 +228,11 @@ describe('Document CRUD tests', function () {
 		});
 	});
 
-	it('should be able to delete Document instance if signed in', function (done) {
+	it('should be able to delete Document instance if signed in', function(done) {
 		agent.post('/api/auth/signin')
 			.send(credentials)
 			.expect(200)
-			.end(function (signinErr, signinRes) {
+			.end(function(signinErr, signinRes) {
 				// Handle signin error
 				if (signinErr) { done(signinErr); }
 
@@ -240,7 +240,7 @@ describe('Document CRUD tests', function () {
 				agent.post('/api/documents')
 					.send(lbDocument)
 					.expect(200)
-					.end(function (documentSaveErr, documentSaveRes) {
+					.end(function(documentSaveErr, documentSaveRes) {
 						// Handle Document save error
 						if (documentSaveErr) { done(documentSaveErr); }
 
@@ -248,7 +248,7 @@ describe('Document CRUD tests', function () {
 						agent.delete('/api/documents/' + documentSaveRes.body._id)
 							.send(lbDocument)
 							.expect(200)
-							.end(function (documentDeleteErr, documentDeleteRes) {
+							.end(function(documentDeleteErr, documentDeleteRes) {
 								// Handle Document error error
 								if (documentDeleteErr) { done(documentDeleteErr); }
 
@@ -262,7 +262,7 @@ describe('Document CRUD tests', function () {
 			});
 	});
 
-	it('should not be able to delete Document instance if not signed in', function (done) {
+	it('should not be able to delete Document instance if not signed in', function(done) {
 		// Set Document user 
 		lbDocument.user = user;
 
@@ -270,23 +270,23 @@ describe('Document CRUD tests', function () {
 		var documentObj = new LBDocument(lbDocument);
 
 		// Save the Document
-		documentObj.save(function () {
+		documentObj.save(function() {
 			// Try deleting Document
 			request(app).delete('/api/documents/' + documentObj._id)
-				.expect(403)
-				.end(function (documentDeleteErr, documentDeleteRes) {
-					// Set message assertion
-					(documentDeleteRes.body.message).should.match('User is not authorized');
+			.expect(403)
+			.end(function(documentDeleteErr, documentDeleteRes) {
+				// Set message assertion
+				(documentDeleteRes.body.message).should.match('User is not authorized');
 
-					// Handle Document error error
-					done(documentDeleteErr);
-				});
+				// Handle Document error error
+				done(documentDeleteErr);
+			});
 
 		});
 	});
 
-	afterEach(function (done) {
-		User.remove().exec(function () {
+	afterEach(function(done) {
+		User.remove().exec(function(){
 			LBDocument.remove().exec(function () {
 				done();
 			});
