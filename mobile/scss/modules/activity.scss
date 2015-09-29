@@ -58,11 +58,39 @@
       .ico {
         margin: 1px;
       }
-      
-      .activity-summary {
-        display: inline-block;
-        overflow: hidden;
+
+      .panel{
+        position: relative;
+        min-height: 15px;
+
+        .visual{
+          margin-right: 5px;
+          vertical-align: middle;
+          display: inline-block;
+          max-width: 90px;
+          max-height: 40px;
+          text-align: center;
+
+          img{
+            max-width: 100%;
+            max-height: 100%;
+          }
+        }
+
+        .activity-summary {
+          display: inline-block;
+          overflow: hidden;
+          vertical-align: middle;
+        }
+
+        .time{
+          position: absolute;
+          right: 0;
+          top: 50%;
+          margin-top: -7.5px;
+        }
       }
+
 
       .last-location,
       .current-location{
@@ -78,19 +106,6 @@
         text-transform: capitalize;
             color: #ff8000;
           }
-      
-      .avatar {
-        margin-right: 5px;
-          vertical-align: top;
-          //position: absolute;
-          top: 50%;
-          left: 15px;
-          max-width: 32px;
-          max-height: 32px;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-      }
 
       &.top, &.bottom {
         padding: $item-padding/2 $item-padding;
@@ -101,7 +116,7 @@
           float: left;
           padding-right: 4px;
         }
-        .comments, .time {
+        .comments {
           float: right;
           padding-left: 4px;
         }
