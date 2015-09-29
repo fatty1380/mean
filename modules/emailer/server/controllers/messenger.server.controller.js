@@ -19,6 +19,7 @@ var client = twilio(clientConfig.accountSid, clientConfig.authToken);
 var recipientOverrideAddress = config.services.twilio.toOverride;
 
 var messageTemplate = '${username} has invited you to join TruckerLine. Join the Convoy at www.joinoutset.com';
+var noSenderTemplate = 'You have been invited to join Truckerline. Join the convoy at www.joinoutset.com';
 
 /**
  * getMessage
@@ -27,7 +28,16 @@ var messageTemplate = '${username} has invited you to join TruckerLine. Join the
  */
 function sendMessageRequest(messageConfig) {
     
-    var body = (messageConfig.message || messageConfig.template || messageTemplate).replace('${username}', messageConfig.from.firstName);
+    var sender = !!messageConfig.from && messageConfig.from.firstName || null;
+    
+    var body = noSenderTemplate;
+    
+    if (!!sender) {
+        body = (messageConfig.message || messageConfig.template || messageTemplate);
+        body.replace('${username}', sender);
+    } else {
+        log.warn({ func: 'sendMessageRequest', err: 'No Sender Specified', config: messageConfig }, 'Must specify a sender when sending a message request');
+    }
 
     var message = {
         to: _.isArray(messageConfig.to) ? _.first(messageConfig.to) : messageConfig.to,
