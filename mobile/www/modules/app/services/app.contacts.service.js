@@ -8,7 +8,7 @@
 
     function contactsService($q, $filter) {
 
-        debugger;
+        console.warn('Contact Service INITIALIZING');
         var contacts = [],
             filter = $filter('contactsFilter');
 
