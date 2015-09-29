@@ -384,14 +384,14 @@ function getOrCreateFeed(userId, log) {
 	//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
 		.exec()
 		.then(function (feed) {
-			log.debug({ func: 'getOrCreateFeed', feed: feed });
+			log.trace({ func: 'getOrCreateFeed', feed: feed });
 			if (!feed) {
-				log.debug({ func: 'getOrCreateFeed' }, '... hmmm, Creating new feed for user');
+				log.info({ func: 'getOrCreateFeed' }, '... hmmm, Creating new feed for user');
 				feed = new Feed({ user: userId });
 
 				return feed.save();
 			} else {
-				log.debug({ func: 'getOrCreateFeed', feed: feed }, '... Found it!');
+				log.trace({ func: 'getOrCreateFeed', feed: feed }, '... Found it!');
 				return feed;
 			}
 		});
