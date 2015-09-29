@@ -42,6 +42,21 @@
   
   .card.item {
     .activity-item{
+      .visual{
+        img{
+          max-width: 100%;
+          max-height: 100%;
+          width: auto;
+          height: auto;
+          -webkit-border-radius: 0;
+          -moz-border-radius: 0;
+          border-radius: 0;
+          top:auto;
+          left:auto;
+          margin: 0;
+        }
+      }
+
       .title{
         margin: 10px 20px;
         color: #333;
