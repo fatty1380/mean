@@ -26,6 +26,7 @@ var app, agent, credentials, user, recipient, message, _test;
  */
 describe('Message CRUD tests', function () {
 	before(function (done) {
+		this.timeout(4000);
 		// Get application
 		app = express.init(mongoose);
 		agent = request.agent(app.http);
@@ -34,7 +35,7 @@ describe('Message CRUD tests', function () {
 	});
 
 	beforeEach(function () {
-		_test = this.test;
+		_test = this.currentTest;
 		
 		// Create user credentials
 		user = new User(stubs.user);
@@ -46,7 +47,8 @@ describe('Message CRUD tests', function () {
 		return Q.all([user.save(), recipient.save()])
 			.then(
 				function (success) {
-					log.info({ test: _test.title, func: 'beforeEach', success: success }, 'Saved User & Recipient to DB');
+					log.info({ test: _test.title, func: 'beforeEach' }, 'Saved User & Recipient to DB');
+					log.trace({ test: _test.title, func: 'beforeEach', success: success }, 'Saved User & Recipient Result');
 
 					user = success[0];
 					recipient = success[1];
@@ -78,7 +80,8 @@ describe('Message CRUD tests', function () {
 
 		it('should be able to save a basic message', function () {
 			_test = this.test;
-			
+
+			log.info({ test: _test.title}, 'Posting new Message');
 			// Save a new Message
 			return agent.post('/api/messages')
 				.send(message)
@@ -179,9 +182,9 @@ describe('Message CRUD tests', function () {
 				.then(function (messageSaveRes) {
 
 					log.info({ test: _test.title, response: messageSaveRes }, 'Posted Message');
-					
+
 					var savedResult = messageSaveRes.body;
-					
+
 					savedResult.should.have.property('sender');
 					savedResult.should.have.property('recipient');
 					savedResult.should.have.property('status', 'sent');
@@ -412,7 +415,7 @@ function verifyChatProperties(chat, recipient) {
 	chat.should.have.property('recipient');
 	chat.should.have.property('messages');
 	chat.should.have.property('lastMessage');
-	
+
 	chat.should.have.property('profileImageURL');
 
 	if (!!recipient) {

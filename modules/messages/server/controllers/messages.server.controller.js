@@ -29,7 +29,7 @@ exports.messageByID = messageByID;
 /**
  * Create a Message
  */
-function list(req, res) {
+function create(req, res) {
 	var message = new Message(req.body);
 	message.sender = req.user;
 	
@@ -46,14 +46,14 @@ function list(req, res) {
 /**
  * Show the current Message
  */
-function messageList(req, res) {
+function read(req, res) {
 	res.json(req.message);
 }
 
 /**
  * Update a Message
  */
-function chatList(req, res) {
+function update(req, res) {
 	var message = req.message ;
 
 	message = _.extend(message , req.body);
@@ -74,7 +74,7 @@ function chatList(req, res) {
 /**
  * Delete an Message
  */
-function chatRead(req, res) {
+function deleteMsg(req, res) {
 	var message = req.message ;
 
 	message.remove(function(err) {
@@ -92,7 +92,7 @@ function chatRead(req, res) {
  * List of Messages
  * @deprecated - possibly to be used by admin, but not currently needed.
  */
-function chatListMessages (req, res) {
+function list (req, res) {
 	Message.find().sort('-created').populate('user', 'displayName').exec(function (err, messages) {
 		if (err) {
 			return res.status(400).send({
@@ -110,7 +110,7 @@ function chatListMessages (req, res) {
  * 
  * @query grouped (Boolean) If true, will group the messages by the other user. Same as chatList function
  */
-function createByChat (req, res) {
+function messageList (req, res) {
 	
 	findAndProcessMessages(req, res).then(function(messages) {
 			req.messages = messages;
@@ -138,7 +138,7 @@ function createByChat (req, res) {
 function findAndProcessMessages(req, res) {
 	var id = req.user._id;
 	
-	req.log.info({ module:'messages', func: 'findAndProcessMessages', id: id, user: req.user }, 'Start');
+	req.log.debug({ module:'messages', func: 'findAndProcessMessages', id: id, user: req.user }, 'Start');
 	
 	//var id = !!req.profile && req.profile._id || req.user._id;
 	
@@ -172,8 +172,8 @@ function findAndProcessMessages(req, res) {
 		});
 }
 
-function messageByID (req, res) {
-	req.log.debug({ func: 'chatList' }, 'Start');
+function chatList (req, res) {
+	req.log.trace({ func: 'chatList' }, 'Start');
 	
 	findAndProcessMessages(req, res).then(
 		function (messages) {
@@ -196,8 +196,8 @@ function messageByID (req, res) {
 		});
 }
 
-function create (req, res) {
-	req.log.debug({ func: 'chatRead' }, 'Start');
+function chatRead (req, res) {
+	req.log.debug({ func: 'chatRead', body: req.body }, 'Start');
 	
 	findAndProcessMessages(req, res).then(
 		function (messages) {
@@ -235,7 +235,7 @@ function create (req, res) {
  * Chat : List Messages
  * 
  */
-function read (req, res, next) {
+function chatListMessages (req, res, next) {
 	req.log.debug({ func: 'chatListMessages' }, 'Start');
 	
 	var id = req.user.id,
@@ -246,7 +246,7 @@ function read (req, res, next) {
 	next();
 }
 
-function update (req, res, next) {
+function createByChat (req, res, next) {
 	
 	var text = _.isString(req.body) ? req.body : req.body.text;
 	
@@ -291,7 +291,7 @@ function groupChatsBySender(req, res) {
 /***********************************************************************************************
  * Message middleware
  */
-function deleteMsg (req, res, next, id) {
+function messageByID (req, res, next, id) {
 	Message.findById(id)
 		.populate('sender', 'displayName')
 		.populate('recipient', 'displayName')

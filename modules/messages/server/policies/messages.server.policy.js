@@ -52,7 +52,7 @@ exports.isAllowed = function (req, res, next) {
 	// If an message is being processed and the current user created it then allow any manipulation
 	if (req.message && req.user &&
 		req.message.sender.id === req.user.id) {
-		req.log.debug({ func: 'message.policy.isAllowed' },
+		req.log.trace({ func: 'message.policy.isAllowed' },
 			'Message Sender matches UserId!');
 		return next();
 	}
@@ -65,7 +65,7 @@ exports.isAllowed = function (req, res, next) {
 			return res.status(500).send('Unexpected authorization error');
 		} else {
 			if (isAllowed) {
-				req.log.debug({ func: 'message.policy.isAllowed' }, '%s user is allowed!', roles);
+				req.log.trace({ func: 'message.policy.isAllowed' }, '%s user is allowed!', roles);
 				// Access granted! Invoke next middleware
 				return next();
 			} else {
