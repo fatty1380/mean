@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -11,12 +11,12 @@
         var vm = this;
 
         vm.searchText = "";
-        vm.contacts = []; 
+        vm.contacts = [];
 
         vm.cancel = cancel;
         vm.showAddFriendsModal = addFriends;
         vm.showFriendManualAddModal = showFriendManualAddModal;
-        
+
         initialize(parameters);
         
         ///////////////////////////////////////////////////////
@@ -24,8 +24,8 @@
         function initialize(parameters) {
             $q.when(parameters,
                 function success(contacts) {
-                    console.error('marging %d Contacts', contacts.length);
-                    
+                    console.log('Selecting from %d Contacts', contacts.length);
+
                     return contacts.forEach(function (contact) {
                         vm.contacts.push(contact);
                     })
@@ -53,25 +53,30 @@
         }
 
         function addFriends() {
-            var filter = $filter('getChecked'),
-                friends = filter(vm.contacts),
-                deferred = $q.defer(),
-                promise = deferred.promise,
-                requestSentStatuses = [],
-                successfullySent, messageTemplate;
+            var filter = $filter('getChecked');
+            var newInvites = filter(vm.contacts);
+            var deferred = $q.defer();
+            var promise = deferred.promise;
+            
+            var requestSentStatuses = [];
+            var successfullySent;
+            var messageTemplate;
 
             //TODO: remove requestSentStatuses array when there will be a possibility to send an array of users
             //TODO: and show the message in the success callback
+            
+            // TODO: COMBINE w/ add.contact.controller
+            //friendsService.sendRequests(newInvites);
 
-            for(var i = 0; i < friends.length; i++){
-                var postData = {contactInfo: friends[i], text: 'hello there!'},
+            for (var i = 0; i < newInvites.length; i++) {
+                var postData = { contactInfo: newInvites[i], text: 'hello there!' },
                     serializedData = utilsService.serialize(postData);
 
                 $http
                     .post(settings.requests, serializedData)
                     .then(function () {
                         requestSentStatuses.push(true);
-                        if(i = friends.length){
+                        if (i = newInvites.length) {
                             successfullySent = requestSentStatuses.indexOf(false) < 0;
                             deferred.resolve(successfullySent);
                         }
@@ -81,9 +86,9 @@
             }
 
             promise.then(function (response) {
-                if(response){
-                    messageTemplate = 'Invitations are successfully sent';
-                    $ionicLoading.show({template: messageTemplate, duration: '1500'});
+                if (response || true) {
+                    messageTemplate = 'Invitations have been successfully sent';
+                    $ionicLoading.show({ template: messageTemplate, duration: '1500' });
                 }
             });
 

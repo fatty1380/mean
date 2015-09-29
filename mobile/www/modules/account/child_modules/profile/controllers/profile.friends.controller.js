@@ -132,6 +132,8 @@
                 .catch(function reject(err) {
                     console.error('Unable to resolve Contacts: ', err);
                     
+                    $ionicLoading.hide();
+                    
                     return addManually();
                 });
         }

@@ -9,9 +9,9 @@
         .module('signup')
         .controller('AddFriendManuallyCtrl', AddFriendManuallyCtrl);
 
-    AddFriendManuallyCtrl.$inject = ['$state', 'contactsService'];
+    AddFriendManuallyCtrl.$inject = ['$state', 'contactsService', '$ionicPopup'];
 
-    function AddFriendManuallyCtrl($state, contactsService) {
+    function AddFriendManuallyCtrl($state, contactsService, $ionicPopup) {
         var vm = this;
 
         vm.invite = invite;
@@ -24,8 +24,17 @@
         }
 
         function invite() {
+            
             return contactsService.addContact(vm.contact)
                 .then(function () {
+                    var config = {
+                        title: 'Success!',
+                        template : 'An invitation has been sent to ' + vm.contact.name || vm.contact.email && vm.contact.email.value || vm.contact.phone && vm.contact.phone.value
+                    }
+
+                    return $ionicPopup.alert(config);
+                })
+                .then(function() {
                     return $state.go('signup-friends-contacts');
                 });
         }

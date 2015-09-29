@@ -22,7 +22,8 @@
             getRequestsList: getRequestsList,
             createRequest: createRequest,
             loadRequest: loadRequest,
-            updateRequest: updateRequest
+            updateRequest: updateRequest,
+            sendRequests: sendFriendRequests
         };
 
         function getFriends() {
@@ -83,6 +84,45 @@
         function updateRequest(id, data) {
             if (!id) return;
             return $http.put(settings.requests + id, data);
+        }
+        
+        ///////////////////////////////////////////////////////////////
+        
+        function sendFriendRequests(newInvites) {
+
+            messageTemplate = '<ion-spinner /><br>Sending ' + newInvites.length + ' Invitations';
+            $ionicLoading.show({ template: messageTemplate, duration: '5000' });
+
+            var requestSentStatuses = [];
+            var successfullySent;
+            var messageTemplate;
+
+            //TODO: remove requestSentStatuses array when there will be a possibility to send an array of users
+            //TODO: and show the message in the success callback
+
+            for (var i = 0; i < newInvites.length; i++) {
+                var postData = { contactInfo: newInvites[i], text: 'hello there!' },
+                    serializedData = utilsService.serialize(postData);
+
+                $http
+                    .post(settings.requests, serializedData)
+                    .then(function () {
+                        requestSentStatuses.push(true);
+                        if (i = newInvites.length) {
+                            successfullySent = requestSentStatuses.indexOf(false) < 0;
+                            deferred.resolve(successfullySent);
+                        }
+                    }, function (err) {
+                        requestSentStatuses.push(false);
+                    });
+            }
+
+            return promise.then(function (response) {
+                if (response || true) {
+                    messageTemplate = 'Invitations have been successfully sent';
+                    $ionicLoading.show({ template: messageTemplate, duration: '1500' });
+                }
+            });
         }
 
     }

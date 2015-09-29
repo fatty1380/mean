@@ -7,7 +7,7 @@
 
     AddContactFriendsCtrl.$inject = ['$state', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl($state,  registerService,  $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
+    function AddContactFriendsCtrl($state, registerService, $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
         var vm = this;
 
         $ionicLoading.hide();
@@ -20,7 +20,7 @@
         function skipToProfile() {
             registerService.updateUser(registerService.getDataProps())
                 .then(function (response) {
-                    if(response.success) {
+                    if (response.success) {
                         $state.go('account.profile');
                     }
                 }, function (err) {
@@ -29,12 +29,12 @@
         }
 
         function sendInvitations() {
-            var filter = $filter('getChecked'),
-                selectedContacts = filter(vm.contacts);
+            var filter = $filter('getChecked')
+            var selectedContacts = filter(vm.contacts);
 
             var names = [];
 
-            for(var i = 0; i < selectedContacts.length; i ++){
+            for (var i = 0; i < selectedContacts.length; i++) {
                 names.push(selectedContacts[i].displayName);
             }
 
@@ -44,39 +44,56 @@
                     template: template
                 });
 
-            if(selectedContacts.length){
-                confirm.then(function(res) {
-                    if(res) {
-                        for(var i = 0; i < selectedContacts.length; i++){
+            if (selectedContacts.length) {
+                confirm.then(function (res) {
+                    if (res) {
+
+                        // TODO: COMBINE w/ profile.add.friends.controller
+                        //return friendsService.sendRequests(selectedContacts);
+
+                        ///////
+                        var reqs = [];
+                        for (var i = 0; i < selectedContacts.length; i++) {
                             console.warn('selectedContacts --->>>', selectedContacts);
                             var hasHashKey = selectedContacts[i].$$hashKey;
-                            if(hasHashKey){
+                            if (hasHashKey) {
                                 delete selectedContacts[i].$$hashKey;
                             }
 
-                            var postData = {contactInfo: selectedContacts[i], text: 'hello there!'},
+                            var postData = { contactInfo: selectedContacts[i], text: 'hello there!' },
                                 serializedData = utilsService.serialize(postData);
 
-                            $http
+                            var r = $http
                                 .post(settings.requests, serializedData)
                                 .then(function (resp) {
                                     console.warn(' resp --->>>', resp);
-                                    $ionicLoading.show({template: 'Invitations are successfully sent', duration: '1500'});
+                                    $ionicLoading.show({ template: 'Invitations are successfully sent', duration: '1500' });
                                 }, function (err) {
                                     console.warn(' err --->>>', err);
                                 });
-
+                                
+                            reqs.push(r);
                         }
-                        registerService.updateUser(registerService.getDataProps())
-                            .then(function (response) {
-                                if(response.success) {
-                                    $state.go('account.profile');
-                                }
-                            });
+                        
+                        return $q.all(reqs);
+                        
                     } else {
                         console.log('friends are not invited');
                     }
-                });
+                })
+                    .then(function (sentRequests) {
+                        console.log('Sent ' + sentRequests.length + ' requests');
+                        registerService.updateUser(registerService.getDataProps())
+                            .then(function (response) {
+                                if (response.success) {
+                                    $state.go('account.profile');
+                                }
+                            });
+                    })
+                    .catch(function (err) {
+                        console.error('Unable to invite friends:', err);
+                        $state.go('account.profile');
+                    });
             }
         }
 
