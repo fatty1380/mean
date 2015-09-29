@@ -24,11 +24,17 @@
 .document-list{
   border-bottom: 1px solid #D2D2D2;
 
-  .item{
+  .item {
     border-top: 1px solid #D2D2D2;
     padding-left: 62px;
     padding-right: 100px;
-    min-height: 80px;
+    min-height: 70px;
+    
+    &.stub-document {
+      .ico {
+        opacity: 0.4;
+      }
+    }
 
     .ico{
       position: absolute;

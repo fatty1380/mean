@@ -13,13 +13,14 @@
     <ion-pane class="pane content-pane">
         <ion-scroll>
             <ul class="list document-list" ng-if="vm.documents.length">
-                <li class="item" ng-repeat="doc in vm.documents track by $index">
+                <li class="item" ng-repeat="doc in vm.documents track by $index" ng-class="{'stub-document': !doc.url}">
                     <i class="ico ico-documentimage ico-documentimage{{doc.sku}}"></i>
                     <div class="item-content">
                         <strong>{{ doc.name }}</strong>
                         <span>{{ doc.created }}</span>
                     </div>
-                    <oset-doc-view model="doc" btn-text="View"></oset-doc-view>
+                    <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
+                    <button ng-if="!doc.url" class="button button-small" ng-click="vm.addDocsPopup(doc.sku)">Add</button>
                 </li>
             </ul>
             <div ng-if="!vm.documents.length" class="no-content">No documents</div>

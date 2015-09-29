@@ -19,7 +19,7 @@
             vm.document = {
                 url: !!parameters.image ? 'data:image/jpeg;base64,' + parameters.image : settings.defaultProfileImage,
                 name: '',
-                sku: '',
+                sku: parameters.sku || '',
                 valid: {
                     from: null,
                     until: null
@@ -44,6 +44,15 @@
         };
 
         function saveDocument() {
+            if (vm.document.sku !== 'misc') {
+                switch (vm.document.sku) {
+                    case 'cdl': vm.document.name = 'Commercial Driver License'; break;
+                    case 'ins': vm.document.name = 'Insurance'; break;
+                    case 'reg': vm.document.name = 'Registration'; break;
+                    default: vm.document.name = vm.document.sku;
+                }
+            }
+            
             return $scope.closeModal(vm.document);
         };
     }

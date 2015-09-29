@@ -67,7 +67,7 @@
         //    return stubDocuments;
         //}
 
-        function addDocsPopup() {
+        function addDocsPopup(docSku) {
             $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take a Picture' },
@@ -82,10 +82,10 @@
                 buttonClicked: function (index) {
                     switch (index) {
                         case 0:
-                            takePicture();
+                            takePicture(docSku);
                             break;
                         case 1:
-                            orderReports();
+                            orderReports(docSku);
                             break;
                     }
                     return true;
@@ -93,10 +93,10 @@
             });
         }
 
-        function takePicture() {
+        function takePicture(sku) {
             cameraService.showActionSheet()
                 .then(function success(rawImageResponse) {
-                    return lockboxModals.showCreateModal({ image: rawImageResponse });
+                    return lockboxModals.showCreateModal({ image: rawImageResponse, sku: sku });
                 })
                 .then(function success(newDocumentResponse) {
                     
@@ -140,17 +140,7 @@
            key: 'kajifpaiueh13232'
        },
        {
-           id: '1234abcd5678efab9011212',
-           sku: 'cdl',
-           name: 'Driver License',
-           created: '2015-07-11 10:33:05',
-           url: 'assets/lockbox/cdl.png',
-           expires: null,
-           bucket: 'outset-dev',
-           key: 'kajifpaiueh13232'
-       },
-       {
-           id: '1234abcd5678efab9011212',
+           id: '1234abcd5678efab901113',
            sku: 'bg',
            name: 'Background Report',
            created: '2015-07-11 10:33:05',
@@ -158,6 +148,14 @@
            expires: null,
            bucket: 'outset-dev',
            key: 'kajifpaiueh13232222'
+       },
+       {
+           id: '1234abcd5678efab9011212',
+           sku: 'cdl',
+           name: 'Driver License',
+           created: null,
+           url: null,
+           expires: null
        }
     ];
 

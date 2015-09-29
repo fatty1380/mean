@@ -15,14 +15,14 @@
                             Document Type:
                         </div>
                         <select ng-model="vm.document.sku">
-                            <option value="CDL">CDL</option>
-                            <option value="INS">Insurance</option>
-                            <option value="REG">Registration</option>
-                            <option value="MISC">other ...</option>
+                            <option value="cdl">CDL</option>
+                            <option value="ins">Insurance</option>
+                            <option value="reg">Registration</option>
+                            <option value="misc">other ...</option>
                         </select>
                     </label>
 
-                    <label class="item item-input item-floating-label" ng-show="vm.document.sku === 'MISC'">
+                    <label class="item item-input item-floating-label" ng-show="vm.document.sku === 'misc'">
                         <span class="input-label">Title:</span>
                         <input type="text" ng-model="vm.document.name" placeholder="Document Name">
                     </label>

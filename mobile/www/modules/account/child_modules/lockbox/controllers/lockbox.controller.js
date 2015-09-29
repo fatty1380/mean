@@ -29,8 +29,8 @@
         
         /// Implementation
         
-        function addDocs() {
-            lockboxDocuments.addDocsPopup().then(
+        function addDocs(docSku) {
+            lockboxDocuments.addDocsPopup(docSku).then(
                 function success(docs) {
                     vm.documents = docs;
                 }
