@@ -146,18 +146,11 @@
       }
 
       .title{
+        padding: 6px 0;
         display: block;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        font-weight: 500;
-        //padding: 0 10px 5px 5px;
-      }
-      
-      .message{
-        margin: 4px 0 8px;
-        display: block;
+        font-weight: bold;
         display: -webkit-box;
+        margin-bottom: 0;
         overflow: hidden;
         white-space: normal;
         text-overflow: ellipsis;
@@ -219,15 +212,17 @@
         padding-bottom: 2*$content-padding;
       }
     }
-    
-      
-    
   }
 
   /* details activity */
   .details-activity-pane {
     .item {
       padding: 10px;
+
+      .top .props{
+        margin-bottom: -4px;
+        border-width: 0;
+      }
 
       .likes{
         float: left;
@@ -240,26 +235,23 @@
   }
   
   .bottom > .props {
-    margin: -8px -16px 8px;
     border-bottom-width: 1px;
   }
         
   .top > .props {
-    margin: 8px -16px -8px;
     border-top-width: 1px;
   }
   
   .props {
     line-height: 18px;
-    padding: 4px 16px ;
+    padding: 4px 0;
     border-style: solid;
     border-color: $stable;
-    
-    
     font-size: 14px;
     
     & > * {
       display: inline-block;
+      vertical-align: middle;
     }
     
     //padding: $item-padding/2 $item-padding;
@@ -276,11 +268,13 @@
     }
     
     
-      .notes,
-      .freight{
-        padding-left: 14px;
-      }
-  
+    .notes,
+    .freight{
+      padding-left: 14px;
+    }
+
+    .notes i.ion{vertical-align: middle;}
+
     .dist, .time {
       font-weight: 400;
     }

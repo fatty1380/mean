@@ -9,27 +9,45 @@
     <ion-pane class="pane has-footer details-activity-pane">
         <ion-scroll delegate-handle="mainScroll">
             <ion-item class="item">
-                <div class="ico ico-avatarsmall"></div>
                 <div class="activity-item">
                     <div class="top">
                         <div class="panel">
-                            <a class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: entry.user.id})">
-                                <strong>{{vm.entry.user.displayName}}</strong>
-                            </a>
-                            <div class="time" ng-if="vm.entry.created"><i class="ico ico-timesmall"></i>{{vm.entry.created | date:'mediumDate'}}</div>
+                            <div class="visual" ng-if="!!vm.avatar || !!vm.entry.props.avatar">
+                                <img class="avatar" ng-src="{{vm.avatar || vm.entry.props.avatar}}" />
+                            </div>
+                            <div class="text">
+                                <div class="holder">
+                                    <div class="activity-summary">
+                                        <a ng-if="!!vm.username || !!vm.entry.props.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+                                            <strong>{{vm.username || vm.entry.props.handle}}</strong>
+                                        </a>
+                                    </div>
+                                    <div class="time" ng-if="vm.entry.created">
+                                        <i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
+                                    </div>
+                                </div>
+                                <div class="holder last-location" ng-if="vm.entry.location.placeName || vm.entry._location[0].placeName">
+                                    <i class="ion-location"></i> {{vm.entry.location.placeName || vm.entry._location[0].placeName}}
+                                </div>
+                            </div>
                         </div>
-                        <div class="message">
-                            {{ vm.entry.title }}
+                        <strong class="title">{{ vm.entry.title }}</strong>
+                        <div class="clearfix props">
+                            <div class="right notes" ng-if="!!vm.entry.notes">
+                                <i class="ion ion-document-text"></i>
+                                <span ng-bind="vm.entry.notes"></span>
+                            </div>
+
+                            <span ng-if="!!vm.entry.milesTraveled">
+                                <i class="ico ico-milestraveledsmall"></i>
+                                <strong class="title">{{ vm.entry.milesTraveled}}</strong>
+                            </span>
+
+                            <span class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity()">
+                                <i class="ico ico-likessmall"></i>
+                                <strong class="title">{{ vm.entry.likes.length }} likes</strong>
+                            </span>
                         </div>
-                        <div class="notes" ng-if="!!vm.entry.notes" ng-bind="vm.entry.notes"></div>
-                        <span ng-if="!!vm.entry.milesTraveled">
-                        <i class="ico ico-milestraveledsmall"></i>
-                        <strong class="title">{{ vm.entry.milesTraveled}}</strong>
-                        </span>
-                        <span class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity()">
-                            <i class="ico ico-likessmall"></i>
-                            <strong class="title">{{ vm.entry.likes.length }} likes</strong>
-                        </span>
                     </div>
                 </div>
             </ion-item>
@@ -51,7 +69,7 @@
 
             <div class="item comment" ng-repeat="message in vm.comments">
                 <a>{{message.sender.displayName}}</a> {{message.text}}
-                <div class="time-inline" ng-if="vm.entry.created"></i>{{message.created | date:'mediumDate'}}</div>
+                <div class="time-inline" ng-if="vm.entry.created">{{message.created | date:'mediumDate'}}</div>
             </div>
         </ion-scroll>
     </ion-pane>
