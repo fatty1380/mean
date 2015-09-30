@@ -138,7 +138,7 @@ function messageList (req, res) {
 function findAndProcessMessages(req, res) {
 	var id = req.user._id;
 	
-	req.log.debug({ module:'messages', func: 'findAndProcessMessages', id: id, user: req.user }, 'Start');
+	req.log.debug({ module:'messages', func: 'findAndProcessMessages', id: id, user: req.user.id }, 'Start');
 	
 	//var id = !!req.profile && req.profile._id || req.user._id;
 	
@@ -158,17 +158,13 @@ function findAndProcessMessages(req, res) {
 
 			req.log.info({ func: 'messages.list' }, 'Loaded %d Messages for %s', messages.length, req.user.id);
 
-			messages = _.map(messages, function (ogMessage) {
+			return _.map(messages, function (ogMessage) {
 				var message = ogMessage.toObject();
 				message.direction = id.equals(message.sender._id) ? 'outbound' : 'inbound';
 				message.party = id.equals(message.sender._id) ? message.recipient : message.sender;
 
 				return message;
 			});
-
-			req.log.debug({ messages: messages }, 'Request party?');
-
-			return messages;
 		});
 }
 
