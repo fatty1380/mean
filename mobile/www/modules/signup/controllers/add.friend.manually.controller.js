@@ -26,14 +26,6 @@
         function invite() {
             
             return contactsService.addContact(vm.contact)
-                .then(function () {
-                    var config = {
-                        title: 'Success!',
-                        template : 'An invitation has been sent to ' + vm.contact.name || vm.contact.email && vm.contact.email.value || vm.contact.phone && vm.contact.phone.value
-                    }
-
-                    return $ionicPopup.alert(config);
-                })
                 .then(function() {
                     return $state.go('signup-friends-contacts');
                 });

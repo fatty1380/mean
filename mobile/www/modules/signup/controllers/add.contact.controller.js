@@ -5,9 +5,9 @@
         .module('signup')
         .controller('AddContactFriendsCtrl', AddContactFriendsCtrl);
 
-    AddContactFriendsCtrl.$inject = ['$state', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
+    AddContactFriendsCtrl.$inject = ['$state', '$q', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', '$ionicLoading', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl($state, registerService, $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
+    function AddContactFriendsCtrl($state, $q, registerService, $ionicPopup, $http, settings, utilsService, $ionicLoading, contactsService, $filter) {
         var vm = this;
 
         $ionicLoading.hide();
@@ -30,7 +30,7 @@
 
         function sendInvitations() {
             var filter = $filter('getChecked')
-            var selectedContacts = filter(vm.contacts);
+            var selectedContacts = filter(vm.contacts, {clearChecked: false});
 
             var names = [];
 

@@ -137,6 +137,11 @@
                         templateUrl: 'modules/account/child_modules/activity/templates/activity.html',
                         controller: 'ActivityCtrl as vm'
                     }
+                },
+                resolve: {
+                    user: ['userService', function (userService) {
+                        return userService.getUserData();
+                    }]
                 }
             })
     }

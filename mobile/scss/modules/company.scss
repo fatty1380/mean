@@ -44,8 +44,6 @@
     .activity-item{
       .visual{
         img{
-          max-width: 100%;
-          max-height: 100%;
           width: auto;
           height: auto;
           -webkit-border-radius: 0;
@@ -58,7 +56,7 @@
       }
 
       .title{
-        margin: 10px 20px;
+        padding: 10px 0;
         color: #333;
         text-align: center;
       }

@@ -68,21 +68,30 @@
     .activity-item{
       overflow: hidden;
 
-      .ico {
-        margin: 1px;
-      }
+      .ico {vertical-align: middle;}
 
       .panel{
         position: relative;
+        overflow: hidden;
         min-height: 15px;
 
         .visual{
           margin-right: 5px;
-          vertical-align: middle;
-          display: inline-block;
-          max-width: 90px;
-          max-height: 40px;
-          text-align: center;
+          float: left;
+
+          .avatar {
+            max-width: 32px;
+            max-height: 32px;
+            vertical-align: top;
+            border-radius: 50%;
+          }
+        }
+
+        .text{
+          overflow: hidden;
+          .holder{
+            overflow: hidden;
+          }
         }
 
         .activity-summary {
@@ -92,6 +101,19 @@
         }
       }
 
+      &.company-item .panel{
+        .visual{
+          max-width: 100px;
+
+          .avatar{
+            max-width: 100px;
+          }
+        }
+
+        .text{
+          line-height: 32px;
+        }
+      }
 
       .last-location,
       .current-location{
@@ -107,19 +129,6 @@
         text-transform: capitalize;
             color: #ff8000;
         }
-
-      .avatar {
-        margin-right: 5px;
-          vertical-align: top;
-          //position: absolute;
-          top: 50%;
-          left: 15px;
-          max-width: 32px;
-          max-height: 32px;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-      }
 
       &.top, &.bottom {
         padding: $item-padding/2 $item-padding;
@@ -137,18 +146,11 @@
       }
 
       .title{
+        padding: 6px 0;
         display: block;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        font-weight: 500;
-        //padding: 0 10px 5px 5px;
-      }
-      
-      .message{
-        margin: 4px 0 9px;
-        display: block;
+        font-weight: bold;
         display: -webkit-box;
+        margin-bottom: 0;
         overflow: hidden;
         white-space: normal;
         text-overflow: ellipsis;
@@ -210,15 +212,17 @@
         padding-bottom: 2*$content-padding;
       }
     }
-    
-      
-    
   }
 
   /* details activity */
   .details-activity-pane {
     .item {
       padding: 10px;
+
+      .top .props{
+        border-width: 0;
+        padding: 0;
+      }
 
       .likes{
         float: left;
@@ -229,28 +233,26 @@
       }
     }
   }
-  
-  .bottom > .props {
-    margin: -8px -16px 8px;
-    border-bottom-width: 1px;
-  }
-        
+
   .top > .props {
-    margin: 8px -16px -8px;
     border-top-width: 1px;
+    padding-top: 6px;
+  }
+
+  .bottom > .props {
+    border-bottom-width: 1px;
+    padding-bottom: 6px;
   }
   
   .props {
     line-height: 18px;
-    padding: 4px 16px ;
     border-style: solid;
     border-color: $stable;
-    
-    
     font-size: 14px;
     
     & > * {
       display: inline-block;
+      vertical-align: middle;
     }
     
     //padding: $item-padding/2 $item-padding;
@@ -267,11 +269,13 @@
     }
     
     
-      .notes,
-      .freight{
-        padding-left: 14px;
-      }
-  
+    .notes,
+    .freight{
+      padding-left: 14px;
+    }
+
+    .notes i.ion{vertical-align: middle;}
+
     .dist, .time {
       font-weight: 400;
     }
@@ -292,20 +296,9 @@
       font-size: 0.8em;
       text-transform: uppercase;
     }
-  
-  .time{
-    background-color: $light;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    margin-top: -7.5px;
-  }
-  
-  .time-inline {
-    display: inline;
-  }
-    
 
+  .time{float: right;}
+  .time-inline {display: inline;}
 }
 
 
