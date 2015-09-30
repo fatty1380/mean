@@ -44,6 +44,7 @@
                 contacts.concat(contact);
             } else {
                 if (contact && (contact.phoneNumbers || contact.emails)) {
+                    contact.checked = true;
                     contacts.push(contact)
                 }
                 else if (contact && (contact.phone || contact.email)) {
@@ -51,7 +52,6 @@
                     contact.phoneNumbers = !!contact.phone ? [{ value: contact.phone, type: 'manual' }] : [];
 
                     var pore = (contact.phone || contact.email);
-                    debugger;
 
                     contact.displayName = contact.displayName || !!pore && pore.value || pore;
 
