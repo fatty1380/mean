@@ -5,9 +5,9 @@
         .module('account')
         .controller('LockboxCreateCtrl', LockboxCreateCtrl);
 
-    LockboxCreateCtrl.$inject = ['$scope', '$ionicPopup', '$sce', 'settings', 'parameters'];
+    LockboxCreateCtrl.$inject = ['$scope', '$ionicPopup', '$ionicLoading',  '$sce', 'settings', 'parameters'];
 
-    function LockboxCreateCtrl($scope, $ionicPopup, $sce, settings, parameters) {
+    function LockboxCreateCtrl($scope, $ionicPopup, $ionicLoading, $sce, settings, parameters) {
         var vm = this;
         vm.cancel = cancel;
         vm.saveDocument = saveDocument;
@@ -44,6 +44,9 @@
         };
 
         function saveDocument() {
+            
+            $ionicLoading.show({ template: '<ion-spinner/><br>Saving...', duration: 10000 });
+                    
             if (vm.document.sku !== 'misc') {
                 switch (vm.document.sku) {
                     case 'cdl': vm.document.name = 'Commercial Driver License'; break;
