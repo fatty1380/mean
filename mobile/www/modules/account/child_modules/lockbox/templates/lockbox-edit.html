@@ -1,7 +1,7 @@
 <ion-modal-view class="lockbox lockbox-edit view-section compact-size">
 
     <ion-header-bar>
-        <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
+        <button class="button button-clear" ng-click="vm.cancel()">Back</button>
         <h1 class="title">My Lockbox</h1>
     </ion-header-bar>
 
@@ -29,7 +29,7 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button button-assertive" ng-disabled="vm.deleteDisabled" ng-show="!vm.deleteDisabled" ng-click="vm.showConfirm()">Delete</button>
+            <button class="button button-assertive" ng-disabled="vm.deleteDisabled" ng-show="!vm.deleteDisabled" ng-click="vm.deleteDocuments()">Delete</button>
         </div>
     </ion-footer-bar>
 

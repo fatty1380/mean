@@ -64,6 +64,7 @@
                 return true;
             }
             else {
+                console.log('Pushing doc into docs', doc, vm.documents);
                 vm.documents.push(doc);
                 return true;
             }
@@ -101,6 +102,11 @@
             });
 
             return deferred.promise;
+        }
+        
+        function updateDocument(doc, data) {
+            _.extend(doc, data);
+            return API.doRequest(settings.documents + doc.id, 'put', data, true);         
         }
 
         function takePicture(sku) {
@@ -145,17 +151,35 @@
         function orderReports() {
             console.log('orderReports');
         }
+        
+        function removeDocuments(documents) {
+            _.each(documents, function (doc) {
+                console.log('Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
+                
+                _.remove(vm.documents, { id: doc.id });
+                
+                var stub = _.find(stubDocuments, { sku: doc.sku });
+                if (!!stub) {
+                    addDocument(stub);
+                }
+                
+                return API.doRequest(settings.documents + doc.id, 'delete');
+                
+            })
+        }
 
         return {
             getDocuments: getDocuments,
-            addDocsPopup: addDocsPopup
+            addDocsPopup: addDocsPopup,
+            removeDocuments: removeDocuments,
+            updateDocument: updateDocument
             //getStubDocuments: getStubDocuments
         }
     }
 
     var stubDocuments = [
         {
-            id: '1234abcd5678efab90123',
+            id: '0',
             sku: 'mvr',
             name: 'Motor Vehicle Report',
             created: '2015-07-11 10:33:05',
@@ -165,7 +189,7 @@
             key: 'kajifpaiueh13232'
         },
         {
-            id: '1234abcd5678efab901113',
+            id: '1',
             sku: 'bg',
             name: 'Background Report',
             created: '2015-07-11 10:33:05',
@@ -175,7 +199,7 @@
             key: 'kajifpaiueh13232222'
         },
         {
-            id: '1234abcd5678efab9011212',
+            id: '2',
             sku: 'cdl',
             name: 'Commercial Driver License',
             created: null,
