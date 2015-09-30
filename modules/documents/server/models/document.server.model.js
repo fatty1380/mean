@@ -39,7 +39,7 @@ var DocumentSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	}
-});
+}, { toJSON: { virtuals: true } });
 
 
 DocumentSchema.pre('save', function (next) {
