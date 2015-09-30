@@ -68,9 +68,7 @@
     .activity-item{
       overflow: hidden;
 
-      .ico {
-        margin: 1px;
-      }
+      .ico {vertical-align: middle;}
 
       .panel{
         position: relative;
@@ -78,11 +76,20 @@
 
         .visual{
           margin-right: 5px;
-          vertical-align: middle;
-          display: inline-block;
-          max-width: 90px;
-          max-height: 40px;
-          text-align: center;
+          float: left;
+
+          .avatar {
+            max-width: 32px;
+            max-height: 32px;
+            border-radius: 50%;
+          }
+        }
+
+        .text{
+          overflow: hidden;
+          .holder{
+            overflow: hidden;
+          }
         }
 
         .activity-summary {
@@ -107,19 +114,6 @@
         text-transform: capitalize;
             color: #ff8000;
         }
-
-      .avatar {
-        margin-right: 5px;
-          vertical-align: top;
-          //position: absolute;
-          top: 50%;
-          left: 15px;
-          max-width: 32px;
-          max-height: 32px;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-      }
 
       &.top, &.bottom {
         padding: $item-padding/2 $item-padding;
@@ -146,7 +140,7 @@
       }
       
       .message{
-        margin: 4px 0 9px;
+        margin: 4px 0 8px;
         display: block;
         display: -webkit-box;
         overflow: hidden;
@@ -292,20 +286,9 @@
       font-size: 0.8em;
       text-transform: uppercase;
     }
-  
-  .time{
-    background-color: $light;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    margin-top: -7.5px;
-  }
-  
-  .time-inline {
-    display: inline;
-  }
-    
 
+  .time{float: right;}
+  .time-inline {display: inline;}
 }
 
 

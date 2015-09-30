@@ -7,18 +7,21 @@
 			<div class="visual" ng-if="!!vm.avatar || !!vm.entry.props.avatar">
 				<img class="avatar" ng-src="{{vm.avatar || vm.entry.props.avatar}}" />
 			</div>
-			<div class="activity-summary">
-				<a ng-if="!!vm.username || !!vm.entry.props.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
-					<strong>{{vm.username || vm.entry.props.handle}}</strong>
-				</a>
+			<div class="text">
+				<div class="holder">
+					<div class="activity-summary">
+						<a ng-if="!!vm.username || !!vm.entry.props.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+							<strong>{{vm.username || vm.entry.props.handle}}</strong>
+						</a>
+					</div>
+					<div class="time" ng-if="vm.entry.created">
+						<i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
+					</div>
+				</div>
+				<div class="holder last-location" ng-if="vm.entry.location.placeName || vm.entry._location[0].placeName">
+					<i class="ion-location"></i> {{vm.entry.location.placeName || vm.entry._location[0].placeName}}
+				</div>
 			</div>
-			<div class="time" ng-if="vm.entry.created">
-				<i class="ico ico-timesmall"></i> {{vm.entry.created | date:'mediumDate'}}
-			</div>
-		</div>
-
-		<div class="last-location" ng-if="vm.entry.location.placeName || vm.entry._location[0].placeName">
-			<i class="ion-location"></i> {{vm.entry.location.placeName || vm.entry._location[0].placeName}}
 		</div>
 
 		<p class="message">
