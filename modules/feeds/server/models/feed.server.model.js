@@ -79,7 +79,7 @@ var FeedItemSchema = new Schema({
 		trim: true,
 		required: 'Please fill in Title'
 	},
-	message: {
+	notes: {
 		type: String,
 		default: '',
 		trim: true

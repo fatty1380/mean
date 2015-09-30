@@ -13,7 +13,7 @@ angular.module('feeds')
 			// Create new Feed object
 			var feedItem = new Feed.item ({
 				title: vm.title,
-				message: vm.message
+				notes: vm.notes
 			});
 
 			// Redirect after save
@@ -22,7 +22,7 @@ angular.module('feeds')
 
 				// Clear form fields
 				vm.title = '';
-				vm.message = '';
+				vm.notes = '';
 			}, function(errorResponse) {
 				vm.error = errorResponse.data.message;
 			});

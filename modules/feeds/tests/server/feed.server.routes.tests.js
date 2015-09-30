@@ -52,7 +52,7 @@ describe('Feed CRUD tests', function () {
 			function () {
 				feedItem = {
 					title: 'Title',
-					message: 'This is my message',
+					notes: 'These are Notes about the activity',
 					location: {
 						coordinates: [37.4422623, -122.143102]
 					}
@@ -202,7 +202,7 @@ describe('Feed CRUD tests', function () {
 
 
 		it('should allow you to comment on your own activity feed item', function () {
-			var message = { text: 'Wow! Thats really cool.' };
+			var comment = { text: 'Wow! Thats really cool.' };
 				
 			// Save a new Feed
 			return agent.post('/api/feed')
@@ -212,7 +212,7 @@ describe('Feed CRUD tests', function () {
 					
 					// Ensure that the "Friend" can comment on "Your" feed item
 					return agent.post('/api/feed/' + feedItem.id + '/comments')
-						.send(message)
+						.send(comment)
 						.expect(200);
 				}).then(
 					function (feedCommentRes) {
@@ -221,7 +221,7 @@ describe('Feed CRUD tests', function () {
 
 						var comments = feedCommentRes.body;
 
-						comments[0].should.have.property('text', message.text);
+						comments[0].should.have.property('text', comment.text);
 						comments[0].should.have.property('sender');
 
 						return feedCommentRes;
@@ -400,11 +400,11 @@ describe('Feed CRUD tests', function () {
 
 
 			it('should allow you to comment on a friend\'s activity feed item', function () {
-				var message = { text: 'Wow! Thats really cool.' };
+				var comment = { text: 'Wow! Thats really cool.' };
 				
 				// Ensure that the "Friend" can comment on "Your" feed item
 				return agent.post('/api/feed/' + feedItem.id + '/comments')
-					.send(message)
+					.send(comment)
 					.expect(200).then(
 						function (feedCommentRes) {
 							// Set assertions
@@ -412,7 +412,7 @@ describe('Feed CRUD tests', function () {
 
 							var comments = feedCommentRes.body;
 
-							comments[0].should.have.property('text', message.text);
+							comments[0].should.have.property('text', comment.text);
 							comments[0].should.have.property('sender');
 
 							return agent.get('/api/feed/' + feedItem.id + '/comments');
@@ -421,7 +421,7 @@ describe('Feed CRUD tests', function () {
 						var comments = feedCommentsRes.body;
 
 						comments.should.be.Array.with.length(1);
-						comments[0].should.have.property('text', message.text);
+						comments[0].should.have.property('text', comment.text);
 						comments[0].should.have.property('sender');
 					});
 
@@ -572,7 +572,7 @@ function verifyFeedProperties(feedItem) {
 
 	feedItem.should.have.property('created');
 	feedItem.should.have.property('title');
-	feedItem.should.have.property('message');
+	feedItem.should.have.property('notes');
 	feedItem.should.have.property('location');
 	feedItem.should.have.property('user');
 	feedItem.should.have.property('props');
