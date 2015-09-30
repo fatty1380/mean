@@ -206,6 +206,17 @@ textarea{
   &.list-inset {
     background: none;
   }
+  
+  label.multiline {
+    height: auto;
+    min-height: 108px;
+    
+    i.icon {
+      font-size: 1.4em;
+      margin-right: 4px;
+      float: right;
+    }
+  }
 
   .item-input{
     padding: 5px 15px;
@@ -220,6 +231,12 @@ textarea{
 
     input{
       padding-right: 0;
+    }
+    
+    i.icon {
+      font-size: 1.4em;
+      margin-right: 20px;
+      float: right;
     }
 
     textarea{
