@@ -11,7 +11,6 @@ var _ = require('lodash'),
 
 var fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     moment = require('moment'),
-    _ = require('lodash'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'documents',
         file: 'controller'
@@ -29,51 +28,84 @@ exports.documentByID = documentByID;
 exports.uploadResume = uploadResume; 
 exports.refreshResume = refreshResume; 
 exports.refreshReport = refresh; 
+
+
+function createWithBody(req, res) {
+    req.log.debug({ func: 'createWithBody' }, 'Start');
     
-/**
- * Create a Document
- */
-function create(req, res) {
-    req.log.debug('[DriverCtrl.uploadResume] Start');
     var user = req.user;
-    var sku = req.files.file.sku || 'resume';
+    
 
     if (!user) {
         return res.status(401).send({
             message: 'User is not signed in'
         });
     }
+    
+    var file = req.body;
+    file.sku = file.sku || 'misc';
+    file.user = req.user._id;
+    
+    debugger;
+    
+    if (!file.url) {
+        return res.status(400).send({
+            message: 'No URL/data Uploaded'
+        });
+    }
+    
+    req.log.info({ func: 'createWithBody', file: file }, 'Creating file based on req body');
+    req.log.info({ func: 'createWithBody', sku: file.sku }, 'Breakdown');
+    req.log.info({ func: 'createWithBody', url: file.url }, 'Breakdown');
+    req.log.info({ func: 'createWithBody', keys: _.keys(file) }, 'Breakdown');
+    
+    req.document = new LBDocument(file);
+    
+    saveDocumentToDB(req, res);
+}
+    
+/**
+ * Create a Document
+ */
+function create(req, res) {
+    
+    if (_.isEmpty(req.files.file)) {
+        return createWithBody(req, res);
+    }
+    
+    req.log.debug('[DriverCtrl.create] Start');
+    
+    var user = req.user;
+    if (!user) {
+        return res.status(401).send({
+            message: 'User is not signed in'
+        });
+    }
+    
+    var sku = req.files.file.sku || 'resume';
 
     req.files.file.name = sku + '.' + req.user.shortName + '.' + req.files.file.extension;
 
-    fileUploader.saveFileToCloud(req.files, 'secure-content', true).then(
-        function (response) {
-            req.log.debug('successfully uploaded user resume to %j', response);
-			
-			var document = new LBDocument(response);
-			
-			document.expires = moment().add(15, 'm').toDate();
-
-            document.save().then(
-				function (success) {
-					req.document = success;
-                	res.json(req.document);
-				},
-				function (saveError) {
-                    req.log.error({ func: 'create', error: saveError, errorMsg: errorHandler.getErrorMessage(saveError) }, 'unable to save document');
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(saveError)
-                    });
-            });
-
-        }, function (error) {
-            req.log.debug('Failed to save Resume: %j', error);
-            return res.status(400).send({
-                message: 'Unable to save Driver Resume. Please try again later'
-            });
-        });
+    return fileUploader
+        .saveFileToCloud(req.files, 'secure-content', true)
+        .then(
+            function (response) {
+                req.log.debug('successfully uploaded user resume to %j', response);
+                
+                req.document = new LBDocument(response);
+                
+                req.document.expires = moment().add(15, 'm').toDate();
+    
+                return saveDocumentToDB(req, res);
+    
+            },
+            function (error) {
+                req.log.debug('Failed to save Resume: %j', error);
+                return res.status(400).send({
+                    message: 'Unable to save Driver Resume. Please try again later'
+                });
+             });
 }
-
 
 
 /**
@@ -225,6 +257,34 @@ function refresh(req, res) {
 
             return res.status(400).send({
                 message: 'Unable to retrieve fresh URL for resume'
+            });
+        });
+}
+
+/////////////////////////////////////////////////////////////
+
+function saveDocumentToDB(req, res) {
+    
+    if (!req.document) {
+        console.error({ func: 'saveDocumentToDB' }, 'No Document defined on request');
+        
+        return res.status(400).send({
+            message: 'No Document Defined in Request'
+        });
+    }
+    
+    return req.document
+        .save()
+        .then(
+        function (success) {
+            req.log.debug({ func: 'saveDocumentToDB', sku: success.sku, id: success.id }, 'Successfully saved document to DB')
+            req.document = success;
+            res.json(req.document);
+        },
+        function (saveError) {
+            req.log.error({ func: 'create', error: saveError, errorMsg: errorHandler.getErrorMessage(saveError) }, 'unable to save document');
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(saveError)
             });
         });
 }

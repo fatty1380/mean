@@ -12,10 +12,16 @@ var mongoose = require('mongoose'),
  */
 var DocumentSchema = new Schema({
 
-	sku: String,
+	sku: {
+		type: String,
+		default: 'misc'
+	},
 	name: String,
 	isSecure: Boolean,
-	url: String,
+	url: {
+		type: String,
+		required: true
+	},
 	expires: Date,
 	bucket: String,
 	key: String,
@@ -45,9 +51,9 @@ DocumentSchema.pre('save', function (next) {
 });
 
 DocumentSchema.methods.updateReportURL = function (url) {
-        this.url = url;
-        this.expires = moment().add(15, 'm').toDate();
-        console.log('[DS.updateReportURL] updated document URL to %s', this.url);
+	this.url = url;
+	this.expires = moment().add(15, 'm').toDate();
+	console.log('[DS.updateReportURL] updated document URL to %s', this.url);
 };
 
 mongoose.model('Document', DocumentSchema);
