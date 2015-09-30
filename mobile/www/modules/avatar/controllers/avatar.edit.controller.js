@@ -10,16 +10,28 @@
     function AvatarEditCtrl(parameters, userService, $ionicLoading, avatarService, settings) {
         var vm = this;
 
-        vm.profileData = userService.profileData;
-        vm.rawImage = '';
-        vm.croppedImage = '';
-
         vm.close = close;
 
-        if (parameters.length) {
-            vm.rawImage = 'data:image/jpeg;base64,' + parameters;
-        } else {
-            vm.rawImage = settings.defaultProfileImage;
+        activate();
+        
+        ////////////////////////////////////////////////////////////////
+        
+        function activate() {
+            vm.profileData = userService.profileData;
+            vm.rawImage = '';
+            vm.croppedImage = '';
+            
+            vm.imgSize = parameters.imgSize || 600;
+            vm.areaType = parameters.areaType || 'circle';
+            
+            if (parameters.rawImage) {
+                vm.rawImage = parameters.rawImage;
+            }
+            if (parameters.length && _.isString(parameters)) {
+                vm.rawImage = 'data:image/jpeg;base64,' + parameters;
+            } else {
+                vm.rawImage = settings.defaultProfileImage;
+            }
         }
 
         function close(save) {

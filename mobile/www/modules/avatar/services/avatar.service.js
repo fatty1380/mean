@@ -14,7 +14,7 @@
         return {
             getImage: getImage,
             setImage: setImage,
-            showEditModal: showEditModal
+            showCropModal: showCropModal
         }
         
         function getImage() {
@@ -25,7 +25,7 @@
             finalImage = data;
         }
         
-        function showEditModal (parameters) {
+        function showCropModal (parameters) {
             templateUrl = 'modules/avatar/templates/edit-avatar.html';
             controller = 'AvatarEditCtrl as vm';
             params = parameters || {};
