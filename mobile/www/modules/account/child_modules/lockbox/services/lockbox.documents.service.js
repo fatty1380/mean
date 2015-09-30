@@ -17,9 +17,9 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$ionicActionSheet', '$ionicLoading', '$http', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
+    lockboxDocuments.$inject = ['$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments($ionicActionSheet, $ionicLoading, $http, $q, settings, cameraService, lockboxModals) {
+    function lockboxDocuments($ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModals) {
 
         var vm = this;
 
@@ -33,7 +33,8 @@
 
         // TODO: Refactor to be "refresh documents"
         function getDocuments() {
-            return $http.get(settings.documents).then(
+            //return $http.get(settings.documents).then(
+            return API.doRequest(settings.documents, 'get').then(
                 function success(documentListResponse) {
                     var docs = documentListResponse.data;
 
@@ -74,7 +75,7 @@
 
         function addDocsPopup(docSku) {
             var deferred = $q.defer();
-            
+
             $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take a Picture' },
@@ -98,7 +99,7 @@
                     return true;
                 }
             });
-            
+
             return deferred.promise;
         }
 
@@ -108,29 +109,30 @@
                     return lockboxModals.showCreateModal({ image: rawImageResponse, sku: sku });
                 })
                 .then(function success(newDocumentObject) {
-                    debugger;
                     if (addDocument(newDocumentObject)) {
-                        return $http.post(settings.documents, newDocumentObject);
+                        return API.doRequest(settings.documents, 'post', newDocumentObject, false);
+                        //return $http.post(settings.documents, newDocumentObject);
                     } else {
-                        return $http.put(settings.documents + newDocumentObject.id, newDocumentObject);
+                        return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject, false);
+                        //return $http.put(settings.documents + newDocumentObject.id, newDocumentObject);
                     }
                 })
                 .then(function saveSuccess(newDocumentResponse) {
                     console.log('Successfully saved document to server');
-                    
+
                     if (newDocumentResponse.status != 200) {
                         console.warn('Unknown Error in Doc Save response: ', newDocumentResponse);
                     }
-                    
+
                     $ionicLoading.show({
                         template: '<i class="icon ion-checkmark"></i><br>Saved Document',
                         duration: 1000
                     })
 
+                    debugger;
                     return newDocumentResponse.data;
                 })
                 .catch(function reject(err) {
-                    debugger;
                     console.error('Failed to save new doc: ', err);
 
                     return _.find(vm.documents, { sku: sku });
