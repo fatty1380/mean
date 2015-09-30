@@ -61,16 +61,10 @@
                     vm.newRequests = requests.data.length;
                     profileModalsService
                         .showFriendRequestModal(requests.data)
-                        .then(function (updateFriends) {
-                            if(updateFriends){
-                                friendsService
-                                    .retrieveFriends()
-                                    .then(function (updatedFriends) {
-                                        vm.friends = updatedFriends.data;
-                                    });
+                        .then(function (updatedFriends) {
+                            if(!!updatedFriends && updatedFriends.length){
+                                vm.friends = updatedFriends;
                             }
-                        }, function (err) {
-                            console.warn('err --->>>', err);
                         });
                 });
         }
