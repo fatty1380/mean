@@ -4,12 +4,12 @@
 		<!--<div class="ico ico-avatarsmall"></div>-->
 		<!--<img ng-if="!!vm.avatar" ng-src="{{vm.avatar}}" />-->
 		<div class="panel">
-			<div class="visual" ng-if="!!vm.avatar">
-				<img class="avatar" ng-src="{{vm.avatar}}" />
+			<div class="visual" ng-if="!!vm.avatar || !!vm.entry.props.avatar">
+				<img class="avatar" ng-src="{{vm.avatar || vm.entry.props.avatar}}" />
 			</div>
 			<div class="activity-summary">
-				<a ng-if="!!vm.username" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
-					<strong>{{vm.username}}</strong>
+				<a ng-if="!!vm.username || !!vm.entry.props.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+					<strong>{{vm.username || vm.entry.props.handle}}</strong>
 				</a>
 			</div>
 			<div class="time" ng-if="vm.entry.created">

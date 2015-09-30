@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope', 'activityService', '$filter', '$ionicLoading', '$ionicPopup', '$ionicPlatform'];
+    ActivityAddCtrl.$inject = ['$scope', 'activityService', 'parameters', '$filter', '$ionicLoading', '$ionicPopup', '$ionicPlatform'];
 
-    function ActivityAddCtrl($scope, activityService, $filter, $ionicLoading, $ionicPopup, $ionicPlatform) {
+    function ActivityAddCtrl($scope, activityService, parameters, $filter, $ionicLoading, $ionicPopup, $ionicPlatform) {
         angular.element(document).ready(
             getCurrentPosition
         );
@@ -18,6 +18,9 @@
         var map = null;
         var marker = null;
         var infoWindow = null;
+        var user = parameters.user;
+
+        console.warn(' user --->>>', user);
 
         vm.activity = {
             title : '',
@@ -30,11 +33,13 @@
                 created: ''
             },
             props:{
+                avatar: user.props.avatar,
+                handle: user.handle,
                 freight: '',
                 slMiles: ''
             },
             created: Date.now()
-        }
+        };
 
         vm.saveItemToFeed = saveItemToFeed;
         vm.close = close;
@@ -173,6 +178,8 @@
             $ionicLoading.show({
                 template: '<ion-spinner/><br>Saving...'
             });
+
+            console.warn('posting vm.activity --->>>', vm.activity);
 
             activityService.postActivityToFeed(vm.activity).then(
 				function(result) {

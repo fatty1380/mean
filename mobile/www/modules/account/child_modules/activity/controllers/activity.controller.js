@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'utilsService', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'user', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, activityModalsService, activityService, $ionicLoading, utilsService, settings, welcomeService) {
+    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, activityModalsService, activityService, $ionicLoading, user, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -151,7 +151,7 @@
 
         function showAddActivityModal() {
             activityModalsService
-                .showAddActivityModal()
+                .showAddActivityModal({user: user})
                 .then(function (res) {
                     console.warn(' res --->>>', res);
                     if (res) {
