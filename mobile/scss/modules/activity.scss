@@ -72,6 +72,7 @@
 
       .panel{
         position: relative;
+        overflow: hidden;
         min-height: 15px;
 
         .visual{
@@ -81,6 +82,7 @@
           .avatar {
             max-width: 32px;
             max-height: 32px;
+            vertical-align: top;
             border-radius: 50%;
           }
         }
@@ -99,6 +101,19 @@
         }
       }
 
+      &.company-item .panel{
+        .visual{
+          max-width: 100px;
+
+          .avatar{
+            max-width: 100px;
+          }
+        }
+
+        .text{
+          line-height: 32px;
+        }
+      }
 
       .last-location,
       .current-location{

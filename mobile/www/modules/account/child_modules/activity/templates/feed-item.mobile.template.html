@@ -1,6 +1,6 @@
 <ion-item class="card" ng-show="!!vm.entry.id" ng-click='vm.showActivityDetailsModal(vm.entry)'>
 
-	<div class="activity-item top">
+	<div class="activity-item top" ng-class="{'company-item': !!vm.entry.company}">
 		<!--<div class="ico ico-avatarsmall"></div>-->
 		<!--<img ng-if="!!vm.avatar" ng-src="{{vm.avatar}}" />-->
 		<div class="panel">
