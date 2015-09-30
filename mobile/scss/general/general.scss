@@ -286,3 +286,10 @@ textarea{
 .platform-ios.platform-cordova .modal-wrapper .modal .has-subheader {
   top: 108px;
 }
+
+#map{
+  div div a,
+  .gmnoprint div{
+    display: none !important;
+  }
+}
