@@ -52,7 +52,7 @@
         };
         
         function getAvatar(userProfile) {
-            if (!userProfile) { return null; }
+            if (!userProfile || _.isString(userProfile)) { return null; }
             
             var avatar = userProfile.profileImageURL || userProfile.props && userProfile.props.avatar;
 

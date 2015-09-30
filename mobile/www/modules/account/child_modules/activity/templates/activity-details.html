@@ -12,14 +12,14 @@
                 <div class="activity-item">
                     <div class="top">
                         <div class="panel">
-                            <div class="visual" ng-if="!!vm.avatar || !!vm.entry.props.avatar">
-                                <img class="avatar" ng-src="{{vm.avatar || vm.entry.props.avatar}}" />
+                            <div class="visual" ng-if="!!vm.avatar || !!vm.user.props.avatar">
+                                <img class="avatar" ng-src="{{vm.avatar || vm.user.props.avatar}}" />
                             </div>
                             <div class="text">
                                 <div class="holder">
                                     <div class="activity-summary">
-                                        <a ng-if="!!vm.username || !!vm.entry.props.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
-                                            <strong>{{vm.username || vm.entry.props.handle}}</strong>
+                                        <a ng-if="!!vm.username || !!vm.user.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+                                            <strong>{{vm.username || vm.user.handle}}</strong>
                                         </a>
                                     </div>
                                     <div class="time" ng-if="vm.entry.created">
@@ -31,22 +31,28 @@
                                 </div>
                             </div>
                         </div>
-                        <strong class="title">{{ vm.entry.title }}</strong>
+
+                        <div class="title">{{ vm.entry.title }}</div>
+                        <div class="notes-content" ng-show="!!vm.showNotes">
+                            <span ng-bind="vm.entry.notes"></span>
+                        </div>
+
                         <div class="clearfix props">
-                            <div class="right notes" ng-if="!!vm.entry.notes">
-                                <i class="ion ion-document-text"></i>
-                                <span ng-bind="vm.entry.notes"></span>
+                            <div class="left notes" ng-class="{'active':!!vm.showNotes}" ng-if="!!vm.entry.notes" ng-click="vm.showNotes = !vm.showNotes">
+                                <i class="ion-document-text"></i>
+                                <span class="lbl">notes</span>&nbsp;
                             </div>
 
-                            <span ng-if="!!vm.entry.milesTraveled">
+                            <div class="right dist driven" ng-if="!!vm.entry.props.distance">
                                 <i class="ico ico-milestraveledsmall"></i>
-                                <strong class="title">{{ vm.entry.milesTraveled}}</strong>
-                            </span>
+                                <span class="dist mi">{{vm.entry.props.distance}}</span>
+                                <span class="lbl">OTR Distance</span>
+                            </div>
 
-                            <span class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity()">
-                                <i class="ico ico-likessmall"></i>
-                                <strong class="title">{{ vm.entry.likes.length }} likes</strong>
-                            </span>
+                            <div class="right freight" ng-if="!!vm.entry.props.freight">
+                                <i class="ico ico-freight"></i>
+                                <span>{{vm.entry.props.freight}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -56,18 +62,29 @@
                 <div id="map" data-tap-disabled="true"></div>
             </div>
 
-            <div class="item-detail">
-                <strong>Distance since last check in:</strong> <span ng-if="!!vm.entry.props.slMiles">{{vm.entry.props.slMiles}} miles</span>
-            </div>
-            <div class="item-detail">
-                <strong>Freight hauled:</strong> <span>{{vm.entry.props.freight}}</span>
+            <div class="activity-item bottom">
+                <div class="clearfix props">
+                    <div class="driven left" ng-if="!!vm.entry.props.slMiles">
+                        <i class="ion-checkmark"></i>
+                        <span class="dist mi">{{vm.entry.props.slMiles}}</span>
+                        <span class="lbl">since last checkin</span>
+                    </div>
+
+                    <div class="likes right" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity(vm.entry.id, $event)">
+                        <i class="ion-star"></i> {{vm.entry.likes.length}}
+                        <span class="lbl">like{{vm.entry.likes.length != 1 ? 's' : ''}}</span>
+                    </div>
+                </div>
             </div>
 
             <div class="item-detail ">
-                <strong>Comments:</strong>
+                <div class="comments" ng-if="!!vm.entry.comments">
+                    <i class="ion ion-chatboxes"></i> {{vm.comments.length}}
+                    <span class="lbl">comments</span>
+                </div>
             </div>
 
-            <div class="item comment" ng-repeat="message in vm.comments">
+            <div class="item comment" ng-repeat="message in vm.comments" ng-init="console.log('Showing message: '+message);">
                 <a>{{message.sender.displayName}}</a> {{message.text}}
                 <div class="time-inline" ng-if="vm.entry.created">{{message.created | date:'mediumDate'}}</div>
             </div>

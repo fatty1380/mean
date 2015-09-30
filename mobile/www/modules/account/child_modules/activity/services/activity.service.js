@@ -27,7 +27,8 @@
             hasCoordinates: hasCoordinates,
             changeFeedSource: changeFeedSource,
             getFeedData: getFeedData,
-            loadMore: loadMore
+            loadMore: loadMore,
+            getAvatar: getAvatar
         };
         
         var vm = this;
@@ -62,6 +63,10 @@
                 loadingText: 'loading all feed.</br>Please Wait.'
             }
         }
+        
+        return service;
+        
+        /////////////////////////////////////////////////////////////////////////////////
 
         function changeFeedSource() {
             feedSource = (feedSource === 'activity') ? 'items' : 'activity';
@@ -372,6 +377,13 @@
                 template: text || 'no message'
             });
         };
-        return service;
+        
+        function getAvatar(feedItem) {
+            if (_.isEmpty(feedItem.user) || _.isString(feedItem.user)) {
+                return null;
+            }
+            
+            return userService.getAvatar(feedItem.user);
+        }
     }
 })();

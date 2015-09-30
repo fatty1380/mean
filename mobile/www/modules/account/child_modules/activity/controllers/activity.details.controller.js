@@ -22,6 +22,21 @@
         vm.likeActivity = likeActivity;
         vm.showInputs = showInputs;
         vm.createComment = createComment;
+        
+        return activate();
+        
+        /////////////////////////////////////////////////////////////
+        
+        function activate() {
+            if (_.isEmpty(vm.entry)) {
+                console.error('No Activity has been loaded into the Controller', parameters);
+                
+                return vm.close();
+            }
+            
+            vm.user = parameters.user || vm.entry.user;
+            vm.avatar = activityService.getAvatar(vm.entry);
+        }
 
         function initMap() {
             if (activityService.hasCoordinates(vm.entry)) {

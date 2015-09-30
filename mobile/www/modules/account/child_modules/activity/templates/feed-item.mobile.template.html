@@ -10,8 +10,8 @@
 			<div class="text">
 				<div class="holder">
 					<div class="activity-summary">
-						<a ng-if="!!vm.username || !!vm.entry.props.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
-							<strong>{{vm.username || vm.entry.props.handle}}</strong>
+						<a ng-if="!!vm.username" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+							<strong>{{vm.username}}</strong>
 						</a>
 					</div>
 					<div class="time" ng-if="vm.entry.created">
@@ -27,8 +27,9 @@
 		<strong class="title" ng-if="!!vm.title">{{ vm.title }}</strong>
 
 		<div class="clearfix props">
-			<div class="right notes" ng-if="!!vm.entry.notes">
+			<div class="left notes" ng-if="!!vm.entry.notes">
 				<i class="ion ion-document-text"></i>
+				<span class="lbl">notes</span>
 			</div>
 			<div class="right dist driven" ng-if="!!vm.entry.props.distance">
 				<i class="ico ico-milestraveledsmall"></i>

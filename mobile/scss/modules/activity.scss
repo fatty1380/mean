@@ -144,11 +144,14 @@
           padding-left: 4px;
         }
       }
+      
+      .title {
+        font-weight: 500;
+      }
 
-      .title{
+      .title, .notes-content {
         padding: 6px 0;
         display: block;
-        font-weight: bold;
         display: -webkit-box;
         margin-bottom: 0;
         overflow: hidden;
@@ -157,6 +160,17 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 10;
       }
+      
+      .notes-content {
+        border-width: 1px 0;
+        border-color: $stable;
+        border-style: solid;
+        border-collapse: collapse;
+      }
+      // .notes.active {
+      //   border-top: 1px solid purple;
+      //   border-collapse: collapse;
+      // }
     }
     
     .static-pic {
@@ -175,7 +189,7 @@
     padding:10px 15px;
     font-size: 14px;
 
-    span{
+    .val {
       float: right;
     }
   }
@@ -216,6 +230,9 @@
 
   /* details activity */
   .details-activity-pane {
+    .scroll, .item {
+    background-color: $light;
+    }
     .item {
       padding: 10px;
 
@@ -255,6 +272,10 @@
       vertical-align: middle;
     }
     
+    & > div {
+      height: 19px;
+    }
+    
     //padding: $item-padding/2 $item-padding;
     overflow: hidden;
     height: auto;
@@ -268,12 +289,13 @@
       padding-left: 4px;
     }
     
-    
-    .notes,
     .freight{
       padding-left: 14px;
     }
 
+
+  }
+  
     .notes i.ion{vertical-align: middle;}
 
     .dist, .time {
@@ -283,14 +305,17 @@
         content: 'MI';
         position: relative;
         bottom: 0;
+        padding-left: 2px;
       }
       
       .lbl, .dist.mi:after  {
         font-size: 0.7em;
         text-transform: uppercase;
-        padding-left: 2px;
       }
-  }
+      
+      .lbl {
+        padding-left: 0;
+      }
   
   .time, .time-inline {
       font-size: 0.8em;

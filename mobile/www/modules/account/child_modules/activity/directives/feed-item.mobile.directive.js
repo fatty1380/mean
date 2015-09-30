@@ -41,9 +41,7 @@
 				vm.username = vm.entry.company.name;
 				vm.title = vm.entry.title;
 			} else if (!!vm.entry.user) {
-				vm.username = vm.entry.user.handle || vm.entry.user.displayName;
-				vm.avatar = 'modules/users/img/profile/default.png' != vm.entry.user.profileImageURL ? vm.entry.user.profileImageURL : vm.entry.user.props.avatar;
-				vm.title = vm.entry.title;
+				vm.activate();
 			}
 		}
 	}
@@ -51,30 +49,39 @@
 	FeedItemCtrl.$inject = ['activityService', 'activityModalsService', '$state', '$ionicPopup', '$ionicLoading'];
 	function FeedItemCtrl(activityService, activityModalsService, $state, $ionicPopup, $ionicLoading) {
 		var vm = this;
-		
+
 		vm.stringify = function (obj) {
 			return JSON.stringify(obj, null, 2);
 		}
 
+		vm.activate = activate;
 		vm.likeActivity = likeActivity;
 		vm.showActivityDetailsModal = showDetailsModal;
 		vm.apply = apply;
+		
+		//////////////////////////////////////////////////////////////////
 
+		function activate() {
+			vm.user = vm.entry.user || {};
+			vm.avatar = activityService.getAvatar(vm.entry);
+			vm.username = vm.user.handle || vm.user.displayName;
+			vm.title = vm.entry.title;
+		}
         /**
          * @param {Number} id - feed id
          */
         function likeActivity(id, event) {
 			event.stopPropagation();
-			
+
             activityService.likeActivity(id)
 				.then(function (updatedLikes) {
-				
-				if (_.isArray(updatedLikes)) {
-					vm.entry.likes = updatedLikes;
-				}
-            }, function (resp) {
-                console.log(resp);
-            });
+
+					if (_.isArray(updatedLikes)) {
+						vm.entry.likes = updatedLikes;
+					}
+				}, function (resp) {
+					console.log(resp);
+				});
         }
 
 		function showDetailsModal(entry) {
