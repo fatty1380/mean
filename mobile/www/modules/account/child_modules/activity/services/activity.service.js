@@ -249,13 +249,24 @@
         }
 
         function likeActivity(id) {
+            var index = _.findIndex(feed, { id: id });
+            
             return $http.post(settings.feed + id + '/likes', null)
                 .then(function (response) {
-                    return response;
+                    var likes = response.data || [];
+                    
+                    if (index !== -1) {
+                        feed[index].likes = likes
+                    }
+                    return likes;
                 }, function (response) {
-                    console.log(response);
-                    showPopup(response.statusText, response.data.message);
-                    return response;
+                    
+                    if (response.status != 403) {
+                        console.error('Unable to like Post', response);
+                    }
+                    
+                    // Return the existing likes array (if present) or an empty array if not;
+                    return index !== -1 && feed[index].likes || [];
                 });
         }
 

@@ -287,6 +287,40 @@ textarea{
   }
 }
 
+.bar-footer.item-input-inset {
+    
+    height: auto;
+    min-height: 64px;
+    background-color: darken($stable, 10%);
+
+    .item-input-wrapper {
+      background: none;
+      //border-top: 1px solid #3eaeb1;
+
+      textarea {
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        width: 100%;
+        min-height: 45px!important;
+        font-size: 12px;
+        background-color: $light;
+        resize: none;
+        padding: 5px 20px 5px 5px;
+      }
+    }
+
+    .button-positive {
+      border: 0;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      border-radius: 0;
+      padding: 0 10px;
+      font-weight: bold;
+      margin-left: 0;
+    }
+  }
+
 
 .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) {
   height: 64px;

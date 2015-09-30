@@ -196,7 +196,7 @@
             }
 
             var notesPopup = $ionicPopup.show({
-                template: '<textarea ng-model="data.notes" style="height: 125px; font-size: 16px; line-height: 18px; color: #9b9b9b;" autofocus></textarea>',
+                template: '<textarea msd-elastic ng-model="data.notes" style="height: 125px; font-size: 16px; line-height: 18px; color: #9b9b9b;" autofocus></textarea>',
                 title: 'Enter notes about your drive',
                 scope: $scope,
                 buttons: [

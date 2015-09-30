@@ -1,4 +1,4 @@
-<ion-item class="card item" ng-show="!!vm.entry.id" ng-click='vm.showActivityDetailsModal(vm.entry)'>
+<ion-item class="card" ng-show="!!vm.entry.id" ng-click='vm.showActivityDetailsModal(vm.entry)'>
 
 	<div class="activity-item top">
 		<!--<div class="ico ico-avatarsmall"></div>-->
@@ -23,21 +23,19 @@
 
 		<p class="message">
 			<span class="title" ng-if="!!vm.title">{{ vm.title }} </span>
-			<span class="message" ng-if="!!vm.message">{{vm.entry.message}}</span>
 		</p>
 
-		<div class="clearfix props top-props">
-			<div class="right dist driven" ng-if="!vm.entry.props.distance">
-				<i class="ico ico-milestraveledsmall"></i>
-				<span>{{vm.entry.props.distance}}</span>
+		<div class="clearfix props">
+			<div class="right notes" ng-if="!!vm.entry.notes">
+				<i class="ion ion-document-text"></i>
 			</div>
-			<div class="right freight" ng-if="!vm.entry.freight">
+			<div class="right dist driven" ng-if="!!vm.entry.props.distance">
+				<i class="ico ico-milestraveledsmall"></i>
+				<span class="dist mi">{{vm.entry.props.distance}}</span>
+			</div>
+			<div class="right freight" ng-if="!!vm.entry.props.freight">
 				<i class="ico ico-freight"></i>
 				<span>{{vm.entry.props.freight}}</span>
-			</div>
-			<div class="right notes" ng-if="!vm.entry.notes">
-				<i class="ion ion-document-text"></i>
-				<span>Notes</span>
 			</div>
 		</div>
 	</div>
@@ -58,23 +56,29 @@
 	<div class="activity-item bottom">
 		<div class="clearfix props">
 
-			<div class="driven" ng-if="!!vm.activity.props.slMiles">
-				<i class="ico ion-android-checkmark-circle"></i>
-				<span class="dist mi">{{vm.activity.props.slMiles}}</span>
+			<div class="driven" ng-if="!!vm.entry.props.slMiles">
+				<i class="ion-checkmark"></i>
+				<span class="dist mi">{{vm.entry.props.slMiles}}</span>
 			</div>
-			<div class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity(vm.entry.id)">
+			<div class="likes" ng-if="!!vm.entry.likes" ng-click="vm.likeActivity(vm.entry.id, $event)">
 				<i class="ion-star"></i>
-				<span>{{vm.entry.likes.length}} like{{vm.entry.likes.length != 1 ? 's' : ''}}</span>
+				{{vm.entry.likes.length}}<span class="lbl">like{{vm.entry.likes.length != 1 ? 's' : ''}}</span>
 			</div>
 			<div class="comments" ng-if="!!vm.entry.comments">
 				<i class="ion ion-chatboxes"></i>
-				<span>{{vm.entry.comments.length}} comments</span>
+				{{vm.entry.comments.length}}<span class="lbl">comments</span>
 			</div>
 		</div>
 
 		<button ng-if="!!vm.isJob" class="button button-block button-calm" ng-click="$event.stopPropagation(); vm.apply(vm.entry)">
 			Apply!
 		</button>
+		
+		<!--<div class="clearfix">
+			<pre>
+				{{vm.stringify(vm.entry.props)}}
+			</pre>
+		</div>-->
 	</div>
 
 

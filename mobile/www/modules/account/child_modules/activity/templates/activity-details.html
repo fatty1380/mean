@@ -13,16 +13,15 @@
                 <div class="activity-item">
                     <div class="top">
                         <div class="panel">
-                            <a class="user-link" ng-click="$event.stopPropagation()"
-                               ui-sref="account.profile({userId: entry.user.id})">
+                            <a class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: entry.user.id})">
                                 <strong>{{vm.entry.user.displayName}}</strong>
                             </a>
                             <div class="time" ng-if="vm.entry.created"><i class="ico ico-timesmall"></i>{{vm.entry.created | date:'mediumDate'}}</div>
                         </div>
                         <div class="message">
                             {{ vm.entry.title }}
-                            <div ng-if="!!vm.entry.message" class="message">{{ vm.entry.message }}</div>
                         </div>
+                        <div class="notes" ng-if="!!vm.entry.notes" ng-bind="vm.entry.notes"></div>
                         <span ng-if="!!vm.entry.milesTraveled">
                         <i class="ico ico-milestraveledsmall"></i>
                         <strong class="title">{{ vm.entry.milesTraveled}}</strong>
@@ -51,7 +50,8 @@
             </div>
 
             <div class="item comment" ng-repeat="message in vm.comments">
-               <a>{{message.sender.displayName}}</a> {{message.text}} at {{message.created | date : 'short'}}
+                <a>{{message.sender.displayName}}</a> {{message.text}}
+                <div class="time-inline" ng-if="vm.entry.created"></i>{{message.created | date:'mediumDate'}}</div>
             </div>
         </ion-scroll>
     </ion-pane>
@@ -62,11 +62,12 @@
         </div>
     </ion-footer-bar>
 
-    <ion-footer-bar ng-if="vm.isInputVisible">
-        <label class="item-input-wrapper">
-            <textarea placeholder="message" ng-model="vm.message"></textarea>
+    <ion-footer-bar ng-if="vm.isInputVisible" class="bar bar-footer item-input-inset">
+        <label class="item-input-wrapper message-textarea">
+            <i class="ion ico-messagesiconblue"></i>
+            <textarea msd-elastic id="message-field" placeholder="&nbsp;Comment" ng-model="vm.message"></textarea>
         </label>
-        <button class="button button-positive" ng-click="vm.createComment()">Send</button>
+        <button class="button button-clear button-positive" ng-click="vm.createComment()">Send</button>
     </ion-footer-bar>
 
 </ion-modal-view>

@@ -51,6 +51,10 @@
 	FeedItemCtrl.$inject = ['activityService', 'activityModalsService', '$state', '$ionicPopup', '$ionicLoading'];
 	function FeedItemCtrl(activityService, activityModalsService, $state, $ionicPopup, $ionicLoading) {
 		var vm = this;
+		
+		vm.stringify = function (obj) {
+			return JSON.stringify(obj, null, 2);
+		}
 
 		vm.likeActivity = likeActivity;
 		vm.showActivityDetailsModal = showDetailsModal;
@@ -59,15 +63,15 @@
         /**
          * @param {Number} id - feed id
          */
-        function likeActivity(id) {
-            activityService.likeActivity(id).then(function (result) {
-                //update like in feed
-                for (var i = 0; i < vm.feed.length; i++) {
-                    if (vm.feed[i].id === id) {
-                        vm.feed[i].likes = result.data || [];
-                        break;
-                    }
-                }
+        function likeActivity(id, event) {
+			event.stopPropagation();
+			
+            activityService.likeActivity(id)
+				.then(function (updatedLikes) {
+				
+				if (_.isArray(updatedLikes)) {
+					vm.entry.likes = updatedLikes;
+				}
             }, function (resp) {
                 console.log(resp);
             });
