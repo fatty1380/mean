@@ -220,7 +220,6 @@
       padding: 10px;
 
       .top .props{
-        margin-bottom: -4px;
         border-width: 0;
       }
 
@@ -233,18 +232,19 @@
       }
     }
   }
-  
-  .bottom > .props {
-    border-bottom-width: 1px;
-  }
-        
+
   .top > .props {
     border-top-width: 1px;
+    padding-top: 6px;
+  }
+
+  .bottom > .props {
+    border-bottom-width: 1px;
+    padding-bottom: 6px;
   }
   
   .props {
     line-height: 18px;
-    padding: 4px 0;
     border-style: solid;
     border-color: $stable;
     font-size: 14px;
