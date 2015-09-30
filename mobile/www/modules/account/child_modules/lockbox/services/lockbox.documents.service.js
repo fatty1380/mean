@@ -152,7 +152,7 @@
        {
            id: '1234abcd5678efab9011212',
            sku: 'cdl',
-           name: 'Driver License',
+           name: 'Commercial Driver License',
            created: null,
            url: null,
            expires: null
