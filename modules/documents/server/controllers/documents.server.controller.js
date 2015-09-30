@@ -126,7 +126,8 @@ function update(req, res) {
 	document.save(function(err) {
 		if (err) {
 			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
+                message: errorHandler.getErrorMessage(err),
+                body: req.body
 			});
 		} else {
 			res.jsonp(document);
