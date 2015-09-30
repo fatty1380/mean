@@ -42,27 +42,27 @@
 
                 activityService.getPlaceName(latLng).then(
                     function (result) {
-                    var infoWindow = new google.maps.InfoWindow({
-                        content: result.formatted_address
+                        var infoWindow = new google.maps.InfoWindow({
+                            content: result.formatted_address
+                        });
+                        infoWindow.setContent(result.formatted_address);
+                        infoWindow.open(map, marker);
+                    }, function () {
+                        console.log('getPlaceName error');
                     });
-                    infoWindow.setContent(result.formatted_address);
-                    infoWindow.open(map, marker);
-                }, function () {
-                    console.log('getPlaceName error');
-                });
             }
         }
 
         function scrollToBottom() {
-            $timeout(function(){
+            $timeout(function () {
                 getDelegate('mainScroll').scrollBottom();
             }, 100);
         }
 
         //fix for scrollDelegate in modals
-        function getDelegate(name){
+        function getDelegate(name) {
             var instances = $ionicScrollDelegate.$getByHandle(name)._instances;
-            return instances.filter(function(element) {
+            return instances.filter(function (element) {
                 return (element['$$delegateHandle'] == name);
             })[0];
         }
@@ -77,8 +77,8 @@
 
             activityService.postComment(vm.entry.id, data).then(
                 function (result) {
-                    console.log('result ',result);
-                    if(result.data){
+                    console.log('result ', result);
+                    if (result.data) {
                         vm.comments = result.data;
                         scrollToBottom();
                     }
@@ -92,12 +92,13 @@
         }
 
         function likeActivity() {
-            activityService.likeActivity(vm.entry.id).then(function(result) {
-                //update like in feed
-                vm.entry.likes = result.data || [];
-            },function(resp) {
-                console.log(resp);
-            });
+            activityService.likeActivity(vm.entry.id)
+                .then(function (result) {
+                    //update like in feed
+                    vm.entry.likes = result || [];
+                }, function (resp) {
+                    console.log(resp);
+                });
         }
 
         function close() {

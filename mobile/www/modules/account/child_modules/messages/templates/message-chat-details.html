@@ -2,7 +2,7 @@
 
     <ion-header-bar align-title="center">
         <div class="buttons">
-            <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ng-click="vm.close()"></button>
+            <button class="button button-icon icon ion-ios-arrow-back" nav-direction="back" ng-click="vm.closeModal()"></button>
         </div>
         <h1 class="title" ng-click="vm.viewUser($event)">{{vm.recipientName}}</h1>
     </ion-header-bar>
@@ -28,11 +28,12 @@
         </ion-scroll>
     </ion-pane>
 
-    <ion-footer-bar class="bar bar-footer">
+    <ion-footer-bar class="bar bar-footer item-input-inset">
         <label class="item-input-wrapper message-textarea">
-            <textarea id="message-field" placeholder="Message" ng-model="vm.message"></textarea>
+            <i class="ion ico-messagesiconblue"></i>
+            <textarea msd-elastic id="message-field" placeholder="Message" ng-model="vm.message"></textarea>
         </label>
-        <button class="button button-positive" ng-click="vm.createMessage()">Send</button>
+        <button class="button button-clear button-positive" ng-click="vm.createMessage()">Send</button>
     </ion-footer-bar>
 
 </ion-modal-view>

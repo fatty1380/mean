@@ -35,16 +35,6 @@
                         templateUrl: 'modules/account/child_modules/profile/templates/profile.html',
                         controller: 'ProfileCtrl as vm',
                         resolve: {
-                            welcome: ['welcomeService', 'profileModalsService',
-                                function (welcomeService, profileModalsService) {
-                                    if (welcomeService.welcomeUser) {
-                                        profileModalsService
-                                            .showWelcomeModal()
-                                            .then(function () {
-                                                welcomeService.welcomeUser = false;
-                                            });
-                                    }
-                                }],
                             updates: ['updateService', function (updateService) {
                                 return updateService.getLastUpdates();
                             }]

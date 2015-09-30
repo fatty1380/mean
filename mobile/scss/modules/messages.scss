@@ -97,37 +97,3 @@
 
   }
 }
-
-/* messages modal details */
-.new-message-modal {
-
-  .bar-footer {
-
-    .item-input-wrapper {
-      background: none;
-      -webkit-border-radius: 0;
-      -moz-border-radius: 0;
-      border-radius: 0;
-      border-top: 1px solid #3eaeb1;
-
-      textarea {
-        width: 100%;
-        height: 45px;
-        font-size: 12px;
-        background-color: transparent;
-        resize: none;
-        padding: 5px 20px 5px 5px;
-      }
-    }
-
-    .button-positive {
-      border: 0;
-      -webkit-border-radius: 0;
-      -moz-border-radius: 0;
-      border-radius: 0;
-      padding: 0 40px;
-      font-weight: bold;
-      margin-left: 0;
-    }
-  }
-}

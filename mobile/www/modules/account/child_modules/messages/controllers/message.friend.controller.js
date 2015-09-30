@@ -2,7 +2,7 @@
     'use strict';
     
     /**
-     * Message Modal : createNewChatModal
+     * Message Modal : selectChatRecipient
      * Invoked to select a user from a list of user's friends.
      * @returns the selected friend
      */

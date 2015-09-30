@@ -7,9 +7,9 @@
 
     MessagesCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'friendsService', 'recipientChat'];
 
-    function MessagesCtrl ($rootScope, updates, updateService, $scope, messageService, messageModalsService, $ionicLoading, friendsService, recipientChat) {
+    function MessagesCtrl($rootScope, updates, updateService, $scope, messageService, messageModalsService, $ionicLoading, friendsService, recipientChat) {
 
-        var vm  = this;
+        var vm = this;
         vm.messages = [];
         vm.chats = [];
         vm.updates = updates || updateService.getLastUpdates();
@@ -25,49 +25,45 @@
         });
 
         $scope.$on('$ionicView.enter', function () {
-            //updateService.resetUpdates('messages');
-            debugger;
-
             if (!!recipientChat) {
                 showChatDetailsModal(recipientChat);
-            }else{
+            } else {
                 getChats();
             }
         });
 
-        function createNewChat () {
+        function createNewChat() {
             friendsService
                 .retrieveFriends()
-                .then(function (friends) {
-                    messageModalsService
-                        .createNewChatModal({friends:friends})
-                        .then(function (friend) {
-                            messageService.getChatByUserId(friend.id)
-                                .then(function (chat) {
-                                    showChatDetailsModal(chat, friend.id)
-                                });
-                        })
+                .then(function retrieveFriendsSuccess(friends) {
+                    return messageModalsService
+                        .selectChatRecipient({ friends: friends })
+                })
+                .then(function selectedChatRecipientSuccess(friend) {
+                    return messageService.getChatByUserId(friend.id);
+                })
+                .then(function getChatSuccess(chat) {
+                    showChatDetailsModal(chat)
                 });
         }
 
         function loadProfileAvatars() {
-            
+
         }
 
-        function showChatDetailsModal(chat, recip) {
-            debugger;
-            console.log('showChatDetailsModal() ',chat);
+        function showChatDetailsModal(chat) {
+            console.log('showChatDetailsModal() ', chat);
             messageModalsService
-                .showNewMessageModal({messages: chat, recipient: recip, })
-                .then(function () {
+                .showNewMessageModal(chat)
+                .then(function messageModalSuccess() {
                     getChats();
-                },
-                function (err) {
+                })
+                .catch(function messageModalFailure(err) {
                     console.log(err);
                 });
         }
 
-        function getChats () {
+        function getChats() {
             $ionicLoading.show({
                 template: 'loading chats'
             });

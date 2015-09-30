@@ -40,12 +40,25 @@
   .comment {
     margin: 0 10px;
     border-top: 1px solid #D2D2D2;
+    white-space: normal;
+    word-wrap: normal;
+    overflow: wrap;
+    border-color: $stable;
+    
+    &.item{
+      padding-top: 4px!important;
+      padding-bottom: 4px!important;
+    }
+    
+    
   }
 
-  .item{
+   
     //margin-bottom: 2px;
     //padding:$item-padding/2 $item-padding;
-    padding: 0;
+    .card {
+      padding: 0;
+    }
 
     > .ico{
       float: left;
@@ -76,13 +89,6 @@
           display: inline-block;
           overflow: hidden;
           vertical-align: middle;
-        }
-
-        .time{
-          position: absolute;
-          right: 0;
-          top: 50%;
-          margin-top: -7.5px;
         }
       }
 
@@ -128,18 +134,6 @@
           float: right;
           padding-left: 4px;
         }
-
-        .top-props{
-          line-height: 18px;
-          margin: 0 -16px;
-          padding: 8px 16px 0;
-          border-top: 1px solid #ddd;
-
-          .notes,
-          .freight{
-            padding-left: 14px;
-          }
-        }
       }
 
       .title{
@@ -173,7 +167,7 @@
       left: -$item-padding;
       //bottom: -$item-padding + (-4px);
     }
-  }
+  
 
   .item-detail {
     padding:10px 15px;
@@ -218,57 +212,7 @@
     }
     
       
-    .props {
-        padding: 5px 16px;
-        font-size: 14px;
-        
-        & > * {
-          display: inline-block;
-        }
-        
-        padding: $item-padding/2 $item-padding;
-        overflow: hidden;
-        height: auto;
-
-        .miles, .likes, .driven, .left {
-          float: left;
-          padding-right: 4px;
-        }
-        .comments, .time, .right {
-          float: right;
-          padding-left: 4px;
-        }
-
-        .dist, .time {
-          font-weight: 400;
-        }
-        
-        .driven {
-          .dist.mi:after {
-            content: 'MI';
-            position: relative;
-            bottom: 0;
-            left: 0.5px;
-          }
-          .lbl, .dist.mi:after  {
-            font-size: 0.6em;
-            text-transform: uppercase;
-          }
-        }
-      }
-      
-    // .driven{
-    //   padding: 5px 16px;
-    //   font-size: 14px;
-    //   font-weight: bold;
-    //   background-color: #E6E6E6;
-    //   color: #6D6D6C;
-
-    //   i, span{
-    //     display: inline-block;
-    //     vertical-align: middle;
-    //   }
-    // }
+    
   }
 
   /* details activity */
@@ -285,25 +229,82 @@
       }
     }
   }
-
-  .bar-footer {
-    .item-input-wrapper {
-      background: none;
-      textarea {
-        width: 100%;
-        height: 45px;
-        font-size: 12px;
-        background-color: transparent;
-        resize: none;
-        padding: 5px 20px 5px 5px;
-      }
-    }
-
-    .button-positive {
-      border: 0;
-      padding: 0 40px;
-    }
+  
+  .bottom > .props {
+    margin: -8px -16px 8px;
+    border-bottom-width: 1px;
   }
+        
+  .top > .props {
+    margin: 8px -16px -8px;
+    border-top-width: 1px;
+  }
+  
+  .props {
+    line-height: 18px;
+    padding: 4px 16px ;
+    border-style: solid;
+    border-color: $stable;
+    
+    
+    font-size: 14px;
+    
+    & > * {
+      display: inline-block;
+    }
+    
+    //padding: $item-padding/2 $item-padding;
+    overflow: hidden;
+    height: auto;
+  
+    .miles, .driven, .left {
+      float: left;
+      padding-right: 4px;
+    }
+    .comments, .likes, .time, .right {
+      float: right;
+      padding-left: 4px;
+    }
+    
+    
+      .notes,
+      .freight{
+        padding-left: 14px;
+      }
+  
+    .dist, .time {
+      font-weight: 400;
+    }
+      .dist.mi:after {
+        content: 'MI';
+        position: relative;
+        bottom: 0;
+      }
+      
+      .lbl, .dist.mi:after  {
+        font-size: 0.7em;
+        text-transform: uppercase;
+        padding-left: 2px;
+      }
+  }
+  
+  .time, .time-inline {
+      font-size: 0.8em;
+      text-transform: uppercase;
+    }
+  
+  .time{
+    background-color: $light;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -7.5px;
+  }
+  
+  .time-inline {
+    display: inline;
+  }
+    
 
 }
 

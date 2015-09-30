@@ -56,7 +56,7 @@
             if(navigator.geolocation) {
                 $ionicPlatform.ready(function() {
                     $ionicLoading.show({
-                        template: 'geocoding position',
+                        template: 'loading location',
                         duration: 10000
                     });
                     var posOptions = {timeout: 10000, enableHighAccuracy: false};
@@ -77,8 +77,8 @@
                         //show only 1 error message
                         if(vm.mapIsVisible) {
                             $ionicLoading.show({
-                                template: 'Geocoder failed </br>'+error.message ,
-                                duration: 4000
+                                template: 'Unable to locate' ,
+                                duration: 1000
                             });
                             vm.mapIsVisible = false;
                         }
@@ -171,7 +171,7 @@
             }
 
             $ionicLoading.show({
-                template: 'post feed'
+                template: '<ion-spinner/><br>Saving...'
             });
 
             activityService.postActivityToFeed(vm.activity).then(
@@ -196,7 +196,7 @@
             }
 
             var notesPopup = $ionicPopup.show({
-                template: '<textarea ng-model="data.notes" style="height: 125px; font-size: 16px; line-height: 18px; color: #9b9b9b;" autofocus></textarea>',
+                template: '<textarea msd-elastic ng-model="data.notes" style="height: 125px; font-size: 16px; line-height: 18px; color: #9b9b9b;" autofocus></textarea>',
                 title: 'Enter notes about your drive',
                 scope: $scope,
                 buttons: [

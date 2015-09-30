@@ -31,8 +31,8 @@
         
         function addDocs(docSku) {
             lockboxDocuments.addDocsPopup(docSku).then(
-                function success(docs) {
-                    vm.documents = docs;
+                function success(doc) {
+                    console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
                 }
             )
         }

@@ -9,7 +9,7 @@
 
     function ActivityWelcomeCtrl() {
         var vm = this;
-        vm.welcomeText = 'The feed page is where you can interact with other drivers and keep up to date on what they are doing';
+        vm.welcomeText = 'This is your Activity Feed where you can keep a personal log of your daily drive and see what your industry friends are up to when they post their daily log. Get started and Add your First Activity';
         vm.close = close;
 
         function close() {

@@ -43,11 +43,11 @@
                     <div class="activity-item bottom">
                         <div class="clearfix props">
                             <div class="driven" ng-if="!!vm.activity.props.slMiles">
-                                <i class="ico ico-milestraveledsmall"></i>
+                                <i class="ion-checkmark"></i>
                                 <span class="dist mi">{{vm.activity.props.slMiles}}</span>
                                 <span class="lbl"> since last post</span>
                             </div>
-                            <div class="time" ng-if="vm.activity.created">
+                            <div class="time-inline right" ng-if="vm.activity.created">
                                 <i class="ico ico-timesmall"></i> {{vm.activity.created | date:'shortTime'}}
                             </div>
                         </div>

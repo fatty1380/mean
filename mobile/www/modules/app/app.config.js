@@ -2,7 +2,7 @@
 
 var AppConfig = (function () {
     var appModuleName = 'truckerline',
-        appModuleDependencies = ['ionic', 'ui.router', 'ionic.rating',  'ngIOS9UIWebViewPatch'],
+        appModuleDependencies = ['ionic', 'ui.router', 'ionic.rating',  'ngIOS9UIWebViewPatch', 'monospaced.elastic'],
         registerModule = function (moduleName, dependencies) {
             // create angular module
             angular.module(moduleName, dependencies || []);

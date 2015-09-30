@@ -4,10 +4,56 @@
     angular
         .module('signup')
         .factory('registerService', registerService);
+    
+    angular.module(AppConfig.appModuleName)
+        .factory('API', serverConnectionService);
+        
+    function serverConnectionService($http) {
+        var service = {
+            serialize: serializeData,
+            doRequest: doApiRequest
+        };
+        
+        return service;
+        
+        //////////////////////////////////////////////////////
+        
+        function doApiRequest(apiUrl, method, data, needSerialize) {
+            $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+            return $http ({
+                url: apiUrl,
+                method: method,
+                data: !needSerialize ? serializeData(data) : data
+            })
+        }
 
-    registerService.$inject = ['$http', 'settings'];
+        function serializeData( data ) {
+            if ( ! angular.isObject( data ) ) {
+                return( ( data == null ) ? '' : data.toString() );
+            }
+            var buffer = [];
+            for ( var name in data ) {
+                if ( ! data.hasOwnProperty( name ) ) {
+                    continue;
+                }
+                var value = data[ name ];
+                buffer.push(
+                    encodeURIComponent( name ) +
+                    '=' +
+                    encodeURIComponent( ( value == null ) ? '' : value )
+                );
+            }
+            var source = buffer
+                    .join( '&' )
+                    .replace( /%20/g, '+' )
+                ;
+            return( source );
+        }
+    }
 
-    function registerService ($http, settings) {
+
+    registerService.$inject = ['$http', 'settings', 'API'];
+    function registerService ($http, settings, API) {
 
         var data = {
             dataProps:{
@@ -33,19 +79,19 @@
 
         function registerUser (data) {
             if (!data) return;
-            return requestApi(settings.signup , 'post', data)
+            return API.doRequest(settings.signup , 'post', data)
                 .then(handleSuccess, handleError);
         }
 
         function updateUser (data) {
             if (!data) return;
-            return requestApi(settings.users , 'put', data, true)
+            return API.doRequest(settings.users , 'put', data, true)
                 .then(handleSuccess, handleError);
         }
 
         function updateUserProps (data) {
             if (!data) return;
-            return requestApi(settings.usersProps, 'put', data, true)
+            return API.doRequest(settings.usersProps, 'put', data, true)
                 .then(handleSuccess, handleError);
         }
 
@@ -62,37 +108,28 @@
             data.grant_type = signinData.grant_type;
             data.client_id = signinData.client_id;
             data.client_secret = signinData.client_secret;
-            return requestApi(settings.token, 'post', data )
+            return API.doRequest(settings.token, 'post', data )
                 .then(handleSuccess, handleError);
         }
 
         function signOut() {
-            return  requestApi(settings.signout , 'get' )
+            return  API.doRequest(settings.signout , 'get' )
                 .then(handleSuccess, handleError);
         }
 
         function me() {
-            return  requestApi(settings.usersProfile, 'get' )
+            return  API.doRequest(settings.usersProfile, 'get' )
                 .then(handleSuccess, handleError);
         }
 
         function getProfiles() {
-            return  requestApi(settings.profiles , 'get' )
+            return  API.doRequest(settings.profiles , 'get' )
                 .then(handleSuccess, handleError);
         }
 
         function getProfileById(profileId) {
-            return  requestApi(settings.profiles + profileId , 'get' )
+            return  API.doRequest(settings.profiles + profileId , 'get' )
                 .then(handleSuccess, handleError);
-        }
-
-        function requestApi(apiUrl, method, data, needSerialize) {
-            $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-            return $http ({
-                url: apiUrl,
-                method: method,
-                data: !needSerialize ? serializeData(data) : data
-            })
         }
 
         function getDataProps() {
@@ -115,29 +152,6 @@
         function handleError(response) {
             console.log('handleError  ',response);
             return { success: false, message: response, title: response.statusText  };
-        }
-
-        function serializeData( data ) {
-            if ( ! angular.isObject( data ) ) {
-                return( ( data == null ) ? '' : data.toString() );
-            }
-            var buffer = [];
-            for ( var name in data ) {
-                if ( ! data.hasOwnProperty( name ) ) {
-                    continue;
-                }
-                var value = data[ name ];
-                buffer.push(
-                    encodeURIComponent( name ) +
-                    '=' +
-                    encodeURIComponent( ( value == null ) ? '' : value )
-                );
-            }
-            var source = buffer
-                    .join( '&' )
-                    .replace( /%20/g, '+' )
-                ;
-            return( source );
         }
     }
 })();
