@@ -18,6 +18,9 @@
             // disable debug info
             $compileProvider.debugInfoEnabled(AppConfig.debug);
         }])
+        .config(['msdElasticConfig', function (config) {
+            config.append = '\n';
+        }])
 
         .run(function ($ionicPlatform) {
             $ionicPlatform.ready(function () {

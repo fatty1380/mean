@@ -6,7 +6,8 @@
     "ionic": "~1.1.0",
     "ionic-rating": "~0.1.0",
     "ngCordova": "~0.1.20-alpha",
-    "pdfjs-dist": "~1.1.343"
+    "pdfjs-dist": "~1.1.343",
+    "angular-elastic": "~2.5.0"
   },
   "resolutions": {
     "angular": "1.4.3"
