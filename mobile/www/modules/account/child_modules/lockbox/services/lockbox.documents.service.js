@@ -111,7 +111,7 @@
         
         function updateDocument(doc, data) {
             _.extend(doc, data);
-            return API.doRequest(settings.documents + doc.id, 'put', data, true);         
+            return API.doRequest(settings.documents + doc.id, 'put', data, true);
         }
 
         function takePicture(sku) {
@@ -140,7 +140,6 @@
                         duration: 1000
                     })
 
-                    debugger;
                     return newDocumentResponse.data;
                 })
                 .catch(function reject(err) {
