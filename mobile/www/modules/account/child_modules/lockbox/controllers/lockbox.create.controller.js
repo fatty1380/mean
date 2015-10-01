@@ -44,9 +44,13 @@
             });
         }
 
-        function setDocumentName () {
-            if(vm.document.sku !== 'other') return;
-
+        function setDocumentName (newVal, oldVal) {
+            if (vm.document.sku !== 'other') {
+                if (vm.document.sku !== 'misc') {
+                    vm.document.name = null;
+                }
+                return;
+            }
             $scope.data = {};
 
             var namePopup = $ionicPopup.show({
@@ -73,6 +77,8 @@
                 if(res){
                     vm.document.name = res;
                     vm.document.sku = 'misc'
+                } else {
+                    vm.document.sku = oldVal;
                 }
             });
         }

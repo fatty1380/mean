@@ -7,6 +7,8 @@
     cameraService.$inject = ['$q', '$ionicActionSheet'];
 
     function cameraService($q, $ionicActionSheet) {
+        
+        var Camera = Camera || { PictureSourceType : { CAMERA : 0, PHOTOS: 1 }}
 
         return {
             showActionSheet: showActionSheet
