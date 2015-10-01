@@ -13,25 +13,29 @@
             PHOTOS: 0
         }
 
-        var defaults = {
-            quality: 60,
-            destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: source,
-            allowEdit: false,
-            encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 512,
-            targetHeight: 1024,
-            correctOrientation: true,
-            popoverOptions: CameraPopoverOptions,
-            saveToPhotoAlbum: false,
-            mediaType: 0
-        };
+
 
         return {
             showActionSheet: showActionSheet
         }
         
         //////////////////////////////////////////////////////////
+        
+        function getDefaults() {
+            return {
+                quality: 60,
+                destinationType: Camera.DestinationType.DATA_URL,
+                sourceType: source,
+                allowEdit: false,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 512,
+                targetHeight: 1024,
+                correctOrientation: true,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false,
+                mediaType: 0
+            };
+        }
 
         function getPicture(source, options) {
             var q = $q.defer();
@@ -41,25 +45,25 @@
                 return q.promise;
             }
 
-            options = _.defaults(options, defaults);
+            options = _.defaults(options, getDefaults());
 
             navigator.camera.getPicture(onSuccess, onFail, options);
-            
+
             function onSuccess(getPictureResult) {
                 q.resolve(getPictureResult);
             }
-            
+
             function onFail(getPictureError) {
                 q.reject(getPictureError);
             }
-            
+
             return q.promise;
         }
 
         function showActionSheet(options) {
             var deferred = $q.defer();
             options = options || {};
-            
+
             $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take a photo from camera' },

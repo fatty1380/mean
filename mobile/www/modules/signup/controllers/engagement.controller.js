@@ -44,7 +44,7 @@
 
 
         vm.createStartedDateObject = function (started) {
-            if (!started) return '';
+            if (!started) return null;
             var startedArray = started.split('-');
 
             return new Date(startedArray[0], startedArray[1]);
@@ -61,7 +61,7 @@
         vm.showEditAvatar = function (parameters) {
             vm.camera.showActionSheet({cameraDirection: 1})
                 .then(function success(rawImageResponse) {
-                    return avatarService.showCropModal({ rawImage: rawImageResponse, imgSize: 100 });
+                    return avatarService.showCropModal({ rawImage: rawImageResponse, imgSize: 512 });
                 })
                 .then(function success(newImageResponse) {
                     vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
@@ -72,12 +72,17 @@
         };
 
         function continueToLicense() {
-            if(vm.owner !== null) registerService.setProps('owner', vm.owner);
+            // Set Owner/Operator Status if set
+            if (vm.owner !== null) registerService.setProps('owner', vm.owner);
+
+            // Set standard Properties
             registerService.setProps('started', vm.createStartedDateObject(vm.started));
             registerService.setProps('avatar', avatarService.getImage());
             registerService.setProps('company', '');
             registerService.setProps('freight', '');
             registerService.setProps('truck', '');
+            
+            // Set the handle - this is so confusing :/
             registerService.setDataProps('handle', vm.handle);
 
             $state.go('signup-license');
