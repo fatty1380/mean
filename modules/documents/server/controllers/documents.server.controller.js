@@ -157,7 +157,11 @@ function deleteReport(req, res) {
 /**
  * List of Documents
  */
-function list(req, res) { LBDocument.find().sort('-created').populate('user', 'displayName').exec(function(err, documents) {
+function list(req, res) {
+    LBDocument.find({user: req.user._id})
+        .sort('-created')
+        .populate('user', 'displayName')
+        .exec(function (err, documents) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
