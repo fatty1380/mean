@@ -18,14 +18,18 @@
                             <option value="cdl">CDL</option>
                             <option value="ins">Insurance</option>
                             <option value="reg">Registration</option>
-                            <option value="misc">other ...</option>
+                            <option ng-show="!!vm.document.name" value="misc">{{vm.document.name}}</option>
+                            <option value="other">other ...</option>
                         </select>
                     </label>
 
-                    <label class="item item-input item-floating-label" ng-show="vm.document.sku === 'misc'">
-                        <span class="input-label">Title:</span>
-                        <input type="text" ng-model="vm.document.name" placeholder="Document Name">
-                    </label>
+                    <div class="item item-input-inset" ng-show="vm.document.sku === 'other'">
+                        <label for="" class="item-input-wrapper">
+                            <input type="text" ng-model="vm.document.name" placeholder="Document Name">
+                        </label>
+                        <a class="button button-icon icon ion-checkmark" ng-click="vm.document.sku = 'misc'"></a>
+                    </div>
+                    
                     <p style="text-align: center">
                         <img ng-src="{{vm.trustedSrc}}" />
                     </p>
@@ -54,7 +58,7 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-disabled="!(!!vm.document.sku || (vm.document.sku=='MISC' && !!vm.document.name))" 
+            <button class="button primary" ng-disabled="vm.document.sku == 'other' || !(!!vm.document.sku || (vm.document.sku=='misc' && !!vm.document.name))" 
             ng-click="vm.saveDocument()"><i classs="icon ion-lock"></i>Store Document</button>
         </div>
     </ion-footer-bar>
