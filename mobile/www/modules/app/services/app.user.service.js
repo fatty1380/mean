@@ -73,8 +73,13 @@
         function updateUserProps(dataProps) {
             return registerService.updateUserProps(dataProps)
                 .then(function (data) {
-                    vm.profileData.props = data.message.data;
-                    return vm.profileData.props;
+                    if (data.success) {
+                        _.extend(vm.profileData.props, data.message.data)
+                        return vm.profileData.props;
+                    }
+                    else {
+                        return null;
+                    }
                 });
         }
     }
