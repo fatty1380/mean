@@ -8,13 +8,6 @@
 
     function cameraService($q, $ionicActionSheet) {
 
-        var source = {
-            CAMERA: 1,
-            PHOTOS: 0
-        }
-
-
-
         return {
             showActionSheet: showActionSheet
         }
@@ -25,7 +18,7 @@
             return {
                 quality: 60,
                 destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: source,
+                sourceType: Camera.PictureSourceType.CAMERA,
                 allowEdit: false,
                 encodingType: Camera.EncodingType.JPEG,
                 targetWidth: 512,
@@ -37,7 +30,7 @@
             };
         }
 
-        function getPicture(source, options) {
+        function getPicture(photoSource, options) {
             var q = $q.defer();
             if (!navigator.camera) {
                 console.log("******* Not a device. Using fake image *********");
@@ -45,7 +38,7 @@
                 return q.promise;
             }
 
-            options = _.defaults(options, getDefaults());
+            options = _.defaults({ sourceType: photoSource }, options, getDefaults());
 
             navigator.camera.getPicture(onSuccess, onFail, options);
 
@@ -61,9 +54,13 @@
         }
 
         function showActionSheet(options) {
-            var deferred = $q.defer();
             options = options || {};
 
+            if (_.isObject(options.sourceType)) {
+                return getPicture(options.sourceType, options)
+            }
+
+            var deferred = $q.defer();
             $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take a photo from camera' },
@@ -78,16 +75,17 @@
                     switch (index) {
                         case 0:
                             console.log("Take a photo");
-                            deferred.resolve(getPicture(source.CAMERA, options));
+                            deferred.resolve(getPicture(Camera.PictureSourceType.CAMERA, options));
                             break;
                         case 1:
                             console.log("Take photo from album");
-                            deferred.resolve(getPicture(source.PHOTOS, options));
+                            deferred.resolve(getPicture(Camera.PictureSourceType.PHOTOS, options));
                             break;
                     }
                     return true;
                 }
             });
+
             return deferred.promise;
         }
     }
