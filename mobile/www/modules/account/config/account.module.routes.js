@@ -102,6 +102,11 @@
                         templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
                         controller: 'LockboxCtrl as vm'
                     }
+                },
+                resolve: {
+                    documents: ['lockboxDocuments', function (lockboxDocuments) {
+                        return lockboxDocuments.getDocuments();
+                    }]
                 }
             })
 

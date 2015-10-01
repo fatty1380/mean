@@ -17,17 +17,22 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
+    lockboxDocuments.$inject = ['$rootScope', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments($ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModals) {
+    function lockboxDocuments($rootScope, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModals) {
 
         var vm = this;
 
         vm.documents = [];
 
-        stubDocuments.forEach(function (doc) {
-            addDocument(doc);
-        })
+        //stubDocuments.forEach(function (doc) {
+        //    addDocument(doc);
+        //});
+
+        $rootScope.$watch('vm.documents', function (data) {
+            console.warn('changed vm.documents --->>>', vm.documents);
+            console.warn(' data --->>>', data);
+        });
 
         function getId(e) { return e.id || e._id; }
 
@@ -48,7 +53,7 @@
                 })
                 .finally(function () {
                     return vm.documents;
-                });;
+                });
         }
 
         function addDocument(doc) {

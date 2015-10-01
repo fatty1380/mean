@@ -5,13 +5,13 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$rootScope', 'lockboxDocuments', 'lockboxModalsService'];
+    LockboxCtrl.$inject = ['$rootScope', 'documents', 'lockboxDocuments', 'lockboxModalsService'];
 
-    function LockboxCtrl( $scope, $rootScope, lockboxDocuments,  lockboxModalsService) {
+    function LockboxCtrl($rootScope, documents, lockboxDocuments,  lockboxModalsService) {
         var vm = this;
 
         vm.currentDoc = null;
-        vm.documents = [];
+        vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
 
         vm.addDocsPopup = addDocs;
         vm.showEditModal = showEditModal;
@@ -23,31 +23,13 @@
             vm.documents = [];
         });
 
-        $scope.$on('$ionicView.enter', function () {
-            getDocs();
-        });
-        
         /// Implementation
-        
         function addDocs(docSku) {
             lockboxDocuments.addDocsPopup(docSku).then(
                 function success(doc) {
                     console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
                 }
             )
-        }
-
-        function getDocs() {
-            lockboxDocuments.getDocuments()
-                .then(
-                    function (response) {
-                        console.log('Documents List', response);
-                        vm.documents = response instanceof Array && response.length ? response : [];
-                    },
-                    function (response) {
-                        console.log('Documents !!!', response);
-                        vm.documents = [];
-                    });
         }
 
         function showEditModal(parameters) {
@@ -59,7 +41,7 @@
                     function (err) {
                         console.log(err);
                     })
-        };
+        }
 
         function showShareModal(parameters) {
             lockboxModalsService.showShareModal(parameters)

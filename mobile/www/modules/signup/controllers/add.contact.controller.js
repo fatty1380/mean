@@ -25,7 +25,7 @@
                     }
                 }, function (err) {
                     $state.go('account.profile');
-                });
+                }));
         }
 
         function sendInvitations() {
@@ -81,19 +81,19 @@
                         console.log('friends are not invited');
                     }
                 })
-                    .then(function (sentRequests) {
-                        console.log('Sent ' + sentRequests.length + ' requests');
-                        registerService.updateUser(registerService.userData
-                            .then(function (response) {
-                                if (response.success) {
-                                    $state.go('account.profile');
-                                }
-                            });
-                    })
-                    .catch(function (err) {
-                        console.error('Unable to invite friends:', err);
-                        $state.go('account.profile');
-                    });
+                .then(function (sentRequests) {
+                    console.log('Sent ' + sentRequests.length + ' requests');
+                    registerService.updateUser(registerService.userData
+                        .then(function (response) {
+                            if (response.success) {
+                                $state.go('account.profile');
+                            }
+                        }));
+                })
+                .catch(function (err) {
+                    console.error('Unable to invite friends:', err);
+                    $state.go('account.profile');
+                });
             }
         }
 
