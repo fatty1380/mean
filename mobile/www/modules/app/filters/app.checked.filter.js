@@ -16,11 +16,11 @@
 
                 if(item.$$hashKey) delete item.$$hashKey;
 
-                if (item.checked && (!params || params.clearChecked)){
-                    if(item.checked) delete item.checked;
+                if (item.checked){
+                    if(!params || params.clearChecked) delete item.checked;
+                    filteredItems.push(item);
                 }
 
-                filteredItems.push(item);
             }
 
             return filteredItems;

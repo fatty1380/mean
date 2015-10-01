@@ -514,6 +514,9 @@ $but-height: 70px;
         &.active{
           color: #fff;
           background: #0a2421;
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none;
         }
       }
     }

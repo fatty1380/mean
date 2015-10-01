@@ -29,8 +29,16 @@
         }
 
         function sendInvitations() {
-            var filter = $filter('getChecked')
-            var selectedContacts = filter(vm.contacts, {clearChecked: false});
+            var filter = $filter('getChecked'),
+                selectedContacts = filter(vm.contacts, {clearChecked: false});
+
+            if(!selectedContacts.length){
+                $ionicPopup.alert({
+                    title: 'Please, select contacts',
+                    template: 'You have to select contacts you want to invite.'
+                });
+                return;
+            }
 
             var names = [];
 
@@ -47,7 +55,6 @@
             if (selectedContacts.length) {
                 confirm.then(function (res) {
                     if (res) {
-
                         // TODO: COMBINE w/ profile.add.friends.controller
                         //return friendsService.sendRequests(selectedContacts);
 
