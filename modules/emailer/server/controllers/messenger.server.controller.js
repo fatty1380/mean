@@ -34,7 +34,7 @@ function sendMessageRequest(messageConfig) {
     
     if (!!sender) {
         body = (messageConfig.message || messageConfig.template || messageTemplate);
-        body.replace('${username}', sender);
+        body = body.replace('${username}', sender);
     } else {
         log.warn({ func: 'sendMessageRequest', err: 'No Sender Specified', config: messageConfig }, 'Must specify a sender when sending a message request');
     }
