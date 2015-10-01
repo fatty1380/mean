@@ -18,7 +18,7 @@
                     </label>
                     <div class="item-content">
                         <strong>{{doc.name}}</strong>
-                        <span>{{doc.created}}</span>
+                        <span>{{doc.created | date : 'MMMM d, y' }}</span>
                     </div>
                     <button class="button button-small" ng-click="vm.rename($index)">Rename</button>
                 </li>
