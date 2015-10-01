@@ -73,17 +73,18 @@
 
         function continueToLicense() {
             // Set Owner/Operator Status if set
-            if (vm.owner !== null) registerService.setProps('owner', vm.owner);
+            if (vm.owner !== null) {
+                registerService.userProps.owner = vm.owner;
+            }
 
             // Set standard Properties
-            registerService.setProps('started', vm.createStartedDateObject(vm.started));
-            registerService.setProps('avatar', avatarService.getImage());
-            registerService.setProps('company', '');
-            registerService.setProps('freight', '');
-            registerService.setProps('truck', '');
+            registerService.userProps.started = vm.createStartedDateObject(vm.started);
+            registerService.userProps.avatar = avatarService.getImage();
+            registerService.userProps.company = '';
+            registerService.userProps.freight = '';
+            registerService.userProps.truck = '';
             
-            // Set the handle - this is so confusing :/
-            registerService.setDataProps('handle', vm.handle);
+            registerService.userData.handle = vm.handle;
 
             $state.go('signup-license');
         }

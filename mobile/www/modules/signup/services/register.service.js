@@ -4,17 +4,18 @@
     angular
         .module('signup')
         .factory('registerService', registerService);
-    
-    registerService.$inject = ['$http', 'settings', 'API'];
-    function registerService ($http, settings, API) {
 
-        var data = {
-            dataProps:{
-                props: {
-                }
-            }
+    registerService.$inject = ['$http', 'settings', 'API'];
+    function registerService($http, settings, API) {
+
+        var _userData = {
+            props: {}
         }
 
+        /**
+         * These 8 methods all make calls to the server
+         * and return filtered promises (success=true|false}
+         */
         var service = {
             registerUser: registerUser,
             signIn: signIn,
@@ -24,31 +25,53 @@
             updateUserProps: updateUserProps,
             getProfiles: getProfiles,
             getProfileById: getProfileById,
-            getDataProps: getDataProps,
-            setDataProps: setDataProps,
-            setProps: setProps
+            reset: function reset() { _userData = { props: {} }; }
         };
+        
+        /**
+         * the following object properties make the current user
+         * (while being registerd), available to the varous controllers.
+         * 
+         */
+        Object.defineProperty(service, 'userProps',
+            {
+                isEnumerable: true,
+                get: function () {
+                    return _userData.props;
+                }
+            });
+        
+        Object.defineProperty(service, 'userData',
+            {
+                isEnumerable: true,
+                get: function () {
+                    return _userData;
+                }
+            });
+        
         return service;
+        
+        ////////////////////////////////////////////////////////////////
 
-        function registerUser (data) {
+        function registerUser(data) {
             if (!data) return;
-            return API.doRequest(settings.signup , 'post', data)
+            return API.doRequest(settings.signup, 'post', data)
                 .then(handleSuccess, handleError);
         }
 
-        function updateUser (data) {
+        function updateUser(data) {
             if (!data) return;
-            return API.doRequest(settings.users , 'put', data, true)
+            return API.doRequest(settings.users, 'put', data, true)
                 .then(handleSuccess, handleError);
         }
 
-        function updateUserProps (data) {
+        function updateUserProps(data) {
             if (!data) return;
             return API.doRequest(settings.usersProps, 'put', data, true)
                 .then(handleSuccess, handleError);
         }
 
-        function signIn (data) {
+        function signIn(data) {
             if (!data) return;
 
             var signinData = {
@@ -61,50 +84,40 @@
             data.grant_type = signinData.grant_type;
             data.client_id = signinData.client_id;
             data.client_secret = signinData.client_secret;
-            return API.doRequest(settings.token, 'post', data )
+            return API.doRequest(settings.token, 'post', data)
                 .then(handleSuccess, handleError);
         }
 
         function signOut() {
-            return  API.doRequest(settings.signout , 'get' )
+            return API.doRequest(settings.signout, 'get')
                 .then(handleSuccess, handleError);
         }
 
         function me() {
-            return  API.doRequest(settings.usersProfile, 'get' )
+            return API.doRequest(settings.usersProfile, 'get')
                 .then(handleSuccess, handleError);
         }
 
         function getProfiles() {
-            return  API.doRequest(settings.profiles , 'get' )
+            return API.doRequest(settings.profiles, 'get')
                 .then(handleSuccess, handleError);
         }
 
         function getProfileById(profileId) {
-            return  API.doRequest(settings.profiles + profileId , 'get' )
+            return API.doRequest(settings.profiles + profileId, 'get')
                 .then(handleSuccess, handleError);
         }
-
-        function getDataProps() {
-            return data.dataProps;
-        }
-
-        function setDataProps(key, value) {
-            data.dataProps[key] = value;
-        }
-
-        function setProps(key, value) {
-            data.dataProps.props[key] = value;
-        }
+        
+        ////////////////////////////////////////////////////////////////
 
         function handleSuccess(response) {
-            console.log('handleSuccess  ',response);
+            console.log('handleSuccess ', response);
             return { success: true, message: response };
         }
 
         function handleError(response) {
-            console.log('handleError  ',response);
-            return { success: false, message: response, title: response.statusText  };
+            console.error('handleError: ', response);
+            return { success: false, message: response, title: response.statusText };
         }
     }
 })();

@@ -16,25 +16,27 @@
         vm.cancel = cancel;
         vm.save = save;
         vm.addTruck = addTruck;
+        
+        //////////////////////////////////////////////////////////////
 
-        function cancel (truck) {
-            $scope.closeModal(truck);
+        function cancel() {
+            vm.closeModal();
         }
 
-        function getTrucks () {
+        function getTrucks() {
             var trucks = parameters.trucks,
                 props = userService.profileData && userService.profileData.props,
                 selectedTruck = props && props.truck || '',
                 names;
 
-            if(!selectedTruck) return trucks;
+            if (!selectedTruck) return trucks;
 
             names = trucks.map(function (truck) {
                 return truck.name;
             });
 
-            if(names.indexOf(selectedTruck) < 0){
-                trucks.push({name: selectedTruck, logoClass: ''});
+            if (names.indexOf(selectedTruck) < 0) {
+                trucks.push({ name: selectedTruck, logoClass: '' });
             }
 
             vm.currentTruck = selectedTruck;
@@ -42,18 +44,23 @@
             return trucks;
         }
 
-        function addTruck () {
+        function addTruck() {
             truckService.addTruck().then(function (response) {
                 vm.trucks.push(response);
                 vm.currentTruck = response.name;
             });
         }
 
-        function save () {
-            registerService.setProps('truck', vm.currentTruck);
-            registerService.updateUser(registerService.getDataProps());
+        function save() {
 
-            cancel(vm.currentTruck);
+            return registerService.updateUserProps({ truck: vm.currentTruck })
+                .then(function (updateResult) {
+                    if (updateResult.success) {
+                        registerService.userProps.truck = vm.currentTruck;
+                        return vm.closeModal(vm.currentTruck)
+                    }
+                    return vm.closeModal(null);
+                });
         }
     }
 

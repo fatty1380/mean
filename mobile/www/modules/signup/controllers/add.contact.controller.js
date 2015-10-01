@@ -18,7 +18,7 @@
         vm.skipToProfile = skipToProfile;
 
         function skipToProfile() {
-            registerService.updateUser(registerService.getDataProps())
+            registerService.updateUser(registerService.userData
                 .then(function (response) {
                     if (response.success) {
                         $state.go('account.profile');
@@ -83,7 +83,7 @@
                 })
                     .then(function (sentRequests) {
                         console.log('Sent ' + sentRequests.length + ' requests');
-                        registerService.updateUser(registerService.getDataProps())
+                        registerService.updateUser(registerService.userData
                             .then(function (response) {
                                 if (response.success) {
                                     $state.go('account.profile');

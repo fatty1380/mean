@@ -44,7 +44,9 @@
                     profileModalsService
                         .showProfileEditTrailersModal({trailers: trailers})
                         .then(function (trailers) {
-                            vm.updateTrailers(trailers);
+                            if (!_.isUndefined(trailers)) {
+                                vm.updateTrailers(trailers);
+                            }
                         });
                 });
         }
@@ -55,8 +57,10 @@
                 .then(function (trucks) {
                     profileModalsService
                         .showProfileEditTrucksModal({trucks: trucks})
-                        .then(function (trucks) {
-                            vm.updateTrucks(trucks);
+                        .then(function (truck) {
+                            if (!_.isUndefined(truck)) {
+                                vm.updateTrucks(truck);
+                            }
                         });
                 });
         }

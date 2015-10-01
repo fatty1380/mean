@@ -30,7 +30,7 @@
         }
 
         function skipToProfile() {
-            registerService.updateUser(registerService.getDataProps())
+            registerService.updateUser(registerService.userData)
                 .then(function (response) {
                     if(response.success) {
                         $state.go('account.profile');

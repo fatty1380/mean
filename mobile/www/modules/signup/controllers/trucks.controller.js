@@ -57,7 +57,7 @@
 
         function continueToTrailers(isSave) {
             if (isSave) {
-                registerService.setProps('truck', vm.currentTruck);
+                registerService.userProps.truck = vm.currentTruck;
             }
             $state.go('signup-trailers');
         }

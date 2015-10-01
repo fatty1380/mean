@@ -64,16 +64,16 @@
         }
 
         function continueToAddFriends() {
-            registerService.setProps('trailer', getNameKeys(vm.trailers));
+            registerService.userProps.trailer = getNameKeys(vm.trailers);
             $state.go('signup-friends');
         }
 
         function continueToProfile(isSave) {
             if(isSave){
-                registerService.setProps('trailer', getNameKeys(vm.trailers));
+                registerService.userProps.trailer = getNameKeys(vm.trailers);
             }
 
-           registerService.updateUser(registerService.getDataProps())
+           registerService.updateUser(registerService.userData)
            .then(function (response) {
                 $ionicLoading.hide();
                 if(response.success) {

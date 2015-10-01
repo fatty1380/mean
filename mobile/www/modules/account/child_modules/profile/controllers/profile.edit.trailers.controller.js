@@ -17,13 +17,13 @@
         vm.save = save;
         vm.addTrailer = trailerService.addTrailer;
 
-        function getTrailers () {
+        function getTrailers() {
             var trailers = parameters.trailers,
                 props = userService.profileData && userService.profileData.props,
                 selectedTrailers = props && props.trailer || [],
                 trailerNames;
 
-            if(!selectedTrailers.length) return trailers;
+            if (!selectedTrailers.length) return trailers;
 
             trailerNames = trailers.map(function (trailer) {
                 return trailer.name;
@@ -31,14 +31,14 @@
 
             for (var i = 0; i < selectedTrailers.length; i++) {
                 var trailer = selectedTrailers[i],
-                    trailerExists =  trailerNames.indexOf(trailer) >= 0;
+                    trailerExists = trailerNames.indexOf(trailer) >= 0;
 
-                if(!trailerExists){
-                    trailers.push({name: trailer, checked: true});
+                if (!trailerExists) {
+                    trailers.push({ name: trailer, checked: true });
                 } else {
                     for (var j = 0; j < trailers.length; j++) {
                         var existingTrailer = trailers[j];
-                        if(existingTrailer.name === trailer){
+                        if (existingTrailer.name === trailer) {
                             existingTrailer.checked = true;
                         }
                     }
@@ -48,16 +48,21 @@
             return trailers;
         }
 
-        function cancel (trailers) {
-            $scope.closeModal(trailers);
+        function cancel() {
+            vm.closeModal();
         }
 
-        function save () {
+        function save() {
             var trailers = getNameKeys(vm.trailers);
-            registerService.setProps('trailer', trailers);
-            registerService.updateUser(registerService.getDataProps());
+            registerService.userProps.trailer = trailers;
+            return registerService.updateUserProps({ trailer: trailers })
+                .then(function (updateResult) {
+                    if (updateResult.success) {
+                        return vm.closeModal(trailers);
+                    }
 
-            cancel(trailers);
+                    return vm.closeModal(null);
+                });
         }
 
         function getNameKeys(obj) {
