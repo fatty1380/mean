@@ -5,9 +5,9 @@
         .module('account')
         .controller('LockboxCreateCtrl', LockboxCreateCtrl);
 
-    LockboxCreateCtrl.$inject = ['$ionicPopup', '$ionicLoading',  '$sce', 'settings', 'parameters'];
+    LockboxCreateCtrl.$inject = ['$ionicPopup', '$scope', '$ionicLoading',  '$sce', 'settings', 'parameters'];
 
-    function LockboxCreateCtrl($ionicPopup, $ionicLoading, $sce, settings, parameters) {
+    function LockboxCreateCtrl($ionicPopup, $scope, $ionicLoading, $sce, settings, parameters) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -51,20 +51,21 @@
                 }
                 return;
             }
-            vm.data = {};
+            
+            $scope.data = {};
 
             var namePopup = $ionicPopup.show({
                 template: '<input type="text" ng-model="data.name" autofocus />',
                 title: 'Enter document name',
-                scope: vm,
+                scope: $scope, // TODO: Remove $scope when $ionicPopup supports it
                 buttons: [
                     { text: 'Cancel' },
                     {
                         text: '<b>Confirm</b>',
                         type: 'button-positive',
                         onTap: function() {
-                            if (vm.data.name) {
-                                return vm.data.name;
+                            if ($scope.data.name) {
+                                return $scope.data.name;
                             } else {
                                 return '';
                             }
