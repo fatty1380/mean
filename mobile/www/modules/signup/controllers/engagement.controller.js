@@ -59,7 +59,7 @@
          * a photo, or selecting from device photos.
          */
         vm.showEditAvatar = function (parameters) {
-            vm.camera.showActionSheet()
+            vm.camera.showActionSheet({cameraDirection: 1})
                 .then(function success(rawImageResponse) {
                     return avatarService.showCropModal({ rawImage: rawImageResponse, imgSize: 100 });
                 })

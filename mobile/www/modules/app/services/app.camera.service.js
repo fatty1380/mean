@@ -13,11 +13,27 @@
             PHOTOS: 0
         }
 
+        var defaults = {
+            quality: 60,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: source,
+            allowEdit: false,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: 512,
+            targetHeight: 1024,
+            correctOrientation: true,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false,
+            mediaType: 0
+        };
+
         return {
             showActionSheet: showActionSheet
         }
+        
+        //////////////////////////////////////////////////////////
 
-        function getPicture(type) {
+        function getPicture(source, options) {
             var q = $q.defer();
             if (!navigator.camera) {
                 console.log("******* Not a device. Using fake image *********");
@@ -25,31 +41,25 @@
                 return q.promise;
             }
 
-            var options = {
-                quality: 80,
-                destinationType: Camera.DestinationType.DATA_URL,
-                sourceType: type,
-                allowEdit: false,
-                encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 500,
-                targetHeight: 1000,
-                correctOrientation: true,
-                popoverOptions: CameraPopoverOptions,
-                saveToPhotoAlbum: false
-            };
+            options = _.defaults(options, defaults);
 
             navigator.camera.getPicture(onSuccess, onFail, options);
+            
             function onSuccess(getPictureResult) {
                 q.resolve(getPictureResult);
             }
+            
             function onFail(getPictureError) {
                 q.reject(getPictureError);
             }
+            
             return q.promise;
         }
 
-        function showActionSheet() {
+        function showActionSheet(options) {
             var deferred = $q.defer();
+            options = options || {};
+            
             $ionicActionSheet.show({
                 buttons: [
                     { text: 'Take a photo from camera' },
@@ -64,11 +74,11 @@
                     switch (index) {
                         case 0:
                             console.log("Take a photo");
-                            deferred.resolve(getPicture(source.CAMERA));
+                            deferred.resolve(getPicture(source.CAMERA, options));
                             break;
                         case 1:
                             console.log("Take photo from album");
-                            deferred.resolve(getPicture(source.PHOTOS));
+                            deferred.resolve(getPicture(source.PHOTOS, options));
                             break;
                     }
                     return true;
