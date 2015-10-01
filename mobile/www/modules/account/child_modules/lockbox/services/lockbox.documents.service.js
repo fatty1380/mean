@@ -145,7 +145,11 @@
                 .catch(function reject(err) {
                     console.error('Failed to save new doc: ', err);
 
-                    return _.find(vm.documents, { sku: sku });
+                    if (!!sku) {
+                        return _.find(vm.documents, { sku: sku });
+                    }
+                    
+                    return null;
                 })
                 .finally(function () {
                     $ionicLoading.hide();
