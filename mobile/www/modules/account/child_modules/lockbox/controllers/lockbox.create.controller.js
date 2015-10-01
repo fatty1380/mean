@@ -5,9 +5,9 @@
         .module('account')
         .controller('LockboxCreateCtrl', LockboxCreateCtrl);
 
-    LockboxCreateCtrl.$inject = ['$scope', '$ionicPopup', '$ionicLoading',  '$sce', 'settings', 'parameters'];
+    LockboxCreateCtrl.$inject = ['$ionicPopup', '$ionicLoading',  '$sce', 'settings', 'parameters'];
 
-    function LockboxCreateCtrl($scope, $ionicPopup, $ionicLoading, $sce, settings, parameters) {
+    function LockboxCreateCtrl($ionicPopup, $ionicLoading, $sce, settings, parameters) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -39,28 +39,32 @@
                 });
                 confirmPopup.then(function(res) {
                     if(res) {
-                        $scope.closeModal();
+                        vm.cancelModal('canceled');
                     }
             });
         }
 
-        function setDocumentName () {
-            if(vm.document.sku !== 'other') return;
-
-            $scope.data = {};
+        function setDocumentName (newVal, oldVal) {
+            if (vm.document.sku !== 'other') {
+                if (vm.document.sku !== 'misc') {
+                    vm.document.name = null;
+                }
+                return;
+            }
+            vm.data = {};
 
             var namePopup = $ionicPopup.show({
                 template: '<input type="text" ng-model="data.name" autofocus />',
                 title: 'Enter document name',
-                scope: $scope,
+                scope: vm,
                 buttons: [
                     { text: 'Cancel' },
                     {
                         text: '<b>Confirm</b>',
                         type: 'button-positive',
                         onTap: function() {
-                            if ($scope.data.name) {
-                                return $scope.data.name;
+                            if (vm.data.name) {
+                                return vm.data.name;
                             } else {
                                 return '';
                             }
@@ -73,6 +77,8 @@
                 if(res){
                     vm.document.name = res;
                     vm.document.sku = 'misc'
+                } else {
+                    vm.document.sku = oldVal;
                 }
             });
         }
@@ -89,7 +95,7 @@
                 }
             }
             
-            return $scope.closeModal(vm.document);
+            return vm.closeModal(vm.document);
         }
     }
 })();

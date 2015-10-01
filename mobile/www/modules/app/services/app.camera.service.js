@@ -7,7 +7,7 @@
     cameraService.$inject = ['$q', '$ionicActionSheet'];
 
     function cameraService($q, $ionicActionSheet) {
-
+        
         return {
             showActionSheet: showActionSheet
         }
@@ -75,11 +75,11 @@
                     switch (index) {
                         case 0:
                             console.log("Take a photo");
-                            deferred.resolve(getPicture(Camera.PictureSourceType.CAMERA, options));
+                            deferred.resolve(getPicture(1, options)); // Camera.PictureSourceType.CAMERA
                             break;
                         case 1:
                             console.log("Take photo from album");
-                            deferred.resolve(getPicture(Camera.PictureSourceType.PHOTOS, options));
+                            deferred.resolve(getPicture(0, options)); // Camera.PictureSourceType.PHOTOLIBRARY
                             break;
                     }
                     return true;

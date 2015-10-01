@@ -5,13 +5,14 @@
         <div class="content-top">
             <label class="item item-input item-select">
                 <div class="input-label">
-                    Document Type:
+                    Select Document Type:
                 </div>
-                <select ng-model="vm.document.sku" ng-change="vm.setDocumentName();">
+                <select class="" ng-model="vm.document.sku" ng-change="vm.setDocumentName(vm.document.sku, '{{vm.document.sku}}');">
+                    <option value="" selected disabled>click here</option>
                     <option value="cdl">CDL</option>
                     <option value="ins">Insurance</option>
                     <option value="reg">Registration</option>
-                    <option ng-show="!!vm.document.name" value="misc">{{vm.document.name}}</option>
+                    <option ng-if="!!vm.document.name" value="misc">{{vm.document.name}}</option>
                     <option value="other">other ...</option>
                 </select>
             </label>
@@ -23,30 +24,6 @@
                 <div class="img-holder">
                     <img ng-src="{{vm.trustedSrc}}" />
                 </div>
-
-                <!--<div class="item item-input-inset" ng-show="vm.document.sku === 'other'">-->
-                    <!--<label class="item-input-wrapper">-->
-                        <!--<input type="text" ng-model="vm.document.name" placeholder="Document Name">-->
-                    <!--</label>-->
-                    <!--<a class="button button-icon icon ion-checkmark" ng-click="vm.document.sku = 'misc'"></a>-->
-                <!--</div>-->
-
-                <!--<hr>-->
-
-                <!--<div class="row">
-                    <div class="col">
-                        <label class="item item-input item-floating-label">
-                            <span class="input-label">Valid From:</span>
-                            <input type="date" ng-model="vm.document.valid.from" placeholder="Valid From">
-                        </label>
-                    </div>
-                    <div class="col">
-                        <label class="item item-input item-floating-label">
-                            <span class="input-label">Valid Until:</span>
-                            <input type="date" ng-model="vm.document.valid.until" placeholder="Valid Until">
-                        </label>
-                    </div>
-                </div>-->
             </div>
         </ion-scroll>
     </ion-pane>
