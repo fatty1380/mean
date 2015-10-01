@@ -61,7 +61,7 @@
         vm.showEditAvatar = function (parameters) {
             vm.camera.showActionSheet()
                 .then(function success(rawImageResponse) {
-                    return avatarService.showCropModal({ rawImage: rawImageResponse, imgSize: 800 });
+                    return avatarService.showCropModal({ rawImage: rawImageResponse, imgSize: 100 });
                 })
                 .then(function success(newImageResponse) {
                     vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();

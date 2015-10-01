@@ -26,8 +26,8 @@
         }
         
         function showCropModal (parameters) {
-            templateUrl = 'modules/avatar/templates/edit-avatar.html';
-            controller = 'AvatarEditCtrl as vm';
+            templateUrl = 'modules/avatar/templates/crop-image.html';
+            controller = 'ImageCropCtrl as vm';
             params = parameters || {};
             return modalService
                 .show(templateUrl, controller, params)

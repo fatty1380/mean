@@ -3,11 +3,11 @@
 
     angular
         .module('avatar')
-        .controller('AvatarEditCtrl', AvatarEditCtrl);
+        .controller('ImageCropCtrl', ImageCropController);
 
-    AvatarEditCtrl.$inject = ['parameters', 'userService', '$ionicLoading', 'avatarService', 'settings'];
+    ImageCropController.$inject = ['parameters', 'userService', '$ionicLoading', 'avatarService', 'settings'];
 
-    function AvatarEditCtrl(parameters, userService, $ionicLoading, avatarService, settings) {
+    function ImageCropController(parameters, userService, $ionicLoading, avatarService, settings) {
         var vm = this;
 
         vm.close = close;
@@ -20,15 +20,20 @@
             vm.profileData = userService.profileData;
             vm.rawImage = '';
             vm.croppedImage = '';
-            
-            vm.imgSize = parameters.imgSize || 600;
+
+            var inputImageType = parameters.inputImageType || 'image/jpeg';
+
+            vm.imgSize = parameters.imgSize || 100;
             vm.areaType = parameters.areaType || 'circle';
-            
+            vm.imgType = parameters.imgType || 'image/jpeg';
+
+            console.log('Initializng Image Cropper with size: ' + vm.imgSize + ', area: ' + vm.areaType + ', type: ' + vm.imgType)
+
             if (parameters.rawImage) {
-                vm.rawImage = parameters.rawImage;
+                vm.rawImage = 'data:' + inputImageType + ';base64,' + parameters.rawImage;
             }
-            if (parameters.length && _.isString(parameters)) {
-                vm.rawImage = 'data:image/jpeg;base64,' + parameters;
+            else if (parameters.length && _.isString(parameters)) {
+                vm.rawImage = 'data:' + inputImageType + ';base64,' + parameters;
             } else {
                 vm.rawImage = settings.defaultProfileImage;
             }
@@ -58,7 +63,7 @@
                     $ionicLoading.hide();
                 })
                 .catch(function reject(err) {
-                    console.error('Unable to save props', err);
+                    console.error('Unable to save props', err, dataProps);
 
                 });
         }
