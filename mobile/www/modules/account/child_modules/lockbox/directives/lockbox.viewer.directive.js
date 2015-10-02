@@ -85,8 +85,6 @@
             vm.modal.initialHeight = this.modal.el.clientHeight;
             vm.modal.initialWidth = this.modal.el.clientWidth;
 
-            console.warn(' this --->>>', this);
-
             this.modal.el.style.height = vm.modal.initialWidth + 'px';
             this.modal.el.style.width = vm.modal.initialHeight + 'px';
             this.modal.el.style.marginLeft = vm.modal.initialWidth + 'px';
