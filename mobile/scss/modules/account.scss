@@ -29,3 +29,16 @@
     }
   }
 }
+
+@media only screen
+and (max-device-height : 568px) {
+  .main-tabs{
+    > .tab-nav{
+      height: 59px;
+
+      .tab-item{
+        padding: 5px 0;
+      }
+    }
+  }
+}

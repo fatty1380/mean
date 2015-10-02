@@ -830,5 +830,50 @@ $but-height: 70px;
     top: 50%;
     left: 0;
   }
+}
 
+
+@media only screen
+and (max-device-height : 568px) {
+  .signup-section{
+    .round-avatar{
+      border-radius: 50px;
+      border: 2px solid white;
+      width: 75px;
+      height: 75px;
+    }
+
+    input::-webkit-input-placeholder{
+      color: #fff !important;
+    }
+
+    .button-other{
+      background-color: $signup-entry-row-bg;
+    }
+
+    .bar{
+      &.bar-subheader{
+        h3{
+          font-weight: normal;
+          color: #fff;
+        }
+      }
+    }
+
+    &.full-size{
+      .bar .bar-subheader{
+        top:120px;
+      }
+    }
+
+    .toggle-block{
+      .label{
+        line-height: 16px;
+      }
+    }
+
+    .avatar-wrapper{
+      margin: 15px 0;
+    }
+  }
 }

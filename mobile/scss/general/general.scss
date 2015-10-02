@@ -84,6 +84,11 @@ body{
       color: #fff;
     }
   }
+
+  .content-pane {
+    bottom: 69px;
+    padding-bottom: 44px;
+  }
 }
 
 
@@ -298,7 +303,6 @@ textarea{
 }
 
 .bar-footer.item-input-inset {
-    
     height: auto;
     min-height: 64px;
     background-color: darken($stable, 10%);
@@ -348,9 +352,129 @@ textarea{
   top: 108px;
 }
 
+// google map tweaks to hide links from the map
 #map{
   div div a,
   .gmnoprint div{
     display: none !important;
+  }
+}
+
+@media only screen
+and (max-device-height : 568px) {
+
+  .view-section{
+    &.full-size > .pane{
+      top: 220px;
+    }
+
+    &.mid-size > .pane{
+      top: 150px;
+    }
+
+    &.compact-size > .pane{
+      top: 130px;
+    }
+
+    &.min-size > .pane{
+      top: 64px;
+    }
+
+    .bar-header{
+      height: 44px;
+      
+      .title{
+        font-size: 14px;
+        height: 43px;
+        line-height: 44px;
+      }
+
+      .button{
+        font-size: 12px;
+
+        &:first-child,
+        &:last-child{
+          max-height: 43px;
+          line-height: 43px;
+        }
+
+        &:first-child:before,
+        &:last-child:before{
+          max-height: 43px;
+          line-height: 43px;
+        }
+
+        &.button-small.button-icon:before {
+          font-size: 20px !important;
+          line-height: 40px;
+        }
+
+        &.back-button{
+          i{
+            display: none;
+          }
+        }
+      }
+    }
+
+    .bar-subheader{
+      top: 64px;
+
+      .title{
+        height: auto;
+        font-size: 14px;
+
+        &.big-lineheight{
+          line-height: 63px;
+        }
+      }
+    }
+
+    &.compact-size .bar-subheader{
+      height: 64px;
+    }
+
+    &.min-size .bar-subheader{
+      height: 44px;
+    }
+
+    .content-pane{
+      bottom: 59px;
+    }
+  }
+
+  .item{
+    font-size: 12px;
+  }
+
+  .pane.has-footer{
+    bottom: 54px;
+  }
+
+  .bar-footer,
+  .action-buttons{
+    height: 54px;
+  }
+
+  .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader){
+    height: 64px;
+  }
+  .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) {
+    height: 64px;
+  }
+  .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader).item-input-inset .item-input-wrapper {
+    margin-top: 19px;
+  }
+  .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) > * {
+    margin-top: 20px;
+  }
+  .platform-ios.platform-cordova .modal-wrapper .modal .has-header, .platform-ios.platform-cordova .modal-wrapper .modal .bar-subheader {
+    top: 64px;
+  }
+  .platform-ios.platform-cordova:not(.fullscreen) .bar-subheader{
+    top: 64px;
+  }
+  .platform-ios.platform-cordova .modal-wrapper .modal .has-subheader {
+    top: 108px;
   }
 }

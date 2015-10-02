@@ -452,3 +452,72 @@
     border-width: 0 0 1px;
   }
 }
+
+@media only screen
+and (max-device-height : 568px) {
+  .profile-visual{
+    top: 64px;
+    height: 84px;
+
+    &.compact{
+      padding-top: 54px;
+    }
+
+    .photo{
+      width: 94px;
+      height: 94px;
+      -webkit-background-size: 94px 94px;
+      background-size: 94px 94px;
+      border-width: 1px;
+    }
+
+    .contacts-amount{
+      strong{
+        font-size: 12px;
+      }
+    }
+  }
+
+  .input-label{
+    font-size: 14px;
+  }
+
+  .edit-pane{
+    .button.ion-log-out{
+      line-height: 31px;
+      max-height: 32px;
+
+      &:before{
+        font-size: 21px;
+        line-height: 32px;
+      }
+    }
+  }
+
+  .profile-tabs{
+    bottom: 59px;
+
+    > .tab-nav{
+      height: 49px;
+
+      .tab-item{
+        font-size: 12px;
+        padding: 10px 0;
+      }
+    }
+
+    .tab-content{
+      padding-top: 50px;
+
+      .content-button{
+        font-size: 13px;
+        min-height: 24px;
+
+        .ico{
+          margin-right: 10px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+}

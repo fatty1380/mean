@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget android-versionCode="0157" id="com.joinoutset.mobile" ios-CFBundleVersion="0157" version="0.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="0165" id="com.joinoutset.mobile" ios-CFBundleVersion="0165" version="0.6.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Truckerline</name>
   <description>
         Mobile tools for Truckers
