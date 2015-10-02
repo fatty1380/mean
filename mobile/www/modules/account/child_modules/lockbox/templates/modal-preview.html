@@ -1,8 +1,9 @@
-<ion-modal-view class="preview">
-
+<ion-modal-view class="preview" ng-class="{'full-screen': !!vm.fullScreenMode}">
     <ion-header-bar>
         <button class="button button-clear button-primary preview-cancel-button" ng-click="vm.closeModal(null)">Close</button>
         <h1 class="title">Preview</h1>
+        <button ng-if="!vm.fullScreenMode" class="button button-clear" ng-click="vm.enlarge()">Enlarge</button>
+        <button ng-if="vm.fullScreenMode" class="button button-clear" ng-click="vm.minimize()">Minimize</button>
     </ion-header-bar>
 
     <ion-content id="pdf-view-content">
@@ -11,14 +12,14 @@
         </ion-pane>
         <div class="pdf-container" ng-if="!!vm.pdfURL.src">
             <pdfviewer
-                    src="{{ vm.trustSrc(vm.pdfURL.src) }}"
-                    scale="{{scale}}"
-                    pages-to-show="{{pages}}"
-                    on-page-load='vm.pageLoaded(page,total)'
-                    id="viewer"
-                    height="100%"
-                    load-progress='vm.loadProgress(loaded, total, state)'
-                    on-pdf-event='vm.onPdfEvent(type)'>
+                src="{{ vm.trustSrc(vm.pdfURL.src) }}"
+                scale="{{scale}}"
+                pages-to-show="{{pages}}"
+                on-page-load='vm.pageLoaded(page,total)'
+                id="viewer"
+                height="100%"
+                load-progress='vm.loadProgress(loaded, total, state)'
+                on-pdf-event='vm.onPdfEvent(type)'>
             </pdfviewer>
         </div>
     </ion-content>

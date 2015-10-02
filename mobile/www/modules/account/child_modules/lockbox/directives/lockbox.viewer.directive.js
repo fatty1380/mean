@@ -65,11 +65,39 @@
         var vm = this;
 
         vm.document = parameters.document || parameters;
+        vm.fullScreenMode = false;
+        vm.modal = {
+            height: 0,
+            width: 0,
+            initialHeight: 0,
+            initialWidth: 0
+        };
 
         vm.trustSrc = trustSrc;
         vm.onImageEvent = onImageEvent;
         vm.onPdfEvent = onPdfEvent;
         vm.loadProgress = loadProgress;
+        vm.enlarge = enlarge;
+        vm.minimize = minimize;
+
+        function enlarge () {
+            vm.fullScreenMode = !vm.fullScreenMode;
+            vm.modal.initialHeight = this.modal.el.clientHeight;
+            vm.modal.initialWidth = this.modal.el.clientWidth;
+
+            console.warn(' this --->>>', this);
+
+            this.modal.el.style.height = vm.modal.initialWidth + 'px';
+            this.modal.el.style.width = vm.modal.initialHeight + 'px';
+            this.modal.el.style.marginLeft = vm.modal.initialWidth + 'px';
+        }
+        function minimize () {
+            vm.fullScreenMode = !vm.fullScreenMode;
+
+            this.modal.el.style.height = vm.modal.initialHeight + 'px';
+            this.modal.el.style.width = vm.modal.initialWidth + 'px';
+            this.modal.el.style.marginLeft = 0;
+        }
 
         console.log('Modal Visible for %s', vm.document.sku);
         

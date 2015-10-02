@@ -21,7 +21,7 @@ function viewer() {
             scope.onImageEvent({type:'loadStart'});
             img = new Image();
             img.src = attrs.src;
-            var el = angular.element('<div style="background: url(' + attrs.src + ') 100% 100% no-repeat;margin: auto;background-size: contain;"/>');
+            var el = angular.element('<image src="' + attrs.src + '" style="width:100%;"/>');
             img.onload = function() {
                 element.append(el);
                 
