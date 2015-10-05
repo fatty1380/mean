@@ -14,7 +14,7 @@
     <ion-pane class="has-footer">
         <ion-scroll>
             <ul class="list document-list">
-                <li class="item item-checkbox" ng-repeat="doc in vm.documents">
+                <li class="item item-checkbox" ng-repeat="doc in vm.documents" ng-if="!!doc.id">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="doc.checked">
                     </label>

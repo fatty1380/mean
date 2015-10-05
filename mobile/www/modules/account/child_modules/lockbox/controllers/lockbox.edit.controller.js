@@ -15,8 +15,8 @@
         vm.deleteDocuments = deleteDocuments;
 
         init();
-
-        if (!vm.documents) return;
+        
+        ////////////////////////////////////////////////////////////////////////
 
         function init() {
             vm.documents = [];
@@ -33,7 +33,7 @@
                 .then(function (response) {
                     console.log('Documents List', response);
 
-                    vm.documents = response instanceof Array && response.length ? response : [];
+                    vm.documents = _.isArray(response) ? response : [];
 
                     for (var i = 0; i < vm.documents.length; i++) {
                         vm.documents[i].checked = false;

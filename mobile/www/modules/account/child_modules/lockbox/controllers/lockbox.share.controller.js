@@ -31,7 +31,7 @@
                 .getDocuments()
                 .then(function (response) {
                     console.log('Documents List', response);
-                    vm.documents = response instanceof Array && response.length ? response : [];
+                    vm.documents = _.isArray(response) ? response : [];
                 });
         }
 
