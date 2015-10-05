@@ -18,10 +18,12 @@
                             var defer = $q.defer();
                             if(tokenService.get('access_token')) {
                                  registerService.me()
-                                    .then(function (resp) {
-                                         defer.resolve();
-                                         if(resp.message.data) {
-                                             $state.go('account.profile');
+                                    .then(function (response) {
+                                         if(response.success){
+                                             defer.resolve();
+                                             if(response.message.data) {
+                                                 $state.go('account.profile');
+                                             }
                                          }
                                     });
                             }else{

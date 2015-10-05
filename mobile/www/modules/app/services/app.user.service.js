@@ -22,34 +22,37 @@
         
         function signOut() {
             return registerService.signOut().then(
-                function (success) {
-                    vm.profileData = {};
+                function (response) {
+                    if(response.success) vm.profileData = {};
                 }
             )
-        };
+        }
 
         function getUserData() {
             if (!vm.profileData || !vm.profileData.id) {
                 return registerService.me()
-                    .then(function (profileData) {
-                        vm.profileData = profileData.success ? profileData.message.data : null;
-                        getAvatar(vm.profileData);
-                        return vm.profileData;
+                    .then(function (response) {
+                        if(response.success){
+                            vm.profileData = response.message.data;
+                            getAvatar(vm.profileData);
+                            return vm.profileData;
+                        }
+                        return null;
                     });
             }
             return $q.when(vm.profileData);
-        };
+        }
 
         function updateUserData(dataProps) {
             return registerService.updateUser(dataProps)
                 .then(function (data) {
-                    if(data.message.data.id){
+                    if(data.success && data.message.data.id){
                         vm.profileData = data.message.data;
                     }
                     return vm.profileData;
                 });
             //return vm.profileData;
-        };
+        }
         
         function getAvatar(userProfile) {
             if (!userProfile || _.isString(userProfile)) { return null; }

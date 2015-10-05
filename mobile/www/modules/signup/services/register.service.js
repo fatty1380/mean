@@ -5,12 +5,12 @@
         .module('signup')
         .factory('registerService', registerService);
 
-    registerService.$inject = ['$http', 'settings', 'API'];
-    function registerService($http, settings, API) {
+    registerService.$inject = ['settings', 'API'];
+    function registerService(settings, API) {
 
         var _userData = {
             props: {}
-        }
+        };
 
         /**
          * These 8 methods all make calls to the server
@@ -111,8 +111,12 @@
         ////////////////////////////////////////////////////////////////
 
         function handleSuccess(response) {
-            console.log('handleSuccess ', response);
-            return { success: true, message: response };
+            console.info('handleSuccess: ', response);
+            if(response.status === 200){
+                return { success: true, message: response };
+            }else{
+                handleError(response);
+            }
         }
 
         function handleError(response) {

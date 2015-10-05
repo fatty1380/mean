@@ -5,9 +5,9 @@
         .module('signup')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'focusService'];
+    LoginCtrl.$inject = ['$state', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'focusService'];
 
-    function LoginCtrl($scope, $state, registerService, $ionicLoading, tokenService, userService, focusService) {
+    function LoginCtrl($state, registerService, $ionicLoading, tokenService, userService, focusService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -59,8 +59,10 @@
                     registerService
                         .me()
                         .then(function (profileData) {
-                            userService.profileData = profileData.message.data;
-                            $state.go('account.profile');
+                            if(profileData.success){
+                                userService.profileData = profileData.message.data;
+                                $state.go('account.profile');
+                            }
                         });
 
                     vm.error = '';

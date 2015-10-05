@@ -47,10 +47,12 @@
             registerService
                 .getProfileById(request.from)
                 .then(function (response) {
-                    var userData = response.message.data;
-                    userData.profileImageURL = getAvatar(userData);
+                    if(response.success){
+                        var userData = response.message.data;
+                        userData.profileImageURL = getAvatar(userData);
 
-                    vm.requests[index].user =  userData;
+                        vm.requests[index].user =  userData;
+                    }
                 });
 
         }

@@ -37,12 +37,13 @@
                 .then(function (response) {
                     $ionicLoading.hide();
 
-                    console.log(" ");
-                    console.log("license response update user : ", response);
-
                     if (response.success) {
+                        console.log("license response update user : ", response);
+
                         $state.go('signup-trucks');
                     } else {
+                        console.error("license response update user ERROR: ", response);
+
                         $state.go('login');
                     }
                 });

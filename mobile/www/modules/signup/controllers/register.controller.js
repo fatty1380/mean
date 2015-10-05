@@ -5,9 +5,9 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService', 'welcomeService'];
+    RegisterCtrl.$inject = ['$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService', 'welcomeService'];
 
-    function RegisterCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading, tokenService, welcomeService) {
+    function RegisterCtrl($state, registerService, $ionicPopup, $ionicLoading, tokenService, welcomeService) {
         var vm = this;
         vm.lastElementFocused = false;
 
