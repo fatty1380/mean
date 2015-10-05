@@ -42,6 +42,7 @@
          * Sign In
          */
         function signIn() {
+            vm.submitted = true;
             $ionicLoading.show({
                 template: 'please wait'
             });

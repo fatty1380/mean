@@ -115,7 +115,7 @@
             if(response.status === 200){
                 return { success: true, message: response };
             }else{
-                handleError(response);
+                return null;
             }
         }
 
