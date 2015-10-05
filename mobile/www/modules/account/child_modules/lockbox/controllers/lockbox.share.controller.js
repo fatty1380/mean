@@ -70,7 +70,7 @@
             requestObj.text = vm.contact.message || '';
             requestObj.contactInfo = getModifiedContactInfo(vm.contact);
             requestObj.contents = {
-                documents: vm.docsToShare
+                documents: _.pluck(vm.docsToShare, 'id')
             };
 
             serializedReqObj = utilsService.serialize(requestObj);
