@@ -18,6 +18,11 @@
         vm.friends = parameters.friends;
         vm.messageFriend = messageFriend;
         vm.getAvatar = getAvatar;
+        vm.close = close;
+
+        function close () {
+            $scope.closeModal(null);
+        }
 
         function messageFriend (friend) {
             $scope.closeModal(friend);

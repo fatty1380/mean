@@ -65,6 +65,11 @@
             var requestObj = {},
                 serializedReqObj;
 
+            if(!vm.contact || !vm.contact.email){
+                $ionicPopup.alert({title: 'Error!', template: 'Please, enter recipient information'});
+                return;
+            }
+
             requestObj.requestType = 'shareRequest';
 
             requestObj.text = vm.contact.message || '';
@@ -81,11 +86,12 @@
                     showSuccessPopup(response);
                 })
                 .catch(function (err) {
-                    console.error('WARNING: Hard Coded Success', err)
+                    console.error('WARNING: Hard Coded Success', err);
                     showSuccessPopup();
                 });
 
             function getModifiedContactInfo(contact) {
+                console.warn(' contact --->>>', contact);
                 if (!contact) return;
 
                 var contactInfo = {};

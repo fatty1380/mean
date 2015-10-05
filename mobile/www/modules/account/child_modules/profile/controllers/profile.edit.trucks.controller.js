@@ -46,8 +46,10 @@
 
         function addTruck() {
             truckService.addTruck().then(function (response) {
-                vm.trucks.push(response);
-                vm.currentTruck = response.name;
+                if(!!response){
+                    vm.trucks.push(response);
+                    vm.currentTruck = response.name;
+                }
             });
         }
 

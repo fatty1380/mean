@@ -9,7 +9,7 @@
         <h3 class="title">Your lockbox will contain all your secure documents.</h3>
     </div>
 
-    <ion-pane class="has-footer">
+    <ion-pane ng-class="{'has-footer': !vm.deleteDisabled }">
         <ion-scroll>
             <ul class="list document-list">
                 <li class="item item-checkbox" ng-repeat="doc in vm.documents">
@@ -27,9 +27,9 @@
         </ion-scroll>
     </ion-pane>
 
-    <ion-footer-bar>
+    <ion-footer-bar ng-show="!vm.deleteDisabled" >
         <div class="button-bar action-buttons">
-            <button class="button button-assertive" ng-disabled="vm.deleteDisabled" ng-show="!vm.deleteDisabled" ng-click="vm.deleteDocuments()">Delete</button>
+            <button class="button button-assertive" ng-disabled="vm.deleteDisabled" ng-click="vm.deleteDocuments()">Delete</button>
         </div>
     </ion-footer-bar>
 

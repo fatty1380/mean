@@ -18,7 +18,7 @@
             startDate: '',
             endDate: '',
             location: ''
-        }
+        };
 
         vm.cancel = cancel;
         vm.saveExperience = saveExperience;
@@ -30,16 +30,15 @@
 
             experienceService.postUserExperience(vm.experience)
             .then(function (resp) {
+                cancel(vm.experience);
                 vm.experience = {};
-                console.warn('success --->>>', resp);
-                cancel();
             }, function (err) {
                 console.warn('err --->>>', err);
             });
         }
 
-        function cancel() {
-            vm.closeModal(null);
+        function cancel(exp) {
+            vm.closeModal(exp || null);
         }
     }
 })();

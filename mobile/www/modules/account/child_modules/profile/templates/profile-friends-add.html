@@ -16,7 +16,7 @@
             <ul class="list friends-list">
                 <li class="item" collection-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
                     <i class="ico ico-avatarsmall" ></i>
-                    <div class="item-content">
+                    <div class="item-content  has-button-offset">
                         {{contact.displayName}}{{contact.text}}
                     </div>
                     <button ng-if="!contact.checked && !contact.invited" class="button button-small list-button" ng-click="contact.checked = !contact.checked;">Invite</button>

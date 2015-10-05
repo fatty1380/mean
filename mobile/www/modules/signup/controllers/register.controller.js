@@ -25,7 +25,7 @@
 
         function initForm(scope) {
             vm.form = scope;
-        };
+        }
 
         /**
          * @description Submit form if last field in focus
@@ -66,18 +66,25 @@
                         });
                 } else {
                     $ionicLoading.hide();
-                    var message = response.message.data && response.message.data.message || 'Unable to Register at this time. Please try again later';
+                    var message;
+
+                    if(response.message.status === 0){
+                        message = 'Request timed-out. Please, check your network connection.'
+                    } else {
+                        message = response.message.data && response.message.data.message || 'Unable to Register at this time. Please try again later';
+                    }
+
                     showPopup(response.title || 'Sorry', message);
                 }
             });
-        };
+        }
 
         function showPopup(title, text) {
              $ionicPopup.alert({
                  title: title || "title",
                  template: text || "no message"
              });
-        };
+        }
         //
         //$scope.$on('$ionicView.afterEnter', function () {
         //    // Handle iOS-specific issue with jumpy viewport when interacting with input fields.
@@ -91,6 +98,6 @@
         //        window.cordova.plugins.Keyboard.disableScroll(false);
         //    }
         //});
-    };
+    }
 
 })();

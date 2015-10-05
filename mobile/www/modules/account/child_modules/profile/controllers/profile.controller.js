@@ -181,17 +181,17 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                        function (err) {
-                            console.log(err);
-                        })
+                    function (err) {
+                        console.log(err);
+                    })
             };
 
             vm.showAddExperienceModal = function (parameters) {
                 profileModalsService
                     .showAddExperienceModal(parameters)
-                    .then(function (result) {
-                        console.log(result);
-                        vm.getExperience();
+                    .then(function (exp) {
+                        vm.experience.push(exp);
+                        //vm.getExperience();
                     },
                         function (err) {
                             console.log(err);

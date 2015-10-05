@@ -22,7 +22,7 @@
                         <strong>{{doc.name}}</strong>
                         <span>{{doc.created | date : 'MMMM d, y'}}</span>
                     </div>
-                    <button class="button button-small">View</button>
+                    <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
                 </li>
             </ul>
             <div class="button-holder text-center">

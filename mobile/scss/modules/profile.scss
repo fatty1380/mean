@@ -68,8 +68,16 @@
     position: absolute;
     right: 0;
     bottom: 20px;
+    width: 33%;
     line-height: 25px;
     color: #fff;
+
+    strong{
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   &.compact{

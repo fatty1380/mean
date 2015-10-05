@@ -37,13 +37,13 @@
                 .retrieveFriends()
                 .then(function retrieveFriendsSuccess(friends) {
                     return messageModalsService
-                        .selectChatRecipient({ friends: friends })
+                        .selectChatRecipient({ friends: friends });
                 })
                 .then(function selectedChatRecipientSuccess(friend) {
-                    return messageService.getChatByUserId(friend.id);
+                    if(!!friend) return messageService.getChatByUserId(friend.id);
                 })
                 .then(function getChatSuccess(chat) {
-                    showChatDetailsModal(chat)
+                    if(!!chat) showChatDetailsModal(chat);
                 });
         }
 

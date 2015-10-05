@@ -19,11 +19,13 @@
                             if(tokenService.get('access_token')) {
                                  registerService.me()
                                     .then(function (response) {
-                                         if(response.success){
+                                         if(response && response.success){
                                              defer.resolve();
                                              if(response.message.data) {
                                                  $state.go('account.profile');
                                              }
+                                         } else {
+                                             defer.resolve();
                                          }
                                     });
                             }else{

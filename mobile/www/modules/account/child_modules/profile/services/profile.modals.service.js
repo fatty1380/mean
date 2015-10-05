@@ -34,7 +34,6 @@
         }
 
         function showProfileShareModal(parameters, options) {
-
             return lockboxModalsService.showShareModal(parameters, options);
         }
 

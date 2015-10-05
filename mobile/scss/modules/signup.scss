@@ -704,8 +704,13 @@ $but-height: 70px;
 
         .item-content {
           display: inline-block;
+          width: 100%;
           vertical-align: middle;
           text-transform: capitalize;
+
+          &.has-button-offset{
+            padding-right: 135px;
+          }
 
           strong{
             display: block;
@@ -720,6 +725,7 @@ $but-height: 70px;
           margin-top: -15px;
           padding: 0 20px;
           min-width: 100px;
+          max-width: 115px;
 
           &.selected{
             background: #37afb2;

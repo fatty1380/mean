@@ -38,6 +38,7 @@
                         text: 'Cancel',
                         onTap: function (e) {
                             scope.vm.truck = '';
+                            return null;
                         }
                     },
                     {
