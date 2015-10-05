@@ -18,14 +18,14 @@
         vm.skipToProfile = skipToProfile;
 
         function skipToProfile() {
-            registerService.updateUser(registerService.userData
+            registerService.updateUser(registerService.userData)
                 .then(function (response) {
                     if (response.success) {
                         $state.go('account.profile');
                     }
                 }, function (err) {
                     $state.go('account.profile');
-                }));
+                });
         }
 
         function sendInvitations() {
