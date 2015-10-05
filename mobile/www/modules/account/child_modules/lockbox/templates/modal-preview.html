@@ -1,12 +1,12 @@
 <ion-modal-view class="preview" ng-class="{'full-screen': !!vm.fullScreenMode}">
-    <ion-header-bar>
+    <ion-header-bar ng-hide="!!vm.showControls">
         <button class="button button-clear button-primary preview-cancel-button" ng-click="vm.closeModal(null)">Close</button>
         <h1 class="title">Preview</h1>
-        <button ng-if="!vm.fullScreenMode" class="button button-clear" ng-click="vm.enlarge()">Enlarge</button>
-        <button ng-if="vm.fullScreenMode" class="button button-clear" ng-click="vm.minimize()">Minimize</button>
+        <button ng-if="!vm.fullScreenMode" class="button button-icon ion-arrow-expand" ng-click="vm.enlarge()"></button>
+        <button ng-if="vm.fullScreenMode" class="button button-icon ion-arrow-shrink" ng-click="vm.minimize()"></button>
     </ion-header-bar>
 
-    <ion-content id="pdf-view-content">
+    <ion-content id="pdf-view-content" ng-click="vm.showControls = !vm.showControls">
         <ion-pane class="image-container" ng-if="!!vm.image">
             <div src="{{vm.trustSrc(vm.image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
         </ion-pane>
@@ -24,7 +24,7 @@
         </div>
     </ion-content>
 
-    <ion-footer-bar class="">
+    <ion-footer-bar class="" ng-hide="!!vm.showControls">
         <h1 class="title">{{ vm.document.name }}</h1>
     </ion-footer-bar>
 
