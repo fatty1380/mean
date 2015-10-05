@@ -23,22 +23,25 @@
 
         var vm = this;
 
-        vm.documents = [];
-
-        //stubDocuments.forEach(function (doc) {
-        //    addDocument(doc);
-        //});
+        vm.documents = stubDocuments;
 
         $rootScope.$watch('vm.documents', function (data) {
             console.warn('changed vm.documents --->>>', vm.documents);
             console.warn(' data --->>>', data);
         });
 
-        function getId(e) { return e.id || e._id; }
+        return {
+            getDocuments: getDocuments,
+            addDocsPopup: addDocsPopup,
+            removeDocuments: removeDocuments,
+            updateDocument: updateDocument,
+            newDocPopup: takePicture,
+            orderReports: orderReports
+            //getStubDocuments: getStubDocuments
+        }
 
         // TODO: Refactor to be "refresh documents"
         function getDocuments() {
-            //return $http.get(settings.documents).then(
             return API.doRequest(settings.documents, 'get').then(
                 function success(documentListResponse) {
                     var docs = documentListResponse.data;
@@ -52,12 +55,12 @@
                     return vm.documents;
                 })
                 .finally(function () {
-                    return vm.documents;
+                    $ionicLoading.hide();
                 });
         }
 
         function addDocument(doc) {
-            var i = _.findIndex(vm.documents, { id: doc.id });
+            var i = !!doc.id ? _.findIndex(vm.documents, { id: doc.id }) : -1;
             var sku = (doc.sku || 'misc').toLowerCase();
 
             if (i !== -1) {
@@ -74,10 +77,6 @@
                 return true;
             }
         }
-        
-        //function getStubDocuments() {
-        //    return stubDocuments;
-        //}
 
         function addDocsPopup(docSku) {
             var deferred = $q.defer();
@@ -115,6 +114,9 @@
         }
 
         function takePicture(sku) {
+            debugger;
+            sku = sku.sku || sku;
+            
             return cameraService.showActionSheet()
                 .then(function success(rawImageResponse) {
                     return lockboxModals.showCreateModal({ image: rawImageResponse, sku: sku });
@@ -175,44 +177,34 @@
                 
             })
         }
-
-        return {
-            getDocuments: getDocuments,
-            addDocsPopup: addDocsPopup,
-            removeDocuments: removeDocuments,
-            updateDocument: updateDocument
-            //getStubDocuments: getStubDocuments
-        }
     }
 
     var stubDocuments = [
         {
-            id: '0',
-            sku: 'mvr',
-            name: 'Motor Vehicle Report',
-            created: '2015-07-11 10:33:05',
-            url: 'assets/lockbox/driving-record-1.gif',
-            expires: null,
-            bucket: 'outset-dev',
-            key: 'kajifpaiueh13232'
+            sku: 'reports',
+            name: 'MVR and Background Checks',
+            action: 'Order',
+            fn: 'orderDocs'
         },
         {
-            id: '1',
-            sku: 'bg',
-            name: 'Background Report',
-            created: '2015-07-11 10:33:05',
-            url: 'assets/lockbox/sample_credit_report.pdf',
-            expires: null,
-            bucket: 'outset-dev',
-            key: 'kajifpaiueh13232222'
-        },
-        {
-            id: '2',
             sku: 'cdl',
             name: 'Commercial Driver License',
-            created: null,
-            url: null,
-            expires: null
+            info: ''
+        },
+        {
+            sku: 'ins',
+            name: 'Insurance',
+            info: ''
+        },
+        {
+            sku: 'cert',
+            name: 'Certification',
+            info: ''
+        },
+        {
+            sku: 'misc',
+            name: 'Any other Document',
+            info: ''
         }
     ];
 

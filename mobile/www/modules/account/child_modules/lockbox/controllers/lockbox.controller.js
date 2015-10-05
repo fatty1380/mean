@@ -11,11 +11,14 @@
         var vm = this;
 
         vm.currentDoc = null;
-        vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
+        vm.documents = documents instanceof Array ? documents : [] || [];
 
         vm.addDocsPopup = addDocs;
         vm.showEditModal = showEditModal;
         vm.showShareModal = showShareModal;
+        
+        vm.newDoc = newDoc;
+        vm.orderDocs = orderDocs;
 
         $rootScope.$on("clear", function () {
             console.log('LockboxCtrl clear');
@@ -37,6 +40,25 @@
                     console.info('Lockbox documents went from ' + docCount + ' to ' + vm.documents.length);
                 }
             )
+        }
+        
+        /**
+         * newDoc
+         * Used to direct straight to adding a document via the camera or photo album.
+         * Skips the 'new doc/order reports' sheet.
+         */
+        function newDoc(docSku) {
+            debugger;
+            return lockboxDocuments.newDocPopup(docSku);
+        }
+        
+        /**
+         * orderDocs
+         * Used to direct straight to the ordering reports page.
+         * Skips the 'new doc/order reports' sheet.
+         */
+        function orderDocs(doc) {
+            return lockboxDocuments.orderReports(doc);
         }
 
         function showEditModal(parameters) {
