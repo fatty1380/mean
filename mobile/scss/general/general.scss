@@ -33,32 +33,32 @@ body{
     padding: 0 5px;
     background: none;
     border: 0;
-    font: 14px Helvetica Neue, Helvetica, Arial;
+    font: $bar-title-font-size Helvetica Neue, Helvetica, Arial;
     color: $secondary-text-action;
 
     .title{
-      font-size: 14px;
-      font-weight: bold;
+      font-size: $bar-title-font-size;
+      font-weight: $headings-font-weight;
       text-transform: capitalize;
       color: $light;
     }
 
     .button{
       color: $secondary-text-action;
-      font-size: 14px;
-      font-weight: bold;
+      font-size: $bar-title-font-size;
+      font-weight: $headings-font-weight;
       padding: 0 5px;
 
       &:first-child,
       &:last-child{
         top:0;
-        max-height: 63px;
-        line-height: 63px;
+        max-height: $bar-height;
+        line-height: $bar-height;
         border: 0;
       }
       &:first-child:before,
       &:last-child:before{
-        line-height: 63px;
+        line-height: $bar-height;
       }
 
       &.back-button{

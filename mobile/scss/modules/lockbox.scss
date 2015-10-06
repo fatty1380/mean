@@ -132,8 +132,7 @@
     background: #fff;
 
     .bar{
-      background-image: linear-gradient(-180deg, #3e86b1 0%, #276b93 100%);
-      background-repeat: repeat-y;
+      background-color: rgba(0,0,0,0.5);
       height: 43px;
 
       .button {
@@ -142,15 +141,21 @@
         color: #fff;
         font-weight: bold;
 
-        &:last-child{
-          max-height: 43px;
-          line-height: 43px;
+        &:first-child {
+          left: 0;
+          padding-left: 8px;
+        }
+
+        &:last-child {
           top: 0;
           color: #fff;
+          padding-right: 8px;
+          right: 0;
           font-weight: 500;
         }
       }
     }
+    
     #pdf-view-content{
       margin: 0;
       padding: 0;
@@ -191,17 +196,17 @@
     background-color: transparent;
 
     .button{
-      &.preview-cancel-button {
-        font-size: 17px;
-        font-weight: 500;
-        line-height: 44px;
-        color: white;
+      &.preview-cancel-button, &:last-child {
+        font-size: $bar-title-font-size;
+        font-weight: $headings-font-weight;
+        line-height: $headings-line-height;
+        color: $light;
         border: 0;
       }
-
-      &:last-child{
-        color: #fff;
-        font-weight: 500;
+      
+      &:last-child {
+        padding-right: 0;
+        right: 0;
       }
     }
   }
