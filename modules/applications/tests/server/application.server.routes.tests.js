@@ -86,7 +86,7 @@ describe('Applications CRUD tests', function () {
                 .expect(401)
                 .then(function (response) {
                     should.exist(response);
-                    log.debug({test: _test.title, response: response}, 'Got Response');
+                    log.trace({test: _test.title, response: response}, 'Got Response');
 
                     response.should.have.property('statusCode', 401);
                     response.should.have.property('text');

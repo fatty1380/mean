@@ -28,6 +28,7 @@ var _ = require('lodash'),
     Request = mongoose.model('RequestMessage'),
     path = require('path'),
     messenger = require(path.resolve('./modules/emailer/server/controllers/messenger.server.controller')),
+    notificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users',
         file: 'Authorization.Controller'
@@ -174,21 +175,24 @@ function createRequest(req, res, next) {
     var request = new Request(req.body);
     request.from = req.user._id;
 
-    // Insert
+    // Insert into the request arrays of each user
+    // TODO: Confirm that "To" actually gets the request, etc
     var u1 = User.where({ '_id': { '$in': [me, req.body.to] } })
         .update(
             { '$push': { 'requests': { '_id': request } } },
             { 'new': true, 'upsert': true }
             );
 
-    var u2;
-    if (_.isEmpty(req.body.to) && !_.isEmpty(req.body.contactInfo)) {
-        u2 = messenger.sendMessage({ to: req.body.contactInfo.phoneNumbers, from: req.user });
-    }
+    // var u2;
+    // if (_.isEmpty(req.body.to) && !_.isEmpty(req.body.contactInfo)) {
+    //     u2 = messenger.sendMessage({ to: req.body.contactInfo.phoneNumbers, from: req.user });
+    // }
 
     return Q.all([request.save(), u1.exec()])
         .then(function (results) {
-            req.log.debug({ func: 'createRequest', friendRequest: results[0], users: results[1] });
+            req.log.debug({ func: 'createRequest', request: results[0], users: results[1] });
+            
+            notificationCtr.processNewRequest(results[0]);
 
             return res.json(results[0]);
         });
