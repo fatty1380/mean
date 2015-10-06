@@ -3,6 +3,11 @@
 
     // Users service used for communicating with the users REST endpoint
 
+    angular
+        .module('users')
+        .factory('Users', UsersService);
+
+    UsersService.$inject = ['$resource', '$q'];
     function UsersService($resource) {
         return $resource('api/users', {}, {
             update: {
@@ -10,7 +15,14 @@
             }
         });
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////
 
+    angular
+        .module('users')
+        .factory('UserService', NewUserService);
+
+    NewUserService.$inject = ['Authentication', '$resource', '$log', '$http', '$q'];
     function NewUserService(auth, $resource, $log, $http, $q) {
         var vm = this;
         vm.auth = auth;
@@ -25,26 +37,32 @@
                 $http.post('api/auth/signup', credentials)
                     .success(function (response) {
 
-                    $log.debug('Successfully created %o USER Profile', response.type);
+                        $log.debug('Successfully created %o USER Profile', response.type);
 
-                    // If successful we assign the response to the global user model
-                    vm.auth.user = response;
+                        // If successful we assign the response to the global user model
+                        vm.auth.user = response;
 
-                    Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
+                        Raygun.setUser(vm.auth.user._id, false, vm.auth.user.email, vm.auth.user.displayName);
 
-                    deferred.resolve(response);
+                        deferred.resolve(response);
 
-                }).error(function (response) {
-                    $log.error('[UserService.createUser] Error creating user: %o', response);
-                    deferred.reject(response.message);
-                });
+                    }).error(function (response) {
+                        $log.error('[UserService.createUser] Error creating user: %o', response);
+                        deferred.reject(response.message);
+                    });
 
                 return deferred.promise;
             }
         };
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////
+    
+    angular
+        .module('users')
+        .factory('Profiles', ProfilesService);
 
-
+    ProfilesService.$inject = ['$resource', '$q', '$log'];
     function ProfilesService($resource, $q, $log) {
         var _data = {
             query: function (query) {
@@ -70,9 +88,9 @@
 
                 return deferred.promise;
             },
-            
-            lookup: function(user) {
-                if(_.isString(user)) {
+
+            lookup: function (user) {
+                if (_.isString(user)) {
                     return _data.load(user);
                 }
                 return $q.when(user);
@@ -82,8 +100,67 @@
 
         return _data;
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////
 
-    function FriendService($resource, $log) {
+    angular
+        .module('users')
+        .factory('Requests', RequestsService);
+
+    RequestsService.$inject = ['$resource', '$log'];
+    function RequestsService($resource, $log) {
+        var service = {
+            create: createRequest,
+            list: listRequests,
+            get: getRequest,
+            update: updateRequest
+        };
+
+        var RequestMsgRsrc = $resource('api/requests/:requestId',
+            { requestId: '@_id' }, {
+                update: { method: 'PUT' }
+            });
+
+        return service;
+        
+        ///////////////////////////////////////////
+        
+        // POST /api/requests
+        function createRequest(obj) {
+            var request = new RequestMsgRsrc(obj);
+
+            return request.$save().then(
+                function (success) {
+                    $log.debug('created new friend request: %o', success);
+                    return success;
+                });
+        }
+        
+        // GET /api/requests
+        function listRequests(query) {
+            return RequestMsgRsrc.query(query).$promise;
+        }
+
+        // GET /api/requests/:requestId
+        function getRequest(id) {
+            return RequestMsgRsrc.get({ requestId: id }).$promise;
+        }
+        
+        function updateRequest(id, data) {
+            return RequestMsgRsrc.update(id, data).$promise;
+        }
+        
+        /////////////////////////////////
+        
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    angular
+        .module('users')
+        .factory('Friends', FriendService);
+    FriendService.$inject = ['$resource', '$log', 'Requests'];
+    function FriendService($resource, $log, Requests) {
 
         // Externally Accessible Members
         var service = {
@@ -103,44 +180,32 @@
             
         //var FriendStatusRsrc = $resource('api/friends/:userId');
         
-        var FriendRequestRsrc = $resource('api/requests/:requestId',
-            {requestId: '@_id'}, {
-                update: { method: 'PUT' }
-            });
-
-        return service;
-        
-        ///////////////////////
-            
-        // GET /api/requests
-        function listRequests(query) {
-            return FriendRequestRsrc.query(query);
-        }
-        
         // POST /api/requests
         function requestFriend(friend) {
             var id = !!friend && friend.id || friend;
 
             debugger; // check ID
-            var friendRequest = new FriendRequestRsrc({ friendId: id });
-
-            return friendRequest.$save().then(
-                function (success) {
-                    $log.debug('created new friend request: %o', success);
-                    return success;
-                });
+            
+            Requests.create({ friendId: id, requestType: 'friendRequest' })
+                .then(
+                    function (success) {
+                        $log.debug('created new friend request: %o', success);
+                        return success;
+                    });
 
         }
         
-        // PUT /api/requests/:requestId
+        function listRequests() {
+            return Requests.list({ requestType: 'friendRequest' });
+        }
         function acceptRequest(request) {
             debugger;
-            return FriendRequestRsrc
-            .update({ requestId: request.id || request._id}, {action: 'accept' }).$promise;
+            return Requests
+                .update({ requestId: request.id || request._id }, { action: 'accept' });
         }
         function ignoreRequest(request) {
-            return FriendRequestRsrc
-            .update({ requestId: request.id || request._id}, {action: 'deny' }).$promise;
+            return Requests
+                .update({ requestId: request.id || request._id }, { action: 'deny' });
         }
         
         // GET /api/friends
@@ -151,15 +216,15 @@
         // GET /api/friends/:userId
         function checkFriend(user) {
             var id = !!user && user.id || user;
-            
-            return FriendRequestRsrc.query({userId: id}).$promise.then(
-                function(results) {
+
+            return Requests.query({ userId: id }).then(
+                function (results) {
                     $log.debug('Got Requests from server: %o', results);
                     return _.first(results);
                 })
-                .then(function(request) {
+                .then(function (request) {
                     $log.debug('Returning first result %o', request);
-                    
+
                     return request;
                 });
         }
@@ -170,7 +235,14 @@
             return RootFriendRsrc.delete({ userId: userId });
         }
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////
 
+    angular
+        .module('users')
+        .factory('SeedService', seedService);
+
+    seedService.$inject = ['$resource'];
     function seedService($resource) {
         return $resource('api/seed', {},
             {
@@ -180,20 +252,6 @@
             });
     }
 
-
-    UsersService.$inject = ['$resource', '$q'];
-    FriendService.$inject = ['$resource', '$log'];
-    NewUserService.$inject = ['Authentication', '$resource', '$log', '$http', '$q'];
-    ProfilesService.$inject = ['$resource', '$q', '$log'];
-    seedService.$inject = ['$resource'];
-
-    angular
-        .module('users')
-        .factory('Users', UsersService)
-        .factory('UserService', NewUserService)
-        .factory('SeedService', seedService)
-        .factory('Profiles', ProfilesService)
-        .factory('Friends', FriendService);
 
 
 })();
