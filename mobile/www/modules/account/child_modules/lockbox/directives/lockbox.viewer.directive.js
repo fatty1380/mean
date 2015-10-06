@@ -79,6 +79,14 @@
         vm.loadProgress = loadProgress;
         vm.enlarge = enlarge;
         vm.minimize = minimize;
+        vm.toggleFullScreen = toggleFullScreen;
+        vm.close = close;
+
+        function close () {
+            vm.fullScreenMode = !vm.fullScreenMode;
+            screen.lockOrientation('portrait');
+            $scope.closeModal(null);
+        }
 
         function enlarge () {
             vm.fullScreenMode = !vm.fullScreenMode;
@@ -88,6 +96,11 @@
         function minimize () {
             vm.fullScreenMode = !vm.fullScreenMode;
             screen.lockOrientation('portrait');
+        }
+
+        function toggleFullScreen () {
+            if(!vm.fullScreenMode) return;
+            vm.showControls = !vm.showControls
         }
 
         console.log('Modal Visible for %s', vm.document.sku);
