@@ -21,7 +21,7 @@ function viewer() {
             scope.onImageEvent({type:'loadStart'});
             img = new Image();
             img.src = attrs.src;
-            var el = angular.element('<image src="' + attrs.src + '" style="width:100%;"/>');
+            var el = angular.element('<image src="' + attrs.src + '" style="width:100%; vertical-align:top;"/>');
             img.onload = function() {
                 element.append(el);
                 

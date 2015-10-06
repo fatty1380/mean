@@ -129,15 +129,14 @@
     bottom: 0;
     width: 100%;
     left: 0;
-    background: #fff;
 
     .bar{
       background-color: rgba(0,0,0,0.5);
-      height: 43px;
+      height: 44px;
 
       .button {
-        line-height: 43px;
-        max-height: 43px;
+        line-height: 44px;
+        max-height: 44px;
         color: #fff;
         font-weight: bold;
 
@@ -161,6 +160,8 @@
       padding: 0;
       bottom: 44px;
       background: none;
+
+      &.controls-hidden{bottom: 0;}
 
       .image-container{
         position: static;

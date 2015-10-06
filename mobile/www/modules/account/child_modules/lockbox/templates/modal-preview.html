@@ -6,7 +6,7 @@
         <button ng-if="vm.fullScreenMode" class="button button-icon ion-arrow-shrink" ng-click="vm.minimize()"></button>
     </ion-header-bar>
 
-    <ion-content id="pdf-view-content" ng-click="vm.showControls = !vm.showControls">
+    <ion-content id="pdf-view-content" ng-class="{'controls-hidden': vm.showControls}" ng-click="vm.showControls = !vm.showControls">
         <ion-pane class="image-container" ng-if="!!vm.image">
             <div src="{{vm.trustSrc(vm.image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
         </ion-pane>
