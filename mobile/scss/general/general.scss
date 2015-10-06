@@ -86,8 +86,18 @@ body{
   }
 
   .content-pane {
-    bottom: 69px;
-    padding-bottom: 44px;
+    .ionic-scroll{
+      height: auto;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 44px;
+      position: absolute;
+
+      &:nth-last-child(1){
+        bottom:0;
+      }
+    }
   }
 }
 
