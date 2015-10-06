@@ -82,19 +82,12 @@
 
         function enlarge () {
             vm.fullScreenMode = !vm.fullScreenMode;
-            vm.modal.initialHeight = this.modal.el.clientHeight;
-            vm.modal.initialWidth = this.modal.el.clientWidth;
-
-            this.modal.el.style.height = vm.modal.initialWidth + 'px';
-            this.modal.el.style.width = vm.modal.initialHeight + 'px';
-            this.modal.el.style.marginLeft = vm.modal.initialWidth + 'px';
+            screen.lockOrientation('landscape');
         }
+
         function minimize () {
             vm.fullScreenMode = !vm.fullScreenMode;
-
-            this.modal.el.style.height = vm.modal.initialHeight + 'px';
-            this.modal.el.style.width = vm.modal.initialWidth + 'px';
-            this.modal.el.style.marginLeft = 0;
+            screen.lockOrientation('portrait');
         }
 
         console.log('Modal Visible for %s', vm.document.sku);

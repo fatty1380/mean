@@ -86,6 +86,8 @@ body{
   }
 
   .content-pane {
+    bottom: 69px;
+
     .ionic-scroll{
       height: auto;
       top: 0;
@@ -460,6 +462,8 @@ and (max-device-height : 568px) {
     }
 
     .content-pane {
+      bottom: 59px;
+
       &.profile-tabs{
         .ionic-scroll{
           top:50px;
