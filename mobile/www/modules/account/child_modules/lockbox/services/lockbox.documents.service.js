@@ -156,8 +156,13 @@
                 });
 
         }
-        function orderReports() {
-            console.log('orderReports');
+        function orderReports(doc) {
+            console.warn(' doc --->>>', doc);
+            lockboxModals
+                .showOrderReportsModal()
+                .then(function (response) {
+                    console.warn(' response --->>>', response);
+                })
         }
         
         function removeDocuments(documents) {

@@ -27,7 +27,7 @@
                 contactInfo: vm.contact,
                 text: vm.message,
                 requestType: 'reviewRequest'
-            }
+            };
             var serializedData = utilsService.serialize(data);
             reviewService
                 .createRequest(serializedData)

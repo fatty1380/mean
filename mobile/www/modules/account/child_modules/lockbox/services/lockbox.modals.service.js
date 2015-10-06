@@ -42,10 +42,21 @@
                 .show(templateUrl, controller, params, options);
         }
 
+        function showOrderReportsModal(parameters, options) {
+            templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-order-reports.html';
+            controller = 'LockboxOrderReportsCtrl as vm';
+            params = parameters || {};
+            options = angular.extend({}, defaultOptions, options);
+
+            return modalService
+                .show(templateUrl, controller, params, options);
+        }
+
         return {
             showCreateModal: showCreateModal,
             showEditModal: showEditModal,
-            showShareModal: showShareModal
+            showShareModal: showShareModal,
+            showOrderReportsModal: showOrderReportsModal
         };
     }
 })();

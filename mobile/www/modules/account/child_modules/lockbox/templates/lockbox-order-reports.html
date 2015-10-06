@@ -1,0 +1,40 @@
+<ion-modal-view class="lockbox lockbox-edit view-section min-size">
+
+    <ion-header-bar>
+        <h1 class="title">Order Reports</h1>
+    </ion-header-bar>
+
+    <ion-pane>
+        <ion-scroll>
+            <div class="card">
+                <div class="item item-divider">
+                    <strong>ORDER REPORTS NOW</strong>
+                </div>
+                <div class="item item-text-wrap">
+                    Fill out the information necessary to order reports on your device and get your reports in a few days.
+                </div>
+                <div class="item item-divider">
+                    <button class="button button-default button-positive button-small button-block" ng-click="vm.orderNow();">Order Now</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="item item-divider">
+                    <strong>REMIND ME LATER</strong>
+                </div>
+                <div class="item item-text-wrap">
+                    Get an email reminder and fill out your information when you are on you computer.
+                </div>
+                <div class="item item-divider">
+                    <button class="button button-default button-calm button-small button-block" ng-click="vm.remindLater();">Remind Me</button>
+                </div>
+            </div>
+        </ion-scroll>
+    </ion-pane>
+
+    <ion-footer-bar>
+        <div class="button-bar action-buttons">
+            <button class="button secondary" ng-click="vm.cancel();">Cancel</button>
+        </div>
+    </ion-footer-bar>
+
+</ion-modal-view>
