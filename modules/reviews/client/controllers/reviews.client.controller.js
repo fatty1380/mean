@@ -1,12 +1,16 @@
 'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Reviews',
-	function($scope, $stateParams, $location, Authentication, Reviews ) {
-		$scope.authentication = Authentication;
+angular.module('reviews').controller('ReviewsController', ['reviewRequest', '$stateParams', '$location', 'Authentication', 'Reviews',
+	function (reviewRequest, $stateParams, $location, Authentication, Reviews) {
+
+		var vm = this;
+		
+		vm.request = reviewRequest;
+		vm.authentication = Authentication;
 
 		// Create new Review
-		$scope.create = function() {
+		vm.create = function() {
 			// Create new Review object
 			var review = new Reviews ({
 				name: this.name
@@ -17,47 +21,47 @@ angular.module('reviews').controller('ReviewsController', ['$scope', '$statePara
 				$location.path('reviews/' + response._id);
 
 				// Clear form fields
-				$scope.name = '';
+				vm.name = '';
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				vm.error = errorResponse.data.message;
 			});
 		};
 
 		// Remove existing Review
-		$scope.remove = function( review ) {
+		vm.remove = function( review ) {
 			if ( review ) { review.$remove();
 
-				for (var i in $scope.reviews ) {
-					if ($scope.reviews [i] === review ) {
-						$scope.reviews.splice(i, 1);
+				for (var i in vm.reviews ) {
+					if (vm.reviews [i] === review ) {
+						vm.reviews.splice(i, 1);
 					}
 				}
 			} else {
-				$scope.review.$remove(function() {
+				vm.review.$remove(function() {
 					$location.path('reviews');
 				});
 			}
 		};
 
 		// Update existing Review
-		$scope.update = function() {
-			var review = $scope.review ;
+		vm.update = function() {
+			var review = vm.review ;
 
 			review.$update(function() {
 				$location.path('reviews/' + review._id);
 			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
+				vm.error = errorResponse.data.message;
 			});
 		};
 
 		// Find a list of Reviews
-		$scope.find = function() {
-			$scope.reviews = Reviews.query();
+		vm.find = function() {
+			vm.reviews = Reviews.query();
 		};
 
 		// Find existing Review
-		$scope.findOne = function() {
-			$scope.review = Reviews.get({ 
+		vm.findOne = function() {
+			vm.review = Reviews.get({ 
 				reviewId: $stateParams.reviewId
 			});
 		};
