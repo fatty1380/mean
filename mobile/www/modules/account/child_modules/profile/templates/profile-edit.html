@@ -31,10 +31,9 @@
                     <span class="input-label">Handle</span>
                     <input type="text" ng-model="vm.profileData.handle" placeholder="Handle">
                 </label>
-                <label class="item item-input item-floating-label" ng-class="{'error': editForm.phone.$invalid}">
+                <label class="item item-input item-floating-label">
                     <span class="input-label">Phone Number</span>
-                    <span class="error-message" ng-show="editForm.phone.$error.required">required</span>
-                    <input type="text" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone" required>
+                    <input type="text" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label has-input">Email Address</span>

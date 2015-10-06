@@ -98,6 +98,11 @@ body{
         bottom:0;
       }
     }
+    &.profile-tabs{
+      .ionic-scroll{
+        top:70px;
+      }
+    }
   }
 }
 
@@ -454,8 +459,12 @@ and (max-device-height : 568px) {
       height: 44px;
     }
 
-    .content-pane{
-      bottom: 59px;
+    .content-pane {
+      &.profile-tabs{
+        .ionic-scroll{
+          top:50px;
+        }
+      }
     }
   }
 

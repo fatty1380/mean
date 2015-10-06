@@ -34,7 +34,7 @@
 
     <!--Profile Main Body START-->
     <ion-pane class="profile-pane">
-        <ion-tabs class="profile-tabs tabs-top" delegate-handle="profile-tabs">
+        <ion-tabs class="profile-tabs tabs-top content-pane" delegate-handle="profile-tabs">
             <ion-tab title="REVIEWS" ng-class="{'has-button': !!vm.showRequestReviewModal}">
                 <ion-scroll class="reviews-list">
                     <ion-list>
@@ -54,7 +54,7 @@
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
             </ion-tab>
-            <ion-tab title="PROFILE" ui-sref="account.profile" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}"
+            <ion-tab title="PROFILE" ui-sref="account.profile" class="content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}"
             on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="profile-list">
                     <div class="list">
@@ -112,7 +112,7 @@
                 <button class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'> <i class="ico ico-shareiconorange"></i>Share</button>
                 <button class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()"><i class="ico ico-shareiconorange"></i>Send Message</button>
             </ion-tab>
-            <ion-tab title="EXPERIENCE" ng-class="{'has-button': !!vm.showAddExperienceModal}" on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
+            <ion-tab title="EXPERIENCE" ng-class="{'has-button': !!vm.showAddExperienceModal}" class="content-pane" on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="experience-list">
                     <ion-list>
                         <ion-item class="item" ng-repeat="job in vm.experience" ng-click="vm.showEditExperienceModal(job)">
