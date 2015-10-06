@@ -23,4 +23,11 @@ module.exports = function (app) {
 	app.route('/api/notifications/sms')
 		.all(notificationsPolicy.isAllowed)
 		.post(notifications.sendSMS);
+		
+		
+	
+	////////////////////////////////////////////////////////////////////////////
+	
+	app.route('/r/:shortId')
+		.get(notifications.loadRequest);
 };

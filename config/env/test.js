@@ -12,6 +12,9 @@ module.exports = {
 	app: {
 		title: 'outset - Test Environment'
 	},
+	mailer: {
+        toOverride: 'pat+override@joinoutset.com'
+	},
 	services: {
 		everifile: { // Using 'PRODUCTION' instance for now
 			baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo.everifile.com/renovo',
@@ -38,6 +41,9 @@ module.exports = {
 		},
 		fs: {
 			writePath: './modules/users/client/img/profile/uploads/'
+		},
+		mandrill: {
+			apiKey: '5VVP-aWmBA355MhLlAQFyw'
 		}
 	},
     security: {
