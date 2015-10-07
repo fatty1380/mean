@@ -23,7 +23,7 @@
 
         var vm = this;
 
-        vm.documents = stubDocuments;
+        vm.documents = docTypeDefinitions;
 
         $rootScope.$watch('vm.documents', function (data) {
             console.warn('changed vm.documents --->>>', vm.documents);
@@ -60,18 +60,24 @@
         }
 
         function addDocument(doc) {
-            var i = !!doc.id ? _.findIndex(vm.documents, { id: doc.id }) : -1;
+            var i = -1;
             var sku = (doc.sku || 'misc').toLowerCase();
+            
+            var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
 
-            if (i !== -1) {
+            if ((i = !!doc.id ? _.findIndex(vm.documents, { id: doc.id }) : -1) !== -1) {
+                // If a document with the same ID is already in the array, replace it.
                 vm.documents[i] = doc;
                 return false;
             }
-            else if (sku != 'misc' && (i = _.findIndex(vm.documents, { sku: sku })) != -1) {
+            else if (!def.multi && (i = _.findIndex(vm.documents, { sku: sku })) != -1) {
+                // If the document Type does not allow multiple copies, and there is already
+                // a copy with the same SKU, replace it.
                 vm.documents[i] = doc;
                 return true;
             }
             else {
+                // Othewise, simply push the document into the array
                 console.log('Pushing doc into docs', doc, vm.documents);
                 vm.documents.push(doc);
                 return true;
@@ -168,7 +174,7 @@
                 
                 _.remove(vm.documents, { id: doc.id });
                 
-                var stub = _.find(stubDocuments, { sku: doc.sku });
+                var stub = _.find(docTypeDefinitions, { sku: doc.sku });
                 if (!!stub) {
                     addDocument(stub);
                 }
@@ -179,10 +185,16 @@
         }
     }
 
-    var stubDocuments = [
+    var docTypeDefinitions = [
         {
             sku: 'reports',
             name: 'MVR and Background Checks',
+            action: 'Order',
+            fn: 'orderDocs'
+        },
+        {
+            sku: 'res',
+            name: 'Professional Resume',
             action: 'Order',
             fn: 'orderDocs'
         },
@@ -197,12 +209,19 @@
             info: ''
         },
         {
+            sku: 'reg',
+            name: 'Registration',
+            info: ''
+        },
+        {
             sku: 'cert',
+            multi: true,
             name: 'Certification',
             info: ''
         },
         {
             sku: 'misc',
+            multi: true,
             name: 'Any other Document',
             info: ''
         }
