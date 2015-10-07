@@ -42,12 +42,18 @@
                     }
                 },
                 resolve: {
-                    profile: ['$stateParams', 'registerService',
-                        function resolveUserProfile($stateParams, registerService) {
-                            if (!!$stateParams.userId) {
-                                return registerService.getProfileById($stateParams.userId)
+                    profile: ['$stateParams', 'registerService', 'appCache',
+                        function resolveUserProfile($stateParams, registerService, appCache) {
+                            var id = $stateParams.userId;
+                            if (!!id) {
+
+                                var cachedProfile = appCache.getProfile(id);
+                                if(!!cachedProfile && cachedProfile.id === id) return cachedProfile;
+
+                                return registerService.getProfileById(id)
                                     .then(function success(response) {
                                         if (response.success) {
+                                            appCache.cacheProfile(response.message.data);
                                             return response.message.data;
                                         }
                                         debugger;

@@ -23,6 +23,8 @@
         });
 
         function initTimer (name, interval, immediate) {
+            if(vm[name]) return;
+
             vm[name] = {};
             vm[name].name = name;
             vm[name].timeOut = null;

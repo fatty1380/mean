@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope', 'updateService', '$state', 'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$rootScope', 'updateService', 'appCache', '$state', 'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, updateService, $state, activityService, reviewService, $ionicLoading, experienceService, utilsService, friendsService, avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, updateService, appCache, $state, activityService, reviewService, $ionicLoading, experienceService, utilsService, friendsService, avatarService, profileModalsService, cameraService, user, profile) {
         var vm = this;
 
         console.log('Loading $state: `%s`', $state.current.name);
@@ -25,6 +25,11 @@
         vm.showFriends = showFriends;
         vm.openChat = openChat;
         vm.friendStatus = null;
+
+        vm.ab = function () {
+           var profi = appCache.getCachedProfiles();
+            console.warn(' profi --->>>', profi);
+        };
 
         $rootScope.$on("clear", function () {
             console.log('ProfileCtrl my event occurred');
