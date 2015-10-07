@@ -10,58 +10,97 @@
     function timerService($rootScope, $timeout) {
         var vm = this;
 
-        vm.isRunning = false;
-        vm.interval = null;
-        vm.counter = null;
-        vm.myTimeOut = null;
+        vm.timers = [];
+
+        // default interval in seconds
+        vm.defaultInterval = 30;
 
         $rootScope.$on("clear", function () {
-            $timeout.cancel(vm.myTimeOut);
-            vm.isRunning = false;
-            vm.interval = null;
-            vm.counter = null;
-            vm.myTimeOut = null;
+            for (var i = 0; i < vm.timers.length; i++) {
+                var timer = vm[vm.timers[i]];
+                cancelTimer(timer);
+            }
         });
 
-        function onTimeout () {
+        function initTimer (name, interval, immediate) {
+            vm[name] = {};
+            vm[name].name = name;
+            vm[name].timeOut = null;
+            vm[name].interval = interval || vm.defaultInterval;
+            vm[name].counter = null;
+            vm[name].running = false;
 
-            if(vm.counter ===  0) {
-                $rootScope.$broadcast('timer-stopped', 0);
-                vm.isRunning = false;
+            vm.timers.push(name);
+
+            startTimer(vm[name], immediate);
+        }
+
+        function startTimer (timer, immediate) {
+            if(!timer) return;
+
+            console.info(' --->>> starting ' + timer.name + ' <<<--- ');
+
+            // run immediately for the first time
+            if(immediate && timer.counter === null){
+                timer.counter = 0;
+            } else {
+                timer.counter = timer.interval;
+            }
+
+            if(!timer.running) {
+                timer.timeOut = $timeout(onTimeout, 1000, true, timer);
+                timer.running = true;
+            }
+        }
+
+        function onTimeout (timer) {
+            if(timer.counter ===  0) {
+                var timerObj = vm[timer.name];
+
+                timerObj.running = false;
+                timerObj.counter = 0;
+
+                $rootScope.$broadcast(timer.name + '-stopped');
                 return;
             }
 
-            vm.counter--;
-            vm.myTimeOut = $timeout(onTimeout, 1000);
-        }
-        
-        function start (interval) {
-            if(!interval) interval = 15;
+            console.warn(timer.name + ' counter --->>>', timer.counter);
 
-            vm.interval = interval;
-            // run immediately for the first time
-            if(vm.counter === null){
-                vm.counter = 0;
-            } else {
-                vm.counter = interval;
-            }
-
-            if(!vm.isRunning) {
-                vm.myTimeOut = $timeout(onTimeout, 1000);
-                vm.isRunning = true;
-            }
+            timer.counter--;
+            timer.timeOut = $timeout(onTimeout, 1000, true, timer);
         }
 
-        function restartTimer () {
-            vm.counter = vm.interval;
-            vm.myTimeOut = null;
+        function restartTimer (name) {
+            if(!name) return;
 
-            start(vm.interval);
+            var timer = vm[name];
+
+            if(!timer) {
+                initTimer(name);
+                return;
+            }
+
+            timer.counter = timer.interval;
+            timer.timeOut = null;
+            timer.running = false;
+
+            startTimer(timer);
+        }
+
+        function cancelTimer (timer) {
+            if(timer) return;
+
+            $timeout.cancel(timer.timeOut);
+
+            timer.running = false;
+            timer.interval = null;
+            timer.counter = null;
+            timer.myTimeOut = null;
         }
 
         return {
-            start: start,
-            restartTimer: restartTimer
+            restartTimer: restartTimer,
+            initTimer: initTimer
         };
     }
 })();

@@ -9,6 +9,7 @@
 
     function updateService($q, $http, settings, timerService, $rootScope) {
         var currentMessage, updateAvailable, currentRequest, user,
+            timerName = 'updates-timer',
             currentActivity = {},
             messageObject = {
                 newItems: [],
@@ -21,21 +22,19 @@
                 requests: 0
             };
 
-        $rootScope.$on('timer-stopped', function(event, remaining) {
-            if(remaining === 0) {
-                var promises = [],
-                    messagePromise = getMessagesStatus(),
-                    activityPromise = getActivityStatus(),
-                    friendRequestPromise = getFriendRequestStatus();
+        $rootScope.$on(timerName + '-stopped', function(event) {
+            var promises = [],
+                messagePromise = getMessagesStatus(),
+                activityPromise = getActivityStatus(),
+                friendRequestPromise = getFriendRequestStatus();
 
-                promises.push(messagePromise, activityPromise, friendRequestPromise);
+            promises.push(messagePromise, activityPromise, friendRequestPromise);
 
-                $q.all(promises)
-                    .then(function (response) {
-                        getUpdates(response);
-                        timerService.restartTimer();
-                    });
-            }
+            $q.all(promises)
+                .then(function (response) {
+                    getUpdates(response);
+                    timerService.restartTimer(timerName);
+                });
         });
 
         function getUpdates (response) {
@@ -262,10 +261,9 @@
             return updates;
         }
 
-        function checkForUpdates(sec, profileData) {
+        function checkForUpdates(profileData) {
             user = profileData;
-            return timerService
-                .start(sec);
+            return timerService.initTimer(timerName, 15, true);
         }
 
         return {

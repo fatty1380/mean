@@ -5,9 +5,9 @@
         .module('account')
         .controller('AccountCtrl', AccountCtrl);
 
-    AccountCtrl.$inject = ['$rootScope', 'updateService', 'user'];
+    AccountCtrl.$inject = ['$rootScope', 'updateService', 'timerService', 'user'];
 
-    function AccountCtrl($rootScope, updateService, user) {
+    function AccountCtrl($rootScope, updateService, timerService, user) {
         var vm = this;
 
         vm.updates = updateService.getLastUpdates();
@@ -16,7 +16,8 @@
             vm.updates = updates;
         });
 
-        updateService.checkForUpdates(5, user);
+        //check for user updates (messages, activities, friend requests)
+        updateService.checkForUpdates(user);
     }
 
 })();
