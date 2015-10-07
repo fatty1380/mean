@@ -8,21 +8,6 @@
     LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup'];
 
     function LockboxCtrl($scope, $state, $rootScope, securityService, documents, lockboxDocuments,  lockboxModalsService, $ionicPopup) {
-        var vm = this;
-
-        vm.currentDoc = null;
-        vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
-
-        vm.addDocsPopup = addDocs;
-        vm.showEditModal = showEditModal;
-        vm.showShareModal = showShareModal;
-
-        $rootScope.$on("clear", function () {
-            console.log('LockboxCtrl clear');
-            vm.currentDoc = null;
-            vm.documents = [];
-        });
-
         $scope.$on("$ionicView.beforeEnter", function () {
             var state = securityService.getState();
 
@@ -60,7 +45,21 @@
                     }
                 });
             }
+        });
 
+        var vm = this;
+
+        vm.currentDoc = null;
+        vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
+
+        vm.addDocsPopup = addDocs;
+        vm.showEditModal = showEditModal;
+        vm.showShareModal = showShareModal;
+
+        $rootScope.$on("clear", function () {
+            console.log('LockboxCtrl clear');
+            vm.currentDoc = null;
+            vm.documents = [];
         });
 
         /// Implementation

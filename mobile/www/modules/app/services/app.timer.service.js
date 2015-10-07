@@ -38,8 +38,6 @@
         function startTimer (timer, immediate) {
             if(!timer) return;
 
-            console.info(' --->>> starting ' + timer.name + ' <<<--- ');
-
             // run immediately for the first time
             if(immediate && timer.counter === null){
                 timer.counter = 0;
@@ -63,8 +61,6 @@
                 $rootScope.$broadcast(timer.name + '-stopped');
                 return;
             }
-
-            console.warn(timer.name + ' counter --->>>', timer.counter);
 
             timer.counter--;
             timer.timeOut = $timeout(onTimeout, 1000, true, timer);
