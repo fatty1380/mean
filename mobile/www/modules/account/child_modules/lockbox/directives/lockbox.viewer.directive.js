@@ -52,7 +52,9 @@
         }
 
         function showDocument(document) {
-            return DocPreview.show('modules/account/child_modules/lockbox/templates/modal-preview.html', 'DocumentModalCtrl as vm', document)
+            return DocPreview.show('modules/account/child_modules/lockbox/templates/modal-preview.html',
+                'DocumentModalCtrl as vm',
+                document)
         }
     }
 
@@ -60,8 +62,8 @@
 
 
     // AKA: ContactDialogCtrl
-    DocumentModalCtrl.$inject = ['$scope', 'parameters', '$sce', '$ionicPopup', '$ionicLoading'];
-    function DocumentModalCtrl($scope, parameters, $sce, $ionicPopup, $ionicLoading) {
+    DocumentModalCtrl.$inject = ['parameters', '$sce', '$ionicPopup', '$ionicLoading'];
+    function DocumentModalCtrl(parameters, $sce, $ionicPopup, $ionicLoading) {
         var vm = this;
 
         vm.document = parameters.document || parameters;
@@ -82,13 +84,14 @@
         vm.toggleFullScreen = toggleFullScreen;
         vm.close = close;
 
-        function close () {
-            vm.fullScreenMode = !vm.fullScreenMode;
+        function close(e) {
+            e.stopPropagation();
+            vm.closeModal(null);
             screen.lockOrientation('portrait');
-            $scope.closeModal(null);
+            vm.fullScreenMode = false;
         }
 
-        function enlarge () {
+        function enlarge (e) {
             vm.fullScreenMode = !vm.fullScreenMode;
             screen.lockOrientation('landscape');
         }

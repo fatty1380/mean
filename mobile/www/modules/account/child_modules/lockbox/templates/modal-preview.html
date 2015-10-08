@@ -1,12 +1,12 @@
 <ion-modal-view class="preview" ng-class="{'full-screen': !!vm.fullScreenMode}">
     <ion-header-bar ng-hide="!!vm.showControls">
-        <button class="button button-clear button-primary preview-cancel-button" ng-click="vm.close();">Close</button>
+        <button class="button button-clear button-primary preview-cancel-button" ng-click="vm.close($event);">Close</button>
         <h1 class="title">Preview</h1>
-        <button ng-if="!vm.fullScreenMode" class="button button-icon ion-arrow-expand" ng-click="vm.enlarge()"></button>
-        <button ng-if="vm.fullScreenMode" class="button button-icon ion-arrow-shrink" ng-click="vm.minimize()"></button>
+        <button ng-if="!vm.fullScreenMode" class="button button-icon ion-arrow-expand" ng-click="vm.enlarge($event)"></button>
+        <button ng-if="vm.fullScreenMode" class="button button-icon ion-arrow-shrink" ng-click="vm.minimize($event)"></button>
     </ion-header-bar>
 
-    <ion-content id="pdf-view-content" ng-class="{'controls-hidden': vm.showControls}" ng-click="vm.toggleFullScreen();">
+    <ion-content id="pdf-view-content" ng-class="{'controls-hidden': vm.showControls}" ng-click="vm.toggleFullScreen($event);">
         <ion-pane class="image-container" ng-if="!!vm.image">
             <div src="{{vm.trustSrc(vm.image)}}"  on-image-event='vm.onImageEvent(type)' imageviewer></div>
         </ion-pane>
