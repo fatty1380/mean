@@ -1,4 +1,4 @@
-<ion-view class="company-screen view-section compact-size" cache-view="false">
+<ion-view class="company-screen view-section min-size" cache-view="false">
 
     <div class="bar bar-header bar-calm" align-title="center">
         <button class="button button-clear" ui-sref="account.activity">Back</button>
@@ -85,6 +85,9 @@
                                 retailers. Core-Mark offers a full range of products, marketing programs and technology solutions;
                                 and is recognized as one of the largest and most valued marketers of fresh and broad-like
                                 supply solutions.</p>
+                        </ion-item>
+                        <ion-item class="card">
+                            <h3><img class="brand-img" ng-if="vm.company.profileImageURL" ng-src="{{vm.company.profileImageURL}}" alt="" /></h3>
                         </ion-item>
                         <br>
                     </ion-list>

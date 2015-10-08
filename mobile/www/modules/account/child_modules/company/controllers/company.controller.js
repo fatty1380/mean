@@ -9,7 +9,7 @@
     function CompanyCtrl(company, activityService, $ionicLoading, $ionicPopup) {
         var vm = this;
         vm.follow = follow;
-        
+
         function initialize() {
             vm.company = angular.extend(defaultCompany, company);
             vm.jobs = jobs;
@@ -27,11 +27,11 @@
                 
             $ionicLoading.hide();
         }
-        
+
         function goBack() {
-             //ng-click="$ionicGoBack()"
+            //ng-click="$ionicGoBack()"
         }
-        
+
         function follow() {
             $ionicLoading.show({
                 template: '<i class="icon ion-checkmark"></i><br>Following',
@@ -43,7 +43,7 @@
     }
 
     var jobs = [{
-        'company': { name: 'Core-Mark'},
+        'company': { name: 'Core-Mark' },
         '_type': 'job',
         'id': 'sampleJob#2',
         'user': '55a8c832f58ef0900b7ca14c',
@@ -57,8 +57,8 @@
         'location':
         {
             'created': '2015-08-19',
-            'coordinates': [ 
-                '37.6673051', 
+            'coordinates': [
+                '37.6673051',
                 '-122.3827679'
             ],
             'type': 'Point',
@@ -67,8 +67,8 @@
 
     },
         {
-        'company': { name: 'Core-Mark'},
-        '_type': 'job',
+            'company': { name: 'Core-Mark' },
+            '_type': 'job',
             'id': 'sampleJob#2',
             'user': '55d76f65fa4aad2e1d66d58e',
             'modified': '2015-08-21T18:52:23.034Z',
@@ -82,8 +82,8 @@
             {
                 'created': '2015-08-21',
                 'coordinates': [
-                     '45.5230622', 
-                '-122.6764816'
+                    '45.5230622',
+                    '-122.6764816'
                 ],
                 'type': 'Point',
                 'placeName': 'Portland, OR (Local)'
@@ -94,13 +94,30 @@
 
     var defaultCompany = {
         name: 'Company Name',
-        
+
     }
-    
+
     var defaultFeed = [
         {
+            "id": '561564106173e4bac0e9f268',
+            "company": defaultCompany,
+            "created": '2015-10-07T09:21:08.513Z',
+            "isPublic": true,
+            "comments": [],
+            "message": "At Core-Mark, you'll have full visibility into where and when you go, and end each night at home in your own bed. Now hiring in the SF Bay Area",
+            "title": "Tired of not getting the routes you deserve? ",
+            "__v": 1,
+            "_location": [],
+            "_imageURL": "http://www.core-mark.com/sites/all/themes/coremark/images/coremark-logo.png",
+            "likes": [],
+            "props": {
+                "slMiles": null,
+                "freight": null
+            }
+        },
+        {
             id: '11',
-            user: {displayName: 'Core-Mark International'},
+            user: { displayName: 'Core-Mark International' },
             company: defaultCompany,
             created: '2015-09-09T18:52:23.030Z',
             likes: [],
@@ -111,7 +128,7 @@
         },
         {
             id: '12',
-            user: {displayName: 'Core-Mark International'},
+            user: { displayName: 'Core-Mark International' },
             company: defaultCompany,
             created: '2015-09-04T18:52:23.030Z',
             likes: [],
@@ -121,7 +138,7 @@
         },
         {
             id: '13',
-            user: {displayName: 'Core-Mark International'},
+            user: { displayName: 'Core-Mark International' },
             company: defaultCompany,
             created: '2015-08-31T18:52:23.030Z',
             likes: [],
@@ -131,7 +148,7 @@
         },
         {
             id: '14',
-            user: {displayName: 'Core-Mark International'},
+            user: { displayName: 'Core-Mark International' },
             company: defaultCompany,
             created: '2015-08-24T18:52:23.030Z',
             likes: [],
@@ -141,7 +158,7 @@
         },
         {
             id: '15',
-            user: {displayName: 'Core-Mark International'},
+            user: { displayName: 'Core-Mark International' },
             company: defaultCompany,
             created: '2015-08-21T18:52:23.030Z',
             likes: [],
@@ -151,7 +168,7 @@
         },
         {
             id: '16',
-            user: {displayName: 'Core-Mark International'},
+            user: { displayName: 'Core-Mark International' },
             company: defaultCompany,
             created: '2015-08-19T18:52:23.030Z',
             likes: [],

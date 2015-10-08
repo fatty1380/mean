@@ -67,6 +67,7 @@
 			vm.username = vm.user.handle || vm.user.displayName;
 			vm.title = vm.entry.title;
 		}
+		
         /**
          * @param {Number} id - feed id
          */
@@ -75,6 +76,10 @@
 
             activityService.likeActivity(id)
 				.then(function (updatedLikes) {
+					$ionicLoading.show({
+						template: '<i class="icon ion-star"></i><br>Liked!',
+						duration: 1000
+					})
 
 					if (_.isArray(updatedLikes)) {
 						vm.entry.likes = updatedLikes;
