@@ -9,39 +9,77 @@
 
     function LockboxCtrl($scope, $state, $rootScope, securityService, documents, lockboxDocuments,  lockboxModalsService, $ionicPopup) {
         $scope.$on("$ionicView.beforeEnter", function () {
-            var state = securityService.getState();
+            // TODO: refactor and move to service
 
-            if(state.accessible === false){
-                $scope.data = {};
+            $scope.data = {
+                title: 'Enter PIN',
+                subTitle: 'Please enter a 4 digit Lockbox PIN'
+            };
 
-                // An elaborate, custom popup
-                var pingPopup = $ionicPopup.show({
-                    template: '<input type="password" ng-model="data.pin" maxlength="4">',
-                    title: 'Enter PIN',
-                    subTitle: 'Please enter PIN-code to enter lockbox',
+            var scopeData = $scope.data,
+                state = securityService.getState(),
+                PIN = securityService.getPin(),
+                pinObject = {
+                    template: '<input type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4">',
+                    title: scopeData.title,
+                    subTitle: scopeData.subTitle,
                     scope: $scope,
                     buttons: [
-                        { text: 'Cancel' },
-                        {
-                            text: '<b>Enter</b>',
-                            type: 'button-positive',
-                            onTap: function(e) {
-                                if (!$scope.data.pin) {
-                                    e.preventDefault();
-                                } else {
-                                    return securityService.unlock($scope.data.pin);
-                                }
-                            }
-                        }
+                        { text: 'Cancel', type: 'button-small' }
                     ]
-                });
+                },
+                pingPopup;
 
-                pingPopup.then(function(response) {
-                    if(!response){
-                        $ionicPopup.alert({title: 'Error', template: 'You have entered a wrong PIN-code, redirecting to Profile'}, 1500);
-                        $state.go('account.profile')
+            //TODO: refactor this
+            if(!!PIN.then){
+                securityService
+                    .getPin().then(function (pin) {
+                        PIN = pin;
+                    });
+            }
+
+            scopeData.closePopup = function (data) {
+                pingPopup.close(data);
+            };
+
+            scopeData.pinChange = function (popup) {
+                if(scopeData.pin.length !== 4) return;
+
+                if(!scopeData.confirm && !state.secured){
+
+                    scopeData.confirm = true;
+                    scopeData.newPin = scopeData.pin;
+                    scopeData.pin = '';
+                    popup.subTitle = 'Please confirm Lockbox PIN';
+                    popup.title = 'Confirm';
+
+                } else if (state.secured && PIN && (scopeData.pin === PIN)) {
+                    scopeData.closePopup(securityService.unlock(scopeData.pin));
+                } else if (state.secured && PIN && scopeData.pin != PIN) {
+                    scopeData.pin = '';
+                } else if (scopeData.confirm && !state.secured){
+
+                    if(scopeData.pin === scopeData.newPin){
+                        securityService.setPin(scopeData.pin);
+                        scopeData.closePopup(securityService.unlock(scopeData.pin));
                     }else{
-                        securityService.unlock();
+
+                        scopeData.confirm = false;
+                        scopeData.pin = '';
+
+                        delete scopeData.newPin;
+
+                        popup.subTitle = 'Please enter Lockbox PIN';
+                        popup.title = 'Enter PIN';
+                    }
+                }
+            };
+
+            if(!state.accessible){
+                pingPopup = $ionicPopup.show(pinObject);
+                pingPopup.then(function(accessGranted) {
+                    if(!accessGranted){
+                        $state.go('account.profile')
                     }
                 });
             }

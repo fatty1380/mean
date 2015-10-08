@@ -61,6 +61,7 @@
                 timerObj.counter = 0;
 
                 $rootScope.$broadcast(timer.name + '-stopped');
+
                 return;
             }
 
