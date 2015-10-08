@@ -195,7 +195,6 @@
         {
             sku: 'res',
             name: 'Professional Resume',
-            action: 'Order',
             fn: 'orderDocs'
         },
         {
@@ -203,26 +202,26 @@
             name: 'Commercial Driver License',
             info: ''
         },
-        {
-            sku: 'ins',
-            name: 'Insurance',
-            info: ''
-        },
-        {
-            sku: 'reg',
-            name: 'Registration',
-            info: ''
-        },
-        {
-            sku: 'cert',
-            multi: true,
-            name: 'Certification',
-            info: ''
-        },
+        // {
+        //     sku: 'ins',
+        //     name: 'Insurance',
+        //     info: ''
+        // },
+        // {
+        //     sku: 'reg',
+        //     name: 'Registration',
+        //     info: ''
+        // },
+        // {
+        //     sku: 'cert',
+        //     multi: true,
+        //     name: 'Certification',
+        //     info: ''
+        // },
         {
             sku: 'misc',
             multi: true,
-            name: 'Any other Document',
+            name: 'other document ...',
             info: ''
         }
     ];
