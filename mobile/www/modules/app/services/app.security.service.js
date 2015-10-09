@@ -5,19 +5,33 @@
         .module(AppConfig.appModuleName)
         .service('securityService', securityService);
 
-    securityService.$inject = ['$rootScope', 'timerService', 'userService', '$window'];
+    securityService.$inject = ['$rootScope', 'timerService', 'userService', '$window', '$q'];
 
-    function securityService($rootScope, timerService, userService, $window) {
+    function securityService($rootScope, timerService, userService, $window, $q) {
 
-        var PIN, state = {};
+        var PIN;
+        var state = {
+            secured: false,
+            accessible: false
+        };
 
         initialize();
+        
+        return {
+            unlock: unlock,
+            lock: lock,
+            setPin: setPin,
+            getPin: getPin,
+            getState: getState
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////
 
         function initialize () {
             userService.getUserData()
                 .then(function (data) {
                     PIN = data.props.pin || null;
-                    PIN ? state.secured = true : state.secured = false;
+                    state.secured = (PIN ? true : false);
                 });
 
             state.accessible = false;
@@ -47,7 +61,7 @@
         }
 
         function getPin () {
-            if(PIN) return PIN;
+            if (PIN) return $q.when(PIN);
 
             return userService.getUserData()
                 .then(function (data) {
@@ -57,14 +71,6 @@
 
         function getState () {
             return state;
-        }
-
-        return {
-            unlock: unlock,
-            lock: lock,
-            setPin: setPin,
-            getPin: getPin,
-            getState: getState
         }
     }
 

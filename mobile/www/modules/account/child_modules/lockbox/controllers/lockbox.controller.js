@@ -81,21 +81,12 @@
 
             $scope.data = {
                 title: 'Enter PIN',
-                subTitle: 'Please enter a 4 digit Lockbox PIN'
+                subTitle: 'Secure your Lockbox with a 4 digit PIN'
             };
 
             var scopeData = $scope.data;
             var state = securityService.getState();
-            var PIN = securityService.getPin();
-            var pinObject = {
-                template: '<input type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4">',
-                title: scopeData.title,
-                subTitle: scopeData.subTitle,
-                scope: $scope,
-                buttons: [
-                    { text: 'Cancel', type: 'button-small' }
-                ]
-            };
+            var PIN;
 
             var pinPopup;
             scopeData.closePopup = closePINPopup;
@@ -109,21 +100,35 @@
             /////////////////////////////////////////////
             
             function activate() {
-                if (!!PIN.then) {
+
+                if (!!PIN) {
                     securityService
-                        .getPin().then(function (pin) {
+                        .getPin()
+                        .then(function (pin) {
                             PIN = pin;
                         });
                 }
 
                 if (!state.accessible) {
-                    pinPopup = $ionicPopup.show(pinObject);
+                    pinPopup = $ionicPopup.show(getPinObject());
                     pinPopup.then(function (accessGranted) {
                         if (!accessGranted) {
                             $state.go('account.profile')
                         }
                     });
                 }
+            }
+
+            function getPinObject() {
+                return {
+                    template: '<input class="pin-input" type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4">',
+                    title: scopeData.title,
+                    subTitle: scopeData.subTitle,
+                    scope: $scope,
+                    buttons: [
+                        { text: 'Cancel', type: 'button-small' }
+                    ]
+                };
             }
 
             function closePINPopup(data) {
@@ -157,8 +162,8 @@
 
                         delete scopeData.newPin;
 
-                        popup.subTitle = 'Please enter Lockbox PIN';
-                        popup.title = 'Enter PIN';
+                        popup.subTitle = 'Please enter PIN to unlock';
+                        popup.title = 'Lockbox Secured';
                     }
                 }
             }
