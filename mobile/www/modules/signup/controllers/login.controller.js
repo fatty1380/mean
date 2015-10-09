@@ -5,9 +5,9 @@
         .module('signup')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$state', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'focusService'];
+    LoginCtrl.$inject = ['$state', '$window', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'focusService'];
 
-    function LoginCtrl($state, registerService, $ionicLoading, tokenService, userService, focusService) {
+    function LoginCtrl($state, $window, registerService, $ionicLoading, tokenService, userService, focusService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -61,6 +61,7 @@
                         .me()
                         .then(function (profileData) {
                             if(profileData.success){
+                                $window.localStorage.setItem('lockbox_pin', profileData.message.data.props.pin);
                                 userService.profileData = profileData.message.data;
                                 $state.go('account.profile');
                             }

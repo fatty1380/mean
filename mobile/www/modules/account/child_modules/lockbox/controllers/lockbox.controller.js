@@ -5,9 +5,9 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup'];
+    LockboxCtrl.$inject = ['$scope', '$window', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup'];
 
-    function LockboxCtrl($scope, $state, $rootScope, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup) {
+    function LockboxCtrl($scope, $window, $state, $rootScope, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup) {
 
 
         var vm = this;
@@ -25,10 +25,11 @@
 
         $rootScope.$on("clear", function () {
             console.log('LockboxCtrl clear');
+            $window.localStorage.removeItem('lockbox_pin');
             vm.currentDoc = null;
             vm.documents = [];
         });
-        
+
         /// Implementation
         function addDocs(docSku) {
             var docCount = vm.documents.length;
@@ -101,7 +102,7 @@
             
             function activate() {
 
-                if (!!PIN) {
+                if (!PIN) {
                     securityService
                         .getPin()
                         .then(function (pin) {
@@ -121,7 +122,7 @@
 
             function getPinObject() {
                 return {
-                    template: '<input class="pin-input" type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4">',
+                    template: '<input class="pin-input" type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4" autofocus>',
                     title: scopeData.title,
                     subTitle: scopeData.subTitle,
                     scope: $scope,
@@ -151,12 +152,10 @@
                 } else if (state.secured && PIN && scopeData.pin != PIN) {
                     scopeData.pin = '';
                 } else if (scopeData.confirm && !state.secured) {
-
                     if (scopeData.pin === scopeData.newPin) {
                         securityService.setPin(scopeData.pin);
                         scopeData.closePopup(securityService.unlock(scopeData.pin));
                     } else {
-
                         scopeData.confirm = false;
                         scopeData.pin = '';
 
