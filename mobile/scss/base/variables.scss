@@ -182,7 +182,8 @@ $button-default-active-border:    $button-stable-active-border !default;
 // Bars
 // -------------------------------
 
-$bar-height:                      40px !default;
+// TODO: Determine why I have to add in $ios-statusbar-height
+$bar-height:                      $ios-statusbar-height + 40px !default;
 $bar-title-font-size:             14px !default;
 $bar-padding-portrait:            0 !default;
 $bar-padding-landscape:           0 !default;
