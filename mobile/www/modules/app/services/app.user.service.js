@@ -77,6 +77,7 @@
             return registerService.updateUserProps(dataProps)
                 .then(function (data) {
                     if (data.success) {
+                        vm.profileData.props = vm.profileData.props || {};
                         _.extend(vm.profileData.props, data.message.data)
                         return vm.profileData.props;
                     }

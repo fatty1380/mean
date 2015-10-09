@@ -22,7 +22,7 @@
         vm.lockboxClear = false;
 
         $scope.$on("$ionicView.beforeEnter", checkLockboxAccess);
-        
+
         $rootScope.$on("clear", function () {
             console.log('LockboxCtrl clear');
             vm.currentDoc = null;
@@ -32,17 +32,25 @@
         /// Implementation
         function addDocs(docSku) {
             var docCount = vm.documents.length;
-            lockboxDocuments.addDocsPopup(docSku).then(
-                function success(doc) {
-                    if (!!doc) {
-                        console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
-                    }
-                    else {
-                        console.log('No Doc added');
-                    }
-                    console.info('Lockbox documents went from ' + docCount + ' to ' + vm.documents.length);
-                }
-                )
+            lockboxDocuments.addDocsPopup(docSku)
+                .then(
+                    function success(doc) {
+                        if (!!doc) {
+                            console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
+                        }
+                        else {
+                            console.log('No Doc added');
+                        }
+                        console.info('Lockbox documents went from ' + docCount + ' to ' + vm.documents.length);
+                    })
+                .catch(
+                    function fail(rejection) {
+                        if (rejection.error || _.isUndefined(rejection.error)) {
+                            console.error('Failed to add Documents', rejection);
+                        } else {
+                            console.log('getNewAvatar Aborted %s', rejection.message || rejection)
+                        }
+                    })
         }
 
         function showEditModal(parameters) {

@@ -59,16 +59,7 @@
          * a photo, or selecting from device photos.
          */
         vm.showEditAvatar = function (parameters) {
-            vm.camera.showActionSheet({cameraDirection: 1})
-                .then(function success(rawImageResponse) {
-                    return avatarService.showCropModal({ rawImage: rawImageResponse, imgSize: 512 });
-                })
-                .then(function success(newImageResponse) {
-                    vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
-                })
-                .catch(function reject(err) {
-                    debugger;
-                });
+            avatarService.getNewAvatar(parameters, vm.profileData);
         };
 
         function continueToLicense() {

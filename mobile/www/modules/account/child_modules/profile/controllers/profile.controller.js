@@ -27,7 +27,7 @@
         vm.friendStatus = null;
 
         vm.ab = function () {
-           var profi = appCache.getCachedProfiles();
+            var profi = appCache.getCachedProfiles();
             console.warn(' profi --->>>', profi);
         };
 
@@ -143,16 +143,7 @@
              * a photo, or selecting from device photos.
              */
             vm.showEditAvatar = function (parameters) {
-                vm.camera.showActionSheet({cameraDirection: 1})
-                    .then(function success(rawImageResponse) {
-                        return avatarService.showCropModal({ rawImage: rawImageResponse, imgSize: 512 });
-                    })
-                    .then(function success(newImageResponse) {
-                        vm.profileData.profileImageURL = vm.profileData.props.avatar = newImageResponse || avatarService.getImage();
-                    })
-                    .catch(function reject(err) {
-                        debugger;
-                    });
+                avatarService.getNewAvatar(parameters, vm.profileData);
             };
 
             /**
@@ -186,9 +177,9 @@
                     .then(function (result) {
                         console.log(result);
                     },
-                    function (err) {
-                        console.log(err);
-                    })
+                        function (err) {
+                            console.log(err);
+                        })
             };
 
             vm.showAddExperienceModal = function (parameters) {

@@ -111,10 +111,12 @@
         ////////////////////////////////////////////////////////////////
 
         function handleSuccess(response) {
-            console.info('handleSuccess: ', response);
+            console.info('handleSuccess: ', response, response.data);
             if(response.status === 200){
                 return { success: true, message: response };
-            }else{
+            } else {
+                debugger;
+                console.error('Unknown Status: ', response.status);
                 return null;
             }
         }

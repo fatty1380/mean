@@ -69,7 +69,7 @@
                 titleText: 'Choose your photo',
                 cancelText: 'Cancel',
                 cancel: function () {
-                    deferred.reject({ error: false, status: 'cancelled', message: 'Action Sheet Cancelled' });
+                    deferred.reject({ error: false, message: 'Camera Action Sheet Cancelled' });
                 },
                 buttonClicked: function (index) {
                     switch (index) {

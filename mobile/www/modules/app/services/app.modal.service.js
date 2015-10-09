@@ -18,7 +18,7 @@
             var ctrlInstance;
             var modalScope = $rootScope.$new();
             var thisScopeId = modalScope.$id;
-            
+
             var defaultOptions = {
                 animation: 'none',
                 focusFirstInput: false,
@@ -35,53 +35,58 @@
                 focusFirstInput: options.focusFirstInput,
                 backdropClickToClose: options.backdropClickToClose,
                 hardwareBackButtonClose: options.hardwareBackButtonClose
-            }).then(function (modal) {
-                modalScope.modal = modal;
-                
-                modalScope.openModal = function openModal() {
-                    return modalScope.modal.show();
-                };
-                modalScope.cancelModal = function cancelModal(result) {
-                    deferred.reject(result);
-                    return modalScope.modal.hide();
-                }
-                modalScope.closeModal = function closeModal(result) {
-                    deferred.resolve(result);
-                    return modalScope.modal.hide();
-                };
-                
-                modalScope.$on('modal.hidden', function (thisModal) {
-                    if (thisModal.currentScope) {
-                        var modalScopeId = thisModal.currentScope.$id;
-                        if (thisScopeId === modalScopeId) {
-                            deferred.resolve(null);
-                            _cleanup(thisModal.currentScope);
+            })
+                .then(
+                    function success(modal) {
+                        modalScope.modal = modal;
+
+                        modalScope.openModal = function openModal() {
+                            return modalScope.modal.show();
+                        };
+                        modalScope.cancelModal = function cancelModal(result) {
+                            deferred.reject(result);
+                            return modalScope.modal.hide();
                         }
-                    }
-                });
+                        modalScope.closeModal = function closeModal(result) {
+                            deferred.resolve(result);
+                            return modalScope.modal.hide();
+                        };
 
-                // Invoke the controller
-                var locals = { '$scope': modalScope, 'parameters': parameters };
-                var ctrlEval = _evalController(controller);
+                        modalScope.$on('modal.hidden', function (thisModal) {
+                            if (thisModal.currentScope) {
+                                var modalScopeId = thisModal.currentScope.$id;
+                                if (thisScopeId === modalScopeId) {
+                                    deferred.resolve(null);
+                                    _cleanup(thisModal.currentScope);
+                                }
+                            }
+                        });
 
-                ctrlInstance = $controller(controller, locals);
+                        // Invoke the controller
+                        var locals = { '$scope': modalScope, 'parameters': parameters };
+                        var ctrlEval = _evalController(controller);
 
-                if (ctrlEval.isControllerAs) {
-                    _.extend(ctrlInstance, modalScope);
-                }
+                        ctrlInstance = $controller(controller, locals);
 
-                modalScope.modal.show()
-                    .then(function () {
-                        modalScope.$broadcast('modal.afterShow', modalScope.modal);
+                        if (ctrlEval.isControllerAs) {
+                            _.extend(ctrlInstance, modalScope);
+                        }
+
+                        modalScope.modal.show()
+                            .then(function () {
+                                modalScope.$broadcast('modal.afterShow', modalScope.modal);
+                            });
+
+                        if (angular.isFunction(options.modalCallback)) {
+                            options.modalCallback(modal);
+                        }
+
+                    })
+                .catch(
+                    function rejection(err) {
+                        deferred.reject(err);
+                        modalScope.modal && modalScope.modal.hide();
                     });
-
-                if (angular.isFunction(options.modalCallback)) {
-                    options.modalCallback(modal);
-                }
-
-            }, function (err) {
-                deferred.reject(err);
-            });
 
             return deferred.promise;
         }

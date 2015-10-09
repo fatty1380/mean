@@ -91,7 +91,7 @@
                 cancelText: 'Cancel',
                 cssClass: 'document-actionsheet',
                 cancel: function () {
-                    console.log("Cancel");
+                    deferred.reject({ error: false, message: 'Action Sheet Cancelled' });
                 },
                 buttonClicked: function (index) {
                     switch (index) {
