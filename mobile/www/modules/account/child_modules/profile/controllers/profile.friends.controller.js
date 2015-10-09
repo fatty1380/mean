@@ -1,13 +1,41 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
+        
+        /**
+         * Friends Controller
+         * ------------------
+         * @resolve updates - get last updtaes from the updates service
+         * @resolve profile - get the logged in (or visible) user's profile
+         * @resolve friends - Gets a list of the `profile` user's friends
+         * 
+         * @inject Angular and Ionic Services ___________________________
+         * @inject $rootScope
+         * @injecct $state
+         * @injecct $filter
+         * @injecct $ionicLoading
+         * @injecct $ionicScrollDelegate
+         * 
+         * @section Outset/Truckerline Services _________________________
+         * @inject $osetUsersService
+         * @inject utilsService
+         * @inject friendsService
+         * @inject contactsService
+         * @inject profileModalsService
+         * 
+         */
 
-    FriendsCtrl.$inject = ['$state', 'updates', '$rootScope', '$filter', '$ionicLoading', 'outsetUsersService', 'utilsService', 'profile', 'friends', 'friendsService', 'contactsService',  'profileModalsService', '$ionicScrollDelegate'];
+    FriendsCtrl.$inject = ['updates', 'profile', 'friends',
+        '$rootScope', '$state', '$filter', '$ionicLoading', '$ionicScrollDelegate',
+        'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
 
-    function FriendsCtrl($state, updates,  $rootScope, $filter, $ionicLoading, outsetUsersService, utilsService, profile, friends, friendsService, contactsService, profileModalsService, $ionicScrollDelegate) {
+    function FriendsCtrl( updates, profile, friends,
+        $rootScope, $state, $filter, $ionicLoading, $ionicScrollDelegate,
+        outsetUsersService, utilsService, friendsService, contactsService, profileModalsService) {
+
         var vm = this;
 
         vm.friends = friends;
@@ -23,9 +51,9 @@
         vm.addFriend = addFriend;
         vm.viewUser = viewUser;
         vm.exitState = exitState;
-        
+
         vm.getAvatar = getAvatar;
-        
+
         initialize();
         
         ////////////////////////
@@ -49,7 +77,7 @@
             });
 
         }
-        
+
         function exitState() {
             return $state.go('^');
         }
@@ -62,13 +90,13 @@
                     profileModalsService
                         .showFriendRequestModal(requests.data)
                         .then(function (updatedFriends) {
-                            if(!!updatedFriends && updatedFriends.length){
+                            if (!!updatedFriends && updatedFriends.length) {
                                 vm.friends = updatedFriends;
                             }
                         });
                 });
         }
-        
+
         function viewUser(user, e) {
             console.log('Routing to User Profile Page for `%s`', user.displayName)
             $state.go('account.profile', { userId: user.id });
@@ -76,22 +104,22 @@
 
         function addFriend(friend, e) {
             e.stopPropagation();
-            if(!friend) return;
+            if (!friend) return;
 
             var requestData = {
-                    to: friend.id,
-                    text: 'Hi there! I want to add you to my friend list!'
-                },
+                to: friend.id,
+                text: 'Hi there! I want to add you to my friend list!'
+            },
                 serializedData = utilsService.serialize(requestData);
 
             friendsService
                 .createRequest(serializedData)
                 .then(function (createdRequestResp) {
-                    if(createdRequestResp.status === 200){
+                    if (createdRequestResp.status === 200) {
                         var template = 'You have invited ' + friend.firstName + ' to be friends.';
 
                         $ionicLoading
-                            .show({template:template, duration: 2000});
+                            .show({ template: template, duration: 2000 });
 
                     }
                 });
@@ -101,7 +129,7 @@
             e.stopPropagation();
             
             /// TODO: Configure this properly
-            $state.go('account.messages', {recipientId: friend.id});
+            $state.go('account.messages', { recipientId: friend.id });
         }
 
         function showAddFriendsModal() {
@@ -125,15 +153,15 @@
                 })
                 .catch(function reject(err) {
                     console.error('Unable to resolve Contacts: ', err);
-                    
+
                     $ionicLoading.hide();
-                    
+
                     return addManually();
                 });
         }
 
         function addManually() {
-           return profileModalsService
+            return profileModalsService
                 .showFriendManualAddModal()
                 .then(function success(result) {
                     console.log('Manual Add Friend Rusult: ', result);
@@ -149,7 +177,7 @@
         }
 
         function getOutsetUsers(query) {
-           return outsetUsersService
+            return outsetUsersService
                 .search(query)
                 .then(function (response) {
                     vm.users = response.data;
@@ -159,25 +187,25 @@
         function searchHandler() {
             var length = vm.searchText.length;
 
-            if(length >= 2){
+            if (length >= 2) {
                 getOutsetUsers(vm.searchText);
-            }else{
+            } else {
                 vm.users = [];
             }
 
             $ionicScrollDelegate.$getByHandle('main-content-scroll').scrollTop();
         }
-        
+
         function getAvatar(friend) {
             var avatar = friend.profileImageURL || friend.props && friend.props.avatar;
-            
+
             if (!avatar || avatar === 'modules/users/img/profile/default.png'
                 || !!~avatar.indexOf('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4')) {
                 return (friend.avatar = null);
             }
-            
+
             friend.avatar = avatar;
-            
+
             return avatar;
         }
     }
