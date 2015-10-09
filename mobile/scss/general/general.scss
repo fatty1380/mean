@@ -10,22 +10,22 @@ body{
   background-repeat: repeat-x;
 
   &.full-size > .pane{
-    top: 220px;
+    top: $bar-fullsize-height;
     height: auto;
   }
 
   &.mid-size > .pane{
-    top: 180px;
+    top: $bar-midsize-height;
     height: auto;
   }
 
   &.compact-size > .pane{
-    top: 150px;
+    top: $bar-compact-height;
     height: auto;
   }
 
   &.min-size > .pane{
-    top: 84px;
+    top: $bar-minsize-height;
     height: auto;
   }
 
@@ -86,7 +86,7 @@ body{
   }
 
   .content-pane {
-    bottom: 69px;
+    bottom: $tabs-height;
 
     .ionic-scroll{
       height: auto;

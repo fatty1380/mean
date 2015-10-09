@@ -2,20 +2,22 @@
   font-size: 26px !important;
 }
 
+$profile-subheader-height : $bar-midsize-height - $bar-height;
+
 .profile-visual{
   position: absolute;
   left: 10px;
   right: 10px;
-  top: 65px;
-  height: 114px;
+  top: $bar-height;
+  height: $profile-subheader-height;
   text-align: center;
   z-index: 2;
 
   .photo{
     display: inline-block;
     vertical-align: top;
-    width: 124px;
-    height: 124px;
+    width: $profile-subheader-height * 1.2;
+    height: $profile-subheader-height * 1.2;
     background: #333 url('../img/bg-profile-default.jpg') 50% no-repeat;
     -webkit-background-size: 120px 120px;
     background-size: 120px 120px;
@@ -124,7 +126,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  bottom: 69px;
+  bottom: $tabs-height;
   right: 0;
   z-index: 1;
 
@@ -133,7 +135,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      height: 69px;
+      height: $tabs-height;
       background: $ribbon-bg;
       text-transform: uppercase;
       padding: 0;
@@ -141,9 +143,9 @@
 
       .tab-item{
         font-weight: bold;
-        font-size: 13px;
-        padding: 20px 0;
-        line-height: 30px;
+        font-size: $tabs-text-font-size;
+        padding: ($tabs-height/2 - $tabs-text-font-size/2) 0;
+        line-height: $tabs-text-font-size * $line-height-base;
         color: #999;
 
         &.tab-item-active{
@@ -462,7 +464,7 @@
 @media only screen
 and (max-device-height : 568px) {
   .profile-visual{
-    top: 64px;
+    //top: 64px;
     height: 84px;
 
     &.compact{

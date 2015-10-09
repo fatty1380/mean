@@ -188,7 +188,12 @@ $bar-padding-portrait:            0 !default;
 $bar-padding-landscape:           0 !default;
 $bar-transparency:                1 !default;
 
-$bar-footer-height:               $bar-height !default;
+$bar-fullsize-height: 			  $bar-height + 136px;
+$bar-midsize-height: 		      $bar-height + 96px;
+$bar-compact-height: 			  $bar-height + 66px;
+$bar-minsize-height:    		  $bar-height;
+
+$bar-footer-height:               64px !default;
 $bar-subheader-height:            $bar-height !default;
 $bar-subfooter-height:            $bar-height !default;
 
@@ -257,8 +262,8 @@ $bar-default-active-border:       $bar-light-active-border !default;
 // Tabs
 // -------------------------------
 
-$tabs-height:                     49px !default;
-$tabs-text-font-size:             14px !default;
+$tabs-height:                     60px !default;
+$tabs-text-font-size:             13px !default;
 $tabs-text-font-size-side-icon:   10px !default;
 $tabs-icon-size:                  32px !default;
 $tabs-badge-padding:              1px 6px !default;
