@@ -87,7 +87,7 @@
         }
 
         function cancelTimer (timer) {
-            if(timer) return;
+            if(!timer) return;
 
             $timeout.cancel(timer.timeOut);
 

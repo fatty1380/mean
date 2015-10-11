@@ -22,7 +22,8 @@
             lock: lock,
             setPin: setPin,
             getPin: getPin,
-            getState: getState
+            getState: getState,
+            logout: logout
         }
         
         /////////////////////////////////////////////////////////////////////////////
@@ -71,6 +72,12 @@
 
         function getState () {
             return state;
+        }
+        
+        function logout() {
+            state.accessible = false;
+            $window.localStorage.removeItem('lockbox_pin');
+            PIN = null;
         }
     }
 

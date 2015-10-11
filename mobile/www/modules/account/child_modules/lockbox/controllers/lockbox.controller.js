@@ -27,6 +27,7 @@
             console.log('LockboxCtrl clear');
             vm.currentDoc = null;
             vm.documents = [];
+            securityService.logout();
         });
         
         /// Implementation
@@ -106,7 +107,7 @@
             /////////////////////////////////////////////
             
             function activate() {
-                
+
                 if (!!state.secured) {
                     scopeData.subTitle = 'Enter your PIN to unlock'
                 }
