@@ -20,8 +20,7 @@
             showProfileEditTrailersModal: showProfileEditTrailersModal,
             showProfileEditTrucksModal: showProfileEditTrucksModal,
             showAddExperienceModal: showAddExperienceModal,
-            showEditExperienceModal: showEditExperienceModal,
-            showWelcomeModal: showWelcomeModal
+            showEditExperienceModal: showEditExperienceModal
         };
 
         function showProfileEditModal (parameters) {
@@ -102,14 +101,6 @@
         function showEditExperienceModal (parameters) {
             templateUrl = 'modules/account/child_modules/profile/templates/profile-experience-edit.html';
             controller = 'ProfileEditExperienceCtrl as vm';
-            params = parameters || {};
-            return modalService
-                .show(templateUrl, controller, params);
-        }
-
-        function showWelcomeModal (parameters) {
-            templateUrl = 'modules/account/child_modules/profile/templates/profile-welcome.html';
-            controller = 'ProfileWelcomeCtrl as vm';
             params = parameters || {};
             return modalService
                 .show(templateUrl, controller, params);

@@ -7,6 +7,7 @@
     <ion-pane class="content-pane">
         <ion-scroll>
             <ul class="list message-list">
+                
                 <li class="item" ng-repeat="chat in vm.chats" ng-click="vm.showChatDetailsModal(chat)">
                     <div class="ico ico-avatarsmall avatar-left"></div>
                     <div class="item-content">
@@ -25,6 +26,15 @@
                         </div>
                     </div>
                 </li>
+                
+                <li class="item" ng-repeat="chat in vm.chats" ng-if="!vm.chats || !vm.chats.length">
+                    <div class="item-content">
+                        <div class="message">
+                            <span>Get started by <a ui-sref="account.profile.friends">adding friends</a> or writing a new message below</span>
+                        </div>
+                    </div>
+                </li>
+                
             </ul>
         </ion-scroll>
         <button class="button content-button" ng-click="vm.createNewChat()">

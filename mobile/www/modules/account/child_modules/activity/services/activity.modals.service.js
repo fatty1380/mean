@@ -24,18 +24,10 @@
             return modalService
                 .show(templateUrl, controller, params);
         }
-        function showWelcomeModal (parameters) {
-            templateUrl = 'modules/account/child_modules/activity/templates/activity-welcome.html';
-            controller = 'ActivityWelcomeCtrl as vm';
-            params = parameters || {};
-            return modalService
-                .show(templateUrl, controller, params);
-        }
 
         return {
             showAddActivityModal: showAddActivityModal,
-            showActivityDetailsModal: showActivityDetailsModal,
-            showWelcomeModal: showWelcomeModal
+            showActivityDetailsModal: showActivityDetailsModal
         };
     }
 })();

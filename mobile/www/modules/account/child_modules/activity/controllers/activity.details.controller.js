@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', 'activityModalsService', '$timeout', '$ionicScrollDelegate'];
+    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', '$timeout', '$ionicScrollDelegate'];
 
-    function ActivityDetailsCtrl(parameters, activityService, activityModalsService, $timeout, $ionicScrollDelegate) {
+    function ActivityDetailsCtrl(parameters, activityService, $timeout, $ionicScrollDelegate) {
         angular.element(document).ready(initMap);
 
         var vm = this;

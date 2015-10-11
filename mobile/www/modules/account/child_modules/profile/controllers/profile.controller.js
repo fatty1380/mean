@@ -216,10 +216,10 @@
                     vm.reviews = response.data;
                 })
                 .finally(function () {
-                    if (!vm.reviews || !vm.reviews.length) {
-                        console.error('WARNING: Hard Coded User Reviews')
-                        vm.reviews = [{ rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631 }];
-                    }
+                    // if (!vm.reviews || !vm.reviews.length) {
+                    //     console.error('WARNING: Hard Coded User Reviews')
+                    //     vm.reviews = [{ rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631 }];
+                    // }
                 })
         };
 
