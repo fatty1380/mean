@@ -16,18 +16,16 @@
     function welcomeService(modalService, $q) {
         var showAcks = {};
 
-        initalize();
-
         return {
             showModal: showModal,
-            initialize: initalize,
+            initialize: initialize,
             acknowledge: acknowledge,
             isAckd: function (state) { return !showAcks[state]; }
         }
         
         ////////////////////////////////////////////////////////
 
-        function initalize() {
+        function initialize() {
             _.each(_.keys(screenConfigs), function (key) {
                 showAcks[key] = true;
             });
