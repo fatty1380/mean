@@ -17,22 +17,20 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$rootScope', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
+    lockboxDocuments.$inject = ['$rootScope', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments($rootScope, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModals) {
+    function lockboxDocuments($rootScope, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModals) {
 
         var vm = this;
+
+        vm.IOS_PATH = cordova.file.documentsDirectory;
+        vm.ANDROID_PATH = cordova.file.dataDirectory + '/documents/';
 
         vm.documents = [];
 
         //stubDocuments.forEach(function (doc) {
         //    addDocument(doc);
         //});
-
-        $rootScope.$watch('vm.documents', function (data) {
-            console.warn('changed vm.documents --->>>', vm.documents);
-            console.warn(' data --->>>', data);
-        });
 
         function getId(e) { return e.id || e._id; }
 
@@ -46,6 +44,7 @@
                     angular.forEach(docs, function (doc, index) {
                         addDocument(doc);
                     });
+
                     return vm.documents;
                 }, function fail(result) {
                     console.error('Error getting docs: ', result);
@@ -129,7 +128,8 @@
                     }
                 })
                 .then(function saveSuccess(newDocumentResponse) {
-                    console.log('Successfully saved document to server');
+
+                    saveFileToDevice(newDocumentResponse);
 
                     if (newDocumentResponse.status != 200) {
                         console.warn('Unknown Error in Doc Save response: ', newDocumentResponse);
@@ -181,11 +181,110 @@
             })
         }
 
+        function saveFileToDevice (file) {
+            var fileData = file.data,
+                fileID = fileData.id + '.jpeg',
+                fileOwner = fileData.user,
+                fileURL = fileData.url.replace(/^data:image\/(png|jpeg);base64,/, ""),
+                path = vm.IOS_PATH; //TODO: check the platform and use correct path
+
+            $cordovaFile.checkDir(path, 'lockbox')
+                .then(function () {
+                    path += 'lockbox/';
+                    console.info(' --->>> has dir lockbox <<<--- ');
+                    console.warn(' path --->>>', path);
+                    writeFileInUserFolder(path, fileOwner, fileID, fileURL);
+                }, function () {
+                    $cordovaFile.createDir(path, "lockbox", false)
+                        .then(function () {
+                            path += 'lockbox/';
+                            console.info(' --->>> lockbox dir created<<<--- ');
+                            console.warn(' path --->>>', path);
+                            writeFileInUserFolder(path, fileOwner, fileID, fileURL);
+                        });
+                });
+        }
+
+        function writeFileInUserFolder (path, user, name, data) {
+            console.info(' --->>> writeFileInUserFolder <<<--- ', arguments);
+
+            $cordovaFile
+                .checkDir(path, user).then(function () {
+                    console.info(' --->>> has user dir <<<--- ');
+                    console.warn(' path --->>>', path);
+
+                    path += user;
+                    writeFile(path, name, data);
+                    updateLocalStorageInfoAboutDocuments(user, {action: 'add'});
+                }, function (error) {
+                    console.info(' --->>> error <<<--- ', error);
+
+                    $cordovaFile
+                        .createDir(path, user, false)
+                        .then(function () {
+                            console.info(' --->>> created user dir <<<--- ');
+                            console.warn(' path --->>>', path);
+                            path += user;
+                            writeFile(path, name, data);
+                            updateLocalStorageInfoAboutDocuments(user, {action: 'add'});
+                        }, function(error){
+                            console.warn(' CANT CREATE USER FOLDER error --->>>', error);
+                        });
+                });
+        }
+
+        function writeFile (path, name, data) {
+            console.warn(' path --->>>', path);
+            $cordovaFile.writeFile(path, name, data)
+                .then(function (file) {
+                    console.warn(' File Created and Saved --->>>', file );
+                });
+        }
+
+        function removeDocumentsByUser (user) {
+            var path = vm.IOS_PATH + 'lockbox';
+
+            $cordovaFile.checkDir(path, user).then(function () {
+                $cordovaFile.removeRecursively(path, user)
+                    .then(function (success) {
+                        console.warn(' user Documents were removed success --->>>', success);
+                        updateLocalStorageInfoAboutDocuments(user, {action: 'remove'});
+                    }, function (error) {
+                        console.warn(' user Documents are not removed. error --->>>', error);
+                    });
+            }, function () {
+                console.info(' --->>> such user folder does not exist <<<--- ');
+            });
+        }
+
+        function updateLocalStorageInfoAboutDocuments (user, data) {
+            // action is a boolean, if true - we are adding file, if false - removing it.
+            var savedUsers = $window.localStorage.getItem('userHasDocumentsSaved'),
+                index = savedUsers instanceof Array && savedUsers.indexOf(user);
+
+            if(!(savedUsers instanceof Array)) savedUsers = [];
+
+            if(data.action === 'add' && index < 0){
+                savedUsers.push(user);
+            } else if (data.action === 'remove' && index >= 0) {
+                savedUsers.splice(index, 1);
+            }
+
+            console.warn(' savedUsers --->>>', savedUsers);
+
+            $window.localStorage.setItem('userHasDocumentsSaved', savedUsers);
+        }
+
         return {
             getDocuments: getDocuments,
             addDocsPopup: addDocsPopup,
             removeDocuments: removeDocuments,
-            updateDocument: updateDocument
+            updateDocument: updateDocument,
+            saveFileToDevice: saveFileToDevice,
+            writeFileInUserFolder: writeFileInUserFolder,
+            removeDocumentsByUser: removeDocumentsByUser,
+            updateLocalStorageInfoAboutDocuments: updateLocalStorageInfoAboutDocuments,
+            writeFile: writeFile
             //getStubDocuments: getStubDocuments
         }
     }

@@ -5,9 +5,15 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
+<<<<<<< HEAD
     LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$ionicLoading', 'welcome'];
 
     function LockboxCtrl($scope, $state, $rootScope, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $ionicLoading, welcome) {
+=======
+    LockboxCtrl.$inject = ['$scope', '$window', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup'];
+
+    function LockboxCtrl($scope, $window, $state, $rootScope, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup) {
+>>>>>>> f1415d9102dff023461cdaf2607db0fb67206e1e
 
 
         var vm = this;
@@ -25,11 +31,12 @@
 
         $rootScope.$on("clear", function () {
             console.log('LockboxCtrl clear');
+            $window.localStorage.removeItem('lockbox_pin');
             vm.currentDoc = null;
             vm.documents = [];
             securityService.logout();
         });
-        
+
         /// Implementation
         function addDocs(docSku) {
             var docCount = vm.documents.length;
@@ -108,8 +115,17 @@
             
             function activate() {
 
+<<<<<<< HEAD
                 if (!!state.secured) {
                     scopeData.subTitle = 'Enter your PIN to unlock'
+=======
+                if (!PIN) {
+                    securityService
+                        .getPin()
+                        .then(function (pin) {
+                            PIN = pin;
+                        });
+>>>>>>> f1415d9102dff023461cdaf2607db0fb67206e1e
                 }
 
                 if (!state.accessible) {
@@ -159,7 +175,6 @@
                 } else if (state.secured && PIN && scopeData.pin != PIN) {
                     scopeData.pin = '';
                 } else if (scopeData.confirm && !state.secured) {
-
                     if (scopeData.pin === scopeData.newPin) {
                         securityService.setPin(scopeData.pin);
                         scopeData.closePopup(securityService.unlock(scopeData.pin));
@@ -169,7 +184,6 @@
                             duration: 1000
                         })
                     } else {
-
                         scopeData.confirm = false;
                         scopeData.pin = '';
 
