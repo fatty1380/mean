@@ -106,13 +106,15 @@
                 views: {
                     'lockbox': {
                         templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
-                        controller: 'LockboxCtrl as vm'
+                        controller: 'LockboxCtrl as vm',
+                        resolve: {
+                            documents: ['lockboxDocuments', 'user', function (lockboxDocuments, user) {
+                                return lockboxDocuments.getFilesByUserId(user.id).then(function (data) {
+                                    return data;
+                                });
+                            }]
+                        }
                     }
-                },
-                resolve: {
-                    documents: ['lockboxDocuments', function (lockboxDocuments) {
-                        return lockboxDocuments.getDocuments();
-                    }]
                 }
             })
 

@@ -5,14 +5,16 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$window', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup'];
+    LockboxCtrl.$inject = ['$scope', 'documents', '$window', '$state', '$rootScope', 'securityService', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup'];
 
-    function LockboxCtrl($scope, $window, $state, $rootScope, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup) {
+    function LockboxCtrl($scope, documents, $window, $state, $rootScope, securityService, lockboxDocuments, lockboxModalsService, $ionicPopup) {
 
 
         var vm = this;
 
         vm.currentDoc = null;
+        console.warn(' documents --->>>', documents);
+        //vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
         vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
 
         vm.addDocsPopup = addDocs;

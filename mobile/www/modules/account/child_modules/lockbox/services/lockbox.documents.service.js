@@ -19,12 +19,14 @@
 
     lockboxDocuments.$inject = ['$rootScope', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments($rootScope, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModals) {
+    function lockboxDocuments($rootScope, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
 
         var vm = this;
 
         vm.IOS_PATH = cordova.file.documentsDirectory;
         vm.ANDROID_PATH = cordova.file.dataDirectory + '/documents/';
+        vm.path = ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
+        vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
 
         vm.documents = [];
 
@@ -35,13 +37,18 @@
         function getId(e) { return e.id || e._id; }
 
         // TODO: Refactor to be "refresh documents"
-        function getDocuments() {
+        function getDocuments(saveToDevice) {
             //return $http.get(settings.documents).then(
             return API.doRequest(settings.documents, 'get').then(
                 function success(documentListResponse) {
                     var docs = documentListResponse.data;
 
-                    angular.forEach(docs, function (doc, index) {
+                    angular.forEach(docs, function (doc) {
+                        if(saveToDevice){
+                            var docName = doc.name + '_' + doc.id + '.jpeg',
+                                docURL = doc.url.replace(/^data:image\/(png|jpeg);base64,/, "");
+                            writeFileInUserFolder(vm.LOCKBOX_FOLDER, doc.user.id, docName, docURL);
+                        }
                         addDocument(doc);
                     });
 
@@ -116,7 +123,7 @@
         function takePicture(sku) {
             return cameraService.showActionSheet()
                 .then(function success(rawImageResponse) {
-                    return lockboxModals.showCreateModal({ image: rawImageResponse, sku: sku });
+                    return lockboxModalsService.showCreateModal({ image: rawImageResponse, sku: sku });
                 })
                 .then(function success(newDocumentObject) {
                     if (addDocument(newDocumentObject)) {
@@ -138,7 +145,7 @@
                     $ionicLoading.show({
                         template: '<i class="icon ion-checkmark"></i><br>Saved Document',
                         duration: 1000
-                    })
+                    });
 
                     return newDocumentResponse.data;
                 })
@@ -158,7 +165,7 @@
         }
         function orderReports(doc) {
             console.warn(' doc --->>>', doc);
-            lockboxModals
+            lockboxModalsService
                 .showOrderReportsModal()
                 .then(function (response) {
                     console.warn(' response --->>>', response);
@@ -183,10 +190,10 @@
 
         function saveFileToDevice (file) {
             var fileData = file.data,
-                fileID = fileData.id + '.jpeg',
+                fileID = fileData.name + '_' + fileData.id + '.jpeg',
                 fileOwner = fileData.user,
                 fileURL = fileData.url.replace(/^data:image\/(png|jpeg);base64,/, ""),
-                path = vm.IOS_PATH; //TODO: check the platform and use correct path
+                path = vm.path;
 
             $cordovaFile.checkDir(path, 'lockbox')
                 .then(function () {
@@ -242,7 +249,7 @@
         }
 
         function removeDocumentsByUser (user) {
-            var path = vm.IOS_PATH + 'lockbox';
+            var path = vm.LOCKBOX_FOLDER;
 
             $cordovaFile.checkDir(path, user).then(function () {
                 $cordovaFile.removeRecursively(path, user)
@@ -275,6 +282,67 @@
             $window.localStorage.setItem('userHasDocumentsSaved', savedUsers);
         }
 
+        function getFilesByUserId (id) {
+            var defer = $q.defer();
+            var path = vm.path;
+
+            $cordovaFile.checkDir(path, 'lockbox')
+                .then(function () {
+                    path += 'lockbox/';
+                    $cordovaFile.checkDir(path, id).then(function (dir) {
+                        path += id;
+                        console.warn('user dir --->>>', dir);
+
+                        console.warn(' dir.toURL() --->>>', dir.toURL());
+                        var reader = dir.createReader();
+                        console.warn(' reader --->>>', reader);
+                        reader.readEntries(function (entries) {
+                            console.warn(' entries --->>>', entries);
+
+                            //var fileReader = new FileReader();
+
+                            var docs = [], doc;
+
+                            angular.forEach(entries, function (entry) {
+                                var def = $q.defer();
+                                doc = {};
+                                $cordovaFile.readAsDataURL(path, entry.name).then(function (data) {
+                                    console.warn(' data --->>>', data);
+                                    doc.url = data;
+                                    doc.name = entry.name.split('_')[0];
+
+                                    console.warn(' doc --->>>', doc);
+                                    def.resolve(doc);
+                                });
+                                console.warn(' def.promise --->>>', def.promise);
+                                docs.push(def.promise);
+                                console.warn(' docs --->>>', docs);
+                            });
+
+                            vm.documents = docs;
+                            console.warn(' docs --->>>', docs);
+                            $q.all(docs).then(function (filesResolved) {
+                                defer.resolve(filesResolved);
+                            })
+                        });
+                    }, function (err) {
+                        console.warn(' err --->>>', err);
+                        console.info(' --->>> no user documents folder, asking service to return documents <<<--- ');
+                        defer.resolve(getDocuments(true));
+                    });
+
+                }, function (err) {
+                    console.warn(' err --->>>', err);
+                    console.info(' --->>> no lockbox folder, asking service to return documents <<<--- ');
+                    $cordovaFile.createDir(path, "lockbox", false).then(function () {
+                        defer.resolve(getDocuments(true));
+                    });
+                });
+
+            console.warn(' defer --->>>', defer);
+            return defer.promise;
+        }
+
         return {
             getDocuments: getDocuments,
             addDocsPopup: addDocsPopup,
@@ -284,7 +352,8 @@
             writeFileInUserFolder: writeFileInUserFolder,
             removeDocumentsByUser: removeDocumentsByUser,
             updateLocalStorageInfoAboutDocuments: updateLocalStorageInfoAboutDocuments,
-            writeFile: writeFile
+            writeFile: writeFile,
+            getFilesByUserId: getFilesByUserId
             //getStubDocuments: getStubDocuments
         }
     }
