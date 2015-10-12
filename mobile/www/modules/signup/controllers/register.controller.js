@@ -56,8 +56,7 @@
                                 tokenService.set('token_type', signInresponse.message.data.token_type);
 
                                 //set fields to show welcome screens for new user
-                                welcomeService.welcomeUser = true;
-                                welcomeService.welcomeActivity = true;
+                                welcomeService.initialize();
 
                                 $state.go('signup-engagement');
                             } else {

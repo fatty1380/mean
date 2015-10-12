@@ -60,7 +60,7 @@
             items: {
                 feedSource: 'items',
                 buttonName: 'My Logs',
-                loadingText: 'loading all feed.</br>Please Wait.'
+                loadingText: '<ion-spinner></ion-spinner><br>Loading Feed'
             }
         }
         
@@ -155,6 +155,10 @@
                     function (feedItem) {
                         console.log('Loaded Feed item #' + index + '. Feeder: ', feeder);
                         feeder.loaded++;
+                        
+                        if (_.isEmpty(feedItem)) {
+                            return null;
+                        }
 
                         if (hasCoordinates(feedItem)) {
                             feedItem.location = {
@@ -172,7 +176,8 @@
 
             return $q.all(promises).then(function (results) {
                 console.log('Resolved %d feed activities to populated feed', results.length, feed);
-                var sorted = feed.sort(function (a, b) {
+
+                var sorted = _.compact(feed).sort(function (a, b) {
                     if (angular.isString(a) && angular.isString(b)) { return 0; }
                     var x = Date.parse(b.created) - Date.parse(a.created);
                     var y = x > 0 ? 1 : x < 0 ? -1 : 0;
@@ -196,8 +201,8 @@
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
-                    showPopup(response.statusText, response.data.message);
-                    return response;
+                    console.error(response, 'Unable to lookup Activity Feed');
+                    return null;
                 });
         }
 
@@ -353,7 +358,7 @@
         }
 
         function hasCoordinates(activity) {
-            return (!!activity.location && !!activity.location.coordinates && !!activity.location.coordinates.length);
+            return (!!activity && !!activity.location && !!activity.location.coordinates && !!activity.location.coordinates.length);
         }
 
         /**

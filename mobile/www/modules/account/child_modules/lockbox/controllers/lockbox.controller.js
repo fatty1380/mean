@@ -5,16 +5,14 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', 'documents', '$window', '$state', '$rootScope', 'securityService', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup'];
+    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', '$window', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$ionicLoading', 'welcome'];
 
-    function LockboxCtrl($scope, documents, $window, $state, $rootScope, securityService, lockboxDocuments, lockboxModalsService, $ionicPopup) {
+    function LockboxCtrl($scope, $state, $rootScope, $window, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $ionicLoading, welcome) {
 
 
         var vm = this;
 
         vm.currentDoc = null;
-        console.warn(' documents --->>>', documents);
-        //vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
         vm.documents = documents instanceof Array && documents.length ? documents : [] || [];
 
         vm.addDocsPopup = addDocs;
@@ -30,6 +28,7 @@
             $window.localStorage.removeItem('lockbox_pin');
             vm.currentDoc = null;
             vm.documents = [];
+            securityService.logout();
         });
 
         /// Implementation
@@ -93,16 +92,26 @@
 
             var pinPopup;
             scopeData.closePopup = closePINPopup;
-            scopeData.pinChange = changePIN;
+            scopeData.pinChange = pinChanged;
 
             //TODO: refactor this
             // Step 1: extracted into activate function
             
-            activate();
+            
+            securityService
+                .getPin()
+                .then(function (pin) {
+                    PIN = pin;
+                })
+                .finally(activate);
             
             /////////////////////////////////////////////
             
             function activate() {
+
+                if (!!state.secured) {
+                    scopeData.subTitle = 'Enter your PIN to unlock'
+                }
 
                 if (!PIN) {
                     securityService
@@ -138,7 +147,7 @@
                 pinPopup.close(data);
             }
 
-            function changePIN(popup) {
+            function pinChanged(popup) {
                 if (scopeData.pin.length !== 4) return;
 
                 if (!scopeData.confirm && !state.secured) {
@@ -146,24 +155,34 @@
                     scopeData.confirm = true;
                     scopeData.newPin = scopeData.pin;
                     scopeData.pin = '';
-                    popup.subTitle = 'Please confirm Lockbox PIN';
-                    popup.title = 'Confirm';
+                    popup.subTitle = 'Please confirm your PIN';
+                    popup.title = 'Confirm New PIN';
 
                 } else if (state.secured && PIN && (scopeData.pin === PIN)) {
                     scopeData.closePopup(securityService.unlock(scopeData.pin));
+
+                    $ionicLoading.show({
+                        template: '<i class="icon ion-unlocked"></i><br>Unlocked',
+                        duration: 1000
+                    })
                 } else if (state.secured && PIN && scopeData.pin != PIN) {
                     scopeData.pin = '';
                 } else if (scopeData.confirm && !state.secured) {
                     if (scopeData.pin === scopeData.newPin) {
                         securityService.setPin(scopeData.pin);
                         scopeData.closePopup(securityService.unlock(scopeData.pin));
+
+                        $ionicLoading.show({
+                            template: '<i class="icon ion-locked"></i><br>Documents Secured',
+                            duration: 1000
+                        })
                     } else {
                         scopeData.confirm = false;
                         scopeData.pin = '';
 
                         delete scopeData.newPin;
 
-                        popup.subTitle = 'Please enter PIN to unlock';
+                        popup.subTitle = 'Enter your PIN to unlock';
                         popup.title = 'Lockbox Secured';
                     }
                 }

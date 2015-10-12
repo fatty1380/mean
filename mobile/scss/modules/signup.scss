@@ -26,7 +26,7 @@ ion-content {
     .icon{
       margin-right: 5px;
       font-size: 20px;
-      color: #fff;
+      color: $light;
       position: absolute;
       top: 50%;
       right: 5px;
@@ -48,7 +48,7 @@ ion-content {
     input{
       height: 50px;
       padding: 15px 30px;
-      color: #fff;
+      color: $light;
       font-weight: bold;
       font-size: 14px;
       line-height: 20px;
@@ -472,7 +472,7 @@ $but-height: 70px;
   }
 
   input::-webkit-input-placeholder{
-    color: #fff !important;
+    color: $light !important;
   }
 
   .button-other{
@@ -483,7 +483,7 @@ $but-height: 70px;
     &.bar-subheader{
       h3{
         font-weight: normal;
-        color: #fff;
+        color: $light;
       }
     }
   }
@@ -501,7 +501,7 @@ $but-height: 70px;
     margin-bottom: 2px;
 
     .label{
-      color: #fff;
+      color: $light;
       padding: 0;
       line-height: 30px;
       font-weight: bold;
@@ -512,7 +512,7 @@ $but-height: 70px;
         color: #0a2421;
 
         &.active{
-          color: #fff;
+          color: $light;
           background: #0a2421;
           -webkit-box-shadow: none;
           -moz-box-shadow: none;
@@ -729,7 +729,7 @@ $but-height: 70px;
 
           &.selected{
             background: #37afb2;
-            color: #fff;
+            color: $light;
           }
         }
 
@@ -795,7 +795,7 @@ $but-height: 70px;
     padding: 0 30px;
   }
   .description{
-    color: #fff;
+    color: $light;
     display: block;
     font-size: 13px;
     padding-bottom: 50px;
@@ -803,38 +803,48 @@ $but-height: 70px;
   }
   .choose-contacts-button {
     background: #3eaeb1;
-    color: #fff;
+    color: $light;
     margin: 0 0 20px;
     padding: 5px 0;
     font-size: 15px;
     -webkit-border-radius: 26px;
     -moz-border-radius: 26px;
     border-radius: 26px;
-    border: 2px solid #fff;
+    border: 2px solid $light;
   }
   .enter-manually-button {
-    color: #fff;
+    color: $light;
   }
 }
 
 .welcome-screen{
-  opacity: 0.8;
+  
+  background: none;
 
   .pane,
   .view{
-    background: #4c4c4c;
+    background: rgba(76,76,76,0.8);
   }
 
-  .welcome{
-    background: url('../img/bg-welcome.png') no-repeat 50% 0;
-    padding: 110px 30px 0;
+  .welcome {
+    //background: url('../img/bg-welcome.png') no-repeat 50% 0;
+    
+    padding: 0 25px;
     text-align: center;
-    color: #fff;
     height: 300px;
     margin-top: -163px;
     position: absolute;
     top: 50%;
     left: 0;
+    
+    p {
+      font-size: 1.4em;
+      line-height: 1.2em;
+    }
+    
+    h3, p {
+      color: $light;
+    }
   }
 }
 
@@ -850,7 +860,7 @@ and (max-device-height : 568px) {
     }
 
     input::-webkit-input-placeholder{
-      color: #fff !important;
+      color: $light !important;
     }
 
     .button-other{
@@ -861,7 +871,7 @@ and (max-device-height : 568px) {
       &.bar-subheader{
         h3{
           font-weight: normal;
-          color: #fff;
+          color: $light;
         }
       }
     }

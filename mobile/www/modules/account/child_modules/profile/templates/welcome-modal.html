@@ -3,7 +3,8 @@
     <ion-pane class="pane has-footer">
         <ion-scroll>
             <div class="welcome">
-                <h3>Welcome</h3>
+                <i class="ico ico-steeringwheel"></i>
+                <h3>{{vm.welcomeTitle}}</h3>
                 <p>{{vm.welcomeText}}</p>
             </div>
         </ion-scroll>
@@ -11,7 +12,7 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-click="vm.continueToProfile();">Continue</button>
+            <button class="button primary" ng-click="vm.acknowledge();">Continue</button>
         </div>
     </ion-footer-bar>
 

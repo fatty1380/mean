@@ -62,21 +62,11 @@
 
         function initialize() {
             vm.feed = [];
-            //show welcome screen for new user
-            if (welcomeService.welcomeActivity) {
-                activityModalsService
-                    .showWelcomeModal()
-                    .then(function () {
-                        welcomeService.welcomeActivity = false;
-                        initialize();
-                    });
-            } else {
-                console.log(vm.feedData);
-                if (vm.feedData) {
-                    $ionicLoading.show({
-                        template: vm.feedData.loadingText
-                    });
-                }
+            
+            if (vm.feedData && welcomeService.isAckd($state.$current.name)) {
+                $ionicLoading.show({
+                    template: vm.feedData.loadingText
+                });
             }
 
             //get all feed
@@ -151,7 +141,7 @@
 
         function showAddActivityModal() {
             activityModalsService
-                .showAddActivityModal({user: user})
+                .showAddActivityModal({ user: user })
                 .then(function (res) {
                     console.warn(' res --->>>', res);
                     if (res) {

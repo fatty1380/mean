@@ -48,7 +48,7 @@
                             if (!!id) {
 
                                 var cachedProfile = appCache.getProfile(id);
-                                if(!!cachedProfile && cachedProfile.id === id) return cachedProfile;
+                                if (!!cachedProfile && cachedProfile.id === id) return cachedProfile;
 
                                 return registerService.getProfileById(id)
                                     .then(function success(response) {
@@ -67,16 +67,9 @@
 
                             return null;
                         }],
-                    welcome: ['welcomeService', 'profileModalsService',
-                        function (welcomeService, profileModalsService) {
-                            if (welcomeService.welcomeUser) {
-                                profileModalsService
-                                    .showWelcomeModal()
-                                    .then(function () {
-                                        welcomeService.welcomeUser = false;
-                                    });
-                            }
-                        }]
+                    welcome: ['welcomeService', function (welcomeService) {
+                        welcomeService.showModal('account.profile');
+                    }]
                 }
             })
 
@@ -112,6 +105,9 @@
                                 return lockboxDocuments.getFilesByUserId(user.id).then(function (data) {
                                     return data;
                                 });
+                            }],
+                            welcome: ['welcomeService', function (welcomeService) {
+                                return welcomeService.showModal('account.lockbox');
                             }]
                         }
                     }
@@ -139,6 +135,9 @@
 
                         console.log('Looking up chat for recipient ID `%s`', $stateParams.recipientId)
                         return messageService.getChatByUserId($stateParams.recipientId);
+                    }],
+                    welcome: ['welcomeService', function (welcomeService) {
+                        return welcomeService.showModal('account.messages');
                     }]
                 }
             })
@@ -154,6 +153,9 @@
                 resolve: {
                     user: ['userService', function (userService) {
                         return userService.getUserData();
+                    }],
+                    welcome: ['welcomeService', function (welcomeService) {
+                        welcomeService.showModal('account.activity');
                     }]
                 }
             })

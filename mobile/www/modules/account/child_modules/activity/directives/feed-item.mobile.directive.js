@@ -23,6 +23,10 @@
 			//debugger;
 
 			vm.entry = scope.entry;
+			
+			if (_.isEmpty(vm.entry)) {
+				return;
+			}
 
 			if (!!vm.entry.location) {
 				vm.markers = {
