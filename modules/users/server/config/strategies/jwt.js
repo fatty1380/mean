@@ -22,6 +22,11 @@ var User = mongoose.model('User'),
 	AccessToken = mongoose.model('AccessToken');
 
 
+/**
+ * JWT.js
+ * ----------------------------------------------------------------------------
+ * The code in this file configures three passport strategies which are used 
+ */
 log.info({ func: 'pre-init' }, 'Initializing new Basic Strategy for Client Lookup');
 
 module.exports = function () {
@@ -37,13 +42,13 @@ module.exports = function () {
 	log.info({ func: 'init' }, 'Initializing new Basic Strategy for Client Lookup');
 	passport.use(new BasicStrategy(
 		function (username, password, done) {
-			log.trace({ strategy: 'basic', username: username }, 'Looking up client key for username');
+			log.error({ strategy: 'basic', username: username }, 'Looking up client key for username');
 			ClientApp.findOne({ clientId: username }, function (err, client) {
 				if (err) { return done(err); }
 				if (!client) { return done(null, false); }
 				if (client.clientSecret !== password) { return done(null, false); }
 
-				log.trace({ strategy: 'basic', username: username }, 'Found client key for username');
+				log.debug({ strategy: 'basic', username: username }, 'Found client key for username');
 				return done(null, client);
 			});
 		}
@@ -52,22 +57,22 @@ module.exports = function () {
 	log.info({ func: 'init' }, 'Initializing new ClientPassword Strategy for Client Lookup');
 	passport.use(new ClientPasswordStrategy(
 		function (clientId, clientSecret, done) {
-			log.trace({ strategy: 'client-password', clientId: clientId }, 'Looking up client key for clientId');
+			log.error({ strategy: 'client-password', clientId: clientId }, 'Looking up client key for clientId');
 			ClientApp.findOne({ clientId: clientId }, function (err, client) {
 				if (err) {
 					log.error({ strategy: 'client-password', clientId: clientId }, 'Error Looking up client key for clientId');
 					return done(err);
 				}
 				if (!client) {
-					log.trace({ strategy: 'client-password', clientId: clientId }, 'No client key found for clientId');
+					log.debug({ strategy: 'client-password', clientId: clientId }, 'No client key found for clientId');
 					return done(null, false);
 				}
 				if (client.clientSecret !== clientSecret) {
-					log.trace({ strategy: 'client-password', clientId: clientId }, 'Invalid client secret found for clientId');
+					log.debug({ strategy: 'client-password', clientId: clientId }, 'Invalid client secret found for clientId');
 					return done(null, false);
 				}
 
-				log.trace({ strategy: 'client-password', clientId: clientId }, 'Found client key for clientId');
+				log.debug({ strategy: 'client-password', clientId: clientId }, 'Found client key for clientId');
 
 				return done(null, client);
 			});
@@ -78,7 +83,9 @@ module.exports = function () {
 	log.info({ func: 'init' }, 'Initializing new Bearer Strategy for User Lookup');
 	passport.use(new BearerStrategy({},
 		function (accessToken, done) {
-			log.trace({ strategy: 'bearer', token: accessToken }, 'Looking up AccessToken');
+			
+			
+			log.info({ strategy: 'bearer', token: accessToken }, 'Looking up AccessToken');
 			AccessToken.findOne({ token: accessToken }, function (err, token) {
 				if (err) { return done(err); }
 				if (!token) { return done(null, false); }
@@ -90,7 +97,7 @@ module.exports = function () {
 					return done(null, false, { message: 'Token expired' });
 				}
 
-				log.trace({ strategy: 'bearer', token: token }, 'AccessToken is valid. Finding User');
+				log.debug({ strategy: 'bearer', token: token }, 'AccessToken is valid. Finding User');
 				User.findById(token.userId).exec()
 					.then(function (user) {
 						if (!user) {
@@ -101,7 +108,7 @@ module.exports = function () {
 
 						var info = { scope: '*' };
 
-						log.trace({ strategy: 'bearer', user: user.id }, 'Found User');
+						log.debug({ strategy: 'bearer', user: user.id }, 'Found User');
 
 						return done(null, user, info);
 					}, function (err) {

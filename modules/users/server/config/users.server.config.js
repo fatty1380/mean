@@ -44,8 +44,8 @@ module.exports = function (app, db) {
 	}
     
 	if (!!config.security.enableJWT) {
-		// Comment to Disable JWT Auth temporarily
 		log.debug({ func: 'exports' }, 'Setting JWT Bearer Auth');
+		//app.use(passport.authenticate('bearer', { session: false }));
 		app.use('/api', passport.authenticate('bearer', { session: false }));
 	}
 };
