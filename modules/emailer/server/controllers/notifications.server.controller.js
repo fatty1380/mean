@@ -4,6 +4,7 @@ exports.send = send;
 exports.sendSMS = sendSMS;
 exports.sendEmail = sendEmail;
 exports.loadRequest = loadRequest;
+exports.processRequest = processNewRequest;
 
 var _ = require('lodash'),
 	path = require('path'),
@@ -55,8 +56,10 @@ function processNewRequest(request) {
 	}
 }
 
-function processShareRequest(requestMessage) {
+function processShareRequest(requestMessage, sender) {
 	var recipient, emails, phoneNumbers;
+
+	log.debug({ func: 'processShareRequest', requestMessage: requestMessage }, 'START');
 
 	if (_.isObject(requestMessage.to) && !_.isEmpty(requestMessage.to)) {
 		recipient = requestMessage.to;
@@ -69,40 +72,62 @@ function processShareRequest(requestMessage) {
 		recipient = requestMessage.contactInfo;
 	}
 
-	return Q.when(recipient, function (target) {
-		// Handle sending...
-		
-		if (_.isEmpty(target.email) && !_.isEmpty(target.emails)) {
-			target.email = getBest(target.emails);
-		}
+	//log.debug({ func: 'processShareRequest', sender: sender, from_ID: requestMessage.from._id.toString(), stringQ: _.isString(requestMessage.from), fromId: requestMessage.from.id, from_id: requestMessage.from._id }, 'Evaluating sender');
 
-		if (_.isEmpty(target.phone) && !_.isEmpty(target.phoneNumbers)) {
-			target.phone = getBest(target.phoneNumbers);
-		}
+	if (_.isEmpty(sender)) {
+		sender = User.findById(requestMessage.from._id || requestMessage.from).select('firstName lastName displayName phone email').exec();
+	}
 
-		if (_.isEmpty(target.email) && _.isEmpty(target.phone)) {
-			throw new Error('No Available Contact Information');
-		}
+	return Q.all({ recipient: recipient, sender: sender })
+		.then(function (results) {
+			// Handle sending...
+			var target = results.recipient;
+			var sender = results.sender;
 
-		var options = [
-			{ name: 'FIRST_NAME', content: target.firstName },
-			{ name: 'LAST_NAME', content: target.lastName },
-			{ name: 'DISPLAY_NAME', content: target.displayName },
-			{ name: 'EMAIL', content: target.email },
-			{ name: 'PHONE', content: target.phone },
-			{ name: 'LINK_ID', content: requestMessage.id },
-			{ name: 'SHORT_ID', content: requestMessage.shortId },
-		];
+			log.debug({ func: 'processShareRequest', recipient: target, sender: sender }, 'Configuring info for Notification');
 
-		if (!!target.email) {
-			emailer.sendTemplateBySlug('profile-share-request', options);
-		} else if (!!target.phone) {
-			messenger.sendTemplate('profile-share-request-sms', options);
-		}
-	});
+			if (_.isEmpty(target.email) && !_.isEmpty(target.emails)) {
+				target.email = getBest(target.emails);
+				log.debug({ func: 'processShareRequest', email: target.email }, 'Got Best Email for User');
+			}
+
+			if (_.isEmpty(target.phone) && !_.isEmpty(target.phoneNumbers)) {
+				target.phone = getBest(target.phoneNumbers);
+				log.debug({ func: 'processShareRequest', email: target.phone }, 'Got Best phone for User');
+			}
+
+			if (_.isEmpty(target.email) && _.isEmpty(target.phone)) {
+				log.debug({ func: 'processShareRequest', target: target }, 'Can\'t continue - both email and phone are empty');
+				throw new Error('No Available Contact Information');
+			}
+
+
+			log.debug({ func: 'processShareRequest' }, 'Configuring options...');
+			var options = [
+				{ name: 'SENDER_NAME', content: sender.firstName || sender.displayName },
+				{ name: 'FIRST_NAME', content: target.firstName || target.displayName },
+				{ name: 'LAST_NAME', content: target.lastName },
+				{ name: 'RECIPIENT_NAME', content: target.displayName || target.firstName || target.lastName },
+				{ name: 'EMAIL', content: target.email },
+				{ name: 'PHONE', content: target.phone },
+				{ name: 'LINK_ID', content: requestMessage.id },
+				{ name: 'SHORT_ID', content: requestMessage.shortId },
+				{ name: 'MESSAGE', content: requestMessage.text }
+			];
+
+			if (!!target.email) {
+				log.debug({ func: 'processShareRequest', email: target.email, options: options }, 'Notifying request recipient via email');
+				emailer.sendTemplateBySlug('profile-share-request', target, options);
+			} else if (!!target.phone) {
+				log.debug({ func: 'processShareRequest', phone: target.phone, options: options }, 'Notifying request recipient via phone');
+				messenger.sendTemplate('profile-share-request-sms', options);
+			}
+		});
 }
 
 function getBest(contacts) {
+	log.debug({ func: 'getBest', source: contacts }, 'Loading best contact from source');
+
 	var pref = _.find(contacts, { pref: true });
 
 	if (!!pref && !_.isEmpty(pref.value)) {
@@ -171,20 +196,20 @@ function loadRequest(req, res) {
 				log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
 				var fromId = requestMessage.from.id || requestMessage.from;
 				if (!!requestMessage && !!fromId) {
-
+					var url = null;
 					log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
 					switch (requestMessage.requestType) {
 						case 'friendRequest':
 							break;
 						case 'shareRequest':
-							var url = '/drivers/' + fromId + '/reports?requestId=' + requestMessage.id;
+							url = '/drivers/' + fromId + '/reports?requestId=' + requestMessage.id;
 							log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
 							return res.redirect(url);
 						case 'reviewRequest':
-							var url = '/reviews/create?requestId=' + requestMessage.id;
+							url = '/reviews/create?requestId=' + requestMessage.id;
 							log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Review Creation');
 							return res.redirect(url);
-						default: log.error({ func: 'loadRequest' }, 'Unknown Request Type')
+						default: log.error({ func: 'loadRequest' }, 'Unknown Request Type');
 					}
 				} else if (!fromId) {
 					log.error({ requestMesage: requestMessage }, 'Request has no sender');

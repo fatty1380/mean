@@ -29,8 +29,8 @@ module.exports = function (app) {
 		.post(users.createRequest);
 
 	app.route('/api/requests/:requestId')
-		.all(users.requiresLogin)
 		.get(users.getRequest)
+		.all(users.requiresLogin)
 		.put(users.updateRequest);
 
 	app.route('/api/users/:userId/friends')
