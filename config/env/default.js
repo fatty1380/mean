@@ -109,7 +109,7 @@ module.exports = {
             writePath: './modules/users/client/img/profile/uploads/'
         },
         mandrill: {
-            apiKey: ''
+            apiKey: 'Wul6b_zCFELaYU9utyGk5g'
         },
         twilio: {
             accountSid: process.env.TWILIO_ACCOUNT_SID || 'AC51314159bbf230bc5769de5772ce8264',

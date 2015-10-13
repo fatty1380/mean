@@ -90,7 +90,10 @@ module.exports = {
                 secretAccessKey: process.env.S3_SECRET_KEY || 'jD2IbZrZJT1nQmB21z0pzB1HhMyNRUWE56tdUAFJ'
             },
             folder: 'profiles-dev/'
-        }
+        },
+		mandrill: {
+			apiKey: '5VVP-aWmBA355MhLlAQFyw'
+		}
     },
     mailer: {
         toOverride: 'pat@joinoutset.com',
