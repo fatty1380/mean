@@ -22,6 +22,12 @@
             }
         });
 
+        return {
+            restartTimer: restartTimer,
+            initTimer: initTimer,
+            cancelTimer: cancelTimer
+        };
+        
         function initTimer (name, interval, immediate) {
             if(vm[name]) return;
 
@@ -86,7 +92,8 @@
             startTimer(timer);
         }
 
-        function cancelTimer (timer) {
+        function cancelTimer(timer) {
+            if (_.isString(timer)) { timer = vm[timer]; }
             if(!timer) return;
 
             $timeout.cancel(timer.timeOut);
@@ -96,10 +103,5 @@
             timer.counter = null;
             timer.myTimeOut = null;
         }
-
-        return {
-            restartTimer: restartTimer,
-            initTimer: initTimer
-        };
     }
 })();

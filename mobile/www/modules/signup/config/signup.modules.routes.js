@@ -14,21 +14,24 @@
                         /**
                          * @desc check user logged in
                         */
-                        check: function($q, userService, $state, tokenService, registerService) {
+                        check: function ($q, userService, $state, tokenService, registerService) {
                             var defer = $q.defer();
-                            if(tokenService.get('access_token')) {
-                                 registerService.me()
+                            if (tokenService.get('access_token')) {
+                                registerService.me()
                                     .then(function (response) {
-                                         if(response && response.success){
-                                             defer.resolve();
-                                             if(response.message.data) {
-                                                 $state.go('account.profile');
-                                             }
-                                         } else {
-                                             defer.resolve();
-                                         }
+                                        if (response && response.success) {
+                                            defer.resolve();
+                                            if (response.message.data) {
+                                                $state.go('account.profile');
+                                            }
+                                        } else {
+                                            if (response && response.status == 401) {
+                                                tokenService.set('access_token', '');
+                                            }
+                                            defer.resolve();
+                                        }
                                     });
-                            }else{
+                            } else {
                                 defer.resolve();
                             }
                             return defer.promise;
@@ -88,10 +91,10 @@
                     resolve: {
                         contacts: function ($stateParams, contactsService, $ionicLoading) {
                             var resolveContacts = $stateParams.resolveContacts;
-                            if(resolveContacts){
+                            if (resolveContacts) {
                                 var contacts = contactsService.getContacts();
-                                if(!contacts.length){
-                                    $ionicLoading.show({template: 'Loading Contacts....'});
+                                if (!contacts.length) {
+                                    $ionicLoading.show({ template: 'Loading Contacts....' });
                                     return contactsService.retrieveContacts();
                                 }
                             }

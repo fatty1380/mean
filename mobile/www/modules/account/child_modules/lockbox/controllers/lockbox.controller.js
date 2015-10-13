@@ -5,9 +5,9 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', '$window', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$ionicLoading', 'welcome'];
+    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$ionicLoading', 'welcome'];
 
-    function LockboxCtrl($scope, $state, $rootScope, $window, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $ionicLoading, welcome) {
+    function LockboxCtrl($scope, $state, $rootScope, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $ionicLoading, welcome) {
 
 
         var vm = this;
@@ -25,7 +25,6 @@
 
         $rootScope.$on("clear", function () {
             console.log('LockboxCtrl clear');
-            $window.localStorage.removeItem('lockbox_pin');
             vm.currentDoc = null;
             vm.documents = [];
             securityService.logout();

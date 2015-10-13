@@ -16,8 +16,9 @@
         };
 
         initialize();
-        
+
         return {
+            initialize: initialize,
             unlock: unlock,
             lock: lock,
             setPin: setPin,
@@ -28,11 +29,21 @@
         
         /////////////////////////////////////////////////////////////////////////////
 
-        function initialize () {
+        function initialize() {
+            state = {
+                secured: false,
+                accessible: false
+            };
+            PIN = null;
+            
             userService.getUserData()
                 .then(function (data) {
+                    if (_.isEmpty(data)) {
+                        return;
+                    }
+                    
                     PIN = data.props.pin || null;
-                    state.secured = (PIN ? true : false);
+                    state.secured = (!!PIN ? true : false);
                 });
 
             state.accessible = false;
@@ -42,26 +53,26 @@
             });
         }
 
-        function lock () {
+        function lock() {
             state.accessible = false;
         }
 
-        function unlock (pin) {
-            if(PIN === pin){
+        function unlock(pin) {
+            if (PIN === pin) {
                 state.accessible = true;
                 // lock lockbox documents every 15 minutes
-                timerService.initTimer('security-timer', 15*60);
+                timerService.initTimer('security-timer', 15 * 60);
             }
             return state.accessible;
         }
 
-        function setPin (pin) {
+        function setPin(pin) {
             PIN = pin;
-            userService.updateUserProps({pin: pin});
+            userService.updateUserProps({ pin: pin });
             $window.localStorage.setItem('lockbox_pin', pin)
         }
 
-        function getPin () {
+        function getPin() {
             if (PIN) return $q.when(PIN);
 
             return userService.getUserData()
@@ -70,11 +81,12 @@
                 });
         }
 
-        function getState () {
+        function getState() {
             return state;
         }
-        
+
         function logout() {
+            timerService.cancelTimer('security-timer');
             state.accessible = false;
             $window.localStorage.removeItem('lockbox_pin');
             PIN = null;

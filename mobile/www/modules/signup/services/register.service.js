@@ -40,7 +40,7 @@
                     return _userData.props;
                 }
             });
-        
+
         Object.defineProperty(service, 'userData',
             {
                 isEnumerable: true,
@@ -48,7 +48,7 @@
                     return _userData;
                 }
             });
-        
+
         return service;
         
         ////////////////////////////////////////////////////////////////
@@ -112,12 +112,12 @@
 
         function handleSuccess(response) {
             console.info('handleSuccess: ', response, response.data);
-            if(response.status === 200){
+            if (response.status === 200) {
                 return { success: true, message: response };
             } else {
                 debugger;
                 console.error('Unknown Status: ', response.status);
-                return null;
+                return { success: response.status > 200 && response.status < 400, message: response };
             }
         }
 
