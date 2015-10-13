@@ -31,8 +31,6 @@
             lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
-                    console.log('Documents List', response);
-
                     vm.documents = response instanceof Array && response.length ? response : [];
 
                     for (var i = 0; i < vm.documents.length; i++) {

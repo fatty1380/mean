@@ -38,7 +38,8 @@
       "locator": "https://github.com/leecrossley/cordova-plugin-transport-security.git",
       "id": "cordova-plugin-transport-security"
     },
-    "org.apache.cordova.file"
+    "org.apache.cordova.file",
+    "org.apache.cordova.inappbrowser"
   ],
   "cordovaPlatforms": [
     "android",

@@ -26,7 +26,6 @@
         function remindLater () {
             vm.sendRequest()
                 .then(function (response) {
-                    console.warn('Order reports remind later response --->>>', response);
                     $ionicLoading.show({template: 'Request Sent'});
 
                     $timeout(function () {
