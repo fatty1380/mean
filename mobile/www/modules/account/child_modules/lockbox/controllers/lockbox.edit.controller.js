@@ -5,13 +5,14 @@
         .module('account')
         .controller('LockboxEditCtrl', LockboxEditCtrl);
 
-    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments'];
+    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments', 'parameters'];
 
-    function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments) {
+    function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments, parameters) {
         var vm = this;
         vm.cancel = cancel;
         vm.getUnselectedItems = getUnselectedItems;
         vm.rename = rename;
+        vm.documents = parameters;
         vm.deleteDocuments = deleteDocuments;
 
         init();
@@ -19,12 +20,11 @@
         if (!vm.documents) return;
 
         function init() {
-            vm.documents = [];
             vm.unselectedDocuments = null;
             vm.deleteDisabled = true;
             vm.renameDisabled = true;
 
-            getDocs();
+            //getDocs();
         }
 
         function getDocs() {

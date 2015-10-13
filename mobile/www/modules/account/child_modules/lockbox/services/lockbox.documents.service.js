@@ -45,8 +45,9 @@
 
                     angular.forEach(docs, function (doc) {
                         if(saveToDevice){
-                            var docName = doc.name + '_' + doc.id + '.jpeg',
-                                docURL = doc.url.replace(/^data:image\/(png|jpeg);base64,/, "");
+                            var docName = doc.name + '_' + doc.id + '.txt',
+                                docURL = doc.url;
+
                             writeFileInUserFolder(vm.LOCKBOX_FOLDER, doc.user.id, docName, docURL);
                         }
                         addDocument(doc);
@@ -190,23 +191,20 @@
 
         function saveFileToDevice (file) {
             var fileData = file.data,
-                fileID = fileData.name + '_' + fileData.id + '.jpeg',
+                fileID = fileData.name + '_' + fileData.id + '.txt',
                 fileOwner = fileData.user,
-                fileURL = fileData.url.replace(/^data:image\/(png|jpeg);base64,/, ""),
+                fileURL = fileData.url,
                 path = vm.path;
 
             $cordovaFile.checkDir(path, 'lockbox')
                 .then(function () {
                     path += 'lockbox/';
-                    console.info(' --->>> has dir lockbox <<<--- ');
-                    console.warn(' path --->>>', path);
+
                     writeFileInUserFolder(path, fileOwner, fileID, fileURL);
                 }, function () {
                     $cordovaFile.createDir(path, "lockbox", false)
                         .then(function () {
                             path += 'lockbox/';
-                            console.info(' --->>> lockbox dir created<<<--- ');
-                            console.warn(' path --->>>', path);
                             writeFileInUserFolder(path, fileOwner, fileID, fileURL);
                         });
                 });
@@ -214,34 +212,26 @@
 
         function writeFileInUserFolder (path, user, name, data) {
             console.info(' --->>> writeFileInUserFolder <<<--- ', arguments);
-
             $cordovaFile
                 .checkDir(path, user).then(function () {
-                    console.info(' --->>> has user dir <<<--- ');
-                    console.warn(' path --->>>', path);
-
                     path += user;
                     writeFile(path, name, data);
                     updateLocalStorageInfoAboutDocuments(user, {action: 'add'});
                 }, function (error) {
-                    console.info(' --->>> error <<<--- ', error);
 
                     $cordovaFile
                         .createDir(path, user, false)
                         .then(function () {
-                            console.info(' --->>> created user dir <<<--- ');
-                            console.warn(' path --->>>', path);
                             path += user;
                             writeFile(path, name, data);
                             updateLocalStorageInfoAboutDocuments(user, {action: 'add'});
                         }, function(error){
-                            console.warn(' CANT CREATE USER FOLDER error --->>>', error);
+                            console.error(' CANT CREATE USER FOLDER error --->>>', error);
                         });
                 });
         }
 
         function writeFile (path, name, data) {
-            console.warn(' path --->>>', path);
             $cordovaFile.writeFile(path, name, data)
                 .then(function (file) {
                     console.warn(' File Created and Saved --->>>', file );
@@ -257,10 +247,10 @@
                         console.warn(' user Documents were removed success --->>>', success);
                         updateLocalStorageInfoAboutDocuments(user, {action: 'remove'});
                     }, function (error) {
-                        console.warn(' user Documents are not removed. error --->>>', error);
+                        console.error(' user Documents are not removed. error --->>>', error);
                     });
             }, function () {
-                console.info(' --->>> such user folder does not exist <<<--- ');
+                console.error(' --->>> such user folder does not exist <<<--- ');
             });
         }
 
@@ -277,8 +267,6 @@
                 savedUsers.splice(index, 1);
             }
 
-            console.warn(' savedUsers --->>>', savedUsers);
-
             $window.localStorage.setItem('userHasDocumentsSaved', savedUsers);
         }
 
@@ -291,39 +279,45 @@
                     path += 'lockbox/';
                     $cordovaFile.checkDir(path, id).then(function (dir) {
                         path += id;
-                        console.warn('user dir --->>>', dir);
-
-                        console.warn(' dir.toURL() --->>>', dir.toURL());
                         var reader = dir.createReader();
-                        console.warn(' reader --->>>', reader);
                         reader.readEntries(function (entries) {
-                            console.warn(' entries --->>>', entries);
-
-                            //var fileReader = new FileReader();
-
                             var docs = [], doc;
 
-                            angular.forEach(entries, function (entry) {
-                                var def = $q.defer();
-                                doc = {};
-                                $cordovaFile.readAsDataURL(path, entry.name).then(function (data) {
-                                    console.warn(' data --->>>', data);
-                                    doc.url = data;
-                                    doc.name = entry.name.split('_')[0];
+                            for (var i = 0; i < entries.length; i++) {
+                                var readEntry = makeEntryReader();
+                               docs.push(readEntry(entries[i]));
+                            }
 
-                                    console.warn(' doc --->>>', doc);
-                                    def.resolve(doc);
-                                });
-                                console.warn(' def.promise --->>>', def.promise);
-                                docs.push(def.promise);
-                                console.warn(' docs --->>>', docs);
+                            console.warn(' docs --->>>', docs);
+
+                            $q.all(docs).then(function (filesResolved) {
+                                console.warn('doc filesResolved --->>>', filesResolved);
+                                vm.documents = filesResolved;
+                                defer.resolve(filesResolved);
                             });
 
-                            vm.documents = docs;
-                            console.warn(' docs --->>>', docs);
-                            $q.all(docs).then(function (filesResolved) {
-                                defer.resolve(filesResolved);
-                            })
+                            function makeEntryReader () {
+                                return function (entry) {
+                                    return readFile(entry);
+                                }
+                            }
+
+                            function readFile (entry) {
+                                var def = $q.defer();
+
+                                $cordovaFile.readAsText(path, entry.name).then(function (data) {
+                                    doc = {};
+                                    doc.url = data;
+                                    doc.sku = "misc";
+                                    doc.name = entry.name.split('_')[0];
+
+                                    def.resolve(doc);
+                                }, function(err){
+                                    def.reject(err);
+                                });
+
+                                return def.promise;
+                            }
                         });
                     }, function (err) {
                         console.warn(' err --->>>', err);
