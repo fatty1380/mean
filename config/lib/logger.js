@@ -7,7 +7,7 @@ var bunyan       = require('bunyan'),
     config       = require(path.resolve('./config/config')),
     chalk        = require('chalk'),
     _            = require('lodash'),
-    PrettyStream = require('bunyan-prettystream'),
+    PrettyStream = config.utils.isDevMode() ? require('bunyan-prettystream') : null,
     vsprintf     = require('sprintf-js').vsprintf;
 
 /**
