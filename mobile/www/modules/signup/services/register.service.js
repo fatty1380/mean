@@ -115,7 +115,6 @@
             if (response.status === 200) {
                 return { success: true, message: response };
             } else {
-                debugger;
                 console.error('Unknown Status: ', response.status);
                 return { success: response.status > 200 && response.status < 400, message: response };
             }

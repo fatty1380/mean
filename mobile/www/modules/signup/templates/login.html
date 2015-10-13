@@ -11,8 +11,7 @@
         <div class="login-content">
             <i class="app-logo"></i>
             <h3>Log into your Truckerline account</h3>
-            <form name="mainLoginForm" id="mainLoginForm" class="list signup-form" ng-submit="vm.submitForm()" ng-init="vm.initForm(this)"
-            novalidate>
+            <form name="vm.mainLoginForm" id="vm.mainLoginForm" class="list signup-form" ng-submit="vm.submitForm()" accessible-form novalidate>
                 <div class="form-row">
                     <label class="item item-input">
                         <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" debounce required>
@@ -26,13 +25,14 @@
                     <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
                 </div>
                 <input style="position:absolute; left:9999px" type="submit" />
-                <div ng-if="vm.submitted || mainLoginForm.$dirty">
-                    <h4 ng-if="mainLoginForm.password.$error.required && mainLoginForm.email.$error.required">Please enter your email and password</h4>
-                    <h4 ng-if="!mainLoginForm.password.$error.required && !mainLoginForm.email.$error.required && mainLoginForm.email.$invalid">Please enter valid email</h4>
-                    <h4 ng-if="!mainLoginForm.password.$error.required && mainLoginForm.email.$error.required">Please enter your email</h4>
-                    <h4 ng-if="mainLoginForm.password.$error.required && !mainLoginForm.email.$error.required">
-                        Please enter your password <span ng-if="mainLoginForm.email.$invalid"> and valid email</span>
+                <div ng-if="vm.mainLoginForm.$submitted">
+                    <h4 ng-if="vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email and password</h4>
+                    <h4 ng-if="!vm.mainLoginForm.password.$error.required && !vm.mainLoginForm.email.$error.required && vm.mainLoginForm.email.$invalid">Please enter a valid email</h4>
+                    <h4 ng-if="!vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email</h4>
+                    <h4 ng-if="vm.mainLoginForm.password.$error.required && !vm.mainLoginForm.email.$error.required">
+                        Please enter a valid email address and password
                     </h4>
+                    <h4 ng-if="vm.error">{{vm.error}}</h4>
                 </div>
             </form>
         </div>
@@ -40,7 +40,7 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button primary" ng-click="vm.signIn();" event-focus="click" event-focus-id="password">Login</button>
+            <button class="button primary" ng-click="vm.submitForm();" event-focus="click" event-focus-id="password">Login</button>
         </div>
     </ion-footer-bar>
 

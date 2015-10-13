@@ -1,6 +1,26 @@
 (function () {
     'use strict';
 
+    angular.module('signup').directive('accessibleForm', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, elem) {
+
+                // set up event handler on the form element
+                elem.on('submit', function () {
+
+                    // find the first invalid element
+                    var firstInvalid = elem[0].querySelector('.ng-invalid');
+
+                    // if we find one, set focus
+                    if (firstInvalid) {
+                        firstInvalid.focus();
+                    }
+                });
+            }
+        };
+    });
+
     angular
         .module('signup')
         .controller('LoginCtrl', LoginCtrl);
@@ -17,22 +37,20 @@
             password: ''
         };
 
-        vm.initForm = initForm;
         vm.signIn = signIn;
         vm.submitForm = submitForm;
 
-        function initForm(scope) {
-            vm.form = scope;
-        }
-
         vm.echange = function () {
-            console.warn(' vm.user --->>>', vm.user.email);
+            vm.error = '';
+            //console.warn(' vm.user --->>>', vm.user.email);
         };
         /**
          * @description Submit form if last field in focus
         */
         function submitForm() {
-            if(vm.lastElementFocused) {
+            vm.error = '';
+            vm.mainLoginForm.$submitted = true;
+            if (vm.lastElementFocused) {
                 signIn();
             }
         }
@@ -42,41 +60,51 @@
          * Sign In
          */
         function signIn() {
-            vm.submitted = true;
+            
+            if (vm.mainLoginForm.$invalid) {
+                return;
+            }
+
             $ionicLoading.show({
                 template: 'please wait'
             });
             tokenService.set('access_token', '');
 
             registerService.signIn(vm.user)
-            .then(function (response) {
-                $ionicLoading.hide();
-                var data = response.message.data;
-                if (response.success && !!data) {
-                    tokenService.set('access_token', data.access_token);
-                    tokenService.set('refresh_token',data.refresh_token);
-                    tokenService.set('token_type', data.token_type);
+                .then(function (response) {
+                    $ionicLoading.hide();
+                    var data = response && response.message && response.message.data;
+                    if (response.success && !!data) {
+                        tokenService.set('access_token', data.access_token);
+                        tokenService.set('refresh_token', data.refresh_token);
+                        tokenService.set('token_type', data.token_type);
 
-                    registerService
-                        .me()
-                        .then(function (profileData) {
-                            if(profileData.success){
-                                userService.profileData = profileData.message.data;
-                                $state.go('account.profile');
-                                
-                                securityService.initialize();
-                            }
-                        });
+                        registerService
+                            .me()
+                            .then(function (profileData) {
+                                if (profileData.success) {
+                                    userService.profileData = profileData.message.data;
+                                    $state.go('account.profile');
 
-                    vm.error = '';
-                } else {
-                    vm.error = !!data && data.error_description || "error";
-                    selectInputValue('password');
-                }
-            });
+                                    securityService.initialize();
+                                }
+                            });
+
+                        vm.error = '';
+                    } else {
+                        var status = response.message && response.message.status;
+                        if (_.includes([401, 403], status)) {
+                            vm.error = 'Please double-check email and password';
+                        } else {
+                            vm.error = 'Unable to authenticate. Please try again later';
+                        }
+                        
+                        selectInputValue('password');
+                    }
+                });
         }
 
-        function selectInputValue (id) {
+        function selectInputValue(id) {
             var password = document.getElementById(id);
             password.setSelectionRange(0, password.value.length);
         }
