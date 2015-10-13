@@ -17,9 +17,9 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$rootScope', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
+    lockboxDocuments.$inject = ['$rootScope', 'registerService', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments($rootScope, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
+    function lockboxDocuments($rootScope, registerService, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
 
         var vm = this;
 
@@ -176,8 +176,12 @@
         function removeDocuments(documents) {
             _.each(documents, function (doc) {
                 console.log('Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
-                
+
+                console.warn(' doc --->>>', doc);
+
                 _.remove(vm.documents, { id: doc.id });
+
+                removeOneDocument(doc);
                 
                 var stub = _.find(stubDocuments, { sku: doc.sku });
                 if (!!stub) {
@@ -211,22 +215,18 @@
         }
 
         function writeFileInUserFolder (path, user, name, data) {
-            console.info(' --->>> writeFileInUserFolder <<<--- ', arguments);
             $cordovaFile
                 .checkDir(path, user).then(function () {
                     path += user;
                     writeFile(path, name, data);
                     updateLocalStorageInfoAboutDocuments(user, {action: 'add'});
                 }, function (error) {
-
                     $cordovaFile
                         .createDir(path, user, false)
                         .then(function () {
                             path += user;
                             writeFile(path, name, data);
                             updateLocalStorageInfoAboutDocuments(user, {action: 'add'});
-                        }, function(error){
-                            console.error(' CANT CREATE USER FOLDER error --->>>', error);
                         });
                 });
         }
@@ -249,6 +249,20 @@
                     }, function (error) {
                         console.error(' user Documents are not removed. error --->>>', error);
                     });
+            }, function () {
+                console.error(' --->>> such user folder does not exist <<<--- ');
+            });
+        }
+
+        function removeOneDocument (doc) {
+            if(!doc) return;
+            var path = vm.LOCKBOX_FOLDER,
+                userID = doc.userId || doc.user && doc.user.id || vm.userID,
+                documentName = doc.name + '_' + doc.id + '.txt';
+
+            $cordovaFile.checkDir(path, userID).then(function () {
+                path += userID;
+                $cordovaFile.removeFile(path, documentName);
             }, function () {
                 console.error(' --->>> such user folder does not exist <<<--- ');
             });
@@ -288,8 +302,6 @@
                                docs.push(readEntry(entries[i]));
                             }
 
-                            console.warn(' docs --->>>', docs);
-
                             $q.all(docs).then(function (filesResolved) {
                                 console.warn('doc filesResolved --->>>', filesResolved);
                                 vm.documents = filesResolved;
@@ -306,10 +318,12 @@
                                 var def = $q.defer();
 
                                 $cordovaFile.readAsText(path, entry.name).then(function (data) {
+
                                     doc = {};
                                     doc.url = data;
-                                    doc.sku = "misc";
                                     doc.name = entry.name.split('_')[0];
+                                    doc.id = entry.name.split('_')[1].replace('.txt', '');
+                                    doc.userId = id;
 
                                     def.resolve(doc);
                                 }, function(err){
@@ -320,13 +334,11 @@
                             }
                         });
                     }, function (err) {
-                        console.warn(' err --->>>', err);
                         console.info(' --->>> no user documents folder, asking service to return documents <<<--- ');
                         defer.resolve(getDocuments(true));
                     });
 
                 }, function (err) {
-                    console.warn(' err --->>>', err);
                     console.info(' --->>> no lockbox folder, asking service to return documents <<<--- ');
                     $cordovaFile.createDir(path, "lockbox", false).then(function () {
                         defer.resolve(getDocuments(true));
