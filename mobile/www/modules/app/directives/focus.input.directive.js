@@ -3,6 +3,8 @@
 
     angular.module(AppConfig.appModuleName)
         .directive('eventFocus', FocusDirective);
+        
+    FocusDirective.$inject = ['focusService'];
 
     function FocusDirective(focusService) {
         return function(scope, elem, attr) {
