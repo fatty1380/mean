@@ -41,22 +41,22 @@ exports.removeLike = delLike;
 exports.queryFeedItems = queryFeedItems;
 exports.queryFeedActivity = queryFeedActivity;
 
-(function migrate() {
-				log.error({ func: 'migrate' }, 'Evaluating Migration');
+// (function migrate() {
+// 				log.error({ func: 'migrate' }, 'Evaluating Migration');
 
-	FeedItem.collection.update({ location: { $exists: true } },
-		{ $rename: { 'location': '_location' } },
-		{ multi: true },
-		function (err, rawResponse) {
-			if (!!err) {
-				log.error({ func: 'migrate', rawResponse: rawResponse, error: err }, 'Migration failed with error');
-			}
+// 	FeedItem.collection.update({ location: { $exists: true } },
+// 		{ $rename: { 'location': '_location' } },
+// 		{ multi: true },
+// 		function (err, rawResponse) {
+// 			if (!!err) {
+// 				log.error({ func: 'migrate', rawResponse: rawResponse, error: err }, 'Migration failed with error');
+// 			}
 
-			if (!!rawResponse && rawResponse.nModified > 0) {
-				log.always({ func: 'migrate', rawResponse: rawResponse }, 'Completed Migration of Old Feed Items to new');
-			}
-		});
-})();
+// 			if (!!rawResponse && rawResponse.nModified > 0) {
+// 				log.always({ func: 'migrate', rawResponse: rawResponse }, 'Completed Migration of Old Feed Items to new');
+// 			}
+// 		});
+// })();
 
 /**
  * Create a Feed Item
