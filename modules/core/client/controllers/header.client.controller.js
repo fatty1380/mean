@@ -1,7 +1,13 @@
 (function () {
     'use strict';
+    
+    angular
+        .module('core')
+        .controller('HeaderController', HeaderController);
 
-    function HeaderController($scope, $state, $document, Authentication, Menus, AppConfig) {
+    HeaderController.$inject = ['$scope', '$state', '$document', 'Authentication', 'Menus', 'AppConfig', 'LoginService'];
+
+    function HeaderController($scope, $state, $document, Authentication, Menus, AppConfig, LoginService) {
         var vm = this;
 
         vm.state = $state;
@@ -57,15 +63,10 @@
         }
         
         vm.logout = function logout() {
-            Authentication.logout();
-        }
+            debugger;
+            LoginService.logout();
+
+            $state.go('home');
+        };
     }
-
-
-    HeaderController.$inject = ['$scope', '$state', '$document', 'Authentication', 'Menus', 'AppConfig'];
-
-    angular
-        .module('core')
-        .controller('HeaderController', HeaderController);
-
 })();

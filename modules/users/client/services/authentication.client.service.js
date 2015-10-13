@@ -120,7 +120,13 @@
 
     function AuthTokenFactory($window) {
 
-        var tokenKeys = [];
+        var tokenKeys = [
+            'access_token',
+            'refresh_token',
+            'token_expires',
+            'token_type'
+        ];
+        //_.filter(_.keys($window.localStorage), function (k) { return _.contains(k.toLowerCase(), 'token'); });
 
         return {
             set: set,
@@ -134,15 +140,25 @@
 
         function set(key, value) {
             if (_.isString(key)) {
-                $window.localStorage[key] = value;
-                tokenKeys.push(key);
+                if (_.isUndefined(value) || _.isNull(value)) {
+                    debugger;
+                    delete $window.localStorage[key];
+                } else {
+                    $window.localStorage[key] = value;
+                    //tokenKeys.push(key);
+                }
             }
             else if (_.isObject(key)) {
                 var response = key;
                 console.info('Setting Tokens based on keys: ', _.keys(response));
                 _.forOwn(response, function setValueForKey(k) {
-                    $window.localStorage[k.key] = k.value;
-                    tokenKeys.push(k.key);
+                    if (_.isUndefined(k.value) || _.isNull(k.value)) {
+                        debugger;
+                        delete $window.localStorage[k.key];
+                    } else {
+                        $window.localStorage[k.key] = k.value;
+                        //tokenKeys.push(k.key);
+                    }
                 });
             } else {
                 console.error('Unable to process args', { key: key, value: value });
@@ -156,13 +172,11 @@
         function clear(key) {
             if (!!key) {
                 set(key);
-                _.remove(tokenKeys, key);
             }
             else {
                 _.each(tokenKeys, function (key) {
                     set(key);
-                    _.remove(tokenKeys, key);
-                })
+                });
             }
         }
         
