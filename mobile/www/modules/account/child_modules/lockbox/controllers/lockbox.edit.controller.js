@@ -5,13 +5,15 @@
         .module('account')
         .controller('LockboxEditCtrl', LockboxEditCtrl);
 
-    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments'];
+    LockboxEditCtrl.$inject = ['$scope', '$ionicPopup', 'lockboxDocuments', 'parameters'];
 
-    function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments) {
+    function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments, parameters) {
         var vm = this;
+
         vm.cancel = cancel;
         vm.getUnselectedItems = getUnselectedItems;
         vm.rename = rename;
+        vm.documents = parameters.documents;
         vm.deleteDocuments = deleteDocuments;
 
         init();
@@ -19,20 +21,17 @@
         if (!vm.documents) return;
 
         function init() {
-            vm.documents = [];
             vm.unselectedDocuments = null;
             vm.deleteDisabled = true;
             vm.renameDisabled = true;
 
-            getDocs();
+            //getDocs();
         }
 
         function getDocs() {
             lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
-                    console.log('Documents List', response);
-
                     vm.documents = response instanceof Array && response.length ? response : [];
 
                     for (var i = 0; i < vm.documents.length; i++) {
@@ -43,7 +42,7 @@
 
         function cancel() {
             $scope.closeModal();
-        };
+        }
 
         $scope.$watch(function () {
             return vm.documents.filter(vm.getUnselectedItems).length;
@@ -56,12 +55,12 @@
         function getUnselectedItems(object) {
             if (!object || !object.hasOwnProperty('checked')) return false;
             return !object.checked;
-        };
+        }
 
         function getSelected(object) {
             if (!object || !object.hasOwnProperty('checked')) return false;
             return object.checked;
-        };
+        }
 
         function rename(selectedIndex) {
             vm.index = selectedIndex;
@@ -115,7 +114,7 @@
                         })
                 }
             });
-        };
+        }
 
         function deleteDocuments() {
             vm.unselectedDocuments = vm.documents.filter(vm.getUnselectedItems);
@@ -134,6 +133,6 @@
                     }
                 });
             }
-        };
+        }
     }
 })();

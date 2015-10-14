@@ -21,7 +21,7 @@
             controller: ViewDocDirectiveCtrl,
             controllerAs: 'vm',
             bindToController: true
-        }
+        };
 
         return directive;
 
@@ -177,6 +177,7 @@
                     break;
             }
         };
+
 
         function loadProgress(loaded, total, state) {
             

@@ -5,25 +5,24 @@
         .module('account')
         .controller('LockboxShareCtrl', LockboxShareCtrl);
 
-    LockboxShareCtrl.$inject = ['$filter', '$ionicPopup', 'contactsService', 'lockboxModalsService', 'lockboxDocuments', 'requestService', 'utilsService'];
+    LockboxShareCtrl.$inject = ['$filter', '$ionicPopup', 'parameters', 'contactsService', 'lockboxModalsService', 'lockboxDocuments', 'requestService', 'utilsService'];
 
-    function LockboxShareCtrl($filter, $ionicPopup, contactsService, lockboxModalsService, lockboxDocuments, requestService, utilsService) {
+    function LockboxShareCtrl($filter, $ionicPopup, parameters, contactsService, lockboxModalsService, lockboxDocuments, requestService, utilsService) {
 
         var vm = this;
         vm.selectedContact = {};
 
         vm.cancel = cancel;
         vm.skipDocs = skipDocs;
+        vm.documents = parameters.documents;
         vm.addDocumentsToShare = addDocumentsToShare;
         vm.shareDocuments = shareDocuments;
 
         init();
 
         function init() {
-            vm.documents = [];
             vm.contact = {};
             vm.shareStep = 1;
-            return getDocs();
         }
 
         function getDocs() {

@@ -55,7 +55,10 @@
         }
 
         function showEditModal(parameters) {
-            lockboxModalsService.showEditModal(parameters)
+            var params = {
+                documents: vm.documents
+            };
+            lockboxModalsService.showEditModal(params)
                 .then(
                     function (result) {
                         console.log(result);
@@ -66,7 +69,10 @@
         }
 
         function showShareModal(parameters) {
-            lockboxModalsService.showShareModal(parameters)
+            var params = {
+                documents: vm.documents
+            };
+            lockboxModalsService.showShareModal(params)
                 .then(
                     function (result) {
                         console.log(result);
