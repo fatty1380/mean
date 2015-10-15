@@ -23,9 +23,9 @@
 
         var vm = this;
 
-        vm.IOS_PATH = cordova.file.documentsDirectory;
-        vm.ANDROID_PATH = cordova.file.dataDirectory + '/documents/';
-        vm.path = ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
+        // vm.IOS_PATH = cordova.file.documentsDirectory;
+        // vm.ANDROID_PATH = cordova.file.dataDirectory + 'Documents/';
+        vm.path = cordova.file.dataDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
         vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
 
         vm.documents = [];
@@ -39,15 +39,17 @@
         // TODO: Refactor to be "refresh documents"
         function getDocuments(saveToDevice) {
             //return $http.get(settings.documents).then(
-            return API.doRequest(settings.documents, 'get').then(
-                function success(documentListResponse) {
+            return API.doRequest(settings.documents, 'get')
+                .then(function success(documentListResponse) {
                     var docs = documentListResponse.data;
 
                     angular.forEach(docs, function (doc) {
-                        if(saveToDevice){
+                        if (saveToDevice) {
                             var docName = doc.name + '_' + doc.id + '.txt',
                                 docURL = doc.url;
 
+                            // NOTE: This returns a promise and the file may not be fully saved
+                            // to the device when teh method returns
                             writeFileInUserFolder(vm.LOCKBOX_FOLDER, doc.user.id, docName, docURL);
                         }
                         addDocument(doc);
