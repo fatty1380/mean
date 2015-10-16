@@ -1,8 +1,12 @@
-'use strict';
+(function() {
+	'use strict';
 
 // Reviews controller
-angular.module('reviews').controller('ReviewsController', ['reviewRequest', '$stateParams', '$location', 'Authentication', 'Reviews',
-	function (reviewRequest, $stateParams, $location, Authentication, Reviews) {
+	angular.module('reviews').controller('ReviewsController', ReviewsController);
+
+	ReviewsController.$inject = ['reviewRequest', '$stateParams', '$location', 'Authentication', 'Reviews'];
+	
+	function ReviewsController(reviewRequest, $stateParams, $location, Authentication, Reviews) {
 
 		var vm = this;
 		
@@ -12,7 +16,7 @@ angular.module('reviews').controller('ReviewsController', ['reviewRequest', '$st
 		// Create new Review
 		vm.create = function() {
 			// Create new Review object
-			var review = new Reviews ({
+			var review = new Reviews.byId ({
 				name: this.name
 			});
 
@@ -56,14 +60,67 @@ angular.module('reviews').controller('ReviewsController', ['reviewRequest', '$st
 
 		// Find a list of Reviews
 		vm.find = function() {
-			vm.reviews = Reviews.query();
+			vm.reviews = Reviews.byId.query();
 		};
 
 		// Find existing Review
 		vm.findOne = function() {
-			vm.review = Reviews.get({ 
+			vm.review = Reviews.byId.get({ 
 				reviewId: $stateParams.reviewId
 			});
 		};
 	}
-]);
+	
+	
+	angular.module('reviews').controller('ReviewEditCtrl', ReviewEditController);
+
+	ReviewsController.$inject = ['reviewRequest', 'profile', 'review', '$stateParams', '$location', 'Authentication', 'Reviews' ];
+	
+	function ReviewEditController(reviewRequest, profile, review, $stateParams, $location, Authentication, Reviews) {
+
+		var vm = this;
+	
+		vm.request = reviewRequest;
+		vm.authentication = Authentication;
+		vm.review = review || {};
+	
+		// Exposed Methods
+		vm.create = create;
+		
+		activate();
+		
+		/////////////////////////////////////////////////////////////////
+		
+		function activate() {
+			
+			vm.review.userId = profile.id;
+			vm.profileName = profile.displayName;
+			
+			var contactInfo = vm.request.contactInfo || {};
+			
+			vm.greetingText = vm.request.text || 'Hi htere mister!';
+			
+			vm.review.name = contactInfo.displayName || contactInfo.firstName || contactInfo.lastName;
+			vm.review.email = contactInfo.email;
+			vm.review.phone = contactInfo.phoneNumber;
+			vm.review.requestId = reviewRequest.id;
+		}
+
+		// Create new Review
+		function create() {
+			// Create new Review object
+			var review = new Reviews.byUser(vm.review);
+
+			// Redirect after save
+			review.$save(function (response) {
+				debugger;
+				$state.go('users.view', { userId: profile.id || response.user.id || response.user });
+
+				// Clear form fields
+				vm.review = {};
+			}, function (errorResponse) {
+				vm.error = errorResponse.data.message;
+			});
+		}
+	}
+})();
