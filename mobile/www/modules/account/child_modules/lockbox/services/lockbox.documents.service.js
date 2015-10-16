@@ -17,9 +17,9 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$rootScope', 'userService', '$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
+    lockboxDocuments.$inject = ['userService', '$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments($rootScope, userService, $cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
+    function lockboxDocuments(userService, $cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
 
         var vm = this;
 
@@ -28,7 +28,6 @@
         vm.path = cordova.file.documentsDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
         vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
         vm.userData = userService.profileData;
-
         vm.documents = [];
 
         //stubDocuments.forEach(function (doc) {
@@ -317,71 +316,100 @@
         }
 
         function getFilesByUserId (id) {
-            var defer = $q.defer();
             var path = vm.path;
+            var hasLockbox = false;
+            var hasUserDir = false;
 
-            $cordovaFile.checkDir(path, 'lockbox')
+            return $cordovaFile.checkDir(path, 'lockbox')
                 .then(function () {
                     path += 'lockbox/';
+                    hasLockbox = true;
 
-                    $cordovaFile.checkDir(path, id).then(function (dir) {
-                        path += id;
-                        var reader = dir.createReader();
+                    return $cordovaFile.checkDir(path, id);
+                })
+                .then(function (dir) {
+                    path += id;
+                    hasUserDir = true;
 
-                        reader.readEntries(function (entries) {
-                            var docsPromises = [];
-                            angular.forEach(entries, function (entry) {
-                                console.warn(' entry --->>>', entry);
-                                docsPromises.push(createDocumentPromise(entry));
-                            });
+                    var dirReader = dir.createReader();
+                    var entries = [];
 
-                            $q.all(docsPromises).then(function (docs) {
-                                console.warn('doc filesResolved --->>>', docs);
-                                vm.documents = docs;
-                                defer.resolve(docs);
-                            });
-                        });
 
-                        function createDocumentPromise (entry) {
-                            var deferred = $q.defer();
-                            var entryExtension = entry.name.split('.').pop();
+                    function readFolders() {
+                        var q = $q.defer();
 
-                            if(entryExtension === 'txt'){
-                                $cordovaFile.readAsText(path, entry.name).then(function (data) {
-                                    deferred.resolve({
-                                        url: data,
-                                        name: entry.name.split('_')[0],
-                                        id: entry.name.split('_')[1].replace('.txt', ''),
-                                        userId: id
-                                    })
-                                }, function(err){
-                                    console.warn(' err --->>>', err);
-                                    deferred.reject(err)
+                        // Keep calling readEntries() until no more results are returned.
+                        function readEntries() {
+                            dirReader.readEntries (function(results) {
+                                if (results.length) {
+                                    entries = entries.concat(toArray(results));
+                                    return readEntries();
+                                }
+                                return resolveDocuments(entries).then(function(entries) {
+                                    q.resolve(entries);
                                 });
-                            }else{
-                                deferred.resolve({
-                                    name: entry.name.replace('_', ' '),
-                                    url: entry.nativeURL,
-                                    created: Date.now()
-                                });
-                            }
-                            return deferred.promise;
+                            });
                         }
 
-                    }, function (err) {
-                        console.info(' --->>> no user documents folder, asking service to return documents <<<--- ');
-                        defer.resolve(getDocuments(true));
-                    });
+                        readEntries();
 
-                }, function (err) {
-                    console.info(' --->>> no lockbox folder, asking service to return documents <<<--- ');
-                    $cordovaFile.createDir(path, "lockbox", false).then(function () {
-                        defer.resolve(getDocuments(true));
-                    });
+                        return q.promise;
+                    }
+
+                    function toArray(list) {
+                        return Array.prototype.slice.call(list || [], 0);
+                    }
+
+                    function resolveDocuments (entries) {
+                        var docsPromises = [];
+
+                        angular.forEach(entries, function (entry) {
+                            docsPromises.push(createDocumentPromise(entry));
+                        });
+
+                        return $q.all(docsPromises).then(function (resolvedDocuments) {
+                            vm.documents = resolvedDocuments;
+                            return resolvedDocuments;
+                        });
+                    }
+
+                    return readFolders();
+                })
+                .catch(function (err) {
+                    if (!!hasLockbox) {
+                        return $q.when(getDocuments(true));
+                    } else {
+                        $cordovaFile.createDir(path, "lockbox", false).then(function () {
+                            return $q.when(getDocuments(true));
+                        });
+                    }
                 });
+        }
 
-            console.warn(' defer --->>>', defer);
-            return defer.promise;
+        function createDocumentPromise (entry) {
+            var deferred = $q.defer();
+            var entryExtension = entry.name.split('.').pop();
+
+            if(entryExtension === 'txt'){
+                $cordovaFile.readAsText(path, entry.name).then(function (data) {
+                    deferred.resolve({
+                        url: data,
+                        name: entry.name.split('_')[0],
+                        id: entry.name.split('_')[1].replace('.txt', ''),
+                        userId: id
+                    })
+                }, function(err){
+                    console.warn(' err --->>>', err);
+                    deferred.reject(err)
+                });
+            }else{
+                deferred.resolve({
+                    name: entry.name.replace('_', ' '),
+                    url: entry.nativeURL,
+                    created: Date.now()
+                });
+            }
+            return deferred.promise;
         }
 
         return {

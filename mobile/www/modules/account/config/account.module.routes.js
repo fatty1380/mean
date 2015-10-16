@@ -103,6 +103,7 @@
                         resolve: {
                             documents: ['lockboxDocuments', 'user', function (lockboxDocuments, user) {
                                 return lockboxDocuments.getFilesByUserId(user.id).then(function (data) {
+                                    console.warn('STATE data --->>>', data);
                                     return data;
                                 });
                             }],
