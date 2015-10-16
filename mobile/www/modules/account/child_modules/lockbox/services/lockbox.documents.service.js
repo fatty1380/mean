@@ -17,16 +17,17 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$rootScope', 'registerService', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
+    lockboxDocuments.$inject = ['$rootScope', 'userService', '$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
 
-    function lockboxDocuments($rootScope, registerService, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
+    function lockboxDocuments($rootScope, userService, $cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
 
         var vm = this;
 
         // vm.IOS_PATH = cordova.file.documentsDirectory;
         // vm.ANDROID_PATH = cordova.file.dataDirectory + 'Documents/';
-        vm.path = cordova.file.dataDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
+        vm.path = cordova.file.documentsDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
         vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
+        vm.userData = userService.profileData;
 
         vm.documents = [];
 
@@ -42,15 +43,34 @@
             return API.doRequest(settings.documents, 'get')
                 .then(function success(documentListResponse) {
                     var docs = documentListResponse.data;
-
+                    console.warn(' saveToDevice --->>>', saveToDevice);
+                    docs = [
+                        {
+                            id: '0',
+                            sku: 'mvr',
+                            name: 'Mushroom',
+                            created: '2015-07-11 10:33:05',
+                            url: 'http://vignette4.wikia.nocookie.net/fantendo/images/5/52/Mushroom2.PNG',
+                            expires: null,
+                            bucket: 'outset-dev',
+                            key: 'kajifpaiueh13232'
+                        },
+                        {
+                            id: '1',
+                            sku: 'bg',
+                            name: 'Create PDF',
+                            created: '2015-07-11 10:33:05',
+                            url: 'http://presevo.rs/u/uploads/lesson2.pdf',
+                            expires: null,
+                            bucket: 'outset-dev',
+                            key: 'kajifpaiueh13232222'
+                        }
+                    ];
                     angular.forEach(docs, function (doc) {
                         if (saveToDevice) {
-                            var docName = doc.name + '_' + doc.id + '.txt',
-                                docURL = doc.url;
-
                             // NOTE: This returns a promise and the file may not be fully saved
                             // to the device when teh method returns
-                            writeFileInUserFolder(vm.LOCKBOX_FOLDER, doc.user.id, docName, docURL);
+                            saveExistingFiles(doc);
                         }
                         addDocument(doc);
                     });
@@ -126,6 +146,7 @@
         function takePicture(sku) {
             return cameraService.showActionSheet()
                 .then(function success(rawImageResponse) {
+                    console.warn(' rawImageResponse --->>>', rawImageResponse);
                     return lockboxModalsService.showCreateModal({ image: rawImageResponse, sku: sku });
                 })
                 .then(function success(newDocumentObject) {
@@ -164,8 +185,8 @@
                 .finally(function () {
                     $ionicLoading.hide();
                 });
-
         }
+
         function orderReports(doc) {
             console.warn(' doc --->>>', doc);
             lockboxModalsService
@@ -216,6 +237,15 @@
                 });
         }
 
+        function saveExistingFiles (doc) {
+            var options = {};
+            var extension = doc.url.split('.').pop();
+            var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + doc.name.replace(' ', '_') + '.' + extension;
+
+            return $cordovaFileTransfer
+                .download(doc.url, path, options, true);
+        }
+
         function writeFileInUserFolder (path, user, name, data) {
             $cordovaFile
                 .checkDir(path, user).then(function () {
@@ -259,7 +289,7 @@
         function removeOneDocument (doc) {
             if(!doc) return;
             var path = vm.LOCKBOX_FOLDER,
-                userID = doc.userId || doc.user && doc.user.id || vm.userID,
+                userID = doc.userId  || vm.userData.id || doc.user && doc.user.id,
                 documentName = doc.name + '_' + doc.id + '.txt';
 
             $cordovaFile.checkDir(path, userID).then(function () {
@@ -293,48 +323,51 @@
             $cordovaFile.checkDir(path, 'lockbox')
                 .then(function () {
                     path += 'lockbox/';
+
                     $cordovaFile.checkDir(path, id).then(function (dir) {
                         path += id;
                         var reader = dir.createReader();
+
                         reader.readEntries(function (entries) {
-                            var docs = [], doc;
-
-                            for (var i = 0; i < entries.length; i++) {
-                                var readEntry = makeEntryReader();
-                               docs.push(readEntry(entries[i]));
-                            }
-
-                            $q.all(docs).then(function (filesResolved) {
-                                console.warn('doc filesResolved --->>>', filesResolved);
-                                vm.documents = filesResolved;
-                                defer.resolve(filesResolved);
+                            var docsPromises = [];
+                            angular.forEach(entries, function (entry) {
+                                console.warn(' entry --->>>', entry);
+                                docsPromises.push(createDocumentPromise(entry));
                             });
 
-                            function makeEntryReader () {
-                                return function (entry) {
-                                    return readFile(entry);
-                                }
-                            }
-
-                            function readFile (entry) {
-                                var def = $q.defer();
-
-                                $cordovaFile.readAsText(path, entry.name).then(function (data) {
-
-                                    doc = {};
-                                    doc.url = data;
-                                    doc.name = entry.name.split('_')[0];
-                                    doc.id = entry.name.split('_')[1].replace('.txt', '');
-                                    doc.userId = id;
-
-                                    def.resolve(doc);
-                                }, function(err){
-                                    def.reject(err);
-                                });
-
-                                return def.promise;
-                            }
+                            $q.all(docsPromises).then(function (docs) {
+                                console.warn('doc filesResolved --->>>', docs);
+                                vm.documents = docs;
+                                defer.resolve(docs);
+                            });
                         });
+
+                        function createDocumentPromise (entry) {
+                            var deferred = $q.defer();
+                            var entryExtension = entry.name.split('.').pop();
+
+                            if(entryExtension === 'txt'){
+                                $cordovaFile.readAsText(path, entry.name).then(function (data) {
+                                    deferred.resolve({
+                                        url: data,
+                                        name: entry.name.split('_')[0],
+                                        id: entry.name.split('_')[1].replace('.txt', ''),
+                                        userId: id
+                                    })
+                                }, function(err){
+                                    console.warn(' err --->>>', err);
+                                    deferred.reject(err)
+                                });
+                            }else{
+                                deferred.resolve({
+                                    name: entry.name.replace('_', ' '),
+                                    url: entry.nativeURL,
+                                    created: Date.now()
+                                });
+                            }
+                            return deferred.promise;
+                        }
+
                     }, function (err) {
                         console.info(' --->>> no user documents folder, asking service to return documents <<<--- ');
                         defer.resolve(getDocuments(true));

@@ -39,7 +39,8 @@
       "id": "cordova-plugin-transport-security"
     },
     "org.apache.cordova.file",
-    "org.apache.cordova.inappbrowser"
+    "org.apache.cordova.inappbrowser",
+    "org.apache.cordova.file-transfer"
   ],
   "cordovaPlatforms": [
     "android",
