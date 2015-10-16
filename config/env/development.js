@@ -92,7 +92,7 @@ module.exports = {
             folder: 'profiles-dev/'
         },
 		mandrill: {
-			apiKey: '5VVP-aWmBA355MhLlAQFyw'
+			
 		}
     },
     mailer: {
