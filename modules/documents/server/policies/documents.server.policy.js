@@ -3,7 +3,8 @@
 /**
  * Module dependencies.
  */
-var acl = require('acl');
+var acl = require('acl'),
+	passport = require('passport');
 
 // Using the memory backend
 acl = new acl(new acl.memoryBackend());
@@ -46,6 +47,9 @@ exports.invokeRolesPolicies = function() {
  * Check If Articles Policy Allows
  */
 exports.isAllowed = function(req, res, next) {
+	passport.authenticate('bearer', { session: false },
+		function cb(err, user, info) {
+			if (err) { return next(err); }
 	var roles = (req.user) ? req.user.roles : ['guest'];
 
 	// If an document is being processed and the current user created it then allow any manipulation
@@ -69,4 +73,6 @@ exports.isAllowed = function(req, res, next) {
 			}
 		}
 	});
+
+		})(req, res, next);
 };
