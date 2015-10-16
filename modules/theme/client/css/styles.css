@@ -1341,6 +1341,16 @@ div.play-button {
   -o-transition: padding-top 100ms ease-in-out;
   transition: padding-top 100ms ease-in-out;
 }
+.section-menu.truckerline.shadow {
+  background-color: rgba(10, 36, 34, 0.6);
+}
+.section-menu.truckerline .content .main-menu .menu-block .logo {
+  position: relative;
+  top: 10px;
+}
+.section-menu.truckerline .content .main-menu .menu-block .logo img {
+  max-height: 24px;
+}
 .section-menu .content {
   text-align: center;
   margin: 0 auto;
@@ -3177,7 +3187,7 @@ oset-chat-console > .chat-window .chat-section .chat-box .timestamp a:hover {
   padding-bottom: 60px;
 }
 .content-section .section .title {
-  color: #333333;
+  color: #FFF;
   font-size: 28px;
 }
 /* Page Headers and Profiles */

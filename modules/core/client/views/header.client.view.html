@@ -1,5 +1,5 @@
 <header class="section-menu" data-ng-controller="HeaderController as vm"
-        data-ng-class="{'navbar-landing' : vm.state.is('intro'), 'shadow' : (vm.scroll > 20)}"
+        data-ng-class="{'navbar-landing' : vm.state.is('intro'), 'shadow' : (vm.scroll > 20), 'truckerline': !!vm.options.isTL }"
         data-ng-hide="!!vm.hideHeader">
 
     <div class="content container">
@@ -7,7 +7,7 @@
             <div class="mobile-nav" mobile-nav></div>
             <div class="menu-block">
                 <div class="logo">
-                    <a href="/"><img src="modules/core/img/others/logo.png"></a>
+                    <a href="/"><img ng-src="modules/core/img/brand/{{vm.logoURL}}"></a>
                 </div>
 
                 <div data-ng-hide="vm.auth.user">
@@ -34,7 +34,7 @@
 
                         <div class="pull-right right-menu">
                             <div class="auth-menu-item pull-left">
-                                <a ui-sref="intro.driver">Truckers</a>
+                                <a ui-sref="intro.driver">For Truckers</a>
                             </div>
                             <div class="clearfix"></div>
                         </div>

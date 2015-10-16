@@ -13,7 +13,7 @@
             driver: {
                 header: {
                     lead: 'Control Your Reputation',
-                    subLead: 'Effortlessly Manage your Trucking Career <br>with your Outset Driver Profile',
+                    subLead: 'Effortlessly Manage your Trucking Career <br>with your TruckerLine Driver Profile',
                     bullets: [
                         'Create a Professionally based Driver Profile including your experience and secure elements like your MVR.',
                         'Claim your Handle and Connect with truckers you trust to share information, stay in-touch and see when they’re close by.',
@@ -23,12 +23,12 @@
                 },
                 subhero: {
                     videoURL: '//www.youtube.com/embed/aj4vz1jMSR8',
-                    title: 'Why Outset?',
+                    title: 'Why TruckerLine?',
                     subtitle: null,
                     bullets: [
                         {
                             title: 'Putting Truckers back in the Driver’s Seat.',
-                            description: 'Outset is built from the ground up with a focus on the industry’s biggest asset, the driver. Our goal is to put the power back in the driver’s hands, keep your information safe and make life on the road more enjoyable.'
+                            description: 'TruckerLine is built from the ground up with a focus on the industry’s biggest asset, the driver. Our goal is to put the power back in the driver’s hands, keep your information safe and make life on the road more enjoyable.'
                         },
                         {
                             title: 'Take back your Reputation',
@@ -36,7 +36,7 @@
                         },
                         {
                             title: 'It’s about the Team',
-                            description: 'Join the fastest growing network of drivers in the country, and hold the industry accountable as a group. Time to give the Drivers a voice in the Industry, join the Outset team and let’s get it done.'
+                            description: 'Join the fastest growing network of drivers in the country, and hold the industry accountable as a group. Time to give the Drivers a voice in the Industry, join the TruckerLine team and let’s get it done.'
                         }
                     ]
                 },
@@ -60,7 +60,7 @@
                 },
 
                 threeSteps: {
-                    title: '<span>3 Simple Steps</span> to get you started with Outset',
+                    title: '<span>3 Simple Steps</span> to get you started with TruckerLine',
                     subtitle: '',
                     bullets: [
                         {
@@ -73,7 +73,7 @@
                         },
                         {
                             title: 'Get out there',
-                            description: 'Use your Outset profile to: Apply quickly for jobs, Access your documents and Connect with friends on the road.'
+                            description: 'Use your TruckerLine profile to quickly Apply for jobs, Access your documents and Connect with friends on the road.'
                         }
                     ]
                 }

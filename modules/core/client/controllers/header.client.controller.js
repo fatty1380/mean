@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    
+
     angular
         .module('core')
         .controller('HeaderController', HeaderController);
@@ -16,10 +16,13 @@
         vm.menu = Menus.getMenu('topbar');
         vm.cmenu = 'topbar';
         vm.options = {};
-        
-        AppConfig.getOptions().then(function (options) {
-            vm.options = options;
-        });
+
+        AppConfig.getOptions()
+            .then(function (options) {
+                vm.options = options;
+
+                vm.logoURL = !!options.isTL ? 'tl-brand-white.png' : 'logo.png';
+            });
 
         vm.stateLink = '';
 
@@ -36,7 +39,7 @@
             vm.hideHeader = !!($state.$current.data && $state.$current.data.hideHeader);
         });
 
-        var handler = function() {
+        var handler = function () {
             //console.log('SCROLLING: %d', $document.scrollTop());
             vm.scroll = $document.scrollTop();
         };
@@ -53,15 +56,15 @@
                 vm.menu.length = 0;
                 _.extend(vm.menu, Menus.getMenu('adminbar'));
                 //vm.navbarClass = 'navbar-inverse';
-            } else if(vm.cmenu !== 'topbar') {
+            } else if (vm.cmenu !== 'topbar') {
                 vm.cmenu = 'topbar';
                 vm.menu.length = 0;
 
-                _.extend(vm.menu,Menus.getMenu('topbar'));
+                _.extend(vm.menu, Menus.getMenu('topbar'));
                 //vm.navbarClass = 'navbar-default';
             }
         }
-        
+
         vm.logout = function logout() {
             debugger;
             LoginService.logout();

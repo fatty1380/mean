@@ -22,7 +22,8 @@ module.exports = {
         debug: false,
         login: false,
        signup: false ,
-       showAuth: true
+       showAuth: true,
+       isTL: true
     },
     modules: {
         driver: {
@@ -78,6 +79,12 @@ module.exports = {
 		}
 	},
     services: {
+        appstore: {
+            url: 'https://itunes.apple.com/us/app/truckerline-take-control-your/id1029130691?mt=8',
+            badge: '<a href="https://itunes.apple.com/us/app/truckerline-take-control-your/id1029130691?mt=8" style="display:inline-block;overflow:hidden;background:url(http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg) no-repeat;width:165px;height:40px;"></a>'
+            
+              
+        },
         everifile: {
             baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo-api-test.everifile.com/renovo',
             username: process.env.EVERIFILE_USERNAME || 'api@dswheels.com',
@@ -109,7 +116,7 @@ module.exports = {
             writePath: './modules/users/client/img/profile/uploads/'
         },
         mandrill: {
-            apiKey: 'Wul6b_zCFELaYU9utyGk5g'
+            apiKey: 'v5XougHzBNv5yfbWE2WgcA'
         },
         twilio: {
             accountSid: process.env.TWILIO_ACCOUNT_SID || 'AC51314159bbf230bc5769de5772ce8264',
