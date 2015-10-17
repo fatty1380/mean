@@ -18,28 +18,40 @@ var client = twilio(clientConfig.accountSid, clientConfig.authToken);
 
 var recipientOverrideAddress = config.services.twilio.toOverride;
 
-var messageTemplate = '${username} has invited you to join TruckerLine. Join the Convoy at www.joinoutset.com';
+var messageTemplate = '{{SENDER_NAME}} has invited you to join TruckerLine. Join the Convoy at www.joinoutset.com';
 var noSenderTemplate = 'You have been invited to join Truckerline. Join the convoy at www.joinoutset.com';
+
+var templates = {};
 
 /**
  * getMessage
  * ----------
  * given Options, creates a message object prepared for sending.
  */
-function sendMessageRequest(messageConfig) {
-    
+function sendMessageRequest(message, messageConfig) {
+
     var sender = !!messageConfig.from && messageConfig.from.firstName || null;
-    
+
     var body = noSenderTemplate;
-    
+    var vars = messageConfig.vars || [];
+
     if (!!sender) {
-        body = (messageConfig.message || messageConfig.template || messageTemplate);
-        body = body.replace('${username}', sender);
+        body = (message || messageConfig.template || messageTemplate);
+
+        var bodyVars = body.match(/{{\s*[\w\.]+\s*}}/g)
+            .map(function (x) { return x.match(/[\w\.]+/)[0]; });
+
+
+        _.each(bodyVars, function (bv) {
+            var replacement = vars[bv] || '';
+
+            body.replace('{{' + bv + '}}', replacement);
+        });
     } else {
         log.warn({ func: 'sendMessageRequest', err: 'No Sender Specified', config: messageConfig }, 'Must specify a sender when sending a message request');
     }
 
-    var message = {
+    var messageObj = {
         to: _.isArray(messageConfig.to) ? _.first(messageConfig.to) : messageConfig.to,
         from: clientConfig.twilioNumber,
         body: body
@@ -48,20 +60,20 @@ function sendMessageRequest(messageConfig) {
     if (!!recipientOverrideAddress) {
         log.debug('Override of Recipient Email Address. Sending to: %s', recipientOverrideAddress);
 
-        if (_.isArray(message.to)) {
+        if (_.isArray(messageObj.to)) {
             var len = messageConfig.to.length;
             for (var i = 0; i < len; i++) {
                 messageConfig.to[i] = recipientOverrideAddress;
             }
             log.debug('Override set for %d recipients', i);
         } else {
-            message.to = recipientOverrideAddress;
+            messageObj.to = recipientOverrideAddress;
         }
     }
-    
+
     log.info({ func: 'sendMessageRequest', message: message }, 'Sending Message');
 
-    return client.sendMessage(message).then(
+    return client.sendMessage(messageObj).then(
         function success(responseData) {
             log.debug('Call success! Call SID: ' + responseData.sid);
             return responseData;
@@ -77,15 +89,20 @@ function sendTemplate(templateName, messageConfig) {
         log.debug('Twilio API Not Configured');
         return false;
     }
-    
-    return sendMessageRequest(messageConfig);
+
+    if (!!templates[templateName]) {
+
+        return sendMessageRequest(templates[templateName], messageConfig);
+    }
+
+    return false;
 }
 
-function sendMessage(messageConfig) {
+function sendMessage(message, messageConfig) {
     if (!client) {
         log.debug('Twilio API Not Configured');
         return false;
     }
 
-    return sendMessageRequest(messageConfig);
+    return sendMessageRequest(message, messageConfig);
 }

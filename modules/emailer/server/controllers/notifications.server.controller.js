@@ -1,5 +1,6 @@
 'use strict';
 
+exports.process = processNotification;
 exports.send = send;
 exports.sendSMS = sendSMS;
 exports.sendEmail = sendEmail;
@@ -22,44 +23,55 @@ var User = mongoose.model('User'),
 	
 ///////////////////////////////////////////////////////////////////////////
 	
-var x = [{
-	channel: 'user',
-	event: '.new',
-	func: 'sendSMS',
-	content: 'Welcome to TruckerLine! Reply \'YES\' to confirm your mobile number'
-}];
+// var x = [{
+// 	channel: 'user',
+// 	event: '.new',
+// 	func: 'sendSMS',
+// 	content: 'Welcome to TruckerLine! Reply \'YES\' to confirm your mobile number'
+// }];
+
+var eventConfig = {};
+
+var defaultEventConfig = {
+	'user:new': {emailTemplate: 'sign-up-email', smsTemplate: null},
+	'user:update': {emailTemplate: null, smsTemplate: null},
+	'inviteRequest:send': {emailTemplate: 'invite-to-truckerline', smsTemplate: '{{FIRST_NAME}} has invited you to TruckerLine. Join the Convoy at http://truckerline.com/r/{{SHORT_ID}}'},
+	'friendRequest:send': {emailTemplate: 'new-friend-request', smsTemplate: null},
+	'friendRequest:accept': {emailTemplate: 'new-connection', smsTemplate: null},
+	'friendRequest:reject': {emailTemplate: null, smsTemplate: null},
+	'shareRequest:send': {emailTemplate: 'shared-profile-email', smsTemplate: null},
+	'shareRequest:accept': {emailTemplate: null, smsTemplate: null},
+	'reviewRequest:send': {emailTemplate: 'new-review-request', smsTemplate: '{{FIRST_NAME}} has requested you review their services on TruckerLine. http://truckerline.com/r/{{SHORT_ID}}'},
+	'reviewRequest:accept': { emailTemplate: 'new-review-posted', smsTemplate: null },
+	'chatMessage:new': { emailTemplate: 'new-message', smsTemplate: null },
+	'orderReports:new': { emailTemplate: null, smsTemplate: null },
+	'orderReports:ready': {emailTemplate: null, smsTemplate: null}
+};
 
 function initalize(messageConfigs) {
-	messageConfigs = messageConfigs || x;
-
-	_.each(messageConfigs, function (subConf) {
-		var channelName = subConf.channel + (subConf.event || '');
-		messenger.subscribe(channelName, function (message) {
-			var fn = exports[subConf.func];
-
-			messenger.on(channelName, function (doc) {
-				fn(doc);
-			});
-		});
-	});
+	eventConfig = _.defaults(eventConfig, messageConfigs, defaultEventConfig);
 }
 
-function processNewRequest(request) {
-	switch (request.requestType) {
-		case 'friendRequest':
-			break;
-		case 'shareRequest':
-			processShareRequest(request);
-			break;
-		case 'reviewRequest':
-			break;
+function send(event, options) {
+	
+	var config = eventConfig[event];
+	
+	if (!config) {
+		return { result: false, message: 'No notification configured for event' };
+	}
+	
+	switch (event) {
+		case 'user:new':
+			return emailer.sendTemplateBySlug(config.emailTemplate, options.user, options);
 	}
 }
 
-function processShareRequest(requestMessage, sender) {
+function processNewRequest(requestMessage, sender) {
 	var recipient, emails, phoneNumbers;
+	
+	var config = eventConfig[requestMessage.requestType + ':new'];
 
-	log.debug({ func: 'processShareRequest', requestMessage: requestMessage }, 'START');
+	log.debug({ func: 'processShareRequest', requestMessage: requestMessage, config: config }, 'START');
 
 	if (_.isObject(requestMessage.to) && !_.isEmpty(requestMessage.to)) {
 		recipient = requestMessage.to;
@@ -115,12 +127,12 @@ function processShareRequest(requestMessage, sender) {
 				{ name: 'MESSAGE', content: requestMessage.text }
 			];
 
-			if (!!target.email) {
+			if (!!target.email && config.emailTemplate) {
 				log.debug({ func: 'processShareRequest', email: target.email, options: options }, 'Notifying request recipient via email');
-				emailer.sendTemplateBySlug('profile-share-request', target, options);
-			} else if (!!target.phone) {
+				emailer.sendTemplateBySlug(config.emailTemplate, target, options);
+			} else if (!!target.phone && config.smsTemplate) {
 				log.debug({ func: 'processShareRequest', phone: target.phone, options: options }, 'Notifying request recipient via phone');
-				messenger.sendTemplate('profile-share-request-sms', options);
+				messenger.sendMessage(config.smsTemplate, { vars: options });
 			}
 		});
 }
@@ -144,7 +156,7 @@ function getBest(contacts) {
 	return pref;
 }
 
-function send(req, res) {
+function processNotification(req, res) {
 	log.debug({ func: 'send', body: req.body }, 'Send : START');
 
 	return res.status(504).send({ message: 'Not Implemnted' });

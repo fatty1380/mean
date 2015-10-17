@@ -98,7 +98,7 @@
 			
 			var contactInfo = vm.request.contactInfo || {};
 			
-			vm.greetingText = vm.request.text || 'Hi htere mister!';
+			vm.greetingText = vm.request.text;
 			
 			vm.review.name = contactInfo.displayName || contactInfo.firstName || contactInfo.lastName;
 			vm.review.email = contactInfo.email;
@@ -110,6 +110,24 @@
 		function create() {
 			// Create new Review object
 			var review = new Reviews.byUser(vm.review);
+			
+			if (!vm.review.email && !vm.review.phone) {
+				vm.error = 'Please enter either a phone number or email address';
+				return;
+			}
+			
+			if (!vm.review.rating) {
+				vm.error = 'Please select a rating';
+				return;
+			}
+			
+			if (vm.reviewForm.$invalid) {
+				_.each(vm.reviewForm.$error.required, function (field) {
+					vm.error = 'Please enter a ' + field.$name;
+				});
+				
+				return;
+			}
 
 			// Redirect after save
 			review.$save(function (response) {
