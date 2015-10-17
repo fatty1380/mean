@@ -889,7 +889,32 @@ and (max-device-height : 568px) {
     }
 
     .avatar-wrapper{
-      margin: 15px 0;
+      margin: 10px 0;
     }
+
+    .login-content{
+      .app-logo{
+        width: 130px;
+        height: 146px;
+        -webkit-background-size: 130px 146px;
+        background-size: 130px 146px;
+      }
+
+      h3{
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+    }
+
+    .signup-form {
+      .item-input{
+        input{
+          height: 40px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+      }
+    }
+
   }
 }
