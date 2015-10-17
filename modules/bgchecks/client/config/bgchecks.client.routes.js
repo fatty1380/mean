@@ -5,14 +5,17 @@
 
     /** ------------------------------------------ **/
 
-    function ReportListController(reports, $stateParams, AppConfig) {
+
+    ReportListController.$inject = ['reports', 'packages', '$state', '$stateParams', 'AppConfig'];
+    function ReportListController(reports, packages, $state, $stateParams, AppConfig) {
         var vm = this;
 
         vm.skus = $stateParams.sku;
 
         vm.reports = reports;
+        vm.packages = packages;
 
-        vm.faqs = AppConfig.getFaqs({category: 'bgreport'}).then(function (vals) {
+        vm.faqs = AppConfig.getFaqs({ category: 'bgreport' }).then(function (vals) {
 
             console.log('[FAQ] promise resolved with %d vals', vals.length);
 
@@ -24,16 +27,20 @@
             lead: 'Order Reports to Include with your Job Applications&hellip;',
             sub: '&hellip;and become 8-12x more likely to get the interview.'
         };
+        
+        vm.order = function (sku) {
+            $state.go('orderReports', { sku: sku });
+        };
 
-        AppConfig.getReports().$promise.then(function(reportResponse) {
-            debugger;
-            vm.packages = reportResponse;
-        });
+        // AppConfig.getReports().$promise.then(function(reportResponse) {
+        //     debugger;
+        //     vm.packages = reportResponse;
+        // });
     }
 
     function resolveApplicantForUser(Applicants, Authentication, $q) {
         var userId = Authentication.user._id;
-        var getApplicant = Applicants.ByUser.get({userId: userId});
+        var getApplicant = Applicants.ByUser.get({ userId: userId });
 
         return getApplicant.$promise.catch(
             function (error) {
@@ -45,7 +52,7 @@
                 console.error('Hard error %s searching for applicant: %o', error.status, error);
                 return $q.reject(error);
             }
-        );
+            );
     }
 
     function resolveReportDetails(Reports, $stateParams) {
@@ -84,7 +91,10 @@
                 controllerAs: 'vm',
                 bindToController: true,
                 resolve: {
-                    reports: resolveReports
+                    reports: resolveReports,
+                    packages: ['AppConfig', function (AppConfig) {
+                        return AppConfig.getReports().$promise;
+                    }]
                 }
             }).
             state('orderReports', {
@@ -124,13 +134,13 @@
                 parent: 'fixed-opaque',
                 resolve: {
                     report: resolveReportDetails,
-                    token: ['Payments', function(payments) {
+                    token: ['Payments', function (payments) {
                         var mytoken = payments.getToken();
                         return mytoken.$promise;
 
                     }],
                     applicant: resolveApplicantForUser,
-                    company: function() {return null;}
+                    company: function () { return null; }
                 },
                 controller: 'PaymentController',
                 controllerAs: 'vm',
@@ -143,8 +153,6 @@
     resolveApplicantForUser.$inject = ['Applicants', 'Authentication', '$q'];
     resolveReports.$inject = ['Reports', '$stateParams'];
     resolveReportDetails.$inject = ['Reports', '$stateParams'];
-
-    ReportListController.$inject = ['reports', '$stateParams', 'AppConfig'];
 
     //Setting up route
     angular.module('bgchecks')

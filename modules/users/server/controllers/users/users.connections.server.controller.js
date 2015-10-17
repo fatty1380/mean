@@ -192,7 +192,7 @@ function createRequest(req, res, next) {
         .then(function (results) {
             req.log.debug({ func: 'createRequest', request: results[0], users: results[1] });
             
-            notificationCtr.processRequest(results[0]);
+            notificationCtr.processRequest(results[0], req.user);
 
             return res.json(results[0]);
         });

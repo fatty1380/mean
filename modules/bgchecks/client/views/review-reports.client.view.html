@@ -39,7 +39,7 @@
         <div class="price-cols row">
             <div class="items-wrapper col-md-10 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
                 <div class="item price-1 col-md-4 col-sm-4 col-xs-12 text-center"
-                     ui-sref="orderReports({'sku':vm.packages.good.sku})">
+                     ng-click="vm.order(vm.packages.good.sku)">
                     <div class="item-inner">
                         <div class="heading">
                             <h3 class="title" ng-bind="vm.packages.good.title">Good</h3>
@@ -63,7 +63,7 @@
                 <!--//item-->
 
                 <div class="item price-2 col-md-4 col-sm-4 col-xs-12 text-center best-buy"
-                     ui-sref="orderReports({'sku':vm.packages.better.sku})">
+                     ng-click="vm.order(vm.packages.better.sku)">
                     <div class="item-inner">
                         <div class="heading">
                             <h3 class="title" ng-bind="vm.packages.better.title">Better</h3>
@@ -97,7 +97,7 @@
                 <!--//item-->
 
                 <div class="item price-3 col-md-4 col-sm-4 col-xs-12 text-center"
-                     ui-sref="orderReports({'sku':vm.packages.best.sku})">
+                     ng-click="vm.order(vm.packages.best.sku)">
                     <div class="item-inner">
                         <div class="heading">
                             <h3 class="title" ng-bind="vm.packages.best.title">Best</h3>

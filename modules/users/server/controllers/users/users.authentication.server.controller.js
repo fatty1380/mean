@@ -12,6 +12,7 @@ var _ = require('lodash'),
     Driver = mongoose.model('Driver'),
     Company = mongoose.model('Company'),
     emailer = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
+    NotificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
     Q = require('q'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users.authentication',
@@ -76,7 +77,8 @@ exports.signup = function (req, res) {
             login(req, res, results.user);
 
             if (results.user.isDriver) {
-                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', results.user);
+                NotificationCtr.send('user:new', { user: results.user });
+                //emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', results.user);
             }
             else if (results.user.isOwner) {
                 emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', results.user);

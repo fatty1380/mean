@@ -69,7 +69,7 @@ var RequestMessageSchema = new Schema({
     },
     requestType: {
         type: String,
-        enum: ['friendRequest', 'shareRequest', 'reviewRequest'],
+        enum: ['friendRequest', 'shareRequest', 'reviewRequest', 'reportRequest'],
         default: 'friendRequest'
     },
     text: {
