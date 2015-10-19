@@ -48,6 +48,12 @@
 
       strong,
       span{display: block;}
+
+      strong{
+        display: block;
+        line-height:30px;
+        padding-top:3px;
+      }
     }
 
     .checkbox{

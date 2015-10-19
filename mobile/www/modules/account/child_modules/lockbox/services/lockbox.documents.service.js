@@ -38,31 +38,32 @@
             return API.doRequest(settings.documents, 'get')
                 .then(function success(documentListResponse) {
                     var docs = documentListResponse.data;
-                    console.warn(' saveToDevice --->>>', saveToDevice);
-                    docs = [
-                        {
-                            id: '0',
-                            sku: 'mvr',
-                            name: 'Mushroom',
-                            created: '2015-07-11 10:33:05',
-                            url: 'http://vignette4.wikia.nocookie.net/fantendo/images/5/52/Mushroom2.PNG',
-                            expires: null,
-                            bucket: 'outset-dev',
-                            key: 'kajifpaiueh13232'
-                        },
-                        {
-                            id: '1',
-                            sku: 'bg',
-                            name: 'Create PDF',
-                            created: '2015-07-11 10:33:05',
-                            url: 'http://presevo.rs/u/uploads/lesson2.pdf',
-                            expires: null,
-                            bucket: 'outset-dev',
-                            key: 'kajifpaiueh13232222'
-                        }
-                    ];
+                    //docs = [
+                    //    {
+                    //        id: '0',
+                    //        sku: 'mvr',
+                    //        name: 'Mushroom',
+                    //        created: '2015-07-11 10:33:05',
+                    //        url: 'http://vignette4.wikia.nocookie.net/fantendo/images/5/52/Mushroom2.PNG',
+                    //        expires: null,
+                    //        bucket: 'outset-dev',
+                    //        key: 'kajifpaiueh13232'
+                    //    },
+                    //    {
+                    //        id: '1',
+                    //        sku: 'bg',
+                    //        name: 'Create PDF',
+                    //        created: '2015-07-11 10:33:05',
+                    //        url: 'http://presevo.rs/u/uploads/lesson2.pdf',
+                    //        expires: null,
+                    //        bucket: 'outset-dev',
+                    //        key: 'kajifpaiueh13232222'
+                    //    }
+                    //];
 
                     var promiseArr = [];
+
+                    if(!docs || !docs.length) return [];
 
                     angular.forEach(docs, function (doc) {
                         if (saveToDevice) {
@@ -75,9 +76,18 @@
                     return $q.all(promiseArr);
                 })
                 .then(function (newDocuments) {
-                    angular.forEach(newDocuments, function(doc){
-                        addDocument( {name: doc.name, url: doc.nativeURL} );
-                    });
+                    var id, name;
+
+                    if(angular.isArray(newDocuments) && newDocuments.length){
+                        angular.forEach(newDocuments, function(doc){
+                            id = doc.name.split('-')[0];
+                            name = doc.name.split('-')[1].replace('_', ' ');
+
+                            addDocument( {name: name, url: doc.nativeURL, id: id} );
+                        });
+                    }else if (angular.isArray(newDocuments) && !newDocuments.length){
+                        vm.documents = newDocuments || [];
+                    }
                     return vm.documents;
                 })
                 .catch(function (result) {
@@ -105,6 +115,13 @@
                 console.log('Pushing doc into docs', doc, vm.documents);
                 vm.documents.push(doc);
                 return true;
+            }
+        }
+
+        function updateNewDocumentWithID (doc) {
+            var i = _.findIndex(vm.documents, { url: doc.url, name: doc.name });
+            if(i >= 0 && vm.documents[i] && !vm.documents[i].id){
+                vm.documents[i].id = doc.id;
             }
         }
 
@@ -139,8 +156,17 @@
         }
         
         function updateDocument(doc, data) {
-            _.extend(doc, data);
-            return API.doRequest(settings.documents + doc.id, 'put', data, true);
+            return API.doRequest(settings.documents + doc.id, 'put', data, true)
+                .then(function () {
+                    return renameLocalFile(doc, data);
+                })
+                .then(function (resp) {
+                    console.warn(' resp --->>>', resp);
+                    return _.extend(doc, data);
+                })
+                .catch(function (err) {
+                    console.warn(' err --->>>', err);
+                });
         }
 
         function takePicture(sku) {
@@ -186,7 +212,7 @@
                 });
         }
 
-        function orderReports(doc) {
+        function orderReports() {
             lockboxModalsService
                 .showOrderReportsModal();
         }
@@ -211,15 +237,18 @@
         function saveFileToDevice (file) {
             var fileData = file.data;
             var path = vm.path;
+
+            updateNewDocumentWithID(fileData);
+
             return $cordovaFile.checkDir(path, 'lockbox')
-                .catch(function (err) {
+                .catch(function () {
                     return $cordovaFile.createDir(path, "lockbox", false);
                 })
                 .then(function () {
                     var options = {
                         path: path + 'lockbox/',
                         user: fileData.user,
-                        name: fileData.name + '_' + fileData.id + '.txt',
+                        name: fileData.id + '-' + getFileName(fileData),
                         data: fileData.url
                     };
                     return writeFileInUserFolder(options);
@@ -227,12 +256,13 @@
         }
 
         function saveExistingFiles (doc) {
-            var options = {};
             var extension = doc.url.split('.').pop();
-            var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + doc.name.replace(' ', '_') + '.' + extension;
+            var id = doc.id;
+            var name = id + "-" + doc.name.replace(' ', '_') + '.' + extension;
+            var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + name;
 
             return $cordovaFileTransfer
-                .download(doc.url, path, options, true);
+                .download(doc.url, path, {}, true);
         }
 
         function writeFileInUserFolder (options) {
@@ -268,11 +298,9 @@
                 .then(function () {
                     return $cordovaFile.removeRecursively(path, user)
                 }, function (err) {
-                    console.error(' --->>> such user folder does not exist <<<--- ', err);
                     return $q.reject(err)
                 })
-                .then(function (success) {
-                    console.info(' user Documents were removed success --->>>', success);
+                .then(function () {
                     return updateStorageInfo(user, {action: 'remove'});
                 }, function (err) {
                     console.error(' user Documents are not removed. error --->>>', err);
@@ -281,10 +309,10 @@
 
         function removeOneDocument (doc) {
             if(!doc) return;
-            
+
             var path = vm.LOCKBOX_FOLDER,
                 userID = doc.userId  || vm.userData.id || doc.user && doc.user.id,
-                documentName = doc.name + '_' + doc.id + '.txt';
+                documentName = doc.id + '-' + getFileName(doc);
 
             return $cordovaFile.checkDir(path, userID)
                 .then(function () {
@@ -332,7 +360,7 @@
                     var dirReader = dir.createReader();
                     var entries = [];
 
-                    function readFolders() {
+                    function readFolder() {
                         var q = $q.defer();
 
                         // Keep calling readEntries() until no more results are returned.
@@ -370,9 +398,9 @@
                         });
                     }
 
-                    return readFolders();
+                    return readFolder();
                 })
-                .catch(function (err) {
+                .catch(function () {
                     if (!!hasLockbox) {
                         return $q.when(getDocuments(true));
                     } else {
@@ -388,26 +416,48 @@
             var entryExtension = entry.name.split('.').pop();
             var userID = vm.userData.id;
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
+            var docObject, params;
 
             if(entryExtension === 'txt'){
                 $cordovaFile.readAsText(path, entry.name).then(function (data) {
-                    deferred.resolve({
-                        url: data,
-                        name: entry.name.split('_')[0],
-                        id: entry.name.split('_')[1].replace('.txt', ''),
-                        userId: userID
-                    })
+                    params = entry.name.split('-');
+
+                    docObject = {};
+                    docObject.id = params[0];
+                    docObject.name = params[1].replace('_', ' ').replace('.txt', '');
+                    docObject.url = data;
+                    docObject.userId = userID;
+
+                    deferred.resolve(docObject);
                 }, function(err){
                     console.warn(' err --->>>', err);
                     deferred.reject(err)
                 });
             }else{
-                deferred.resolve({
-                    name: entry.name.replace('_', ' '),
-                    url: entry.nativeURL
-                });
+                params = entry.name.split('-');
+
+                docObject = {};
+                docObject.id = params[0];
+                docObject.name = params[1].replace('_', ' ');
+                docObject.url = entry.nativeURL;
+
+                deferred.resolve(docObject);
             }
             return deferred.promise;
+        }
+
+        function renameLocalFile (doc, data) {
+            var userID = vm.userData.id;
+            var path = vm.LOCKBOX_FOLDER + '/' + userID;
+            var oldName = doc.id + '-' + getFileName(doc);
+            var newName = doc.id + '-' + getFileName(data);
+
+            return $cordovaFile.moveFile(path, oldName, path, newName);
+        }
+
+        function getFileName (source) {
+            var hasExtension = source.name.lastIndexOf('.') >= 0;
+            return source.name.replace(' ', '_') + (!hasExtension ? '.txt' : '');
         }
 
         return {
