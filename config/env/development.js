@@ -7,8 +7,8 @@ module.exports = {
         useLocalhost: true
     },
     db: {
-        //uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
-        uri: 'mongodb://localhost/outset-dev',
+        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        //uri: 'mongodb://localhost/outset-dev',
         options: {
             user: '',
             pass: ''
@@ -21,7 +21,7 @@ module.exports = {
         }
     },
     https: {
-        enabled: process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
+        enabled: false, // process.env.ENABLE_HTTPS !== undefined ? process.env.ENABLE_HTTPS : true,
         port: 8443,
         privateKeyPath: './config/sslcerts/key.pem',
         publicKeyPath: './config/sslcerts/cert.pem',

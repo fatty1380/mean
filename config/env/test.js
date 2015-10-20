@@ -43,7 +43,7 @@ module.exports = {
 			writePath: './modules/users/client/img/profile/uploads/'
 		},
 		mandrill: {
-			apiKey: '5VVP-aWmBA355MhLlAQFyw'
+			apiKey: 'v5XougHzBNv5yfbWE2WgcA' //Truckerline TEST Key
 		}
 	},
     security: {

@@ -7,5 +7,6 @@
     "browser": true,
     "element": true
   },
+  "node": true,
   "expr": true
 }
