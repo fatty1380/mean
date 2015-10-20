@@ -25,8 +25,13 @@
 
         // vm.IOS_PATH = cordova.file.documentsDirectory;
         // vm.ANDROID_PATH = cordova.file.dataDirectory + 'Documents/';
-        vm.path = cordova.file.documentsDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
-        vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
+        try{
+            vm.path = cordova.file.documentsDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
+            vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
+        } catch (err) {
+            console.warn('no cordova available, can\'t get access to documentsDirectory and lockbox folder');
+        }
+
         vm.userData = userService.profileData;
         vm.documents = [];
 
@@ -61,6 +66,8 @@
                     //    }
                     //];
 
+                    if(!vm.path) return $q.when(docs);
+
                     var promiseArr = [];
 
                     if(!docs || !docs.length) return [];
@@ -76,26 +83,33 @@
                     return $q.all(promiseArr);
                 })
                 .then(function (newDocuments) {
-                    var id, name;
-
+                    var id, name, url;
+                    console.warn(' newDocuments --->>>', newDocuments);
                     if(angular.isArray(newDocuments) && newDocuments.length){
                         angular.forEach(newDocuments, function(doc){
-                            id = doc.name.split('-')[0];
-                            name = doc.name.split('-')[1].replace('_', ' ');
+                            if(!doc.id && doc.name && doc.nativeURL){
+                                id = doc.name.split('-')[0];
+                                name = doc.name.split('-')[1].replace('_', ' ');
+                                url = doc.nativeURL
+                            }else{
+                                id = doc.id;
+                                name = doc.name;
+                                url = doc.url;
+                            }
 
-                            addDocument( {name: name, url: doc.nativeURL, id: id} );
+                            addDocument( {name: name, url: url, id: id} );
                         });
                     }else if (angular.isArray(newDocuments) && !newDocuments.length){
                         vm.documents = newDocuments || [];
                     }
-                    return vm.documents;
+                    return $q.when(vm.documents);
                 })
                 .catch(function (result) {
                     console.error('Error getting docs: ', result);
-                    return vm.documents;
+                    return $q.when(vm.documents);
                 })
                 .finally(function () {
-                    return vm.documents;
+                    return $q.when(vm.documents);
                 });
         }
 
@@ -158,7 +172,8 @@
         function updateDocument(doc, data) {
             return API.doRequest(settings.documents + doc.id, 'put', data, true)
                 .then(function () {
-                    return renameLocalFile(doc, data);
+                    if(!vm.path) return _.extend(doc, data);
+                     return renameLocalFile(doc, data);
                 })
                 .then(function (resp) {
                     console.warn(' resp --->>>', resp);
@@ -342,6 +357,8 @@
         }
 
         function getFilesByUserId (id) {
+            if(!vm.path) return $q.when(getDocuments(true));
+
             var path = vm.path;
             var hasLockbox = false;
             var hasUserDir = false;
@@ -352,6 +369,9 @@
                     hasLockbox = true;
 
                     return $cordovaFile.checkDir(path, id);
+                })
+                .catch(function (err) {
+                    console.warn('shut err --->>>', err);
                 })
                 .then(function (dir) {
                     path += id;
@@ -402,9 +422,13 @@
                 })
                 .catch(function () {
                     if (!!hasLockbox) {
+                        console.info(' --->>> getting 1 <<<--- ');
+
                         return $q.when(getDocuments(true));
                     } else {
+                        console.info(' --->>> getting 2 <<<--- ');
                         return $cordovaFile.createDir(path, "lockbox", false).then(function () {
+                            console.info(' --->>> getting 2.1 <<<--- ');
                             return $q.when(getDocuments(true));
                         });
                     }

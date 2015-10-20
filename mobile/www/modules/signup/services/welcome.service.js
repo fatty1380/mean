@@ -21,7 +21,7 @@
             initialize: initialize,
             acknowledge: acknowledge,
             isAckd: function (state) { return !showAcks[state]; }
-        }
+        };
         
         ////////////////////////////////////////////////////////
 

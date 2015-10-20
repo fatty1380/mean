@@ -87,18 +87,25 @@
         function close(e) {
             e.stopPropagation();
             vm.closeModal(null);
-            screen.lockOrientation('portrait');
+
             vm.fullScreenMode = false;
+            if(angular.isFunction(screen.lockOrientation)){
+                screen.lockOrientation('portrait');
+            }
         }
 
         function enlarge (e) {
             vm.fullScreenMode = !vm.fullScreenMode;
-            screen.lockOrientation('landscape');
+            if(angular.isFunction(screen.lockOrientation)){
+                screen.lockOrientation('landscape');
+            }
         }
 
         function minimize () {
             vm.fullScreenMode = !vm.fullScreenMode;
-            screen.lockOrientation('portrait');
+            if(angular.isFunction(screen.lockOrientation)){
+                screen.lockOrientation('portrait');
+            }
         }
 
         function toggleFullScreen () {
