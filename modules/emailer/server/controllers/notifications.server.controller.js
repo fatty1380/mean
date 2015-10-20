@@ -45,7 +45,8 @@ var defaultEventConfig = {
 	'reviewRequest:accept': { emailTemplate: 'new-review-posted', smsTemplate: null },
 	'chatMessage:new': { emailTemplate: 'new-message', smsTemplate: null },
 	'orderReports:new': { emailTemplate: null, smsTemplate: null },
-	'orderReports:ready': {emailTemplate: null, smsTemplate: null}
+	'orderReports:ready': { emailTemplate: null, smsTemplate: null },
+	'report-request:new': { emailTemplate: 'request-reminder', smsTemplate: null }
 };
 
 function initalize(messageConfigs) {
@@ -116,6 +117,7 @@ function processNewRequest(requestMessage, sender) {
 
 			log.debug({ func: 'processShareRequest' }, 'Configuring options...');
 			var options = [
+				{ name: 'SENDER_ID', content: sender.id },
 				{ name: 'SENDER_NAME', content: sender.firstName || sender.displayName },
 				{ name: 'FIRST_NAME', content: target.firstName || target.displayName },
 				{ name: 'LAST_NAME', content: target.lastName },
@@ -124,7 +126,8 @@ function processNewRequest(requestMessage, sender) {
 				{ name: 'PHONE', content: target.phone },
 				{ name: 'LINK_ID', content: requestMessage.id },
 				{ name: 'SHORT_ID', content: requestMessage.shortId },
-				{ name: 'MESSAGE', content: requestMessage.text }
+				{ name: 'MESSAGE', content: requestMessage.text },
+				{ name: 'PROFILE_IMAGE', content: sender.profileImageURL || sender.props && sender.props.avatar }
 			];
 
 			if (!!target.email && config.emailTemplate) {
