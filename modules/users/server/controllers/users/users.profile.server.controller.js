@@ -11,7 +11,11 @@ var _            = require('lodash'),
     mongoose     = require('mongoose'),
     passport     = require('passport'),
     User         = mongoose.model('User'),
-    Q            = require('q');
+    Q            = require('q'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users',
+        file: 'users.profile.server.controller'
+    });
 
 _.extend(exports, {
     update: update,
@@ -210,8 +214,8 @@ function read(req, res) {
  * Send User
  */
 function me(req, res) {
-
-    if (!req.user) {
+    if (req.isUnauthenticated()) {
+        log.trace({ func: 'me' }, 'Unauthorized user');
         return res.status(401).send({
             message: 'unauthorized'
         });

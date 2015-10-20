@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var config = require('../config'),
+    _ = require('lodash'),
     chalk = require('chalk'),
     express = require('express'),
     morgan = require('morgan'),
@@ -164,25 +165,31 @@ module.exports.initMiddleware = function (app) {
     //app.use(cors(corsOptions));
     app.use(cors());
     
-    // function fullCorsHandler(req, res, next) {
-    //     res.header('Access-Control-Allow-Origin', '*');
-    //     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    
-    //     // intercept OPTIONS method
-    //     if ('OPTIONS' === req.method) {
-    //         log.trace('Intercepted OPTIONS method');
-    //         res.send(200);
-    //     }
-    //     else {
-    //         next();
-    //     }
-    // }
-        
-    // app.use(fullCorsHandler);
-    
     /// JWT???
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));
     //app.use('/api', expressJwt({ secret: config.sessionSecret }));
+    
+    // Authenticate with Passport-Bearer Authentication, and only
+    // fail in case of exception/error - not failed auth.
+    app.use('/api', function (req, res, next) {
+        if (_.isEmpty(req.headers.authorization)) {
+            return next();
+        }
+
+        console.log('Doing Bearer Authentication');
+        passport.authenticate('bearer', { session: false },
+            function cb(err, user, info) {
+                if (err) { return next(err); }
+                
+                if (!!user) {
+                    // Since We're using custom-middleware for passport, we need to 
+                    // set the request user ourselves.
+                    req.user = user;
+                }
+                
+                return next();
+            })(req, res, next);
+    });
 
 
     // Request body parsing middleware should be above methodOverride

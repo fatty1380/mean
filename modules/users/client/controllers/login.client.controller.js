@@ -17,7 +17,6 @@
                     debugger;
 
                     if (!vm.auth.user) {
-                        debugger;
                         vm.auth.user = response;
                     }
 
@@ -39,7 +38,7 @@
                     }
                 }).catch(function error(response) {
                     console.error(response.message || response);
-                    vm.error = response.message;
+                    vm.error = response.message || 'Unable to Login at this time. Please Check your Credentials';
                 });
         };
     }
