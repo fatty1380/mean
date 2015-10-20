@@ -7,6 +7,7 @@ var should = require('should'),
 	path = require('path'),
 	express = require(path.resolve('./config/lib/express')),
 	stubs = require(path.resolve('./config/lib/test.stubs')),
+	TestAgent = require(path.resolve('./config/lib/test.agent')),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'tests',
         file: 'notifications.server.routes'
@@ -32,6 +33,8 @@ describe('Notifications CRUD tests', function () {
 		// Get application
 		app = express.init(mongoose);
 		agent = request.agent(app.http);
+		
+		agent = new TestAgent();
 
 		done();
 	});
@@ -54,6 +57,22 @@ describe('Notifications CRUD tests', function () {
 	});
 
 	describe('for Logged In users', function () {
+		
+		function postToNotifications(postBody, endpoint) {
+			endpoint = endpoint || '/api/notifications/sms';
+
+			return agent.post(endpoint)
+				.send(postBody)
+				.expect(200)
+				.then(
+					function success(postResponse) {
+						should.exist(postResponse.body);
+
+						log.debug({ response: postResponse.body }, 'Got Response Body');
+						
+						return postResponse;
+					});
+		}
 
 		beforeEach(function () {
 			_test = this.currentTest;
@@ -64,24 +83,33 @@ describe('Notifications CRUD tests', function () {
 		it('should be able to send an SMS message to a mobile number', function () {
 			contactInfo.phone = '6507767675';
 
-			endpoint = '/api/notifications/sms';
-
-			return agent.post(endpoint)
-				.send(contactInfo)
-				.expect(200)
-				.then(
-				function success(smsResponse) {
-					log.debug({ test: _test.title, response: smsResponse }, 'Got SMS Response');
-						should.exist(smsResponse.body);
-
-						log.debug({ response: smsResponse.body }, 'Got SMS Response Message');
-				},
-				function failure(err) {
-					log.error({ test: _test.title, err: err }, 'SMS Response Failed');
-					
-					should.not.exist(err);
-				});
+			
 		});
+		
+		
+		//'user:new': {emailTemplate: 'sign-up-email', smsTemplate: null},
+		it('should send a signup email when a new user is created');
+
+		//'inviteRequest:send': {emailTemplate: 'invite-to-truckerline', smsTemplate: '{{FIRST_NAME}} has invited you to TruckerLine. Join the Convoy at http://app.truckerline.com/r/{{SHORT_ID}}'},
+		it('should send an \'invite\' email when a user invtes another user with only an email address');
+		it('should send an \'invite\' SMS/Text when a user invtes another user with only a phone number');
+		it('should send an \'invite\' email and SMS when a user invites another with both email and phone number');
+
+		//'friendRequest:send': {emailTemplate: 'new-friend-request', smsTemplate: null},
+
+		//'friendRequest:accept': {emailTemplate: 'new-connection', smsTemplate: null},
+
+		//'shareRequest:send': {emailTemplate: 'shared-profile-email', smsTemplate: null},
+
+		//'shareRequest:accept': {emailTemplate: null, smsTemplate: null},
+
+		//'reviewRequest:send': {emailTemplate: 'new-review-request', smsTemplate: '{{FIRST_NAME}} has requested you review their services on TruckerLine. http://app.truckerline.com/r/{{SHORT_ID}}'},
+
+		//'reviewRequest:accept': { emailTemplate: 'new-review-posted', smsTemplate: null },
+
+		//'chatMessage:new': { emailTemplate: 'new-message', smsTemplate: null },
+
+		//'report-request:new': { emailTemplate: 'request-reminder', smsTemplate: null }
 
 
 		afterEach(function (done) {
