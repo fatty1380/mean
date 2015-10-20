@@ -87,7 +87,6 @@ function getSubscriptions(req) {
 }
 
 function validateState(value) {
-    debugger;
     if (_.contains(constants.usStates, value)) {
         return true;
     }
