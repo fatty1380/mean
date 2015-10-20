@@ -49,8 +49,12 @@ var defaultEventConfig = {
 	'report-request:new': { emailTemplate: 'request-reminder', smsTemplate: null }
 };
 
-function initalize(messageConfigs) {
+initialize();
+
+function initialize(messageConfigs) {
 	eventConfig = _.defaults(eventConfig, messageConfigs, defaultEventConfig);
+	
+	log.debug({ func: 'initialize', config: eventConfig }, 'Notification Center Configured with new settings');
 }
 
 function send(event, options) {
@@ -64,6 +68,10 @@ function send(event, options) {
 	switch (event) {
 		case 'user:new':
 			return emailer.sendTemplateBySlug(config.emailTemplate, options.user, options);
+	}
+	
+	if (!!options.requestMessage) {
+		return processNewRequest(options.requestMessage, options.user);
 	}
 }
 
