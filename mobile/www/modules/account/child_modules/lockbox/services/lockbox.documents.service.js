@@ -43,28 +43,7 @@
             return API.doRequest(settings.documents, 'get')
                 .then(function success(documentListResponse) {
                     var docs = documentListResponse.data;
-                    //docs = [
-                    //    {
-                    //        id: '0',
-                    //        sku: 'mvr',
-                    //        name: 'Mushroom',
-                    //        created: '2015-07-11 10:33:05',
-                    //        url: 'http://vignette4.wikia.nocookie.net/fantendo/images/5/52/Mushroom2.PNG',
-                    //        expires: null,
-                    //        bucket: 'outset-dev',
-                    //        key: 'kajifpaiueh13232'
-                    //    },
-                    //    {
-                    //        id: '1',
-                    //        sku: 'bg',
-                    //        name: 'Create PDF',
-                    //        created: '2015-07-11 10:33:05',
-                    //        url: 'http://presevo.rs/u/uploads/lesson2.pdf',
-                    //        expires: null,
-                    //        bucket: 'outset-dev',
-                    //        key: 'kajifpaiueh13232222'
-                    //    }
-                    //];
+                    console.warn('11 docs --->>>', docs);
 
                     if(!vm.path) return $q.when(docs);
 
@@ -76,9 +55,17 @@
                         if (saveToDevice) {
                             // NOTE: This returns a promise and the file may not be fully saved
                             // to the device when teh method returns
-                            promiseArr.push(saveExistingFiles(doc));
+
+                            if(doc.url.indexOf('data:image') !== -1){
+                                saveFileToDevice(doc);
+                                promiseArr.push($q.when(doc));
+                            }else{
+                                promiseArr.push(saveExistingFiles(doc));
+                            }
                         }
                     });
+
+                    console.warn(' promiseArr --->>>', promiseArr);
 
                     return $q.all(promiseArr);
                 })
@@ -200,7 +187,7 @@
                 })
                 .then(function saveSuccess(newDocumentResponse) {
 
-                    saveFileToDevice(newDocumentResponse);
+                    saveFileToDevice(newDocumentResponse.data);
 
                     if (newDocumentResponse.status != 200) {
                         console.warn('Unknown Error in Doc Save response: ', newDocumentResponse);
@@ -250,10 +237,9 @@
         }
 
         function saveFileToDevice (file) {
-            var fileData = file.data;
             var path = vm.path;
 
-            updateNewDocumentWithID(fileData);
+            if(!file.id) updateNewDocumentWithID(file);
 
             return $cordovaFile.checkDir(path, 'lockbox')
                 .catch(function () {
@@ -262,9 +248,9 @@
                 .then(function () {
                     var options = {
                         path: path + 'lockbox/',
-                        user: fileData.user,
-                        name: fileData.id + '-' + getFileName(fileData),
-                        data: fileData.url
+                        user: angular.isObject(file.user) ? file.user.id : file.user,
+                        name: file.id + '-' + getFileName(file),
+                        data: file.url
                     };
                     return writeFileInUserFolder(options);
                 });
@@ -370,9 +356,6 @@
 
                     return $cordovaFile.checkDir(path, id);
                 })
-                .catch(function (err) {
-                    console.warn('shut err --->>>', err);
-                })
                 .then(function (dir) {
                     path += id;
                     hasUserDir = true;
@@ -422,13 +405,9 @@
                 })
                 .catch(function () {
                     if (!!hasLockbox) {
-                        console.info(' --->>> getting 1 <<<--- ');
-
                         return $q.when(getDocuments(true));
                     } else {
-                        console.info(' --->>> getting 2 <<<--- ');
                         return $cordovaFile.createDir(path, "lockbox", false).then(function () {
-                            console.info(' --->>> getting 2.1 <<<--- ');
                             return $q.when(getDocuments(true));
                         });
                     }

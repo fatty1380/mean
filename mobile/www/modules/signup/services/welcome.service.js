@@ -71,11 +71,10 @@
 
     function WelcomeModalCtrl(parameters) {
         var vm = this;
-
         var screenConfig = screenConfigs[parameters.stateName];
 
         if (_.isEmpty(screenConfig)) {
-                        console.error('Closing modal because of no config');
+            console.error('Closing modal because of no config');
             return vm.closeModal(false);
         }
 
