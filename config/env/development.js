@@ -7,8 +7,8 @@ module.exports = {
         useLocalhost: true
     },
     db: {
-        uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
-        // uri: 'mongodb://localhost/outset-aws',
+        //uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        uri: 'mongodb://localhost/outset-dev',
         options: {
             user: '',
             pass: ''
@@ -92,8 +92,13 @@ module.exports = {
             folder: 'profiles-dev/'
         },
 		mandrill: {
-			
-		}
+		},
+        twilio: {
+            accountSid: process.env.TWILIO_ACCOUNT_SID || 'AC51314159bbf230bc5769de5772ce8264',
+            authToken: process.env.TWILIO_AUTH_TOKEN || '827a9998ea90ed5c0483cc4246ddcace',
+            twilioNumber: process.env.TWILIO_NUMBER || '+18189601051',
+            toOverride: '650-776-7675'
+        }
     },
     mailer: {
         toOverride: 'pat@joinoutset.com',

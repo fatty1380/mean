@@ -82,8 +82,6 @@ module.exports = {
         appstore: {
             url: 'https://itunes.apple.com/us/app/truckerline-take-control-your/id1029130691?mt=8',
             badge: '<a href="https://itunes.apple.com/us/app/truckerline-take-control-your/id1029130691?mt=8" style="display:inline-block;overflow:hidden;background:url(http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg) no-repeat;width:165px;height:40px;"></a>'
-            
-              
         },
         everifile: {
             baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo-api-test.everifile.com/renovo',
@@ -121,8 +119,7 @@ module.exports = {
         twilio: {
             accountSid: process.env.TWILIO_ACCOUNT_SID || 'AC51314159bbf230bc5769de5772ce8264',
             authToken: process.env.TWILIO_AUTH_TOKEN || '827a9998ea90ed5c0483cc4246ddcace',
-            twilioNumber: process.env.TWILIO_NUMBER || '+18189601051',
-            toOverride: '650-776-7675'
+            twilioNumber: process.env.TWILIO_NUMBER || '+18189601051'
         }
     },
     port: process.env.PORT || 3000,

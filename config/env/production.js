@@ -26,7 +26,8 @@ module.exports = {
         debug: false,
         login: true,
         signup: true,
-        showAuth: false
+        showAuth: false,
+        isTL: process.env.IS_TRUCKERLINE !== undefined ? (process.env.IS_TRUCKERLINE === 'true') : true
     },
     modules: {
         driver: {
@@ -102,7 +103,7 @@ module.exports = {
         s3: {
             enabled: true,
             s3Options: {
-                bucket: 'outset-public-resources',
+                bucket: process.env.S3_DEFAULT_BUCKET || 'outset-public-resources',
                 accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
                 secretAccessKey: process.env.S3_SECRET_KEY || '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'
             },
@@ -112,7 +113,13 @@ module.exports = {
             writePath: '/tmp/'
         },
         mandrill: {
-            apiKey: 'yzS2d5_09Nh51me_QXI_zA'
+            apiKey: process.env.MANDRILL_API_KEY || 'yzS2d5_09Nh51me_QXI_zA'
+        },
+        twilio: {
+            accountSid: process.env.TWILIO_ACCOUNT_SID || 'AC51314159bbf230bc5769de5772ce8264',
+            authToken: process.env.TWILIO_AUTH_TOKEN || '827a9998ea90ed5c0483cc4246ddcace',
+            twilioNumber: process.env.TWILIO_NUMBER || '+18189601051',
+            toOverride: '650-776-7675'
         }
     },
     reports: {},
