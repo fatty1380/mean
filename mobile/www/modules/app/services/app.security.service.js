@@ -15,8 +15,6 @@
             accessible: false
         };
 
-        initialize();
-
         return {
             initialize: initialize,
             unlock: unlock,

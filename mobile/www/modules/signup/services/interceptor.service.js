@@ -39,7 +39,7 @@
             responseError: function (rejection) {
                 // revoke client authentication if 401 is received
                 if (rejection != null && rejection.status === 401) {
-                    console.warn('  eqweqe --->>> %o', rejection);
+                    console.warn('  rejection --->>> %o', rejection);
 
                     $rootScope.$broadcast("clear");
 

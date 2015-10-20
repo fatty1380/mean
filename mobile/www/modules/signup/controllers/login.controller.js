@@ -60,7 +60,7 @@
          * Sign In
          */
         function signIn() {
-            
+
             if (vm.mainLoginForm.$invalid) {
                 return;
             }
@@ -84,9 +84,9 @@
                             .then(function (profileData) {
                                 if (profileData.success) {
                                     userService.profileData = profileData.message.data;
-                                    $state.go('account.profile');
-
                                     securityService.initialize();
+
+                                    $state.go('account.profile');
                                 }
                             });
 
@@ -98,7 +98,7 @@
                         } else {
                             vm.error = 'Unable to authenticate. Please try again later';
                         }
-                        
+
                         selectInputValue('password');
                     }
                 });

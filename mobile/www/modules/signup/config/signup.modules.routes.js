@@ -14,28 +14,30 @@
                         /**
                          * @desc check user logged in
                         */
-                        check: function ($q, userService, $state, tokenService, registerService) {
-                            var defer = $q.defer();
-                            if (tokenService.get('access_token')) {
-                                registerService.me()
-                                    .then(function (response) {
-                                        if (response && response.success) {
-                                            defer.resolve();
-                                            if (response.message.data) {
-                                                $state.go('account.profile');
+                        check: ['$q', 'userService', '$state', 'tokenService', 'registerService',
+                            function ($q, userService, $state, tokenService, registerService) {
+                                var defer = $q.defer();
+                                if (tokenService.get('access_token')) {
+                                    registerService.me()
+                                        .then(function (response) {
+                                            if (response && response.success) {
+                                                defer.resolve();
+                                                if (response.message.data) {
+                                                    $state.go('account.profile');
+                                                }
+                                            } else {
+                                                if (response && response.status == 401) {
+                                                    tokenService.set('access_token', '');
+                                                }
+                                                defer.resolve();
                                             }
-                                        } else {
-                                            if (response && response.status == 401) {
-                                                tokenService.set('access_token', '');
-                                            }
-                                            defer.resolve();
-                                        }
-                                    });
-                            } else {
-                                defer.resolve();
+                                        });
+                                } else {
+                                    defer.resolve();
+                                }
+                                return defer.promise;
                             }
-                            return defer.promise;
-                        }
+                        ]
                     }
                 })
 
