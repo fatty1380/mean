@@ -347,10 +347,14 @@ module.exports.initErrorRoutes = function (app) {
     app.use(function (req, res) {
         // Redirect to not found page
         
-        res.status(404).json({ error: 'not found' });
-        
-        if (!/^\/api\/.*/i.test(req.url)) {
-            res.redirect('/not-found');
+        if (!res.headersSent) {
+            res.status(404).json({ error: 'not found' });
+
+            if (!/^\/api\/.*/i.test(req.url)) {
+                res.redirect('/not-found');
+            }
+        } else {
+            log.error({ url: req.url, res: res }, 'Headers have already been set after hitting middlewarae fallback');
         }
     });
 };
