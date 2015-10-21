@@ -7,7 +7,7 @@ var should = require('should'),
 	path = require('path'),
 	express = require(path.resolve('./config/lib/express')),
 	stubs = require(path.resolve('./config/lib/test.stubs')),
-	TestAgent = require(path.resolve('./config/lib/test.agent')),
+	TestAgent = require(path.resolve('./config/lib/test.agent')).TestAgent,
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'tests',
         file: 'notifications.server.routes'
@@ -31,10 +31,15 @@ describe('Notifications CRUD tests', function () {
 	before(function (done) {
 		log.debug({ func: 'beforeAll' }, 'Setup Base');
 		// Get application
-		app = express.init(mongoose);
-		agent = request.agent(app.http);
+		// app = express.init(mongoose);
+		// agent = request.agent(app.http);
 		
+		//log.info({ testAgent: TestAgent, keys: _.keys(TestAgent)});
+	
 		agent = new TestAgent();
+		log.info({ func: 'beforeAll', agent: agent, keys: _.keys(agent) });
+		
+		should.exist(agent.get);
 
 		done();
 	});
@@ -58,32 +63,36 @@ describe('Notifications CRUD tests', function () {
 
 	describe('for Logged In users', function () {
 		
-		function postToNotifications(postBody, endpoint) {
-			endpoint = endpoint || '/api/notifications/sms';
-
+		function postToNotifications(postBody, expect, endpoint) {
+			endpoint = endpoint || '/api/notifications';
+			expect = expect || 200;
+			
 			return agent.post(endpoint)
 				.send(postBody)
-				.expect(200)
+				.expect(expect)
 				.then(
 					function success(postResponse) {
 						should.exist(postResponse.body);
 
 						log.debug({ response: postResponse.body }, 'Got Response Body');
 						
-						return postResponse;
+						return postResponse.body;
 					});
 		}
 
 		beforeEach(function () {
 			_test = this.currentTest;
 			log.debug({ func: this.test.title, test: _test.title }, 'Setup');
-			return stubs.agentLogin(agent, credentials);
+			return agent.login(credentials);
 		});
 
 		it('should be able to send an SMS message to a mobile number', function () {
 			contactInfo.phone = '6507767675';
 
-			
+			return postToNotifications(contactInfo, 200, '/api/notifications/sms').then(
+				function (response) {
+					response.should.have.property('message');
+				});
 		});
 		
 		
@@ -112,12 +121,9 @@ describe('Notifications CRUD tests', function () {
 		//'report-request:new': { emailTemplate: 'request-reminder', smsTemplate: null }
 
 
-		afterEach(function (done) {
+		afterEach(function () {
 			log.debug({ func: 'afterEach' }, 'Signing Out of API');
-			agent.get('/api/auth/signout').expect(302).then(function (signoutRes) {
-				log.trace({ signoutRes: signoutRes }, 'signed out of app');
-				done();
-			});
+			return agent.logout();
 		});
 	});
 

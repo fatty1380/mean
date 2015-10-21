@@ -29,7 +29,14 @@ var templates = {};
  * given Options, creates a message object prepared for sending.
  */
 function sendMessageRequest(message, messageConfig) {
+    
+    log.info({ func: 'sendMessageRequest', message: message, messageConfig: messageConfig }, 'Sending Message (START)');
 
+    if (_.isObject(message) && _.isEmpty(messageConfig)) {
+        messageConfig = message;
+        message = 'Build your Driving Career at Truckerline.com';
+    }
+    
     var sender = !!messageConfig.from && messageConfig.from.firstName || null;
 
     var body = noSenderTemplate;
@@ -38,7 +45,7 @@ function sendMessageRequest(message, messageConfig) {
     if (!!sender) {
         body = (message || messageConfig.template || messageTemplate);
 
-        var bodyVars = body.match(/{{\s*[\w\.]+\s*}}/g)
+        var bodyVars = (body.match(/{{\s*[\w\.]+\s*}}/g) || [])
             .map(function (x) { return x.match(/[\w\.]+/)[0]; });
 
 

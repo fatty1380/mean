@@ -76,10 +76,15 @@ exports.hasAuthorization = function(roles) {
             if (_.intersection(req.user.roles, roles).length) {
                 req.log.debug({func: 'hasAuthorization'}, 'Authorized');
                 return next();
-            } else {
+            } else if(req.isAuthenticated()) {
                 req.log.debug({func: 'hasAuthorization', code: 403}, 'Not Authorized');
                 return res.status(403).send({
                     message: 'User is not authorized'
+                });
+            } else {
+                req.log.debug({func: 'hasAuthorization', code: 401}, 'Not Authenticated');
+                return res.status(401).send({
+                    message: 'User is not authenticated'
                 });
             }
         });

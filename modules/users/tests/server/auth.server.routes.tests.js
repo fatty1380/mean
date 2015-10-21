@@ -5,6 +5,7 @@ var should = require('should'),
     Q = require('q'),
     path = require('path'),
     stubs = require(path.resolve('./config/lib/test.stubs')),
+    TestAgent = require(path.resolve('./config/lib/test.agent')).TestAgent,
     express = require(path.resolve('./config/lib/express')),
     request = require('supertest-as-promised')(Q.Promise),
     log = require(path.resolve('./config/lib/logger')).child({
@@ -25,28 +26,31 @@ var mongoose = require('mongoose'),
  */
 var app, agent, credentials, user, _test;
 
-var client;
-
 var jwtConfig, config;
 
 
 describe('Auth Routes tests', function () {
-    before(function () {
+    before(function (done) {
         // Get application
         
-        log.error({ func: 'before' }, 'Enabling JWT Auth');
+        log.error({ func: 'beforeAll' }, 'Enabling JWT Auth');
         
-        config = require(path.resolve('./config/config'));
-        jwtConfig = config.security.enableJWT;
-        config.security.enableJWT = true;
+        // config = require(path.resolve('./config/config'));
+        // jwtConfig = config.security.enableJWT;
+        // config.security.enableJWT = true;
         
-        app = express.init(mongoose).http;
-        agent = request.agent(app);
+        // app = express.init(mongoose).http;
+        // agent = request.agent(app);
+        agent = new TestAgent();
+        
+        should.exist(agent.get);
+        
+        done();
 
 
-        client = new ClientApp({ name: 'TestCase', clientId: 'tc_01', clientSecret: 'shenanigans' });
+        //client = new ClientApp({ name: 'TestCase', clientId: 'tc_01', clientSecret: 'shenanigans' });
 
-        return client.save();
+        //return client.save();
     });
 
     describe('JWT Tests', function () {
@@ -81,15 +85,8 @@ describe('Auth Routes tests', function () {
             var _test = this.test;
 
             var endpoint = '/oauth/token';
-            var payload = _.extend(credentials, {
-                grant_type: 'password',
-                client_id: client.clientId,
-                client_secret: client.clientSecret
-            });
-
-            return agent.post(endpoint)
-                .send(payload)
-                .expect(200)
+            
+            return agent.login(credentials, { rawResponse: true, expect: 200 })
                 .then(function (response) {
                     log.debug({
                         test: _test.title,
@@ -107,9 +104,7 @@ describe('Auth Routes tests', function () {
             var endpoint = '/oauth/token';
             credentials.password = 'incorrect';
 
-            return agent.post(endpoint)
-                .send(credentials)
-                .expect(401)
+            return agent.login(credentials, { rawResponse: true, expect: 401 })
                 .then(function (response) {
                     log.debug({
                         test: _test.title,
@@ -117,7 +112,7 @@ describe('Auth Routes tests', function () {
                         err: response.error
                     }, 'Got Response from %s', endpoint);
 
-                    response.body.should.not.have.property('token');
+                    response.body.should.not.have.property('access_token');
                 });
         });
 
@@ -127,8 +122,9 @@ describe('Auth Routes tests', function () {
             var token;
 
             beforeEach(function () {
-                return stubs.getToken(agent, credentials, client).then(function (response) {
-                    log.debug({ func: 'auth.before', token: response.body }, 'Got Token');
+                
+                return agent.login(credentials, { rawResponse: true }).then(function (response) {
+                    log.debug({ func: 'auth.before', body: response.body }, 'Got Token');
                     token = response.body;
                 });
             });
@@ -230,11 +226,11 @@ describe('Auth Routes tests', function () {
 
     afterEach(function () {
         user = credentials = null;
-        return stubs.cleanTables([User, 'AccessToken', 'RefreshToken']);
+        return stubs.cleanTables([User]); //, 'AccessToken', 'RefreshToken']);
     });
 
     after(function () {
-        config.security.enableJWT = jwtConfig;
+        //config.security.enableJWT = jwtConfig;
         return stubs.cleanTables([ClientApp]);
     });
 });

@@ -181,8 +181,9 @@ function sendEmail(req, res) {
 
 function sendSMS(req, res) {
 	var contactInfo = req.body;
+	var message = req.body.message || 'This is a Test of the TruckerLine SMS Messaging System';
 
-	log.debug({ func: 'sendSMS', body: contactInfo }, 'Send SMS : START');
+	log.debug({ func: 'sendSMS', body: contactInfo, reqUser: req.user }, 'Send SMS : START');
 
 	if (_.isEmpty(contactInfo.phoneNumbers) && _.isEmpty(contactInfo.phone)) {
 		return res.status(422).send({ message: 'must define phone numbers in request' });
@@ -193,9 +194,9 @@ function sendSMS(req, res) {
 		from: req.user
 	};
 
-	messenger.sendMessage(messageConfig).then(
+	messenger.sendMessage(message, messageConfig).then(
 		function success(sendMessageResponse) {
-			return res.status(200).send({ message: 'Successfully sent SMS Message to recipient' });
+			return res.status(200).send({ message: 'Sent SMS Message to recipient', sid: sendMessageResponse.sid, status: sendMessageResponse.status });
 		},
 		function failure(err) {
 			log.error({ err: err, messageConfig: messageConfig }, 'Failed to Send SMS Message');
