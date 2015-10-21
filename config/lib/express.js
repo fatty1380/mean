@@ -176,7 +176,6 @@ module.exports.initMiddleware = function (app) {
             return next();
         }
 
-        console.log('Doing Bearer Authentication');
         passport.authenticate('bearer', { session: false },
             function cb(err, user, info) {
                 if (err) { return next(err); }

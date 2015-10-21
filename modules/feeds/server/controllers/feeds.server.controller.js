@@ -336,16 +336,18 @@ function feedByID(req, res, next, id) {
 }
 
 function feedItemByID(req, res, next, id) {
-	req.log.debug({ func: 'feedItemByID', id: id }, 'Looking up Feed Item by ID');
+	req.log.trace({ func: 'feedItemByID', id: id }, 'Looking up Feed Item by ID');
 
 	FeedItem.findById(id)
 		.populate({ path: 'user', select: 'handle displayName profileImageURL props', model: 'User' })
 		.populate({ path: 'company', select: 'name profileImageURL', model: 'Company' })
 		.exec().then(
 			function (feedItem) {
-				req.log.debug({ feedItem: feedItem, method: 'feedItemById.FeedItem.findById' }, 'Feed Item result');
+				req.log.trace({ feedItem: feedItem, method: 'feedItemById.FeedItem.findById' }, 'Feed Item result');
 
 				if (!feedItem) {
+					req.log.warn({ feedItemId: id, method: 'feedItemById.FeedItem.findById' }, 'Feed Item not found for ID `%s`', id);
+
 					return next(new Error('Failed to load feed Item ' + id));
 				}
 
@@ -360,15 +362,15 @@ function feedItemByID(req, res, next, id) {
 
 function myFeed(req, res, next) {
 	if (!req.user || !req.user._id) {
-		req.log.debug('No logged in user - No feed');
+		req.log.error('No logged in user - No feed');
 		return next();
 	}
 
-	log.debug({ func: 'myFeed', user: req.user.id }, 'Finding Feed for user ...');
+	log.trace({ func: 'myFeed', user: req.user.id }, 'Finding Feed for user ...');
 
 	return getOrCreateFeed(req.user._id, req.log)
 		.then(function (feed) {
-			log.debug({ func: 'myFeed' }, 'Returning Feed id:%s', feed.id);
+			log.trace({ func: 'myFeed' }, 'Returning Feed id:%s', feed.id);
 			req.feed = feed;
 			next();
 		}, function (err) {

@@ -5,30 +5,6 @@
     function handleBadRoute($injector, $location) {
         console.log('Unknown URL pattern: %s', $location.url());
         $location.path('/home');
-        
-        // $injector.invoke(['Authentication', '$log', '$state', function (auth, $log, $state) {
-        //     if (!auth.isLoggedIn()) {
-        //         $location.path('/');
-        //     }
-        //     else {
-        //         switch (auth.user.type) {
-        //             case 'driver':
-        //                 $log.debug('[Route.Otherwise] Re-Routing to driver\'s profile page');
-        //                 $state.go('users.view');
-        //                 $location.path('/home');
-        //                 break;
-        //             case 'owner':
-        //                 $log.debug('[Route.Otherwise] Re-Routing to the user\'s company home');
-        //                 $state.go('companies.home');
-        //                 $location.path('/home');
-        //                 break;
-        //             default:
-        //                 $log.warn('[Route.Otherwise] Unknown Destination');
-        //                 $location.path('/');
-        //         }
-        //     }
-
-        // }]);
     }
 
     resolveUser.$inject = ['Authentication', 'LoginService'];
@@ -49,6 +25,17 @@
                 return null;
             });
     }
+    
+    /** Core Routes & States:
+     * 
+     *  fixed-opaque    : abstract
+     *                  : Root level template containing a single, fixed-width container overlayed on a short header
+     *                  : resolves: 'user'
+     *  headline-bg     : abstract
+     *                  : Root level template containing a single, fixed-width container overlayed on a large header
+     * 
+     *  intro           : 
+     */
 
     function config($stateProvider, $urlRouterProvider) {
         // Redirect to home view when route not found
