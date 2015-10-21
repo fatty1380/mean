@@ -1,12 +1,14 @@
 {
   //"extends": "../../../.jshintrc",
   "globals": {
+    "angular": true,
     "ApplicationConfiguration": true,
     "inject": true,
     "by": true,
     "browser": true,
     "element": true
   },
+  "jasmine": true,
   "mocha": true,
   "node": true,
   "expr": true
