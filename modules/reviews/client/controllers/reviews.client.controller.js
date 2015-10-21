@@ -74,7 +74,7 @@
 	
 	angular.module('reviews').controller('ReviewEditCtrl', ReviewEditController);
 
-	ReviewsController.$inject = ['reviewRequest', 'profile', 'review', '$stateParams', '$location', 'Authentication', 'Reviews' ];
+	ReviewsEditController.$inject = ['reviewRequest', 'profile', 'review', '$stateParams', '$location', 'Authentication', 'Reviews' ];
 	
 	function ReviewEditController(reviewRequest, profile, review, $stateParams, $location, Authentication, Reviews) {
 

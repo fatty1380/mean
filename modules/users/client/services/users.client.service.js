@@ -240,10 +240,10 @@
 
     angular
         .module('users')
-        .factory('SeedService', seedService);
+        .factory('SeedService', SeedService);
 
-    seedService.$inject = ['$resource'];
-    function seedService($resource) {
+    SeedService.$inject = ['$resource'];
+    function SeedService($resource) {
         return $resource('api/seed', {},
             {
                 update: {

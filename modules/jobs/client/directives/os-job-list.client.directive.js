@@ -1,7 +1,33 @@
 (function () {
     'use strict';
+    
+    angular.module('jobs')
+        .directive('osJobList', JobListDirective);
 
-    function JobListController(Jobs, $log, $state, $location, config, auth, params) {
+    function JobListDirective() {
+        return {
+            templateUrl: '/modules/jobs/views/templates/job-list.client.template.html',
+            restrict: 'E',
+            replace: false,
+            scope: {
+                header: '@?',
+                companyId: '@?',
+                srcJobs: '=?',
+                showPost: '=?',
+                limitTo: '=?',
+                config: '=?',
+                showSearch: '=?',
+                btnClass: '@?'
+            },
+            controller: JobListDirectiveCtrl,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }
+
+    JobListDirectiveCtrl.$inject = ['Jobs', '$log', '$state', '$location', 'AppConfig', 'Authentication', '$stateParams'];
+        
+    function JobListDirectiveCtrl(Jobs, $log, $state, $location, config, auth, params) {
         var vm = this;
 
         vm.visibleId = params.itemId;
@@ -189,32 +215,5 @@
 
         activate();
     }
-
-    function JobListDirective() {
-        return {
-            templateUrl: '/modules/jobs/views/templates/job-list.client.template.html',
-            restrict: 'E',
-            replace: false,
-            scope: {
-                header: '@?',
-                companyId: '@?',
-                srcJobs: '=?',
-                showPost: '=?',
-                limitTo: '=?',
-                config: '=?',
-                showSearch: '=?',
-                btnClass: '@?'
-            },
-            controller: 'JobListController',
-            controllerAs: 'vm',
-            bindToController: true
-        };
-    }
-
-    JobListController.$inject = ['Jobs', '$log', '$state', '$location', 'AppConfig', 'Authentication', '$stateParams'];
-
-    angular.module('jobs')
-        .controller('JobListController', JobListController)
-        .directive('osJobList', JobListDirective);
 
 })();

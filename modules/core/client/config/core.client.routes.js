@@ -13,7 +13,6 @@
             function success(user) {
 
                 if (!Authentication.user) {
-                    debugger;
                     Authentication.user = user;
                 }
 
@@ -67,19 +66,20 @@
 
             state('intro', {
                 url: '/',
+                abstract: true,
                 template: '<div ui-view></div>',
-                controller: ['$state', '$timeout', function ($state, $timeout) {
-                    if ($state.is('intro')) {
-                        $timeout(function () {
-                            $state.go('intro.driver');
-                        }, 0);
-                    }
-                }]
+                // controller: ['$state', '$timeout', function ($state, $timeout) {
+                //     if ($state.is('intro')) {
+                //         $timeout(function () {
+                //             $state.go('intro.driver');
+                //         }, 0);
+                //     }
+                // }]
 
             }).
 
             state('intro.driver', {
-                url: 'd',
+                url: '',
                 templateUrl: '/modules/core/views/intro.client.view.html',
                 parent: 'intro',
                 controller: 'HomeController',
