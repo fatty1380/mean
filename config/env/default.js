@@ -117,9 +117,9 @@ module.exports = {
             apiKey: 'v5XougHzBNv5yfbWE2WgcA'
         },
         twilio: {
-            accountSid: process.env.TWILIO_ACCOUNT_SID || 'AC51314159bbf230bc5769de5772ce8264',
-            authToken: process.env.TWILIO_AUTH_TOKEN || '827a9998ea90ed5c0483cc4246ddcace',
-            twilioNumber: process.env.TWILIO_NUMBER || '+18189601051'
+            accountSid: 'AC15d6d12a6d92ca496a261fb4bba62956',
+            authToken: '7ead479d89436da9933c34e7d90ac82f', 
+            twilioNumber: '+15005550006'
         }
     },
     port: process.env.PORT || 3000,
