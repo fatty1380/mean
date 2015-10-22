@@ -29,7 +29,7 @@
 
             vm.subscription = _.extend(vm.subscription, _.find(vm.packages, {'planId': vm.subscription.planId}));
 
-            var features = vm.subscription['features'];
+            var features = vm.subscription.features;
             vm.features = _.keys(features);
         } else {
             debugger;

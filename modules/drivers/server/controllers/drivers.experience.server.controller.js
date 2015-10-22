@@ -48,7 +48,7 @@ exports.update = function setExperience(req, res) {
         .then(function (user) {
             loginPostUpdate(req, res, user, 'experience');
         });
-}
+};
 
 /**
  * deleteExperience
@@ -65,7 +65,7 @@ exports.remove = function deleteExperience(req, res) {
         .then(function (user) {
             loginPostUpdate(req, res, user, 'experience');
         });
-}
+};
 
 function saveParent(req, res, func) {
     return req.user.save()
@@ -88,7 +88,7 @@ exports.experienceById = function experienceById(req, res, next, id) {
     req.log.debug({ func: 'experienceById', id: id, user: user }, 'start for id: ', id);
 
     if (!!user && (/^[a-f\d]{24}$/i).test(id)) {
-        req.experience = user.experience.id(id)
+        req.experience = user.experience.id(id);
 
         if (!!req.experience) {
             req.log.debug({ func: 'experienceById', experience: req.experience, id: id }, 'Found Experience!');
@@ -103,7 +103,7 @@ exports.experienceById = function experienceById(req, res, next, id) {
         message: 'Unable to find an experience item associated with that id for that user'
     });
 
-}
+};
 
 // TODO: Combine with drivers.properties.server.controller
 function loginPostUpdate(req, res, user, property) {

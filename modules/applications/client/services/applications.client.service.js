@@ -28,7 +28,7 @@
                         method: 'POST'
                     }
                 }),
-            rsrcByID = $resource('api/applications/:id', {
+            RsrcByID = $resource('api/applications/:id', {
                 id: '@_id'
             }, {
                     update: {
@@ -41,11 +41,11 @@
 
         _this._data = {
             ByJob: rsrcByJob,
-            ById: rsrcByID,
+            ById: RsrcByID,
             setStatus: function (id, status) {
                 debugger;
 
-                var rsrc = new rsrcByID();
+                var rsrc = new RsrcByID();
 
                 return rsrc.$get({ id: id }).then(function (app) {
                     app.status = status;

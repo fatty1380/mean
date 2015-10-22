@@ -115,7 +115,7 @@ function messageList (req, res) {
 	findAndProcessMessages(req, res).then(function(messages) {
 			req.messages = messages;
 				
-			var grouped = req.query['grouped'];
+			var grouped = req.query.grouped;
 			req.log.debug({ module:'messages', func: 'messageList', params: req.query, grouped: grouped });
 			
 			if (!!grouped) {

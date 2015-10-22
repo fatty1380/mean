@@ -1,3 +1,4 @@
+/* jshint -W097 */
 'use strict';
 
 // Init the application configuration module for AngularJS application
@@ -28,4 +29,4 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
         registerModule: registerModule
     };
 })();
-
+/* jshint +W097 */

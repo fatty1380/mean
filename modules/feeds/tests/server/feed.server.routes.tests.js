@@ -323,7 +323,7 @@ describe('Feed CRUD tests', function () {
 
 		describe('When dealing with Company posts', function () {
 			it('Should have basic data about the company populated');
-			it('Should allow me to like it')
+			it('Should allow me to like it');
 		});
 
 		describe('When cross posting amongst friends', function () {
@@ -521,8 +521,8 @@ describe('Feed CRUD tests', function () {
 
 		});
 
-		it('should be able to get a list of Feeds if an admin', function () {
-			return
+		it.skip('should be able to get a list of Feeds if an admin', function () {
+
 			agent.get('/api/feeds')
 				.expect(200)
 				.then(

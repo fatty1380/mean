@@ -68,24 +68,25 @@ describe('Review CRUD tests', function () {
 	 */
 
 	describe('when logged in', function () {
-		
+
 		beforeEach(function () {
 			return stubs.agentLogin(agent, credentials);
-		})
+		});
 
 		it('should allow me to query for specific request type: `reviewRequest`', function () {
 			_test = this.test;
+			var endpoint = '/api/reviews';
 
-			return agent.post('/api/reviews')
+			return agent.post(endpoint)
 				.send(review)
 				.then(function () {
-					var endpoint = '/api/requests?requestType=reviewRequest';
+					endpoint = '/api/requests?requestType=reviewRequest';
 
-			return agent.get(endpoint)
-				.expect(200)
-				.query({ status: ['new', 'accepted'] })
+					return agent.get(endpoint)
+						.expect(200)
+						.query({ status: ['new', 'accepted'] });
 				})
-			
+
 				.then(function (response) {
 					log.debug({
 						test: _test.title,
@@ -98,7 +99,7 @@ describe('Review CRUD tests', function () {
 					return response.body;
 				});
 		});
-	})
+	});
 
 	 it('should be able to save Review instance if logged in', function (done) {
 			log.debug({ func: 'save' }, 'Setup');

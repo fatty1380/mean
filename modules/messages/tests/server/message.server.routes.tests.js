@@ -170,7 +170,7 @@ describe('Message CRUD tests', function () {
 					(messages[0].sender).should.have.property('_id');
 					(messages[0].recipient).should.have.property('_id');
 
-				})
+				});
 		});
 
 		it('should get a list of chats grouped by other party', function () {
@@ -362,7 +362,7 @@ describe('Message CRUD tests', function () {
 				agent.get('/api/messages/' + messageObj._id)
 					.expect(401)
 					.end(function (req, res) {
-						log.debug({ resBody: res.body, error: res.error, req: req })
+						log.debug({ resBody: res.body, error: res.error, req: req });
 						// Set assertion
 						
 						// Call the assertion callback

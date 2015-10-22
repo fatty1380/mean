@@ -70,11 +70,11 @@ describe('Company CRUD tests', function () {
 			})
 			.then(
 				function (companySaveRes) {
-					log.debug({ test: _test.title, companies: companySaveRes.body }, 'Saved Company to Server')
+					log.debug({ test: _test.title, companies: companySaveRes.body }, 'Saved Company to Server');
 
 
 					// Get a list of Companies
-					return agent.get('/api/companies')
+					return agent.get('/api/companies');
 				},
 				function (companySaveErr) {
 					return Q.reject(companySaveErr);
@@ -83,14 +83,14 @@ describe('Company CRUD tests', function () {
 				function (companiesGetRes) {
 					// Get Companies list
 					var companies = companiesGetRes.body;
-					log.debug({ test: _test.title, companies: companies }, 'Got Company list from Server')
+					log.debug({ test: _test.title, companies: companies }, 'Got Company list from Server');
 
 					var firstCompany = companies[0];
 
-					log.debug({ test: _test.title, company: firstCompany, ownerId: firstCompany.owner._id, userId: userId }, 'Examining first result in list')
+					log.debug({ test: _test.title, company: firstCompany, ownerId: firstCompany.owner._id, userId: userId }, 'Examining first result in list');
 
 					// Set assertions
-					firstCompany.should.have.property('owner')
+					firstCompany.should.have.property('owner');
 					firstCompany.owner.should.have.property('_id', userId);
 					firstCompany.owner.should.have.property('displayName');
 

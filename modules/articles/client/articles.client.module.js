@@ -1,4 +1,6 @@
-'use strict';
+(function () {
+	'use strict';
 
-// Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('articles');
+	// Use applicaion configuration module to register a new module
+	ApplicationConfiguration.registerModule('articles');
+})();

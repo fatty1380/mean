@@ -184,14 +184,14 @@ function addComment(req, res, next) {
 	req.feedItem.save()
 		.then(function success(result) {
 			req.log.error({ result: result, comments: result.comments, func: 'addComment', file: 'feeds.server.controller' }, 'Added comment to comments array');
-			
+
 			return res.json(result.comments);
 
 		}, function reject(err) {
 			req.log.error({ err: err, func: 'addComment', file: 'feeds.server.controller' }, 'Failed to add comment');
 
 			return res.status(400).send({ message: 'Unable to comment on this item' });
-		})
+		});
 }
 
 function getComments(req, res, next) {

@@ -105,7 +105,7 @@ function create(req, res) {
             res.json(company);
         }
     });
-};
+}
 
 /**
  * Show the current Company
@@ -123,7 +123,7 @@ function read(req, res) {
     req.log.debug('[CompaniesCtrl.read] Returning company %s', req.company._id);
 
     res.json(req.company);
-};
+}
 
 /**
  * Update a Company
@@ -169,7 +169,7 @@ function update(req, res) {
                     error: err
                 });
             });
-};
+}
 
 
 /**
@@ -219,7 +219,7 @@ function changeProfilePicture(req, res) {
             });
         }
         );
-};
+}
 
 /**
  * deleteCompany an Company
@@ -238,7 +238,7 @@ function deleteCompany(req, res) {
             res.json(company);
         }
     });
-};
+}
 
 /**
  * List of Companies
@@ -249,7 +249,7 @@ function list(req, res) {
     req.sort = '-created';
 
     executeQuery(req, res);
-};
+}
 
 function listDrivers(req, res) {
     req.log.debug('[CompaniesCtrl.listDrivers] Start');
@@ -260,7 +260,7 @@ function listDrivers(req, res) {
         error: 'NOT IMPLEMENTED',
         about: 'THIS METHOD IS NOT IMPLEMENTED'
     }]);
-};
+}
 
 function companiesByUserID(req, res) {
     req.log.debug({ func: 'companiesByUserID' }, 'Start');
@@ -273,7 +273,7 @@ function companiesByUserID(req, res) {
     req.log.debug({ func: 'companiesByUserID', query: req.query }, 'Searching for companies based on parameterId');
 
     executeQuery(req, res);
-};
+}
 
 function companyByUserID(req, res, next) {
 
@@ -304,7 +304,7 @@ function companyByUserID(req, res, next) {
                 next();
             }
         });
-};
+}
 
 /**
  * Company middleware
@@ -343,7 +343,7 @@ function companyByID(req, res, next, id) {
         req.log.trace({ companyId: id }, '`%s` is not a valid companyId', id);
         next();
     }
-};
+}
 
 /**
  * Company authorization middleware
@@ -363,7 +363,7 @@ function hasAuthorization(req, res, next) {
         req.log.debug({ company: { id: req.company.id, owner: req.company.owner } }, 'Owner != User :(: %j vs %j', req.company.owner, req.user);
         return res.status(403).send('User is not authorized');
     }
-};
+}
 
 /**
  * Follow & Social Logic

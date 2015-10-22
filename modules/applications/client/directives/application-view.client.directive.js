@@ -306,7 +306,7 @@
     ////////////////////////////////////
 
     angular.module('applications')
-        .directive('osetJobListItem', JobItemDirective)
+        .directive('osetJobListItem', JobItemDirective);
 
     JobItemDirective.$inject = ['$log'];
 
@@ -392,7 +392,7 @@
                         vm.loading = false;
                         vm.applications = vm.applications || [];
                     });
-            };
+            }
 
             vm.applications = applications;
         }
@@ -407,7 +407,7 @@
 
             $state.transitionTo($state.current, { 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
             $location.search({ 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
-        };
+        }
 
         function toggleFilter(category, key, isRadio) {
 
@@ -439,7 +439,7 @@
                 // value will handle the de-selection of the only selected item
                 vm.filters[category].all = vm.filters[category][filterKey];
             }
-        };
+        }
 
         function filterApplications(application) {
 
@@ -450,7 +450,7 @@
                 switch (keys[i]) {
                     case 'negStatus':
                     case 'status':
-                        if (!tmp || tmp['all']) {
+                        if (!tmp || tmp.all) {
                             break;
                         }
                         if (!!tmp) {
@@ -466,11 +466,11 @@
             }
 
             return true;
-        };
+        }
 
         function getActiveApplicationCount(applications) {
             return _.where(applications || vm.job.applications, { isActive: true }).length;
-        };
+        }
 
         function setApplicationStatus(application, status, $event) {
             $event.stopPropagation();
@@ -489,7 +489,7 @@
             application.isNew = application.isConnected = false;
             application.isRejected = true;
             application.disabled = true;
-        };
+        }
     }
 
 })();

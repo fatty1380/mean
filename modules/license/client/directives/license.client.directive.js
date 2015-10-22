@@ -100,7 +100,7 @@
                     if (!_.isEmpty(value)) {
                         vm.hasLicense = true;
                         return false;
-                    };
+                    }
                 });
             },
             controllerAs: 'vm',

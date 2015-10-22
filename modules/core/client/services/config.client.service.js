@@ -84,7 +84,7 @@
                         var filter = myfilter || {};
                         if (!!filter.category && !!filter.category.length) {
                             faqs = _.filter(resp, function (item) {
-                                return _.contains(filter.category, item['category']);
+                                return _.contains(filter.category, item.category);
                             });
                         }
                         else {

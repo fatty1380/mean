@@ -95,7 +95,7 @@
             }
             else {
                 if (vm.filter.hasOwnProperty('company')) {
-                    delete vm.filter['company'];
+                    delete vm.filter.company;
                 }
             }
             vm.filters.clear = !(vm.filters.today || vm.filters.week || vm.filters.unseen || !vm.filters.mine);

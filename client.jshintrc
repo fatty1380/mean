@@ -4,7 +4,6 @@
     "angular": true,
     "ApplicationConfiguration": true,
     "moment": true,
-    "browser": true,
     "element": true,
     "google": true,
     "braintree": true,
@@ -12,5 +11,7 @@
     "tinymce": true,
     "io": true,
     "_": true
-  }
+  },
+    "browser": true,
+    "debug":true
 }

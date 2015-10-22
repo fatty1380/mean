@@ -282,7 +282,7 @@ function saveDocumentToDB(req, res) {
         .save()
         .then(
         function (success) {
-            req.log.debug({ func: 'saveDocumentToDB', sku: success.sku, id: success.id }, 'Successfully saved document to DB')
+            req.log.debug({ func: 'saveDocumentToDB', sku: success.sku, id: success.id }, 'Successfully saved document to DB');
             req.document = success;
             res.json(req.document);
         },

@@ -34,7 +34,7 @@ function getSubscription(req, res) {
     } else {
         return res.json(subscription);
     }
-};
+}
 
 function createSubscription(req, res, next) {
 
@@ -63,7 +63,7 @@ function createSubscription(req, res, next) {
     req.subscriptionType = _.find(constants.subscriptionPackages.packages, { 'planId': req.planId });
 
     next();
-};
+}
 
 function saveSubscription(req, res) {
     if (!!req.paymentResult && req.paymentResult.success) {
@@ -115,4 +115,4 @@ function saveSubscription(req, res) {
             serverData: req.paymentResult
         });
     }
-};
+}

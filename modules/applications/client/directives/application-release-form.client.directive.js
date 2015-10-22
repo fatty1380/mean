@@ -184,7 +184,7 @@
             },
             link: function (scope, element, attrs, ctrls) {
                 scope.vm.form = ctrls[0];
-                scope.vm.releaseAuthForm = scope.vm.form['releaseAuthForm'];
+                scope.vm.releaseAuthForm = scope.vm.form.releaseAuthForm;
             },
             controller: 'ApplicationReleaseFormController',
             controllerAs: 'vm',

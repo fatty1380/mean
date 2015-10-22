@@ -6,7 +6,7 @@
             link: function ($scope, element, attributes) {
                 if ($scope.$last === true) {
                     $timeout(function () {
-                        $scope.$emit(attributes['onRepeatDone'] || 'repeat_done', element);
+                        $scope.$emit(attributes.onRepeatDone || 'repeat_done', element);
                     });
                 }
             }

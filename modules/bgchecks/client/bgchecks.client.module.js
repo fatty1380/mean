@@ -1,4 +1,6 @@
-'use strict';
+(function () {
+	'use strict';
 
-// Use applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('bgchecks');
+	// Use applicaion configuration module to register a new module
+	ApplicationConfiguration.registerModule('bgchecks');
+})();

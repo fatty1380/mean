@@ -37,6 +37,7 @@
 
             vm.activate();
         }
+        
 
         return ddo;
     }
@@ -84,7 +85,7 @@
                     $state.transitionTo('applications.list', { 'itemId': vm.visibleId, 'tabName': vm.visibleTab });
                 }
             }
-        }
+        };
 
     }
 
