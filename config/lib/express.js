@@ -86,11 +86,11 @@ module.exports.initMiddleware = function (app) {
 
     log.info(config.https, 'EXPRESS ROUTER HTTPS Config');
 
-    if (process.env.NODE_ENV === 'production' && (config.https.enabled)) {
+    if (process.env.NODE_ENV === 'production' || (config.https.enabled)) {
         app.use(function (req, res, next) {
-            if ((config.https.enabled) && (!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'] !== 'https') {
-                console.log('[EXPRESS.ROUTER] HTTPS Redirect %s', req.get('Host'));
-                return res.redirect(['https://', req.get('Host'), req.url].join(''));
+            if ((!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
+                req.log.info('[EXPRESS.ROUTER] HTTPS Redirect %s', req.headers.host);
+                return res.redirect(['https://', req.headers.host, req.url].join(''));
             }
             return next();
         });
