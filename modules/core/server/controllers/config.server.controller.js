@@ -44,7 +44,7 @@ exports.getAllConfigs = function (req, res) {
         usStates: constants.usStates
     };
 
-    res.jsonp(response);
+    res.json(response);
 };
 
 exports.read = function (req, res) {

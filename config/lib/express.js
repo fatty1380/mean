@@ -61,9 +61,6 @@ module.exports.initMiddleware = function (app) {
     // Showing stack errors
     app.set('showStackError', true);
 
-    // Enable jsonp
-    app.enable('jsonp callback');
-
     // Should be placed before express.static
     app.use(compress({
         filter: function (req, res) {
@@ -74,6 +71,19 @@ module.exports.initMiddleware = function (app) {
 
     // Initialize favicon middleware
     app.use(favicon('./modules/core/client/img/brand/favicon.ico'));
+    
+    // Init a unique Request ID
+    app.use(addRequestId);
+
+    // Initializ the per-request loggger
+    app.use(function (req, res, next) {
+        req.log = log.child({
+            req: req,
+            req_id: req.id
+        });
+
+        next();
+    });
 
     var accessLogStream, streamType;
 
@@ -89,7 +99,7 @@ module.exports.initMiddleware = function (app) {
     if (process.env.NODE_ENV === 'production' || (config.https.enabled)) {
         app.use(function (req, res, next) {
             if ((!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
-                req.log.info('[EXPRESS.ROUTER] HTTPS Redirect %s', req.headers.host);
+                log.info('[EXPRESS.ROUTER] HTTPS Redirect %s', req.headers.host);
                 return res.redirect(['https://', req.headers.host, req.url].join(''));
             }
             return next();
@@ -208,18 +218,6 @@ module.exports.initMiddleware = function (app) {
         dest: './uploads/',
         inMemory: true
     }));
-
-    // Init a unique Request ID
-    app.use(addRequestId);
-
-    app.use(function (req, res, next) {
-        req.log = log.child({
-            req: req,
-            req_id: req.id
-        });
-
-        next();
-    });
 
     log.trace({ func: 'initLocalVariables' }, 'Completed Initializing Middleware');
 };
@@ -346,6 +344,7 @@ module.exports.initErrorRoutes = function (app) {
     // Assume 404 since no middleware responded
     app.use(function (req, res) {
         // Redirect to not found page
+        req.log.error({ func: 'noMiddleware', err: 'umm', url: req.url, status: res.status }, 'Assuming 404, unless Headers are already set');
         
         if (!res.headersSent) {
             res.status(404).json({ error: 'not found' });

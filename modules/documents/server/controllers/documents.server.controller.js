@@ -112,7 +112,7 @@ function create(req, res) {
  * Show the current Document
  */
 function read(req, res) {
-	res.jsonp(req.document);
+	res.json(req.document);
 }
 
 /**
@@ -130,7 +130,7 @@ function update(req, res) {
                 body: req.body
 			});
 		} else {
-			res.jsonp(document);
+			res.json(document);
 		}
 	});
 }
@@ -149,7 +149,7 @@ function deleteReport(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(document);
+			res.json(document);
 		}
 	});
 }
@@ -167,7 +167,7 @@ function list(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(documents);
+			res.json(documents);
 		}
 	});
 }

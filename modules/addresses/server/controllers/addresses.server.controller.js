@@ -46,7 +46,7 @@ exports.create = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(address);
+            res.json(address);
         }
     });
 };
@@ -61,7 +61,7 @@ exports.read = function(req, res) {
         });
     }
 
-    res.jsonp(req.address);
+    res.json(req.address);
 };
 
 /**
@@ -78,7 +78,7 @@ exports.update = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(address);
+            res.json(address);
         }
     });
 };
@@ -95,7 +95,7 @@ exports.delete = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(address);
+            res.json(address);
         }
     });
 };
@@ -111,7 +111,7 @@ exports.list = function(req, res) {
                 message: getErrorMessage(err)
             });
         } else {
-            res.jsonp(addresses);
+            res.json(addresses);
         }
     });
 };
