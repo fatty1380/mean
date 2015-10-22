@@ -1,6 +1,9 @@
 (function () {
     'use strict';
 
+    angular.module('users')
+        .directive('loginModal', LoginModalDirective);
+
     function LoginModalDirective() {
         return {
             transclude: true,
@@ -13,13 +16,14 @@
                 job: '=?',
                 redirect: '=?'
             },
-            controller: 'LoginModalController',
+            controller: LoginModalController,
             controllerAs: 'vm',
             bindToController: true
         };
     }
 
-    function LoginModalController($scope, $modal, $log, $attrs) {
+    LoginModalController.$inject = ['$scope', '$uibModal', '$log', '$attrs'];
+    function LoginModalController($scope, $uibModal, $log, $attrs) {
         var vm = this;
 
         vm.isOpen = false;
@@ -37,7 +41,7 @@
         }
 
         vm.showLogin = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'loginModal.html',
                 controller: 'LoginController',
                 resolve: {
@@ -63,11 +67,5 @@
 
         };
     }
-
-    LoginModalController.$inject = ['$scope', '$modal', '$log', '$attrs'];
-
-    angular.module('users')
-        .directive('loginModal', LoginModalDirective)
-        .controller('LoginModalController', LoginModalController);
 
 })();

@@ -17,13 +17,13 @@
 //        };
 //    }
 //
-//    function PrivacyModalController($modal, $log) {
+//    function PrivacyModalController($uibModal, $log) {
 //        var vm = this;
 //
 //        vm.isOpen = false;
 //
 //        vm.showModal = function() {
-//            var modalInstance = $modal.open({
+//            var modalInstance = $uibModal.open({
 //                templateUrl: 'privacyModal.html',
 //                size: 'xl',
 //                backdropClass: 'darken',
@@ -64,7 +64,7 @@
 //    }
 //
 //    PrivacyController.$inject = ['vm', '$log'];
-//    PrivacyModalController.$inject = ['$modal', '$log'];
+//    PrivacyModalController.$inject = ['$uibModal', '$log'];
 //
 //    angular.module('core')
 //        .directive('osPrivacy', PrivacyModalDirective)

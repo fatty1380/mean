@@ -68,7 +68,7 @@
                 <br class="visible-lg mgn-vert"/>
                 <a class="btn-tab btn-link strong pull-right"
                    style="white-space: nowrap"
-                   tooltip="{{vm.application.messagingText || vm.messagingText}}"
+                   uib-tooltip="{{vm.application.messagingText || vm.messagingText}}"
                    tooltip-popup-delay="1000"
                    ui-sref="applications.view({applicationId: vm.application._id, action: 'message'})">
 
@@ -80,7 +80,7 @@
 
                 <a class="btn-tab btn-link strong"
                    style="white-space: nowrap"
-                   tooltip="{{vm.application.documentText || vm.documentText}}"
+                   uib-tooltip="{{vm.application.documentText || vm.documentText}}"
                    tooltip-popup-delay="1000"
                    ui-sref="drivers.documents({driverId: vm.application.user.id})">
                     Documents

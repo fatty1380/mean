@@ -6,7 +6,7 @@
         'ng-if="key"' +
         'class="endorsement label label-success" ' +
         'tooltip-popup-delay="750" ' +
-        'tooltip="{{description}}">{{key}}</span>' +
+        'uib-tooltip="{{description}}">{{key}}</span>' +
         '<span ng-if="!vm.filteredEndorsements.length">None</span></span>';
 
     function EndorsementDisplayDirective() {

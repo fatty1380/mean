@@ -41,8 +41,7 @@
             },
             link: function (scope, elem, attrs) {
                 var vm = scope.vm;
-
-                debugger;
+                
                 vm.pictureUrl = vm.profile.props && vm.profile.props.avatar || vm.profile.profileImageURL;
                 vm.subTitle = vm.profile.handle || vm.profile.type;
 

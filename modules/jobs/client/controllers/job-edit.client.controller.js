@@ -1,8 +1,12 @@
 (function () {
     'use strict';
 
+    angular.module('jobs')
+        .controller('JobEditController', JobEditController);
+
     // Jobs controller
-    function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company, $modal, config) {
+    JobEditController.$inject = ['$stateParams', '$state', '$log', 'Authentication', 'Jobs', 'job', 'company', '$uibModal', 'AppConfig'];
+    function JobEditController($stateParams, $state, $log, Authentication, Jobs, job, company, $uibModal, config) {
 
         if(!Authentication.user) {
             return $state.go('intro');
@@ -79,7 +83,7 @@
         }
 
         function openSubscriptionModal() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'invalidSubscription.html',
                 controller: ['$state', '$modalInstance', 'statusMessage',
                     function ($state, $modalInstance, statusMessage) {
@@ -194,11 +198,5 @@
 
         activate();
     }
-
-
-    JobEditController.$inject = ['$stateParams', '$state', '$log', 'Authentication', 'Jobs', 'job', 'company', '$modal', 'AppConfig'];
-
-    angular.module('jobs')
-        .controller('JobEditController', JobEditController);
 
 })();

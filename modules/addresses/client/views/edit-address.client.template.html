@@ -4,13 +4,13 @@
 
         <div ng-class="{'input-group' : !!vm.address.type}">
 
-            <span class="dropdown input-group-btn" dropdown is-open="vm.ddlStatus.isopen" on-toggle="vm.toggled(open)">
-                <button type="button" class="btn btn-oset-link dropdown-toggle" dropdown-toggle
+            <span class="uib-dropdown input-group-btn" uib-dropdown is-open="vm.ddlStatus.isopen" on-toggle="vm.toggled(open)">
+                <button type="button" class="btn btn-oset-link uib-dropdown-toggle" uib-dropdown-toggle
                         ng-class="{'btn-block':!vm.address.type}" >
                     <b><span ng-show="!vm.address.type">select address type<span class="caret"></span></span>
                     <span ng-show="!!vm.address.type">address type:</span></b>
                 </button>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="uib-dropdown-menu" role="menu">
                     <li ng-repeat="type in vm.types"><a href="#" ng-click="vm.setType(type, $event)">{{type}}</a></li>
                     <li class="divider"></li>
                     <li><a ng-click="vm.setType('other', $event)">other ...</a></li>

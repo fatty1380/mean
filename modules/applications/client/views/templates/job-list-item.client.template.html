@@ -45,7 +45,7 @@
                         <i class="fa fa-comments-o fa-lg"></i><span
                             class="hidden-xs mgn-left">Messaging</span>
                                     <span class="badge" ng-show="!!vm.job.newMessages"
-                                          tooltip="{{vm.job.newMessages}} new message{{vm.job.newMessages>1?'s':''}}">{{vm.job.newMessages}}</span>
+                                          uib-tooltip="{{vm.job.newMessages}} new message{{vm.job.newMessages>1?'s':''}}">{{vm.job.newMessages}}</span>
                     </button>
                     <button type="button" class="btn-tab btn-link read-more strong mgn-left"
                             ng-click="vm.showTab(vm.job._id, 'documents')"

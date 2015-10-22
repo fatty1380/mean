@@ -144,7 +144,7 @@
                         {{package.name}}
                         <i class="mgn-left fa fa-star"
                            ng-show="package.planId === vm.subscription.planId"
-                           tooltip="This is your current subscription level"
+                           uib-tooltip="This is your current subscription level"
                            tooltip-popup-delay="700"></i>
                     </h3>
                 </div>
@@ -176,7 +176,7 @@
                      ng-class="{'active': package.active, 'lastRow': !vm.user && lastFeature, 'current': package.current}"
                      ng-mouseenter="package.active = true;"
                      ng-mouseleave="package.active = false;"
-                     ng-attr-tooltip="{{pkgValue.tooltip}}"
+                     ng-attr-uib-tooltip="{{pkgValue.tooltip}}"
                      tooltip-popup-delay="700">
 
                     <span ng-if="lastFeature && !!pkgValue.text">

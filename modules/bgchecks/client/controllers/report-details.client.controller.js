@@ -1,7 +1,12 @@
 (function () {
     'use strict';
+    
+    angular.module('bgchecks')
+        .controller('ReportDetailsController', ReportDetailsController);
 
-    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $modal, $document, PolyField) {
+    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$uibModal', '$document', 'PolyFieldService'];
+
+    function ReportDetailsController(report, applicant, appConfig, auth, Applicants, $log, $state, $uibModal, $document, PolyField) {
         var vm = this;
 
         vm.debugMode = appConfig.get('debug');
@@ -102,7 +107,7 @@
         };
 
         vm.showSpinner = function () {
-            vm.spinnerModal = $modal.open({
+            vm.spinnerModal = $uibModal.open({
                 templateUrl: 'spinnerModal.html',
                 backdrop: 'static',
                 controller: ['$timeout', function ($timeout) {
@@ -140,9 +145,5 @@
 
         activate();
     }
-
-    ReportDetailsController.$inject = ['report', 'applicant', 'AppConfig', 'Authentication', 'Applicants', '$log', '$state', '$modal', '$document', 'PolyFieldService'];
-    angular.module('bgchecks')
-        .controller('ReportDetailsController', ReportDetailsController);
 
 })();

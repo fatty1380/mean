@@ -10,7 +10,7 @@
 				btnClass: '@?'
 			},
 			template: [
-				'<button type="button" ng-hide="!!vm.button.hide" tooltip="{{vm.request | prettyPrint}}"',
+				'<button type="button" ng-hide="!!vm.button.hide" uib-tooltip="{{vm.request | prettyPrint}}"',
 				'ng-click="vm.click()" ng-class="pull-right {{vm.class}}">',
 				'{{vm.button.text}}',
 				'<i ng-show="!!vm.button.icon" class="fa {{vm.button.icon}}"></i>',

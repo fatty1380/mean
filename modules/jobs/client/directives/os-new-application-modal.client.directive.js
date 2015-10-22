@@ -1,6 +1,11 @@
 (function () {
     'use strict';
 
+
+    angular
+        .module('jobs')
+        .directive('osNewApplicationModal', NewApplicationDirective);
+
     /* @ngInject */
     function NewApplicationDirective() {
         // Usage:
@@ -16,7 +21,7 @@
                 job: '=',
                 title: '@?'
             },
-            controller: 'NewApplicationModalController',
+            controller: NewApplicationModalController,
             controllerAs: 'vm',
             bindToController: true
         };
@@ -24,16 +29,17 @@
         return ddo;
     }
 
-    function NewApplicationModalController($modal, $log) {
+    NewApplicationModalController.$inject = ['$uibModal', '$log'];
+    function NewApplicationModalController($uibModal, $log) {
 
         var vm = this;
 
         vm.isOpen = false;
 
         vm.showModal = function (size) {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'applyModal.html',
-                controller: 'ApplicationCreateController', // Pass data here?
+                controller: ApplicationCreateController, // Pass data here?
                 controllerAs: 'vm',
                 size: size || 'lg',
                 resolve: {
@@ -58,7 +64,8 @@
         };
     }
 
-    function ApplicationCreateController($scope, $modalInstance, $state, $log, Applications, job, auth) {
+    ApplicationCreateController.$inject = ['$scope', '$uibModalInstance', '$state', '$log', 'Applications', 'job', 'Authentication'];
+    function ApplicationCreateController($scope, $uibModalInstance, $state, $log, Applications, job, auth) {
 
         var vm = this;
         $scope.vm = vm;
@@ -156,20 +163,11 @@
             application.$save(function (response) {
                 // Clear form fields
 
-                $modalInstance.close(response._id);
+                $uibModalInstance.close(response._id);
                 $state.go('applications.view', {applicationId: response._id});
             }, function (errorResponse) {
                 vm.error = errorResponse.data.message;
             });
         };
     }
-
-    NewApplicationModalController.$inject = ['$modal', '$log'];
-    ApplicationCreateController.$inject = ['$scope', '$modalInstance', '$state', '$log', 'Applications', 'job', 'Authentication'];
-
-    angular
-        .module('jobs')
-        .directive('osNewApplicationModal', NewApplicationDirective)
-        .controller('NewApplicationModalController', NewApplicationModalController)
-        .controller('ApplicationCreateController', ApplicationCreateController);
 })();

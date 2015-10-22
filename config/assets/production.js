@@ -18,7 +18,7 @@ module.exports = {
                 'public/lib/angular-animate/angular-animate.min.js',
                 'public/lib/angular-messages/angular-messages.min.js',
                 'public/lib/angular-ui-router/release/angular-ui-router.min.js',
-                'public/lib/angular-ui-utils/ui-utils.min.js',
+                'public/lib/angular-ui-mask/dist/mask.min.js',
                 'public/lib/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js',
                 'public/lib/angular-file-upload/angular-file-upload.min.js',
                 'public/lib/ng-file-upload/ng-file-upload.min.js',

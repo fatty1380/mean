@@ -51,14 +51,14 @@
                              data-ui-sref-active="active"
                              data-ng-init="itemParentName = item.state.split('.')[0] "
                              data-ng-class="{'active': vm.state.includes(itemParentName)}"
-                             ng-attr-dropdown="item.type === 'dropdown'">
+                             ng-attr-uib-dropdown="item.type === 'dropdown'">
 
-                            <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle>
+                            <a ng-switch-when="dropdown" class="uib-dropdown-toggle" uib-dropdown-toggle>
                                 <span data-ng-bind-html="item.title"></span>
                                 <b class="caret"></b>
                             </a>
 
-                            <div ng-switch-when="dropdown" class="dropdown-menu">
+                            <div ng-switch-when="dropdown" class="uib-dropdown-menu">
                                 <div data-ng-repeat="subitem in item.items | orderBy: 'position'"
                                      data-ng-if="subitem.shouldRender(vm.auth.user);" data-ui-sref-active="active">
                                     <a data-ui-sref="{{subitem.state}}" data-ng-bind-html="subitem.title"></a>
@@ -70,14 +70,14 @@
                         </div>
 
                         <div class="pull-right right-menu">
-                            <div class="menu-item pull-left dropdown" dropdown>
+                            <div class="menu-item pull-left" uib-dropdown>
 
-                                <a ui-sref="settings.profile" class="dropdown-toggle text-right" dropdown-toggle>
+                                <a class="text-right" uib-dropdown-toggle>
                                     <i class="fa fa-cog fa-lg"></i>
                                     <i class="fa fa-caret-down"></i>
                                 </a>
 
-                                <div class="dropdown-menu pull-right">
+                                <div class="pull-right" uib-dropdown-menu>
                                     <div data-ui-sref-active="active">
                                         <a data-ui-sref="settings.profile">Edit Profile</a>
                                     </div>

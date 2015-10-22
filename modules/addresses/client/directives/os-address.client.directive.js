@@ -19,7 +19,12 @@
         };
     }
 
-    function AddressItemController($modal) {
+    angular.module('addresses')
+        .directive('osAddress', AddressItemDirective)
+        .controller('OsAddressItemController', AddressItemController);
+
+    AddressItemController.$inject = ['$uibModal'];
+    function AddressItemController($uibModal) {
 
         var vm = this;
 
@@ -42,7 +47,7 @@
         };
 
         vm.editAddress = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'addressEditModal.html',
                 controllerAs: 'vm',
                 controller: function($scope,  address, text) {
@@ -88,11 +93,5 @@
 
         activate();
     }
-
-    AddressItemController.$inject = ['$modal'];
-
-    angular.module('addresses')
-        .directive('osAddress', AddressItemDirective)
-        .controller('OsAddressItemController', AddressItemController);
 
 })();

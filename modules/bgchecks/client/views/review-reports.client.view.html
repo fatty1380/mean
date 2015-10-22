@@ -160,24 +160,24 @@
         <div class="container">
             <h2 class="title text-center mgn-bottom">Frequently Asked Questions</h2> <hr>
 
-            <accordion class="row">
+            <uib-accordion class="row">
                 <div class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">
-                    <accordion-group class="panel" ng-repeat="faq in vm.faqs">
-                        <accordion-heading class="panel-heading">
+                    <uib-accordion-group class="panel" ng-repeat="faq in vm.faqs">
+                        <uib-accordion-heading class="panel-heading">
                             <h4 class="panel-title"><a data-parent="#accordion" data-toggle="collapse"
                                                        class="panel-toggle" href="#faq1"><i
                                     class="fa fa-plus-square"></i>{{faq.question}}</a></h4>
-                        </accordion-heading>
+                        </uib-accordion-heading>
 
                         <p class="panel-body" data-ng-bind-html="faq.answer">
                         </p>
 
                         <div class="label label-muted hidden" ng-repeat="key in faq.keywords track by $index">{{key}}
                         </div>
-                    </accordion-group>
+                    </uib-accordion-group>
                     <!--//panel-->
                 </div>
-            </accordion>
+            </uib-accordion>
             <!--//row-->
         </div>
         <!--//container-->

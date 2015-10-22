@@ -40,7 +40,7 @@
         </div>
         <a data-ng-repeat="user in vm.users | filter: vm.doFilter" data-ui-sref="users.view({userId: user.id})" class="row list-group-item">
             <div class="col-sm-9 col-xs-8">
-                <img ng-src="{{user.profileImageURL}}" alt="" class="profile-image small round" tooltip="{{user | prettyPrint}}"/>
+                <img ng-src="{{user.profileImageURL}}" alt="" class="profile-image small round" uib-tooltip="{{user | prettyPrint}}"/>
                 
                 <button type="button" ui-sref="users.view({userId: user.id})" class="btn btn-link"><i
                         class="fa fa-edit"></i></button>

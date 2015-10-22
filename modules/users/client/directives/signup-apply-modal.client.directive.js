@@ -1,6 +1,9 @@
 (function () {
     'use strict';
 
+    angular.module('users')
+        .directive('osetSignupApplyModal', SignupApplyModalDirective);
+
     function SignupApplyModalDirective() {
         var ddo;
         ddo = {
@@ -14,15 +17,16 @@
                 srefText: '@?',
                 job: '=?'
             },
-            controller: 'SignupApplyModalController',
+            controller: SignupApplyModalController,
             controllerAs: 'vm',
             bindToController: true
         };
 
         return ddo;
     }
-
-    function SignupApplyModalController($modal, $log, $attrs) {
+    
+    SignupApplyModalController.$inject = ['$uibModal', '$log', '$attrs'];
+    function SignupApplyModalController($uibModal, $log, $attrs) {
         var vm = this;
 
         vm.isOpen = false;
@@ -32,9 +36,9 @@
         }
 
         vm.show = function () {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'signupApplyModal.html',
-                controller: 'SignupApplyController',
+                controller: SignupApplyController,
                 size: 'lg',
                 resolve: {
                     type: function () {
@@ -62,6 +66,7 @@
         };
     }
 
+    SignupApplyController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'type', 'job', '$document', 'Drivers', 'Applications'];
     function SignupApplyController($http, $state, $modalInstance, $log, Authentication, type, job, $document, Drivers, ApplicationFactory) {
         var vm = this;
 
@@ -247,37 +252,5 @@
             }
         };
     }
-
-    SignupApplyController.$inject = ['$http', '$state', '$modalInstance', '$log', 'Authentication', 'type', 'job', '$document', 'Drivers', 'Applications'];
-    SignupApplyModalController.$inject = ['$modal', '$log', '$attrs'];
-
-    angular.module('users')
-        .controller('SignupApplyModalController', SignupApplyModalController)
-        .controller('SignupApplyController', SignupApplyController)
-        .directive('osetSignupApplyModal', SignupApplyModalDirective);
-
-    function DebounceDirective() {
-        return {
-            require: 'ngModel',
-            link: function (scope, element, attrs, controller) {
-                if (!controller.$options) {
-                    controller.$options = {
-                        updateOn: 'default blur',
-                        debounce: {
-                            'default': 3000,
-                            'blur': 0
-                        },
-                        updateOnDefault: true
-                    };
-                }
-            }
-        };
-    }
-
-    //ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 300, 'blur': 0 } }">
-
-
-    angular.module('core')
-        .directive('debounce', DebounceDirective);
 
 })();

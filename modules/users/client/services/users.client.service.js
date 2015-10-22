@@ -143,6 +143,7 @@
 
         // GET /api/requests/:requestId
         function getRequest(id) {
+            debugger;
             return RequestMsgRsrc.get({ requestId: id }).$promise;
         }
         
@@ -177,6 +178,8 @@
         /// Local Vars
         var RootFriendRsrc = $resource('api/friends/:userId',
             {}, { update: { method: 'PUT' } });
+            
+        return service;
             
         //var FriendStatusRsrc = $resource('api/friends/:userId');
         
@@ -217,7 +220,7 @@
         function checkFriend(user) {
             var id = !!user && user.id || user;
 
-            return Requests.query({ userId: id }).then(
+            return Requests.list({ userId: id }).then(
                 function (results) {
                     $log.debug('Got Requests from server: %o', results);
                     return _.first(results);

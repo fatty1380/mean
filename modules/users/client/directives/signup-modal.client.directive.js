@@ -1,6 +1,9 @@
 (function() {
     'use strict';
 
+    angular.module('users')
+        .directive('signupModal', SignupModalDirective);
+
     function SignupModalDirective() {
         return {
             transclude: true,
@@ -13,13 +16,14 @@
                 srefText: '@?',
                 job: '=?'
             },
-            controller: 'SignupModalController',
+            controller: SignupModalController,
             controllerAs: 'vm',
             bindToController: true
         };
     }
 
-    function SignupModalController($modal, $log, $attrs) {
+    SignupModalController.$inject = ['$uibModal', '$log', '$attrs'];
+    function SignupModalController($uibModal, $log, $attrs) {
         var vm = this;
 
         vm.type = vm.type || null;
@@ -35,7 +39,7 @@
         }
 
         vm.showSignup = function() {
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 templateUrl: 'signupModal.html',
                 controller: 'SignupController',
                 size: 'lg',
@@ -60,7 +64,8 @@
             });
         };
     }
-
+    
+    SignupController.$inject = ['$state', '$modalInstance', '$log', 'Authentication', 'type', 'srefRedirect'];
     function SignupController($state, $modalInstance, $log, Authentication, type, srefRedirect) {
         var vm = this;
         vm.auth = Authentication;
@@ -104,13 +109,5 @@
                 });
         };
     }
-
-    SignupController.$inject = ['$state', '$modalInstance', '$log', 'Authentication', 'type', 'srefRedirect'];
-    SignupModalController.$inject = ['$modal', '$log', '$attrs'];
-
-    angular.module('users')
-        .directive('signupModal', SignupModalDirective)
-        .controller('SignupModalController', SignupModalController)
-        .controller('SignupController', SignupController);
 
 })();

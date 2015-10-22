@@ -53,8 +53,8 @@
         
     }
     
-    LoginService.$inject = ['$http', 'TokenFactory', '$window', '$q', 'Authentication'];
-    function LoginService($http, TokenFactory, $window, $q, auth) {
+    LoginService.$inject = ['$http', '$log', 'TokenFactory', '$window', '$q', 'Authentication'];
+    function LoginService($http, $log, TokenFactory, $window, $q, auth) {
         getUser();
         
         return {
@@ -71,17 +71,13 @@
             
             return $http.post('/oauth/token', credentials)
                 .then(function success(response) {
-                    console.log('Got Token Response: ', response);
+                    $log.debug('Got Token Response: ', response);
                     TokenFactory.set('access_token', response.data.access_token);
                     TokenFactory.set('refresh_token', response.data.refresh_token);
                     TokenFactory.set('token_type', response.data.token_type);
                     TokenFactory.set('token_expires', Date.now() + response.data.expires_in);
 
-                    return $http.get('api/users/me');
-                })
-                .then(function success(response) {
-                    console.log('Got `me` Response: ', response);
-                    return response.data;
+                    return getUser();
                 });
         }
 
@@ -99,7 +95,7 @@
                 // $http = $http || $injector.get('$http');
                 return $http.get('api/users/me').then(
                     function success(response) {
-                        console.log('Got `me` Response: ', response);
+                        $log.debug('Got `me` Response: ', response);
                         auth.user = response.data;
                         return auth.user;
                     },
