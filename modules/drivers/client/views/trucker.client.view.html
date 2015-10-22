@@ -1,14 +1,23 @@
-
 <div class="headline-bg headline-sm headline-map-bg">
     <div class="blue-mask container-fluid"></div>
 </div>
 
 <div class="container profile-base section section-on-bg">
 
-    <div class="row profile">
+    <div class="row profile tline-profile">
         <div class="col-md-offset-2 col-md-8 profile-body">
             <os-profile-header model="vm.profile" can-edit="vm.canEdit"></os-profile-header>
-            <div ui-view="content"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <tabs data="vm.tabs" type="tabs"></tabs>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ui-view></ui-view>
+                </div>
+            </div>
+            <!--<div ui-view="content"></div>-->
         </div>
     </div>
 </div>

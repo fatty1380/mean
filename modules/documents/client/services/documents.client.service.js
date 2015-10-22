@@ -4,12 +4,23 @@
 	//Documents service used to communicate Documents REST endpoints
 	angular.module('documents').factory('Documents', ['$resource',
 		function($resource) {
-			return $resource('api/documents/:documentId', { documentId: '@_id'
+			
+			var ProfileRSRC = $resource('/api/profiles/:userId/documents', { userId: '@_id' });
+			var DocumentRSRC = $resource('api/documents/:documentId', { documentId: '@_id'
 			}, {
 				update: {
 					method: 'PUT'
 				}
-			});
+				});
+			
+			var service = {
+				byUser: ProfileRSRC,
+				byId: DocumentRSRC,
+
+
+			};
+			
+			return service;
 		}
 	]); 
 })();

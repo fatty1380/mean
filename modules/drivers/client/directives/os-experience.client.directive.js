@@ -1,6 +1,38 @@
 (function () {
     'use strict';
 
+
+    angular.module('drivers')
+        .directive('osetExperienceItem', ExperienceItemDirective);
+        
+    function ExperienceItemDirective() {
+        return {
+            priority: 0,
+            templateUrl: '/modules/drivers/views/templates/experience.client.template.html',
+            replace: false,
+            restrict: 'E',
+            scope: {
+                model: '=',
+                editMode: '=?',
+                canEdit: '=?',
+                addFn: '&?',
+                dropFn: '&?',
+                isLast: '=?',
+                modelIndex: '=?',
+                viewOnly: '=?'
+            },
+            require: ['^osetExperienceList', '^?form'],
+            link: function(scope, element, attrs, ctrls) {
+                scope.vm.form = ctrls[1];
+                scope.vm.list = ctrls[0];
+            },
+            controller: ExperienceItemController,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }
+
+    ExperienceItemController.$inject = ['AppConfig', '$attrs'];
     function ExperienceItemController(AppConfig, $attrs) {
 
         var vm = this;
@@ -96,36 +128,36 @@
         //vm.form.save = vm.save;
         //vm.form.cancel = vm.cancel;
     }
-
-    function ExperienceItemDirective() {
-        return {
-            priority: 0,
-            templateUrl: '/modules/drivers/views/templates/experience.client.template.html',
-            replace: false,
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    angular.module('drivers')
+        .directive('osetExperienceList', ExperienceListDirective);
+        
+    function ExperienceListDirective() {
+        var ddo;
+        ddo = {
+            templateUrl: '/modules/drivers/views/templates/experience-list.client.template.html',
             restrict: 'E',
             scope: {
-                model: '=',
-                editMode: '=?',
+                models: '=list',
                 canEdit: '=?',
-                addFn: '&?',
-                dropFn: '&?',
-                isLast: '=?',
-                modelIndex: '=?',
-                viewOnly: '=?'
+                viewOnly: '=?',
+                maxCt: '=?'
             },
-            require: ['^osetExperienceList', '^?form'],
+            require: ['^?form'],
             link: function(scope, element, attrs, ctrls) {
-                scope.vm.form = ctrls[1];
-                scope.vm.list = ctrls[0];
+                scope.vm.form = ctrls[0];
             },
-            controller: 'ExperienceItemController',
+            controller: ExperienceListController,
             controllerAs: 'vm',
             bindToController: true
         };
+
+        return ddo;
     }
 
-    ExperienceItemController.$inject = ['AppConfig', '$attrs'];
-
+    ExperienceListController.$inject = ['$log'];
     function ExperienceListController($log) {
         var vm = this;
 
@@ -165,37 +197,5 @@
             vm.maxCt++;
         }
     }
-
-    ExperienceListController.$inject = ['$log'];
-
-    function ExperienceListDirective() {
-        var ddo;
-        ddo = {
-            templateUrl: '/modules/drivers/views/templates/experience-list.client.template.html',
-            restrict: 'E',
-            scope: {
-                models: '=list',
-                canEdit: '=?',
-                viewOnly: '=?',
-                maxCt: '=?'
-            },
-            require: ['^?form'],
-            link: function(scope, element, attrs, ctrls) {
-                scope.vm.form = ctrls[0];
-            },
-            controller: 'ExperienceListController',
-            controllerAs: 'vm',
-            bindToController: true
-        };
-
-        return ddo;
-    }
-
-    angular.module('drivers')
-        .controller('ExperienceItemController', ExperienceItemController)
-        .directive('osetExperienceItem', ExperienceItemDirective)
-        .controller('ExperienceListController', ExperienceListController)
-        .directive('osetExperienceList', ExperienceListDirective);
-
 
 })();

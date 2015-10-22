@@ -11,9 +11,9 @@
                 $locationProvider.html5Mode(true).hashPrefix('!');
             }
         ])
-        .config(function ($logProvider) {
+        .config(['$logProvider', function ($logProvider) {
             $logProvider.debugEnabled(true);
-        });
+        }])
 
     //Then define the init function for starting up the application
     angular.element(document).ready(function () {

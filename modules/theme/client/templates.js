@@ -3889,11 +3889,9 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        <div class="row">\n' +
   '            <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">\n' +
   '                <div class="center-block full-width">\n' +
-  '                    <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"\n' +
-  '                         class="img-thumbnail user-profile-picture img-responsive">\n' +
-  '                    <br data-ng-if="vm.canEdit"/>\n' +
-  '                    <a class="btn btn-link" data-ng-click="vm.editPicFn()"\n' +
-  '                       data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || \'.\'}}">edit\n' +
+  '                    <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture" class="img-thumbnail user-profile-picture img-responsive">\n' +
+  '                    <br data-ng-if="vm.canEdit" />\n' +
+  '                    <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || \'.\'}}">edit\n' +
   '                        <i class="fa fa-pencil-square-o"></i>\n' +
   '                    </a>\n' +
   '                </div>\n' +
@@ -3907,36 +3905,34 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                <div class="licenses">\n' +
   '                    <oset-license-inline model="vm.profile.license" show-endorsements="true"></oset-license-inline>\n' +
   '                </div>\n' +
+  '                <ul class="props">\n' +
+  '                    <li class="prop" ng-if="vm.profile.props.started"><strong>Driving Since:</strong> {{vm.profile.props.started | amDateFormat : \'MMMM, YYYY\'}}</li>\n' +
+  '                    <li class="prop" ng-if="vm.profile.props.truck || vm.profileData.props.model"><strong>Truck:</strong> {{vm.profile.props.truck}} {{vm.profileData.props.model}}</li>\n' +
+  '                    <li class="prop" ng-if="vm.profile.props.trailer && !!vm.profile.props.trailer.length">\n' +
+  '                        <strong>Trailer Type<span ng-if="vm.profile.props.trailer.length > 1">s</span>:</strong>\n' +
+  '                        <span ng-repeat="trailer in vm.profile.props.trailer">\n' +
+  '                                    {{trailer}}<span ng-if="!$last">, </span>\n' +
+  '                    </li>\n' +
+  '                </ul>\n' +
   '            </div>\n' +
   '\n' +
   '            <div class="profile-actions col-sm-12">\n' +
   '\n' +
   '                <div class="icons icon-group pull-left">\n' +
-  '                    <a href="" class="icon">\n' +
-  '                        <div class="twitter"></div>\n' +
-  '                    </a>\n' +
-  '                    <a href="" class="icon">\n' +
-  '                        <div class="google"></div>\n' +
-  '                    </a>\n' +
-  '                    <a href="" class="icon">\n' +
-  '                        <div class="facebook"></div>\n' +
-  '                    </a>\n' +
+  '\n' +
   '                </div>\n' +
   '\n' +
   '                <div class="icons icon-group pull-right text-right">\n' +
-  '                    <button type="button" class="btn btn-oset-link"\n' +
-  '                            ng-if="!!vm.canEdit"\n' +
-  '                            ui-sref="drivers.edit({driverId:vm.profile.id})">\n' +
+  '                    <button type="button" class="btn btn-oset-link" ng-if="!!vm.canEdit" ui-sref="drivers.edit({driverId:vm.profile.id})">\n' +
   '                        <i class="fa fa-2x fa-edit"></i>\n' +
   '                    </button>\n' +
-  '                    \n' +
+  '\n' +
   '                    <oset-connection-button profile="vm.profile" class="btn btn-oset-secondary"></oset-connection-button>\n' +
   '                </div>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '    </div>\n' +
-  '</section>\n' +
-  '');
+  '</section>');
  $templateCache.put('/modules/drivers/views/templates/driver-edit-form.client.template.html',
   '<fieldset>\n' +
   '\n' +

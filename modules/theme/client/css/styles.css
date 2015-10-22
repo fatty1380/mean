@@ -887,6 +887,61 @@ h4.vert-middle {
   -o-transform: translate(0, -50%);
   transform: translate(0, -50%);
 }
+.tline-profile .review .rating .glyphicon.ng-scope.glyphicon-star,
+.tline-profile .review .rating .glyphicon.ng-scope.glyphicon-star-empty {
+  font-size: 2em;
+}
+.tline-profile .reviews-list .item {
+  margin-bottom: 2px;
+}
+.tline-profile .reviews-list .item > .ico {
+  float: left;
+  margin-right: 15px;
+}
+.tline-profile .reviews-list .item .review {
+  overflow: hidden;
+}
+.tline-profile .reviews-list .item .review .top {
+  padding: 3px 0 5px;
+  overflow: hidden;
+  height: auto;
+}
+.tline-profile .reviews-list .item .review .top .rating {
+  font-size: 17px;
+}
+.tline-profile .reviews-list .item .review .top .rating li {
+  float: left;
+}
+.tline-profile .reviews-list .item .review .top .rating li i {
+  color: #3b9fa1;
+}
+.tline-profile .reviews-list .item .review .top .time {
+  float: right;
+}
+.tline-profile .reviews-list .item .review .title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 0 5px;
+}
+.tline-profile .reviews-list .item .review .message {
+  margin: 0 0 5px;
+  display: block;
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.tline-profile .reviews-list .item .review .button-holder {
+  overflow: hidden;
+}
+.tline-profile .reviews-list .item .review .button-holder button {
+  float: right;
+  padding: 0 25px;
+  min-height: 26px;
+}
 .icons {
   padding: 10px;
   width: 220px;

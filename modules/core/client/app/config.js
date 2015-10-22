@@ -8,7 +8,7 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
     var applicationModuleVendorDependencies =
         [
             'ngSanitize', 'ngAnimate', 'ngResource', 'ngMessages',
-            'ui.router', 'ui.bootstrap', 'ui.mask',
+            'ui.router', 'ui.router.tabs', 'ui.bootstrap', 'ui.mask',
             'angularFileUpload', 'ngMap', 'toastr',
             'ngImgCrop', 'duScroll', 'angularMoment',
             'ngSignaturePad'

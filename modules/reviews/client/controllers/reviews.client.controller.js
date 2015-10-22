@@ -93,6 +93,7 @@
 		
 		function activate() {
 			
+			vm.profile = profile;
 			vm.review.userId = profile.id;
 			vm.profileName = profile.displayName;
 			

@@ -53,12 +53,12 @@
 	
 			// Find a list of Documents
 			$scope.find = function() {
-				$scope.documents = Documents.query();
+				$scope.documents = Documents.byId.query();
 			};
 	
 			// Find existing Document
 			$scope.findOne = function() {
-				$scope.document = Documents.get({ 
+				$scope.document = Documents.byId.get({ 
 					documentId: $stateParams.documentId
 				});
 			};

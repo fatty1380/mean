@@ -107,8 +107,8 @@
         .module('users')
         .factory('Requests', RequestsService);
 
-    RequestsService.$inject = ['$resource', '$log'];
-    function RequestsService($resource, $log) {
+    RequestsService.$inject = ['$resource', '$log', '$q'];
+    function RequestsService($resource, $log, $q) {
         var service = {
             create: createRequest,
             list: listRequests,
@@ -143,6 +143,9 @@
 
         // GET /api/requests/:requestId
         function getRequest(id) {
+            if (!id) {
+                return $q.when({});
+            }
             debugger;
             return RequestMsgRsrc.get({ requestId: id }).$promise;
         }

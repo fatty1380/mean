@@ -107,23 +107,75 @@
 
             state('trucker', {
                 url: '/trucker',
-                views: {
-                    '': {
-                        templateUrl: '/modules/drivers/views/trucker.client.view.html',
-                        controller: function (user, profile) {
-                            var vm = this;
-                            vm.user = user;
-                            vm.profile = profile || user;
-                        },
-                        controllerAs: 'vm',
-                        bindToController: true
-                    },
-                    'content@trucker': {
-                        template: '<h1 class="text-center">CONTENT</h1>'
-                    }
-                },
+                templateUrl: '/modules/drivers/views/trucker.client.view.html',
+                controller: 'TruckerViewCtrl',
+                controllerAs: 'vm',
+                bindToController: true,
                 resolve: upcResolve
             }).
+            state('trucker.experience', {
+                url: '/experience',
+                template: '<oset-experience-list list="vm.profile.experience"></oset-experience-list>'
+            }).
+            state('trucker.review', {
+                url: '/review',
+                templateUrl: '/modules/reviews/views/create-review.client.view.html',
+                controller: 'ReviewEditCtrl',
+                controllerAs: 'vm',
+                params: {
+                    requestId: {
+                        value: null,
+                        squash: true
+                    }
+                },
+                resolve: {
+                    reviewRequest: ['$log', '$stateParams', 'Requests', function ($log, $stateParams, Requests) {
+                        if (!!$stateParams.requestId) {
+                            return Requests.get($stateParams.requestId)
+                                .catch(function fail(err) {
+                                    $log.error(err, 'Unable to find requestId');
+                                    return {};
+                                });
+                        }
+                        return {};
+                    }],
+                    review: ['$log', '$stateParams', 'profile', function ($log, $stateParams, profile) {
+                        if (!!$stateParams.reviewId) {
+                            return _.find(profile.reviews, { id: $$stateParams.reviewId });
+                        }
+                        return {};
+                    }]
+                }
+            }).
+            state('trucker.reviews', {
+                url: '/reviews',
+                controller: 'TruckerReviewListCtrl',
+                controllerAs: 'vm',
+                resolve: {
+                    reviews: ['$log', 'Reviews', 'profile', function ($log, Reviews, profile) {
+                        return Reviews.byUser.query({ userId: profile.id });
+                    }]
+                },
+                templateUrl: '/modules/drivers/views/trucker-reviews.client.view.html',
+            }).
+            state('trucker.documents', {
+                url: '/documents',
+                controller: 'TruckerLockboxCtrl',
+                controllerAs: 'vm',
+                resolve: {
+                    documents: ['$log', 'Documents', 'profile', function ($log, Documents, profile) {
+                        return Documents.byUser.query({ userId: profile.id }).$promise
+                            .catch(function reject(err) {
+                                $log.error('Unable to Fetch User\'s documents', err);
+                                
+                                return null;
+                            });
+                    }]
+                },
+                templateUrl: '/modules/drivers/views/trucker-docs.client.view.html',
+            }).
+            
+        /** ==== TRUCKERLINE BASE : END =========================================== */
 
             state('drivers', {
                 abstract: true,

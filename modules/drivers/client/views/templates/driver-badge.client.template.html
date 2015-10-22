@@ -3,11 +3,9 @@
         <div class="row">
             <div class="profile-photo col-sm-4" data-ng-if="!!vm.pictureUrl">
                 <div class="center-block full-width">
-                    <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture"
-                         class="img-thumbnail user-profile-picture img-responsive">
-                    <br data-ng-if="vm.canEdit"/>
-                    <a class="btn btn-link" data-ng-click="vm.editPicFn()"
-                       data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || '.'}}">edit
+                    <img data-ng-src="{{vm.pictureUrl}}" alt="profile picture" class="img-thumbnail user-profile-picture img-responsive">
+                    <br data-ng-if="vm.canEdit" />
+                    <a class="btn btn-link" data-ng-click="vm.editPicFn()" data-ng-if="vm.canEdit" ui-sref="{{vm.editPicSref || '.'}}">edit
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
                 </div>
@@ -21,29 +19,28 @@
                 <div class="licenses">
                     <oset-license-inline model="vm.profile.license" show-endorsements="true"></oset-license-inline>
                 </div>
+                <ul class="props">
+                    <li class="prop" ng-if="vm.profile.props.started"><strong>Driving Since:</strong> {{vm.profile.props.started | amDateFormat : 'MMMM, YYYY'}}</li>
+                    <li class="prop" ng-if="vm.profile.props.truck || vm.profileData.props.model"><strong>Truck:</strong> {{vm.profile.props.truck}} {{vm.profileData.props.model}}</li>
+                    <li class="prop" ng-if="vm.profile.props.trailer && !!vm.profile.props.trailer.length">
+                        <strong>Trailer Type<span ng-if="vm.profile.props.trailer.length > 1">s</span>:</strong>
+                        <span ng-repeat="trailer in vm.profile.props.trailer">
+                                    {{trailer}}<span ng-if="!$last">, </span>
+                    </li>
+                </ul>
             </div>
 
             <div class="profile-actions col-sm-12">
 
                 <div class="icons icon-group pull-left">
-                    <a href="" class="icon">
-                        <div class="twitter"></div>
-                    </a>
-                    <a href="" class="icon">
-                        <div class="google"></div>
-                    </a>
-                    <a href="" class="icon">
-                        <div class="facebook"></div>
-                    </a>
+
                 </div>
 
                 <div class="icons icon-group pull-right text-right">
-                    <button type="button" class="btn btn-oset-link"
-                            ng-if="!!vm.canEdit"
-                            ui-sref="drivers.edit({driverId:vm.profile.id})">
+                    <button type="button" class="btn btn-oset-link" ng-if="!!vm.canEdit" ui-sref="drivers.edit({driverId:vm.profile.id})">
                         <i class="fa fa-2x fa-edit"></i>
                     </button>
-                    
+
                     <oset-connection-button profile="vm.profile" class="btn btn-oset-secondary"></oset-connection-button>
                 </div>
             </div>

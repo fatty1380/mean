@@ -2,6 +2,82 @@
 @import "mixins.less";
 @import "theme-default.less";
 
+.tline-profile {
+  
+  .review {
+    
+    .rating {
+      
+      .glyphicon.ng-scope {
+        &.glyphicon-star, &.glyphicon-star-empty {
+          font-size: 2em;
+        }
+      }
+    }
+  }
+  
+  .reviews-list {
+    .item{
+      margin-bottom: 2px;
+  
+      > .ico{
+        float: left;
+        margin-right: 15px;
+      }
+  
+      .review{
+        overflow: hidden;
+  
+        .top{
+          padding: 3px 0 5px;
+          overflow: hidden;
+          height: auto;
+  
+          .rating{
+            font-size: 17px;
+  
+            li{
+              float: left;
+  
+              i{color: #3b9fa1;}
+            }
+          }
+  
+          .time{
+            float: right;
+          }
+        }
+  
+        .title{
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 0 5px;
+        }
+        .message{
+          margin: 0 0 5px;
+          display: block;
+          display: -webkit-box;
+          overflow: hidden;
+          white-space: normal;
+          text-overflow: ellipsis;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+        }
+        .button-holder{
+          overflow: hidden;
+  
+          button{
+            float: right;
+            padding: 0 25px;
+            min-height: 26px;
+          }
+        }
+      }
+    }
+  }
+}
+
 .icons {
   padding: 10px;
   width: 220px;
