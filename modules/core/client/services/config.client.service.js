@@ -104,7 +104,7 @@
             },
             getOptions: function () {
                 if (!!options) {
-                    return options;
+                    return $q.when(options);
                 }
 
                 var rsrc = $resource('config/options');
@@ -126,7 +126,7 @@
                             return {};
                         });
                 } else {
-                    return paramFilter(modules, userType, moduleName);
+                    return $q.when(paramFilter(modules, userType, moduleName));
                 }
             }
         };
