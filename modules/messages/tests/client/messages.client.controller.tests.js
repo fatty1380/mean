@@ -61,7 +61,7 @@
 
 			// Set GET response
 			$httpBackend.expectGET('api/messages').respond(sampleMessages);
-
+ 
 			// Run controller functionality
 			scope.find();
 			$httpBackend.flush();

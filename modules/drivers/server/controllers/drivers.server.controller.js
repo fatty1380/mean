@@ -17,7 +17,7 @@ var mongoose = require('mongoose'),
 
 var props = require('./drivers.properties.server.controller'),
     exp = require('./drivers.experience.server.controller');
-    
+
 var docs = require(path.resolve('./modules/documents/server/controllers/documents.server.controller'));
 
 var
@@ -242,32 +242,28 @@ function hasAuthorization(req, res, next) {
 function executeQuery(req, res, next) {
     var query = req.query || {};
     var sort = req.sort || '';
+    var select = Driver.fields.social;
+
+
+    req.log.debug({ func: 'executeQuery', query: query, sort: sort, select: select }, 'Loading Drivers');
 
     Driver.find(query)
         .sort(sort)
-        .select(Driver.fields.social)
-        .exec(function (err, drivers) {
-            if (err) {
-                if (!drivers) {
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
-                    });
-                }
-            }
-            
-            // var fields = Driver.fields.social.split(' ');
-            // fields.push('id')
-            
-            // req.drivers = _.map(drivers, function (d) {
-            //     d.socialify();
-                
-            //     return d;
-            // })
-
+        .select(select)
+        .exec()
+        .then(function (drivers) {  
             req.drivers = drivers || [];
             req.log.debug('[DriversCtrl.executeQuery] Found %d drivers for query %j', req.drivers.length, query);
-            res.json(req.drivers);
+            return res.json(req.drivers);
+        }, function (err) {
+
+            req.log.error({ func: 'executeQuery', err: err }, 'Failed to Query for Drivers due to error');
+
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
         });
+         
 }
 
 // Searches for a single instance of a driver, based on the passed in 'driverFind' function;

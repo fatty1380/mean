@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function handle404s(err) {
@@ -13,6 +13,7 @@
         throw err;
     }
 
+    driverResolve.$inject = ['Drivers', '$stateParams'];
     function driverResolve(Drivers, params) {
         if (!!params.driverId) {
             console.log('Searching for driver ID: %s', params.driverId);
@@ -21,6 +22,7 @@
         return Drivers.default;
     }
 
+    userResolve.$inject = ['Drivers', '$stateParams', 'Authentication'];
     function userResolve(Drivers, params, auth) {
         var val;
         if (!!params.userId) {
@@ -36,45 +38,123 @@
         return driver.catch(handle404s);
     }
 
-    function driverListResolve(Drivers) {
-        return Drivers.ById.query().$promise;
+    driverListResolve.$inject = ['Drivers', '$log'];
+    function driverListResolve(Drivers, $log) {
+        return Drivers.ById.query().$promise
+            .catch(function (err) {
+                $log.error('Unable to load drivers list due to error', err);
+                return [];
+            });
     }
 
+
+    /// TODO: This is a dupe of users.client.routes resolver
+    var upcResolve = {
+        user: ['Authentication', 'LoginService', function resolveUser(Authentication, LoginService) {
+            return LoginService.getUser().then(
+                function success(user) {
+
+                    if (!Authentication.user) {
+                        Authentication.user = user;
+                    }
+
+                    return user;
+                },
+                function reject(reason) {
+                    console.error('Unable to load user - not logged in?', reason);
+
+                    return null;
+                });
+        }],
+        profile: ['user', '$stateParams', 'Profiles', function resolveProfile(user, $stateParams, Profiles) {
+            if (_.isEmpty($stateParams.userId)) {
+                return user;
+            }
+
+            return Profiles.load($stateParams.userId).then(
+                function success(profile) {
+                    return profile;
+                },
+                function reject(reason) {
+                    console.error('Unable to load profile: ', reason);
+
+                    debugger;
+
+                    return null;
+
+                });
+        }],
+        company: ['profile', 'Companies', function resolveCompany(profile, Companies) {
+            return !!profile.company ? Companies.get(profile.company) : null;
+        }]
+    };
+            
+    // Dependency Injection
+    config.$inject = ['$stateProvider'];
     function config($stateProvider) {
+        
+            
 
         // Drivers state routing
         $stateProvider.
 
-        state('drivers', {
-            abstract: true,
-            url: '/drivers',
-            template: '<div ui-view class="content-section"></div>',
-            parent: 'fixed-opaque'
-        }).
+        /** ==== Truckerline Base ==================================================
+         * Serves as a base route for visible truckerline profile viewing...
+         * 
+         * At the root will be the driver's profile card, with sub-states containing
+         * things like documents and reviews dependent on permissions.
+         */
 
-        state('drivers.list', {
-            url: '',
-            templateUrl: '/modules/drivers/views/list-drivers.client.view.html',
-            parent: 'drivers',
-            resolve: {
-                drivers: driverListResolve
-            },
-            controller: 'DriversListController',
-            controllerAs: 'vm',
-            bindToController: true
-        }).
+            state('trucker', {
+                url: '/trucker',
+                views: {
+                    '': {
+                        templateUrl: '/modules/drivers/views/trucker.client.view.html',
+                        controller: function (user, profile) {
+                            var vm = this;
+                            vm.user = user;
+                            vm.profile = profile || user;
+                        },
+                        controllerAs: 'vm',
+                        bindToController: true
+                    },
+                    'content@trucker': {
+                        template: '<h1 class="text-center">CONTENT</h1>'
+                    }
+                },
+                resolve: upcResolve
+            }).
 
-        state('drivers.create', {
-            url: '/create',
-            templateUrl: '/modules/drivers/views/edit-driver.client.view.html',
-            parent: 'drivers',
-            resolve: {
-                driver: userResolve
-            },
-            controller: 'DriverEditController',
-            controllerAs: 'vm',
-            bindToController: true
-        }).
+            state('drivers', {
+                abstract: true,
+                url: '/drivers',
+                template: '<div ui-view class="content-section"></div>',
+                parent: 'fixed-opaque'
+            }).
+
+            state('drivers.list', {
+                url: '',
+                templateUrl: '/modules/drivers/views/list-drivers.client.view.html',
+                parent: 'drivers',
+                resolve: {
+                    drivers: driverListResolve
+                },
+                controller: 'DriversListController',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
+
+            state('drivers.create', {
+                url: '/create',
+                templateUrl: '/modules/drivers/views/edit-driver.client.view.html',
+                parent: 'drivers',
+                resolve: {
+                    driver: userResolve
+                },
+                controller: 'DriverEditController',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
 
         // state('drivers.home', {
         //     url: '/home',
@@ -105,36 +185,31 @@
         //    bindToController: true
         //}).
 
-        state('drivers.edit', {
-            url: '/{driverId:[0-9a-fA-F]{24}}/edit',
-            templateUrl: '/modules/drivers/views/edit-driver.client.view.html',
-            parent: 'drivers',
-            resolve: {
-                driver: driverResolve
-            },
-            controller: 'DriverEditController',
-            controllerAs: 'vm',
-            bindToController: true
-        }).
+            state('drivers.edit', {
+                url: '/{driverId:[0-9a-fA-F]{24}}/edit',
+                templateUrl: '/modules/drivers/views/edit-driver.client.view.html',
+                parent: 'drivers',
+                resolve: {
+                    driver: driverResolve
+                },
+                controller: 'DriverEditController',
+                controllerAs: 'vm',
+                bindToController: true
+            }).
 
-        state('drivers.documents', {
-            url: '/{driverId:[0-9a-fA-F]{24}}/reports/:documentId',
-            templateUrl: '/modules/drivers/views/document-viewer.client.view.html',
-            parent: 'drivers',
-            resolve: {
-                driver: driverResolve
-            },
-            controller: 'DocumentViewController',
-            controllerAs: 'vm',
-            bindToController: true
-        });
+            state('drivers.documents', {
+                url: '/{driverId:[0-9a-fA-F]{24}}/reports/:documentId',
+                templateUrl: '/modules/drivers/views/document-viewer.client.view.html',
+                parent: 'drivers',
+                resolve: {
+                    driver: driverResolve
+                },
+                controller: 'DocumentViewController',
+                controllerAs: 'vm',
+                bindToController: true
+            });
     }
 
-    // Dependency Injection
-    driverListResolve.$inject = ['Drivers'];
-    driverResolve.$inject = ['Drivers', '$stateParams'];
-    userResolve.$inject = ['Drivers', '$stateParams', 'Authentication'];
-    config.$inject = ['$stateProvider'];
 
     //Setting up route
     angular.module('drivers').config(config);

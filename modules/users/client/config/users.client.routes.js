@@ -4,6 +4,47 @@
     // Setting up route
     angular.module('users').config(['$stateProvider',
         function ($stateProvider) {
+            var upcResolve = {
+                user: ['Authentication', 'LoginService', function resolveUser(Authentication, LoginService) {
+                    return LoginService.getUser().then(
+                        function success(user) {
+
+                            if (!Authentication.user) {
+                                debugger;
+                                Authentication.user = user;
+                            }
+
+                            return user;
+                        },
+                        function reject(reason) {
+                            console.error('Unable to load user - not logged in?', reason);
+
+                            return null;
+                        });
+                }],
+                profile: ['user', '$stateParams', 'Profiles', function resolveProfile(user, $stateParams, Profiles) {
+                    if (_.isEmpty($stateParams.userId)) {
+                        return user;
+                    }
+
+                    return Profiles.load($stateParams.userId).then(
+                        function success(profile) {
+                            return profile;
+                        },
+                        function reject(reason) {
+                            console.error('Unable to load profile: ', reason);
+
+                            debugger;
+
+                            return null;
+
+                        });
+                }],
+                company: ['profile', 'Companies', function resolveCompany(profile, Companies) {
+                    return !!profile.company ? Companies.get(profile.company) : null;
+                }]
+            };
+            
             // Users state routing
             $stateProvider.
             
@@ -41,6 +82,7 @@
                                 function initialize() {
                                     var friendOne = _.first(vm.user.friends);
 
+                                    debugger;
                                     if (_.isString(friendOne)) {
                                         Friends.query({ user: vm.user.id }).then(
                                             function (results) {
@@ -56,46 +98,7 @@
                             bindToController: true
                         }
                     },
-                    resolve: {
-                        user: ['Authentication', 'LoginService', function resolveUser(Authentication, LoginService) {
-                            return LoginService.getUser().then(
-                                function success(user) {
-
-                                    if (!Authentication.user) {
-                                        debugger;
-                                        Authentication.user = user;
-                                    }
-
-                                    return user;
-                                },
-                                function reject(reason) {
-                                    console.error('Unable to load user - not logged in?', reason);
-
-                                    return null;
-                                });
-                        }],
-                        profile: ['user', '$stateParams', 'Profiles', function resolveProfile(user, $stateParams, Profiles) {
-                            if (_.isEmpty($stateParams.userId)) {
-                                return user;
-                            }
-
-                            return Profiles.load($stateParams.userId).then(
-                                function success(profile) {
-                                    return profile;
-                                },
-                                function reject(reason) {
-                                    console.error('Unable to load profile: ', reason);
-
-                                    debugger;
-
-                                    return null;
-
-                                });
-                        }],
-                        company: ['profile', 'Companies', function resolveCompany(profile, Companies) {
-                            return !!profile.company ? Companies.get(profile.company) : null;
-                        }]
-                    }
+                    resolve: upcResolve
                 }).
 
             // === Users Settings ======================================================
