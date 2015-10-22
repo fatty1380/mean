@@ -18,6 +18,7 @@
         vm.addDocsPopup = addDocs;
         vm.showEditModal = showEditModal;
         vm.showShareModal = showShareModal;
+        vm.refreshDocuments = refreshDocuments;
 
         vm.lockboxClear = false;
 
@@ -81,6 +82,15 @@
                     function (err) {
                         console.log(err);
                     })
+        }
+
+        function refreshDocuments () {
+            lockboxDocuments.getDocuments(true)
+                .finally(function () {
+                    vm.documents = lockboxDocuments.updateDocumentList();
+                    // Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
         }
 
         function checkLockboxAccess() {

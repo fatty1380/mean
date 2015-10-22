@@ -33,8 +33,8 @@
 
         vm.error = '';
         vm.user = {
-            email: 'rykov@mobidev.biz',
-            password: 'admin@123'
+            email: '',
+            password: ''
         };
 
         vm.signIn = signIn;

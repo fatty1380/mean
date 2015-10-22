@@ -35,13 +35,12 @@
         vm.userData = userService.profileData;
         vm.documents = [];
 
-        function getId(e) { return e.id || e._id; }
-
         // TODO: Refactor to be "refresh documents"
         function getDocuments(saveToDevice) {
             //return $http.get(settings.documents).then(
             return API.doRequest(settings.documents, 'get')
                 .then(function success(documentListResponse) {
+                    console.warn(' documentListResponse >>>', documentListResponse);
                     var docs = documentListResponse.data;
 
                     if(!vm.path) return $q.when(docs);
@@ -63,30 +62,33 @@
                             }
                         }
                     });
-
+                    console.warn(' promiseArr >>>', promiseArr);
                     return $q.all(promiseArr);
                 })
                 .then(function (newDocuments) {
-                    var id, name, url, user;
+                    console.warn(' newDocuments >>>', newDocuments);
+                    var id, name, url, user, created;
                     if(angular.isArray(newDocuments) && newDocuments.length){
                         angular.forEach(newDocuments, function(doc){
                             if(!doc.id && doc.name && doc.nativeURL){
                                 id = doc.name.split('-')[0];
                                 name = doc.name.split('-')[1].replace('_', ' ');
-                                user = angular.isObject(doc.user) && doc.user.id || doc.user;
-                                url = doc.nativeURL
+                                url = doc.nativeURL;
                             }else{
                                 id = doc.id;
                                 name = doc.name;
-                                user = angular.isObject(doc.user) && doc.user.id || doc.user;
                                 url = doc.url;
                             }
 
-                            addDocument( {name: name, url: url, id: id, user: user} );
+                            user = getUserId(doc);
+                            created = doc.created;
+
+                            addDocument( {name: name, url: url, id: id, user: user, created: created} );
                         });
                     }else if (angular.isArray(newDocuments) && !newDocuments.length){
                         vm.documents = newDocuments || [];
                     }
+                    console.warn(' vm.documents >>>', vm.documents);
                     return vm.documents;
                 })
                 .catch(function (result) {
@@ -229,10 +231,12 @@
                 }
                 
                 return API.doRequest(settings.documents + doc.id, 'delete');
-            })
+            });
         }
 
         function saveFileToDevice (file) {
+            console.info(' --->>> save file trigerred <<<--- ');
+
             var path = vm.path;
 
             updateNewDocumentWithID(file);
@@ -244,10 +248,11 @@
                 .then(function () {
                     var options = {
                         path: path + 'lockbox/',
-                        user: angular.isObject(file.user) ? file.user.id : file.user,
+                        user: getUserId(file),
                         name: file.id + '-' + getFileName(file),
                         data: file.url
                     };
+                    console.warn(' options >>>', options);
                     return writeFileInUserFolder(options);
                 });
         }
@@ -268,6 +273,8 @@
             var name = options.name;
             var data = options.data;
 
+            console.info(' --->>> WRITE FILE IN USERs <<<--- ');
+
             return $cordovaFile
                 .checkDir(path, user)
                 .catch(function () {
@@ -281,11 +288,14 @@
                     console.warn(' created file --->>>', file);
                     updateStorageInfo(user, {action: 'add'});
                     return file;
+                })
+                .catch(function (err) {
+                    console.warn(' err >>>', err);
                 });
         }
 
         function writeFile (path, name, data) {
-            return $cordovaFile.writeFile(path, name, data);
+            return $cordovaFile.writeFile(path, name, data, true);
         }
 
         function removeDocumentsByUser (user) {
@@ -308,7 +318,7 @@
             if(!doc) return;
 
             var path = vm.LOCKBOX_FOLDER,
-                userID = angular.isObject(doc.user) && doc.user.id || doc.user || doc.userId  || vm.userData.id,
+                userID = getUserId(doc),
                 documentName = doc.id + '-' + getFileName(doc);
 
             return $cordovaFile.checkDir(path, userID)
@@ -411,6 +421,7 @@
                             return $q.when(getDocuments(true));
                         });
                     }
+                    return $q.when(vm.documents);
                 });
         }
 
@@ -449,7 +460,7 @@
         }
 
         function renameLocalFile (doc, data) {
-            var userID = angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
+            var userID = getUserId(doc);
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
             var oldName = doc.id + '-' + getFileName(doc);
             var newName = doc.id + '-' + getFileName(data);
@@ -466,6 +477,11 @@
             return vm.documents;
         }
 
+        function getId(e) { return e.id || e._id; }
+
+        function getUserId (doc) {
+            return angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
+        }
 
         //////////////////// Save Methods ////////////////////
 
