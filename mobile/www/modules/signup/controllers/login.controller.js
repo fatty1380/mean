@@ -25,16 +25,16 @@
         .module('signup')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$state', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'securityService'];
+    LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'securityService'];
 
-    function LoginCtrl($state, registerService, $ionicLoading, tokenService, userService, securityService) {
+    function LoginCtrl($state, lockboxDocuments, $window, registerService, $ionicLoading, tokenService, userService, securityService) {
         var vm = this;
         vm.lastElementFocused = false;
 
         vm.error = '';
         vm.user = {
-            email: '',
-            password: ''
+            email: 'rykov@mobidev.biz',
+            password: 'admin@123'
         };
 
         vm.signIn = signIn;
@@ -86,6 +86,8 @@
                                     userService.profileData = profileData.message.data;
                                     securityService.initialize();
 
+                                    removePrevUserDocuments(profileData.message.data.id);
+
                                     $state.go('account.profile');
                                 }
                             });
@@ -102,6 +104,24 @@
                         selectInputValue('password');
                     }
                 });
+        }
+
+        function removePrevUserDocuments (id) {
+            var storage = $window.localStorage;
+            var usersJSON = storage.getItem('hasDocumentsForUsers');
+            var users = usersJSON && JSON.parse(usersJSON);
+
+            if(!users || !(users instanceof Array) || !users.length) return;
+
+            angular.forEach(users, function (user) {
+                if(user !== id){
+                    console.warn('removing documents for user --->>>', user);
+                    return lockboxDocuments.removeDocumentsByUser(user);
+                }
+            });
+
+            console.warn('Documents users >>>', users);
+            storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 
         function selectInputValue(id) {

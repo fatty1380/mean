@@ -43,7 +43,6 @@
             return API.doRequest(settings.documents, 'get')
                 .then(function success(documentListResponse) {
                     var docs = documentListResponse.data;
-                    console.warn('11 docs --->>>', docs);
 
                     if(!vm.path) return $q.when(docs);
 
@@ -65,38 +64,37 @@
                         }
                     });
 
-                    console.warn(' promiseArr --->>>', promiseArr);
-
                     return $q.all(promiseArr);
                 })
                 .then(function (newDocuments) {
-                    var id, name, url;
-                    console.warn(' newDocuments --->>>', newDocuments);
+                    var id, name, url, user;
                     if(angular.isArray(newDocuments) && newDocuments.length){
                         angular.forEach(newDocuments, function(doc){
                             if(!doc.id && doc.name && doc.nativeURL){
                                 id = doc.name.split('-')[0];
                                 name = doc.name.split('-')[1].replace('_', ' ');
+                                user = angular.isObject(doc.user) && doc.user.id || doc.user;
                                 url = doc.nativeURL
                             }else{
                                 id = doc.id;
                                 name = doc.name;
+                                user = angular.isObject(doc.user) && doc.user.id || doc.user;
                                 url = doc.url;
                             }
 
-                            addDocument( {name: name, url: url, id: id} );
+                            addDocument( {name: name, url: url, id: id, user: user} );
                         });
                     }else if (angular.isArray(newDocuments) && !newDocuments.length){
                         vm.documents = newDocuments || [];
                     }
-                    return $q.when(vm.documents);
+                    return vm.documents;
                 })
                 .catch(function (result) {
                     console.error('Error getting docs: ', result);
-                    return $q.when(vm.documents);
+                    return vm.documents;
                 })
                 .finally(function () {
-                    return $q.when(vm.documents);
+                    return vm.documents;
                 });
         }
 
@@ -121,8 +119,8 @@
 
         function updateNewDocumentWithID (doc) {
             var i = _.findIndex(vm.documents, { url: doc.url, name: doc.name });
-            if(i >= 0 && vm.documents[i] && !vm.documents[i].id){
-                vm.documents[i].id = doc.id;
+            if(i >= 0 && vm.documents[i]){
+                _.extend(vm.documents[i], doc);
             }
         }
 
@@ -155,7 +153,7 @@
 
             return deferred.promise;
         }
-        
+
         function updateDocument(doc, data) {
             return API.doRequest(settings.documents + doc.id, 'put', data, true)
                 .then(function () {
@@ -163,7 +161,6 @@
                      return renameLocalFile(doc, data);
                 })
                 .then(function (resp) {
-                    console.warn(' resp --->>>', resp);
                     return _.extend(doc, data);
                 })
                 .catch(function (err) {
@@ -186,7 +183,6 @@
                     }
                 })
                 .then(function saveSuccess(newDocumentResponse) {
-
                     saveFileToDevice(newDocumentResponse.data);
 
                     if (newDocumentResponse.status != 200) {
@@ -206,7 +202,7 @@
                     if (!!sku) {
                         return _.find(vm.documents, { sku: sku });
                     }
-                    
+
                     return null;
                 })
                 .finally(function () {
@@ -226,7 +222,7 @@
                 _.remove(vm.documents, { id: doc.id });
 
                 removeOneDocument(doc);
-                
+
                 var stub = _.find(stubDocuments, { sku: doc.sku });
                 if (!!stub) {
                     addDocument(stub);
@@ -239,7 +235,7 @@
         function saveFileToDevice (file) {
             var path = vm.path;
 
-            if(!file.id) updateNewDocumentWithID(file);
+            updateNewDocumentWithID(file);
 
             return $cordovaFile.checkDir(path, 'lockbox')
                 .catch(function () {
@@ -282,7 +278,7 @@
                     return writeFile(path, name, data);
                 })
                 .then(function (file) {
-                    console.warn(' file --->>>', file);
+                    console.warn(' created file --->>>', file);
                     updateStorageInfo(user, {action: 'add'});
                     return file;
                 });
@@ -296,7 +292,7 @@
             var path = vm.LOCKBOX_FOLDER;
 
             return $cordovaFile.checkDir(path, user)
-                .then(function () {
+                .then(function (path) {
                     return $cordovaFile.removeRecursively(path, user)
                 }, function (err) {
                     return $q.reject(err)
@@ -312,12 +308,14 @@
             if(!doc) return;
 
             var path = vm.LOCKBOX_FOLDER,
-                userID = doc.userId  || vm.userData.id || doc.user && doc.user.id,
+                userID = angular.isObject(doc.user) && doc.user.id || doc.user || doc.userId  || vm.userData.id,
                 documentName = doc.id + '-' + getFileName(doc);
 
             return $cordovaFile.checkDir(path, userID)
-                .then(function () {
+                .then(function (dir) {
                     path += userID;
+                    console.warn('removeOneDoc dir >>>', dir);
+                    console.warn(' path >>>', path);
                     return $cordovaFile.removeFile(path, documentName);
                 })
                 .catch(function (err) {
@@ -326,20 +324,22 @@
         }
 
         function updateStorageInfo (user, data) {
-            // action is a boolean, if true - we are adding file, if false - removing it.
-            var ls = $window.localStorage;
-            var savedUsers = ls.getItem('userHasDocumentsSaved'),
-                index = savedUsers instanceof Array && savedUsers.indexOf(user);
+            var storage = $window.localStorage;
+            var usersJSON = storage.getItem('hasDocumentsForUsers');
+            var users = !!usersJSON && JSON.parse(usersJSON);
+            var index;
 
-            if(!(savedUsers instanceof Array)) savedUsers = [];
+            if(!(users instanceof Array)) users = [];
 
-            if(data.action === 'add' && index < 0){
-                savedUsers.push(user);
+            index = users.indexOf(user);
+
+            if(data.action === 'add' && index < 0) {
+                users.push(user);
             } else if (data.action === 'remove' && index >= 0) {
-                savedUsers.splice(index, 1);
+                users.splice(index, 1);
             }
 
-            ls.setItem('userHasDocumentsSaved', savedUsers);
+            storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 
         function getFilesByUserId (id) {
@@ -429,11 +429,10 @@
                     docObject.id = params[0];
                     docObject.name = params[1].replace('_', ' ').replace('.txt', '');
                     docObject.url = data;
-                    docObject.userId = userID;
+                    docObject.user = userID;
 
                     deferred.resolve(docObject);
                 }, function(err){
-                    console.warn(' err --->>>', err);
                     deferred.reject(err)
                 });
             }else{
@@ -450,7 +449,7 @@
         }
 
         function renameLocalFile (doc, data) {
-            var userID = vm.userData.id;
+            var userID = angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
             var oldName = doc.id + '-' + getFileName(doc);
             var newName = doc.id + '-' + getFileName(data);
@@ -463,6 +462,17 @@
             return source.name.replace(' ', '_') + (!hasExtension ? '.txt' : '');
         }
 
+        function updateDocumentList () {
+            return vm.documents;
+        }
+
+
+        //////////////////// Save Methods ////////////////////
+
+        //////////////////// Retrieve Methods ////////////////////
+
+        //////////////////// Remove Mehtods ////////////////////
+
         return {
             getDocuments: getDocuments,
             addDocsPopup: addDocsPopup,
@@ -473,7 +483,8 @@
             removeDocumentsByUser: removeDocumentsByUser,
             updateLocalStorageInfoAboutDocuments: updateStorageInfo,
             writeFile: writeFile,
-            getFilesByUserId: getFilesByUserId
+            getFilesByUserId: getFilesByUserId,
+            updateDocumentList: updateDocumentList
             //getStubDocuments: getStubDocuments
         }
     }

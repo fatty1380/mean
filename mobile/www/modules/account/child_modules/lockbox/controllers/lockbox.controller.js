@@ -38,6 +38,7 @@
                     function success(doc) {
                         if (!!doc) {
                             console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
+                            vm.documents = lockboxDocuments.updateDocumentList();
                         }
                         else {
                             console.log('No Doc added');

@@ -17,7 +17,7 @@
                     <i class="ico ico-documentimage ico-documentimage{{doc.sku}}"></i>
                     <div class="item-content">
                         <strong>{{ doc.name }}</strong>
-                        <!--<span>{{ doc.created }}</span>-->
+                        <span>{{ doc.created | date : 'MMMM d, y' }}</span>
                     </div>
                     <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
                     <button ng-if="!doc.url" class="button button-small" ng-click="vm.addDocsPopup(doc.sku)">Add</button>
