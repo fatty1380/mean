@@ -98,6 +98,9 @@ module.exports.initMiddleware = function (app) {
 
     if (process.env.NODE_ENV === 'production' || (config.https.enabled)) {
         app.use(function (req, res, next) {
+            if (/elasticbeanstalk/.test(req.headers.host)) {
+                return next();
+            }
             if ((!req.secure) && (!!req.headers['x-forwarded-proto']) && req.headers['x-forwarded-proto'].toLowerCase() === 'http') {
                 log.info('[EXPRESS.ROUTER] HTTPS Redirect %s', req.headers.host);
                 return res.redirect(['https://', req.headers.host, req.url].join(''));
