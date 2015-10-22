@@ -26,7 +26,8 @@
 					controllerAs: 'vm',
 					params: {
 						requestId: {
-							default: null
+							value: null,
+							squash: true
 						}
 					},
 					resolve: {
