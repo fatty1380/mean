@@ -30,6 +30,11 @@
                 if (window.StatusBar) {
                     StatusBar.styleDefault();
                 }
+                
+                if (!!screen && angular.isFunction(screen.lockOrientation)) {
+                    screen.lockOrientation('portrait');
+                }
+
             });
         });
 })();
