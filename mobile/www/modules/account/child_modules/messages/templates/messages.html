@@ -7,7 +7,7 @@
     <ion-pane class="content-pane">
         <ion-scroll>
             <ul class="list message-list">
-                
+
                 <li class="item" ng-repeat="chat in vm.chats" ng-click="vm.showChatDetailsModal(chat)">
                     <div class="ico ico-avatarsmall avatar-left"></div>
                     <div class="item-content">
@@ -26,20 +26,16 @@
                         </div>
                     </div>
                 </li>
-                
-                <li class="item" ng-repeat="chat in vm.chats" ng-if="!vm.chats || !vm.chats.length">
-                    <div class="item-content">
-                        <div class="message">
-                            <span>Get started by <a ui-sref="account.profile.friends">adding friends</a> or writing a new message below</span>
-                        </div>
-                    </div>
-                </li>
-                
+
+                <div ng-if="!vm.chats || !vm.chats.length" class="no-content">
+                    <p class="message">With messages you can communicate with people you’ve connected with in the Industry and want to stay in touch with!</p>
+                    <p class="message">Get started by <strong><a ui-sref="account.profile.friends">adding friends</a></strong> or if you have already added friends to your convoy, use the <strong>New Message</strong> button below.</p>
+                </div>
+
             </ul>
         </ion-scroll>
         <button class="button content-button" ng-click="vm.createNewChat()">
-            <i class="ico ico-shareiconorange"></i>
-            New Message
+            <i class="ico ico-shareiconorange"></i> New Message
         </button>
     </ion-pane>
 

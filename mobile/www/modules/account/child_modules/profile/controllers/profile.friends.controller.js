@@ -133,7 +133,7 @@
         }
 
         function showAddFriendsModal() {
-            $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading Contacts ... ', duration: 20000 });
+            $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading Contacts ... <br><small>(this may take a moment)</small>', duration: 20000 });
 
             contactsService
                 .find()

@@ -30,6 +30,10 @@
                 <li ng-if="vm.friends && !friends.length" class="no-matches">
                     <div class="item-content">NO MATCHES</div>
                 </li>
+                
+                <div ng-if="!vm.friends || !vm.friends.length" class="no-content">
+                    <p class="message">Get started with messaging by <strong><a ui-sref="account.profile.friends">adding friends</a></strong> to your convoy.</p>
+                </div>
             </ul>
         </ion-scroll>
     </ion-pane>

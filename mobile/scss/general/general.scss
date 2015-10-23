@@ -169,6 +169,14 @@ textarea{
   padding: 20px;
   font-weight: 300;
   line-height: 1.2em;
+  
+  strong {
+    font-weight: 500;
+  }
+  
+  a {
+    text-decoration: none;
+  }
 }
 
 .label{
