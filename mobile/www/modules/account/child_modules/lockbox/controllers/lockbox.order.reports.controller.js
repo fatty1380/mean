@@ -19,7 +19,7 @@
         }
 
         function orderNow () {
-            $window.open(settings.baseUrl + 'reports', '_system');
+            $window.open(settings.baseUrl + 'reports/', '_system');
             vm.cancel(null);
         }
 
