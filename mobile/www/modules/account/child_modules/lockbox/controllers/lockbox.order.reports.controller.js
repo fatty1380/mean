@@ -15,7 +15,7 @@
         vm.sendRequest = sendRequest;
 
         function cancel(data) {
-            $scope.closeModal(data);
+            vm.closeModal(data);
         }
 
         function orderNow () {
@@ -26,15 +26,13 @@
         function remindLater () {
             vm.sendRequest()
                 .then(function (response) {
-                    $ionicLoading.show({template: 'Request Sent'});
+                    $ionicLoading.show({ template: 'Request Sent', duration: 2000 });
 
-                    $timeout(function () {
-                        $ionicLoading.hide();
-                        vm.cancel(null);
-                    }, 2000);
+                    vm.closeModal(response);
 
-                }, function () {
-                    vm.cancel(null);
+                }, function (err) {
+                    console.error('Unable to request reminder', err);
+                    $ionicLoading.show({ template: '<h3>Sorry</h3>Unable to Send Reminder<br> at this time', duration: 2000 });
                 });
         }
 

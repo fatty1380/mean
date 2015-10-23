@@ -128,7 +128,7 @@
         console.log('[DocumentModalCtrl] for document: %o', vm.document);
 
         function trustSrc(src) {
-            console.log('SCE Trusting resource: `%s`', src);
+            //console.log('SCE Trusting resource: `%s`', src);
             return $sce.trustAsResourceUrl(src);
         };
 

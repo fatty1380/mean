@@ -17,9 +17,9 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['userService', '$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService'];
+    lockboxDocuments.$inject = ['userService', '$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService', 'welcomeService'];
 
-    function lockboxDocuments(userService, $cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService) {
+    function lockboxDocuments(userService, $cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService, welcomeService) {
 
         var vm = this;
 
@@ -86,7 +86,7 @@
                 .then(function (newDocuments) {
                     console.warn(' newDocuments >>>', newDocuments);
                     var id, name, url, user, created;
-                    
+
                     if (angular.isArray(newDocuments) && newDocuments.length) {
                         angular.forEach(newDocuments, function (doc) {
                             if (!doc.id && doc.name && doc.nativeURL) {
@@ -102,11 +102,11 @@
                             user = getUserId(doc);
                             created = doc.created;
 
-                            addDocument({ 
-                                name: name, 
-                                url: url, 
-                                id: id, 
-                                user: user, 
+                            addDocument({
+                                name: name,
+                                url: url,
+                                id: id,
+                                user: user,
                                 created: created,
                                 sku: doc.sku
                             });
@@ -125,6 +125,12 @@
                     return vm.documents;
                 })
                 .finally(function () {
+                    
+                    var realDocs = _.filter(vm.documents, function (doc) { return !!doc.id });
+                    if (!realDocs || realDocs.length == 0) {
+                        welcomeService.initialize('lockbox.add');
+                    }
+                    
                     $ionicLoading.hide();
                 });
         }
@@ -206,9 +212,11 @@
         }
 
         function takePicture(sku) {
-            sku = sku.sku || sku;
 
-            return cameraService.showActionSheet()
+            return welcomeService.showModal('lockbox.add')
+                .then(function () {
+                    return cameraService.showActionSheet()
+                })
                 .then(function success(rawImageResponse) {
                     return lockboxModalsService.showCreateModal({ image: rawImageResponse, sku: sku });
                 })
