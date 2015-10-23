@@ -418,6 +418,7 @@
                         function readEntries() {
                             dirReader.readEntries(
                                 function (results) {
+                                    console.log('results from dirReader: ', results);
                                     if (results.length) {
                                         entries = entries.concat(toArray(results));
                                         readEntries();
@@ -427,6 +428,10 @@
                                                 q.resolve(entries);
                                             });
                                     }
+                                },
+                                function (err) {
+                                    console.error('Failed to read Directory', err);
+                                    q.reject(err);
                                 });
                         }
 

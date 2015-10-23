@@ -102,7 +102,7 @@
                         controller: 'LockboxCtrl as vm',
                         resolve: {
                             documents: ['lockboxDocuments', 'user', '$ionicLoading', function (lockboxDocuments, user, $ionicLoading) {
-                                $ionicLoading.show({template: '<ion-spinner></ion-spinner><br>Loading documents', duration: 20000});
+                                $ionicLoading.show({template: '<ion-spinner></ion-spinner><br>Loading documents', delay: 500, duration: 10000});
                                 return lockboxDocuments.getFilesByUserId(user.id)
                                     .then(function (data) {
                                         return data;
