@@ -86,6 +86,7 @@
                 .then(function (newDocuments) {
                     console.warn(' newDocuments >>>', newDocuments);
                     var id, name, url, user, created;
+                    
                     if (angular.isArray(newDocuments) && newDocuments.length) {
                         angular.forEach(newDocuments, function (doc) {
                             if (!doc.id && doc.name && doc.nativeURL) {
@@ -101,7 +102,14 @@
                             user = getUserId(doc);
                             created = doc.created;
 
-                            addDocument({ name: name, url: url, id: id, user: user, created: created });
+                            addDocument({ 
+                                name: name, 
+                                url: url, 
+                                id: id, 
+                                user: user, 
+                                created: created,
+                                sku: doc.sku
+                            });
                         });
                     } else if (angular.isArray(newDocuments) && !newDocuments.length) {
                         // Itereate and add to avoid ovrewriting stubs
@@ -198,7 +206,6 @@
         }
 
         function takePicture(sku) {
-            debugger;
             sku = sku.sku || sku;
 
             return cameraService.showActionSheet()
@@ -281,7 +288,8 @@
                         path: path + 'lockbox/',
                         user: getUserId(file),
                         name: file.id + '-' + getFileName(file),
-                        data: file.url
+                        data: file.url,
+                        sku: file.sku
                     };
                     console.warn(' options >>>', options);
                     return writeFileInUserFolder(options);
@@ -289,9 +297,8 @@
         }
 
         function saveExistingFiles(doc) {
-            var extension = doc.url.split('.').pop();
             var id = doc.id;
-            var name = id + "-" + doc.name.replace(' ', '_') + '.' + extension;
+            var name = id + "-" + getFileName(doc);
             var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + name;
 
             return $cordovaFileTransfer
@@ -477,7 +484,8 @@
 
                     docObject = {};
                     docObject.id = params[0];
-                    docObject.name = params[1].replace('_', ' ').replace('.txt', '');
+                    docObject.sku = params[1];
+                    docObject.name = params[2].replace('_', ' ').replace('.txt', '');
                     docObject.url = data;
                     docObject.user = userID;
 
@@ -490,7 +498,8 @@
 
                 docObject = {};
                 docObject.id = params[0];
-                docObject.name = params[1].replace('_', ' ');
+                docObject.sku = params[1];
+                docObject.name = params[2].replace('_', ' ');
                 docObject.url = entry.nativeURL;
 
                 deferred.resolve(docObject);
@@ -509,7 +518,7 @@
 
         function getFileName(source) {
             var hasExtension = source.name.lastIndexOf('.') >= 0;
-            return source.name.replace(' ', '_') + (!hasExtension ? '.txt' : '');
+            return source.sku + '-' + source.name.replace(' ', '_') + (!hasExtension ? '.txt' : '');
         }
 
         function updateDocumentList() {

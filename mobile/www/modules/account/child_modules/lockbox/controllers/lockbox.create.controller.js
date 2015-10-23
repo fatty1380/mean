@@ -86,6 +86,11 @@
 
         function saveDocument() {
             $ionicLoading.show({ template: '<ion-spinner/><br>Saving...', duration: 10000 });
+            
+            if (!vm.document.sku) {
+                $ionicLoading.show({ template: 'Please select document type above', duration: 2000 });
+                return;
+            }
                     
             if (vm.document.sku !== 'misc') {
                 switch (vm.document.sku) {

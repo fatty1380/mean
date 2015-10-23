@@ -12,7 +12,7 @@
     <ion-pane ng-class="{'has-footer': !vm.deleteDisabled }">
         <ion-scroll>
             <ul class="list document-list">
-                <li class="item item-checkbox" ng-repeat="doc in vm.documents" ng-if="!!doc.id">
+                <li class="item item-checkbox" ng-repeat="doc in vm.documents track by $index" ng-if="!!doc.id">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="doc.checked">
                     </label>

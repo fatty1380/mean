@@ -65,7 +65,6 @@
          * Skips the 'new doc/order reports' sheet.
          */
         function newDoc(docSku) {
-            debugger;
             return lockboxDocuments.newDocPopup(docSku);
         }
         
