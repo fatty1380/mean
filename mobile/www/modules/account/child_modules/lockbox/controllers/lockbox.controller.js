@@ -13,13 +13,13 @@
         var vm = this;
 
         vm.currentDoc = null;
-        vm.documents = documents instanceof Array ? documents : [] || [];
+        vm.documents = sortDocs(documents instanceof Array ? documents : [] || []);
 
         vm.addDocsPopup = addDocs;
         vm.showEditModal = showEditModal;
         vm.showShareModal = showShareModal;
         vm.refreshDocuments = refreshDocuments;
-        
+
         vm.newDoc = newDoc;
         vm.orderDocs = orderDocs;
 
@@ -34,20 +34,24 @@
             securityService.logout();
         });
 
+        function sortDocs(docs) {
+            return _.sortBy(docs, function (d) { return !d.url; });
+        }
+
         /// Implementation
         function addDocs(docSku) {
             var docCount = vm.documents.length;
             lockboxDocuments.addDocsPopup(docSku)
                 .then(
-                function success(doc) {
-                    if (!!doc) {
-                        console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
-                            vm.documents = lockboxDocuments.updateDocumentList();
-                    }
-                    else {
-                        console.log('No Doc added');
-                    }
-                    console.info('Lockbox documents went from ' + docCount + ' to ' + vm.documents.length);
+                    function success(doc) {
+                        if (!!doc) {
+                            console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
+                            vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
+                        }
+                        else {
+                            console.log('No Doc added');
+                        }
+                        console.info('Lockbox documents went from ' + docCount + ' to ' + vm.documents.length);
                     })
                 .catch(
                     function fail(rejection) {
@@ -55,8 +59,11 @@
                             console.error('Failed to add Documents', rejection);
                         } else {
                             console.log('getNewAvatar Aborted %s', rejection.message || rejection)
-                }
+                        }
                     })
+                .finally(function () {
+                    refreshDocuments();
+                });
         }
         
         /**
@@ -65,7 +72,10 @@
          * Skips the 'new doc/order reports' sheet.
          */
         function newDoc(docSku) {
-            return lockboxDocuments.newDocPopup(docSku);
+            return lockboxDocuments.newDocPopup(docSku)
+                .finally(function () {
+                    refreshDocuments();
+                });
         }
         
         /**
@@ -105,14 +115,14 @@
                     })
         }
 
-        function refreshDocuments () {
-            lockboxDocuments.getDocuments(true)
+        function refreshDocuments() {
+            return lockboxDocuments.getDocuments(true)
                 .finally(function () {
-                    vm.documents = lockboxDocuments.updateDocumentList();
+                    vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
                     // Stop the ion-refresher from spinning
                     $scope.$broadcast('scroll.refreshComplete');
                 });
-    }
+        }
 
         function checkLockboxAccess() {
             // TODO: refactor and move to service
@@ -160,12 +170,17 @@
                 }
 
                 if (!state.accessible) {
+                    $ionicLoading.hide();
                     pinPopup = $ionicPopup.show(getPinObject());
                     pinPopup.then(function (accessGranted) {
                         if (!accessGranted) {
                             $state.go('account.profile')
                         }
+
+                        $ionicLoading.hide();
                     });
+                } else {
+                    $ionicLoading.hide();
                 }
             }
 

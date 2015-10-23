@@ -129,12 +129,12 @@
                     return vm.documents;
                 })
                 .finally(function () {
-
-                    var realDocs = _.filter(vm.documents, function (doc) { return !!doc.id });
-                    if (!realDocs || realDocs.length == 0) {
+                    var hasRealDoc = _.some(vm.documents, function (doc) { return !!doc.id });
+                    if (!hasRealDoc) {
                         welcomeService.initialize('lockbox.add');
                     }
 
+                    console.warn('finally vm.documents >>>', vm.documents);
                     $ionicLoading.hide();
                 });
         }
@@ -477,7 +477,7 @@
                                 addDocument(doc);
                             });
 
-                            return resolvedDocuments;
+                            return vm.documents;
                         });
                     }
 
@@ -492,6 +492,15 @@
                         });
                     }
                     return $q.when(vm.documents);
+                })
+                .finally(function () {
+                    var hasRealDoc = _.some(vm.documents, function (doc) { return !!doc.id });
+                    if (!hasRealDoc) {
+                        welcomeService.initialize('lockbox.add');
+                    }
+
+                    console.warn('finally vm.documents >>>', vm.documents);
+                    $ionicLoading.hide();
                 });
         }
 

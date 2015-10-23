@@ -16,7 +16,7 @@
 
             <ion-list>
             <ul class="list document-list" ng-if="vm.documents.length">
-                <li class="item" ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : true" ng-class="{'stub-document': !doc.url}">
+                <li class="item" ng-repeat="doc in vm.documents track by $index | orderBy: 'url' : false" ng-class="{'stub-document': !doc.url}">
                     <i class="ico ico-documentimage ico-documentimage{{doc.sku}}"></i>
                         <div class="item-content" ng-class="{'no-date': !doc.created}">
                         <strong>{{ doc.name }}</strong>
