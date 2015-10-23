@@ -11,25 +11,31 @@
         .module('messages')
         .controller('MessageFriendCtrl', MessageFriendCtrl);
 
-    MessageFriendCtrl.$inject = ['$scope', 'parameters', 'userService'];
-    function MessageFriendCtrl ($scope, parameters, userService) {
+    MessageFriendCtrl.$inject = ['$state', 'parameters', 'userService'];
+    function MessageFriendCtrl ($state, parameters, userService) {
         var vm  = this;
         
         vm.friends = parameters.friends;
         vm.messageFriend = messageFriend;
         vm.getAvatar = getAvatar;
         vm.close = close;
+        vm.gotoFriends = gotoFriends;
 
         function close () {
-            $scope.closeModal(null);
+            vm.closeModal(null);
         }
 
         function messageFriend (friend) {
-            $scope.closeModal(friend);
+            vm.closeModal(friend);
         }
 
         function getAvatar(friend) {
             return userService.getAvatar(friend);
+        }
+        
+        function gotoFriends() {
+            $state.go('account.profile.friends');
+            vm.closeModal(null);
         }
 
     }
