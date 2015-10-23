@@ -22,6 +22,7 @@
         vm.refresh = refresh;
         vm.loadMore = loadMore;
         vm.addFriends = addFriends;
+        vm.getFeedButtonClass = getFeedButtonClass;
 
         /**
          * try to initialize if have no feed
@@ -50,6 +51,10 @@
             activityService.changeFeedSource();
             updateFeedData();
             initialize();
+        }
+        
+        function getFeedButtonClass() {
+            return (/my/i.test(vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down'
         }
 
         function addFriends() {
