@@ -85,16 +85,20 @@
                 })
                 .then(function (newDocuments) {
                     console.warn(' newDocuments >>>', newDocuments);
-                    var id, name, url, user, created;
+                    var id, sku, name, url, user, created;
 
                     if (angular.isArray(newDocuments) && newDocuments.length) {
                         angular.forEach(newDocuments, function (doc) {
                             if (!doc.id && doc.name && doc.nativeURL) {
-                                id = doc.name.split('-')[0];
-                                name = doc.name.split('-')[1].replace('_', ' ');
+                                var docObject = parseDocFromFilename(doc.name);
+                                
+                                id = docObject.id;
+                                sku = docObject.sku;
+                                name = docObject.name;
                                 url = doc.nativeURL;
                             } else {
                                 id = doc.id;
+                                sku = doc.sku;
                                 name = doc.name;
                                 url = doc.url;
                             }
@@ -125,12 +129,12 @@
                     return vm.documents;
                 })
                 .finally(function () {
-                    
+
                     var realDocs = _.filter(vm.documents, function (doc) { return !!doc.id });
                     if (!realDocs || realDocs.length == 0) {
                         welcomeService.initialize('lockbox.add');
                     }
-                    
+
                     $ionicLoading.hide();
                 });
         }
@@ -435,13 +439,12 @@
                                         console.log('dirReader trying to resolve docs: ' + JSON.stringify(entries));
                                         resolveDocuments(entries)
                                             .then(function (entries) {
-
-                                                console.log('dirReader resolving with entries: ' + JSON.stringify(entries));
+                                                console.log('dirReader resolving with entries: ', entries);
                                                 q.resolve(entries);
                                             })
                                             .catch(function (err) {
                                                 console.error('dirReader failed to resolve entries: ' + JSON.stringify(entries) + ' err: ' + err);
-                                                q.reject(entries);
+                                                q.reject(err);
                                             });
                                     }
                                 },
@@ -497,16 +500,12 @@
             var entryExtension = entry.name.split('.').pop();
             var userID = vm.userData.id;
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
-            var docObject, params;
+            var docObject;
 
             if (entryExtension === 'txt') {
                 $cordovaFile.readAsText(path, entry.name).then(function (data) {
-                    params = entry.name.split('-');
+                    docObject = parseDocFromFilename(entry.name);
 
-                    docObject = {};
-                    docObject.id = params[0];
-                    docObject.sku = params[1];
-                    docObject.name = params[2].replace('_', ' ').replace('.txt', '');
                     docObject.url = data;
                     docObject.user = userID;
 
@@ -515,13 +514,10 @@
                     deferred.reject(err)
                 });
             } else {
-                params = entry.name.split('-');
+                docObject = parseDocFromFilename(entry.name);
 
-                docObject = {};
-                docObject.id = params[0];
-                docObject.sku = params[1];
-                docObject.name = params[2].replace('_', ' ');
                 docObject.url = entry.nativeURL;
+                docObject.user = userID;
 
                 deferred.resolve(docObject);
             }
@@ -537,9 +533,28 @@
             return $cordovaFile.moveFile(path, oldName, path, newName);
         }
 
+        function parseDocFromFilename(filename) {
+            var params = filename.split('-');
+
+            var doc = {};
+
+            var i = 0;
+            doc.id = params[i++];
+            if (params.length === 3) {
+                doc.sku = params[i++];
+            }
+            doc.name = getDisplayName(params[i++]);
+
+            return doc;
+        }
+
         function getFileName(source) {
             var hasExtension = source.name.lastIndexOf('.') >= 0;
-            return source.sku + '-' + source.name.replace(' ', '_') + (!hasExtension ? '.txt' : '');
+            return source.sku + '-' + source.name.replace('/ /g', '_') + (!hasExtension ? '.txt' : '');
+        }
+
+        function getDisplayName(source) {
+            return source.replace('/_/g', ' ');
         }
 
         function updateDocumentList() {

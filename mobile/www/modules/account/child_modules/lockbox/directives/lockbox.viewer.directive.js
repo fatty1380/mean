@@ -123,7 +123,7 @@
             vm.image = vm.document.url;
         }
                 
-        console.log('Modal Visible for PDF: %s IMG: %o', vm.pdfURL, vm.image);
+        //console.log('Modal Visible for PDF: %s IMG: %o', vm.pdfURL, vm.image);
 
         console.log('[DocumentModalCtrl] for document: %o', vm.document);
 

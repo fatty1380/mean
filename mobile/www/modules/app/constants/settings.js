@@ -3,9 +3,8 @@
 
     var settings = {};
 
-    settings.baseUrl = 'http://outset-dev.elasticbeanstalk.com/';
-    // settings.baseUrl = 'http://outset-d.elasticbeanstalk.com/';
-    //settings.baseUrl = 'https://app.truckerline.com/';
+    //settings.baseUrl = 'http://outset-dev.elasticbeanstalk.com/'; // DEVELOPMENT USE
+    settings.baseUrl = 'https://app.truckerline.com/';              // PRODUCTION USE
 
     // controllers
     settings.oauth = settings.baseUrl + 'oauth/';
