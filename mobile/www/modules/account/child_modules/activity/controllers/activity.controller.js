@@ -54,7 +54,7 @@
         }
         
         function getFeedButtonClass() {
-            return (/my/i.test(vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down'
+            return (/my/i.test(vm.feedData && vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down'
         }
 
         function addFriends() {
