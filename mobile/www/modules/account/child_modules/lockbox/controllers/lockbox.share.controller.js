@@ -30,7 +30,7 @@
                 .getDocuments()
                 .then(function (response) {
                     console.log('Documents List', response);
-                    vm.documents = response instanceof Array && response.length ? response : [];
+                    vm.documents = _.isArray(response) ? response : [];
                 });
         }
 
@@ -74,7 +74,7 @@
             requestObj.text = vm.contact.message || '';
             requestObj.contactInfo = getModifiedContactInfo(vm.contact);
             requestObj.contents = {
-                documents: vm.docsToShare
+                documents: _.pluck(vm.docsToShare, 'id')
             };
 
             serializedReqObj = utilsService.serialize(requestObj);

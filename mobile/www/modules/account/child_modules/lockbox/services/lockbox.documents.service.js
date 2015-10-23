@@ -25,7 +25,7 @@
 
         // vm.IOS_PATH = cordova.file.documentsDirectory;
         // vm.ANDROID_PATH = cordova.file.dataDirectory + 'Documents/';
-        try{
+        try {
             vm.path = cordova.file.documentsDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
             vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
         } catch (err) {
@@ -33,8 +33,25 @@
         }
 
         vm.userData = userService.profileData;
-        vm.documents = [];
+        vm.documents = docTypeDefinitions;
 
+        return {
+            getDocuments: getDocuments,
+            addDocsPopup: addDocsPopup,
+            removeDocuments: removeDocuments,
+            updateDocument: updateDocument,
+            saveFileToDevice: saveFileToDevice,
+            writeFileInUserFolder: writeFileInUserFolder,
+            removeDocumentsByUser: removeDocumentsByUser,
+            updateLocalStorageInfoAboutDocuments: updateStorageInfo,
+            writeFile: writeFile,
+            getFilesByUserId: getFilesByUserId,
+            updateDocumentList: updateDocumentList,
+            orderReports: orderReports,
+            newDocPopup: takePicture
+            //getStubDocuments: getStubDocuments
+        }
+        
         // TODO: Refactor to be "refresh documents"
         function getDocuments(saveToDevice) {
             //return $http.get(settings.documents).then(
@@ -43,38 +60,39 @@
                     console.warn(' documentListResponse >>>', documentListResponse);
                     var docs = documentListResponse.data;
 
-                    if(!vm.path) return $q.when(docs);
+                    if (!vm.path) { return $q.when(docs); }
 
                     var promiseArr = [];
 
-                    if(!docs || !docs.length) return [];
+                    if (!docs || !docs.length) { return $q.when([]); }
 
                     angular.forEach(docs, function (doc) {
                         if (saveToDevice) {
                             // NOTE: This returns a promise and the file may not be fully saved
                             // to the device when teh method returns
 
-                            if(doc.url.indexOf('data:image') !== -1){
+                            if (doc.url.indexOf('data:image') !== -1) {
                                 saveFileToDevice(doc);
                                 promiseArr.push($q.when(doc));
-                            }else{
+                            } else {
                                 promiseArr.push(saveExistingFiles(doc));
                             }
                         }
                     });
                     console.warn(' promiseArr >>>', promiseArr);
+
                     return $q.all(promiseArr);
                 })
                 .then(function (newDocuments) {
                     console.warn(' newDocuments >>>', newDocuments);
                     var id, name, url, user, created;
-                    if(angular.isArray(newDocuments) && newDocuments.length){
-                        angular.forEach(newDocuments, function(doc){
-                            if(!doc.id && doc.name && doc.nativeURL){
+                    if (angular.isArray(newDocuments) && newDocuments.length) {
+                        angular.forEach(newDocuments, function (doc) {
+                            if (!doc.id && doc.name && doc.nativeURL) {
                                 id = doc.name.split('-')[0];
                                 name = doc.name.split('-')[1].replace('_', ' ');
                                 url = doc.nativeURL;
-                            }else{
+                            } else {
                                 id = doc.id;
                                 name = doc.name;
                                 url = doc.url;
@@ -83,10 +101,13 @@
                             user = getUserId(doc);
                             created = doc.created;
 
-                            addDocument( {name: name, url: url, id: id, user: user, created: created} );
+                            addDocument({ name: name, url: url, id: id, user: user, created: created });
                         });
-                    }else if (angular.isArray(newDocuments) && !newDocuments.length){
-                        vm.documents = newDocuments || [];
+                    } else if (angular.isArray(newDocuments) && !newDocuments.length) {
+                        // Itereate and add to avoid ovrewriting stubs
+                        _.each(newDocuments, function (doc) {
+                            addDocument(doc);
+                        });
                     }
                     console.warn(' vm.documents >>>', vm.documents);
                     return vm.documents;
@@ -96,32 +117,38 @@
                     return vm.documents;
                 })
                 .finally(function () {
-                    return vm.documents;
+                    $ionicLoading.hide();
                 });
         }
 
         function addDocument(doc) {
-            var i = _.findIndex(vm.documents, { id: doc.id });
+            var i = -1;
             var sku = (doc.sku || 'misc').toLowerCase();
 
-            if (i !== -1) {
+            var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
+
+            if ((i = !!doc.id ? _.findIndex(vm.documents, { id: doc.id }) : -1) !== -1) {
+                // If a document with the same ID is already in the array, replace it.
                 vm.documents[i] = doc;
                 return false;
             }
-            else if (sku != 'misc' && (i = _.findIndex(vm.documents, { sku: sku })) != -1) {
+            else if (!def.multi && (i = _.findIndex(vm.documents, { sku: sku })) != -1) {
+                // If the document Type does not allow multiple copies, and there is already
+                // a copy with the same SKU, replace it.
                 vm.documents[i] = doc;
                 return true;
             }
             else {
+                // Othewise, simply push the document into the array
                 console.log('Pushing doc into docs', doc, vm.documents);
                 vm.documents.push(doc);
                 return true;
             }
         }
 
-        function updateNewDocumentWithID (doc) {
+        function updateNewDocumentWithID(doc) {
             var i = _.findIndex(vm.documents, { url: doc.url, name: doc.name });
-            if(i >= 0 && vm.documents[i]){
+            if (i >= 0 && vm.documents[i]) {
                 _.extend(vm.documents[i], doc);
             }
         }
@@ -159,8 +186,8 @@
         function updateDocument(doc, data) {
             return API.doRequest(settings.documents + doc.id, 'put', data, true)
                 .then(function () {
-                    if(!vm.path) return _.extend(doc, data);
-                     return renameLocalFile(doc, data);
+                    if (!vm.path) return _.extend(doc, data);
+                    return renameLocalFile(doc, data);
                 })
                 .then(function (resp) {
                     return _.extend(doc, data);
@@ -171,6 +198,9 @@
         }
 
         function takePicture(sku) {
+            debugger;
+            sku = sku.sku || sku;
+
             return cameraService.showActionSheet()
                 .then(function success(rawImageResponse) {
                     return lockboxModalsService.showCreateModal({ image: rawImageResponse, sku: sku });
@@ -185,6 +215,7 @@
                     }
                 })
                 .then(function saveSuccess(newDocumentResponse) {
+                    // TODO: Is this a sync or async call?
                     saveFileToDevice(newDocumentResponse.data);
 
                     if (newDocumentResponse.status != 200) {
@@ -216,7 +247,7 @@
             lockboxModalsService
                 .showOrderReportsModal();
         }
-        
+
         function removeDocuments(documents) {
             _.each(documents, function (doc) {
                 console.log('Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
@@ -225,16 +256,16 @@
 
                 removeOneDocument(doc);
 
-                var stub = _.find(stubDocuments, { sku: doc.sku });
+                var stub = _.find(docTypeDefinitions, { sku: doc.sku });
                 if (!!stub) {
                     addDocument(stub);
                 }
-                
+
                 return API.doRequest(settings.documents + doc.id, 'delete');
             });
         }
 
-        function saveFileToDevice (file) {
+        function saveFileToDevice(file) {
             console.info(' --->>> save file trigerred <<<--- ');
 
             var path = vm.path;
@@ -257,7 +288,7 @@
                 });
         }
 
-        function saveExistingFiles (doc) {
+        function saveExistingFiles(doc) {
             var extension = doc.url.split('.').pop();
             var id = doc.id;
             var name = id + "-" + doc.name.replace(' ', '_') + '.' + extension;
@@ -267,7 +298,7 @@
                 .download(doc.url, path, {}, true);
         }
 
-        function writeFileInUserFolder (options) {
+        function writeFileInUserFolder(options) {
             var path = options.path;
             var user = options.user;
             var name = options.name;
@@ -286,7 +317,7 @@
                 })
                 .then(function (file) {
                     console.warn(' created file --->>>', file);
-                    updateStorageInfo(user, {action: 'add'});
+                    updateStorageInfo(user, { action: 'add' });
                     return file;
                 })
                 .catch(function (err) {
@@ -294,11 +325,11 @@
                 });
         }
 
-        function writeFile (path, name, data) {
+        function writeFile(path, name, data) {
             return $cordovaFile.writeFile(path, name, data, true);
         }
 
-        function removeDocumentsByUser (user) {
+        function removeDocumentsByUser(user) {
             var path = vm.LOCKBOX_FOLDER;
 
             return $cordovaFile.checkDir(path, user)
@@ -308,14 +339,14 @@
                     return $q.reject(err)
                 })
                 .then(function () {
-                    return updateStorageInfo(user, {action: 'remove'});
+                    return updateStorageInfo(user, { action: 'remove' });
                 }, function (err) {
                     console.error(' user Documents are not removed. error --->>>', err);
                 });
         }
 
-        function removeOneDocument (doc) {
-            if(!doc) return;
+        function removeOneDocument(doc) {
+            if (!doc) return;
 
             var path = vm.LOCKBOX_FOLDER,
                 userID = getUserId(doc),
@@ -333,17 +364,17 @@
                 });
         }
 
-        function updateStorageInfo (user, data) {
+        function updateStorageInfo(user, data) {
             var storage = $window.localStorage;
             var usersJSON = storage.getItem('hasDocumentsForUsers');
             var users = !!usersJSON && JSON.parse(usersJSON);
             var index;
 
-            if(!(users instanceof Array)) users = [];
+            if (!(users instanceof Array)) users = [];
 
             index = users.indexOf(user);
 
-            if(data.action === 'add' && index < 0) {
+            if (data.action === 'add' && index < 0) {
                 users.push(user);
             } else if (data.action === 'remove' && index >= 0) {
                 users.splice(index, 1);
@@ -352,8 +383,8 @@
             storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 
-        function getFilesByUserId (id) {
-            if(!vm.path) return $q.when(getDocuments(true));
+        function getFilesByUserId(id) {
+            if (!vm.path) return $q.when(getDocuments(true));
 
             var path = vm.path;
             var hasLockbox = false;
@@ -378,15 +409,18 @@
 
                         // Keep calling readEntries() until no more results are returned.
                         function readEntries() {
-                            dirReader.readEntries (function(results) {
-                                if (results.length) {
-                                    entries = entries.concat(toArray(results));
-                                    return readEntries();
-                                }
-                                return resolveDocuments(entries).then(function(entries) {
-                                    q.resolve(entries);
+                            dirReader.readEntries(
+                                function (results) {
+                                    if (results.length) {
+                                        entries = entries.concat(toArray(results));
+                                        readEntries();
+                                    } else {
+                                        resolveDocuments(entries)
+                                            .then(function (entries) {
+                                                q.resolve(entries);
+                                            });
+                                    }
                                 });
-                            });
                         }
 
                         readEntries();
@@ -398,7 +432,7 @@
                         return Array.prototype.slice.call(list || [], 0);
                     }
 
-                    function resolveDocuments (entries) {
+                    function resolveDocuments(entries) {
                         var docsPromises = [];
 
                         angular.forEach(entries, function (entry) {
@@ -406,7 +440,12 @@
                         });
 
                         return $q.all(docsPromises).then(function (resolvedDocuments) {
-                            vm.documents = resolvedDocuments;
+                            
+                            // Itereate and add to avoid ovrewriting stubs
+                            _.each(resolvedDocuments, function (doc) {
+                                addDocument(doc);
+                            });
+
                             return resolvedDocuments;
                         });
                     }
@@ -425,14 +464,14 @@
                 });
         }
 
-        function createDocumentPromise (entry) {
+        function createDocumentPromise(entry) {
             var deferred = $q.defer();
             var entryExtension = entry.name.split('.').pop();
             var userID = vm.userData.id;
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
             var docObject, params;
 
-            if(entryExtension === 'txt'){
+            if (entryExtension === 'txt') {
                 $cordovaFile.readAsText(path, entry.name).then(function (data) {
                     params = entry.name.split('-');
 
@@ -443,10 +482,10 @@
                     docObject.user = userID;
 
                     deferred.resolve(docObject);
-                }, function(err){
+                }, function (err) {
                     deferred.reject(err)
                 });
-            }else{
+            } else {
                 params = entry.name.split('-');
 
                 docObject = {};
@@ -459,7 +498,7 @@
             return deferred.promise;
         }
 
-        function renameLocalFile (doc, data) {
+        function renameLocalFile(doc, data) {
             var userID = getUserId(doc);
             var path = vm.LOCKBOX_FOLDER + '/' + userID;
             var oldName = doc.id + '-' + getFileName(doc);
@@ -468,18 +507,18 @@
             return $cordovaFile.moveFile(path, oldName, path, newName);
         }
 
-        function getFileName (source) {
+        function getFileName(source) {
             var hasExtension = source.name.lastIndexOf('.') >= 0;
             return source.name.replace(' ', '_') + (!hasExtension ? '.txt' : '');
         }
 
-        function updateDocumentList () {
+        function updateDocumentList() {
             return vm.documents;
         }
 
         function getId(e) { return e.id || e._id; }
 
-        function getUserId (doc) {
+        function getUserId(doc) {
             return angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
         }
 
@@ -488,51 +527,33 @@
         //////////////////// Retrieve Methods ////////////////////
 
         //////////////////// Remove Mehtods ////////////////////
-
-        return {
-            getDocuments: getDocuments,
-            addDocsPopup: addDocsPopup,
-            removeDocuments: removeDocuments,
-            updateDocument: updateDocument,
-            saveFileToDevice: saveFileToDevice,
-            writeFileInUserFolder: writeFileInUserFolder,
-            removeDocumentsByUser: removeDocumentsByUser,
-            updateLocalStorageInfoAboutDocuments: updateStorageInfo,
-            writeFile: writeFile,
-            getFilesByUserId: getFilesByUserId,
-            updateDocumentList: updateDocumentList
-            //getStubDocuments: getStubDocuments
-        }
     }
 
-    var stubDocuments = [
+    /** Documnt Stubs
+     * These stub documents are in place to provide placeholders for users
+     * so that they have a better idea how to use the app.
+     */
+    var docTypeDefinitions = [
         {
-            id: '0',
-            sku: 'mvr',
-            name: 'Motor Vehicle Report',
-            created: '2015-07-11 10:33:05',
-            url: 'assets/lockbox/driving-record-1.gif',
-            expires: null,
-            bucket: 'outset-dev',
-            key: 'kajifpaiueh13232'
+            sku: 'reports',
+            name: 'MVR and Background Checks',
+            action: 'Order',
+            fn: 'orderDocs'
         },
         {
-            id: '1',
-            sku: 'bg',
-            name: 'Background Report',
-            created: '2015-07-11 10:33:05',
-            url: 'assets/lockbox/sample_credit_report.pdf',
-            expires: null,
-            bucket: 'outset-dev',
-            key: 'kajifpaiueh13232222'
+            sku: 'res',
+            name: 'Professional Resume'
         },
         {
-            id: '2',
             sku: 'cdl',
-            name: 'Commercial Driver License',
-            created: null,
-            url: null,
-            expires: null
+            name: 'Driver License',
+            info: ''
+        },
+        {
+            sku: 'misc',
+            multi: true,
+            name: 'other document ...',
+            info: ''
         }
     ];
 

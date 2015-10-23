@@ -34,15 +34,7 @@
             };
             PIN = null;
             
-            userService.getUserData()
-                .then(function (data) {
-                    if (_.isEmpty(data)) {
-                        return;
-                    }
-                    
-                    PIN = data.props.pin || null;
-                    state.secured = (!!PIN ? true : false);
-                });
+            getPin();
 
             state.accessible = false;
 
@@ -71,11 +63,18 @@
         }
 
         function getPin() {
-            if (PIN) return $q.when(PIN);
+            if (PIN) {return $q.when(PIN);}
 
             return userService.getUserData()
                 .then(function (data) {
-                    return data.props.pin || null;
+                    if (_.isEmpty(data)) {
+                        return null;
+                    }
+                    
+                    PIN = data.props.pin || null;
+                    state.secured = (!!PIN ? true : false);
+                    
+                    return PIN;
                 });
         }
 

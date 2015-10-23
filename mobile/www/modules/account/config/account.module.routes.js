@@ -102,17 +102,17 @@
                         controller: 'LockboxCtrl as vm',
                         resolve: {
                             documents: ['lockboxDocuments', 'user', '$ionicLoading', function (lockboxDocuments, user, $ionicLoading) {
-                                $ionicLoading.show({template: 'Loading documents'});
+                                $ionicLoading.show({template: '<ion-spinner></ion-spinner><br>Loading documents', duration: 20000});
                                 return lockboxDocuments.getFilesByUserId(user.id)
                                     .then(function (data) {
-                                        console.warn('STATE data --->>>', data);
-                                        $ionicLoading.hide();
                                         return data;
                                     })
                                     .catch(function (err) {
-                                        $ionicLoading.hide();
                                         console.warn('Couldn\'t retrieve documents err --->>>', err);
                                         return [];
+                                    })
+                                    .finally(function () {
+                                        $ionicLoading.hide();
                                     });
                             }],
                             welcome: ['welcomeService', function (welcomeService) {
