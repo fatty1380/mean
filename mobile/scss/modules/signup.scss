@@ -575,28 +575,50 @@ $but-height: 70px;
 
 
 /* home */
-.home-content{
-  width: 300px;
-  //height: 100px;
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  margin-left: -150px;
-  margin-top: -80px;
-  bottom: 0;
-  overflow: auto;
+.home-content {
+  text-align: center;
+  padding-top: 20%;
+}
 
-  i{
-    display: block;
-    margin: auto;
-  }
-
-  h3{
-    font: 14px Helvetica Neue, Helvetica, Arial;
-    color: $light;
-    font-weight: bold;
-    text-align: center;
-  }
+.home-slide-box {
+    width: 100vw;
+    
+    .slider-slides {
+      display: block;
+      
+      .slider-slide {
+        overflow: auto;
+        text-align: center;
+        padding-bottom: 20px;
+        padding-left: 10vw;
+        padding-right: 10vw;
+        
+        div {
+        overflow: auto;
+        height: 100%;
+        
+        }
+        
+        h3{
+          font: 18px Helvetica Neue, Helvetica, Arial;
+          color: $light;
+          font-weight: 300;
+          text-align: center;
+          line-height: 1.5em;
+        }
+      }
+      
+      
+    }
+    
+   .slider-pager {
+     top: initial;
+     bottom: 0;
+     
+     .slider-pager-page {
+        color: #FFF;
+      }
+   }
 }
 
 
