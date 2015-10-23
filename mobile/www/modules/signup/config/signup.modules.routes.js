@@ -14,8 +14,8 @@
                         /**
                          * @desc check user logged in
                         */
-                        check: ['$q', 'userService', '$state', 'tokenService', 'registerService',
-                            function ($q, userService, $state, tokenService, registerService) {
+                        check: ['$q', 'userService', '$state', 'tokenService', 'registerService', 'securityService',
+                            function ($q, userService, $state, tokenService, registerService, securityService) {
                                 var defer = $q.defer();
                                 if (tokenService.get('access_token')) {
                                     registerService.me()
@@ -23,6 +23,7 @@
                                             if (response && response.success) {
                                                 defer.resolve();
                                                 if (response.message.data) {
+                                                    securityService.initialize();
                                                     $state.go('account.profile');
                                                 }
                                             } else {

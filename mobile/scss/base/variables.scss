@@ -183,16 +183,19 @@ $button-default-active-border:    $button-stable-active-border !default;
 // -------------------------------
 
 // TODO: Determine why I have to add in $ios-statusbar-height
-$bar-height:                      20px + 40px !default;
+$bar-height:                      40px !default;
 $bar-title-font-size:             14px !default;
 $bar-padding-portrait:            0 !default;
 $bar-padding-landscape:           0 !default;
 $bar-transparency:                1 !default;
 
-$bar-fullsize-height: 			  $bar-height + 136px;
-$bar-midsize-height: 		      $bar-height + 96px;
-$bar-compact-height: 			  $bar-height + 66px;
-$bar-minsize-height:    		  $bar-height;
+// We need to add 20px (ios statusbar height) cause ionic adds
+// 20px top-margin to all header siblings
+// which pushes header down to free space for the status bar info.
+$bar-fullsize-height: 			  $bar-height + 136px + 20px;
+$bar-midsize-height: 		      $bar-height + 126px  + 20px;
+$bar-compact-height: 			  $bar-height + 66px  + 20px;
+$bar-minsize-height:    		  $bar-height + 20px;
 
 $bar-footer-height:               64px !default;
 $bar-subheader-height:            $bar-height !default;

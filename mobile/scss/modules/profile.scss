@@ -2,13 +2,13 @@
   font-size: 26px !important;
 }
 
-$profile-subheader-height : $bar-midsize-height - $bar-height;
+$profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
 
 .profile-visual{
   position: absolute;
   left: 10px;
   right: 10px;
-  top: $bar-height;
+  top: $bar-height + 20px; // adding ios statusbar height offset
   height: $profile-subheader-height;
   text-align: center;
   z-index: 2;
@@ -16,8 +16,8 @@ $profile-subheader-height : $bar-midsize-height - $bar-height;
   .photo{
     display: inline-block;
     vertical-align: top;
-    width: $profile-subheader-height * 1.2;
-    height: $profile-subheader-height * 1.2;
+    width: $profile-subheader-height * 1.1;
+    height: $profile-subheader-height * 1.1;
     background: #333 url('../img/bg-profile-default.jpg') 50% no-repeat;
     -webkit-background-size: 120px 120px;
     background-size: 120px 120px;
@@ -90,7 +90,7 @@ $profile-subheader-height : $bar-midsize-height - $bar-height;
     bottom: auto;
     height: auto;
     overflow: hidden;
-    padding: 74px 20px 0;
+    padding: 60px 13px 0;
 
     .photo{
       float: left;

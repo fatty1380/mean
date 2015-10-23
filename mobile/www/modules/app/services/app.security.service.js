@@ -44,8 +44,6 @@
                     state.secured = (!!PIN ? true : false);
                 });
 
-            state.accessible = false;
-
             $rootScope.$on("security-timer-stopped", function (event) {
                 lock();
             });

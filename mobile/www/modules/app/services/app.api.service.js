@@ -16,7 +16,8 @@ function serverConnectionService($http) {
 		return $http({
 			url: apiUrl,
 			method: method,
-			data: !needSerialize ? serializeData(data) : data
+			data: !needSerialize ? serializeData(data) : data,
+			timeout: 60 * 1000 // one minute timeout
 		})
 	}
 

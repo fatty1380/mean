@@ -106,13 +106,14 @@
                                 return lockboxDocuments.getFilesByUserId(user.id)
                                     .then(function (data) {
                                         console.warn('STATE data --->>>', data);
-                                        $ionicLoading.hide();
                                         return data;
                                     })
                                     .catch(function (err) {
-                                        $ionicLoading.hide();
                                         console.warn('Couldn\'t retrieve documents err --->>>', err);
                                         return [];
+                                    })
+                                    .finally(function () {
+                                        $ionicLoading.hide();
                                     });
                             }],
                             welcome: ['welcomeService', function (welcomeService) {

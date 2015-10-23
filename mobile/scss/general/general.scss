@@ -57,6 +57,7 @@ body{
         line-height: $bar-height;
         border: 0;
       }
+
       &:first-child:before,
       &:last-child:before{
         line-height: $bar-height;

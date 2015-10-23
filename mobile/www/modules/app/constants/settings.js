@@ -4,6 +4,7 @@
     var settings = {};
 
     settings.baseUrl = 'http://outset-d.elasticbeanstalk.com/';
+    //settings.baseUrl = 'http://outset-dev.elasticbeanstalk.com/';
 
     // controllers
     settings.oauth = settings.baseUrl + 'oauth/';

@@ -16,7 +16,7 @@
                     <label class="checkbox">
                         <input type="checkbox" ng-model="doc.checked">
                     </label>
-                    <div class="item-content">
+                    <div class="item-content" ng-class="{'no-date': !doc.created}">
                         <strong>{{doc.name}}</strong>
                         <span>{{doc.created | date : 'MMMM d, y' }}</span>
                     </div>
