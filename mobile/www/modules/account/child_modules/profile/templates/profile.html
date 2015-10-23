@@ -124,7 +124,7 @@
             on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
                 <ion-scroll class="experience-list">
                     <ion-list>
-                        <ion-item class="item" ng-repeat="job in vm.experience" ng-click="vm.showEditExperienceModal(job)">
+                        <ion-item class="item" ng-repeat="job in (vm.experience)" ng-click="vm.showEditExperienceModal(job)">
                             <strong>{{job.title}} <span class="company" ng-if="!!job.company">, {{job.company}}</span></strong>
                             <p ng-if="!!job.description">{{job.description}}</p>
                             <p ng-if="!!job.location">{{job.location}}</p>
@@ -136,7 +136,15 @@
                             </em>
                         </ion-item>
                     </ion-list>
-                    <div ng-if="!vm.experience || !vm.experience.length" class="no-content">No Experience</div>
+                    <div ng-if="!vm.experience || !vm.experience.length" class="no-content">
+                        <span ng-if="!!vm.showEditModal">
+                            <p>This is your profile’s experience section where you can keep a digital record of your work experience - think of it like a digital resume. Add your past jobs here and add details about all your responsibilities to present a full picture of your professional abilities.</p>
+                            
+                        <p class="message">Get started with the 'Add Experience' button below</p>
+                        </span>
+                        <span ng-if="!vm.showEditModal">No Experience Listed</span>
+                        
+                    </div>
                 </ion-scroll>
                 <button class="button content-button" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showAddExperienceModal()"><i class="ico ico-shareiconorange"></i>Add Experience</button>
             </ion-tab>

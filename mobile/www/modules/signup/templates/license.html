@@ -9,7 +9,7 @@
 
     <ion-pane class="has-footer license-content">
         <ion-scroll>
-            <h4>Select your license</h4>
+            <h4>Select your license Class</h4>
             <div class="list license">
                 <label class="oset-cb-item category-a" ng-click="vm.class='A'" ng-class="{'active':vm.class==='A'}">
                     <div class="item-content">
@@ -36,12 +36,6 @@
                     <p>Double /
                         <br> Triple trailers</p>
                 </li>
-                <li class="item item-checkbox endorsement-b col">
-                    <label class="checkbox">
-                        <input type="checkbox" ng-model="vm.endorsement.P">
-                    </label>
-                    <p>Passenger</p>
-                </li>
                 <li class="item item-checkbox endorsement-c col">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="vm.endorsement.N">
@@ -54,12 +48,17 @@
                     </label>
                     <p>Hazardous Materials</p>
                 </li>
+                <li class="item item-checkbox endorsement-b col">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="vm.endorsement.P">
+                    </label>
+                    <p>Passenger</p>
+                </li>
                 <li class="item item-checkbox endorsement-e col">
                     <label class="checkbox">
                         <input type="checkbox" ng-model="vm.endorsement.X">
                     </label>
-                    <p>Tank Vehicle
-                        <br> and
+                    <p>Tank Vehicle and
                         <br> Hazardous Materials</p>
                 </li>
             </ul>

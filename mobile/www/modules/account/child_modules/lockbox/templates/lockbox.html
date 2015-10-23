@@ -7,7 +7,7 @@
     </ion-header-bar>
 
     <div class="bar bar-subheader">
-        <h3 class="title">Your lockbox will contain all your secure documents.</h3>
+        <h3 class="title">Securely store your important documents here</h3>
     </div>
 
     <ion-pane class="pane content-pane">
@@ -15,18 +15,18 @@
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refreshDocuments()"></ion-refresher>
 
             <ion-list>
-                <ul class="list document-list" ng-if="vm.documents.length">
-                    <li class="item" ng-repeat="doc in vm.documents track by $index" ng-class="{'stub-document': !doc.url}">
-                        <i class="ico ico-documentimage ico-documentimage{{doc.sku}}"></i>
+            <ul class="list document-list" ng-if="vm.documents.length">
+                <li class="item" ng-repeat="doc in vm.documents track by $index" ng-class="{'stub-document': !doc.url}">
+                    <i class="ico ico-documentimage ico-documentimage{{doc.sku}}"></i>
                         <div class="item-content" ng-class="{'no-date': !doc.created}">
-                            <strong>{{ doc.name }}</strong>
-                            <span>{{ doc.created | date : 'MMMM d, y' }}</span>
-                        </div>
-                        <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
-                        <button ng-if="!doc.url" class="button button-small" ng-click="vm.addDocsPopup(doc.sku)">Add</button>
-                    </li>
-                </ul>
-                <div ng-if="!vm.documents.length" class="no-content">No documents</div>
+                        <strong>{{ doc.name }}</strong>
+                        <!--<span>{{ doc.created }}</span>-->
+                    </div>
+                    <oset-doc-view ng-if="!!doc.url" model="doc" btn-text="View"></oset-doc-view>
+                    <button ng-if="!doc.url" class="button button-small" ng-click="!!vm[doc.fn] ? vm[doc.fn](doc) : vm.newDoc(doc.sku)">{{doc.action || 'Add'}}</button>
+                </li>
+            </ul>
+            <div ng-if="!vm.documents.length" class="no-content">No documents</div>
             <ion-list>
             <!--<ion-infinite-scroll ng-if="vm.feed.length > 2" distance="5%" on-infinite="vm.loadMore()" immediate-check="false"></ion-infinite-scroll>-->
         </ion-scroll>

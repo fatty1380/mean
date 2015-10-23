@@ -16,6 +16,8 @@
     function welcomeService(modalService, $q) {
         var showAcks = {};
 
+        //initialize();
+
         return {
             showModal: showModal,
             initialize: initialize,
@@ -25,10 +27,14 @@
         
         ////////////////////////////////////////////////////////
 
-        function initialize() {
-            _.each(_.keys(screenConfigs), function (key) {
+        function initialize(key) {
+            if (!!key) {
                 showAcks[key] = true;
-            });
+            } else {
+                _.each(_.keys(screenConfigs), function (key) {
+                    showAcks[key] = true;
+                });
+            }
         }
 
         function acknowledge(state) {
@@ -42,7 +48,7 @@
             parameters = parameters || { stateName: state }
 
             var key = parameters.stateName;
-            
+
             console.warn('Welcome Modal for state %s: %s', key, showAcks[key] ? 'yes' : 'no', showAcks);
 
             if (showAcks[key]) {
@@ -109,6 +115,10 @@
         'account.messages': {
             title: 'Welcome to your Messages',
             text: 'Use this area to communicate with people you’ve connected with in the Industry and want to stay in touch with!'
+        },
+        'lockbox.add': {
+            title: 'Adding Lockbox Documents',
+            text: 'Adding documents to your lockbox is easy. Simply place the document you want to add on a flat, well-list area and take a clear picture, trying to fill up the whole screen. Once you have a good picture, you can select the document type, save it, and it will be waiting securely in your lockbox anytime you need it.'
         }
     }
 

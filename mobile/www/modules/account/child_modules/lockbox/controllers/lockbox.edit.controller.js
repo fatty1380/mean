@@ -17,8 +17,8 @@
         vm.deleteDocuments = deleteDocuments;
 
         init();
-
-        if (!vm.documents) return;
+        
+        ////////////////////////////////////////////////////////////////////////
 
         function init() {
             vm.unselectedDocuments = null;
@@ -32,7 +32,9 @@
             lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
-                    vm.documents = response instanceof Array && response.length ? response : [];
+                    console.log('Documents List', response);
+
+                    vm.documents = _.isArray(response) ? response : [];
 
                     for (var i = 0; i < vm.documents.length; i++) {
                         vm.documents[i].checked = false;
@@ -133,6 +135,6 @@
                     }
                 });
             }
-        }
+    }
     }
 })();

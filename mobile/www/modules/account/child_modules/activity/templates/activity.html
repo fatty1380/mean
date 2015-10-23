@@ -1,7 +1,10 @@
 <ion-view class="activity view-section min-size">
     
     <ion-header-bar align-title="center">
-        <button class="button button-clear" ng-click='vm.changeFeedSource()' ng-bind="vm.feedData.buttonName">Add logs</button>
+        <button class="button button-clear" ng-click='vm.changeFeedSource()'>
+            <span ng-bind="vm.feedData.buttonName"></span>
+            <i class="{{vm.getFeedButtonClass()}}"></i>
+        </button>
         <h1 class="title">Activity</h1>
         <button class="button button-clear" ng-click="vm.addFriends()">Add Friends</button>
     </ion-header-bar>

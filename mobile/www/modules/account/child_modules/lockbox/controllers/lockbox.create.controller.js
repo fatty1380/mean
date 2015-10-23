@@ -86,12 +86,19 @@
 
         function saveDocument() {
             $ionicLoading.show({ template: '<ion-spinner/><br>Saving...', duration: 10000 });
+            
+            if (!vm.document.sku) {
+                $ionicLoading.show({ template: 'Please select document type above', duration: 2000 });
+                return;
+            }
                     
             if (vm.document.sku !== 'misc') {
                 switch (vm.document.sku) {
+                    case 'res': vm.document.name = 'Professional Resume'; break;
                     case 'cdl': vm.document.name = 'Commercial Driver License'; break;
                     case 'ins': vm.document.name = 'Insurance'; break;
                     case 'reg': vm.document.name = 'Registration'; break;
+                    case 'cert': vm.document.name = 'Registration'; break;
                     default: vm.document.name = vm.document.sku;
                 }
             }
