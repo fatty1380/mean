@@ -165,7 +165,7 @@ function createRequest(req, res, next) {
 
     req.log.debug({ func: 'createRequest', body: req.body, friend: req.body.to }, 'Adding friend with POSTed body content');
 
-    if (_.isEmpty(req.body.to) && _.isEmpty(req.body.contactInfo)) {
+    if (req.body.requestType !== 'reportRequest' && _.isEmpty(req.body.to) && _.isEmpty(req.body.contactInfo)) {
         req.log.error({ func: 'createRequest' }, 'No Friend Parameter present in request');
         return res.status(400).send({ message: 'No Friend Specified in Request' });
     }
