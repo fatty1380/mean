@@ -16,6 +16,8 @@
         
         vm.profileData = userService.profileData;
         vm.profileData.props = vm.profileData.props || {};
+        vm.profileData.profileImageURL = userService.getAvatar(vm.profileData);
+        
         vm.owner = vm.profileData.props.owner;
         vm.started = getFormattedDate(vm.profileData.props.started);
 

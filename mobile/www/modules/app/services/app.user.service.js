@@ -57,11 +57,11 @@
         function getAvatar(userProfile) {
             if (!userProfile || _.isString(userProfile)) { return null; }
             
-            var avatar = userProfile.profileImageURL || userProfile.props && userProfile.props.avatar;
+            var avatar = userProfile.props && userProfile.props.avatar || userProfile.profileImageURL;
 
             if (!avatar || avatar === 'modules/users/img/profile/default.png'
                 || !!~avatar.indexOf('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4')) {
-                return (userProfile.avatar = null);
+                avatar = null;
             }
 
             userProfile.profileImageURL = userProfile.avatar = avatar;
