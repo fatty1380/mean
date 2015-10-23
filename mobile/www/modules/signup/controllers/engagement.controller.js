@@ -10,9 +10,9 @@
     function EngagementCtrl($scope, $state, registerService, cameraService, userService, avatarService) {
 
         var vm = this;
-        vm.handle = "";
-        vm.started = "";
-        vm.company = "Default Company";
+        vm.handle = '';
+        vm.started = '';
+        vm.employer = '';
         vm.owner = null;
         vm.camera = cameraService;
 
@@ -46,8 +46,11 @@
         vm.createStartedDateObject = function (started) {
             if (!started) return null;
             var startedArray = started.split('-');
+            
+            var year = startedArray[0];
+            var month = parseInt(startedArray[1]) - 1;
 
-            return new Date(startedArray[0], startedArray[1]);
+            return new Date(year, month);
         };
         
         
@@ -71,13 +74,28 @@
             // Set standard Properties
             registerService.userProps.started = vm.createStartedDateObject(vm.started);
             registerService.userProps.avatar = avatarService.getImage();
-            registerService.userProps.company = '';
+            registerService.userProps.employer = vm.employer;
             registerService.userProps.freight = '';
             registerService.userProps.truck = '';
-            
-            registerService.userData.handle = vm.handle;
 
-            $state.go('signup-license');
+            registerService.updateUserProps(registerService.userProps)
+                .then(function success(propsResult) {
+                    console.log('Updated User Props ...', propsResult);
+                    // TODO: Check for success/fail
+
+                    registerService.userData.handle = vm.handle;
+                    return registerService.updateUser(registerService.userData);
+                })
+                .then(function success(result) {
+                    // TODO: Check for success/fail
+                    console.error('Saved changes to user', result);
+                    $state.go('signup-license');
+                })
+                .catch(function failure(err) {
+                    console.error('Unable to save changes to user', registerService.userData, err);
+                    vm.error = 'Unable to save changes';
+                });
+
         }
     }
 

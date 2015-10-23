@@ -43,17 +43,15 @@
             registerService.registerUser(vm.user)
             .then(function (response) {
 
-                $ionicLoading.hide();
                 if (response.success) {
                     tokenService.set('access_token', '');
                     registerService.signIn({ email: response.message.data.email, password: vm.user.password })
-                        .then(function (signInresponse) {
-                            $ionicLoading.hide();
-                            if (signInresponse.success) {
+                        .then(function (signInResponse) {
+                            if (signInResponse.success) {
                                 // TODO: Move tokenService actions into registerService
-                                tokenService.set('access_token', signInresponse.message.data.access_token);
-                                tokenService.set('refresh_token', signInresponse.message.data.refresh_token);
-                                tokenService.set('token_type', signInresponse.message.data.token_type);
+                                tokenService.set('access_token', signInResponse.message.data.access_token);
+                                tokenService.set('refresh_token', signInResponse.message.data.refresh_token);
+                                tokenService.set('token_type', signInResponse.message.data.token_type);
 
                                 //set fields to show welcome screens for new user
                                 welcomeService.initialize();
@@ -61,8 +59,11 @@
 
                                 $state.go('signup-engagement');
                             } else {
-                                showPopup(signInresponse.title, signInresponse.message.data.error_description);
+                                showPopup(signInResponse.title, signInResponse.message.data.error_description);
                             }
+                        })
+                        .finally(function () {
+                            $ionicLoading.hide();
                         });
                 } else {
                     $ionicLoading.hide();
