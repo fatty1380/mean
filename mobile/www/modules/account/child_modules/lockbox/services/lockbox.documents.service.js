@@ -428,12 +428,20 @@
                                 function (results) {
                                     console.log('results from dirReader: ', results);
                                     if (results.length) {
+                                        console.log('dirReader Length' + results.length);
                                         entries = entries.concat(toArray(results));
                                         readEntries();
                                     } else {
+                                        console.log('dirReader trying to resolve docs: ' + JSON.stringify(entries));
                                         resolveDocuments(entries)
                                             .then(function (entries) {
+
+                                                console.log('dirReader resolving with entries: ' + JSON.stringify(entries));
                                                 q.resolve(entries);
+                                            })
+                                            .catch(function (err) {
+                                                console.error('dirReader failed to resolve entries: ' + JSON.stringify(entries) + ' err: ' + err);
+                                                q.reject(entries);
                                             });
                                     }
                                 },
