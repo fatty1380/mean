@@ -77,10 +77,11 @@ ion-content {
 
 .avatar-wrapper{
   width:100%;
-  margin: 25px 0;
+  text-align: center;
+  margin: 25px 0 35px;
   .avatar{
+    cursor: pointer;
     margin:auto;
-    width:75px;
   }
 }
 
@@ -509,11 +510,12 @@ $but-height: 70px;
     }
     .button-bar{
       .button{
-        color: #0a2421;
-
+        font-weight: 500;
+        color: $light;
+        
         &.active{
-          color: $light;
-          background: #0a2421;
+          color: $button-light-text;
+          background: $light;
           -webkit-box-shadow: none;
           -moz-box-shadow: none;
           box-shadow: none;
