@@ -596,7 +596,6 @@ $but-height: 70px;
         div {
         overflow: auto;
         height: 100%;
-        
         }
         
         h3{
@@ -607,7 +606,7 @@ $but-height: 70px;
           line-height: 1.5em;
         }
       }
-      
+
       
     }
     
@@ -621,6 +620,11 @@ $but-height: 70px;
    }
 }
 
+.register-content {
+  text-align: center;
+  padding-top: 15px;
+  //opacity: 0.7;
+}
 
 /* login */
 .login-content{

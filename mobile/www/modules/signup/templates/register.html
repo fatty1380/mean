@@ -15,7 +15,8 @@
         <form name="mainForm" id="mainForm" class="list sign-up signup-form" ng-init="vm.initForm(this)" ng-submit="vm.submitForm()"
         novalidate>
             <label class="item item-input">
-                <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" ng-focus="vm.lastElementFocused = false" required>
+                <input id="firstName" name="firstName" type="text" placeholder="First Name" ng-model="vm.user.firstName" ng-focus="vm.lastElementFocused = false"
+                required>
             </label>
             <label class="item item-input">
                 <input type="text" placeholder="Last Name" ng-model="vm.user.lastName" ng-focus="vm.lastElementFocused = false" required>
@@ -27,10 +28,15 @@
                 <input type="password" placeholder="Password" ng-model="vm.user.password" ng-focus="vm.lastElementFocused = false" required>
             </label>
             <label class="item item-input item-ass">
-                <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" compare-to="vm.user.password" ng-focus="vm.lastElementFocused = true" required>
+                <input name="confirmPassword" type="password" placeholder="Confirm Password" ng-model="vm.user.confirmPassword" compare-to="vm.user.password"
+                ng-focus="vm.lastElementFocused = true" required>
             </label>
             <input style="position:absolute; left:9999px" type="submit" />
         </form>
+
+        <div class="register-content">
+            <i class="app-logo"></i>
+        </div>
     </ion-pane>
 
     <ion-footer-bar>
