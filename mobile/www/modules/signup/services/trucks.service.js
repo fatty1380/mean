@@ -31,7 +31,7 @@
 
             return $ionicPopup.show({
                 template: '<input type="text" style="text-align: center; height: 35px;font-size: 14px" ng-model="vm.truck" autofocus>',
-                title: 'Please enter a truck type',
+                title: 'Please select a Manufacturer',
                 scope: scope,
                 buttons: [
                     {
