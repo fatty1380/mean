@@ -6,7 +6,7 @@
         <button class="button button-clear" ng-if="vm.canEdit" ng-click="vm.showRequestsModal();"><span ng-if="vm.newRequests" class="badge badge-assertive">{{vm.newRequests}}</span> Requests</button>
     </ion-header-bar>
 
-    <ion-pane class="friends-pane" ng-class="{'has-footer':vm.canEdit}">
+    <ion-pane class="friends-pane" ng-class="{'has-footer':vm.canEdit && !!vm.friends.length}">
         <div class="item item-input search-bar">
             <i class="icon light ion-ios-search-strong"></i>
             <input type="search" debounce placeholder="Search" ng-model="vm.searchText" ng-change="vm.canEdit && vm.searchHandler()">
@@ -16,15 +16,14 @@
             <!-- Friends -->
             <div class="title" ng-if="vm.friends.length">{{vm.yourFriendsTitle}}</div>
             <ul class="list friends-list user-friends-list" ng-if="vm.friends.length">
-                <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)"
-                    ng-click="vm.viewUser(friend, $event)" ng-init="vm.getAvatar(friend)">
+                <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)" ng-click="vm.viewUser(friend, $event)"
+                ng-init="vm.getAvatar(friend)">
                     <img ng-if="!!(friend.avatar)" ng-src="{{friend.avatar}}" />
                     <i ng-if="!(friend.avatar)" class="ico ico-avatarsmall"></i>
                     <div class="item-content">
                         {{friend.displayName}}{{friend.text}}
                     </div>
-                    <button class="button button-small list-button" 
-                        ng-click="vm.messageFriend(friend, $event);">
+                    <button class="button button-small list-button" ng-click="vm.messageFriend(friend, $event);">
                         Message
                     </button>
                 </li>
@@ -35,42 +34,44 @@
 
             <!--These Sections will only be shown when a user is viewing their own friends list-->
             <span ng-if="vm.canEdit">
-            <!-- No friends -->
-            <div class="no-friends" ng-if="!vm.searchText && !vm.friends.length">
-                <p>Start with the 5 best drivers you know and help grow your personal network of professional truck drivers.</p>
-                <p>Select from your device contacts or manually by Mobile Phone or Email</p>
-
-                <button class="button button-block button-small" ng-click="vm.showAddFriendsModal()">Choose from Contact List</button>
-
-                <div class="button-holder text-center" ng-if="!contacts.length">
-                    <a class="button button-clear manual-add" ng-click="vm.showAddFriendsModal()">
-                        <i class="icon ion-ios-plus-outline"></i>
-                        Add by Mobile Phone or Email
-                    </a>
-                </div>
-            </div>
-
-            <!-- Outset users -->
-            <div class="title" ng-if="vm.searchText.length >= 1">Truckerline Users</div>
-            <ul class="list friends-list" ng-if="vm.users.length && !contacts.length && vm.searchText.length >= 2">
-                <li class="item" ng-repeat="user in vm.users" ng-click="vm.viewUser(user, $event)">
-                    <i class="ico ico-avatarsmall" ></i>
-                    <div class="item-content">
-                        <strong>{{user.handle}}</strong>
-                        {{user.firstName}} {{user.lastName}}
+                <!-- No friends -->
+                <div class="no-content" ng-if="!vm.searchText && !vm.friends.length">
+                    <h3>Grow your Convoy!</h3>
+                    <p>Start with the 5 best drivers you know and help grow your personal network of professional truck drivers.</p>
+                    <p>Select from your device contacts or manually by Mobile Phone or Email</p>
+                    <br>
+    
+                    <button class="button button-block button-small" ng-click="vm.showAddFriendsModal()">Choose from Contact List</button>
+    
+                    <div class="button-holder text-center" ng-if="!contacts.length">
+                        <a class="button button-clear manual-add" ng-click="vm.showAddFriendsModal()">
+                            <i class="icon ion-ios-plus-outline"></i>
+                            Add by Mobile Phone or Email
+                        </a>
                     </div>
-                   <button ng-if="vm.searchText.length>0" class="button button-small list-button" ng-click="vm.addFriend(user, $event)">Add</button>
-                </li>
-            </ul>
-            <div ng-if="vm.searchText.length >= 1 && !vm.users.length" class="no-matches">
-                <div class="item-content">No Users Found. Please, try to edit your search query.</div>
-            </div>
+                </div>
+    
+                <!-- Outset users -->
+                <div class="title" ng-if="vm.searchText.length >= 1">Truckerline Users</div>
+                <ul class="list friends-list" ng-if="vm.users.length && !contacts.length && vm.searchText.length >= 2">
+                    <li class="item" ng-repeat="user in vm.users" ng-click="vm.viewUser(user, $event)">
+                        <i class="ico ico-avatarsmall" ></i>
+                        <div class="item-content">
+                            <strong>{{user.handle}}</strong>
+                            {{user.firstName}} {{user.lastName}}
+                        </div>
+                    <button ng-if="vm.searchText.length>0" class="button button-small list-button" ng-click="vm.addFriend(user, $event)">Add</button>
+                    </li>
+                </ul>
+                <div ng-if="vm.searchText.length >= 1 && !vm.users.length" class="no-matches">
+                    <div class="item-content">No Users Found. Please, try to edit your search query.</div>
+                </div>
             </span>
 
         </ion-scroll>
     </ion-pane>
 
-    <ion-footer-bar ng-if="vm.canEdit">
+    <ion-footer-bar ng-if="vm.canEdit && !!vm.friends.length">
         <div class="button-bar">
             <button class="button block-button" ng-click="vm.showAddFriendsModal()">Invite Friends</button>
         </div>

@@ -1,11 +1,11 @@
 <ion-modal-view class="friends-screen view-section min-size">
 
     <ion-header-bar>
-        <button class="button button-clear" ng-click="vm.cancel()">back</button>
+        <button class="button button-clear" ng-click="vm.cancel()">Back</button>
         <h1 class="title">Friend Requests</h1>
     </ion-header-bar>
 
-    <ion-pane class="has-footer friends-pane">
+    <ion-pane class="friends-pane">
         <ion-scroll delegate-handle="main-content-scroll">
             <ul class="list friends-list user-friends-list request-list">
                 <li class="item" ng-repeat="request in vm.requests track by $index" ng-init="vm.extendWithUserObject(request)">
@@ -24,17 +24,11 @@
                         Accept
                     </button>
                 </li>
-                <li ng-if="!vm.requests || !vm.requests.length" class="no-matches">
-                    <div class="item-content">No Requests</div>
+                <li ng-if="!vm.requests || !vm.requests.length" class="no-content">
+                <p>You have no convoy requests right now. When poeple request to add you to their convoy, a notification badge will appear on your profile page letting you know to check your requests.</p>
                 </li>
             </ul>
         </ion-scroll>
     </ion-pane>
-
-    <ion-footer-bar>
-        <div class="button-bar action-buttons">
-            <button class="button button-block secondary" ng-click="vm.cancel();">Back</button>
-        </div>
-    </ion-footer-bar>
 
 </ion-modal-view>
