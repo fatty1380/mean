@@ -18,7 +18,9 @@
         <ion-scroll>
             <ion-refresher pulling-text="Pull to refresh ..." on-refresh="vm.refresh()"></ion-refresher>
             <ion-list>
-                <oset-feed-item ng-repeat="activity in vm.feed track by activity.id" model="activity"></oset-feed-item>
+                <span ng-repeat="entry in vm.feed track by entry.id">
+                <oset-feed-item model="entry"></oset-feed-item>
+                </span>
             </ion-list>
 
             <!--<ion-infinite-scroll ng-if="vm.feed.length > 2" distance="5%" on-infinite="vm.loadMore()" immediate-check="false"></ion-infinite-scroll>-->
