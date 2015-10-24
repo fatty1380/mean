@@ -60,7 +60,7 @@
             if(navigator.geolocation) {
                 $ionicPlatform.ready(function() {
                     $ionicLoading.show({
-                        template: 'loading location',
+                        template: 'checking 20',
                         duration: 10000
                     });
                     var posOptions = {timeout: 10000, enableHighAccuracy: false};
@@ -81,7 +81,7 @@
                         //show only 1 error message
                         if(vm.mapIsVisible) {
                             $ionicLoading.show({
-                                template: 'Unable to locate' ,
+                                template: '10-7' ,
                                 duration: 1000
                             });
                             vm.mapIsVisible = false;
@@ -167,21 +167,22 @@
 
         function saveItemToFeed() {
             if(!vm.activity.title){
-                $ionicPopup.alert({
-                    title: 'Title is empty.',
-                    template: 'Please, enter title before posting an activity.'
-                });
+                $ionicLoading.show({
+                template: '<i class="ion-close-circled"></i>location<br>Please enter a title for your activity',
+                duration: 2000
+            });
                 return;
             }
 
             $ionicLoading.show({
-                template: '<ion-spinner/><br>Saving...'
+                template: '<ion-spinner/><br>Saving...',
+                duration: 10000
             });
 
             console.warn('posting vm.activity --->>>', vm.activity);
 
             activityService.postActivityToFeed(vm.activity).then(
-				function(result) {
+                function (result) {
             	    $ionicLoading.hide();
             	    console.log(result);
             	    vm.close(result);

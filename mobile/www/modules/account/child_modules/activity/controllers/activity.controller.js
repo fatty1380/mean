@@ -41,7 +41,7 @@
             }
         });
 
-        $rootScope.$on("clear", function () {
+        $rootScope.$on('clear', function () {
             console.log('ActivityCtrl clear');
             vm.feed = [];
             vm.lastUpdate = Date.now();
@@ -52,7 +52,7 @@
             updateFeedData();
             initialize();
         }
-        
+
         function getFeedButtonClass() {
             return (/my/i.test(vm.feedData && vm.feedData.buttonName)) ? 'ion-chevron-up' : 'ion-chevron-down'
         }
@@ -67,7 +67,7 @@
 
         function initialize() {
             vm.feed = [];
-            
+
             if (vm.feedData && welcomeService.isAckd($state.$current.name)) {
                 $ionicLoading.show({
                     template: vm.feedData.loadingText
@@ -75,17 +75,19 @@
             }
 
             //get all feed
-            return activityService.getFeed().then(function (result) {
-                $ionicLoading.hide();
+            return activityService.getFeed()
+                .then(function (result) {
 
-                vm.feed = _.uniq(result);
-                updateService.resetUpdates('activities');
-                console.log("getFeed() ", result);
+                    vm.feed = _.uniq(result);
+                    updateService.resetUpdates('activities');
+                    console.log('getFeed() ', result);
 
-            }, function () {
-                $ionicLoading.hide();
-                vm.feed = [];
-            });
+                }, function () {
+                    vm.feed = [];
+                })
+                .finally(function () {
+                    $ionicLoading.hide();
+                });
         }
 
         /**
@@ -150,7 +152,7 @@
                 .then(function (res) {
                     console.warn(' res --->>>', res);
                     if (res) {
-                        //debugger;
+                        debugger;
                         if (angular.isObject(res)) {
                             console.log('Pushing newly created feed item onto the front of the array', res);
                             console.warn(' vm.feed --->>>', vm.feed.length);
@@ -163,7 +165,7 @@
                         }
                     }
                 }, function (err) {
-                    activityService.showPopup("Modal failed", "Please try later");
+                    activityService.showPopup('10-92', 'Unable to checkin, try again later');
                 })
         }
     }

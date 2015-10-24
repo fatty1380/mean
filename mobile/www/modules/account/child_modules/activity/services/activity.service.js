@@ -298,7 +298,7 @@
                     avoidTolls: false
                 }, function (response, status) {
                     if (status !== google.maps.DistanceMatrixStatus.OK) {
-                        activityService.showPopup('Google maps failed', status);
+                        //activityService.showPopup('Google maps failed', status);
                         reject('error');
                     } else {
                         if (response.rows[0].elements[0].distance) {

@@ -3,6 +3,8 @@
     <ion-header-bar align-title="center">
         <button class="button button-clear" ng-click="vm.close()">Cancel</button>
         <h1 class="title">Add Activity</h1>
+        <button class="button button-clear" ng-disabled="!vm.activity.title"
+         ng-click="vm.saveItemToFeed()">Post</button>
     </ion-header-bar>
 
     <ion-pane class="pane has-footer add-activity-pane">
@@ -23,7 +25,7 @@
                         </div>
                         <div class="col">
                             <label class="item item-input item-floating-label">
-                                <span class="input-label">Distance Driven:</span>
+                                <span class="input-label">Miles Driven:</span>
                                 <input type="text" ng-model="vm.activity.props.distance" placeholder="Distance Driven">
                             </label>
                         </div>
