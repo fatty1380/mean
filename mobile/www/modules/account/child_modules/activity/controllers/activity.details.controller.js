@@ -17,12 +17,12 @@
         vm.distanceSinceLastPost = 'no data';
         vm.isInputVisible = false;
         vm.entry = parameters.entry;
-        
+
         vm.close = close;
         vm.likeActivity = likeActivity;
-        vm.showInputs = showInputs;
+        vm.toggleInput = toggleInput;
         vm.createComment = createComment;
-        
+
         return activate();
         
         /////////////////////////////////////////////////////////////
@@ -30,10 +30,10 @@
         function activate() {
             if (_.isEmpty(vm.entry)) {
                 console.error('No Activity has been loaded into the Controller', parameters);
-                
+
                 return vm.close();
             }
-            
+
             vm.user = parameters.user || vm.entry.user;
             vm.avatar = activityService.getAvatar(vm.entry);
         }
@@ -82,7 +82,12 @@
             })[0];
         }
 
-        function createComment() {
+        function createComment(event) {
+            
+            if (_.isEmpty(vm.message)) {
+                return;
+            }
+
             var data = {
                 text: vm.message
             };
@@ -90,24 +95,29 @@
             vm.message = '';
             vm.isInputVisible = false;
 
-            activityService.postComment(vm.entry.id, data).then(
-                function (result) {
-                    console.log('result ', result);
-                    if (result.data) {
-                        vm.entry.comments = result.data;
-                        scrollToBottom();
-                    }
-                }, function (resp) {
-                    console.log(resp);
-                });
+            activityService
+                .postComment(vm.entry.id, data)
+                .then(
+                    function (result) {
+                        console.log('result ', result);
+                        if (result.data) {
+                            vm.entry.comments = result.data;
+                            scrollToBottom();
+                        }
+                    }, function (resp) {
+                        console.log(resp);
+                    });
         }
 
-        function showInputs() {
-            vm.isInputVisible = true;
+        function toggleInput(event, direction) {
+            vm.isInputVisible = _.isUndefined(direction) ? !vm.isInputVisible : !!direction;
+            
+            if (!!vm.isInputVisible) { vm.focusComment = true; }
         }
 
         function likeActivity() {
-            activityService.likeActivity(vm.entry.id)
+            activityService
+                .likeActivity(vm.entry.id)
                 .then(function (result) {
                     //update like in feed
                     vm.entry.likes = result || [];
@@ -121,3 +131,20 @@
         }
     }
 })();
+
+angular.module('activity').directive('focusMe', function($timeout) {
+  return {
+    scope: { trigger: '=focusMe' },
+    link: function(scope, element) {
+      scope.$watch('trigger', function(value) {
+        if(value === true) { 
+          //console.log('trigger',value);
+          //$timeout(function() {
+            element[0].focus();
+            scope.trigger = false;
+          //});
+        }
+      });
+    }
+  };
+});

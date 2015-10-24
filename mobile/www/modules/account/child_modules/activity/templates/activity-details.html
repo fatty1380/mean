@@ -93,16 +93,17 @@
 
     <ion-footer-bar ng-if="!vm.isInputVisible">
         <div class="button-bar action-buttons">
-            <button class="button icon ion-ios-plus-outline primary" ng-click="vm.showInputs()"> comment</button>
+            <button class="button icon ion-ios-plus-outline primary" ng-click="vm.toggleInput($event, true)"> comment</button>
         </div>
     </ion-footer-bar>
 
     <ion-footer-bar ng-if="vm.isInputVisible" class="bar bar-footer item-input-inset">
+        <button class="button button-clear button-positive" ng-disabled="!vm.message" ng-click="vm.toggleInput($event, false)"><i class="ion-close-round"></i></button>
         <label class="item-input-wrapper message-textarea">
             <i class="ion ico-messagesiconblue"></i>
-            <textarea msd-elastic id="message-field" placeholder="&nbsp;Comment" ng-model="vm.message"></textarea>
+            <textarea focus-me="vm.focusComment" msd-elastic id="message-field" name="commentInput" placeholder="&nbsp;Comment" ng-model="vm.message"></textarea>
         </label>
-        <button class="button button-clear button-positive" ng-click="vm.createComment()">Send</button>
+        <button class="button button-clear button-positive" ng-disabled="!vm.message" ng-click="vm.createComment($event)">Send</button>
     </ion-footer-bar>
 
 </ion-modal-view>
