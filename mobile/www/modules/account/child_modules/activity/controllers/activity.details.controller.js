@@ -17,7 +17,7 @@
         vm.distanceSinceLastPost = 'no data';
         vm.isInputVisible = false;
         vm.entry = parameters.entry;
-        vm.comments = parameters.entry.comments;
+        
         vm.close = close;
         vm.likeActivity = likeActivity;
         vm.showInputs = showInputs;
@@ -94,7 +94,7 @@
                 function (result) {
                     console.log('result ', result);
                     if (result.data) {
-                        vm.comments = result.data;
+                        vm.entry.comments = result.data;
                         scrollToBottom();
                     }
                 }, function (resp) {

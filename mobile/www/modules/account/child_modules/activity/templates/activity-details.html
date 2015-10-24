@@ -79,12 +79,12 @@
 
             <div class="item-detail ">
                 <div class="comments" ng-if="!!vm.entry.comments">
-                    <i class="ion ion-chatboxes"></i> {{vm.comments.length}}
+                    <i class="ion ion-chatboxes"></i> {{vm.entry.comments.length}}
                     <span class="lbl">comments</span>
                 </div>
             </div>
 
-            <div class="item comment" ng-repeat="message in vm.comments" ng-init="console.log('Showing message: '+message);">
+            <div class="item comment" ng-repeat="message in vm.entry.comments" ng-init="console.log('Showing message: '+message);">
                 <a>{{message.sender.displayName}}</a> {{message.text}}
                 <div class="time-inline" ng-if="vm.entry.created">{{message.created | date:'mediumDate'}}</div>
             </div>

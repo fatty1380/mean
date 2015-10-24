@@ -97,13 +97,13 @@
 			if (!!entry.company && entry.company.id) {
 				return $state.go('company', { companyId: entry.company.id });
 			}
-            //stopCheckNewActivities();
+			
             activityModalsService
                 .showActivityDetailsModal({ entry: entry })
                 .then(function (res) {
-                    //startCheckNewActivities();
+					console.log('Details Complete', res);
                 }, function (err) {
-                    activityService.showPopup("Modal failed", "Please try later");
+                    activityService.showPopup("10-7", "Please try later");
                 })
         };
 
