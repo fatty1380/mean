@@ -163,6 +163,19 @@ textarea{
   }
 }
 
+.item-input {
+  textarea {
+    min-height: 125px; 
+    font-size: 16px; 
+    line-height: 18px; 
+    color: #9b9b9b;
+    
+    &.optional {
+      min-height: 36px;
+    }
+  }
+}
+
 .no-content {
   text-align: center;
   font-size: 16px;

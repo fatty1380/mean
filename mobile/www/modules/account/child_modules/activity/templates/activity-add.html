@@ -29,9 +29,11 @@
                         </div>
                     </div>
 
-                    <label class="item item-input item-floating-label" ng-click="vm.addNotes();">
+                    <label class="item item-input item-floating-label">
                         <span class="input-label">Notes:</span>
-                        <div class="notes-holder" ng-bind="vm.activity.notes"></div>
+                        <!--<div class="notes-holder" ng-bind="vm.activity.notes"></div>-->
+                        
+                        <textarea msd-elastic class="optional" placeholder="Enter notes about your drive (optional)" ng-model="vm.activity.notes"></textarea>
                     </label>
 
                     <label class="item item-input" ng-if="!!vm.mapIsVisible">
