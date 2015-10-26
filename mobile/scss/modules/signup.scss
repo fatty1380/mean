@@ -632,8 +632,8 @@ $but-height: 70px;
 .login-content{
   position: absolute;
   width: 100%;
-  bottom: 50%;
-  height: 210px;
+  //bottom: 50%;
+  min-height: 210px;
   // margin-top: -125px;
   i{
     display: block;
@@ -923,7 +923,7 @@ and (max-device-height : 568px) {
     .login-content{
       .app-logo{
         width: 130px;
-        height: 146px;
+        min-height: 146px;
         -webkit-background-size: 130px 146px;
         background-size: 130px 146px;
       }

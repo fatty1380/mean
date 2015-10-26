@@ -189,7 +189,7 @@ $bar-padding-portrait:            0 !default;
 $bar-padding-landscape:           0 !default;
 $bar-transparency:                1 !default;
 
-// We need to add 20px (ios statusbar height) cause ionic adds
+// We need to add 20px (ios-statusbar-height) cause ionic adds
 // 20px top-margin to all header siblings
 // which pushes header down to free space for the status bar info.
 $bar-fullsize-height: 			  $bar-height + 136px + 20px;

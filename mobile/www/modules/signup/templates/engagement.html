@@ -8,7 +8,8 @@
         <h3 class="title">Personalize your account with a Picture, your Handle and how long you've been on the road</h3>
     </div>
 
-    <ion-pane class="has-footer">
+    <ion-pane class="has-footer has-subheader">
+        <ion-scroll>
         <form name="mainEnagegmentForm" id="mainEnagegmentForm" class="list signup-form" ng-init="vm.initEngagementForm(this)" ng-submit="vm.continueToLicense()"
         role="form">
             <label class="item item-input">
@@ -31,6 +32,7 @@
                 <input type="text" placeholder="Name of Employer" ng-model="vm.employer">
             </label>
         </form>
+        </ion-scroll>
     </ion-pane>
 
     <ion-footer-bar>

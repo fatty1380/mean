@@ -7,41 +7,48 @@
         <h1 class="title">Login</h1>
     </ion-header-bar>
 
-    <ion-pane>
-        <div class="login-content">
-            <i class="app-logo"></i>
-            <h3>Log into your Truckerline account</h3>
-            <form name="vm.mainLoginForm" id="vm.mainLoginForm" class="list signup-form" ng-submit="vm.submitForm()" accessible-form novalidate>
-                <div class="form-row">
-                    <label class="item item-input">
-                        <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false" debounce required>
-                    </label>
-                    <i class="icon ion-backspace-outline" ng-if="vm.user.email && vm.user.email.length" ng-click="vm.user.email = ''"></i>
-                </div>
-                <div class="form-row">
-                    <label class="item item-input">
-                        <input id="password" type="password" placeholder="Password" ng-model="vm.user.password" name="password" ng-focus="vm.lastElementFocused = true" required>
-                    </label>
-                    <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
-                </div>
-                <input style="position:absolute; left:9999px" type="submit" />
-                <div ng-if="vm.mainLoginForm.$submitted">
-                    <h4 ng-if="vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email and password</h4>
-                    <h4 ng-if="!vm.mainLoginForm.password.$error.required && !vm.mainLoginForm.email.$error.required && vm.mainLoginForm.email.$invalid">Please enter a valid email</h4>
-                    <h4 ng-if="!vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email</h4>
-                    <h4 ng-if="vm.mainLoginForm.password.$error.required && !vm.mainLoginForm.email.$error.required">
+    <ion-pane class="has-header has-footer">
+        <ion-scroll>
+            <div class="login-content">
+                <h3>Log into your Truckerline account</h3>
+                <form name="vm.mainLoginForm" id="vm.mainLoginForm" class="list signup-form" ng-submit="vm.submitForm()" accessible-form
+                novalidate>
+                    <div class="form-row">
+                        <label class="item item-input">
+                            <input type="email" name="email" placeholder="Email" ng-change="vm.echange()" ng-model="vm.user.email" ng-focus="vm.lastElementFocused = false"
+                            debounce required focus-me>
+                        </label>
+                        <i class="icon ion-backspace-outline" ng-if="vm.user.email && vm.user.email.length" ng-click="vm.user.email = ''"></i>
+                    </div>
+                    <div class="form-row">
+                        <label class="item item-input">
+                            <input id="password" type="password" placeholder="Password" ng-model="vm.user.password" name="password" ng-focus="vm.lastElementFocused = true"
+                            required>
+                        </label>
+                        <i class="icon ion-backspace-outline" ng-if="vm.user.password.length > 0" ng-click="vm.user.password = ''"></i>
+                    </div>
+                    <input style="position:absolute; left:9999px" type="submit" />
+                    <div ng-if="vm.mainLoginForm.$submitted">
+                        <h4 ng-if="vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email and password</h4>
+                        <h4 ng-if="!vm.mainLoginForm.password.$error.required && !vm.mainLoginForm.email.$error.required && vm.mainLoginForm.email.$invalid">Please enter a valid email</h4>
+                        <h4 ng-if="!vm.mainLoginForm.password.$error.required && vm.mainLoginForm.email.$error.required">Please enter your email</h4>
+                        <h4 ng-if="vm.mainLoginForm.password.$error.required && !vm.mainLoginForm.email.$error.required">
                         Please enter a valid email address and password
                     </h4>
-                    <h4 ng-if="vm.error">{{vm.error}}</h4>
+                        <h4 ng-if="vm.error">{{vm.error}}</h4>
+                    </div>
+                </form>
+
+                <div class="register-content">
+                    <i class="app-logo"></i>
                 </div>
-            </form>
-        </div>
+            </div>
+        </ion-scroll>
     </ion-pane>
 
-    <ion-footer-bar>
-        <div class="button-bar action-buttons">
-            <button class="button primary" ng-click="vm.submitForm();" event-focus="click" event-focus-id="password">Login</button>
-        </div>
-    </ion-footer-bar>
-
+        <ion-footer-bar>
+            <div class="button-bar action-buttons">
+                <button class="button primary" ng-click="vm.submitForm();" event-focus="click" event-focus-id="password">Login</button>
+            </div>
+        </ion-footer-bar>
 </ion-view>

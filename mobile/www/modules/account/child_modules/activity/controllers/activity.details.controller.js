@@ -139,10 +139,10 @@ angular.module('activity').directive('focusMe', function($timeout) {
       scope.$watch('trigger', function(value) {
         if(value === true) { 
           //console.log('trigger',value);
-          //$timeout(function() {
+          $timeout(function() {
             element[0].focus();
             scope.trigger = false;
-          //});
+          }, 100);
         }
       });
     }

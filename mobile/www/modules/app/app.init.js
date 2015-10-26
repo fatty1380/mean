@@ -30,7 +30,9 @@
                 if (window.StatusBar) {
                     StatusBar.styleDefault();
                 }
-                
+
+                ionic.Platform.isFullScreen = true;
+
                 if (!!screen && angular.isFunction(screen.lockOrientation)) {
                     screen.lockOrientation('portrait');
                 }
