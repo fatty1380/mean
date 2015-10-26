@@ -6,6 +6,7 @@ var should = require('should'),
 	path = require('path'),
 	express = require(path.resolve('./config/lib/express')),
 	stubs = require(path.resolve('./config/lib/test.stubs')),
+	TestAgent = require(path.resolve('./config/lib/test.agent')).TestAgent,
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'tests',
         file: 'feed.server.routes'
@@ -28,8 +29,7 @@ describe('Review CRUD tests', function () {
 	before(function (done) {
 		log.debug({ func: 'beforeAll' }, 'Setup Base');
 		// Get application
-		app = express.init(mongoose);
-		agent = request.agent(app.http);
+		agent = new TestAgent();
 
 		done();
 	});
@@ -70,7 +70,7 @@ describe('Review CRUD tests', function () {
 	describe('when logged in', function () {
 
 		beforeEach(function () {
-			return stubs.agentLogin(agent, credentials);
+			return agent.login(credentials);
 		});
 
 		it('should allow me to query for specific request type: `reviewRequest`', function () {
@@ -99,9 +99,8 @@ describe('Review CRUD tests', function () {
 					return response.body;
 				});
 		});
-	});
 
-	 it('should be able to save Review instance if logged in', function (done) {
+		it('should be able to save Review instance if logged in', function (done) {
 			log.debug({ func: 'save' }, 'Setup');
 			// Get the userId
 			var userId = user.id;
@@ -131,22 +130,67 @@ describe('Review CRUD tests', function () {
 							done();
 						});
 				});
-	});
+		});
+
+		it('should be able to update Review instance if signed in', function (done) {
+			agent.post('/api/auth/signin')
+				.send(credentials)
+				.expect(200)
+				.end(function (signinErr, signinRes) {
+					// Handle signin error
+					if (signinErr) { done(signinErr); }
+
+					// Get the userId
+					var userId = user.id;
+
+					// Save a new Review
+					agent.post('/api/reviews')
+						.send(review)
+						.expect(200)
+						.end(function (reviewSaveErr, reviewSaveRes) {
+							// Handle Review save error
+							if (reviewSaveErr) { done(reviewSaveErr); }
+
+							// Update Review name
+							review.name = 'WHY YOU GOTTA BE SO MEAN?';
+
+							// Update existing Review
+							agent.put('/api/reviews/' + reviewSaveRes.body._id)
+								.send(review)
+								.expect(200)
+								.end(function (reviewUpdateErr, reviewUpdateRes) {
+									// Handle Review update error
+									if (reviewUpdateErr) { done(reviewUpdateErr); }
+
+									// Set assertions
+									(reviewUpdateRes.body._id).should.equal(reviewSaveRes.body._id);
+									(reviewUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+
+									// Call the assertion callback
+									done();
+								});
+						});
+				});
+		});
+
+		afterEach(function () {
+			return agent.logout();
+		});
+	}); 
 	/**
 	 * End Stubs
 	 */
 
-	it('should not be able to save Review instance if not logged in', function (done) {
+	it('should be able to save Review instance if not logged in', function (done) {
 		agent.post('/api/reviews')
 			.send(review)
-			.expect(403)
+			.expect(200)
 			.end(function (reviewSaveErr, reviewSaveRes) {
-				// Call the assertion callback
-				done(reviewSaveErr);
+				should.not.exist(reviewSaveErr);
 			});
 	});
 
-	
+
 
 	it('should not be able to save Review instance if no name is provided', function (done) {
 		// Invalidate name field
@@ -176,46 +220,7 @@ describe('Review CRUD tests', function () {
 			});
 	});
 
-	it('should be able to update Review instance if signed in', function (done) {
-		agent.post('/api/auth/signin')
-			.send(credentials)
-			.expect(200)
-			.end(function (signinErr, signinRes) {
-				// Handle signin error
-				if (signinErr) { done(signinErr); }
 
-				// Get the userId
-				var userId = user.id;
-
-				// Save a new Review
-				agent.post('/api/reviews')
-					.send(review)
-					.expect(200)
-					.end(function (reviewSaveErr, reviewSaveRes) {
-						// Handle Review save error
-						if (reviewSaveErr) { done(reviewSaveErr); }
-
-						// Update Review name
-						review.name = 'WHY YOU GOTTA BE SO MEAN?';
-
-						// Update existing Review
-						agent.put('/api/reviews/' + reviewSaveRes.body._id)
-							.send(review)
-							.expect(200)
-							.end(function (reviewUpdateErr, reviewUpdateRes) {
-								// Handle Review update error
-								if (reviewUpdateErr) { done(reviewUpdateErr); }
-
-								// Set assertions
-								(reviewUpdateRes.body._id).should.equal(reviewSaveRes.body._id);
-								(reviewUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
-
-								// Call the assertion callback
-								done();
-							});
-					});
-			});
-	});
 
 	it('should be able to get a list of Reviews if not signed in', function (done) {
 		// Create new Review model instance
