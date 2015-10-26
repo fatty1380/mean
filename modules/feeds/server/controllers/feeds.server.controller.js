@@ -391,7 +391,7 @@ function postBodyToUserFeed(userId, feedBody, reqLog) {
 		'title': 'Welcome to TruckerLine! Using your activity feed, you can keep a personal log of your daily drive, and see what your industry friends are up to as they post to their daily log. Get started by adding your first activity, then find your friends and grow your convoy.',
 		'__v': 1,
 		'_location': [],
-		'_imageURL': 'https://s3-us-west-2.amazonaws.com/outset-public-resources/img/tl_welcome.png',
+		//'_imageURL': 'https://s3-us-west-2.amazonaws.com/outset-public-resources/img/tl_welcome.png',
 		'likes': [
 		],
 		'props': {

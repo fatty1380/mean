@@ -5,21 +5,22 @@
  */
 var _ = require('lodash'),
     path = require('path'),
-    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-    mongoose = require('mongoose'),
     passport = require('passport'),
-    User = mongoose.model('User'),
-    Driver = mongoose.model('Driver'),
-    Company = mongoose.model('Company'),
+    errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
     emailer = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
     NotificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
+    FeedCtrl = require(path.resolve('./modules/feeds/server/controllers/feeds.server.controller')),
     Q = require('q'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users.authentication',
         file: 'users.authentication.server.controller'
     });
-    
-var FeedCtrl = require(path.resolve('./modules/feeds/server/controllers/feeds.server.controller')); 
+
+var mongoose = require('mongoose'),
+    User = mongoose.model('User'),
+    Driver = mongoose.model('Driver'),
+    Company = mongoose.model('Company'),
+    Request = mongoose.model('RequestMessage');
 
 exports.userseed = function (req, res) {
     delete req.body.roles;
@@ -38,12 +39,12 @@ exports.signup = function (req, res) {
 
     req.log.info({ func: 'signup', type: req.body.type, username: req.body.username }, 'Signup for new user');
     var user, company, saves = [{}, {}];
-    
+
     req.body.type = req.body.type || 'driver';
     
     // Init Variables
     switch (req.body.type) {
-        case 'driver': 
+        case 'driver':
             user = new Driver(req.body);
             break;
         case 'owner':
@@ -51,14 +52,14 @@ exports.signup = function (req, res) {
             break;
         default: user = new User(req.body);
     }
-    
+
     req.log.info({ func: 'signup', user: user }, 'Initialized');
     
     // Add missing user fields
     user.provider = 'local';
 
     if (!!req.body.companyName && req.body.type === 'owner') {
-        
+
         company = new Company({ 'owner': user._id, 'name': req.body.companyName });
         req.log.info({ func: 'signup', company: company }, 'Creating company');
         user.company = company._id;
@@ -67,7 +68,7 @@ exports.signup = function (req, res) {
     }
 
     saves[0] = user.save();
-    
+
     var newUser;
 
     req.log.info({ func: 'signup', saves: saves }, 'Waiting for saves');
@@ -97,6 +98,8 @@ exports.signup = function (req, res) {
             if (newUser.isDriver) {
                 NotificationCtr.send('user:new', { user: newUser });
 
+                createDefaultRequest(newUser, req.log);
+
                 return FeedCtrl.postBodyToUserFeed(newUser.id, null, req.log);
                 //emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', newUser);
             }
@@ -119,6 +122,21 @@ exports.signup = function (req, res) {
             }
         });
 };
+
+function createDefaultRequest(user, reqLog) {
+    reqLog = reqLog || log;
+    
+    var request = new Request({
+        from: mongoose.Types.ObjectId('562ab0cebd3222d851523755'),
+        to: user._id,
+        requestType: 'friendRequest'
+    });
+    
+    return request.save().then(function (result) {
+        reqLog.debug('Created New Default Request: ', result);
+        return result;
+    });
+}
 
 /**
  * Signin after passport authentication
@@ -284,14 +302,14 @@ function login(req, res, user, noResponse) {
         if (err) {
             log.warn({ err: err }, 'Login Failed due to error');
             res.status(400).send(err);
-        } 
+        }
         else {
             req.log.trace({ func: 'login', user: req.user.email, roles: req.user.roles.join(',') }, 'Login Successful!');
 
             if (!!noResponse) {
                 return;
             }
-            
+
             res.json(req.user);
         }
     });
