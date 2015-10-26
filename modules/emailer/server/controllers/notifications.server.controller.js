@@ -59,7 +59,11 @@ function initialize(messageConfigs) {
 
 function send(event, options) {
 	
+	log.info({ func: 'send', event: event, options: options }, 'Sending notification for event `%s`', event);
+	
 	var config = eventConfig[event];
+	
+	log.info({ func: 'send', config: config }, 'Loaded Config for event `%s`', event);
 	
 	if (!config) {
 		return { result: false, message: 'No notification configured for event' };
@@ -67,6 +71,7 @@ function send(event, options) {
 	
 	switch (event) {
 		case 'user:new':
+			console.warn({ func: 'send' }, 'Sending Template for new user signup');
 			return emailer.sendTemplateBySlug(config.emailTemplate, options.user, options);
 	}
 	
