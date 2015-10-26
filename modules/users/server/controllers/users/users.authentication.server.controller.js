@@ -18,6 +18,8 @@ var _ = require('lodash'),
         module: 'users.authentication',
         file: 'users.authentication.server.controller'
     });
+    
+var FeedCtrl = require(path.resolve('./modules/feeds/server/controllers/feeds.server.controller')); 
 
 exports.userseed = function (req, res) {
     delete req.body.roles;
@@ -65,6 +67,8 @@ exports.signup = function (req, res) {
     }
 
     saves[0] = user.save();
+    
+    var newUser;
 
     req.log.info({ func: 'signup', saves: saves }, 'Waiting for saves');
     return Q.all(saves)
@@ -72,25 +76,47 @@ exports.signup = function (req, res) {
             req.log.info({ func: 'signup', company: company }, 'Returned from saves');
             results.user = results[0];
             results.company = results[1];
-            
-            req.log.info({ func: 'signup', user: user, ruser: results.user, company: results.company }, 'Saved User object');
-            login(req, res, results.user);
 
-            if (results.user.isDriver) {
-                NotificationCtr.send('user:new', { user: results.user });
-                //emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', results.user);
+            req.log.info({ func: 'signup', user: user, ruser: results.user, company: results.company }, 'Saved User object');
+            login(req, res, results.user, true);
+
+            return results.user;
+        })
+        .catch(function (err) {
+            if (!res.headersSent) {
+                res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
             }
-            else if (results.user.isOwner) {
-                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', results.user);
+        })
+        .then(function (newUser) {
+            if (!newUser) {
+                return;
+            }
+
+            if (newUser.isDriver) {
+                NotificationCtr.send('user:new', { user: newUser });
+
+                return FeedCtrl.postBodyToUserFeed(newUser.id, null, req.log);
+                //emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', newUser);
+            }
+            else if (newUser.isOwner) {
+                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', newUser);
             }
             else {
                 req.log.warn('[SIGNPU] - Creating new User of type `%s` ... what to do?', req.body.type);
             }
         })
-        .catch(function (err) {
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
+        .then(function (result) {
+            req.log.info({ func: 'signup', result: result }, 'Result from signup sending');
+        })
+        .finally(function () {
+            // Crappy hack to save to feed before returning the user ;/
+            
+            if (!res.headersSent) {
+                res.json(req.user);
+
+            }
         });
 };
 
@@ -246,7 +272,7 @@ exports.removeOAuthProvider = function (req, res, next) {
 };
 
 // DRY Simple Login Function
-function login(req, res, user) {
+function login(req, res, user, noResponse) {
     req.log.trace({ func: 'login' }, 'Logging in user %s', user.email);
 
     if (!_.isEmpty(user.salt + user.password)) {
@@ -262,6 +288,10 @@ function login(req, res, user) {
         else {
             req.log.trace({ func: 'login', user: req.user.email, roles: req.user.roles.join(',') }, 'Login Successful!');
 
+            if (!!noResponse) {
+                return;
+            }
+            
             res.json(req.user);
         }
     });

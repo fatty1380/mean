@@ -30,6 +30,7 @@ exports.myFeed = myFeed;
 exports.feedItemByID = feedItemByID;
 
 exports.getOrCreateFeed = getOrCreateFeed;
+exports.postBodyToUserFeed = postBodyToUserFeed;
 
 exports.addComment = addComment;
 exports.getComments = getComments;
@@ -177,10 +178,10 @@ function readItem(req, res) {
 function addComment(req, res, next) {
 	var comment = new Message(req.body);
 	comment.sender = req.user;
-	
+
 	req.feedItem.comments.push(comment);
-	
-	
+
+
 	req.feedItem.save()
 		.then(function success(result) {
 			req.log.error({ result: result, comments: result.comments, func: 'addComment', file: 'feeds.server.controller' }, 'Added comment to comments array');
@@ -198,7 +199,7 @@ function getComments(req, res, next) {
 	if (_.isEmpty(req.feedItem)) {
 		return res.status(404).send({ message: 'no feed activity specified' });
 	}
-	
+
 	res.json(req.feedItem.comments);
 }
 
@@ -210,7 +211,7 @@ function addLike(req, res) {
 	if (_.isEmpty(req.feedItem)) {
 		return res.status(404).send({ message: 'no feed activity specified' });
 	}
-	
+
 	if (req.user._id.equals(req.feedItem.user.id)) {
 		return res.status(403).send({ message: 'You have already liked your own post' });
 	}
@@ -289,7 +290,7 @@ function queryFeedItems(req, res, next) {
 	if (!!req.body.query) {
 		return readQueryResults(req, res, next);
 	}
-	
+
 	return res.json(req.feed.items);
 }
 
@@ -297,7 +298,7 @@ function queryFeedActivity(req, res, next) {
 	if (!!req.body.query) {
 		return readQueryResults(req, res, next);
 	}
-	
+
 	return res.json(req.feed.activity);
 }
 
@@ -379,6 +380,54 @@ function myFeed(req, res, next) {
 		});
 }
 
+function postBodyToUserFeed(userId, feedBody, reqLog) {
+	log = reqLog || log;
+
+	feedBody = feedBody || {
+		'user': mongoose.Types.ObjectId('562ab0cebd3222d851523755'),
+		'isPublic': true,
+		'comments': [],
+		'message': '',
+		'title': 'Welcome to TruckerLine! Using your activity feed, you can keep a personal log of your daily drive, and see what your industry friends are up to as they post to their daily log. Get started by adding your first activity, then find your friends and grow your convoy.',
+		'__v': 1,
+		'_location': [],
+		'_imageURL': 'https://s3-us-west-2.amazonaws.com/outset-public-resources/img/tl_welcome.png',
+		'likes': [
+		],
+		'props': {
+			'slMiles': 1300
+		}
+	};
+
+	var feedItem = new FeedItem(feedBody);
+
+	log.debug({ func: 'postBodyToUserFeed', item: feedItem }, 'posting feed item to feed %s', userId);
+
+	return feedItem.save()
+		.then(function (item) {
+			log.debug({ func: 'postBodyToUserFeed' }, 'Saved Feed item, now posting to feed');
+
+			return postToUserFeed(userId, feedItem, log);
+		})
+		.then(function success(feedSuccess) {
+			log.info({ func: 'postBodyToUserFeed', feed: feedSuccess.id }, 'Posted item to user feed');
+		})
+		.catch(function (err) {
+			log.error({ func: 'postBodyToUserFeed', err: err }, 'Failed to post to feed');
+		});
+}
+
+function postToUserFeed(userId, item, log) {
+	log.debug({ func: 'postToUserFeed', item: item }, 'posting feed item to feed %s', userId);
+	return getOrCreateFeed(userId, log).then(
+		function (theirFeed) {
+			log.debug({ func: 'postToUserFeed', feed: theirFeed }, 'posting feed item to feed %s', userId);
+			theirFeed.items.push(item);
+
+			return theirFeed.save();
+		});
+}
+
 function getOrCreateFeed(userId, log) {
 	return Feed.findById(userId)
 	//	.populate({ path: 'items', model: 'FeedItem', options: { sort: { 'created': -1 } } })
@@ -409,18 +458,12 @@ function crossPost(user, item) {
 	return Q.all(_.map(user.friends, function (friend) {
 
 		log.debug({ func: 'crossPost', friend: friend, isString: _.isString(friend) }, 'looking up friend for post');
-		return getOrCreateFeed(friend, log).then(
-			function (theirFeed) {
-				log.debug({ func: 'crossPost', feed: theirFeed }, 'posting feed item by %s to friend %s', user.id, theirFeed.user.id);
-				theirFeed.items.push(item);
+		return postToUserFeed(friend, item, log).then(
+			function (success) {
+				log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
 
-				return theirFeed.save();
-			}).then(
-				function (success) {
-					log.debug({ func: 'crossPost', resultFeed: success }, 'posted feed item to friend');
-
-					return success;
-				});
+				return success;
+			});
 	}));
 }
 

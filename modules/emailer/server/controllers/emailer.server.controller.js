@@ -20,10 +20,11 @@ function getMessage(options) {
     var message = {
         'merge_language': 'mailchimp',
         'google_analytics_domains': [
-            'joinoutset.com'
+            'joinoutset.com',
+            'truckerline.com'
         ],
         'metadata': {
-            'website': 'www.joinoutset.com'
+            'website': 'www.truckerline.com'
         }
     };
 
@@ -62,6 +63,14 @@ function sendGenericTemplateEmail(templateName, user, options) {
             {
                 name: 'USERNAME',
                 content: user.firstName || user.displayName
+            },
+            {
+                name: 'FNAME',
+                content: user.firstName || user.displayName
+            },
+            {
+                name: 'PROFILE_IMAGE',
+                content: user.profileImageURL || user.props && user.props.avatar
             }
         ]
     };
@@ -81,7 +90,7 @@ function sendGenericTemplateEmail(templateName, user, options) {
     }
 
     else {
-        return e;
+        return { message: 'Results', e: e };
     }
 
 }
@@ -99,7 +108,7 @@ function sendTemplate(templateName, mailOptions) {
 
     console.log('Full Message Object: %j', message);
 
-    mandrillClient.messages.sendTemplate({
+    return mandrillClient.messages.sendTemplate({
         'template_name': templateName,
         'template_content': {},
         'message': message,

@@ -41,7 +41,7 @@
         vm.showSignup = function() {
             var modalInstance = $uibModal.open({
                 templateUrl: 'signupModal.html',
-                controller: 'SignupController',
+                controller: SignupController,
                 size: 'lg',
                 resolve: {
                     type: function() { return vm.type; },

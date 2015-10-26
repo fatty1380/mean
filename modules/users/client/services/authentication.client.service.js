@@ -137,7 +137,7 @@
         function set(key, value) {
             if (_.isString(key)) {
                 if (_.isUndefined(value) || _.isNull(value)) {
-                    debugger;
+                    //debugger;
                     delete $window.localStorage[key];
                 } else {
                     $window.localStorage[key] = value;
@@ -149,7 +149,7 @@
                 console.info('Setting Tokens based on keys: ', _.keys(response));
                 _.forOwn(response, function setValueForKey(k) {
                     if (_.isUndefined(k.value) || _.isNull(k.value)) {
-                        debugger;
+                        //debugger;
                         delete $window.localStorage[k.key];
                     } else {
                         $window.localStorage[k.key] = k.value;

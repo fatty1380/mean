@@ -66,7 +66,7 @@
         }
 
         vm.logout = function logout() {
-            debugger;
+            //debugger;
             LoginService.logout();
 
             $state.go('home');

@@ -42,9 +42,9 @@ describe('Auth Routes tests', function () {
         // app = express.init(mongoose).http;
         // agent = request.agent(app);
         agent = new TestAgent();
-        
+
         should.exist(agent.get);
-        
+
         done();
 
 
@@ -85,7 +85,7 @@ describe('Auth Routes tests', function () {
             var _test = this.test;
 
             var endpoint = '/oauth/token';
-            
+
             return agent.login(credentials, { rawResponse: true, expect: 200 })
                 .then(function (response) {
                     log.debug({
@@ -122,7 +122,7 @@ describe('Auth Routes tests', function () {
             var token;
 
             beforeEach(function () {
-                
+
                 return agent.login(credentials, { rawResponse: true }).then(function (response) {
                     log.debug({ func: 'auth.before', body: response.body }, 'Got Token');
                     token = response.body;
@@ -150,6 +150,23 @@ describe('Auth Routes tests', function () {
                         var user = response.body;
 
                         user.should.have.property('firstName');
+                    });
+            });
+
+            it('should have a feed already populated with one item', function () {
+                var _test = this.test;
+                var endpoint = '/api/feed';
+
+                return agent.get(endpoint)
+                    .expect(200)
+                    .then(function (response) {
+                        log.debug({
+                            test: _test.title,
+                            body: response.body,
+                            err: response.error
+                        }, 'Got Response from %s', endpoint);
+
+                        response.body.should.have.property('items').with.length(1);
                     });
             });
 
