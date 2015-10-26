@@ -111,7 +111,13 @@
                 controller: 'TruckerViewCtrl',
                 controllerAs: 'vm',
                 bindToController: true,
-                resolve: upcResolve
+                resolve: upcResolve,
+                params: {
+                    userId: {
+                        value: null,
+                        squash: true
+                    }
+                }
             }).
             state('trucker.experience', {
                 url: '/experience',
