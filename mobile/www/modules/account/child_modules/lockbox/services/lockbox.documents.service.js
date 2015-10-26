@@ -57,13 +57,10 @@
             //return $http.get(settings.documents).then(
             return API.doRequest(settings.documents, 'get')
                 .then(function success(documentListResponse) {
-                    console.warn(' documentListResponse >>>', documentListResponse);
                     var docs = documentListResponse.data;
-
-                    if (!vm.path) { return $q.when(docs); }
-
                     var promiseArr = [];
 
+                    if (!vm.path) { return $q.when(docs); }
                     if (!docs || !docs.length) { return $q.when([]); }
 
                     angular.forEach(docs, function (doc) {
@@ -79,12 +76,10 @@
                             }
                         }
                     });
-                    console.warn(' promiseArr >>>', promiseArr);
 
                     return $q.all(promiseArr);
                 })
                 .then(function (newDocuments) {
-                    console.warn(' newDocuments >>>', newDocuments);
                     var id, sku, name, url, user, created;
 
                     if (angular.isArray(newDocuments) && newDocuments.length) {
@@ -121,7 +116,6 @@
                             addDocument(doc);
                         });
                     }
-                    console.warn(' vm.documents >>>', vm.documents);
                     return vm.documents;
                 })
                 .catch(function (result) {
@@ -219,7 +213,7 @@
 
             return welcomeService.showModal('lockbox.add')
                 .then(function () {
-                    return cameraService.showActionSheet()
+                    return cameraService.showActionSheet();
                 })
                 .then(function success(rawImageResponse) {
                     return lockboxModalsService.showCreateModal({ image: rawImageResponse, sku: sku });
@@ -268,25 +262,31 @@
         }
 
         function removeDocuments(documents) {
+            var promises = [];
+
             _.each(documents, function (doc) {
                 console.log('Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
 
                 _.remove(vm.documents, { id: doc.id });
-
                 removeOneDocument(doc);
 
                 var stub = _.find(docTypeDefinitions, { sku: doc.sku });
-                if (!!stub) {
+                var alreadyHasStub = _.find(vm.documents, { sku: doc.sku });
+
+                if (!!stub && !alreadyHasStub) {
                     addDocument(stub);
                 }
 
-                return API.doRequest(settings.documents + doc.id, 'delete');
+                //return API.doRequest(settings.documents + doc.id, 'delete');
+                var promise = API.doRequest(settings.documents + doc.id, 'delete');
+
+                promises.push(promise);
             });
+
+            return $q.all(promises);
         }
 
         function saveFileToDevice(file) {
-            console.info(' --->>> save file trigerred <<<--- ');
-
             var path = vm.path;
 
             updateNewDocumentWithID(file);
@@ -303,7 +303,6 @@
                         data: file.url,
                         sku: file.sku
                     };
-                    console.warn(' options >>>', options);
                     return writeFileInUserFolder(options);
                 });
         }
@@ -323,8 +322,6 @@
             var name = options.name;
             var data = options.data;
 
-            console.info(' --->>> WRITE FILE IN USERs <<<--- ');
-
             return $cordovaFile
                 .checkDir(path, user)
                 .catch(function () {
@@ -335,7 +332,6 @@
                     return writeFile(path, name, data);
                 })
                 .then(function (file) {
-                    console.warn(' created file --->>>', file);
                     updateStorageInfo(user, { action: 'add' });
                     return file;
                 })
@@ -365,6 +361,7 @@
         }
 
         function removeOneDocument(doc) {
+            console.warn(' removeOneDocument() doc >>>', doc);
             if (!doc) return;
 
             var path = vm.LOCKBOX_FOLDER,
@@ -374,12 +371,10 @@
             return $cordovaFile.checkDir(path, userID)
                 .then(function (dir) {
                     path += userID;
-                    console.warn('removeOneDoc dir >>>', dir);
-                    console.warn(' path >>>', path);
                     return $cordovaFile.removeFile(path, documentName);
                 })
                 .catch(function (err) {
-                    console.warn(' err --->>>', err);
+                    console.warn(' remove doc err --->>>', err);
                 });
         }
 
@@ -403,6 +398,7 @@
         }
 
         function getFilesByUserId(id) {
+            console.warn('getFilesByUserId() for id >>>', id);
             if (!vm.path) return $q.when(getDocuments(true));
 
             var path = vm.path;
@@ -498,8 +494,7 @@
                     if (!hasRealDoc) {
                         welcomeService.initialize('lockbox.add');
                     }
-
-                    console.warn('finally vm.documents >>>', vm.documents);
+                    console.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
                     $ionicLoading.hide();
                 });
         }
@@ -544,10 +539,9 @@
 
         function parseDocFromFilename(filename) {
             var params = filename.split('-');
-
             var doc = {};
-
             var i = 0;
+
             doc.id = params[i++];
             if (params.length === 3) {
                 doc.sku = params[i++];
@@ -576,11 +570,6 @@
             return angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
         }
 
-        //////////////////// Save Methods ////////////////////
-
-        //////////////////// Retrieve Methods ////////////////////
-
-        //////////////////// Remove Mehtods ////////////////////
     }
 
     /** Documnt Stubs

@@ -5,9 +5,9 @@
         .module('account')
         .controller('LockboxOrderReportsCtrl', LockboxOrderReportsCtrl);
 
-    LockboxOrderReportsCtrl.$inject = ['$scope', '$window', 'settings', '$ionicLoading', '$timeout', 'API'];
+    LockboxOrderReportsCtrl.$inject = ['$window', 'settings', '$ionicLoading', 'API'];
 
-    function LockboxOrderReportsCtrl($scope, $window, settings, $ionicLoading, $timeout, API) {
+    function LockboxOrderReportsCtrl($window, settings, $ionicLoading, API) {
         var vm = this;
         vm.cancel = cancel;
         vm.orderNow = orderNow;
