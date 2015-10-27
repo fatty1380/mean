@@ -98,21 +98,60 @@ describe('Notifications CRUD tests', function () {
 			return NotificationCtrl.processRequest(friendRequest, user)
 				.then(function (sendResult) {
 					should.exist(sendResult);
-					
+
 					log.debug({ func: 'Friend SMS Test', result: sendResult }, 'Got Result from Sending Friend Request');
-					
+
 					sendResult.should.have.property('success');
 					sendResult.should.have.property('messageId');
 					sendResult.should.have.property('status');
 					sendResult.should.have.property('system');
-					
+
 					/Join the Convoy/.test(sendResult.message).should.be.true;
 					/Terry has invited you/.test(sendResult.message).should.be.true;
 				});
 		});
+		it('should send an SMS for an alternate format contact info', function () {
+			var fr = new RequestMessage({
+				"from": user._id,
+				"contactInfo": {
+					"emails": [
+						{
+							"value": "undefined"
+						}
+					],
+					"phones": [
+						{
+							"type": "main",
+							"value": "6507767675"
+						}
+					],
+					"displayName": "undefined"
+				},
+				"requestType": "friendRequest"
+			});
+
+			return fr.save()
+				.then(function (frResult) {
+					return NotificationCtrl.processRequest(fr, user);
+				})
+				.then(function (sendResult) {
+					should.exist(sendResult);
+
+					log.debug({ func: 'Friend SMS Test', result: sendResult }, 'Got Result from Sending Friend Request');
+
+					sendResult.should.have.property('success');
+					sendResult.should.have.property('messageId');
+					sendResult.should.have.property('status');
+					sendResult.should.have.property('system');
+					sendResult.should.have.property('recipient', '6507767675');
+
+					/Join the Convoy/.test(sendResult.message).should.be.true;
+					/Terry has invited you/.test(sendResult.message).should.be.true;
+				});
+		})
 		it('should send an email when a new friend request is accepted');
 		it('should send an email when sharing a user\'s profile');
-		
+
 		afterEach(function () {
 			return stubs.cleanTables([RequestMessage]);
 		});
