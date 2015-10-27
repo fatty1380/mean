@@ -94,6 +94,7 @@
             lockboxModalsService.showEditModal(params)
                 .then(
                     function (result) {
+                        vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
                         console.log(result);
                     },
                     function (err) {
@@ -143,8 +144,6 @@
 
             //TODO: refactor this
             // Step 1: extracted into activate function
-            
-            
             securityService
                 .getPin()
                 .then(function (pin) {

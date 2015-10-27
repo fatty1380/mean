@@ -104,7 +104,6 @@
 
             renamePopup.then(function (res) {
                 if (res) {
-
                     lockboxDocuments.updateDocument(vm.documents[vm.index], { name: res })
                         .then(function (result) {
                             console.log('updated document to: ', result);
@@ -127,14 +126,18 @@
                     okType: 'button-small button-assertive',
                     template: 'Are you sure you want to delete selected documents?'
                 });
-                confirmPopup.then(function (res) {
-                    if (res) {
-                        lockboxDocuments.removeDocuments(vm.documents.filter(getSelected));
-                        
-                        //vm.documents = vm.unselectedDocuments;
-                    }
-                });
+
+                confirmPopup
+                    .then(function (res) {
+                        if (res) {
+                            lockboxDocuments.removeDocuments(vm.documents.filter(getSelected));
+                            //vm.documents = vm.unselectedDocuments;
+                        }
+                    })
+                    .then(function () {
+                        vm.documents = lockboxDocuments.updateDocumentList();
+                    });
             }
-    }
+        }
     }
 })();
