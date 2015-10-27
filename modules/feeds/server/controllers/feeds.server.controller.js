@@ -380,10 +380,10 @@ function myFeed(req, res, next) {
 		});
 }
 
-function postBodyToUserFeed(userId, feedBody, reqLog) {
+function postBodyToUserFeed(userId, feedItemBody, reqLog) {
 	log = reqLog || log;
 
-	feedBody = feedBody || {
+	feedItemBody = feedItemBody || {
 		'user': mongoose.Types.ObjectId('562ab0cebd3222d851523755'),
 		'isPublic': true,
 		'comments': [],
@@ -408,7 +408,7 @@ function postBodyToUserFeed(userId, feedBody, reqLog) {
 		}
 	};
 
-	var feedItem = new FeedItem(feedBody);
+	var feedItem = new FeedItem(feedItemBody);
 
 	log.debug({ func: 'postBodyToUserFeed', item: feedItem }, 'posting feed item to feed %s', userId);
 

@@ -20,7 +20,7 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Driver = mongoose.model('Driver'),
     Company = mongoose.model('Company'),
-    Request = mongoose.model('RequestMessage');
+    RequestMessage = mongoose.model('RequestMessage');
 
 exports.userseed = function (req, res) {
     delete req.body.roles;
@@ -126,7 +126,7 @@ exports.signup = function (req, res) {
 function createDefaultRequest(user, reqLog) {
     reqLog = reqLog || log;
     
-    var request = new Request({
+    var request = new RequestMessage({
         from: mongoose.Types.ObjectId('562ab0cebd3222d851523755'),
         to: user._id,
         requestType: 'friendRequest'

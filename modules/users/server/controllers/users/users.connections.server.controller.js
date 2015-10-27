@@ -25,7 +25,7 @@ var _ = require('lodash'),
     mongoose = require('mongoose'),
     Q = require('q'),
     User = mongoose.model('User'),
-    Request = mongoose.model('RequestMessage'),
+    RequestMessage = mongoose.model('RequestMessage'),
     path = require('path'),
     messenger = require(path.resolve('./modules/emailer/server/controllers/messenger.server.controller')),
     notificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
@@ -98,7 +98,7 @@ function checkFriendStatus(req, res, next) {
         return res.json({ status: 'friends' });
     }
 
-    Request.find({ status: { $ne: 'rejected' } })
+    RequestMessage.find({ status: { $ne: 'rejected' } })
         .or([{ to: them._id, from: me._id }, { to: me._id, from: them._id }])
         .sort('created').exec().then(
             function (requests) {
@@ -172,7 +172,7 @@ function createRequest(req, res, next) {
 
     delete req.body.status;
 
-    var request = new Request(req.body);
+    var request = new RequestMessage(req.body);
     request.from = req.user._id;
 
     // Insert into the request arrays of each user
@@ -236,14 +236,14 @@ function listRequests(req, res) {
 
     req.log.debug({ func: 'listRequests', query: req.query, statuses: statuses, types: types, mainQuery: mainQuery, orQuery: orQuery }, 'Executing find');
 
-    Request.find()
+    RequestMessage.find()
         .exec()
         .then(function (reqs) {
             req.log.trace({ func: 'listRequests', allRequests: reqs }, 'Listing all requests for debugging');
 
         });
 
-    return Request.find(mainQuery)
+    return RequestMessage.find(mainQuery)
         .or(orQuery)
         .sort('created').exec()
         .then(
@@ -381,7 +381,7 @@ function removeFriend(req, res, next) {
  */
 function requestById(req, res, next, id) {
 
-    Request.findById(id)
+    RequestMessage.findById(id)
         .exec().then(
             function (request) {
                 if (_.isEmpty(request)) {
