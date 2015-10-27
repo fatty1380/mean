@@ -166,6 +166,11 @@ function processNewRequest(event, requestMessage, sender) {
 				log.debug({ func: 'processNewRequest', phone: target.phone }, 'Got Best phone for User');
 			}
 
+			if (_.isEmpty(target.phone) && !_.isEmpty(target.phones)) {
+				target.phone = getBest(target.phones);
+				log.debug({ func: 'processNewRequest', phone: target.phone }, 'Got Best phone for User');
+			}
+
 			if (_.isEmpty(target.email) && _.isEmpty(target.phone)) {
 				log.debug({ func: 'processNewRequest', target: target }, 'Can\'t continue - both email and phone are empty');
 				throw new Error('No Available Contact Information');
@@ -233,7 +238,7 @@ function processNewRequest(event, requestMessage, sender) {
 			return requestMessage;
 		})
 		.then(function(saveResult) {
-			result.requestMessage = saveResult;
+			result.requestMessage = saveResult.toObject();
 			
 			return result;
 
@@ -251,12 +256,12 @@ function getBest(contacts) {
 
 	_.forEach(contacts, function (e) {
 		log.debug({ func: 'getBest', contact: e }, 'Evaluating Current Contact');
-		if (!_.isEmpty(e.value)) {
+		if (!_.isEmpty(e.value) && e.value !== 'undefined') {
 			log.debug({ func: 'getBest', best: e }, 'Got It (value)!');
 			pref = e.value;
 			return false;
 		}
-		if (_.isString(e)) {
+		if (_.isString(e) && !_.isEmpty(e) && e !== 'undefined') {
 			log.debug({ func: 'getBest', best: e }, 'Got It (string)!');
 			pref = e;
 			return false;

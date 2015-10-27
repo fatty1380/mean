@@ -143,7 +143,9 @@ describe('Notifications CRUD tests', function () {
 					sendResult.should.have.property('messageId');
 					sendResult.should.have.property('status');
 					sendResult.should.have.property('system');
-					sendResult.should.have.property('recipient', '6507767675');
+					sendResult.should.have.property('recipient');
+					
+					/6507767675$/.test(sendResult.recipient).should.be.true;
 
 					/Join the Convoy/.test(sendResult.message).should.be.true;
 					/Terry has invited you/.test(sendResult.message).should.be.true;
