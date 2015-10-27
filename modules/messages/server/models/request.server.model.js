@@ -64,7 +64,7 @@ var RequestMessageSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['new', 'accepted', 'rejected'],
+        enum: ['new', 'sent', 'bounced', 'accepted', 'rejected'],
         default: 'new'
     },
     requestType: {

@@ -8,6 +8,7 @@ var _ = require('lodash'),
     path = require('path'),
     config = require(path.resolve('./config/config')),
     twilio = require('twilio'),
+    doT = require('dot'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'notifications',
         file: 'messenger'
@@ -18,8 +19,8 @@ var client = twilio(clientConfig.accountSid, clientConfig.authToken);
 
 var recipientOverrideAddress = config.services.twilio.toOverride;
 
-var messageTemplate = '{{SENDER_NAME}} has invited you to join TruckerLine. Join the Convoy at www.joinoutset.com';
-var noSenderTemplate = 'You have been invited to join Truckerline. Join the convoy at www.joinoutset.com';
+var defaultMessageTemplate = '{{=it.SENDER_NAME}} has invited you to join TruckerLine. Join the Convoy at http://truckerline.com';
+var noSenderTemplate = 'You have been invited to join Truckerline. Join the convoy at http://truckerline.com';
 
 var templates = {};
 
@@ -29,34 +30,35 @@ var templates = {};
  * given Options, creates a message object prepared for sending.
  */
 function sendMessageRequest(message, messageConfig) {
-    
+
     log.info({ func: 'sendMessageRequest', message: message, messageConfig: messageConfig }, 'Sending Message (START)');
 
     if (_.isObject(message) && _.isEmpty(messageConfig)) {
         messageConfig = message;
         message = 'Build your Driving Career at Truckerline.com';
     }
-    
-    var sender = !!messageConfig.from && messageConfig.from.firstName || null;
+
+    var sender = !!messageConfig.from && (messageConfig.from.firstName || messageConfig.from.displayName)
+        || messageConfig.vars && messageConfig.vars.SENDER_NAME
+        || null;
 
     var body = noSenderTemplate;
     var vars = messageConfig.vars || [];
-
+    var tempFn;
+        log.info({ vars: vars }, 'Composing message with vars');
+    
     if (!!sender) {
-        body = (message || messageConfig.template || messageTemplate);
-
-        var bodyVars = (body.match(/{{\s*[\w\.]+\s*}}/g) || [])
-            .map(function (x) { return x.match(/[\w\.]+/)[0]; });
-
-
-        _.each(bodyVars, function (bv) {
-            var replacement = vars[bv] || '';
-
-            body.replace('{{' + bv + '}}', replacement);
-        });
+        tempFn = doT.template(message || messageConfig.template || defaultMessageTemplate);
+        body = tempFn(vars);
     } else {
         log.warn({ func: 'sendMessageRequest', err: 'No Sender Specified', config: messageConfig }, 'Must specify a sender when sending a message request');
+        tempFn = doT.template(noSenderTemplate);
+        
+        body = tempFn(vars);
+
     }
+    
+
 
     var messageObj = {
         to: _.isArray(messageConfig.to) ? _.first(messageConfig.to) : messageConfig.to,
@@ -78,11 +80,11 @@ function sendMessageRequest(message, messageConfig) {
         }
     }
 
-    log.info({ func: 'sendMessageRequest', message: message }, 'Sending Message');
+    log.info({ func: 'sendMessageRequest', message: messageObj }, 'Sending Message');
 
     return client.sendMessage(messageObj).then(
         function success(responseData) {
-            log.debug('Call success! Call SID: ' + responseData.sid);
+            log.debug('Message success! Call SID: ' + responseData.sid);
             return responseData;
         }, function reject(error) {
             console.error('Call failed!  Reason: ' + error.message);

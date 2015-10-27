@@ -95,14 +95,19 @@ describe('Notifications CRUD tests', function () {
 		it('should send an email for a new friend invitation');
 		it('should send an SMS for a new friend invitation', function () {
 
-			NotificationCtrl.processRequest(friendRequest, user)
+			return NotificationCtrl.processRequest(friendRequest, user)
 				.then(function (sendResult) {
 					should.exist(sendResult);
+					
+					log.debug({ func: 'Friend SMS Test', result: sendResult }, 'Got Result from Sending Friend Request');
 					
 					sendResult.should.have.property('success');
 					sendResult.should.have.property('messageId');
 					sendResult.should.have.property('status');
 					sendResult.should.have.property('system');
+					
+					/Join the Convoy/.test(sendResult.message).should.be.true;
+					/Terry has invited you/.test(sendResult.message).should.be.true;
 				});
 		});
 		it('should send an email when a new friend request is accepted');

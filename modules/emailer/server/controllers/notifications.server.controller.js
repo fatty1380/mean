@@ -5,7 +5,7 @@ exports.send = send;
 exports.sendSMS = sendSMS;
 exports.sendEmail = sendEmail;
 exports.loadRequest = loadRequest;
-exports.processRequest = processNewRequest;
+exports.processRequest = processRequest;
 
 var _ = require('lodash'),
 	path = require('path'),
@@ -33,20 +33,20 @@ var User = mongoose.model('User'),
 var eventConfig = {};
 
 var defaultEventConfig = {
-	'user:new': {emailTemplate: 'sign-up-email', smsTemplate: null},
-	'user:update': {emailTemplate: null, smsTemplate: null},
-	'inviteRequest:send': {emailTemplate: 'invite-to-truckerline', smsTemplate: '{{FIRST_NAME}} has invited you to TruckerLine. Join the Convoy at http://truckerline.com/r/{{SHORT_ID}}'},
-	'friendRequest:send': {emailTemplate: 'new-friend-request', smsTemplate: null},
-	'friendRequest:accept': {emailTemplate: 'new-connection', smsTemplate: null},
-	'friendRequest:reject': {emailTemplate: null, smsTemplate: null},
-	'shareRequest:send': {emailTemplate: 'shared-profile-email', smsTemplate: null},
-	'shareRequest:accept': {emailTemplate: null, smsTemplate: null},
-	'reviewRequest:send': {emailTemplate: 'new-review-request', smsTemplate: '{{FIRST_NAME}} has requested you review their services on TruckerLine. http://truckerline.com/r/{{SHORT_ID}}'},
-	'reviewRequest:accept': { emailTemplate: 'new-review-posted', smsTemplate: null },
+	'user:new': { emailTemplate: 'sign-up-email', smsTemplate: null },
+	'user:update': { emailTemplate: null, smsTemplate: null },
+	'inviteRequest:new': { emailTemplate: 'invite-to-truckerline', smsTemplate: '{{=it.SENDER_NAME}} has invited you to TruckerLine. Join the Convoy at http://truckerline.com/'}, //r/{{=it.SHORT_ID}}' },
+	'friendRequest:new': { emailTemplate: 'new-friend-request', smsTemplate: null },
+	'friendRequest:accepted': { emailTemplate: 'new-connection', smsTemplate: null },
+	'friendRequest:rejected': { emailTemplate: null, smsTemplate: null },
+	'shareRequest:new': { emailTemplate: 'shared-profile-email', smsTemplate: null },
+	'shareRequest:accepted': { emailTemplate: null, smsTemplate: null },
+	'reviewRequest:new': { emailTemplate: 'new-review-request', smsTemplate: '{{=it.SENDER_NAME}} has requested you review their services on TruckerLine. http://truckerline.com/'}, //r/{{=it.SHORT_ID}}' },
+	'reviewRequest:accepted': { emailTemplate: 'new-review-posted', smsTemplate: null },
 	'chatMessage:new': { emailTemplate: 'new-message', smsTemplate: null },
 	'orderReports:new': { emailTemplate: null, smsTemplate: null },
 	'orderReports:ready': { emailTemplate: null, smsTemplate: null },
-	'report-request:new': { emailTemplate: 'request-reminder', smsTemplate: null }
+	'reportRequest:new': { emailTemplate: 'request-reminder', smsTemplate: null }
 };
 
 /**
@@ -64,37 +64,70 @@ initialize();
 
 function initialize(messageConfigs) {
 	eventConfig = _.defaults(eventConfig, messageConfigs, defaultEventConfig);
-	
+
 	log.debug({ func: 'initialize', config: eventConfig }, 'Notification Center Configured with new settings');
 }
 
 function send(event, options) {
-	
+
 	log.info({ func: 'send', event: event, options: options }, 'Sending notification for event `%s`', event);
-	
+
 	var config = eventConfig[event];
-	
+
 	log.info({ func: 'send', config: config }, 'Loaded Config for event `%s`', event);
-	
+
 	if (!config) {
 		return { result: false, message: 'No notification configured for event' };
 	}
-	
+
 	switch (event) {
 		case 'user:new':
 			console.warn({ func: 'send' }, 'Sending Template for new user signup');
 			return emailer.sendTemplateBySlug(config.emailTemplate, options.user, options);
 	}
-	
+
 	if (!!options.requestMessage) {
-		return processNewRequest(options.requestMessage, options.user);
+		return processRequest(options.requestMessage, options.user);
 	}
 }
 
-function processNewRequest(requestMessage, sender) {
-	var recipient, emails, phoneNumbers;
+function processRequest(requestMessage, sender) {
+
+	var event;
+
+	switch (requestMessage.requestType) {
+		case 'friendRequest':
+			if (_.isEmpty(requestMessage.to)) {
+				event = 'inviteRequest:new';
+			}
+			else {
+				event = 'friendRequest:' + requestMessage.status;
+			}
+			break;
+		case 'shareRequest':
+			event = 'shareRequest:' + requestMessage.status;
+			break;
+		case 'reviewRequest':
+			event = 'reviewRequest:' + requestMessage.status;
+			break;
+		case 'reportRequest':
+			event = 'reportRequest:' + requestMessage.status;
+			break;
+	}
 	
-	var config = eventConfig[requestMessage.requestType + ':new'];
+	log.info({ func: 'processRequest', requestMessage: requestMessage, event: event }, 'Processing for event `%s`', event);
+
+	return processNewRequest(event, requestMessage, sender);
+}
+
+function processNewRequest(event, requestMessage, sender) {
+	var result, recipient, emails, phoneNumbers;
+
+	var config = eventConfig[event];
+
+	if (_.isEmpty(config)) {
+		return Q.reject('Invalid Event Configuration');
+	}
 
 	log.debug({ func: 'processNewRequest', requestMessage: requestMessage, config: config }, 'START');
 
@@ -130,7 +163,7 @@ function processNewRequest(requestMessage, sender) {
 
 			if (_.isEmpty(target.phone) && !_.isEmpty(target.phoneNumbers)) {
 				target.phone = getBest(target.phoneNumbers);
-				log.debug({ func: 'processNewRequest', email: target.phone }, 'Got Best phone for User');
+				log.debug({ func: 'processNewRequest', phone: target.phone }, 'Got Best phone for User');
 			}
 
 			if (_.isEmpty(target.email) && _.isEmpty(target.phone)) {
@@ -140,33 +173,70 @@ function processNewRequest(requestMessage, sender) {
 
 
 			log.debug({ func: 'processNewRequest' }, 'Configuring options...');
-			var options = [
-				{ name: 'SENDER_ID', content: sender.id },
-				{ name: 'SENDER_NAME', content: sender.firstName || sender.displayName },
-				{ name: 'FIRST_NAME', content: target.firstName || target.displayName },
-				{ name: 'LAST_NAME', content: target.lastName },
-				{ name: 'RECIPIENT_NAME', content: target.displayName || target.firstName || target.lastName },
-				{ name: 'EMAIL', content: target.email },
-				{ name: 'PHONE', content: target.phone },
-				{ name: 'LINK_ID', content: requestMessage.id },
-				{ name: 'SHORT_ID', content: requestMessage.shortId },
-				{ name: 'MESSAGE', content: requestMessage.text },
-				{ name: 'PROFILE_IMAGE', content: sender.profileImageURL || sender.props && sender.props.avatar }
-			];
+			var vars = {
+				'SENDER_ID': sender.id,
+				'SENDER_NAME': sender.firstName || sender.displayName,
+				'FIRST_NAME': target.firstName || target.displayName,
+				'LAST_NAME': target.lastName,
+				'RECIPIENT_NAME': target.displayName || target.firstName || target.lastName,
+				'EMAIL': target.email,
+				'PHONE': target.phone,
+				'LINK_ID': requestMessage.id,
+				'SHORT_ID': requestMessage.shortId,
+				'MESSAGE': requestMessage.text,
+				'PROFILE_IMAGE': sender.profileImageURL || sender.props && sender.props.avatar
+			};
+			log.debug({ func: 'processNewRequest', vars: vars, config: config }, 'Configured options... Sending For Config');
 
-			if (!!target.email && config.emailTemplate) {
-				log.debug({ func: 'processNewRequest', email: target.email, options: options }, 'Notifying request recipient via email');
-				return emailer.sendTemplateBySlug(config.emailTemplate, target, options);
-			} else if (!!target.phone && config.smsTemplate) {
-				log.debug({ func: 'processNewRequest', phone: target.phone, options: options }, 'Notifying request recipient via phone');
-				return messenger.sendMessage(config.smsTemplate, { vars: options });
+			if (!!target.phone && config.smsTemplate) {
+				log.debug({ func: 'processNewRequest', phone: target.phone, options: vars }, 'Notifying request recipient via phone');
+				return messenger.sendMessage(config.smsTemplate, { vars: vars });
+			} else if (!!target.email && config.emailTemplate) {
+				log.debug({ func: 'processNewRequest', email: target.email, options: vars }, 'Notifying request recipient via email');
+				return emailer.sendTemplateBySlug(config.emailTemplate, target, vars);
 			}
 		})
 		.then(function (sendResult) {
 			debugger;
 			log.info({ func: 'processNewRequest', stage: 'sendResult', result: sendResult }, 'Got result from send');
+
+
+			if (!_.isEmpty(sendResult.sid)) {
+				result = {
+					success: sendResult.status !== 'rejected',
+					status: sendResult.status,
+					messageId: sendResult.sid,
+					system: 'twilio',
+					method: 'sms',
+					recipient: sendResult.to,
+					message: sendResult.body
+				};
+			}
+			else {
+				result = {
+					success: _.isEmpty(sendResult.reject_reason),
+					status: sendResult.status,
+					messageId: sendResult._id,
+					system: 'mandrill',
+					method: 'email',
+					recipient: sendResult.email
+				};
+			}
 			
-			return sendResult;
+			if (result.success && requestMessage.status === 'new') {
+				log.debug('Setting `new` status to `sent` after success');
+				requestMessage.status = 'sent';
+				
+				return requestMessage.save();
+			}
+			
+			return requestMessage;
+		})
+		.then(function(saveResult) {
+			result.requestMessage = saveResult;
+			
+			return result;
+
 		});
 }
 
@@ -180,8 +250,15 @@ function getBest(contacts) {
 	}
 
 	_.forEach(contacts, function (e) {
+		log.debug({ func: 'getBest', contact: e }, 'Evaluating Current Contact');
 		if (!_.isEmpty(e.value)) {
+			log.debug({ func: 'getBest', best: e }, 'Got It (value)!');
 			pref = e.value;
+			return false;
+		}
+		if (_.isString(e)) {
+			log.debug({ func: 'getBest', best: e }, 'Got It (string)!');
+			pref = e;
 			return false;
 		}
 	});
@@ -211,6 +288,7 @@ function sendSMS(req, res) {
 		return res.status(422).send({ message: 'must define phone numbers in request' });
 	}
 
+	// TODO: Remap this setup
 	var messageConfig = {
 		to: contactInfo.phone || contactInfo.phoneNumbers,
 		from: req.user
