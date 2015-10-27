@@ -16,6 +16,15 @@ var should = require('should'),
 
 var mongoose = require('mongoose'),
 	User = mongoose.model('User');
+	
+	
+// ** CONTROLLER TEST IMPORTS ** //
+
+var NotificationCtrl = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
+	RequestMessage = mongoose.model('RequestMessage');
+
+
+///////////////////////////////////
 
 /**
  * Globals
@@ -38,7 +47,7 @@ describe('Notifications CRUD tests', function () {
 	
 		agent = new TestAgent();
 		log.info({ func: 'beforeAll', agent: agent, keys: _.keys(agent) });
-		
+
 		should.exist(agent.get);
 
 		done();
@@ -61,12 +70,55 @@ describe('Notifications CRUD tests', function () {
 			});
 	});
 
-	describe('for Logged In users', function () {
+	describe('for the Controller', function () {
+
+		var friendRequest;
+
+		beforeEach(function () {
+			friendRequest = new RequestMessage({
+				"from": user._id,
+				"contactInfo": {
+					"checked": "true",
+					"phoneNumbers": [
+						"6507767675"
+					],
+					"emails": "",
+					"displayName": "Patrick Test"
+				},
+				"requestType": "friendRequest",
+				"status": "new",
+				"to": null
+			});
+		});
+
+		it('Should send an email for a new user');
+		it('should send an email for a new friend invitation');
+		it('should send an SMS for a new friend invitation', function () {
+
+			NotificationCtrl.processRequest(friendRequest, user)
+				.then(function (sendResult) {
+					should.exist(sendResult);
+					
+					sendResult.should.have.property('success');
+					sendResult.should.have.property('messageId');
+					sendResult.should.have.property('status');
+					sendResult.should.have.property('system');
+				});
+		});
+		it('should send an email when a new friend request is accepted');
+		it('should send an email when sharing a user\'s profile');
 		
+		afterEach(function () {
+			return stubs.cleanTables([RequestMessage]);
+		});
+	});
+
+	describe('for Logged In users', function () {
+
 		function postToNotifications(postBody, expect, endpoint) {
 			endpoint = endpoint || '/api/notifications';
 			expect = expect || 200;
-			
+
 			return agent.post(endpoint)
 				.send(postBody)
 				.expect(expect)
@@ -75,7 +127,7 @@ describe('Notifications CRUD tests', function () {
 						should.exist(postResponse.body);
 
 						log.debug({ response: postResponse.body }, 'Got Response Body');
-						
+
 						return postResponse.body;
 					});
 		}

@@ -49,6 +49,17 @@ var defaultEventConfig = {
 	'report-request:new': { emailTemplate: 'request-reminder', smsTemplate: null }
 };
 
+/**
+ * Return Values
+ * -------------
+ * Each message type, whether SMS or Email, needs to have a semi-consistent return type. The 
+ * core bits of information are:
+ *   - Success : Boolean
+ *   - MessageId : String
+ *   - Status : String [Queued, Delivered, Rejected]
+ *   - System : String [Twilio, Mandrill]
+ */
+
 initialize();
 
 function initialize(messageConfigs) {
@@ -85,7 +96,7 @@ function processNewRequest(requestMessage, sender) {
 	
 	var config = eventConfig[requestMessage.requestType + ':new'];
 
-	log.debug({ func: 'processShareRequest', requestMessage: requestMessage, config: config }, 'START');
+	log.debug({ func: 'processNewRequest', requestMessage: requestMessage, config: config }, 'START');
 
 	if (_.isObject(requestMessage.to) && !_.isEmpty(requestMessage.to)) {
 		recipient = requestMessage.to;
@@ -98,7 +109,7 @@ function processNewRequest(requestMessage, sender) {
 		recipient = requestMessage.contactInfo;
 	}
 
-	//log.debug({ func: 'processShareRequest', sender: sender, from_ID: requestMessage.from._id.toString(), stringQ: _.isString(requestMessage.from), fromId: requestMessage.from.id, from_id: requestMessage.from._id }, 'Evaluating sender');
+	//log.debug({ func: 'processNewRequest', sender: sender, from_ID: requestMessage.from._id.toString(), stringQ: _.isString(requestMessage.from), fromId: requestMessage.from.id, from_id: requestMessage.from._id }, 'Evaluating sender');
 
 	if (_.isEmpty(sender)) {
 		sender = User.findById(requestMessage.from._id || requestMessage.from).select('firstName lastName displayName phone email').exec();
@@ -110,25 +121,25 @@ function processNewRequest(requestMessage, sender) {
 			var target = results.recipient;
 			var sender = results.sender;
 
-			log.debug({ func: 'processShareRequest', recipient: target, sender: sender }, 'Configuring info for Notification');
+			log.debug({ func: 'processNewRequest', recipient: target, sender: sender }, 'Configuring info for Notification');
 
 			if (_.isEmpty(target.email) && !_.isEmpty(target.emails)) {
 				target.email = getBest(target.emails);
-				log.debug({ func: 'processShareRequest', email: target.email }, 'Got Best Email for User');
+				log.debug({ func: 'processNewRequest', email: target.email }, 'Got Best Email for User');
 			}
 
 			if (_.isEmpty(target.phone) && !_.isEmpty(target.phoneNumbers)) {
 				target.phone = getBest(target.phoneNumbers);
-				log.debug({ func: 'processShareRequest', email: target.phone }, 'Got Best phone for User');
+				log.debug({ func: 'processNewRequest', email: target.phone }, 'Got Best phone for User');
 			}
 
 			if (_.isEmpty(target.email) && _.isEmpty(target.phone)) {
-				log.debug({ func: 'processShareRequest', target: target }, 'Can\'t continue - both email and phone are empty');
+				log.debug({ func: 'processNewRequest', target: target }, 'Can\'t continue - both email and phone are empty');
 				throw new Error('No Available Contact Information');
 			}
 
 
-			log.debug({ func: 'processShareRequest' }, 'Configuring options...');
+			log.debug({ func: 'processNewRequest' }, 'Configuring options...');
 			var options = [
 				{ name: 'SENDER_ID', content: sender.id },
 				{ name: 'SENDER_NAME', content: sender.firstName || sender.displayName },
@@ -144,12 +155,18 @@ function processNewRequest(requestMessage, sender) {
 			];
 
 			if (!!target.email && config.emailTemplate) {
-				log.debug({ func: 'processShareRequest', email: target.email, options: options }, 'Notifying request recipient via email');
-				emailer.sendTemplateBySlug(config.emailTemplate, target, options);
+				log.debug({ func: 'processNewRequest', email: target.email, options: options }, 'Notifying request recipient via email');
+				return emailer.sendTemplateBySlug(config.emailTemplate, target, options);
 			} else if (!!target.phone && config.smsTemplate) {
-				log.debug({ func: 'processShareRequest', phone: target.phone, options: options }, 'Notifying request recipient via phone');
-				messenger.sendMessage(config.smsTemplate, { vars: options });
+				log.debug({ func: 'processNewRequest', phone: target.phone, options: options }, 'Notifying request recipient via phone');
+				return messenger.sendMessage(config.smsTemplate, { vars: options });
 			}
+		})
+		.then(function (sendResult) {
+			debugger;
+			log.info({ func: 'processNewRequest', stage: 'sendResult', result: sendResult }, 'Got result from send');
+			
+			return sendResult;
 		});
 }
 
