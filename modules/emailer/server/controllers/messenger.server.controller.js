@@ -58,10 +58,12 @@ function sendMessageRequest(message, messageConfig) {
 
     }
     
-
+    var recipient = _.isString(messageConfig.to) && messageConfig.to
+        || messageConfig.vars && messageConfig.vars.PHONE
+        || null;
 
     var messageObj = {
-        to: _.isArray(messageConfig.to) ? _.first(messageConfig.to) : messageConfig.to,
+        to: recipient,
         from: clientConfig.twilioNumber,
         body: body
     };

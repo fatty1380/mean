@@ -195,7 +195,7 @@ function processNewRequest(event, requestMessage, sender) {
 
 			if (!!target.phone && config.smsTemplate) {
 				log.debug({ func: 'processNewRequest', phone: target.phone, options: vars }, 'Notifying request recipient via phone');
-				return messenger.sendMessage(config.smsTemplate, { vars: vars });
+				return messenger.sendMessage(config.smsTemplate, { vars: vars, to: target.phone });
 			} else if (!!target.email && config.emailTemplate) {
 				log.debug({ func: 'processNewRequest', email: target.email, options: vars }, 'Notifying request recipient via email');
 				return emailer.sendTemplateBySlug(config.emailTemplate, target, vars);
