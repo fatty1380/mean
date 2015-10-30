@@ -3,15 +3,16 @@
 /**
  * Module dependencies.
  */
-var _            = require('lodash'),
-    path         = require('path'),
+var _ = require('lodash'),
+    path = require('path'),
     fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-    config       = require(path.resolve('./config/config')),
-    mongoose     = require('mongoose'),
-    passport     = require('passport'),
-    User         = mongoose.model('User'),
-    Q            = require('q'),
+    AuthCtrl = require('./users.authentication.server.controller'),
+    config = require(path.resolve('./config/config')),
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    User = mongoose.model('User'),
+    Q = require('q'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users',
         file: 'users.profile.server.controller'
@@ -42,12 +43,20 @@ function update(req, res) {
 
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
-    req.log.debug({func: 'update', file: 'users.profile.ctrl', body: req.body}, 'Updating Logged in user with body contents');
+    req.log.debug({ func: 'update', file: 'users.profile.ctrl', body: req.body }, 'Updating Logged in user with body contents');
+
+    if (!_.isEmpty(req.body.salt + req.body.password)) {
+        debugger;
+        req.log.error({ func: 'update' }, 'Request Body has Password and/or SALT');
+        delete req.body.password;
+        delete req.body.salt;
+        delete req.body.oldPass;
+    }
 
     if (req.user) {
         // Merge existing user
-        var user             = _.extend(req.user, req.body);
-        user.modified    = Date.now();
+        var user = _.extend(req.user, req.body);
+        user.modified = Date.now();
 
         user.save(function (err) {
             if (err) {
@@ -55,13 +64,7 @@ function update(req, res) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                req.login(user, function (err) {
-                    if (err) {
-                        res.status(400).send(err);
-                    } else {
-                        res.json(user);
-                    }
-                });
+                AuthCtrl.login(req, res, user);
             }
         });
     } else {
@@ -84,11 +87,11 @@ function changeProfilePicture(req, res) {
 
                 var successURL = successResponse.url;
 
-                req.log.debug({func: 'changeProfilePicture', file: 'users.profile'}, 'successfully uploaded profile picture to %s', successURL);
+                req.log.debug({ func: 'changeProfilePicture', file: 'users.profile' }, 'successfully uploaded profile picture to %s', successURL);
 
                 user.profileImageURL = successURL;
 
-                req.log.debug({func: 'changeProfilePicture', file: 'users.profile'}, '[ChangeProfilePicture] - Saving User with URL: %s', user.profileImageURL);
+                req.log.debug({ func: 'changeProfilePicture', file: 'users.profile' }, '[ChangeProfilePicture] - Saving User with URL: %s', user.profileImageURL);
 
                 user.save(function (saveError) {
                     if (saveError) {
@@ -96,13 +99,7 @@ function changeProfilePicture(req, res) {
                             message: errorHandler.getErrorMessage(saveError)
                         });
                     } else {
-                        req.login(user, function (err) {
-                            if (err) {
-                                res.status(400).send(err);
-                            } else {
-                                res.json(user);
-                            }
-                        });
+                        AuthCtrl.login(req, res, user);
                     }
                 });
             },
@@ -111,7 +108,7 @@ function changeProfilePicture(req, res) {
                     message: errorHandler.getErrorMessage(error)
                 });
             }
-        );
+            );
     }
     else {
         res.status(400).send({
@@ -122,21 +119,21 @@ function changeProfilePicture(req, res) {
 
 function search(req, res, next) {
 
-    req.log.debug({query: req.query}, 'Searching based on query string');
+    req.log.debug({ query: req.query }, 'Searching based on query string');
     var queryStrings = (_.isString(req.query.text) ? [req.query.text] : req.query.text) || [];
 
-    var qs = _.map(queryStrings, function(qString) {
+    var qs = _.map(queryStrings, function (qString) {
         return /[@\.]/.test(qString) ? '"' + qString + '"' : qString;
     });
 
-    req.log.debug({query: qs}, 'Updated Searching based on query string to `%s`', qs);
+    req.log.debug({ query: qs }, 'Updated Searching based on query string to `%s`', qs);
 
     req.select = 'firstName lastName handle profileImageURL type driver company email';
 
     User.find(
-        {$text: {$search: qs.join(' ')}},
-        {score: {$meta: 'textScore'}}
-    ).sort({score: {$meta: 'textScore'}})
+        { $text: { $search: qs.join(' ') } },
+        { score: { $meta: 'textScore' } }
+        ).sort({ score: { $meta: 'textScore' } })
         .select(req.select)
         .exec(function (err, users) {
             if (err) {
@@ -144,7 +141,7 @@ function search(req, res, next) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                req.log.debug({func: 'search', file: 'users.profile', users: users}, '[Profiles] Returning %d profiles', (users || []).length);
+                req.log.debug({ func: 'search', file: 'users.profile', users: users }, '[Profiles] Returning %d profiles', (users || []).length);
                 res.json(users);
             }
         });
@@ -168,18 +165,18 @@ function list(req, res, next) {
 
     var queryStrings = (_.isString(req.query.text) ? [req.query.text] : req.query.text) || [];
 
-    req.log.debug({func: 'list', file: 'users.profile'}, 'Query Search terms: `%s`', queryStrings);
+    req.log.debug({ func: 'list', file: 'users.profile' }, 'Query Search terms: `%s`', queryStrings);
 
     _.each(queryStrings, function (search) {
-        req.log.debug({func: 'list', file: 'users.profile'}, 'Adding search term `%s`', search);
+        req.log.debug({ func: 'list', file: 'users.profile' }, 'Adding search term `%s`', search);
 
         var q = [
-            {displayName: new RegExp(search, 'i')},
-            {handle: new RegExp(search, 'i')},
-            {email: new RegExp(search, 'i')}
+            { displayName: new RegExp(search, 'i') },
+            { handle: new RegExp(search, 'i') },
+            { email: new RegExp(search, 'i') }
         ];
 
-        query.and({$or : q});
+        query.and({ $or: q });
     });
 
     query.select(select)
@@ -190,7 +187,7 @@ function list(req, res, next) {
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                req.log.debug({func: 'list', file: 'users.profile'}, '[Profiles] Returning %d profiles', (users || []).length);
+                req.log.debug({ func: 'list', file: 'users.profile' }, '[Profiles] Returning %d profiles', (users || []).length);
                 res.json(users);
             }
         });
@@ -203,10 +200,10 @@ function read(req, res) {
             message: 'No profile found'
         });
     }
-    
+
     req.profile.cleanse();
 
-    req.log.debug({func: 'readProfile', file: 'users.profile', profile: req.profile}, '[Profiles] Returning profile');
+    req.log.debug({ func: 'readProfile', file: 'users.profile', profile: req.profile }, '[Profiles] Returning profile');
     res.json(req.profile);
 }
 
@@ -221,5 +218,8 @@ function me(req, res) {
         });
     }
 
-    res.json(req.user);
+    var user = req.user.cleanse();
+    debugger;
+
+    res.json(user);
 }

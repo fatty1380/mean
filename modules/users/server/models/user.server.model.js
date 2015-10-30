@@ -200,13 +200,16 @@ UserSchema.index({
  * Hook a pre save method to hash the password
  */
 UserSchema.pre('save', function (next) {
-    if (!this.isModified('password')) {
-        return next();
-    }
 
     if (this.isModified('firstName') || this.isModified('lastName')) {
         this.displayName = this.firstName + ' ' + this.lastName;
     }
+    
+    if (!this.isModified('password')) {
+        return next();
+    }
+    
+    debugger;
 
     if (this.password && this.password.length > 6) {
         this.salt = crypto.randomBytes(16).toString('base64');
@@ -269,11 +272,13 @@ UserSchema.methods.authenticate = function (password) {
 };
 
 UserSchema.methods.cleanse = function () {
-    log.trace({ func: 'cleanse' }, 'Cleansing sensitive Data');
+    //log.trace({ func: 'cleanse' }, 'Cleansing sensitive Data');
 
-    this.oldPass = undefined;
-    this.password = undefined;
-    this.salt = undefined;
+    delete this.oldPass;
+    delete this.password;
+    delete this.salt;
+    
+    return this;
 };
 
 UserSchema.methods.socialify = function () {

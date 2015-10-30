@@ -314,3 +314,5 @@ function login(req, res, user, noResponse) {
         }
     });
 }
+
+exports.login = login;
