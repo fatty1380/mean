@@ -67,16 +67,19 @@ function sendGenericTemplateEmail(templateName, user, options) {
             {
                 name: 'FNAME',
                 content: user.firstName || user.displayName
-            },
-            {
-                name: 'PROFILE_IMAGE',
-                content: user.profileImageURL || user.props && user.props.avatar
             }
         ]
     };
 
     if (!!options && !!options.length) {
-        mailOptions.global_merge_vars = _.union(mailOptions.global_merge_vars, options);
+        if (_.isArray(options)) {
+            mailOptions.global_merge_vars = _.union(mailOptions.global_merge_vars, options);
+        }
+        else if (_.isObject(options)) {
+            _.forOwn(options, function (key, value) {
+                mailOptions.global_merge_vars.push({ name: key, content: value });
+             });
+        }
     }
 
     console.log('With options: %j', mailOptions);
