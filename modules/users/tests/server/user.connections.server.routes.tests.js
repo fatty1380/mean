@@ -392,6 +392,41 @@ describe('User Connections & Social', function () {
                     friendRequest.should.have.property('status', 'new');
                 });
         });
+        
+        it('should clean up a messy friend request to a non-outset user', function () {
+                        _test = this.test;
+
+            var endpoint = '/api/requests';
+            var contactInfo = {
+                checked: 'true',
+                displayName: 'Calamity Jane',
+                email: 'c.jane@deadwoodpost.com',
+                phoneNumbers: [{ value: '123-456-7689' }]
+                
+            };
+            var postData = { contactInfo: contactInfo, text: 'hello there!' };
+
+            log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
+
+            return agent.post(endpoint)
+                .send(postData)
+                .expect(200)
+                .then(function (response) {
+                    var friendRequest = response.body;
+
+                    log.debug({ url: endpoint, test: _test.title, body: response.body, code: response.status }, 'Got friends result');
+
+                    friendRequest.should.have.property('text', postData.text);
+                    friendRequest.should.have.property('from', user.id);
+                    friendRequest.should.have.property('to', null);
+                    friendRequest.should.have.property('contactInfo', contactInfo);
+                    friendRequest.should.have.property('status', 'new');
+                    
+					friendRequest.should.have.property('contactInfo');
+					friendRequest.contactInfo.should.not.have.property('checked');
+                });
+					
+        });
 
         it('should allow me to load a specific friend request', function () {
             _test = this.test;

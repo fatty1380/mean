@@ -76,18 +76,18 @@ describe('Notifications CRUD tests', function () {
 
 		beforeEach(function () {
 			friendRequest = new RequestMessage({
-				"from": user._id,
-				"contactInfo": {
-					"checked": "true",
-					"phoneNumbers": [
-						"6507767675"
+				'from': user._id,
+				'contactInfo': {
+					'checked': 'true',
+					'phoneNumbers': [
+						'6507767675'
 					],
-					"emails": "",
-					"displayName": "Patrick Test"
+					'emails': '',
+					'displayName': 'Patrick Test'
 				},
-				"requestType": "friendRequest",
-				"status": "new",
-				"to": null
+				'requestType': 'friendRequest',
+				'status': 'new',
+				'to': null
 			});
 		});
 
@@ -112,22 +112,22 @@ describe('Notifications CRUD tests', function () {
 		});
 		it('should send an SMS for an alternate format contact info', function () {
 			var fr = new RequestMessage({
-				"from": user._id,
-				"contactInfo": {
-					"emails": [
+				'from': user._id,
+				'contactInfo': {
+					'emails': [
 						{
-							"value": "undefined"
+							'value': 'undefined'
 						}
 					],
-					"phones": [
+					'phones': [
 						{
-							"type": "main",
-							"value": "6507767675"
+							'type': 'main',
+							'value': '6507767675'
 						}
 					],
-					"displayName": "undefined"
+					'displayName': 'undefined'
 				},
-				"requestType": "friendRequest"
+				'requestType': 'friendRequest'
 			});
 
 			return fr.save()

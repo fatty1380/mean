@@ -73,13 +73,13 @@ module.exports = function (grunt) {
                     }
                 },
 
-                serverTests: {
-                    options: {
-                        spawn: false
-                    },
-                    files: defaultAssets.server.allJS,
-                    tasks: ['test']
-                }
+                // serverTests: {
+                //     options: {
+                //         spawn: false
+                //     },
+                //     files: defaultAssets.server.allJS,
+                //     tasks: ['test:server']
+                // }
             },
             express         : {
                 options: {},
@@ -277,6 +277,12 @@ module.exports = function (grunt) {
                         reporter: 'spec'
                     }
                 },
+                srvCtrl     : {
+                    src: testAssets.tests.srvCtrl,
+                    options: {
+                        reporter: 'spec'
+                    }
+                },
                 integration: {
                     src: testAssets.tests.integration,
                     options: {
@@ -374,6 +380,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test:server', ['env:test', 'mongoose', 'mochaTest']);
     grunt.registerTask('test:integration', ['env:test', 'mongoose', 'mochaTest:integration']);
     grunt.registerTask('test:routes', ['env:test', 'mongoose', 'mochaTest:routes']);
+    grunt.registerTask('test:srvctrl', ['env:test', 'mongoose', 'mochaTest:srvCtrl']);
     grunt.registerTask('test:model', ['env:test', 'mongoose', 'mochaTest:model']);
     grunt.registerTask('test-e2e', ['env:test', 'express:test', 'protractor', 'express:test:stop']);
 
