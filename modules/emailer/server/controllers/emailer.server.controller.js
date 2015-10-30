@@ -82,7 +82,7 @@ function sendGenericTemplateEmail(templateName, user, options) {
         }
         else if (_.isObject(options)) {
             log.debug({ func: 'sendGenericTemplateEmail', keys: _.keys(options) }, 'merging options object');
-            _.forOwn(options, function (key, value) {
+            _.forOwn(options, function (value, key) {
                 mailOptions.global_merge_vars.push({ name: key, content: value });
              });
         }
