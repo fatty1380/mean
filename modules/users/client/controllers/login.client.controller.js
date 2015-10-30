@@ -34,7 +34,7 @@
                     }
 
                     if (vm.auth.isLoggedIn()) {
-                        Raygun.setUser(vm.auth.user.id, false, vm.auth.user.email, vm.auth.user.displayName);
+                        //Raygun.setUser(vm.auth.user.id, false, vm.auth.user.email, vm.auth.user.displayName);
                     }
                 }).catch(function error(response) {
                     console.error(response.message || response);
