@@ -133,7 +133,8 @@ module.exports = {
         tokenLife: 1000 * 3600 * 24 * 30,
         cors: {
             whitelist: ['*']
-        }
+        },
+        randomB64: 'kvwBOcTj8kX3QpgdkqwVkQ=='
     },
 
     facebook: {

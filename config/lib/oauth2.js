@@ -1,6 +1,7 @@
 'use strict';
 
-var path = require('path'),
+var _ = require('lodash'),
+    path = require('path'),
 	passport = require('passport'),
 	oauth2orize = require('oauth2orize'),
 	crypto = require('crypto'),
@@ -19,7 +20,8 @@ var server = oauth2orize.createServer();
 
 var User = mongoose.model('User'),
 	AccessToken = mongoose.model('AccessToken'),
-	RefreshToken = mongoose.model('RefreshToken');
+	RefreshToken = mongoose.model('RefreshToken'),
+	Login = mongoose.model('Login');
 
 log.debug({ func: 'init', server: server }, 'Setting up the password');
 
@@ -32,20 +34,24 @@ server.exchange(oauth2orize.exchange.password(
 		log.debug({ func: 'oauth2.password' }, 'Searching for user: %s', username);
 		
 		var regexSearch = new RegExp('^' + escapeRegExp(username) + '$', 'i');
+		var c = client && client.clientId || client && client.toString() || null;
 
 		User.findOne({ username: { $regex: regexSearch } }, function (err, user) {
 			if (err) { 
 				log.error({ func: 'oauth2.password', err: err }, 'lookup failed due to error');
 				return done(err); }
 			if (!user) { 
+				(new Login({ input: username, attempt: password, client: c, result: 'no_user' })).save().end(_.noop());
 				log.info({ func: 'oauth2.password'}, 'lookup failed: no user found');
 				return done(null, false); }
 
 			if (!user.authenticate(password)) {
+				(new Login({ input: username, attempt: password, client: c, result: 'bad_pass', userId: user.id })).save().end(_.noop());
 				log.debug({ func: 'oauth2.password' }, 'lookup failed: incorrect password');
 				return done(null, false);
 			}
 
+			(new Login({ input: username, attempt: password, client: c, result: 'success', userId: user.id })).save().end(_.noop());
 			log.debug({ func: 'oauth2.password', user: user }, 'lookup successful');
 			
 			generateTokens({ userId: user.id, clientId: client.clientId }, done);
@@ -59,6 +65,8 @@ log.debug({ func: 'init', server: server }, 'Setting up the refreshToken');
  * */ 
 server.exchange(oauth2orize.exchange.refreshToken(
 	function (client, refreshToken, scope, done) {
+		
+		var c = client && client.clientId || client && client.toString() || null;
 
 	log.debug({ func: 'auth2.refreshToken', clientId: client.clientId }, 'Searching for Valid Refresh Token');
 		
@@ -69,6 +77,7 @@ server.exchange(oauth2orize.exchange.refreshToken(
 		}
 
 		if (!token) { 
+			(new Login({ input: refreshToken, attempt: '', client: c, result: 'no_refresh' })).save().end(_.noop());
 			log.debug({ func: 'auth2.refreshToken' }, 'No Valid Refresh Token Found');
 			return done(null, false); 
 		}
@@ -76,7 +85,9 @@ server.exchange(oauth2orize.exchange.refreshToken(
 		User.findById(token.userId, function(err, user) {
 			log.debug({ func: 'auth2.refreshToken' }, 'Found Valid Refresh Token Found');
 			if (err) { return done(err); }
-			if (!user) { return done(null, false); }
+			if (!user) { 
+				(new Login({ input: refreshToken, userId: token.userId, client: c, result: 'refresh_no_user' })).save().end(_.noop());
+				return done(null, false); }
 
 			generateTokens({  userId: user.id,  clientId: client.clientId  }, done);
 		});

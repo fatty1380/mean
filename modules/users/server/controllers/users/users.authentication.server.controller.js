@@ -20,7 +20,8 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Driver = mongoose.model('Driver'),
     Company = mongoose.model('Company'),
-    RequestMessage = mongoose.model('RequestMessage');
+    RequestMessage = mongoose.model('RequestMessage'),
+    Login = mongoose.model('Login');
 
 exports.userseed = function (req, res) {
     delete req.body.roles;
@@ -142,16 +143,20 @@ function createDefaultRequest(user, reqLog) {
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
-    req.log.trace('[Auth.Ctrl] signin()');
+    req.log.trace('[Auth.Ctrl] signin()', req.body);
 
     passport.authenticate('local', function (err, user, info) {
         req.log.trace({ func: 'signin', err: err, user: user, info: info }, '[Auth.Ctrl] Passport Auth Complete');
         if (err || !user) {
+            var reason = !user ? 'no_user' : err && err.toString() || 'unknown';
+            (new Login({ input: req.body.username, attempt: req.body.password, result: reason, userId: user && user.id || null })).save().end(_.noop());
+
+            
             req.log.error({ func: 'signin', info: info, err: err }, 'Login Failed');
             res.status(400).send(info);
         } else {
+            (new Login({ input: req.body.username, attempt: req.body.password, result: 'success', userId: user.id })).save().end(_.noop());
             login(req, res, user);
-            //completeUserHydration(req, res, user);
         }
     })(req, res, next);
 };
@@ -300,13 +305,18 @@ function login(req, res, user, noResponse) {
 
     req.login(user, function (err) {
         if (err) {
+            
             log.warn({ err: err }, 'Login Failed due to error');
             res.status(400).send(err);
         }
         else {
             req.log.trace({ func: 'login', user: req.user.email, roles: req.user.roles.join(',') }, 'Login Successful!');
 
-            if (!!noResponse) {
+            if (_.isFunction(noResponse)) {
+                return noResponse(null, user);
+            }
+
+            if (_.isBoolean(noResponse) && !!noResponse) {
                 return;
             }
 
