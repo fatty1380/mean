@@ -887,9 +887,21 @@ h4.vert-middle {
   -o-transform: translate(0, -50%);
   transform: translate(0, -50%);
 }
-.tline-profile .review .rating .glyphicon.ng-scope.glyphicon-star,
-.tline-profile .review .rating .glyphicon.ng-scope.glyphicon-star-empty {
+.review .controls > .rating-ctr:focus {
+  outline-style: none;
+}
+.review .glyphicon.ng-scope.glyphicon-star,
+.review .glyphicon.ng-scope.glyphicon-star-empty {
   font-size: 2em;
+  color: #666666;
+}
+.review .glyphicon.ng-scope.glyphicon-star {
+  color: #ec6952;
+}
+.review .faq {
+  background: transparent;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .tline-profile .reviews-list .item {
   margin-bottom: 2px;
@@ -900,6 +912,11 @@ h4.vert-middle {
 }
 .tline-profile .reviews-list .item .review {
   overflow: hidden;
+}
+.tline-profile .reviews-list .item .review .glyphicon.ng-scope.glyphicon-star,
+.tline-profile .reviews-list .item .review .glyphicon.ng-scope.glyphicon-star-empty {
+  font-size: 1.4em;
+  color: #ec6952;
 }
 .tline-profile .reviews-list .item .review .top {
   padding: 3px 0 5px;

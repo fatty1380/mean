@@ -12,16 +12,17 @@
 		
 		vm.request = reviewRequest;
 		vm.authentication = Authentication;
-
+		
+		///////////////////////////////////////////////////////
+		
 		// Create new Review
 		vm.create = function() {
 			// Create new Review object
-			var review = new Reviews.byId ({
-				name: this.name
-			});
+			var review = new Reviews.ByUser (vm.review);
 
 			// Redirect after save
-			review.$save(function(response) {
+			review.$save(function (response) {
+				
 				$location.path('reviews/' + response._id);
 
 				// Clear form fields
@@ -74,15 +75,17 @@
 	
 	angular.module('reviews').controller('ReviewEditCtrl', ReviewEditController);
 
-	ReviewEditController.$inject = ['reviewRequest', 'profile', 'review', '$stateParams', '$location', 'Authentication', 'Reviews' ];
+	ReviewEditController.$inject = ['$log', '$state', '$stateParams', '$location', 'reviewRequest', 'profile', 'review', 'Authentication', 'Reviews' ];
 	
-	function ReviewEditController(reviewRequest, profile, review, $stateParams, $location, Authentication, Reviews) {
+	function ReviewEditController($log, $state, $stateParams, $location, reviewRequest, profile, review, Authentication, Reviews) {
 
 		var vm = this;
 	
-		vm.request = reviewRequest;
+		vm.request = reviewRequest || {};
 		vm.authentication = Authentication;
 		vm.review = review || {};
+	
+        vm.faqs = faqs;
 	
 		// Exposed Methods
 		vm.create = create;
@@ -92,6 +95,12 @@
 		/////////////////////////////////////////////////////////////////
 		
 		function activate() {
+			
+			if (_.isEmpty(vm.request) && _.isEmpty(vm.review)) {
+				$log.error('No review or review request in parameters ... redirecting');
+				
+				vm.error = 'Unable to find Review';
+			}
 			
 			vm.profile = profile;
 			vm.review.userId = profile.id;
@@ -110,6 +119,7 @@
 		// Create new Review
 		function create() {
 			// Create new Review object
+			vm.error = null;
 			var review = new Reviews.byUser(vm.review);
 			
 			if (!vm.review.email && !vm.review.phone) {
@@ -133,7 +143,7 @@
 			// Redirect after save
 			review.$save(function (response) {
 				debugger;
-				$state.go('users.view', { userId: profile.id || response.user.id || response.user });
+				$state.go('trucker', { userId: profile.id || response.user.id || response.user });
 
 				// Clear form fields
 				vm.review = {};
@@ -142,4 +152,19 @@
 			});
 		}
 	}
+
+	var faqs = [
+        {
+            question: 'What do you need my information for?',
+            answer: 'We use your information to ensure that each review is tied to a real person - and to ensure the integrity of the site'
+        },
+        {
+            question: 'What information will be visible to users?',
+            answer: 'Only your name will be shown to the driver or other users. We will keep your contact information hidden at all times.'
+        },
+        {
+            question: 'What will my email and phone number be used for?',
+            answer: 'We will be providing other users to check references for reviews. Communication will be handled through TruckerLine and your email and phone number will aways remain private.'
+        }
+    ];
 })();

@@ -28,6 +28,10 @@ exports.invokeRolesPolicies = function () {
 			{
 				resources: '/api/notifications/email',
 				permissions: '*'
+			},
+			{
+				resources: '/r/:shortId',
+				permissions: ['get']
 			}
 		]
 	}, {
@@ -42,6 +46,10 @@ exports.invokeRolesPolicies = function () {
 				}, {
 					resources: '/api/notifications/email',
 					permissions: ['get']
+				},
+				{
+					resources: '/r/:shortId',
+					permissions: ['get']
 				}
 			]
 		},
@@ -50,7 +58,7 @@ exports.invokeRolesPolicies = function () {
 			allows: [
 				{
 					resources: '/r/:shortId',
-					permissions: []
+					permissions: ['get']
 				}
 			]
 		}]);

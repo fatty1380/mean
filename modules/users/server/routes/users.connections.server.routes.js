@@ -35,4 +35,7 @@ module.exports = function (app) {
 
 	app.route('/api/users/:userId/friends')
 		.get(users.requiresLogin, users.loadFriends);
+
+
+	app.param('requestId', users.requestById);
 };

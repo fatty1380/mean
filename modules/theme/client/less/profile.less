@@ -2,19 +2,33 @@
 @import "mixins.less";
 @import "theme-default.less";
 
-.tline-profile {
+
   
   .review {
     
-    .rating {
+    .controls > .rating-ctr:focus {
+      outline-style: none;
+    }
       
       .glyphicon.ng-scope {
         &.glyphicon-star, &.glyphicon-star-empty {
           font-size: 2em;
+          color: @text-color-dark;
+        }
+        
+        &.glyphicon-star {
+          color: @theme-default;
         }
       }
+    
+    .faq {
+      background: transparent;
+      padding-top: 20px;
+      padding-bottom: 20px;
     }
   }
+
+.tline-profile {
   
   .reviews-list {
     .item{
@@ -27,6 +41,13 @@
   
       .review{
         overflow: hidden;
+        
+        .glyphicon.ng-scope {
+        &.glyphicon-star, &.glyphicon-star-empty {
+          font-size: 1.4em;
+          color: @theme-default;
+        }
+      }
   
         .top{
           padding: 3px 0 5px;

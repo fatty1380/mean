@@ -320,18 +320,21 @@ function loadRequest(req, res) {
 
 	if (shortid.isValid(id)) {
 		log.info({ func: 'loadRequest', shortId: id }, 'Looking up By ShortID?');
+		
 		return RequestMessage.findOne({ shortId: id }).exec().then(
 			function success(requestMessage) {
 				log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
 				var fromId = requestMessage.from.id || requestMessage.from;
+				
 				if (!!requestMessage && !!fromId) {
 					var url = null;
 					log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
+
 					switch (requestMessage.requestType) {
 						case 'friendRequest':
 							break;
 						case 'shareRequest':
-							url = '/drivers/' + fromId + '/reports?requestId=' + requestMessage.id;
+							url = '/truckers/' + fromId + '?requestId=' + requestMessage.id;
 							log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
 							return res.redirect(url);
 						case 'reviewRequest':

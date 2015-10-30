@@ -37,6 +37,7 @@
             loadMenus();
             vm.isCollapsed = false;
             vm.hideHeader = !!($state.$current.data && $state.$current.data.hideHeader);
+            vm.hideMenus = !!($state.$current.data && $state.$current.data.hideMenus);
         });
 
         var handler = function () {

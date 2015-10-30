@@ -10,7 +10,7 @@
                     <a href="/"><img ng-src="modules/core/img/brand/{{vm.logoURL}}"></a>
                 </div>
 
-                <div data-ng-hide="vm.auth.user">
+                <div data-ng-hide="vm.auth.user || vm.hideMenus">
                     <div class="menu-list">
                         <!--<div class="menu-item pull-left" ng-class="{'active': vm.state.is('intro.driver')}">-->
                             <!--<a ui-sref="intro.driver">Drivers</a>-->
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div data-ng-show="vm.auth.user">
+                <div data-ng-show="vm.auth.user && !vm.hideMenus">
 
                     <div class="menu-list">
                         <div data-ng-repeat="item in vm.menu.items | orderBy: 'position'"

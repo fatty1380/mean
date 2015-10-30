@@ -146,7 +146,7 @@
             if (!id) {
                 return $q.when({});
             }
-            debugger;
+            
             return RequestMsgRsrc.get({ requestId: id }).$promise;
         }
         

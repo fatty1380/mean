@@ -125,33 +125,15 @@
             }).
             state('trucker.review', {
                 url: '/review',
-                templateUrl: '/modules/reviews/views/create-review.client.view.html',
-                controller: 'ReviewEditCtrl',
-                controllerAs: 'vm',
                 params: {
                     requestId: {
                         value: null,
                         squash: true
                     }
                 },
-                resolve: {
-                    reviewRequest: ['$log', '$stateParams', 'Requests', function ($log, $stateParams, Requests) {
-                        if (!!$stateParams.requestId) {
-                            return Requests.get($stateParams.requestId)
-                                .catch(function fail(err) {
-                                    $log.error(err, 'Unable to find requestId');
-                                    return {};
-                                });
-                        }
-                        return {};
-                    }],
-                    review: ['$log', '$stateParams', 'profile', function ($log, $stateParams, profile) {
-                        if (!!$stateParams.reviewId) {
-                            return _.find(profile.reviews, { id: $$stateParams.reviewId });
-                        }
-                        return {};
-                    }]
-                }
+                onEnter: ['$log', '$stateParams', '$state', function ($log, $stateParams, $state) {
+                    $state.go('reviews.create', { requestId: $stateParams.requestId });
+                }],
             }).
             state('trucker.reviews', {
                 url: '/reviews',
@@ -173,7 +155,7 @@
                         return Documents.byUser.query({ userId: profile.id }).$promise
                             .catch(function reject(err) {
                                 $log.error('Unable to Fetch User\'s documents', err);
-                                
+
                                 return null;
                             });
                     }]

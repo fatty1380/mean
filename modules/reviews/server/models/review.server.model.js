@@ -46,8 +46,17 @@ var ReviewSchema = new Schema({
 	email: {
 		type: String,
 		default: '',
-		trim: true,
-		required: 'Please provide your email address'
+		trim: true
+	},
+	
+	/**
+	 * Phone
+	 * @description The Phone Number of who wrote the review
+	 */
+	phone: {
+		type: String,
+		default: '',
+		trim: true
 	},
 	
 	/**

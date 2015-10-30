@@ -7,16 +7,17 @@
                 <h3 class="title text-center" ng-bind-html="vm.text.lead"></h3>
 
                 <div class="item horizontal price-1 col-lg-4 col-md-6 col-sm-8 col-lg-offset-4 col-md-offset-3 col-sm-offset-2 col-xs-12 text-center"
-                     ui-sref="orderReports({'sku':vm.packages.base.sku})">
+                ui-sref="orderReports({'sku':vm.packages.base.sku})">
 
                     <div class="item-inner">
                         <div class="row item-content">
                             <div class="col-md-3 col-xs-4">
-                                    <span class="fa-stack fa-3x">
+                                <span class="fa-stack fa-3x">
                                         <i class="fa fa-certificate fa-stack-2x text-primary"></i>
                                         <span class="price-figure"><span class="price-figure-inner fa fa-stack-1x" ng-class="{'price-promo': !!vm.packages.base.promo}"><span
-                                                class="currency">$</span><span class="number">{{vm.packages.base.promo || vm.packages.base.price || 5}}</span></span></span>
-                                    </span>
+                                                class="currency">$</span><span class="number">{{vm.packages.base.promo || vm.packages.base.price || 5}}</span></span>
+                                </span>
+                                </span>
                             </div>
                             <div class="col-md-9 col-xs-8">
                                 <h3 class="lead">{{vm.packages.base.title || 'Motor Vehicle Report'}}<br>
@@ -38,16 +39,15 @@
 
         <div class="price-cols row">
             <div class="items-wrapper col-md-10 col-sm-12 col-xs-12 col-md-offset-1 col-sm-offset-0 col-xs-offset-0">
-                <div class="item price-1 col-md-4 col-sm-4 col-xs-12 text-center"
-                     ng-click="vm.order(vm.packages.good.sku)">
+                <div class="item price-1 col-md-4 col-sm-4 col-xs-12 text-center" ng-click="vm.order(vm.packages.good.sku)">
                     <div class="item-inner">
                         <div class="heading">
                             <h3 class="title" ng-bind="vm.packages.good.title">Good</h3>
 
                             <p class="price-figure"><span class="price-figure-inner"><span
-                                    class="currency">$</span><span class="number"
-                                                                   ng-bind="vm.packages.good.price">14.95</span><br><span
-                                    class="unit"></span></span></p>
+                                    class="currency">$</span><span class="number" ng-bind="vm.packages.good.price">14.95</span>
+                                <br><span class="unit"></span></span>
+                            </p>
                         </div>
                         <div class="item-content">
                             <ul class="list-unstyled feature-list">
@@ -62,15 +62,15 @@
                 </div>
                 <!--//item-->
 
-                <div class="item price-2 col-md-4 col-sm-4 col-xs-12 text-center best-buy"
-                     ng-click="vm.order(vm.packages.better.sku)">
+                <div class="item price-2 col-md-4 col-sm-4 col-xs-12 text-center best-buy" ng-click="vm.order(vm.packages.better.sku)">
                     <div class="item-inner">
                         <div class="heading">
                             <h3 class="title" ng-bind="vm.packages.better.title">Better</h3>
 
                             <p class="price-figure"><span class="price-figure-inner"><span
-                                    class="currency">$</span><span class="number" ng-bind="vm.packages.better.price">39.95</span><br><span
-                                    class="unit"></span></span></p>
+                                    class="currency">$</span><span class="number" ng-bind="vm.packages.better.price">39.95</span>
+                                <br><span class="unit"></span></span>
+                            </p>
                         </div>
                         <div class="item-content">
                             <ul class="list-unstyled feature-list">
@@ -96,16 +96,15 @@
                 </div>
                 <!--//item-->
 
-                <div class="item price-3 col-md-4 col-sm-4 col-xs-12 text-center"
-                     ng-click="vm.order(vm.packages.best.sku)">
+                <div class="item price-3 col-md-4 col-sm-4 col-xs-12 text-center" ng-click="vm.order(vm.packages.best.sku)">
                     <div class="item-inner">
                         <div class="heading">
                             <h3 class="title" ng-bind="vm.packages.best.title">Best</h3>
 
                             <p class="price-figure"><span class="price-figure-inner"><span
-                                    class="currency">$</span><span class="number"
-                                                                   ng-bind="vm.packages.best.price">85.95</span><br><span
-                                    class="unit"></span></span></p>
+                                    class="currency">$</span><span class="number" ng-bind="vm.packages.best.price">85.95</span>
+                                <br><span class="unit"></span></span>
+                            </p>
                         </div>
                         <div class="item-content">
                             <ul class="list-unstyled feature-list">
@@ -133,9 +132,9 @@
                     <div class="row item-content">
                         <div class="col-md-4">
                             <p class="price-figure"><span class="price-figure-inner"><span
-                                    class="currency">$</span><span class="number"
-                                                                   ng-bind="vm.packages.drugs.price">40</span><br><span
-                                    class="unit"> one time</span></span></p>
+                                    class="currency">$</span><span class="number" ng-bind="vm.packages.drugs.price">40</span>
+                                <br><span class="unit"> one time</span></span>
+                            </p>
                         </div>
                         <div class="col-md-8">
                             <h3 class="lead" ng-bind="vm.packages.drugs.title">Drug Test</h3>
@@ -158,7 +157,8 @@
 <section class="container-fluid opaque-bg">
     <section class="faq section has-bg-color">
         <div class="container">
-            <h2 class="title text-center mgn-bottom">Frequently Asked Questions</h2> <hr>
+            <h2 class="title text-center mgn-bottom">Frequently Asked Questions</h2>
+            <hr>
 
             <uib-accordion class="row">
                 <div class="col-md-8 col-sm-10 col-xs-12 col-md-offset-2 col-sm-offset-1 col-xs-offset-0">

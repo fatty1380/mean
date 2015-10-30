@@ -7,7 +7,6 @@
 			// Reviews state routing
 			$stateProvider.
 				state('reviews', {
-					parent: 'fixed-opaque',
 					abstract: true,
 					url: '/reviews',
 					template: '<ui-view/>',
@@ -28,7 +27,14 @@
 						requestId: {
 							value: null,
 							squash: true
+						},
+						userId: {
+							value: null,
+							squash: true
 						}
+					},
+					data: {
+						hideMenus: true
 					},
 					resolve: {
 						reviewRequest: ['$log', '$stateParams', 'Requests', function ($log, $stateParams, Requests) {
@@ -38,12 +44,19 @@
 									return null;
 								});
 						}],
-						profile: ['$log', 'reviewRequest', 'Profiles', function ($log, reviewRequest, Profiles) {
-							return Profiles.load(reviewRequest.from)
-								.catch(function fail(err) {
-									$log.error(err, 'Unable to find Requesting party');
-									return null;
-								});
+						profile: ['$log', '$stateParams', 'reviewRequest', 'Profiles', function ($log, $stateParams, reviewRequest, Profiles) {
+							
+							var profileId = reviewRequest && reviewRequest.from  || $stateParams.userId;
+							
+							if(!!profileId) {
+								return Profiles.load(profileId)
+									.catch(function fail(err) {
+										$log.error(err, 'Unable to find Requesting party');
+										return null;
+									});
+							}
+							
+							
 						}]
 					}
 				}).

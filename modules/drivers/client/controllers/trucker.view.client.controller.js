@@ -20,7 +20,7 @@
 			{
 				heading: 'Review',
 				route: 'trucker.review',
-				disable: false
+				disable: true
 			},
 			{
 				heading: 'Reviews',
@@ -30,7 +30,7 @@
 			{
 				heading: 'Documents',
 				route: 'trucker.documents',
-				disable: false
+				disable: true
 			}
 		];
 	}
