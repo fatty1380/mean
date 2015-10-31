@@ -106,7 +106,7 @@
          */
 
             state('trucker', {
-                url: '/trucker',
+                url: '/trucker/:userId',
                 templateUrl: '/modules/drivers/views/trucker.client.view.html',
                 controller: 'TruckerViewCtrl',
                 controllerAs: 'vm',

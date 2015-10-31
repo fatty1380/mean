@@ -72,6 +72,9 @@ var RequestMessageSchema = new Schema({
         enum: ['friendRequest', 'shareRequest', 'reviewRequest', 'reportRequest'],
         default: 'friendRequest'
     },
+    objectLink: {
+        type: String
+    },
     text: {
         type: String,
         default: ''

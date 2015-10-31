@@ -20,6 +20,13 @@ var ReviewSchema = new Schema({
 		ref: 'User',
 		required: true
 	},
+	
+	request: {
+		type: Schema.ObjectId,
+		ref: 'RequestMessage',
+		default: null
+	},
+	
 	/**
 	 * Reviewer (optional)
 	 * @description The User who wrote the review

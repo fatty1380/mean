@@ -11,7 +11,8 @@
 					url: '/reviews',
 					template: '<ui-view/>',
 					resolve: {
-						review: function () { return null; }
+						review: _.noop,
+						reviewRequest: _.noop
 					}
 				}).
 				state('reviews.list', {
@@ -66,7 +67,52 @@
 				}).
 				state('reviews.edit', {
 					url: '/:reviewId/edit',
-					templateUrl: 'modules/reviews/views/edit-review.client.view.html'
+					templateUrl: 'modules/reviews/views/create-review.client.view.html',
+					controller: 'ReviewEditCtrl',
+					controllerAs: 'vm',
+					params: {
+						requestId: {
+							value: null,
+							squash: true
+						},
+						userId: {
+							value: null,
+							squash: true
+						}
+					},
+					data: {
+						hideMenus: true
+					},
+					resolve: {
+						review: ['$log', '$stateParams', 'Reviews', function ($log, $stateParams, Reviews) {
+							return Reviews.getById($stateParams.reviewId)
+								.catch(function fail(err) {
+									$log.error(err, 'Unable to find Review');
+									return null;
+								});
+						}],
+						reviewRequest: ['$log', 'review', 'Requests', function ($log, review, Requests) {
+							return Requests.get(review.objectLink)
+								.catch(function fail(err) {
+									$log.error(err, 'Unable to find request');
+									return null;
+								});
+						}],
+						profile: ['$log', '$stateParams', 'review', 'Profiles', function ($log, $stateParams, review, Profiles) {
+							
+							var profileId = review && (review.user && review.user.id || review.user) || $stateParams.userId;
+							
+							if(!!profileId) {
+								return Profiles.load(profileId)
+									.catch(function fail(err) {
+										$log.error(err, 'Unable to find Requesting party');
+										return null;
+									});
+							}
+							
+							
+						}]
+					}
 				});
 		}
 	]);

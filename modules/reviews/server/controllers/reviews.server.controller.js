@@ -5,10 +5,11 @@
  */
 var _ = require('lodash'),
 	path = require('path'),
-	mongoose = require('mongoose'),
-	Review = mongoose.model('Review'),
 	errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
+var mongoose = require('mongoose'),
+	Review = mongoose.model('Review'),
+	RequestMessage = mongoose.model('RequestMessage');
 /**
  * Reviews module.
  * @module reviews
@@ -34,9 +35,11 @@ exports.create = function (req, res) {
 	req.log.debug({ module: 'reviews', func: 'create', body: req.body });
 	var review = new Review(req.body);
 
+	var requestId = req.body.request;
+
 	review.reviewer = req.user;
 	review.user = !!req.profile && req.profile.id || req.params.userId;
-	
+
 	req.log.debug({ module: 'reviews', func: 'create', review: review });
 
 	review.save(function (err) {
@@ -45,7 +48,25 @@ exports.create = function (req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			req.log.debug({ module: 'reviews', func: 'create', review: review }, 'Saved Review!');
 			res.json(review);
+
+			if (!!requestId) {
+				req.log.debug({ module: 'reviews', func: 'create', request: requestId }, 'Updating ReviewRequest');
+				RequestMessage.findOneAndUpdate(
+					{ _id: requestId },
+					{ status: 'accepted', objectLink: review.id },
+					{ new: true })
+					.exec()
+					.then(
+						function success(newRequest) {
+							req.log.debug({ func: 'create', module: 'reviews', reviewRequest: newRequest }, 'Updated Review Request Status');
+						})
+					.end(
+						function failure(err) {
+							req.log.error({ func: 'create', module: 'reviews', err: err }, 'Failed to update Review Request');
+						});
+			}
 		}
 	});
 };
@@ -100,12 +121,12 @@ exports.delete = function (req, res) {
  * List of Reviews
  */
 exports.list = function (req, res) {
-	
+
 	req.log.debug({ module: 'reviews', func: 'list' });
 
 	var reviewedParty = req.profile || req.user;
 
-	Review.find({ user: reviewedParty.id }) 
+	Review.find({ user: reviewedParty.id })
 		.sort('-created')
 		.populate('user', 'displayName')
 		.exec()
@@ -124,9 +145,9 @@ exports.list = function (req, res) {
  * Review middleware
  */
 exports.reviewByID = function (req, res, next, id) {
-	
+
 	req.log.debug({ module: 'reviews', func: 'reviewByID' });
-	
+
 	Review.findById(id)
 		.populate('user', 'displayName')
 		.exec()

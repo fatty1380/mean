@@ -315,44 +315,48 @@ function sendSMS(req, res) {
 var shortid = require('shortid');
 
 function loadRequest(req, res) {
-	log.info({ func: 'loadRequest', params: req.params }, 'Loading Notification Request');
+	req.log.info({ func: 'loadRequest', params: req.params }, 'Loading Notification Request');
 	var id = req.params.shortId;
 
 	if (shortid.isValid(id)) {
-		log.info({ func: 'loadRequest', shortId: id }, 'Looking up By ShortID?');
+		req.log.info({ func: 'loadRequest', shortId: id }, 'Looking up By ShortID?');
 		
 		return RequestMessage.findOne({ shortId: id }).exec().then(
 			function success(requestMessage) {
-				log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
+				req.log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
 				var fromId = requestMessage.from.id || requestMessage.from;
 				
 				if (!!requestMessage && !!fromId) {
 					var url = null;
-					log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
+					req.log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
 
 					switch (requestMessage.requestType) {
 						case 'friendRequest':
 							break;
 						case 'shareRequest':
 							url = '/truckers/' + fromId + '?requestId=' + requestMessage.id;
-							log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
+							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
 							return res.redirect(url);
 						case 'reviewRequest':
-							url = '/reviews/create?requestId=' + requestMessage.id;
-							log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Review Creation');
+							// if (!!requestMessage.objectLink) {
+							// 	url = '/reviews/' + requestMessage.objectLink + '/edit';
+							// } else {
+								url = '/reviews/create?requestId=' + requestMessage.id;
+							//}
+							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Review Creation');
 							return res.redirect(url);
-						default: log.error({ func: 'loadRequest' }, 'Unknown Request Type');
+						default: req.log.error({ func: 'loadRequest' }, 'Unknown Request Type');
 					}
 				} else if (!fromId) {
-					log.error({ requestMesage: requestMessage }, 'Request has no sender');
+					req.log.error({ requestMesage: requestMessage }, 'Request has no sender');
 				} else {
-					log.error({ requestMessage: requestMessage }, 'Unable to process request');
+					req.log.error({ requestMessage: requestMessage }, 'Unable to process request');
 				}
 
 				return res.redirect('/not-found');
 			},
 			function fail(err) {
-				log.error({ err: err, params: req.params }, 'Unable to load request');
+				req.log.error({ err: err, params: req.params }, 'Unable to load request');
 				return res.redirect('/not-found');
 			});
 	}

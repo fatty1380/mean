@@ -61,12 +61,12 @@
 
 		// Find a list of Reviews
 		vm.find = function() {
-			vm.reviews = Reviews.byId.query();
+			vm.reviews = Reviews.ById.query();
 		};
 
 		// Find existing Review
 		vm.findOne = function() {
-			vm.review = Reviews.byId.get({ 
+			vm.review = Reviews.ById.get({ 
 				reviewId: $stateParams.reviewId
 			});
 		};
@@ -103,24 +103,26 @@
 			}
 			
 			vm.profile = profile;
-			vm.review.userId = profile.id;
 			vm.profileName = profile.displayName;
 			
 			var contactInfo = vm.request.contactInfo || {};
 			
 			vm.greetingText = vm.request.text;
 			
-			vm.review.name = contactInfo.displayName || contactInfo.firstName || contactInfo.lastName;
-			vm.review.email = contactInfo.email;
-			vm.review.phone = contactInfo.phoneNumber;
-			vm.review.requestId = reviewRequest.id;
+			if (_.isEmpty(vm.review)) {
+				vm.review.userId = profile.id;
+				vm.review.name = contactInfo.displayName || contactInfo.firstName || contactInfo.lastName;
+				vm.review.email = contactInfo.email;
+				vm.review.phone = contactInfo.phoneNumber;
+				vm.review.request = vm.request.id;
+			}
 		}
 
 		// Create new Review
 		function create() {
 			// Create new Review object
 			vm.error = null;
-			var review = new Reviews.byUser(vm.review);
+			var review = !!vm.review._id ? vm.review : new Reviews.byUser(vm.review);
 			
 			if (!vm.review.email && !vm.review.phone) {
 				vm.error = 'Please enter either a phone number or email address';
@@ -141,7 +143,9 @@
 			}
 
 			// Redirect after save
-			review.$save(function (response) {
+			var p = !!vm.review._id ? review.$update : review.$save;
+			
+			p(function (response) {
 				debugger;
 				$state.go('trucker', { userId: profile.id || response.user.id || response.user });
 

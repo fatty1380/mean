@@ -17,11 +17,11 @@
 				route: 'trucker.experience',
 				disable: false
 			},
-			{
-				heading: 'Review',
-				route: 'trucker.review',
-				disable: true
-			},
+			// {
+			// 	heading: 'Review',
+			// 	route: 'trucker.review',
+			// 	disable: true
+			// },
 			{
 				heading: 'Reviews',
 				route: 'trucker.reviews',

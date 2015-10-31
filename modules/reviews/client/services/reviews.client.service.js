@@ -8,9 +8,9 @@
 
 	function ReviewFactory($resource) {
 
-		var byId = $resource('api/reviews/:reviewId',
+		var rsrc = $resource('api/reviews/:id',
 			{
-				reviewId: '@_id'
+				id: '@_id'
 			}, {
 				update: {
 					method: 'PUT'
@@ -22,11 +22,17 @@
 				method: 'PUT'
 			}
 		});
+		
+		function getById(id) {
+			debugger;
+			return rsrc.get({id: id}).$promise;
+		}
 
 
 		return {
-			byId: byId,
-			byUser: byUser
+			ById: rsrc,
+			ByUser: byUser,
+			getById: getById
 		};
 	}
 
