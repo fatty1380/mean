@@ -122,7 +122,7 @@
 		function create() {
 			// Create new Review object
 			vm.error = null;
-			var review = !!vm.review._id ? vm.review : new Reviews.byUser(vm.review);
+			var review = !!vm.review._id ? vm.review : new Reviews.ByUser(vm.review);
 			
 			if (!vm.review.email && !vm.review.phone) {
 				vm.error = 'Please enter either a phone number or email address';
