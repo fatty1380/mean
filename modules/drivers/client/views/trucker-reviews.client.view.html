@@ -5,7 +5,7 @@
 				<uib-rating ng-if="!!review.rating" readonly="true" ng-model="review.rating" max="5"></uib-rating>
 				<div class="time"><i class="ico ico-timesmall"></i> {{review.created | date : 'mediumDate'}}</div>
 			</div>
-			<strong class="title">{{review.name}} - {{review.title}}</strong>
+			<strong>{{review.name}} - {{review.title}}</strong>
 			<div class="message">{{review.text}}</div>
 		</div>
 	</div>

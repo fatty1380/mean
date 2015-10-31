@@ -141,7 +141,7 @@
                 controllerAs: 'vm',
                 resolve: {
                     reviews: ['$log', 'Reviews', 'profile', function ($log, Reviews, profile) {
-                        return Reviews.byUser.query({ userId: profile.id });
+                        return Reviews.ByUser.query({ userId: profile.id });
                     }]
                 },
                 templateUrl: '/modules/drivers/views/trucker-reviews.client.view.html',

@@ -109,20 +109,23 @@
 			
 			vm.greetingText = vm.request.text;
 			
-			if (_.isEmpty(vm.review)) {
+			//if (_.isEmpty(vm.review)) {
 				vm.review.userId = profile.id;
 				vm.review.name = contactInfo.displayName || contactInfo.firstName || contactInfo.lastName;
 				vm.review.email = contactInfo.email;
 				vm.review.phone = contactInfo.phoneNumber;
 				vm.review.request = vm.request.id;
-			}
+			//}
 		}
 
 		// Create new Review
 		function create() {
 			// Create new Review object
 			vm.error = null;
-			var review = !!vm.review._id ? vm.review : new Reviews.ByUser(vm.review);
+			debugger;
+			//var review = !!vm.review._id ? vm.review : new Reviews.ByUser(vm.review);
+			var review = new Reviews.ByUser(vm.review);
+
 			
 			if (!vm.review.email && !vm.review.phone) {
 				vm.error = 'Please enter either a phone number or email address';
@@ -143,9 +146,9 @@
 			}
 
 			// Redirect after save
-			var p = !!vm.review._id ? review.$update : review.$save;
-			
-			p(function (response) {
+			// var p = !!vm.review._id ? review.$update : review.$save;
+			// p().then(function (response) {
+		    review.$save(function(response) {
 				debugger;
 				$state.go('trucker', { userId: profile.id || response.user.id || response.user });
 

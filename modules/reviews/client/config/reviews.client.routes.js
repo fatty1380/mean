@@ -11,8 +11,8 @@
 					url: '/reviews',
 					template: '<ui-view/>',
 					resolve: {
-						review: _.noop,
-						reviewRequest: _.noop
+						review: function() { return null; },
+						reviewRequest: function() { return null; }
 					}
 				}).
 				state('reviews.list', {
