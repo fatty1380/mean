@@ -335,11 +335,13 @@ function loadRequest(req, res) {
 					switch (requestMessage.requestType) {
 						case 'friendRequest':
 							(new Login({ input: requestMessage.shortId, result: 'referral', userId: requestMessage.user, ip: ip })).save().end(_.noop());
-							break;
+							return res.redirect('http://www.truckerline.com');
+							
 						case 'shareRequest':
 							url = '/truckers/' + fromId + '?requestId=' + requestMessage.id;
 							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
 							return res.redirect(url);
+							
 						case 'reviewRequest':
 							// if (!!requestMessage.objectLink) {
 							// 	url = '/reviews/' + requestMessage.objectLink + '/edit';
