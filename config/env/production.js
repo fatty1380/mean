@@ -15,6 +15,10 @@ module.exports = {
         title: process.env.PAGE_TITLE || 'Outset - The best way to find and fill transportation jobs',
         keywords: process.env.KEYWORDS || 'transportation, job, hiring, marketplace, outset, trucking, taxi, uber, lyft, livery, delivery, reputation'
     },
+    
+    security: {
+        enableSession: false
+    },
     https: {
         enabled: process.env.ENABLE_HTTPS !== undefined ? (process.env.ENABLE_HTTPS === 'true') : true,
         port: 443,

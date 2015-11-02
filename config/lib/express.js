@@ -243,18 +243,21 @@ module.exports.initViewEngine = function (app) {
  * Configure Express session
  */
 module.exports.initSession = function (app, db) {
-    log.trace({ func: 'initSession' }, 'Initializing Session');
+    
+    if (config.security.enableSession) {
+        log.trace({ func: 'initSession' }, 'Initializing Session');
 
-    // Express MongoDB session storage
-    app.use(session({
-        saveUninitialized: true,
-        resave: true,
-        secret: config.sessionSecret,
-        store: new MongoStore({
-            mongooseConnection: db.connection,
-            collection: config.sessionCollection
-        })
-    }));
+        // Express MongoDB session storage
+        app.use(session({
+            saveUninitialized: true,
+            resave: true,
+            secret: config.sessionSecret,
+            store: new MongoStore({
+                mongooseConnection: db.connection,
+                collection: config.sessionCollection
+            })
+        }));
+    }
 };
 
 /**
