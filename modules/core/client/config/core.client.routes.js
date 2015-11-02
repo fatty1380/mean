@@ -4,7 +4,8 @@
     handleBadRoute.$inject = ['$injector', '$location'];
     function handleBadRoute($injector, $location) {
         console.log('Unknown URL pattern: %s', $location.url());
-        $location.path('/home');
+        //$location.path('/trucker');
+        window.location.href = 'http://www.truckerline.com';
     }
 
     resolveUser.$inject = ['Authentication', 'LoginService'];
@@ -78,13 +79,13 @@
 
             }).
 
-            state('intro.driver', {
-                url: '',
-                templateUrl: '/modules/core/views/intro.client.view.html',
-                parent: 'intro',
-                controller: 'HomeController',
-                controllerAs: 'vm'
-            }).
+            // state('intro.driver', {
+            //     url: '',
+            //     templateUrl: '/modules/core/views/intro.client.view.html',
+            //     parent: 'intro',
+            //     controller: 'HomeController',
+            //     controllerAs: 'vm'
+            // }).
 
             state('intro.owner', {
                 url: 'o',
@@ -94,40 +95,47 @@
                 controllerAs: 'vm'
             }).
 
-            state('home', {
-                url: '/home',
-                controller: ['$state', 'LoginService', 'Authentication', function ($state, LoginService, Authentication) {
-                    LoginService.getUser().then(
-                        function success(user) {
+            // state('home', {
+            //     url: '/home',
+            //     controller: ['$state', 'LoginService', 'Authentication', function ($state, LoginService, Authentication) {
+            //         LoginService.getUser().then(
+            //             function success(user) {
 
-                            if (!Authentication.user) {
-                                debugger;
-                                Authentication.user = user;
-                            }
+            //                 if (!Authentication.user) {
+            //                     debugger;
+            //                     Authentication.user = user;
+            //                 }
 
-                            console.log('Success in looking up user, redirecting', user);
-                            if (user.isDriver) {
-                                //$state.go('drivers.home', {}, { reload: true });
-                                $state.go('feed.list', { userId: user.id });
-                            }
-                            else if (user.isOwner) {
-                                $state.go('companies.home');
-                            } else {
-                                $state.go('intro');
-                            }
-                        },
-                        function reject(err) {
-                            console.log('No user lookup, redirecting', err);
-                            $state.go('intro.owner');
-                        });
-                }]
-            }).
+            //                 console.log('Success in looking up user, redirecting', user);
+            //                 if (user.isDriver) {
+            //                     //$state.go('drivers.home', {}, { reload: true });
+            //                     $state.go('feed.list', { userId: user.id });
+            //                 }
+            //                 else if (user.isOwner) {
+            //                     $state.go('companies.home');
+            //                 } else {
+            //                     $state.go('intro');
+            //                 }
+            //             },
+            //             function reject(err) {
+            //                 console.log('No user lookup, redirecting', err);
+            //                 $state.go('intro.owner');
+            //             });
+            //     }]
+            // }).
             
         /// Page - Specific States
 
             state('privacy', {
                 url: '/privacy',
                 templateUrl: '/modules/core/views/templates/privacy.template.html',
+                parent: 'fixed-opaque'
+            }).
+            
+
+            state('tos', {
+                url: '/tos',
+                templateUrl: '/modules/core/views/templates/tos.template.html',
                 parent: 'fixed-opaque'
             });
     }
