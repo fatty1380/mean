@@ -1,7 +1,12 @@
 (function () {
     'use strict';
 
-    //Drivers service used to communicate Drivers REST endpoints
+
+    angular
+        .module('core')
+        .factory('AppConfig', ConfigFactory);
+
+    ConfigFactory.$inject = ['$resource', '$log', '$q'];
     function ConfigFactory($resource, $log, $q) {
         var months, faqs, modules, options;
 
@@ -150,11 +155,5 @@
             return retVal;
         }
     }
-
-    ConfigFactory.$inject = ['$resource', '$log', '$q'];
-
-    angular
-        .module('core')
-        .factory('AppConfig', ConfigFactory);
 
 })();

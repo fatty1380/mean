@@ -1,30 +1,5 @@
 (function () {
     'use strict';
-
-    handleBadRoute.$inject = ['$injector', '$location'];
-    function handleBadRoute($injector, $location) {
-        console.log('Unknown URL pattern: %s', $location.url());
-        //$location.path('/trucker');
-        window.location.href = 'http://www.truckerline.com';
-    }
-
-    resolveUser.$inject = ['Authentication', 'LoginService'];
-    function resolveUser(Authentication, LoginService) {
-        return LoginService.getUser().then(
-            function success(user) {
-
-                if (!Authentication.user) {
-                    Authentication.user = user;
-                }
-
-                return user;
-            },
-            function reject(reason) {
-                console.error('Unable to load user - not logged in?', reason);
-
-                return null;
-            });
-    }
     
     /** Core Routes & States:
      * 
@@ -36,7 +11,15 @@
      * 
      *  intro           : 
      */
+    
 
+    // Setting up route
+    angular
+        .module('core')
+        .config(config);
+
+
+    config.$inject = ['$stateProvider', '$urlRouterProvider'];
     function config($stateProvider, $urlRouterProvider) {
         // Redirect to home view when route not found
         $urlRouterProvider.otherwise(handleBadRoute);
@@ -88,7 +71,7 @@
             // }).
 
             state('intro.owner', {
-                url: 'o',
+                url: '',
                 templateUrl: '/modules/core/views/intro.client.view.html',
                 parent: 'intro',
                 controller: 'HomeController',
@@ -139,11 +122,52 @@
                 parent: 'fixed-opaque'
             });
     }
+    
+    handleBadRoute.$inject = ['$injector', '$location'];
+    function handleBadRoute($injector, $location) {
+        console.log('Unknown URL pattern: %s', $location.url());
+        
+        var settings = {
+            isProduction: ApplicationConfiguration.isProduction,
+            defaultRedirect: ApplicationConfiguration.defaultRedirect
+        };
+        
+        if (settings.defaultRedirect === null) {
+            return;
+        }
+        
+        debugger;
+        if (!!settings && !!settings.defaultRedirect) {
+            if (/^http/i.test(settings.defaultRedirect)) {
+                window.location.href = settings.defaultRedirect;
+                return;
+            }
+            $location.path(settings.defaultRedirect);
+            return;
+        }
+        
+        if (!!settings && settings.isProduction) {
+            window.location.href = 'http://www.truckerline.com';
+        } else {
+            $location.path('/trucker');
+        }
+    }
 
-    config.$inject = ['$stateProvider', '$urlRouterProvider'];
+    resolveUser.$inject = ['Authentication', 'LoginService'];
+    function resolveUser(Authentication, LoginService) {
+        return LoginService.getUser().then(
+            function success(user) {
 
-    // Setting up route
-    angular
-        .module('core')
-        .config(config);
+                if (!Authentication.user) {
+                    Authentication.user = user;
+                }
+
+                return user;
+            },
+            function reject(reason) {
+                console.error('Unable to load user - not logged in?', reason);
+
+                return null;
+            });
+    }
 })();

@@ -1,6 +1,11 @@
 (function () {
 	'use strict';
 
+
+	angular.module('users')
+		.directive('osetConnectionButton', ConnectionButtonDirective);
+
+	ConnectionButtonDirective.$inject = ['$log', 'Friends'];
 	function ConnectionButtonDirective($log, Friends) {
 
 		var directive = {
@@ -68,6 +73,7 @@
 		}
 	}
 
+	ConnectionButtonController.$inject = ['$log', 'Friends', 'Authentication'];
 	function ConnectionButtonController($log, Friends, Authentication) {
 		var vm = this;
 
@@ -143,10 +149,4 @@
 			return false;
 		}
 	}
-
-	ConnectionButtonController.$inject = ['$log', 'Friends', 'Authentication'];
-	ConnectionButtonDirective.$inject = ['$log', 'Friends'];
-
-	angular.module('users')
-		.directive('osetConnectionButton', ConnectionButtonDirective);
 })();

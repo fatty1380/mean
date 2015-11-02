@@ -85,7 +85,7 @@
                 });
         }],
         company: ['profile', 'Companies', function resolveCompany(profile, Companies) {
-            return !!profile.company ? Companies.get(profile.company) : null;
+            return profile && !!profile.company ? Companies.get(profile.company) : null;
         }]
     };
             

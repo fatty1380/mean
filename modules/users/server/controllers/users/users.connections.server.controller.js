@@ -94,6 +94,10 @@ function createRequest(req, res, next) {
  */
 function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
+    
+    if (!req.isAuthenticated()) {
+        return res.json([]);
+    }
 
     var types,
         mainQuery = { 'to': req.user.id },

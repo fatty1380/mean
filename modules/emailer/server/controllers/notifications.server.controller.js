@@ -326,7 +326,11 @@ function loadRequest(req, res) {
 		return RequestMessage.findOne({ shortId: id }).exec().then(
 			function success(requestMessage) {
 				req.log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
-				var fromId = requestMessage.from.id || requestMessage.from;
+				var fromId = _.isEmpty(requestMessage.from) ?
+					null :
+					_.isString(requestMessage.from) ?
+						requestMessage.from :
+						requestMessage.from.toHexString();
 
 				if (!!requestMessage && !!fromId) {
 					var url = null;
@@ -338,7 +342,7 @@ function loadRequest(req, res) {
 							return res.redirect('http://www.truckerline.com');
 							
 						case 'shareRequest':
-							url = '/truckers/' + fromId + '?requestId=' + requestMessage.id;
+							url = '/trucker/' + fromId + '?requestId=' + requestMessage.id;
 							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
 							return res.redirect(url);
 							
