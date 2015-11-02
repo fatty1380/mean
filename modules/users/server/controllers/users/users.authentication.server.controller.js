@@ -71,6 +71,7 @@ exports.signup = function (req, res) {
     saves[0] = user.save();
 
     var newUser;
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     req.log.info({ func: 'signup', saves: saves }, 'Waiting for saves');
     return Q.all(saves)
@@ -95,6 +96,8 @@ exports.signup = function (req, res) {
             if (!newUser) {
                 return;
             }
+
+            (new Login({ input: newUser.username, result: 'signup', userId: newUser.id, ip: ip })).save().end(_.noop());
 
             if (newUser.isDriver) {
                 NotificationCtr.send('user:new', { user: newUser });
@@ -126,13 +129,13 @@ exports.signup = function (req, res) {
 
 function createDefaultRequest(user, reqLog) {
     reqLog = reqLog || log;
-    
+
     var request = new RequestMessage({
         from: mongoose.Types.ObjectId('562ab0cebd3222d851523755'),
         to: user._id,
         requestType: 'friendRequest'
     });
-    
+
     return request.save().then(function (result) {
         reqLog.debug('Created New Default Request: ', result);
         return result;
@@ -151,7 +154,7 @@ exports.signin = function (req, res, next) {
             var reason = !user ? 'no_user' : err && err.toString() || 'unknown';
             (new Login({ input: req.body.username, attempt: req.body.password, result: reason, userId: user && user.id || null })).save().end(_.noop());
 
-            
+
             req.log.error({ func: 'signin', info: info, err: err }, 'Login Failed');
             res.status(400).send(info);
         } else {
@@ -305,7 +308,7 @@ function login(req, res, user, noResponse) {
 
     req.login(user, function (err) {
         if (err) {
-            
+
             log.warn({ err: err }, 'Login Failed due to error');
             res.status(400).send(err);
         }

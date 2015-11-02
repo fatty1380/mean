@@ -19,7 +19,8 @@ var _ = require('lodash'),
     });
 
 var User = mongoose.model('User'),
-	RequestMessage = mongoose.model('RequestMessage');
+	RequestMessage = mongoose.model('RequestMessage'),
+    Login = mongoose.model('Login');
 	
 ///////////////////////////////////////////////////////////////////////////
 	
@@ -114,7 +115,7 @@ function processRequest(requestMessage, sender) {
 			event = 'reportRequest:' + requestMessage.status;
 			break;
 	}
-	
+
 	log.info({ func: 'processRequest', requestMessage: requestMessage, event: event }, 'Processing for event `%s`', event);
 
 	return processNewRequest(event, requestMessage, sender);
@@ -227,19 +228,19 @@ function processNewRequest(event, requestMessage, sender) {
 					recipient: sendResult.email
 				};
 			}
-			
+
 			if (result.success && requestMessage.status === 'new') {
 				log.debug('Setting `new` status to `sent` after success');
 				requestMessage.status = 'sent';
-				
+
 				return requestMessage.save();
 			}
-			
+
 			return requestMessage;
 		})
-		.then(function(saveResult) {
+		.then(function (saveResult) {
 			result.requestMessage = saveResult.toObject();
-			
+
 			return result;
 
 		});
@@ -317,21 +318,23 @@ var shortid = require('shortid');
 function loadRequest(req, res) {
 	req.log.info({ func: 'loadRequest', params: req.params }, 'Loading Notification Request');
 	var id = req.params.shortId;
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
 	if (shortid.isValid(id)) {
 		req.log.info({ func: 'loadRequest', shortId: id }, 'Looking up By ShortID?');
-		
+
 		return RequestMessage.findOne({ shortId: id }).exec().then(
 			function success(requestMessage) {
 				req.log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
 				var fromId = requestMessage.from.id || requestMessage.from;
-				
+
 				if (!!requestMessage && !!fromId) {
 					var url = null;
 					req.log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
 
 					switch (requestMessage.requestType) {
 						case 'friendRequest':
+							(new Login({ input: requestMessage.shortId, result: 'referral', userId: requestMessage.user, ip: ip })).save().end(_.noop());
 							break;
 						case 'shareRequest':
 							url = '/truckers/' + fromId + '?requestId=' + requestMessage.id;
@@ -341,7 +344,7 @@ function loadRequest(req, res) {
 							// if (!!requestMessage.objectLink) {
 							// 	url = '/reviews/' + requestMessage.objectLink + '/edit';
 							// } else {
-								url = '/reviews/create?requestId=' + requestMessage.id;
+							url = '/reviews/create?requestId=' + requestMessage.id;
 							//}
 							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Review Creation');
 							return res.redirect(url);

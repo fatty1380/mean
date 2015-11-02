@@ -28,6 +28,11 @@ var Login = new Schema({
         default: null
     },
     
+    ip: {
+        type: String,
+        default: null
+    },
+    
     client: {
         type: String,
         default: null
