@@ -903,6 +903,10 @@ h4.vert-middle {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+.tline-profile .reviews-list {
+  padding-top: 50px;
+  padding-bottom: 30px;
+}
 .tline-profile .reviews-list .item {
   margin-bottom: 2px;
 }
@@ -3198,8 +3202,9 @@ oset-chat-console > .chat-window .chat-section .chat-box .timestamp a:hover {
   z-index: 10;
 }
 .profile-base .row.profile > div {
-  background-color: #fafafa;
   min-height: 200px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #dadada;
 }
 .profile-base .row.profile > div.right {
   padding-right: 0;
@@ -4854,7 +4859,7 @@ pdf > object {
 }
 /*Panel Title Box*/
 .profile {
-  background-color: white;
+  background-color: white!important;
 }
 .profile .list-group i {
   min-width: 20px;
@@ -4863,6 +4868,9 @@ pdf > object {
 }
 .profile .heading-sm-v2 {
   font-size: 16px;
+}
+.profile .profile-body {
+  background-color: white;
 }
 .profile .panel-profile,
 .profile .panel-default {

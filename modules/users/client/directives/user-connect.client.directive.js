@@ -5,8 +5,8 @@
 	angular.module('users')
 		.directive('osetConnectionButton', ConnectionButtonDirective);
 
-	ConnectionButtonDirective.$inject = ['$log', 'Friends'];
-	function ConnectionButtonDirective($log, Friends) {
+	ConnectionButtonDirective.$inject = ['$log', 'Friends', 'Authentication'];
+	function ConnectionButtonDirective($log, Friends, Authentication) {
 
 		var directive = {
 			restrict: 'E',
@@ -15,11 +15,12 @@
 				btnClass: '@?'
 			},
 			template: [
-				'<button type="button" ng-hide="!!vm.button.hide" uib-tooltip="{{vm.request | prettyPrint}}"',
+				'<button type="button" ng-hide="!!vm.button.hide" ',
+				'uib - tooltip="{{vm.request | prettyPrint}}"',
 				'ng-click="vm.click()" ng-class="pull-right {{vm.class}}">',
 				'{{vm.button.text}}',
 				'<i ng-show="!!vm.button.icon" class="fa {{vm.button.icon}}"></i>',
-				'</button>'].join(''),
+				'</button>'].join(' '),
 			replace: true,
 			link: linkFn,
 			controller: ConnectionButtonController,
@@ -29,7 +30,7 @@
 		
 		// TODO: Expand functionality to include 'ignore' via split button
 		var altTemplate = [
-			'<button type="button" ng-hide="!!vm.button.hide || !vm.request || vm.status === \'sent\'"',
+			'<button type="button" ng-if="!!vm.request" ng-hide="!!vm.button.hide || !vm.request || vm.status === \'sent\'"',
 			'ng-click="vm.click(true)" ng-class="{{vm.class}}">',
 			'ignore',
 			'</button>'
@@ -43,7 +44,7 @@
 			var vm = scope.vm;
 
 			vm.class = attr['class'] || 'btn btn-oset-secondary';
-			vm.status = '';
+			vm.status = 'default';
 			vm.buttonConfig = {
 				me: { hide: true },
 				none: { text: 'ignored' },
@@ -59,17 +60,21 @@
 					return !vm.buttonConfig ? { hide: true } : vm.buttonConfig[vm.status] || vm.buttonConfig['default'] || { hide: true };
 				}
 			});
-
-			Friends.check(vm.profile).then(
-				function (response) {
-					$log.debug('Got Friend Check Response: %o', response);
-					vm.setStatus(response);
-				},
-				function (err) {
-					$log.error(err, 'Unable to Check Friend Status');
-					vm.status = 'default';
-					vm.request = null;
-				});
+			
+			if (Authentication.isLoggedIn()) {
+				Friends.check(vm.profile).then(
+					function (response) {
+						$log.debug('Got Friend Check Response: %o', response);
+						vm.setStatus(response);
+					},
+					function (err) {
+						$log.error(err, 'Unable to Check Friend Status');
+						vm.status = 'default';
+						vm.request = null;
+					});
+			} else {
+				vm.button.hide = true;
+			}
 		}
 	}
 

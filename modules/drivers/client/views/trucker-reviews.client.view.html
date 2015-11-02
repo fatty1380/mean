@@ -1,12 +1,20 @@
 <section class="reviews-list">
-	<div ng-repeat="review in vm.reviews track by $index" class="item">
-		<div class="review">
-			<div class="top">
-				<uib-rating ng-if="!!review.rating" readonly="true" ng-model="review.rating" max="5"></uib-rating>
-				<div class="time"><i class="ico ico-timesmall"></i> {{review.created | date : 'mediumDate'}}</div>
+	<div class="row profile-row">
+		<div class="col-sm-12">
+			<div ng-repeat="review in vm.reviews track by $index" class="item">
+				<div class="review">
+					<div class="top">
+						<uib-rating ng-if="!!review.rating" readonly="true" ng-model="review.rating" max="5"></uib-rating>
+						<div class="time"><i class="ico ico-timesmall"></i> {{review.created | date : 'mediumDate'}}</div>
+					</div>
+					<strong>{{review.name}} - {{review.title}}</strong>
+					<div class="message">{{review.text}}</div>
+				</div>
 			</div>
-			<strong>{{review.name}} - {{review.title}}</strong>
-			<div class="message">{{review.text}}</div>
+
+			<div class="text-center" ng-if="!vm.reivews || !vm.reviews.length">
+				<h4>No Reviews</h4>
+			</div>
 		</div>
 	</div>
 </section>

@@ -433,8 +433,11 @@ oset-chat-console > .chat-window {
   }
 
   .row.profile > div {
-    background-color: @body-bgcolor;
+    //background-color: @body-bgcolor;
     min-height: 200px;
+    
+    padding-bottom: 40px;
+    border-bottom: 1px solid @panel-divider-color;
 
     &.right {
       padding-right: 0;
@@ -2270,7 +2273,7 @@ pdf {
 
 /*Panel Title Box*/
 .profile {
-  background-color: white;
+  background-color: white!important;
   .list-group i {
     min-width: 20px;
     margin-right: 5px;
@@ -2282,6 +2285,7 @@ pdf {
   }
 
   .profile-body {
+  background-color: white;
     //padding: 20px;
     //background: #f7f7f7;
   }

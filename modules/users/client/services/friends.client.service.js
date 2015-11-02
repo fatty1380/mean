@@ -74,14 +74,7 @@
                     $log.debug('Returning first result %o', request);
 
                     return request;
-                })
-				.catch(function (err) {
-					$log.error(err, 'Failed to load friend status');
-					
-					if (/401|403/.test(err.status)) {
-						return null;
-					}
-				});
+                });
         }
         
         // DELETE /api/friends/:userId

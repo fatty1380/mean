@@ -4233,9 +4233,11 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '            </oset-experience-item>\n' +
   '\n' +
   '            <div class="text-center" ng-switch-default>\n' +
-  '                <button type="button" class="btn btn-oset-primary" ng-click="vm.add()">\n' +
+  '                <button type="button" class="btn btn-oset-primary" ng-click="vm.add()" ng-if="vm.canEdit">\n' +
   '                    <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Experience\n' +
   '                </button>\n' +
+  '                \n' +
+  '                <h4 ng-if="!vm.canEdit">None Listed</h4>\n' +
   '            </div>\n' +
   '\n' +
   '            <p class="" ng-if="vm.models.length > vm.maxCt">\n' +

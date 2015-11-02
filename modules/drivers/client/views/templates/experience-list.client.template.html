@@ -10,9 +10,11 @@
             </oset-experience-item>
 
             <div class="text-center" ng-switch-default>
-                <button type="button" class="btn btn-oset-primary" ng-click="vm.add()">
+                <button type="button" class="btn btn-oset-primary" ng-click="vm.add()" ng-if="vm.canEdit">
                     <i class="fa fa-plus-circle" style="padding-right: 10px;"></i> Add Experience
                 </button>
+                
+                <h4 ng-if="!vm.canEdit">None Listed</h4>
             </div>
 
             <p class="" ng-if="vm.models.length > vm.maxCt">
