@@ -3,11 +3,11 @@
 
     angular
         .module(AppConfig.appModuleName)
-        .factory('outsetCache', appCache);
+        .factory('outsetCache', OutsetCache);
 
-    appCache.$inject = ['$cacheFactory'];
+    OutsetCache.$inject = ['$cacheFactory'];
 
-    function appCache($cacheFactory) {
+    function OutsetCache($cacheFactory) {
         return $cacheFactory('outsetCache');
     }
 

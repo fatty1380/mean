@@ -101,7 +101,7 @@
             //TODO: and show the message in the success callback
 
             for (var i = 0; i < newInvites.length; i++) {
-                var postData = { contactInfo: newInvites[i], text: 'hello there!' },
+                var postData = { contactInfo: newInvites[i], text: '' },
                     serializedData = utilsService.serialize(postData);
 
                 $http

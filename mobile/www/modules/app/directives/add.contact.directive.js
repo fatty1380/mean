@@ -67,11 +67,12 @@
 					 * display the number to the users
 					 */
 					
-					vm.contact.emails = selectedContact.emails;
-					vm.contact.phoneNumbers = selectedContact.phoneNumbers;
 					vm.contact.firstName = selectedContact.name && selectedContact.name.givenName;
 					vm.contact.lastName = selectedContact.name && selectedContact.name.familyName;
 					vm.contact.displayName = selectedContact.displayName || selectedContact.name && selectedContact.name.formatted;
+					
+					vm.contact.emails = selectedContact.emails;
+					vm.contact.phoneNumbers = selectedContact.phoneNumbers;
 					
 					vm.contact.email = !!vm.contact.emails && !!vm.contact.emails.length && vm.contact.emails[0].value || null;
 					vm.contact.phone = !!vm.contact.phoneNumbers && !!vm.contact.phoneNumbers.length && vm.contact.phoneNumbers[0].value || null;

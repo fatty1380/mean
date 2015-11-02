@@ -67,7 +67,7 @@
                                 delete selectedContacts[i].$$hashKey;
                             }
 
-                            var postData = { contactInfo: selectedContacts[i], text: 'hello there!' },
+                            var postData = { contactInfo: selectedContacts[i], text: '' },
                                 serializedData = utilsService.serialize(postData);
 
                             var r = $http

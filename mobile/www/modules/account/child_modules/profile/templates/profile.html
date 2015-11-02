@@ -19,7 +19,7 @@
 
     <div class="profile-visual">
         <div class="photo" ng-click="vm.showEditAvatar()">
-            <img ng-if="vm.profileData.props.avatar" ng-src="{{vm.profileData.props.avatar}}" alt="" />
+            <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
         </div>
         <div class="contacts-amount" ng-click="vm.showFriends();">
             <span class="ico ico-friends ico-middle"></span>

@@ -33,8 +33,8 @@
                 created: ''
             },
             props:{
-                avatar: user.props.avatar,
-                handle: user.handle,
+                avatar: user.props.avatar,  /// TODO: WRONG - Use Cache Service
+                handle: user.handle,        /// WRONG
                 freight: '',
                 slMiles: ''
             },

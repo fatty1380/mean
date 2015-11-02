@@ -27,8 +27,8 @@
             var contact = {
                 checked: true,
                 displayName: vm.contact.displayName,
-                phones: [{ value: vm.contact.phone, type: 'main' }],
-                emails: [{ value: vm.contact.email }]
+                phone: vm.contact.phone,
+                email: vm.contact.email
             };
 
             closeModal(contact);

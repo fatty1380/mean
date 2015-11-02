@@ -13,6 +13,7 @@
         console.log('Loading $state: `%s`', $state.current.name);
 
         vm.profileData = profile || user;
+        //vm.profileAvatar = 
         vm.user = user;
         vm.camera = cameraService;
         vm.updates = updateService.getLastUpdates();
