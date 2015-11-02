@@ -26,7 +26,10 @@ var ApplicationConfiguration = (function () { // jshint ignore:line
     return {
         applicationModuleName: applicationModuleName,
         applicationModuleVendorDependencies: applicationModuleVendorDependencies,
-        registerModule: registerModule
+        registerModule: registerModule,
+        
+        isProduction: true,
+        defaultRedirect: 'http://truckerline.com'
     };
 })();
 /* jshint +W097 */
