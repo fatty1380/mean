@@ -10,53 +10,58 @@
     function companyModuleConfig($stateProvider) {
 
         $stateProvider
-        // .state('company', {
-        //     parent: 'account',
-        //     url: '^/company/:companyId',
-        //     views: {
-        //         'company': {
-        //             templateUrl: 'modules/account/child_modules/company/templates/company.profile.html',
-        //             controller: 'CompanyCtrl as vm',
-        //             resolve: {
-        //                 company: ['$stateParams', '$http', '$ionicLoading', 'settings',
-        //                     function ($stateParams, $http, $ionicLoading, settings) {
-        //                         $ionicLoading.show({ template: 'Loading', duration: 10000 });
-        //                         return $http.get(settings.companies + $stateParams.companyId)
-        //                             .then(
-        //                                 function success(result) {
-        //                                     console.log('COmpany Result: ', result);
-        //                                     return result.data;
-        //                                 },
-        //                                 function reject(err) {
-        //                                     debugger;
-        //                                     console.error('Company result failed', err);
-        //                                     return {};
-        //                                 });
-        //                     }]
-        //             }
-        //         }
-        //     }
 
-        // })
             .state('company', {
                 url: '^/company/:companyId',
                 templateUrl: 'modules/account/child_modules/company/templates/company.profile.html',
                 controller: 'CompanyCtrl as vm',
                 resolve: {
-                    company: ['$stateParams', '$http', '$ionicLoading', 'settings',
-                        function ($stateParams, $http, $ionicLoading, settings) {
+                    company: ['$stateParams', '$state', '$ionicLoading', 'CompanyService',
+                        function ($stateParams, $state, $ionicLoading, CompanyService) {
                             $ionicLoading.show({ template: 'Loading', duration: 10000 });
-                            return $http.get(settings.companies + $stateParams.companyId)
+                            return CompanyService.get($stateParams.companyId)
                                 .then(
                                     function success(result) {
-                                        console.log('COmpany Result: ', result);
+                                        console.log('Company Result: ', result);
                                         return result.data;
-                                    },
+                                    })
+                                .catch(
                                     function reject(err) {
                                         debugger;
                                         console.error('Company result failed', err);
                                         return {};
                                     });
+                        }],
+
+                    jobs: ['$stateParams', '$state', 'company', 'CompanyService',
+                        function ($stateParams, $state, company, CompanyService) {
+
+                            return CompanyService.loadJobs($stateParams.companyId)
+                                .then(
+                                    function success(result) {
+                                        console.log('Company Jobs Result: ', result.data);
+                                        return result.data;
+                                    })
+                                .catch(function reject(err) {
+                                    debugger;
+                                    console.error('Company Jobs result failed', err);
+                                    return [];
+                                });
+                        }],
+                    feed: ['$stateParams', '$state', 'company', 'CompanyService',
+                        function ($stateParams, $state, company, CompanyService) {
+
+                            return CompanyService.loadFeed($stateParams.companyId)
+                                .then(
+                                    function success(result) {
+                                        console.log('Company Feed Result: ', result.data);
+                                        return result.data;
+                                    })
+                                .catch(function reject(err) {
+                                    debugger;
+                                    console.error('Company Feed result failed', err);
+                                    return [];
+                                });
                         }]
                 }
 
