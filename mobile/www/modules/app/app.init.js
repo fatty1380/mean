@@ -50,9 +50,8 @@
             console.log('readBranchData');
             if (!!window.cordova) {
 
-                branch.setDebug(false);
-                debugger;
-                branch.init(settings.branch.testKey, function (err, response) {
+                branch.setDebug(AppConfig.debug);
+                branch.init(settings.branch.key, function (err, response) {
                     console.log("branch.init - start");
 
                     if (err) {
@@ -61,12 +60,14 @@
                         console.log("branch data: " + JSON.stringify(response, null, 1));
                     }
                     
+                    if (_.isEmpty(response)) {
+                        return;
+                    }
+                    
                     if (!!response.data) {
                         console.log("branch data: " + JSON.stringify(response.data, null, 1));
                     }
 
-
-                    debugger;
                     if (!err && response.data) {
                         var parsed_data = JSON.parse(response.data);
                         console.log('Parsed: ' + JSON.stringify(parsed_data, null, 1))
