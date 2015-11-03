@@ -748,12 +748,17 @@
         },
         {
             sku: 'cdl',
-            name: 'Driver License',
+            name: 'Commercial Driver License',
             info: ''
         },
         {
             sku: 'res',
             name: 'Resume',
+            info: ''
+        },
+        {
+            sku: 'ins',
+            name: 'Insurance',
             info: ''
         },
         {
