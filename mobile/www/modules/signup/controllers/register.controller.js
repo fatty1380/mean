@@ -5,18 +5,22 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$state', 'registerService', '$ionicPopup', '$ionicLoading', 'tokenService', 'welcomeService', 'securityService'];
+    RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', '$ionicLoading', 'tokenService', 'welcomeService', 'securityService', 'registerService'];
 
-    function RegisterCtrl($state, registerService, $ionicPopup, $ionicLoading, tokenService, welcomeService, securityService ) {
+    function RegisterCtrl($state, $window, $ionicPopup, $ionicLoading, tokenService, welcomeService, securityService, registerService ) {
         var vm = this;
         vm.lastElementFocused = false;
+        
+        var branchData = JSON.parse($window.localStorage.getItem('branchData') || 'null');
 
         vm.user = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: ""
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            referralCode: $window.localStorage.getItem('referralCode'),
+            branchData: branchData
         };
 
         vm.initForm = initForm;
@@ -65,6 +69,9 @@
                         .finally(function () {
                             $ionicLoading.hide();
                         });
+                        
+                    $window.localStorage.removeItem('referralCode');
+                    $window.localStorage.removeItem('branchData');
                 } else {
                     $ionicLoading.hide();
                     var message;

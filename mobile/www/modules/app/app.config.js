@@ -17,7 +17,7 @@ var AppConfig = (function () {
             // Add the module to the AngularJS configuration file
             angular.module(appModuleName).requires.push(moduleName);
         },
-        debug = true;
+        debug = false;
 
     return {
         appModuleName: appModuleName,

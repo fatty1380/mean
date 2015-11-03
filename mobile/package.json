@@ -40,7 +40,11 @@
     },
     "cordova-plugin-file",
     "cordova-plugin-inappbrowser",
-    "cordova-plugin-file-transfer"
+    "cordova-plugin-file-transfer",
+    {
+      "locator": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK",
+      "id": "io.branch.sdk"
+    }
   ],
   "cordovaPlatforms": [
     "android",
