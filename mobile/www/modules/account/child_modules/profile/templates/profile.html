@@ -1,7 +1,7 @@
 <ion-view class="profile-screen view-section mid-size" cache-view="false">
     <!--Profile Main Heading START-->
     <ion-header-bar align-title="center">
-        <button ng-if="!!vm.showEditModal" class="button button-small button-icon icon ion-compose" ng-click="vm.showEditModal()"></button>
+        <button ng-if="!!vm.showEditModal" class="button button-clear" ng-click="vm.showEditModal()"><i class="ion-compose"></i> Edit</button>
         <button ng-if="!vm.showEditModal" class="button button-clear" ui-sref="account.profile({userId: null})" ui-sref-opts="{reload: true}">
             <i class="ion-ios-arrow-back"></i>
             <span class="ico ico-avatarsmall ico-middle"></span>
@@ -36,9 +36,10 @@
     <ion-pane class="profile-pane">
         <ion-tabs class="profile-tabs tabs-top content-pane" delegate-handle="profile-tabs">
             <ion-tab title="REVIEWS" ui-sref="account.profile.reviews" ng-class="{'has-button': !!vm.showRequestReviewModal}">
+
                 <ion-scroll class="reviews-list">
                     <ion-list>
-                        <ion-item ng-repeat="review in vm.reviews track by $index">
+                        <ion-item class="item" ng-repeat="review in vm.reviews track by $index">
                             <div class="ico ico-avatarsmall"></div>
                             <div class="review">
                                 <div class="top">
@@ -60,7 +61,13 @@
                     </div>
 
                 </ion-scroll>
-                <button class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()"><i class="ico ico-request-review"></i>Request Review</button>
+
+                <div class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()">
+                    <button type="button" class="button button-block button-positive">
+                        <i class="ion-clipboard"></i>  Request Review
+                    </button>
+                </div>
+
             </ion-tab>
             <ion-tab title="PROFILE" ui-sref="account.profile" class="content-pane" ng-class="{'has-button': !!vm.showShareModal || !vm.canEdit}"
             on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
@@ -117,23 +124,42 @@
                         <div ng-if="!vm.feed.length" class="no-feed-items">{{ vm.feedMessage }}</div>
                     </div>
                 </ion-scroll>
-                <button class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'> <i class="ico ico-shareiconorange"></i>Share</button>
-                <button class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()"><i class="ico ico-shareiconorange"></i>Send Message</button>
+
+                <div class="button content-button" ng-if="!!vm.showShareModal" ng-click='vm.showShareModal()'>
+                    <button type="button" class="button button-block button-positive">
+                        <i class="ion-share"></i> Share
+                    </button>
+                </div>
+                <div class="button content-button" ng-if="!vm.canEdit" ng-click="vm.openChat()">
+                    <button type="button" class="button button-block button-positive">
+                        <i class="ion-chatbubbles"></i> Send Message
+                    </button>
+                </div>
+
             </ion-tab>
             <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience" ng-class="{'has-button': !!vm.showAddExperienceModal}" class="content-pane"
             on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
+
                 <ion-scroll class="experience-list">
                     <ion-list>
-                        <ion-item class="item" ng-repeat="job in (vm.experience)" ng-click="vm.showEditExperienceModal(job)">
-                            <strong>{{job.title}} <span class="company" ng-if="!!job.company">, {{job.company}}</span></strong>
-                            <p ng-if="!!job.description">{{job.description}}</p>
-                            <p ng-if="!!job.location">{{job.location}}</p>
-                            <em ng-if="!!job.startDate || job.endDate">
-                                <i class="ico ico-timesmall"></i>
-                                <span ng-if="!!job.startDate">{{job.startDate | monthDate | date : 'MMMM, yyyy'}}</span>
-                                <span ng-if="!!job.startDate && job.endDate">-</span>
-                                <span ng-if="!!job.endDate">{{job.endDate | monthDate | date : 'MMMM, yyyy'}}</span>
-                            </em>
+                        <ion-item class="item card" ng-repeat="job in (vm.experience) track by $index">
+                            <strong class="title">
+                                {{job.title}} <span clases="company" ng-if="!!job.company">, {{job.company}}</span>
+                                <span class="edit-btn" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showEditExperienceModal(job)"><i class="ion-compose"></i></span>
+                            </strong>
+
+                            <div class="props">
+                                <div class="location" ng-if="!!job.location">{{job.location}}</div>
+                                <div class="time" ng-if="!!job.startDate || job.endDate">
+                                    <i class="ico ico-timesmall"></i>
+                                    <span ng-if="!!job.startDate">{{job.startDate | monthDate | date : 'MMMM, yyyy'}}</span>
+                                    <span ng-if="!!job.startDate && job.endDate">-</span>
+                                    <span ng-if="!!job.endDate">{{job.endDate | monthDate | date : 'MMMM, yyyy'}}</span>
+                                </div>
+                            </div>
+                            
+                            <p class="description" ng-if="!!job.description">{{job.description}}</p>
+
                         </ion-item>
                     </ion-list>
                     <div ng-if="!vm.experience || !vm.experience.length" class="no-content">
@@ -143,10 +169,16 @@
                         <p class="message">Get started with the <strong>Add Experience</strong> button below</p>
                         </span>
                         <span ng-if="!vm.showEditModal">No Experience Listed</span>
-                        
+
                     </div>
                 </ion-scroll>
-                <button class="button content-button" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showAddExperienceModal()"><i class="ico ico-shareiconorange"></i>Add Experience</button>
+
+                <div class="button content-button" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showAddExperienceModal()">
+                    <button type="button" class="button button-block button-positive">
+                        <i class="ion-plus"></i> Add Experience
+                    </button>
+                </div>
+
             </ion-tab>
         </ion-tabs>
     </ion-pane>

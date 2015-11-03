@@ -9,8 +9,12 @@
             <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt="" />
         </div>
         <div class="text">
-            <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
-            <em ng-bind="vm.profileData.props.company"></em>
+            <div class="title">{{::vm.profileData.firstName}} {{::vm.profileData.lastName}}
+                <span class="profile-handle" ng-if="vm.profileData.handle">
+                    "{{vm.profileData.handle}}"
+                </span>
+            </div>
+            <em ng-bind="vm.profileData.email"></em>
         </div>
     </div>
 
@@ -34,10 +38,6 @@
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Phone Number</span>
                     <input type="text" ng-model="vm.profileData.phone" placeholder="Phone Number" name="phone">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label has-input">Email Address</span>
-                    <div class="email" ng-bind="vm.profileData.email"></div>
                 </label>
                 <div class="item edit-profile-types">
                     <div class="top">
@@ -72,10 +72,18 @@
                     <span class="input-label">Miles per Year</span>
                     <input type="number" ng-model="vm.profileData.props.miles" placeholder="Miles per Year">
                 </label>
-                <button class="button button-clear button-block icon-left ion-log-out" ng-click="vm.logout()">
+
+                <div class="item item-button-right">
                     Log Out
-                </button>
+                    <button class="button button-assertive" ng-click="vm.logout()">
+                        <i class="ion-log-out"></i>
+                    </button>
+                </div>
+
+
             </div>
+
+
         </ion-scroll>
     </ion-pane>
 

@@ -95,12 +95,21 @@ body{
       top: 0;
       right: 0;
       left: 0;
-      bottom: 44px;
+      // bottom: 44px;
+      bottom: 0;
       position: absolute;
 
       &:nth-last-child(1){
         bottom:0;
       }
+      
+      .list {
+        padding-bottom: 74px;
+        
+        & > :last-child > .item {
+          //padding-bottom: 84px;
+        }
+      } 
     }
     &.profile-tabs{
       .ionic-scroll{
@@ -166,9 +175,10 @@ textarea{
 .item-input {
   textarea {
     min-height: 125px; 
-    font-size: 16px; 
-    line-height: 18px; 
-    color: #9b9b9b;
+    padding-top: 13px;
+    //font-size: 16px; 
+    //line-height: 18px; 
+    //color: #9b9b9b;
     
     &.optional {
       min-height: 36px;

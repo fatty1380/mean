@@ -101,25 +101,34 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
       background-size: 60px 60px;
     }
     .text{
+      color: $light;
       padding-top: 11px;
       overflow: hidden;
       text-align:left;
-
-      strong,
-      em{
-        display: block;
-        padding-bottom: 3px;
-        color: #fff;
-        font-size: 16px;
+      
+      .title {
+        font-size: 1.3em;
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+      
+      .profile-handle {
+        font-size: 0.9em;
+        font-weight: 400;
+        margin-left: 5px;
       }
 
-      em{
-        color: rgba(255,255,255,0.6);
+      em {
+        color: $stable;
         font-size: 12px;
       }
 
     }
   }
+}
+
+.profile-handle {
+  color: $action-icon;
 }
 
 .profile-tabs{
@@ -294,11 +303,14 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
     text-align: center;
   }
   .item{
-    background: none;
+    //background: none;
     padding: 10px 15px 9px;
     border-bottom: 1px solid #ddd;
-    font-size: 11px;
     color: #666;
+    
+    .edit-btn {
+      float: right;
+    }
 
     strong,
     p,
@@ -309,24 +321,41 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
 
     strong{
       text-transform: uppercase;
-      font-size: 13px;
 
       .company{
         font-style: italic;
-        font-size: 11px;
         text-transform: capitalize;
       }
     }
 
-    p{
-      font-size: 11px;
+    .description {
+      border-top: 1px solid $stable;
+      padding-top: 3px;
+      
       white-space: normal;
       text-overflow: initial;
     }
-    em{
-      i{
-        margin-right: 5px;
+    
+    .props {
+      display: inline-block;
+      width: 100%;
+      border-top: 1px solid $stable;
+      padding-top: 3px;
+      
+      .location {
+        font-weight: 500;
+        float: left;
+        padding: 3px 0;
+      }
+      
+      .time {
+        padding: 3px 0;
+        float: right;
+        
+      i {
+        margin-right: 4px;
         vertical-align: text-top;
+      }
       }
     }
   }
@@ -527,5 +556,11 @@ and (max-device-height : 568px) {
         }
       }
     }
+  }
+  
+  .content-button .button.button-block {
+    border: none;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 }

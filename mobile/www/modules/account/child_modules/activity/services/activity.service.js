@@ -54,13 +54,13 @@
         var feedData = {
             activity: {
                 feedSource: 'activity',
-                buttonName: 'All Logs',
-                loadingText: 'loading my feed.</br>Please Wait.'
+                buttonName: 'My Logs',
+                loadingText: '<ion-spinner></ion-spinner><br>Loading My Logs'
             },
             items: {
                 feedSource: 'items',
-                buttonName: 'My Logs',
-                loadingText: '<ion-spinner></ion-spinner><br>Loading Feed'
+                buttonName: 'Activity',
+                loadingText: '<ion-spinner></ion-spinner><br>Loading Activity Feed'
             }
         }
         

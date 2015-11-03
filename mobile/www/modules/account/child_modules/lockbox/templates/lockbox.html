@@ -26,12 +26,15 @@
                     </li>
                 </ul>
                 <div ng-if="!vm.documents.length" class="no-content">No documents</div>
-            <ion-list>
-            <!--<ion-infinite-scroll ng-if="vm.feed.length > 2" distance="5%" on-infinite="vm.loadMore()" immediate-check="false"></ion-infinite-scroll>-->
+            </ion-list>
         </ion-scroll>
-        <button class="button content-button" ng-class="{'disabled': !vm.documents.length}" ng-click="vm.showShareModal()">
-            <i class="ico ico-shareiconorange"></i> Share
-        </button>
+
+        <div class="button content-button" ng-class="{'disabled': !vm.documents.length}" ng-click="vm.showShareModal()">
+            <button type="button" class="button button-block button-positive">
+                <i class="ion-share"></i> Share
+            </button>
+        </div>
+
     </ion-pane>
 
 </ion-view>
