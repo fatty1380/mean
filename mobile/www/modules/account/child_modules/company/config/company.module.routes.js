@@ -23,7 +23,7 @@
                                 .then(
                                     function success(result) {
                                         console.log('Company Result: ', result);
-                                        return result.data;
+                                        return result;
                                     })
                                 .catch(
                                     function reject(err) {
@@ -39,8 +39,8 @@
                             return CompanyService.loadJobs($stateParams.companyId)
                                 .then(
                                     function success(result) {
-                                        console.log('Company Jobs Result: ', result.data);
-                                        return result.data;
+                                        console.log('Company Jobs Result: ', result);
+                                        return result;
                                     })
                                 .catch(function reject(err) {
                                     debugger;
@@ -54,8 +54,8 @@
                             return CompanyService.loadFeed($stateParams.companyId)
                                 .then(
                                     function success(result) {
-                                        console.log('Company Feed Result: ', result.data);
-                                        return result.data;
+                                        console.log('Company Feed Result: ', result);
+                                        return result;
                                     })
                                 .catch(function reject(err) {
                                     debugger;
