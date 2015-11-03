@@ -28,51 +28,48 @@
             cancelTimer: cancelTimer
         };
         
-        function initTimer (name, interval, immediate) {
+        function initTimer (name, intervalSeconds, callback) {
             if(vm[name]) return;
 
-            vm[name] = {};
-            vm[name].name = name;
-            vm[name].timeOut = null;
-            vm[name].interval = interval || vm.defaultInterval;
-            vm[name].counter = null;
-            vm[name].running = false;
+            var timer = {};
+            timer.name = name;
+            timer.timeOut = null;
+            timer.interval = intervalSeconds || vm.defaultInterval;
+            timer.running = false;
+            timer.callback = callback;
+            
+            vm[name] = timer;
 
             vm.timers.push(name);
 
-            startTimer(vm[name], immediate);
+            startTimer(vm[name]);
         }
 
-        function startTimer (timer, immediate) {
+        function startTimer (timer) {
             if(!timer) return;
 
-            // run immediately for the first time
-            if(immediate && timer.counter === null){
-                timer.counter = 0;
-            } else {
-                timer.counter = timer.interval;
-            }
-
-            if(!timer.running) {
-                timer.timeOut = $timeout(onTimeout, 1000, true, timer);
+            if (!timer.running) {
+                timer.timeOut = $timeout(onTimeout, timer.interval * 1000, true, timer);
                 timer.running = true;
             }
         }
 
-        function onTimeout (timer) {
-            if(timer.counter ===  0) {
-                var timerObj = vm[timer.name];
+        function onTimeout(timer) {
+            console.log('[onTimeout] %s timed out', timer.name);
 
-                timerObj.running = false;
-                timerObj.counter = 0;
+            if (timer.name === 'security-timer') debugger;
 
-                $rootScope.$broadcast(timer.name + '-stopped');
+            var timerObj = vm[timer.name];
+
+            timerObj.running = false;
+
+            $rootScope.$broadcast(timer.name + '-stopped');
+
+            if (_.isFunction(timerObj.callback)) {
+                    timerObj.callback();
+                }
 
                 return;
-            }
-
-            timer.counter--;
-            timer.timeOut = $timeout(onTimeout, 1000, true, timer);
         }
 
         function restartTimer (name) {
@@ -85,7 +82,6 @@
                 return;
             }
 
-            timer.counter = timer.interval;
             timer.timeOut = null;
             timer.running = false;
 
@@ -100,8 +96,7 @@
 
             timer.running = false;
             timer.interval = null;
-            timer.counter = null;
-            timer.myTimeOut = null;
+            timer.timeOut = null;
         }
     }
 })();

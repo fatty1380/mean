@@ -263,7 +263,7 @@
 
         function checkForUpdates(profileData) {
             user = profileData;
-            return timerService.initTimer(timerName, 15, true);
+            return timerService.initTimer(timerName, 15);
         }
 
         return {

@@ -11,6 +11,7 @@
 
         var PIN;
         var state = {
+            initialized: false,
             secured: false,
             accessible: false
         };
@@ -34,22 +35,25 @@
             };
             PIN = null;
             
-            getPin();
-
-            $rootScope.$on("security-timer-stopped", function (event) {
+            $rootScope.$on('security-timer-stopped', function (event) {
+                debugger;
                 lock();
             });
+            
+            state.initialized = true;
         }
 
         function lock() {
+            console.log('Locking Lockbox');
             state.accessible = false;
         }
 
         function unlock(pin) {
+            console.log('UnLocking Lockbox');
             if (PIN === pin) {
                 state.accessible = true;
                 // lock lockbox documents every 15 minutes
-                timerService.initTimer('security-timer', 15 * 60);
+                timerService.initTimer('security-timer', 15*60, false);
             }
             return state.accessible;
         }
@@ -61,6 +65,10 @@
         }
 
         function getPin() {
+            if (!state.initialized) {
+                initialize();
+            }
+            
             if (PIN) {return $q.when(PIN);}
 
             return userService.getUserData()
@@ -83,6 +91,7 @@
         function logout() {
             timerService.cancelTimer('security-timer');
             state.accessible = false;
+            state.initialized = false;
             $window.localStorage.removeItem('lockbox_pin');
             PIN = null;
         }
