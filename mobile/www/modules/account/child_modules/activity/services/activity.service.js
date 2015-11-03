@@ -68,8 +68,12 @@
         
         /////////////////////////////////////////////////////////////////////////////////
 
-        function changeFeedSource() {
-            feedSource = (feedSource === 'activity') ? 'items' : 'activity';
+        function changeFeedSource(source) {
+            var src = feedSource;
+            source = /activity|items/i.test(source) ? source : null;
+            feedSource = source || (feedSource === 'activity') ? 'items' : 'activity';
+            
+            return src !== feedSource;
         }
 
         function getFeedData() {
@@ -153,7 +157,7 @@
                 if(!angular.isString(value)) return value;
                 return getFeedActivityById(value).then(
                     function (feedItem) {
-                        console.log('Loaded Feed item #' + index + '. Feeder: ', feeder);
+                        //console.log('Loaded Feed item #' + index + '. Feeder: ', feeder);
                         feeder.loaded++;
                         
                         if (_.isEmpty(feedItem)) {
@@ -182,7 +186,7 @@
                     var x = Date.parse(b.created) - Date.parse(a.created);
                     var y = x > 0 ? 1 : x < 0 ? -1 : 0;
                     var word = y == 1 ? 'after' : 'before';
-                    console.log('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
+                    //console.log('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
                     return y
                 });
 

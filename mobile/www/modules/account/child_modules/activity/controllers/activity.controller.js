@@ -13,7 +13,7 @@
 
         // Initialize Update Logic
         vm.lastUpdate = Date.now();
-        vm.feedData = null;
+        vm.feedData = {};
         vm.updates = updates;
 
         vm.showAddActivityModal = showAddActivityModal;
@@ -34,8 +34,13 @@
 
         $scope.$on('$ionicView.enter', function () {
             updateService.resetUpdates('activities');
-
-            if (!vm.feed.length) {
+            
+            if (vm.feed.length && activityService.changeFeedSource('activity')) {
+                console.log('Activity Source Changed to ' + vm.feedData.feedSource);
+                updateFeedData();
+                initialize();
+            }
+            else if (!vm.feed.length) {
                 updateFeedData();
                 initialize();
             }
