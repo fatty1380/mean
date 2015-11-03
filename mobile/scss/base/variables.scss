@@ -6,6 +6,7 @@ $action-icon: #dc9647;
 $icon-blue: #cfedff;
 $badge-green: #206B89;
 $ribbon-bg: #4d4951;
+$brand-blue: #4896BB;
 $gradient-bottom: #276b93;
 $tab-selected: #3e86b1;
 $content-bg: #f8f8f8;
@@ -14,6 +15,10 @@ $content-body-text: darken(#9b9b9b, 20%);
 $secondary-text-action: rgba(255, 255, 255, 1.0);
 $tab-text: #807b84;
 $danger: #B13E3E;
+
+//$brand-bg: #0A2422;
+//$brand-bg: #062733;
+$brand-bg: $brand-blue;
 
 // Colors
 // -------------------------------
@@ -34,8 +39,8 @@ $modal-primary-text: $light;
 $modal-secondary-bg: $light;
 $modal-secondary-text: #858585;
 
-$signup-entry-row-bg: rgba(255,255,255,0.4);
-$signup-entry-row-active-bg: rgba(250,250,250, 1);
+$signup-entry-row-bg: rgba(255,255,255,0.2);
+$signup-entry-row-active-bg: rgba(250,250,250,1);
 $signup-entry-label-text: #EFEFEF;
 $signup-entry-value-text: $light;
 

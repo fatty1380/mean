@@ -456,9 +456,11 @@ $but-height: 70px;
 
 
 .signup-section{
-  background: url("../img/welcomeBackground@3x.jpg") 0 0 no-repeat ;
-  -webkit-background-size: cover;
-  background-size: cover;
+  // background: url("../img/welcomeBackground@3x.jpg") 0 0 no-repeat ;
+  // -webkit-background-size: cover;
+  // background-size: cover;
+  
+  background-color: $brand-bg;
 
 
   .header,
