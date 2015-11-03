@@ -19,14 +19,14 @@
                     <div class="row">
                         <div class="col">
                             <label class="item item-input item-floating-label">
-                                <span class="input-label">Freight Hauled:</span>
+                                <span class="input-label" ng-show="vm.activity.props.freight || vm.activity.props.distance">Freight Hauled:</span>
                                 <input type="text" ng-model="vm.activity.props.freight" placeholder="Freight Hauled">
                             </label>
                         </div>
                         <div class="col">
                             <label class="item item-input item-floating-label">
-                                <span class="input-label">Miles Driven:</span>
-                                <input type="text" ng-model="vm.activity.props.distance" placeholder="Distance Driven">
+                                <span class="input-label" ng-show="vm.activity.props.freight || vm.activity.props.distance">Miles Driven:</span>
+                                <input type="tel" ng-model="vm.activity.props.distance" placeholder="Distance Driven">
                             </label>
                         </div>
                     </div>

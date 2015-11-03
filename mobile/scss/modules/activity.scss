@@ -197,27 +197,42 @@
   .add-activity-pane {
     .item {
       margin:0;
-      padding: 10px;
-      border-top: 1px solid #D2D2D2;
-
+      padding: 6px 10px;
+      border-bottom: 1px solid #D2D2D2;
+      border-collapse: collapse;
+      
       .input-label {
         width:auto;
         font-weight: 500;
         color: inherit;
         max-width: 500px;
+        
+        margin-right: 5px;
       }
-      input {
-        font-size:16px;
-        line-height: 20px;
-        padding:0;
-        border: 0;
+      
+      input, textarea {
+        background-color: transparent;
+        font-size:14px;
         color: $content-body-text;
+        ::-webkit-input-placeholder {
+          color: $ribbon-bg;
+        }
+        line-height: 22px;
+      }
+      
+      input {
+        height: auto;
+        line-height: 22px;
+        padding:0;
+        padding-top: 9px;
+        padding-bottom: 7px;
+        border: 0;
       }
       div{
         white-space: normal;
-        font-size:16px;
+        font-size:15px;
         color: $content-body-text;
-        line-height: 20px;
+        line-height: 22px;
       }
       
       .notes-holder {

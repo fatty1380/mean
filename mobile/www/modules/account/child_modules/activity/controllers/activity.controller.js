@@ -170,7 +170,7 @@
                         }
                     }
                 }, function (err) {
-                    activityService.showPopup('10-92', 'Unable to checkin, try again later');
+                    $ionicLoading.show({ template: '<h3>10-92</h3>Unable to checkin, try again later', duration: 2000 });
                 })
         }
     }

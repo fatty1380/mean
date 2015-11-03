@@ -302,7 +302,7 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
   .center{
     text-align: center;
   }
-  .item{
+  .item {
     //background: none;
     padding: 10px 15px 9px;
     border-bottom: 1px solid #ddd;
@@ -311,14 +311,10 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
     .edit-btn {
       float: right;
     }
-
-    strong,
-    p,
-    em{
-      display: block;
-      padding-bottom: 5px;
+    
+    .title {
+      
     }
-
     strong{
       text-transform: uppercase;
 
@@ -334,6 +330,9 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
       
       white-space: normal;
       text-overflow: initial;
+      
+      display: block;
+      padding-bottom: 5px;
     }
     
     .props {

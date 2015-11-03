@@ -4,9 +4,9 @@
         <h1 class="title">{{vm.stateAction}} Experience</h1>
     </ion-header-bar>
 
-    <ion-pane class="pan has-footer">
+    <ion-pane class="pane has-footer">
         <ion-scroll>
-            <div class="list edit-fields-list">
+            <div class="list edit-fields-list add-activity-pane">
                 <label class="item item-input">
                     <span class="input-label">Job Title</span>
                     <input type="text" ng-model="vm.experience.title" placeholder="" required>
@@ -15,7 +15,7 @@
                     <span class="input-label">Company</span>
                     <input type="text" ng-model="vm.experience.company" placeholder="" />
                 </label>
-                <label class="item item-input">
+                <label class="item item-input item-stacked-label">
                     <span class="input-label">Description</span>
                     <textarea msd-elastic class="optional" type="text" ng-model="vm.experience.description" placeholder="About the role"></textarea>
                 </label>
@@ -27,13 +27,13 @@
                 <div class="row">
                     <div class="col">
                         <label class="item item-input item-floating-label">
-                            <span class="input-label">Start Date</span>
+                            <span class="input-label" ng-show="vm.experience.startDate || vm.experience.endDate">Start Date</span>
                             <input type="text" ng-model="vm.experience.startDate" placeholder="Start Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                         </label>
                     </div>
                     <div class="col">
                         <label class="item item-input item-floating-label">
-                            <span class="input-label">End Date</span>
+                            <span class="input-label" ng-show="vm.experience.startDate || vm.experience.endDate">End Date</span>
                             <input type="text" ng-model="vm.experience.endDate" placeholder="End Date" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                         </label>
                     </div>

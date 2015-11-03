@@ -33,7 +33,7 @@
                 created: ''
             },
             props:{
-                avatar: user.props.avatar,  /// TODO: WRONG - Use Cache Service
+                avatar: user.profileImageURL,  /// TODO: WRONG - Use Cache Service
                 handle: user.handle,        /// WRONG
                 freight: '',
                 slMiles: ''
