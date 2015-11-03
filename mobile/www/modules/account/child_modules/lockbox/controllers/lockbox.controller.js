@@ -25,12 +25,17 @@
 
         vm.lockboxClear = false;
 
-        $scope.$on("$ionicView.beforeEnter", checkLockboxAccess);
+        $scope.$on("$ionicView.beforeEnter", function () {
+            console.log('Reactivate Lockbox Controller');
+            
+            return lockboxDocuments.checkAccess({ redirect: true });
+        });
 
         $rootScope.$on("clear", function () {
             console.log('LockboxCtrl clear');
             vm.currentDoc = null;
             vm.documents = [];
+            lockboxDocuments.clear();
             securityService.logout();
         });
 
@@ -123,122 +128,6 @@
                     // Stop the ion-refresher from spinning
                     $scope.$broadcast('scroll.refreshComplete');
                 });
-        }
-
-        function checkLockboxAccess() {
-            // TODO: refactor and move to service
-            // Step 1: Pulled out into standalone function
-
-            $scope.data = {
-                title: 'Enter PIN',
-                subTitle: 'Secure your Lockbox with a 4 digit PIN'
-            };
-
-            var scopeData = $scope.data;
-            var state = securityService.getState();
-            var PIN;
-
-            var pinPopup;
-            scopeData.closePopup = closePINPopup;
-            scopeData.pinChange = pinChanged;
-
-            //TODO: refactor this
-            // Step 1: extracted into activate function
-            securityService
-                .getPin()
-                .then(function (pin) {
-                    PIN = pin;
-                    state = securityService.getState();
-                })
-                .finally(activate);
-            
-            /////////////////////////////////////////////
-            
-            function activate() {
-
-                if (!!state.secured) {
-                    scopeData.subTitle = 'Enter your PIN to unlock'
-                }
-
-                if (!PIN) {
-                    securityService
-                        .getPin()
-                        .then(function (pin) {
-                            PIN = pin;
-                        });
-                }
-
-                if (!state.accessible) {
-                    $ionicLoading.hide();
-                    pinPopup = $ionicPopup.show(getPinObject());
-                    pinPopup.then(function (accessGranted) {
-                        if (!accessGranted) {
-                            $state.go('account.profile')
-                        }
-
-                        $ionicLoading.hide();
-                    });
-                } else {
-                    $ionicLoading.hide();
-                }
-            }
-
-            function getPinObject() {
-                return {
-                    template: '<input class="pin-input" type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4" autofocus>',
-                    title: scopeData.title,
-                    subTitle: scopeData.subTitle,
-                    scope: $scope,
-                    buttons: [
-                        { text: 'Cancel', type: 'button-small' }
-                    ]
-                };
-            }
-
-            function closePINPopup(data) {
-                pinPopup.close(data);
-            }
-
-            function pinChanged(popup) {
-                if (scopeData.pin.length !== 4) return;
-
-                if (!scopeData.confirm && !state.secured) {
-
-                    scopeData.confirm = true;
-                    scopeData.newPin = scopeData.pin;
-                    scopeData.pin = '';
-                    popup.subTitle = 'Please confirm your PIN';
-                    popup.title = 'Confirm New PIN';
-
-                } else if (state.secured && PIN && (scopeData.pin === PIN)) {
-                    scopeData.closePopup(securityService.unlock(scopeData.pin));
-
-                    $ionicLoading.show({
-                        template: '<i class="icon ion-unlocked"></i><br>Unlocked',
-                        duration: 1000
-                    })
-                } else if (state.secured && PIN && scopeData.pin != PIN) {
-                    scopeData.pin = '';
-                } else if (scopeData.confirm && !state.secured) {
-                    if (scopeData.pin === scopeData.newPin) {
-                        securityService.setPin(scopeData.pin);
-                        scopeData.closePopup(securityService.unlock(scopeData.pin));
-
-                        $ionicLoading.show({
-                            template: '<i class="icon ion-locked"></i><br>Documents Secured',
-                            duration: 1000
-                        })
-                    } else {
-                        scopeData.confirm = false;
-                        scopeData.pin = '';
-
-                        delete scopeData.newPin;
-
-                        popup.subTitle = 'Secure your Lockbox with a 4 digit PIN';
-                        popup.title = 'Confirmation Failed';
-                    }
-                }
-            }
         }
     }
 })();

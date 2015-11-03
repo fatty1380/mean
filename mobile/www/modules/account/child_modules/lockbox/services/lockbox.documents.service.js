@@ -17,16 +17,16 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['userService', '$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$ionicLoading', 'API', '$q', 'settings', 'cameraService', 'lockboxModalsService', 'welcomeService'];
+    lockboxDocuments.$inject = ['$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$q', '$ionicLoading',
+        'userService', 'API', 'settings', 'cameraService', 'lockboxModalsService', 'welcomeService', 'lockboxSecurity'];
 
-    function lockboxDocuments(userService, $cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $ionicLoading, API, $q, settings, cameraService, lockboxModalsService, welcomeService) {
+    function lockboxDocuments($cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $q, $ionicLoading,
+        userService, API, settings, cameraService, lockboxModalsService, welcomeService, lockboxSecurity) {
 
         var vm = this;
 
-        // vm.IOS_PATH = cordova.file.documentsDirectory;
-        // vm.ANDROID_PATH = cordova.file.dataDirectory + 'Documents/';
         try {
-            vm.path = cordova.file.documentsDirectory; // ionic.Platform.isIOS() ? vm.IOS_PATH : vm.ANDROID_PATH;
+            vm.path = cordova.file.documentsDirectory;
             vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
         } catch (err) {
             console.warn('no cordova available, can\'t get access to documentsDirectory and lockbox folder');
@@ -43,50 +43,72 @@
             saveFileToDevice: saveFileToDevice,
             writeFileInUserFolder: writeFileInUserFolder,
             removeDocumentsByUser: removeDocumentsByUser,
-            updateLocalStorageInfoAboutDocuments: updateStorageInfo,
             writeFile: writeFile,
             getFilesByUserId: getFilesByUserId,
             updateDocumentList: updateDocumentList,
             orderReports: orderReports,
-            newDocPopup: takePicture
+            newDocPopup: takePicture,
+            checkAccess: lockboxSecurity.checkAccess,
+            clear: clear
             //getStubDocuments: getStubDocuments
+        }
+        
+        function clear() {
+            vm.documents = docTypeDefinitions;
+            vm.userData = null;
         }
         
         // TODO: Refactor to be "refresh documents"
         function getDocuments(saveToDevice) {
-            //return $http.get(settings.documents).then(
-            return API.doRequest(settings.documents, 'get')
+            if (_.isEmpty(vm.userData)) {
+                return $q.reject('No user is logged in');
+            }
+            
+            return lockboxSecurity.checkAccess()
+                .then(function (hasAccess) {
+
+                    if (hasAccess) {
+                        return API.doRequest(settings.documents, 'get')
+                    }
+
+                    return $q.reject('No Access');
+                })
                 .then(function success(documentListResponse) {
                     var docs = documentListResponse.data;
-                    var promiseArr = [];
 
-                    if (!vm.path) { return $q.when(docs); }
-                    if (!docs || !docs.length) { return $q.when([]); }
+                    if (!vm.path) { 
+                        // Not Saving to Device - return docs directly
+                        return docs;
+                    }
+                    if (_.isEmpty(docs)) { 
+                        // No Docs - Resolve w/ empty array
+                        return [];
+                    }
 
-                    angular.forEach(docs, function (doc) {
+                    var promises = _.map(docs, function (doc) {
                         if (saveToDevice) {
                             // NOTE: This returns a promise and the file may not be fully saved
                             // to the device when teh method returns
 
                             if (doc.url.indexOf('data:image') !== -1) {
                                 saveFileToDevice(doc);
-                                promiseArr.push($q.when(doc));
+                                return $q.when(doc);
                             } else {
-                                promiseArr.push(saveExistingFiles(doc));
+                                return saveExistingFiles(doc);
                             }
                         }
                     });
 
-                    return $q.all(promiseArr);
+                    return $q.all(promises);
                 })
                 .then(function (newDocuments) {
                     var id, sku, name, url, user, created;
 
-                    if (angular.isArray(newDocuments) && newDocuments.length) {
-                        angular.forEach(newDocuments, function (doc) {
+                    if (!_.isEmpty(newDocuments)) {
+                        _.each(newDocuments, function (doc) {
                             if (!doc.id && doc.name && doc.nativeURL) {
                                 var docObject = parseDocFromFilename(doc.name);
-                                
+
                                 id = docObject.id;
                                 sku = docObject.sku;
                                 name = docObject.name;
@@ -110,12 +132,8 @@
                                 sku: doc.sku
                             });
                         });
-                    } else if (angular.isArray(newDocuments) && !newDocuments.length) {
-                        // Itereate and add to avoid ovrewriting stubs
-                        _.each(newDocuments, function (doc) {
-                            addDocument(doc);
-                        });
-                    }
+                    } 
+                    
                     return vm.documents;
                 })
                 .catch(function (result) {
@@ -129,6 +147,59 @@
                     }
 
                     console.warn('finally vm.documents >>>', vm.documents);
+                    $ionicLoading.hide();
+                });
+        }
+
+
+        function getFilesByUserId(id) {
+            if (_.isEmpty(vm.userData)) {
+                return $q.reject('No user is logged in');
+            }
+
+            console.warn('getFilesByUserId() for id >>>', id);
+            if (!vm.path) return $q.when(getDocuments(true));
+
+            var path = vm.path;
+            var hasLockbox = false;
+            var hasUserDir = false;
+
+            return lockboxSecurity.checkAccess()
+                .then(function (result) {
+                    if (result.hasAccess) {
+                        return $cordovaFile.checkDir(path, 'lockbox')
+                    }
+
+                    return $q.reject('No Access');
+                })
+                .then(function () {
+                    path += 'lockbox/';
+                    hasLockbox = true;
+
+                    return $cordovaFile.checkDir(path, id);
+                })
+                .then(function (dir) {
+                    path += id;
+                    hasUserDir = true;
+
+                    return readFolder(dir);
+                })
+                .catch(function () {
+                    if (!!hasLockbox) {
+                        return $q.when(getDocuments(true));
+                    } else {
+                        return $cordovaFile.createDir(path, "lockbox", false).then(function () {
+                            return $q.when(getDocuments(true));
+                        });
+                    }
+                    return $q.when(vm.documents);
+                })
+                .finally(function () {
+                    var hasRealDoc = _.some(vm.documents, function (doc) { return !!doc.id });
+                    if (!hasRealDoc) {
+                        welcomeService.initialize('lockbox.add');
+                    }
+                    console.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
                     $ionicLoading.hide();
                 });
         }
@@ -221,10 +292,8 @@
                 .then(function success(newDocumentObject) {
                     if (addDocument(newDocumentObject)) {
                         return API.doRequest(settings.documents, 'post', newDocumentObject, false);
-                        //return $http.post(settings.documents, newDocumentObject);
                     } else {
                         return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject, false);
-                        //return $http.put(settings.documents + newDocumentObject.id, newDocumentObject);
                     }
                 })
                 .then(function saveSuccess(newDocumentResponse) {
@@ -262,9 +331,7 @@
         }
 
         function removeDocuments(documents) {
-            var promises = [];
-
-            _.each(documents, function (doc) {
+            var promises = _.map(documents, function (doc) {
                 console.log('Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
 
                 _.remove(vm.documents, { id: doc.id });
@@ -278,9 +345,7 @@
                 }
 
                 //return API.doRequest(settings.documents + doc.id, 'delete');
-                var promise = API.doRequest(settings.documents + doc.id, 'delete');
-
-                promises.push(promise);
+                return API.doRequest(settings.documents + doc.id, 'delete');
             });
 
             return $q.all(promises);
@@ -384,7 +449,7 @@
             var users = !!usersJSON && JSON.parse(usersJSON);
             var index;
 
-            if (!(users instanceof Array)) users = [];
+            if (!_.isArray(users)) { users = [];}
 
             index = users.indexOf(user);
 
@@ -397,105 +462,71 @@
             storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 
-        function getFilesByUserId(id) {
-            console.warn('getFilesByUserId() for id >>>', id);
-            if (!vm.path) return $q.when(getDocuments(true));
+        
+        
+        //////// Methods ///////////////////////////////////////////////////////////////
 
-            var path = vm.path;
-            var hasLockbox = false;
-            var hasUserDir = false;
+        function toArray(list) {
+            return Array.prototype.slice.call(list || [], 0);
+        }
 
-            return $cordovaFile.checkDir(path, 'lockbox')
-                .then(function () {
-                    path += 'lockbox/';
-                    hasLockbox = true;
+        function readFolder(directory) {
 
-                    return $cordovaFile.checkDir(path, id);
-                })
-                .then(function (dir) {
-                    path += id;
-                    hasUserDir = true;
+            var dirReader = directory.createReader();
+            var entries = [];
 
-                    var dirReader = dir.createReader();
-                    var entries = [];
+            var q = $q.defer();
 
-                    function readFolder() {
-                        var q = $q.defer();
-
-                        // Keep calling readEntries() until no more results are returned.
-                        function readEntries() {
-                            dirReader.readEntries(
-                                function (results) {
-                                    console.log('results from dirReader: ', results);
-                                    if (results.length) {
-                                        console.log('dirReader Length' + results.length);
-                                        entries = entries.concat(toArray(results));
-                                        readEntries();
-                                    } else {
-                                        console.log('dirReader trying to resolve docs: ' + JSON.stringify(entries));
-                                        resolveDocuments(entries)
-                                            .then(function (entries) {
-                                                console.log('dirReader resolving with entries: ', entries);
-                                                q.resolve(entries);
-                                            })
-                                            .catch(function (err) {
-                                                console.error('dirReader failed to resolve entries: ' + JSON.stringify(entries) + ' err: ' + err);
-                                                q.reject(err);
-                                            });
-                                    }
-                                },
-                                function (err) {
-                                    console.error('Failed to read Directory', err);
+            // Keep calling readEntries() until no more results are returned.
+            function readEntries() {
+                var reader = dirReader.readEntries(
+                    function (results) {
+                        console.log('results from dirReader: ', results);
+                        if (results.length) {
+                            console.log('dirReader Length' + results.length);
+                            entries = entries.concat(toArray(results));
+                            readEntries();
+                        } else {
+                            console.log('dirReader trying to resolve docs: ' + JSON.stringify(entries));
+                            resolveDocuments(entries)
+                                .then(function (entries) {
+                                    console.log('dirReader resolving with entries: ', entries);
+                                    q.resolve(entries);
+                                })
+                                .catch(function (err) {
+                                    console.error('dirReader failed to resolve entries: ' + JSON.stringify(entries) + ' err: ' + err);
                                     q.reject(err);
                                 });
                         }
+                    },
+                    function (err) {
+                        console.error('Failed to read Directory', err);
+                        q.reject(err);
+                    });
+                    
+                debugger; // Check 'reader'
+            }
 
-                        readEntries();
+            readEntries();
 
-                        return q.promise;
-                    }
+            return q.promise;
+        }
 
-                    function toArray(list) {
-                        return Array.prototype.slice.call(list || [], 0);
-                    }
 
-                    function resolveDocuments(entries) {
-                        var docsPromises = [];
+        function resolveDocuments(entries) {
+            var docsPromises = angular.map(entries, function (entry) {
+                return createDocumentPromise(entry);
+            });
 
-                        angular.forEach(entries, function (entry) {
-                            docsPromises.push(createDocumentPromise(entry));
-                        });
-
-                        return $q.all(docsPromises).then(function (resolvedDocuments) {
+            return $q.all(docsPromises)
+                .then(function (resolvedDocuments) {
                             
-                            // Itereate and add to avoid ovrewriting stubs
-                            _.each(resolvedDocuments, function (doc) {
-                                addDocument(doc);
-                            });
+                    // Itereate and add to avoid ovrewriting stubs
+                    _.each(resolvedDocuments, function (doc) {
+                        addDocument(doc);
+                    });
 
-                            return vm.documents;
-                        });
-                    }
-
-                    return readFolder();
-                })
-                .catch(function () {
-                    if (!!hasLockbox) {
-                        return $q.when(getDocuments(true));
-                    } else {
-                        return $cordovaFile.createDir(path, "lockbox", false).then(function () {
-                            return $q.when(getDocuments(true));
-                        });
-                    }
-                    return $q.when(vm.documents);
-                })
-                .finally(function () {
-                    var hasRealDoc = _.some(vm.documents, function (doc) { return !!doc.id });
-                    if (!hasRealDoc) {
-                        welcomeService.initialize('lockbox.add');
-                    }
-                    console.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
-                    $ionicLoading.hide();
+                    return vm.documents;
                 });
         }
 
@@ -572,6 +603,138 @@
 
     }
 
+
+    angular
+        .module('lockbox')
+        .factory('lockboxSecurity', lockboxSecurity);
+
+    lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', '$ionicLoading', '$q', 'securityService'];
+    function lockboxSecurity($rootScope, $state, $ionicPopup, $ionicLoading, $q, securityService) {
+
+        return {
+            checkAccess: checkAccess
+        };
+
+        function checkAccess(options) {
+            // TODO: refactor and move to service
+            // Step 1: Pulled out into standalone function
+            
+            options = _.defaults({}, options, {
+                redirect: true,
+                setNew: true
+            })
+
+            var $scope = $rootScope.$new();
+
+            $scope.data = {
+                title: 'Enter New PIN',
+                subTitle: 'Secure your Lockbox with a 4 digit PIN'
+            };
+
+            var scopeData = $scope.data;
+            var state = securityService.getState();
+            var PIN;
+
+            var pinPopup;
+            scopeData.closePopup = closePINPopup;
+            scopeData.pinChange = pinChanged;
+            
+            /////////////////////////////////////////////
+            
+            return securityService
+                .getPin()
+                .then(function (pin) {
+                    PIN = pin;
+                    state = securityService.getState();
+
+                    if (!!state.secured) {
+                        scopeData.title = 'Enter PIN';
+                        scopeData.subTitle = 'Enter your PIN to unlock'
+                    }
+                    else if (!state.secured && !options.setNew) {
+                        return $q.reject('Lockbox not secured and securing is disabled');
+                    }
+
+                })
+                .then(function () {
+                    if (!state.accessible) {
+                        $ionicLoading.hide();
+                        return (pinPopup = $ionicPopup.show(getPinObject()));
+                    }
+
+                    return state.accessible;
+                })
+                .then(function (accessGranted) {
+                    if (!accessGranted && options.redirect) {
+                        $state.go('account.profile');
+                        return false;
+                    }
+                    
+                    return !!accessGranted;
+                })
+                .finally(function () {
+                    $ionicLoading.hide();
+                });
+
+            function getPinObject() {
+                return {
+                    template: '<input class="pin-input" type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4" autofocus>',
+                    title: scopeData.title,
+                    subTitle: scopeData.subTitle,
+                    scope: $scope,
+                    buttons: [
+                        { text: 'Cancel', type: 'button-small' }
+                    ]
+                };
+            }
+
+            function closePINPopup(data) {
+                pinPopup.close(data);
+            }
+
+            function pinChanged(popup) {
+                if (scopeData.pin.length !== 4) return;
+
+                if (!scopeData.confirm && !state.secured) {
+
+                    scopeData.confirm = true;
+                    scopeData.newPin = scopeData.pin;
+                    scopeData.pin = '';
+                    popup.subTitle = 'Please confirm your PIN';
+                    popup.title = 'Confirm New PIN';
+
+                } else if (state.secured && PIN && (scopeData.pin === PIN)) {
+                    scopeData.closePopup(securityService.unlock(scopeData.pin));
+
+                    $ionicLoading.show({
+                        template: '<i class="icon ion-unlocked"></i><br>Unlocked',
+                        duration: 1000
+                    })
+                } else if (state.secured && PIN && scopeData.pin != PIN) {
+                    scopeData.pin = '';
+                } else if (scopeData.confirm && !state.secured) {
+                    if (scopeData.pin === scopeData.newPin) {
+                        securityService.setPin(scopeData.pin);
+                        scopeData.closePopup(securityService.unlock(scopeData.pin));
+
+                        $ionicLoading.show({
+                            template: '<i class="icon ion-locked"></i><br>Documents Secured',
+                            duration: 1000
+                        })
+                    } else {
+                        scopeData.confirm = false;
+                        scopeData.pin = '';
+
+                        delete scopeData.newPin;
+
+                        popup.subTitle = 'Secure your Lockbox with a 4 digit PIN';
+                        popup.title = 'Confirmation Failed';
+                    }
+                }
+            }
+        }
+    }
+
     /** Documnt Stubs
      * These stub documents are in place to provide placeholders for users
      * so that they have a better idea how to use the app.
@@ -584,12 +747,13 @@
             fn: 'orderDocs'
         },
         {
-            sku: 'res',
-            name: 'Professional Resume'
-        },
-        {
             sku: 'cdl',
             name: 'Driver License',
+            info: ''
+        },
+        {
+            sku: 'res',
+            name: 'Resume',
             info: ''
         },
         {

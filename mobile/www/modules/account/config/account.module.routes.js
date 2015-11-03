@@ -101,17 +101,19 @@
                         templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
                         controller: 'LockboxCtrl as vm',
                         resolve: {
-                            documents: ['lockboxDocuments', 'user', '$ionicLoading', function (lockboxDocuments, user, $ionicLoading) {
-                                $ionicLoading.show({template: '<ion-spinner></ion-spinner><br>Loading documents', delay: 500, duration: 10000});
-                                return lockboxDocuments.getFilesByUserId(user.id)
-                                    .then(function (data) {
-                                        return data;
-                                    })
-                                    .catch(function (err) {
-                                        console.warn('Couldn\'t retrieve documents err --->>>', err);
-                                        return [];
-                                    })
-                            }],
+                            documents: ['lockboxDocuments', 'user', '$ionicLoading',
+                                function (lockboxDocuments, user, $ionicLoading) {
+
+                                    $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading documents', delay: 500, duration: 10000 });
+                                    return lockboxDocuments.getFilesByUserId(user.id)
+                                        .then(function (data) {
+                                            return data;
+                                        })
+                                        .catch(function (err) {
+                                            console.warn('Couldn\'t retrieve documents err --->>>', err);
+                                            return [];
+                                        })
+                                }],
                             welcome: ['welcomeService', function (welcomeService) {
                                 return welcomeService.showModal('account.lockbox');
                             }]

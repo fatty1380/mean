@@ -11,7 +11,9 @@
 
         var vm = this;
         vm.selectedContact = {};
+        vm.docsToShare = [];
 
+        vm.back = back;
         vm.cancel = cancel;
         vm.skipDocs = skipDocs;
         vm.documents = parameters.documents;
@@ -23,6 +25,26 @@
         function init() {
             vm.contact = {};
             vm.shareStep = 1;
+
+            return lockboxDocuments.checkAccess({ redirect: false, setNew: false })
+                .then(function (isAccessible) {
+                    vm.canAccess = isAccessible;
+
+                    if (isAccessible) {
+                        if (_.isEmpty(vm.documents)) {
+                            console.log('Documents not included in parameters - looking up');
+                            getDocs();
+                        }
+                        
+                        return;
+                    }
+
+                    return skipDocs();
+                })
+                .catch(function fail(err) {
+                    console.log('Failed to access lockbox due to `%s`', err);
+                    vm.canAccess = false;
+                });
         }
 
         function getDocs() {
@@ -34,10 +56,14 @@
                 });
         }
 
+        function back() {
+            vm.shareStep = 1;
+        }
+
         function cancel() {
             var self = this;
-            vm.closeModal(null);
             self.shareStep = 1;
+            vm.closeModal(null);
         }
 
         function skipDocs() {
@@ -45,17 +71,22 @@
         }
 
         function addDocumentsToShare(skip) {
-            var filter = $filter('getChecked'),
-                selectedDocs = filter(vm.documents);
+            if (!skip) {
+                var filter = $filter('getChecked'),
+                    selectedDocs = filter(vm.documents);
 
-            if (!selectedDocs.length && !skip) {
-                return $ionicPopup.alert({
-                    title: 'Error',
-                    template: 'Please select documents you would like to share'
-                });
+                if (!selectedDocs.length && !skip) {
+                    return $ionicPopup.alert({
+                        title: 'Error',
+                        template: 'Please select documents you would like to share'
+                    });
+                }
+
+                vm.docsToShare = selectedDocs;
+            } else {
+                vm.docsToShare = [];
             }
 
-            vm.docsToShare = selectedDocs;
             vm.shareStep = 2;
         }
 
@@ -64,8 +95,8 @@
             var requestObj = {},
                 serializedReqObj;
 
-            if(!vm.contact || !vm.contact.email){
-                $ionicPopup.alert({title: 'Error!', template: 'Please, enter recipient information'});
+            if (!vm.contact || !vm.contact.email) {
+                $ionicPopup.alert({ title: 'Error!', template: 'Please, enter recipient information' });
                 return;
             }
 

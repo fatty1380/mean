@@ -4,11 +4,11 @@
     <ion-header-bar>
         <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
         <h1 class="title">Share Profile</h1>
-        <button class="button button-clear" ng-click="vm.shareStep = 2;">skip</button>
+        <button class="button button-clear" ng-click="vm.skipDocs()">skip</button>
     </ion-header-bar>
 
     <div class="bar bar-subheader">
-        <h3 class="title">Select which documents you would like to share along with the information saved in your profile</h3>
+        <h3 class="title">Select documents to share along with your profile</h3>
     </div>
 
     <ion-pane class="has-footer">
@@ -44,15 +44,18 @@
 </ion-modal-view>
 
 <!-- Modal step #2 -->
-<ion-modal-view class="lockbox lockbox-share view-section compact-size" ng-if="vm.shareStep === 2">
+<ion-modal-view class="lockbox lockbox-share view-section compact-size" 
+ng-class="{'compact-size': (vm.docsToShare && vm.docsToShare.length), 'min-size': (!vm.docsToShare || !vm.docsToShare.length)}"
+ng-if="vm.shareStep === 2">
 
     <ion-header-bar>
-        <button class="button button-clear" ng-click="vm.shareStep = 1;">Back</button>
-        <h1 class="title">My Lockbox</h1>
+        <button class="button button-clear" ng-show="vm.canAccess" ng-click="vm.back()">Back</button>
+        <button class="button button-clear" ng-hide="vm.canAccess" ng-click="vm.cancel()">Cancel</button>
+        <h1 class="title">Share Profile</h1>
     </ion-header-bar>
 
-    <div class="bar bar-subheader">
-        <h3 class="title">Your lockbox will contain all your secure documents.</h3>
+    <div class="bar bar-subheader" ng-if="vm.docsToShare.length">
+        <h3 class="title">Sharing profile and {{vm.docsToShare.length}} Document{{vm.docsToShare.length === 1 ? '' : 's'}}</h3>
     </div>
 
     <ion-pane class="has-footer">
@@ -64,7 +67,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary" ng-click="vm.shareDocuments()">Share</button>
+            <button class="button primary" ng-class="{'disabled': !(vm.contact.phone && vm.contact.email)}" ng-click="vm.shareDocuments()">Share</button>
         </div>
     </ion-footer-bar>
 

@@ -22,21 +22,23 @@
             config.append = '\n';
         }])
 
-        .run(function ($ionicPlatform) {
-            $ionicPlatform.ready(function () {
-                if (window.cordova && window.cordova.plugins.Keyboard) {
-                    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-                }
-                if (window.StatusBar) {
-                    StatusBar.styleDefault();
-                }
+        .run(initializePlatform);
 
-                ionic.Platform.isFullScreen = true;
+    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings']
 
-                if (!!screen && angular.isFunction(screen.lockOrientation)) {
-                    screen.lockOrientation('portrait');
-                }
+    function initializePlatform($ionicPlatform, $window, settings) {
+        $ionicPlatform.ready(function () {
+            if (window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+            }
+            if (window.StatusBar) {
+                StatusBar.styleDefault();
+            }
 
-            });
+            ionic.Platform.isFullScreen = true;
+
+            if (!!screen && angular.isFunction(screen.lockOrientation)) {
+                screen.lockOrientation('portrait');
+            }
         });
 })();

@@ -25,7 +25,11 @@
             vm.deleteDisabled = true;
             vm.renameDisabled = true;
 
-            //getDocs();
+            
+            if (_.isEmpty(vm.documents)) {
+                console.log('Documents not included in parameters - looking up');
+                getDocs();
+            }
         }
 
         function getDocs() {
