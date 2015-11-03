@@ -114,9 +114,11 @@
                     case 'none':
                         vm.addUserToFriends();
                         break;
-                    case 'friends': alert('The convoy is strong with ' + vm.profileData.displayName);
+                    case 'friends':
+                        console.log('The convoy is strong with ' + vm.profileData.displayName);
                         break;
-                    case 'sent': alert('Already sent the invitation to ' + vm.profileData.displayName);
+                    case 'sent':
+                        console.log('Already sent the invitation to ' + vm.profileData.displayName);
                         break;
                 }
             };

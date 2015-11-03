@@ -52,30 +52,29 @@
 
                 branch.setDebug(false);
                 debugger;
-                branch.init(settings.branch.liveKey, function (err, response) {
-                    alert("branch.init - start");
+                branch.init(settings.branch.testKey, function (err, response) {
+                    console.log("branch.init - start");
 
                     if (err) {
-                        alert("branch error msg: " + err);
+                        console.log("branch error msg: " + err);
                     } else {
-                        alert("branch data: " + JSON.stringify(response, null, 1));
-                        console.log("branch data: " + JSON.stringify(response, null, 1))
+                        console.log("branch data: " + JSON.stringify(response, null, 1));
                     }
                     
                     if (!!response.data) {
-                        alert("branch data: " + JSON.stringify(response.data, null, 1));
-                        console.log("branch data: " + JSON.stringify(response.data, null, 1))
+                        console.log("branch data: " + JSON.stringify(response.data, null, 1));
                     }
 
 
                     debugger;
                     if (!err && response.data) {
                         var parsed_data = JSON.parse(response.data);
-                        alert('Parsed: ' + JSON.stringify(parsed_data, null, 1))
+                        console.log('Parsed: ' + JSON.stringify(parsed_data, null, 1))
 
                         if (parsed_data['+clicked_branch_link']) {
-                            alert('Referral Code' + parsed_data.referring_identity);
+                            console.log('Referral Code' + parsed_data.referring_identity);
                             $window.localStorage.setItem('referralCode', parsed_data.referring_identity);
+                            
                             $window.localStorage.setItem('branchData', JSON.stringify(parsed_data));
                         }
                     }
