@@ -40,10 +40,8 @@
             addDocsPopup: addDocsPopup,
             removeDocuments: removeDocuments,
             updateDocument: updateDocument,
-            saveFileToDevice: saveFileToDevice,
             writeFileInUserFolder: writeFileInUserFolder,
             removeDocumentsByUser: removeDocumentsByUser,
-            writeFile: writeFile,
             getFilesByUserId: getFilesByUserId,
             updateDocumentList: updateDocumentList,
             orderReports: orderReports,
@@ -52,19 +50,22 @@
             clear: clear
             //getStubDocuments: getStubDocuments
         }
-        
+
         function clear() {
             vm.documents = docTypeDefinitions;
             vm.userData = null;
         }
         
         // TODO: Refactor to be "refresh documents"
-        function getDocuments(saveToDevice) {
+        function getDocuments(saveToDevice, options) {
+
+            vm.userData = userService.profileData;
+
             if (_.isEmpty(vm.userData)) {
                 return $q.reject('No user is logged in');
             }
-            
-            return lockboxSecurity.checkAccess()
+
+            return lockboxSecurity.checkAccess(options)
                 .then(function (hasAccess) {
 
                     if (hasAccess) {
@@ -89,13 +90,16 @@
                         if (saveToDevice) {
                             // NOTE: This returns a promise and the file may not be fully saved
                             // to the device when teh method returns
-
-                            if (doc.url.indexOf('data:image') !== -1) {
-                                saveFileToDevice(doc);
-                                return $q.when(doc);
+   
+                            if (/data:\d+\//i.test(doc.url)) {
+                                // If the URL is a URI (eg: 'data:image/jpeg'), save it directly to the device
+                                return $q.when(saveFileToDevice(doc));
                             } else {
-                                return saveExistingFiles(doc);
+                                // Otherwise, we can assume that the URL is a URL and must be Downloaded
+                                return $q.when(downloadAndSaveDocumentToDevice(doc));
                             }
+                        } else {
+                            return $q.when(doc);
                         }
                     });
 
@@ -106,6 +110,8 @@
 
                     if (!_.isEmpty(newDocuments)) {
                         _.each(newDocuments, function (doc) {
+                            if (!doc) { return }
+                            
                             if (!doc.id && doc.name && doc.nativeURL) {
                                 var docObject = parseDocFromFilename(doc.name);
 
@@ -132,8 +138,8 @@
                                 sku: doc.sku
                             });
                         });
-                    } 
-                    
+                    } else { debugger; }
+
                     return vm.documents;
                 })
                 .catch(function (result) {
@@ -153,11 +159,14 @@
 
 
         function getFilesByUserId(id) {
+
+            vm.userData = userService.profileData;
+
             if (_.isEmpty(vm.userData)) {
                 return $q.reject('No user is logged in');
             }
 
-            console.warn('getFilesByUserId() for id >>>', id);
+            console.warn('getFilesByUserId() for id >>> @ path `%s`', vm.path, id);
             if (!vm.path) return $q.when(getDocuments(true));
 
             var path = vm.path;
@@ -165,8 +174,8 @@
             var hasUserDir = false;
 
             return lockboxSecurity.checkAccess()
-                .then(function (result) {
-                    if (result.hasAccess) {
+                .then(function (hasAccess) {
+                    if (hasAccess) {
                         return $cordovaFile.checkDir(path, 'lockbox')
                     }
 
@@ -179,10 +188,16 @@
                     return $cordovaFile.checkDir(path, id);
                 })
                 .then(function (dir) {
+                    console.log('directory >>> ', dir);
                     path += id;
                     hasUserDir = true;
 
                     return readFolder(dir);
+                })
+                .then(function (entries) {
+                    console.log('entries >>> ', entries);
+                    
+                    return vm.documents;
                 })
                 .catch(function () {
                     if (!!hasLockbox) {
@@ -202,38 +217,6 @@
                     console.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
                     $ionicLoading.hide();
                 });
-        }
-
-        function addDocument(doc) {
-            var i = -1;
-            var sku = (doc.sku || 'misc').toLowerCase();
-
-            var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
-
-            if ((i = !!doc.id ? _.findIndex(vm.documents, { id: doc.id }) : -1) !== -1) {
-                // If a document with the same ID is already in the array, replace it.
-                vm.documents[i] = doc;
-                return false;
-            }
-            else if (!def.multi && (i = _.findIndex(vm.documents, { sku: sku })) != -1) {
-                // If the document Type does not allow multiple copies, and there is already
-                // a copy with the same SKU, replace it.
-                vm.documents[i] = doc;
-                return true;
-            }
-            else {
-                // Othewise, simply push the document into the array
-                console.log('Pushing doc into docs', doc, vm.documents);
-                vm.documents.push(doc);
-                return true;
-            }
-        }
-
-        function updateNewDocumentWithID(doc) {
-            var i = _.findIndex(vm.documents, { url: doc.url, name: doc.name });
-            if (i >= 0 && vm.documents[i]) {
-                _.extend(vm.documents[i], doc);
-            }
         }
 
         function addDocsPopup(docSku) {
@@ -351,6 +334,35 @@
             return $q.all(promises);
         }
 
+        /**
+        * downloadAndSaveDocumentToDevice
+        * Given a document defined by a URL, downloads the doucment and saves it to the device
+        */
+        function downloadAndSaveDocumentToDevice(doc) {
+            var id = doc.id;
+            var name = id + "-" + getFileName(doc);
+            var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + name;
+
+            var deferred = $q.defer();
+
+            $cordovaFileTransfer
+                .download(doc.url, path,
+                    function success(entry) {
+                        deferred.resolve(entry);
+                    },
+                    function error(err) {
+                        console.error(err, 'Error Downloading doc id ' + id);
+                        deferred.reject('Failed to Download File');
+                    },
+                    true);
+
+            return deferred.promise;
+        }
+
+        /**
+         * saveFileToDevice
+         * Give a 'document' defined as a URI, saves the document contents to the device
+         */
         function saveFileToDevice(file) {
             var path = vm.path;
 
@@ -369,18 +381,15 @@
                         sku: file.sku
                     };
                     return writeFileInUserFolder(options);
+                    // writeFileInUserFolder Returns promise CONFIRMED
                 });
         }
 
-        function saveExistingFiles(doc) {
-            var id = doc.id;
-            var name = id + "-" + getFileName(doc);
-            var path = vm.LOCKBOX_FOLDER + vm.userData.id + '/' + name;
 
-            return $cordovaFileTransfer
-                .download(doc.url, path, {}, true);
-        }
-
+        /**
+         * @returns : promise
+         * @resolves with: the newly wirtten file object
+         */
         function writeFileInUserFolder(options) {
             var path = options.path;
             var user = options.user;
@@ -394,21 +403,17 @@
                 })
                 .then(function () {
                     path += user;
-                    return writeFile(path, name, data);
+                    return $cordovaFile.writeFile(path, name, data, true);
                 })
                 .then(function (file) {
                     updateStorageInfo(user, { action: 'add' });
                     return file;
                 })
                 .catch(function (err) {
-                    console.warn(' err >>>', err);
+                    console.error('writeFileInUserFolder err >>>', err);
                 });
         }
-
-        function writeFile(path, name, data) {
-            return $cordovaFile.writeFile(path, name, data, true);
-        }
-
+        
         function removeDocumentsByUser(user) {
             var path = vm.LOCKBOX_FOLDER;
 
@@ -428,6 +433,8 @@
         function removeOneDocument(doc) {
             console.warn(' removeOneDocument() doc >>>', doc);
             if (!doc) return;
+            
+            var sku = doc.sku;
 
             var path = vm.LOCKBOX_FOLDER,
                 userID = getUserId(doc),
@@ -440,6 +447,9 @@
                 })
                 .catch(function (err) {
                     console.warn(' remove doc err --->>>', err);
+                })
+                .finally(function () {
+                    // TODO: Restore deleted document from stubs *IF* the deleted document sku matches a non-multi docTypeDefinition
                 });
         }
 
@@ -449,7 +459,7 @@
             var users = !!usersJSON && JSON.parse(usersJSON);
             var index;
 
-            if (!_.isArray(users)) { users = [];}
+            if (!_.isArray(users)) { users = []; }
 
             index = users.indexOf(user);
 
@@ -465,11 +475,51 @@
         
         
         //////// Methods ///////////////////////////////////////////////////////////////
+        
+        function addDocument(doc) {
+            if (_.isEmpty(doc.sku + doc.id + doc.url)) {
+                return false;
+            }
+            
+            var i = -1;
+            var sku = (doc.sku || 'misc').toLowerCase();
+            
+
+            var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
+
+            if ((i = !!doc.id ? _.findIndex(vm.documents, { id: doc.id }) : -1) !== -1) {
+                // If a document with the same ID is already in the array, replace it.
+                vm.documents[i] = doc;
+                return false;
+            }
+            else if (!def.multi && (i = _.findIndex(vm.documents, { sku: sku })) != -1) {
+                // If the document Type does not allow multiple copies, and there is already
+                // a copy with the same SKU, replace it.
+                vm.documents[i] = doc;
+                return true;
+            }
+            else {
+                // Othewise, simply push the document into the array
+                console.log('Pushing doc into docs', doc, vm.documents);
+                vm.documents.push(doc);
+                return true;
+            }
+        }
+
+        function updateNewDocumentWithID(doc) {
+            var i = _.findIndex(vm.documents, { url: doc.url, name: doc.name });
+            if (i >= 0 && vm.documents[i]) {
+                _.extend(vm.documents[i], doc);
+            }
+        }
 
         function toArray(list) {
             return Array.prototype.slice.call(list || [], 0);
         }
 
+        /**
+         * Given a directory, reads through it and resolves teh documents in it.
+         */
         function readFolder(directory) {
 
             var dirReader = directory.createReader();
@@ -479,15 +529,15 @@
 
             // Keep calling readEntries() until no more results are returned.
             function readEntries() {
-                var reader = dirReader.readEntries(
-                    function (results) {
-                        console.log('results from dirReader: ', results);
+                dirReader.readEntries(
+                    function success(results) {
+                        console.log('dirReader.readEntries results: %d entries: %d', results && results.length, entries.length);
                         if (results.length) {
-                            console.log('dirReader Length' + results.length);
+                            console.log('dirReader Length ' + results.length);
                             entries = entries.concat(toArray(results));
                             readEntries();
                         } else {
-                            console.log('dirReader trying to resolve docs: ' + JSON.stringify(entries));
+                            // console.log('dirReader trying to resolve docs: ' + JSON.stringify(entries));
                             resolveDocuments(entries)
                                 .then(function (entries) {
                                     console.log('dirReader resolving with entries: ', entries);
@@ -499,12 +549,10 @@
                                 });
                         }
                     },
-                    function (err) {
+                    function fail(err) {
                         console.error('Failed to read Directory', err);
                         q.reject(err);
                     });
-                    
-                debugger; // Check 'reader'
             }
 
             readEntries();
@@ -514,8 +562,12 @@
 
 
         function resolveDocuments(entries) {
-            var docsPromises = angular.map(entries, function (entry) {
-                return createDocumentPromise(entry);
+            
+            console.log('looking  at %d documents to resolve', entries && entries.length || 0);
+            
+            var docsPromises = [];
+            _.each(entries, function (entry) {
+                docsPromises.push(createDocumentPromise(entry));
             });
 
             return $q.all(docsPromises)
@@ -525,7 +577,7 @@
                     _.each(resolvedDocuments, function (doc) {
                         addDocument(doc);
                     });
-
+                    
                     return vm.documents;
                 });
         }
@@ -541,6 +593,7 @@
                 $cordovaFile.readAsText(path, entry.name).then(function (data) {
                     docObject = parseDocFromFilename(entry.name);
 
+                    debugger;
                     docObject.url = data;
                     docObject.user = userID;
 
@@ -550,6 +603,7 @@
                 });
             } else {
                 docObject = parseDocFromFilename(entry.name);
+                debugger;
 
                 docObject.url = entry.nativeURL;
                 docObject.user = userID;
@@ -588,7 +642,8 @@
         }
 
         function getDisplayName(source) {
-            return source.replace('/_/g', ' ');
+            if (/txt$/.test(source)) { debugger; }
+            return source.replace('/_/g', ' ').replace(/\.\d{3,3}$/, '');
         }
 
         function updateDocumentList() {
@@ -603,6 +658,7 @@
 
     }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
     angular
         .module('lockbox')
@@ -669,7 +725,7 @@
                         $state.go('account.profile');
                         return false;
                     }
-                    
+
                     return !!accessGranted;
                 })
                 .finally(function () {

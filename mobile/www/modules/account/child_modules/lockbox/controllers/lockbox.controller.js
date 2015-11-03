@@ -5,9 +5,9 @@
         .module('lockbox', ['pdf'])
         .controller('LockboxCtrl', LockboxCtrl);
 
-    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$ionicLoading', 'welcome'];
+    LockboxCtrl.$inject = ['$scope', '$state', '$rootScope', 'securityService', 'user', 'documents', 'lockboxDocuments', 'lockboxModalsService', '$ionicPopup', '$ionicLoading', 'welcome'];
 
-    function LockboxCtrl($scope, $state, $rootScope, securityService, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $ionicLoading, welcome) {
+    function LockboxCtrl($scope, $state, $rootScope, securityService, user, documents, lockboxDocuments, lockboxModalsService, $ionicPopup, $ionicLoading, welcome) {
 
 
         var vm = this;
@@ -28,7 +28,8 @@
         $scope.$on("$ionicView.beforeEnter", function () {
             console.log('Reactivate Lockbox Controller');
             
-            return lockboxDocuments.checkAccess({ redirect: true });
+            init();
+
         });
 
         $rootScope.$on("clear", function () {
@@ -38,6 +39,39 @@
             lockboxDocuments.clear();
             securityService.logout();
         });
+        
+        function init() {
+
+            return lockboxDocuments.checkAccess({ redirect: true, setNew: true })
+                .then(function (isAccessible) {
+                    vm.canAccess = isAccessible;
+
+                    if (isAccessible) {
+                        if (_.isEmpty(vm.documents)) {
+                            console.log('Documents not included in parameters - looking up');
+                            getDocs();
+                        }
+                        
+                        return;
+                    }
+                })
+                .catch(function fail(err) {
+                    console.log('Failed to access lockbox due to `%s`', err);
+                    vm.canAccess = false;
+                });
+        }
+
+        function getDocs() {
+            if (_.isEmpty(user) || !user.id) {
+                return false;
+            }
+            
+            return lockboxDocuments.getFilesByUserId(user.id)
+                .then(function (response) {
+                    console.log('Documents List', response);
+                    vm.documents = sortDocs(_.isArray(response) ? response : []);
+                });
+        }
 
         function sortDocs(docs) {
             return _.sortBy(docs, function (d) { return !d.url; });
@@ -122,7 +156,7 @@
         }
 
         function refreshDocuments() {
-            return lockboxDocuments.getDocuments(true)
+            return lockboxDocuments.getDocuments(true, { redirect: true })
                 .finally(function () {
                     vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
                     // Stop the ion-refresher from spinning
