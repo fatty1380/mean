@@ -29,7 +29,7 @@
             
             vm.trustedSrc = $sce.trustAsResourceUrl(vm.document.url);
             
-            if (/other/i.test(vm.document.sku)) {
+            if (/other|misc/i.test(vm.document.sku)) {
                 showNamePopup();
             }
         }
