@@ -20,6 +20,9 @@ module.exports = function(app) {
     app.route('/api/companies/:companyId/jobs/applications')
         .get(jobs.queryByCompanyID, jobs.populateApplications, jobs.executeQuery, jobs.list);
 
+    app.route('/api/companies/:companyId/jobs')
+        .get(jobs.queryByCompanyID, jobs.executeQuery, jobs.list);
+
     // Finish by binding the Job middleware
     app.param('jobId', jobs.jobByID);
 };
