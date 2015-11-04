@@ -51,7 +51,7 @@
                             </div>
                         </ion-item>
                     </ion-list>
-                    
+
                     <div ng-if="!vm.reviews || !vm.reviews.length" class="no-content">
                         <p class="message">This is your Reviews Section where you can request reviews from people you have worked with previously.
                             Use reviews as your place to show your professionalism and work ethic in ways that traditional
@@ -63,7 +63,7 @@
 
                 <div class="button content-button" ng-if="!!vm.showRequestReviewModal" ng-click="vm.showRequestReviewModal()">
                     <button type="button" class="button button-block button-positive">
-                        <i class="ion-clipboard"></i>  Request Review
+                        <i class="ion-clipboard"></i> Request Review
                     </button>
                 </div>
 
@@ -141,29 +141,29 @@
 
                 <ion-scroll class="experience-list">
                     <ion-list ng-if="vm.experience && vm.experience.length">
-                        <ion-item class="item card" ng-repeat="job in (vm.experience) track by $index">
-                            <div class="title">
-                                {{job.title}} 
-                                <span clases="company" ng-if="!!job.company"> {{job.company}}</span>
-                                <span class="edit-btn" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showEditExperienceModal(job)">
-                                    <i class="ion-compose"></i>
-                                </span>
+                        <ion-item class="item card" ng-repeat="exp in (vm.experience) track by $index">
+                            <button class="button button-clear edit-btn" ng-if="!!vm.showAddExperienceModal" ng-click="vm.showEditExperienceModal(exp)">
+                                <i class="ion-compose"></i>
+                            </button>
+                            <div class="experience-heading">
+                                <div class="title">{{exp.title}}</div>
+                                <div class="company" ng-if="!!exp.company"> {{exp.company}}</div>
                             </div>
 
-                            <div class="props">
-                                <div class="location" ng-if="!!job.location">{{job.location}}</div>
-                                <div class="time" ng-if="!!job.startDate || job.endDate">
+                            <div class="props" ng-if="exp.location || exp.startDate || exp.endDate">
+                                <div class="location" ng-if="!!exp.location">{{exp.location}}</div>
+                                <div class="time" ng-if="!!exp.startDate || exp.endDate">
                                     <i class="ico ico-timesmall"></i>
-                                    <span ng-if="!!job.startDate">{{job.startDate | monthDate | date : 'MMMM, yyyy'}}</span>
-                                    <span ng-if="!!job.startDate && job.endDate">-</span>
-                                    <span ng-if="!!job.endDate">{{job.endDate | monthDate | date : 'MMMM, yyyy'}}</span>
+                                    <span ng-if="!!exp.startDate">{{exp.startDate | monthDate | date : 'MMMM, yyyy'}}</span>
+                                    <span ng-if="!!exp.startDate && exp.endDate">-</span>
+                                    <span ng-if="!!exp.endDate">{{exp.endDate | monthDate | date : 'MMMM, yyyy'}}</span>
                                 </div>
                             </div>
-                            
-                            <p class="description" ng-if="!!job.description">{{job.description}}</p>
+
+                            <p class="description" ng-if="!!exp.description">{{exp.description}}</p>
                         </ion-item>
                     </ion-list>
-                    
+
                     <div ng-if="!vm.experience || !vm.experience.length" class="no-content">
                         <span ng-if="!!vm.showEditModal">
                             <p>This is your profile’s experience section where you can keep a digital record of your work experience - think of it like a digital resume. Add your past jobs here and add details about all your responsibilities to present a full picture of your professional abilities.</p>

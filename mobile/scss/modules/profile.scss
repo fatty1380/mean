@@ -304,25 +304,36 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
   }
   .item {
     //background: none;
-    padding: 10px 15px 9px;
+    padding: 10px 15px 3px;
     border-bottom: 1px solid #ddd;
     color: #666;
     
     .edit-btn {
       float: right;
+      top: -10px;
+      right: -10px;
     }
     
-    .title {
-      
-    }
-    strong{
-      text-transform: uppercase;
-
-      .company{
-        font-style: italic;
+    .experience-heading {
+        font-weight: 500;
+        margin-right: 25px;
+        display: flexbox;
+        padding-bottom: 3px;
+        
+      .title {
+        display: block;
         text-transform: capitalize;
+        margin-bottom: 3px;
+      }
+      
+      .company{
+          display: inline-block;
+        font-size: 0.85em;
+        text-transform: uppercase;
+        color: $badge-green;
       }
     }
+    
 
     .description {
       border-top: 1px solid $stable;
@@ -332,7 +343,7 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
       text-overflow: initial;
       
       display: block;
-      padding-bottom: 5px;
+      margin-bottom: 5px;
     }
     
     .props {
@@ -342,7 +353,7 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
       padding-top: 3px;
       
       .location {
-        font-weight: 500;
+        font-weight: 400;
         float: left;
         padding: 3px 0;
       }

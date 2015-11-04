@@ -47,7 +47,7 @@
         if (!vm.canEdit) {
 
             vm.feed = [];
-            vm.experience = vm.profileData.experience;
+            vm.experience = vm.profileData.experience || [];
             vm.isFriend = vm.profileData.friends.indexOf(vm.user.id) >= 0;
             vm.feedMessage = vm.isFriend ? 'No feed items' : 'You have to be friends to see user\'s feed';
 
@@ -132,8 +132,7 @@
              * Placeholder for showing app settings
              */
             vm.showUserSettings = null;
-
-            vm.experience = vm.user.experience;
+            getExperience();
 
             $rootScope.$on('updates-available', function (event, updates) {
                 vm.updates = updates;
@@ -188,25 +187,41 @@
             vm.showAddExperienceModal = function (parameters) {
                 profileModalsService
                     .showAddExperienceModal(parameters)
-                    .then(function (exp) {
-                        vm.experience.push(exp);
-                        //vm.getExperience();
-                    },
-                        function (err) {
-                            console.log(err);
-                        })
+                    .then(function (experienceResult) {
+                        if (_.isEmpty(experienceResult)) {
+                            return;
+                        }
+                        
+                        if(_.isArray(experienceResult)) {
+                            vm.experience = experienceResult;
+                        } else {
+                            vm.experience.push(experienceResult);
+                        }
+                    })
+                    .catch(function (err) {
+                        if (!!err) { console.log(err); }
+                    })
             };
 
-            vm.showEditExperienceModal = function (parameters) {
+            vm.showEditExperienceModal = function (experienceItem) {
                 profileModalsService
-                    .showEditExperienceModal(parameters)
-                    .then(function (result) {
-                        console.log(result);
-                        vm.getExperience();
-                    },
-                        function (err) {
-                            console.log(err);
-                        })
+                    .showEditExperienceModal(experienceItem)
+                    .then(function (experienceResult) {
+                        console.log('Edited Experience ', experienceResult);
+                        debugger;
+                        
+                        if(_.isArray(experienceResult)) {
+                            vm.experience = experienceResult;
+                        } else {
+                            vm.experience.push(experienceResult);
+                        }
+                        
+                        //experienceItem = result;
+                        getExperience();
+                    })
+                    .catch(function (err) {
+                        if (!!err) { console.log(err); }
+                    })
             };
         }
         // END: vm.canEdit
@@ -219,18 +234,14 @@
                     vm.reviews = response.data;
                 })
                 .finally(function () {
-                    // if (!vm.reviews || !vm.reviews.length) {
-                    //     console.error('WARNING: Hard Coded User Reviews')
-                    //     vm.reviews = [{ rating: 5, title: 'A real professional driver!', created: 1443285630631, text: 'Sergey is incredibly professional, and in the 5 years he has been delivering freight to my job sites, he has never let me down', name: 'Rob' }, { rating: 4, text: 'Serge is a good driver, has never let me down', title: 'He is the best', name: 'John', created: 1443285630631 }];
-                    // }
                 })
         };
 
-        vm.getExperience = function () {
+        function getExperience() {
             experienceService
                 .getUserExperience()
                 .then(function (response) {
-                    vm.experience = response.data;
+                    vm.experience = response.data || [];
                 })
         };
 

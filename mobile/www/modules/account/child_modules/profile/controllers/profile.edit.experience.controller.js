@@ -16,7 +16,7 @@
 
         vm.experience = parameters;
 
-        vm.cancel = cancel;
+        vm.cancel = function () { vm.cancelModal(); }
         vm.saveExperience = saveExperience;
 
         function saveExperience() {
@@ -27,15 +27,10 @@
             experienceService.updateUserExperience(vm.experience._id, vm.experience)
             .then(function (resp) {
                 vm.experience = {};
-                console.warn('success --->>>', resp);
-                cancel();
+                vm.closeModal(resp.data);
             }, function (err) {
                 console.error('err --->>>', err);
             });
-        }
-
-        function cancel() {
-            vm.closeModal(null);
         }
     }
 })();

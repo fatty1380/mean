@@ -20,7 +20,7 @@
             location: ''
         };
 
-        vm.cancel = cancel;
+        vm.cancel = function () { vm.cancelModal(); }
         vm.saveExperience = saveExperience;
 
         function saveExperience() {
@@ -30,15 +30,11 @@
 
             experienceService.postUserExperience(vm.experience)
             .then(function (resp) {
-                cancel(vm.experience);
+                vm.closeModal(resp.data);
                 vm.experience = {};
             }, function (err) {
                 console.warn('err --->>>', err);
             });
-        }
-
-        function cancel(exp) {
-            vm.closeModal(exp || null);
         }
     }
 })();
