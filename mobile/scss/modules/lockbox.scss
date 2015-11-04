@@ -22,7 +22,10 @@
 
 // document list
 .document-list{
+  
+  &::last-child {
   border-bottom: 1px solid #D2D2D2;
+  }
 
   .item {
     border-top: 1px solid #D2D2D2;

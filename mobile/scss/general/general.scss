@@ -104,11 +104,20 @@ body{
         bottom:0;
       }
       
+      
       .list {
-        padding-bottom: 74px;
+        padding-bottom: 80px;
         
-        & > :last-child > .item {
-          //padding-bottom: 84px;
+        // This will grab the last item 
+        // in the activity list;
+        & > span:nth-last-child(1) .item {
+          //background-color: purple;
+          
+          margin-bottom: 20px;
+        }
+        
+        &.document-list .item:last-child {
+          border-bottom-width: 1px;
         }
       } 
     }
