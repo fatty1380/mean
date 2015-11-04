@@ -91,7 +91,7 @@
                             // NOTE: This returns a promise and the file may not be fully saved
                             // to the device when teh method returns
    
-                            if (/data:\d+\//i.test(doc.url)) {
+                            if (/data:\w+\//i.test(doc.url)) {
                                 // If the URL is a URI (eg: 'data:image/jpeg'), save it directly to the device
                                 return $q.when(saveFileToDevice(doc));
                             } else {
@@ -158,7 +158,7 @@
         }
 
 
-        function getFilesByUserId(id) {
+        function getFilesByUserId(id, options) {
 
             vm.userData = userService.profileData;
 
@@ -173,14 +173,7 @@
             var hasLockbox = false;
             var hasUserDir = false;
 
-            return lockboxSecurity.checkAccess()
-                .then(function (hasAccess) {
-                    if (hasAccess) {
-                        return $cordovaFile.checkDir(path, 'lockbox')
-                    }
-
-                    return $q.reject('No Access');
-                })
+            return $cordovaFile.checkDir(path, 'lockbox')
                 .then(function () {
                     path += 'lockbox/';
                     hasLockbox = true;
@@ -199,7 +192,7 @@
                     
                     return vm.documents;
                 })
-                .catch(function () {
+                .catch(function (err) {
                     if (!!hasLockbox) {
                         return $q.when(getDocuments(true));
                     } else {
@@ -643,7 +636,7 @@
 
         function getDisplayName(source) {
             if (/txt$/.test(source)) { debugger; }
-            return source.replace('/_/g', ' ').replace(/\.\d{3,3}$/, '');
+            return source.replace('/_/g', ' ').replace(/\.\w{3,4}$/, '');
         }
 
         function updateDocumentList() {
@@ -722,6 +715,8 @@
                 })
                 .then(function (accessGranted) {
                     if (!accessGranted && options.redirect) {
+                        console.log('Access not granted - redirecting to profile');
+                        debugger;
                         $state.go('account.profile');
                         return false;
                     }

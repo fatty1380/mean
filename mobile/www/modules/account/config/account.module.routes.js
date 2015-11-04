@@ -118,7 +118,12 @@
                                         })
                                         .catch(function (err) {
                                             console.warn('Couldn\'t retrieve documents err --->>>', err);
-                                            return [];
+                                            
+                                            if (/no access/i.test(err)) {
+                                                return null;
+                                            }
+                                            
+                                            return lockboxDocuments.getDocuments(true, { redirect: true });
                                         })
                                 }],
                             welcome: ['welcomeService', function (welcomeService) {

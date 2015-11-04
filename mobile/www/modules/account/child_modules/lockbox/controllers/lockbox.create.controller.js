@@ -28,6 +28,10 @@
             };
             
             vm.trustedSrc = $sce.trustAsResourceUrl(vm.document.url);
+            
+            if (/other/i.test(vm.document.sku)) {
+                showNamePopup();
+            }
         }
 
         function cancel() {
@@ -44,7 +48,7 @@
             });
         }
 
-        function setDocumentName (newVal, oldVal) {
+        function setDocumentName(newVal, oldVal) {
             if (vm.document.sku !== 'other') {
                 if (vm.document.sku !== 'misc') {
                     vm.document.name = null;
@@ -52,11 +56,16 @@
                 return;
             }
             
+            showNamePopup(oldVal);
+        }
+        
+        function showNamePopup(originalValue) {
             $scope.data = {};
+            originalValue = originalValue || '';
 
             var namePopup = $ionicPopup.show({
                 template: '<input type="text" ng-model="data.name" autofocus />',
-                title: 'Enter document name',
+                title: 'Enter Document Name',
                 scope: $scope, // TODO: Remove $scope when $ionicPopup supports it
                 buttons: [
                     { text: 'Cancel' },
@@ -75,11 +84,11 @@
             });
 
             namePopup.then(function(res) {
-                if(res){
+                if(res && !_.isEmpty(res)) {
                     vm.document.name = res;
                     vm.document.sku = 'misc'
                 } else {
-                    vm.document.sku = oldVal;
+                    vm.document.sku = originalValue;
                 }
             });
         }
