@@ -6,6 +6,7 @@
 var _ = require('lodash'),
     path = require('path'),
     passport = require('passport'),
+	config = require(path.resolve('./config/config')),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
     emailer = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
     NotificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
@@ -154,9 +155,10 @@ function createDefaultRequest(user, reqLog) {
     reqLog = reqLog || log;
 
     var request = new RequestMessage({
-        from: mongoose.Types.ObjectId('562ab0cebd3222d851523755'),
+        from: mongoose.Types.ObjectId(config.services.stubs.userId),
         to: user._id,
-        requestType: 'friendRequest'
+        requestType: 'friendRequest',
+        status: 'sent'
     });
 
     return request.save().then(function (result) {

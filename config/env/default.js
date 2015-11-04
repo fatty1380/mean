@@ -79,6 +79,9 @@ module.exports = {
 		}
 	},
     services: {
+        stubs: {
+            userId: '562ab0cebd3222d851523755'  
+        },
         appstore: {
             url: 'https://itunes.apple.com/us/app/truckerline-take-control-your/id1029130691?mt=8',
             badge: '<a href="https://itunes.apple.com/us/app/truckerline-take-control-your/id1029130691?mt=8" style="display:inline-block;overflow:hidden;background:url(http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg) no-repeat;width:165px;height:40px;"></a>'

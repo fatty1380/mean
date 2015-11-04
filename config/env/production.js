@@ -88,6 +88,9 @@ module.exports = {
         ]
     },
     services: {
+        stubs: {
+            userId: process.env.STUB_USER_ID || '562ab0cebd3222d851523755'  
+        },
         everifile: {
             baseUrl: process.env.EVERIFILE_BASE_URL || 'https://renovo.everifile.com/renovo',
             username: process.env.EVERIFILE_USERNAME || 'api@joinoutset.com',
