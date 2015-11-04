@@ -272,11 +272,11 @@ UserSchema.methods.authenticate = function (password) {
 };
 
 UserSchema.methods.cleanse = function () {
-    //log.trace({ func: 'cleanse' }, 'Cleansing sensitive Data');
+    log.trace({ func: 'cleanse' }, 'Cleansing sensitive Data');
 
-    delete this.oldPass;
-    delete this.password;
-    delete this.salt;
+    delete this._doc.oldPass;
+    delete this._doc.password;
+    delete this._doc.salt;
     
     return this;
 };
