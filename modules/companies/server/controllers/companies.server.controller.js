@@ -422,8 +422,13 @@ function getFeed(req, res, next) {
     if (!req.company) {
         return res.status(404).send({ message: 'Company not Found' });
     }
+    
+    var ownerId = req.company.owner && req.company.owner.id || req.company.owner;
+    var companyId = req.company && req.company.id || req.company;
+    
+    req.log.debug({ func: 'getFeed', file: 'companies.srv.ctrl', owner: ownerId, company: companyId });
 
-    feedCtrl.getOrCreateFeed(req.log, req.user, req.company).then(
+    feedCtrl.getOrCreateFeed(ownerId, req.log, companyId).then(
         function success(feed) {
             req.log.debug({ func: 'company.getFeed', feed: feed }, 'Returning Feed for %s', req.company.name);
             return res.json(feed);

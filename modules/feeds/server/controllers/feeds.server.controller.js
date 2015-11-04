@@ -437,8 +437,12 @@ function postToUserFeed(userId, item, log) {
 		});
 }
 
-function getOrCreateFeed(userId, log) {
-	return Feed.findById(userId)
+function getOrCreateFeed(userId, log, companyId) {
+	
+	var searchId = companyId || userId;
+	debugger;
+	
+	return Feed.findById(searchId)
 	//	.populate({ path: 'items', model: 'FeedItem', options: { sort: { 'created': -1 } } })
 	//		.populate({ path: 'items', select: 'created user', model: 'FeedItem', options: { sort: { 'created': -1 } } })
 	//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
@@ -447,13 +451,17 @@ function getOrCreateFeed(userId, log) {
 			log.trace({ func: 'getOrCreateFeed', feed: feed });
 			if (!feed) {
 				log.info({ func: 'getOrCreateFeed' }, '... hmmm, Creating new feed for user');
-				feed = new Feed({ user: userId });
+				feed = new Feed({ user: userId, company: companyId });
 
 				return feed.save();
 			} else {
 				log.trace({ func: 'getOrCreateFeed', feed: feed }, '... Found it!');
 				return feed;
 			}
+		},
+		function fail(err) {
+			debugger;
+			return Q.reject(err);
 		});
 }
 

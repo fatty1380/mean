@@ -19,8 +19,7 @@ var FeedSchema = new Schema({
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User',
-		required: 'Feeds must be associated with a user',
-		unique: true
+		required: 'Feeds must be associated with a user'
 	},
 	company: {
 		type: Schema.ObjectId,
@@ -67,6 +66,8 @@ FeedSchema.pre('save', function (next) {
 
     next();
 });
+
+FeedSchema.index({ user: 1, company: 1 }, { unique: true });
 
 mongoose.model('Feed', FeedSchema);
 
