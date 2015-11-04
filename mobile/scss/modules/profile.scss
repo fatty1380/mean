@@ -55,7 +55,7 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
     .badge{
       position: absolute;
       left: -5px;
-      top: -4px;
+      top: 8px;
       font-size: 10px;
       min-width: 0;
       padding: 3px 5px;
@@ -522,9 +522,12 @@ and (max-device-height : 568px) {
     }
 
     .contacts-amount{
+      padding-bottom: 10px;
+      padding-right: 10px;
       strong{
         font-size: 12px;
       }
+      
     }
   }
 
