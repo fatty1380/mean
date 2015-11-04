@@ -9,7 +9,11 @@
             <img ng-if="vm.profileData.profileImageURL" ng-src="{{vm.profileData.profileImageURL}}" alt=""/>
         </div>
         <div class="text">
-            <strong class="profile-handle" ng-bind="vm.profileData.handle"></strong>
+            <div class="title">{{::vm.profileData.displayName}}
+                <span class="profile-handle" ng-if="vm.profileData.handle">
+                    "{{vm.profileData.handle}}"
+                </span>
+            </div>
             <em ng-bind="vm.profileData.props.company"></em>
         </div>
     </div>
@@ -23,7 +27,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary" ng-click="vm.sendRequest()">Send</button>
+            <button class="button primary" ng-class="{'disabled': !(vm.contact.phone || vm.contact.email)}" ng-click="vm.sendRequest()">Send</button>
         </div>
     </ion-footer-bar>
 

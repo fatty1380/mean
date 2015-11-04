@@ -67,7 +67,7 @@ ng-if="vm.shareStep === 2">
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancel()">Cancel</button>
-            <button class="button primary" ng-class="{'disabled': !(vm.contact.phone && vm.contact.email)}" ng-click="vm.shareDocuments()">Share</button>
+            <button class="button primary" ng-class="{'disabled': !(vm.contact.phone || vm.contact.email)}" ng-click="vm.shareDocuments()">Share</button>
         </div>
     </ion-footer-bar>
 
