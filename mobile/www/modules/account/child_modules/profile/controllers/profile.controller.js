@@ -41,7 +41,7 @@
 
         function showFriends() {
             console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
-            $state.go('account.profile.friends');
+            $state.go('account.profile.friends', { userId: profile && profile.id });
         }
 
         if (!vm.canEdit) {
@@ -191,8 +191,8 @@
                         if (_.isEmpty(experienceResult)) {
                             return;
                         }
-                        
-                        if(_.isArray(experienceResult)) {
+
+                        if (_.isArray(experienceResult)) {
                             vm.experience = experienceResult;
                         } else {
                             vm.experience.push(experienceResult);
@@ -209,8 +209,8 @@
                     .then(function (experienceResult) {
                         console.log('Edited Experience ', experienceResult);
                         debugger;
-                        
-                        if(_.isArray(experienceResult)) {
+
+                        if (_.isArray(experienceResult)) {
                             vm.experience = experienceResult;
                         } else {
                             vm.experience.push(experienceResult);

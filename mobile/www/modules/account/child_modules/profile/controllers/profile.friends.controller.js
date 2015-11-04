@@ -5,36 +5,36 @@
         .module('account')
         .controller('FriendsCtrl', FriendsCtrl);
         
-        /**
-         * Friends Controller
-         * ------------------
-         * @resolve updates - get last updtaes from the updates service
-         * @resolve profile - get the logged in (or visible) user's profile
-         * @resolve friends - Gets a list of the `profile` user's friends
-         * 
-         * @inject Angular and Ionic Services ___________________________
-         * @inject $rootScope
-         * @injecct $state
-         * @injecct $filter
-         * @injecct $ionicLoading
-         * @injecct $ionicScrollDelegate
-         * 
-         * @section Outset/Truckerline Services _________________________
-         * @inject $osetUsersService
-         * @inject utilsService
-         * @inject friendsService
-         * @inject contactsService
-         * @inject profileModalsService
-         * 
-         */
+    /**
+     * Friends Controller
+     * ------------------
+     * @resolve updates - get last updtaes from the updates service
+     * @resolve profile - get the logged in (or visible) user's profile
+     * @resolve friends - Gets a list of the `profile` user's friends
+     * 
+     * @inject Angular and Ionic Services ___________________________
+     * @inject $rootScope
+     * @injecct $state
+     * @injecct $filter
+     * @injecct $ionicLoading
+     * @injecct $ionicScrollDelegate
+     * 
+     * @section Outset/Truckerline Services _________________________
+     * @inject $osetUsersService
+     * @inject utilsService
+     * @inject friendsService
+     * @inject contactsService
+     * @inject profileModalsService
+     * 
+     */
 
-    FriendsCtrl.$inject = ['updates', 'profile', 'friends',
+    FriendsCtrl.$inject = ['updates', 'user', 'profile', 'friends',
         '$rootScope', '$state', '$filter', '$ionicLoading', '$ionicScrollDelegate',
-        'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
+       'userService', 'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
 
-    function FriendsCtrl( updates, profile, friends,
+    function FriendsCtrl(updates, user, profile, friends,
         $rootScope, $state, $filter, $ionicLoading, $ionicScrollDelegate,
-        outsetUsersService, utilsService, friendsService, contactsService, profileModalsService) {
+        userService, outsetUsersService, utilsService, friendsService, contactsService, profileModalsService) {
 
         var vm = this;
 
@@ -52,7 +52,7 @@
         vm.viewUser = viewUser;
         vm.exitState = exitState;
 
-        vm.getAvatar = getAvatar;
+        vm.initUser = initUser;
 
         initialize();
         
@@ -107,8 +107,7 @@
             if (!friend) return;
 
             var requestData = {
-                to: friend.id,
-                text: 'Hi there! I want to add you to my friend list!'
+                to: friend.id
             },
                 serializedData = utilsService.serialize(requestData);
 
@@ -196,17 +195,15 @@
             $ionicScrollDelegate.$getByHandle('main-content-scroll').scrollTop();
         }
 
-        function getAvatar(friend) {
-            var avatar = friend.profileImageURL || friend.props && friend.props.avatar;
-
-            if (!avatar || avatar === 'modules/users/img/profile/default.png'
-                || !!~avatar.indexOf('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4')) {
-                return (friend.avatar = null);
-            }
-
-            friend.avatar = avatar;
-
-            return avatar;
+        function initUser(userProfile) {
+            userProfile.avatar = userService.getAvatar(userProfile);;
+            
+            // 
+            userProfile.isFriend = _.contains(userProfile.friends, user.id)
+            userProfile.isSelf = userProfile.id === user.id;
+            
+            userProfile.displayName = userProfile.isFriend ? vm.profile.displayName :
+                userProfile.firstName + ' ' + (userProfile.lastName && userProfile.lastName.charAt(0));
         }
     }
 

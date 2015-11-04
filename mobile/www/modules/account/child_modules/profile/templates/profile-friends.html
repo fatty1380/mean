@@ -17,14 +17,18 @@
             <div class="title" ng-if="vm.friends.length">{{vm.yourFriendsTitle}}</div>
             <ul class="list friends-list user-friends-list" ng-if="vm.friends.length">
                 <li class="item" ng-repeat="friend in friends = (vm.friends | filter:vm.searchText)" ng-click="vm.viewUser(friend, $event)"
-                ng-init="vm.getAvatar(friend)">
+                ng-init="vm.initUser(friend)">
                     <img ng-if="!!(friend.avatar)" ng-src="{{friend.avatar}}" />
                     <i ng-if="!(friend.avatar)" class="ico ico-avatarsmall"></i>
                     <div class="item-content">
-                        {{friend.displayName}}{{friend.text}}
+                        <strong>{{friend.handle}}</strong>
+                        {{friend.displayName}}
                     </div>
-                    <button class="button button-small list-button" ng-click="vm.messageFriend(friend, $event);">
+                    <button class="button button-small list-button" ng-click="vm.messageFriend(friend, $event);" ng-if="friend.isFriend && !friend.isSelf">
                         Message
+                    </button>
+                    <button ng-if="!friend.isFriend && !friend.isSelf" class="button button-small list-button" ng-click="vm.addFriend(friend, $event)">
+                        Add
                     </button>
                 </li>
                 <li ng-if="vm.friends && !friends.length" class="no-matches">
@@ -60,7 +64,9 @@
                             <strong>{{user.handle}}</strong>
                             {{user.firstName}} {{user.lastName}}
                         </div>
-                    <button ng-if="vm.searchText.length>0" class="button button-small list-button" ng-click="vm.addFriend(user, $event)">Add</button>
+                        <button ng-if="vm.searchText.length>0" class="button button-small list-button" ng-click="vm.addFriend(user, $event)">
+                            Add
+                        </button>
                     </li>
                 </ul>
                 <div ng-if="vm.searchText.length >= 1 && !vm.users.length" class="no-matches">

@@ -55,18 +55,24 @@
         }
         
         function getAvatar(userProfile) {
+            
             if (!userProfile || _.isString(userProfile)) { return null; }
             
-            var avatar = userProfile.props && userProfile.props.avatar || userProfile.profileImageURL;
-
-            if (!avatar || avatar === 'modules/users/img/profile/default.png'
-                || !!~avatar.indexOf('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4')) {
-                avatar = null;
-            }
+            var avatar = filterAvatar(userProfile.profileImageURL) || filterAvatar(userProfile.props && userProfile.props.avatar);
 
             userProfile.profileImageURL = userProfile.avatar = avatar;
 
             return avatar;
+        }
+        
+        function filterAvatar(input) {
+            
+            if (!input || input === 'modules/users/img/profile/default.png'
+                || /4AAQSkZJRgABAQAAAQABAAD\/2wBDAAoHBwgHBgoICAgLCgoLDhg/.test(input)) {
+                return null;
+            }
+            
+            return input;
         }
 
         /**

@@ -42,8 +42,8 @@
                     }
                 },
                 resolve: {
-                    profile: ['$stateParams', 'registerService', 'appCache',
-                        function resolveUserProfile($stateParams, registerService, appCache) {
+                    profile: ['$stateParams', 'registerService', 'userService', 'appCache',
+                        function resolveUserProfile($stateParams, registerService, userService, appCache) {
                             var id = $stateParams.userId;
                             if (!!id) {
 
@@ -53,11 +53,18 @@
                                 return registerService.getProfileById(id)
                                     .then(function success(response) {
                                         if (response.success) {
-                                            appCache.cacheProfile(response.message.data);
                                             return response.message.data;
                                         }
                                         debugger;
                                         return null;
+                                    })
+                                    .then(function (profile) {
+                                        if (!_.isEmpty(profile)) {
+                                            userService.getAvatar(profile);
+                                            appCache.cacheProfile(profile);
+                                        }
+                                        
+                                        return profile;
                                     })
                                     .catch(function reject(error) {
                                         debugger;
