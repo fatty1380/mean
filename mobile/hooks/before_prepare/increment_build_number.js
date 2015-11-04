@@ -40,11 +40,11 @@ fs.readFile('config.xml', 'utf8', function(err, data) {
     // android-versionCode doen't exist in config.xml
     if(typeof obj['widget']['$']['android-versionCode'] === 'undefined') {
       obj['widget']['$']['android-versionCode'] = 0;
+      obj['widget']['$']['android-versionCode'] = String(zeros + (++obj['widget']['$']['android-versionCode'])).slice(-zeroPadLength);
     }
     
     // Increment build numbers (separately for iOS and Android)
     obj['widget']['$']['ios-CFBundleVersion'] = String(zeros + (++obj['widget']['$']['ios-CFBundleVersion'])).slice(-zeroPadLength);
-    obj['widget']['$']['android-versionCode'] = String(zeros + (++obj['widget']['$']['android-versionCode'])).slice(-zeroPadLength);
     
     // Build XML from JS Obj
     var builder = new xml2js.Builder();
