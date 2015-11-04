@@ -101,13 +101,25 @@ exports.signup = function (req, res) {
             (new Login({ input: newUser.username, result: 'signup', userId: newUser.id, ip: ip })).save().end(_.noop());
 
             if (!!req.body.branchData || !!req.body.referralCode) {
+                debugger;
+                req.log.info({ func: 'signup', file: 'users.authentication', branchData: req.body.branchData, referralCode: req.body.referralCode }, 'Saving BranchData from New User Request');
+
                 var branchData = new BranchData({
                     user: user._id,
                     data: req.body.branchData,
                     referralCode: req.body.referralCode
                 });
 
-                branchData.save().end(_.noop());
+                branchData.save().then(
+                    function success(result) {
+                        debugger;
+                        req.log.info({ func: 'signup.saveBranch', file: 'users.authentication', result: result }, 'Saved BranchData from New User Request');
+                    },
+                    function fail(err) {
+                        debugger;
+                        req.log.error({ func: 'signup.saveBranch', file: 'users.authentication', err: err }, 'Failed to save Branch Data from New User Request');
+                    })
+                    .end(_.noop);
             }
 
             if (newUser.isDriver) {
@@ -180,7 +192,12 @@ exports.signin = function (req, res, next) {
  */
 exports.signout = function (req, res) {
     req.logout();
-    res.redirect('/');
+    
+    if (!!req.body.redirect) {
+        res.redirect('/');
+    } else {
+        res.status(200).send({ message: 'Successfully Logged Out' });
+    }
 };
 
 /**

@@ -1,10 +1,15 @@
 'use strict';
 
-var mongoose = require('mongoose'),
+var _ = require('lodash'),
+    mongoose = require('mongoose'),
     path = require('path'),
     config = require(path.resolve('./config/config')),
     Schema = mongoose.Schema,
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    log = require(path.resolve('./config/lib/logger')).child({
+        module: 'users.models',
+        file: 'login.branch.schemas'
+    });
 
 var Login = new Schema({
 
@@ -62,13 +67,13 @@ mongoose.model('Login', Login);
 
 
 var BranchData = new Schema({
-    
-	user: {
+
+    user: {
         type: Schema.ObjectId,
         required: true,
-		ref: 'User'
-	},
-    
+        ref: 'User'
+    },
+
     data: {
         type: Schema.Types.Mixed,
         default: null
@@ -78,7 +83,7 @@ var BranchData = new Schema({
         type: String,
         default: null
     },
-    
+
     status: {
         type: String,
         default: 'new'
@@ -88,6 +93,33 @@ var BranchData = new Schema({
         type: Date,
         default: Date.now
     }
+});
+
+
+
+BranchData.pre('save', function (next) {
+
+    log.debug({ func: 'branch.preSave', model: this, keys: _.keys(this.data) }, 'Examining Keys');
+    debugger;
+    _.forOwn(this.data, function (value, key) {
+        if (/^[~\$\+]/.test(key)) {
+            var newKey = key.substring(1);
+
+            log.debug({ func: 'branch.preSave' }, 'Renaming Key from %s to %s', key, newKey);
+            debugger;
+
+            this.data[newKey] = value;
+            delete this.data[key];
+
+            log.debug({ func: 'branch.preSave', newKeyVal: this.data[newKey], oldKeyVal: this.data[key] }, 'Renaming Key from %s to %s', key, newKey);
+        }
+    }, this);
+    
+    if (/undefined/.test(this.referralCode)) {
+        delete this.referralCode;
+    }
+
+    next();
 });
 
 mongoose.model('BranchData', BranchData);
