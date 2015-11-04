@@ -27,7 +27,6 @@
                                     })
                                 .catch(
                                     function reject(err) {
-                                        debugger;
                                         console.error('Company result failed', err);
                                         return {};
                                     });
@@ -43,7 +42,6 @@
                                         return result;
                                     })
                                 .catch(function reject(err) {
-                                    debugger;
                                     console.error('Company Jobs result failed', err);
                                     return [];
                                 });
@@ -58,7 +56,6 @@
                                         return result;
                                     })
                                 .catch(function reject(err) {
-                                    debugger;
                                     console.error('Company Feed result failed', err);
                                     return [];
                                 });

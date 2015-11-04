@@ -5,12 +5,13 @@
 
     //settings.baseUrl = 'http://outset-dev.elasticbeanstalk.com/'; // DEVELOPMENT USE
     settings.baseUrl = 'https://app.truckerline.com/';              // PRODUCTION USE
+    //settings.baseUrl = 'http://localhost:3000/';
     //settings.baseUrl = 'http://10.0.1.66:3000/';
     
     settings.uriScheme = 'truckerline';
     settings.branch = {
-        liveKey: 'key_live_cjpJIvP9erJIol5fdKzEpmjayAcT0MRH',
-        testKey: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX'
+        key: 'key_live_cjpJIvP9erJIol5fdKzEpmjayAcT0MRH'
+        //key: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX'
     }
 
     // controllers
