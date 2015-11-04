@@ -202,7 +202,7 @@
             userProfile.isFriend = _.contains(userProfile.friends, user.id)
             userProfile.isSelf = userProfile.id === user.id;
             
-            userProfile.displayName = userProfile.isFriend ? vm.profile.displayName :
+            userProfile.displayName = userProfile.isFriend || userProfile.isSelf ? userProfile.displayName :
                 userProfile.firstName + ' ' + (userProfile.lastName && userProfile.lastName.charAt(0));
         }
     }

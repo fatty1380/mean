@@ -42,10 +42,10 @@
                     }
                 },
                 resolve: {
-                    profile: ['$stateParams', 'registerService', 'userService', 'appCache',
-                        function resolveUserProfile($stateParams, registerService, userService, appCache) {
+                    profile: ['$stateParams', 'registerService', 'user', 'userService', 'appCache',
+                        function resolveUserProfile($stateParams, registerService, user, userService, appCache) {
                             var id = $stateParams.userId;
-                            if (!!id) {
+                            if (!!id && id != user.id) {
 
                                 var cachedProfile = appCache.getProfile(id);
                                 if (!!cachedProfile && cachedProfile.id === id) return cachedProfile;
