@@ -21,7 +21,8 @@ var mongoose = require('mongoose'),
     Driver = mongoose.model('Driver'),
     Company = mongoose.model('Company'),
     RequestMessage = mongoose.model('RequestMessage'),
-    Login = mongoose.model('Login');
+    Login = mongoose.model('Login'),
+    BranchData = mongoose.model('BranchData');
 
 exports.userseed = function (req, res) {
     delete req.body.roles;
@@ -39,7 +40,7 @@ exports.signup = function (req, res) {
     delete req.body.roles;
 
     req.log.info({ func: 'signup', type: req.body.type, username: req.body.username }, 'Signup for new user');
-    var user, company, saves = [{}, {}];
+    var user, company, saves = [];
 
     req.body.type = req.body.type || 'driver';
     
@@ -59,16 +60,16 @@ exports.signup = function (req, res) {
     // Add missing user fields
     user.provider = 'local';
 
+    saves.push(user.save());
+
     if (!!req.body.companyName && req.body.type === 'owner') {
 
         company = new Company({ 'owner': user._id, 'name': req.body.companyName });
         req.log.info({ func: 'signup', company: company }, 'Creating company');
         user.company = company._id;
 
-        saves[1] = company.save();
+        saves.push(company.save());
     }
-
-    saves[0] = user.save();
 
     var newUser;
     var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -98,6 +99,16 @@ exports.signup = function (req, res) {
             }
 
             (new Login({ input: newUser.username, result: 'signup', userId: newUser.id, ip: ip })).save().end(_.noop());
+
+            if (!!req.body.branchData || !!req.body.referralCode) {
+                var branchData = new BranchData({
+                    user: user._id,
+                    data: req.body.branchData,
+                    referralCode: req.body.referralCode
+                });
+
+                branchData.save().end(_.noop());
+            }
 
             if (newUser.isDriver) {
                 NotificationCtr.send('user:new', { user: newUser });

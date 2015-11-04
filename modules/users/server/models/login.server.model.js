@@ -58,3 +58,36 @@ Login.pre('save', function (next) {
 });
 
 mongoose.model('Login', Login);
+
+
+
+var BranchData = new Schema({
+    
+	user: {
+        type: Schema.ObjectId,
+        required: true,
+		ref: 'User'
+	},
+    
+    data: {
+        type: Schema.Types.Mixed,
+        default: null
+    },
+
+    referralCode: {
+        type: String,
+        default: null
+    },
+    
+    status: {
+        type: String,
+        default: 'new'
+    },
+
+    created: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+mongoose.model('BranchData', BranchData);
