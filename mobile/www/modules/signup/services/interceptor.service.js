@@ -11,6 +11,8 @@
         .factory('AuthenticationInterceptor', AuthenticationInterceptor)
         .config(function ($httpProvider) {
             $httpProvider.interceptors.push('AuthenticationInterceptor');
+            
+            $httpProvider.defaults.headers.post['Content-Type'] = 'application/json';
         });
 
     AuthenticationInterceptor.$inject = ['$q', '$rootScope', '$location', 'tokenService'];

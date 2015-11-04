@@ -7,10 +7,10 @@
 
     RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', '$ionicLoading', 'tokenService', 'welcomeService', 'securityService', 'registerService'];
 
-    function RegisterCtrl($state, $window, $ionicPopup, $ionicLoading, tokenService, welcomeService, securityService, registerService ) {
+    function RegisterCtrl($state, $window, $ionicPopup, $ionicLoading, tokenService, welcomeService, securityService, registerService) {
         var vm = this;
         vm.lastElementFocused = false;
-        
+
         var branchData = JSON.parse($window.localStorage.getItem('branchData') || 'null');
 
         vm.user = {
@@ -35,7 +35,7 @@
          * @description Submit form if last field in focus
          */
         function submitForm() {
-            if(vm.lastElementFocused) {
+            if (vm.lastElementFocused) {
                 continueToEngagement();
             }
         }
@@ -45,53 +45,62 @@
                 template: 'please wait'
             });
             registerService.registerUser(vm.user)
-            .then(function (response) {
+                .then(function (response) {
 
-                if (response.success) {
-                    tokenService.set('access_token', '');
-                    registerService.signIn({ email: response.message.data.email, password: vm.user.password })
-                        .then(function (signInResponse) {
-                            if (signInResponse.success) {
-                                // TODO: Move tokenService actions into registerService
-                                tokenService.set('access_token', signInResponse.message.data.access_token);
-                                tokenService.set('refresh_token', signInResponse.message.data.refresh_token);
-                                tokenService.set('token_type', signInResponse.message.data.token_type);
+                    if (response.success) {
+                        tokenService.set('access_token', '');
+                        registerService.signIn({ email: response.message.data.email, password: vm.user.password })
+                            .then(function (signInResponse) {
+                                if (signInResponse.success) {
+                                    // TODO: Move tokenService actions into registerService
+                                    tokenService.set('access_token', signInResponse.message.data.access_token);
+                                    tokenService.set('refresh_token', signInResponse.message.data.refresh_token);
+                                    tokenService.set('token_type', signInResponse.message.data.token_type);
 
-                                //set fields to show welcome screens for new user
-                                welcomeService.initialize();
-                                securityService.initialize();
+                                    //set fields to show welcome screens for new user
+                                    welcomeService.initialize();
+                                    securityService.initialize();
 
-                                $state.go('signup-engagement');
-                            } else {
-                                showPopup(signInResponse.title, signInResponse.message.data.error_description);
-                            }
-                        })
-                        .finally(function () {
-                            $ionicLoading.hide();
-                        });
-                        
-                    $window.localStorage.removeItem('referralCode');
-                    $window.localStorage.removeItem('branchData');
-                } else {
-                    $ionicLoading.hide();
-                    var message;
+                                    $window.localStorage.removeItem('referralCode');
+                                    $window.localStorage.removeItem('branchData');
 
-                    if(response.message.status === 0){
-                        message = 'Request timed-out. Please, check your network connection.'
+                                    $state.go('signup-engagement');
+                                } else {
+                                    showPopup(null, signInResponse.title, signInResponse.message.data.error_description);
+                                }
+                            })
+                            .finally(function () {
+                                $ionicLoading.hide();
+                            });
                     } else {
-                        message = response.message.data && response.message.data.message || 'Unable to Register at this time. Please try again later';
+                        $ionicLoading.hide();
+                        
+                        showPopup(response, 'Registration Failed');
                     }
-
-                    showPopup(response.title || 'Sorry', message);
-                }
-            });
+                });
         }
 
-        function showPopup(title, text) {
-             $ionicPopup.alert({
-                 title: title || "title",
-                 template: text || "no message"
-             });
+        function showPopup(response, title, message) {
+            
+
+            if (!!response) {
+                if (response.message.status === 0) {
+                    message = 'Request timed-out. Please, check your network connection.'
+                } else {
+                    message = response.message.data && response.message.data.message || 'Unable to Register at this time. Please try again later';
+                }
+            }
+
+            if (/unique field/i.test(message)) {
+                message = 'Email is already registered. Would you like to <a ui-sref="login">Login?</a>';
+            }
+
+            title = 'Sorry';
+            
+            $ionicPopup.alert({
+                title: title || "Sorry",
+                template: message || "no message"
+            });
         }
         //
         //$scope.$on('$ionicView.afterEnter', function () {

@@ -11,13 +11,14 @@ function serverConnectionService($http) {
         
 	//////////////////////////////////////////////////////
         
+	// TODO: Verify in all places that replacement of 'application/form-encoded'
+	// with 'application/json' will work properly ... seriosuly, who does that?
 	function doApiRequest(apiUrl, method, data, needSerialize) {
-		$http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 		return $http({
 			url: apiUrl,
 			method: method,
-			data: !needSerialize ? serializeData(data) : data,
-			timeout: 60 * 1000 // one minute timeout
+			data: data, // !needSerialize ? serializeData(data) : data,
+			timeout: 30 * 1000 // one minute timeout
 		})
 	}
 
