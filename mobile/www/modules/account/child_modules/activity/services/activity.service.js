@@ -185,7 +185,7 @@
                     if (angular.isString(a) && angular.isString(b)) { return 0; }
                     var x = Date.parse(b.created) - Date.parse(a.created);
                     var y = x > 0 ? 1 : x < 0 ? -1 : 0;
-                    var word = y == 1 ? 'after' : 'before';
+                    ///var word = y == 1 ? 'after' : 'before';
                     //console.log('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
                     return y
                 });
