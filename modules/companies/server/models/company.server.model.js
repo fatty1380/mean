@@ -63,6 +63,14 @@ var CompanySchema = new Schema({
         type: String,
         default: ''
     },
+    
+    details: {
+        type: [{
+            title: String,
+            bodyHTML: String
+        }],
+        default: []
+    },
 
     phone: {
         type: String,
