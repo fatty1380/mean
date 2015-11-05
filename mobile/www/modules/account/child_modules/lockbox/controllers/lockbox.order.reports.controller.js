@@ -15,18 +15,18 @@
         vm.sendRequest = sendRequest;
 
         function cancel(data) {
-            vm.closeModal(data);
+            vm.cancel(data);
         }
 
         function orderNow () {
             $window.open(settings.baseUrl + 'reports/', '_system');
-            vm.cancel(null);
+            vm.closeModal('Opened Report Order Page');
         }
 
         function remindLater () {
             vm.sendRequest()
                 .then(function (response) {
-                    $ionicLoading.show({ template: 'Request Sent', duration: 2000 });
+                    $ionicLoading.show({ template: 'Reminder Sent', duration: 2000 });
 
                     vm.closeModal(response);
 
@@ -39,7 +39,7 @@
         function sendRequest() {
             var data = {requestType: 'reportRequest', message: 'Please, remind me later '};
 
-            return API.doRequest(settings.requests, 'POST', data, true);
+            return API.doRequest(settings.requests, 'POST', data);
         }
 
     }

@@ -65,7 +65,7 @@
 
         function getChats() {
             $ionicLoading.show({
-                template: 'loading chats'
+                template: 'loading'
             });
             messageService
                 .getChats()

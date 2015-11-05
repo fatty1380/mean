@@ -69,6 +69,7 @@
                 .then(function (hasAccess) {
 
                     if (hasAccess) {
+                        $ionicLoading.show({ template: '<ion-spinner/><br>Loading Docs...', duration: 10000 });
                         return API.doRequest(settings.documents, 'get')
                     }
 
@@ -111,7 +112,7 @@
                     if (!_.isEmpty(newDocuments)) {
                         _.each(newDocuments, function (doc) {
                             if (!doc) { return }
-                            
+
                             if (!doc.id && doc.name && doc.nativeURL) {
                                 var docObject = parseDocFromFilename(doc.name);
 
@@ -169,6 +170,9 @@
             console.warn('getFilesByUserId() for id >>> @ path `%s`', vm.path, id);
             if (!vm.path) return $q.when(getDocuments(true));
 
+
+            $ionicLoading.show({ template: '<ion-spinner/><br>Loading Docs...', duration: 10000 });
+
             var path = vm.path;
             var hasLockbox = false;
             var hasUserDir = false;
@@ -189,7 +193,7 @@
                 })
                 .then(function (entries) {
                     console.log('entries >>> ', entries);
-                    
+
                     return vm.documents;
                 })
                 .catch(function (err) {
@@ -406,7 +410,7 @@
                     console.error('writeFileInUserFolder err >>>', err);
                 });
         }
-        
+
         function removeDocumentsByUser(user) {
             var path = vm.LOCKBOX_FOLDER;
 
@@ -426,7 +430,7 @@
         function removeOneDocument(doc) {
             console.warn(' removeOneDocument() doc >>>', doc);
             if (!doc) return;
-            
+
             var sku = doc.sku;
 
             var path = vm.LOCKBOX_FOLDER,
@@ -473,10 +477,10 @@
             if (_.isEmpty(doc.sku + doc.id + doc.url)) {
                 return false;
             }
-            
+
             var i = -1;
             var sku = (doc.sku || 'misc').toLowerCase();
-            
+
 
             var def = _.find(docTypeDefinitions, { sku: doc.sku }) || {};
 
@@ -555,9 +559,9 @@
 
 
         function resolveDocuments(entries) {
-            
+
             console.log('looking  at %d documents to resolve', entries && entries.length || 0);
-            
+
             var docsPromises = [];
             _.each(entries, function (entry) {
                 docsPromises.push(createDocumentPromise(entry));
@@ -570,7 +574,7 @@
                     _.each(resolvedDocuments, function (doc) {
                         addDocument(doc);
                     });
-                    
+
                     return vm.documents;
                 });
         }
@@ -651,7 +655,7 @@
 
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
     angular
         .module('lockbox')

@@ -12,7 +12,7 @@
 
         vm.contact = {};
 
-        vm.closeModal = closeModal;
+        vm.cancel = cancel;
         vm.addFriend = addFriend;
 
         initialize();
@@ -31,11 +31,11 @@
                 email: vm.contact.email
             };
 
-            closeModal(contact);
+            vm.closeModal(contact);
         }
 
-        function closeModal(contact) {
-            $scope.closeModal(contact);
+        function cancel() {
+            vm.cancel();
         }
     }
 

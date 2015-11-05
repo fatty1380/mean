@@ -20,7 +20,7 @@
         var initialFriendLength = userService.profileData.friends.length;
         vm.updatedProfle = false;
 
-        vm.cancel = cancel;
+        vm.back = back;
         vm.handleRequest = handleRequest;
         vm.extendWithUserObject = extendWithUserObject;
 
@@ -56,14 +56,14 @@
 
         }
 
-        function cancel() {
+        function back() {
             if(initialFriendLength !== userService.profileData.friends.length){
                 friendsService.loadFriends(userService.profileData.id)
                     .then(function (friends) {
-                        $scope.closeModal(friends);
+                        vm.closeModal(friends);
                     });
             }else{
-                $scope.closeModal(null);
+                vm.closeModal();
             }
         }
 

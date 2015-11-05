@@ -89,12 +89,14 @@
                     messageTemplate = 'Invitations have been successfully sent';
                     $ionicLoading.show({ template: messageTemplate, duration: '1500' });
                 }
+                
+                vm.closeModal(response);
             });
 
         }
 
         function cancel() {
-            $scope.closeModal(null);
+            vm.cancel();
         }
 
     }

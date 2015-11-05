@@ -28,6 +28,12 @@
                 text: vm.message,
                 requestType: 'reviewRequest'
             };
+            
+            if (_.isEmpty(vm.contact) || _.isEmpty(vm.contact.email) && _.isEmpty(vm.contact.phone)) {
+                $ionicLoading.show({ template: 'Please enter an email address', duration: '2000' });
+                return;
+            }
+            
             reviewService
                 .createRequest(data)
                 .then(function (resp) {
@@ -37,16 +43,18 @@
                         vm.message = '';
                         $ionicLoading.show({ template: 'Success! Your request has been sent', duration: '1500' });
                     }
+                    
+                    return vm.closeModal(resp.data);
                 })
                 .catch(function (resp) {
                     if (resp.data) {
-                        $ionicLoading.show({ template: resp.data.message, duration: '1500' });
+                        $ionicLoading.show({ template: 'Unable to Request at this time. <br>Please try again later', duration: '1500' });
                     }
                 });
         }
 
         function cancel() {
-            vm.closeModal(null);
+            vm.cancel();
         }
     }
 })();
