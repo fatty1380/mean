@@ -21,7 +21,6 @@
                 .show(templateUrl, controller, params, options);
         }
 
-        
         function showCreateModal(parameters, options) {
             templateUrl = 'modules/account/child_modules/lockbox/templates/lockbox-create.html';
             controller = 'LockboxCreateCtrl as vm';
