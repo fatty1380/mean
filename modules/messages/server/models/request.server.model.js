@@ -75,6 +75,9 @@ var RequestMessageSchema = new Schema({
     objectLink: {
         type: String
     },
+    redirectURL: {
+        type: String
+    },
     text: {
         type: String,
         default: ''

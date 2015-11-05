@@ -101,7 +101,7 @@ function listRequests(req, res) {
 
     var types,
         mainQuery = { 'to': req.user.id },
-        statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new'];
+        statuses = req.query.status === 'all' ? ['new', 'accepted'] : req.query.status || ['new', 'sent'];
 
     mainQuery.status = statuses.length > 1 ? { $in: statuses } : statuses[0];
 
