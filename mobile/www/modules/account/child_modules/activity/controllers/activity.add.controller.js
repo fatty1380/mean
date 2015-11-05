@@ -190,7 +190,7 @@
         }
 
         function close(str) {
-            vm.closeModal(str);
+            vm.cancelModal(str);
         }
     }
 })();

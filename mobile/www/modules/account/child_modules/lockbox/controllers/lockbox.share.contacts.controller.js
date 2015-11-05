@@ -12,17 +12,17 @@
         vm.selectedContact = '';
 
         vm.contacts = contactsService.getContacts();
-        vm.closeModal = closeModal;
+        vm.cancel = cancel;
         vm.select = select;
 
 
-        function closeModal (contacts) {
-            $scope.closeModal(contacts);
+        function cancel () {
+            vm.cancelModal();
         }
 
         function select () {
             console.warn(' vm.selectedContact --->>>', vm.selectedContact);
-            closeModal(vm.selectedContact);
+            vm.closeModal(vm.selectedContact);
         }
 
     }

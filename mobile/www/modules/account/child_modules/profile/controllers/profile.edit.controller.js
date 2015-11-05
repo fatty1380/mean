@@ -81,8 +81,8 @@
             return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
         }
 
-        function cancel () {
-            vm.closeModal(null);
+        function cancel() {
+            vm.cancelModal('canceled');
         }
 
         function save(form, e) {

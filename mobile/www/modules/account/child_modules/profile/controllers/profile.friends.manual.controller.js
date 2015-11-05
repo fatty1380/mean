@@ -35,7 +35,7 @@
         }
 
         function cancel() {
-            vm.cancel();
+            vm.cancelModal();
         }
     }
 

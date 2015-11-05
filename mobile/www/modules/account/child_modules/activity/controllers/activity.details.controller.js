@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityDetailsCtrl', ActivityDetailsCtrl);
 
-    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', '$timeout', '$ionicScrollDelegate'];
+    ActivityDetailsCtrl.$inject = ['parameters', 'activityService', '$state', '$timeout', '$ionicScrollDelegate'];
 
-    function ActivityDetailsCtrl(parameters, activityService, $timeout, $ionicScrollDelegate) {
+    function ActivityDetailsCtrl(parameters, activityService, $state, $timeout, $ionicScrollDelegate) {
         angular.element(document).ready(initMap);
 
         var vm = this;
@@ -19,6 +19,7 @@
         vm.entry = parameters.entry;
 
         vm.close = close;
+        vm.viewUser = viewUser;
         vm.likeActivity = likeActivity;
         vm.toggleInput = toggleInput;
         vm.createComment = createComment;
@@ -113,6 +114,13 @@
             vm.isInputVisible = _.isUndefined(direction) ? !vm.isInputVisible : !!direction;
             
             if (!!vm.isInputVisible) { vm.focusComment = true; }
+        }
+        
+        function viewUser() {
+            event.stopPropagation();
+            
+            $state.go('account.profile', { userId: vm.entry.user.id });
+            vm.closeModal(vm.entry);
         }
 
         function likeActivity() {

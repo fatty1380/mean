@@ -15,7 +15,7 @@
         vm.sendRequest = sendRequest;
 
         function cancel(data) {
-            vm.cancel(data);
+            vm.cancelModal(data);
         }
 
         function orderNow () {

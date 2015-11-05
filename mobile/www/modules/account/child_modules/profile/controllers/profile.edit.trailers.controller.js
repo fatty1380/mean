@@ -49,7 +49,7 @@
         }
 
         function cancel() {
-            vm.closeModal();
+            vm.cancelModal();
         }
 
         function save() {
@@ -61,7 +61,7 @@
                         return vm.closeModal(trailers);
                     }
 
-                    return vm.closeModal(null);
+                    return vm.cancelModal(updateResult.message);
                 });
         }
 

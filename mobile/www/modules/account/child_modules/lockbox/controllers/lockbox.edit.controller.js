@@ -10,7 +10,7 @@
     function LockboxEditCtrl($scope, $ionicPopup, lockboxDocuments, parameters) {
         var vm = this;
 
-        vm.cancel = cancel;
+        vm.close = close;
         vm.getUnselectedItems = getUnselectedItems;
         vm.rename = rename;
         vm.documents = parameters.documents;
@@ -46,8 +46,8 @@
                 });
         }
 
-        function cancel() {
-            $scope.closeModal();
+        function close() {
+            vm.closeModal(vm.documents);
         }
 
         $scope.$watch(function () {

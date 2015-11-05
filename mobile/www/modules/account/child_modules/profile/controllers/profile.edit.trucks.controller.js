@@ -20,7 +20,7 @@
         //////////////////////////////////////////////////////////////
 
         function cancel() {
-            vm.closeModal();
+            vm.cancelModal();
         }
 
         function getTrucks() {
@@ -61,7 +61,7 @@
                         registerService.userProps.truck = vm.currentTruck;
                         return vm.closeModal(vm.currentTruck)
                     }
-                    return vm.closeModal(null);
+                    return vm.cancelModal(updateResult.message);
                 });
         }
     }

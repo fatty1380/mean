@@ -18,7 +18,8 @@
                             <div class="text">
                                 <div class="holder">
                                     <div class="activity-summary">
-                                        <a ng-if="!!vm.username || !!vm.user.handle" class="user-link" ng-click="$event.stopPropagation()" ui-sref="account.profile({userId: vm.entry.user.id})">
+                                        <a ng-if="!!vm.username || !!vm.user.handle" class="user-link" 
+                                            ng-click="vm.viewUser($event)">
                                             <strong>{{vm.username || vm.user.handle}}</strong>
                                         </a>
                                     </div>

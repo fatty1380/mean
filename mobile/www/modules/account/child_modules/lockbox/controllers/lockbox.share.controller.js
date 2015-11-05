@@ -65,7 +65,7 @@
         function cancel() {
             var self = this;
             self.shareStep = 1;
-            vm.closeModal(null);
+            vm.cancelModal(null);
         }
 
         function skipDocs() {
@@ -108,11 +108,17 @@
             requestObj.contents = {
                 documents: _.pluck(vm.docsToShare, 'id')
             };
+            
+            var sentRequest = null;
 
             requestService
                 .createRequest(requestObj)
                 .then(function (response) {
+                    sentRequest = response;
                     showSuccessPopup(response);
+                })
+                .then(function () {
+                    vm.closeModal(sentRequest);
                 })
                 .catch(function (err) {
                     $ionicPopup.alert({
@@ -152,11 +158,7 @@
                 config.title = 'Success!';
                 config.template = displayName ? 'Your profile has been shared with ' + displayName : 'Your profile has been shared';
 
-                var popup = $ionicPopup.alert(config);
-
-                popup.then(function () {
-                    vm.cancel();
-                });
+                return $ionicPopup.alert(config);
             }
         }
 
