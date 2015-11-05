@@ -28,21 +28,20 @@
                 text: vm.message,
                 requestType: 'reviewRequest'
             };
-            
+
             if (_.isEmpty(vm.contact) || _.isEmpty(vm.contact.email) && _.isEmpty(vm.contact.phone)) {
-                $ionicLoading.show({ template: 'Please enter an email address', duration: '2000' });
+                $ionicLoading.show({ template: 'Please enter an email address or phone number', duration: '2000' });
                 return;
             }
-            
+
             reviewService
                 .createRequest(data)
                 .then(function (resp) {
+                    $ionicLoading.show({ template: '<h3>Success!</h3> Your request has been sent', duration: '1500' });
+
                     console.log(resp);
-                    if (resp.data) {
-                        vm.contact = {};
-                        vm.message = '';
-                        $ionicLoading.show({ template: 'Success! Your request has been sent', duration: '1500' });
-                    }
+                    vm.contact = {};
+                    vm.message = '';
                     
                     return vm.closeModal(resp.data);
                 })
