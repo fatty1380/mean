@@ -19,7 +19,6 @@
         vm.message = '';
 
         vm.sendRequest = sendRequest;
-        vm.cancel = cancel;
 
         function sendRequest() {
             console.log(vm.contact);
@@ -50,10 +49,6 @@
                         $ionicLoading.show({ template: 'Unable to Request at this time. <br>Please try again later', duration: '1500' });
                     }
                 });
-        }
-
-        function cancel() {
-            vm.cancelModal();
         }
     }
 })();

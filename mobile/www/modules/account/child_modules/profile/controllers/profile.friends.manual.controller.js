@@ -12,7 +12,6 @@
 
         vm.contact = {};
 
-        vm.cancel = cancel;
         vm.addFriend = addFriend;
 
         initialize();
@@ -32,10 +31,6 @@
             };
 
             vm.closeModal(contact);
-        }
-
-        function cancel() {
-            vm.cancelModal();
         }
     }
 

@@ -13,7 +13,6 @@
         vm.searchText = "";
         vm.contacts = [];
 
-        vm.cancel = cancel;
         vm.showAddFriendsModal = addFriends;
         vm.showFriendManualAddModal = showFriendManualAddModal;
 
@@ -93,10 +92,6 @@
                 vm.closeModal(response);
             });
 
-        }
-
-        function cancel() {
-            vm.cancelModal();
         }
 
     }

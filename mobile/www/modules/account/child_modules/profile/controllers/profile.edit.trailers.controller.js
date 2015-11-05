@@ -13,7 +13,6 @@
         vm.newTrailer = '';
         vm.trailers = getTrailers();
 
-        vm.cancel = cancel;
         vm.save = save;
         vm.addTrailer = trailerService.addTrailer;
 
@@ -46,10 +45,6 @@
             }
 
             return trailers;
-        }
-
-        function cancel() {
-            vm.cancelModal();
         }
 
         function save() {

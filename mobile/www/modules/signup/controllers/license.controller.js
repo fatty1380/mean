@@ -70,7 +70,7 @@
         vm.showCancel = true;
 
         vm.save = save;
-        vm.cancel = function () { vm.cancel(); }
+        vm.cancel = vm.cancelModal;
 
         activate();
         

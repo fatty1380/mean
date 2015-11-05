@@ -21,7 +21,6 @@
         vm.owner = vm.profileData.props.owner;
         vm.started = getFormattedDate(vm.profileData.props.started);
 
-        vm.cancel = cancel;
         vm.save = save;
         vm.logout = logout;
         vm.showProfileEditTrailersModal = showProfileEditTrailersModal;
@@ -79,10 +78,6 @@
 
         function getFormattedDate(date) {
             return $filter('date')($filter('monthDate')(date), 'MMMM, yyyy');
-        }
-
-        function cancel() {
-            vm.cancelModal('canceled');
         }
 
         function save(form, e) {

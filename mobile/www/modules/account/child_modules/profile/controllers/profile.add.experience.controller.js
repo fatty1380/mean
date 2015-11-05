@@ -20,7 +20,6 @@
             location: ''
         };
 
-        vm.cancel = function () { vm.cancelModal(); }
         vm.saveExperience = saveExperience;
 
         function saveExperience() {

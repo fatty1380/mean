@@ -12,13 +12,7 @@
         vm.selectedContact = '';
 
         vm.contacts = contactsService.getContacts();
-        vm.cancel = cancel;
         vm.select = select;
-
-
-        function cancel () {
-            vm.cancelModal();
-        }
 
         function select () {
             console.warn(' vm.selectedContact --->>>', vm.selectedContact);

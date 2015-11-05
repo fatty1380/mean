@@ -16,7 +16,6 @@
 
         vm.experience = parameters;
 
-        vm.cancel = function () { vm.cancelModal(); }
         vm.saveExperience = saveExperience;
 
         function saveExperience() {

@@ -13,15 +13,10 @@
         vm.currentTruck = '';
         vm.trucks = getTrucks();
 
-        vm.cancel = cancel;
         vm.save = save;
         vm.addTruck = addTruck;
         
         //////////////////////////////////////////////////////////////
-
-        function cancel() {
-            vm.cancelModal();
-        }
 
         function getTrucks() {
             var trucks = parameters.trucks,

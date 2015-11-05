@@ -9,14 +9,9 @@
 
     function LockboxOrderReportsCtrl($window, settings, $ionicLoading, API) {
         var vm = this;
-        vm.cancel = cancel;
         vm.orderNow = orderNow;
         vm.remindLater = remindLater;
         vm.sendRequest = sendRequest;
-
-        function cancel(data) {
-            vm.cancelModal(data);
-        }
 
         function orderNow () {
             $window.open(settings.baseUrl + 'reports/', '_system');
