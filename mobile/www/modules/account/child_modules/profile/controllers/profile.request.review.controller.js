@@ -28,9 +28,8 @@
                 text: vm.message,
                 requestType: 'reviewRequest'
             };
-            var serializedData = utilsService.serialize(data);
             reviewService
-                .createRequest(serializedData)
+                .createRequest(data)
                 .then(function (resp) {
                     console.log(resp);
                     if (resp.data) {

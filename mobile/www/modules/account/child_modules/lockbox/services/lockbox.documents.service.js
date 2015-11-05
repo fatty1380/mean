@@ -243,7 +243,7 @@
         }
 
         function updateDocument(doc, data) {
-            return API.doRequest(settings.documents + doc.id, 'put', data, true)
+            return API.doRequest(settings.documents + doc.id, 'put', data)
                 .then(function () {
                     if (!vm.path) return _.extend(doc, data);
                     return renameLocalFile(doc, data);
@@ -267,9 +267,9 @@
                 })
                 .then(function success(newDocumentObject) {
                     if (addDocument(newDocumentObject)) {
-                        return API.doRequest(settings.documents, 'post', newDocumentObject, false);
+                        return API.doRequest(settings.documents, 'post', newDocumentObject);
                     } else {
-                        return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject, false);
+                        return API.doRequest(settings.documents + newDocumentObject.id, 'put', newDocumentObject);
                     }
                 })
                 .then(function saveSuccess(newDocumentResponse) {

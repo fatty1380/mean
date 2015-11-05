@@ -69,11 +69,10 @@
             //friendsService.sendRequests(newInvites);
 
             for (var i = 0; i < newInvites.length; i++) {
-                var postData = { contactInfo: newInvites[i], text: '' },
-                    serializedData = utilsService.serialize(postData);
+                var postData = { contactInfo: newInvites[i], text: '' };
 
                 $http
-                    .post(settings.requests, serializedData)
+                    .post(settings.requests, postData)
                     .then(function () {
                         requestSentStatuses.push(true);
                         if (i = newInvites.length) {

@@ -92,12 +92,10 @@
                 var requestData = {
                     to: friend.id,
                     text: 'Hi there! I want to add you to my friend list!'
-                },
-
-                    serializedData = utilsService.serialize(requestData);
-
+                };
+                
                 friendsService
-                    .createRequest(serializedData)
+                    .createRequest(requestData)
                     .then(function (createdRequestResp) {
                         if (createdRequestResp.status === 200) {
                             vm.friendStatus = 'sent';

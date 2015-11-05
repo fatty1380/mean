@@ -34,8 +34,7 @@
         }
 
         function createMessage(message) {
-            $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded;charset=utf-8";
-            return $http.post(settings.messages, utilsService.serialize(message));
+            return $http.post(settings.messages, message);
         }
     }
 })();

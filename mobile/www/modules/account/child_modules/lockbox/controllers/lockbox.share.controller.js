@@ -20,9 +20,11 @@
         vm.addDocumentsToShare = addDocumentsToShare;
         vm.shareDocuments = shareDocuments;
 
-        init();
+        activate();
+        
+        ////////////////////////////////////////////////////////////
 
-        function init() {
+        function activate() {
             vm.contact = {};
             vm.shareStep = 1;
 
@@ -92,8 +94,7 @@
 
 
         function shareDocuments() {
-            var requestObj = {},
-                serializedReqObj;
+            var requestObj = {};
 
             if (!vm.contact || !vm.contact.email) {
                 $ionicPopup.alert({ title: 'Error!', template: 'Please, enter recipient information' });
@@ -108,16 +109,16 @@
                 documents: _.pluck(vm.docsToShare, 'id')
             };
 
-            serializedReqObj = utilsService.serialize(requestObj);
-
             requestService
-                .createRequest(serializedReqObj)
+                .createRequest(requestObj)
                 .then(function (response) {
                     showSuccessPopup(response);
                 })
                 .catch(function (err) {
-                    console.error('WARNING: Hard Coded Success', err);
-                    showSuccessPopup();
+                    $ionicPopup.alert({
+                        title: 'Sorry',
+                        template: 'Unable to Submit your request right now, please try again later'
+                    });
                 });
 
             function getModifiedContactInfo(contact) {

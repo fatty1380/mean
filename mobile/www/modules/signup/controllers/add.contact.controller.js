@@ -67,11 +67,10 @@
                                 delete selectedContacts[i].$$hashKey;
                             }
 
-                            var postData = { contactInfo: selectedContacts[i], text: '' },
-                                serializedData = utilsService.serialize(postData);
+                            var postData = { contactInfo: selectedContacts[i], text: '' };
 
                             var r = $http
-                                .post(settings.requests, serializedData)
+                                .post(settings.requests, postData)
                                 .then(function (resp) {
                                     console.warn(' resp --->>>', resp);
                                     $ionicLoading.show({ template: 'Invitations are successfully sent', duration: '1500' });

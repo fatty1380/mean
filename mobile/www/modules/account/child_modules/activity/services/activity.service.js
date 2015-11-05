@@ -231,8 +231,8 @@
         }
 
         function postFeed(data) {
-            $http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-            return $http.post(settings.feed, utilsService.serialize(data))
+
+            return $http.post(settings.feed, data)
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
@@ -242,7 +242,7 @@
         }
 
         function postComment(id, data) {
-            return $http.post(settings.feed + id + '/comments', utilsService.serialize(data))
+            return $http.post(settings.feed + id + '/comments', data)
                 .then(function (response) {
                     return response;
                 }, function (response) {

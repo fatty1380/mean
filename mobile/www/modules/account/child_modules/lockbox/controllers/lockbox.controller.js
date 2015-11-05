@@ -145,6 +145,7 @@
             var params = {
                 documents: vm.documents
             };
+            
             lockboxModalsService.showShareModal(params)
                 .then(
                     function (result) {

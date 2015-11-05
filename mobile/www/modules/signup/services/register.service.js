@@ -61,13 +61,13 @@
 
         function updateUser(data) {
             if (!data) return;
-            return API.doRequest(settings.users, 'put', data, true)
+            return API.doRequest(settings.users, 'put', data)
                 .then(handleSuccess, handleError);
         }
 
         function updateUserProps(data) {
             if (!data) return;
-            return API.doRequest(settings.usersProps, 'put', data, true)
+            return API.doRequest(settings.usersProps, 'put', data)
                 .then(handleSuccess, handleError);
         }
 

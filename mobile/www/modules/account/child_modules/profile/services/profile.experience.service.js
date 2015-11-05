@@ -12,7 +12,7 @@
                 return $http.get(settings.usersExperience)
             },
             postUserExperience = function (experience) {
-                return $http.post(settings.usersExperience, utilsService.serialize(experience));
+                return $http.post(settings.usersExperience, experience);
             },
             updateUserExperience = function (id, experience) {
                 if(!id) return;

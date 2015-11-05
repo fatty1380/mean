@@ -108,11 +108,10 @@
 
             var requestData = {
                 to: friend.id
-            },
-                serializedData = utilsService.serialize(requestData);
+            };
 
             friendsService
-                .createRequest(serializedData)
+                .createRequest(requestData)
                 .then(function (createdRequestResp) {
                     if (createdRequestResp.status === 200) {
                         var template = 'You have invited ' + friend.firstName + ' to be friends.';
