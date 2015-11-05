@@ -2,9 +2,9 @@
 
     <ion-header-bar align-title="center" class="bar-stable">
         <ion-nav-bar>
-            <ion-nav-back-button>Back</ion-nav-back-button>
+            <ion-nav-back-button ng-click="vm.cancel()">{{::vm.backTxt}}</ion-nav-back-button>
         </ion-nav-bar>
-            <h1 class="title">Create Account</h1>
+            <h1 class="title">{{::vm.header}}</h1>
         </ion-header-bar>
 
     <ion-pane class="has-footer license-content">
@@ -67,7 +67,8 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary submit" ng-click="vm.continueToTrucks()">Continue</button>
+            <button class="button secondary" ng-if="vm.showCancel" ng-click="vm.cancel()">Cancel</button>
+            <button class="button {{!!vm.showCancel ? 'primary' : secondary}} submit" ng-click="vm.save()">{{::vm.saveTxt}}</button>
         </div>
     </ion-footer-bar>
 

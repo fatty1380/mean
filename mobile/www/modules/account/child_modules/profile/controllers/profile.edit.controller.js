@@ -26,6 +26,7 @@
         vm.logout = logout;
         vm.showProfileEditTrailersModal = showProfileEditTrailersModal;
         vm.showProfileEditTrucksModal = showProfileEditTrucksModal;
+        vm.editLicense = showProfileEditLicenseModal;
         vm.updateTrailers = updateTrailers;
         vm.updateTrucks = updateTrucks;
 
@@ -64,6 +65,15 @@
                                 vm.updateTrucks(truck);
                             }
                         });
+                });
+        }
+        
+        function showProfileEditLicenseModal() {
+            profileModalsService.showProfileEditLicenseModal({ license: vm.profileData.license })
+                .then(function success(result) {
+                    debugger;
+                    console.log('Updated License to ', result);
+                    vm.profileData.license = result;
                 });
         }
 

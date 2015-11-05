@@ -60,6 +60,12 @@
                         <li ng-repeat="trailer in vm.profileData.props.trailer">{{trailer}}</li>
                     </ul>
                 </div>
+                <div class="item edit-profile-types">
+                    <div class="top">
+                        <span class="input-label">License</span>
+                        <button class="button button-small" ng-click="vm.editLicense();">edit</button>
+                    </div>
+                </div>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Driving Since</span>
                     <input type="text" ng-model="vm.started" placeholder="Driving Since" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">

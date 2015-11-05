@@ -20,6 +20,7 @@
             showFriendManualAddModal: showFriendManualAddModal,
             showProfileEditTrailersModal: showProfileEditTrailersModal,
             showProfileEditTrucksModal: showProfileEditTrucksModal,
+            showProfileEditLicenseModal: showProfileEditLicenseModal,
             showAddExperienceModal: showAddExperienceModal,
             showEditExperienceModal: showEditExperienceModal
         };

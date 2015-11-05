@@ -5,9 +5,9 @@
         .module('account')
         .controller('ProfileEditTrucksCtrl', ProfileEditTrucksCtrl);
 
-    ProfileEditTrucksCtrl.$inject = ['$scope', 'parameters', 'registerService', 'userService', 'truckService'];
+    ProfileEditTrucksCtrl.$inject = ['parameters', 'registerService', 'userService', 'truckService'];
 
-    function ProfileEditTrucksCtrl($scope, parameters, registerService, userService, truckService) {
+    function ProfileEditTrucksCtrl(parameters, registerService, userService, truckService) {
         var vm = this;
 
         vm.currentTruck = '';
