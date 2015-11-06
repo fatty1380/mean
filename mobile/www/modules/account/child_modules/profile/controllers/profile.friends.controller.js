@@ -73,6 +73,7 @@
             }
 
             $rootScope.$on('updates-available', function (event, updates) {
+                console.log('FriendsCtrl: %d New updates available: ', updates.requests);
                 vm.newRequests = updates.requests;
             });
 

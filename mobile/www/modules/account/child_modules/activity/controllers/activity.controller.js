@@ -29,6 +29,7 @@
          * */
 
         $rootScope.$on('updates-available', function (event, updates) {
+            console.log('ActivityCtrl: %d New updates available: ', updates.activities);
             vm.updates = updates;
         });
 

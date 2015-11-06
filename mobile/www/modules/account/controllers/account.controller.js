@@ -9,10 +9,12 @@
 
     function AccountCtrl($rootScope, updateService, timerService, user) {
         var vm = this;
-
+        console.log('AccountCtrl.init');
+            
         vm.updates = updateService.getLastUpdates();
 
         $rootScope.$on('updates-available', function (event, updates) {
+            console.log('AccountCtrl: New updates available: ', updates);
             vm.updates = updates;
         });
 
