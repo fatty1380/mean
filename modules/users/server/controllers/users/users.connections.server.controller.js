@@ -546,6 +546,8 @@ function normalizeRequest(request) {
 }
 
 function deformatPhone(phone) {
+    if (_.isEmpty(phone)) { return; }
+    
     var newNum = phone.replace(/\D/g, '');
 
     // Ignore numbers without area code
@@ -567,6 +569,8 @@ function deformatPhone(phone) {
 }
 
 function validateEmail(email) {
+    if (_.isEmpty(email)) { return; }
+    
     return /^\S+@\S+\.\S+$/.test(email) ? email.toLowerCase() : null;
 }
 
