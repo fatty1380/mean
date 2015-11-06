@@ -130,7 +130,7 @@
         }
 
         function showAddFriendsModal() {
-            LoadingService.showLoader('Loading Contacts ... <br><small>(this may take a moment)</small>');
+            LoadingService.showLoader('Loading Contacts<br><small>(this may take a moment)</small>');
 
             contactsService
                 .find()

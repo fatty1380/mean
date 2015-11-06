@@ -69,7 +69,7 @@
                 .then(function (hasAccess) {
 
                     if (hasAccess) {
-                        LoadingService.showLoader('Loading Docs...');
+                        LoadingService.showLoader('Loading Documents');
                         
                         return API.doRequest(settings.documents, 'get')
                     }

@@ -108,7 +108,7 @@
             if (!vm.isFriend) {
                 vm.profileData.displayName = vm.profileData.firstName + ' ' + (vm.profileData.lastName && vm.profileData.lastName[0]);
             } else {
-                LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed...');
+                LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed');
                 
                 activityService
                     .getFeed().then(function (result) {
