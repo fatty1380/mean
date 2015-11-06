@@ -48,7 +48,7 @@
                 </div>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Truck Model</span>
-                    <input type="text" ng-model="vm.profileData.props.model" placeholder="Truck Model">
+                    <input type="text" ng-model="vm.profileData.props.model" placeholder="Truck Model" name="model">
                 </label>
                 <oset-toggle label="Owner Operator" type="button-small" model="vm.owner"></oset-toggle>
                 <div class="item edit-profile-types">
@@ -76,15 +76,16 @@
                 </div>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Driving Since</span>
-                    <input type="text" ng-model="vm.started" placeholder="Driving Since" onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
+                    <input type="text" ng-model="vm.started" placeholder="Driving Since"  name="started"
+                    onfocus="this.type='month';this.setAttribute('onfocus','');this.blur();this.focus();">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Employer</span>
-                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Employer">
+                    <input type="text" ng-model="vm.profileData.props.company" placeholder="Employer" name="employer">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Miles per Year</span>
-                    <input type="number" ng-model="vm.profileData.props.miles" placeholder="Miles per Year">
+                    <input type="text" ng-model="vm.profileData.props.miles" placeholder="Miles per Year" name="miles">
                 </label>
 
                 <div class="item item-button-right">

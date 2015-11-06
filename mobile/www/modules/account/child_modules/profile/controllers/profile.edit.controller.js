@@ -5,9 +5,11 @@
         .module('account')
         .controller('ProfileEditCtrl', ProfileEditCtrl);
 
-    ProfileEditCtrl.$inject = ['$rootScope', '$ionicPopup', 'truckService', '$state', '$filter', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
+    ProfileEditCtrl.$inject = ['$rootScope', '$ionicPopup', '$timeout', '$state', '$filter',
+        'LoadingService', 'truckService', 'userService', 'profileModalsService', 'trailerService', 'tokenService'];
 
-    function ProfileEditCtrl($rootScope, $ionicPopup, truckService, $state, $filter, userService, profileModalsService, trailerService, tokenService) {
+    function ProfileEditCtrl($rootScope, $ionicPopup, $timeout, $state, $filter,
+        LoadingService, truckService, userService, profileModalsService, trailerService, tokenService) {
         var vm = this;
 
         if (!userService.profileData) {
@@ -104,7 +106,18 @@
                         }
                     });
             } else {
-                $ionicPopup.alert({ title: 'Error', template: 'Please, enter all required fields.' });
+
+                if (form.$error.number) {
+                    LoadingService.showFailure('Please enter value as a number');
+                } else if (form.$error.required) {
+                    LoadingService.showFailure('Please enter all required fields');
+                } else {
+                    LoadingService.showFailure('Sorry, an error occured');
+                }
+
+                $timeout(function () {
+                    $('input.ng-invalid').focus()
+                }, 2000);
             }
         }
 
