@@ -121,9 +121,24 @@ body{
         }
       } 
     }
-    &.profile-tabs{
+    &.profile-tabs {
       .ionic-scroll{
         top:70px;
+      }
+      
+      .tab-item,
+        {
+          opacity: 1;
+          
+          .badge {
+            right: 10%;
+            top: 20%;
+            
+            &.badge-energized {
+              font-weight: 900;
+              background-color: $energized;
+            }
+          }
       }
     }
   }
@@ -272,7 +287,7 @@ textarea{
 
 
 .share-form{
-  height: 100%;
+  // height: 100%;
   display: flex;
   flex-direction: column;
   

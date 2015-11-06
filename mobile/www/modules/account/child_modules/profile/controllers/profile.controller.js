@@ -33,12 +33,35 @@
             console.warn(' profi --->>>', profi);
         };
 
+        var unbindUpdatesHandler = null;
+        function destroy() {
+            _.isFunction(unbindUpdatesHandler) && unbindUpdatesHandler();
+        }
+
         $rootScope.$on("clear", function () {
             console.log('ProfileCtrl my event occurred');
             vm.profileData = profile || user;
             vm.user = user;
             vm.friendStatus = null;
+
+            destroy();
         });
+
+        $scope.$on('$ionicView.enter', function (event) {
+            if (_.isEmpty(unbindUpdatesHandler)) {
+                unbindUpdatesHandler = $rootScope.$on('updates-available', function (event, updates) {
+                    console.log('ProfileCtrl: %d New updates available: ', updates);
+                    vm.updates = updates;
+                });
+            }
+
+            getReviews();
+        });
+
+        $scope.$on('$ioncView.unloaded', function (event) {
+            destroy();
+        });
+        vm.welcomeReview = true;
 
         function showFriends() {
             console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
@@ -156,10 +179,6 @@
             vm.showUserSettings = null;
             getExperience();
 
-            $rootScope.$on('updates-available', function (event, updates) {
-                vm.updates = updates;
-            });
-
             /**
              * showEditAvatar
              * --------------
@@ -230,7 +249,6 @@
                     .showEditExperienceModal(experienceItem)
                     .then(function (experienceResult) {
                         console.log('Edited Experience ', experienceResult);
-                        debugger;
 
                         if (_.isArray(experienceResult)) {
                             vm.experience = experienceResult;
@@ -248,14 +266,42 @@
         }
         // END: vm.canEdit
 
+        vm.showReviewTab = function () {
+            if (vm.canEdit) {
+                updateService.resetUpdates('reviews');
 
-        vm.getReviews = function () {
+                if (!vm.welcomeReview) {
+                    vm.welcomeReview = 'true';
+                    StorageService.set('welcome.review', 'true');
+                }
+            }
+        }
+
+        vm.getReviewBadge = function () {
+            if (vm.canEdit) {
+
+                if (!!vm.updates.reviews) {
+                    return vm.updates.reviews;
+                }
+
+                if (!vm.welcomeReview) {
+                    return '+'
+                }
+            }
+
+            return null;
+        }
+
+        function getReviews() {
             reviewService
                 .getReviewsByUserID(vm.profileData.id)
                 .then(function (response) {
                     vm.reviews = response.data;
                 })
                 .finally(function () {
+                    if (vm.canEdit) {
+                        vm.welcomeReview = !_.isEmpty(vm.reviews) || JSON.parse(StorageService.get('welcome.review'));
+                    }
                 })
         };
 
@@ -266,8 +312,6 @@
                     vm.experience = response.data || [];
                 })
         };
-
-        vm.getReviews();
 
         function openChat() {
             if (!vm.canEdit) {

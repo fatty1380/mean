@@ -39,10 +39,10 @@
                 return $http.delete(settings.reviews + id)
             };
 
-            //
-            function createRequest(data) {
-                return $http.post(settings.requests, data)
-            }
+        //
+        function createRequest(data) {
+            return $http.post(settings.requests, data)
+        }
 
         return {
             getUserReviews: getUserReviews,

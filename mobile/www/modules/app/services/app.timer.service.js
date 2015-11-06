@@ -29,7 +29,7 @@
         };
         
         function initTimer (name, intervalSeconds, callback) {
-            if(vm[name]) return;
+            if(vm[name]) return false;
 
             var timer = {};
             timer.name = name;
@@ -42,16 +42,18 @@
 
             vm.timers.push(name);
 
-            startTimer(vm[name]);
+            return startTimer(vm[name]);
         }
 
         function startTimer (timer) {
-            if(!timer) return;
+            if(!timer) return false;
 
             if (!timer.running) {
                 timer.timeOut = $timeout(onTimeout, timer.interval * 1000, true, timer);
                 timer.running = true;
             }
+            
+            return timer.running;
         }
 
         function onTimeout(timer) {
