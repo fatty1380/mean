@@ -74,8 +74,8 @@
 					vm.contact.emails = selectedContact.emails;
 					vm.contact.phoneNumbers = selectedContact.phoneNumbers;
 					
-					vm.contact.email = !!vm.contact.emails && !!vm.contact.emails.length && vm.contact.emails[0].value || null;
-					vm.contact.phone = !!vm.contact.phoneNumbers && !!vm.contact.phoneNumbers.length && vm.contact.phoneNumbers[0].value || null;
+					vm.contact.email = !!vm.showEmail && !!vm.contact.emails && !!vm.contact.emails.length && vm.contact.emails[0].value || null;
+					vm.contact.phone = !!vm.showPhone && !!vm.contact.phoneNumbers && !!vm.contact.phoneNumbers.length && vm.contact.phoneNumbers[0].value || null;
 			})
 		}
 	}
@@ -83,6 +83,7 @@
 	var contactTemplate = [
 		'<div class="list list-inset share-form">',
 		'   <button class="button button-block button-light" ng-click="vm.pickContact();">Choose from Contacts</button>', 
+		'',
 		'	<label class="item item-input" ng-if="!!vm.showPhone">',
 		'		<span class="input-label">Phone</span>',
 		'		<input type="tel" placeholder="Phone Number" ng-model="vm.contact.phone">',
@@ -95,7 +96,7 @@
 		'	</label>',
 		'	<label class="item item-input" ng-if="!!vm.showName">',
 		'		<span class="input-label">Name</span>',
-		'		<input type="text" placeholder="Name" ng-model="vm.contact.displayName">',
+		'		<input type="text" placeholder="Recipient Name" ng-model="vm.contact.displayName">',
 		'		<i class="icon ion-ios-person"></i>',
 		'	</label>',
 		'   <label class="item item-input item-stacked-label multiline" ng-if="!!vm.showMessage">',

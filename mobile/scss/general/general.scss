@@ -298,8 +298,19 @@ textarea{
     background-color: $light;
 
     &:last-child{
-      align-items: stretch;
-      border-bottom: 1px;
+      //align-items: stretch;
+      border-bottom-style: solid; 
+      border-bottom-width: 1px;
+    }
+    
+    input, textarea {
+      background-color: transparent;
+      font-size:14px;
+      color: $content-body-text;
+      ::-webkit-input-placeholder {
+        color: $ribbon-bg;
+      }
+      line-height: 22px;
     }
 
     input{
