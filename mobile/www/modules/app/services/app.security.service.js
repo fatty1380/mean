@@ -5,9 +5,9 @@
         .module(AppConfig.appModuleName)
         .service('securityService', securityService);
 
-    securityService.$inject = ['$rootScope', 'timerService', 'userService', '$window', '$q'];
+    securityService.$inject = ['$rootScope', 'timerService', 'userService', 'StorageService', '$q'];
 
-    function securityService($rootScope, timerService, userService, $window, $q) {
+    function securityService($rootScope, timerService, userService, StorageService, $q) {
 
         var PIN;
         var state = {
@@ -61,7 +61,7 @@
         function setPin(pin) {
             PIN = pin;
             userService.updateUserProps({ pin: pin });
-            $window.localStorage.setItem('lockbox_pin', pin)
+            StorageService.set('lockbox_pin', pin)
         }
 
         function getPin() {
@@ -92,7 +92,7 @@
             timerService.cancelTimer('security-timer');
             state.accessible = false;
             state.initialized = false;
-            $window.localStorage.removeItem('lockbox_pin');
+            StorageService.remove('lockbox_pin');
             PIN = null;
         }
     }

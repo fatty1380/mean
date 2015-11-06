@@ -18,6 +18,13 @@
         vm.getAvatar = getAvatar;
         vm.updateUserProps = updateUserProps;
         
+        Object.defineProperty(vm, 'userId', {
+            enumerable: true,
+            get: function () {
+                return _.isEmpty(vm.profileData) ? null : vm.profileData.id;
+            }
+        });
+        
         //////////////////////////////////////////////////////////////////////////
         
         function signOut() {
@@ -27,7 +34,7 @@
                 }
             )
         }
-
+        
         function getUserData() {
             if (!vm.profileData || !vm.profileData.id) {
                 return registerService.me()

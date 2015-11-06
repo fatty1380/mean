@@ -28,8 +28,12 @@
         $scope.$on("$ionicView.beforeEnter", function () {
             console.log('Reactivate Lockbox Controller');
             
+            if (documents === -1) {
+                console.log('docs equals negative 1 - fail1')
+                return;
+            }
+            
             init();
-
         });
 
         $rootScope.$on("clear", function () {

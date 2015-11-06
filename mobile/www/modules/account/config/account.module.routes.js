@@ -112,15 +112,18 @@
                                 function (lockboxDocuments, user, $ionicLoading) {
 
                                     $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading documents', delay: 500, duration: 10000 });
+                                    
                                     return lockboxDocuments.getFilesByUserId(user.id)
                                         .then(function (data) {
+                                            console.log('returning lockbox doc loaded from device');
                                             return data;
                                         })
                                         .catch(function (err) {
-                                            console.warn('Couldn\'t retrieve documents err --->>>', err);
+                                            console.error('Couldn\'t retrieve documents err --->>>', err);
                                             
                                             if (/no access/i.test(err)) {
-                                                return null;
+                                                debugger;
+                                                return -1; // $q.reject(err);
                                             }
                                             
                                             return lockboxDocuments.getDocuments(true, { redirect: true });

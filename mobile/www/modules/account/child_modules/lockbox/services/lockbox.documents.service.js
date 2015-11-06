@@ -144,6 +144,12 @@
                     return vm.documents;
                 })
                 .catch(function (result) {
+                    if (/No Access/i.test(result)) {
+                        console.error('no access to docs');
+                        
+                        return $q.reject(result);
+                    }
+                    
                     console.error('Error getting docs: ', result);
                     return vm.documents;
                 })
@@ -198,7 +204,8 @@
                 })
                 .catch(function (err) {
                     if (!!hasLockbox) {
-                        return $q.when(getDocuments(true));
+                        console.log('getFilesByUserId : calling getDocuments')
+                        return $q.when(getDocuments(true, { redirect: true }));
                     } else {
                         return $cordovaFile.createDir(path, "lockbox", false).then(function () {
                             return $q.when(getDocuments(true));
@@ -416,6 +423,7 @@
 
             return $cordovaFile.checkDir(path, user)
                 .then(function (path) {
+                    console.log('Lockbox: Removing Documents for User ' + user);
                     return $cordovaFile.removeRecursively(path, user)
                 }, function (err) {
                     return $q.reject(err)
@@ -661,8 +669,8 @@
         .module('lockbox')
         .factory('lockboxSecurity', lockboxSecurity);
 
-    lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', '$ionicLoading', '$q', 'securityService'];
-    function lockboxSecurity($rootScope, $state, $ionicPopup, $ionicLoading, $q, securityService) {
+    lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', '$ionicLoading', '$q', '$timeout', 'securityService'];
+    function lockboxSecurity($rootScope, $state, $ionicPopup, $ionicLoading, $q, $timeout, securityService) {
 
         return {
             checkAccess: checkAccess
@@ -719,10 +727,12 @@
                 })
                 .then(function (accessGranted) {
                     if (!accessGranted && options.redirect) {
-                        console.log('Access not granted - redirecting to profile');
-                        debugger;
-                        $state.go('account.profile');
-                        return false;
+                        //debugger;
+                        
+                        $timeout(function () {
+                            console.log('No access ... Redirecting to account profile');
+                            $state.go('account.profile');
+                        }, 100);
                     }
 
                     return !!accessGranted;
