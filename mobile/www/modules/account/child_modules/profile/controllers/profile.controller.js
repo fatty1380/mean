@@ -5,9 +5,14 @@
         .module('account')
         .controller('ProfileCtrl', ProfileCtrl);
 
-    ProfileCtrl.$inject = ['$rootScope', 'updateService', 'appCache', '$state', 'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService', 'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
+    ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state',
+        'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService',
+        'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
-    function ProfileCtrl($rootScope, updateService, appCache, $state, activityService, reviewService, $ionicLoading, experienceService, utilsService, friendsService, avatarService, profileModalsService, cameraService, user, profile) {
+    function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state,
+        activityService, reviewService, $ionicLoading, experienceService, utilsService,
+        friendsService, avatarService, profileModalsService, cameraService, user, profile) {
+            
         var vm = this;
 
         console.log('Loading $state: `%s`', $state.current.name);
@@ -61,7 +66,13 @@
         $scope.$on('$ioncView.unloaded', function (event) {
             destroy();
         });
+        
+        //
+        
+        vm.welcomeExperience = JSON.parse(StorageService.get('welcome.experience')) || !_.isEmpty(vm.user.experience);
         vm.welcomeReview = true;
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////
 
         function showFriends() {
             console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
@@ -140,7 +151,7 @@
                     to: friend.id,
                     text: 'Hi there! I want to add you to my friend list!'
                 };
-                
+
                 friendsService
                     .createRequest(requestData)
                     .then(function (createdRequestResp) {
@@ -277,6 +288,13 @@
             }
         }
 
+        vm.showExperienceTab = function () {
+            if (vm.canEdit && !vm.welcomeExperience) {
+                vm.welcomeExperience = 'true';
+                StorageService.set('welcome.experience', 'true');
+            }
+        }
+        
         vm.getReviewBadge = function () {
             if (vm.canEdit) {
 
@@ -287,6 +305,14 @@
                 if (!vm.welcomeReview) {
                     return '+'
                 }
+            }
+
+            return null;
+        }
+
+        vm.getExperienceBadge = function () {
+            if (vm.canEdit && !vm.welcomeExperience) {
+                return '+';
             }
 
             return null;

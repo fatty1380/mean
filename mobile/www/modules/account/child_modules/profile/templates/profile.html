@@ -140,8 +140,11 @@
                 </div>
 
             </ion-tab>
-            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience" ng-class="{'has-button': !!vm.showAddExperienceModal}" class="content-pane"
-            on-select="console.log('Load Tab %s', this)" on-deselect="console.log('Leave Tab %s', this)">
+            
+            <ion-tab title="EXPERIENCE" ui-sref="account.profile.experience" 
+            ng-class="{'has-button': !!vm.showAddExperienceModal}"
+            on-select="vm.showExperienceTab()"
+            badge="vm.canEdit && vm.getExperienceBadge()" badge-style="badge-energized">
 
                 <ion-scroll class="experience-list">
                     <ion-list ng-if="vm.experience && vm.experience.length">
