@@ -12,7 +12,7 @@
         var vm = this;
         vm.handle = '';
         vm.started = '';
-        vm.employer = '';
+        vm.company = '';
         vm.owner = null;
         vm.camera = cameraService;
 
@@ -74,7 +74,7 @@
             // Set standard Properties
             registerService.userProps.started = vm.createStartedDateObject(vm.started);
             registerService.userProps.avatar = avatarService.getImage();
-            registerService.userProps.employer = vm.employer;
+            registerService.userProps.company = vm.company;
             registerService.userProps.freight = '';
             registerService.userProps.truck = '';
 

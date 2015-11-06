@@ -3,7 +3,7 @@
     <ion-header-bar align-title="center">
         <button class="button button-clear" ng-click="$ionicGoBack()">Back</button>
         <h1 class="title">Create Account</h1>
-        <button class="button button-clear" ng-click="vm.continueToProfile(false)">
+        <button class="button button-clear" ng-click="vm.continue(false)">
             Skip
         </button>
     </ion-header-bar>
@@ -39,7 +39,7 @@
 
     <ion-footer-bar>
         <div class="button-bar action-buttons">
-            <button class="button secondary"  ng-click="vm.continueToAddFriends()" type="submit">Continue</button>
+            <button class="button secondary"  ng-click="vm.continue(true)" type="submit">Continue</button>
         </div>
     </ion-footer-bar>
 

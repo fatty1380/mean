@@ -97,10 +97,12 @@
                             if (resolveContacts) {
                                 var contacts = contactsService.getContacts();
                                 if (!contacts.length) {
-                                    $ionicLoading.show({ template: 'Loading Contacts....' });
+                                    $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading Contacts...', duration: 15000 });
                                     return contactsService.retrieveContacts();
                                 }
                             }
+                            
+                            return contactsService.getContacts();
                         }
                     }
                 })

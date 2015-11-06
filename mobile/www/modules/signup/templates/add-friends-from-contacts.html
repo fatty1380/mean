@@ -1,9 +1,9 @@
 <ion-view class="friends-screen view-section min-size">
 
     <ion-header-bar>
-        <button class="button button-clear" ng-click="$ionicGoBack();">Back</button>
+        <button class="button button-clear" ng-click="vm.back()">Back</button>
         <h1 class="title">Add Friends</h1>
-        <a class="button button-clear" ng-click="vm.skipToProfile();">Skip</a>
+        <a class="button button-clear" ng-click="vm.skip();">Skip</a>
     </ion-header-bar>
 
     <ion-pane class="has-footer friends-pane">
@@ -21,6 +21,12 @@
                 </ion-checkbox>
             </div>
             <div class="button-holder text-center">
+                
+                <button class="button button-block choose-contacts-button" ng-hide="vm.contacts && vm.contacts.length"
+                 ng-click="vm.loadContacts()">
+                 Load All Contacts
+                 </button>
+                
                 <a class="button button-block button-clear manual-add" ui-sref="signup-friends-manually">
                     <i class="icon ion-ios-plus-outline"></i>
                     Add by Mobile Phone or Email

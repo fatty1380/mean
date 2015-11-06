@@ -24,7 +24,6 @@
         }
 
         function invite() {
-            
             return contactsService.addContact(vm.contact)
                 .then(function() {
                     return $state.go('signup-friends-contacts');

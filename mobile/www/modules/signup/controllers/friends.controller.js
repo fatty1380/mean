@@ -11,37 +11,35 @@
         var vm = this;
 
         vm.chooseContacts = chooseContacts;
-        vm.addManualy = addManualy;
+        vm.addManually = addManually;
         vm.skipToProfile = skipToProfile;
 
         $rootScope.$on('$stateChangeError', handleStateChangeError);
 
-        function handleStateChangeError (event, toState, toParams, fromState, fromParams, error) {
+        function handleStateChangeError(event, toState, toParams, fromState, fromParams, error) {
+            console.error('Friends Controller: Handle State Change Error', error);
             console.log('event -->', event);
             console.log('toState -->', toState);
             console.log('fromState -->', fromState);
             console.log('error -->', error);
 
-            $state.go('signup-friends-contacts');
+            if (fromState && fromState.name === 'signup-friends') {
+                $state.go('signup-friends-contacts');
+            }
         }
 
-        function chooseContacts () {
-            $state.go('signup-friends-contacts', {resolveContacts: true});
+        function chooseContacts() {
+            $state.go('signup-friends-contacts', { resolveContacts: true });
         }
 
         function skipToProfile() {
-            registerService.updateUser(registerService.userData)
-                .then(function (response) {
-                    if(response.success) {
-                        $state.go('account.profile');
-                    }
-                }, function (err) {
-                    $state.go('account.profile');
-                });
+            // No changes within the friends controller - no saving required
+            // single responsibility pattern ftw!
+            $state.go('account.profile');
         }
 
-        function addManualy() {
-            $state.go('signup-friends-contacts');
+        function addManually() {
+            $state.go('signup-friends-manually');
         }
 
     }

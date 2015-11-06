@@ -1,10 +1,9 @@
 <ion-view class="view-section compact-size">
 
-    <ion-header-bar align-title="center">
-        <ion-nav-bar>
-            <ion-nav-back-button>Back</ion-nav-back-button>
-        </ion-nav-bar>
+    <ion-header-bar align-title="center">        
+        <button class="button button-clear" ng-click="vm.cancel()">Cancel</button>
         <h1 class="title">Add Friends</h1>
+        <a class="button button-clear" ng-disabled="!vm.contact.phone && !vm.contact.email" ng-click="vm.skip();">Invite</a>
     </ion-header-bar>
 
     <div class="bar bar-subheader">

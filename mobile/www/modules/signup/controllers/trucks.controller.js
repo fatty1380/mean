@@ -5,16 +5,16 @@
         .module('signup')
         .controller('TrucksCtrl', TrucksCtrl)
 
-    TrucksCtrl.$inject = ['$scope','$state','registerService', '$ionicPopup'];
-    
-    function TrucksCtrl($scope, $state, registerService, $ionicPopup ) {
+    TrucksCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading'];
+
+    function TrucksCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading) {
         var TRUCKS = [
-            {name: 'Peterbilt', logoClass: 'ico ico-peterbilt-logo'},
-            {name: 'International', logoClass: 'ico ico-international-logo'},
-            {name: 'Freightliner', logoClass: 'ico ico-freightliner-logo'},
-            {name: 'Mack Trucks', logoClass: 'ico ico-mack-logo'},
-            {name: 'Kenworth', logoClass: 'ico ico-kenworth-logo'},
-            {name: 'Volvo', logoClass: 'ico ico-volvo-logo'}
+            { name: 'Peterbilt', logoClass: 'ico ico-peterbilt-logo' },
+            { name: 'International', logoClass: 'ico ico-international-logo' },
+            { name: 'Freightliner', logoClass: 'ico ico-freightliner-logo' },
+            { name: 'Mack Trucks', logoClass: 'ico ico-mack-logo' },
+            { name: 'Kenworth', logoClass: 'ico ico-kenworth-logo' },
+            { name: 'Volvo', logoClass: 'ico ico-volvo-logo' }
         ];
 
         var vm = this;
@@ -44,10 +44,11 @@
                             if (!vm.newTruck) {
                                 e.preventDefault();
                             } else {
-                                vm.trucks.push({name: vm.newTruck, logoClass: ''});
+                                vm.trucks.push({ name: vm.newTruck, logoClass: '' });
                                 vm.currentTruck = vm.newTruck;
                                 vm.newTruck = '';
-                                return vm.newTruck;
+                                debugger;
+                                return vm.currentTruck;
                             }
                         }
                     }
@@ -58,8 +59,25 @@
         function continueToTrailers(isSave) {
             if (isSave) {
                 registerService.userProps.truck = vm.currentTruck;
+                $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Saving', delay: 500, duration: 5000 });
+
+                registerService.updateUserProps({ truck: vm.currentTruck })
+                    .then(function (response) {
+                        if (response.success) {
+                            console.log('Trucks: Saved Successfully', response.message);
+                        } else {
+                            console.error('Trucks: Save Failed', response.message);
+                        }
+
+                        $state.go('signup-trailers');
+                    })
+                    .finally(function () {
+                        $ionicLoading.hide();
+                    });
+
+            } else {
+                $state.go('signup-trailers');
             }
-            $state.go('signup-trailers');
         }
 
         function getTrucks() {

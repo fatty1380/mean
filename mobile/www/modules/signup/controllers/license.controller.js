@@ -54,10 +54,10 @@
     }
 
     angular
-        .module('profile')
-        .controller('ProfileEditLicenseCtrl', LicenseCtrl);
+        .module('signup')
+        .controller('ProfileEditLicenseCtrl', LicenseProfileCtrl);
 
-    LicenseCtrl.$inject = ['userService', '$ionicLoading'];
+    LicenseProfileCtrl.$inject = ['userService', '$ionicLoading'];
     function LicenseProfileCtrl(userService, $ionicLoading) {
         var vm = this;
 
@@ -81,7 +81,7 @@
 
             if (!_.isEmpty(license)) {
                 vm.class = license.class;
-                vm.endorsements = license.endorsements;
+                vm.endorsement = mapEndorsementKeys(license.endorsements);
             }
         }
 
@@ -100,7 +100,8 @@
 
             userService.updateUserData(obj).then(
                 function success(response) {
-                    vm.closeModal(response);
+                    debugger;
+                    vm.closeModal(response.license);
                     $ionicLoading.hide();
                 },
                 function fail(err) {
@@ -109,8 +110,7 @@
                         duration: 2000
                     });
                     console.error(err, 'Failed to update License');
-                }
-                )
+                });
         }
     }
     
@@ -126,6 +126,16 @@
             }
         }
         return keys;
+    }
+    
+    function mapEndorsementKeys(keys) {
+        var endorsements = _.clone(endorsementStub);
+        _.each(keys, function (key) {
+            debugger;
+            endorsements[key] = true;
+        });
+        
+        return endorsements;
     }
 
     var endorsementStub = {

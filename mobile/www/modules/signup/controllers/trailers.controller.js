@@ -10,28 +10,9 @@
     function TrailersCtrl($scope, $state, registerService, $ionicLoading, $ionicPopup) {
         var vm = this;
         vm.newTrailer = '';
-        var TRAILERS = [
-            {name:'Box', checked:false},
-            {name:'Car Carrier', checked:false},
-            {name:'Curtain Sider', checked:false} ,
-            {name:'Drop Deck', checked:false},
-            {name:'Double Decker', checked:false},
-            {name:'Dry Bulk', checked:false},
-            {name:'Dump Truck', checked:false},
-            {name:'Flatbed', checked:false},
-            {name:'Hopper Bottom', checked:false},
-            {name:'Live Bottom', checked:false},
-            {name:'Livestock', checked:false},
-            {name:'Lowboy', checked:false},
-            {name:'Refrigerator Trailer', checked:false},
-            {name:'Refrigerator Tank', checked:false},
-            {name:'Sidelifter', checked:false},
-            {name:'Tank', checked:false}
-        ];
 
         vm.addTrailer = addTrailer;
-        vm.continueToProfile = continueToProfile;
-        vm.continueToAddFriends = continueToAddFriends;
+        vm.continue = goNext;
         vm.trailers = getTrailers();
 
         function addTrailer() {
@@ -49,11 +30,11 @@
                     {
                         text: 'Save',
                         type: 'button-positive',
-                        onTap: function(e) {
+                        onTap: function (e) {
                             if (!vm.newTrailer) {
                                 e.preventDefault();
                             } else {
-                                vm.trailers.push({name:vm.newTrailer, checked:true});
+                                vm.trailers.push({ name: vm.newTrailer, checked: true });
                                 vm.newTrailer = '';
                                 return vm.newTrailer;
                             }
@@ -63,25 +44,27 @@
             });
         }
 
-        function continueToAddFriends() {
-            registerService.userProps.trailer = getNameKeys(vm.trailers);
-            $state.go('signup-friends');
-        }
-
-        function continueToProfile(isSave) {
-            if(isSave){
+        function goNext(isSave) {
+            if (isSave) {
                 registerService.userProps.trailer = getNameKeys(vm.trailers);
+                $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Saving', delay: 500, duration: 5000 });
+
+                return registerService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
+                    .then(function (response) {
+                        if (response.success) {
+                            console.log('Trailers: Saved Successfully', response.message);
+                        } else {
+                            console.error('Trailers: Save Failed', response.message);
+                        }
+
+                        $state.go('signup-friends');
+                    })
+                    .finally(function () {
+                        $ionicLoading.hide();
+                    });
             }
 
-           registerService.updateUser(registerService.userData)
-           .then(function (response) {
-                $ionicLoading.hide();
-                if(response.success) {
-                    $state.go('account.profile');
-                }else{
-                    showPopup(JSON.stringify(response));
-                }
-            });
+            $state.go('signup-friends');
         }
 
         function getNameKeys(obj) {
@@ -101,11 +84,30 @@
                 title: response.title || 'title',
                 template: response || 'no message'
             });
-            alertPopup.then(function (res) {});
+            alertPopup.then(function (res) { });
         }
 
         function getTrailers() {
             return TRAILERS;
         }
     };
+
+    var TRAILERS = [
+        { name: 'Box', checked: false },
+        { name: 'Car Carrier', checked: false },
+        { name: 'Curtain Sider', checked: false },
+        { name: 'Drop Deck', checked: false },
+        { name: 'Double Decker', checked: false },
+        { name: 'Dry Bulk', checked: false },
+        { name: 'Dump Truck', checked: false },
+        { name: 'Flatbed', checked: false },
+        { name: 'Hopper Bottom', checked: false },
+        { name: 'Live Bottom', checked: false },
+        { name: 'Livestock', checked: false },
+        { name: 'Lowboy', checked: false },
+        { name: 'Refrigerator Trailer', checked: false },
+        { name: 'Refrigerator Tank', checked: false },
+        { name: 'Sidelifter', checked: false },
+        { name: 'Tank', checked: false }
+    ];
 })();
