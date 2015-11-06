@@ -13,11 +13,11 @@
         if (!userService.profileData) {
             return $state.go('home');
         }
-        
+
         vm.profileData = userService.profileData;
         vm.profileData.props = vm.profileData.props || {};
         vm.profileData.profileImageURL = userService.getAvatar(vm.profileData);
-        
+
         vm.owner = vm.profileData.props.owner;
         vm.started = getFormattedDate(vm.profileData.props.started);
 
@@ -29,22 +29,22 @@
         vm.updateTrailers = updateTrailers;
         vm.updateTrucks = updateTrucks;
 
-        function updateTrailers (trailers) {
-            if(!trailers) return;
+        function updateTrailers(trailers) {
+            if (!trailers) return;
             vm.profileData.props.trailer = trailers;
         }
 
-        function updateTrucks (truck) {
-            if(!truck) return;
+        function updateTrucks(truck) {
+            if (!truck) return;
             vm.profileData.props.truck = truck;
         }
 
-        function showProfileEditTrailersModal () {
+        function showProfileEditTrailersModal() {
             trailerService
                 .getTrailers()
                 .then(function (trailers) {
                     profileModalsService
-                        .showProfileEditTrailersModal({trailers: trailers})
+                        .showProfileEditTrailersModal({ trailers: trailers })
                         .then(function (trailers) {
                             if (!_.isUndefined(trailers)) {
                                 vm.updateTrailers(trailers);
@@ -53,12 +53,12 @@
                 });
         }
 
-        function showProfileEditTrucksModal () {
+        function showProfileEditTrucksModal() {
             truckService
                 .getTrucks()
                 .then(function (trucks) {
                     profileModalsService
-                        .showProfileEditTrucksModal({trucks: trucks})
+                        .showProfileEditTrucksModal({ trucks: trucks })
                         .then(function (truck) {
                             if (!_.isUndefined(truck)) {
                                 vm.updateTrucks(truck);
@@ -84,7 +84,7 @@
             e.preventDefault();
             console.warn(' form --->>>', form);
 
-            if(form.$valid){
+            if (form.$valid) {
                 // Update the started date
                 if (vm.owner !== null) vm.profileData.props.owner = vm.owner;
 
@@ -95,19 +95,20 @@
                 console.log('Saving user data: ', vm.profileData);
                 return userService.updateUserData(vm.profileData)
                     .then(function (success) {
-                        if(success.id){
+                        if (success.id) {
+                            debugger;
                             vm.closeModal(success);
-                        }else{
-                            $ionicPopup.alert({title: 'Error', template: 'Profile wasn\'t updated'});
-                            vm.closeModal(null);
+                        } else {
+                            $ionicPopup.alert({ title: 'Error', template: 'Profile wasn\'t updated' });
+                            //vm.closeModal(null);
                         }
                     });
-            }else{
-                $ionicPopup.alert({title: 'Error', template: 'Please, enter all required fields.'});
+            } else {
+                $ionicPopup.alert({ title: 'Error', template: 'Please, enter all required fields.' });
             }
         }
 
-        function logout () {
+        function logout() {
             userService
                 .signOut()
                 .then(function (data) {
@@ -115,7 +116,7 @@
                     tokenService.set('refresh_token', '');
                     tokenService.set('token_type', '');
 
-                    vm.cancel();
+                    vm.cancelModal('logout');
 
                     //clear controllers data
                     $rootScope.$broadcast("clear");
