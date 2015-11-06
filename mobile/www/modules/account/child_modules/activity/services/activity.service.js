@@ -55,12 +55,12 @@
             activity: {
                 feedSource: 'activity',
                 buttonName: 'My Logs',
-                loadingText: '<ion-spinner></ion-spinner><br>Loading My Logs'
+                loadingText: 'Loading My Logs'
             },
             items: {
                 feedSource: 'items',
                 buttonName: 'Activity',
-                loadingText: '<ion-spinner></ion-spinner><br>Loading Activity Feed'
+                loadingText: 'Loading Activity Feed'
             }
         }
         
