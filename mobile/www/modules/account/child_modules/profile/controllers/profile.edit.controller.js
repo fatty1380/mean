@@ -86,8 +86,11 @@
 
             if(form.$valid){
                 // Update the started date
-                if(vm.owner !== null) vm.profileData.props.owner = vm.owner;
-                vm.profileData.props.started = vm.started;
+                if (vm.owner !== null) vm.profileData.props.owner = vm.owner;
+
+                if (/\d{4,4}-\d{2,2}/.test(vm.started)) {
+                    vm.profileData.props.started = vm.started;
+                }
 
                 console.log('Saving user data: ', vm.profileData);
                 return userService.updateUserData(vm.profileData)
