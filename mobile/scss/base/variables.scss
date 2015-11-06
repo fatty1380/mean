@@ -2,7 +2,6 @@
 $ionicons-font-path: "../../lib/ionic/release/fonts" !default;
 
 /** SASS Color Variables **/
-$action-icon: #dc9647;
 $icon-blue: #cfedff;
 $badge-green: #206B89;
 $ribbon-bg: #4d4951;
@@ -25,16 +24,16 @@ $brand-bg: $brand-blue;
 
 $light:                           #fff !default;
 $stable:                          #f8f8f8 !default;
-$positive:                        $badge-green !default; //#387ef5 !default;
+$positive:                        #206B89 !default; //#387ef5 !default;
 $calm:                            $tab-selected !default; //#11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       $action-icon !default;
+$balanced:                        #3EAEB1 !default;
+$energized:                       #dc9647 !default;
 $assertive:                       $danger !default; // #ef473a !default;
 $royal:                           #886aea !default;
 $dark:                            #444 !default;
 
 /** Outset Context specific variables **/
-$modal-primary-bg: $badge-green;
+$modal-primary-bg: $positive;
 $modal-primary-text: $light;
 $modal-secondary-bg: $light;
 $modal-secondary-text: #858585;

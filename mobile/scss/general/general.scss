@@ -209,7 +209,7 @@ textarea{
   
   a {
     text-decoration: none;
-    color: $action-icon;
+    color: $energized;
   }
 }
 
@@ -219,7 +219,7 @@ textarea{
   &:after { content : ":"; }
   .ico,
   .icon{
-    color: $badge-green;
+    color: $positive;
     height: 15px;
     margin-right: 5px;
   }
@@ -231,7 +231,7 @@ textarea{
   text-align: right;
 
   /* BODY ICON/BADGE: */
-  color: $badge-green;
+  color: $positive;
   height: 32px;
   margin-left: 5px;
 }

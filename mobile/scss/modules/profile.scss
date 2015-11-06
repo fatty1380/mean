@@ -130,7 +130,7 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
 }
 
 .profile-handle {
-  color: $action-icon;
+  color: $energized;
 }
 
 .profile-tabs{
@@ -332,7 +332,7 @@ $profile-subheader-height : $bar-midsize-height - $bar-height - 20px;
           display: inline-block;
         font-size: 0.85em;
         text-transform: uppercase;
-        color: $badge-green;
+        color: $positive;
       }
     }
     
