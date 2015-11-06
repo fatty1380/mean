@@ -66,13 +66,13 @@
                         });
                 });
         }
-        
+
         function showProfileEditLicenseModal() {
-            profileModalsService.showProfileEditLicenseModal({ license: vm.profileData.license })
-                .then(function success(result) {
-                    debugger;
-                    console.log('Updated License to ', result);
-                    vm.profileData.license = result;
+            profileModalsService
+                .showProfileEditLicenseModal({ license: vm.profileData.license })
+                .then(function success(license) {
+                    console.log('Updated License to ', license);
+                    vm.profileData.license = license;
                 });
         }
 

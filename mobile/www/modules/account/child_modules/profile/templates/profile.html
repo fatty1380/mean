@@ -110,7 +110,9 @@
                     </div>
                     <div class="item endorsements-row">
                         <span class="item-label">ENDORSEMENTS:</span>
-                        <ul class="endorsements-list">
+                        <!--<i class="ico extra-small-size {{'ico-license' + vm.profileData.license.class.toLowerCase() + 'active' }}"></i>-->
+                        <ul class="endorsements-list" ng-click="vm.showEndorsements()">
+                            <li ng-if="vm.profileData.license.class" class="license"><span class="ltxt">{{vm.profileData.license.class}}</span></li>
                             <li ng-repeat="endorsement in vm.profileData.license.endorsements">
                                 <i class="ico extra-small-size {{ vm.endorsementsMap[endorsement].ico}}"></i>
                             </li>

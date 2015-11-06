@@ -386,6 +386,24 @@ $photo-dimension : $profile-subheader-height * 1.1;
     width: 36px;
     padding: 0 0 5px 5px;
     display: inline-block;
+    
+    &.license {
+      border: 1px solid darken($positive, 10%);
+      font-weight: 800;
+      border-radius: 50%;
+      background-color: $positive;
+      color: $light;
+      height: 30px;
+      width: 30px !important;
+      text-align: center;
+      padding-left: 0;
+      
+      .ltxt {
+        position: relative;
+        left: -0.5px;
+        top: -1px;
+      }
+    }
 
     .ico{
       width: 31px;

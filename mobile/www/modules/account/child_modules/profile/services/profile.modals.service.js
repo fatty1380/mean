@@ -100,7 +100,7 @@
         }
 
         function showProfileEditLicenseModal (parameters, options) {
-            templateUrl = 'modules/signup/templates/license.html';
+            templateUrl = 'modules/signup/templates/license.modal.html';
             controller = 'ProfileEditLicenseCtrl as vm';
             params = parameters || {};
             options = angular.extend({}, defaultOptions, options);

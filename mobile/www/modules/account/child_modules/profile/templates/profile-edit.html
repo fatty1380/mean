@@ -65,6 +65,14 @@
                         <span class="input-label">License</span>
                         <button class="button button-small" ng-click="vm.editLicense();">edit</button>
                     </div>
+                    <div ng-if="vm.profileData.license">
+                        <span ng-if="vm.profileData.license.class">Class {{vm.profileData.license.class}} License. </span>
+                        <span ng-if="vm.profileData.license.endorsements.length">Endorsements
+                            <span ng-repeat="code in vm.profileData.license.endorsements">
+                                {{code}}<span ng-if="!$last">,</span>
+                            </span>
+                        </span>
+                    </div>
                 </div>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Driving Since</span>

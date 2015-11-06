@@ -23,6 +23,7 @@
 
         vm.canEdit = vm.profileData && vm.user ? vm.profileData.id === vm.user.id : false;
 
+        vm.showEndorsements = showEndorsements;
         vm.showFriends = showFriends;
         vm.openChat = openChat;
         vm.friendStatus = null;
@@ -42,6 +43,29 @@
         function showFriends() {
             console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends', { userId: profile && profile.id });
+        }
+
+        function showEndorsements() {
+
+            if (_.isEmpty(vm.profileData.license) ||
+                _.isEmpty(vm.profileData.license.class) && _.isEmpty(vm.profileData.license.endorsements)) {
+                return;
+            }
+
+            var title = !!vm.profileData.license.class ? '<h3>Class ' + vm.profileData.license.class + '</h3>' : '<h3>License</h3>';
+
+            var listItems = _.map(vm.profileData.license.endorsements,
+                function (e) {
+                    return '<li>' + vm.endorsementsMap[e].title + '</li>';
+                })
+
+            var endorsements = '<ul>' + listItems.join('') + '</ul>';
+
+            $ionicLoading.show({
+                template: title + endorsements,
+                duration: 2000,
+                noBackdrop: true
+            });
         }
 
         if (!vm.canEdit) {
