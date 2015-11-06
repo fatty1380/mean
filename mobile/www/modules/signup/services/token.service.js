@@ -52,7 +52,7 @@
 
     function LoadingService($ionicLoading, userService) {
         
-        var spinner = '<ion-spinner></ion-spinner>';
+        var spinner = '<ion-spinner class="spinner-stable"></ion-spinner>';
         var success = '<i class="icon ion-checkmark"></i>';
         var failure = '<i class="icon ion-close"></i>';
         var alert = '<i class="icon ion-alert"></i>';
@@ -65,42 +65,43 @@
         return {
             showLoader: function (text, options) {
                 var template = { 
-                    template: spinner + (!!text ? '<br><p>' + text + '</p>' : '')
+                    template: spinner + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
-                options = _.defaults(ld, template, options);
+                options = _.extend({}, ld, template, options);
                 
                 return $ionicLoading.show(options);
             },
             showSuccess: function (text, options) {
                 var template = { 
-                    template: success + (!!text ? '<br><p>' + text + '</p>' : '')
+                    template: success + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
-                options = _.defaults(sd, template, options);
+                options = _.extend({}, sd, template, options);
                 
                 return $ionicLoading.show(options);
             },
             showFailure: function (text, options) {
+                text = text || 'Sorry, an error occurred';
                 var template = { 
-                    template: failure + (!!text ? '<br><p>' + text + '</p>' : 'Sorry, an error occurred')
+                    template: failure + '<h4>' + text + '</h4>'
                 };
-                options = _.defaults(fd, template, options);
+                options = _.extend({}, fd, template, options);
                 
                 return $ionicLoading.show(options);
             },
             showAlert: function (text, options) {
                 var template = { 
-                    template: alert + (!!text ? '<br><p>' + text + '</p>' : '')
+                    template: alert + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
-                options = _.defaults(dd, template, options);
+                options = _.extend({}, dd, template, options);
                 
                 return $ionicLoading.show(options);
             },
             showIcon: function (text, icon, options) {
                 var template = { 
                     template: '<i class="icon ' + icon + '"></i>'
-                    + (!!text ? '<br><p>' + text + '</p>' : '')
+                    + (!!text ? '<h4>' + text + '</h4>' : '')
                 };
-                options = _.defaults(dd, template, { duration: 1300 }, options);
+                options = _.extend({}, dd, template, { duration: 1300 }, options);
                 
                 return $ionicLoading.show(options);
             },
@@ -110,7 +111,7 @@
                 var template = { 
                     template: text || success
                 };
-                options = _.defaults(dd, template, options);
+                options = _.extend({}, dd, template, options);
                 
                 return $ionicLoading.show(options);
             },

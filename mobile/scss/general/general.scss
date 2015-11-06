@@ -368,6 +368,15 @@ textarea{
   }
 }
 
+.loading-container .loading {
+  padding-bottom: $loading-padding/2;
+  
+  i {
+    font-size: 2em;
+  }
+  
+}
+
 .toggle-block{
   border:solid #ddd;
   padding: 12px 16px;
