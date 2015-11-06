@@ -173,7 +173,7 @@
                 function (result) {
                     LoadingService.hide();
                     console.log(result);
-                    vm.close(result);
+                    vm.closeModal(result);
                 });
         }
 
