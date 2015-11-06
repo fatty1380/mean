@@ -5,9 +5,9 @@
         .module('account')
         .controller('LockboxOrderReportsCtrl', LockboxOrderReportsCtrl);
 
-    LockboxOrderReportsCtrl.$inject = ['$window', 'settings', '$ionicLoading', 'API'];
+    LockboxOrderReportsCtrl.$inject = ['$window', 'settings', 'LoadingService', 'API'];
 
-    function LockboxOrderReportsCtrl($window, settings, $ionicLoading, API) {
+    function LockboxOrderReportsCtrl($window, settings, LoadingService, API) {
         var vm = this;
         vm.orderNow = orderNow;
         vm.remindLater = remindLater;
@@ -21,13 +21,13 @@
         function remindLater () {
             vm.sendRequest()
                 .then(function (response) {
-                    $ionicLoading.show({ template: 'Reminder Sent', duration: 2000 });
+                    LoadingService.showSuccess('Reminder Sent');
 
                     vm.closeModal(response);
 
                 }, function (err) {
                     console.error('Unable to request reminder', err);
-                    $ionicLoading.show({ template: '<h3>Sorry</h3>Unable to Send Reminder<br> at this time', duration: 2000 });
+                    LoadingService.showFailure('Sorry, Unable to Send Reminder');
                 });
         }
 

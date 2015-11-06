@@ -5,9 +5,9 @@
         .module('account')
         .controller('ManualFriendsAddCtrl', ManualFriendsAddCtrl);
 
-    ManualFriendsAddCtrl.$inject = ['$scope', '$state', 'contactsService', '$ionicScrollDelegate', '$ionicLoading'];
+    ManualFriendsAddCtrl.$inject = ['$scope', '$state', 'contactsService', '$ionicScrollDelegate', 'LoadingService'];
 
-    function ManualFriendsAddCtrl($scope, $state, contactsService, $ionicScrollDelegate, $ionicLoading) {
+    function ManualFriendsAddCtrl($scope, $state, contactsService, $ionicScrollDelegate, LoadingService) {
         var vm = this;
 
         vm.contact = {};
@@ -19,7 +19,7 @@
         /////////////////////////////
         
         function initialize() {
-            $ionicLoading.hide();
+            LoadingService.hide();
         }
 
         function addFriend() {

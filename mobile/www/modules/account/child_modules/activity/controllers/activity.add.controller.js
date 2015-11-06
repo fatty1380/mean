@@ -1,16 +1,16 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('activity')
         .controller('ActivityAddCtrl', ActivityAddCtrl);
 
-    ActivityAddCtrl.$inject = ['$scope', 'activityService', 'parameters', '$filter', '$ionicLoading', '$ionicPopup', '$ionicPlatform'];
+    ActivityAddCtrl.$inject = ['$scope', 'activityService', 'parameters', '$filter', 'LoadingService', '$ionicPopup', '$ionicPlatform'];
 
-    function ActivityAddCtrl($scope, activityService, parameters, $filter, $ionicLoading, $ionicPopup, $ionicPlatform) {
+    function ActivityAddCtrl($scope, activityService, parameters, $filter, LoadingService, $ionicPopup, $ionicPlatform) {
         angular.element(document).ready(
             getCurrentPosition
-        );
+            );
 
         var vm = this;
         var myCoordinates = null;
@@ -23,16 +23,16 @@
         console.warn(' user --->>>', user);
 
         vm.activity = {
-            title : '',
-            notes : '',
-            location : {
+            title: '',
+            notes: '',
+            location: {
                 placeName: '',
                 placeId: '',
                 type: 'Point',
                 coordinates: [],
                 created: ''
             },
-            props:{
+            props: {
                 avatar: user.profileImageURL,  /// TODO: WRONG - Use Cache Service
                 handle: user.handle,        /// WRONG
                 freight: '',
@@ -45,8 +45,8 @@
         vm.close = close;
         vm.mapIsVisible = true;
 
-        $scope.$watch('vm.where', function() {
-            if(vm.where) {
+        $scope.$watch('vm.where', function () {
+            if (vm.where) {
                 vm.activity.location.placeName = vm.where.formatted_address;
                 vm.activity.location.placeId = vm.where.place_id;
                 setMarkerPosition();
@@ -57,33 +57,27 @@
          * @desc geocode current position
          */
         function getCurrentPosition() {
-            if(navigator.geolocation) {
-                $ionicPlatform.ready(function() {
-                    $ionicLoading.show({
-                        template: 'checking 20',
-                        duration: 10000
-                    });
-                    var posOptions = {timeout: 10000, enableHighAccuracy: false};
+            if (navigator.geolocation) {
+                $ionicPlatform.ready(function () {
+                    LoadingService.showLoader('Checking 20');
+                    var posOptions = { timeout: 10000, enableHighAccuracy: false };
 
-                    var onSuccess = function(position) {
+                    var onSuccess = function (position) {
                         console.log('*** sucess ***');
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                         var lat = position.coords.latitude;
                         var long = position.coords.longitude;
                         myCoordinates = new google.maps.LatLng(lat, long);
                         vm.activity.location.coordinates = [lat, long];
-                        console.log($ionicLoading);
+                        console.log(LoadingService);
                         initMap();
                     };
                     function onError(error) {
                         console.log('*** error ***');
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                         //show only 1 error message
-                        if(vm.mapIsVisible) {
-                            $ionicLoading.show({
-                                template: '10-7' ,
-                                duration: 1000
-                            });
+                        if (vm.mapIsVisible) {
+                            LoadingService.showAlert('10-7', { duration: 1000 });
                             vm.mapIsVisible = false;
                         }
                     }
@@ -99,9 +93,9 @@
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 8,
                 center: myCoordinates,
-                draggable:true,
+                draggable: true,
                 sensor: true,
-                zoomControl:true,
+                zoomControl: true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
             marker = new google.maps.Marker({
@@ -113,23 +107,23 @@
 
             vm.mapIsVisible = true;
 
-            google.maps.event.addDomListener(map, 'click', function(e) {
+            google.maps.event.addDomListener(map, 'click', function (e) {
                 var myLatLng = e.latLng;
-                var latlng = { lat:  myLatLng.lat(), lng: myLatLng.lng() };
+                var latlng = { lat: myLatLng.lat(), lng: myLatLng.lng() };
                 activityService.getPlaceName(latlng)
-                    .then(function(result) {
+                    .then(function (result) {
                         vm.where = result;
                     });
                 clickCoordinates = latlng;
             });
 
             infoWindow = new google.maps.InfoWindow({
-                content:  ''
+                content: ''
             });
 
             //get location name after init
             activityService.getPlaceName(myCoordinates)
-                .then(function(result) {
+                .then(function (result) {
                     vm.where = result;
                 });
         }
@@ -138,9 +132,9 @@
          * @desc set marker position
          */
         function setMarkerPosition() {
-            var location = { lat:  vm.where.geometry.location.lat(), lng: vm.where.geometry.location.lng() };
+            var location = { lat: vm.where.geometry.location.lat(), lng: vm.where.geometry.location.lng() };
             //click coordinates more accurate than geocoded by place coordinates
-            var position = (clickCoordinates) ? clickCoordinates : location ;
+            var position = (clickCoordinates) ? clickCoordinates : location;
             vm.activity.location.coordinates = [position.lat, position.lng];
             marker.setPosition(position);
             infoWindow.setContent(vm.where.formatted_address)
@@ -155,38 +149,32 @@
          */
         function setDistanceFromLastPost(position) {
             var lastActivity = activityService.getLastActivityWithCoord();
-            if(lastActivity) {
+            if (lastActivity) {
                 var startPos = new google.maps.LatLng(lastActivity.location.coordinates[0], lastActivity.location.coordinates[1]);
-                var endPos =  new google.maps.LatLng(position.lat, position.lng);
+                var endPos = new google.maps.LatLng(position.lat, position.lng);
                 activityService.getSLDistanceBetween(startPos, endPos)
-                    .then(function(result) {
+                    .then(function (result) {
                         vm.activity.props.slMiles = result;
                     });
             }
         }
 
         function saveItemToFeed() {
-            if(!vm.activity.title){
-                $ionicLoading.show({
-                template: '<i class="ion-close-circled"></i>location<br>Please enter a title for your activity',
-                duration: 2000
-            });
+            if (!vm.activity.title) {
+                LoadingService.showAlert('Please enter a title for your activity');
                 return;
             }
 
-            $ionicLoading.show({
-                template: '<ion-spinner/><br>Saving...',
-                duration: 10000
-            });
+            LoadingService.showLoader('Saving')
 
             console.warn('posting vm.activity --->>>', vm.activity);
 
             activityService.postActivityToFeed(vm.activity).then(
                 function (result) {
-            	    $ionicLoading.hide();
-            	    console.log(result);
-            	    vm.close(result);
-            });
+                    LoadingService.hide();
+                    console.log(result);
+                    vm.close(result);
+                });
         }
 
         function close(str) {

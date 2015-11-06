@@ -5,9 +5,9 @@
         .module('account')
         .controller('AddFriendsCtrl', AddFriendsCtrl);
 
-    AddFriendsCtrl.$inject = ['$q', 'profileModalsService', '$scope', 'contactsService', 'utilsService', '$filter', 'parameters', '$http', 'settings', '$ionicLoading'];
+    AddFriendsCtrl.$inject = ['$q', 'profileModalsService', '$scope', 'contactsService', 'utilsService', '$filter', 'parameters', '$http', 'settings', 'LoadingService'];
 
-    function AddFriendsCtrl($q, profileModalsService, $scope, contactsService, utilsService, $filter, parameters, $http, settings, $ionicLoading) {
+    function AddFriendsCtrl($q, profileModalsService, $scope, contactsService, utilsService, $filter, parameters, $http, settings, LoadingService) {
         var vm = this;
 
         vm.searchText = "";
@@ -36,7 +36,7 @@
                     console.log('Loading Contacts: %o', status);
                 })
                 .finally(function end() {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 })
         }
 
@@ -86,7 +86,7 @@
             promise.then(function (response) {
                 if (response || true) {
                     messageTemplate = 'Invitations have been successfully sent';
-                    $ionicLoading.show({ template: messageTemplate, duration: '1500' });
+                    LoadingService.showSuccess(messageTemplate);
                 }
                 
                 vm.closeModal(response);

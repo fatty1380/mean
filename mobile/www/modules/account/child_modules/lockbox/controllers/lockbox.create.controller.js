@@ -5,9 +5,9 @@
         .module('account')
         .controller('LockboxCreateCtrl', LockboxCreateCtrl);
 
-    LockboxCreateCtrl.$inject = ['$ionicPopup', '$scope', '$ionicLoading',  '$sce', 'settings', 'parameters'];
+    LockboxCreateCtrl.$inject = ['$ionicPopup', '$scope', 'LoadingService',  '$sce', 'settings', 'parameters'];
 
-    function LockboxCreateCtrl($ionicPopup, $scope, $ionicLoading, $sce, settings, parameters) {
+    function LockboxCreateCtrl($ionicPopup, $scope, LoadingService, $sce, settings, parameters) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -94,10 +94,10 @@
         }
 
         function saveDocument() {
-            $ionicLoading.show({ template: '<ion-spinner/><br>Saving...', duration: 10000 });
+            LoadingService.showLoader('Saving');
             
             if (!vm.document.sku) {
-                $ionicLoading.show({ template: 'Please select document type above', duration: 2000 });
+                LoadingService.showAlert('Please select document type above');
                 return;
             }
                     

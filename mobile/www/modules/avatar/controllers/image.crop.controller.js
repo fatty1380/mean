@@ -5,9 +5,9 @@
         .module('avatar')
         .controller('ImageCropCtrl', ImageCropController);
 
-    ImageCropController.$inject = ['parameters', 'userService', '$ionicLoading', 'avatarService', 'settings'];
+    ImageCropController.$inject = ['parameters', 'userService', 'LoadingService', 'avatarService', 'settings'];
 
-    function ImageCropController(parameters, userService, $ionicLoading, avatarService, settings) {
+    function ImageCropController(parameters, userService, LoadingService, avatarService, settings) {
         var vm = this;
 
         vm.close = close;
@@ -43,9 +43,7 @@
             if (!save) {
                 return vm.cancelModal({ error: false, message: 'Image Crop Cancelled' });
             }
-            $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner></br>Saving Changes'
-            });
+            LoadingService.showLoader('Saving Changes');
 
             avatarService.setImage(vm.croppedImage);
             var dataProps = {
@@ -61,7 +59,7 @@
                     vm.cancelModal(err);
                 })
                 .finally(function () {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 });
         }
     }

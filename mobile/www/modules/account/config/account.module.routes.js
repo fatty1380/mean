@@ -108,10 +108,10 @@
                         templateUrl: 'modules/account/child_modules/lockbox/templates/lockbox.html',
                         controller: 'LockboxCtrl as vm',
                         resolve: {
-                            documents: ['lockboxDocuments', 'user', '$ionicLoading',
-                                function (lockboxDocuments, user, $ionicLoading) {
+                            documents: ['lockboxDocuments', 'user', 'LoadingService',
+                                function (lockboxDocuments, user, LoadingService) {
 
-                                    $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading documents', delay: 500, duration: 10000 });
+                                    LoadingService.showLoader('Loading documents');
                                     
                                     return lockboxDocuments.getFilesByUserId(user.id)
                                         .then(function (data) {

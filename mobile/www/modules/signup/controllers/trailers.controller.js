@@ -5,9 +5,9 @@
         .module('signup')
         .controller('TrailersCtrl', TrailersCtrl)
 
-    TrailersCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicLoading', '$ionicPopup'];
+    TrailersCtrl.$inject = ['$scope', '$state', 'registerService', 'LoadingService', '$ionicPopup'];
 
-    function TrailersCtrl($scope, $state, registerService, $ionicLoading, $ionicPopup) {
+    function TrailersCtrl($scope, $state, registerService, LoadingService, $ionicPopup) {
         var vm = this;
         vm.newTrailer = '';
 
@@ -47,7 +47,7 @@
         function goNext(isSave) {
             if (isSave) {
                 registerService.userProps.trailer = getNameKeys(vm.trailers);
-                $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Saving', delay: 500, duration: 5000 });
+                LoadingService.showLoader('Saving');
 
                 return registerService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
                     .then(function (response) {
@@ -60,7 +60,7 @@
                         $state.go('signup-friends');
                     })
                     .finally(function () {
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                     });
             }
 

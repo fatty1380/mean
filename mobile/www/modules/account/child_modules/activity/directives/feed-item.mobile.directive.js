@@ -50,8 +50,8 @@
 		}
 	}
 
-	FeedItemCtrl.$inject = ['activityService', 'activityModalsService', '$state', '$ionicPopup', '$ionicLoading'];
-	function FeedItemCtrl(activityService, activityModalsService, $state, $ionicPopup, $ionicLoading) {
+	FeedItemCtrl.$inject = ['activityService', 'activityModalsService', '$state', '$ionicPopup', 'LoadingService'];
+	function FeedItemCtrl(activityService, activityModalsService, $state, $ionicPopup, LoadingService) {
 		var vm = this;
 
 		vm.stringify = function (obj) {
@@ -80,10 +80,7 @@
 
             activityService.likeActivity(id)
 				.then(function (updatedLikes) {
-					$ionicLoading.show({
-						template: '<i class="icon ion-star"></i><br>Liked!',
-						duration: 1000
-					})
+					LoadingService.showIcon('Liked!', 'ion-star');
 
 					if (_.isArray(updatedLikes)) {
 						vm.entry.likes = updatedLikes;
@@ -116,10 +113,7 @@
 			});
 			applyPopup.then(function (res) {
 				if (res) {
-					$ionicLoading.show({
-						template: '<i class="icon ion-checkmark"></i><br>Thanks for Applying',
-						duration: 2000
-					})
+					LoadingService.showSuccess('Thanks for Applying');
 				} else {
 					console.log('You are not sure');
 				}

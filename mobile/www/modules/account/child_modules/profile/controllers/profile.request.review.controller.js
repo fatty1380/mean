@@ -10,9 +10,9 @@
         .module('account')
         .controller('ProfileRequestReviewCtrl', ProfileRequestReviewCtrl);
 
-    ProfileRequestReviewCtrl.$inject = ['userService', 'reviewService', 'utilsService', '$ionicLoading'];
+    ProfileRequestReviewCtrl.$inject = ['userService', 'reviewService', 'utilsService', 'LoadingService'];
 
-    function ProfileRequestReviewCtrl(userService, reviewService, utilsService, $ionicLoading) {
+    function ProfileRequestReviewCtrl(userService, reviewService, utilsService, LoadingService) {
         var vm = this;
         vm.profileData = userService.profileData;
         vm.contact = {};
@@ -29,14 +29,14 @@
             };
 
             if (_.isEmpty(vm.contact) || _.isEmpty(vm.contact.email) && _.isEmpty(vm.contact.phone)) {
-                $ionicLoading.show({ template: 'Please enter an email address or phone number', duration: '2000' });
+                LoadingService.showLoader('Please enter an email address or phone number');
                 return;
             }
 
             reviewService
                 .createRequest(data)
                 .then(function (resp) {
-                    $ionicLoading.show({ template: '<h3>Success!</h3> Your request has been sent', duration: '1500' });
+                    LoadingService.showSuccess('<h3>Success!</h3> Your request has been sent');
 
                     console.log(resp);
                     vm.contact = {};
@@ -46,7 +46,7 @@
                 })
                 .catch(function (resp) {
                     if (resp.data) {
-                        $ionicLoading.show({ template: 'Unable to Request at this time. <br>Please try again later', duration: '1500' });
+                        LoadingService.showFailure('Unable to Request at this time. <br>Please try again later');
                     }
                 });
         }

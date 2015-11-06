@@ -92,12 +92,12 @@
                         resolveContacts: false
                     },
                     resolve: {
-                        contacts: function ($stateParams, contactsService, $ionicLoading) {
+                        contacts: function ($stateParams, contactsService, LoadingService) {
                             var resolveContacts = $stateParams.resolveContacts;
                             if (resolveContacts) {
                                 var contacts = contactsService.getContacts();
                                 if (!contacts.length) {
-                                    $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading Contacts...', duration: 15000 });
+                                    LoadingService.showLoader('Loading Contacts<br><small>(this may take a moment)</small>');
                                     return contactsService.retrieveContacts();
                                 }
                             }

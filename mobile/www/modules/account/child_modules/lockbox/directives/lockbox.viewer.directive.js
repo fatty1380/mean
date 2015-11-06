@@ -62,8 +62,8 @@
 
 
     // AKA: ContactDialogCtrl
-    DocumentModalCtrl.$inject = ['parameters', '$sce', '$ionicPopup', '$ionicLoading'];
-    function DocumentModalCtrl(parameters, $sce, $ionicPopup, $ionicLoading) {
+    DocumentModalCtrl.$inject = ['parameters', '$sce', '$ionicPopup', 'LoadingService'];
+    function DocumentModalCtrl(parameters, $sce, $ionicPopup, LoadingService) {
         var vm = this;
 
         vm.document = parameters.document || parameters;
@@ -137,23 +137,17 @@
             console.log("   **** onImageEvent  " + type + " ****");
             switch (type) {
                 case "loadStart":
-                    $ionicLoading.show({
-                        template: 'Image Loading. Please Wait.'
-                    });
+                    LoadingService.showLoader('Loading Image, Please Wait.');
                     break;
                 case 'loadComplete':
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                     break;
                 case 'loadError':
-                    $ionicLoading.hide();
-                    $ionicPopup.alert({
-                        title: type,
-                        template: 'Please, try later.'
-                    });
+                    LoadingService.showAlert('Sorry, Please, try later.');
                     break;
                 default:
                     console.warn('Unknown Image Event: `%s`', type);
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                     break;
             }
         };
@@ -163,24 +157,17 @@
             console.log("   **** " + type + " ****");
             switch (type) {
                 case "loadStart":
-                    $ionicLoading.show({
-                        template: 'PDF Loading. Please Wait.'
-                    });
+                    LoadingService.showLoader('Loading PDF, Please Wait.');
                     break;
                 case 'loadComplete':
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                     break;
                 case 'loadError':
-                    $ionicLoading.hide();
-
-                    $ionicPopup.alert({
-                        title: type,
-                        template: 'Please, try later.'
-                    });
+                    LoadingService.showAlert('Sorry, Please, try later.');
                     break;
                 default:
                     console.warn('Unknown PDF Event: `%s`', type);
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                     break;
             }
         };

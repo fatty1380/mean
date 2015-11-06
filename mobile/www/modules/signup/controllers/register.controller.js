@@ -5,9 +5,9 @@
         .module('signup')
         .controller('RegisterCtrl', RegisterCtrl);
 
-    RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', '$ionicLoading', 'tokenService', 'welcomeService', 'securityService', 'registerService'];
+    RegisterCtrl.$inject = ['$state', '$window', '$ionicPopup', 'LoadingService', 'tokenService', 'welcomeService', 'securityService', 'registerService'];
 
-    function RegisterCtrl($state, $window, $ionicPopup, $ionicLoading, tokenService, welcomeService, securityService, registerService) {
+    function RegisterCtrl($state, $window, $ionicPopup, LoadingService, tokenService, welcomeService, securityService, registerService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -41,9 +41,7 @@
         }
 
         function continueToEngagement() {
-            $ionicLoading.show({
-                template: 'please wait'
-            });
+            LoadingService.showLoader('Saving');
             registerService.registerUser(vm.user)
                 .then(function (response) {
 
@@ -70,18 +68,18 @@
                                 }
                             })
                             .finally(function () {
-                                $ionicLoading.hide();
+                                LoadingService.hide();
                             });
                     } else {
-                        $ionicLoading.hide();
-                        
+                        LoadingService.hide();
+
                         showPopup(response, 'Registration Failed');
                     }
                 });
         }
 
         function showPopup(response, title, message) {
-            
+
 
             if (!!response) {
                 if (response.message.status === 0) {
@@ -93,14 +91,14 @@
 
             if (/unique field/i.test(message)) {
                 message = 'Email is already registered. Would you like to <a ui-sref="login">Login?</a>';
-            }
 
-            title = 'Sorry';
-            
-            $ionicPopup.alert({
-                title: title || "Sorry",
-                template: message || "no message"
-            });
+                $ionicPopup.alert({
+                    title: title || "Sorry",
+                    template: message || "no message"
+                });
+            } else {
+                LoadingService.showFailure(message);
+            }
         }
         //
         //$scope.$on('$ionicView.afterEnter', function () {

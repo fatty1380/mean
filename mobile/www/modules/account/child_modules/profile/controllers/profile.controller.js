@@ -6,11 +6,11 @@
         .controller('ProfileCtrl', ProfileCtrl);
 
     ProfileCtrl.$inject = ['$rootScope', '$scope', 'StorageService', 'updateService', 'appCache', '$state',
-        'activityService', 'reviewService', '$ionicLoading', 'experienceService', 'utilsService',
+        'activityService', 'reviewService', 'LoadingService', 'experienceService', 'utilsService',
         'friendsService', 'avatarService', 'profileModalsService', 'cameraService', 'user', 'profile'];
 
     function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state,
-        activityService, reviewService, $ionicLoading, experienceService, utilsService,
+        activityService, reviewService, LoadingService, experienceService, utilsService,
         friendsService, avatarService, profileModalsService, cameraService, user, profile) {
             
         var vm = this;
@@ -95,11 +95,7 @@
 
             var endorsements = '<ul>' + listItems.join('') + '</ul>';
 
-            $ionicLoading.show({
-                template: title + endorsements,
-                duration: 2000,
-                noBackdrop: true
-            });
+            LoadingService.show(title + endorsements, { noBackdrop: true });
         }
 
         if (!vm.canEdit) {
@@ -112,7 +108,8 @@
             if (!vm.isFriend) {
                 vm.profileData.displayName = vm.profileData.firstName + ' ' + (vm.profileData.lastName && vm.profileData.lastName[0]);
             } else {
-                $ionicLoading.show({ template: 'Loading ' + vm.profileData.firstName + '\'s Feed...' });
+                LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed...');
+                
                 activityService
                     .getFeed().then(function (result) {
                         var uniqueResults = _.uniq(result),
@@ -128,9 +125,9 @@
                         }
 
                         vm.feed = sortedItems;
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                     }, function (err) {
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                     });
             }
 
@@ -158,8 +155,7 @@
                         if (createdRequestResp.status === 200) {
                             vm.friendStatus = 'sent';
                             var template = 'You have invited ' + friend.firstName + ' to be friends.';
-                            $ionicLoading
-                                .show({ template: template, duration: 2000 });
+                            LoadingService.showSuccess(template);
 
                         }
                     });

@@ -5,10 +5,10 @@
         .module('company')
         .controller('CompanyCtrl', CompanyCtrl);
 
-    CompanyCtrl.$inject = ['$ionicLoading', '$ionicPopup', '$ionicHistory', '$state',
+    CompanyCtrl.$inject = ['LoadingService', '$ionicPopup', '$ionicHistory', '$state',
         'company', 'jobs', 'feed', 'userService', 'CompanyService'];
 
-    function CompanyCtrl($ionicLoading, $ionicPopup, $ionicHistory, $state,
+    function CompanyCtrl(LoadingService, $ionicPopup, $ionicHistory, $state,
         company, jobs, feed, userService, CompanyService) {
         var vm = this;
 
@@ -24,7 +24,7 @@
         function initialize() {
 
             if (_.isEmpty(company)) {
-                $ionicLoading.show({ template: 'Not Found', duration: 2500 });
+                LoadingService.showAlert('Not Found');
                 return goBack();
             }
 
@@ -38,7 +38,7 @@
                 });
 
 
-            $ionicLoading.hide();
+            LoadingService.hide();
         }
 
         function goBack() {
@@ -53,10 +53,7 @@
         function follow() {
             CompanyService.follow(vm.company.id)
                 .then(function success(result) {
-                    $ionicLoading.show({
-                        template: '<i class="icon ion-checkmark"></i><br>Following',
-                        duration: 1500
-                    })
+                    LoadingService.showSuccess('Following');
                     vm.isFollowing = true;
                 });
         }
@@ -64,10 +61,7 @@
         function unfollow() {
             CompanyService.unfollow(vm.company.id).then(
                 function success(result) {
-                    $ionicLoading.show({
-                        template: '<i class="icon ion-close"></i>',
-                        duration: 1500
-                    })
+                    LoadingService.showFailure();
                     vm.isFollowing = false;
                 });
         }

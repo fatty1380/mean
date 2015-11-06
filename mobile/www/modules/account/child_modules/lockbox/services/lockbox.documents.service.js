@@ -17,10 +17,10 @@
         .module('lockbox')
         .service('lockboxDocuments', lockboxDocuments);
 
-    lockboxDocuments.$inject = ['$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$q', '$ionicLoading',
+    lockboxDocuments.$inject = ['$cordovaFileTransfer', '$window', '$cordovaFile', '$ionicActionSheet', '$q', 'LoadingService',
         'userService', 'API', 'settings', 'cameraService', 'lockboxModalsService', 'welcomeService', 'lockboxSecurity'];
 
-    function lockboxDocuments($cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $q, $ionicLoading,
+    function lockboxDocuments($cordovaFileTransfer, $window, $cordovaFile, $ionicActionSheet, $q, LoadingService,
         userService, API, settings, cameraService, lockboxModalsService, welcomeService, lockboxSecurity) {
 
         var vm = this;
@@ -69,7 +69,8 @@
                 .then(function (hasAccess) {
 
                     if (hasAccess) {
-                        $ionicLoading.show({ template: '<ion-spinner/><br>Loading Docs...', duration: 10000 });
+                        LoadingService.showLoader('Loading Docs...');
+                        
                         return API.doRequest(settings.documents, 'get')
                     }
 
@@ -160,7 +161,7 @@
                     }
 
                     console.warn('finally vm.documents >>>', vm.documents);
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 });
         }
 
@@ -177,7 +178,7 @@
             if (!vm.path) return $q.when(getDocuments(true));
 
 
-            $ionicLoading.show({ template: '<ion-spinner/><br>Loading Docs...', duration: 10000 });
+            LoadingService.showLoader('Loading Documents');
 
             var path = vm.path;
             var hasLockbox = false;
@@ -219,7 +220,7 @@
                         welcomeService.initialize('lockbox.add');
                     }
                     console.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 });
         }
 
@@ -291,10 +292,7 @@
                         console.warn('Unknown Error in Doc Save response: ', newDocumentResponse);
                     }
 
-                    $ionicLoading.show({
-                        template: '<i class="icon ion-checkmark"></i><br>Saved Document',
-                        duration: 1000
-                    });
+                    LoadingService.showSuccess('Saved Document');
 
                     return newDocumentResponse.data;
                 })
@@ -308,7 +306,7 @@
                     return null;
                 })
                 .finally(function () {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 });
         }
 
@@ -669,8 +667,8 @@
         .module('lockbox')
         .factory('lockboxSecurity', lockboxSecurity);
 
-    lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', '$ionicLoading', '$q', '$timeout', 'securityService'];
-    function lockboxSecurity($rootScope, $state, $ionicPopup, $ionicLoading, $q, $timeout, securityService) {
+    lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', 'LoadingService', '$q', '$timeout', 'securityService'];
+    function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $timeout, securityService) {
 
         return {
             checkAccess: checkAccess
@@ -719,7 +717,7 @@
                 })
                 .then(function () {
                     if (!state.accessible) {
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                         return (pinPopup = $ionicPopup.show(getPinObject()));
                     }
 
@@ -738,7 +736,7 @@
                     return !!accessGranted;
                 })
                 .finally(function () {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 });
 
             function getPinObject() {
@@ -771,10 +769,7 @@
                 } else if (state.secured && PIN && (scopeData.pin === PIN)) {
                     scopeData.closePopup(securityService.unlock(scopeData.pin));
 
-                    $ionicLoading.show({
-                        template: '<i class="icon ion-unlocked"></i><br>Unlocked',
-                        duration: 1000
-                    })
+                    LoadingService.showIcon('Unlocked', 'ion-unlocked');
                 } else if (state.secured && PIN && scopeData.pin != PIN) {
                     scopeData.pin = '';
                 } else if (scopeData.confirm && !state.secured) {
@@ -782,10 +777,7 @@
                         securityService.setPin(scopeData.pin);
                         scopeData.closePopup(securityService.unlock(scopeData.pin));
 
-                        $ionicLoading.show({
-                            template: '<i class="icon ion-locked"></i><br>Documents Secured',
-                            duration: 1000
-                        })
+                    LoadingService.showIcon('Documents Secured', 'ion-locked');
                     } else {
                         scopeData.confirm = false;
                         scopeData.pin = '';

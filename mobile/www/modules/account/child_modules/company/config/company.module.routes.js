@@ -16,9 +16,9 @@
                 templateUrl: 'modules/account/child_modules/company/templates/company.profile.html',
                 controller: 'CompanyCtrl as vm',
                 resolve: {
-                    company: ['$stateParams', '$state', '$ionicLoading', 'CompanyService',
-                        function ($stateParams, $state, $ionicLoading, CompanyService) {
-                            $ionicLoading.show({ template: 'Loading', duration: 10000 });
+                    company: ['$stateParams', '$state', 'LoadingService', 'CompanyService',
+                        function ($stateParams, $state, LoadingService, CompanyService) {
+                            LoadingService.showLoader('Loading');
                             return CompanyService.get($stateParams.companyId)
                                 .then(
                                     function success(result) {

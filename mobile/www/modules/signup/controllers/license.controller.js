@@ -5,9 +5,9 @@
         .module('signup')
         .controller('LicenseCtrl', LicenseCtrl);
 
-    LicenseCtrl.$inject = ['$state', 'registerService', '$ionicLoading'];
+    LicenseCtrl.$inject = ['$state', 'registerService', 'LoadingService'];
 
-    function LicenseCtrl($state, registerService, $ionicLoading) {
+    function LicenseCtrl($state, registerService, LoadingService) {
 
         var vm = this;
         vm.class = null;
@@ -27,9 +27,7 @@
                 }
             }
 
-            $ionicLoading.show({
-                template: 'please wait'
-            });
+            LoadingService.showLoader('please wait');
 
             registerService.updateUser(obj).then(
                 function (response) {
@@ -37,15 +35,12 @@
                         console.log("license response update user : ", response);
 
                         $state.go('signup-trucks');
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                     } else {
                         console.error("license response update user ERROR: ", response);
 
                         $state.go('login');
-                        $ionicLoading.show({
-                            template: 'Unable to Save at this time',
-                            duration: 2000
-                        });
+                        LoadingService.showFailure('Sorry, unable to save at this time');
                     }
                 });
         }
@@ -57,8 +52,8 @@
         .module('signup')
         .controller('ProfileEditLicenseCtrl', LicenseProfileCtrl);
 
-    LicenseProfileCtrl.$inject = ['userService', '$ionicLoading'];
-    function LicenseProfileCtrl(userService, $ionicLoading) {
+    LicenseProfileCtrl.$inject = ['userService', 'LoadingService'];
+    function LicenseProfileCtrl(userService, LoadingService) {
         var vm = this;
 
         vm.class = null;
@@ -93,22 +88,16 @@
                 }
             }
 
-            $ionicLoading.show({
-                template: '<ion-spinner></ion-spinner><br>Saving License',
-                duration: 10000
-            });
+            LoadingService.showLoader('Saving License');
 
             userService.updateUserData(obj).then(
                 function success(response) {
                     debugger;
                     vm.closeModal(response.license);
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 },
                 function fail(err) {
-                    $ionicLoading.show({
-                        template: 'Unable to Save at this time',
-                        duration: 2000
-                    });
+                    LoadingService.showFailure('Unable to Save at this time');
                     console.error(err, 'Failed to update License');
                 });
         }

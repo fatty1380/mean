@@ -5,9 +5,9 @@
         .module('messages')
         .controller('MessagesCtrl', MessagesCtrl);
 
-    MessagesCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', 'messageService', 'messageModalsService', '$ionicLoading', 'friendsService', 'recipientChat'];
+    MessagesCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', 'messageService', 'messageModalsService', 'LoadingService', 'friendsService', 'recipientChat'];
 
-    function MessagesCtrl($rootScope, updates, updateService, $scope, messageService, messageModalsService, $ionicLoading, friendsService, recipientChat) {
+    function MessagesCtrl($rootScope, updates, updateService, $scope, messageService, messageModalsService, LoadingService, friendsService, recipientChat) {
 
         var vm = this;
         vm.messages = [];
@@ -64,19 +64,18 @@
         }
 
         function getChats() {
-            $ionicLoading.show({
-                template: 'loading'
-            });
+            LoadingService.showLoader('Loading');
             messageService
                 .getChats()
                 .then(function (res) {
-                    $ionicLoading.hide();
                     console.log('GET CHATS SUCCESS ----- >>>', res);
                     vm.chats = res.data;
                     loadProfileAvatars();
                 }, function (err) {
-                    $ionicLoading.hide();
                     console.log('GET CHATS ERROR ----- >>>', err);
+                })
+                .finally(function () {
+                    LoadingService.hide();
                 });
         }
     }

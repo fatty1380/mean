@@ -16,7 +16,7 @@
      * @inject $rootScope
      * @injecct $state
      * @injecct $filter
-     * @injecct $ionicLoading
+     * @injecct LoadingService
      * @injecct $ionicScrollDelegate
      * 
      * @section Outset/Truckerline Services _________________________
@@ -29,11 +29,11 @@
      */
 
     FriendsCtrl.$inject = ['updates', 'user', 'profile', 'friends',
-        '$rootScope', '$state', '$filter', '$ionicLoading', '$ionicScrollDelegate',
+        '$rootScope', '$state', '$filter', 'LoadingService', '$ionicScrollDelegate',
        'userService', 'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
 
     function FriendsCtrl(updates, user, profile, friends,
-        $rootScope, $state, $filter, $ionicLoading, $ionicScrollDelegate,
+        $rootScope, $state, $filter, LoadingService, $ionicScrollDelegate,
         userService, outsetUsersService, utilsService, friendsService, contactsService, profileModalsService) {
 
         var vm = this;
@@ -117,9 +117,7 @@
                     if (createdRequestResp.status === 200) {
                         var template = 'You have invited ' + friend.firstName + ' to be friends.';
 
-                        $ionicLoading
-                            .show({ template: template, duration: 2000 });
-
+                        LoadingService.showSuccess(template);
                     }
                 });
         }
@@ -132,7 +130,7 @@
         }
 
         function showAddFriendsModal() {
-            $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Loading Contacts ... <br><small>(this may take a moment)</small>', duration: 20000 });
+            LoadingService.showLoader('Loading Contacts ... <br><small>(this may take a moment)</small>');
 
             contactsService
                 .find()
@@ -153,7 +151,7 @@
                 .catch(function reject(err) {
                     console.error('Unable to resolve Contacts: ', err);
 
-                    $ionicLoading.hide();
+                    LoadingService.hide();
 
                     return addManually();
                 });
@@ -171,7 +169,7 @@
                     return null;
                 })
                 .finally(function done() {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 })
         }
 

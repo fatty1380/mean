@@ -5,9 +5,9 @@
         .module('signup')
         .controller('TrucksCtrl', TrucksCtrl)
 
-    TrucksCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', '$ionicLoading'];
+    TrucksCtrl.$inject = ['$scope', '$state', 'registerService', '$ionicPopup', 'LoadingService'];
 
-    function TrucksCtrl($scope, $state, registerService, $ionicPopup, $ionicLoading) {
+    function TrucksCtrl($scope, $state, registerService, $ionicPopup, LoadingService) {
         var TRUCKS = [
             { name: 'Peterbilt', logoClass: 'ico ico-peterbilt-logo' },
             { name: 'International', logoClass: 'ico ico-international-logo' },
@@ -59,7 +59,7 @@
         function continueToTrailers(isSave) {
             if (isSave) {
                 registerService.userProps.truck = vm.currentTruck;
-                $ionicLoading.show({ template: '<ion-spinner></ion-spinner><br>Saving', delay: 500, duration: 5000 });
+                LoadingService.showLoader('Saving');
 
                 registerService.updateUserProps({ truck: vm.currentTruck })
                     .then(function (response) {
@@ -72,7 +72,7 @@
                         $state.go('signup-trailers');
                     })
                     .finally(function () {
-                        $ionicLoading.hide();
+                        LoadingService.hide();
                     });
 
             } else {

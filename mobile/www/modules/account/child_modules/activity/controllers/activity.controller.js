@@ -5,9 +5,9 @@
         .module('activity')
         .controller('ActivityCtrl', ActivityCtrl);
 
-    ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', '$ionicLoading', 'user', 'settings', 'welcomeService'];
+    ActivityCtrl.$inject = ['$rootScope', 'updates', 'updateService', '$scope', '$state', 'activityModalsService', 'activityService', 'LoadingService', 'user', 'settings', 'welcomeService'];
 
-    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, activityModalsService, activityService, $ionicLoading, user, settings, welcomeService) {
+    function ActivityCtrl($rootScope, updates, updateService, $scope, $state, activityModalsService, activityService, LoadingService, user, settings, welcomeService) {
         var vm = this;
         vm.feed = [];
 
@@ -75,9 +75,7 @@
             vm.feed = [];
 
             if (vm.feedData && welcomeService.isAckd($state.$current.name)) {
-                $ionicLoading.show({
-                    template: vm.feedData.loadingText
-                });
+                LoadingService.showLoader(vm.feedData.loadingText);
             }
 
             //get all feed
@@ -92,7 +90,7 @@
                     vm.feed = [];
                 })
                 .finally(function () {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                 });
         }
 
@@ -138,9 +136,8 @@
          * @param {Number} id - feed id
          */
         function refreshFeedActivityById(id) {
-            $ionicLoading.show({
-                template: 'update feed'
-            });
+            LoadingService.showLoader('Updating Feed')
+            
             activityService.getFeedActivityById(id).then(function (result) {
                 console.warn('get feed by id result --->>>', result);
                 result.location = activityService.hasCoordinates(result) ? {
@@ -148,7 +145,7 @@
                     coordinates: result.location.coordinates
                 } : null;
                 vm.feed.unshift(result);
-                $ionicLoading.hide();
+                LoadingService.hide();
             });
         }
 
@@ -171,7 +168,7 @@
                         }
                     }
                 }, function (err) {
-                    $ionicLoading.show({ template: '<h3>10-92</h3>Unable to checkin, try again later', duration: 2000 });
+                    LoadingService.showAlert('Unable to checkin, try again later');
                 })
         }
     }

@@ -5,9 +5,9 @@
         .module('account')
         .controller('MessageChatDetailsCtrl', MessageChatDetailsCtrl);
 
-    MessageChatDetailsCtrl.$inject = ['$state', '$scope', 'updateService', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', '$ionicLoading', 'utilsService', 'settings'];
+    MessageChatDetailsCtrl.$inject = ['$state', '$scope', 'updateService', 'messageService', 'parameters', '$ionicScrollDelegate', '$timeout', 'LoadingService', 'utilsService', 'settings'];
 
-    function MessageChatDetailsCtrl($state, $scope, updateService, messageService, parameters, $ionicScrollDelegate, $timeout, $ionicLoading, utilsService, settings) {
+    function MessageChatDetailsCtrl($state, $scope, updateService, messageService, parameters, $ionicScrollDelegate, $timeout, LoadingService, utilsService, settings) {
         var vm = this;
         vm.message = '';
         vm.messages = (parameters.messages || []).reverse();
@@ -75,14 +75,14 @@
             messageService
                 .createMessage(messageObj)
                 .then(function (res) {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                     console.log('MESSAGE CREATED SUCCESS ----- >>>', res);
                     vm.message = '';
                     res.data.direction = 'outbound';
                     vm.messages.push(res.data);
                     scrollToBottom();
                 }, function (err) {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                     console.log('MESSAGES WASN\'T CREATED ERROR ----- >>>', err);
                 });
         }

@@ -25,9 +25,9 @@
         .module('signup')
         .controller('LoginCtrl', LoginCtrl);
 
-    LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', 'registerService', '$ionicLoading', 'tokenService', 'userService', 'securityService'];
+    LoginCtrl.$inject = ['$state', 'lockboxDocuments', '$window', 'registerService', 'LoadingService', 'tokenService', 'userService', 'securityService'];
 
-    function LoginCtrl($state, lockboxDocuments, $window, registerService, $ionicLoading, tokenService, userService, securityService) {
+    function LoginCtrl($state, lockboxDocuments, $window, registerService, LoadingService, tokenService, userService, securityService) {
         var vm = this;
         vm.lastElementFocused = false;
 
@@ -65,14 +65,12 @@
                 return;
             }
 
-            $ionicLoading.show({
-                template: 'please wait'
-            });
+            LoadingService.showLoader('Signing In');
             tokenService.set('access_token', '');
 
             registerService.signIn(vm.user)
                 .then(function (response) {
-                    $ionicLoading.hide();
+                    LoadingService.hide();
                     var data = response && response.message && response.message.data;
                     if (response.success && !!data) {
                         tokenService.set('access_token', data.access_token);
