@@ -411,7 +411,8 @@ function updateOutstandingRequests(user) {
             status: { $in: ['new', 'sent'] },
             requestType: 'friendRequest'
         })
-        .exec(
+        .exec()
+        .then(
             function (requests) {
                 return getMatchingRequests(user, requests);
             },
