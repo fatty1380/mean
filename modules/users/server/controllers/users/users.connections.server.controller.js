@@ -66,7 +66,7 @@ function createRequest(req, res, next) {
     debugger;
     var request = new RequestMessage(normalizeRequest(req.body));
     debugger;
-    request.from = req.user._id;
+    request.from = req.user;
 
     return request.save()
         .then(function (savedRequest) {

@@ -317,14 +317,15 @@ var branchConfig = config.services.branch;
 function getBranchDeepLink(request, event, channel) {
 
 	debugger;
-
-	var senderId = _.isString(request.from) ? request.from : request.from.id;
+	var senderId = _.isString(request.from) ? request.from : request.from.toHexString();
+	debugger;
 
 	var postData = {
 		branch_key: branchConfig.key,
 		data: {
 			requestId: request.id,
 			requestUserId: senderId,
+			shortId: request.shortId
 		},
 		feature: event,
 		channel: channel
@@ -398,6 +399,7 @@ function loadRequest(req, res) {
 										return res.redirect(redirect);
 									});
 							}
+							break;
 
 						case 'shareRequest':
 							url = '/trucker/' + fromId + '?requestId=' + requestMessage.id;
