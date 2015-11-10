@@ -8,6 +8,7 @@ module.exports = {
     },
     db: {
         uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/outset-dev',
+        //uri: 'mongodb://ec2-54-148-79-252.us-west-2.compute.amazonaws.com/truckerline',
         //uri: 'mongodb://localhost/outset-dev',
         options: {
             user: '',

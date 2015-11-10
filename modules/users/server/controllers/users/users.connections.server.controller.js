@@ -94,7 +94,7 @@ function createRequest(req, res, next) {
  */
 function listRequests(req, res) {
     req.log.debug({ func: 'listRequests' }, 'Start');
-    
+
     if (!req.isAuthenticated()) {
         return res.json([]);
     }
@@ -510,9 +510,9 @@ function normalizeRequest(request) {
                     .unique('value')
                     .sortBy('order')
                     .value();
-                    
+
             log.debug({ func: 'normalizeRequest', src: contactInfo.phoneNumbers, out: pn }, 'Processed Phones');
-                    
+
             contactInfo.phoneNumbers = pn;
         }
 
@@ -523,9 +523,9 @@ function normalizeRequest(request) {
                     .unique('value')
                     .sortBy('order')
                     .value();
-                    
+
             log.debug({ func: 'normalizeRequest', src: contactInfo.emails, out: em }, 'Processed Emails');
-                    
+
             contactInfo.emails = em;
         }
                     
@@ -547,7 +547,7 @@ function normalizeRequest(request) {
 
 function deformatPhone(phone) {
     if (_.isEmpty(phone)) { return; }
-    
+
     var newNum = phone.replace(/\D/g, '');
 
     // Ignore numbers without area code
@@ -570,7 +570,7 @@ function deformatPhone(phone) {
 
 function validateEmail(email) {
     if (_.isEmpty(email)) { return; }
-    
+
     return /^\S+@\S+\.\S+$/.test(email) ? email.toLowerCase() : null;
 }
 
@@ -592,7 +592,7 @@ function translateToEmailObject(email) {
     }
 
     log.debug({ func: 'translateToEmailObject' }, 'formatted to `%s` [%s]', newEmail, ord);
-    
+
     return { value: newEmail, order: ord };
 }
 
@@ -614,7 +614,7 @@ function translateToPhoneObject(phone) {
             ord = 2;
         }
     }
-    
+
     log.debug({ func: 'translateToPhoneObject' }, 'formatted to `%s` [%s]', newNum, ord);
 
     if (_.isEmpty(newNum)) {

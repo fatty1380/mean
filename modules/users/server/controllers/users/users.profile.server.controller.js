@@ -219,6 +219,5 @@ function me(req, res) {
     }
 
     var user = req.user.cleanse();
-
     res.json(user);
 }

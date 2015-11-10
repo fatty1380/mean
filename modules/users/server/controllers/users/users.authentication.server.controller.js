@@ -194,7 +194,7 @@ exports.signin = function (req, res, next) {
  */
 exports.signout = function (req, res) {
     req.logout();
-    
+
     if (!!req.body.redirect) {
         res.redirect('/');
     } else {

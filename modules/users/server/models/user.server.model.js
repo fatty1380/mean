@@ -208,8 +208,6 @@ UserSchema.pre('save', function (next) {
     if (!this.isModified('password')) {
         return next();
     }
-    
-    debugger;
 
     if (this.password && this.password.length > 6) {
         this.salt = crypto.randomBytes(16).toString('base64');

@@ -438,10 +438,10 @@ function postToUserFeed(userId, item, log) {
 }
 
 function getOrCreateFeed(userId, log, companyId) {
-	
+
 	var searchId = companyId || userId;
-	debugger;
-	
+	log.trace({ func: 'getOrCreateFeed', userId: userId, companyId: companyId }, 'Start');
+
 	return Feed.findById(searchId)
 	//	.populate({ path: 'items', model: 'FeedItem', options: { sort: { 'created': -1 } } })
 	//		.populate({ path: 'items', select: 'created user', model: 'FeedItem', options: { sort: { 'created': -1 } } })

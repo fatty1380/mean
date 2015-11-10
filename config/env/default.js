@@ -123,6 +123,11 @@ module.exports = {
             accountSid: 'AC15d6d12a6d92ca496a261fb4bba62956',
             authToken: '7ead479d89436da9933c34e7d90ac82f', 
             twilioNumber: '+15005550006'
+        },
+        branch: {
+            url: 'https://api.branch.io',
+            key: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX',
+            secret: 'secret_test_AWSPorraAdrOEyxfukw0DKT2icQFeHwe'
         }
     },
     port: process.env.PORT || 3000,
@@ -131,7 +136,7 @@ module.exports = {
     sessionCollection: 'sessions',
     
     security: {
-        enableSession: true,
+        enableSession: false,
         enableJWT: true,
         tokenLife: 1000 * 3600 * 24 * 30,
         cors: {
