@@ -13,17 +13,7 @@ module.exports = function (app) {
 	// Messages Routes
 	app.route('/api/notifications')
 		.all(notificationsPolicy.isAllowed)
-		.post(notifications.send);
-
-	app.route('/api/notifications/email')
-		.all(notificationsPolicy.isAllowed)
-		.post(notifications.sendEmail);
-
-	app.route('/api/notifications/sms')
-		.all(notificationsPolicy.isAllowed)
-		.post(notifications.sendSMS);
-		
-		
+		.post(notifications.send);		
 	
 	////////////////////////////////////////////////////////////////////////////
 	

@@ -288,37 +288,10 @@ function processNotification(req, res) {
 	return res.status(504).send({ message: 'Not Implemnted' });
 }
 
-function sendEmail(req, res) {
-	log.debug({ func: 'sendEmail', body: req.body }, 'Send Email : START');
 
-	return res.status(504).send({ message: 'Not Implemnted' });
-}
 
-function sendSMS(req, res) {
-	var contactInfo = req.body;
-	var message = req.body.message || 'This is a Test of the TruckerLine SMS Messaging System';
 
-	log.debug({ func: 'sendSMS', body: contactInfo, reqUser: req.user }, 'Send SMS : START');
-
-	if (_.isEmpty(contactInfo.phoneNumbers) && _.isEmpty(contactInfo.phone)) {
-		return res.status(422).send({ message: 'must define phone numbers in request' });
-	}
-
-	// TODO: Remap this setup
-	var messageConfig = {
-		to: contactInfo.phone || contactInfo.phoneNumbers,
-		from: req.user
-	};
-
-	messenger.sendMessage(message, messageConfig).then(
-		function success(sendMessageResponse) {
-			return res.status(200).send({ message: 'Sent SMS Message to recipient', sid: sendMessageResponse.sid, status: sendMessageResponse.status });
 		},
-		function failure(err) {
-			log.error({ err: err, messageConfig: messageConfig }, 'Failed to Send SMS Message');
-			return res.status(500).send({ message: 'error sending SMS Message to recipient' });
-		}
-		);
 }
 
 //////////////////////////////////////////////////////
