@@ -30,8 +30,7 @@ module.exports.connect = function(cb) {
 	var _this = this;
 
 
-	log.info(config.db, 'Making connection to MongoDB');
-	console.log('Connecting to DB %o', config.db);
+	log.info({func: 'connect', mongooseVersion: mongoose.version, config: config.db}, 'Making connection to MongoDB');
 
 	var db = mongoose.connect(config.db.uri, config.db.options, function (err) {
 		// Log Error
