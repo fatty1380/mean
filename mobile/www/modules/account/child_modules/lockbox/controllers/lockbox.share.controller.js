@@ -16,7 +16,7 @@
         vm.back = back;
         vm.cancel = cancel;
         vm.skipDocs = skipDocs;
-        vm.documents = parameters.documents;
+        vm.documents = getRealDocs(parameters.documents || []);
         vm.addDocumentsToShare = addDocumentsToShare;
         vm.shareDocuments = shareDocuments;
 
@@ -33,6 +33,7 @@
                     vm.canAccess = isAccessible;
 
                     if (isAccessible) {
+                        
                         if (_.isEmpty(vm.documents)) {
                             console.log('Documents not included in parameters - looking up');
                             getDocs();
@@ -54,7 +55,11 @@
                 .getDocuments()
                 .then(function (response) {
                     console.log('Documents List', response);
-                    vm.documents = _.isArray(response) ? response : [];
+                    vm.documents = getRealDocs(_.isArray(response) ? response : []);
+                    
+                    if (_.isEmpty(vm.documents)) {
+                        return skipDocs();
+                    }
                 });
         }
 
@@ -67,6 +72,10 @@
             self.shareStep = 1;
             vm.cancelModal(null);
         }
+        
+        function getRealDocs(source) {
+            return _.filter(source, function (src) { return !!src.id; });
+        }
 
         function skipDocs() {
             return addDocumentsToShare(true);
@@ -76,13 +85,6 @@
             if (!skip) {
                 var filter = $filter('getChecked'),
                     selectedDocs = filter(vm.documents);
-
-                if (!selectedDocs.length && !skip) {
-                    return $ionicPopup.alert({
-                        title: 'Error',
-                        template: 'Please select documents you would like to share'
-                    });
-                }
 
                 vm.docsToShare = selectedDocs;
             } else {
@@ -115,12 +117,13 @@
                 .createRequest(requestObj)
                 .then(function (response) {
                     sentRequest = response;
-                    showSuccessPopup(response);
+                    return showSuccessPopup(response);
                 })
                 .then(function () {
                     vm.closeModal(sentRequest);
                 })
                 .catch(function (err) {
+                    console.error(err, 'Unable to Send Request');
                     $ionicPopup.alert({
                         title: 'Sorry',
                         template: 'Unable to Submit your request right now, please try again later'
