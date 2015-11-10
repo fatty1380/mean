@@ -11,6 +11,8 @@ var config = require('../config'),
 		module: 'lib',
 		file: 'mongoose'
 	});
+	
+mongoose.Promise = require('q').Promise;
 
 // Load the mongoose models
 module.exports.loadModels = function() {

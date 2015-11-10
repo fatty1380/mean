@@ -41,17 +41,17 @@ server.exchange(oauth2orize.exchange.password(
 				log.error({ func: 'oauth2.password', err: err }, 'lookup failed due to error');
 				return done(err); }
 			if (!user) { 
-				(new Login({ input: username, attempt: password, client: c, result: 'no_user' })).save().end(_.noop());
+				(new Login({ input: username, attempt: password, client: c, result: 'no_user' })).save().finally(_.noop());
 				log.info({ func: 'oauth2.password'}, 'lookup failed: no user found');
 				return done(null, false); }
 
 			if (!user.authenticate(password)) {
-				(new Login({ input: username, attempt: password, client: c, result: 'bad_pass', userId: user.id })).save().end(_.noop());
+				(new Login({ input: username, attempt: password, client: c, result: 'bad_pass', userId: user.id })).save().finally(_.noop());
 				log.debug({ func: 'oauth2.password' }, 'lookup failed: incorrect password');
 				return done(null, false);
 			}
 
-			(new Login({ input: username, attempt: password, client: c, result: 'success', userId: user.id })).save().end(_.noop());
+			(new Login({ input: username, attempt: password, client: c, result: 'success', userId: user.id })).save().finally(_.noop());
 			log.debug({ func: 'oauth2.password', user: user }, 'lookup successful');
 			
 			generateTokens({ userId: user.id, clientId: client.clientId }, done);
@@ -77,7 +77,7 @@ server.exchange(oauth2orize.exchange.refreshToken(
 		}
 
 		if (!token) { 
-			(new Login({ input: refreshToken, attempt: '', client: c, result: 'no_refresh' })).save().end(_.noop());
+			(new Login({ input: refreshToken, attempt: '', client: c, result: 'no_refresh' })).save().finally(_.noop());
 			log.debug({ func: 'auth2.refreshToken' }, 'No Valid Refresh Token Found');
 			return done(null, false); 
 		}
@@ -86,7 +86,7 @@ server.exchange(oauth2orize.exchange.refreshToken(
 			log.debug({ func: 'auth2.refreshToken' }, 'Found Valid Refresh Token Found');
 			if (err) { return done(err); }
 			if (!user) { 
-				(new Login({ input: refreshToken, userId: token.userId, client: c, result: 'refresh_no_user' })).save().end(_.noop());
+				(new Login({ input: refreshToken, userId: token.userId, client: c, result: 'refresh_no_user' })).save().finally(_.noop());
 				return done(null, false); }
 
 			generateTokens({  userId: user.id,  clientId: client.clientId  }, done);

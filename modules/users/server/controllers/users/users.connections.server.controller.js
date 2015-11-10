@@ -126,7 +126,8 @@ function listRequests(req, res) {
 
     return RequestMessage.find(mainQuery)
         .or(orQuery)
-        .sort('created').exec()
+        .sort('created')
+        .exec()
         .then(
             function (requests) {
                 if (!requests) {
@@ -135,7 +136,8 @@ function listRequests(req, res) {
 
                 req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
                 return res.json(requests);
-            },
+            })
+        .catch(
             function (err) {
                 req.log.error({ func: 'listRequests', error: err }, 'Unable to find requests due to error');
 

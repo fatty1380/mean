@@ -54,7 +54,7 @@
     "mandrill-api": "^1.0.41",
     "method-override": "~2.3.0",
     "moment": "^2.8.4",
-    "mongoose": "~4.0.1",
+    "mongoose": "^4.2.5",
     "mongoose-schema-extend": "^0.1.7",
     "morgan": "^1.4.1",
     "multer": "~0.1.6",

@@ -125,7 +125,7 @@ exports.signup = function (req, res) {
 })();
 
 function logLogin(user, req) {
-    (new Login({ input: user.username, result: 'signup', userId: user.id, ip: req.ip })).save().end(_.noop());
+    (new Login({ input: user.username, result: 'signup', userId: user.id, ip: req.ip })).save().finally(_.noop);
 }
 
 function logBranchData(user, req) {
@@ -156,7 +156,7 @@ function logBranchData(user, req) {
             req.log.error({ func: 'signup.saveBranch', file: 'users.authentication', err: err },
                 'Failed to save Branch Data from New User Request');
         })
-        .end(_.noop);
+        .finally(_.noop);
 }
 
 function processNewUser(user, req) {
@@ -204,13 +204,15 @@ exports.signin = function (req, res, next) {
         req.log.trace({ func: 'signin', err: err, user: user, info: info }, '[Auth.Ctrl] Passport Auth Complete');
         if (err || !user) {
             var reason = !user ? 'no_user' : err && err.toString() || 'unknown';
-            (new Login({ input: req.body.username, attempt: req.body.password, result: reason, userId: user && user.id || null })).save().end(_.noop());
+            (new Login({ input: req.body.username, attempt: req.body.password, result: reason, userId: user && user.id || null })).save().finally(_.noop);
 
 
             req.log.error({ func: 'signin', info: info, err: err }, 'Login Failed');
             res.status(400).send(info);
         } else {
-            (new Login({ input: req.body.username, attempt: req.body.password, result: 'success', userId: user.id })).save().end(_.noop());
+            (new Login({ input: req.body.username, attempt: req.body.password, result: 'success', userId: user.id }))
+                .save()
+                .finally(_.noop);
             login(req, res, user);
         }
     })(req, res, next);
