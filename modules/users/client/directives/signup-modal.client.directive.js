@@ -85,7 +85,7 @@
                 $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
                 $state.go($state.current, {newUser: true}, {reload: true});
             } else {
-                $state.go('home');
+                $state.go('trucker');
             }
             $modalInstance.close();
         };

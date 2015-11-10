@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    angular.module('core')
+        .directive('modalFocus', ModalFocusDirective);
+        
+    ModalFocusDirective.$inject = ['$timeout', '$parse'];
     function ModalFocusDirective($timeout, $parse) {
         return {
             restrict: 'A',
@@ -18,7 +22,12 @@
         };
     }
 
+
+    angular.module('core')
+        .factory('focus', FocusFactory);
+        
     /** Source: http://stackoverflow.com/a/25597540/609021 **/
+    FocusFactory.$inject = ['$timeout'];
     function FocusFactory($timeout) {
         return function (id) {
             // timeout makes sure that it is invoked after any other event has been triggered.
@@ -34,7 +43,10 @@
         };
     }
 
+    angular.module('core')
+        .directive('eventFocus', FocusDirective);
     /** Source: http://stackoverflow.com/a/25597540/609021 **/
+    FocusDirective.$inject = ['focus'];
     function FocusDirective(focus) {
         return function (scope, elem, attr) {
             elem.on(attr.eventFocus, function () {
@@ -48,16 +60,5 @@
             });
         };
     }
-
-    ModalFocusDirective.$inject = ['$timeout', '$parse'];
-    FocusFactory.$inject = ['$timeout'];
-
-    angular.module('core')
-        .factory('focus', FocusFactory)
-        .directive('modalFocus', ModalFocusDirective);
-
-    FocusDirective.$inject = ['focus'];
-    angular.module('core')
-        .directive('eventFocus', FocusDirective);
 
 })();

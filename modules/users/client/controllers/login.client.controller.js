@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    angular.module('users')
+        .controller('LoginController', LoginController);
+
+    LoginController.$inject = ['$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect', 'LoginService'];
     function LoginController($state, $modalInstance, $log, Authentication, srefRedirect, LoginService) {
         var vm = this;
         vm.auth = Authentication;
@@ -30,7 +34,7 @@
                         $log.debug('currently at state `%s`, staying here and not redirecting home', $state.$current.name);
                         $state.go($state.current, {}, { reload: true });
                     } else {
-                        $state.go('home');
+                        $state.go('trucker');
                     }
 
                     if (vm.auth.isLoggedIn()) {
@@ -42,9 +46,4 @@
                 });
         };
     }
-
-    LoginController.$inject = ['$state', '$modalInstance', '$log', 'Authentication', 'srefRedirect', 'LoginService'];
-
-    angular.module('users')
-        .controller('LoginController', LoginController);
 })();
