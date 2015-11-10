@@ -322,7 +322,7 @@ describe('User Connections & Social', function () {
             _test = this.test;
 
             var endpoint = '/api/requests';
-            var postData = { to: u3.id, text: 'hello there!' };
+            var postData = { to: u3.id, text: 'Hello Man! Want to be my friend?' };
             
             log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
 
@@ -345,7 +345,7 @@ describe('User Connections & Social', function () {
             _test = this.test;
 
             var endpoint = '/api/requests';
-            var postData = { from: user.id, to: u3.id, text: 'hello there!' };
+            var postData = { from: user.id, to: u3.id, text: 'Hello Man! Want to be my friend?' };
             
             log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
 
@@ -371,9 +371,9 @@ describe('User Connections & Social', function () {
             var contactInfo = {
                 displayName: 'Calamity Jane',
                 email: 'c.jane@deadwoodpost.com',
-                phoneNumbers: [{ main: '123-456-7689' }]
+                phoneNumbers: [{ value: '123-456-7689' }]
             };
-            var postData = { contactInfo: contactInfo, text: 'hello there!' };
+            var postData = { contactInfo: contactInfo, text: 'Hello Man! Want to be my friend?' };
 
             log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
 
@@ -388,7 +388,13 @@ describe('User Connections & Social', function () {
                     friendRequest.should.have.property('text', postData.text);
                     friendRequest.should.have.property('from', user.id);
                     friendRequest.should.have.property('to', null);
-                    friendRequest.should.have.property('contactInfo', contactInfo);
+                    friendRequest.should.have.property('contactInfo');
+                    
+                    friendRequest.contactInfo.should.have.property('email', contactInfo.email);
+                    friendRequest.contactInfo.should.have.property('emails').and.have.length(1);
+                    friendRequest.contactInfo.should.have.property('phone', (contactInfo.phoneNumbers[0].value.replace(/-/g, '')));
+                    friendRequest.contactInfo.should.have.property('phoneNumbers');
+                    
                     friendRequest.should.have.property('status', 'new');
                 });
         });
@@ -404,7 +410,7 @@ describe('User Connections & Social', function () {
                 phoneNumbers: [{ value: '123-456-7689' }]
                 
             };
-            var postData = { contactInfo: contactInfo, text: 'hello there!' };
+            var postData = { contactInfo: contactInfo, text: 'Hello Man! Want to be my friend?' };
 
             log.debug({ url: endpoint, test: _test.title, postData: postData }, 'Posting Friend Request');
 
@@ -419,10 +425,13 @@ describe('User Connections & Social', function () {
                     friendRequest.should.have.property('text', postData.text);
                     friendRequest.should.have.property('from', user.id);
                     friendRequest.should.have.property('to', null);
-                    friendRequest.should.have.property('contactInfo', contactInfo);
                     friendRequest.should.have.property('status', 'new');
                     
-					friendRequest.should.have.property('contactInfo');
+                    friendRequest.contactInfo.should.have.property('email', contactInfo.email);
+                    friendRequest.contactInfo.should.have.property('emails').and.have.length(1);
+                    friendRequest.contactInfo.should.have.property('phone', (contactInfo.phoneNumbers[0].value.replace(/-/g, '')));
+                    friendRequest.contactInfo.should.have.property('phoneNumbers');
+                    
 					friendRequest.contactInfo.should.not.have.property('checked');
                 });
 					

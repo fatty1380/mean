@@ -144,11 +144,14 @@ function processNewRequest(event, requestMessage, sender) {
 
 	log.debug({ func: 'processNewRequest', requestMessage: requestMessage, config: config }, 'START');
 
-	if (_.isObject(requestMessage.to) && !_.isEmpty(requestMessage.to)) {
+	if (_.isObject(requestMessage.to) && _.has(requestMessage.to, 'email')) {
+		log.debug({ func: 'processNewRequest', recipient: requestMessage.to }, 'Resolving Recipient from Object');
 		recipient = Q.when(requestMessage.to);
-	} else if (_.isObject(requestMessage.to) && !_.isEmpty(requestMessage.to)) {
+	} else if (!_.isEmpty(requestMessage.to)) {
+		log.debug({ func: 'processNewRequest', recipient: requestMessage.to }, 'Resolving Recipient from String');
 		recipient = User.findById(requestMessage.to).select('firstName lastName displayName phone email').exec();
 	} else {
+		log.debug({ func: 'processNewRequest', recipient: requestMessage.contactInfo }, 'Resolving Recipient from ContactInfo');
 		emails = requestMessage.contactInfo.emails;
 		phoneNumbers = requestMessage.contactInfo.phoneNumbers;
 
@@ -244,22 +247,22 @@ function processNewRequest(event, requestMessage, sender) {
 
 			if (result.success && requestMessage.status === 'new') {
 				return getBranchDeepLink(requestMessage, event, result.method)
-					.then(function (deepLinkURL) {						
+					.then(function (deepLinkURL) {
 						return deepLinkURL;
 					})
 					.catch(function (err) {
-						log.error({ func: 'processNewRequest', err: err }, 'Failed to load Branch Metrics request')
+						log.error({ func: 'processNewRequest', err: err }, 'Failed to load Branch Metrics request');
 						return null;
 					});
 			}
 		})
 		.then(function (objectLink) {
-						
+
 			if (result.success && requestMessage.status === 'new') {
 				log.debug('Setting `new` status to `sent` after success');
 				requestMessage.status = 'sent';
 				requestMessage.objectLink = objectLink;
-				
+
 				return requestMessage.save();
 			}
 
@@ -395,7 +398,7 @@ function loadRequest(req, res) {
 										return res.redirect(redirect);
 									});
 							}
-							
+
 						case 'shareRequest':
 							url = '/trucker/' + fromId + '?requestId=' + requestMessage.id;
 							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');

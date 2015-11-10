@@ -72,10 +72,18 @@ function createRequest(req, res, next) {
         .then(function (savedRequest) {
             req.log.debug({ func: 'createRequest', request: savedRequest });
 
-            notificationCtr.processRequest(savedRequest, req.user);
+            var result = notificationCtr.processRequest(savedRequest, req.user);
+            if (result.success) {
+                req.log.debug({ func: 'createRequest', result: result }, 'Successfully sent notification');
+            }
+            else {
+                req.log.error({ func: 'createRequest', result: result }, 'Failed to send notification');
+            }
+            
+            req.log.debug({ func: 'createRequest', response: savedRequest }, 'Returning newly Created Request Object');
             req.request = savedRequest;
 
-            return res.json(savedRequest[0]);
+            return res.json(savedRequest);
         }, function caught(error) {
             req.log.error({ func: 'createRequest', err: error }, 'Failed to save new Request');
             return next(error);
@@ -130,6 +138,7 @@ function listRequests(req, res) {
         .exec()
         .then(
             function (requests) {
+                req.log.debug({ func: 'listRequests' }, 'Found Requests');
                 if (!requests) {
                     requests = [];
                 }
@@ -393,6 +402,8 @@ function removeFriend(req, res, next) {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
+var BranchData = mongoose.model('BranchData');
+
 /**
  * updateOutstandingRequests
  * -------------------------
@@ -503,7 +514,7 @@ function normalizeRequest(request) {
     var contactInfo = request.contactInfo;
 
     if (!_.isEmpty(contactInfo)) {
-        
+
         if (!_.isEmpty(contactInfo.phone)) {
             contactInfo.phone = deformatPhone(contactInfo.phone);
         }
@@ -555,7 +566,8 @@ function normalizeRequest(request) {
     }
             
     // Normalize and Clean up Other Fields;
-    if (/hello there!/i.test(request.text)) {
+    if (/^hello there/i.test(request.text)) {
+        log.info({ func: 'normalizeRequest', text: request.text }, 'Removing Existing Placeholder Text')
         request.text = null;
     }
     

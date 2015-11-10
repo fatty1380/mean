@@ -125,7 +125,7 @@ function sendTemplate(templateName, mailOptions) {
         'ip_pool': ipPool
     }, function (result) {
         log.debug('Emailer] Successful Result: %j', result);
-        return;
+        return result;
     }, function (e) {
         // Mandrill returns the error as an object with name and message keys
         log.debug('A mandrill error occurred: ' + e.name + ' - ' + e.message);
