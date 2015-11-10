@@ -535,6 +535,11 @@ function normalizeRequest(request) {
             log.debug({ func: 'normalizeRequest', src: contactInfo.phoneNumbers, out: pn }, 'Processed Phones');
 
             contactInfo.phoneNumbers = pn;
+            
+            if (_.isEmpty(contactInfo.phone) && !_.isEmpty(pn)) {
+                contactInfo.phone = pn[0].value;
+            }
+            
         } else if (!_.isEmpty(contactInfo.phone)) {
             // If the contact info object contains a 'phone' value, but not 'phoneNumbers',
             // Push the 'phone' object into a new array.
@@ -553,6 +558,10 @@ function normalizeRequest(request) {
             log.debug({ func: 'normalizeRequest', src: contactInfo.emails, out: em }, 'Processed Emails');
 
             contactInfo.emails = em;
+            
+            if (_.isEmpty(contactInfo.email) && !_.isEmpty(em)) {
+                contactInfo.email = em[0].value;
+            }
         } else if (!_.isEmpty(contactInfo.email)) {
             // If the contact info object contains a 'email' value, but not 'emailNumbers',
             // Push the 'email' object into a new array.
