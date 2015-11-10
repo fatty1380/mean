@@ -61,6 +61,9 @@ module.exports.initMiddleware = function (app) {
     // Showing stack errors
     app.set('showStackError', true);
 
+    // Trust the Proxy, so that IP Addresses can be accurately and consistently logged.
+    app.set('trust proxy', true);
+    
     // Should be placed before express.static
     app.use(compress({
         filter: function (req, res) {
@@ -153,35 +156,21 @@ module.exports.initMiddleware = function (app) {
         // Enable logger (morgan)
         app.use(morgan(streamType));
     }
-
-    if (process.env.NODE_ENV === 'development') {
-        
-        
-        // log.info({ func: 'initMiddleware' }, 'Configuring CORS Specific headers and OPTIONS for development only');
-        // app.use();
-    } 
     
-    log.info({ func: 'initLocalVariables', options: config.security.cors }, 'Enabling CORS for Mobile Application');
+    // log.info({ func: 'initLocalVariables', options: config.security.cors }, 'Enabling CORS for Mobile Application');
 
-    var whitelist = config.security.cors.whitelist || [];
-    var corsOptions = !!whitelist.length ? {
-        origin: whitelist
-        // function(origin, callback) {
-        //     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
-        //     log.debug({ func: 'corsOptions', origin: origin, whitelist: whitelist, isValid: originIsWhitelisted }, 'evaluating origin for CORS validity');
-        //     callback(null, originIsWhitelisted);
-        // }
-    } : {};
+    // var whitelist = config.security.cors.whitelist || [];
+    // var corsOptions = !!whitelist.length ? {
+    //     origin: whitelist
+    // } : {};
 
     //app.use(cors(corsOptions));
+    log.info({ func: 'initLocalVariables' }, 'Enabling CORS');
     app.use(cors());
-    
-    /// JWT???
-    //app.use('/api', expressJwt({ secret: config.sessionSecret }));
-    //app.use('/api', expressJwt({ secret: config.sessionSecret }));
     
     // Authenticate with Passport-Bearer Authentication, and only
     // fail in case of exception/error - not failed auth.
+    log.info({ func: 'initLocalVariables' }, 'Securing /api routes');
     app.use('/api', function (req, res, next) {
         if (_.isEmpty(req.headers.authorization)) {
             return next();

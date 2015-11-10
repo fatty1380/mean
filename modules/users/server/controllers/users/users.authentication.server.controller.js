@@ -73,7 +73,6 @@ exports.signup = function (req, res) {
     }
 
     var newUser;
-    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     req.log.info({ func: 'signup', saves: saves }, 'Waiting for saves');
     return Q.all(saves)
