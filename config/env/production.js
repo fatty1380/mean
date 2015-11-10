@@ -127,6 +127,11 @@ module.exports = {
             authToken: process.env.TWILIO_AUTH_TOKEN || '827a9998ea90ed5c0483cc4246ddcace',
             twilioNumber: process.env.TWILIO_NUMBER || '+18189601051',
             toOverride: process.env.TWILIO_OVERRIDE || null
+        },
+        branch: {
+            url: process.env.BRANCH_API_ROOT || 'https://api.branch.io',
+            key: process.env.BRANCH_ACCOUNT_KEY || 'key_live_cjpJIvP9erJIol5fdKzEpmjayAcT0MRH',
+            secret: process.env.BRANCH_ACCOUNT_SECRET || 'secret_live_ORDbfObgxmJ4f0xSHX9Wu7mvFA4YhL6m'
         }
     },
     reports: {},
