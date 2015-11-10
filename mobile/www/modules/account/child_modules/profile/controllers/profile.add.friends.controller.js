@@ -5,9 +5,9 @@
         .module('account')
         .controller('AddFriendsCtrl', AddFriendsCtrl);
 
-    AddFriendsCtrl.$inject = ['$q', 'profileModalsService', '$scope', 'contactsService', 'utilsService', '$filter', 'parameters', '$http', 'settings', 'LoadingService'];
+    AddFriendsCtrl.$inject = ['$q', 'profileModalsService', '$scope', 'contactsService', 'utilsService', '$filter', 'parameters', '$http', 'settings', 'LoadingService', 'friendsService'];
 
-    function AddFriendsCtrl($q, profileModalsService, $scope, contactsService, utilsService, $filter, parameters, $http, settings, LoadingService) {
+    function AddFriendsCtrl($q, profileModalsService, $scope, contactsService, utilsService, $filter, parameters, $http, settings, LoadingService, friendsService) {
         var vm = this;
 
         vm.searchText = "";
@@ -15,6 +15,7 @@
 
         vm.showAddFriendsModal = addFriends;
         vm.showFriendManualAddModal = showFriendManualAddModal;
+        vm.selected = getSelectedContacts;
 
         initialize(parameters);
         
@@ -44,53 +45,36 @@
             profileModalsService
                 .showFriendManualAddModal()
                 .then(function (contact) {
-                    vm.contacts.push(contact);
+                    vm.contacts.unshift(contact);
                     contactsService.setContacts(vm.contacts);
                 }, function (err) {
                     console.warn('err --->>>', err);
                 });
         }
 
+        function getSelectedContacts() {
+            return _.filter(vm.contacts, function (c) { return c.checked; });
+
+        }
+
         function addFriends() {
             var filter = $filter('getChecked');
             var newInvites = filter(vm.contacts);
-            var deferred = $q.defer();
-            var promise = deferred.promise;
-            
-            var requestSentStatuses = [];
-            var successfullySent;
-            var messageTemplate;
 
             //TODO: remove requestSentStatuses array when there will be a possibility to send an array of users
             //TODO: and show the message in the success callback
             
-            // TODO: COMBINE w/ add.contact.controller
-            //friendsService.sendRequests(newInvites);
+            LoadingService.showLoader('Sending Invitations');
 
-            for (var i = 0; i < newInvites.length; i++) {
-                var postData = { contactInfo: newInvites[i], text: '' };
+            friendsService.sendFriendRequests(newInvites)
+                .then(function (response) {
+                    LoadingService.showSuccess('Invitations sent!');
 
-                $http
-                    .post(settings.requests, postData)
-                    .then(function () {
-                        requestSentStatuses.push(true);
-                        if (i = newInvites.length) {
-                            successfullySent = requestSentStatuses.indexOf(false) < 0;
-                            deferred.resolve(successfullySent);
-                        }
-                    }, function (err) {
-                        requestSentStatuses.push(false);
-                    });
-            }
-
-            promise.then(function (response) {
-                if (response || true) {
-                    messageTemplate = 'Invitations have been successfully sent';
-                    LoadingService.showSuccess(messageTemplate);
-                }
-                
-                vm.closeModal(response);
-            });
+                    vm.closeModal(response);
+                })
+                .catch(function fail(err) {
+                    LoadingService.showFailure('Unable to Send Invitations<br>Please try again later');
+                });
 
         }
 

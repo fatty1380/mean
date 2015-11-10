@@ -12,45 +12,60 @@
 
     function contactsFilter() {
         return function (allContacts) {
-            var contacts = [],
-                contact, formattedContact, i,
-                displayName, phoneNumbers, emails, conditions;
+            return _(allContacts).map(processContact).filter(_.isObject).value();
+        }
 
-            for(i = 0; i < allContacts.length; i++){
-                contact = allContacts[i];
+        function processContact(contact) {
+            var conditions = contact.emails && contact.emails.length || contact.phoneNumbers && contact.phoneNumbers.length;
+            if (conditions) {
+                return {
+                    "id": contact.id,
+                    "displayName": (contact.name.formatted || contact.name.givenName + " " + contact.name.familyName || "Contact" + contact.id).trim(),
+                    "emails": getEmail(contact.emails),
+                    "phoneNumbers": getPhoneNumbers(contact.phoneNumbers)
+                };
+            }
+            return null;
+        }
 
-                conditions =  contact.emails && contact.emails.length || contact.phoneNumbers && contact.phoneNumbers.length;
-                if(conditions){
-                    displayName = (contact.name.formatted || contact.name.givenName + " " + contact.name.familyName || "Person").trim();
-                    emails = getEmail(contact.emails);
-                    phoneNumbers = getPhoneNumbers(contact.phoneNumbers);
+        function getEmail(emails) {
+            if (!emails || !emails.length) return [];
+            
+            var emailArray = [];
+            var e;
 
-                    formattedContact = {
-                        "displayName": displayName,
-                        "emails": emails,
-                        "phoneNumbers": phoneNumbers
-                    };
-                    contacts.push(formattedContact);
+            for (var j = 0; j < emails.length; j++) {
+                if (!_.isEmpty(e = emails[j])) {
+                    emailArray.push({
+                        value: e.value,
+                        type: e.type,
+                        pref: e.pref
+                    });
                 }
             }
 
-            function getEmail(emails) {
-                return emails && emails[0].value || '';
-            }
+            return emailArray;
+            
+            
+        }
 
-            function getPhoneNumbers(phones) {
-                if (!phones || !phones.length) return [];
+        function getPhoneNumbers(phones) {
+            if (!phones || !phones.length) return [];
 
-                var phoneArray = [];
+            var phoneArray = [];
+            var p;
 
-                for(var j = 0; j < phones.length; j++){
-                    phoneArray.push(phones[j].value);
+            for (var j = 0; j < phones.length; j++) {
+                if (!_.isEmpty(p = phones[j])) {
+                    phoneArray.push({
+                        value: p.value,
+                        type: p.type,
+                        pref: p.pref
+                    });
                 }
-
-                return phoneArray;
             }
 
-            return contacts;
+            return phoneArray;
         }
     }
 

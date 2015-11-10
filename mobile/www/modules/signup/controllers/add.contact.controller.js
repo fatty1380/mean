@@ -5,19 +5,19 @@
         .module('signup')
         .controller('AddContactFriendsCtrl', AddContactFriendsCtrl);
 
-    AddContactFriendsCtrl.$inject = ['$state', '$q', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', 'LoadingService', 'contactsService', '$filter'];
+    AddContactFriendsCtrl.$inject = ['contacts', '$state', '$q', 'registerService', '$ionicPopup', '$http', 'settings', 'utilsService', 'LoadingService', 'contactsService', '$filter'];
 
-    function AddContactFriendsCtrl($state, $q, registerService, $ionicPopup, $http, settings, utilsService, LoadingService, contactsService, $filter) {
+    function AddContactFriendsCtrl(contacts, $state, $q, registerService, $ionicPopup, $http, settings, utilsService, LoadingService, contactsService, $filter) {
         var vm = this;
 
-        vm.contacts = contactsService.getContacts();
+        debugger;
+        vm.contacts = contacts || contactsService.getContacts();
+        vm.contactsResolved = contactsService.isResolved();
 
         vm.skip = skip;
         vm.back = goBack;
         vm.loadContacts = loadContacts;
         vm.sendInvitations = sendInvitations;
-
-        LoadingService.hide();
         
         ///////////////////////////////////////////////////////////////////
 
@@ -30,10 +30,13 @@
         }
 
         function loadContacts() {
-            if (!vm.contacts.length) {
-                LoadingService.showshowLoader('Loading Contacts');
-                return contactsService.retrieveContacts().then(LoadingService.hide);
-            }
+            return contactsService.resolveContacts()
+                .then(function (resolvedContacts) {
+                    debugger;
+                    vm.contacts = resolvedContacts; // contactsService.getContacts();
+                    vm.contactsResolved = contactsService.isResolved();
+                })
+                .finally(LoadingService.hide);
         }
 
         function sendInvitations() {
@@ -44,7 +47,7 @@
                 LoadingService.showFailure('Please select at least one contact to invite');
                 return;
             }
-            
+
             var confirm = $ionicPopup.confirm({
                 title: 'TruckerLine Invites',
                 template: 'Invite ' + selectedContacts.length + ' selected contacts?'
@@ -54,7 +57,7 @@
                 confirm
                     .then(function (res) {
                         if (res) {
-                            LoadingService.showLoadere('Sending Invitations');
+                            LoadingService.showLoader('Sending Invitations');
                             // TODO: COMBINE w/ profile.add.friends.controller
                             //return friendsService.sendRequests(selectedContacts);
 
@@ -85,6 +88,7 @@
 
                         } else {
                             console.log('friends are not invited');
+                            return $q.reject('cancel');
                         }
                     })
                     .then(function (sentRequests) {
@@ -97,6 +101,12 @@
                         $state.go('account.profile');
                     })
                     .catch(function (err) {
+
+                        if (/cancel/i.test(err)) {
+                            console.log('user cancelled');
+                            return;
+                        }
+
                         console.error('Unable to invite friends:', err);
                         $ionicPopup.confirm({
                             title: 'Sorry',

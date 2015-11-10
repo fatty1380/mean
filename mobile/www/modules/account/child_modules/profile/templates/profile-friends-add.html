@@ -12,16 +12,17 @@
         </div>
 
         <ion-scroll>
-            <div class="title">Contact List</div>
+            <div class="title">Contact List <span ng-if="vm.selected().length">({{vm.selected().length}} Selected)</span></div>
             <ul class="list friends-list">
                 <li class="item" collection-repeat="contact in contacts = (vm.contacts | filter:vm.searchText)">
-                    <i class="ico ico-avatarsmall" ></i>
+                    <i class="ico ico-avatarsmall"></i>
                     <div class="item-content  has-button-offset">
                         {{contact.displayName}}{{contact.text}}
                     </div>
+
                     <button ng-if="!contact.checked && !contact.invited" class="button button-small list-button" ng-click="contact.checked = !contact.checked;">Invite</button>
-                    <button ng-if="contact.invited" class="button button-small list-button">Invited</button>
                     <button ng-if="contact.checked" class="button button-small list-button selected" ng-click="contact.checked = !contact.checked;">Selected</button>
+                    <button ng-if="contact.invited" class="button button-small list-button">Invited</button>
                 </li>
             </ul>
             <div ng-if="!contacts.length" class="no-matches">
@@ -29,8 +30,7 @@
             </div>
             <div class="button-holder text-center">
                 <a class="button button-clear manual-add" ng-click="vm.showFriendManualAddModal()">
-                    <i class="icon ion-ios-plus-outline"></i>
-                    Add by Mobile Phone or Email
+                    <i class="icon ion-ios-plus-outline"></i> Add by Mobile Phone or Email
                 </a>
             </div>
         </ion-scroll>
@@ -39,7 +39,7 @@
     <ion-footer-bar>
         <div class="button-bar action-buttons">
             <button class="button secondary" ng-click="vm.cancelModal();">Cancel</button>
-            <button class="button primary" ng-click="vm.showAddFriendsModal();">Add Friends</button>
+            <button class="button primary" ng-class="{'disabled': !vm.selected().length}" ng-click="vm.showAddFriendsModal();">Send Invites</button>
         </div>
     </ion-footer-bar>
 

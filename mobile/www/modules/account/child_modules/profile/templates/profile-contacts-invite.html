@@ -16,7 +16,7 @@
                 <li class="item" ng-repeat="contact in contacts = (vm.friends | filter:vm.searchText)">
                     <i class="ico ico-avatarsmall" ></i>
                     <div class="item-content">
-                        {{contact.displayName}}{{contact.text}}
+                        {{contact.displayName || contact.phone || contact.email || 'manual contact'}} <small ng-if="contact.text">{{contact.text}}</small>
                     </div>
                     <button class="button button-small list-button">Select</button>
                 </li>

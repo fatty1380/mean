@@ -30,7 +30,7 @@
 
     FriendsCtrl.$inject = ['updates', 'user', 'profile', 'friends',
         '$rootScope', '$state', '$filter', 'LoadingService', '$ionicScrollDelegate',
-       'userService', 'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
+        'userService', 'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
 
     function FriendsCtrl(updates, user, profile, friends,
         $rootScope, $state, $filter, LoadingService, $ionicScrollDelegate,
@@ -160,17 +160,21 @@
         function addManually() {
             return profileModalsService
                 .showFriendManualAddModal()
-                .then(function success(result) {
-                    console.log('Manual Add Friend Rusult: ', result);
-                    return result;
+                .then(function success(contact) {
+                    console.log('Manual Add Friend Rusult: ', contact);
+
+                    return friendsService.createRequest({
+                        contactInfo: contact
+                    });
+                })
+                .then(function sendInviteSuccess(result) {
+                    console.log('Sent Invite', result.data);
+                    LoadingService.showSuccess('Invitation Sent!');
                 })
                 .catch(function failure(err) {
-                    console.error('Add Friend Results failed', err);
+                    LoadingService.showError('Unable to Send Invitation');
                     return null;
-                })
-                .finally(function done() {
-                    LoadingService.hide();
-                })
+                });
         }
 
         function getOutsetUsers(query) {
@@ -199,7 +203,7 @@
             // 
             userProfile.isFriend = _.contains(userProfile.friends, user.id)
             userProfile.isSelf = userProfile.id === user.id;
-            
+
             userProfile.displayName = userProfile.isFriend || userProfile.isSelf ? userProfile.displayName :
                 userProfile.firstName + ' ' + (userProfile.lastName && userProfile.lastName.charAt(0));
         }

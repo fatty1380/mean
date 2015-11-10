@@ -22,7 +22,8 @@
             </div>
             <div class="button-holder text-center">
                 
-                <button class="button button-block choose-contacts-button" ng-hide="vm.contacts && vm.contacts.length"
+                <button class="button button-block choose-contacts-button" 
+                 ng-hide="vm.contactsResolved"
                  ng-click="vm.loadContacts()">
                  Load All Contacts
                  </button>

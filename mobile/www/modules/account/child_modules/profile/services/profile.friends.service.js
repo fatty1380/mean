@@ -5,9 +5,9 @@
         .module('profile')
         .factory('friendsService', friendsService);
 
-    friendsService.$inject = ['$http', 'settings'];
+    friendsService.$inject = ['$http', '$q', 'settings'];
 
-    function friendsService($http, settings) {
+    function friendsService($http, $q, settings) {
         var friends = [], users = [];
 
         return {
@@ -20,6 +20,7 @@
             retrieveFriends: retrieveFriends,
             getFriendStatus: getFriendStatus,
             getRequestsList: getRequestsList,
+            sendFriendRequests: sendFriendRequests,
             createRequest: createRequest,
             loadRequest: loadRequest,
             updateRequest: updateRequest
@@ -69,6 +70,22 @@
 
         function getRequestsList() {
             return $http.get(settings.requests);
+        }
+
+        function sendFriendRequests(recipients) {
+            var promises = _.map(recipients, function (recipient) {
+                return createRequest({ contactInfo: recipient });
+            })
+
+            return $q.all(promises)
+                .then(function success(results) {
+                    console.log('Sent %d  new Requests')
+                    return results;
+                })
+                .catch(function fail(err) {
+                    console.error(err, 'Failed to send requests');
+                    return false;
+                })
         }
 
         function createRequest(requestData) {

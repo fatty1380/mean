@@ -9,23 +9,26 @@
         .module('signup')
         .controller('AddFriendManuallyCtrl', AddFriendManuallyCtrl);
 
-    AddFriendManuallyCtrl.$inject = ['$state', 'contactsService', '$ionicPopup'];
+    AddFriendManuallyCtrl.$inject = ['$scope', '$state', 'contactsService', '$ionicPopup'];
 
-    function AddFriendManuallyCtrl($state, contactsService, $ionicPopup) {
+    function AddFriendManuallyCtrl($scope, $state, contactsService, $ionicPopup) {
         var vm = this;
 
         vm.invite = invite;
         vm.cancel = cancel;
+        vm.init = init;
 
-        init();
+        $scope.$on('$ionicView.enter', function () {
+            init();
+        });
 
-        function init() {
-            vm.contact = {};
+        function init(newContact) {
+            vm.contact = newContact || { type: 'manual' };
         }
 
         function invite() {
             return contactsService.addContact(vm.contact)
-                .then(function() {
+                .then(function () {
                     return $state.go('signup-friends-contacts');
                 });
         }

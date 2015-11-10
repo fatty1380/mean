@@ -4,16 +4,27 @@
         .module(AppConfig.appModuleName)
         .factory('contactsService', contactsService);
 
-    contactsService.$inject = ['$q', '$filter'];
+    contactsService.$inject = ['$q', '$filter', 'LoadingService'];
 
-    function contactsService($q, $filter) {
+    function contactsService($q, $filter, LoadingService) {
 
         console.warn('Contact Service INITIALIZING');
         var contacts = [],
+            deviceContactsLoaded = false,
             filter = $filter('contactsFilter');
+            
+        // SM for Service Model
+        var sm = {
+            contacts: []
+        };
 
         return {
-            getContacts: getContacts,
+            getContacts: function () { return sm.contacts; },
+            isResolved: function () { return deviceContactsLoaded; },
+            
+            resolveContacts: resolveContacts,
+            loadContacts: loadContacts,
+            loadOrResolveContacts: loadOrResolveContacts,
             retrieveContacts: retrieveContacts,
             addContact: addContact,
             setContacts: setContacts,
@@ -21,18 +32,16 @@
             clone: clone,
             remove: remove,
             find: find,
-            pickContact: pickContact
-        };
+            pickContact: pickContact,
 
-        function getContacts() {
-            return contacts;
-        }
+            deviceContactsLoaded: deviceContactsLoaded
+        };
 
         function setContacts(newContacts) {
             if (newContacts) {
-                contacts = newContacts;
+                sm.contacts = newContacts;
             }
-            return contacts;
+            return sm.contacts;
         }
 
         /**
@@ -41,11 +50,11 @@
          */
         function addContact(contact) {
             if (angular.isArray(contact)) {
-                contacts.concat(contact);
+                sm.contacts.concat(contact);
             } else {
                 if (contact && (contact.phoneNumbers || contact.emails)) {
                     contact.checked = true;
-                    contacts.push(contact)
+                    sm.contacts.unshift(contact)
                 }
                 else if (contact && (contact.phone || contact.email)) {
                     contact.emails = !!contact.email ? [{ value: contact.email, type: 'manual' }] : [];
@@ -56,24 +65,53 @@
                     contact.displayName = contact.displayName || !!pore && pore.value || pore;
 
                     contact.checked = true;
+                    
+                    contact.id = contact.id || 'manual' + Math.floor(10000 * Math.random() + 1000);
 
-                    contacts.push(contact);
+                    sm.contacts.unshift(contact);
                 }
             }
-            return $q.when(contacts);
+            return $q.when(sm.contacts);
+        }
+        
+        function loadContacts(resolve) {
+            return loadOrResolveContacts(resolve);
+        }
+        
+        function resolveContacts() {
+            return loadOrResolveContacts(true);
+        }
+
+        function loadOrResolveContacts(resolve) {
+            if (resolve && (!deviceContactsLoaded || !sm.contacts.length)) {
+                LoadingService.showLoader('Loading Contacts<br><small>(this may take a moment)</small>');
+                return retrieveContacts()
+                    .finally(LoadingService.hide);
+            }
+            
+            return $q.when(sm.contacts);
         }
 
 
         function retrieveContacts() {
             return find().then(
                 function (data) {
-                    contacts = filter(data);
-                    console.warn(' getContacts() --->>>', getContacts());
+                    var newContacts = filter(data);
+                    console.warn(' retrieveContacts() --->>>', newContacts);
+                    
+                    sm.contacts = _(sm.contacts.concat(newContacts)).uniq(function (c) {
+                        return c.id || 'manual-' + Math.floor(10000 * Math.random() + 1000);
+                    }).value();
+                    debugger;
+                    
+                    deviceContactsLoaded = true;
+                    
+                    return sm.contacts
                 })
                 .catch(function (err) {
                     console.log('error retrieving contacts', err);
 
-                    contacts = contacts || [];
+                    return (sm.contacts = sm.contacts || []);
                 });
         }
 
