@@ -40,7 +40,7 @@ exports.signup = function (req, res) {
     // For security measurement we remove the roles from the req.body object
     delete req.body.roles;
 
-    req.log.info({ func: 'signup', type: req.body.type, username: req.body.username }, 'Signup for new user');
+    req.log.info({ func: 'signup', type: req.body.type, username: req.body.username }, 'Signup for new user', req.body);
     var user, company, saves = [];
 
     req.body.type = req.body.type || 'driver';
@@ -48,9 +48,11 @@ exports.signup = function (req, res) {
     // Init Variables
     switch (req.body.type) {
         case 'driver':
+            req.log.info({ func: 'signup' }, 'Signup for new Driver');
             user = new Driver(req.body);
             break;
         case 'owner':
+            req.log.info({ func: 'signup' }, 'Signup for new Owner');
             user = new User(req.body);
             break;
         default: user = new User(req.body);
