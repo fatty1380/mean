@@ -500,6 +500,13 @@ function normalizeRequest(request) {
     var contactInfo = request.contactInfo;
 
     if (!_.isEmpty(contactInfo)) {
+        
+        if (!_.isEmpty(contactInfo.phone)) {
+            contactInfo.phone = deformatPhone(contactInfo.phone);
+        }
+        if (!_.isEmpty(contactInfo.email)) {
+            contactInfo.email = validateEmail(contactInfo.email);
+        }
 
         var phoneNumbers = contactInfo.phoneNumbers || contactInfo.phones;
 
@@ -514,6 +521,11 @@ function normalizeRequest(request) {
             log.debug({ func: 'normalizeRequest', src: contactInfo.phoneNumbers, out: pn }, 'Processed Phones');
 
             contactInfo.phoneNumbers = pn;
+        } else if (!_.isEmpty(contactInfo.phone)) {
+            // If the contact info object contains a 'phone' value, but not 'phoneNumbers',
+            // Push the 'phone' object into a new array.
+            
+            contactInfo.phoneNumbers = [translateToPhoneObject(contactInfo.phone)];
         }
 
         if (!_.isEmpty(contactInfo.emails)) {
@@ -527,6 +539,11 @@ function normalizeRequest(request) {
             log.debug({ func: 'normalizeRequest', src: contactInfo.emails, out: em }, 'Processed Emails');
 
             contactInfo.emails = em;
+        } else if (!_.isEmpty(contactInfo.email)) {
+            // If the contact info object contains a 'email' value, but not 'emailNumbers',
+            // Push the 'email' object into a new array.
+            
+            contactInfo.emails = [translateToEmailObject(contactInfo.email)];
         }
                     
         // Cleanup Extraneous fields
