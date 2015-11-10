@@ -93,16 +93,7 @@
                     },
                     resolve: {
                         contacts: function ($stateParams, contactsService, LoadingService) {
-                            var resolveContacts = $stateParams.resolveContacts;
-                            if (resolveContacts) {
-                                var contacts = contactsService.getContacts();
-                                if (!contacts.length) {
-                                    LoadingService.showLoader('Loading Contacts<br><small>(this may take a moment)</small>');
-                                    return contactsService.retrieveContacts();
-                                }
-                            }
-                            
-                            return contactsService.getContacts();
+                            return contactsService.loadOrResolveContacts($stateParams.resolveContacts);
                         }
                     }
                 })
