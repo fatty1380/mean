@@ -391,14 +391,14 @@ function postBodyToUserFeed(userId, feedItemBody, reqLog) {
 		'title': 'Welcome to TruckerLine! Using your activity feed, you can keep a personal log of your daily drive, and see what your industry friends are up to as they post to their daily log. Get started by adding your first activity, then find your friends and grow your convoy.',
 		'__v': 1,
 		'_location': [{
-            "placeName" : "Kansas City, MO, USA",
-            "placeId" : "ChIJl5npr173wIcRolGqauYlhVU",
-            "created" : "",
-            "coordinates" : [ 
-                39.0997265, 
+            "placeName": "Kansas City, MO, USA",
+            "placeId": "ChIJl5npr173wIcRolGqauYlhVU",
+            "created": "",
+            "coordinates": [
+                39.0997265,
                 -94.57856670000001
             ],
-            "type" : "Point"
+            "type": "Point"
         }],
 		//'_imageURL': 'https://s3-us-west-2.amazonaws.com/outset-public-resources/img/tl_welcome.png',
 		'likes': [
@@ -412,7 +412,7 @@ function postBodyToUserFeed(userId, feedItemBody, reqLog) {
 
 	log.debug({ func: 'postBodyToUserFeed', item: feedItem }, 'posting feed item to feed %s', userId);
 
-	return feedItem.save()
+	return Q(feedItem.save())
 		.then(function (item) {
 			log.debug({ func: 'postBodyToUserFeed' }, 'Saved Feed item, now posting to feed');
 
@@ -448,7 +448,7 @@ function getOrCreateFeed(userId, log, companyId) {
 	//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
 		.exec()
 		.then(function (feed) {
-			log.trace({ func: 'getOrCreateFeed', feed: feed });
+			log.debug({ func: 'getOrCreateFeed', feed: feed });
 			if (!feed) {
 				log.info({ func: 'getOrCreateFeed' }, '... hmmm, Creating new feed for user');
 				feed = new Feed({ user: userId, company: companyId });
@@ -459,10 +459,10 @@ function getOrCreateFeed(userId, log, companyId) {
 				return feed;
 			}
 		},
-		function fail(err) {
-			debugger;
-			return Q.reject(err);
-		});
+			function fail(err) {
+				debugger;
+				return Q.reject(err);
+			});
 }
 
 /** Private Method implementations ____________________________________________________________________ */

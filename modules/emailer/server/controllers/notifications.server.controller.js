@@ -1,16 +1,11 @@
 'use strict';
 
-exports.process = processNotification;
-exports.send = send;
-exports.sendSMS = sendSMS;
-exports.sendEmail = sendEmail;
-exports.loadRequest = loadRequest;
-exports.processRequest = processRequest;
-
 var _ = require('lodash'),
 	path = require('path'),
     mongoose = require('mongoose'),
 	Q = require('q'),
+	EventEmitter = require('events').EventEmitter,
+ 	eventServer = new EventEmitter(),
 	messenger = require('../controllers/messenger.server.controller'),
 	emailer = require('../controllers/emailer.server.controller'),
     log = require(path.resolve('./config/lib/logger')).child({
@@ -21,6 +16,13 @@ var _ = require('lodash'),
 var User = mongoose.model('User'),
 	RequestMessage = mongoose.model('RequestMessage'),
     Login = mongoose.model('Login');
+	
+///////////////////////////////////////////////////////////////////////////
+
+exports.send = send;
+exports.loadRequest = loadRequest;
+exports.processRequest = processRequest;
+exports.events = eventServer;
 	
 ///////////////////////////////////////////////////////////////////////////
 	
@@ -67,7 +69,15 @@ function initialize(messageConfigs) {
 	eventConfig = _.defaults(eventConfig, messageConfigs, defaultEventConfig);
 
 	log.debug({ func: 'initialize', config: eventConfig }, 'Notification Center Configured with new settings');
+
+	eventServer.on('user:new', function (user, req) {
+		send('user:new', { user: user });
+	});
+
+	log.debug({ func: 'initialize' }, 'Initialization complete');
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function send(event, options) {
 

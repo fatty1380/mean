@@ -6,7 +6,7 @@
 var _ = require('lodash'),
     path = require('path'),
     passport = require('passport'),
-	config = require(path.resolve('./config/config')),
+    config = require(path.resolve('./config/config')),
     errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
     emailer = require(path.resolve('./modules/emailer/server/controllers/emailer.server.controller')),
     NotificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
@@ -74,81 +74,107 @@ exports.signup = function (req, res) {
 
     var newUser;
 
-    req.log.info({ func: 'signup', saves: saves }, 'Waiting for saves');
     return Q.all(saves)
         .then(function (results) {
             req.log.info({ func: 'signup', company: company }, 'Returned from saves');
             results.user = results[0];
             results.company = results[1];
+            
+            if (!_.isEmpty(results.company)) {
+                NotificationCtr.events.emit('company:new', results.company, req);
+            }
 
+            // Invoke Notification Center Event as a Promise so that they are run
+            // asynchronously and don't block or interrupt the signup flow
+            Q.when(NotificationCtr.events.emit('user:new', results.user, req))
+                .then(function success(result) {
+                    req.log.info({ func: 'signup' }, 'Processed all event handlers');
+                })
+                .catch(function fail(err) {
+                    debugger;
+                    req.log.error(err, 'failed to send events');
+                });
+            
             req.log.info({ func: 'signup', user: user, ruser: results.user, company: results.company }, 'Saved User object');
             login(req, res, results.user, true);
 
             return results.user;
         })
         .catch(function (err) {
+            req.log.error({ func: 'signup', err: err }, 'Error with Signup');
             if (!res.headersSent) {
                 res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
                 });
             }
         })
-        .then(function (newUser) {
-            if (!newUser) {
-                return;
-            }
-
-            (new Login({ input: newUser.username, result: 'signup', userId: newUser.id, ip: ip })).save().end(_.noop());
-
-            if (!!req.body.branchData || !!req.body.referralCode) {
-                debugger;
-                req.log.info({ func: 'signup', file: 'users.authentication', branchData: req.body.branchData, referralCode: req.body.referralCode }, 'Saving BranchData from New User Request');
-
-                var branchData = new BranchData({
-                    user: user._id,
-                    data: req.body.branchData,
-                    referralCode: req.body.referralCode
-                });
-
-                branchData.save().then(
-                    function success(result) {
-                        debugger;
-                        req.log.info({ func: 'signup.saveBranch', file: 'users.authentication', result: result }, 'Saved BranchData from New User Request');
-                    },
-                    function fail(err) {
-                        debugger;
-                        req.log.error({ func: 'signup.saveBranch', file: 'users.authentication', err: err }, 'Failed to save Branch Data from New User Request');
-                    })
-                    .end(_.noop);
-            }
-
-            if (newUser.isDriver) {
-                NotificationCtr.send('user:new', { user: newUser });
-
-                createDefaultRequest(newUser, req.log);
-
-                return FeedCtrl.postBodyToUserFeed(newUser.id, null, req.log);
-                //emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-driver', newUser);
-            }
-            else if (newUser.isOwner) {
-                emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', newUser);
-            }
-            else {
-                req.log.warn('[SIGNPU] - Creating new User of type `%s` ... what to do?', req.body.type);
-            }
-        })
-        .then(function (result) {
-            req.log.info({ func: 'signup', result: result }, 'Result from signup sending');
-        })
         .finally(function () {
             // Crappy hack to save to feed before returning the user ;/
             
             if (!res.headersSent) {
                 res.json(req.user);
-
             }
         });
 };
+
+////////////////////////////////////////////////////////////////////////////
+(function registerEvents() {
+    NotificationCtr.events.on('user:new', logLogin);
+    NotificationCtr.events.on('user:new', logBranchData);
+    NotificationCtr.events.on('user:new', processNewUser);
+})();
+
+function logLogin(user, req) {
+    (new Login({ input: user.username, result: 'signup', userId: user.id, ip: req.ip })).save().end(_.noop());
+}
+
+function logBranchData(user, req) {
+    if (_.isEmpty(req.body.branchData) && _.isEmpty(req.body.referralCode)) {
+        return;
+    }
+
+    debugger;
+    var referralCode = _.isString(req.body.referralCode) && !(/undefined/i.test(req.body.referralCode)) ? req.body.referralCode : null;
+    var data = req.body.branchData || null;
+
+    req.log.info({ func: 'signup', file: 'users.authentication', branchData: req.body.branchData, referralCode: referralCode }, 'Saving BranchData from New User Request');
+
+    var branchData = new BranchData({
+        user: user._id,
+        data: data,
+        referralCode: referralCode
+    });
+
+    branchData.save().then(
+        function success(result) {
+            debugger;
+            req.log.info({ func: 'signup.saveBranch', file: 'users.authentication', result: result },
+                'Saved BranchData from New User Request');
+        },
+        function fail(err) {
+            debugger;
+            req.log.error({ func: 'signup.saveBranch', file: 'users.authentication', err: err },
+                'Failed to save Branch Data from New User Request');
+        })
+        .end(_.noop);
+}
+
+function processNewUser(user, req) {
+    if (user.isDriver) {
+        //NotificationCtr.send('user:new', { user: user });
+
+        createDefaultRequest(user, req.log);
+
+        return FeedCtrl.postBodyToUserFeed(user.id, null, req.log);
+    }
+    else if (user.isOwner) {
+        //emailer.sendTemplateBySlug('thank-you-for-signing-up-for-outset-owner', user);
+    }
+    else {
+        req.log.warn('[SIGNPU] - Creating new User of type `%s` ... what to do?', req.body.type);
+    }
+}
+
 
 function createDefaultRequest(user, reqLog) {
     reqLog = reqLog || log;
@@ -165,6 +191,8 @@ function createDefaultRequest(user, reqLog) {
         return result;
     });
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Signin after passport authentication
@@ -343,6 +371,8 @@ function login(req, res, user, noResponse) {
         }
         else {
             req.log.trace({ func: 'login', user: req.user.email, roles: req.user.roles.join(',') }, 'Login Successful!');
+
+            NotificationCtr.events.emit('login:success');
 
             if (_.isFunction(noResponse)) {
                 return noResponse(null, user);
