@@ -5,7 +5,7 @@ var _ = require('lodash'),
     mongoose = require('mongoose'),
 	Q = require('q'),
 	EventEmitter = require('events').EventEmitter,
- 	eventServer = new EventEmitter(),
+	eventServer = new EventEmitter(),
 	messenger = require('../controllers/messenger.server.controller'),
 	emailer = require('../controllers/emailer.server.controller'),
     log = require(path.resolve('./config/lib/logger')).child({
@@ -131,6 +131,8 @@ function processRequest(requestMessage, sender) {
 	return processNewRequest(event, requestMessage, sender);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function processNewRequest(event, requestMessage, sender) {
 	var result, recipient, emails, phoneNumbers;
 
@@ -143,14 +145,14 @@ function processNewRequest(event, requestMessage, sender) {
 	log.debug({ func: 'processNewRequest', requestMessage: requestMessage, config: config }, 'START');
 
 	if (_.isObject(requestMessage.to) && !_.isEmpty(requestMessage.to)) {
-		recipient = requestMessage.to;
+		recipient = Q.when(requestMessage.to);
 	} else if (_.isObject(requestMessage.to) && !_.isEmpty(requestMessage.to)) {
 		recipient = User.findById(requestMessage.to).select('firstName lastName displayName phone email').exec();
 	} else {
 		emails = requestMessage.contactInfo.emails;
 		phoneNumbers = requestMessage.contactInfo.phoneNumbers;
 
-		recipient = requestMessage.contactInfo;
+		recipient = Q.when(requestMessage.contactInfo);
 	}
 
 	//log.debug({ func: 'processNewRequest', sender: sender, from_ID: requestMessage.from._id.toString(), stringQ: _.isString(requestMessage.from), fromId: requestMessage.from.id, from_id: requestMessage.from._id }, 'Evaluating sender');
@@ -159,11 +161,11 @@ function processNewRequest(event, requestMessage, sender) {
 		sender = User.findById(requestMessage.from._id || requestMessage.from).select('firstName lastName displayName phone email').exec();
 	}
 
-	return Q.all({ recipient: recipient, sender: sender })
+	return Q.all([recipient, Q.when(sender)])
 		.then(function (results) {
 			// Handle sending...
-			var target = results.recipient;
-			var sender = results.sender;
+			var target = results[0];
+			var sender = results[1];
 
 			log.debug({ func: 'processNewRequest', recipient: target, sender: sender }, 'Configuring info for Notification');
 
@@ -239,10 +241,25 @@ function processNewRequest(event, requestMessage, sender) {
 				};
 			}
 
+
+			if (result.success && requestMessage.status === 'new') {
+				return getBranchDeepLink(requestMessage, event, result.method)
+					.then(function (deepLinkURL) {						
+						return deepLinkURL;
+					})
+					.catch(function (err) {
+						log.error({ func: 'processNewRequest', err: err }, 'Failed to load Branch Metrics request')
+						return null;
+					});
+			}
+		})
+		.then(function (objectLink) {
+						
 			if (result.success && requestMessage.status === 'new') {
 				log.debug('Setting `new` status to `sent` after success');
 				requestMessage.status = 'sent';
-
+				requestMessage.objectLink = objectLink;
+				
 				return requestMessage.save();
 			}
 
@@ -252,10 +269,12 @@ function processNewRequest(event, requestMessage, sender) {
 			result.requestMessage = saveResult.toObject();
 
 			return result;
-
 		});
 }
 
+/**
+ * 
+ */
 function getBest(contacts) {
 	log.debug({ func: 'getBest', source: contacts }, 'Loading best contact from source');
 
@@ -282,16 +301,49 @@ function getBest(contacts) {
 	return pref;
 }
 
-function processNotification(req, res) {
-	log.debug({ func: 'send', body: req.body }, 'Send : START');
+//////////////////////////////////////////////////////
+//				Branch Metrics Code					//
+//////////////////////////////////////////////////////
 
-	return res.status(504).send({ message: 'Not Implemnted' });
-}
+var unirest = require('unirest'),
+	path = require('path'),
+	config = require(path.resolve('./config/config'));
 
+var branchConfig = config.services.branch;
 
+function getBranchDeepLink(request, event, channel) {
 
+	debugger;
 
+	var senderId = _.isString(request.from) ? request.from : request.from.id;
+
+	var postData = {
+		branch_key: branchConfig.key,
+		data: {
+			requestId: request.id,
+			requestUserId: senderId,
 		},
+		feature: event,
+		channel: channel
+	};
+
+	var deferred = Q.defer();
+
+	unirest.post(branchConfig.url + '/v1/url')
+		.type('json')
+		.send(postData)
+		.end(function (response) {
+			if (response.error) {
+				log.error({ func: 'getBranchDeepLink', err: response.body, code: response.code, response: response }, 'Branch Link Failed');
+				return deferred.reject(response.body);
+			}
+
+			log.info({ func: 'getBranchDeepLink', response: response.body }, 'Got Branch URL');
+
+			return deferred.resolve(response.body.url);
+		});
+
+	return deferred.promise;
 }
 
 //////////////////////////////////////////////////////
@@ -321,14 +373,34 @@ function loadRequest(req, res) {
 
 					switch (requestMessage.requestType) {
 						case 'friendRequest':
-							(new Login({ input: requestMessage.shortId, result: 'referral', userId: requestMessage.user, ip: ip })).save().end(_.noop());
-							return res.redirect('http://www.truckerline.com');
+							(new Login({ input: requestMessage.shortId, result: 'referral', userId: requestMessage.user, ip: ip })).save().finally(_.noop());
+
+							var redirect = 'http://www.truckerline.com';
+
+							if (!!requestMessage.objectLink) {
+								req.log.debug({ func: 'loadRequest', link: requestMessage.objectLink }, 'Forwarding Request to link');
+								return res.redirect(requestMessage.objectLink);
+							} else {
+								return getBranchDeepLink(requestMessage, requestMessage.requestType)
+									.then(function (resultUrl) {
+										if (!_.isEmpty(resultUrl)) {
+											req.log.info({ func: 'loadRequest', branchURL: resultUrl }, 'Redirecting to branch URL');
+											redirect = resultUrl;
+										}
+									})
+									.catch(function (err) {
+										req.log.error({ func: 'loadRequest', err: err }, 'Unable to generate new Branch Redirect URL');
+									})
+									.finally(function () {
+										return res.redirect(redirect);
+									});
+							}
 							
 						case 'shareRequest':
 							url = '/trucker/' + fromId + '?requestId=' + requestMessage.id;
 							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
 							return res.redirect(url);
-							
+
 						case 'reviewRequest':
 							// if (!!requestMessage.objectLink) {
 							// 	url = '/reviews/' + requestMessage.objectLink + '/edit';

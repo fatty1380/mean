@@ -105,6 +105,10 @@ describe('Notifications CRUD tests', function () {
 					sendResult.should.have.property('messageId');
 					sendResult.should.have.property('status');
 					sendResult.should.have.property('system');
+					
+					sendResult.should.have.property('requestMessage');
+					
+					sendResult.requestMessage.should.have.property('objectLink').and.not.be.null;
 
 					/Join the Convoy/.test(sendResult.message).should.be.true;
 					/Terry has invited you/.test(sendResult.message).should.be.true;
@@ -184,7 +188,7 @@ describe('Notifications CRUD tests', function () {
 			return agent.login(credentials);
 		});
 
-		it('should be able to send an SMS message to a mobile number', function () {
+		it.skip('should be able to send an SMS message to a mobile number', function () {
 			contactInfo.phone = '6507767675';
 
 			return postToNotifications(contactInfo, 200, '/api/notifications/sms').then(
