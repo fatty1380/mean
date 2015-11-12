@@ -5,12 +5,12 @@
 // Configuring the Jobs module
     function menus(Menus) {
 
-        Menus.addMenuItem('topbar', {
-            title: 'My Reports',
-            state: 'reviewReports',
-            userTypes: ['driver'],
-            position: 30
-        });
+        // Menus.addMenuItem('topbar', {
+        //     title: 'My Reports',
+        //     state: 'reviewReports',
+        //     userTypes: ['driver'],
+        //     position: 30
+        // });
 
 
         // Set admin menu items
