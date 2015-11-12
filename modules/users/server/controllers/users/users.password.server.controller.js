@@ -60,7 +60,7 @@ exports.forgot = function (req, res, next) {
             },
             function (token, user, done) {
 
-                var resetURL = ((!!config.app.useLocalhost) ? 'http://localhost:3000' : 'https://www.joinoutset.com') + '/api/auth/reset/' + token;
+                var resetURL = ((!!config.app.useLocalhost) ? 'http://localhost:3000' : 'https://app.truckerline.com') + '/api/auth/reset/' + token;
                 var templateName = 'forgot-password';
 
                 console.log('Sending email template: %s', templateName);

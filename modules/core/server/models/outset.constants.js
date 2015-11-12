@@ -110,7 +110,7 @@ var faqs = [
     {
         category: 'driver',
         question: 'How do I sign up as a Driver looking for work?',
-        answer: 'Signing up is easy.  Go to www.joinoutset.com and Click the <b>Sign Up</b> button.  When prompted, let us know that you\'re a Driver.  After that, we\'ll ask you a few more simple questions to help create your account.  Once your account is created, you can begin to build your profile.',
+        answer: 'Signing up is easy.  Go to www.truckerline.com and Click the <b>Sign Up</b> button.  When prompted, let us know that you\'re a Driver.  After that, we\'ll ask you a few more simple questions to help create your account.  Once your account is created, you can begin to build your profile.',
         keywords: ['separate', 'any', 'keywords', 'terms', 'here']
     },
     {
@@ -194,7 +194,7 @@ var faqs = [
     {
         category: 'employer',
         question: 'How do I sign up to post jobs and driving opportunities?',
-        answer: 'Signing up is easy.  Go to www.joinoutset.com and Click the [Sign Up] button.  When prompted, let us know that you are an Employer.  After that, we\'ll ask you a few more simple questions to help create your account.  Once your account is created, you can subscribe and post your first job!',
+        answer: 'Signing up is easy.  Go to www.truckerline.com and Click the [Sign Up] button.  When prompted, let us know that you are an Employer.  After that, we\'ll ask you a few more simple questions to help create your account.  Once your account is created, you can subscribe and post your first job!',
         keywords: ['term', 'term']
     },
     {

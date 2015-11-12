@@ -2249,7 +2249,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                        Policy")\n' +
   '                        is designed to provide a clear understanding of the information we collect and how we use it to\n' +
   '                        provide our services and give users a better experience. It applies to any users of\n' +
-  '                        www.joinoutset.com and any US affiliated websites, web pages, mobile applications and mobile\n' +
+  '                        www.truckerline.com and any US affiliated websites, web pages, mobile applications and mobile\n' +
   '                        websites operated by Outset (the "Site"), including those who are seeking to find a service\n' +
   '                        provider\n' +
   '                        through Outset ("Job Providers") as well as those who are looking to promote their services\n' +
@@ -2833,7 +2833,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                        Settings sections or your Jobs section. To request removal of other Personal Information you\n' +
   '                        have\n' +
   '                        voluntarily posted on our Site, such as information you may have posted in online group forums,\n' +
-  '                        contact support@joinoutset.com In some cases, we may not be able to reasonably accommodate your\n' +
+  '                        contact support@truckerline.com In some cases, we may not be able to reasonably accommodate your\n' +
   '                        request to remove your Personal Information, in which case we will let you know if we are unable\n' +
   '                        to\n' +
   '                        do so and why.</p>\n' +
@@ -2925,14 +2925,14 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                        into effect 30 days after we notify. Non-material changes or clarifications will take effect\n' +
   '                        immediately upon posting of the updated policy on our Site. You should\n' +
   '                        periodically\n' +
-  '                        check www.joinoutset/privacy for updates. Your use of the Site or the Services after such\n' +
+  '                        check www.truckerline/privacy for updates. Your use of the Site or the Services after such\n' +
   '                        effective\n' +
   '                        date will constitute acceptance by you of such changes.</p>\n' +
   '\n' +
   '                    <p>Contact Us</p>\n' +
   '\n' +
   '                    <p>If you have any questions on our Privacy Policy, you can contact us via email at\n' +
-  '                        info@joinoutset.com\n' +
+  '                        info@truckerline.com\n' +
   '                        or at:</p>\n' +
   '\n' +
   '                    <p>Attn: Legal Department Outset Partners, Inc</p>\n' +
@@ -5255,7 +5255,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                <h4>Looking for your username?</h4>\n' +
   '\n' +
   '                <p>In order to keep accounts linked with people, we use your email address as your username. If you\'d\n' +
-  '                    like to change it, please <a href="mailto:accounts@joinoutset.com">let us know</a>!</p>\n' +
+  '                    like to change it, please <a href="mailto:info@truckerline.com">let us know</a>!</p>\n' +
   '            </div>\n' +
   '        </div>\n' +
   '\n' +

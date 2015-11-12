@@ -242,7 +242,7 @@ function sendNewApplicantEmail(user, job, application) {
         },
         {
             name   : 'LINK_URL',
-            content: 'https://joinoutset.com/applications?itemId=' + application.id + '&tabName=applicants'
+            content: 'https://app.truckerline.com/applications?itemId=' + application.id + '&tabName=applicants'
         }
     ];
 
@@ -670,7 +670,7 @@ exports.persistMessage = function (applicationId, message) {
                             },
                             {
                                 name   : 'LINK_URL',
-                                content: 'https://joinoutset.com/applications/' + populated.id
+                                content: 'https://app.truckerline.com/applications/' + populated.id
                             }
                         ];
 
@@ -741,7 +741,7 @@ exports.createConnection = function (req, res) {
                         },
                         {
                             name   : 'LINK_URL',
-                            content: 'https://joinoutset.com/applications/' + req.application.id
+                            content: 'https://app.truckerline.com/applications/' + req.application.id
                         }
                     ];
 
