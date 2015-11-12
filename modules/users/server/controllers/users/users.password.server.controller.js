@@ -61,7 +61,7 @@ exports.forgot = function (req, res, next) {
             function (token, user, done) {
 
                 var resetURL = ((!!config.app.useLocalhost) ? 'http://localhost:3000' : 'https://www.joinoutset.com') + '/api/auth/reset/' + token;
-                var templateName = 'password-reset';
+                var templateName = 'forgot-password';
 
                 console.log('Sending email template: %s', templateName);
 
