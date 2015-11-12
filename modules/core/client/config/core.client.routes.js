@@ -123,8 +123,8 @@
             });
     }
     
-    handleBadRoute.$inject = ['$injector', '$location'];
-    function handleBadRoute($injector, $location) {
+    handleBadRoute.$inject = ['$location'];
+    function handleBadRoute($location) {
         console.log('Unknown URL pattern: %s', $location.url());
         
         var settings = {

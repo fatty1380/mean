@@ -53,8 +53,44 @@
             }
         });
 
+        $rootScope.$on('$stateNotFound',
+            function (event, unfoundState, fromState, fromParams) {
+                debugger;
+                event.preventDefault();
+
+                $log.error('Unknown State `%s`', unfoundState.to); // "lazy.state"
+                $log.error(unfoundState.toParams); // {a:1, b:2}
+                $log.error(unfoundState.options); // {inherit:false} + default options
+
+                var settings = {
+                    isProduction: ApplicationConfiguration.isProduction,
+                    defaultRedirect: ApplicationConfiguration.defaultRedirect
+                };
+
+                if (settings.defaultRedirect === null) {
+                    return;
+                }
+
+                debugger;
+                if (!!settings && !!settings.defaultRedirect) {
+                    if (/^http/i.test(settings.defaultRedirect)) {
+                        window.location.href = settings.defaultRedirect;
+                        return;
+                    }
+                    $location.path(settings.defaultRedirect);
+                    return;
+                }
+
+                if (!!settings && settings.isProduction) {
+                    window.location.href = 'http://www.truckerline.com';
+                } else {
+                    $location.path('/trucker');
+                }
+
+            });
+
         $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-            if(!!fromState && !!fromState.name) {
+            if (!!fromState && !!fromState.name) {
                 $state.gotoPrevious = function () {
                     $state.go(fromState, fromParams);
                 };
@@ -83,7 +119,7 @@
             if (fromState && fromState.name) {
                 event.preventDefault();
                 $log.warn('Rerouting back to source state');
-                $state.go(fromState.name, {error: error});
+                $state.go(fromState.name, { error: error });
             } else {
                 event.preventDefault();
                 $log.warn('Unknown next step');
@@ -94,7 +130,7 @@
          * This will scroll the window to the top of the frame, assuming no hash is specified
          */
         $rootScope.$on('$stateChangeSuccess', function () {
-            if(!$location.hash()) {
+            if (!$location.hash()) {
                 $document.scrollTo(-50, 0);
             }
         });
@@ -108,7 +144,7 @@
                 return;
             }
 
-            $window.ga('send', 'pageview', {page: $location.path()});
+            $window.ga('send', 'pageview', { page: $location.path() });
         });
     }
 

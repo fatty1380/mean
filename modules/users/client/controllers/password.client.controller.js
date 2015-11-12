@@ -31,7 +31,7 @@
                                 updateMsg(ct);
                             }, 1000);
                         } else {
-                            $state.go('intro');
+                            $state.go('home');
                         }
                     }
 
