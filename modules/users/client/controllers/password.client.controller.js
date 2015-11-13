@@ -7,7 +7,7 @@
 
             //If user is signed in then redirect back home
             if ($scope.authentication.user) {
-                $state.go('home');
+                $state.go('trucker');
             }
 
             // Submit forgotten password account id
