@@ -258,7 +258,7 @@ module.exports = function (grunt) {
                         'web-host'         : 'localhost',
                         'debug-port'       : 5858,
                         'save-live-edit'   : true,
-                        'no-preload'       : true,
+                        'no-preload'       : false,
                         'stack-trace-limit': 50,
                         'hidden'           : []
                     }
