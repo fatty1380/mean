@@ -34,7 +34,7 @@ var contentStubs = {
 
 var tester = { property: 'shenanigans' };
 
-describe.only('S3 File Access Tests', function () {
+describe('S3 File Access Tests', function () {
 	before(function () {
 		log.trace({ func: 'beforeAll' }, 'Setup Base');
 
