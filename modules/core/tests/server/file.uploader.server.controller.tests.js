@@ -62,6 +62,7 @@ describe.only('S3 File Access Tests', function () {
 		});
 
 		it('should allow me to upload', function () {
+			this.slow(1000);
 			return Uploader.saveContentToCloud({ content: content, isSecure: false })
 				.then(function success(result) {
 
@@ -90,6 +91,8 @@ describe.only('S3 File Access Tests', function () {
 		});
 
 		it('should allow me to upload a secure document', function () {
+						
+			this.slow(1000);
 			return Uploader.saveContentToCloud({ content: content, isSecure: true })
 				.then(function success(result) {
 

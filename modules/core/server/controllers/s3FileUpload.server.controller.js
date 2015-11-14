@@ -15,6 +15,15 @@ var _ = require('lodash'),
 
 var client, publicURL;
 
+
+/////////////////
+var awsPromised = require('aws-promised');
+var s3Promised = awsPromised.s3();
+
+var options = config.services.s3;
+options.s3Options = config.services.s3.s3Options;
+//////////////////////////////
+
 //exports.saveFileToCloud = saveFile;
 exports.saveFileToCloud = directUpload;
 exports.saveContentToCloud = saveContentToCloud;
@@ -30,6 +39,7 @@ exports.getSecureReadURL = getSecureReadURL;
     if (!!config.services.s3 && config.services.s3.enabled) {
         var options = config.services.s3;
         options.s3Options = config.services.s3.s3Options;
+        
         client = s3.createClient(options);
         log.trace({ func: 'initialize' }, 'configured s3 client');
     } else {
@@ -164,7 +174,7 @@ function getSecureReadURLPromise(bucket, key) {
 
     if (!client) {
         log.debug('[s3.directRead] S3 is not configured - cannot update secure read url');
-        deferred.reject('Unable to update file from cloud store');
+        return Q.reject('Unable to update file from cloud store');
     } else {
 
         log.debug('[s3.directRead] Attempting S3 Download for %j', params);
@@ -332,12 +342,6 @@ function doDirectUpload(files, folder, isSecure) {
     return deferred.promise;
 }
 
-/////////////////
-var awsPromised = require('aws-promised');
-var s3Promised = awsPromised.s3();
-
-var options = config.services.s3;
-options.s3Options = config.services.s3.s3Options;
 //var pClient = s3Promised.createClient(options);
 
 function doUploadPromise(params, isSecure) {
