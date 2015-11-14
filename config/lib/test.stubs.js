@@ -3,8 +3,6 @@
 
 var
     _ = require('lodash'),
-    mongoose = require('mongoose'),
-    User = mongoose.model('User'),
     Q = require('q'),
     path = require('path'),
     log = require(path.resolve('./config/lib/logger')).child({
@@ -17,6 +15,8 @@ var config = {
     token: 'a123'
 };
 
+var mongoose = require('mongoose'),
+    User = require(path.resolve('./modules/users/server/models/user.server.model'));
 
 var stubs = {};
     
