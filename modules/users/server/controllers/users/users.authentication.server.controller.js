@@ -148,10 +148,12 @@ function logBranchData(user, req) {
     });
 
     branchData.save().then(
-        function success(result) {
+        function success(branchDataSaveResult) {
             debugger;
-            req.log.info({ func: 'signup.saveBranch', file: 'users.authentication', result: result },
+            req.log.info({ func: 'signup.saveBranch', file: 'users.authentication', result: branchDataSaveResult },
                 'Saved BranchData from New User Request');
+                
+            NotificationCtr.events.emit('branch:new', user, branchDataSaveResult);
         },
         function fail(err) {
             debugger;

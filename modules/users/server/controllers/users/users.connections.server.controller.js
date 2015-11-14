@@ -28,7 +28,7 @@ var _ = require('lodash'),
     RequestMessage = mongoose.model('RequestMessage'),
     path = require('path'),
     messenger = require(path.resolve('./modules/emailer/server/controllers/messenger.server.controller')),
-    notificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
+    NotificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users',
         file: 'Authorization.Controller'
@@ -72,14 +72,14 @@ function createRequest(req, res, next) {
         .then(function (savedRequest) {
             req.log.debug({ func: 'createRequest', request: savedRequest });
 
-            var result = notificationCtr.processRequest(savedRequest, req.user);
+            var result = NotificationCtr.processRequest(savedRequest, req.user);
             if (result.success) {
                 req.log.debug({ func: 'createRequest', result: result }, 'Successfully sent notification');
             }
             else {
                 req.log.error({ func: 'createRequest', result: result }, 'Failed to send notification');
             }
-            
+
             req.log.debug({ func: 'createRequest', response: savedRequest }, 'Returning newly Created Request Object');
             req.request = savedRequest;
 
@@ -412,70 +412,178 @@ var BranchData = mongoose.model('BranchData');
  * bit of contact info.
  */
 
-function updateOutstandingRequests(user) {
+exports.updateOutstandingRequests = updateOutstandingRequests;
+
+NotificationCtr.events.on('branch:new', updateOutstandingRequests);
+
+function updateOutstandingRequests(user, branchData) {
 
     if (!user) {
         return Q.reject('User not Specified');
     }
 
-    return RequestMessage
-        .find({
-            to: null,
-            status: { $in: ['new', 'sent'] },
-            requestType: 'friendRequest'
-        })
-        .exec()
-        .then(
-            function (requests) {
-                return getMatchingRequests(user, requests);
-            },
-            function caught(err) {
-                log.error({ func: 'updateOutstandingRequests', err: err }, 'Failed to query or find outstanding requests');
+    log.info({ func: 'updateOutstandingRequests', file: 'users.connections', branchData: branchData, user: user }, 'Processing BranchData from New User Request');
 
-                return null;
-            })
+    return (_.isEmpty(branchData) ? BranchData.findOne({ user: user._id }).exec() : Q.resolve(branchData))
+        .then(function success(bd) {
+            if (_.isEmpty(bd)) {
+                return Q.reject('No Branch Data Found');
+            }
+
+            branchData = bd;
+            return getMatchingRequests(user, branchData);
+        })
         .then(
-            function (outstandingRequests) {
+            function success(outstandingRequests) {
                 if (_.isEmpty(outstandingRequests)) {
+                    log.info({ func: 'updateOutstandingRequests' }, 'No Outstanding Requests Found');
                     return null;
                 }
 
+                log.info({ func: 'updateOutstandingRequests' }, 'Mapping %d Found Requests', outstandingRequests.length);
                 return Q.all(_.map(outstandingRequests, function (request) {
                     request.to = user._id;
+
+                    log.info({ func: 'updateOutstandingRequests', updated: request }, 'Saving Updated Request');
 
                     return request.save();
                 }));
 
+            })
+        .then(
+            function success(saved) {
+
+                branchData.status = 'processed';
+                branchData.save();
+
+                if (!!saved) {
+                    log.info({ func: 'updateOutstandingRequests', firstSaved: _.first(saved) }, 'Updated %d outstanding Requests', saved.length);
+                } else {
+                    log.warn({ func: 'updateOutstandingRequests' }, 'No Requests - what happened?');
+                    
+                    branchData.status = 'notFound';
+                    branchData.save();
+                    
+                    return [];
+                }
+
+                return saved;
+            })
+        .catch(
+            function fail(err) {
+                log.error({ func: 'updateOutstandingRequests', err: err }, 'Failed to query or find outstanding requests');
+
+
+                branchData.status = 'rejected';
+                branchData.save();
+
+                return null;
             });
 }
 
-function getMatchingRequests(user, requests) {
-    var email = user.email.toLowerCase();
-    var phone = deformatPhone(user.phone);
+/**
+ * finding 'matching' requests:
+ * 
+ * 1. lookup branch data for user. EG:
+ *     "requestId"      : "5646f055b9203e0a07f8dd34",   # ID of the request
+ *     "shortId"        : "NJ8O1yeXe",                  # ShortId, also from the request
+ *     "requestUserId"  : "56450f83b9203e0a07f8c608",   # The userId who sent the request
+ */
 
-    return _.filter(requests, function (request) {
-        var ci = request.contactInfo;
+function getMatchingRequests(user, bd) {
 
-        if (!_.isEmpty(ci.email)) {
-            if (ci.email === email) {
-                return true;
-            }
+    if (!bd) {
+        return Q.reject('No BD Found');
+    }
 
-            if (_.any(ci.emails, function (e) { return e.value === email; })) {
-                return true;
-            }
+    log.debug({ func: 'getMatchingRequests', branchData: bd }, 'Found Branch Data For User');
+
+    var query = {
+        to: null,
+        status: { $in: ['new', 'sent'] },
+        requestType: 'friendRequest'
+    };
+
+    var findMessage = RequestMessage
+        .find(query);
+
+
+    log.debug({ func: 'getMatchingRequests', query: query }, 'Created Query');
+    
+    // Setup the possible query matches and conditions
+    var ors = [];
+
+    if (!!bd) {
+        if (!!bd.data.shortId) {
+            ors.push({ shortId: bd.data.shortId });
         }
-
-        if (!_.isEmpty(ci.phone)) {
-            if (ci.phone === phone) {
-                return true;
-            }
-
-            if (_.any(ci.phoneNumbers, function (e) { return e.value === phone; })) {
-                return true;
-            }
+        if (!!bd.data.requestId) {
+            ors.push({ _id: mongoose.Types.ObjectId(bd.data.requestId) });
         }
-    });
+    } else {
+        log.warn({ func: 'getMatchingRequests' }, 'No Branch Data Found');
+    }
+
+    if (_.isEmpty(ors)) {
+        log.error({ func: 'getMatchingRequests' }, 'No Query Data Available - Rejecting');
+        return Q.reject('No Query Data Available');
+    }
+
+    log.warn({ func: 'getMatchingRequests', ors: ors }, 'Searching requests based on %d ors', ors.length);
+        
+    // Return the executed query
+    return findMessage.or(ors).exec()
+        .then(
+            function success(requests) {
+                log.debug({ func: 'getMatchingRequests', requests: requests }, 'Found Matching, Outstanding Requests');
+
+                return requests;
+            });
+            
+            
+    // TODO: Incorporate this logic for extended search
+    // 
+    // var emails = _.reject([validateEmail(user.email)], _.isEmpty);
+    // var phones = _.reject([deformatPhone(user.phone)], _.isEmpty);
+    // if (!_.isEmpty(emails)) {
+    //     ors.push({ $in: emails });
+    // }
+
+    // if (!_.isEmpty(phones)) {
+    //     ors.push({ $in: phones });
+    // }
+    // if (!_.isEmpty(rm.contactInfo.email) && !_.contains(emails, rm.contactInfo.email)) {
+    //     emails.push(rm.contactInfo.email);
+    // }
+    // if (!_.isEmpty(rm.contactInfo.phone) && !_.contains(phones, rm.contactInfo.phone)) {
+    //     phones.push(rm.contactInfo.phone);
+    // }
+
+
+
+    // return _.filter(requests, function (request) {
+    //     var ci = request.contactInfo;
+
+    //     if (!_.isEmpty(ci.email)) {
+    //         if (ci.email === email) {
+    //             return true;
+    //         }
+
+    //         if (_.any(ci.emails, function (e) { return e.value === email; })) {
+    //             return true;
+    //         }
+    //     }
+
+    //     if (!_.isEmpty(ci.phone)) {
+    //         if (ci.phone === phone) {
+    //             return true;
+    //         }
+
+    //         if (_.any(ci.phoneNumbers, function (e) { return e.value === phone; })) {
+    //             return true;
+    //         }
+    //     }
+    // }
 }
 
 /**
@@ -535,11 +643,11 @@ function normalizeRequest(request) {
             log.debug({ func: 'normalizeRequest', src: contactInfo.phoneNumbers, out: pn }, 'Processed Phones');
 
             contactInfo.phoneNumbers = pn;
-            
+
             if (_.isEmpty(contactInfo.phone) && !_.isEmpty(pn)) {
                 contactInfo.phone = pn[0].value;
             }
-            
+
         } else if (!_.isEmpty(contactInfo.phone)) {
             // If the contact info object contains a 'phone' value, but not 'phoneNumbers',
             // Push the 'phone' object into a new array.
@@ -558,7 +666,7 @@ function normalizeRequest(request) {
             log.debug({ func: 'normalizeRequest', src: contactInfo.emails, out: em }, 'Processed Emails');
 
             contactInfo.emails = em;
-            
+
             if (_.isEmpty(contactInfo.email) && !_.isEmpty(em)) {
                 contactInfo.email = em[0].value;
             }

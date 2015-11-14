@@ -86,7 +86,7 @@ var BranchData = new Schema({
 
     status: {
         type: String,
-        default: 'new'
+        default: 'new' // ['new', 'processed', 'rejected']
     },
 
     created: {
