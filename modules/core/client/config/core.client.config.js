@@ -1,6 +1,12 @@
 (function () {
     'use strict';
 
+    angular
+        .module('core')
+        .run(registerRootScopeEventListeners);
+
+    registerRootScopeEventListeners.$inject = ['$rootScope', '$state', 'Authentication', '$log', '$document', '$location', '$window'];
+
     function registerRootScopeEventListeners($rootScope, $state, Auth, $log, $document, $location, $window) {
 
         /** SECTION: State Change Listeners */
@@ -147,12 +153,5 @@
             $window.ga('send', 'pageview', { page: $location.path() });
         });
     }
-
-    registerRootScopeEventListeners.$inject = ['$rootScope', '$state', 'Authentication', '$log', '$document', '$location', '$window'];
-
-    // Setting up route
-    angular
-        .module('core')
-        .run(registerRootScopeEventListeners);
 })();
 

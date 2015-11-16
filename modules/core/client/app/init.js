@@ -14,6 +14,9 @@
         .config(['$logProvider', function ($logProvider) {
             $logProvider.debugEnabled(true);
         }])
+        .config(['$compileProvider', function ($compileProvider) {
+            $compileProvider.aHrefSanitizationWhitelist(/^\s*((https?|ftp|mailto|file):|data:(image\/|application\/pdf))/);
+        }]);
 
     //Then define the init function for starting up the application
     angular.element(document).ready(function () {

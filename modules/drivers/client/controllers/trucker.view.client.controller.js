@@ -72,13 +72,15 @@
 		///////////////////////////////////////
 		
 		function initDocument(document) {
+			var fileName = document.name;
+			
 			if (/^data:.*base64/.test(document.url)) {
 				if (/image\/[\w]+;/.test(document.url)) {
 					document.imgSrc = document.url;
 					$sce.trustAsResourceUrl(document.imgSrc);
 					document.activeReport = fileName;
 					document.fileType = _.first(document.url.match(/image\/(\w+)/));
-                    document.documentTitle = document.fileUser + '_' + fileName + '.' + (_.last(document.url.match(/image\/(\w+)/)) || '.jpg');
+                    document.documentTitle = document.fileUser + '_' + fileName.replace(/ /g, '_') + '.' + (_.last(document.url.match(/image\/(\w+)/)) || '.jpg');
 					return;
 				} 
 				else if (/application\/pdf/.test(document.url)) {
