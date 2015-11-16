@@ -49,7 +49,7 @@
 
 
     /// TODO: This is a dupe of users.client.routes resolver
-    var upcResolve = {
+    var upcrResolve = {
         user: ['Authentication', 'LoginService', function resolveUser(Authentication, LoginService) {
             return LoginService.getUser().then(
                 function success(user) {
@@ -86,6 +86,10 @@
         }],
         company: ['profile', 'Companies', function resolveCompany(profile, Companies) {
             return profile && !!profile.company ? Companies.get(profile.company) : null;
+        }],
+        request: ['$log', '$stateParams', 'Documents', function ($log, $stateParams, Documents) {
+            if (_.isEmpty($stateParams.requestId)) { return null; }
+            return Documents.getByRequest($stateParams.requestId);
         }]
     };
             
@@ -106,14 +110,18 @@
          */
 
             state('trucker', {
-                url: '/trucker/:userId',
+                url: '/trucker/:userId?:requestId',
                 templateUrl: '/modules/drivers/views/trucker.client.view.html',
                 controller: 'TruckerViewCtrl',
                 controllerAs: 'vm',
                 bindToController: true,
-                resolve: upcResolve,
+                resolve: upcrResolve,
                 params: {
                     userId: {
+                        value: null,
+                        squash: true
+                    },
+                    requestId: {
                         value: null,
                         squash: true
                     }
@@ -151,13 +159,30 @@
                 controller: 'TruckerLockboxCtrl',
                 controllerAs: 'vm',
                 resolve: {
-                    documents: ['$log', 'Documents', 'profile', function ($log, Documents, profile) {
-                        return Documents.byUser.query({ userId: profile.id }).$promise
-                            .catch(function reject(err) {
-                                $log.error('Unable to Fetch User\'s documents', err);
+                    documents: ['$log', '$q', 'request', 'user', 'profile', 'Documents',
+                        function ($log, $q, request, user, profile, Documents) {
 
-                                return null;
+                        if (!!user && user.id === profile.id) {
+                            return Documents.byUser.query({ userId: profile.id }).$promise
+                                .catch(function reject(err) {
+                                    $log.error('Unable to Fetch User\'s documents', err);
+
+                                    return null;
+                                });
+                        }
+
+                        if (!_.isEmpty(request.contents) && !_.isEmpty(request.contents.documents)) {
+                            var docs = _.map(request.contents.documents, function (docId) {
+                                return Documents.byId.get({ documentId: docId }).$promise
+                                    .catch(function reject(err) {
+                                        $log.error('Unable to fetch user document `%s`, docId', err);
+                                    });
                             });
+
+                            return $q.all(docs);
+                        }
+
+                        return [];
                     }]
                 },
                 templateUrl: '/modules/drivers/views/trucker-docs.client.view.html',

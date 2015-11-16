@@ -2,40 +2,31 @@
 	<div ng-if="vm.hasAccess && !vm.documents.length" class="no-content text-center">No documents</div>
 	<div ng-if="!vm.hasAccess" class="no-content text-center">Sorry, {{vm.profile.firstName}} has not shared access to their documents.</div>
 
-	<div class="row">
-		<div class="col-sm-12">
-			<ul class="nav nav-tabs">
-				<li role="presentation" ng-repeat="report in vm.documents" ng-click="vm.viewFile(report)" ng-class="{'active': vm.activeReport===report.sku}">
-					<a>{{report.name || report.sku | titleCase }}</a>
-				</li>
-			</ul>
-
-			<div class="col-sm-12 center-block pdf-container">
+	<div class="row" ng-repeat="document in vm.documents" ng-init="vm.initDocument(document)">
+		<div class="col-sm-12 center-block pdf-container">
 				<div class="row mgn-btm">
 					<div class="col-sm-9">
-						<h3 class="no-margin-top">{{vm.activeReport}}</h3>
+						<h3 class="no-margin-top">{{document.name}}</h3>
 					</div>
-					<div class="col-sm-3 text-right" ng-show="vm.documentUrl">
-						<a class="btn btn-cta-primary" target="_self" ng-href="{{vm.documentUrl}}" download="{{vm.documentTitle}}" type="{{vm.fileType || 'application/pdf'}}">
-                                Download {{report.name}} <i class="fa fa-download"></i>
+					<div class="col-sm-3 text-right" ng-show="document.documentUrl">
+						<a class="btn btn-cta-primary" target="_self" ng-href="{{document.documentUrl}}" download="{{document.name}}" type="{{document.fileType || 'application/pdf'}}">
+                                Download<i class="fa fa-download"></i>
                             </a>
 					</div>
-					<div class="col-sm-3 text-right" ng-show="vm.imgSrc">
-						<a class="btn btn-cta-primary" target="_self" ng-href="{{vm.imgSrc}}" download="{{vm.documentTitle}}" type="{{vm.fileType || 'image/jpeg'}}">
-                                Download {{report.name}} <i class="fa fa-download"></i>
+					<div class="col-sm-3 text-right" ng-show="document.imgSrc">
+						<a class="btn btn-cta-primary" target="_self" ng-href="{{document.imgSrc}}" download="{{document.name}}" type="{{document.fileType || 'image/jpeg'}}">
+                                Download<i class="fa fa-download"></i>
                             </a>
 					</div>
 				</div>
 
 				<div class="row text-center">
-					<img ng-hide="vm.error || !vm.imgSrc" ng-src="{{vm.imgSrc}}" />
-					<pdf ng-hide="vm.error || !vm.documentUrl" pdf-src="{{vm.documentUrl}}"></pdf>
-					<h4 class="text-danger strong text-center">{{vm.error}}</h4>
-					<h4 ng-hide="!!vm.activeReport" class="text-center strong">Please select from one of the available documents</h4>
+					<img ng-hide="document.error || !document.imgSrc" ng-src="{{document.imgSrc}}" />
+					<pdf ng-hide="document.error || !document.documentUrl" pdf-src="{{document.documentUrl}}"></pdf>
+					<h4 class="text-danger strong text-center">{{document.error}}</h4>
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 </section>

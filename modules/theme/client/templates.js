@@ -546,7 +546,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '                <div ng-show="vm.visibleTab === \'documents\'">\n' +
   '                    <pre ng-if="vm.debug">{{vm.application.user.reports}}</pre>\n' +
-  '                    <oset-document-list model="vm.application.user" application="vm.application" display-mode="full"\n' +
+  '                    <oset-document-list profile="vm.application.user" application="vm.application" display-mode="full"\n' +
   '                                        doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
   '                </div>\n' +
   '\n' +
@@ -673,7 +673,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '\n' +
   '                <dt>Documents:</dt>\n' +
   '\n' +
-  '                <oset-document-list model="vm.applicant" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
+  '                <oset-document-list profile="vm.applicant" application="vm.application" display-mode="full" doc-access="vm.application.canViewDocs"></oset-document-list>\n' +
   '\n' +
   '                <dt>Interests:</dt>\n' +
   '                <dd class="label-list">\n' +
@@ -735,7 +735,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '                Documents\n' +
   '            </div>\n' +
   '            <div class="col-md-9 col-lg-10 col-xs-12 inline-content">\n' +
-  '                <oset-document-list model="vm.applicant" application="vm.application" doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
+  '                <oset-document-list profile="vm.applicant" application="vm.application" doc-access="vm.application.canViewDocs" display-mode="inline"></oset-document-list>\n' +
   '            </div>\n' +
   '\n' +
   '            </div>\n' +
@@ -4166,7 +4166,7 @@ angular.module('theme', []).run(['$templateCache', function($templateCache) {
   '        </div>\n' +
   '\n' +
   '        <div class="panel-body">\n' +
-  '            <oset-document-list model="vm.driver" display-mode="inline"></oset-document-list>\n' +
+  '            <oset-document-list profile="vm.driver" display-mode="inline"></oset-document-list>\n' +
   '        </div>\n' +
   '\n' +
   '        <div id="portfolio-carousel" class="carousel" data-ride="carousel">\n' +
