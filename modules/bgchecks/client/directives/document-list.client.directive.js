@@ -35,7 +35,7 @@
             } ,
             restrict: 'E',
             scope: {
-                profile: '=model',
+                profile: '=',
                 application: '=',
                 docAccess: '=?',
                 displayMode: '='

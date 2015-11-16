@@ -50,7 +50,7 @@
 
                 <div ng-show="vm.visibleTab === 'documents'">
                     <pre ng-if="vm.debug">{{vm.application.user.reports}}</pre>
-                    <oset-document-list model="vm.application.user" application="vm.application" display-mode="full"
+                    <oset-document-list profile="vm.application.user" application="vm.application" display-mode="full"
                                         doc-access="vm.application.canViewDocs"></oset-document-list>
                 </div>
 
