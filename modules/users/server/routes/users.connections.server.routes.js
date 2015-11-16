@@ -2,7 +2,10 @@
 
 module.exports = function (app) {
 	// User Routes
-	var users = require('../controllers/users.server.controller');
+	var path = require('path'),
+		users = require('../controllers/users.server.controller'),
+		Requests = require('../controllers/requests.server.controller'),
+		requestsPolicy = require(path.resolve('./modules/users/server/policies/requests.server.policy'));
 		
 	// Friends & Connections
         
@@ -25,17 +28,25 @@ module.exports = function (app) {
 	 */
 	app.route('/api/requests')
 		.all(users.requiresLogin)
-		.get(users.listRequests)
-		.post(users.createRequest);
+		.get(Requests.listRequests)
+		.post(Requests.createRequest);
 
 	app.route('/api/requests/:requestId')
-		.get(users.getRequest)
+		.get(Requests.getRequest)
 		.all(users.requiresLogin)
-		.put(users.updateRequest);
+		.put(users.updateFriendRequest, Requests.updateRequest, Requests.closeRequestChain);
+
+	app.route('/r/:shortId')
+		.all(requestsPolicy.isAllowed)
+		.get(Requests.loadRequest);
+		
+	////////////////////////////////////////////////////////////////////////////
+		
+	app.route('/api/friends/:userId')
+		.put(users.updateFriendRequest);
 
 	app.route('/api/users/:userId/friends')
 		.get(users.requiresLogin, users.loadFriends);
-
-
-	app.param('requestId', users.requestById);
+	
+	app.param('requestId', Requests.requestById);
 };

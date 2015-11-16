@@ -14,10 +14,4 @@ module.exports = function (app) {
 	app.route('/api/notifications')
 		.all(notificationsPolicy.isAllowed)
 		.post(notifications.send);		
-	
-	////////////////////////////////////////////////////////////////////////////
-	
-	app.route('/r/:shortId')
-		.all(notificationsPolicy.isAllowed)
-		.get(notifications.loadRequest);
 };

@@ -76,7 +76,7 @@ describe.only('User Connection Tests', function () {
 			.then(function (bd) {
 				log.debug({ test: _test.title, bd: bd }, 'Examining updated BD');
 				bd.should.have.property('status', 'processed');
-			})
+			});
 
 	});
 

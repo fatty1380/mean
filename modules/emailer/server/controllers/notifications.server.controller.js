@@ -20,7 +20,6 @@ var User = mongoose.model('User'),
 ///////////////////////////////////////////////////////////////////////////
 
 exports.send = send;
-exports.loadRequest = loadRequest;
 exports.processRequest = processRequest;
 exports.events = eventServer;
 	
@@ -129,6 +128,54 @@ function processRequest(requestMessage, sender) {
 	log.info({ func: 'processRequest', requestMessage: requestMessage, event: event }, 'Processing for event `%s`', event);
 
 	return processNewRequest(event, requestMessage, sender);
+}
+
+
+/**
+ * processInboundRequest
+ * ---------------------
+ * Method called primarily from teh 'requests.server.controller' (for now), to isolate code used
+ * when handling an inbound friend request.
+ * 
+ * This method will always result in a "redirect" response to the client.
+ */
+
+function processInboundRequest(req, res) {
+
+	var requestMessage = req.request;
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var redirect = 'http://www.truckerline.com';
+
+	if (_.isEmpty(requestMessage)) {
+		return res.redirect(redirect);
+	}
+
+	switch (requestMessage.requestType) {
+		case 'friendRequest':
+			(new Login({ input: requestMessage.shortId, result: 'referral', userId: requestMessage.user, ip: ip })).save().finally(_.noop());
+
+			if (!!requestMessage.objectLink) {
+				req.log.debug({ func: 'loadRequest', link: requestMessage.objectLink }, 'Forwarding Request to link');
+				return res.redirect(requestMessage.objectLink);
+			} else {
+				return getBranchDeepLink(requestMessage, requestMessage.requestType)
+					.then(function (resultUrl) {
+						if (!_.isEmpty(resultUrl)) {
+							req.log.info({ func: 'loadRequest', branchURL: resultUrl }, 'Redirecting to branch URL');
+							redirect = resultUrl;
+						}
+					})
+					.catch(function (err) {
+						req.log.error({ func: 'loadRequest', err: err }, 'Unable to generate new Branch Redirect URL');
+					})
+					.finally(function () {
+						return res.redirect(redirect);
+					});
+
+			}
+	}
+	
+	return res.redirect(redirect);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -351,85 +398,3 @@ function getBranchDeepLink(request, event, channel) {
 }
 
 //////////////////////////////////////////////////////
-
-var shortid = require('shortid');
-
-function loadRequest(req, res) {
-	req.log.info({ func: 'loadRequest', params: req.params }, 'Loading Notification Request');
-	var id = req.params.shortId;
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-	if (shortid.isValid(id)) {
-		req.log.info({ func: 'loadRequest', shortId: id }, 'Looking up By ShortID?');
-
-		return RequestMessage.findOne({ shortId: id }).exec().then(
-			function success(requestMessage) {
-				req.log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
-				var fromId = _.isEmpty(requestMessage.from) ?
-					null :
-					_.isString(requestMessage.from) ?
-						requestMessage.from :
-						requestMessage.from.toHexString();
-
-				if (!!requestMessage && !!fromId) {
-					var url = null;
-					req.log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
-
-					switch (requestMessage.requestType) {
-						case 'friendRequest':
-							(new Login({ input: requestMessage.shortId, result: 'referral', userId: requestMessage.user, ip: ip })).save().finally(_.noop());
-
-							var redirect = 'http://www.truckerline.com';
-
-							if (!!requestMessage.objectLink) {
-								req.log.debug({ func: 'loadRequest', link: requestMessage.objectLink }, 'Forwarding Request to link');
-								return res.redirect(requestMessage.objectLink);
-							} else {
-								return getBranchDeepLink(requestMessage, requestMessage.requestType)
-									.then(function (resultUrl) {
-										if (!_.isEmpty(resultUrl)) {
-											req.log.info({ func: 'loadRequest', branchURL: resultUrl }, 'Redirecting to branch URL');
-											redirect = resultUrl;
-										}
-									})
-									.catch(function (err) {
-										req.log.error({ func: 'loadRequest', err: err }, 'Unable to generate new Branch Redirect URL');
-									})
-									.finally(function () {
-										return res.redirect(redirect);
-									});
-							}
-							break;
-
-						case 'shareRequest':
-							url = '/trucker/' + fromId + '?requestId=' + requestMessage.id;
-							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
-							return res.redirect(url);
-
-						case 'reviewRequest':
-							// if (!!requestMessage.objectLink) {
-							// 	url = '/reviews/' + requestMessage.objectLink + '/edit';
-							// } else {
-							url = '/reviews/create?requestId=' + requestMessage.id;
-							//}
-							req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Review Creation');
-							return res.redirect(url);
-						default: req.log.error({ func: 'loadRequest' }, 'Unknown Request Type');
-					}
-				} else if (!fromId) {
-					req.log.error({ requestMesage: requestMessage }, 'Request has no sender');
-				} else {
-					req.log.error({ requestMessage: requestMessage }, 'Unable to process request');
-				}
-
-				return res.redirect('/not-found');
-			},
-			function fail(err) {
-				req.log.error({ err: err, params: req.params }, 'Unable to load request');
-				return res.redirect('/not-found');
-			});
-	}
-	else {
-		return res.redirect('/not-found');
-	}
-}
