@@ -613,7 +613,7 @@ function loadRequest(req, res) {
                             
                             var baseURL = '/trucker/' + fromId;
                             
-                            if (requestMessage.contents && requestMessage.contents.documents && requestMessage.documents.length) {
+                            if (requestMessage.contents && requestMessage.contents.documents && requestMessage.contents.documents.length) {
                                 baseURL = baseURL + '/documents';
                             }
                         
