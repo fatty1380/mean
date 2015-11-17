@@ -133,12 +133,6 @@
             }).
             state('trucker.review', {
                 url: '/review',
-                params: {
-                    requestId: {
-                        value: null,
-                        squash: true
-                    }
-                },
                 onEnter: ['$log', '$stateParams', '$state', function ($log, $stateParams, $state) {
                     $state.go('reviews.create', { requestId: $stateParams.requestId });
                 }],
@@ -171,7 +165,7 @@
                                 });
                         }
 
-                        if (!_.isEmpty(request.contents) && !_.isEmpty(request.contents.documents)) {
+                        if (!!request && !_.isEmpty(request.contents) && !_.isEmpty(request.contents.documents)) {
                             var docs = _.map(request.contents.documents, function (docId) {
                                 return Documents.byId.get({ documentId: docId }).$promise
                                     .catch(function reject(err) {
