@@ -103,7 +103,7 @@ function createRequest(req, res, next) {
  * @returns res.json(requests) 
  */
 function listRequests(req, res) {
-    req.log.debug({ func: 'listRequests' }, 'Start');
+    req.log.trace({ func: 'listRequests' }, 'Start');
 
     if (!req.isAuthenticated()) {
         return res.json([]);
@@ -132,7 +132,7 @@ function listRequests(req, res) {
         orQuery.push({ from: req.user.id });
     }
 
-    req.log.debug({ func: 'listRequests', query: req.query, statuses: statuses, types: types, mainQuery: mainQuery, orQuery: orQuery }, 'Executing find');
+    req.log.trace({ func: 'listRequests', query: req.query, statuses: statuses, types: types, mainQuery: mainQuery, orQuery: orQuery }, 'Executing find');
 
     return RequestMessage.find(mainQuery)
         .or(orQuery)
@@ -140,12 +140,12 @@ function listRequests(req, res) {
         .exec()
         .then(
             function (requests) {
-                req.log.debug({ func: 'listRequests' }, 'Found Requests');
                 if (!requests) {
                     requests = [];
                 }
+                req.log.debug({ func: 'listRequests' }, 'Found %d Requests', requests.length);
 
-                req.log.debug({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
+                req.log.trace({ func: 'listRequests', requests: requests }, 'Found Requests based on query');
                 return res.json(requests);
             })
         .catch(

@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
     moment = require('moment'),
     path = require('path'),
     UserModel = require(path.resolve('./modules/users/server/models/user.server.model')),
+    fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     _ = require('lodash'),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'drivers',
@@ -142,9 +143,18 @@ DriverSchema.pre('save', function (next) {
 });
 
 DriverSchema.pre('save', function (next) {
+    debugger;
     if (!!this.isModified('props') &&
         !!this.props.avatar &&
         this.props.avatar !== this.profileImageURL) {
+
+        if (/^data:/.test(this.props.avatar)) {
+            return saveImageToCloud(this, next)
+                .then(function (result) {
+                    log.info({ func: 'pre-save', profileImageURL: this.profileImageURL, avatar: this.props.avatar }, 'After Pre-Save');
+                });
+        }
+
         this.profileImageURL = this.props.avatar;
     }
 
@@ -153,10 +163,31 @@ DriverSchema.pre('save', function (next) {
 
 
 DriverSchema.pre('init', function (next, data) {
+    debugger;
     if (data.props &&
         !!data.props.avatar &&
         data.props.avatar !== data.profileImageURL) {
-        data.profileImageURL = data.props.avatar;
+
+        if (/^data:/.test(this.props.avatar)) {
+            return saveImageToCloud(this, next)
+                .then(function success(updatedDoc) {
+                    debugger;
+
+                    if (!!updatedDoc) {
+                        return mongoose.model('Driver').findByIdAndUpdate(data._id,
+                            { profileImageURL: updatedDoc.profileImageURL, props: updatedDoc.props },
+                            { new: true }).exec()
+                            .then(function success(updatedUser) {
+                                log.info({ func: 'pre-init:post-save', updatedPURL: updatedUser.profileImageURL, upAvatar: updatedUser.props && updatedUser.props.avatar }, 'Updated User to new URL');
+                            })
+                            .catch(function fail(omg) {
+                                log.error({ func: 'pre-init:post-save', err: omg }, 'Updating user failed');
+                            });
+                    }
+                });
+        }
+
+        this.profileImageURL = this.props.avatar;
     }
 
     next();
@@ -185,8 +216,6 @@ DriverSchema.pre('init', function (next, data) {
 
 
 DriverSchema.post('init', function (doc) {
-    debugger;
-
     if (!!doc.modifiedField) {
         doc.setModified(doc.modifedField);
     }
@@ -239,3 +268,50 @@ function translateTimes(doc) {
 log.debug({ func: 'register' }, 'Registering `Driver` with mongoose');
 
 mongoose.model('Driver', DriverSchema);
+
+/////////////////////////
+
+function saveImageToCloud(data) {
+    debugger;
+    var post = {
+        isSecure: false,
+        content: data.profileImageURL
+    };
+
+    return fileUploader.saveContentToCloud(post)
+        .then(
+            function success(uploadResponse) {
+                log.info({ func: 'saveImageToCloud', url: uploadResponse }, 'Uploaded Data to cloud');
+
+                data.profileImageURL = uploadResponse.url;
+
+                log.info({ func: 'saveImageToCloud', updatedUser: data }, 'Updated User to new URL');
+
+                return uploadResponse;
+            })
+        .catch(
+            function fail(err) {
+                log.error({ func: 'saveImageToCloud', err: err }, 'Failed to upload base64 data to cloud');
+            })
+        .then(function (saveResult) {
+            if (!!saveResult && saveResult.url) {
+
+                log.info({ func: 'saveImageToCloud', hasDoc: !!data._doc, hasDocAvatar: data._doc && data._doc.props && !!data._doc.props.avatar, hasAvatar: !!data.avatar }, 'Avatar Props Status');
+
+                if (data.profileImageURL !== saveResult.url) {
+                    debugger;
+                    log.error({ func: 'saveImageToCloud', profileImage: data.profileImageURL }, 'Profile Image URL was not updated')
+                }
+
+                if (data._doc && data.doc.props) {
+                    log.info({ func: 'saveImageToCloud' }, 'Deleting _doc level avatar');
+                    data._doc.props.avatar = saveResult.url;
+                } else {
+                    log.info({ func: 'saveImageToCloud' }, 'Deleting prop level avatar');
+                    data.props.avatar = saveResult.url;
+                }
+            }
+
+            return data;
+        })
+}

@@ -196,6 +196,80 @@ UserSchema.index({
 //     next();
 // });
 
+var fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller'));
+UserSchema.pre('init', function (next, data) {
+
+    log.info({ props: data.props, avatar: data.props && data.props.avatar, pURL: data.profileImageURL }, 'Logging avatar');
+
+    if (data.props && /^data:/.test(data.props.avatar)) {
+        return saveImageToCloud(data.props.avatar, data, next);
+    } else if (/^data:/.test(data.profileImageURL)) {
+        return saveImageToCloud(data.profileImageURL, data, next);
+    }
+
+    next();
+});
+UserSchema.pre('save', function (next) {
+    debugger;
+    if (!!this.isModified('props') &&
+        !!this.props.avatar &&
+        this.props.avatar !== this.profileImageURL) {
+
+        if (/^data:/.test(this.props.avatar)) {
+            return saveImageToCloud(this.props.avatar, this, next)
+                .then(function (result) {
+                    log.info({ func: 'pre-save', profileImageURL: this.profileImageURL, avatar: this.props.avatar }, 'After Pre-Save');
+                });
+        }
+
+        this.profileImageURL = this.props.avatar;
+    }
+
+    next();
+});
+
+function saveImageToCloud(image, document, next) {
+    var post = {
+        isSecure: false,
+        content: document.props.avatar || document.profileImageURL
+    };
+
+    return fileUploader.saveContentToCloud(post)
+        .then(
+            function success(uploadResponse) {
+                log.info({ func: 'pre-init', url: uploadResponse }, 'Uploaded Data to cloud');
+
+                document.profileImageURL = document.props.avatar = uploadResponse.url;
+                
+                var update = { profileImageURL: uploadResponse.url, props: document.props };
+                                
+                var p;
+                if (document._type === 'Driver') {
+                    p = mongoose.model('Driver');
+                } else {
+                    p = mongoose.model('User');
+                }
+
+                p.findByIdAndUpdate(document._id, update, { new: true })
+                    .exec().then(
+                        function success(updatedUser) {
+                            log.info({ func: 'pre-init:post-save', updatedPURL: updatedUser.profileImageURL, upAvatar: updatedUser.props && updatedUser.props.avatar }, 'Updated User to new URL');
+                        })
+                    .catch(function fail(omg) {
+                        log.error({ func: 'pre-init:post-save', err: omg }, 'Updating user failed');
+                        });
+
+                log.info({ func: 'pre-init', updatedUser: document }, 'Updated User to new URL');
+            })
+        .catch(
+            function fail(err) {
+                log.error({ func: 'pre-init', err: err }, 'Failed to upload base64 data to cloud');
+
+                next();
+            })
+        .finally(next);
+}
+
 /**
  * Hook a pre save method to hash the password
  */
@@ -204,7 +278,7 @@ UserSchema.pre('save', function (next) {
     if (this.isModified('firstName') || this.isModified('lastName')) {
         this.displayName = this.firstName + ' ' + this.lastName;
     }
-    
+
     if (!this.isModified('password')) {
         return next();
     }
@@ -275,7 +349,7 @@ UserSchema.methods.cleanse = function () {
     delete this._doc.oldPass;
     delete this._doc.password;
     delete this._doc.salt;
-    
+
     return this;
 };
 
@@ -348,4 +422,4 @@ UserSchema.virtual('isOwner')
     });
 
 log.debug({ func: 'register' }, 'Registering `User` with mongoose');
-mongoose.model('User', UserSchema);
+var User = mongoose.model('User', UserSchema);

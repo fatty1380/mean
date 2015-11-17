@@ -69,37 +69,29 @@ var uriRegex = /^data:(.+\/.+);(\w+),(.*)$/;
  * saveContentToCloud
  */
 function saveContentToCloud(data) {
-    log.debug({ func: 'saveContentToCloud', data: data }, 'START');
+    log.debug({ trace: 'saveContentToCloud', data: data }, 'START');
 
     var file = {
         name: data.filename
     };
 
     var isSecure = _.isUndefined(data.isSecure) ? true : !!data.isSecure;
-    
-    console.log({ func: 'saveContentToCloud', isSecure: isSecure });
 
     if (/^data:/i.test(data.content)) {
         var matches = data.content.match(uriRegex);
-
-        var contentType = matches[1];
-        var encoding = matches[2];
-        var fileData = matches[3];
-
-        debugger;
-
-        file.contentType = contentType;
-        file.encoding = encoding;
-        file.buffer = new Buffer(fileData, encoding);
+        file.contentType = matches[1];
+        file.encoding = matches[2];
+        file.buffer = new Buffer(matches[3], file.encoding);
 
     } else {
         file.buffer = (data.content instanceof Buffer) ? data.content : new Buffer(data.content, 'utf-8');
     }
 
-    log.trace({ func: 'saveContentToCloud', dataContentLength: file.buffer.toString().length });
+    debugger;
+    log.trace({ func: 'saveContentToCloud', isSecure: isSecure, contentType: file.contentType, encoding :file.encoding,  dataContentLength: file.buffer.toString().length });
 
     if (_.isEmpty(file.name)) {
-        file.name = [uuid.v4(), mime.extension(file.contentType)].join('.');
+        file.name = [data.userId || uuid.v4(), mime.extension(file.contentType)].join('.');
     }
 
     //return Q(directUpload({file: file}, null, true));
@@ -166,37 +158,6 @@ function doS3FileUpload(filename, folder) {
     return deferred.promise;
 }
 
-function getSecureReadURLPromise(bucket, key) {
-    var params = {
-        Key: key,
-        Bucket: bucket || config.services.s3.s3Options.bucket
-    };
-
-    if (!client) {
-        log.debug('[s3.directRead] S3 is not configured - cannot update secure read url');
-        return Q.reject('Unable to update file from cloud store');
-    } else {
-
-        log.debug('[s3.directRead] Attempting S3 Download for %j', params);
-
-        client.s3.getSignedUrl('getObject', params, function (err, url) {
-            if (err) {
-                log.error('[s3.directRead] unable to download:', err && err.stack);
-
-                return deferred.reject(err);
-            }
-
-            log.debug('[s3.directRead] Got signed url: `%s`', url);
-
-            var strippedURL = url.replace('http://', 'https://'); //.replace('https://', '//');
-            log.debug('[s3.directRead] Post stripping, resolving with : %s', strippedURL);
-
-            deferred.resolve(strippedURL);
-
-        });
-    }
-}
-
 function getSecureReadURL(bucket, key) {
 
     var deferred = Q.defer();
@@ -255,7 +216,8 @@ function doDirectUpload(files, folder, isSecure) {
 
     var file = files.file;
 
-    log.debug({ func: 'directUpload' }, 'Uploading file: %s', JSON.stringify(file, function (key, value) {
+    log.debug({ func: 'directUpload' }, 'Uploading file: %s',
+        JSON.stringify(file, function (key, value) {
         return (key === 'buffer') ? '<BufferLength:' + value.length + '>' : value;
     }, 2));
 
@@ -270,7 +232,6 @@ function doDirectUpload(files, folder, isSecure) {
             extension = !!fileName ? (file.extension || fileName.slice(-3)).toLowerCase() : null;
         } else {
             fileName = uuid.v4();
-
         }
 
         log.debug({ func: 'directUpload' }, 'Initializing S3 Upload for %s to %s', fileName, folder);
@@ -307,7 +268,7 @@ function doDirectUpload(files, folder, isSecure) {
 
         doUploadPromise(params).then(
             function success(uploadResult) {
-                debugger;
+
                 log.debug({ func: 'directUpload', result: uploadResult }, 'Uploaded File');
 
                 // if (isSecure) {
@@ -323,7 +284,6 @@ function doDirectUpload(files, folder, isSecure) {
                 uploader.send();
             })
             .then(function success(saveSecureResult) {
-                debugger;
 
                 if (_.isEmpty(saveSecureResult)) {
                     // Assume deferred is clea
@@ -579,107 +539,6 @@ function saveFile(files, folder) {
 }
 
 // ============================================================================================
-
-function uploadBase64ToCloud(content, document, config) {
-    var filename = filename || 'uploadedContent';
-    var folder = getFolder(config.folder);
-
-    var isSecure = config.isSecure || false;
-
-    var buffer;
-    var contentType = getContentType(content);
-
-    var base64DataMatch = /^data:(\w+\/\w+);base64,(.*)$/.compile;
-
-    var matches = content.match(base64DataMatch);
-
-    var extension = _.last(contentType.split('/'));
-    
-    // If the data type is application or image
-    if (!!matches && /(image)|(application\/pdf)/.test(matches[0])) {
-        buffer = new Buffer(content.replace(/^data:\w+\/\w+;base64,/, ''), 'base64');
-
-        var data = {
-            Bucket: config.services.s3.s3Options.bucket,
-            Key: folder + '/' + filename,
-            ACL: 'public-read',
-            Body: buffer
-        };
-
-        return uploadDeferred();
-
-    } else if (!!matches) {
-        log.error({ header: content.substring(0, 50) }, 'Unable to upload due to unknown content type in base64 headers');
-    } else {
-        return Q.reject('Unable to determine content type');
-
-    }
-}
-
-
-function uploadDeferred(data, isSecure) {
-    var deferred = Q.defer();
-
-    var uploader = client.s3.putObject(data);
-
-    uploader
-        .on('success', function (response) {
-            console.log('Logger is%s defined', _.isEmpty(log) ? ' NOT' : '');
-            log.debug({ func: 'uploadBase64ToCloud:onSuccess', response: response.data }, 'done uploading, got data!');
-
-            var publicURL = s3.getPublicUrlHttp(data.Bucket, data.Key);
-            log.debug({ func: 'uploadBase64ToCloud:onSuccess' }, 'Got public URL: %s', publicURL);
-
-            var strippedURL = publicURL.replace('http://', 'https://');
-            log.debug({ func: 'uploadBase64ToCloud:onSuccess' }, 'Post stripping, resolving with : %s', strippedURL);
-
-            if (isSecure) {
-                response = {
-                    key: data.Key,
-                    bucket: data.Bucket,
-                    url: strippedURL,
-                    timestamp: Date.now(),
-                    expires: Date.now()
-                };
-
-                return getSecureReadURL(response.bucket, response.key).then(
-                    function (success) {
-                        response.url = success;
-                        response.expires = (Date.now() + 15 * 60 * 1000);
-
-                        log.debug({ func: 'uploadBase64ToCloud:onSuccess' }, 'Post secure upload, resolving with : %j', response);
-
-                        deferred.resolve(response);
-                    }, function (err) {
-                        log.debug({ func: 'uploadBase64ToCloud:onSuccess' }, 'Post secure upload failed: %j', err);
-                        log.debug({ func: 'uploadBase64ToCloud:onSuccess' }, 'Resolving with public URL?');
-
-                        deferred.resolve(response);
-                    });
-            }
-            else {
-                response = {
-                    key: data.Key,
-                    bucket: data.Bucket,
-                    url: strippedURL,
-                    timestamp: Date.now()
-                };
-
-                deferred.resolve(response);
-            }
-        })
-        .on('error', function (response) {
-            log.error({ func: 'uploadBase64ToCloud:onError', response: response }, 'File upload failed: `%s`', response.message);
-
-            deferred.reject(response);
-        });
-
-    log.debug({ func: 'uploadBase64ToCloud' }, 'Event Handlers in place');
-
-    uploader.send();
-
-    return deferred.promise;
-}
 
 
 /********************************************************************************************

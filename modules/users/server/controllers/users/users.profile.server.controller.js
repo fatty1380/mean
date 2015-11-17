@@ -201,9 +201,11 @@ function read(req, res) {
         });
     }
 
+    req.log.debug({ func: 'readProfile', file: 'users.profile', profileURL: req.profile.profileImageURL }, 'Returning Profile with URL');
+
     req.profile.cleanse();
 
-    req.log.debug({ func: 'readProfile', file: 'users.profile', profile: req.profile }, '[Profiles] Returning profile');
+    req.log.trace({ func: 'readProfile', file: 'users.profile', profile: req.profile }, '[Profiles] Returning profile');
     res.json(req.profile);
 }
 

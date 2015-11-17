@@ -84,9 +84,9 @@ module.exports = {
         google: {
         },
         s3: {
-            enabled: false,
+            enabled: true,
             s3Options: {
-                bucket: 'outset-public-resources',
+                bucket: 'outset-dev-resources',
                 accessKeyId: process.env.S3_ACCESS_KEY || 'AKIAIJ4QZKURJBV2DAWQ',
                 secretAccessKey: process.env.S3_SECRET_KEY || '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'
             },

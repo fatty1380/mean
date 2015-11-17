@@ -46,7 +46,9 @@
                     return;
                 }
                 
-                vm.pictureUrl = vm.profile.props && vm.profile.props.avatar || vm.profile.profileImageURL;
+                debugger;
+                
+                vm.pictureUrl = vm.profile.profileImageURL; //vm.profile.props && vm.profile.props.avatar || 
                 vm.subTitle = vm.profile.handle || vm.profile.type;
 
                 vm.canEdit = _.isUndefined(vm.canEdit) ? false : vm.canEdit;

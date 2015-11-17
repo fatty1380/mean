@@ -1,5 +1,9 @@
 'use strict';
-var _ = require('lodash');
+var _ = require('lodash'),
+    path = require('path'),
+    Q = require('q');
+    
+var fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller'));
 
 exports.getProperties = function getProperties(req, res) {
     req.log.debug({ module: 'drivers', func: 'getProperties' }, 'Loading Properties');
@@ -25,7 +29,25 @@ exports.setProperties = function setProperties(req, res) {
     user.props = _.extend(user.props, req.body);
     user.markModified('props');
 
-    return user.save().then(function success(result) {
+    var p;
+
+    if (req.body.avatar && /^data:/.test(req.body.avatar)) {
+        var post = {
+            isSecure: false,
+            content: req.body.avatar
+        };
+        
+        p = fileUploader.saveContentToCloud(post)
+            .then(function success(uploadResponse) {
+                user.profileImageURL = user.props.avatar = uploadResponse.url;
+                
+                return user.save();
+            });
+    } else {
+        p = user.save();
+    }
+
+    return p.then(function success(result) {
         loginPostUpdate(req, res, result, 'props');
     }, function reject(err) {
         req.log.error({ module: 'drivers', func: 'setProperties', error: err }, 'unable to set properties for driver user');

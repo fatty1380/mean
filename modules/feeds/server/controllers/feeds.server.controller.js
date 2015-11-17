@@ -448,9 +448,9 @@ function getOrCreateFeed(userId, log, companyId) {
 	//.populate({path: 'items.user', select: 'handle displayName', model: 'User'})
 		.exec()
 		.then(function (feed) {
-			log.debug({ func: 'getOrCreateFeed', feed: feed });
+			log.trace({ func: 'getOrCreateFeed', feed: feed });
 			if (!feed) {
-				log.info({ func: 'getOrCreateFeed' }, '... hmmm, Creating new feed for user');
+				log.trace({ func: 'getOrCreateFeed' }, '... hmmm, Creating new feed for user');
 				feed = new Feed({ user: userId, company: companyId });
 
 				return feed.save();

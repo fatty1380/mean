@@ -10,14 +10,6 @@ module.exports = function(app) {
 		.get(documents.list)
 		.all(documentsPolicy.isAllowed)
 		.post(documents.create);
-		
-	app.route('/api/profiles/:userId/documents')
-		.all(documentsPolicy.isAllowed)
-		.get(documents.list);
-		
-	app.route('/api/profiles/:userId/documents/:documentId')
-		.all(documentsPolicy.isAllowed)
-		.get(documents.read);
 
 	// TODO: Refactor Existing routes which used this to use query params
 	// app.route('/api/profiles/:userId/documents/:docType')
@@ -30,6 +22,16 @@ module.exports = function(app) {
 		.get(documents.read)
 		.put(documents.update)
 		.delete(documents.delete);
+		
+		
+		
+	app.route('/api/profiles/:userId/documents')
+		.all(documentsPolicy.isAllowed)
+		.get(documents.list);
+		
+	app.route('/api/profiles/:userId/documents/:documentId')
+		.all(documentsPolicy.isAllowed)
+		.get(documents.read);
 
 	// Finish by binding the Document middleware
 	app.param('documentId', documents.documentByID);
