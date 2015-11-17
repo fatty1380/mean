@@ -32,12 +32,12 @@ exports.refreshReport = refresh;
 
 
 function createWithBody(req, res) {
-    req.log.debug({ func: 'createWithBody' }, 'Start');
+    req.log.debug({ func: 'createWithBody', body: req.body, user: req.user }, 'Start');
     
     var user = req.user;
-    
 
     if (!user) {
+        req.log.error({ func: 'createWithBody' }, 'User is not signed in');
         return res.status(401).send({
             message: 'User is not signed in'
         });
@@ -50,6 +50,7 @@ function createWithBody(req, res) {
     debugger;
     
     if (!file.url) {
+        req.log.error({ func: 'createWithBody', file: file }, 'File has no URL');
         return res.status(400).send({
             message: 'No URL/data Uploaded'
         });
@@ -92,7 +93,7 @@ function createWithBody(req, res) {
             function saveUpdatedFile(updatedFile) {
                 req.document = new LBDocument(file);
 
-                saveDocumentToDB(req, res);
+                return saveDocumentToDB(req, res);
             });
 }
     
@@ -102,10 +103,11 @@ function createWithBody(req, res) {
 function create(req, res) {
     
     if (_.isEmpty(req.files.file)) {
+        req.log.debug({ func: 'create' }, 'Files are empty, creating with body');
         return createWithBody(req, res);
     }
     
-    req.log.debug('[DriverCtrl.create] Start');
+    req.log.debug({ func: 'create', files: req.files }, 'Start');
     
     var user = req.user;
     if (!user) {
@@ -198,7 +200,8 @@ function list(req, res) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
+        } else {
+            req.log.debug({ func: 'list', file: 'documents.controller' }, 'Returning %d Docuemnts in response', documents.length);
 			res.json(documents);
 		}
 	});
