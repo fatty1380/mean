@@ -67,7 +67,8 @@ function createWithBody(req, res) {
         
         var post = {
             isSecure: true,
-            content: file.url
+            content: file.url,
+            folder: 'lockbox'
         };
         
         getUrlAsync = fileUploader.saveContentToCloud(post);

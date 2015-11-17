@@ -95,7 +95,7 @@ function saveContentToCloud(data) {
     }
 
     //return Q(directUpload({file: file}, null, true));
-    return directUpload({ file: file }, null, isSecure)
+    return directUpload({ file: file }, data.folder || null, isSecure)
         .then(
             function (success) {
                 log.debug({ func: 'saveContentToCloud', result: success }, 'Returning promise');
@@ -156,7 +156,7 @@ function doS3FileUpload(filename, folder) {
     }
 
     return deferred.promise;
-}
+}  
 
 function getSecureReadURL(bucket, key) {
 
@@ -208,8 +208,7 @@ function doDirectUpload(files, folder, isSecure) {
 
     var deferred = Q.defer();
 
-    folder = folder || config.services.s3.folder;
-
+    folder = folder || (!!isSecure ? 'lockbox' : config.services.s3.folder);
     if (folder.substring(folder.length - 1) === '/') {
         folder = folder.substring(0, folder.length - 1);
     }

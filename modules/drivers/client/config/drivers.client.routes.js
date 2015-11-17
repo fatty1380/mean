@@ -156,28 +156,37 @@
                     documents: ['$log', '$q', 'request', 'user', 'profile', 'Documents',
                         function ($log, $q, request, user, profile, Documents) {
 
-                        if (!!user && user.id === profile.id) {
-                            return Documents.byUser.query({ userId: profile.id }).$promise
-                                .catch(function reject(err) {
-                                    $log.error('Unable to Fetch User\'s documents', err);
-
-                                    return null;
-                                });
-                        }
-
-                        if (!!request && !_.isEmpty(request.contents) && !_.isEmpty(request.contents.documents)) {
-                            var docs = _.map(request.contents.documents, function (docId) {
-                                return Documents.byId.get({ documentId: docId }).$promise
+                            if (!!user && user.id === profile.id) {
+                                $log.debug('Loading logged in users docs');
+                                return Documents.byUser.query({ userId: profile.id }).$promise
                                     .catch(function reject(err) {
-                                        $log.error('Unable to fetch user document `%s`, docId', err);
+                                        $log.error('Unable to Fetch User\'s documents', err);
+
+                                        return null;
                                     });
-                            });
+                            }
 
-                            return $q.all(docs);
-                        }
+                            if (!!request && !_.isEmpty(request.contents) && !_.isEmpty(request.contents.resolvedDocs)) {
+                                debugger;
+                                $log.debug('Returning %d pre-resolved docs', request.contents.resolvedDocs.length);
+                                return request.contents.resolvedDocs;
+                            }
 
-                        return [];
-                    }]
+                            if (!!request && !_.isEmpty(request.contents) && !_.isEmpty(request.contents.documents)) {
+                                var docs = _.map(request.contents.documents, function (docId) {
+                                    return Documents.byId.get({ documentId: docId }).$promise
+                                        .catch(function reject(err) {
+                                            $log.error('Unable to fetch user document `%s`, docId', err);
+                                        });
+                                });
+
+                                $log.debug('Resolving %d documents from server', docs.length);
+
+                                return $q.all(docs);
+                            }
+
+                            return [];
+                        }]
                 },
                 templateUrl: '/modules/drivers/views/trucker-docs.client.view.html',
             }).

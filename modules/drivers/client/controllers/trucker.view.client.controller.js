@@ -76,41 +76,62 @@
 		///////////////////////////////////////
 		
 		function initDocument(document) {
-			var fileName = document.name;
+			var docName = document.name;
 
 			if (/^data:.*base64/.test(document.url)) {
 				if (/image\/[\w]+;/.test(document.url)) {
 					document.imgSrc = document.url;
 					$sce.trustAsResourceUrl(document.imgSrc);
-					document.activeReport = fileName;
 					document.fileType = _.first(document.url.match(/image\/(\w+)/));
-                    document.documentTitle = vm.fileUser + '_' + fileName.replace(/ /g, '_') + '.' + (_.last(document.url.match(/image\/(\w+)/)) || '.jpg');
+                    document.documentTitle = vm.fileUser + '_' + docName.replace(/ /g, '_') + '.' + (_.last(document.url.match(/image\/(\w+)/)) || '.jpg');
 					return;
 				}
 				else if (/application\/pdf/.test(document.url)) {
 					document.documentUrl = document.url;
 					$sce.trustAsResourceUrl(document.documentUrl);
-					document.activeReport = fileName;
 					document.fileType = _.first(document.url.match(/application\/\w+/));
-                    document.documentTitle = vm.fileUser + '_' + fileName + '.pdf';
+                    document.documentTitle = vm.fileUser + '_' + docName + '.pdf';
+					return;
+				}
+			} else {
+				
+				var urlComponents = document.url.split('?');
+				
+				var baseURL = urlComponents[0];
+				var filename = _.last(baseURL.split('/'));
+				var extension = _.last(filename.split('.'));
+				var docname = document.name;
+				
+				if (/.pdf$/.test(filename)) {
+					document.documentUrl = document.url;
+					$sce.trustAsResourceUrl(document.documentUrl);
+					//document.fileType = _.first(document.url.match(/application\/\w+/));
+                    document.documentTitle = vm.fileUser + '_' + docName.replace(/ /g, '_') + '.' + extension;
+					return;
+				} else {
+					document.imgSrc = document.url;
+					$sce.trustAsResourceUrl(document.imgSrc);
+					//document.fileType = _.first(document.url.match(/image\/(\w+)/));
+                    document.documentTitle = vm.fileUser + '_' + docName.replace(/ /g, '_') + '.' + extension;
 					return;
 				}
 			}
 
-            $log.debug('Opening File %o', fileName);
+            $log.debug('Opening File %o', docName);
 
-            var file = vm.reports[fileName];
+            var file = vm.reports[docName];
 
             DocAccess.updateFileUrl(profile.id, file)
                 .then(function (success) {
+					debugger;
                     document.documentUrl = success.url;
-                    document.documentTitle = vm.fileUser + '_' + fileName + '.pdf';
+                    document.documentTitle = vm.fileUser + '_' + docName + '.pdf';
 
                     $sce.trustAsResourceUrl(document.documentUrl);
 
                     document.reports[success.sku] = success;
 
-                    document.activeReport = fileName;
+                    document.activeReport = docName;
                 })
                 .catch(function (error) {
                     $log.warn('[DocViewCtrl.updateFileUrl] %s', error);

@@ -5,7 +5,7 @@ exports.listRequests = listRequests;
 exports.getRequest = getRequest;
 exports.createRequest = createRequest;
 exports.updateRequest = updateRequest;
-exports.loadRequest = loadRequest;
+exports.loadRequest = requestByShortId;
 exports.closeRequestChain = closeRequestChain;
 
 /** Middleware */
@@ -18,8 +18,11 @@ exports.requestById = requestById;
  */
 var _ = require('lodash'),
     path = require('path'),
+    moment = require('moment'),
     Q = require('q'),
     shortid = require('shortid'),
+    moment = require('moment'),
+    fileUploader = require(path.resolve('./modules/core/server/controllers/s3FileUpload.server.controller')),
     NotificationCtr = require(path.resolve('./modules/emailer/server/controllers/notifications.server.controller')),
     log = require(path.resolve('./config/lib/logger')).child({
         module: 'users',
@@ -29,6 +32,7 @@ var _ = require('lodash'),
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     RequestMessage = mongoose.model('RequestMessage'),
+    LBDocument = mongoose.model('Document'),
     BranchData = mongoose.model('BranchData'),
     Login = mongoose.model('Login');
 
@@ -162,6 +166,53 @@ function listRequests(req, res) {
  * Simple 'read' method which returns the value loaded into the request value
  */
 function getRequest(req, res, next) {
+
+    if (_.isEmpty(req.request)) {
+        return res.status(404).send({ message: 'No Request Found' });
+    }
+
+    var request = req.request;
+    var hasDocs = request.contents && !_.isEmpty(request.contents.documents);
+    var isExpired = false;
+
+    if (!_.isEmpty(request.expires)) {
+        isExpired = moment().isBefore(moment(request.expires));
+    }
+
+    if (hasDocs && !isExpired) {
+        return Q
+            .all(_.map(request.contents.documents, function (doc) {
+
+                var theDoc;
+
+                return LBDocument.findById(doc).exec()
+                    .then(
+                        function success(foundDocument) {
+                            req.log.debug({ func: 'getRequest', existingDoc: foundDocument }, 'Loading updated Secure URL for Doc');
+                            theDoc = foundDocument;
+                            return fileUploader.getSecureReadURL(foundDocument.bucket, foundDocument.key);
+                        })
+                    .then(
+                        function success(secureURLResponse) {
+                            debugger;
+                            req.log.debug({ func: 'getRequest', newURL: secureURLResponse }, 'Saving updated Secure URL');
+                            theDoc.updateReportURL(secureURLResponse);
+
+                            return theDoc.save();
+                        });
+            }))
+            .then(function success(updatedDocs) {
+
+                if (true) {
+                    req.log.debug({ func: 'getRequest', resolvedDocs: updatedDocs }, 'Appending resolved docs to Response');
+                    request.contents.resolvedDocs = updatedDocs;
+                }
+                
+                return res.json(request);
+            });
+    }
+
+
     return res.json(req.request);
 }
 
@@ -203,6 +254,97 @@ function requestById(req, res, next, id) {
                 req.log.error({ func: 'requestById', error: err }, 'Unable to find request due to error');
                 next(err);
             });
+}
+
+
+/**
+ * loadRequest
+ * -----------
+ * Given a 'shortId' in the request, looks up and tries to find the correspnding requests, and forwards
+ * the user as appropriate.
+ */
+
+function requestByShortId(req, res) {
+    req.log.info({ func: 'loadRequest', params: req.params }, 'Loading Notification Request');
+    var id = req.params.shortId;
+    debugger;
+    if (shortid.isValid(id)) {
+        req.log.info({ func: 'loadRequest', shortId: id }, 'Looking up By ShortID?');
+
+        return RequestMessage.findOne({ shortId: id }).exec().then(
+            function success(requestMessage) {
+
+                req.request = requestMessage;
+
+                if (!!requestMessage) {
+                    var hasDocs = false;
+
+                    req.log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
+                    var fromId = _.isEmpty(requestMessage.from) ?
+                        null :
+                        _.isString(requestMessage.from) ?
+                            requestMessage.from :
+                            requestMessage.from.toHexString();
+
+                    if (!!fromId) {
+                        var url = null;
+                        req.log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
+
+                        switch (requestMessage.requestType) {
+                            case 'friendRequest':
+                                return NotificationCtr.processInboundReferral(req, res);
+                            case 'shareRequest':
+
+                                var baseURL = '/trucker/' + fromId;
+
+                                if (requestMessage.contents && requestMessage.contents.documents && requestMessage.contents.documents.length) {
+                                    hasDocs = true;
+                                    baseURL = baseURL + '/documents';
+                                }
+
+                                url = baseURL + '?requestId=' + requestMessage.id;
+                                req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
+
+                                if (/new|sent/i.test(requestMessage.status)) {
+                                    if (req.isAuthenticated()) {
+                                        requestMessage.status = 'accepted';
+                                        requestMessage.to = req.user._id;
+                                        requestMessage.expires = moment().add(30, 'days');
+                                    } else {
+                                        requestMessage.status = 'accepted';
+                                        requestMessage.expires = moment().add(1, 'days');
+                                    }
+                                }
+
+                                return res.redirect(url);
+
+                            case 'reviewRequest':
+                                // if (!!requestMessage.objectLink) {
+                                // 	url = '/reviews/' + requestMessage.objectLink + '/edit';
+                                // } else {
+                                url = '/reviews/create?requestId=' + requestMessage.id;
+                                //}
+                                req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Review Creation');
+                                return res.redirect(url);
+                            default: req.log.error({ func: 'loadRequest' }, 'Unknown Request Type');
+                        }
+                    } else if (!fromId) {
+                        req.log.error({ requestMesage: requestMessage }, 'Request has no sender');
+                    }
+                } else {
+                    req.log.error({ requestMessage: requestMessage }, 'Unable to process request');
+                }
+
+                return res.redirect('/not-found');
+            },
+            function fail(err) {
+                req.log.error({ err: err, params: req.params }, 'Unable to load request');
+                return res.redirect('/not-found');
+            });
+    }
+    else {
+        return res.redirect('/not-found');
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -574,77 +716,4 @@ function translateToPhoneObject(phone) {
     }
 
     return { value: newNum, order: ord };
-}
-
-/**
- * loadRequest
- * -----------
- * Given a 'shortId' in the request, looks up and tries to find the correspnding requests, and forwards
- * the user as appropriate.
- */
-
-function loadRequest(req, res) {
-    req.log.info({ func: 'loadRequest', params: req.params }, 'Loading Notification Request');
-    var id = req.params.shortId;
-
-    if (shortid.isValid(id)) {
-        req.log.info({ func: 'loadRequest', shortId: id }, 'Looking up By ShortID?');
-
-        return RequestMessage.findOne({ shortId: id }).exec().then(
-            function success(requestMessage) {
-                
-                req.request = requestMessage;
-                
-                req.log.info({ func: 'loadRequest', reqMsg: requestMessage }, 'Found Request Message');
-                var fromId = _.isEmpty(requestMessage.from) ?
-                    null :
-                    _.isString(requestMessage.from) ?
-                        requestMessage.from :
-                        requestMessage.from.toHexString();
-
-                if (!!requestMessage && !!fromId) {
-                    var url = null;
-                    req.log.info({ func: 'loadRequest', fromId: fromId, requestType: requestMessage.requestType }, 'Redirecting based on request type');
-
-                    switch (requestMessage.requestType) {
-                        case 'friendRequest':
-                            return NotificationCtr.processInboundReferral(req, res);
-                        case 'shareRequest':
-                            
-                            var baseURL = '/trucker/' + fromId;
-                            
-                            if (requestMessage.contents && requestMessage.contents.documents && requestMessage.contents.documents.length) {
-                                baseURL = baseURL + '/documents';
-                            }
-                        
-                            url = baseURL + '?requestId=' + requestMessage.id;
-                            req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
-                            return res.redirect(url);
-
-                        case 'reviewRequest':
-                            // if (!!requestMessage.objectLink) {
-                            // 	url = '/reviews/' + requestMessage.objectLink + '/edit';
-                            // } else {
-                            url = '/reviews/create?requestId=' + requestMessage.id;
-                            //}
-                            req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Review Creation');
-                            return res.redirect(url);
-                        default: req.log.error({ func: 'loadRequest' }, 'Unknown Request Type');
-                    }
-                } else if (!fromId) {
-                    req.log.error({ requestMesage: requestMessage }, 'Request has no sender');
-                } else {
-                    req.log.error({ requestMessage: requestMessage }, 'Unable to process request');
-                }
-
-                return res.redirect('/not-found');
-            },
-            function fail(err) {
-                req.log.error({ err: err, params: req.params }, 'Unable to load request');
-                return res.redirect('/not-found');
-            });
-    }
-    else {
-        return res.redirect('/not-found');
-    }
 }

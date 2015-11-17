@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
-    
+
 var shortid = require('shortid');
     
 /**
@@ -64,7 +64,7 @@ var RequestMessageSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['new', 'sent', 'bounced', 'accepted', 'rejected'],
+        enum: ['new', 'sent', 'bounced', 'accepted', 'granted', 'rejected'],
         default: 'new'
     },
     requestType: {
@@ -82,6 +82,10 @@ var RequestMessageSchema = new Schema({
         type: String,
         default: ''
     },
+    expires: {
+        type: Date,
+        default: null
+    },
     created: {
         type: Date,
         default: Date.now
@@ -90,10 +94,10 @@ var RequestMessageSchema = new Schema({
         type: Date,
         default: Date.now
     }
-}, {toJSON: {virtuals: true}});
+}, { toJSON: { virtuals: true } });
 
 RequestMessageSchema.statics.reqTypes = {
-    friendRequest : 'friendRequest'
+    friendRequest: 'friendRequest'
 };
 
 mongoose.model('RequestMessage', RequestMessageSchema);
