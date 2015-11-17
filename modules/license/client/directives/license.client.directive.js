@@ -7,11 +7,12 @@
         vm.licenseTypes = ['Standard', 'Commercial'];
         vm.ratings = ['A', 'B', 'C', 'D', 'G'];
         vm.endorsements = [
-            {key: 'HME', description: 'Hazardous Materials', value: false},
+            {key: 'H', description: 'Hazardous Materials', value: false},
             {key: 'P', description: 'Passenger', value: false},
             {key: 'S', description: 'School Bus', value: false},
             {key: 'T', description: 'Double-Triple Trailer', value: false},
             {key: 'N', description: 'Tank Vehicle', value: false},
+            {key: 'X', description: 'Tank + HazMat', value: false},
             {key: 'M', description: 'Motorcycle', value: false}
         ];
 
