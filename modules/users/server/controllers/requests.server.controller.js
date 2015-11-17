@@ -610,7 +610,14 @@ function loadRequest(req, res) {
                         case 'friendRequest':
                             return NotificationCtr.processInboundReferral(req, res);
                         case 'shareRequest':
-                            url = '/trucker/' + fromId + '?requestId=' + requestMessage.id;
+                            
+                            var baseURL = '/trucker/' + fromId;
+                            
+                            if (requestMessage.contents && requestMessage.contents.documents && requestMessage.documents.length) {
+                                baseURL = baseURL + '/documents';
+                            }
+                        
+                            url = baseURL + '?requestId=' + requestMessage.id;
                             req.log.info({ func: 'loadRequest', url: url }, 'Redirecting user to Report Documents');
                             return res.redirect(url);
 

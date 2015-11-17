@@ -84,7 +84,7 @@
 					$sce.trustAsResourceUrl(document.imgSrc);
 					document.activeReport = fileName;
 					document.fileType = _.first(document.url.match(/image\/(\w+)/));
-                    document.documentTitle = document.fileUser + '_' + fileName.replace(/ /g, '_') + '.' + (_.last(document.url.match(/image\/(\w+)/)) || '.jpg');
+                    document.documentTitle = vm.fileUser + '_' + fileName.replace(/ /g, '_') + '.' + (_.last(document.url.match(/image\/(\w+)/)) || '.jpg');
 					return;
 				}
 				else if (/application\/pdf/.test(document.url)) {
@@ -92,7 +92,7 @@
 					$sce.trustAsResourceUrl(document.documentUrl);
 					document.activeReport = fileName;
 					document.fileType = _.first(document.url.match(/application\/\w+/));
-                    document.documentTitle = document.fileUser + '_' + fileName + '.pdf';
+                    document.documentTitle = vm.fileUser + '_' + fileName + '.pdf';
 					return;
 				}
 			}
@@ -104,7 +104,7 @@
             DocAccess.updateFileUrl(profile.id, file)
                 .then(function (success) {
                     document.documentUrl = success.url;
-                    document.documentTitle = document.fileUser + '_' + fileName + '.pdf';
+                    document.documentTitle = vm.fileUser + '_' + fileName + '.pdf';
 
                     $sce.trustAsResourceUrl(document.documentUrl);
 
