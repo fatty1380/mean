@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var _ = require('lodash'),
+Q = require('q'),
 	path = require('path'),
 	mongoose = require('mongoose'),
 	LBDocument = mongoose.model('Document'),
@@ -59,9 +60,40 @@ function createWithBody(req, res) {
     req.log.info({ func: 'createWithBody', url: file.url }, 'Breakdown');
     req.log.info({ func: 'createWithBody', keys: _.keys(file) }, 'Breakdown');
     
-    req.document = new LBDocument(file);
+    var getUrlAsync;
     
-    saveDocumentToDB(req, res);
+    if (/^data:/.test(file.url)) {
+        
+        var post = {
+            isSecure: true,
+            content: file.url
+        };
+        
+        getUrlAsync = fileUploader.saveContentToCloud(post);
+    } 
+    else {
+        getUrlAsync = Q.when({ url: file.url });
+    }
+    
+    return getUrlAsync.then(
+        function success(saveResult) {
+            log.info({ func: 'createWithBody', result: saveResult }, 'Got Uploaded Document URL');
+
+            _.extend(file, saveResult);
+
+            return file;
+        },
+        function fail(err) {
+            log.error({ func: 'createWithBody', err: err }, 'Upload to server failed');
+
+            return file;
+        })
+        .then(
+            function saveUpdatedFile(updatedFile) {
+                req.document = new LBDocument(file);
+
+                saveDocumentToDB(req, res);
+            });
 }
     
 /**
