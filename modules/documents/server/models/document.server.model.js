@@ -22,6 +22,9 @@ var DocumentSchema = new Schema({
 		type: String,
 		required: true
 	},
+	s3: {
+		type: String
+	},
 	expires: Date,
 	bucket: String,
 	key: String,

@@ -53,14 +53,22 @@ exports.getSecureReadURL = getSecureReadURL;
 
 
 function directUpload(files, folder, isSecure) {
+    var deferred = Q.defer();
+    
+    debugger;
+    
     if (!!client) {
         log.debug({ func: 'directUpload' }, 'Uploading to S3');
-        return doDirectUpload(files, folder, isSecure);
+        doDirectUploadOriginal(files, folder, isSecure, deferred);
+        log.debug({ func: 'directUpload' }, 'Returned from Uploading to S3');
     }
     else {
         log.debug({ func: 'directUpload' }, 'No S3 Configured - Saving locally');
-        return saveLocally(files, folder);
+        saveLocally(files, folder);
     }
+        log.debug({ func: 'directUpload', promise: deferred.promise }, 'Returning promise');
+    
+    return deferred.promise;
 }
 
 var uriRegex = /^data:(.+\/.+);(\w+),(.*)$/;
@@ -75,31 +83,43 @@ function saveContentToCloud(data) {
     var file = {
         name: data.filename
     };
+    
+        log.debug({ func: 'saveContentToCloud' }, '1');
 
     var isSecure = _.isUndefined(data.isSecure) ? true : !!data.isSecure;
 
+        log.debug({ func: 'saveContentToCloud' }, '2');
+
     if (/^data:/i.test(data.content)) {
-        debugger;
+        log.debug({ func: 'saveContentToCloud' }, '3a');
+
         var matches = data.content.match(uriRegex);
+        log.debug({ func: 'saveContentToCloud', matches: matches }, '3a1');
         file.contentType = matches[1];
         file.encoding = matches[2];
-        file.buffer = new Buffer(matches[3], file.encoding);
+        file.buffer = new Buffer(matches[3], 'utf-8');
+        log.debug({ func: 'saveContentToCloud' }, '3a2');
 
     } else {
+        log.debug({ func: 'saveContentToCloud' }, '3b');
+
         file.buffer = (data.content instanceof Buffer) ? data.content : new Buffer(data.content, 'utf-8');
     }
 
-    debugger;
     log.trace({ func: 'saveContentToCloud', isSecure: isSecure, contentType: file.contentType, 
-        encoding :file.encoding,  dataContentLength: file.buffer.toString().length });
+        encoding :file.encoding });
 
     if (_.isEmpty(file.name)) {
         file.name = [data.userId || uuid.v4(), mime.extension(file.contentType)].join('.');
     }
 
+    log.debug({ func: 'saveContentToCloud' }, '4');
+
     //return Q(directUpload({file: file}, null, true));
-    return directUpload({ file: file }, data.folder || null, isSecure)
-        .then(
+        var x = directUpload({ file: file }, data.folder || null, isSecure);
+        log.debug({ func: 'saveContentToCloud', promise: x }, '5');
+            
+        return x.then(
             function (success) {
                 log.debug({ func: 'saveContentToCloud', result: success }, 'Returning promise');
 
@@ -208,10 +228,67 @@ function logFileContent(file, func, message) {
     func = func || 'logFileContent';
     message = message || 'Current File';
     
-    log.debug({ func: 'directUpload' }, '%s: %s', message,
+    log.debug({ func: func }, '%s: %s', message,
         JSON.stringify(file, function (key, value) {
+            if (value.type === 'Buffer' && !_.isEmpty(value.data)) value = value.data;
+        return (key === 'buffer') || value instanceof Buffer ? '<BufferLength:' + value.toString().length + '>' : value;
+    }, 2));
+}
+
+function doDirectUploadOriginal(files, folder, isSecure, deferred) {
+    folder = folder || config.services.s3.folder;
+
+    if (folder.substring(folder.length - 1) === '/') {
+        folder = folder.substring(0, folder.length - 1);
+    }
+
+    var file = files.file;
+
+    log.debug({ func: 'directUpload' }, 'Uploading file: %s', JSON.stringify(file, function (key, value) {
         return (key === 'buffer') ? '<BufferLength:' + value.length + '>' : value;
     }, 2));
+
+    if (file) {
+        var fileName = _.contains(file.path, file.name) ? file.originalname : file && file.name || file.originalname;
+
+        log.debug({ func: 'directUpload' }, 'Attempting S3 Upload for %s to %s', fileName, folder);
+        var params = {
+            Bucket: config.services.s3.s3Options.bucket,
+            Key: folder + '/' + fileName,
+            ACL: 'public-read',
+            Body: file.buffer
+        };
+
+        if (!!file.contentType) {
+            params.ContentType = file.contentType;
+        } else {
+            switch ((file.extension || fileName.slice(-3)).toLowerCase()) {
+                case 'pdf':
+                    params.ContentType = 'application/pdf';
+                    break;
+            }
+        }
+
+        if (!!file.contentEncoding) {
+            params.ContentEncoding = file.contentEncoding;
+        }
+
+        log.debug({ func: 'directUpload' }, 'Uploading file with params: %s', JSON.stringify(params, function (key, value) {
+            return (key === 'Body') ? '<BufferLength:' + value.length + '>' : value;
+        }, 2));
+
+        var uploader = initializeUploader(params, isSecure, deferred);
+
+
+        log.debug({ func: 'directUpload' }, 'Event Handlers in place');
+
+        uploader.send();
+    } else {
+        debugger;
+        deferred.reject('No file present in request');
+    }
+    
+    return deferred.promise;
 }
 
 /// needs to return a promise
@@ -229,17 +306,21 @@ function doDirectUpload(files, folder, isSecure) {
     logFileContent(file, 'directUpload', 'Uploading File');
 
     if (file) {
+        log.debug({ func: 'directUpload' }, 'has file: 1');
         var fileName = _.contains(file.path, file.name) ?
             file.originalname :
             file && file.name || file.originalname;
 
         var extension;
 
+        log.debug({ func: 'directUpload' }, 'has file: 2');
         if (!!fileName) {
             extension = !!fileName ? (file.extension || fileName.slice(-3)).toLowerCase() : null;
         } else {
             fileName = uuid.v4();
         }
+        
+        log.debug({ func: 'directUpload' }, 'has file: 3');
 
         log.debug({ func: 'directUpload' }, 'Initializing S3 Upload for %s to %s', fileName, folder);
 
@@ -265,47 +346,53 @@ function doDirectUpload(files, folder, isSecure) {
             params.ContentEncoding = file.contentEncoding;
             log.debug({ func: 'directUpload', contentType: params.ContentEncoding }, 'Set content encoding to `%s`', params.ContentEncoding);
         }
-
-        log.debug({ func: 'directUpload' }, 'Uploading file with params: %s',
-            JSON.stringify(params, function (key, value) {
-                return (key === 'Body') ? '<BufferLength:' + value.length + '>' : value;
-            }, 2));
-
-
-
-        doUploadPromise(params).then(
-            function success(uploadResult) {
-
-                log.debug({ func: 'directUpload', result: uploadResult }, 'Uploaded File');
-
-                // if (isSecure) {
-                //     return secureDocument(uploadResult);
-                // }
-
-                return uploadResult;
-            },
-            function caught(err) {
+        
+        logFileContent(params, 'doDirectUpload', 'Uploading file with params:');
+        
+        
                 var uploader = initializeUploader(params, isSecure, deferred);
                 log.debug({ func: 'directUpload' }, 'Event Handlers in place');
 
                 uploader.send();
-            })
-            .then(function success(saveSecureResult) {
+                
 
-                if (_.isEmpty(saveSecureResult)) {
-                    // Assume deferred is clea
-                    return;
-                }
+        // doUploadPromise(params).then(
+        //     function success(uploadResult) {
 
-                log.debug({ func: 'directUpload', result: saveSecureResult }, 'Resolving with final result');
-                deferred.resolve(saveSecureResult);
+        //         log.debug({ func: 'directUpload', result: uploadResult }, 'Uploaded File');
 
-            });
+        //         // if (isSecure) {
+        //         //     return secureDocument(uploadResult);
+        //         // }
+
+        //         return uploadResult;
+        //     },
+        //     function caught(err) {
+        //         log.error({ func: 'directUpload', err: err }, 'Caught Error in uploader');
+        //         var uploader = initializeUploader(params, isSecure, deferred);
+        //         log.debug({ func: 'directUpload' }, 'Event Handlers in place');
+
+        //         return uploader.send();
+        //     })
+        //     .then(function success(saveSecureResult) {
+        //         log.debug({ func: 'directUpload', saveSecureResult: saveSecureResult }, 'Save Secure Result');
+
+        //         if (_.isEmpty(saveSecureResult)) {
+        //             log.debug({ func: 'directUpload'}, 'return is alreay diferred');
+        //             // Assume deferred is clea
+        //             return;
+        //         }
+
+        //         log.debug({ func: 'directUpload', result: saveSecureResult }, 'Resolving with final result');
+        //         deferred.resolve(saveSecureResult);
+
+        //     });
     } else {
-        debugger;
+        
         deferred.reject('No file present in request');
     }
 
+                log.debug({ func: 'directUpload' }, 'Returning Promise via deferral');
     return deferred.promise;
 }
 
@@ -316,32 +403,46 @@ function doUploadPromise(params, isSecure) {
         log.error({ func: 'doUpload' }, 's3Promised is not defined');
         return Q.reject('s3 Promised is not defined');
     }
+    
+    isSecure = isSecure || params.isSecure;
+    
+    
+        logFileContent(params, 'doUploadPromise', 'Start');
 
-    return s3Promised.putObjectPromised(params)
-        .then(function success(response) {
-            log.info({ func: 'doUpload', responseData: response.data }, 'done uploading, got data!');
-            log.debug({ func: 'doUpload', response: response }, 'done uploading, full response object!');
+        var x = s3Promised.putObjectPromised(params)
+            .then(function success(response) {
+                log.info({ func: 'doUpload', responseData: response.data }, 'done uploading, got data!');
+                log.debug({ func: 'doUpload', response: response }, 'done uploading, full response object!');
 
-            if (!!isSecure) {
-                return s3Promised.getSignedUrl('getObject', params);
-            }
-            return s3Promised.getPublicUrlHttp(params.Bucket, params.Key);
-        })
-        .then(function (fileURL) {
-            
-            log.debug({ func: 'doUpload' }, 'Got  URL: %s', fileURL);
+                if (!!isSecure) {
+                    return s3Promised.getSignedUrl('getObject', params);
+                }
+                return s3Promised.getPublicUrlHttp(params.Bucket, params.Key);
+            })
+            .then(function (fileURL) {
 
-            var strippedURL = fileURL.replace('http://', 'https://');
-            log.debug({ func: 'doUpload' }, 'Post stripping, resolving with : %s', strippedURL);
+                log.debug({ func: 'doUpload' }, 'Got  URL: %s', fileURL);
 
-            return {
-                key: params.Key,
-                bucket: params.Bucket,
-                url: strippedURL,
-                timestamp: Date.now(),
-                expires: !!isSecure ? (Date.now() + 15 * 60 * 1000) : undefined
-            };
-        });
+                var strippedURL = fileURL.replace('http://', 'https://');
+                log.debug({ func: 'doUpload' }, 'Post stripping, resolving with : %s', strippedURL);
+
+                return {
+                    key: params.Key,
+                    bucket: params.Bucket,
+                    url: strippedURL,
+                    timestamp: Date.now(),
+                    expires: !!isSecure ? (Date.now() + 15 * 60 * 1000) : undefined
+                };
+            })
+            .catch(function fail(err) {
+                log.error({ func: 'doUploadPromise', err: err }, 'promised upload failed');
+                
+                return Q.reject(err);
+            });
+        
+    log.debug({ func: 'doUploadPromise', promise: x }, 'Returning promise');
+    
+    return x;
 }
 
 function secureDocument(document) {

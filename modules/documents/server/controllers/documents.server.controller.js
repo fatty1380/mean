@@ -32,9 +32,10 @@ exports.refreshReport = refresh;
 
 
 function createWithBody(req, res) {
-    req.log.debug({ func: 'createWithBody', body: req.body, user: req.user }, 'Start');
+    req.log.debug({ func: 'createWithBody', user: req.user }, 'Start');
     
     var user = req.user;
+    var content;
 
     if (!user) {
         req.log.error({ func: 'createWithBody' }, 'User is not signed in');
@@ -43,25 +44,31 @@ function createWithBody(req, res) {
         });
     }
     
+    req.log.debug({ func: 'createWithBody' }, '1');
     var file = req.body;
     file.sku = file.sku || 'misc';
-    file.user = req.user._id;
+    file.user = user._id;
     
-    debugger;
+    req.log.debug({ func: 'createWithBody', file: file.url}, '2');
+    //debugger;
     
-    if (!file.url) {
+    if (_.isEmpty(file.url)) {
+        req.log.debug({ func: 'createWithBody'}, '2e');
         req.log.error({ func: 'createWithBody', file: file }, 'File has no URL');
         return res.status(400).send({
             message: 'No URL/data Uploaded'
         });
     }
     
-    req.log.info({ func: 'createWithBody', file: file }, 'Creating file based on req body');
-    req.log.info({ func: 'createWithBody', sku: file.sku }, 'Breakdown');
-    req.log.info({ func: 'createWithBody', url: file.url }, 'Breakdown');
-    req.log.info({ func: 'createWithBody', keys: _.keys(file) }, 'Breakdown');
+    req.log.debug({ func: 'createWithBody' }, '3');
+    // req.log.info({ func: 'createWithBody'}, 'Creating file based on req body');
+    // req.log.info({ func: 'createWithBody', sku: file.sku }, 'Breakdown');
+    // //req.log.info({ func: 'createWithBody', url: file.url }, 'Breakdown');
+    // req.log.info({ func: 'createWithBody', keys: _.keys(file) }, 'Breakdown');
     
     var getUrlAsync;
+    
+    req.log.debug({ func: 'createWithBody' }, '3');
     
     if (/^data:/.test(file.url)) {
         
@@ -71,17 +78,32 @@ function createWithBody(req, res) {
             folder: 'lockbox'
         };
         
+    req.log.debug({ func: 'createWithBody' }, '4a');
+        
+        if (/^data:/i.test(file.url)) {
+            content = file.url;
+        }
+        
         getUrlAsync = fileUploader.saveContentToCloud(post);
+        debugger;
     } 
     else {
+    req.log.debug({ func: 'createWithBody' }, '4b');
         getUrlAsync = Q.when({ url: file.url });
     }
     
+    debugger;
+    req.log.debug({ func: 'createWithBody' }, '5');
     return getUrlAsync.then(
         function success(saveResult) {
             log.info({ func: 'createWithBody', result: saveResult }, 'Got Uploaded Document URL');
 
             _.extend(file, saveResult);
+            
+            if (!!content && /^http/i.test(file.url)) {
+                file.s3 = file.url;
+                file.url = content;
+            }
 
             return file;
         },
