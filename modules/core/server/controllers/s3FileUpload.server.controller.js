@@ -69,7 +69,8 @@ var uriRegex = /^data:(.+\/.+);(\w+),(.*)$/;
  * saveContentToCloud
  */
 function saveContentToCloud(data) {
-    log.debug({ trace: 'saveContentToCloud', data: data }, 'START');
+    
+    logFileContent(data, 'saveContentToCloud', 'Start');
 
     var file = {
         name: data.filename
@@ -78,6 +79,7 @@ function saveContentToCloud(data) {
     var isSecure = _.isUndefined(data.isSecure) ? true : !!data.isSecure;
 
     if (/^data:/i.test(data.content)) {
+        debugger;
         var matches = data.content.match(uriRegex);
         file.contentType = matches[1];
         file.encoding = matches[2];
@@ -88,7 +90,8 @@ function saveContentToCloud(data) {
     }
 
     debugger;
-    log.trace({ func: 'saveContentToCloud', isSecure: isSecure, contentType: file.contentType, encoding :file.encoding,  dataContentLength: file.buffer.toString().length });
+    log.trace({ func: 'saveContentToCloud', isSecure: isSecure, contentType: file.contentType, 
+        encoding :file.encoding,  dataContentLength: file.buffer.toString().length });
 
     if (_.isEmpty(file.name)) {
         file.name = [data.userId || uuid.v4(), mime.extension(file.contentType)].join('.');
@@ -201,7 +204,15 @@ function getSecureReadURL(bucket, key) {
 //		Private Methods     													  //
 ////////////////////////////////////////////////////////////////////////////////////
 
-
+function logFileContent(file, func, message) {
+    func = func || 'logFileContent';
+    message = message || 'Current File';
+    
+    log.debug({ func: 'directUpload' }, '%s: %s', message,
+        JSON.stringify(file, function (key, value) {
+        return (key === 'buffer') ? '<BufferLength:' + value.length + '>' : value;
+    }, 2));
+}
 
 /// needs to return a promise
 function doDirectUpload(files, folder, isSecure) {
@@ -215,10 +226,7 @@ function doDirectUpload(files, folder, isSecure) {
 
     var file = files.file;
 
-    log.debug({ func: 'directUpload' }, 'Uploading file: %s',
-        JSON.stringify(file, function (key, value) {
-        return (key === 'buffer') ? '<BufferLength:' + value.length + '>' : value;
-    }, 2));
+    logFileContent(file, 'directUpload', 'Uploading File');
 
     if (file) {
         var fileName = _.contains(file.path, file.name) ?
