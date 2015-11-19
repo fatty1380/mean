@@ -43,34 +43,64 @@
                             prop.apply(null, args)
                         };
                     }
-                }); 
-                
+                });
+
                 return $delegate;
             }]);
         }])
 
-        .run(initializePlatform);
+        .run(initializePlatform)
+        .run(initializeStateChangeListeners);
 
-    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$cordovaGoogleAnalytics']
+    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$cordovaGoogleAnalytics', '$cordovaKeyboard', '$cordovaStatusbar', '$cordovaDevice']
 
-    function initializePlatform($ionicPlatform, $window, settings, $log, $cordovaGoogleAnalytics) {
+    function initializePlatform($ionicPlatform, $window, settings, $log, $cordovaGoogleAnalytics, $cordovaKeyboard, $cordovaStatusbar, $cordovaDevice) {
 
         if (!!$window) {
             $window.logger = $log;
         }
 
+        if (!$window.cordova && _.isUndefined($window.ga)) {
+            debugger;
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', settings.ga.web, 'auto');
+            ga('send', 'pageview', 'Say Hello from app.init');
+        }
+
         $ionicPlatform.ready(function () {
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+            if ($window.cordova && $window.cordova.plugins.Keyboard) {
+                $cordovaKeyboard.hideAccessoryBar(false);
+                //cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
             }
-            if (window.StatusBar) {
-                StatusBar.styleDefault();
+
+            if (!!$window.StatusBar) {
+                $cordovaStatusbar.style(1);
+                // StatusBar.styleDefault();
             }
 
             ionic.Platform.isFullScreen = true;
 
             if (!!screen && angular.isFunction(screen.lockOrientation)) {
                 screen.lockOrientation('portrait');
+            }
+
+            if (!!$window.analytics) {
+                debugger;
+                logger.info('$cordovaGoogleAnalytics initializing with id [%s]', settings.ga.web);
+                $cordovaGoogleAnalytics.startTrackerWithId(settings.ga.web);
+            } else {
+                logger.warn('$cordovaGoogleAnalytics is not available');
             }
 
             readBranchData();
@@ -80,7 +110,7 @@
 
         function readBranchData() {
             logger.debug('readBranchData');
-            if (!!window.cordova) {
+            if (!!$window.cordova) {
 
                 branch.setDebug(AppConfig.debug);
                 branch.init(settings.branch.key, function (err, response) {
@@ -114,5 +144,45 @@
                 });
             }
         }
+    }
+
+    initializeStateChangeListeners.$inject = ['$rootScope', '$window', '$cordovaGoogleAnalytics'];
+
+    function initializeStateChangeListeners($rootScope, $window, $cordovaGoogleAnalytics) {
+        if (!$window.analytics && !!$window.ga) {
+            debugger;
+
+
+            $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                $window.ga('send', 'pageview', { page: toState.name });
+                logger.debug('pageview %s', toState.name);
+            });
+
+            $rootScope.$on('$ionicView.afterEnter', function (event) {
+                $window.ga('send', 'screenview', { screenName: window.location.hash } );
+                logger.debug('trackview %s', window.location.hash);
+            })
+            return;
+        }
+        else if (!$window.analytics) {
+            logger.warn('No Google Analytics Available');
+            return;
+        }
+
+        var i = 0;
+
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+            logger.debug('StateChange %s -> %s', fromState.name, toState.name);
+            $cordovaGoogleAnalytics.trackEvent('StateChange', fromState.name, toState.name, i++);
+            //$window.ga('send', 'pageview', { page: $location.path() });
+        });
+
+        $rootScope.$on('$ionicView.afterEnter', function (event) {
+            logger.debug('StateChange --> %s', window.location.hash);
+            $cordovaGoogleAnalytics.trackView(window.location.hash);
+        })
+
+
     }
 })();

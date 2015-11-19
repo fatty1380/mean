@@ -44,7 +44,8 @@
     {
       "locator": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK",
       "id": "io.branch.sdk"
-    }
+    },
+    "cordova-plugin-google-analytics"
   ],
   "cordovaPlatforms": [
     "android",

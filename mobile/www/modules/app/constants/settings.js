@@ -13,6 +13,14 @@
         key: 'key_live_cjpJIvP9erJIol5fdKzEpmjayAcT0MRH'
         //key: 'key_test_djoMGBQ5jCINia7eaPxrmocbtqjS2VLX'
     }
+    
+    settings.ga = {
+        id: 'UA-52626400-2',
+        dev: 'UA-52626400-3',
+        web: 'UA-52626400-4'
+    };
+    
+    
 
     // controllers
     settings.oauth = settings.baseUrl + 'oauth/';

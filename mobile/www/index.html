@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -7,6 +8,7 @@
     <title>Truckerline</title>
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
+
 <body ng-app="truckerline">
 
     <ion-nav-view></ion-nav-view>
@@ -18,6 +20,9 @@
     <script src="lib/angular-elastic/elastic.js"></script>
     <script src='lib/angular-google-staticmaps/angular-google-staticmaps.js'></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1fUj13JDJpKxczSfAHzGSuk8ARoenrk&sensor=true&libraries=geometry,places"></script>
+
+
+
 
     <script src="lib/moment/min/moment.min.js"></script>
 
@@ -51,7 +56,7 @@
     <script src="modules/app/filters/app.contacts.filter.js"></script>
     <script src="modules/app/filters/app.checked.filter.js"></script>
     <script src="modules/app/filters/app.monthDate.filter.js"></script>
-    
+
     <!-- app directives -->
     <script src="modules/app/directives/add.contact.directive.js"></script>
     <script src="modules/app/directives/debounce.input.directive.js"></script>
@@ -131,7 +136,7 @@
     <script src="modules/account/child_modules/lockbox/controllers/lockbox.order.reports.controller.js"></script>
     <script src="modules/account/child_modules/lockbox/controllers/lockbox.edit.controller.js"></script>
     <script src="modules/account/child_modules/lockbox/controllers/lockbox.share.contacts.controller.js"></script>
-    
+
     <script src="modules/account/child_modules/lockbox/services/lockbox.documents.service.js"></script>
     <script src="modules/account/child_modules/lockbox/services/lockbox.modals.service.js"></script>
     <script src="modules/account/child_modules/lockbox/directives/lockbox.pdfviewer.directive.js"></script>
@@ -162,5 +167,16 @@
     <script src="modules/account/child_modules/activity/directives/activity.iongoogleplace.directive.js"></script>
     <script src="modules/account/child_modules/activity/directives/feed-item.mobile.directive.js"></script>
 
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-52626400-4', 'auto');
+ga('send', 'pageview');
+ga('send', 'pageview', 'Hello GA');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
 </body>
+
 </html>
