@@ -23,16 +23,16 @@
         vm.saveExperience = saveExperience;
 
         function saveExperience() {
-            console.log(' ');
-            console.log('saveExperience()');
-            console.log(vm.experience);
+            logger.debug(' ');
+            logger.debug('saveExperience()');
+            logger.debug(vm.experience);
 
             experienceService.postUserExperience(vm.experience)
             .then(function (resp) {
                 vm.closeModal(resp.data);
                 vm.experience = {};
             }, function (err) {
-                console.warn('err --->>>', err);
+                logger.error('[ProfileAddExperience.save] err --->>>', err);
             });
         }
     }

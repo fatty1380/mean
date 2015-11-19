@@ -19,7 +19,7 @@
         vm.getChats = getChats;
 
         $rootScope.$on("clear", function () {
-            console.log('MessagesCtrl clear');
+            logger.debug('MessagesCtrl clear');
             vm.messages = [];
             vm.chats = [];
         });
@@ -52,14 +52,14 @@
         }
 
         function showChatDetailsModal(chat) {
-            console.log('showChatDetailsModal() ', chat);
+            logger.debug('showChatDetailsModal() ', chat);
             messageModalsService
                 .showNewMessageModal(chat)
                 .then(function messageModalSuccess() {
                     getChats();
                 })
                 .catch(function messageModalFailure(err) {
-                    console.log(err);
+                    logger.error('Messages.showChatDetails failed', err);
                 });
         }
 
@@ -68,11 +68,11 @@
             messageService
                 .getChats()
                 .then(function (res) {
-                    console.log('GET CHATS SUCCESS ----- >>>', res);
+                    logger.debug('GET CHATS SUCCESS ----- >>>', res);
                     vm.chats = res.data;
                     loadProfileAvatars();
                 }, function (err) {
-                    console.log('GET CHATS ERROR ----- >>>', err);
+                    logger.error('GET CHATS ERROR ----- >>>', err);
                 })
                 .finally(function () {
                     LoadingService.hide();

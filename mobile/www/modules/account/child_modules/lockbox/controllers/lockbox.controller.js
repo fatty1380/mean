@@ -26,10 +26,10 @@
         vm.lockboxClear = false;
 
         $scope.$on("$ionicView.beforeEnter", function () {
-            console.log('Reactivate Lockbox Controller');
+            logger.debug('Reactivate Lockbox Controller');
             
             if (documents === -1) {
-                console.log('docs equals negative 1 - fail1')
+                logger.debug('docs equals negative 1 - fail1')
                 return;
             }
             
@@ -37,7 +37,7 @@
         });
 
         $rootScope.$on("clear", function () {
-            console.log('LockboxCtrl clear');
+            logger.debug('LockboxCtrl clear');
             vm.currentDoc = null;
             vm.documents = [];
             lockboxDocuments.clear();
@@ -52,7 +52,7 @@
 
                     if (isAccessible) {
                         if (_.isEmpty(vm.documents)) {
-                            console.log('Documents not included in parameters - looking up');
+                            logger.debug('Documents not included in parameters - looking up');
                             getDocs();
                         }
                         
@@ -60,7 +60,7 @@
                     }
                 })
                 .catch(function fail(err) {
-                    console.log('Failed to access lockbox due to `%s`', err);
+                    logger.debug('Failed to access lockbox due to `%s`', err);
                     vm.canAccess = false;
                 });
         }
@@ -72,7 +72,7 @@
             
             return lockboxDocuments.getFilesByUserId(user.id)
                 .then(function (response) {
-                    console.log('Documents List', response);
+                    logger.debug('Documents List', response);
                     vm.documents = sortDocs(_.isArray(response) ? response : []);
                 });
         }
@@ -88,20 +88,20 @@
                 .then(
                     function success(doc) {
                         if (!!doc) {
-                            console.log('Added new document with sku `%s` ', doc && doc.sku || doc);
+                            logger.debug('Added new document with sku `%s` ', doc && doc.sku || doc);
                             vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
                         }
                         else {
-                            console.log('No Doc added');
+                            logger.debug('No Doc added');
                         }
-                        console.info('Lockbox documents went from ' + docCount + ' to ' + vm.documents.length);
+                        logger.info('Lockbox documents went from ' + docCount + ' to ' + vm.documents.length);
                     })
                 .catch(
                     function fail(rejection) {
                         if (rejection.error || _.isUndefined(rejection.error)) {
-                            console.error('Failed to add Documents', rejection);
+                            logger.error('Failed to add Documents', rejection);
                         } else {
-                            console.log('getNewAvatar Aborted %s', rejection.message || rejection)
+                            logger.debug('getNewAvatar Aborted %s', rejection.message || rejection)
                         }
                     })
                 .finally(function () {
@@ -138,10 +138,10 @@
                 .then(
                     function (result) {
                         vm.documents = sortDocs(lockboxDocuments.updateDocumentList());
-                        console.log(result);
+                        logger.debug(result);
                     },
                     function (err) {
-                        console.log(err);
+                        logger.debug(err);
                     })
         }
 
@@ -153,10 +153,10 @@
             lockboxModalsService.showShareModal(params)
                 .then(
                     function (result) {
-                        console.log(result);
+                        logger.debug(result);
                     },
                     function (err) {
-                        console.log(err);
+                        logger.debug(err);
                     })
         }
 

@@ -44,7 +44,7 @@ angular.module('pdf',[]).
 				};
 
 				$scope.reRender = function(){
-					console.log("------   reRender   -----");
+					logger.debug("------   reRender   -----");
 					$scope.forceReRender = true;
 				};
 
@@ -241,7 +241,7 @@ angular.module('pdf',[]).
 					if(scope.pdfDoc==null || scope.renderInProgress || !angular.isNumber(parseInt(v)))
 						return;
 						
-					console.log('PDF: Changed `$scope` to `scope`. Confirm Functionality');
+					logger.debug('PDF: Changed `$scope` to `scope`. Confirm Functionality');
 					
 					scope.forceReRender = true;
 					$log.debug('scale attribute changed, new value is <' + v + ">");

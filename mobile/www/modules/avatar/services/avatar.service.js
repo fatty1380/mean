@@ -42,9 +42,9 @@
                 .catch(
                     function reject(rejection) {
                         if (rejection.error || _.isUndefined(rejection.error)) {
-                            console.error('getNewAvatar Failed due to error', rejection)
+                            logger.error('getNewAvatar Failed due to error', rejection)
                         } else {
-                            console.log('getNewAvatar Aborted %s', rejection.message || rejection)
+                            logger.debug('getNewAvatar Aborted %s', rejection.message || rejection)
                         }
                     });
         }

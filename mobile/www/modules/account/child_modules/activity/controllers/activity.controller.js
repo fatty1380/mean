@@ -29,7 +29,7 @@
          * */
 
         $rootScope.$on('updates-available', function (event, updates) {
-            console.log('ActivityCtrl: %d New updates available: ', updates.activities);
+            logger.debug('ActivityCtrl: %d New updates available: ', updates.activities);
             vm.updates = updates;
         });
 
@@ -37,7 +37,7 @@
             updateService.resetUpdates('activities');
             
             if (vm.feed.length && activityService.changeFeedSource('activity')) {
-                console.log('Activity Source Changed to ' + vm.feedData.feedSource);
+                logger.debug('Activity Source Changed to ' + vm.feedData.feedSource);
                 updateFeedData();
                 initialize();
             }
@@ -48,7 +48,7 @@
         });
 
         $rootScope.$on('clear', function () {
-            console.log('ActivityCtrl clear');
+            logger.debug('ActivityCtrl clear');
             vm.feed = [];
             vm.lastUpdate = Date.now();
         });
@@ -84,7 +84,7 @@
 
                     vm.feed = _.uniq(result);
                     updateService.resetUpdates('activities');
-                    console.log('getFeed() ', result);
+                    logger.debug('getFeed() ', result);
 
                 }, function () {
                     vm.feed = [];
@@ -112,13 +112,13 @@
         function loadMore() {
 
             if (vm.feed && vm.feed.length > 2) {
-                console.log('[loadMore] Loading Updates');
+                logger.debug('[loadMore] Loading Updates');
 
                 activityService.loadMore()
                     .then(function success(updates) {
-                        console.log('[loadMore] got Updates: ' + updates);
+                        logger.debug('[loadMore] got Updates: ' + updates);
                         angular.forEach(updates, function (val, key) {
-                            console.log('[loadMore] Pushing item #' + key);
+                            logger.debug('[loadMore] Pushing item #' + key);
                             vm.feed.push(val);
                         })
                     })
@@ -139,7 +139,7 @@
             LoadingService.showLoader('Updating Feed')
             
             activityService.getFeedActivityById(id).then(function (result) {
-                console.warn('get feed by id result --->>>', result);
+                logger.warn('get feed by id result --->>>', result);
                 result.location = activityService.hasCoordinates(result) ? {
                     type: result.location.type || result.location.coordinates.length > 1 ? 'LineString' : 'Point',
                     coordinates: result.location.coordinates
@@ -153,14 +153,14 @@
             activityModalsService
                 .showAddActivityModal({ user: user })
                 .then(function (res) {
-                    console.warn(' res --->>>', res);
+                    logger.warn(' res --->>>', res);
                     if (res) {
                         debugger;
                         if (angular.isObject(res)) {
-                            console.log('Pushing newly created feed item onto the front of the array', res);
-                            console.warn(' vm.feed --->>>', vm.feed.length);
+                            logger.debug('Pushing newly created feed item onto the front of the array', res);
+                            logger.warn(' vm.feed --->>>', vm.feed.length);
                             vm.feed.unshift(res);
-                            console.warn(' vm.feed --->>>', vm.feed);
+                            logger.warn(' vm.feed --->>>', vm.feed);
                         }
                         else {
                             // TODO: Determine if the extra trip to the server is required

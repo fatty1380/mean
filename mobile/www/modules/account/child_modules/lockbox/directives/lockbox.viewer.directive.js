@@ -113,7 +113,7 @@
             vm.showControls = !vm.showControls
         }
 
-        console.log('Modal Visible for %s', vm.document.sku);
+        logger.debug('Modal Visible for %s', vm.document.sku);
         
         var docURL = vm.document.url;
         
@@ -123,18 +123,18 @@
             vm.image = vm.document.url;
         }
                 
-        //console.log('Modal Visible for PDF: %s IMG: %o', vm.pdfURL, vm.image);
+        //logger.debug('Modal Visible for PDF: %s IMG: %o', vm.pdfURL, vm.image);
 
-        console.log('[DocumentModalCtrl] for document: %o', vm.document);
+        logger.debug('[DocumentModalCtrl] for document: %o', vm.document);
 
         function trustSrc(src) {
-            //console.log('SCE Trusting resource: `%s`', src);
+            //logger.debug('SCE Trusting resource: `%s`', src);
             return $sce.trustAsResourceUrl(src);
         };
 
 
         function onImageEvent(type) {
-            console.log("   **** onImageEvent  " + type + " ****");
+            logger.debug("   **** onImageEvent  " + type + " ****");
             switch (type) {
                 case "loadStart":
                     LoadingService.showLoader('Loading Image, Please Wait.');
@@ -146,7 +146,7 @@
                     LoadingService.showAlert('Sorry, Please, try later.');
                     break;
                 default:
-                    console.warn('Unknown Image Event: `%s`', type);
+                    logger.warn('Unknown Image Event: `%s`', type);
                     LoadingService.hide();
                     break;
             }
@@ -154,7 +154,7 @@
 
 
         function onPdfEvent(type) {
-            console.log("   **** " + type + " ****");
+            logger.debug("   **** " + type + " ****");
             switch (type) {
                 case "loadStart":
                     LoadingService.showLoader('Loading PDF, Please Wait.');
@@ -166,7 +166,7 @@
                     LoadingService.showAlert('Sorry, Please, try later.');
                     break;
                 default:
-                    console.warn('Unknown PDF Event: `%s`', type);
+                    logger.warn('Unknown PDF Event: `%s`', type);
                     LoadingService.hide();
                     break;
             }

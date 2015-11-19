@@ -52,7 +52,7 @@
 					debugger;
 					
 					//alert(JSON.stringify(selectedContact, null, 2));
-					console.log('Selected Contact: ', selectedContact);
+					logger.debug('Selected Contact: ', selectedContact);
 					
 					/**
 					 * Contacts returned with teh following schemas:

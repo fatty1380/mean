@@ -30,15 +30,15 @@
         utilsService.startClock(function() {
             messageService.getChatByUserId(parameters.recipient)
                 .then(function(response) {
-                    console.log(response.messages.length,' - ',vm.messages.length);
+                    logger.debug(response.messages.length,' - ',vm.messages.length);
                     var messages = response.messages;
                     if(messages && messages.length > vm.messages.length) {
                         vm.messages = messages.reverse();
-                        console.log('messages updated: ', vm.messages.length);
+                        logger.debug('messages updated: ', vm.messages.length);
                         scrollToBottom();
                     }
                 },function() {
-                    console.log('messages update error ', vm.messages.length);
+                    logger.debug('messages update error ', vm.messages.length);
                 });
         }, settings.messagesTimeout);
 
@@ -76,19 +76,19 @@
                 .createMessage(messageObj)
                 .then(function (res) {
                     LoadingService.hide();
-                    console.log('MESSAGE CREATED SUCCESS ----- >>>', res);
+                    logger.debug('MESSAGE CREATED SUCCESS ----- >>>', res);
                     vm.message = '';
                     res.data.direction = 'outbound';
                     vm.messages.push(res.data);
                     scrollToBottom();
                 }, function (err) {
                     LoadingService.hide();
-                    console.log('MESSAGES WASN\'T CREATED ERROR ----- >>>', err);
+                    logger.error('MESSAGES WASN\'T CREATED ERROR ----- >>>', err);
                 });
         }
         
         function viewUser(e) {
-            console.log('Routing to User Profile Page for `%s`', vm.recipientName);
+            logger.debug('Routing to User Profile Page for `%s`', vm.recipientName);
             vm.closeModal(null);
             $state.go('account.profile', { userId: vm.recipientId });
         }

@@ -20,7 +20,7 @@
         var infoWindow = null;
         var user = parameters.user;
 
-        console.warn(' user --->>>', user);
+        logger.warn(' user --->>>', user);
 
         vm.activity = {
             title: '',
@@ -63,17 +63,17 @@
                     var posOptions = { timeout: 10000, enableHighAccuracy: false };
 
                     var onSuccess = function (position) {
-                        console.log('*** sucess ***');
+                        logger.debug('*** sucess ***');
                         LoadingService.hide();
                         var lat = position.coords.latitude;
                         var long = position.coords.longitude;
                         myCoordinates = new google.maps.LatLng(lat, long);
                         vm.activity.location.coordinates = [lat, long];
-                        console.log(LoadingService);
+                        logger.debug(LoadingService);
                         initMap();
                     };
                     function onError(error) {
-                        console.log('*** error ***');
+                        logger.debug('*** error ***');
                         LoadingService.hide();
                         //show only 1 error message
                         if (vm.mapIsVisible) {
@@ -167,12 +167,12 @@
 
             LoadingService.showLoader('Saving')
 
-            console.warn('posting vm.activity --->>>', vm.activity);
+            logger.warn('posting vm.activity --->>>', vm.activity);
 
             activityService.postActivityToFeed(vm.activity).then(
                 function (result) {
                     LoadingService.hide();
-                    console.log(result);
+                    logger.debug(result);
                     vm.closeModal(result);
                 });
         }

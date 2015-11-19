@@ -15,7 +15,7 @@
             
         var vm = this;
 
-        console.log('Loading $state: `%s`', $state.current.name);
+        logger.debug('Loading $state: `%s`', $state.current.name);
 
         vm.profileData = profile || user;
         //vm.profileAvatar = 
@@ -35,7 +35,7 @@
 
         vm.ab = function () {
             var profi = appCache.getCachedProfiles();
-            console.warn(' profi --->>>', profi);
+            logger.info(' Loaded Cached Profiles --->>>', profi);
         };
 
         var unbindUpdatesHandler = null;
@@ -44,7 +44,7 @@
         }
 
         $rootScope.$on("clear", function () {
-            console.log('ProfileCtrl my event occurred');
+            logger.debug('ProfileCtrl my event occurred');
             vm.profileData = profile || user;
             vm.user = user;
             vm.friendStatus = null;
@@ -55,7 +55,7 @@
         $scope.$on('$ionicView.enter', function (event) {
             if (_.isEmpty(unbindUpdatesHandler)) {
                 unbindUpdatesHandler = $rootScope.$on('updates-available', function (event, updates) {
-                    console.log('ProfileCtrl: %d New updates available: ', updates);
+                    logger.debug('ProfileCtrl: %d New updates available: ', updates);
                     vm.updates = updates;
                 });
             }
@@ -75,7 +75,7 @@
         //////////////////////////////////////////////////////////////////////////////////////////////
 
         function showFriends() {
-            console.log('TODO: Edit friends to adhere to \'profile\' resolve parameter');
+            logger.debug('TODO: Edit friends to adhere to \'profile\' resolve parameter');
             $state.go('account.profile.friends', { userId: profile && profile.id });
         }
 
@@ -167,10 +167,10 @@
                         vm.addUserToFriends();
                         break;
                     case 'friends':
-                        console.log('The convoy is strong with ' + vm.profileData.displayName);
+                        logger.debug('The convoy is strong with ' + vm.profileData.displayName);
                         break;
                     case 'sent':
-                        console.log('Already sent the invitation to ' + vm.profileData.displayName);
+                        logger.debug('Already sent the invitation to ' + vm.profileData.displayName);
                         break;
                 }
             };
@@ -214,10 +214,10 @@
                 profileModalsService
                     .showProfileShareModal(parameters)
                     .then(function (result) {
-                        console.log(result);
+                        logger.debug(result);
                     },
                         function (err) {
-                            console.log(err);
+                            logger.debug(err);
                         })
             };
 
@@ -225,10 +225,10 @@
                 profileModalsService
                     .showRequestReviewModal(parameters)
                     .then(function (result) {
-                        console.log(result);
+                        logger.debug(result);
                     },
                         function (err) {
-                            console.log(err);
+                            logger.debug(err);
                         })
             };
 
@@ -247,7 +247,7 @@
                         }
                     })
                     .catch(function (err) {
-                        if (!!err) { console.log(err); }
+                        if (!!err) { logger.debug(err); }
                     })
             };
 
@@ -255,7 +255,7 @@
                 profileModalsService
                     .showEditExperienceModal(experienceItem)
                     .then(function (experienceResult) {
-                        console.log('Edited Experience ', experienceResult);
+                        logger.debug('Edited Experience ', experienceResult);
 
                         if (_.isArray(experienceResult)) {
                             vm.experience = experienceResult;
@@ -267,7 +267,7 @@
                         getExperience();
                     })
                     .catch(function (err) {
-                        if (!!err) { console.log(err); }
+                        if (!!err) { logger.debug(err); }
                     })
             };
         }

@@ -6,7 +6,7 @@
         .module(AppConfig.appModuleName, AppConfig.appModuleDependencies)
         .config([
             '$urlRouterProvider', function ($urlRouterProvider) {
-                //console.warn('unknown route or url: ' + location.hash);
+                //logger.warn('unknown route or url: ' + location.hash);
                 $urlRouterProvider.otherwise('home');
             }
         ])
@@ -21,12 +21,44 @@
         .config(['msdElasticConfig', function (config) {
             config.append = '\n';
         }])
+        .config(["$provide", function ($provide) {
+            // Use the `decorator` solution to substitute or attach behaviors to
+            // original service instance; @see angular-mocks for more examples....
+            // @attribution http://solutionoptimist.com/2013/10/07/enhance-angularjs-logging-using-decorators/
+            // TODO: Implement additional points from article regarding per-class invocation and initailziation.
+ 
+            $provide.decorator('$log', ["$delegate", function ($delegate) {
+                // Save the original $log.debug()
+                
+                _.forOwn($delegate, function (prop, key) {
+                    if (_.isFunction(prop)) {
+                        $delegate[key] = function () {
+                            var args = [].slice.call(arguments),
+                                now = moment().format('HH:MM:SS');
+ 
+                            // Prepend timestamp
+                            args[0] = now + ' - ' + args[0];
+ 
+                            // Call the original with the output prepended with formatted timestamp
+                            prop.apply(null, args)
+                        };
+                    }
+                }); 
+                
+                return $delegate;
+            }]);
+        }])
 
         .run(initializePlatform);
 
-    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings']
+    initializePlatform.$inject = ['$ionicPlatform', '$window', 'settings', '$log', '$cordovaGoogleAnalytics']
 
-    function initializePlatform($ionicPlatform, $window, settings) {
+    function initializePlatform($ionicPlatform, $window, settings, $log, $cordovaGoogleAnalytics) {
+
+        if (!!$window) {
+            $window.logger = $log;
+        }
+
         $ionicPlatform.ready(function () {
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
@@ -47,35 +79,35 @@
         });
 
         function readBranchData() {
-            console.log('readBranchData');
+            logger.debug('readBranchData');
             if (!!window.cordova) {
 
                 branch.setDebug(AppConfig.debug);
                 branch.init(settings.branch.key, function (err, response) {
-                    console.log("branch.init - start");
+                    logger.debug("branch.init - start");
 
                     if (err) {
-                        console.log("branch error msg: " + err);
+                        logger.debug("branch error msg: " + err);
                     } else {
-                        console.log("branch data: " + JSON.stringify(response, null, 1));
+                        logger.debug("branch data: " + JSON.stringify(response, null, 1));
                     }
-                    
+
                     if (_.isEmpty(response)) {
                         return;
                     }
-                    
+
                     if (!!response.data) {
-                        console.log("branch data: " + JSON.stringify(response.data, null, 1));
+                        logger.debug("branch data: " + JSON.stringify(response.data, null, 1));
                     }
 
                     if (!err && response.data) {
                         var parsed_data = JSON.parse(response.data);
-                        console.log('Parsed: ' + JSON.stringify(parsed_data, null, 1))
+                        logger.debug('Parsed: ' + JSON.stringify(parsed_data, null, 1))
 
                         if (parsed_data['+clicked_branch_link']) {
-                            console.log('Referral Code' + parsed_data.referring_identity);
+                            logger.debug('Referral Code' + parsed_data.referring_identity);
                             $window.localStorage.setItem('referralCode', parsed_data.referring_identity);
-                            
+
                             $window.localStorage.setItem('branchData', JSON.stringify(parsed_data));
                         }
                     }

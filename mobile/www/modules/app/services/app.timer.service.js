@@ -57,7 +57,7 @@
         }
 
         function onTimeout(timer) {
-            console.log('[onTimeout] %s timed out', timer.name);
+            logger.debug('[onTimeout] %s timed out', timer.name);
 
             if (timer.name === 'security-timer') debugger;
 

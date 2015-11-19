@@ -52,9 +52,9 @@
                 return registerService.updateUserProps({ trailer: getNameKeys(vm.trailers) })
                     .then(function (response) {
                         if (response.success) {
-                            console.log('Trailers: Saved Successfully', response.message);
+                            logger.debug('Trailers: Saved Successfully', response.message);
                         } else {
-                            console.error('Trailers: Save Failed', response.message);
+                            logger.error('Trailers: Save Failed', response.message);
                         }
 
                         $state.go('signup-friends');

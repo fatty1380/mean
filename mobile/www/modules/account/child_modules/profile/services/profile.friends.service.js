@@ -79,11 +79,11 @@
 
             return $q.all(promises)
                 .then(function success(results) {
-                    console.log('Sent %d  new Requests')
+                    logger.debug('Sent %d  new Requests')
                     return results;
                 })
                 .catch(function fail(err) {
-                    console.error(err, 'Failed to send requests');
+                    logger.error(err, 'Failed to send requests');
                     return false;
                 })
         }

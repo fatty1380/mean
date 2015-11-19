@@ -30,7 +30,7 @@
         
         function activate() {
             if (_.isEmpty(vm.entry)) {
-                console.error('No Activity has been loaded into the Controller', parameters);
+                logger.error('No Activity has been loaded into the Controller', parameters);
 
                 return vm.close();
             }
@@ -63,8 +63,8 @@
                         });
                         infoWindow.setContent(result.formatted_address);
                         infoWindow.open(map, marker);
-                    }, function () {
-                        console.log('getPlaceName error');
+                    }, function (err) {
+                        logger.error('getPlaceName error', err);
                     });
             }
         }
@@ -100,13 +100,13 @@
                 .postComment(vm.entry.id, data)
                 .then(
                     function (result) {
-                        console.log('result ', result);
+                        logger.debug('result ', result);
                         if (result.data) {
                             vm.entry.comments = result.data;
                             scrollToBottom();
                         }
                     }, function (resp) {
-                        console.log(resp);
+                        logger.error('Activty Service: Post Comment Failed', resp);
                     });
         }
 
@@ -129,8 +129,8 @@
                 .then(function (result) {
                     //update like in feed
                     vm.entry.likes = result || [];
-                }, function (resp) {
-                    console.log(resp);
+                }, function (err) {
+                    logger.error('Activity Details.LikeActivity Failed', err);
                 });
         }
 
@@ -146,7 +146,7 @@ angular.module('activity').directive('focusMe', function($timeout) {
     link: function(scope, element) {
       scope.$watch('trigger', function(value) {
         if(value === true) { 
-          //console.log('trigger',value);
+          //logger.debug('trigger',value);
           $timeout(function() {
             element[0].focus();
             scope.trigger = false;

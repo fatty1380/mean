@@ -115,11 +115,11 @@
                                     
                                     return lockboxDocuments.getFilesByUserId(user.id)
                                         .then(function (data) {
-                                            console.log('returning lockbox doc loaded from device');
+                                            logger.debug('returning lockbox doc loaded from device');
                                             return data;
                                         })
                                         .catch(function (err) {
-                                            console.error('Couldn\'t retrieve documents err --->>>', err);
+                                            logger.error('[LockboxDocResolve] Couldn\'t retrieve documents err --->>>', err);
                                             
                                             if (/no access/i.test(err)) {
                                                 debugger;
@@ -156,7 +156,7 @@
                             return null;
                         }
 
-                        console.log('Looking up chat for recipient ID `%s`', $stateParams.recipientId)
+                        logger.debug('Looking up chat for recipient ID `%s`', $stateParams.recipientId)
                         return messageService.getChatByUserId($stateParams.recipientId);
                     }],
                     welcome: ['welcomeService', function (welcomeService) {

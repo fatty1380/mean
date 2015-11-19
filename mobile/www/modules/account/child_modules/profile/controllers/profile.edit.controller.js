@@ -73,7 +73,7 @@
             profileModalsService
                 .showProfileEditLicenseModal({ license: vm.profileData.license })
                 .then(function success(license) {
-                    console.log('Updated License to ', license);
+                    logger.debug('Updated License to ', license);
                     vm.profileData.license = license;
                 });
         }
@@ -84,7 +84,7 @@
 
         function save(form, e) {
             e.preventDefault();
-            console.warn(' form --->>>', form);
+            logger.warn(' form --->>>', form);
 
             if (form.$valid) {
                 // Update the started date
@@ -94,7 +94,7 @@
                     vm.profileData.props.started = vm.started;
                 }
 
-                console.log('Saving user data: ', vm.profileData);
+                logger.debug('Saving user data: ', vm.profileData);
                 return userService.updateUserData(vm.profileData)
                     .then(function (success) {
                         if (success.id) {

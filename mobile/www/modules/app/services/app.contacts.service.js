@@ -8,7 +8,7 @@
 
     function contactsService($q, $filter, LoadingService) {
 
-        console.warn('Contact Service INITIALIZING');
+        logger.info('Contact Service INITIALIZING');
         var contacts = [],
             deviceContactsLoaded = false,
             filter = $filter('contactsFilter');
@@ -97,7 +97,7 @@
             return find().then(
                 function (data) {
                     var newContacts = filter(data);
-                    console.warn(' retrieveContacts() --->>>', newContacts);
+                    logger.warn(' retrieveContacts() --->>>', newContacts);
                     
                     sm.contacts = _(sm.contacts.concat(newContacts)).uniq(function (c) {
                         return c.id || 'manual-' + Math.floor(10000 * Math.random() + 1000);
@@ -109,7 +109,7 @@
                     return sm.contacts
                 })
                 .catch(function (err) {
-                    console.log('error retrieving contacts', err);
+                    logger.debug('error retrieving contacts', err);
 
                     return (sm.contacts = sm.contacts || []);
                 });

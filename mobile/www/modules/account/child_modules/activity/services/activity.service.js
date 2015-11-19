@@ -98,7 +98,7 @@
         }
 
         function feedRequestSuccess(response) {
-            console.log(response);
+            logger.debug(response);
 
             feeder = vm.FEEDER_CONFIG;
 
@@ -115,12 +115,12 @@
 
         function feedRequestError(response) {
             //showPopup('Error', response.message);
-            console.error('Unable to load Feed', response.data)
+            logger.error('Unable to load Feed', response.data)
             return [];
         }
 
         function loadMore() {
-            console.log('[activityService.loadMore] Loading Updates');
+            logger.debug('[activityService.loadMore] Loading Updates');
             debugger;
             return populateActivityFeed(items, feeder.start, feeder.step);
         }
@@ -139,7 +139,7 @@
             count = count || undefined;
 
 
-            console.log('Iterating over ' + feed.length + ' feed IDs to populate ' + count + ' from ' + start);
+            logger.debug('Iterating over ' + feed.length + ' feed IDs to populate ' + count + ' from ' + start);
 
             /**
              * Look at feed IDs `start` to `start+count` and 
@@ -148,7 +148,7 @@
             feed = [];
             
             if (!itemsToResolve || !itemsToResolve.length) {
-                console.log('No more activities');
+                logger.debug('No more activities');
                 return $q.when([]);
             }
 
@@ -157,7 +157,7 @@
                 if(!angular.isString(value)) return value;
                 return getFeedActivityById(value).then(
                     function (feedItem) {
-                        //console.log('Loaded Feed item #' + index + '. Feeder: ', feeder);
+                        //logger.debug('Loaded Feed item #' + index + '. Feeder: ', feeder);
                         feeder.loaded++;
                         
                         if (_.isEmpty(feedItem)) {
@@ -179,18 +179,18 @@
                 });
 
             return $q.all(promises).then(function (results) {
-                console.log('Resolved %d feed activities to populated feed', results.length, feed);
+                logger.debug('Resolved %d feed activities to populated feed', results.length, feed);
 
                 var sorted = _.compact(feed).sort(function (a, b) {
                     if (angular.isString(a) && angular.isString(b)) { return 0; }
                     var x = Date.parse(b.created) - Date.parse(a.created);
                     var y = x > 0 ? 1 : x < 0 ? -1 : 0;
                     ///var word = y == 1 ? 'after' : 'before';
-                    //console.log('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
+                    //logger.debug('Feed Item %s is %s than %s (%s %s %s)', a.title, word, b.title, a.created, word, b.created);
                     return y
                 });
 
-                console.log('Sorted %d feed activities to populated feed', results.length, sorted);
+                logger.debug('Sorted %d feed activities to populated feed', results.length, sorted);
                 return sorted;
             })
         }
@@ -205,7 +205,7 @@
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
-                    console.error(response, 'Unable to lookup Activity Feed');
+                    logger.error(response, 'Unable to lookup Activity Feed');
                     return null;
                 });
         }
@@ -246,7 +246,7 @@
                 .then(function (response) {
                     return response;
                 }, function (response) {
-                    console.log(response);
+                    logger.debug(response);
                     showPopup(response.statusText, response.data.message);
                     return response;
                 });
@@ -276,7 +276,7 @@
                 }, function (response) {
                     
                     if (response.status != 403) {
-                        console.error('Unable to like Post', response);
+                        logger.error('Unable to like Post', response);
                     }
                     
                     // Return the existing likes array (if present) or an empty array if not;
@@ -334,7 +334,7 @@
          * @returns {Promise} promise with formatted address
          */
         function getPlaceName(latlng) {
-            console.log('getPlaceName()');
+            logger.debug('getPlaceName()');
             if (!geocoder) {
                 var geocoder = new google.maps.Geocoder;
             }

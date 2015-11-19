@@ -12,23 +12,23 @@
         
         vm.stateAction = 'Edit';
 
-        console.log(parameters);
+        logger.debug(parameters);
 
         vm.experience = parameters;
 
         vm.saveExperience = saveExperience;
 
         function saveExperience() {
-            console.log(' ');
-            console.log('saveExperience()');
-            console.log(vm.experience);
+            logger.debug(' ');
+            logger.debug('saveExperience()');
+            logger.debug(vm.experience);
 
             experienceService.updateUserExperience(vm.experience._id, vm.experience)
             .then(function (resp) {
                 vm.experience = {};
                 vm.closeModal(resp.data);
             }, function (err) {
-                console.error('err --->>>', err);
+                logger.error('[ProfileEditExperience.saveExperience] err --->>>', err);
             });
         }
     }

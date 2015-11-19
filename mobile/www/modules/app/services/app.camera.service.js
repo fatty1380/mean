@@ -33,7 +33,7 @@
         function getPicture(photoSource, options) {
             var q = $q.defer();
             if (!navigator.camera) {
-                console.log("******* Not a device. Using fake image *********");
+                logger.warn("******* Not a device. Using fake image *********");
                 q.resolve(null);
                 return q.promise;
             }
@@ -74,11 +74,11 @@
                 buttonClicked: function (index) {
                     switch (index) {
                         case 0:
-                            console.log("Take a photo");
+                            logger.debug("Take a photo");
                             deferred.resolve(getPicture(1, options)); // Camera.PictureSourceType.CAMERA
                             break;
                         case 1:
-                            console.log("Take photo from album");
+                            logger.debug("Take photo from album");
                             deferred.resolve(getPicture(0, options)); // Camera.PictureSourceType.PHOTOLIBRARY
                             break;
                     }

@@ -22,12 +22,12 @@
                             return CompanyService.get($stateParams.companyId)
                                 .then(
                                     function success(result) {
-                                        console.log('Company Result: ', result);
+                                        logger.debug('Company Result: ', result);
                                         return result;
                                     })
                                 .catch(
                                     function reject(err) {
-                                        console.error('Company result failed', err);
+                                        logger.error('Company result failed', err);
                                         return {};
                                     });
                         }],
@@ -38,11 +38,11 @@
                             return CompanyService.loadJobs($stateParams.companyId)
                                 .then(
                                     function success(result) {
-                                        console.log('Company Jobs Result: ', result);
+                                        logger.debug('Company Jobs Result: ', result);
                                         return result;
                                     })
                                 .catch(function reject(err) {
-                                    console.error('Company Jobs result failed', err);
+                                    logger.error('Company Jobs result failed', err);
                                     return [];
                                 });
                         }],
@@ -52,11 +52,11 @@
                             return CompanyService.loadFeed($stateParams.companyId)
                                 .then(
                                     function success(result) {
-                                        console.log('Company Feed Result: ', result);
+                                        logger.debug('Company Feed Result: ', result);
                                         return result;
                                     })
                                 .catch(function reject(err) {
-                                    console.error('Company Feed result failed', err);
+                                    logger.error('Company Feed result failed', err);
                                     return [];
                                 });
                         }]

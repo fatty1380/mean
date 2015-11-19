@@ -32,12 +32,12 @@
             registerService.updateUser(obj).then(
                 function (response) {
                     if (response.success) {
-                        console.log("license response update user : ", response);
+                        logger.debug("license response update user : ", response);
 
                         $state.go('signup-trucks');
                         LoadingService.hide();
                     } else {
-                        console.error("license response update user ERROR: ", response);
+                        logger.error("license response update user ERROR: ", response);
 
                         $state.go('login');
                         LoadingService.showFailure('Sorry, unable to save at this time');
@@ -98,7 +98,7 @@
                 },
                 function fail(err) {
                     LoadingService.showFailure('Unable to Save at this time');
-                    console.error(err, 'Failed to update License');
+                    logger.error(err, 'Failed to update License');
                 });
         }
     }

@@ -73,7 +73,7 @@
             }
 
             $rootScope.$on('updates-available', function (event, updates) {
-                console.log('FriendsCtrl: %d New updates available: ', updates.requests);
+                logger.debug('FriendsCtrl: %d New updates available: ', updates.requests);
                 vm.newRequests = updates.requests;
             });
 
@@ -99,7 +99,7 @@
         }
 
         function viewUser(user, e) {
-            console.log('Routing to User Profile Page for `%s`', user.displayName)
+            logger.debug('Routing to User Profile Page for `%s`', user.displayName)
             $state.go('account.profile', { userId: user.id });
         }
 
@@ -143,13 +143,13 @@
                     profileModalsService
                         .showAddFriendsModal(contacts)
                         .then(function (resp) {
-                            console.warn('resp --->>>', resp);
+                            logger.debug('[ProfileFriends.showAddFriends] resp --->>>', resp);
                         }, function (err) {
-                            console.warn('err --->>>', err);
+                            logger.error('[ProfileFriends.showAddFriends] err --->>>', err);
                         });
                 })
                 .catch(function reject(err) {
-                    console.error('Unable to resolve Contacts: ', err);
+                    logger.error('[ProfileFriends.showAddFriends] Unable to resolve Contacts: ', err);
 
                     LoadingService.hide();
 
@@ -161,14 +161,14 @@
             return profileModalsService
                 .showFriendManualAddModal()
                 .then(function success(contact) {
-                    console.log('Manual Add Friend Rusult: ', contact);
+                    logger.debug('Manual Add Friend Rusult: ', contact);
 
                     return friendsService.createRequest({
                         contactInfo: contact
                     });
                 })
                 .then(function sendInviteSuccess(result) {
-                    console.log('Sent Invite', result.data);
+                    logger.debug('Sent Invite', result.data);
                     LoadingService.showSuccess('Invitation Sent!');
                 })
                 .catch(function failure(err) {

@@ -64,9 +64,9 @@
                 registerService.updateUserProps({ truck: vm.currentTruck })
                     .then(function (response) {
                         if (response.success) {
-                            console.log('Trucks: Saved Successfully', response.message);
+                            logger.debug('Trucks: Saved Successfully', response.message);
                         } else {
-                            console.error('Trucks: Save Failed', response.message);
+                            logger.error('Trucks: Save Failed', response.message);
                         }
 
                         $state.go('signup-trailers');

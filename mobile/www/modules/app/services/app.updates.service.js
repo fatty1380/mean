@@ -40,7 +40,7 @@
 
 
         function getLastUpdates() {
-            console.log('getLastUpdates ', updates);
+            logger.debug('getLastUpdates ', updates);
             return updates;
         }
 
@@ -76,7 +76,7 @@
         /////////////////////////////////////////////////
         
         function runUpdateProcess(event) {
-            console.log('AppUpdates: Checking for Updates: ', updates);
+            logger.debug('AppUpdates: Checking for Updates: ', updates);
             var promises = [
                 getLatestMessages(),
                 getLatestActivity(),
@@ -86,7 +86,7 @@
 
             return $q.all(promises)
                 .then(function (response) {
-                    console.log('AppUpdates: Checked for Updates: Processing', updates);
+                    logger.debug('AppUpdates: Checked for Updates: Processing', updates);
                     getUpdates(response);
                     
                     if (!!event) {
@@ -137,7 +137,7 @@
                 currentMessage = latestMessage;
             } else if (currentMessage && currentMessage < latestMessage) {
                 updates.messages = processNewMessages(messagesArray, currentMessage);
-                console.warn(' updates.messages --->>>', updates.messages);
+                logger.info(' updates.messages --->>>', updates.messages);
                 currentMessage = latestMessage;
                 updateAvailable = true;
             }

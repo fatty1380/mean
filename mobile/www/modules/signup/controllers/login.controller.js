@@ -42,7 +42,7 @@
 
         vm.echange = function () {
             vm.error = '';
-            //console.warn(' vm.user --->>>', vm.user.email);
+            //logger.warn(' vm.user --->>>', vm.user.email);
         };
         /**
          * @description Submit form if last field in focus
@@ -113,12 +113,12 @@
 
             angular.forEach(users, function (user) {
                 if(user !== id){
-                    console.warn('removing documents for user --->>>', user);
+                    logger.warn('removing documents for user --->>>', user);
                     return lockboxDocuments.removeDocumentsByUser(user);
                 }
             });
 
-            console.warn('Documents users >>>', users);
+            logger.warn('Documents users >>>', users);
             storage.setItem('hasDocumentsForUsers', JSON.stringify(users));
         }
 

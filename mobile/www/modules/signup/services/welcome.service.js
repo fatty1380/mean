@@ -49,7 +49,7 @@
 
             var key = parameters.stateName;
 
-            console.warn('Welcome Modal for state %s: %s', key, showAcks[key] ? 'yes' : 'no', showAcks);
+            logger.info('Welcome Modal for state %s: %s', key, showAcks[key] ? 'yes' : 'no', showAcks);
 
             if (showAcks[key]) {
                 return modalService
@@ -80,7 +80,7 @@
         var screenConfig = screenConfigs[parameters.stateName];
 
         if (_.isEmpty(screenConfig)) {
-            console.error('Closing modal because of no config');
+            logger.error('Closing modal because of no config');
             return vm.closeModal(false);
         }
 

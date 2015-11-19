@@ -15,7 +15,7 @@
         vm.select = select;
 
         function select () {
-            console.warn(' vm.selectedContact --->>>', vm.selectedContact);
+            logger.debug(' vm.selectedContact --->>>', vm.selectedContact);
             vm.closeModal(vm.selectedContact);
         }
 

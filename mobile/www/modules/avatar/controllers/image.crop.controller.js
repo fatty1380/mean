@@ -27,7 +27,7 @@
             vm.areaType = parameters.areaType || 'circle';
             vm.imgType = parameters.imgType || 'image/jpeg';
 
-            console.log('Initializng Image Cropper with size: ' + vm.imgSize + ', area: ' + vm.areaType + ', type: ' + vm.imgType)
+            logger.debug('Initializng Image Cropper with size: ' + vm.imgSize + ', area: ' + vm.areaType + ', type: ' + vm.imgType)
 
             if (parameters.rawImage) {
                 vm.rawImage = 'data:' + inputImageType + ';base64,' + parameters.rawImage;
@@ -55,7 +55,7 @@
                     vm.closeModal(profileDataProps.avatar);
                 })
                 .catch(function reject(err) {
-                    console.error('Unable to save props', err, dataProps);
+                    logger.error('Unable to save props', err, dataProps);
                     vm.cancelModal(err);
                 })
                 .finally(function () {

@@ -36,7 +36,7 @@ function viewer() {
             return attrs.src;
         }), function (newVal, oldVal) {
             if (!img && !!newVal || oldVal !== newVal) {
-                console.log('imageviewer: loadImage(%s)', newVal);
+                logger.debug('imageviewer: loadImage(%s)', newVal);
                 loadImage();
             }
         });

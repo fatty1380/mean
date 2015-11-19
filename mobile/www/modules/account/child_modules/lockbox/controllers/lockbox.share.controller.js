@@ -35,7 +35,7 @@
                     if (isAccessible) {
                         
                         if (_.isEmpty(vm.documents)) {
-                            console.log('Documents not included in parameters - looking up');
+                            logger.debug('Documents not included in parameters - looking up');
                             getDocs();
                         }
                         
@@ -45,7 +45,7 @@
                     return skipDocs();
                 })
                 .catch(function fail(err) {
-                    console.log('Failed to access lockbox due to `%s`', err);
+                    logger.error('Failed to access lockbox due to error', err);
                     vm.canAccess = false;
                 });
         }
@@ -54,7 +54,7 @@
             return lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
-                    console.log('Documents List', response);
+                    logger.debug('Documents List', response);
                     vm.documents = getRealDocs(_.isArray(response) ? response : []);
                     
                     if (_.isEmpty(vm.documents)) {
@@ -123,7 +123,7 @@
                     vm.closeModal(sentRequest);
                 })
                 .catch(function (err) {
-                    console.error(err, 'Unable to Send Request');
+                    logger.error(err, 'Unable to Send Request');
                     $ionicPopup.alert({
                         title: 'Sorry',
                         template: 'Unable to Submit your request right now, please try again later'
@@ -131,7 +131,7 @@
                 });
 
             function getModifiedContactInfo(contact) {
-                console.warn(' contact --->>>', contact);
+                logger.debug(' contact --->>>', contact);
                 if (!contact) return;
 
                 var contactInfo = {};

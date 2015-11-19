@@ -26,7 +26,7 @@
                     vm.closeModal(response);
 
                 }, function (err) {
-                    console.error('Unable to request reminder', err);
+                    logger.error('Unable to request reminder', err);
                     LoadingService.showFailure('Sorry, Unable to Send Reminder');
                 });
         }

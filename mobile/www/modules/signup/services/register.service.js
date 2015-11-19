@@ -111,17 +111,17 @@
         ////////////////////////////////////////////////////////////////
 
         function handleSuccess(response) {
-            console.info('handleSuccess: ', response, response.data);
+            logger.debug('[RegisterSvc] handleSuccess: ', response, response.data);
             if (response.status === 200) {
                 return { success: true, message: response };
             } else {
-                if (!!response.status) { console.error('Unknown Status: ', response.status) };
+                if (!!response.status) { logger.error('[RegisterSvc] Unknown Status: ', response.status) };
                 return { success: response.status > 200 && response.status < 400, message: response };
             }
         }
 
         function handleError(response) {
-            console.error('handleError: ', response);
+            logger.error('[RegisterSvc] handleError: ', response);
             return { success: false, message: response, title: response.statusText };
         }
     }

@@ -21,7 +21,7 @@
         vm.sendRequest = sendRequest;
 
         function sendRequest() {
-            console.log(vm.contact);
+            logger.debug(vm.contact);
             var data = {
                 contactInfo: vm.contact,
                 text: vm.message,
@@ -38,7 +38,7 @@
                 .then(function (resp) {
                     LoadingService.showSuccess('<h3>Success!</h3> Your request has been sent');
 
-                    console.log(resp);
+                    logger.debug(resp);
                     vm.contact = {};
                     vm.message = '';
                     

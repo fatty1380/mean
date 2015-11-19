@@ -24,17 +24,17 @@
         function initialize(parameters) {
             $q.when(parameters,
                 function success(contacts) {
-                    console.log('Selecting from %d Contacts', contacts.length);
+                    logger.debug('Selecting from %d Contacts', contacts.length);
 
                     return contacts.forEach(function (contact) {
                         vm.contacts.push(contact);
                     })
                 },
                 function reject(err) {
-                    console.error('Failed to Load Contacts', err);
+                    logger.error('[ProfileAddFriends.initialize] Failed to Load Contacts', err);
                 },
                 function progress(status) {
-                    console.log('Loading Contacts: %o', status);
+                    logger.debug('Loading Contacts: %o', status);
                 })
                 .finally(function end() {
                     LoadingService.hide();
@@ -48,7 +48,7 @@
                     vm.contacts.unshift(contact);
                     contactsService.setContacts(vm.contacts);
                 }, function (err) {
-                    console.warn('err --->>>', err);
+                    logger.error('[ProfileAddFriends.showManual] err --->>>', err);
                 });
         }
 

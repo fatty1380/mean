@@ -27,7 +27,7 @@
 
             
             if (_.isEmpty(vm.documents)) {
-                console.log('Documents not included in parameters - looking up');
+                logger.debug('Documents not included in parameters - looking up');
                 getDocs();
             }
         }
@@ -36,7 +36,7 @@
             lockboxDocuments
                 .getDocuments()
                 .then(function (response) {
-                    console.log('Documents List', response);
+                    logger.debug('Documents List', response);
 
                     vm.documents = _.isArray(response) ? response : [];
 
@@ -110,12 +110,12 @@
                 if (res) {
                     lockboxDocuments.updateDocument(vm.documents[vm.index], { name: res })
                         .then(function (result) {
-                            console.log('updated document to: ', result);
+                            logger.debug('updated document to: ', result);
 
                             vm.index = null;
                         })
                         .catch(function failure(err) {
-                            console.error('Problem updating document: ', err);
+                            logger.error('Problem updating document: ', err);
                         })
                 }
             });

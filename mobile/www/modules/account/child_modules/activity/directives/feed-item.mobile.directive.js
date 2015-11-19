@@ -85,8 +85,8 @@
 					if (_.isArray(updatedLikes)) {
 						vm.entry.likes = updatedLikes;
 					}
-				}, function (resp) {
-					console.log(resp);
+				}, function (err) {
+					logger.error('feed-item.directive.likeActivity Failed', err);
 				});
         }
 
@@ -98,7 +98,7 @@
             activityModalsService
                 .showActivityDetailsModal({ entry: entry })
                 .then(function (res) {
-					console.log('Details Complete', res);
+					logger.debug('Details Complete', res);
                 }, function (err) {
                     activityService.showPopup("10-7", "Please try later");
                 })
@@ -115,7 +115,7 @@
 				if (res) {
 					LoadingService.showSuccess('Thanks for Applying');
 				} else {
-					console.log('You are not sure');
+					logger.debug('You are not sure');
 				}
 			});
 		}

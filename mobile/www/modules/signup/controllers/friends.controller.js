@@ -17,11 +17,11 @@
         $rootScope.$on('$stateChangeError', handleStateChangeError);
 
         function handleStateChangeError(event, toState, toParams, fromState, fromParams, error) {
-            console.error('Friends Controller: Handle State Change Error', error);
-            console.log('event -->', event);
-            console.log('toState -->', toState);
-            console.log('fromState -->', fromState);
-            console.log('error -->', error);
+            logger.error('Friends Controller: Handle State Change Error', error);
+            logger.debug('event -->', event);
+            logger.debug('toState -->', toState);
+            logger.debug('fromState -->', fromState);
+            logger.debug('error -->', error);
 
             if (fromState && fromState.name === 'signup-friends') {
                 $state.go('signup-friends-contacts');

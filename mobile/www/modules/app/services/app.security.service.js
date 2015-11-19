@@ -44,12 +44,12 @@
         }
 
         function lock() {
-            console.log('Locking Lockbox');
+            logger.debug('Locking Lockbox');
             state.accessible = false;
         }
 
         function unlock(pin) {
-            console.log('UnLocking Lockbox');
+            logger.debug('UnLocking Lockbox');
             if (PIN === pin) {
                 state.accessible = true;
                 // lock lockbox documents every 15 minutes

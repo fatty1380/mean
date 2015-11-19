@@ -29,7 +29,7 @@
             vm.path = cordova.file.documentsDirectory;
             vm.LOCKBOX_FOLDER = vm.path + 'lockbox/';
         } catch (err) {
-            console.warn('no cordova available, can\'t get access to documentsDirectory and lockbox folder');
+            logger.warn('no cordova available, can\'t get access to documentsDirectory and lockbox folder');
         }
 
         vm.userData = userService.profileData;
@@ -146,12 +146,12 @@
                 })
                 .catch(function (result) {
                     if (/No Access/i.test(result)) {
-                        console.error('no access to docs');
+                        logger.error('no access to docs');
                         
                         return $q.reject(result);
                     }
                     
-                    console.error('Error getting docs: ', result);
+                    logger.error('Error getting docs: ', result);
                     return vm.documents;
                 })
                 .finally(function () {
@@ -160,7 +160,7 @@
                         welcomeService.initialize('lockbox.add');
                     }
 
-                    console.warn('finally vm.documents >>>', vm.documents);
+                    logger.warn('finally vm.documents >>>', vm.documents);
                     LoadingService.hide();
                 });
         }
@@ -174,7 +174,7 @@
                 return $q.reject('No user is logged in');
             }
 
-            console.warn('getFilesByUserId() for id >>> @ path `%s`', vm.path, id);
+            logger.warn('getFilesByUserId() for id >>> @ path `%s`', vm.path, id);
             if (!vm.path) return $q.when(getDocuments(true));
 
 
@@ -192,20 +192,20 @@
                     return $cordovaFile.checkDir(path, id);
                 })
                 .then(function (dir) {
-                    console.log('directory >>> ', dir);
+                    logger.debug('[LockboxDocsService] directory >>> ', dir);
                     path += id;
                     hasUserDir = true;
 
                     return readFolder(dir);
                 })
                 .then(function (entries) {
-                    console.log('entries >>> ', entries);
+                    logger.debug('[LockboxDocsService] entries >>> ', entries);
 
                     return vm.documents;
                 })
                 .catch(function (err) {
                     if (!!hasLockbox) {
-                        console.log('getFilesByUserId : calling getDocuments')
+                        logger.debug('[LockboxDocsService] getFilesByUserId : calling getDocuments')
                         return $q.when(getDocuments(true, { redirect: true }));
                     } else {
                         return $cordovaFile.createDir(path, "lockbox", false).then(function () {
@@ -219,7 +219,7 @@
                     if (!hasRealDoc) {
                         welcomeService.initialize('lockbox.add');
                     }
-                    console.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
+                    logger.warn('getFilesByUserId() finally vm.documents >>>', vm.documents);
                     LoadingService.hide();
                 });
         }
@@ -264,7 +264,7 @@
                     return _.extend(doc, data);
                 })
                 .catch(function (err) {
-                    console.warn(' err --->>>', err);
+                    logger.warn(' err --->>>', err);
                 });
         }
 
@@ -289,7 +289,7 @@
                     saveFileToDevice(newDocumentResponse.data);
 
                     if (newDocumentResponse.status != 200) {
-                        console.warn('Unknown Error in Doc Save response: ', newDocumentResponse);
+                        logger.warn('Unknown Error in Doc Save response: ', newDocumentResponse);
                     }
 
                     LoadingService.showSuccess('Saved Document');
@@ -297,7 +297,7 @@
                     return newDocumentResponse.data;
                 })
                 .catch(function reject(err) {
-                    console.error('Failed to save new doc: ', err);
+                    logger.error('Failed to save new doc: ', err);
 
                     if (!!sku) {
                         return _.find(vm.documents, { sku: sku });
@@ -317,7 +317,7 @@
 
         function removeDocuments(documents) {
             var promises = _.map(documents, function (doc) {
-                console.log('Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
+                logger.debug('[LockboxDocsService] Removing Doc: %s w/ ID: %s ', doc.sku, doc.id);
 
                 _.remove(vm.documents, { id: doc.id });
                 removeOneDocument(doc);
@@ -353,7 +353,7 @@
                         deferred.resolve(entry);
                     },
                     function error(err) {
-                        console.error(err, 'Error Downloading doc id ' + id);
+                        logger.error(err, 'Error Downloading doc id ' + id);
                         deferred.reject('Failed to Download File');
                     },
                     true);
@@ -412,7 +412,7 @@
                     return file;
                 })
                 .catch(function (err) {
-                    console.error('writeFileInUserFolder err >>>', err);
+                    logger.error('writeFileInUserFolder err >>>', err);
                 });
         }
 
@@ -421,7 +421,7 @@
 
             return $cordovaFile.checkDir(path, user)
                 .then(function (path) {
-                    console.log('Lockbox: Removing Documents for User ' + user);
+                    logger.debug('[LockboxDocsService] Lockbox: Removing Documents for User ' + user);
                     return $cordovaFile.removeRecursively(path, user)
                 }, function (err) {
                     return $q.reject(err)
@@ -429,12 +429,12 @@
                 .then(function () {
                     return updateStorageInfo(user, { action: 'remove' });
                 }, function (err) {
-                    console.error(' user Documents are not removed. error --->>>', err);
+                    logger.error(' user Documents are not removed. error --->>>', err);
                 });
         }
 
         function removeOneDocument(doc) {
-            console.warn(' removeOneDocument() doc >>>', doc);
+            logger.warn(' removeOneDocument() doc >>>', doc);
             if (!doc) return;
 
             var sku = doc.sku;
@@ -449,7 +449,7 @@
                     return $cordovaFile.removeFile(path, documentName);
                 })
                 .catch(function (err) {
-                    console.warn(' remove doc err --->>>', err);
+                    logger.warn(' remove doc err --->>>', err);
                 })
                 .finally(function () {
                     // TODO: Restore deleted document from stubs *IF* the deleted document sku matches a non-multi docTypeDefinition
@@ -503,7 +503,7 @@
             }
             else {
                 // Othewise, simply push the document into the array
-                console.log('Pushing doc into docs', doc, vm.documents);
+                logger.debug('[LockboxDocsService] Pushing doc into docs', doc, vm.documents);
                 vm.documents.push(doc);
                 return true;
             }
@@ -534,26 +534,26 @@
             function readEntries() {
                 dirReader.readEntries(
                     function success(results) {
-                        console.log('dirReader.readEntries results: %d entries: %d', results && results.length, entries.length);
+                        logger.debug('[LockboxDocsService] dirReader.readEntries results: %d entries: %d', results && results.length, entries.length);
                         if (results.length) {
-                            console.log('dirReader Length ' + results.length);
+                            logger.debug('[LockboxDocsService] dirReader Length ' + results.length);
                             entries = entries.concat(toArray(results));
                             readEntries();
                         } else {
-                            // console.log('dirReader trying to resolve docs: ' + JSON.stringify(entries));
+                            // logger.debug('[LockboxDocsService] dirReader trying to resolve docs: ' + JSON.stringify(entries));
                             resolveDocuments(entries)
                                 .then(function (entries) {
-                                    console.log('dirReader resolving with entries: ', entries);
+                                    logger.debug('[LockboxDocsService] dirReader resolving with entries: ', entries);
                                     q.resolve(entries);
                                 })
                                 .catch(function (err) {
-                                    console.error('dirReader failed to resolve entries: ' + JSON.stringify(entries) + ' err: ' + err);
+                                    logger.error('dirReader failed to resolve entries: ' + JSON.stringify(entries) + ' err: ' + err);
                                     q.reject(err);
                                 });
                         }
                     },
                     function fail(err) {
-                        console.error('Failed to read Directory', err);
+                        logger.error('Failed to read Directory', err);
                         q.reject(err);
                     });
             }
@@ -566,7 +566,7 @@
 
         function resolveDocuments(entries) {
 
-            console.log('looking  at %d documents to resolve', entries && entries.length || 0);
+            logger.debug('[LockboxDocsService] looking  at %d documents to resolve', entries && entries.length || 0);
 
             var docsPromises = [];
             _.each(entries, function (entry) {
@@ -728,7 +728,7 @@
                         //debugger;
                         
                         $timeout(function () {
-                            console.log('No access ... Redirecting to account profile');
+                            logger.debug('[LockboxDocsService] No access ... Redirecting to account profile');
                             $state.go('account.profile');
                         }, 100);
                     }

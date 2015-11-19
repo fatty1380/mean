@@ -80,7 +80,7 @@
 
             registerService.updateUserProps(registerService.userProps)
                 .then(function success(propsResult) {
-                    console.log('Updated User Props ...', propsResult);
+                    logger.debug('Updated User Props ...', propsResult);
                     // TODO: Check for success/fail
 
                     registerService.userData.handle = vm.handle;
@@ -88,11 +88,11 @@
                 })
                 .then(function success(result) {
                     // TODO: Check for success/fail
-                    console.error('Saved changes to user', result);
+                    logger.error('Saved changes to user', result);
                     $state.go('signup-license');
                 })
                 .catch(function failure(err) {
-                    console.error('Unable to save changes to user', registerService.userData, err);
+                    logger.error('Unable to save changes to user', registerService.userData, err);
                     vm.error = 'Unable to save changes';
                 });
 

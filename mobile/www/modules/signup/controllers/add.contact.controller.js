@@ -64,7 +64,7 @@
                             ///////
                             var reqs = [];
                             for (var i = 0; i < selectedContacts.length; i++) {
-                                console.warn('selectedContacts --->>>', selectedContacts);
+                                logger.warn('selectedContacts --->>>', selectedContacts);
                                 var hasHashKey = selectedContacts[i].$$hashKey;
                                 if (hasHashKey) {
                                     delete selectedContacts[i].$$hashKey;
@@ -75,10 +75,10 @@
                                 var r = $http
                                     .post(settings.requests, postData)
                                     .then(function (resp) {
-                                        console.info('Send Request Success resp --->>>', resp);
+                                        logger.info('Send Request Success resp --->>>', resp);
 
                                     }, function (err) {
-                                        console.error('Send request err --->>>', err);
+                                        logger.error('Send request err --->>>', err);
                                     });
 
                                 reqs.push(r);
@@ -87,14 +87,14 @@
                             return $q.all(reqs);
 
                         } else {
-                            console.log('friends are not invited');
+                            logger.debug('friends are not invited');
                             return $q.reject('cancel');
                         }
                     })
                     .then(function (sentRequests) {
 
                         if (!!sentRequests) {
-                            console.log('Sent ' + sentRequests.length + ' requests');
+                            logger.debug('Sent ' + sentRequests.length + ' requests');
                             LoadingService.showSuccess('Invitations Sent');
                         }
 
@@ -103,11 +103,11 @@
                     .catch(function (err) {
 
                         if (/cancel/i.test(err)) {
-                            console.log('user cancelled');
+                            logger.debug('user cancelled');
                             return;
                         }
 
-                        console.error('Unable to invite friends:', err);
+                        logger.error('Unable to invite friends:', err);
                         $ionicPopup.confirm({
                             title: 'Sorry',
                             template: 'Failed to send invites. Try again?'
