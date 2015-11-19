@@ -94,7 +94,6 @@
                 zoom: 8,
                 center: myCoordinates,
                 draggable: true,
-                sensor: true,
                 zoomControl: true,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });

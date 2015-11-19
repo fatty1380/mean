@@ -46,7 +46,6 @@
                     zoom: 8,
                     center: latLng,
                     draggable: true,
-                    sensor: true,
                     zoomControl: true,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 });
