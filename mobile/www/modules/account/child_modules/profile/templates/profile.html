@@ -13,7 +13,8 @@
         <button class="button button-clear" ng-if="!!vm.doFriendAction" ng-click="vm.doFriendAction()">
             <span ng-if="vm.friendStatus === 'none'"><i class="ion-plus"></i> Add</span>
             <span ng-if="vm.friendStatus === 'sent'" class="badge badge-balanced">invited</span>
-            <span ng-if="vm.friendStatus === 'friends'" class="badge badge-balanced">in convoy</span>
+            <span ng-if="vm.friendStatus === 'pending'" class="badge badge-balanced"><i class="ion-plus"></i> Accept</span>
+            <span ng-if="vm.friendStatus === 'friends'" class="badge badge-positive">in convoy</span>
         </button>
     </ion-header-bar>
 
@@ -26,7 +27,7 @@
             <span ng-if="vm.canEdit && vm.updates.requests" class="badge badge-assertive">{{vm.updates.requests}}</span>
             <strong>{{vm.profileData.friends.length}}</strong>
         </div>
-        <div class="handle">
+        <div class="handle" ng-if="!!vm.profileData.handle">
             <strong><i class="ico ico-radio"></i> {{vm.profileData.handle}}</strong>
         </div>
     </div>

@@ -63,7 +63,7 @@
         }
 
         function getFriendStatus(id) {
-            if (!id) return;
+            if (!id) return $q.reject('No ID Specified');
 
             return $http.get(settings.friends + id);
         }
@@ -93,12 +93,12 @@
         }
 
         function loadRequest(id) {
-            if (!id) return;
+            if (!id) return $q.reject('No ID Specified');
             return $http.get(settings.friends + id);
         }
 
         function updateRequest(id, data) {
-            if (!id) return;
+            if (!id) return $q.reject('No ID Specified');
             return $http.put(settings.requests + id, data);
         }
 

@@ -11,19 +11,23 @@
         .module('account')
         .controller('ProfileFriendRequestCtrl', ProfileFriendRequestCtrl);
 
-    ProfileFriendRequestCtrl.$inject = ['$scope', 'friendsService', 'userService', 'parameters', 'registerService', 'updateService'];
+    ProfileFriendRequestCtrl.$inject = ['$scope', '$state', 'friendsService', 'userService', 'parameters', 'registerService', 'updateService'];
 
-    function ProfileFriendRequestCtrl($scope, friendsService, userService, parameters, registerService, updateService) {
+    function ProfileFriendRequestCtrl($scope, $state, friendsService, userService, parameters, registerService, updateService) {
         var vm = this;
 
+        vm.back = back;
+        vm.handleRequest = handleRequest;
+        vm.viewUser = viewUser;
+        vm.extendWithUserObject = extendWithUserObject;
+
+        //////////////////////////////////////////////////////////////////
         vm.requests = parameters || [];
         var initialFriendLength = userService.profileData.friends.length;
         vm.updatedProfle = false;
 
-        vm.back = back;
-        vm.handleRequest = handleRequest;
-        vm.extendWithUserObject = extendWithUserObject;
-
+        //////////////////////////////////////////////////////////////////
+        
         function handleRequest(request, action) {
             var data = { action: action },
                 friends = userService.profileData.friends.indexOf(request.from) >= 0,
@@ -33,10 +37,17 @@
                 .updateRequest(request.id, data)
                 .then(function () {
                     if (action === 'accept' && !friends) {
+                        request.user.actionStatus = 'Friends';
                         userService.profileData.friends.push(request.from);
                     }
-                    updateService.resetUpdates('requests', vm.requests.length - 1);
-                    if (index >= 0) vm.requests.splice(index);
+                    else if (action === 'reject') {
+                        request.user.actionStatus = 'Ignored';
+
+                        if (index >= 0) {
+                            vm.requests.splice(index);
+                        }
+                    }
+
                 });
         }
 
@@ -56,8 +67,16 @@
 
         }
 
+        function viewUser(user, e) {
+            logger.debug('Routing to User Profile Page for `%s`', user.displayName)
+            $state.go('account.profile', { userId: user.id });
+            vm.closeModal();
+        }
+
         function back() {
+
             if (initialFriendLength !== userService.profileData.friends.length) {
+                updateService.resetUpdates('requests');
                 friendsService.loadFriends(userService.profileData.id)
                     .then(function (friends) {
                         vm.closeModal(friends);

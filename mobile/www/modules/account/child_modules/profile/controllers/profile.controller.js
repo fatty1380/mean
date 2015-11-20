@@ -12,7 +12,7 @@
     function ProfileCtrl($rootScope, $scope, StorageService, updateService, appCache, $state,
         activityService, reviewService, LoadingService, experienceService, utilsService,
         friendsService, avatarService, profileModalsService, cameraService, user, profile) {
-            
+
         var vm = this;
 
         logger.debug('Loading $state: `%s`', $state.current.name);
@@ -109,7 +109,7 @@
                 vm.profileData.displayName = vm.profileData.firstName + ' ' + (vm.profileData.lastName && vm.profileData.lastName[0]);
             } else {
                 LoadingService.showLoader('Loading ' + vm.profileData.firstName + '\'s Feed');
-                
+
                 activityService
                     .getFeed().then(function (result) {
                         var uniqueResults = _.uniq(result),
@@ -134,8 +134,8 @@
             friendsService
                 .getFriendStatus(vm.profileData.id)
                 .then(function (response) {
-                    var status = response.data.status;
-                    if (status) vm.friendStatus = status;
+                    vm.friendStatus = response.data.status;
+                    vm.friendRequest = response.data.request;
                 });
 
 
@@ -166,6 +166,9 @@
                     case 'none':
                         vm.addUserToFriends();
                         break;
+                    case 'pending':
+                        vm.acceptFriend();
+                        break;
                     case 'friends':
                         logger.debug('The convoy is strong with ' + vm.profileData.displayName);
                         break;
@@ -174,6 +177,19 @@
                         break;
                 }
             };
+
+            vm.acceptFriend = function acceptFriend() {
+                friendsService
+                    .updateRequest(vm.friendRequest.id, { action: 'accept' })
+                    .then(function (result) {
+                        if (result.status === 200) {
+                            vm.friendStatus = 'friends';
+                            user.friends.push(vm.friendRequest.from);
+                            var template = 'Added ' + (vm.profileData.handle || vm.profileData.firstName) + ' to your convoy';
+                            LoadingService.showSuccess(template);
+                        }
+                    })
+            }
         }
 
         if (vm.canEdit) { // TODO: Restore this || vm.profileData.id === vm.user.id) {
@@ -290,7 +306,7 @@
                 StorageService.set('welcome.experience', 'true');
             }
         }
-        
+
         vm.getReviewBadge = function () {
             if (vm.canEdit) {
 

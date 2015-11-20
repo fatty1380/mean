@@ -8,7 +8,9 @@
     <ion-pane class="friends-pane">
         <ion-scroll delegate-handle="main-content-scroll">
             <ul class="list friends-list user-friends-list request-list">
-                <li class="item" ng-repeat="request in vm.requests track by $index" ng-init="vm.extendWithUserObject(request)">
+                <li class="item" ng-repeat="request in vm.requests track by $index" 
+                    ng-click="vm.viewUser(request.user, $event)" 
+                    ng-init="vm.extendWithUserObject(request)">
                     <img ng-if="!!(request.user.profileImageURL)" ng-src="{{request.user.profileImageURL}}" />
                     <i ng-if="!(request.user.profileImageURL)" class="ico ico-avatarsmall"></i>
                     <div class="item-content">
@@ -21,7 +23,7 @@
                     </button>
                     <button class="button button-small list-button"
                             ng-click="vm.handleRequest(request, 'accept')">
-                        Accept
+                        {{request.user.actionStatus || 'Accept'}}
                     </button>
                 </li>
                 <li ng-if="!vm.requests || !vm.requests.length" class="no-content">

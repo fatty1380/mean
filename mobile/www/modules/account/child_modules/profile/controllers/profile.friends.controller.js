@@ -19,7 +19,7 @@
      * @injecct LoadingService
      * @injecct $ionicScrollDelegate
      * 
-     * @section Outset/Truckerline Services _________________________
+     * @section Outset/TruckerLine Services _________________________
      * @inject $osetUsersService
      * @inject utilsService
      * @inject friendsService
@@ -29,11 +29,11 @@
      */
 
     FriendsCtrl.$inject = ['updates', 'user', 'profile', 'friends',
-        '$rootScope', '$state', '$filter', 'LoadingService', '$ionicScrollDelegate',
+        '$rootScope', '$state', '$filter', 'LoadingService', '$ionicScrollDelegate', '$timeout',
         'userService', 'outsetUsersService', 'utilsService', 'friendsService', 'contactsService', 'profileModalsService'];
 
     function FriendsCtrl(updates, user, profile, friends,
-        $rootScope, $state, $filter, LoadingService, $ionicScrollDelegate,
+        $rootScope, $state, $filter, LoadingService, $ionicScrollDelegate, $timeout,
         userService, outsetUsersService, utilsService, friendsService, contactsService, profileModalsService) {
 
         var vm = this;
@@ -49,6 +49,7 @@
         vm.searchHandler = searchHandler;
         vm.showRequestsModal = showRequestsModal;
         vm.addFriend = addFriend;
+        vm.acceptFriend = acceptFriend;
         vm.viewUser = viewUser;
         vm.exitState = exitState;
 
@@ -84,6 +85,11 @@
         }
 
         function showRequestsModal() {
+
+            if (!vm.newRequests) {
+                LoadingService.show('no pending requests');
+            }
+            
             friendsService
                 .getRequestsList()
                 .then(function (requests) {
@@ -117,8 +123,30 @@
                     if (createdRequestResp.status === 200) {
                         var template = 'You have invited ' + friend.firstName + ' to be friends.';
 
+                        statii[friend.id] = 'sent';
+
                         LoadingService.showSuccess(template);
                     }
+                });
+        }
+
+        function acceptFriend(friend, e) {
+            e.stopPropagation();
+            if (!friend) return;
+
+            if (!friend.request) {
+                logger.error('No Reqeust loaded for friend id %s', friend.id);
+                return;
+            }
+
+
+            friendsService
+                .updateRequest(friend.request.id, 'accept')
+                .then(function (acceptRequestResp) {
+                    statii[friend.id] = 'friends';
+                    user.friends.push(friend.id);
+                    var template = 'Added ' + (vm.profileData.handle || vm.profileData.firstName) + ' to your convoy';
+                    LoadingService.showSuccess(template);
                 });
         }
 
@@ -177,11 +205,45 @@
                 });
         }
 
+        var timer;
+
+        var statii = {};
+
+        function initFriendStatuses() {
+            statii = {};
+            statii[user.id] = 'me';
+        }
+        initFriendStatuses();
+
+
         function getOutsetUsers(query) {
+
+            if (!!timer) {
+                $timeout.cancel(timer);
+            }
+
             return outsetUsersService
                 .search(query)
                 .then(function (response) {
                     vm.users = response.data;
+
+                    timer = $timeout(function () {
+                        _.each(vm.users, function (tlUser) {
+                            if (statii[tlUser.id]) {
+                                tlUser.friendStatus = statii[tlUser.id];
+                                return;
+                            }
+
+                            friendsService
+                                .getFriendStatus(tlUser.id)
+                                .then(function (response) {
+                                    statii[tlUser.id] = tlUser.friendStatus = response.data.status;
+                                    tlUser.request = response.request;
+                                });
+                        })
+
+                        timer = null;
+                    }, 500);
                 });
         }
 
@@ -198,13 +260,13 @@
         }
 
         function initUser(userProfile) {
-            userProfile.avatar = userService.getAvatar(userProfile);;
-            
-            // 
-            userProfile.isFriend = _.contains(userProfile.friends, user.id)
+            userProfile.avatar = userService.getAvatar(userProfile);
+
+            userProfile.isFriend = _.contains(user.friends, userProfile.id)
             userProfile.isSelf = userProfile.id === user.id;
 
-            userProfile.displayName = userProfile.isFriend || userProfile.isSelf ? userProfile.displayName :
+            userProfile.displayName = userProfile.isFriend || userProfile.isSelf ?
+                userProfile.displayName :
                 userProfile.firstName + ' ' + (userProfile.lastName && userProfile.lastName.charAt(0));
         }
     }

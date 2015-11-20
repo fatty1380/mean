@@ -5,15 +5,25 @@
         .module(AppConfig.appModuleName)
         .factory('modalService', modalService);
 
-    modalService.$inject = ['$ionicModal', '$rootScope', '$q', '$controller'];
+    modalService.$inject = ['$ionicModal', '$rootScope', '$q', '$controller', '$cordovaGoogleAnalytics'];
 
-    function modalService($ionicModal, $rootScope, $q, $controller) {
+    function modalService($ionicModal, $rootScope, $q, $controller, $cordovaGoogleAnalytics) {
 
         return {
             show: show
         };
 
         function show(templateUrl, controller, parameters, options) {
+            debugger;
+
+            var start = Date.now();
+            var ctrl = _.first(controller.split(' '));
+            var page = _.last(templateUrl.split('/'));
+            var evt = ctrl + '@' + page;
+
+            $cordovaGoogleAnalytics.trackEvent('ModalView', 'show', evt);
+            $cordovaGoogleAnalytics.trackView(evt);
+
             var deferred = $q.defer();
             var ctrlInstance;
             var modalScope = $rootScope.$new();
@@ -45,10 +55,16 @@
                         };
                         modalScope.cancelModal = function cancelModal(result) {
                             deferred.reject(result);
+
+                            $cordovaGoogleAnalytics.trackEvent('ModalView', 'cancel', evt, Date.now() - start);
+                            $cordovaGoogleAnalytics.trackView(location.hash);
+
                             return modalScope.modal.hide();
                         }
                         modalScope.closeModal = function closeModal(result) {
                             deferred.resolve(result);
+                            $cordovaGoogleAnalytics.trackEvent('ModalView', 'close', evt, Date.now() - start);
+                            $cordovaGoogleAnalytics.trackView(location.hash);
                             return modalScope.modal.hide();
                         };
 

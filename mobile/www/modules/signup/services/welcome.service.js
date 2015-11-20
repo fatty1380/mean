@@ -98,7 +98,7 @@
 
     var screenConfigs = {
         'account.profile': {
-            title: 'Your Truckerline Profile',
+            title: 'Your TruckerLine Profile',
             text: 'With your profile you will build and mange your Professional reputation. Be sure to fill out your experience and request reviews from shippers and co-workers. When you’re ready to apply for a job, or pick up a load make sure to share your profile with the interested party to put your best foot forward!'
         },
         'account.profile.reviews': {
@@ -106,7 +106,7 @@
         },
         'account.lockbox': {
             title: 'Secure Document Lockbox',
-            text: 'Welcome to your Secure Truckerline Document Lockbox. Here you can manage, view and share all of your Professional Documentation by simply scanning it with your smartphone and own your reputation by including your MVR, Background check and Employment Verification right in your profile. This area is secured, and information will never be shared without your consent. '
+            text: 'Welcome to your Secure TruckerLine Document Lockbox. Here you can manage, view and share all of your Professional Documentation by simply scanning it with your smartphone and own your reputation by including your MVR, Background check and Employment Verification right in your profile. This area is secured, and information will never be shared without your consent. '
         },
         'account.activity': {
             title: 'Your Activity Feed',

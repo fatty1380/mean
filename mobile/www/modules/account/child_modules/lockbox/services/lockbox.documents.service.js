@@ -70,7 +70,7 @@
 
                     if (hasAccess) {
                         LoadingService.showLoader('Loading Documents');
-                        
+
                         return API.doRequest(settings.documents, 'get')
                     }
 
@@ -147,10 +147,10 @@
                 .catch(function (result) {
                     if (/No Access/i.test(result)) {
                         logger.error('no access to docs');
-                        
+
                         return $q.reject(result);
                     }
-                    
+
                     logger.error('Error getting docs: ', result);
                     return vm.documents;
                 })
@@ -596,7 +596,6 @@
                 $cordovaFile.readAsText(path, entry.name).then(function (data) {
                     docObject = parseDocFromFilename(entry.name);
 
-                    debugger;
                     docObject.url = data;
                     docObject.user = userID;
 
@@ -645,7 +644,7 @@
         }
 
         function getDisplayName(source) {
-            if (/txt$/.test(source)) { debugger; }
+
             return source.replace('/_/g', ' ').replace(/\.\w{3,4}$/, '');
         }
 
@@ -659,137 +658,6 @@
             return angular.isObject(doc.user) && doc.user.id || doc.user || vm.userData.id;
         }
 
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-    angular
-        .module('lockbox')
-        .factory('lockboxSecurity', lockboxSecurity);
-
-    lockboxSecurity.$inject = ['$rootScope', '$state', '$ionicPopup', 'LoadingService', '$q', '$timeout', 'securityService'];
-    function lockboxSecurity($rootScope, $state, $ionicPopup, LoadingService, $q, $timeout, securityService) {
-
-        return {
-            checkAccess: checkAccess
-        };
-
-        function checkAccess(options) {
-            // TODO: refactor and move to service
-            // Step 1: Pulled out into standalone function
-            
-            options = _.defaults({}, options, {
-                redirect: true,
-                setNew: true
-            })
-
-            var $scope = $rootScope.$new();
-
-            $scope.data = {
-                title: 'Enter New PIN',
-                subTitle: 'Secure your Lockbox with a 4 digit PIN'
-            };
-
-            var scopeData = $scope.data;
-            var state = securityService.getState();
-            var PIN;
-
-            var pinPopup;
-            scopeData.closePopup = closePINPopup;
-            scopeData.pinChange = pinChanged;
-            
-            /////////////////////////////////////////////
-            
-            return securityService
-                .getPin()
-                .then(function (pin) {
-                    PIN = pin;
-                    state = securityService.getState();
-
-                    if (!!state.secured) {
-                        scopeData.title = 'Enter PIN';
-                        scopeData.subTitle = 'Enter your PIN to unlock'
-                    }
-                    else if (!state.secured && !options.setNew) {
-                        return $q.reject('Lockbox not secured and securing is disabled');
-                    }
-
-                })
-                .then(function () {
-                    if (!state.accessible) {
-                        LoadingService.hide();
-                        return (pinPopup = $ionicPopup.show(getPinObject()));
-                    }
-
-                    return state.accessible;
-                })
-                .then(function (accessGranted) {
-                    if (!accessGranted && options.redirect) {
-                        //debugger;
-                        
-                        $timeout(function () {
-                            logger.debug('[LockboxDocsService] No access ... Redirecting to account profile');
-                            $state.go('account.profile');
-                        }, 100);
-                    }
-
-                    return !!accessGranted;
-                })
-                .finally(function () {
-                    LoadingService.hide();
-                });
-
-            function getPinObject() {
-                return {
-                    template: '<input class="pin-input" type="tel" ng-model="data.pin" ng-change="data.pinChange(this)" maxlength="4" autofocus>',
-                    title: scopeData.title,
-                    subTitle: scopeData.subTitle,
-                    scope: $scope,
-                    buttons: [
-                        { text: 'Cancel', type: 'button-small' }
-                    ]
-                };
-            }
-
-            function closePINPopup(data) {
-                pinPopup.close(data);
-            }
-
-            function pinChanged(popup) {
-                if (scopeData.pin.length !== 4) return;
-
-                if (!scopeData.confirm && !state.secured) {
-
-                    scopeData.confirm = true;
-                    scopeData.newPin = scopeData.pin;
-                    scopeData.pin = '';
-                    popup.subTitle = 'Please confirm your PIN';
-                    popup.title = 'Confirm New PIN';
-
-                } else if (state.secured && PIN && (scopeData.pin === PIN)) {
-                    scopeData.closePopup(securityService.unlock(scopeData.pin));
-
-                    LoadingService.showIcon('Unlocked', 'ion-unlocked');
-                } else if (state.secured && PIN && scopeData.pin != PIN) {
-                    scopeData.pin = '';
-                } else if (scopeData.confirm && !state.secured) {
-                    if (scopeData.pin === scopeData.newPin) {
-                        securityService.setPin(scopeData.pin);
-                        scopeData.closePopup(securityService.unlock(scopeData.pin));
-
-                    LoadingService.showIcon('Documents Secured', 'ion-locked');
-                    } else {
-                        scopeData.confirm = false;
-                        scopeData.pin = '';
-
-                        delete scopeData.newPin;
-
-                        popup.subTitle = 'Secure your Lockbox with a 4 digit PIN';
-                        popup.title = 'Confirmation Failed';
-                    }
-                }
-            }
-        }
     }
 
     /** Documnt Stubs

@@ -168,11 +168,15 @@
 
             logger.warn('posting vm.activity --->>>', vm.activity);
 
-            activityService.postActivityToFeed(vm.activity).then(
-                function (result) {
+            activityService.postActivityToFeed(vm.activity)
+                .then(function (result) {
                     LoadingService.hide();
                     logger.debug(result);
                     vm.closeModal(result);
+                })
+                .catch(function (err) {
+                    logger.error('Posting Activity Failed', err);
+                    LoadingService.showAlert('Unable to checkin, try again later');
                 });
         }
 

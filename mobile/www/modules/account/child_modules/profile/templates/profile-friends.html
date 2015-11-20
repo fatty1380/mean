@@ -9,7 +9,8 @@
     <ion-pane class="friends-pane" ng-class="{'has-footer':vm.canEdit && !!vm.friends.length}">
         <div class="item item-input search-bar">
             <i class="icon light ion-ios-search-strong"></i>
-            <input type="search" debounce placeholder="Search" ng-model="vm.searchText" ng-change="vm.canEdit && vm.searchHandler()">
+            <input type="search" debounce placeholder="{{!vm.friends.length ? 'Find TruckerLine Users' : 'Search'}}" ng-model="vm.searchText"
+            ng-change="vm.canEdit && vm.searchHandler()">
         </div>
 
         <ion-scroll delegate-handle="main-content-scroll">
@@ -21,8 +22,7 @@
                     <img ng-if="!!(friend.avatar)" ng-src="{{friend.avatar}}" />
                     <i ng-if="!(friend.avatar)" class="ico ico-avatarsmall"></i>
                     <div class="item-content">
-                        <strong>{{friend.handle}}</strong>
-                        {{friend.displayName}}
+                        <strong>{{friend.handle}}</strong>  {{friend.displayName}}
                     </div>
                     <button class="button button-small list-button" ng-click="vm.messageFriend(friend, $event);" ng-if="friend.isFriend && !friend.isSelf">
                         Message
@@ -58,20 +58,31 @@
                 </div>
     
                 <!-- Outset users -->
-                <div class="title" ng-if="vm.searchText.length >= 1">Truckerline Users</div>
+                <div class="title" ng-if="vm.searchText.length >= 3">TruckerLine Users</div>
                 <ul class="list friends-list" ng-if="vm.users.length && !contacts.length && vm.searchText.length >= 2">
-                    <li class="item" ng-repeat="user in vm.users" ng-click="vm.viewUser(user, $event)">
+                    <li class="item" ng-repeat="user in vm.users" ng-click="vm.viewUser(user, $event)" ng-init="vm.initUser(user)">
                         <i class="ico ico-avatarsmall" ></i>
                         <div class="item-content">
                             <strong>{{user.handle}}</strong>
-                            {{user.firstName}} {{user.lastName}}
-                        </div>
-                        <button ng-if="vm.searchText.length>0" class="button button-small list-button" ng-click="vm.addFriend(user, $event)">
-                            Add
-                        </button>
+                            {{user.displayName}}
+                        </div>                        
+                        
+                    <button ng-show="user.friendStatus === 'friends'" class="button button-small list-button" ng-click="vm.messageFriend(friend, $event);" >
+                        Message
+                    </button>
+                    <button ng-show="user.friendStatus === 'sent'" class="button button-small list-button button-balanced" ng-click="$event.stopPropagation();" >
+                        Invited
+                    </button>
+                    <button ng-show="user.friendStatus === 'pending'" class="button button-small list-button button-balanced" ng-click="vm.acceptFriend(user, $event)"  >
+                        <i class="ion-plus"></i> Accept
+                    </button>
+                    <button ng-show="user.friendStatus === 'none'" class="button button-small list-button" ng-click="vm.addFriend(user, $event)" >
+                        <i class="ion-plus"></i> Add
+                    </button>
+                        
                     </li>
                 </ul>
-                <div ng-if="vm.searchText.length >= 1 && !vm.users.length" class="no-matches">
+                <div ng-if="vm.searchText.length >= 3 && !vm.users.length" class="no-matches">
                     <div class="item-content">No Users Found. Please, try to edit your search query.</div>
                 </div>
             </span>

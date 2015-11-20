@@ -153,22 +153,20 @@
             activityModalsService
                 .showAddActivityModal({ user: user })
                 .then(function (res) {
-                    logger.warn(' res --->>>', res);
+                    logger.debug(' res --->>>', res);
                     if (res) {
                         debugger;
                         if (angular.isObject(res)) {
                             logger.debug('Pushing newly created feed item onto the front of the array', res);
-                            logger.warn(' vm.feed --->>>', vm.feed.length);
+                            logger.debug(' vm.feed --->>>', vm.feed.length);
                             vm.feed.unshift(res);
-                            logger.warn(' vm.feed --->>>', vm.feed);
+                            logger.debug(' vm.feed --->>>', vm.feed);
                         }
                         else {
                             // TODO: Determine if the extra trip to the server is required
                             refreshFeedActivityById(res);
                         }
                     }
-                }, function (err) {
-                    LoadingService.showAlert('Unable to checkin, try again later');
                 })
         }
     }
